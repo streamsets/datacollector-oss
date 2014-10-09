@@ -20,7 +20,7 @@
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../../streamsets-root</relativePath>
+    <relativePath>../../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-sandbox-jetty</artifactId>
