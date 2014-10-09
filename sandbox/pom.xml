@@ -16,40 +16,21 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.streamsets</groupId>
+    <artifactId>streamsets-root</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../streamsets-root</relativePath>
+  </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-all</artifactId>
+  <artifactId>streamsets-sandbox</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets All</description>
-  <name>StreamSets All</name>
+  <description>StreamSets Sandbox</description>
+  <name>StreamSets Sandbox</name>
   <packaging>pom</packaging>
 
-  <organization>
-    <name>StreamSets</name>
-    <url>http://www.streamsets.com</url>
-  </organization>
-
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
-
   <modules>
-    <module>root</module>
+    <module>dagger</module>
+    <module>jetty</module>
   </modules>
-
-  <profiles>
-    <profile>
-      <id>sandbox</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <modules>
-        <module>root</module>
-        <module>sandbox</module>
-      </modules>
-    </profile>
-  </profiles>
-
 </project>
