@@ -17,20 +17,15 @@
  */
 package com.streamsets.pipeline.api.v1;
 
-import java.util.List;
+public abstract class AbstractRecordProcessor extends AbstractProcessor {
 
-public interface Record {
+  @Override
+  public void process(Batch batch, BatchMaker batchMaker) {
+    for (Record record : batch.getAllRecords()) {
+      batchMaker.addRecord(process(record));
+    }
+  }
 
-  public List<String> getFieldNames();
-
-  public boolean hasField(String fieldName);
-
-  public Metadata getMetadata(String fieldName);
-
-  public <T> T getValue(String fieldName, Class<T> klass);
-
-  public byte[] getRawValue();
-
-  public List<String> getProcessingPath();
+  protected abstract Record process(Record record);
 
 }

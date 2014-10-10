@@ -32,7 +32,7 @@ import java.util.Set;
            description = "Counts how many different IDs go through per batch")
 public class IdCounterProcessor extends AbstractProcessor {
 
-  @Configuration(name = "idField", type = Configuration.Type.STRING, defaultValue = "id")
+  @Configuration(name = "id-field", type = Configuration.Type.STRING, defaultValue = "id")
   private String idField;
 
   private Meter meter;

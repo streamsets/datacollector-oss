@@ -17,46 +17,23 @@
  */
 package com.streamsets.pipeline.api.v1;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
+public class RecordEditor  {
+  private Record record;
 
-public interface FieldMetadata {
+  public RecordEditor(Record record) {
+    this.record = record;
+  }
 
-  public String getName();
+  public <T> void setValue(String fieldName, T value) {
+    setValue(fieldName, record.getMetadata(fieldName), value);
+  }
 
-  public enum Type {
-    BOOLEAN(Boolean.class),
-    BYTE(Byte.class),
-    CHAR(Character.class),
-    SHORT(Short.class),
-    INTEGER(Integer.class),
-    LONG(Long.class),
-    FLOAT(Float.class),
-    DOUBLE(Double.class),
-    NUMBER(BigDecimal.class),
-    STRING(String.class),
-    MAP(Map.class),
-    ARRAY(List.class);
-
-    private Class type;
-
-    private Type(Class type) {
-      this.type = type;
-    }
-
-    public Class getType() {
-      return type;
-    }
+  public <T> void setValue(String fieldName, Metadata metadata, T value) {
 
   }
 
-  public Type getType();
+  public void removeField(String fieldName) {
 
-  public String getFormat(); //printf syntax
-
-  public Map<String, FieldMetadata> getMapMetadata(); // only if type==MAP
-
-  public List<FieldMetadata> getArrayMetadata(); // only if type==ARRAY
+  }
 
 }
