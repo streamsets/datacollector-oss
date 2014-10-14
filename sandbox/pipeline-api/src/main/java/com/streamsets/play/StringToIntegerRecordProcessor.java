@@ -30,7 +30,7 @@ import com.streamsets.pipeline.api.v1.RecordEditor;
            description = "Converts String fields to other types")
 public class StringToIntegerRecordProcessor extends AbstractRecordProcessor {
 
-  @Configuration(name = "fields-to-convert", type = Configuration.Type.STRING, defaultValue = {"age", "weight"})
+  @Configuration(name = "fields-to-handle", type = Configuration.Type.STRING, defaultValue = {"age", "weight"})
   private String[] fieldsToConvert;
 
 
