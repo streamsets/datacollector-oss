@@ -23,9 +23,11 @@ import java.util.Locale;
 
 public interface Record {
 
-  public static final String RECORD_SOURCE = "_.source";
+  public static final String MODULE = "_.module";
 
-  public static final String RECORD_PROCESSING_PATH = "_.path";
+  public static final String SOURCE = "_.source";
+
+  public static final String PROCESSING_PATH = "_.path";
 
   public interface Header {
 
@@ -42,6 +44,8 @@ public interface Record {
     public void removeAttribute(String name);
 
   }
+
+  public Record getPrevious();
 
   public Header getHeader();
 

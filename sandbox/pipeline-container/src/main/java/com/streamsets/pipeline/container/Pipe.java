@@ -26,6 +26,7 @@ import java.util.Set;
 
 public abstract class Pipe {
   public static final String INVALID_NAME = "pipeline";
+  public static final char INVALID_CHAR_IN_NAME = '|';
 
   private String name;
   private Set<String> inputLanes;
@@ -39,6 +40,8 @@ public abstract class Pipe {
     Preconditions.checkNotNull(outputLanes, "outputLanes cannot be null");
     Preconditions.checkArgument(!name.equals(INVALID_NAME), String.format(
         "A pipe name cannot be '%s'", INVALID_NAME));
+    Preconditions.checkArgument(name.indexOf(INVALID_CHAR_IN_NAME) == -1, String.format(
+        "A pipe name '%s' cannot have a '%c' character", name, INVALID_CHAR_IN_NAME));
     Preconditions.checkArgument(!(inputLanes.isEmpty() && outputLanes.isEmpty()),
                                 "both, inputLanes and outputLanes, cannot be empty");
     this.name = name;

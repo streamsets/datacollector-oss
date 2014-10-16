@@ -18,4 +18,13 @@
 package com.streamsets.pipeline.api;
 
 public class Field {
+  private Object value;
+
+  public Field(Object value) {
+    this.value = value;
+  }
+  public Object value() {
+    return value;
+  }
+
 }

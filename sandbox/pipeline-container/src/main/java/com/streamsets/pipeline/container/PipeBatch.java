@@ -21,6 +21,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -106,12 +107,19 @@ public class PipeBatch implements BatchMaker, Batch {
     return pipe.getInputLanes();
   }
 
+  private void snapshotRecords(List<Record> records) {
+    for (int i = 0; i < records.size(); i++) {
+      records.set(i, new RecordImpl( (RecordImpl) records.get(i), pipe.getName()));
+    }
+  }
+
   @Override
   public Iterator<Record> getRecords(String... lanes) {
     List<Record> list = new ArrayList<Record>(512);
     for (String lane : lanes) {
       list.addAll(pipeInput.remove(lane));
     }
+    snapshotRecords(list);
     list = Collections.unmodifiableList(list);
     return list.iterator();
   }

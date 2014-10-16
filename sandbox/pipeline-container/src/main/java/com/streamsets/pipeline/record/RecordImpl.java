@@ -25,8 +25,9 @@ import java.util.Iterator;
 import java.util.Locale;
 
 public class RecordImpl implements Record {
-  private byte[] raw;
-  private String rawMime;
+  private final Record previous;
+  private final byte[] raw;
+  private final String rawMime;
   private final SimpleMap<String, String> headerData;
   private final Header header;
   private final SimpleMap<String, Field> fieldData;
@@ -70,25 +71,35 @@ public class RecordImpl implements Record {
 
   }
 
-  public RecordImpl(byte[] raw, String rawMime, String source, String processingPath) {
+  public RecordImpl(byte[] raw, String rawMime, String module, String source) {
+    Preconditions.checkNotNull(module, "module cannot be null");
     Preconditions.checkNotNull(source, "source cannot be null");
-    Preconditions.checkNotNull(processingPath, "processingPath cannot be null");
+    previous = null;
     this.raw = raw.clone();
     this.rawMime = rawMime;
     headerData = new VersionedSimpleMap<String, String>();
-    headerData.put(RECORD_SOURCE, source);
-    headerData.put(RECORD_PROCESSING_PATH, processingPath);
+    headerData.put(MODULE, module);
+    headerData.put(SOURCE, source);
+    headerData.put(PROCESSING_PATH, module);
     fieldData = new VersionedSimpleMap<String, Field>();
     header = new HeaderImpl(headerData);
   }
 
-  public RecordImpl(RecordImpl record) {
+  public RecordImpl(RecordImpl record, String module) {
     Preconditions.checkNotNull(record, "record cannot be null");
+    previous = record;
     raw = record.raw;
     rawMime = record.rawMime;
     headerData = new VersionedSimpleMap<String, String>(record.headerData);
+    headerData.put(MODULE, module);
+    headerData.put(PROCESSING_PATH, headerData.get(PROCESSING_PATH) + ":" + module);
     fieldData = new VersionedSimpleMap<String, Field>(record.fieldData);
     header = new HeaderImpl(headerData);
+  }
+
+  @Override
+  public Record getPrevious() {
+    return previous;
   }
 
   @Override
