@@ -19,6 +19,8 @@ package com.streamsets.pipeline.container;
 
 public interface SourceTracker {
 
+  public boolean isFinished();
+
   public String getLastBatchId();
 
   public void udpateLastBatchId(String batchId);

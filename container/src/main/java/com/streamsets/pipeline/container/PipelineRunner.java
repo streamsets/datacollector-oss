@@ -18,12 +18,19 @@
 package com.streamsets.pipeline.container;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.EvictingQueue;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class PipelineRunner {
   private Pipeline pipeline;
   private volatile boolean active;
   private SourceTracker sourceTracker;
   private boolean preview;
+  private volatile Collection<RunOutput> storedOutputs;
   private volatile Configuration conf;
 
   public PipelineRunner(Pipeline pipeline, SourceTracker sourceTracker, boolean preview) {
@@ -38,17 +45,63 @@ public class PipelineRunner {
     boolean sourceFinished = false;
     active = true;
     while (active && !sourceFinished) {
-      PipelineBatch batch = new PipelineBatch(sourceTracker.getLastBatchId());
+      Collection<RunOutput> storedOutputsLocal = storedOutputs;
+      PipelineBatch batch = (storedOutputsLocal == null) ? new PipelineBatch(sourceTracker.getLastBatchId())
+                                                         : new PipelineBatchRunOutput(sourceTracker.getLastBatchId());
       if (conf != null) {
         pipeline.configure(conf);
         conf = null;
       }
       pipeline.runBatch(batch);
       sourceTracker.udpateLastBatchId(batch.getBatchId());
+      if (storedOutputsLocal != null) {
+        storedOutputsLocal.add((RunOutput) batch);
+      }
       if (batch.getBatchId() == null) {
         sourceFinished = true;
       }
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  public void setKeepOutputs(int numberOfOutputs) {
+    if (numberOfOutputs > 0) {
+      storedOutputs = (Collection<RunOutput>) (Collection)
+          Collections.synchronizedCollection(EvictingQueue.create(numberOfOutputs));
+    } else {
+      storedOutputs = null;
+    }
+  }
+
+  @SuppressWarnings({"unchecked", "SynchronizationOnLocalVariableOrMethodParameter"})
+  public List<RunOutput> getStoredRunOutputs() {
+    Collection<RunOutput> storedOutputsLocal = storedOutputs;
+    if (storedOutputsLocal != null) {
+      // the queue is synchronized, but iterator operations are not guarded by the lock,
+      // so we have to manually synchronize
+      synchronized (storedOutputsLocal) {
+        return new ArrayList<RunOutput>(storedOutputsLocal);
+      }
+    } else {
+      return Collections.EMPTY_LIST;
+    }
+  }
+
+  public RunOutput step() {
+    Preconditions.checkState(!preview, "Preview mode, cannot step");
+    Preconditions.checkState(!sourceTracker.isFinished(), "Pipeline source does not have more data");
+    PipelineBatchRunOutput batch = new PipelineBatchRunOutput(sourceTracker.getLastBatchId());
+    if (conf != null) {
+      pipeline.configure(conf);
+      conf = null;
+    }
+    pipeline.runBatch(batch);
+    sourceTracker.udpateLastBatchId(batch.getBatchId());
+    Collection<RunOutput> storedOutputsLocal = storedOutputs;
+    if (storedOutputsLocal != null) {
+      storedOutputsLocal.add(batch);
+    }
+    return batch;
   }
 
   public void stop() {
@@ -64,11 +117,11 @@ public class PipelineRunner {
     this.conf = conf;
   }
 
-  public PreviewOutput preview(String batchId) {
+  public RunOutput preview(String batchId) {
     Preconditions.checkState(preview, "Run mode, cannot preview");
     // if preview exhausts the source, we loop back to the current starting point
     batchId = (batchId == null) ? sourceTracker.getLastBatchId() : batchId;
-    PreviewPipelineBatch batch = new PreviewPipelineBatch(batchId);
+    PipelineBatchRunOutput batch = new PipelineBatchRunOutput(batchId);
     pipeline.runBatch(batch);
     return batch;
   }

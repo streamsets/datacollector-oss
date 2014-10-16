@@ -84,9 +84,11 @@ public class TestEndToEnd {
 
     }
   }
+
   public static class TTarget implements Target {
+
     @Override
-    public void init(Info info, Context context) {
+    public void init(Info info, Target.Context context) {
 
     }
 
@@ -107,7 +109,12 @@ public class TestEndToEnd {
   }
 
   public static class TSourceTracker implements SourceTracker {
+    private boolean finished;
     private String batchId;
+
+    public boolean isFinished() {
+      return finished;
+    }
 
     @Override
     public String getLastBatchId() {
@@ -117,34 +124,51 @@ public class TestEndToEnd {
     @Override
     public void udpateLastBatchId(String batchId) {
       this.batchId = batchId;
+      finished = batchId == null;
     }
   }
 
-  private Pipeline createPipeline() {
+  private Pipeline createPipeline(boolean complete) {
     MetricRegistry metrics = new MetricRegistry();
 
     Source.Info sourceInfo = new ModuleInfo("s", "1", "S", "si");
     Source source = new TSource();
+    Pipeline.Builder pb = new Builder(metrics, sourceInfo, source, ImmutableSet.of("lane"));
 
     Processor.Info processorInfo = new ModuleInfo("p", "1", "P", "pi");
     Processor processor = new TProcessor();
-
-    Target.Info targetInfo = new ModuleInfo("t", "1", "T", "ti");
-    Target target = new TTarget();
-
-    Pipeline.Builder pb = new Builder(metrics, sourceInfo, source, ImmutableSet.of("lane"));
     pb.add(processorInfo, processor, ImmutableSet.of("lane"), ImmutableSet.of("lane"));
-    pb.add(targetInfo, target, ImmutableSet.of("lane"));
-    return pb.build();
+
+    if (complete) {
+      Target.Info targetInfo = new ModuleInfo("t", "1", "T", "ti");
+      Target target = new TTarget();
+      pb.add(targetInfo, target, ImmutableSet.of("lane"));
+    }
+
+    return (complete) ? pb.build() : pb.buildPreview();
   }
 
   @Test
   public void testPreview() {
-    Pipeline pipeline = createPipeline();
+    Pipeline pipeline = createPipeline(true);
 
     pipeline.init();
     PipelineRunner pr = new PipelineRunner(pipeline, new TSourceTracker(), true);
-    PreviewOutput po = pr.preview(null);
+    RunOutput po = pr.preview(null);
+    while (po.getBatchId() != null) {
+      po = pr.preview(po.getBatchId());
+      System.out.println(po.getOutput());
+    }
+    pipeline.destroy();
+  }
+
+  @Test
+  public void testPreviewIncomplete() {
+    Pipeline pipeline = createPipeline(false);
+
+    pipeline.init();
+    PipelineRunner pr = new PipelineRunner(pipeline, new TSourceTracker(), true);
+    RunOutput po = pr.preview(null);
     while (po.getBatchId() != null) {
       po = pr.preview(po.getBatchId());
       System.out.println(po.getOutput());
@@ -154,7 +178,7 @@ public class TestEndToEnd {
 
   @Test
   public void testRun() {
-    Pipeline pipeline = createPipeline();
+    Pipeline pipeline = createPipeline(true);
 
     pipeline.init();
     PipelineRunner pr = new PipelineRunner(pipeline, new TSourceTracker(), false);

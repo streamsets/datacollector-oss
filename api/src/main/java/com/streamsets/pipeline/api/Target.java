@@ -17,7 +17,15 @@
  */
 package com.streamsets.pipeline.api;
 
-public interface Target extends Module<Module.Context> {
+import java.util.Set;
+
+public interface Target extends Module<Target.Context> {
+
+  public interface Context extends Module.Context {
+
+    public Set<String> getInputLanes();
+
+  }
 
   public void write(Batch batch);
 

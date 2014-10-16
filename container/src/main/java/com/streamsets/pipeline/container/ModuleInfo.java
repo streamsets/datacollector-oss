@@ -30,10 +30,8 @@ public class ModuleInfo implements Module.Info {
     if (name.isEmpty()) {
       return false;
     }
-    for (String invalidName : ContainerConstants.INVALID_MODULE_NAMES) {
-      if (name.equals(invalidName)) {
-        return  false;
-      }
+    if (name.startsWith(ContainerConstants.INVALID_INSTANCE_NAME_PREFIX)) {
+      return false;
     }
     for (char c : ContainerConstants.INVALID_MODULE_CHARACTERS.toCharArray()) {
       if (name.indexOf(c) > -1) {
@@ -44,8 +42,8 @@ public class ModuleInfo implements Module.Info {
   }
 
   private static String invalidNameMessage() {
-    return "cannot be null, cannot be empty, cannot be " + ContainerConstants.INVALID_MODULE_NAMES +
-           " and cannot contain any of the following characters '" + ContainerConstants.INVALID_MODULE_CHARACTERS + "'";
+    return "cannot be null, cannot be empty, cannot start with '" + ContainerConstants.INVALID_INSTANCE_NAME_PREFIX +
+           "' and cannot contain any of the following characters '" + ContainerConstants.INVALID_MODULE_CHARACTERS + "'";
   }
 
   public ModuleInfo(String name, String version, String description, String instanceName) {

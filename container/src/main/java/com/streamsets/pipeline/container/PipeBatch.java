@@ -94,9 +94,16 @@ public class PipeBatch implements BatchMaker, Batch {
   @Override
   public void addRecord(Record record, String... lanes) {
     Preconditions.checkState(!observer, "Observer cannot add records");
-    for (String lane : lanes) {
-      Preconditions.checkArgument(pipeOutput.containsKey(lane));
-      pipeOutput.get(lane).add(record);
+    if (lanes.length == 0) {
+      Preconditions.checkArgument(pipeOutput.size() == 1, String.format(
+          "No lane has been specified and the module '%s' has multiple output lanes '%s'",
+          pipe.getModuleInfo().getInstanceName(), pipe.getOutputLanes()));
+      pipeOutput.get(pipeOutput.keySet().iterator().next()).add(record);
+    } else {
+      for (String lane : lanes) {
+        Preconditions.checkArgument(pipeOutput.containsKey(lane));
+        pipeOutput.get(lane).add(record);
+      }
     }
   }
 
@@ -117,8 +124,15 @@ public class PipeBatch implements BatchMaker, Batch {
   @Override
   public Iterator<Record> getRecords(String... lanes) {
     List<Record> list = new ArrayList<Record>(512);
-    for (String lane : lanes) {
-      list.addAll(pipeInput.remove(lane));
+    if (lanes.length == 0) {
+      for (List<Record> lane : pipeInput.values()) {
+        list.addAll(lane);
+      }
+      pipeInput.clear();
+    } else {
+      for (String lane : lanes) {
+        list.addAll(pipeInput.remove(lane));
+      }
     }
     snapshotRecords(list);
     list = Collections.unmodifiableList(list);

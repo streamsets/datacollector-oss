@@ -23,7 +23,7 @@ import com.streamsets.pipeline.api.Record;
 import java.util.List;
 import java.util.Map;
 
-public interface PreviewOutput {
+public interface RunOutput {
 
   public interface ModuleOutput {
 

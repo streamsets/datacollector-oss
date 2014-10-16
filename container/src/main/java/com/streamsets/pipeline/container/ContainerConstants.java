@@ -23,7 +23,7 @@ import java.util.Set;
 
 public interface ContainerConstants {
 
-  public static final Set<String> INVALID_MODULE_NAMES = ImmutableSet.of("pipeline");
+  public static final String INVALID_INSTANCE_NAME_PREFIX = "pipeline.";
 
   public static final String INVALID_MODULE_CHARACTERS = ":()";
 

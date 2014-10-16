@@ -26,7 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PreviewPipelineBatch extends PipelineBatch implements PreviewOutput {
+public class PipelineBatchRunOutput extends PipelineBatch implements RunOutput {
   private List<ModuleOutput> output;
 
   private static class ModuleOutputImpl implements ModuleOutput {
@@ -54,7 +54,7 @@ public class PreviewPipelineBatch extends PipelineBatch implements PreviewOutput
     }
   }
 
-  public PreviewPipelineBatch(String previousBatchId) {
+  public PipelineBatchRunOutput(String previousBatchId) {
     super(previousBatchId, true);
     output = new ArrayList<ModuleOutput>();
   }

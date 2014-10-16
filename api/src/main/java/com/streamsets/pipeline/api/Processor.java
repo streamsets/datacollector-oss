@@ -17,9 +17,15 @@
  */
 package com.streamsets.pipeline.api;
 
+import java.util.Set;
+
 public interface Processor extends Module<Processor.Context> {
 
   public interface Context extends Module.Context {
+
+    public Set<String> getInputLanes();
+
+    public Set<String> getOutputLanes();
 
     public Record createRecord(String sourceInfo);
 

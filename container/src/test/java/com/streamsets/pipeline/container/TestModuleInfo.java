@@ -54,12 +54,12 @@ public class TestModuleInfo {
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidName() {
-    new ModuleInfo("pipeline", "v", "d", "n");
+    new ModuleInfo("pipeline.", "v", "d", "n");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidInstanceName() {
-    new ModuleInfo("n", "v", "d", "pipeline");
+    new ModuleInfo("n", "v", "d", "pipeline.x");
   }
 
   @Test(expected = IllegalArgumentException.class)

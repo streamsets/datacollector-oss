@@ -19,19 +19,41 @@ package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Module;
 import com.streamsets.pipeline.api.Module.Info;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Target;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 public class Pipeline {
+
+  private static class PreviewPlugTarget implements Target {
+
+    @Override
+    public void init(Info info, Context context) {
+    }
+
+    @Override
+    public void write(Batch batch) {
+      Iterator<Record> it = batch.getRecords();
+      while (it.hasNext()) {
+        it.next();
+      }
+    }
+
+    @Override
+    public void destroy() {
+    }
+  }
 
   public static class Builder {
     private boolean built;
@@ -94,15 +116,28 @@ public class Pipeline {
     }
 
     public Builder validate() {
-      Pipeline.validate(pipes.toArray(new Pipe[pipes.size()]));
+      Pipeline pipeline = new Pipeline(pipes.toArray(new Pipe[pipes.size()]));
+      pipeline.validate();
       return this;
     }
 
     public Pipeline build() {
       Preconditions.checkState(!built, "Builder has been built already, it cannot be reused");
       Pipeline pipeline = new Pipeline(pipes.toArray(new Pipe[pipes.size()]));
+      pipeline.validate();
       built = true;
       return pipeline;
+    }
+
+    public Pipeline buildPreview() {
+      Preconditions.checkState(!built, "Builder has been built already, it cannot be reused");
+      Pipeline pipeline = new Pipeline(pipes.toArray(new Pipe[pipes.size()]));
+      Set<String> openLanes = pipeline.findOpenLanes();
+      if (!openLanes.isEmpty()) {
+        add(new ModuleInfo("", "","", "pipeline-preview-plug", false), new PreviewPlugTarget(), openLanes);
+      }
+      built = true;
+      return new Pipeline(pipes.toArray(new Pipe[pipes.size()]));
     }
 
   }
@@ -112,11 +147,10 @@ public class Pipeline {
   private boolean destroyed;
 
   private Pipeline(Pipe[] pipes) {
-    validate(pipes);
     this.pipes = pipes;
   }
 
-  private static void validate(Pipe[] pipes) {
+  private Set<String> findOpenLanes() {
     Preconditions.checkNotNull(pipes, "pipes cannot be null");
     Set<String> moduleNames = new HashSet<String>();
     Set<String> currentLines = new HashSet<String>();
@@ -129,8 +163,13 @@ public class Pipeline {
       currentLines.removeAll(pipe.getConsumedLanes());
       currentLines.addAll(pipe.getOutputLanes());
     }
-    Preconditions.checkState(currentLines.isEmpty(), String.format(
-        "End of pipeline should not have any line, it has: %s", currentLines));
+    return currentLines;
+  }
+
+  private void validate() {
+    Set<String> openLanes = findOpenLanes();
+    Preconditions.checkState(openLanes.isEmpty(), String.format(
+        "End of pipeline should not have any line, it has: %s", openLanes));
   }
 
   public synchronized void init() {

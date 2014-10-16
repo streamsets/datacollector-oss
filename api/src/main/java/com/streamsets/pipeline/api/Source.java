@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.api;
 
+import java.util.Set;
+
 public interface Source extends Module<Source.Context> {
 
   public interface Context extends Module.Context {
@@ -24,6 +26,8 @@ public interface Source extends Module<Source.Context> {
     public Record createRecord(String sourceInfo);
 
     public Record createRecord(String sourceInfo, byte[] raw, String rawMime);
+
+    public Set<String> getOutputLanes();
 
   }
 
