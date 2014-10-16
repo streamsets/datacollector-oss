@@ -18,7 +18,6 @@
 package com.streamsets.pipeline.container;
 
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.config.Configuration;
 
 public class PipelineRunner {
   private Pipeline pipeline;

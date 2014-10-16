@@ -17,14 +17,18 @@
  */
 package com.streamsets.pipeline.api;
 
+import java.util.Date;
+
+// A field is immutable, doing special handling for Date, cloning it on value()
 public class Field {
   private Object value;
 
   public Field(Object value) {
     this.value = value;
   }
+
   public Object value() {
-    return value;
+    return (value != null && value instanceof Date) ? ((Date)value).clone() : value;
   }
 
 }

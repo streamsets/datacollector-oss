@@ -17,6 +17,25 @@
  */
 package com.streamsets.pipeline.api;
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.Date;
+
 public class TestField {
 
+  @Test
+  public void testField() {
+    Field f = new Field(null);
+    Assert.assertNull(f.value());
+
+    f = new Field("s");
+    Assert.assertEquals("s", f.value());
+
+    Date d = new Date();
+    f = new Field(d);
+    Assert.assertEquals(d, f.value());
+    Assert.assertNotSame(d, f.value());
+
+  }
 }

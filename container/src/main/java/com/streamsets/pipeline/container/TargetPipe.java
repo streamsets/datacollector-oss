@@ -22,7 +22,6 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Module;
 import com.streamsets.pipeline.api.Module.Info;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.config.Configuration;
 
 import java.util.HashSet;
 import java.util.List;

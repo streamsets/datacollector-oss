@@ -18,9 +18,6 @@
 package com.streamsets.pipeline.container;
 
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.config.Configuration;
-
-import java.util.Iterator;
 
 public interface Observer {
 

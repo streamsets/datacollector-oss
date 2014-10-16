@@ -19,7 +19,6 @@ package com.streamsets.pipeline.container;
 
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Module;
-import com.streamsets.pipeline.config.Configuration;
 
 class ObserverPipe extends Pipe {
 

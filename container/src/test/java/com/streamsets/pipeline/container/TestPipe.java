@@ -20,7 +20,6 @@ package com.streamsets.pipeline.container;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.Module;
 import com.streamsets.pipeline.api.Module.Info;
-import com.streamsets.pipeline.config.Configuration;
 import org.junit.Assert;
 import org.junit.Test;
 

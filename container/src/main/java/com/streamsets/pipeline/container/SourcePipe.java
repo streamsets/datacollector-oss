@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.Module;
 import com.streamsets.pipeline.api.Module.Info;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.config.Configuration;
 import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.HashSet;

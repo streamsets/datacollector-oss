@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.Module.Info;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.config.Configuration;
 
 import java.util.ArrayList;
 import java.util.Collections;

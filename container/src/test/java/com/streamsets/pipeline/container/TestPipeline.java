@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.Module;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.config.Configuration;
 import com.streamsets.pipeline.container.Pipeline.Builder;
 import org.junit.Assert;
 import org.junit.Test;
