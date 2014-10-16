@@ -45,8 +45,6 @@ public interface Module<C extends Module.Context> {
 
   public void init(Info info, C context);
 
-  public Info getInfo();
-
   public void destroy();
 
 }
