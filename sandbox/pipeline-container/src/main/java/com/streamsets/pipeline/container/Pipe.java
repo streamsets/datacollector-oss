@@ -1,0 +1,89 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.container;
+
+import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.config.Configuration;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+public abstract class Pipe {
+  public static final String INVALID_NAME = "pipeline";
+
+  private String name;
+  private Set<String> inputLanes;
+  private Set<String> outputLanes;
+  private Set<String> producedLanes;
+  private Set<String> consumedLanes;
+
+  public Pipe(String name, Set<String> inputLanes, Set<String> outputLanes) {
+    Preconditions.checkNotNull(name, "name cannot be null");
+    Preconditions.checkNotNull(inputLanes, "inputLanes cannot be null");
+    Preconditions.checkNotNull(outputLanes, "outputLanes cannot be null");
+    Preconditions.checkArgument(!name.equals(INVALID_NAME), String.format(
+        "A pipe name cannot be '%s'", INVALID_NAME));
+    Preconditions.checkArgument(!(inputLanes.isEmpty() && outputLanes.isEmpty()),
+                                "both, inputLanes and outputLanes, cannot be empty");
+    this.name = name;
+    this.inputLanes = Collections.unmodifiableSet(inputLanes);
+    this.outputLanes = Collections.unmodifiableSet(outputLanes);
+    consumedLanes = new HashSet<String>(inputLanes);
+    consumedLanes.removeAll(outputLanes);
+    consumedLanes = Collections.unmodifiableSet(consumedLanes);
+    producedLanes = new HashSet<String>(outputLanes);
+    producedLanes.removeAll(inputLanes);
+    producedLanes = Collections.unmodifiableSet(producedLanes);
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Set<String> getInputLanes() {
+    return inputLanes;
+  }
+
+  public Set<String> getOutputLanes() {
+    return outputLanes;
+  }
+
+  public Set<String> getProducedLanes() {
+    return producedLanes;
+  }
+
+  public Set<String> getConsumedLanes() {
+    return consumedLanes;
+  }
+
+  public void configure(Configuration conf) {
+    Preconditions.checkNotNull(conf, "conf cannot be null");
+    //TODO
+  }
+
+  public void processBatch(PipelineBatch batch) {
+    PipeBatch pipeBatch = new PipeBatch(this, batch);
+    pipeBatch.extractFromPipelineBatch();
+    processBatch(pipeBatch);
+    pipeBatch.flushBackToPipelineBatch();
+  }
+
+  protected abstract void processBatch(PipeBatch pipeBatch);
+
+}
