@@ -71,11 +71,11 @@ public class RecordImpl implements Record {
 
   }
 
-  public RecordImpl(byte[] raw, String rawMime, String module, String source) {
+  public RecordImpl(String module, String source, byte[] raw, String rawMime) {
     Preconditions.checkNotNull(module, "module cannot be null");
     Preconditions.checkNotNull(source, "source cannot be null");
     previous = null;
-    this.raw = raw.clone();
+    this.raw = (raw != null) ? raw.clone() : null;
     this.rawMime = rawMime;
     headerData = new VersionedSimpleMap<String, String>();
     headerData.put(MODULE, module);

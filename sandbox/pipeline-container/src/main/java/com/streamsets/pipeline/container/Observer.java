@@ -24,6 +24,10 @@ import java.util.Iterator;
 
 public interface Observer {
 
+  public void init();
+
+  public void destroy();
+
   public void configure(Configuration conf);
 
   public boolean isActive();

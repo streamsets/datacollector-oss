@@ -17,11 +17,14 @@
  */
 package com.streamsets.pipeline.container;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.Module;
+import com.streamsets.pipeline.api.Module.Info;
 import com.streamsets.pipeline.api.Source;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,21 +32,19 @@ public class TestSourcePipe {
 
   @Test(expected = NullPointerException.class)
   public void testInvalidConstructor() {
-    Module.Info info = Mockito.mock(Module.Info.class);
-    Mockito.when(info.getInstance()).thenReturn("name");
+    Module.Info info = new ModuleInfo("n", "v", "d", "in");
     Set<String> output = new HashSet<String>();
     output.add("a");
-    new SourcePipe(info, null, output);
+    new SourcePipe(new ArrayList<Info>(), new MetricRegistry(), info, null, output);
   }
 
   @Test
   public void testConstructor() {
-    Module.Info info = Mockito.mock(Module.Info.class);
-    Mockito.when(info.getInstance()).thenReturn("name");
+    Module.Info info = new ModuleInfo("n", "v", "d", "in");
     Source source = Mockito.mock(Source.class);
     Set<String> output = new HashSet<String>();
     output.add("a");
-    new SourcePipe(info, source, output);
+    new SourcePipe(new ArrayList<Info>(), new MetricRegistry(), info, source, output);
   }
 
 }

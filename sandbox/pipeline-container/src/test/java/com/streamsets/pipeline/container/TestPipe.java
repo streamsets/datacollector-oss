@@ -17,18 +17,31 @@
  */
 package com.streamsets.pipeline.container;
 
+import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.api.Module;
+import com.streamsets.pipeline.api.Module.Info;
 import com.streamsets.pipeline.config.Configuration;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class TestPipe {
 
   public static class TPipe extends Pipe {
-    public TPipe(String name, Set<String> inputLines, Set<String> outputLines) {
-      super(name, inputLines, outputLines);
+
+    public TPipe(Module.Info info, Set<String> inputLines, Set<String> outputLines) {
+      super(new ArrayList<Info>(), new MetricRegistry(), info, inputLines, outputLines);
+    }
+
+    @Override
+    public void init() {
+    }
+
+    @Override
+    public void destroy() {
     }
 
     @Override
@@ -47,44 +60,39 @@ public class TestPipe {
 
   @Test(expected = NullPointerException.class)
   public void testInvalidConstructor2() {
-    new TPipe("name", null, null);
+    ModuleInfo info = new ModuleInfo("m", "1", "d", "i");
+    new TPipe(info, null, null);
   }
 
   @Test(expected = NullPointerException.class)
   public void testInvalidConstructor3() {
-    new TPipe("name", new HashSet<String>(), null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidConstructor4() {
-    new TPipe(Pipe.INVALID_NAME, new HashSet<String>(), new HashSet<String>());
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidConstructor5() {
-    new TPipe(Pipe.INVALID_NAME, new HashSet<String>(), new HashSet<String>());
+    ModuleInfo info = new ModuleInfo("m", "1", "d", "i");
+    new TPipe(info, new HashSet<String>(), null);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidConstructor6() {
-    new TPipe("name", new HashSet<String>(), new HashSet<String>());
+    ModuleInfo info = new ModuleInfo("m", "1", "d", "i");
+    new TPipe(info, new HashSet<String>(), new HashSet<String>());
   }
 
   @Test
   public void testName() {
+    ModuleInfo info = new ModuleInfo("m", "1", "d", "i");
     Set<String> input = new HashSet<String>();
     input.add("i");
     Set<String> output = new HashSet<String>();
-    Pipe pipe = new TPipe("name", input, output);
-    Assert.assertEquals("name", pipe.getName());
+    Pipe pipe = new TPipe(info, input, output);
+    Assert.assertEquals(info, pipe.getModuleInfo());
   }
 
   @Test
   public void testWithInput() {
+    ModuleInfo info = new ModuleInfo("m", "1", "d", "i");
     Set<String> input = new HashSet<String>();
     input.add("i");
     Set<String> output = new HashSet<String>();
-    Pipe pipe = new TPipe("name", input, output);
+    Pipe pipe = new TPipe(info, input, output);
     Assert.assertEquals(input, pipe.getInputLanes());
     Assert.assertEquals(output, pipe.getOutputLanes());
     Assert.assertEquals(input, pipe.getConsumedLanes());
@@ -93,10 +101,11 @@ public class TestPipe {
 
   @Test
   public void testWithOutput() {
+    ModuleInfo info = new ModuleInfo("m", "1", "d", "i");
     Set<String> input = new HashSet<String>();
     Set<String> output = new HashSet<String>();
     output.add("o");
-    Pipe pipe = new TPipe("name", input, output);
+    Pipe pipe = new TPipe(info, input, output);
     Assert.assertEquals(input, pipe.getInputLanes());
     Assert.assertEquals(output, pipe.getOutputLanes());
     Assert.assertTrue(pipe.getConsumedLanes().isEmpty());
@@ -105,11 +114,12 @@ public class TestPipe {
 
   @Test
   public void testWithSameInputOutput() {
+    ModuleInfo info = new ModuleInfo("m", "1", "d", "i");
     Set<String> input = new HashSet<String>();
     input.add("l");
     Set<String> output = new HashSet<String>();
     output.add("l");
-    Pipe pipe = new TPipe("name", input, output);
+    Pipe pipe = new TPipe(info, input, output);
     Assert.assertEquals(input, pipe.getInputLanes());
     Assert.assertEquals(output, pipe.getOutputLanes());
     Assert.assertTrue(pipe.getProducedLanes().isEmpty());
@@ -118,13 +128,14 @@ public class TestPipe {
 
   @Test
   public void testWithDiffInputOutput() {
+    ModuleInfo info = new ModuleInfo("m", "1", "d", "i");
     Set<String> input = new HashSet<String>();
     input.add("a");
     input.add("b");
     Set<String> output = new HashSet<String>();
     output.add("b");
     output.add("c");
-    Pipe pipe = new TPipe("name", input, output);
+    Pipe pipe = new TPipe(info, input, output);
     Assert.assertEquals(input, pipe.getInputLanes());
     Assert.assertEquals(output, pipe.getOutputLanes());
     Assert.assertEquals(1, pipe.getProducedLanes().size());

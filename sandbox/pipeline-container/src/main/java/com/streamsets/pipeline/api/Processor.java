@@ -21,7 +21,7 @@ public interface Processor extends Module<Processor.Context> {
 
   public interface Context extends Module.Context {
 
-    public Record createRecord(Record parentRecord);
+    public Record createRecord(String sourceInfo);
 
     public Record cloneRecord(Record record);
 

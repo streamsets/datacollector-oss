@@ -17,23 +17,39 @@
  */
 package com.streamsets.pipeline.container;
 
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Module;
+import com.streamsets.pipeline.api.Module.Info;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.config.Configuration;
+import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-class SourcePipe extends Pipe {
+class SourcePipe extends Pipe implements Source.Context {
   private static final Set<String> EMPTY_INPUT = new HashSet<String>();
 
   private Source source;
 
-  public SourcePipe(Module.Info moduleInfo, Source source, Set<String> outputLanes) {
-    super(moduleInfo.getInstance(), EMPTY_INPUT, outputLanes);
+  public SourcePipe(List<Info> pipelineInfo, MetricRegistry metrics, Module.Info info, Source source,
+      Set<String> outputLanes) {
+    super(pipelineInfo, metrics, info, EMPTY_INPUT, outputLanes);
     Preconditions.checkNotNull(source, "source cannot be null");
     this.source = source;
+  }
+
+  @Override
+  public void init() {
+    source.init(getModuleInfo(), this);
+  }
+
+  @Override
+  public void destroy() {
+    source.destroy();
   }
 
   @Override
@@ -47,6 +63,18 @@ class SourcePipe extends Pipe {
     Preconditions.checkNotNull(batch, "batch cannot be null");
     String newBatchId = source.produce(batch.getPreviousBatchId(), batch);
     batch.setBatchId(newBatchId);
+  }
+
+  // Source.Context
+
+  @Override
+  public Record createRecord(String sourceInfo) {
+    return new RecordImpl(getModuleInfo().getName(), sourceInfo, null, null);
+  }
+
+  @Override
+  public Record createRecord(String sourceInfo, byte[] raw, String rawMime) {
+    return new RecordImpl(getModuleInfo().getName(), sourceInfo, raw, rawMime);
   }
 
 }

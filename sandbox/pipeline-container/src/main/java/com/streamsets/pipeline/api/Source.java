@@ -21,7 +21,9 @@ public interface Source extends Module<Source.Context> {
 
   public interface Context extends Module.Context {
 
-    public Record createRecord(String recordLocation);
+    public Record createRecord(String sourceInfo);
+
+    public Record createRecord(String sourceInfo, byte[] raw, String rawMime);
 
   }
 

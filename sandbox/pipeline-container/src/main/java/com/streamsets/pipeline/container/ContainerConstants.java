@@ -15,38 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.container;
 
-import com.codahale.metrics.MetricRegistry;
+import com.google.common.collect.ImmutableSet;
 
-import java.util.List;
+import java.util.Set;
 
-public interface Module<C extends Module.Context> {
+public interface ContainerConstants {
 
-  public interface Info {
+  public static final Set<String> INVALID_MODULE_NAMES = ImmutableSet.of("pipeline");
 
-    public String getName();
-
-    public String getVersion();
-
-    public String getDescription();
-
-    public String getInstanceName();
-
-  }
-
-  public interface Context {
-
-    public List<Info> getPipelineInfo();
-
-    public MetricRegistry getMetrics();
-
-  }
-
-  public void init(Info info, C context);
-
-  public Info getInfo();
-
-  public void destroy();
+  public static final String INVALID_MODULE_CHARACTERS = ":()";
 
 }

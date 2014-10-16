@@ -17,21 +17,38 @@
  */
 package com.streamsets.pipeline.container;
 
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Module;
+import com.streamsets.pipeline.api.Module.Info;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Processor.Context;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.Configuration;
+import com.streamsets.pipeline.record.RecordImpl;
 
+import java.util.List;
 import java.util.Set;
 
-class ProcessorPipe extends Pipe {
+class ProcessorPipe extends Pipe implements Context {
 
   private Processor processor;
 
-  public ProcessorPipe(Module.Info moduleInfo, Processor processor, Set<String> inputLanes, Set<String> outputLanes) {
-    super(moduleInfo.getInstance(), inputLanes, outputLanes);
+  public ProcessorPipe(List<Info> pipelineInfo, MetricRegistry metrics, Module.Info moduleInfo, Processor processor,
+      Set<String> inputLanes, Set<String> outputLanes) {
+    super(pipelineInfo, metrics, moduleInfo, inputLanes, outputLanes);
     Preconditions.checkNotNull(processor, "processor cannot be null");
     this.processor = processor;
+  }
+
+  @Override
+  public void init() {
+    processor.init(getModuleInfo(), this);
+  }
+
+  @Override
+  public void destroy() {
+    processor.destroy();
   }
 
   @Override
@@ -45,6 +62,18 @@ class ProcessorPipe extends Pipe {
     Preconditions.checkNotNull(batch, "batch cannot be null");
     processor.process(batch, batch);
     //LOG warning if !batch.isInputFullyConsumed()
+  }
+
+  // Processor.Context
+
+  @Override
+  public Record createRecord(String sourceInfo) {
+    return new RecordImpl(getModuleInfo().getName(), sourceInfo, null, null);
+  }
+
+  @Override
+  public Record cloneRecord(Record record) {
+    return new RecordImpl((RecordImpl)record, "(cloned)");
   }
 
 }
