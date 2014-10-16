@@ -174,6 +174,7 @@ public class Pipeline {
       batch.createLines(pipe.getOutputLanes());
       pipe.processBatch(batch);
       batch.deleteLines(pipe.getConsumedLanes());
+      batch.pipeCheckPoint(pipe);
     }
     Preconditions.checkState(batch.isEmpty(), String.format("Batch should be empty, it has: %s", batch.getLanes()));
   }

@@ -45,7 +45,7 @@ public class TestEndToEnd {
     public String produce(String lastBatchId, BatchMaker batchMaker) {
       int count = (lastBatchId == null) ? 0 : Integer.parseInt(lastBatchId);
       for (int i = 0; i < 2; i++) {
-        Record record = context.createRecord("batch:" + count);
+        Record record = context.createRecord("id:" + count + ":" + i);
         record.setField("batch", new Field(count));
         record.setField("idx", new Field(i));
         record.setField("name", new Field("" + count + ":" + i));
@@ -73,6 +73,7 @@ public class TestEndToEnd {
       Iterator<Record> it = batch.getRecords("lane");
       while (it.hasNext()) {
         Record record = it.next();
+        record.setField("idx", new Field(100 + counter++));
         record.setField("p-added", new Field(counter++));
         batchMaker.addRecord(record, "lane");
       }
@@ -119,21 +120,42 @@ public class TestEndToEnd {
     }
   }
 
-  @Test
-  public void testRun() {
+  private Pipeline createPipeline() {
     MetricRegistry metrics = new MetricRegistry();
+
     Source.Info sourceInfo = new ModuleInfo("s", "1", "S", "si");
     Source source = new TSource();
+
     Processor.Info processorInfo = new ModuleInfo("p", "1", "P", "pi");
     Processor processor = new TProcessor();
+
     Target.Info targetInfo = new ModuleInfo("t", "1", "T", "ti");
     Target target = new TTarget();
 
     Pipeline.Builder pb = new Builder(metrics, sourceInfo, source, ImmutableSet.of("lane"));
     pb.add(processorInfo, processor, ImmutableSet.of("lane"), ImmutableSet.of("lane"));
     pb.add(targetInfo, target, ImmutableSet.of("lane"));
+    return pb.build();
+  }
 
-    Pipeline pipeline = pb.build();
+  @Test
+  public void testPreview() {
+    Pipeline pipeline = createPipeline();
+
+    pipeline.init();
+    PipelineRunner pr = new PipelineRunner(pipeline, new TSourceTracker(), true);
+    PreviewOutput po = pr.preview(null);
+    while (po.getBatchId() != null) {
+      po = pr.preview(po.getBatchId());
+      System.out.println(po.getOutput());
+    }
+    pipeline.destroy();
+  }
+
+  @Test
+  public void testRun() {
+    Pipeline pipeline = createPipeline();
+
     pipeline.init();
     PipelineRunner pr = new PipelineRunner(pipeline, new TSourceTracker(), false);
     pr.run();

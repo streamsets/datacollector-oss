@@ -1,5 +1,3 @@
-package com.streamsets.pipeline.container;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,8 +15,24 @@ package com.streamsets.pipeline.container;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.container;
+
+import com.streamsets.pipeline.api.Module;
+import com.streamsets.pipeline.api.Record;
+
+import java.util.List;
+import java.util.Map;
+
 public interface PreviewOutput {
+
+  public interface ModuleOutput {
+
+    public Module.Info getModuleInfo();
+
+    public Map<String, List<Record>> getOutput();
+  }
 
   public String getBatchId();
 
+  public List<ModuleOutput> getOutput();
 }

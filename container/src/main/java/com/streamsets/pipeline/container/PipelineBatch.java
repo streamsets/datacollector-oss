@@ -112,4 +112,7 @@ public class PipelineBatch {
     records.putAll(map);
   }
 
+  public void pipeCheckPoint(Pipe pipe) {
+  }
+
 }

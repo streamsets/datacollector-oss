@@ -65,7 +65,7 @@ public class PipelineRunner {
   }
 
   public PreviewOutput preview(String batchId) {
-    Preconditions.checkState(!preview, "Run mode, cannot preview");
+    Preconditions.checkState(preview, "Run mode, cannot preview");
     // if preview exhausts the source, we loop back to the current starting point
     batchId = (batchId == null) ? sourceTracker.getLastBatchId() : batchId;
     PreviewPipelineBatch batch = new PreviewPipelineBatch(batchId);
