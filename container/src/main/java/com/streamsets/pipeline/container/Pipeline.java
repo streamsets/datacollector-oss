@@ -98,6 +98,7 @@ public class Pipeline {
       Preconditions.checkArgument(!input.isEmpty(), "input cannot be empty");
       Preconditions.checkArgument(!output.isEmpty(), "output cannot be empty");
       ProcessorPipe processorPipe = new ProcessorPipe(modulesInfoRO, metrics, info, processor, input, output);
+      modulesInfo.add(info);
       pipes.add(processorPipe);
       if (observer != null) {
         ObserverPipe observerPipe = new ObserverPipe(processorPipe, observer);
@@ -111,6 +112,7 @@ public class Pipeline {
       Preconditions.checkNotNull(target, "target cannot be null");
       Preconditions.checkNotNull(input, "input cannot be null");
       Preconditions.checkArgument(!input.isEmpty(), "input cannot be empty");
+      modulesInfo.add(info);
       pipes.add(new TargetPipe(modulesInfoRO, metrics, info, target, input));
       return this;
     }
