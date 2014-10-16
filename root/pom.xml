@@ -68,6 +68,18 @@
     -->
     <dependencies>
       <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-pipeline-api</artifactId>
+        <version>${project.version}</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-pipeline-container</artifactId>
+        <version>${project.version}</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit.version}</version>

@@ -16,42 +16,33 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.streamsets</groupId>
+    <artifactId>streamsets-root</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../root</relativePath>
+  </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-all</artifactId>
+  <artifactId>streamsets-pipeline-api</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets All</description>
-  <name>StreamSets All</name>
-  <packaging>pom</packaging>
+  <description>StreamSets Pipeline API</description>
+  <name>StreamSets Pipeline API</name>
+  <packaging>jar</packaging>
 
-  <organization>
-    <name>StreamSets</name>
-    <url>http://www.streamsets.com</url>
-  </organization>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+    </dependency>
+  </dependencies>
 
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
-
-  <modules>
-    <module>root</module>
-    <module>api</module>
-    <module>container</module>
-  </modules>
-
-  <profiles>
-    <profile>
-      <id>sandbox</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <modules>
-        <module>root</module>
-        <module>sandbox</module>
-      </modules>
-    </profile>
-  </profiles>
+  <build>
+    <plugins>
+    </plugins>
+  </build>
 
 </project>
