@@ -131,4 +131,9 @@ public class RecordImpl implements Record {
   public String toString(Locale locale) {
     return null;
   }
+
+  public String toString() {
+    return String.format("Record headers %s, fields %s", headerData.toString(), fieldData.toString());
+  }
+
 }

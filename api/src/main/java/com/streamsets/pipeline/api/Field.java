@@ -31,4 +31,8 @@ public class Field {
     return (value != null && value instanceof Date) ? ((Date)value).clone() : value;
   }
 
+  public String toString() {
+    return (value != null) ? value.toString() : null;
+  }
+  
 }

@@ -37,7 +37,7 @@ public class PipelineRunner {
     Preconditions.checkState(!preview, "Preview mode, cannot run");
     boolean sourceFinished = false;
     active = true;
-    while (active || sourceFinished) {
+    while (active && !sourceFinished) {
       PipelineBatch batch = new PipelineBatch(sourceTracker.getLastBatchId());
       if (conf != null) {
         pipeline.configure(conf);

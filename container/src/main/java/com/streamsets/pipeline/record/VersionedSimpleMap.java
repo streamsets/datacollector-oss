@@ -112,4 +112,12 @@ public class VersionedSimpleMap<K, V>implements SimpleMap<K,V> {
     return keys;
   }
 
+  public String toString() {
+    Map<K, V> flatMap = new LinkedHashMap<K, V>();
+    for (K key : getKeys()) {
+      flatMap.put(key, get(key));
+    }
+    return flatMap.toString();
+  }
+
 }

@@ -68,7 +68,7 @@ class SourcePipe extends Pipe implements Source.Context {
 
   @Override
   public Record createRecord(String sourceInfo) {
-    return new RecordImpl(getModuleInfo().getName(), sourceInfo, null, null);
+    return new RecordImpl(getModuleInfo().getInstanceName(), sourceInfo, null, null);
   }
 
   @Override
