@@ -24,17 +24,20 @@ import org.slf4j.LoggerFactory;
 public class Main {
 
   public static void main(String[] args) throws Exception {
+    Logger log = null;
     try {
       ObjectGraph dagger = ObjectGraph.create(PipelineAgentModule.class);
       final Agent agent = dagger.get(MainAgent.class);
 
       agent.init();
-      final Logger log = LoggerFactory.getLogger(Main.class);
+      log = LoggerFactory.getLogger(Main.class);
+      log.info("Starting ....");
       log.debug("Initialized");
+      final Logger finalLog = log;
       Thread shutdownHookThread = new Thread("Main.shutdownHook") {
         @Override
         public void run() {
-          log.debug("Stopping, reason: SIGTERM (kill)");
+          finalLog.debug("Stopping, reason: SIGTERM (kill)");
           agent.stop();
         }
       };
@@ -46,6 +49,9 @@ public class Main {
       agent.stop();
       System.exit(0);
     } catch (Throwable ex) {
+      if (log != null) {
+        log.error("Abnormal exit: {}", ex.getMessage(), ex);
+      }
       System.out.println();
       System.out.printf("Abnormal exit: %s", ex.getMessage());
       System.out.printf("Check STDERR for more details");

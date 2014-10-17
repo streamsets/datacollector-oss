@@ -17,67 +17,80 @@
  */
 package com.streamsets.pipeline.http;
 
-import com.codahale.metrics.JmxReporter;
-import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Set;
 
 public class WebServerImpl implements WebServer {
-  private MetricRegistry metrics;
+  private static final Logger LOG = LoggerFactory.getLogger(WebServerImpl.class);
+
+  private int port;
   private Set<ContextConfigurator> contextConfigurators;
-  private JmxReporter reporter;
   private Server server;
   private volatile boolean started;
   private volatile boolean destroyed;
 
   @Inject
-  public WebServerImpl(MetricRegistry metrics, Set<ContextConfigurator> contextConfigurators) {
-    this.metrics = metrics;
+  public WebServerImpl(Set<ContextConfigurator> contextConfigurators) {
     this.contextConfigurators = contextConfigurators;
   }
 
   public void init() {
-    server = new Server(8080);
+    LOG.debug("Initializing");
+    port = 8080;
+    server = new Server(port);
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
     context.setContextPath("/");
     server.setHandler(context);
     for (ContextConfigurator cc : contextConfigurators) {
-      cc.configure(context);
+      cc.init(context);
     }
     server.setHandler(context);
+    LOG.debug("Initialized");
   }
 
   @Override
   public synchronized void start() {
+    LOG.debug("Starting");
     Preconditions.checkState(!started, "Already started");
     Preconditions.checkState(!destroyed, "Already destroyed");
     started = true;
-    reporter = JmxReporter.forRegistry(metrics).build();
-    reporter.start();
+    for (ContextConfigurator cc : contextConfigurators) {
+      cc.start();
+    }
     try {
       server.start();
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
+    LOG.debug("Started on port '{}'", port);
   }
 
   @Override
   public synchronized void stop() {
     Preconditions.checkState(started, "Not started");
     if (!destroyed) {
+      LOG.debug("Stopping");
       destroyed = true;
       try {
         server.stop();
       } catch (Exception ex) {
-        throw new RuntimeException(ex);
+        LOG.error("Stopping Jetty: {}", ex.getMessage(), ex);
       } finally {
-        reporter.stop();
-        reporter.close();
+        for (ContextConfigurator cc : contextConfigurators) {
+          try {
+            cc.stop();
+          } catch (Exception ex) {
+            LOG.error("Stopping ContextConfigurator: {}", ex.getMessage(), ex);
+          }
+        }
       }
+      LOG.debug("Stopped");
     }
   }
 }

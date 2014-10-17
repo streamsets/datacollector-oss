@@ -19,8 +19,14 @@ package com.streamsets.pipeline.http;
 
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
-public interface ContextConfigurator {
+public abstract class ContextConfigurator {
 
-  public void configure(ServletContextHandler context);
+  public abstract void init(ServletContextHandler context);
+
+  public void start() {
+  }
+
+  public void stop() {
+  }
 
 }

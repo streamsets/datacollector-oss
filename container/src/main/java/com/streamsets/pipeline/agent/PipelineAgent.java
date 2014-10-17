@@ -18,11 +18,15 @@
 package com.streamsets.pipeline.agent;
 
 import com.streamsets.pipeline.http.WebServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.concurrent.CountDownLatch;
 
 public class PipelineAgent implements Agent {
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineAgent.class);
+
   private WebServer webServer;
   private CountDownLatch latch;
 
@@ -34,16 +38,18 @@ public class PipelineAgent implements Agent {
 
   @Override
   public void init() {
-    System.out.println("init");
+    LOG.debug("Initializing");
     webServer.init();
+    LOG.debug("Initialized");
   }
 
   @Override
   public void run() {
-    System.out.println("run");
+    LOG.debug("Starting");
     webServer.start();
 
 
+    LOG.debug("Running");
     try {
       latch.await();
     } catch (InterruptedException ex) {
@@ -57,6 +63,8 @@ public class PipelineAgent implements Agent {
 
   @Override
   public void stop() {
+    LOG.debug("Stopping");
     webServer.stop();
+    LOG.debug("Stopped");
   }
 }

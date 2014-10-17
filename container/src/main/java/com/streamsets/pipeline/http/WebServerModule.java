@@ -17,8 +17,12 @@
  */
 package com.streamsets.pipeline.http;
 
+import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.container.ContainerModule;
+import com.streamsets.pipeline.container.PipelineRunner;
 import com.streamsets.pipeline.metrics.MetricsModule;
+import com.streamsets.pipeline.restapi.PipelineRestAPI;
 import com.streamsets.pipeline.restapi.RestAPI;
 import dagger.Module;
 import dagger.Provides;
@@ -27,7 +31,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-@Module(library = true, includes = {MetricsModule.class})
+@Module(library = true, includes = {MetricsModule.class, ContainerModule.class})
 public class WebServerModule {
 
   @Provides
@@ -38,11 +42,24 @@ public class WebServerModule {
   @Provides(type = Type.SET)
   ContextConfigurator provideJMX(final MetricRegistry metrics) {
     return new ContextConfigurator() {
+      private JmxReporter reporter;
       @Override
-      public void configure(ServletContextHandler context) {
+      public void init(ServletContextHandler context) {
         context.setAttribute("com.codahale.metrics.servlets.MetricsServlet.registry", metrics);
         ServletHolder servlet = new ServletHolder(new JMXJsonServlet());
         context.addServlet(servlet, "/jmx");
+      }
+
+      @Override
+      public void start() {
+        reporter = JmxReporter.forRegistry(metrics).build();
+        reporter.start();
+      }
+
+      @Override
+      public void stop() {
+        reporter.stop();
+        reporter.close();
       }
     };
   }
@@ -51,11 +68,21 @@ public class WebServerModule {
   ContextConfigurator provideJersey(final MetricRegistry metrics) {
     return new ContextConfigurator() {
       @Override
-      public void configure(ServletContextHandler context) {
+      public void init(ServletContextHandler context) {
         context.setAttribute("com.codahale.metrics.servlets.MetricsServlet.registry", metrics);
         ServletHolder servlet = new ServletHolder(new ServletContainer());
         servlet.setInitParameter("jersey.config.server.provider.packages", RestAPI.class.getPackage().getName());
         context.addServlet(servlet, "/rest/*");
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator providePipelineRunnerForPreview(final PipelineRunner pipelineRunner) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(PipelineRestAPI.PIPELINE, pipelineRunner);
       }
     };
   }
