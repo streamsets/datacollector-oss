@@ -17,31 +17,46 @@
  */
 package com.streamsets.pipeline.agent;
 
+import com.streamsets.pipeline.http.WebServer;
+
 import javax.inject.Inject;
+import java.util.concurrent.CountDownLatch;
 
 public class PipelineAgent implements Agent {
+  private WebServer webServer;
+  private CountDownLatch latch;
 
   @Inject
-  public PipelineAgent() {
+  public PipelineAgent(WebServer webServer) {
+    this.webServer = webServer;
+    latch = new CountDownLatch(1);
   }
 
   @Override
   public void init() {
     System.out.println("init");
+    webServer.init();
   }
 
   @Override
   public void run() {
     System.out.println("run");
+    webServer.start();
+
+
     try {
-      Thread.sleep(10);
+      latch.await();
     } catch (InterruptedException ex) {
 
     }
   }
 
+  public void shutdown() {
+    latch.countDown();
+  }
+
   @Override
   public void stop() {
-    System.out.println("stop");
+    webServer.stop();
   }
 }

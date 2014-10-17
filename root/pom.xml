@@ -53,6 +53,7 @@
     <log4j.version>1.2.17</log4j.version>
     <slf4j.version>1.7.7</slf4j.version>
     <jaxrpc.version>2.0.1</jaxrpc.version>
+    <servlet.version>3.0.1</servlet.version>
     <jetty.version>9.2.3.v20140905</jetty.version>
     <commons-codec.version>1.9</commons-codec.version>
     <commons-cli.version>1.2</commons-cli.version>
@@ -120,6 +121,12 @@
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-servlet</artifactId>
         <version>${jetty.version}</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>${servlet.version}</version>
         <scope>compile</scope>
       </dependency>
       <dependency>

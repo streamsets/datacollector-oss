@@ -15,19 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.agent;
+package com.streamsets.pipeline.http;
 
-import com.streamsets.pipeline.http.WebServerModule;
-import dagger.Module;
-import dagger.Provides;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 
-import javax.inject.Singleton;
+public interface ContextConfigurator {
 
-@Module(injects = MainAgent.class, includes = {WebServerModule.class})
-public class PipelineAgentModule {
-
-  @Provides @Singleton Agent provideAgent(PipelineAgent agent) {
-    return agent;
-  }
+  public void configure(ServletContextHandler context);
 
 }
