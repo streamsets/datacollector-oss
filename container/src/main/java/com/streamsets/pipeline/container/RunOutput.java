@@ -17,12 +17,15 @@
  */
 package com.streamsets.pipeline.container;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.streamsets.pipeline.api.Module;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.serde.RunOutputSerializer;
 
 import java.util.List;
 import java.util.Map;
 
+@JsonSerialize(using = RunOutputSerializer.class)
 public interface RunOutput {
 
   public interface ModuleOutput {

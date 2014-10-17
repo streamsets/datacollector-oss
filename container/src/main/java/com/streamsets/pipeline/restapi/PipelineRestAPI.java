@@ -40,11 +40,11 @@ public class PipelineRestAPI {
 
   @POST
   @Path("/step")
-  @Produces("application/json")
+  @Produces(MediaType.APPLICATION_JSON)
   public Response step(@Context ServletContext context, @QueryParam("batchId") String batchId) {
     PipelineRunner runner = getRunner(context);
     RunOutput output = runner.preview(batchId);
-    return Response.ok().type(MediaType.APPLICATION_JSON_TYPE).entity(output).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(output).build();
   }
 
 }
