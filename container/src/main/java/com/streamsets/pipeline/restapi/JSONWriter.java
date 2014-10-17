@@ -62,6 +62,7 @@ public class JSONWriter implements MessageBodyWriter<Object> {
       OutputStream outputStream) throws IOException, WebApplicationException {
     Writer writer = new OutputStreamWriter(outputStream);
     ObjectMapper jsonMapper = new ObjectMapper();
+    // we need to register a serializer for RunOutput
     jsonMapper.writerWithDefaultPrettyPrinter().writeValue(writer, obj);
   }
 
