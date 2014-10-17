@@ -37,9 +37,9 @@ PIPELINE_DIST=${BASEDIR}
 
 PIPELINE_HOME=${PIPELINE_HOME:=${PIPELINE_DIST}}
 
-if [ -f ${PIPELINE_HOME}/libexec/p-agent-env.sh ]
+if [ -f ${PIPELINE_HOME}/libexec/pipeline-env.sh ]
 then
-  source ${PIPELINE_HOME}/libexec/p-agent-env.sh
+  source ${PIPELINE_HOME}/libexec/pipeline-env.sh
 fi
 
 PIPELINE_CONF=${PIPELINE_CONF:=${PIPELINE_HOME}/conf}
