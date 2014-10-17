@@ -43,6 +43,18 @@
 
   <profiles>
     <profile>
+      <id>dist</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>root</module>
+        <module>api</module>
+        <module>container</module>
+        <module>dist</module>
+      </modules>
+    </profile>
+    <profile>
       <id>sandbox</id>
       <activation>
         <activeByDefault>false</activeByDefault>
