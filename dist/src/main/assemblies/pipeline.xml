@@ -60,6 +60,12 @@
       <outputDirectory>/conf</outputDirectory>
     </fileSet>
 
+    <!-- log -->
+    <fileSet>
+      <directory>${basedir}/src/main/log</directory>
+      <outputDirectory>/log</outputDirectory>
+    </fileSet>
+
   </fileSets>
 
   <dependencySets>
