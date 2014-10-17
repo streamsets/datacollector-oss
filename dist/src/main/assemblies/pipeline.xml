@@ -72,6 +72,12 @@
       <outputDirectory>/data</outputDirectory>
     </fileSet>
 
+    <!-- static web -->
+    <fileSet>
+      <directory>${basedir}/src/main/emptydir</directory>
+      <outputDirectory>/static-web</outputDirectory>
+    </fileSet>
+
   </fileSets>
 
   <dependencySets>

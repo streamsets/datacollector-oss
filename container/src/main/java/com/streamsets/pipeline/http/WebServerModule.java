@@ -19,6 +19,8 @@ package com.streamsets.pipeline.http;
 
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.agent.InfoModule;
+import com.streamsets.pipeline.agent.RuntimeInfo;
 import com.streamsets.pipeline.container.ContainerModule;
 import com.streamsets.pipeline.container.PipelineRunner;
 import com.streamsets.pipeline.metrics.MetricsModule;
@@ -27,16 +29,32 @@ import com.streamsets.pipeline.restapi.RestAPI;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Provides.Type;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-@Module(library = true, includes = {MetricsModule.class, ContainerModule.class})
+@Module(library = true, includes = {InfoModule.class, MetricsModule.class, ContainerModule.class})
 public class WebServerModule {
 
   @Provides
   WebServer provideWebServer(WebServerImpl webServer) {
     return webServer;
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideStaticWeb(final RuntimeInfo runtimeInfo) {
+    return new ContextConfigurator() {
+
+      @Override
+      public void init(ServletContextHandler context) {
+        ServletHolder servlet = new ServletHolder(new DefaultServlet());
+        servlet.setInitParameter("dirAllowed", "true");
+        servlet.setInitParameter("resourceBase", runtimeInfo.getStaticWebDir());
+        context.addServlet(servlet, "/*");
+      }
+
+    };
   }
 
   @Provides(type = Type.SET)

@@ -23,13 +23,17 @@ import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(injects = {MainAgent.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class},
-        includes = {InfoModule.class, WebServerModule.class})
-public class PipelineAgentModule {
+@Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class})
+public class InfoModule {
 
   @Provides @Singleton
-  public Agent provideAgent(PipelineAgent agent) {
-    return agent;
+  public BuildInfo provideBuildInfo() {
+    return new BuildInfo();
+  }
+
+  @Provides @Singleton
+  public RuntimeInfo provideRuntimeInfo() {
+    return new RuntimeInfo();
   }
 
 }

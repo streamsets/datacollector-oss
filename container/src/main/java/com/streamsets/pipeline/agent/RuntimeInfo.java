@@ -21,21 +21,30 @@ import org.slf4j.Logger;
 
 public class RuntimeInfo {
 
+  public String getRuntimeDir() {
+    return System.getProperty("user.dir");
+  }
+
+  public String getStaticWebDir() {
+    return System.getProperty("pipeline.static-web.dir", getRuntimeDir() + "/static-web");
+  }
+
   public String getConfigDir() {
-    return System.getProperty("pipeline.conf.dir", System.getProperty("user.home") + "/etc");
+    return System.getProperty("pipeline.conf.dir", getRuntimeDir() + "/etc");
   }
 
   public String getLogDir() {
-    return System.getProperty("pipeline.log.dir", System.getProperty("user.home") + "/log");
+    return System.getProperty("pipeline.log.dir", getRuntimeDir() + "/log");
   }
 
   public String getDataDir() {
-    return System.getProperty("pipeline.data.dir", System.getProperty("user.home") + "/var");
+    return System.getProperty("pipeline.data.dir", getRuntimeDir() + "/var");
   }
 
   public void log(Logger log) {
     log.info("Runtime info:");
     log.info("  Java version : {}", System.getProperty("java.runtime.version"));
+    log.info("  Runtime dir  : {}", getRuntimeDir());
     log.info("  Config dir   : {}", getConfigDir());
     log.info("  Data dir     : {}", getDataDir());
     log.info("  Log dir      : {}", getLogDir());

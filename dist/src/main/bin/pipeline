@@ -72,6 +72,8 @@ then
   echo "  MAIN CLASS   : ${PIPELINE_MAIN_CLASS}"
 fi
 
+cd ${PIPELINE_DIST}
+
 exec java -classpath ${CLASSPATH} ${PIPELINE_JAVA_OPTS} ${PIPELINE_MAIN_CLASS}
 status=$?
 echo "Exit: $status"
