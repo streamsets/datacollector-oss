@@ -43,35 +43,36 @@ then
 fi
 
 PIPELINE_CONF=${PIPELINE_CONF:=${PIPELINE_HOME}/conf}
-PIPELINE_VAR=${PIPELINE_VAR:=${PIPELINE_HOME}/var}
+PIPELINE_DATA=${PIPELINE_DATA:=${PIPELINE_HOME}/data}
 PIPELINE_LOG=${PIPELINE_LOG:=${PIPELINE_HOME}/log}
 PIPELINE_JAVA_OPTS=${PIPELINE_JAVA_OPTS:="-Xmx1024m"}
+PIPELINE_MAIN_CLASS=${PIPELINE_MAIN_CLASS:="com.streamsets.pipeline.agent.Main"}
 
-PIPELINE_JAVA_OPTS="${PIPELINE_JAVA_OPTS} -Dpipeline.conf=${PIPELINE_CONF}"
-PIPELINE_JAVA_OPTS="${PIPELINE_JAVA_OPTS} -Dpipeline.conf=${PIPELINE_VAR}"
-PIPELINE_JAVA_OPTS="${PIPELINE_JAVA_OPTS} -Dpipeline.conf=${PIPELINE_LOG}"
+PIPELINE_JAVA_OPTS="${PIPELINE_JAVA_OPTS} -Dpipeline.conf.dir=${PIPELINE_CONF}"
+PIPELINE_JAVA_OPTS="${PIPELINE_JAVA_OPTS} -Dpipeline.data.dir=${PIPELINE_DATA}"
+PIPELINE_JAVA_OPTS="${PIPELINE_JAVA_OPTS} -Dpipeline.log.dir=${PIPELINE_LOG}"
 
-CLASSPATH=""
+CLASSPATH="${PIPELINE_CONF}"
 for i in "${PIPELINE_DIST}/lib/"*.jar; do
   CLASSPATH="${CLASSPATH}:$i"
 done
 CLASSPATH="${PIPELINE_PRE_CLASSPATH}:${CLASSPATH}:${PIPELINE_POST_CLASSPATH}:"
 
-#if [ "$1" = "--verbose" ];
-if [ 1 ];
+if [ "$1" = "--verbose" ];
 then
   echo "Pipeline Agent:"
   echo "  DIST         : ${PIPELINE_DIST}"
   echo "  HOME         : ${PIPELINE_HOME}"
   echo "  CONF         : ${PIPELINE_CONF}"
-  echo "  VAR          : ${PIPELINE_VAR}"
+  echo "  DATA         : ${PIPELINE_DATA}"
   echo "  LOG          : ${PIPELINE_LOG}"
   echo "  JAVA PATH    : `which java`"
   echo "  CLASSPATH    : ${CLASSPATH}"
-  echo "  JAVA_OPTS    : ${PIPELINE_JAVA_OPTS}"
+  echo "  JAVA OPTS    : ${PIPELINE_JAVA_OPTS}"
+  echo "  MAIN CLASS   : ${PIPELINE_MAIN_CLASS}"
 fi
 
-exec java -classpath ${CLASSPATH} ${PIPELINE_OPTS} com.streamsets.pipeline.agent.Main
+exec java -classpath ${CLASSPATH} ${PIPELINE_JAVA_OPTS} ${PIPELINE_MAIN_CLASS}
 status=$?
 echo "Exit: $status"
 exit $status

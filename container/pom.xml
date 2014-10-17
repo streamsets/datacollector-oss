@@ -109,6 +109,22 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+        <excludes>
+          <exclude>pipeline-build-info.properties</exclude>
+        </excludes>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+        <includes>
+          <include>pipeline-build-info.properties</include>
+        </includes>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
     </plugins>
   </build>

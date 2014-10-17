@@ -17,11 +17,28 @@
  */
 package com.streamsets.pipeline.agent;
 
-public interface Agent {
+import org.slf4j.Logger;
 
-  public void init();
+public class RuntimeInfo {
 
-  public void run();
+  public String getConfigDir() {
+    return System.getProperty("pipeline.conf.dir", System.getProperty("user.home") + "/etc");
+  }
 
-  public void stop();
+  public String getLogDir() {
+    return System.getProperty("pipeline.log.dir", System.getProperty("user.home") + "/log");
+  }
+
+  public String getDataDir() {
+    return System.getProperty("pipeline.data.dir", System.getProperty("user.home") + "/var");
+  }
+
+  public void log(Logger log) {
+    log.info("Runtime info:");
+    log.info("  Java version : {}", System.getProperty("java.runtime.version"));
+    log.info("  Config dir   : {}", getConfigDir());
+    log.info("  Data dir     : {}", getDataDir());
+    log.info("  Log dir      : {}", getLogDir());
+  }
+
 }

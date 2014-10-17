@@ -60,10 +60,16 @@
       <outputDirectory>/conf</outputDirectory>
     </fileSet>
 
-    <!-- log -->
+    <!-- log dir -->
     <fileSet>
-      <directory>${basedir}/src/main/log</directory>
+      <directory>${basedir}/src/main/emptydir</directory>
       <outputDirectory>/log</outputDirectory>
+    </fileSet>
+
+    <!-- data dir -->
+    <fileSet>
+      <directory>${basedir}/src/main/emptydir</directory>
+      <outputDirectory>/data</outputDirectory>
     </fileSet>
 
   </fileSets>

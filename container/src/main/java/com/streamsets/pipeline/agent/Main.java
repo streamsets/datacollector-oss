@@ -29,10 +29,16 @@ public class Main {
       ObjectGraph dagger = ObjectGraph.create(PipelineAgentModule.class);
       final Agent agent = dagger.get(MainAgent.class);
 
-      agent.init();
+      dagger.get(LogConfigurator.class).configure();
       log = LoggerFactory.getLogger(Main.class);
-      log.info("Starting ....");
-      log.debug("Initialized");
+      log.info("-----------------------------------------------------------------");
+      dagger.get(BuildInfo.class).log(log);
+      log.info("-----------------------------------------------------------------");
+      dagger.get(RuntimeInfo.class).log(log);
+      log.info("-----------------------------------------------------------------");
+      log.info("Starting ...");
+
+      agent.init();
       final Logger finalLog = log;
       Thread shutdownHookThread = new Thread("Main.shutdownHook") {
         @Override
@@ -42,10 +48,9 @@ public class Main {
         }
       };
       Runtime.getRuntime().addShutdownHook(shutdownHookThread);
-      log.debug("Starting");
       agent.run();
       Runtime.getRuntime().removeShutdownHook(shutdownHookThread);
-      log.debug("Stopping, reason: Shutdown");
+      log.debug("Stopping, reason: shutdown");
       agent.stop();
       System.exit(0);
     } catch (Throwable ex) {
