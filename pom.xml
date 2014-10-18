@@ -39,6 +39,7 @@
     <module>root</module>
     <module>api</module>
     <module>container</module>
+    <module>ui</module>
   </modules>
 
   <profiles>
@@ -51,6 +52,7 @@
         <module>root</module>
         <module>api</module>
         <module>container</module>
+        <module>ui</module>
         <module>dist</module>
       </modules>
     </profile>

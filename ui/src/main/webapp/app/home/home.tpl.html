@@ -1,0 +1,14 @@
+<button type="button" class="btn btn-primary btn btn-create-pipeline" ng-hide="config" ng-click="createPipelineAgent()">
+  <span class="glyphicon glyphicon-plus"></span> Create Pipeline Flow
+</button>
+
+<div ng-show="config" >
+  <bg-splitter orientation="vertical">
+    <bg-pane min-size="100" class="canvas-pane">
+      Canvas Pane
+    </bg-pane>
+    <bg-pane min-size="50" class="detail-pane">
+      Detail Pane
+    </bg-pane>
+  </bg-splitter>
+</div>

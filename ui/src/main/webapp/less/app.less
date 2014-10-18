@@ -1,0 +1,49 @@
+/**
+ * This is the main application stylesheet. It should include or import all
+ * stylesheets used throughout the application as this is the only stylesheet in
+ * the Grunt configuration that is automatically processed.
+ */
+
+
+/**
+ * First, we include the Twitter Bootstrap LESS files. Only the ones used in the
+ * project should be imported as the rest are just wasting space.
+ */
+
+@import '../bower_components/bootstrap/less/bootstrap.less';
+
+
+/**
+ * This is our main variables file. We must include it last so we can overwrite any variable
+ * definitions in our imported stylesheets.
+ */
+
+@import 'variables.less';
+
+
+/**
+ * Main Body
+ */
+
+body {
+  padding-top: 50px;
+}
+
+
+/**
+ * Header
+ */
+
+.logo {
+  padding-right: 20px;
+}
+
+/**
+ * Now that all app-wide styles have been applied, we can load the styles for
+ * all the submodules and components we are using.
+ *
+ * TODO: Automate this.
+ */
+
+@import '../app/home/home.less';
+@import '../app/widgets/splitter/splitter.less';

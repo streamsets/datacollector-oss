@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" ng-app="pipelineAgentApp">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Sample Spring boot angularjs application.">
+  <title ng-bind="common.title">StreamSets | Data In Motion</title>
+  <base href="/" />
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
+  <link rel="stylesheet" type="text/css" href="/<%= file %>" /><% }); %>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="logo" href="/">
+        <img src="/assets/logo.png" width="120"/>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+      <form class="form-horizontal" action='' method="POST">
+        <fieldset>
+          <div id="legend">
+            <legend class="">Login</legend>
+          </div>
+          <div class="control-group">
+            <!-- Username -->
+            <label class="control-label"  for="username">Username</label>
+            <div class="controls">
+              <input type="text" id="username" name="username" placeholder="" class="input-xlarge">
+            </div>
+          </div>
+          <div class="control-group">
+            <!-- Password-->
+            <label class="control-label" for="password">Password</label>
+            <div class="controls">
+              <input type="password" id="password" name="password" placeholder="" class="input-xlarge">
+            </div>
+          </div>
+          <div class="control-group">
+            <!-- Button -->
+            <div class="controls">
+              <button class="btn btn-success">Login</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- compiled JavaScript --><% scripts.forEach( function ( file ) { %>
+<script type="text/javascript" src="/<%= file %>"></script><% }); %>
+
+</body>
+</html>
