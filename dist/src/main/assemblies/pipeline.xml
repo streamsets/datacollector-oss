@@ -74,7 +74,7 @@
 
     <!-- static web -->
     <fileSet>
-      <directory>${basedir}/src/main/emptydir</directory>
+      <directory>${basedir}/../ui/src/main/webapp/dist</directory>
       <outputDirectory>/static-web</outputDirectory>
     </fileSet>
 

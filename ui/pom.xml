@@ -20,13 +20,43 @@
 
   </dependencies>
 
-  <build>
-    <resources>
-      <resource>
-        <targetPath>webapp</targetPath>
-        <directory>src/main/webapp</directory>
-      </resource>
-   </resources>
-  </build>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.trecloux</groupId>
+        <artifactId>yeoman-maven-plugin</artifactId>
+        <version>0.2</version>
+        <executions>
+          <execution>
+            <id>run-grunt</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+            <configuration>
+              <gruntBuildArgs>--force</gruntBuildArgs>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <yeomanProjectDirectory>${project.basedir}</yeomanProjectDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>src/main/webapp/dist</directory>
+            </fileset>
+            <fileset>
+              <directory>node_modules</directory>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

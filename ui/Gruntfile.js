@@ -17,12 +17,9 @@ module.exports = function(grunt) {
 
   var userConfig = {
     /**
-     * The `build_dir` folder is where our projects are compiled during
-     * development and the `compile_dir` folder is where our app resides once it's
-     * completely built.
+     * The `build_dir` folder is where our projects are compiled.
      */
-    build_dir: 'build',
-    compile_dir: 'bin',
+    build_dir: 'dist',
     base_dir: 'src/main/webapp/',
 
     /**
@@ -109,15 +106,15 @@ module.exports = function(grunt) {
       banner:
         '/**\n' +
         ' * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
-        ' * <%= pkg.homepage %>\n'
+        ' * <%= pkg.homepage %>\n' +
+        ' */\n'
     },
 
     /**
      * The directories to delete when `grunt clean` is executed.
      */
     clean: [
-      '<%= base_dir %><%= build_dir %>',
-      '<%= base_dir %><%= compile_dir %>'
+      '<%= base_dir %><%= build_dir %>'
     ],
 
     /**
@@ -233,15 +230,8 @@ module.exports = function(grunt) {
         options: {
           banner: '<%= meta.banner %>'
         },
-        src: [
-          '<%= base_dir %><%= build_dir %>/bower_components/**/*.js',
-          'module.prefix',
-          '<%= base_dir %><%= build_dir %>/app/**/*.js',
-          '<%= html2js.app.dest %>',
-          '<%= html2js.common.dest %>',
-          'module.suffix'
-        ],
-        dest: '<%= base_dir %><%= compile_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.js'
+        src: getCompileJSFiles(),
+        dest: '<%= base_dir %><%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.js'
       }
     },
 
@@ -255,7 +245,7 @@ module.exports = function(grunt) {
           {
             src: [ '<%= app_files.js %>' ],
             cwd: '<%= base_dir %><%= build_dir %>',
-            dest: '<%= build_dir %>',
+            dest: '<%= base_dir %><%= build_dir %>',
             expand: true
           }
         ]
@@ -388,11 +378,11 @@ module.exports = function(grunt) {
        * file. Now we're back!
        */
       compile: {
-        cwd: '<%= base_dir %><%= compile_dir %>',
+        cwd: '<%= base_dir %><%= build_dir %>',
         src: [
-          '<%= concat.compile_js.dest %>',
+          'assets/<%= pkg.name %>-<%= pkg.version %>.js',
           '<%= vendor_files.css %>',
-          '<%= base_dir %><%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css'
+          'assets/<%= pkg.name %>-<%= pkg.version %>.css'
         ]
       }
     },
@@ -501,6 +491,9 @@ module.exports = function(grunt) {
    * The default task is to build and compile.
    */
   grunt.registerTask( 'default', [ 'build', 'compile' ] );
+  //grunt.registerTask( 'default', [ 'build' ] );
+
+  grunt.registerTask( 'test', []);
 
   /**
    * The `build` task gets your app ready to run for development and testing.
@@ -517,7 +510,7 @@ module.exports = function(grunt) {
    * minifying your code.
    */
   grunt.registerTask( 'compile', [
-    'less:compile', 'copy:compile_assets', 'ngAnnotate', 'concat:compile_js', 'uglify', 'index:compile'
+    'less:compile', 'ngAnnotate', 'concat:compile_js', 'uglify', 'index:compile'
   ]);
 
   /**
@@ -536,6 +529,29 @@ module.exports = function(grunt) {
     return files.filter( function ( file ) {
       return file.match( /\.css$/ );
     });
+  }
+
+
+  /**
+   * A utility function to get all JS Files for compile task.
+   */
+  function getCompileJSFiles(files, prefix) {
+    var compileJSFiles = [],
+      baseDir = userConfig.base_dir,
+      buildDir = userConfig.build_dir,
+      vendorFilesJS = userConfig.vendor_files.js;
+
+    vendorFilesJS.forEach(function(file){
+      compileJSFiles.push(baseDir + buildDir + '/' + file);
+    });
+
+    compileJSFiles.push('module.prefix');
+    compileJSFiles.push(baseDir + buildDir + '/app/**/*.js');
+    compileJSFiles.push('<%= html2js.app.dest %>');
+    compileJSFiles.push('<%= html2js.common.dest %>');
+    compileJSFiles.push('module.suffix');
+
+    return compileJSFiles;
   }
 
   /**
@@ -572,7 +588,6 @@ module.exports = function(grunt) {
    * compiled as grunt templates for use by Karma. Yay!
    */
   grunt.registerMultiTask( 'karmaconfig', 'Process karma config templates', function () {
-    console.log( this.filesSrc );
     var jsFiles = filterForJS( this.filesSrc );
 
     grunt.file.copy( grunt.config( 'base_dir' ) + 'karma/karma-conf.tpl.js', grunt.config( 'base_dir' ) + grunt.config( 'build_dir' ) + '/karma-conf.js', {

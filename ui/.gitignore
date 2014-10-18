@@ -16,4 +16,4 @@ target
 .project
 .settings
 
-src/main/webapp/build
+src/main/webapp/dist

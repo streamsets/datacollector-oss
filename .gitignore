@@ -16,3 +16,7 @@ target
 .project
 .settings
 
+#Node.js
+node
+node_modules
+npm-debug.log
