@@ -35,14 +35,31 @@
     </license>
   </licenses>
 
-  <modules>
-    <module>root</module>
-    <module>api</module>
-    <module>container</module>
-    <module>ui</module>
-  </modules>
-
   <profiles>
+    <profile>
+      <id>no-ui</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>root</module>
+        <module>api</module>
+        <module>container</module>
+        <module>dist</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>dist-no-ui</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>root</module>
+        <module>api</module>
+        <module>container</module>
+        <module>dist</module>
+      </modules>
+    </profile>
     <profile>
       <id>dist</id>
       <activation>

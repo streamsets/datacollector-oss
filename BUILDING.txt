@@ -1,0 +1,29 @@
+StreamSets - Pipeline Development Environment
+
+-------
+
+Software requirements:
+
+* Git 1.9+
+* JDK 1.7.*
+* Maven 3.2.3+
+* Node 0.10.32+1  (OSX, avail via macports: sudo install nodejs)
+** npm            (OSX, avail via macports: sudo install npm)
+** bower          (avail via npm          : sudo npm -g install bower)
+** grunt-cli      (avail via npm          : sudo npm -g install grunt-cli)
+
+-------
+
+Maven Goals: clean, compile, test, package, cobertura:cobertura
+
+Profiles (use -P<profile-name>):
+
+* (default) : builds the pipeline modules
+* no-ui     : builds the pipeline modules minus the ui module
+* dist      : builds a distribution of the pipeline
+* dist-no-ui: builds a distribution of the pipeline without the UI
+* sandbox   : builds the sandbox modules (use -Dsandbox.module=<module-name> to build only one module)
+
+
+
+

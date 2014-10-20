@@ -83,6 +83,12 @@
         <scope>compile</scope>
       </dependency>
       <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-pipeline-ui</artifactId>
+        <version>${project.version}</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit.version}</version>

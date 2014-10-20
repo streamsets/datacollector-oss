@@ -33,17 +33,6 @@
   <name>StreamSets Pipeline Dist</name>
   <packaging>jar</packaging>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-pipeline-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-pipeline-container</artifactId>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
       <plugin>
@@ -77,4 +66,36 @@
     </plugins>
   </build>
 
+  <profiles>
+    <profile>
+      <id>dist-no-ui</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-pipeline-api</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-pipeline-container</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>dist</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-pipeline-api</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-pipeline-container</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-pipeline-ui</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 </project>
