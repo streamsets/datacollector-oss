@@ -74,7 +74,7 @@
 
     <!-- static web -->
     <fileSet>
-      <directory>${basedir}/../ui/src/main/webapp/dist</directory>
+      <directory>${ui.dist-dir}</directory>
       <outputDirectory>/static-web</outputDirectory>
     </fileSet>
 

@@ -18,11 +18,13 @@ Maven Goals: clean, compile, test, package, cobertura:cobertura
 
 Profiles (use -P<profile-name>):
 
-* (default) : builds the pipeline modules
-* no-ui     : builds the pipeline modules minus the ui module
+* (default) : builds the pipeline modules without the ui module
+* ui        : builds the pipeline modules with the ui module
 * dist      : builds a distribution of the pipeline
-* dist-no-ui: builds a distribution of the pipeline without the UI
-* sandbox   : builds the sandbox modules (use -Dsandbox.module=<module-name> to build only one module)
+              (if the 'ui' profile is active it will bundle UI in the distribution)
+* sandbox   : builds the sandbox modules
+              (use -Dsandbox.module=<module-name> to build only one module)
+
 
 
 

@@ -35,29 +35,20 @@
     </license>
   </licenses>
 
+  <modules>
+    <module>root</module>
+    <module>api</module>
+    <module>container</module>
+  </modules>
+
   <profiles>
     <profile>
-      <id>no-ui</id>
+      <id>ui</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
       <modules>
-        <module>root</module>
-        <module>api</module>
-        <module>container</module>
-        <module>dist</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>dist-no-ui</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <modules>
-        <module>root</module>
-        <module>api</module>
-        <module>container</module>
-        <module>dist</module>
+        <module>ui</module>
       </modules>
     </profile>
     <profile>
@@ -66,10 +57,6 @@
         <activeByDefault>false</activeByDefault>
       </activation>
       <modules>
-        <module>root</module>
-        <module>api</module>
-        <module>container</module>
-        <module>ui</module>
         <module>dist</module>
       </modules>
     </profile>

@@ -33,6 +33,22 @@
   <name>StreamSets Pipeline Dist</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <!-- trick to avoid pulling UI files if the 'ui' profile is not active -->
+    <ui.dist-dir>${basedir}/src/main/emptydir</ui.dist-dir>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-pipeline-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-pipeline-container</artifactId>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -68,29 +84,11 @@
 
   <profiles>
     <profile>
-      <id>dist-no-ui</id>
+      <id>ui</id>
+      <properties>
+        <ui.dist-dir>${basedir}/../ui/src/main/webapp/dist</ui.dist-dir>
+      </properties>
       <dependencies>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-pipeline-api</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-pipeline-container</artifactId>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>dist</id>
-      <dependencies>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-pipeline-api</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-pipeline-container</artifactId>
-        </dependency>
         <dependency>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-pipeline-ui</artifactId>
