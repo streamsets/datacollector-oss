@@ -56,8 +56,8 @@
 
     <!-- configuration -->
     <fileSet>
-      <directory>${basedir}/src/main/conf</directory>
-      <outputDirectory>/conf</outputDirectory>
+      <directory>${basedir}/src/main/etc</directory>
+      <outputDirectory>/etc</outputDirectory>
     </fileSet>
 
     <!-- log dir -->
