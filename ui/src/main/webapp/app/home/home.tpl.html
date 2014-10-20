@@ -1,14 +1,133 @@
-<button type="button" class="btn btn-primary btn btn-create-pipeline" ng-hide="config" ng-click="createPipelineAgent()">
-  <span class="glyphicon glyphicon-plus"></span> Create Pipeline Flow
-</button>
+<div class="row">
+  <button type="button" class="btn btn-primary btn-create-pipeline" ng-hide="config" ng-click="createPipelineAgent()">
+    <span class="glyphicon glyphicon-plus"></span> Create Pipeline Flow
+  </button>
 
-<div ng-show="config" >
-  <bg-splitter orientation="vertical">
-    <bg-pane min-size="100" class="canvas-pane">
-      Canvas Pane
-    </bg-pane>
-    <bg-pane min-size="50" class="detail-pane">
-      Detail Pane
-    </bg-pane>
-  </bg-splitter>
+  <div ng-show="config" >
+    <bg-splitter orientation="vertical">
+
+      <bg-pane min-size="100" class="panel panel-default canvas-pane">
+        <div class="panel-heading clearfix">
+          <h3 class="panel-title pull-left">Create Pipeline Flow</h3>
+          <div class="pull-right">
+            <button type="button" class="btn btn-primary btn-xs">
+              <span class="glyphicon glyphicon-play"></span> Start
+            </button>
+            <button type="button" class="btn btn-primary btn-xs">
+              <span class="glyphicon glyphicon-stop"></span> Stop
+            </button>
+            <button type="button" class="btn btn-primary btn-xs">
+              <span class="glyphicon glyphicon-pencil"></span> Edit
+            </button>
+          </div>
+        </div>
+        <div class="panel-body">
+
+        </div>
+      </bg-pane>
+
+      <bg-pane min-size="50" class="panel panel-default detail-pane">
+        <div class="panel-heading">
+          <h3 class="panel-title">File Source</h3>
+        </div>
+        <div class="panel-body">
+          <div class="tabbable tabs-left">
+
+            <ul class="nav nav-tabs">
+              <li class="active"><a showtab="" href="#a" data-toggle="tab">Configuration</a></li>
+              <li><a showtab="" href="#b" data-toggle="tab">Attributes</a></li>
+              <li><a showtab="" href="#c" data-toggle="tab">Preview</a></li>
+            </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane active" id="a">
+
+                <form class="form-horizontal" role="form">
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Location</label>
+                    <div class="col-sm-6">
+                      <input type="text" class="form-control" placeholder="location">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label  class="col-sm-2 control-label">Type</label>
+                    <div class="col-sm-6">
+                      <select class="form-control">
+                        <option>JSON</option>
+                        <option>CSV</option>
+                        <option>Log File</option>
+                      </select>
+                    </div>
+                  </div>
+
+
+                  <div class="form-group">
+                    <label  class="col-sm-2 control-label">Batch Size</label>
+                    <div class="col-sm-6">
+                      <input type="text" class="form-control" placeholder="Enter number of records in batch.">
+                    </div>
+                  </div>
+
+
+                  <div class="form-group">
+                    <label  class="col-sm-2 control-label">Maximum Record Size</label>
+                    <div class="col-sm-6">
+                      <input type="text" class="form-control" placeholder="Enter allowed maximum size of Record in bytes.">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label  class="col-sm-2 control-label">Required Attributes</label>
+                    <div class="col-sm-6">
+                      <tags-input ng-model="tags" placeholder="Add a attribute"></tags-input>
+                    </div>
+                  </div>
+
+                </form>
+
+              </div>
+
+              <div class="tab-pane" id="b">
+                <div class="col-sm-6">
+
+                  <table class="table table-hover" >
+                    <thead>
+                      <tr>
+                        <th>Attribute Name</th>
+                        <th>Type</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr ng-repeat="attribute in attributes">
+                        <td>{{attribute.name}}</td>
+                        <td>
+                          <select class="form-control attribute-type">
+                            <option>String</option>
+                            <option>Integer</option>
+                            <option>Long</option>
+                            <option>Date</option>
+                            <option>Binary</option>
+                          </select>
+                        </td>
+                      </tr>
+                    </tbody>
+
+                  </table>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="c">
+                <json-formatter open="1" json="preview"></json-formatter>
+              </div>
+            </div>
+          </div>
+          <!-- /tabs -->
+        </div>
+      </bg-pane>
+    </bg-splitter>
+  </div>
 </div>
+

@@ -9,12 +9,8 @@ describe('pipelineAgentApp module', function() {
     $controller = _$controller_;
   }));
 
-  it('should make home menu item active.', function() {
-    expect($rootScope.common.active.home == 'active');
-  });
-
   it('should have correct page title.', function() {
-    expect($rootScope.common.title == 'StreamSets | Data In Motion');
+    expect($rootScope.common.title == 'StreamSets | Data In Motion').toBeTruthy();
   });
 
 });

@@ -70,10 +70,13 @@ module.exports = function(grunt) {
         'bower_components/jquery/dist/jquery.js',
         'bower_components/angular/angular.js',
         'bower_components/angular-route/angular-route.js',
-        'bower_components/bootstrap/dist/js/bootstrap.js'
+        'bower_components/bootstrap/dist/js/bootstrap.js',
+        'bower_components/ng-tags-input/ng-tags-input.js',
+        'bower_components/json-formatter/dist/json-formatter.js'
       ],
       css: [
-
+        'bower_components/ng-tags-input/ng-tags-input.css',
+        'bower_components/json-formatter/dist/json-formatter.css'
       ],
       assets: [
       ],
@@ -217,9 +220,7 @@ module.exports = function(grunt) {
        * together.
        */
       build_css: {
-        src: [
-          '<%= base_dir %><%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css'
-        ],
+        src: getBuildConcatCSSFiles(),
         dest: '<%= base_dir %><%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css'
       },
       /**
@@ -324,8 +325,8 @@ module.exports = function(grunt) {
       unit: {
         src: [
           '<%= vendor_files.js %>',
-          'build/templates-app.js',
-          'build/templates-common.js',
+          '<%= build_dir %>/templates-app.js',
+          '<%= build_dir %>/templates-common.js',
           '<%= test_files.js %>'
         ],
         cwd: '<%= base_dir %>'
@@ -555,6 +556,27 @@ module.exports = function(grunt) {
   }
 
   /**
+   * A utility function to get all CSS Files for concat:build task.
+   */
+  function getBuildConcatCSSFiles() {
+    var cssFiles = [],
+      baseDir = userConfig.base_dir,
+      buildDir = userConfig.build_dir,
+      vendorFilesCSS = userConfig.vendor_files.css;
+
+    vendorFilesCSS.forEach(function(file){
+      cssFiles.push(baseDir + '/' + file);
+    });
+
+    cssFiles.push('<%= base_dir %><%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css');
+
+    console.log(cssFiles);
+
+    return cssFiles;
+
+  }
+
+  /**
    * The index.html template includes the stylesheet and javascript sources
    * based on dynamic names calculated in this Gruntfile. This task assembles
    * the list into variables for the template to use and then runs the
@@ -562,6 +584,7 @@ module.exports = function(grunt) {
    */
   grunt.registerMultiTask( 'index', 'Process index.html template', function () {
     var dirRE = new RegExp( '^('+grunt.config('build_dir')+'|'+grunt.config('compile_dir')+')\/', 'g' );
+    console.log(this.filesSrc);
     var jsFiles = filterForJS( this.filesSrc ).map( function ( file ) {
       return file.replace( dirRE, '' );
     });

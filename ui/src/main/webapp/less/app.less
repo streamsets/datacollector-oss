@@ -35,15 +35,16 @@ body {
  */
 
 .logo {
-  padding-right: 20px;
+  padding: 0 20px;
 }
 
 /**
  * Now that all app-wide styles have been applied, we can load the styles for
  * all the submodules and components we are using.
  *
- * TODO: Automate this.
+ * TODO: Automate adding app specific LESS files.
  */
 
 @import '../app/home/home.less';
 @import '../app/widgets/splitter/splitter.less';
+@import '../app/widgets/tabs/tabs.less';

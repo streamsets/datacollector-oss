@@ -5,3 +5,38 @@
 .canvas-pane {
   margin-top: 50px;
 }
+
+.detail-pane {
+  margin-bottom: 0;
+
+  .panel-body {
+    padding: 0 @smallPadding * 3;
+    height: calc(~"100% - 40px");
+    overflow: auto;
+
+    .tabbable {
+      height: 100%;
+
+      .nav-tabs {
+        height: 100%;
+        padding-top: @smallPadding * 3;
+      }
+
+      .tab-content {
+        padding-top: @smallPadding * 3;
+
+        .attribute-type {
+          height: 24px;
+        }
+      }
+    }
+  }
+}
+
+
+/**
+ * To fix bug in json-formatter
+ */
+.json-formatter-row .date {
+  background-color: inherit;
+}

@@ -1,4 +1,4 @@
-angular.module('bgDirectives', [])
+angular.module('pipelineAgentApp.splitterDirectives', [])
   .directive('bgSplitter', function() {
     return {
       restrict: 'E',
