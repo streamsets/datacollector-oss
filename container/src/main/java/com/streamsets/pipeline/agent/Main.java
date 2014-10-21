@@ -17,16 +17,32 @@
  */
 package com.streamsets.pipeline.agent;
 
+import com.google.common.annotations.VisibleForTesting;
 import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Main {
+  private Class moduleClass;
 
-  public static void main(String[] args) throws Exception {
+  public Main() {
+    this(PipelineAgentModule.class);
+  }
+
+  @VisibleForTesting
+  Main(Class moduleClass) {
+    this.moduleClass = moduleClass;
+  }
+
+  @VisibleForTesting
+  Runtime getRuntime() {
+    return Runtime.getRuntime();
+  }
+
+  public int doMain() {
     Logger log = null;
     try {
-      ObjectGraph dagger = ObjectGraph.create(PipelineAgentModule.class);
+      ObjectGraph dagger = ObjectGraph.create(moduleClass);
       final Agent agent = dagger.get(MainAgent.class);
 
       dagger.get(LogConfigurator.class).configure();
@@ -47,12 +63,12 @@ public class Main {
           agent.stop();
         }
       };
-      Runtime.getRuntime().addShutdownHook(shutdownHookThread);
+      getRuntime().addShutdownHook(shutdownHookThread);
       agent.run();
-      Runtime.getRuntime().removeShutdownHook(shutdownHookThread);
+      getRuntime().removeShutdownHook(shutdownHookThread);
       log.debug("Stopping, reason: shutdown");
       agent.stop();
-      System.exit(0);
+      return 0;
     } catch (Throwable ex) {
       if (log != null) {
         log.error("Abnormal exit: {}", ex.getMessage(), ex);
@@ -64,8 +80,12 @@ public class Main {
       System.err.println();
       ex.printStackTrace(System.err);
       System.err.println();
-      System.exit(1);
+      return 1;
     }
+  }
+
+  public static void main(String[] args) throws Exception {
+    System.exit(new Main().doMain());
   }
 
 }

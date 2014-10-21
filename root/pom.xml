@@ -36,7 +36,11 @@
   </licenses>
 
   <properties>
+    <!-- required JDK version -->
     <javaVersion>1.7</javaVersion>
+
+    <!-- Testcases output redirection -->
+    <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
 
     <!-- Dependency Versions
 
