@@ -29,7 +29,7 @@ public class LogConfigurator {
 
   private static final String LOG4J_PROPERTIES = "log4j.properties";
 
-  private RuntimeInfo runtimeInfo;
+  private final RuntimeInfo runtimeInfo;
 
   @Inject
   public LogConfigurator(RuntimeInfo runtimeInfo) {

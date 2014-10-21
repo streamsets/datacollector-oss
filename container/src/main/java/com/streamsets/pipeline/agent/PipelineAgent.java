@@ -30,8 +30,8 @@ import java.util.concurrent.CountDownLatch;
 public class PipelineAgent implements Agent {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineAgent.class);
 
-  private WebServer webServer;
-  private CountDownLatch latch;
+  private final WebServer webServer;
+  private final CountDownLatch latch;
 
   @Inject
   public PipelineAgent(WebServer webServer) {

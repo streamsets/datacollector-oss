@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Main {
-  private Class moduleClass;
+  private final Class moduleClass;
 
   public Main() {
     this(PipelineAgentModule.class);
