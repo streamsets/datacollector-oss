@@ -29,7 +29,7 @@ import com.streamsets.pipeline.record.RecordImpl;
 import java.util.List;
 import java.util.Set;
 
-class ProcessorPipe extends Pipe implements Context {
+public class ProcessorPipe extends Pipe implements Context {
 
   private Processor processor;
 
@@ -75,4 +75,7 @@ class ProcessorPipe extends Pipe implements Context {
     return new RecordImpl((RecordImpl)record, "(cloned)");
   }
 
+  public Processor getProcessor() {
+    return processor;
+  }
 }

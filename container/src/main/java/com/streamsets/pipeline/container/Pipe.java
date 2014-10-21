@@ -39,8 +39,8 @@ public abstract class Pipe implements Module.Context {
 
   public Pipe(List<Info> pipelineInfo, MetricRegistry metrics, Info info, Set<String> inputLanes,
       Set<String> outputLanes) {
-    Preconditions.checkNotNull(pipelineInfo, "pipelineInfo cannot be null");
-    Preconditions.checkNotNull(metrics, "metrics cannot be null");
+    //Preconditions.checkNotNull(pipelineInfo, "pipelineInfo cannot be null");
+    //Preconditions.checkNotNull(metrics, "metrics cannot be null");
     Preconditions.checkNotNull(info, "info cannot be null");
     Preconditions.checkNotNull(inputLanes, "inputLanes cannot be null");
     Preconditions.checkNotNull(outputLanes, "outputLanes cannot be null");

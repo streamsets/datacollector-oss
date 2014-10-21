@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class TargetPipe extends Pipe implements Target.Context {
+public class TargetPipe extends Pipe implements Target.Context {
   private static final Set<String> EMPTY_OUTPUT = new HashSet<String>();
 
   private Target target;
@@ -60,6 +60,10 @@ class TargetPipe extends Pipe implements Target.Context {
     Preconditions.checkNotNull(batch, "batch cannot be null");
     target.write(batch);
     //LOG warning if !batch.isInputFullyConsumed()
+  }
+
+  public Target getTarget() {
+    return target;
   }
 
 }

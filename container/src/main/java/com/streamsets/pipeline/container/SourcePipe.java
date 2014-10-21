@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class SourcePipe extends Pipe implements Source.Context {
+public class SourcePipe extends Pipe implements Source.Context {
   private static final Set<String> EMPTY_INPUT = new HashSet<String>();
 
   private Source source;
@@ -74,6 +74,10 @@ class SourcePipe extends Pipe implements Source.Context {
   @Override
   public Record createRecord(String sourceInfo, byte[] raw, String rawMime) {
     return new RecordImpl(getModuleInfo().getName(), sourceInfo, raw, rawMime);
+  }
+
+  public Source getSource() {
+    return source;
   }
 
 }

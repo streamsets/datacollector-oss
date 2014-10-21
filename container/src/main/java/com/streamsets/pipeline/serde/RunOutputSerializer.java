@@ -1,11 +1,14 @@
 package com.streamsets.pipeline.serde;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.PipelineBatchRunOutput;
 import com.streamsets.pipeline.container.RunOutput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -23,18 +26,20 @@ import java.util.Map;
  */
 @Produces(MediaType.APPLICATION_JSON)
 public class RunOutputSerializer extends JsonSerializer<RunOutput> {
+
+  private static Logger LOG = LoggerFactory.getLogger(RunOutputSerializer.class);
+
   @Override
   public void serialize(RunOutput runOutput
     , JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
     throws IOException {
 
-    System.out.println("Using Serializer : " + getClass().getName());
+    LOG.debug("Using Serializer : " + getClass().getName());
+    jsonGenerator.setPrettyPrinter(new DefaultPrettyPrinter());
+
     if(runOutput instanceof PipelineBatchRunOutput) {
-
       jsonGenerator.writeStartObject(); //start RunOutput object
-
       jsonGenerator.writeStringField("batchId", runOutput.getBatchId());
-
       jsonGenerator.writeArrayFieldStart("modules"); //start modules array
 
       //write each module in the pipeline and the records in each lane

@@ -18,6 +18,8 @@
 package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Module;
@@ -26,6 +28,8 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.serde.PipelineDeserializer;
+import com.streamsets.pipeline.serde.PipelineSerializer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +38,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+@JsonSerialize(using = PipelineSerializer.class)
+@JsonDeserialize(using = PipelineDeserializer.class)
 public class Pipeline {
 
   private static class PreviewPlugTarget implements Target {
@@ -64,6 +70,11 @@ public class Pipeline {
 
     public Builder(MetricRegistry metrics, Module.Info info, Source source, Set<String> output) {
       this(metrics, info, source, output, null);
+    }
+
+    public Builder() {
+      modulesInfo = new ArrayList<Info>();
+      pipes = new ArrayList<Pipe>();
     }
 
     public Builder(MetricRegistry metrics, Module.Info info, Source source, Set<String> output, Observer observer) {
@@ -114,6 +125,16 @@ public class Pipeline {
       Preconditions.checkArgument(!input.isEmpty(), "input cannot be empty");
       modulesInfo.add(info);
       pipes.add(new TargetPipe(modulesInfoRO, metrics, info, target, input));
+      return this;
+    }
+
+    public Builder add(Module.Info info, Source source, Set<String> output) {
+      Preconditions.checkNotNull(info, "info cannot be null");
+      Preconditions.checkNotNull(source, "target cannot be null");
+      Preconditions.checkNotNull(output, "output cannot be null");
+      Preconditions.checkArgument(!output.isEmpty(), "output cannot be empty");
+      modulesInfo.add(info);
+      pipes.add(new SourcePipe(modulesInfoRO, metrics, info, source, output));
       return this;
     }
 
@@ -218,6 +239,10 @@ public class Pipeline {
       batch.pipeCheckPoint(pipe);
     }
     Preconditions.checkState(batch.isEmpty(), String.format("Batch should be empty, it has: %s", batch.getLanes()));
+  }
+
+  public Pipe[] getPipes() {
+    return pipes;
   }
 
 }
