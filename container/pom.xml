@@ -57,14 +57,17 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.squareup.dagger</groupId>
@@ -117,14 +120,14 @@
       <resource>
         <directory>${basedir}/src/main/resources</directory>
         <excludes>
-          <exclude>pipeline-build-info.properties</exclude>
+          <exclude>pipeline-container-build-info.properties</exclude>
         </excludes>
         <filtering>false</filtering>
       </resource>
       <resource>
         <directory>${basedir}/src/main/resources</directory>
         <includes>
-          <include>pipeline-build-info.properties</include>
+          <include>pipeline-container-build-info.properties</include>
         </includes>
         <filtering>true</filtering>
       </resource>

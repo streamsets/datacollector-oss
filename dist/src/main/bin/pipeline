@@ -53,9 +53,29 @@ PIPELINE_JAVA_OPTS="${PIPELINE_JAVA_OPTS} -Dpipeline.data.dir=${PIPELINE_DATA}"
 PIPELINE_JAVA_OPTS="${PIPELINE_JAVA_OPTS} -Dpipeline.log.dir=${PIPELINE_LOG}"
 
 CLASSPATH="${PIPELINE_CONF}"
-for i in "${PIPELINE_DIST}/lib/"*.jar; do
+
+# This way of building the CLASSPATH is temporary while we don't have separate classloaders.
+
+for i in "${PIPELINE_DIST}/api-lib/"*.jar; do
   CLASSPATH="${CLASSPATH}:$i"
 done
+
+for i in "${PIPELINE_DIST}/impl-lib/"*.jar; do
+  CLASSPATH="${CLASSPATH}:$i"
+done
+
+for i in "${PIPELINE_DIST}/stage-collections-lib/"*/; do
+  if [ -d "${i}" ]
+  then
+    for j in "${i}"/*.jar; do
+      if [ -f "${j}" ]
+      then
+        CLASSPATH="${CLASSPATH}:$j"
+      fi
+    done
+  fi
+done
+
 CLASSPATH="${PIPELINE_PRE_CLASSPATH}:${CLASSPATH}:${PIPELINE_POST_CLASSPATH}:"
 
 if [ "$1" = "--verbose" ];
@@ -78,3 +98,4 @@ exec java -classpath ${CLASSPATH} ${PIPELINE_JAVA_OPTS} ${PIPELINE_MAIN_CLASS}
 status=$?
 echo "Exit: $status"
 exit $status
+

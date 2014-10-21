@@ -78,6 +78,12 @@
       <outputDirectory>/static-web</outputDirectory>
     </fileSet>
 
+    <!-- stage collections lib dir -->
+    <fileSet>
+      <directory>${basedir}/src/main/emptydir</directory>
+      <outputDirectory>/stage-collections-lib</outputDirectory>
+    </fileSet>
+
   </fileSets>
 
   <dependencySets>
@@ -86,9 +92,27 @@
       <useProjectArtifact>false</useProjectArtifact>
       <useTransitiveDependencies>true</useTransitiveDependencies>
       <useTransitiveFiltering>true</useTransitiveFiltering>
-      <outputDirectory>/lib</outputDirectory>
+      <outputDirectory>/api-lib</outputDirectory>
       <unpack>false</unpack>
       <scope>compile</scope>
+      <includes>
+        <include>com.streamsets:streamsets-pipeline-api</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>true</useTransitiveDependencies>
+      <useTransitiveFiltering>true</useTransitiveFiltering>
+      <outputDirectory>/impl-lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>compile</scope>
+      <includes>
+        <include>com.streamsets:streamsets-pipeline-container</include>
+      </includes>
+      <excludes>
+        <exclude>com.streamsets:streamsets-pipeline-api</exclude>
+      </excludes>
     </dependencySet>
 
   </dependencySets>
