@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 public class TestPipelineResource extends JerseyTest {
   
   private static final String REQUEST_JSON = "{\n" +
+    "  \"uuid\" : \"c3e8d544-34c6-452e-b87f-518f4c3cffcb\",\n" +
     "  \"runtimeModuleConfigurations\" : [\n" +
     "    {\n" +
     "      \"generalInformation\" : {\n" +
@@ -45,7 +46,9 @@ public class TestPipelineResource extends JerseyTest {
     "            \"group\" : \"FileOptions\"\n" +
     "          }\n" +
     "        ],\n" +
-    "        \"inputLanes\" : [ ],\n" +
+    "        \"inputLanes\" : [\n" +
+    "          \"csv->mask\"\n" +
+    "        ],\n" +
     "        \"outputLanes\" : [\n" +
     "          \"csv->mask\"\n" +
     "        ]\n" +
@@ -117,12 +120,29 @@ public class TestPipelineResource extends JerseyTest {
     "        \"inputLanes\" : [\n" +
     "          \"mask->kafka\"\n" +
     "        ],\n" +
-    "        \"outputLanes\" : [ ]\n" +
+    "        \"outputLanes\" : [\n" +
+    "          \"kafka->hdfs\"\n" +
+    "        ]\n" +
     "      },\n" +
     "      \"uiInformation\" : {\n" +
     "        \"xPos\" : \"900\",\n" +
     "        \"yPos\" : \"900\"\n" +
     "      }\n" +
+    "    }\n" +
+    "  ],\n" +
+    "  \"errors\" : [\n" +
+    "    {\n" +
+    "      \"module\" : \"myCsvSource\",\n" +
+    "      \"errorMessages\" : [\n" +
+    "        \"Source cannot have input lanes\"\n" +
+    "      ]\n" +
+    "    },\n" +
+    "    {\n" +
+    "      \"module\" : \"myKafkaTarget\",\n" +
+    "      \"errorMessages\" : [\n" +
+    "        \"Target cannot have output lanes\",\n" +
+    "        \"Target topic does not exist\"\n" +
+    "      ]\n" +
     "    }\n" +
     "  ]\n" +
     "}";

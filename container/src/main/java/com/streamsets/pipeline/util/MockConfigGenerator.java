@@ -4,6 +4,7 @@ import com.streamsets.pipeline.config.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by harikiran on 10/20/14.
@@ -13,6 +14,8 @@ public class MockConfigGenerator {
   public static RuntimePipelineConfiguration getRuntimePipelineConfiguration() {
 
     RuntimePipelineConfiguration r = new RuntimePipelineConfiguration();
+    //set uuid
+    r.setUuid(UUID.randomUUID().toString());
 
     ConfigOption fileLocationOption = new ConfigOption(
       "fileLocation",
@@ -38,6 +41,7 @@ public class MockConfigGenerator {
     sourceConfigOptions.add(bufferSizeOption);
     List<String> inputLanes  = new ArrayList<String>();
     List<String> outputLanes = new ArrayList<String>();
+    inputLanes.add("csv->mask");
     outputLanes.add("csv->mask");
 
     RuntimeModuleConfiguration sourceConfig = new RuntimeModuleConfiguration("myCsvSource",
@@ -107,6 +111,8 @@ public class MockConfigGenerator {
     List<String> tInputLanes  = new ArrayList<String>();
     List<String> tOutputLanes = new ArrayList<String>();
     tInputLanes.add("mask->kafka");
+    tInputLanes.add("csv->kafka");
+    tOutputLanes.add("kafka->hdfs");
 
     RuntimeModuleConfiguration targetConfig = new RuntimeModuleConfiguration("myKafkaTarget",
       "KafkaTarget",
@@ -119,6 +125,15 @@ public class MockConfigGenerator {
       tOutputLanes);
 
     r.getRuntimeModuleConfigurations().add(targetConfig);
+
+    //set errors
+    List<String> sourceErrors = new ArrayList<String>();
+    List<String> targetErrors = new ArrayList<String>();
+    sourceErrors.add("Source cannot have input lanes");
+    targetErrors.add("Target cannot have output lanes");
+    targetErrors.add("Target topic does not exist");
+    r.getErrorsMap().put("myCsvSource", sourceErrors);
+    r.getErrorsMap().put("myKafkaTarget", targetErrors);
 
     return r;
   }
