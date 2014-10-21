@@ -1,0 +1,55 @@
+{
+  "global": {
+    "title": "Pipeline Agent",
+    "menu": {
+      "admin": "Admin",
+      "flow": "Flow",
+      "data": "Data"
+    },
+    "form": {
+      "username": "Login",
+      "username.placeholder": "Your login"
+    },
+    "messages": {
+      "info": {
+      },
+      "error": {
+      },
+      "validate": {
+      }
+    }
+  },
+  "admin": {
+    "createPipelineFLow": "Create Pipeline Flow",
+    "header" : {
+      "pipelineFlow": "Pipeline Flow",
+      "preview": "Preview",
+      "start": "Start",
+      "stop": "Stop"
+    },
+    "detailPane": {
+      "attributes": {
+        "title": "Attributes"
+      },
+      "configuration": {
+        "title": "Configuration",
+        "location": "Location",
+        "location.placeholder": "Enter Source Location",
+        "type": "Type",
+        "type.json": "JSON",
+        "type.csv": "CSV",
+        "type.logFile": "Log File"
+      }
+    }
+  },
+  "flow": {
+
+  },
+  "data": {
+
+  },
+  "errors": {
+    "title": "Error page!",
+    "403": "You are not authorized to access the page."
+  }
+}

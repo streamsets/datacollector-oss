@@ -37,7 +37,8 @@ module.exports = function(grunt) {
       atpl: [ 'app/**/*.tpl.html' ],
       ctpl: [ 'common/**/*.tpl.html' ],
       html: [ 'index.html' ],
-      less: 'less/app.less'
+      less: 'less/app.less',
+      i18n: ['i18n/*.json']
     },
 
     /**
@@ -70,6 +71,11 @@ module.exports = function(grunt) {
         'bower_components/jquery/dist/jquery.js',
         'bower_components/angular/angular.js',
         'bower_components/angular-route/angular-route.js',
+        'bower_components/angular-cookies/angular-cookies.js',
+        'bower_components/angular-translate/angular-translate.js',
+        'bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js',
+        'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
+        'bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js',
         'bower_components/bootstrap/dist/js/bootstrap.js',
         'bower_components/ng-tags-input/ng-tags-input.js',
         'bower_components/json-formatter/dist/json-formatter.js'
@@ -81,10 +87,13 @@ module.exports = function(grunt) {
       assets: [
       ],
       fonts: [
-        'bower_components/bootstrap/fonts/glyphicons-halflings-regular.eot',
-        'bower_components/bootstrap/fonts/glyphicons-halflings-regular.svg',
-        'bower_components/bootstrap/fonts/glyphicons-halflings-regular.ttf',
-        'bower_components/bootstrap/fonts/glyphicons-halflings-regular.woff'
+        'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.eot',
+        'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.svg',
+        'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf',
+        'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff'
+      ],
+      i18n: [
+        'bower_components/angular-i18n/*.js'
       ]
     }
   };
@@ -161,7 +170,7 @@ module.exports = function(grunt) {
       build_appjs: {
         files: [
           {
-            src: [ '<%= app_files.js %>' ],
+            src: [ '<%= app_files.js %>', '<%= app_files.i18n %>' ],
             dest: '<%= base_dir %><%= build_dir %>/',
             cwd: '<%= base_dir %>',
             expand: true
@@ -171,7 +180,7 @@ module.exports = function(grunt) {
       build_vendorjs: {
         files: [
           {
-            src: [ '<%= vendor_files.js %>' ],
+            src: [ '<%= vendor_files.js %>', '<%= vendor_files.i18n %>' ],
             dest: '<%= base_dir %><%= build_dir %>/',
             cwd: '<%= base_dir %>',
             expand: true
@@ -430,6 +439,16 @@ module.exports = function(grunt) {
           '<%= base_dir %>app/**/*.js'
         ],
         tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs' ]
+      },
+
+      /**
+       * When our i18n source files change, we want to copy the file to build directory.
+       */
+      i18nsrc: {
+        files: [
+          '<%= base_dir %>i18n/*.json'
+        ],
+        tasks: [ 'copy:build_appjs' ]
       },
 
       /**

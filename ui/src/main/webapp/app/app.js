@@ -1,5 +1,8 @@
 angular.module('pipelineAgentApp', [
   'ngRoute',
+  'ngCookies',
+  'tmh.dynamicLocale',
+  'pascalprecht.translate',
   'templates-app',
   'templates-common',
   'pipelineAgentApp.common',
@@ -7,11 +10,25 @@ angular.module('pipelineAgentApp', [
   'pipelineAgentApp.flow',
   'pipelineAgentApp.data'
 ])
-  .config(function($routeProvider, $locationProvider){
+  .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider){
     $locationProvider.html5Mode(true);
     $routeProvider.otherwise({
       redirect: '/'
     });
+
+    // Initialize angular-translate
+    $translateProvider.useStaticFilesLoader({
+      prefix: 'i18n/',
+      suffix: '.json'
+    });
+
+    $translateProvider.preferredLanguage('en');
+
+    $translateProvider.useCookieStorage();
+
+    tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-i18n/angular-locale_{{locale}}.js');
+    tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');
+
   })
   .run(function ($location, $rootScope) {
     var defaultTitle = 'StreamSets | Data In Motion';

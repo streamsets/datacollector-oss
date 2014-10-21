@@ -26,7 +26,6 @@
     "shelljs": "^0.2.6"
   },
   "scripts": {
-    "postinstall": "bower install",
     "prestart": "npm install",
     "start": "node ./src/main/webapp/server.js",
     "pretest": "npm install",
