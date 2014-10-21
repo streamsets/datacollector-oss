@@ -1,0 +1,150 @@
+package com.streamsets.pipeline.serde;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.streamsets.pipeline.config.ConfigOption;
+import com.streamsets.pipeline.config.ConfigType;
+import com.streamsets.pipeline.config.RuntimeModuleConfiguration;
+import com.streamsets.pipeline.config.RuntimePipelineConfiguration;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by harikiran on 10/20/14.
+ */
+@Consumes(MediaType.APPLICATION_JSON)
+public class RuntimePipelineConfigDeserializer extends JsonDeserializer<RuntimePipelineConfiguration> {
+
+  @Override
+  public RuntimePipelineConfiguration deserialize(
+    JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    RuntimePipelineConfiguration runtimePipelineConfiguration = new RuntimePipelineConfiguration();
+
+    System.out.println("Using deserializer : " + getClass().getName());
+    String fieldName;
+    String instanceName = null;
+    String moduleName = null;
+    String moduleVersion = null;
+    String moduleDescription = null;
+    List<ConfigOption> configOptionList = null;
+    int xPos = 0;
+    int yPos = 0;
+    List<String> inputLanes = null;
+    List<String> outputLanes = null;
+
+    while(jsonParser.nextToken() != JsonToken.END_OBJECT) {
+      fieldName = jsonParser.getCurrentName();
+      if ("runtimeModuleConfigurations".equals(fieldName)) {
+        while(jsonParser.nextToken() != JsonToken.END_ARRAY) {
+
+          //read each module config
+          while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+
+            fieldName = jsonParser.getCurrentName();
+            if ("generalInformation".equals(fieldName)) {
+              //read general information
+              while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                fieldName = jsonParser.getCurrentName();
+                if ("instanceName".equals(fieldName)) {
+                  instanceName = jsonParser.getValueAsString();
+                } else if ("moduleName".equals(fieldName)) {
+                  moduleName = jsonParser.getText();
+                } else if ("moduleVersion".equals(fieldName)) {
+                  moduleVersion = jsonParser.getText();
+                } else if ("moduleDescription".equals(fieldName)) {
+                  moduleDescription = jsonParser.getText();
+                }
+              }
+            } else if ("configInformation".equals(fieldName)) {
+              while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                //read config option array
+                fieldName = jsonParser.getCurrentName();
+                if ("options".equals(fieldName)) {
+                  configOptionList = readConfigOptionArray(jsonParser);
+                } else if ("inputLanes".equals(fieldName)) {
+                  //read config option array
+                  inputLanes = readStringArray(jsonParser);
+                } else if ("outputLanes".equals(fieldName)) {
+                  //read config option array
+                  outputLanes = readStringArray(jsonParser);
+                }
+              }
+            } else if ("uiInformation".equals(fieldName)) {
+              while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                fieldName = jsonParser.getCurrentName();
+                if ("xPos".equals(fieldName)) {
+                  xPos = jsonParser.getValueAsInt();
+                } else if ("yPos".equals(fieldName)) {
+                  yPos = jsonParser.getValueAsInt();
+                }
+              }
+            }
+          }
+          runtimePipelineConfiguration.getRuntimeModuleConfigurations().add(
+            new RuntimeModuleConfiguration(
+              instanceName, moduleName, moduleVersion, moduleDescription, configOptionList, xPos, yPos, inputLanes,
+              outputLanes));
+        }
+      }
+    }
+
+    return runtimePipelineConfiguration;
+  }
+
+  private List<String> readStringArray(JsonParser jsonParser) throws IOException {
+    List<String> stringSet = new ArrayList<String>();
+    while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+      stringSet.add(jsonParser.getValueAsString());
+    }
+    return stringSet;
+  }
+
+  private List<ConfigOption> readConfigOptionArray(JsonParser jsonParser) throws IOException {
+    List<ConfigOption> configOptions = new ArrayList<ConfigOption>();
+    String fieldName;
+    String name = null;
+    String description = null;
+    String defaultValue = null;
+    String shortDescription = null;
+    String type = null;
+    String mandatory = null;
+    String group = null;
+
+    // iterate through the array until token equal to "]"
+    while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+      while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+        fieldName = jsonParser.getCurrentName();
+        if ("name".equals(fieldName)) {
+          name = jsonParser.getText();
+        } else if ("description".equals(fieldName)) {
+          description = jsonParser.getText();
+        } else if ("shortDescription".equals(fieldName)) {
+          shortDescription = jsonParser.getText();
+        } else if ("defaultValue".equals(fieldName)) {
+          defaultValue = jsonParser.getText();
+        } else if ("type".equals(fieldName)) {
+          type = jsonParser.getText();
+        } else if ("mandatory".equals(fieldName)) {
+          mandatory = jsonParser.getText();
+        } else if ("group".equals(fieldName)) {
+          group = jsonParser.getText();
+        }
+      }
+      configOptions.add(new ConfigOption(name,
+        ConfigType.valueOf(type),
+        shortDescription,
+        description,
+        defaultValue,
+        "true".equals(mandatory)? true: false,
+        group));
+    }
+    return configOptions;
+  }
+}

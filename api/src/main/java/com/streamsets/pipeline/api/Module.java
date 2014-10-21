@@ -18,7 +18,6 @@
 package com.streamsets.pipeline.api;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.config.api.ConfigOptionGroup;
 
 import java.util.List;
 
@@ -33,8 +32,6 @@ public interface Module<C extends Module.Context> {
     public String getDescription();
 
     public String getInstanceName();
-
-    public List<ConfigOptionGroup> getConfiguration();
 
   }
 

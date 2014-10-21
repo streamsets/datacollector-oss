@@ -1,4 +1,4 @@
-package com.streamsets.config.api;
+package com.streamsets.pipeline.config;
 
 /**
  * Created by harikiran on 10/18/14.

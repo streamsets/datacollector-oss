@@ -17,25 +17,15 @@
  */
 package com.streamsets.pipeline.container;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
-import com.streamsets.config.api.ConfigOptionGroup;
 import com.streamsets.pipeline.api.Module;
-import com.streamsets.pipeline.serde.ModuleInfoDeserializer;
-import com.streamsets.pipeline.serde.ModuleInfoSerializer;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@JsonSerialize(using = ModuleInfoSerializer.class)
-@JsonDeserialize(using = ModuleInfoDeserializer.class)
 public class ModuleInfo implements Module.Info {
   private String name;
   private String version;
   private String description;
   private String instanceName;
-  private List<ConfigOptionGroup> configOptions;
+
 
   private static boolean validName(String name) {
     if (name.isEmpty()) {
@@ -75,7 +65,6 @@ public class ModuleInfo implements Module.Info {
     this.version = version;
     this.description = description;
     this.instanceName = instanceName;
-    this.configOptions = new ArrayList<ConfigOptionGroup>();
   }
 
   @Override
@@ -96,11 +85,6 @@ public class ModuleInfo implements Module.Info {
   @Override
   public String getInstanceName() {
     return instanceName;
-  }
-
-  @Override
-  public List<ConfigOptionGroup> getConfiguration() {
-    return configOptions;
   }
 
 }

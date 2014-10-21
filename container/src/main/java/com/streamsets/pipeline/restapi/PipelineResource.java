@@ -1,17 +1,17 @@
 package com.streamsets.pipeline.restapi;
 
-import com.codahale.metrics.MetricRegistry;
-import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.container.*;
+import com.streamsets.pipeline.config.RuntimePipelineConfiguration;
+import com.streamsets.pipeline.container.PipelineRunner;
+import com.streamsets.pipeline.container.RunOutput;
+import com.streamsets.pipeline.util.MockConfigGenerator;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by harikiran on 10/19/14.
@@ -27,9 +27,13 @@ public class PipelineResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getAllPipelines(@Context ServletContext context) {
-    //Mock implementation
+    //Mock implementation, return 2 pipeline configuration objects
+    List<RuntimePipelineConfiguration> runtimePipelineConfigurations = new ArrayList<RuntimePipelineConfiguration>(2);
+    runtimePipelineConfigurations.add(MockConfigGenerator.getRuntimePipelineConfiguration());
+    runtimePipelineConfigurations.add(MockConfigGenerator.getRuntimePipelineConfiguration());
+
     return Response.ok().type(MediaType.APPLICATION_JSON)
-      .entity("All pipeLines").build();
+      .entity(runtimePipelineConfigurations).build();
   }
 
   @GET
@@ -38,9 +42,9 @@ public class PipelineResource {
   public Response getConfiguration(@Context ServletContext context,
                                    @PathParam("pipelineName") String pipelineName) {
     //test
-    Pipeline p = createPipeline(true);
+    RuntimePipelineConfiguration r = MockConfigGenerator.getRuntimePipelineConfiguration();
     return Response.ok().type(MediaType.APPLICATION_JSON)
-      .entity(p).build();
+      .entity(r).build();
   }
 
   @POST
@@ -49,10 +53,10 @@ public class PipelineResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response setConfiguration(@Context ServletContext context,
               @PathParam("pipelineName") String pipelineName,
-              Pipeline pipeline,
+              RuntimePipelineConfiguration runtimePipelineConfiguration,
               @QueryParam("mode") String mode) {
     //Mock implementation
-    return Response.accepted().type(MediaType.APPLICATION_JSON).entity(pipeline).build();
+    return Response.accepted().type(MediaType.APPLICATION_JSON).entity(runtimePipelineConfiguration).build();
   }
 
   @GET
@@ -140,26 +144,6 @@ public class PipelineResource {
     PipelineRunner runner = getRunner(context);
     RunOutput output = runner.preview(pipelineName);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(output).build();
-  }
-
-  //Used for mock implementation, to be removed.
-  private Pipeline createPipeline(boolean complete) {
-    MetricRegistry metrics = new MetricRegistry();
-
-    Source.Info sourceInfo = new ModuleInfo("s", "1", "S", "si");
-    Source source = new ContainerModule.TSource();
-    Pipeline.Builder pb = new Pipeline.Builder(metrics, sourceInfo, source, ImmutableSet.of("lane"));
-
-    Processor.Info processorInfo = new ModuleInfo("p", "1", "P", "pi");
-    Processor processor = new ContainerModule.TProcessor();
-    pb.add(processorInfo, processor, ImmutableSet.of("lane"), ImmutableSet.of("lane"));
-
-    if (complete) {
-      Target.Info targetInfo = new ModuleInfo("t", "1", "T", "ti");
-      Target target = new ContainerModule.TTarget();
-      pb.add(targetInfo, target, ImmutableSet.of("lane"));
-    }
-    return (complete) ? pb.build() : pb.buildPreview();
   }
 
 }
