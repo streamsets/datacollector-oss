@@ -130,6 +130,27 @@
       </resource>
     </resources>
     <plugins>
+      <plugin>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-maven-plugins</artifactId>
+      <executions>
+      <execution>
+        <id>version-info</id>
+        <phase>generate-resources</phase>
+        <goals>
+          <goal>version-info</goal>
+        </goals>
+        <configuration>
+          <source>
+            <directory>${basedir}/src/main</directory>
+            <includes>
+              <include>java/**/*.java</include>
+            </includes>
+          </source>
+        </configuration>
+      </execution>
+      </executions>
+      </plugin>
     </plugins>
   </build>
 

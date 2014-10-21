@@ -55,11 +55,21 @@ public class BuildInfo {
     return info.getProperty("pipeline.built.by", "?");
   }
 
+  public String getBuiltRepoSha() {
+    return info.getProperty("pipeline.built.repo.sha", "?");
+  }
+
+  public String getSourceMd5Checksum() {
+    return info.getProperty("pipeline.built.source.md5.checksum", "?");
+  }
+
   public void log(Logger log) {
     log.info("Build info:");
-    log.info("  Version     : {}", getVersion());
-    log.info("  Built date  : {}", getBuiltDate());
-    log.info("  Built by    : {}", getBuiltBy());
+    log.info("  Version         : {}", getVersion());
+    log.info("  Built date      : {}", getBuiltDate());
+    log.info("  Built by        : {}", getBuiltBy());
+    log.info("  Built Repo SHA  : {}", getBuiltRepoSha());
+    log.info("  Built Source MD5: {}", getSourceMd5Checksum());
   }
 
 }
