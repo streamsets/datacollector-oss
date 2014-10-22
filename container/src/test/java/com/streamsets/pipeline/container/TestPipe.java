@@ -18,8 +18,8 @@
 package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.pipeline.api.Module;
-import com.streamsets.pipeline.api.Module.Info;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.Info;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class TestPipe {
 
   public static class TPipe extends Pipe {
 
-    public TPipe(Module.Info info, Set<String> inputLines, Set<String> outputLines) {
+    public TPipe(Stage.Info info, Set<String> inputLines, Set<String> outputLines) {
       super(new ArrayList<Info>(), new MetricRegistry(), info, inputLines, outputLines);
     }
 

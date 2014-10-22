@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.container;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.streamsets.pipeline.api.Module;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.serde.RunOutputSerializer;
 
@@ -30,7 +30,7 @@ public interface RunOutput {
 
   public interface ModuleOutput {
 
-    public Module.Info getModuleInfo();
+    public Stage.Info getModuleInfo();
 
     public Map<String, List<Record>> getOutput();
   }

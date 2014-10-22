@@ -18,12 +18,8 @@
 package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.Module;
-import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.container.Pipeline.Builder;
 import org.junit.Assert;
 import org.junit.Test;
@@ -59,7 +55,7 @@ public class TestPipeline {
 
   @Test(expected = IllegalArgumentException.class)
   public void testBuilderConstructorInvalid5() {
-    Module.Info info = Mockito.mock(Module.Info.class);
+    Stage.Info info = Mockito.mock(Stage.Info.class);
     Mockito.when(info.getInstanceName()).thenReturn("name");
     Source source = Mockito.mock(Source.class);
     Set<String> output = new HashSet<String>();
@@ -130,7 +126,7 @@ public class TestPipeline {
 
   @Test(expected = IllegalArgumentException.class)
   public void testBuilderInvalidPipelineTargetWithNoInput() {
-    Module.Info info = new ModuleInfo("m", "1", "d", "source");
+    Stage.Info info = new ModuleInfo("m", "1", "d", "source");
     Source source = Mockito.mock(Source.class);
     Set<String> output = new HashSet<String>();
     output.add("o");
@@ -286,7 +282,7 @@ public class TestPipeline {
   }
 
   @Test
-  public void testPipelineLifeCycle() {
+  public void testPipelineLifeCycle() throws PipelineException {
     ModuleInfo info = new ModuleInfo("m", "1", "d", "source");
     Observer sourceObserver = Mockito.mock(Observer.class);
     Source source = Mockito.mock(Source.class);
@@ -336,11 +332,11 @@ public class TestPipeline {
     Mockito.verifyZeroInteractions(processorObserver);
     Mockito.verifyZeroInteractions(target);
     pipeline.init();
-    Mockito.verify(source).init(Mockito.any(Module.Info.class), Mockito.any(Source.Context.class));
+    Mockito.verify(source).init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
     Mockito.verify(sourceObserver).init();
-    Mockito.verify(processor).init(Mockito.any(Module.Info.class), Mockito.any(Processor.Context.class));
+    Mockito.verify(processor).init(Mockito.any(Stage.Info.class), Mockito.any(Processor.Context.class));
     Mockito.verify(processorObserver).init();
-    Mockito.verify(target).init(Mockito.any(Module.Info.class), Mockito.any(Target.Context.class));
+    Mockito.verify(target).init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(sourceObserver);
     Mockito.verifyNoMoreInteractions(processor);

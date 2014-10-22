@@ -19,8 +19,9 @@ package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.Module;
-import com.streamsets.pipeline.api.Module.Info;
+import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.Info;
 import com.streamsets.pipeline.api.Target;
 
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class TargetPipe extends Pipe implements Target.Context {
 
   private Target target;
 
-  public TargetPipe(List<Info> pipelineInfo, MetricRegistry metrics, Module.Info moduleInfo, Target target,
+  public TargetPipe(List<Info> pipelineInfo, MetricRegistry metrics, Stage.Info moduleInfo, Target target,
       Set<String> inputLanes) {
     super(pipelineInfo, metrics, moduleInfo, inputLanes, EMPTY_OUTPUT);
     Preconditions.checkNotNull(target, "target cannot be null");
@@ -41,7 +42,11 @@ public class TargetPipe extends Pipe implements Target.Context {
 
   @Override
   public void init() {
-    target.init(getModuleInfo(), this);
+    try {
+      target.init(getModuleInfo(), this);
+    } catch (PipelineException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -58,7 +63,11 @@ public class TargetPipe extends Pipe implements Target.Context {
   @Override
   protected void processBatch(PipeBatch batch) {
     Preconditions.checkNotNull(batch, "batch cannot be null");
-    target.write(batch);
+    try {
+      target.write(batch);
+    } catch (PipelineException e) {
+      e.printStackTrace();
+    }
     //LOG warning if !batch.isInputFullyConsumed()
   }
 

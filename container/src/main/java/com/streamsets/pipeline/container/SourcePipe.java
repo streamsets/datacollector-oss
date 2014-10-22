@@ -19,8 +19,9 @@ package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.Module;
-import com.streamsets.pipeline.api.Module.Info;
+import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.Info;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.record.RecordImpl;
@@ -34,7 +35,7 @@ public class SourcePipe extends Pipe implements Source.Context {
 
   private Source source;
 
-  public SourcePipe(List<Info> pipelineInfo, MetricRegistry metrics, Module.Info info, Source source,
+  public SourcePipe(List<Info> pipelineInfo, MetricRegistry metrics, Stage.Info info, Source source,
       Set<String> outputLanes) {
     super(pipelineInfo, metrics, info, EMPTY_INPUT, outputLanes);
     Preconditions.checkNotNull(source, "source cannot be null");
@@ -43,7 +44,11 @@ public class SourcePipe extends Pipe implements Source.Context {
 
   @Override
   public void init() {
-    source.init(getModuleInfo(), this);
+    try {
+      source.init(getModuleInfo(), this);
+    } catch (PipelineException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -60,7 +65,12 @@ public class SourcePipe extends Pipe implements Source.Context {
   @Override
   protected void processBatch(PipeBatch batch) {
     Preconditions.checkNotNull(batch, "batch cannot be null");
-    String newBatchId = source.produce(batch.getPreviousBatchId(), batch);
+    String newBatchId = null;
+    try {
+      newBatchId = source.produce(batch.getPreviousBatchId(), batch);
+    } catch (PipelineException e) {
+      e.printStackTrace();
+    }
     batch.setBatchId(newBatchId);
   }
 

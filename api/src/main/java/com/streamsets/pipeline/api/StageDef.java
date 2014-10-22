@@ -15,36 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.pipeline.api;
 
-import com.codahale.metrics.MetricRegistry;
 
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface Module<C extends Module.Context> {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface StageDef {
 
-  public interface Info {
+  String name();
 
-    public String getName();
+  String version();
 
-    public String getVersion();
+  String label();
 
-    public String getDescription();
-
-    public String getInstanceName();
-
-  }
-
-  public interface Context {
-
-    public List<Info> getPipelineInfo();
-
-    public MetricRegistry getMetrics();
-
-  }
-
-  public void init(Info info, C context);
-
-  public void destroy();
+  String description() default "";
 
 }

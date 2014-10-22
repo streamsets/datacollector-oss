@@ -97,7 +97,7 @@ public class ContainerModule {
 
     @Override
     public void write(Batch batch) {
-      System.out.println("Target processing batch: " + batch.getBatchId());
+      System.out.println("Target processing batch: " + batch.getSourceOffset());
       Iterator<Record> it = batch.getRecords("lane");
       while (it.hasNext()) {
         Record record = it.next();

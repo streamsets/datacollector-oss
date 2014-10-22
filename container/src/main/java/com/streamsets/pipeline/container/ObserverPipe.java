@@ -18,13 +18,13 @@
 package com.streamsets.pipeline.container;
 
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.Module;
+import com.streamsets.pipeline.api.Stage;
 
 class ObserverPipe extends Pipe {
 
   private Observer observer;
 
-  private static ModuleInfo createObserverInfo(Module.Info info) {
+  private static ModuleInfo createObserverInfo(Stage.Info info) {
     return new ModuleInfo("Observer", "-", "Pipeline built-in observer", info.getInstanceName() + ":observer", false);
   }
 

@@ -19,9 +19,9 @@ package com.streamsets.pipeline.api;
 
 import java.util.Set;
 
-public interface Processor extends Module<Processor.Context> {
+public interface Processor extends Stage<Processor.Context> {
 
-  public interface Context extends Module.Context {
+  public interface Context extends Stage.Context {
 
     public Set<String> getInputLanes();
 
@@ -33,6 +33,6 @@ public interface Processor extends Module<Processor.Context> {
 
   }
 
-  public void process(Batch batch, BatchMaker batchMaker);
+  public void process(Batch batch, BatchMaker batchMaker) throws PipelineException;
 
 }

@@ -19,14 +19,14 @@ package com.streamsets.pipeline.api;
 
 import java.util.Set;
 
-public interface Target extends Module<Target.Context> {
+public interface Target extends Stage<Target.Context> {
 
-  public interface Context extends Module.Context {
+  public interface Context extends Stage.Context {
 
     public Set<String> getInputLanes();
 
   }
 
-  public void write(Batch batch);
+  public void write(Batch batch) throws PipelineException;
 
 }

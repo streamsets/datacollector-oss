@@ -20,9 +20,16 @@ package com.streamsets.pipeline.container;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.Module.Info;
 
-import java.util.*;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.Info;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class Pipeline {
 
@@ -48,15 +55,15 @@ public class Pipeline {
   public static class Builder {
     private boolean built;
     private MetricRegistry metrics;
-    private List<Module.Info> modulesInfo;
-    private List<Module.Info> modulesInfoRO;
+    private List<Stage.Info> modulesInfo;
+    private List<Stage.Info> modulesInfoRO;
     private List<Pipe> pipes;
 
-    public Builder(MetricRegistry metrics, Module.Info info, Source source, Set<String> output) {
+    public Builder(MetricRegistry metrics, Stage.Info info, Source source, Set<String> output) {
       this(metrics, info, source, output, null);
     }
 
-    public Builder(MetricRegistry metrics, Module.Info info, Source source, Set<String> output, Observer observer) {
+    public Builder(MetricRegistry metrics, Stage.Info info, Source source, Set<String> output, Observer observer) {
       Preconditions.checkNotNull(metrics, "metrics cannot be null");
       Preconditions.checkNotNull(info, "info cannot be null");
       Preconditions.checkNotNull(source, "source cannot be null");
@@ -75,11 +82,11 @@ public class Pipeline {
       }
     }
 
-    public Builder add(Module.Info info, Processor processor, Set<String> input, Set<String> output) {
+    public Builder add(Stage.Info info, Processor processor, Set<String> input, Set<String> output) {
       return add(info, processor, input, output, null);
     }
 
-    public Builder add(Module.Info info, Processor processor, Set<String> input, Set<String> output,
+    public Builder add(Stage.Info info, Processor processor, Set<String> input, Set<String> output,
         Observer observer) {
       Preconditions.checkNotNull(info, "info cannot be null");
       Preconditions.checkNotNull(processor, "processor cannot be null");
@@ -97,7 +104,7 @@ public class Pipeline {
       return this;
     }
 
-    public Builder add(Module.Info info, Target target, Set<String> input) {
+    public Builder add(Stage.Info info, Target target, Set<String> input) {
       Preconditions.checkNotNull(info, "info cannot be null");
       Preconditions.checkNotNull(target, "target cannot be null");
       Preconditions.checkNotNull(input, "input cannot be null");
@@ -107,7 +114,7 @@ public class Pipeline {
       return this;
     }
 
-    public Builder add(Module.Info info, Source source, Set<String> output) {
+    public Builder add(Stage.Info info, Source source, Set<String> output) {
       Preconditions.checkNotNull(info, "info cannot be null");
       Preconditions.checkNotNull(source, "target cannot be null");
       Preconditions.checkNotNull(output, "output cannot be null");

@@ -61,7 +61,6 @@
     <jetty.version>9.2.3.v20140905</jetty.version>
     <commons-codec.version>1.9</commons-codec.version>
     <commons-cli.version>1.2</commons-cli.version>
-    <jersy.jackson.version>2.10.1</jersy.jackson.version>
 
     <!-- Platform encoding override -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -215,7 +214,7 @@
       <dependency>
         <groupId>org.glassfish.jersey.media</groupId>
         <artifactId>jersey-media-json-jackson</artifactId>
-        <version>${jersy.jackson.version}</version>
+        <version>${jersey.version}</version>
         <scope>compile</scope>
       </dependency>
     </dependencies>

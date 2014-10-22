@@ -71,7 +71,7 @@ public class PipeBatch implements BatchMaker, Batch {
   }
 
   @Override
-  public String getBatchId() {
+  public String getSourceOffset() {
     return pipelineBatch.getBatchId();
   }
 

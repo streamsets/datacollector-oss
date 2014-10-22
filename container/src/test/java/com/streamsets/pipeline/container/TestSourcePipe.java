@@ -18,8 +18,8 @@
 package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.pipeline.api.Module;
-import com.streamsets.pipeline.api.Module.Info;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.Info;
 import com.streamsets.pipeline.api.Source;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -32,7 +32,7 @@ public class TestSourcePipe {
 
   @Test(expected = NullPointerException.class)
   public void testInvalidConstructor() {
-    Module.Info info = new ModuleInfo("n", "v", "d", "in");
+    Stage.Info info = new ModuleInfo("n", "v", "d", "in");
     Set<String> output = new HashSet<String>();
     output.add("a");
     new SourcePipe(new ArrayList<Info>(), new MetricRegistry(), info, null, output);
@@ -40,7 +40,7 @@ public class TestSourcePipe {
 
   @Test
   public void testConstructor() {
-    Module.Info info = new ModuleInfo("n", "v", "d", "in");
+    Stage.Info info = new ModuleInfo("n", "v", "d", "in");
     Source source = Mockito.mock(Source.class);
     Set<String> output = new HashSet<String>();
     output.add("a");

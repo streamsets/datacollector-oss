@@ -17,8 +17,8 @@
  */
 package com.streamsets.pipeline.container;
 
-import com.streamsets.pipeline.api.Module;
-import com.streamsets.pipeline.api.Module.Info;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.Info;
 import com.streamsets.pipeline.api.Record;
 
 import java.util.ArrayList;
@@ -30,10 +30,10 @@ public class PipelineBatchRunOutput extends PipelineBatch implements RunOutput {
   private List<ModuleOutput> output;
 
   private static class ModuleOutputImpl implements ModuleOutput {
-    private Module.Info info;
+    private Stage.Info info;
     private Map<String, List<Record>> output;
 
-    public ModuleOutputImpl(Module.Info info, Map<String, List<Record>> output) {
+    public ModuleOutputImpl(Stage.Info info, Map<String, List<Record>> output) {
       this.info = info;
       this.output = output;
     }

@@ -18,8 +18,8 @@
 package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.pipeline.api.Module;
-import com.streamsets.pipeline.api.Module.Info;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.Info;
 import com.streamsets.pipeline.api.Processor;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -32,7 +32,7 @@ public class TestProcessorPipe {
 
   @Test(expected = NullPointerException.class)
   public void testInvalidConstructor() {
-    Module.Info info = new ModuleInfo("n", "v", "d", "in");
+    Stage.Info info = new ModuleInfo("n", "v", "d", "in");
     Set<String> input = new HashSet<String>();
     input.add("a");
     Set<String> output = new HashSet<String>();
@@ -42,7 +42,7 @@ public class TestProcessorPipe {
 
   @Test
   public void testConstructor() {
-    Module.Info info = new ModuleInfo("n", "v", "d", "in");
+    Stage.Info info = new ModuleInfo("n", "v", "d", "in");
     Processor Processor = Mockito.mock(Processor.class);
     Set<String> input = new HashSet<String>();
     input.add("a");

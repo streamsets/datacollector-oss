@@ -18,9 +18,9 @@
 package com.streamsets.pipeline.container;
 
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.Module;
+import com.streamsets.pipeline.api.Stage;
 
-public class ModuleInfo implements Module.Info {
+public class ModuleInfo implements Stage.Info {
   private String name;
   private String version;
   private String description;

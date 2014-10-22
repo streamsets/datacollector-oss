@@ -17,20 +17,34 @@
  */
 package com.streamsets.pipeline.api;
 
-import java.util.Set;
+import com.codahale.metrics.MetricRegistry;
 
-public interface Source extends Stage<Source.Context> {
+import java.util.List;
 
-  public interface Context extends Stage.Context {
+public interface Stage<C extends Stage.Context> {
 
-    public Record createRecord(String sourceInfo);
+  public interface Info {
 
-    public Record createRecord(String sourceInfo, byte[] raw, String rawMime);
+    public String getName();
 
-    public Set<String> getOutputLanes();
+    public String getVersion();
+
+    public String getDescription();
+
+    public String getInstanceName();
 
   }
 
-  public String produce(String lastBatchId, BatchMaker batchMaker) throws PipelineException; // returns batchId, NULL if done
+  public interface Context {
+
+    public List<Info> getPipelineInfo();
+
+    public MetricRegistry getMetrics();
+
+  }
+
+  public void init(Info info, C context) throws PipelineException;
+
+  public void destroy();
 
 }

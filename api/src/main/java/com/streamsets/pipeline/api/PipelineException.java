@@ -15,22 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.pipeline.api;
 
-import java.util.Set;
+public class PipelineException extends Exception {
 
-public interface Source extends Stage<Source.Context> {
+  public interface ID {
 
-  public interface Context extends Stage.Context {
-
-    public Record createRecord(String sourceInfo);
-
-    public Record createRecord(String sourceInfo, byte[] raw, String rawMime);
-
-    public Set<String> getOutputLanes();
+    public String getMessageTemplate();
 
   }
 
-  public String produce(String lastBatchId, BatchMaker batchMaker) throws PipelineException; // returns batchId, NULL if done
+  public PipelineException(ID id, Object... args) {
+    super("");
+  }
 
 }

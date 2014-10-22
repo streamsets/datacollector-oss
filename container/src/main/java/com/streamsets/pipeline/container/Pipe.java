@@ -19,19 +19,19 @@ package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.Module;
-import com.streamsets.pipeline.api.Module.Info;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.Info;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class Pipe implements Module.Context {
+public abstract class Pipe implements Stage.Context {
 
   private List<Info> pipelineInfo;
   private MetricRegistry metrics;
-  private Module.Info info;
+  private Stage.Info info;
   private Set<String> inputLanes;
   private Set<String> outputLanes;
   private Set<String> producedLanes;
@@ -73,7 +73,7 @@ public abstract class Pipe implements Module.Context {
     return metrics;
   }
 
-  public Module.Info getModuleInfo() {
+  public Stage.Info getModuleInfo() {
     return info;
   }
 

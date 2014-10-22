@@ -19,8 +19,9 @@ package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.Module;
-import com.streamsets.pipeline.api.Module.Info;
+import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.Info;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Processor.Context;
 import com.streamsets.pipeline.api.Record;
@@ -33,7 +34,7 @@ public class ProcessorPipe extends Pipe implements Context {
 
   private Processor processor;
 
-  public ProcessorPipe(List<Info> pipelineInfo, MetricRegistry metrics, Module.Info moduleInfo, Processor processor,
+  public ProcessorPipe(List<Info> pipelineInfo, MetricRegistry metrics, Stage.Info moduleInfo, Processor processor,
       Set<String> inputLanes, Set<String> outputLanes) {
     super(pipelineInfo, metrics, moduleInfo, inputLanes, outputLanes);
     Preconditions.checkNotNull(processor, "processor cannot be null");
@@ -42,7 +43,12 @@ public class ProcessorPipe extends Pipe implements Context {
 
   @Override
   public void init() {
-    processor.init(getModuleInfo(), this);
+
+    try {
+      processor.init(getModuleInfo(), this);
+    } catch (PipelineException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -59,7 +65,11 @@ public class ProcessorPipe extends Pipe implements Context {
   @Override
   protected void processBatch(PipeBatch batch) {
     Preconditions.checkNotNull(batch, "batch cannot be null");
-    processor.process(batch, batch);
+    try {
+      processor.process(batch, batch);
+    } catch (PipelineException e) {
+      e.printStackTrace();
+    }
     //LOG warning if !batch.isInputFullyConsumed()
   }
 

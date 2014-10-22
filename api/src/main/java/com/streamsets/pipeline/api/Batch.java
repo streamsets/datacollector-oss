@@ -22,7 +22,7 @@ import java.util.Set;
 
 public interface Batch {
 
-  public String getBatchId();
+  public String getSourceOffset();
 
   public Set<String> getLanes();
 
