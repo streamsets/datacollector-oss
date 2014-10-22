@@ -17,25 +17,20 @@
  */
 package com.streamsets.pipeline.api;
 
-import org.junit.Assert;
-import org.junit.Test;
+class ByteArrayTypeSupport extends TypeSupport<byte[]> {
 
-import java.util.Date;
-
-public class TestField {
-
-  @Test
-  public void testField() {
-    Field f = Field.create((String)null);
-    Assert.assertNull(f.getValue());
-
-    f = Field.create("s");
-    Assert.assertEquals("s", f.getValue());
-
-    Date d = new Date();
-    f = Field.createDate(d);
-    Assert.assertEquals(d, f.getValue());
-    Assert.assertNotSame(d, f.getValue());
-
+  @Override
+  public byte[] convert(Object value) {
+    if (value instanceof byte[]) {
+      return (byte[])value;
+    }
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a byte[]",
+                                                       value.getClass().getSimpleName(), value));
   }
+
+  @Override
+  public Object snapshot(Object value) {
+    return ((byte[])value).clone();
+  }
+
 }

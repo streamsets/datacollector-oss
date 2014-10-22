@@ -19,12 +19,18 @@ package com.streamsets.pipeline.api;
 
 import org.slf4j.helpers.MessageFormatter;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 // private class with utilities for the public API classes, not exposed as public API
 abstract class ApiUtils {
 
-  static <T> T checkNotNull(T value, String msg) {
+  static <T> T checkNotNull(T value, String varName) {
     if (value == null) {
-      throw new NullPointerException(msg);
+      throw new NullPointerException(format("{} cannot be null", varName));
     }
     return value;
   }
@@ -33,5 +39,20 @@ abstract class ApiUtils {
     return MessageFormatter.arrayFormat(template, args).getMessage();
   }
 
+  private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
+  private static final String ISO8601_UTC_MASK = "yyyy-MM-dd'T'HH:mm'Z'";
+
+  private static DateFormat getISO8601DateFormat() {
+    DateFormat dateFormat = new SimpleDateFormat(ISO8601_UTC_MASK);
+    // Stricter parsing to prevent dates such as 2011-12-50T01:00Z (December 50th) from matching
+    dateFormat.setLenient(false);
+    dateFormat.setTimeZone(UTC);
+    return dateFormat;
+  }
+
+  //TODO make format masks configurable and support scanning
+  static Date parse(String str) throws ParseException {
+    return getISO8601DateFormat().parse(str);
+  }
 
 }

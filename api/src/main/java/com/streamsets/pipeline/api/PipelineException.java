@@ -36,8 +36,8 @@ public class PipelineException extends Exception {
   private Object params;
 
   public PipelineException(ID id, Object... params) {
-    super(null, getCause(ApiUtils.checkNotNull(params, "params cannot be null")));
-    this.id = ApiUtils.checkNotNull(id, "id cannot be null");
+    super(null, getCause(ApiUtils.checkNotNull(params, "params")));
+    this.id = ApiUtils.checkNotNull(id, "id");
     this.params = params.clone();
   }
 

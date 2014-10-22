@@ -78,9 +78,9 @@ public class RecordImpl implements Record {
     this.raw = (raw != null) ? raw.clone() : null;
     this.rawMime = rawMime;
     headerData = new VersionedSimpleMap<String, String>();
-    headerData.put(MODULE, module);
-    headerData.put(SOURCE, source);
-    headerData.put(PROCESSING_PATH, module);
+    headerData.put(PREVIOUS_MODULE_ATTR, module);
+    headerData.put(SOURCE_ATTR, source);
+    headerData.put(PROCESSING_PATH_ATTR, module);
     fieldData = new VersionedSimpleMap<String, Field>();
     header = new HeaderImpl(headerData);
   }
@@ -91,14 +91,14 @@ public class RecordImpl implements Record {
     raw = record.raw;
     rawMime = record.rawMime;
     headerData = new VersionedSimpleMap<String, String>(record.headerData);
-    headerData.put(MODULE, module);
-    headerData.put(PROCESSING_PATH, headerData.get(PROCESSING_PATH) + ":" + module);
+    headerData.put(PREVIOUS_MODULE_ATTR, module);
+    headerData.put(PROCESSING_PATH_ATTR, headerData.get(PROCESSING_PATH_ATTR) + ":" + module);
     fieldData = new VersionedSimpleMap<String, Field>(record.fieldData);
     header = new HeaderImpl(headerData);
   }
 
   @Override
-  public Record getPrevious() {
+  public Record getPreviousVersion() {
     return previous;
   }
 

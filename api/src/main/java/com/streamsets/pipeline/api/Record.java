@@ -23,11 +23,13 @@ import java.util.Locale;
 
 public interface Record {
 
-  public static final String MODULE = "_.module";
+  public static final String RESERVED_ATTRIBUTE_PREFIX = "_.";
 
-  public static final String SOURCE = "_.source";
+  public static final String PREVIOUS_MODULE_ATTR = RESERVED_ATTRIBUTE_PREFIX + "previous-module";
 
-  public static final String PROCESSING_PATH = "_.path";
+  public static final String SOURCE_ATTR = RESERVED_ATTRIBUTE_PREFIX + "source";
+
+  public static final String PROCESSING_PATH_ATTR = RESERVED_ATTRIBUTE_PREFIX + "processing-path";
 
   public interface Header {
 
@@ -45,7 +47,7 @@ public interface Record {
 
   }
 
-  public Record getPrevious();
+  public Record getPreviousVersion();
 
   public Header getHeader();
 

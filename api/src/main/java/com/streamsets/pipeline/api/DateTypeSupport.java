@@ -17,25 +17,31 @@
  */
 package com.streamsets.pipeline.api;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import java.text.ParseException;
 import java.util.Date;
 
-public class TestField {
+class DateTypeSupport extends TypeSupport<Date> {
 
-  @Test
-  public void testField() {
-    Field f = Field.create((String)null);
-    Assert.assertNull(f.getValue());
-
-    f = Field.create("s");
-    Assert.assertEquals("s", f.getValue());
-
-    Date d = new Date();
-    f = Field.createDate(d);
-    Assert.assertEquals(d, f.getValue());
-    Assert.assertNotSame(d, f.getValue());
-
+  @Override
+  public Date convert(Object value) {
+    if (value instanceof Date) {
+      return (Date) value;
+    }
+    if (value instanceof String) {
+      try {
+        return ApiUtils.parse((String) value);
+      } catch (ParseException ex) {
+        throw new IllegalArgumentException(ApiUtils.format("Cannot parse '{}' to a Date, format must be ISO8601 UTC" +
+                                                           "(yyyy-MM-dd'T'HH:mm'Z')", value));
+      }
+    }
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a Date",
+                                                       value.getClass().getSimpleName(), value));
   }
+
+  @Override
+  public Object snapshot(Object value) {
+    return ((Date) value).clone();
+  }
+
 }

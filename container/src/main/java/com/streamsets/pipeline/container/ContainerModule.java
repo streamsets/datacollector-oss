@@ -49,9 +49,9 @@ public class ContainerModule {
       int count = (lastBatchId == null) ? 0 : Integer.parseInt(lastBatchId);
       for (int i = 0; i < 2; i++) {
         Record record = context.createRecord("id:" + count + ":" + i);
-        record.setField("batch", new Field(count));
-        record.setField("idx", new Field(i));
-        record.setField("name", new Field("" + count + ":" + i));
+        record.setField("batch", Field.create(count));
+        record.setField("idx", Field.create(i));
+        record.setField("name", Field.create("" + count + ":" + i));
         batchMaker.addRecord(record, "lane");
       }
       return (count < 100) ? "" + (count + 1) : null;
@@ -76,8 +76,8 @@ public class ContainerModule {
       Iterator<Record> it = batch.getRecords("lane");
       while (it.hasNext()) {
         Record record = it.next();
-        record.setField("idx", new Field(100 + counter++));
-        record.setField("p-added", new Field(counter++));
+        record.setField("idx", Field.create(100 + counter++));
+        record.setField("p-added", Field.create(counter++));
         batchMaker.addRecord(record, "lane");
       }
     }

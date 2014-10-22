@@ -17,25 +17,21 @@
  */
 package com.streamsets.pipeline.api;
 
-import org.junit.Assert;
-import org.junit.Test;
+class CharTypeSupport extends TypeSupport<Character> {
 
-import java.util.Date;
-
-public class TestField {
-
-  @Test
-  public void testField() {
-    Field f = Field.create((String)null);
-    Assert.assertNull(f.getValue());
-
-    f = Field.create("s");
-    Assert.assertEquals("s", f.getValue());
-
-    Date d = new Date();
-    f = Field.createDate(d);
-    Assert.assertEquals(d, f.getValue());
-    Assert.assertNotSame(d, f.getValue());
-
+  @Override
+  public Character convert(Object value) {
+    if (value instanceof Character) {
+      return (Character) value;
+    }
+    if (value instanceof String) {
+      String s = (String) value;
+      if (s.length() > 0) {
+        return s.charAt(0);
+      }
+    }
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a char",
+                                                       value.getClass().getSimpleName(), value));
   }
+
 }

@@ -17,25 +17,12 @@
  */
 package com.streamsets.pipeline.api;
 
-import org.junit.Assert;
-import org.junit.Test;
+abstract class TypeSupport<T> {
 
-import java.util.Date;
+  public abstract T convert(Object value);
 
-public class TestField {
-
-  @Test
-  public void testField() {
-    Field f = Field.create((String)null);
-    Assert.assertNull(f.getValue());
-
-    f = Field.create("s");
-    Assert.assertEquals("s", f.getValue());
-
-    Date d = new Date();
-    f = Field.createDate(d);
-    Assert.assertEquals(d, f.getValue());
-    Assert.assertNotSame(d, f.getValue());
-
+  public Object snapshot(Object value) {
+    return value;
   }
+
 }
