@@ -14,9 +14,7 @@ Software requirements:
 
 -------
 
-Maven Goals: clean, compile, test, package, cobertura:cobertura
-
-Profiles (use -P<profile-name>):
+Maven Profiles (use -P<profile-name>):
 
 * (default) : builds the pipeline modules without the ui module
 * ui        : builds the pipeline modules with the ui module
@@ -25,6 +23,25 @@ Profiles (use -P<profile-name>):
 * sandbox   : builds the sandbox modules
               (use -Dsandbox.module=<module-name> to build only one module)
 
+-------
+
+Code Coverage (using cobertura plugin):
+
+To generate coverage report run:
+
+  $ mvn cobertura:cobertura
+
+  The coverage report of each module will be at [MODULE]/target/site/cobertura/index.html
+
+To generate coverage report and check minimum coverage run:
+
+  $ mvn cobertura:cobertura cobertura:check
+
+Aggregating the coverage report for all modules:
+
+  $ mvn cobertura:cobertura -Dcobertura.aggregate
+
+  The aggregated coverage report will be at root/target/site/cobertura/index.html
 
 
 
