@@ -20,37 +20,41 @@ package com.streamsets.pipeline.api;
 import java.math.BigDecimal;
 import java.util.Date;
 
-// A field is immutable, doing special handling for Date, cloning it on value()
+// A field is immutable
 public class Field {
 
   public enum Type {
-    BOOLEAN(new BooleanTypeSupport()),
-    CHAR(new CharTypeSupport()),
-    BYTE(new ByteTypeSupport()),
-    SHORT(new ShortTypeSupport()),
-    INTEGER(new IntegerTypeSupport()),
-    LONG(new LongTypeSupport()),
-    FLOAT(new FloatTypeSupport()),
-    DOUBLE(new DoubleTypeSupport()),
-    DATE(new DateTypeSupport()),
-    DATETIME(new DateTypeSupport()),
-    DECIMAL(new DecimalTypeSupport()),
-    STRING(new StringTypeSupport()),
-    BYTE_ARRAY(new ByteArrayTypeSupport());
+    BOOLEAN(new _BooleanTypeSupport()),
+    CHAR(new _CharTypeSupport()),
+    BYTE(new _ByteTypeSupport()),
+    SHORT(new _ShortTypeSupport()),
+    INTEGER(new _IntegerTypeSupport()),
+    LONG(new _LongTypeSupport()),
+    FLOAT(new _FloatTypeSupport()),
+    DOUBLE(new _DoubleTypeSupport()),
+    DATE(new _DateTypeSupport()),
+    DATETIME(new _DateTypeSupport()),
+    DECIMAL(new _DecimalTypeSupport()),
+    STRING(new _StringTypeSupport()),
+    BYTE_ARRAY(new _ByteArrayTypeSupport());
 
-    private final TypeSupport<?> support;
+    final _TypeSupport<?> supporter;
 
-    private Type(TypeSupport<?> support) {
-      this.support = support;
+    private Type(_TypeSupport<?> supporter) {
+      this.supporter = supporter;
     }
 
     private Object convert(Object value) {
-      return (value != null) ? support.convert(value) : null;
+      return (value != null) ? supporter.convert(value) : null;
     }
 
     @SuppressWarnings("unchecked")
     private <T> T snapshot(T value) {
-      return (value != null) ? (T) support.snapshot(value) : null;
+      return (value != null) ? (T) supporter.snapshot(value) : null;
+    }
+
+    private String toString(Object value) {
+      return _ApiUtils.format("Field[{}:{}]", this, value);
     }
 
   }
@@ -108,18 +112,18 @@ public class Field {
   }
 
   public static <T> Field create(Type type, T value) {
-    return new Field(ApiUtils.checkNotNull(type, "type"), type.convert(value));
+    return new Field(_ApiUtils.checkNotNull(type, "type"), type.convert(value));
   }
 
   public static <T> Field create(Field field, T value) {
-    return create(ApiUtils.checkNotNull(field, "field").getType(), value);
+    return create(_ApiUtils.checkNotNull(field, "field").getType(), value);
   }
 
   private Type type;
   private Object value;
 
   private Field(Type type, Object value) {
-    this.type = ApiUtils.checkNotNull(type, "type");
+    this.type = type;
     this.value = type.snapshot(value);
   }
 
@@ -132,7 +136,7 @@ public class Field {
   }
 
   public String toString() {
-    return (value != null) ? value.toString() : null;
+    return type.toString(value);
   }
 
 }

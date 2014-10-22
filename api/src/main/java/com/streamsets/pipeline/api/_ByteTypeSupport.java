@@ -19,36 +19,36 @@ package com.streamsets.pipeline.api;
 
 import java.math.BigDecimal;
 
-class FloatTypeSupport extends TypeSupport<Float> {
+class _ByteTypeSupport extends _TypeSupport<Byte> {
 
   @Override
-  public Float convert(Object value) {
-    if (value instanceof Float) {
-      return (Float) value;
+  public Byte convert(Object value) {
+    if (value instanceof Byte) {
+      return (Byte) value;
     }
     if (value instanceof String) {
-      return Float.parseFloat((String) value);
-    }
-    if (value instanceof Short) {
-      return ((Short)value).floatValue();
+      return Byte.parseByte((String) value);
     }
     if (value instanceof Integer) {
-      return ((Integer)value).floatValue();
-    }
-    if (value instanceof Byte) {
-      return ((Byte)value).floatValue();
+      return ((Integer)value).byteValue();
     }
     if (value instanceof Long) {
-      return ((Long)value).floatValue();
+      return ((Long)value).byteValue();
+    }
+    if (value instanceof Short) {
+      return ((Short)value).byteValue();
+    }
+    if (value instanceof Float) {
+      return ((Float)value).byteValue();
     }
     if (value instanceof Double) {
-      return ((Double)value).floatValue();
+      return ((Double)value).byteValue();
     }
     if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).floatValue();
+      return ((BigDecimal)value).byteValue();
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a float",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a byte",
+                                                        value.getClass().getSimpleName(), value));
   }
 
 }

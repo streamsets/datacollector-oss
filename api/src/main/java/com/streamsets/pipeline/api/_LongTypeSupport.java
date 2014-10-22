@@ -19,36 +19,36 @@ package com.streamsets.pipeline.api;
 
 import java.math.BigDecimal;
 
-class IntegerTypeSupport extends TypeSupport<Integer> {
+class _LongTypeSupport extends _TypeSupport<Long> {
 
   @Override
-  public Integer convert(Object value) {
-    if (value instanceof Integer) {
-      return (Integer) value;
+  public Long convert(Object value) {
+    if (value instanceof Long) {
+      return (Long) value;
     }
     if (value instanceof String) {
-      return Integer.parseInt((String) value);
+      return Long.parseLong((String) value);
     }
     if (value instanceof Short) {
-      return ((Short)value).intValue();
+      return ((Short)value).longValue();
     }
-    if (value instanceof Long) {
-      return ((Long)value).intValue();
+    if (value instanceof Integer) {
+      return ((Integer)value).longValue();
     }
     if (value instanceof Byte) {
-      return ((Byte)value).intValue();
+      return ((Byte)value).longValue();
     }
     if (value instanceof Float) {
-      return ((Float)value).intValue();
+      return ((Float)value).longValue();
     }
     if (value instanceof Double) {
-      return ((Double)value).intValue();
+      return ((Double)value).longValue();
     }
     if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).intValue();
+      return ((BigDecimal)value).longValue();
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a int",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a long",
+                                                        value.getClass().getSimpleName(), value));
   }
 
 }

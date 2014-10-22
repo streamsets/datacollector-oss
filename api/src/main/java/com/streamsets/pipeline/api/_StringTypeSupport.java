@@ -17,20 +17,11 @@
  */
 package com.streamsets.pipeline.api;
 
-class ByteArrayTypeSupport extends TypeSupport<byte[]> {
+class _StringTypeSupport extends _TypeSupport<String> {
 
   @Override
-  public byte[] convert(Object value) {
-    if (value instanceof byte[]) {
-      return (byte[])value;
-    }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a byte[]",
-                                                       value.getClass().getSimpleName(), value));
-  }
-
-  @Override
-  public Object snapshot(Object value) {
-    return ((byte[])value).clone();
+  public String convert(Object value) {
+    return value.toString();
   }
 
 }

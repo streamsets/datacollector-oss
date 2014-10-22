@@ -17,12 +17,21 @@
  */
 package com.streamsets.pipeline.api;
 
-abstract class TypeSupport<T> {
+class _CharTypeSupport extends _TypeSupport<Character> {
 
-  public abstract T convert(Object value);
-
-  public Object snapshot(Object value) {
-    return value;
+  @Override
+  public Character convert(Object value) {
+    if (value instanceof Character) {
+      return (Character) value;
+    }
+    if (value instanceof String) {
+      String s = (String) value;
+      if (s.length() > 0) {
+        return s.charAt(0);
+      }
+    }
+    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a char",
+                                                        value.getClass().getSimpleName(), value));
   }
 
 }

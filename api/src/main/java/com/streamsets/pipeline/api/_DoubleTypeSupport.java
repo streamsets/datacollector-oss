@@ -19,39 +19,36 @@ package com.streamsets.pipeline.api;
 
 import java.math.BigDecimal;
 
-class BooleanTypeSupport extends TypeSupport<Boolean> {
+class _DoubleTypeSupport extends _TypeSupport<Double> {
 
   @Override
-  public Boolean convert(Object value) {
-    if (value instanceof Boolean) {
-      return (Boolean) value;
+  public Double convert(Object value) {
+    if (value instanceof Double) {
+      return (Double) value;
     }
     if (value instanceof String) {
-      return Boolean.valueOf((String) value);
-    }
-    if (value instanceof Integer) {
-      return ((Integer)value) != 0;
-    }
-    if (value instanceof Long) {
-      return ((Long)value) != 0;
+      return Double.parseDouble((String) value);
     }
     if (value instanceof Short) {
-      return ((Short)value) != 0;
+      return ((Short)value).doubleValue();
+    }
+    if (value instanceof Integer) {
+      return ((Integer)value).doubleValue();
     }
     if (value instanceof Byte) {
-      return ((Byte)value) != 0;
+      return ((Byte)value).doubleValue();
+    }
+    if (value instanceof Long) {
+      return ((Long)value).doubleValue();
     }
     if (value instanceof Float) {
-      return ((Float)value) != 0;
-    }
-    if (value instanceof Double) {
-      return ((Double)value) != 0;
+      return ((Float)value).doubleValue();
     }
     if (value instanceof BigDecimal) {
-      return ! value.equals(BigDecimal.ZERO);
+      return ((BigDecimal)value).doubleValue();
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a boolean",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a double",
+                                                        value.getClass().getSimpleName(), value));
   }
 
 }

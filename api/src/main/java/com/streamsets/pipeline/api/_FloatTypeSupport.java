@@ -19,36 +19,36 @@ package com.streamsets.pipeline.api;
 
 import java.math.BigDecimal;
 
-class DoubleTypeSupport extends TypeSupport<Double> {
+class _FloatTypeSupport extends _TypeSupport<Float> {
 
   @Override
-  public Double convert(Object value) {
-    if (value instanceof Double) {
-      return (Double) value;
+  public Float convert(Object value) {
+    if (value instanceof Float) {
+      return (Float) value;
     }
     if (value instanceof String) {
-      return Double.parseDouble((String) value);
+      return Float.parseFloat((String) value);
     }
     if (value instanceof Short) {
-      return ((Short)value).doubleValue();
+      return ((Short)value).floatValue();
     }
     if (value instanceof Integer) {
-      return ((Integer)value).doubleValue();
+      return ((Integer)value).floatValue();
     }
     if (value instanceof Byte) {
-      return ((Byte)value).doubleValue();
+      return ((Byte)value).floatValue();
     }
     if (value instanceof Long) {
-      return ((Long)value).doubleValue();
+      return ((Long)value).floatValue();
     }
-    if (value instanceof Float) {
-      return ((Float)value).doubleValue();
+    if (value instanceof Double) {
+      return ((Double)value).floatValue();
     }
     if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).doubleValue();
+      return ((BigDecimal)value).floatValue();
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a double",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a float",
+                                                        value.getClass().getSimpleName(), value));
   }
 
 }

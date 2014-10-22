@@ -19,36 +19,39 @@ package com.streamsets.pipeline.api;
 
 import java.math.BigDecimal;
 
-class DecimalTypeSupport extends TypeSupport<BigDecimal> {
+class _BooleanTypeSupport extends _TypeSupport<Boolean> {
 
   @Override
-  public BigDecimal convert(Object value) {
-    if (value instanceof BigDecimal) {
-      return (BigDecimal) value;
+  public Boolean convert(Object value) {
+    if (value instanceof Boolean) {
+      return (Boolean) value;
     }
     if (value instanceof String) {
-      return new BigDecimal((String) value);
-    }
-    if (value instanceof Short) {
-      return new BigDecimal((Short)value);
+      return Boolean.valueOf((String) value);
     }
     if (value instanceof Integer) {
-      return new BigDecimal((Integer)value);
+      return ((Integer)value) != 0;
     }
     if (value instanceof Long) {
-      return new BigDecimal((Long)value);
+      return ((Long)value) != 0;
+    }
+    if (value instanceof Short) {
+      return ((Short)value) != 0;
     }
     if (value instanceof Byte) {
-      return new BigDecimal((Byte)value);
+      return ((Byte)value) != 0;
     }
     if (value instanceof Float) {
-      return new BigDecimal((Float)value);
+      return ((Float)value) != 0;
     }
     if (value instanceof Double) {
-      return new BigDecimal((Double)value);
+      return ((Double)value) != 0;
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a BigDecimal",
-                                                       value.getClass().getSimpleName(), value));
+    if (value instanceof BigDecimal) {
+      return ! value.equals(BigDecimal.ZERO);
+    }
+    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a boolean",
+                                                        value.getClass().getSimpleName(), value));
   }
 
 }

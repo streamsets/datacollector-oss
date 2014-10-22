@@ -17,31 +17,12 @@
  */
 package com.streamsets.pipeline.api;
 
-import java.text.ParseException;
-import java.util.Date;
+abstract class _TypeSupport<T> {
 
-class DateTypeSupport extends TypeSupport<Date> {
+  public abstract T convert(Object value);
 
-  @Override
-  public Date convert(Object value) {
-    if (value instanceof Date) {
-      return (Date) value;
-    }
-    if (value instanceof String) {
-      try {
-        return ApiUtils.parse((String) value);
-      } catch (ParseException ex) {
-        throw new IllegalArgumentException(ApiUtils.format("Cannot parse '{}' to a Date, format must be ISO8601 UTC" +
-                                                           "(yyyy-MM-dd'T'HH:mm'Z')", value));
-      }
-    }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a Date",
-                                                       value.getClass().getSimpleName(), value));
-  }
-
-  @Override
   public Object snapshot(Object value) {
-    return ((Date) value).clone();
+    return value;
   }
 
 }

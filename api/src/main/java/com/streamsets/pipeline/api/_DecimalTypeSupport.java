@@ -19,36 +19,36 @@ package com.streamsets.pipeline.api;
 
 import java.math.BigDecimal;
 
-class LongTypeSupport extends TypeSupport<Long> {
+class _DecimalTypeSupport extends _TypeSupport<BigDecimal> {
 
   @Override
-  public Long convert(Object value) {
-    if (value instanceof Long) {
-      return (Long) value;
+  public BigDecimal convert(Object value) {
+    if (value instanceof BigDecimal) {
+      return (BigDecimal) value;
     }
     if (value instanceof String) {
-      return Long.parseLong((String) value);
+      return new BigDecimal((String) value);
     }
     if (value instanceof Short) {
-      return ((Short)value).longValue();
+      return new BigDecimal((Short)value);
     }
     if (value instanceof Integer) {
-      return ((Integer)value).longValue();
+      return new BigDecimal((Integer)value);
+    }
+    if (value instanceof Long) {
+      return new BigDecimal((Long)value);
     }
     if (value instanceof Byte) {
-      return ((Byte)value).longValue();
+      return new BigDecimal((Byte)value);
     }
     if (value instanceof Float) {
-      return ((Float)value).longValue();
+      return new BigDecimal((Float)value);
     }
     if (value instanceof Double) {
-      return ((Double)value).longValue();
+      return new BigDecimal((Double)value);
     }
-    if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).longValue();
-    }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a long",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a BigDecimal",
+                                                        value.getClass().getSimpleName(), value));
   }
 
 }

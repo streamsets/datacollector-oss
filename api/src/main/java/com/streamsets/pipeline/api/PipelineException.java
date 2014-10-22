@@ -36,8 +36,8 @@ public class PipelineException extends Exception {
   private Object params;
 
   public PipelineException(ID id, Object... params) {
-    super(null, getCause(ApiUtils.checkNotNull(params, "params")));
-    this.id = ApiUtils.checkNotNull(id, "id");
+    super(null, getCause(_ApiUtils.checkNotNull(params, "params")));
+    this.id = _ApiUtils.checkNotNull(id, "id");
     this.params = params.clone();
   }
 
@@ -46,7 +46,7 @@ public class PipelineException extends Exception {
   }
 
   public String getMessage() {
-    return ApiUtils.format(id.getMessageTemplate(), params);
+    return _ApiUtils.format(id.getMessageTemplate(), params);
   }
 
   public String getMessage(ResourceBundle rb) {
@@ -59,7 +59,7 @@ public class PipelineException extends Exception {
         msg = getMessage();
       } else {
         LOG.warn("ResourceBundle does not contain ID '{}' key", id.getClass().getSimpleName() + ":" + id.toString());
-        msg = ApiUtils.format(rb.getString(key), params);
+        msg = _ApiUtils.format(rb.getString(key), params);
       }
     }
     return msg;

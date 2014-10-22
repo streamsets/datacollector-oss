@@ -19,7 +19,7 @@ package com.streamsets.pipeline.api;
 
 import java.math.BigDecimal;
 
-class ShortTypeSupport extends TypeSupport<Short> {
+class _ShortTypeSupport extends _TypeSupport<Short> {
 
   @Override
   public Short convert(Object value) {
@@ -47,8 +47,8 @@ class ShortTypeSupport extends TypeSupport<Short> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).shortValue();
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a short",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a short",
+                                                        value.getClass().getSimpleName(), value));
   }
 
 }

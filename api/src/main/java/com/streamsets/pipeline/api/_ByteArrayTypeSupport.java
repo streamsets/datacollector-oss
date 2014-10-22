@@ -17,21 +17,20 @@
  */
 package com.streamsets.pipeline.api;
 
-class CharTypeSupport extends TypeSupport<Character> {
+class _ByteArrayTypeSupport extends _TypeSupport<byte[]> {
 
   @Override
-  public Character convert(Object value) {
-    if (value instanceof Character) {
-      return (Character) value;
+  public byte[] convert(Object value) {
+    if (value instanceof byte[]) {
+      return (byte[])value;
     }
-    if (value instanceof String) {
-      String s = (String) value;
-      if (s.length() > 0) {
-        return s.charAt(0);
-      }
-    }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a char",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a byte[]",
+                                                        value.getClass().getSimpleName(), value));
+  }
+
+  @Override
+  public Object snapshot(Object value) {
+    return ((byte[])value).clone();
   }
 
 }
