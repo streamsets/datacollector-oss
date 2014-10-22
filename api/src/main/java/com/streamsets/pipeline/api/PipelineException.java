@@ -18,7 +18,13 @@
 
 package com.streamsets.pipeline.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ResourceBundle;
+
 public class PipelineException extends Exception {
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineException.class);
 
   public interface ID {
 
@@ -26,8 +32,45 @@ public class PipelineException extends Exception {
 
   }
 
-  public PipelineException(ID id, Object... args) {
-    super("");
+  private ID id;
+  private Object params;
+
+  public PipelineException(ID id, Object... params) {
+    super(null, getCause(ApiUtils.checkNotNull(params, "params cannot be null")));
+    this.id = ApiUtils.checkNotNull(id, "id cannot be null");
+    this.params = params.clone();
+  }
+
+  public ID getID() {
+    return id;
+  }
+
+  public String getMessage() {
+    return ApiUtils.format(id.getMessageTemplate(), params);
+  }
+
+  public String getMessage(ResourceBundle rb) {
+    String msg;
+    if (rb == null) {
+      msg = getMessage();
+    } else {
+      String key = id.toString();
+      if (!rb.containsKey(key)) {
+        msg = getMessage();
+      } else {
+        LOG.warn("ResourceBundle does not contain ID '{}' key", id.getClass().getSimpleName() + ":" + id.toString());
+        msg = ApiUtils.format(rb.getString(key), params);
+      }
+    }
+    return msg;
+  }
+
+  private static Throwable getCause(Object... params) {
+    Throwable throwable = null;
+    if (params.length > 0 && params[params.length - 1] instanceof Throwable) {
+      throwable = (Throwable) params[params.length - 1];
+    }
+    return throwable;
   }
 
 }

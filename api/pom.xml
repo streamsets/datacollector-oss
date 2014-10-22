@@ -91,6 +91,16 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <linksource>true</linksource>
+          <quiet>true</quiet>
+          <verbose>false</verbose>
+          <charset>UTF-8</charset>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
