@@ -93,6 +93,12 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-pipeline-sdk</artifactId>
+        <version>${project.version}</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-pipeline-ui</artifactId>
         <version>${project.version}</version>
         <scope>compile</scope>

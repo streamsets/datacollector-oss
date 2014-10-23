@@ -40,6 +40,7 @@
     <module>api</module>
     <module>container</module>
     <module>stage-lib</module>
+    <module>sdk</module>
   </modules>
 
   <build>

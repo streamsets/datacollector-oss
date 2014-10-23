@@ -51,6 +51,10 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-pipeline-stage-lib</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-pipeline-sdk</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -120,7 +124,7 @@
                   <goal>javadoc</goal>
                 </goals>
                 <configuration>
-                  <linksource>true</linksource>
+                  <linksource>false</linksource>
                   <quiet>true</quiet>
                   <verbose>false</verbose>
                   <charset>UTF-8</charset>
@@ -143,12 +147,19 @@
                         com.streamsets.pipeline.lib:com.streamsets.pipeline.lib.*
                       </packages>
                     </group>
+                    <group>
+                      <title>Pipeline Stage SDK API</title>
+                      <packages>
+                        com.streamsets.pipeline.sdk
+                      </packages>
+                    </group>
                   </groups>
 
                   <includeDependencySources>true</includeDependencySources>
                   <dependencySourceIncludes>
                     <dependencySourceInclude>com.streamsets:streamsets-pipeline-api</dependencySourceInclude>
                     <dependencySourceInclude>com.streamsets:streamsets-pipeline-stage-lib</dependencySourceInclude>
+                    <dependencySourceInclude>com.streamsets:streamsets-pipeline-sdk</dependencySourceInclude>
                   </dependencySourceIncludes>
                 </configuration>
               </execution>
