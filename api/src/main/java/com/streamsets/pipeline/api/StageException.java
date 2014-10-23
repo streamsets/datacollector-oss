@@ -25,8 +25,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class PipelineException extends Exception {
-  private static final Logger LOG = LoggerFactory.getLogger(PipelineException.class);
+public class StageException extends Exception {
+  private static final Logger LOG = LoggerFactory.getLogger(StageException.class);
   private static final String PIPELINE_BUNDLE_NAME = "pipeline-bundle";
 
   public interface ID {
@@ -67,7 +67,7 @@ public class PipelineException extends Exception {
   private Object params;
   private StageContext stageContext;
 
-  public PipelineException(ID id, Object... params) {
+  public StageException(ID id, Object... params) {
     super(null, getCause(_ApiUtils.checkNotNull(params, "params")));
     this.id = _ApiUtils.checkNotNull(id, "id");
     this.params = params.clone();
@@ -106,7 +106,8 @@ public class PipelineException extends Exception {
         rb = ResourceBundle.getBundle(PIPELINE_BUNDLE_NAME, locale, getClass().getClassLoader());
         if (!rb.containsKey(key)) {
           msg = getMessage();
-          LOG.warn("ResourceBundle does not contain PipelineException.ID '{}'", id.getClass() + ":" + id.toString());
+          LOG.warn("ResourceBundle '{}' does not contain PipelineException.ID '{}'", stageContext.getBundleName(),
+                   id.getClass() + ":" + id.toString());
         } else {
           msg = _ApiUtils.format(rb.getString(key), params);
         }

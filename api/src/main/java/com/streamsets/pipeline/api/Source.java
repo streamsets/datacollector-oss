@@ -31,6 +31,6 @@ public interface Source extends Stage<Source.Context> {
 
   }
 
-  public String produce(String lastBatchId, BatchMaker batchMaker) throws PipelineException; // returns batchId, NULL if done
+  public String produce(String lastBatchId, BatchMaker batchMaker) throws StageException; // returns batchId, NULL if done
 
 }

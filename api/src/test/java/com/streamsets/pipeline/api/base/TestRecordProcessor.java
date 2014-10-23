@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import org.junit.Assert;
@@ -51,7 +51,7 @@ public class TestRecordProcessor {
 
     Processor processor = new RecordProcessor() {
       @Override
-      protected void process(String lane, Record record, BatchMaker bm) throws PipelineException {
+      protected void process(String lane, Record record, BatchMaker bm) throws StageException {
         invocations[0]++;
         Assert.assertEquals(batchMaker, bm);
         if (!got.containsKey(lane)) {

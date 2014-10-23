@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.api.base;
 
-import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Record;
 
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import java.util.Iterator;
 public abstract class SingleLaneRecordProcessor extends SingleLaneProcessor {
 
   @Override
-  public final void process(SingleLaneBatch batch, SingleLaneBatchMaker batchMaker) throws PipelineException {
+  public final void process(SingleLaneBatch batch, SingleLaneBatchMaker batchMaker) throws StageException {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       Record record = it.next();

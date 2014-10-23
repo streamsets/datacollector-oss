@@ -19,7 +19,7 @@ package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Record;
 
 import java.util.Iterator;
@@ -27,7 +27,7 @@ import java.util.Iterator;
 public abstract class RecordProcessor extends BaseProcessor {
 
   @Override
-  public final void process(Batch batch, BatchMaker batchMaker) throws PipelineException {
+  public final void process(Batch batch, BatchMaker batchMaker) throws StageException {
     for (String lane : batch.getLanes()) {
       Iterator<Record> it = batch.getRecords(lane);
       while (it.hasNext()) {
@@ -37,6 +37,6 @@ public abstract class RecordProcessor extends BaseProcessor {
     }
   }
 
-  protected abstract void process(String lane, Record record, BatchMaker batchMaker) throws PipelineException;
+  protected abstract void process(String lane, Record record, BatchMaker batchMaker) throws StageException;
 
 }

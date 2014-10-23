@@ -19,7 +19,7 @@ package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.Info;
 import com.streamsets.pipeline.api.Processor;
@@ -46,7 +46,7 @@ public class ProcessorPipe extends Pipe implements Context {
 
     try {
       processor.init(getModuleInfo(), this);
-    } catch (PipelineException e) {
+    } catch (StageException e) {
       e.printStackTrace();
     }
   }
@@ -67,7 +67,7 @@ public class ProcessorPipe extends Pipe implements Context {
     Preconditions.checkNotNull(batch, "batch cannot be null");
     try {
       processor.process(batch, batch);
-    } catch (PipelineException e) {
+    } catch (StageException e) {
       e.printStackTrace();
     }
     //LOG warning if !batch.isInputFullyConsumed()

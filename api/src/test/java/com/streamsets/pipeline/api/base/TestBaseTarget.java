@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import org.junit.Test;
 
 public class TestBaseTarget {
@@ -27,7 +27,7 @@ public class TestBaseTarget {
   public void testConstructor() {
     new BaseTarget() {
       @Override
-      public void write(Batch batch) throws PipelineException {
+      public void write(Batch batch) throws StageException {
       }
     };
   }

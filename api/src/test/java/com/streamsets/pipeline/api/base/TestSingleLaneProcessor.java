@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -40,14 +40,14 @@ public class TestSingleLaneProcessor {
     Assert.assertNotNull(SingleLaneProcessor.Error.INPUT_LANE_ERROR.getMessageTemplate());
   }
 
-  @Test(expected = PipelineException.class)
+  @Test(expected = StageException.class)
   @SuppressWarnings("unchecked")
   public void testInvalidConfig1() throws Exception {
 
     Processor processor = new SingleLaneProcessor() {
       @Override
       public void process(SingleLaneBatch singleLaneBatch, SingleLaneBatchMaker singleLaneBatchMaker) throws
-          PipelineException {
+          StageException {
       }
     };
 
@@ -58,13 +58,13 @@ public class TestSingleLaneProcessor {
     processor.init(info, context);
   }
 
-  @Test(expected = PipelineException.class)
+  @Test(expected = StageException.class)
   public void testInvalidConfig2() throws Exception {
 
     Processor processor = new SingleLaneProcessor() {
       @Override
       public void process(SingleLaneBatch singleLaneBatch, SingleLaneBatchMaker singleLaneBatchMaker) throws
-          PipelineException {
+          StageException {
       }
     };
 
@@ -75,14 +75,14 @@ public class TestSingleLaneProcessor {
     processor.init(info, context);
   }
 
-  @Test(expected = PipelineException.class)
+  @Test(expected = StageException.class)
   @SuppressWarnings("unchecked")
   public void testInvalidConfig3() throws Exception {
 
     Processor processor = new SingleLaneProcessor() {
       @Override
       public void process(SingleLaneBatch singleLaneBatch, SingleLaneBatchMaker singleLaneBatchMaker) throws
-          PipelineException {
+          StageException {
       }
     };
 
@@ -93,13 +93,13 @@ public class TestSingleLaneProcessor {
     processor.init(info, context);
   }
 
-  @Test(expected = PipelineException.class)
+  @Test(expected = StageException.class)
   public void testInvalidConfig4() throws Exception {
 
     Processor processor = new SingleLaneProcessor() {
       @Override
       public void process(SingleLaneBatch singleLaneBatch, SingleLaneBatchMaker singleLaneBatchMaker) throws
-          PipelineException {
+          StageException {
       }
     };
 
@@ -122,7 +122,7 @@ public class TestSingleLaneProcessor {
     Processor processor = new SingleLaneProcessor() {
       @Override
       public void process(SingleLaneBatch singleLaneBatch, SingleLaneBatchMaker singleLaneBatchMaker) throws
-          PipelineException {
+          StageException {
         Iterator<Record> it = singleLaneBatch.getRecords();
         while (it.hasNext()) {
           singleLaneBatchMaker.addRecord(it.next());

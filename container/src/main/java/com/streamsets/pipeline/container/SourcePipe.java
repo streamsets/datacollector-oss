@@ -19,7 +19,7 @@ package com.streamsets.pipeline.container;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.Info;
 import com.streamsets.pipeline.api.Record;
@@ -46,7 +46,7 @@ public class SourcePipe extends Pipe implements Source.Context {
   public void init() {
     try {
       source.init(getModuleInfo(), this);
-    } catch (PipelineException e) {
+    } catch (StageException e) {
       e.printStackTrace();
     }
   }
@@ -68,7 +68,7 @@ public class SourcePipe extends Pipe implements Source.Context {
     String newBatchId = null;
     try {
       newBatchId = source.produce(batch.getPreviousBatchId(), batch);
-    } catch (PipelineException e) {
+    } catch (StageException e) {
       e.printStackTrace();
     }
     batch.setBatchId(newBatchId);

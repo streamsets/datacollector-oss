@@ -43,7 +43,7 @@ public interface Stage<C extends Stage.Context> {
 
   }
 
-  public void init(Info info, C context) throws PipelineException;
+  public void init(Info info, C context) throws StageException;
 
   public void destroy();
 

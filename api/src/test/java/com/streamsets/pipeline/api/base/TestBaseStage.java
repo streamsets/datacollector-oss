@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.api.base;
 
-import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Stage;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,7 +32,7 @@ public class TestBaseStage {
   public class TBaseStage extends BaseStage<Stage.Context> {
 
     @Override
-    protected void init() throws PipelineException {
+    protected void init() throws StageException {
       super.init();
       Assert.assertEquals(info, getInfo());
       Assert.assertEquals(context, getContext());

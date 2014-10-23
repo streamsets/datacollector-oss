@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.api.base;
 
-import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.Context;
 
@@ -26,7 +26,7 @@ public abstract class BaseStage<C extends Context> implements Stage<C> {
   private C context;
 
   @Override
-  public final void init(Info info, C context) throws PipelineException {
+  public final void init(Info info, C context) throws StageException {
     this.info = info;
     this.context = context;
     init();
@@ -40,7 +40,7 @@ public abstract class BaseStage<C extends Context> implements Stage<C> {
     return context;
   }
 
-  protected void init() throws PipelineException {
+  protected void init() throws StageException {
   }
 
   @Override

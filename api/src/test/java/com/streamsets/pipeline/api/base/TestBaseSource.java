@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import org.junit.Test;
 
 public class TestBaseSource {
@@ -27,7 +27,7 @@ public class TestBaseSource {
   public void testConstructor() {
     new BaseSource() {
       @Override
-      public String produce(String lastBatchId, BatchMaker batchMaker) throws PipelineException {
+      public String produce(String lastBatchId, BatchMaker batchMaker) throws StageException {
         return null;
       }
     };

@@ -19,7 +19,7 @@ package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import org.junit.Test;
 
 public class TestBaseProcessor {
@@ -28,7 +28,7 @@ public class TestBaseProcessor {
   public void testConstructor() {
     new BaseProcessor() {
       @Override
-      public void process(Batch batch, BatchMaker batchMaker) throws PipelineException {
+      public void process(Batch batch, BatchMaker batchMaker) throws StageException {
 
       }
     };

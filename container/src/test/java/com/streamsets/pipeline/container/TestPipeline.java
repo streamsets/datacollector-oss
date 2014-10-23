@@ -282,7 +282,7 @@ public class TestPipeline {
   }
 
   @Test
-  public void testPipelineLifeCycle() throws PipelineException {
+  public void testPipelineLifeCycle() throws StageException {
     ModuleInfo info = new ModuleInfo("m", "1", "d", "source");
     Observer sourceObserver = Mockito.mock(Observer.class);
     Source source = Mockito.mock(Source.class);

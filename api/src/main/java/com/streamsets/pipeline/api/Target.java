@@ -27,6 +27,6 @@ public interface Target extends Stage<Target.Context> {
 
   }
 
-  public void write(Batch batch) throws PipelineException;
+  public void write(Batch batch) throws StageException;
 
 }

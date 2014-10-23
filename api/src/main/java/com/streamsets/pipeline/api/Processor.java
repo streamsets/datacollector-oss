@@ -33,6 +33,6 @@ public interface Processor extends Stage<Processor.Context> {
 
   }
 
-  public void process(Batch batch, BatchMaker batchMaker) throws PipelineException;
+  public void process(Batch batch, BatchMaker batchMaker) throws StageException;
 
 }
