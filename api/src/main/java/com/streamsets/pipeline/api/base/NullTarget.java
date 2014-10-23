@@ -15,7 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Pipeline API
- */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.base;
+
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
+
+import java.util.Iterator;
+
+@StageDef(name = "nullTarget", version = "1.0.0", label = "Null",
+          description = "It discards all records")
+public class NullTarget extends BaseTarget {
+
+  @Override
+  public void write(Batch batch) {
+    // iterating over the batch to consume the iterator and avoid warning messages
+    Iterator<Record> it = batch.getRecords();
+    while (it.hasNext()) {
+      it.next();
+    }
+  }
+
+}

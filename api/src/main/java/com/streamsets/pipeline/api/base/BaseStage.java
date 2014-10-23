@@ -15,7 +15,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Pipeline API
- */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.base;
+
+import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.Context;
+
+public abstract class BaseStage<C extends Context> implements Stage<C> {
+  private Info info;
+  private C context;
+
+  @Override
+  public final void init(Info info, C context) throws PipelineException {
+    this.info = info;
+    this.context = context;
+    init();
+  }
+
+  protected Info getInfo() {
+    return info;
+  }
+
+  protected C getContext() {
+    return context;
+  }
+
+  protected void init() throws PipelineException {
+  }
+
+  @Override
+  public void destroy() {
+  }
+
+}

@@ -15,7 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Pipeline API
- */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.base;
+
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.PipelineException;
+import org.junit.Test;
+
+public class TestBaseSource {
+
+  @Test
+  public void testConstructor() {
+    new BaseSource() {
+      @Override
+      public String produce(String lastBatchId, BatchMaker batchMaker) throws PipelineException {
+        return null;
+      }
+    };
+  }
+
+
+}

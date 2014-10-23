@@ -15,7 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Pipeline API
- */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.base;
+
+import com.streamsets.pipeline.api.Source;
+
+public abstract class BaseSource extends BaseStage<Source.Context> implements Source {
+}

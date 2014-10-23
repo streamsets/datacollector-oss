@@ -15,7 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Pipeline API
- */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.base;
+
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.PipelineException;
+import org.junit.Test;
+
+public class TestBaseTarget {
+
+  @Test
+  public void testConstructor() {
+    new BaseTarget() {
+      @Override
+      public void write(Batch batch) throws PipelineException {
+      }
+    };
+  }
+
+
+}

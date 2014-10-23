@@ -15,7 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Pipeline API
- */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.base;
+
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.Record;
+
+import java.util.Iterator;
+
+public abstract class RecordProcessor extends BaseProcessor {
+
+  @Override
+  public final void process(Batch batch, BatchMaker batchMaker) throws PipelineException {
+    for (String lane : batch.getLanes()) {
+      Iterator<Record> it = batch.getRecords(lane);
+      while (it.hasNext()) {
+        Record record = it.next();
+        process(lane, record, batchMaker);
+      }
+    }
+  }
+
+  protected abstract void process(String lane, Record record, BatchMaker batchMaker) throws PipelineException;
+
+}
