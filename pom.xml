@@ -39,6 +39,7 @@
     <module>root</module>
     <module>api</module>
     <module>container</module>
+    <module>stage-lib</module>
   </modules>
 
   <build>

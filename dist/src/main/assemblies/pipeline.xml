@@ -115,6 +115,18 @@
       </excludes>
     </dependencySet>
 
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>true</useTransitiveDependencies>
+      <useTransitiveFiltering>true</useTransitiveFiltering>
+      <outputDirectory>/stage-collections-lib/pipeline-stage-lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>compile</scope>
+      <includes>
+        <include>com.streamsets:streamsets-pipeline-stage-lib</include>
+      </includes>
+    </dependencySet>
+
   </dependencySets>
 
   </assembly>

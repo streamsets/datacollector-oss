@@ -47,6 +47,10 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-pipeline-container</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-pipeline-stage-lib</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

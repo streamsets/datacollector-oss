@@ -87,6 +87,12 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-pipeline-stage-lib</artifactId>
+        <version>${project.version}</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-pipeline-ui</artifactId>
         <version>${project.version}</version>
         <scope>compile</scope>
