@@ -20,6 +20,8 @@ Maven Profiles (use -P<profile-name>):
 * ui        : builds the pipeline modules with the ui module
 * dist      : builds a distribution of the pipeline
               (if the 'ui' profile is active it will bundle UI in the distribution)
+* docs      : used in conjunction with the 'dist' profile to generate documentation
+              as part of the build
 * sandbox   : builds the sandbox modules
               (use -Dsandbox.module=<module-name> to build only one module)
 

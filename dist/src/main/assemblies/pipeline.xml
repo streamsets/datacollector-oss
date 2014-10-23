@@ -78,10 +78,10 @@
       <outputDirectory>/static-web</outputDirectory>
     </fileSet>
 
-    <!-- stage collections lib dir -->
+    <!-- javadocs -->
     <fileSet>
-      <directory>${basedir}/src/main/emptydir</directory>
-      <outputDirectory>/stage-collections-lib</outputDirectory>
+      <directory>${basedir}/target/site/apidocs</directory>
+      <outputDirectory>/docs/api</outputDirectory>
     </fileSet>
 
   </fileSets>

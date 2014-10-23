@@ -89,6 +89,9 @@
   <profiles>
     <profile>
       <id>ui</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
       <properties>
         <ui.dist-dir>${basedir}/../ui/src/main/webapp/dist</ui.dist-dir>
       </properties>
@@ -98,6 +101,61 @@
           <artifactId>streamsets-pipeline-ui</artifactId>
         </dependency>
       </dependencies>
+    </profile>
+    <profile>
+      <id>docs</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.10.1</version>
+            <executions>
+              <execution>
+                <id>javadoc</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>javadoc</goal>
+                </goals>
+                <configuration>
+                  <linksource>true</linksource>
+                  <quiet>true</quiet>
+                  <verbose>false</verbose>
+                  <charset>UTF-8</charset>
+                  <groups>
+                    <group>
+                      <title>Pipeline API</title>
+                      <packages>
+                        com.streamsets.pipeline.api
+                      </packages>
+                    </group>
+                    <group>
+                      <title>Pipeline API Convenience Classes</title>
+                      <packages>
+                        com.streamsets.pipeline.api.base
+                      </packages>
+                    </group>
+                    <group>
+                      <title>Pipeline Stage Library</title>
+                      <packages>
+                        com.streamsets.pipeline.lib:com.streamsets.pipeline.lib.*
+                      </packages>
+                    </group>
+                  </groups>
+
+                  <includeDependencySources>true</includeDependencySources>
+                  <dependencySourceIncludes>
+                    <dependencySourceInclude>com.streamsets:streamsets-pipeline-api</dependencySourceInclude>
+                    <dependencySourceInclude>com.streamsets:streamsets-pipeline-stage-lib</dependencySourceInclude>
+                  </dependencySourceIncludes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>
