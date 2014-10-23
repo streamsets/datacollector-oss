@@ -15,30 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.external.stage;
 
-package com.streamsets.pipeline.api;
 
+public interface Target {
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface ConfigDef {
-
-  public enum Type { BOOLEAN, INTEGER, LONG, STRING}
-
-  String name();
-
-  Type type();
-
-  String defaultValue();
-
-  boolean required();
-
-  String label();
-
-  String description() default "";
 }

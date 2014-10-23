@@ -20,45 +20,33 @@
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../root</relativePath>
+    <relativePath>../../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-sandbox</artifactId>
+  <artifactId>streamsets-sandbox-config-test</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Sandbox</description>
-  <name>StreamSets Sandbox</name>
-  <packaging>pom</packaging>
+  <description>StreamSets Sandbox ConfigTest</description>
+  <name>StreamSets Sandbox ConfigTest</name>
+  <packaging>jar</packaging>
 
-  <profiles>
-    <profile>
-      <id>all.sandbox.modules</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>!sandbox.module</name>
-        </property>
-      </activation>
-      <modules>
-        <module>dagger</module>
-        <module>jetty</module>
-        <module>appclassloader</module>
-        <module>annotations</module>
-        <module>pipeline-api</module>
-        <module>pipeline-container</module>
-        <module>config-test</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>sandbox.module</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>sandbox.module</name>
-        </property>
-      </activation>
-      <modules>
-        <module>${sandbox.module}</module>
-      </modules>
-    </profile>
-  </profiles>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+      <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-pipeline-api</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-pipeline-container</artifactId>
+      </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+    </plugins>
+  </build>
+
 </project>

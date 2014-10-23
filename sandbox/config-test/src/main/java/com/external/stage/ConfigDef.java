@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.api;
+package com.external.stage;
 
 
 import java.lang.annotation.ElementType;
