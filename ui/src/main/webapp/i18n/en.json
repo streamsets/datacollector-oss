@@ -29,7 +29,9 @@
     },
     "detailPane": {
       "attributes": {
-        "title": "Attributes"
+        "title": "Attributes",
+        "attributeName": "Attribute Name",
+        "type": "Type"
       },
       "configuration": {
         "title": "Configuration",
@@ -38,7 +40,16 @@
         "type": "Type",
         "type.json": "JSON",
         "type.csv": "CSV",
-        "type.logFile": "Log File"
+        "type.logFile": "Log File",
+
+        "batchSize": "Batch Size",
+        "batchSize.placeholder": "Enter number of records in batch.",
+
+        "maximumRecordSize": "Maximum Record Size",
+        "maximumRecordSize.placeholder": "Enter allowed maximum size of Record in bytes.",
+
+        "requiredAttributes": "Required Attributes",
+        "requiredAttributes.placeholder": "Add a attribute"
       }
     }
   },

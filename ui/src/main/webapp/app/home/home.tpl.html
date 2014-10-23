@@ -1,7 +1,7 @@
 <div class="row">
   <button type="button" class="btn btn-primary btn-create-pipeline" ng-hide="config" ng-click="createPipelineAgent()">
     <span class="glyphicon glyphicon-plus"></span>
-    <span translate="admin.createPipelineFLow"></span>
+    <span>{{'admin.createPipelineFLow' | translate}}</span>
   </button>
 
   <div ng-show="config" >
@@ -9,19 +9,16 @@
 
       <bg-pane min-size="100" class="panel panel-default canvas-pane">
         <div class="panel-heading clearfix">
-          <h3 class="panel-title pull-left" translate="admin.header.pipelineFlow"></h3>
+          <h3 class="panel-title pull-left">{{'admin.header.pipelineFlow' | translate}}</h3>
           <div class="pull-right">
             <button type="button" class="btn btn-primary btn-xs">
-              <span class="glyphicon glyphicon-eye-open"></span>
-              <span translate="admin.header.preview"></span>
+              <span class="glyphicon glyphicon-eye-open"></span> {{'admin.header.preview' | translate}}
             </button>
             <button type="button" class="btn btn-primary btn-xs">
-              <span class="glyphicon glyphicon-play"></span>
-              <span translate="admin.header.start"></span>
+              <span class="glyphicon glyphicon-play"></span> {{'admin.header.start' | translate}}
             </button>
             <button type="button" class="btn btn-primary btn-xs">
-              <span class="glyphicon glyphicon-stop"></span>
-              <span translate="admin.header.stop"></span>
+              <span class="glyphicon glyphicon-stop"></span> {{'admin.header.stop' | translate}}
             </button>
           </div>
         </div>
@@ -39,13 +36,19 @@
 
             <ul class="nav nav-tabs">
               <li class="active">
-                <a showtab="" href="#a" translate="admin.detailPane.configuration.title" data-toggle="tab"></a>
+                <a showtab="" href="#a" data-toggle="tab">
+                  {{'admin.detailPane.configuration.title' | translate}}
+                </a>
               </li>
               <li>
-                <a showtab="" href="#b" translate="admin.detailPane.attributes.title" data-toggle="tab"></a>
+                <a showtab="" href="#b" data-toggle="tab">
+                  {{'admin.detailPane.attributes.title' | translate}}
+                </a>
               </li>
               <li>
-                <a showtab="" href="#c" translate="admin.header.preview" data-toggle="tab"></a>
+                <a showtab="" href="#c" data-toggle="tab">
+                  {{'admin.header.preview' | translate}}
+                </a>
               </li>
             </ul>
 
@@ -55,7 +58,9 @@
                 <form class="form-horizontal" role="form">
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label" translate="admin.detailPane.configuration.location"></label>
+                    <label class="col-sm-2 control-label">
+                      {{'admin.detailPane.configuration.location' | translate}}
+                    </label>
                     <div class="col-sm-6">
                       <input type="text" class="form-control"
                              placeholder="{{'admin.detailPane.configuration.location.placeholder' | translate}}">
@@ -63,36 +68,49 @@
                   </div>
 
                   <div class="form-group">
-                    <label  class="col-sm-2 control-label" translate="admin.detailPane.configuration.type">
+                    <label  class="col-sm-2 control-label">
+                      {{'admin.detailPane.configuration.type' | translate}}
                     </label>
                     <div class="col-sm-6">
                       <select class="form-control">
-                        <option translate="admin.detailPane.configuration.type.json"></option>
-                        <option translate="admin.detailPane.configuration.type.csv"></option>
-                        <option translate="admin.detailPane.configuration.type.logFile"></option>
+                        <option>
+                          {{'admin.detailPane.configuration.type.json' | translate}}
+                        </option>
+                        <option>
+                          {{'admin.detailPane.configuration.type.csv' | translate}}
+                        </option>
+                        <option>
+                          {{'admin.detailPane.configuration.type.logFile' | translate}}
+                        </option>
                       </select>
                     </div>
                   </div>
 
                   <div class="form-group">
-                    <label  class="col-sm-2 control-label">Batch Size</label>
+                    <label  class="col-sm-2 control-label">
+                      {{'admin.detailPane.configuration.batchSize' | translate}}
+                    </label>
                     <div class="col-sm-6">
-                      <input type="text" class="form-control" placeholder="Enter number of records in batch.">
+                      <input type="text" class="form-control" placeholder="{{'admin.detailPane.configuration.batchSize.placeholder' | translate}}">
                     </div>
                   </div>
 
 
                   <div class="form-group">
-                    <label  class="col-sm-2 control-label">Maximum Record Size</label>
+                    <label  class="col-sm-2 control-label">
+                      {{'admin.detailPane.configuration.maximumRecordSize' | translate}}
+                    </label>
                     <div class="col-sm-6">
-                      <input type="text" class="form-control" placeholder="Enter allowed maximum size of Record in bytes.">
+                      <input type="text" class="form-control" placeholder="{{'admin.detailPane.configuration.maximumRecordSize.placeholder' | translate}}">
                     </div>
                   </div>
 
                   <div class="form-group">
-                    <label  class="col-sm-2 control-label">Required Attributes</label>
+                    <label  class="col-sm-2 control-label">
+                      {{'admin.detailPane.configuration.requiredAttributes' | translate}}
+                    </label>
                     <div class="col-sm-6">
-                      <tags-input ng-model="tags" placeholder="Add a attribute"></tags-input>
+                      <tags-input ng-model="tags" placeholder="{{'admin.detailPane.configuration.requiredAttributes.placeholder' | translate}}"></tags-input>
                     </div>
                   </div>
 
@@ -106,8 +124,8 @@
                   <table class="table table-hover">
                     <thead>
                       <tr>
-                        <th>Attribute Name</th>
-                        <th>Type</th>
+                        <th>{{'admin.detailPane.attributes.attributeName' | translate}}</th>
+                        <th>{{'admin.detailPane.attributes.type' | translate}}</th>
                       </tr>
                     </thead>
 

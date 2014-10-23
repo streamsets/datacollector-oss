@@ -24,7 +24,6 @@ angular
       console.log($scope.config);
     });
 
-
     $scope.attributes = [{
       name: 'first',
       type: 'String'
@@ -57,7 +56,7 @@ angular
     $scope.preview = {
       first: 'John',
       last: 'Smith',
-      ssn: '123-45-6789',
+      ssn: 'xxx-xx-xxxx',
       address1: '1234 Main St',
       address2: 'APT #567',
       city: 'San Francisco',
