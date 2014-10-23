@@ -58,6 +58,7 @@ public class PipelineAgent implements Agent {
   }
 
   public void shutdown() {
+    LOG.debug("Shutting down");
     latch.countDown();
   }
 
