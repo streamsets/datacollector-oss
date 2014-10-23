@@ -1,4 +1,4 @@
-package com.external.stage;
+package com.streamsets.pipeline.sdk;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;

@@ -40,7 +40,7 @@
       </dependency>
       <dependency>
           <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-pipeline-container</artifactId>
+          <artifactId>streamsets-pipeline-sdk</artifactId>
       </dependency>
   </dependencies>
 

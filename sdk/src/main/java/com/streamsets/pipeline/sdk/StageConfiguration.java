@@ -1,4 +1,4 @@
-package com.external.stage;
+package com.streamsets.pipeline.sdk;
 
 import java.util.ArrayList;
 import java.util.HashMap;

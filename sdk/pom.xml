@@ -97,6 +97,31 @@
           </check>
         </configuration>
       </plugin>
+
+	<plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/classes/META-INF/services</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}</directory>
+		          <includes>
+                      <include>javax.annotation.processing.Processor</include>
+		          </includes>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 

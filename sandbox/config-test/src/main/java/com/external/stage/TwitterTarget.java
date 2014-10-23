@@ -1,5 +1,7 @@
 package com.external.stage;
 
+import com.streamsets.pipeline.api.*;
+
 /**
  * Created by harikiran on 10/22/14.
  */
@@ -32,21 +34,6 @@ public class TwitterTarget implements Target {
     this.password = password;
   }
 
-  /*@Override
-  public String produce(String lastBatchId, BatchMaker batchMaker) throws PipelineException {
-    return null;
-  }
-
-  @Override
-  public void init(Info info, Context context) throws PipelineException {
-
-  }
-
-  @Override
-  public void destroy() {
-
-  }*/
-
   public String getUsername() {
     return username;
   }
@@ -58,4 +45,20 @@ public class TwitterTarget implements Target {
   public static void main(String[] args) {
     System.out.println("Hellow world");
   }
+
+  @Override
+  public void write(Batch batch) throws PipelineException {
+
+  }
+
+  @Override
+  public void init(Info info, Context context) throws PipelineException {
+
+  }
+
+  @Override
+  public void destroy() {
+
+  }
 }
+

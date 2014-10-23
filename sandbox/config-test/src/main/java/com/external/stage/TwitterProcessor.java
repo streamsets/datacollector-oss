@@ -1,11 +1,14 @@
 package com.external.stage;
 
+import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.base.BaseProcessor;
+
 /**
  * Created by harikiran on 10/22/14.
  */
 @StageDef(name = "TwitterProcessor", description = "processes twitter feeds", label = "twitter_processor"
 , version = "1.0")
-public class TwitterProcessor implements Target {
+public class TwitterProcessor extends BaseProcessor{
 
   @ConfigDef(
     name = "username",
@@ -32,20 +35,7 @@ public class TwitterProcessor implements Target {
     this.password = password;
   }
 
-  /*@Override
-  public String produce(String lastBatchId, BatchMaker batchMaker) throws PipelineException {
-    return null;
-  }
 
-  @Override
-  public void init(Info info, Context context) throws PipelineException {
-
-  }
-
-  @Override
-  public void destroy() {
-
-  }*/
 
   public String getUsername() {
     return username;
@@ -55,7 +45,9 @@ public class TwitterProcessor implements Target {
     return password;
   }
 
-  public static void main(String[] args) {
-    System.out.println("Hellow world");
+  @Override
+  public void process(Batch batch, BatchMaker batchMaker) throws PipelineException {
+
   }
 }
+

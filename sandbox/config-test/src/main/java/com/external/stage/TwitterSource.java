@@ -1,11 +1,17 @@
 package com.external.stage;
 
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.PipelineException;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.base.BaseSource;
+
 /**
  * Created by harikiran on 10/22/14.
  */
 @StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
 , version = "1.0")
-public class TwitterSource implements Source {
+public class TwitterSource extends BaseSource{
 
   @ConfigDef(
     name = "username",
@@ -32,21 +38,6 @@ public class TwitterSource implements Source {
     this.password = password;
   }
 
-  /*@Override
-  public String produce(String lastBatchId, BatchMaker batchMaker) throws PipelineException {
-    return null;
-  }
-
-  @Override
-  public void init(Info info, Context context) throws PipelineException {
-
-  }
-
-  @Override
-  public void destroy() {
-
-  }*/
-
   public String getUsername() {
     return username;
   }
@@ -58,4 +49,11 @@ public class TwitterSource implements Source {
   public static void main(String[] args) {
     System.out.println("Hellow world");
   }
+
+  @Override
+  public String produce(String lastBatchId, BatchMaker batchMaker) throws PipelineException {
+    return null;
+  }
 }
+
+
