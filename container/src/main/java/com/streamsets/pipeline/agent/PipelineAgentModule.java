@@ -24,7 +24,7 @@ import dagger.Provides;
 import javax.inject.Singleton;
 
 @Module(injects = {MainAgent.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class},
-        includes = {InfoModule.class, WebServerModule.class})
+        includes = {RuntimeModule.class, WebServerModule.class})
 public class PipelineAgentModule {
 
   @Provides @Singleton

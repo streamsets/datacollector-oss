@@ -17,14 +17,19 @@
  */
 package com.streamsets.pipeline.agent;
 
+import com.streamsets.pipeline.container.Configuration;
 import com.streamsets.pipeline.http.WebServerModule;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 
-@Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class})
-public class InfoModule {
+@Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class})
+public class RuntimeModule {
 
   @Provides @Singleton
   public BuildInfo provideBuildInfo() {
@@ -34,6 +39,20 @@ public class InfoModule {
   @Provides @Singleton
   public RuntimeInfo provideRuntimeInfo() {
     return new RuntimeInfo();
+  }
+
+  @Provides @Singleton
+  public Configuration provideConfiguration(RuntimeInfo runtimeInfo) {
+    Configuration conf = new Configuration();
+    File configFile = new File(runtimeInfo.getConfigDir(), "pipeline-agent.properties");
+    if (configFile.exists()) {
+      try {
+        conf.load(new FileReader(configFile));
+      } catch (IOException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+    return conf;
   }
 
 }

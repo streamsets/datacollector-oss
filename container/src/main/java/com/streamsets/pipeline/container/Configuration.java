@@ -19,9 +19,13 @@ package com.streamsets.pipeline.container;
 
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 public class Configuration {
@@ -46,6 +50,11 @@ public class Configuration {
     return new HashSet<String>(map.keySet());
   }
 
+  public boolean hasName(String name) {
+    Preconditions.checkNotNull(name, "name cannot be null");
+    return map.containsKey(name);
+  }
+
   public void set(String name, String value) {
     Preconditions.checkNotNull(name, "name cannot be null");
     Preconditions.checkNotNull(value, "value cannot be null, use unset");
@@ -55,6 +64,10 @@ public class Configuration {
   public void unset(String name) {
     Preconditions.checkNotNull(name, "name cannot be null");
     map.remove(name);
+  }
+
+  public void set(String name, int value) {
+    set(name, Integer.toString(value));
   }
 
   public void set(String name, long value) {
@@ -79,9 +92,33 @@ public class Configuration {
     String value = get(name);
     return (value != null) ? Long.parseLong(value) : defaultValue;
   }
+
+  public int get(String name, int defaultValue) {
+    String value = get(name);
+    return (value != null) ? Integer.parseInt(value) : defaultValue;
+  }
+
   public boolean get(String name, boolean defaultValue) {
     String value = get(name);
     return (value != null) ? Boolean.parseBoolean(value) : defaultValue;
+  }
+
+  public void load(Reader reader) throws IOException {
+    Preconditions.checkNotNull(reader, "reader cannot be null");
+    Properties props = new Properties();
+    props.load(reader);
+    for (Map.Entry entry : props.entrySet()) {
+      set((String) entry.getKey(), (String) entry.getValue());
+    }
+    reader.close();
+  }
+
+  public void save(Writer writer) throws IOException {
+    Preconditions.checkNotNull(writer, "writer cannot be null");
+    Properties props = new Properties();
+    props.putAll(map);
+    props.store(writer, "");
+    writer.close();
   }
 
 }

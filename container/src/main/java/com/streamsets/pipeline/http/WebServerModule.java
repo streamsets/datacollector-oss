@@ -19,7 +19,7 @@ package com.streamsets.pipeline.http;
 
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.pipeline.agent.InfoModule;
+import com.streamsets.pipeline.agent.RuntimeModule;
 import com.streamsets.pipeline.agent.RuntimeInfo;
 import com.streamsets.pipeline.container.ContainerModule;
 import com.streamsets.pipeline.container.PipelineRunner;
@@ -34,7 +34,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-@Module(library = true, includes = {InfoModule.class, MetricsModule.class, ContainerModule.class})
+@Module(library = true, includes = {RuntimeModule.class, MetricsModule.class, ContainerModule.class})
 public class WebServerModule {
 
   @Provides

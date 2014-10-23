@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.http;
 
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.container.Configuration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.slf4j.Logger;
@@ -27,22 +28,27 @@ import javax.inject.Inject;
 import java.util.Set;
 
 public class WebServerImpl implements WebServer {
+  private static final String PORT_NUMBER_KEY = "http.port";
+  private static final int PORT_NUMBER_DEFAULT = 8080;
+
   private static final Logger LOG = LoggerFactory.getLogger(WebServerImpl.class);
 
+  private final Configuration conf;
+  private final Set<ContextConfigurator> contextConfigurators;
   private int port;
-  private Set<ContextConfigurator> contextConfigurators;
   private Server server;
   private volatile boolean started;
   private volatile boolean destroyed;
 
   @Inject
-  public WebServerImpl(Set<ContextConfigurator> contextConfigurators) {
+  public WebServerImpl(Configuration conf, Set<ContextConfigurator> contextConfigurators) {
+    this.conf = conf;
     this.contextConfigurators = contextConfigurators;
   }
 
   public void init() {
     LOG.debug("Initializing");
-    port = 8080;
+    port = conf.get(PORT_NUMBER_KEY, PORT_NUMBER_DEFAULT);
     server = new Server(port);
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
     context.setContextPath("/");
