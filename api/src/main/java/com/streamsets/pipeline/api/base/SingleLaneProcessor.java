@@ -25,8 +25,9 @@ import java.util.Iterator;
 public abstract class SingleLaneProcessor extends BaseProcessor {
 
   public enum Error implements PipelineException.ID {
-    INPUT_LANE_ERROR("There should be 1 input lane, there are '{}'"),
-    OUTPUT_LANE_ERROR("There should be 1 output lane, there are '{}'");
+    // We have an trailing whitespace for testing purposes
+    INPUT_LANE_ERROR("There should be 1 input lane but there are '{}' "),
+    OUTPUT_LANE_ERROR("There should be 1 output lane but there are '{}' ");
 
     private String msg;
 

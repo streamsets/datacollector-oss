@@ -21,10 +21,13 @@ package com.streamsets.pipeline.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class PipelineException extends Exception {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineException.class);
+  private static final String PIPELINE_BUNDLE_NAME = "pipeline-bundle";
 
   public interface ID {
 
@@ -32,13 +35,47 @@ public class PipelineException extends Exception {
 
   }
 
+  private static class StageContext {
+    private final String bundleName;
+    private final ClassLoader classLoader;
+
+    private StageContext(Stage.Info info, ClassLoader stageClassLoader) {
+      bundleName = (info.getName() + "-" + info.getVersion() + "-bundle").replace('.', '_');
+      classLoader = stageClassLoader;
+    }
+
+    public String getBundleName() {
+      return bundleName;
+    }
+
+    public ClassLoader getClassLoader() {
+      return classLoader;
+    }
+  }
+
+  private static final ThreadLocal<StageContext> STAGE_CONTEXT_TL = new ThreadLocal<StageContext>();
+
+  static void setStageContext(Stage.Info info, ClassLoader stageClassLoader) {
+    STAGE_CONTEXT_TL.set(new StageContext(info, stageClassLoader));
+  }
+
+  static void resetStageContext() {
+    STAGE_CONTEXT_TL.remove();
+  }
+
   private ID id;
   private Object params;
+  private StageContext stageContext;
 
   public PipelineException(ID id, Object... params) {
     super(null, getCause(_ApiUtils.checkNotNull(params, "params")));
     this.id = _ApiUtils.checkNotNull(id, "id");
     this.params = params.clone();
+    stageContext = STAGE_CONTEXT_TL.get();
+    if (stageContext == null) {
+      // setting an exception to create a stack trace
+      LOG.warn("The PipelineException.StageContext has has not been set, messages won't be localized", new Exception());
+    }
   }
 
   public ID getID() {
@@ -49,16 +86,31 @@ public class PipelineException extends Exception {
     return _ApiUtils.format(id.getMessageTemplate(), params);
   }
 
-  public String getMessage(ResourceBundle rb) {
+  public String getMessage(Locale locale) {
+    locale = (locale != null) ? locale : Locale.getDefault();
+    ResourceBundle rb = null;
     String msg;
+    if (stageContext != null) {
+      try {
+        rb = ResourceBundle.getBundle(stageContext.getBundleName(), locale, stageContext.getClassLoader());
+      } catch (MissingResourceException ex) {
+        // setting an exception to create a stack trace
+        LOG.warn("Cannot find resource bundle '{}'", stageContext.getBundleName());
+      }
+    }
     if (rb == null) {
       msg = getMessage();
     } else {
       String key = id.toString();
       if (!rb.containsKey(key)) {
-        msg = getMessage();
+        rb = ResourceBundle.getBundle(PIPELINE_BUNDLE_NAME, locale, getClass().getClassLoader());
+        if (!rb.containsKey(key)) {
+          msg = getMessage();
+          LOG.warn("ResourceBundle does not contain PipelineException.ID '{}'", id.getClass() + ":" + id.toString());
+        } else {
+          msg = _ApiUtils.format(rb.getString(key), params);
+        }
       } else {
-        LOG.warn("ResourceBundle does not contain ID '{}' key", id.getClass().getSimpleName() + ":" + id.toString());
         msg = _ApiUtils.format(rb.getString(key), params);
       }
     }

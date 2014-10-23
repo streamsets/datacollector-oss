@@ -18,10 +18,12 @@
 package com.streamsets.pipeline.api;
 
 import com.streamsets.pipeline.api.PipelineException.ID;
+import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import java.util.ResourceBundle;
+import java.util.Locale;
 
 public class TestPipelineException {
 
@@ -84,15 +86,55 @@ public class TestPipelineException {
   }
 
   @Test
-  public void testMessageLocalization() {
-    ResourceBundle rb = ResourceBundle.getBundle("test-bundle");
-
+  public void testMessageLocalizationWithNoStageContext() {
     PipelineException ex = new PipelineException(TID.ID0);
-    Assert.assertNotNull("hi", ex.getMessage(rb));
+    Assert.assertNotNull("hi", ex.getMessage(null));
 
     ex = new PipelineException(TID.ID1, "foo");
-    Assert.assertNotNull("hello 'foo'", ex.getMessage(null));
-    Assert.assertNotNull("HELLO 'foo'", ex.getMessage(rb));
+    Assert.assertNotNull("hello 'foo'", ex.getMessage(Locale.getDefault()));
+
+    // testing pipeline-api bundle
+    ex = new PipelineException(SingleLaneProcessor.Error.INPUT_LANE_ERROR, 2);
+    Assert.assertTrue(ex.getMessage(Locale.getDefault()).endsWith(" "));
+  }
+
+  @Test
+  public void testMessageLocalizationWithStageContext() {
+    try {
+      Stage.Info info = Mockito.mock(Stage.Info.class);
+      Mockito.when(info.getName()).thenReturn("stage");
+      Mockito.when(info.getVersion()).thenReturn("1.0.0");
+      PipelineException.setStageContext(info, getClass().getClassLoader());
+
+      PipelineException ex = new PipelineException(TID.ID0);
+      Assert.assertNotNull("HI", ex.getMessage(null));
+
+      ex = new PipelineException(TID.ID1, "foo");
+      Assert.assertNotNull("HELLO 'foo'", ex.getMessage(Locale.getDefault()));
+
+      // testing pipeline-api bundle
+      ex = new PipelineException(SingleLaneProcessor.Error.INPUT_LANE_ERROR, 2);
+      Assert.assertFalse(ex.getMessage(Locale.getDefault()).endsWith(" "));
+
+    } finally {
+      PipelineException.resetStageContext();
+    }
+  }
+
+  @Test
+  public void testMissingResourceBundle() {
+    try {
+      Stage.Info info = Mockito.mock(Stage.Info.class);
+      Mockito.when(info.getName()).thenReturn("missing");
+      Mockito.when(info.getVersion()).thenReturn("1.0.0");
+      PipelineException.setStageContext(info, getClass().getClassLoader());
+
+      PipelineException ex = new PipelineException(TID.ID0);
+      Assert.assertNotNull("hi", ex.getMessage(null));
+
+    } finally {
+      PipelineException.resetStageContext();
+    }
   }
 
 }
