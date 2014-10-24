@@ -17,23 +17,22 @@
  */
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.StageException.ID;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.Locale;
 
-public class TestPipelineException {
-
-  public enum TID implements ID {
+public class Test_PipelineException {
+  private static final String PIPELINE_BUNDLE_NAME = "pipeline-bundle";
+  
+  public enum TErrorId implements ErrorId {
     ID0("hi"),
     ID1("hello '{}'");
 
     private String template;
 
-    private TID(String template) {
+    private TErrorId(String template) {
       this.template = template;
     }
 
@@ -46,94 +45,101 @@ public class TestPipelineException {
   @Test(expected = NullPointerException.class)
   @SuppressWarnings("ThrowableInstanceNeverThrown")
   public void testConstructorFail1() {
-    new StageException(null);
+    new _PipelineException(PIPELINE_BUNDLE_NAME, null);
   }
 
   @Test(expected = NullPointerException.class)
   @SuppressWarnings("ThrowableInstanceNeverThrown")
   public void testConstructorFail2() {
-    new StageException(TID.ID0, (Object[])null);
+    new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID0, (Object[])null);
   }
 
   @Test
   public void testConstructorOK() {
-    StageException ex = new StageException(TID.ID0);
+    _PipelineException ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID0);
     Assert.assertNull(ex.getCause());
-    Assert.assertNotNull(TID.ID0.getMessageTemplate(), ex.getMessage());
-    Assert.assertEquals(TID.ID0, ex.getID());
-    ex = new StageException(TID.ID1);
+    Assert.assertNotNull(TErrorId.ID0.getMessageTemplate(), ex.getMessage());
+    Assert.assertEquals(TErrorId.ID0, ex.getErrorId());
+    ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID1);
     Assert.assertNull(ex.getCause());
     Assert.assertNotNull("hello '{}'", ex.getMessage());
-    Assert.assertEquals(TID.ID1, ex.getID());
+    Assert.assertEquals(TErrorId.ID1, ex.getErrorId());
     Exception cause = new Exception();
-    ex = new StageException(TID.ID0, cause);
+    ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID0, cause);
     Assert.assertEquals(cause, ex.getCause());
   }
 
   @Test
   public void testMessage() {
-    StageException ex = new StageException(TID.ID0, "x");
+    _PipelineException ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID0, "x");
     Assert.assertNull(ex.getCause());
-    Assert.assertNotNull(TID.ID0.getMessageTemplate(), ex.getMessage());
+    Assert.assertNotNull(TErrorId.ID0.getMessageTemplate(), ex.getMessage());
 
-    ex = new StageException(TID.ID1, (Object) null);
+    ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID1, (Object) null);
     Assert.assertNull(ex.getCause());
     Assert.assertNotNull("hello 'null'", ex.getMessage());
 
-    ex = new StageException(TID.ID1, "foo");
+    ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID1, "foo");
     Assert.assertNull(ex.getCause());
     Assert.assertNotNull("hello 'foo'", ex.getMessage());
   }
 
   @Test
-  public void testMessageLocalizationWithNoStageContext() {
-    StageException ex = new StageException(TID.ID0);
+  public void testMessageLocalizationWithDefaultBundleAndNoContext() {
+    _PipelineException ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID0);
     Assert.assertNotNull("hi", ex.getMessage(null));
 
-    ex = new StageException(TID.ID1, "foo");
+    ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID1, "foo");
     Assert.assertNotNull("hello 'foo'", ex.getMessage(Locale.getDefault()));
 
     // testing pipeline-api bundle
-    ex = new StageException(SingleLaneProcessor.Error.INPUT_LANE_ERROR, 2);
+    ex = new _PipelineException(PIPELINE_BUNDLE_NAME, SingleLaneProcessor.Error.INPUT_LANE_ERROR, 2);
+    Assert.assertFalse(ex.getMessage(Locale.getDefault()).endsWith(" "));
+  }
+
+  @Test
+  public void testMessageLocalizationWithMissingBundleAndNoContext() {
+    _PipelineException ex = new _PipelineException("missing-bundle", TErrorId.ID0);
+    Assert.assertNotNull("hi", ex.getMessage(null));
+
+    ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID1, "foo");
+    Assert.assertNotNull("hello 'foo'", ex.getMessage(Locale.getDefault()));
+
+    // testing pipeline-api bundle
+    ex = new _PipelineException("missing-bundle", SingleLaneProcessor.Error.INPUT_LANE_ERROR, 2);
     Assert.assertTrue(ex.getMessage(Locale.getDefault()).endsWith(" "));
   }
 
   @Test
-  public void testMessageLocalizationWithStageContext() {
+  public void testMessageLocalizationWithContext() {
     try {
-      Stage.Info info = Mockito.mock(Stage.Info.class);
-      Mockito.when(info.getName()).thenReturn("stage");
-      Mockito.when(info.getVersion()).thenReturn("1.0.0");
-      StageException.setStageContext(info, getClass().getClassLoader());
+      _PipelineException.setContext("test", getClass().getClassLoader());
 
-      StageException ex = new StageException(TID.ID0);
+      _PipelineException ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID0);
       Assert.assertNotNull("HI", ex.getMessage(null));
 
-      ex = new StageException(TID.ID1, "foo");
+      ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID1, "foo");
       Assert.assertNotNull("HELLO 'foo'", ex.getMessage(Locale.getDefault()));
 
       // testing pipeline-api bundle
-      ex = new StageException(SingleLaneProcessor.Error.INPUT_LANE_ERROR, 2);
+      ex = new _PipelineException(PIPELINE_BUNDLE_NAME, SingleLaneProcessor.Error.INPUT_LANE_ERROR, 2);
       Assert.assertFalse(ex.getMessage(Locale.getDefault()).endsWith(" "));
 
     } finally {
-      StageException.resetStageContext();
+      _PipelineException.resetContext();
     }
   }
 
   @Test
   public void testMissingResourceBundle() {
     try {
-      Stage.Info info = Mockito.mock(Stage.Info.class);
-      Mockito.when(info.getName()).thenReturn("missing");
-      Mockito.when(info.getVersion()).thenReturn("1.0.0");
-      StageException.setStageContext(info, getClass().getClassLoader());
+      _PipelineException.setContext("invalid", getClass().getClassLoader());
 
-      StageException ex = new StageException(TID.ID0);
+      _PipelineException ex = new _PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID0);
       Assert.assertNotNull("hi", ex.getMessage(null));
 
     } finally {
-      StageException.resetStageContext();
+      _PipelineException.resetContext();
     }
   }
 

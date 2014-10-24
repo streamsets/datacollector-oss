@@ -21,109 +21,90 @@ package com.streamsets.pipeline.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 public class StageException extends Exception {
   private static final Logger LOG = LoggerFactory.getLogger(StageException.class);
   private static final String PIPELINE_BUNDLE_NAME = "pipeline-bundle";
 
-  public interface ID {
-
-    public String getMessageTemplate();
-
+  static void setContext(Stage.Info info, ClassLoader stageClassLoader) {
+    _ApiUtils.checkNotNull(info, "info");
+    _ApiUtils.checkNotNull(stageClassLoader, "stageClassLoader");
+    String bundleName = (info.getName() + "-" + info.getVersion()).replace('.', '_');
+    _PipelineException.setContext(bundleName, stageClassLoader);
   }
 
-  private static class StageContext {
-    private final String bundleName;
-    private final ClassLoader classLoader;
-
-    private StageContext(Stage.Info info, ClassLoader stageClassLoader) {
-      bundleName = (info.getName() + "-" + info.getVersion() + "-bundle").replace('.', '_');
-      classLoader = stageClassLoader;
-    }
-
-    public String getBundleName() {
-      return bundleName;
-    }
-
-    public ClassLoader getClassLoader() {
-      return classLoader;
-    }
+  static void resetContext() {
+    _PipelineException.resetContext();
   }
 
-  private static final ThreadLocal<StageContext> STAGE_CONTEXT_TL = new ThreadLocal<StageContext>();
+  private _PipelineException exception;
 
-  static void setStageContext(Stage.Info info, ClassLoader stageClassLoader) {
-    STAGE_CONTEXT_TL.set(new StageContext(info, stageClassLoader));
-  }
-
-  static void resetStageContext() {
-    STAGE_CONTEXT_TL.remove();
-  }
-
-  private ID id;
-  private Object params;
-  private StageContext stageContext;
-
-  public StageException(ID id, Object... params) {
-    super(null, getCause(_ApiUtils.checkNotNull(params, "params")));
-    this.id = _ApiUtils.checkNotNull(id, "id");
-    this.params = params.clone();
-    stageContext = STAGE_CONTEXT_TL.get();
-    if (stageContext == null) {
+  public StageException(ErrorId id, Object... params) {
+    exception = new _PipelineException(PIPELINE_BUNDLE_NAME, id, params);
+    if (!_PipelineException.isContextSet()) {
       // setting an exception to create a stack trace
-      LOG.warn("The PipelineException.StageContext has has not been set, messages won't be localized", new Exception());
+      LOG.warn("The StageException context has not been set, messages won't be localized", new Exception());
     }
   }
 
-  public ID getID() {
-    return id;
+  public ErrorId getErrorId() {
+    return exception.getErrorId();
   }
 
   public String getMessage() {
-    return _ApiUtils.format(id.getMessageTemplate(), params);
+    return exception.getMessage();
   }
 
   public String getMessage(Locale locale) {
-    locale = (locale != null) ? locale : Locale.getDefault();
-    ResourceBundle rb = null;
-    String msg;
-    if (stageContext != null) {
-      try {
-        rb = ResourceBundle.getBundle(stageContext.getBundleName(), locale, stageContext.getClassLoader());
-      } catch (MissingResourceException ex) {
-        // setting an exception to create a stack trace
-        LOG.warn("Cannot find resource bundle '{}'", stageContext.getBundleName());
-      }
-    }
-    if (rb == null) {
-      msg = getMessage();
-    } else {
-      String key = id.toString();
-      if (!rb.containsKey(key)) {
-        rb = ResourceBundle.getBundle(PIPELINE_BUNDLE_NAME, locale, getClass().getClassLoader());
-        if (!rb.containsKey(key)) {
-          msg = getMessage();
-          LOG.warn("ResourceBundle '{}' does not contain PipelineException.ID '{}'", stageContext.getBundleName(),
-                   id.getClass() + ":" + id.toString());
-        } else {
-          msg = _ApiUtils.format(rb.getString(key), params);
-        }
-      } else {
-        msg = _ApiUtils.format(rb.getString(key), params);
-      }
-    }
-    return msg;
+    return exception.getMessage(locale);
   }
 
-  private static Throwable getCause(Object... params) {
-    Throwable throwable = null;
-    if (params.length > 0 && params[params.length - 1] instanceof Throwable) {
-      throwable = (Throwable) params[params.length - 1];
-    }
-    return throwable;
+  @Override
+  public String getLocalizedMessage() {
+    return exception.getLocalizedMessage();
+  }
+
+  @Override
+  public synchronized Throwable getCause() {
+    return exception.getCause();
+  }
+
+  @Override
+  public synchronized Throwable initCause(Throwable cause) {
+    return exception.initCause(cause);
+  }
+
+  @Override
+  public String toString() {
+    return exception.toString();
+  }
+
+  @Override
+  public void printStackTrace() {
+    exception.printStackTrace();
+  }
+
+  @Override
+  public void printStackTrace(PrintStream s) {
+    exception.printStackTrace(s);
+  }
+
+  @Override
+  public void printStackTrace(PrintWriter s) {
+    exception.printStackTrace(s);
+  }
+
+  @Override
+  public StackTraceElement[] getStackTrace() {
+    return exception.getStackTrace();
+  }
+
+  @Override
+  public void setStackTrace(StackTraceElement[] stackTrace) {
+    exception.setStackTrace(stackTrace);
   }
 
 }
