@@ -7,5 +7,5 @@ public enum ConfigType {
 
   TEXT,
   NUMBER,
-  PASSOWRD
+  PASSWORD
 }

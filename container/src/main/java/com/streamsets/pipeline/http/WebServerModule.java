@@ -24,8 +24,14 @@ import com.streamsets.pipeline.agent.RuntimeInfo;
 import com.streamsets.pipeline.container.ContainerModule;
 import com.streamsets.pipeline.container.PipelineRunner;
 import com.streamsets.pipeline.metrics.MetricsModule;
-import com.streamsets.pipeline.restapi.PipelineRestAPI;
 import com.streamsets.pipeline.restapi.RestAPI;
+import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;
+import com.streamsets.pipeline.restapi.configuration.RestAPIResourceConfig;
+import com.streamsets.pipeline.restapi.configuration.StageLibraryInjector;
+import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
+import com.streamsets.pipeline.store.PipelineStore;
+import com.streamsets.pipeline.store.PipelineStoreModule;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Provides.Type;
@@ -33,8 +39,10 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
+import org.glassfish.jersey.servlet.ServletProperties;
 
-@Module(library = true, includes = {RuntimeModule.class, MetricsModule.class, ContainerModule.class})
+@Module(library = true, includes = {RuntimeModule.class, MetricsModule.class, ContainerModule.class,
+    PipelineStoreModule.class, StageLibraryModule.class})
 public class WebServerModule {
 
   @Provides
@@ -83,13 +91,13 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
-  ContextConfigurator provideJersey(final MetricRegistry metrics) {
+  ContextConfigurator provideJersey() {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
-        context.setAttribute("com.codahale.metrics.servlets.MetricsServlet.registry", metrics);
         ServletHolder servlet = new ServletHolder(new ServletContainer());
         servlet.setInitParameter("jersey.config.server.provider.packages", RestAPI.class.getPackage().getName());
+        servlet.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, RestAPIResourceConfig.class.getName());
         context.addServlet(servlet, "/rest/*");
       }
     };
@@ -100,7 +108,27 @@ public class WebServerModule {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
-        context.setAttribute(PipelineRestAPI.PIPELINE, pipelineRunner);
+//        context.setAttribute(PipelineRestAPI.PIPELINE, pipelineRunner);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator providePipelineStore(final PipelineStore pipelineStore) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(PipelineStoreInjector.PIPELINE_STORE, pipelineStore);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator providePipelineStore(final StageLibrary stageLibrary) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(StageLibraryInjector.STAGE_LIBRARY, stageLibrary);
       }
     };
   }

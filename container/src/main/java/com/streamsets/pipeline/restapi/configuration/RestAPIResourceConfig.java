@@ -15,23 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.agent;
+package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.http.WebServerModule;
-import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
-import com.streamsets.pipeline.store.PipelineStoreModule;
-import dagger.Module;
-import dagger.Provides;
+import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.store.PipelineStore;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.server.ResourceConfig;
 
-import javax.inject.Singleton;
+import java.net.URI;
+import java.security.Principal;
 
-@Module(injects = {MainAgent.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class},
-        includes = {RuntimeModule.class, WebServerModule.class, PipelineStoreModule.class})
-public class PipelineAgentModule {
+public class RestAPIResourceConfig extends ResourceConfig {
 
-  @Provides @Singleton
-  public Agent provideAgent(PipelineAgent agent) {
-    return agent;
+  public RestAPIResourceConfig() {
+    register(new AbstractBinder() {
+      @Override
+      protected void configure() {
+        bindFactory(PipelineStoreInjector.class).to(PipelineStore.class);
+        bindFactory(StageLibraryInjector.class).to(StageLibrary.class);
+        bindFactory(PrincipalInjector.class).to(Principal.class);
+        bindFactory(URIInjector.class).to(URI.class);
+      }
+    });
   }
 
 }

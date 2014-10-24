@@ -25,8 +25,7 @@ public enum PipelineStoreErrors implements ErrorId {
   COULD_NOT_CREATE_PIPELINE("Could not create pipeline '{}', {}"),
   COULD_NOT_DELETE_PIPELINE("Could not delete pipeline '{}', {}"),
   COULD_NOT_SAVE_PIPELINE("Could not save pipeline '{}', {}"),
-  COULD_NOT_LOAD_PIPELINE_INFO("Could not load pipeline '{}' info, {}")
-  ;
+  COULD_NOT_LOAD_PIPELINE_INFO("Could not load pipeline '{}' info, {}");
 
   private final String msgTemplate;
 

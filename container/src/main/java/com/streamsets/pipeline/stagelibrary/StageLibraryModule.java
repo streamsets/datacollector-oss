@@ -15,23 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.agent;
+package com.streamsets.pipeline.stagelibrary;
 
-import com.streamsets.pipeline.http.WebServerModule;
-import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
-import com.streamsets.pipeline.store.PipelineStoreModule;
+import com.streamsets.pipeline.stagelibrary.mock.MockStageLibrary;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(injects = {MainAgent.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class},
-        includes = {RuntimeModule.class, WebServerModule.class, PipelineStoreModule.class})
-public class PipelineAgentModule {
+@Module(library = true)
+public class StageLibraryModule {
 
-  @Provides @Singleton
-  public Agent provideAgent(PipelineAgent agent) {
-    return agent;
+  @Provides
+  @Singleton
+  public StageLibrary provideStageLibrary(MockStageLibrary stageLibrary) {
+    return stageLibrary;
   }
 
 }

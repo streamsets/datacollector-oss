@@ -1,5 +1,8 @@
 package com.streamsets.pipeline.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
@@ -24,15 +27,17 @@ public class RuntimeModuleConfiguration {
   private List<String> inputLanes;
   private List<String> outputLanes;
 
-  public RuntimeModuleConfiguration(String instanceName,
-                                    String moduleName,
-                                    String moduleVersion,
-                                    String moduleDescription,
-                                    List<ConfigOption> configOptions,
-                                    int xPos,
-                                    int yPos,
-                                    List<String> inputLanes,
-                                    List<String> outputLanes) {
+  @JsonCreator
+  public RuntimeModuleConfiguration(
+      @JsonProperty("instanceName") String instanceName,
+      @JsonProperty("moduleName") String moduleName,
+      @JsonProperty("moduleVersion") String moduleVersion,
+      @JsonProperty("moduleDescription") String moduleDescription,
+      @JsonProperty("configOptions") List<ConfigOption> configOptions,
+      @JsonProperty("xPos") int xPos,
+      @JsonProperty("yPos") int yPos,
+      @JsonProperty("inputLanes") List<String> inputLanes,
+      @JsonProperty("outputLanes") List<String> outputLanes) {
     this.instanceName = instanceName;
     this.moduleName = moduleName;
     this.moduleVersion = moduleVersion;

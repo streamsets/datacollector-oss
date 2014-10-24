@@ -15,23 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.agent;
+package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.http.WebServerModule;
-import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
-import com.streamsets.pipeline.store.PipelineStoreModule;
-import dagger.Module;
-import dagger.Provides;
+import com.streamsets.pipeline.store.PipelineStore;
+import org.glassfish.hk2.api.Factory;
 
-import javax.inject.Singleton;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
-@Module(injects = {MainAgent.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class},
-        includes = {RuntimeModule.class, WebServerModule.class, PipelineStoreModule.class})
-public class PipelineAgentModule {
+public class PipelineStoreInjector implements Factory<PipelineStore> {
+  public static final String PIPELINE_STORE = "pipeline-store";
+  private PipelineStore store;
 
-  @Provides @Singleton
-  public Agent provideAgent(PipelineAgent agent) {
-    return agent;
+  @Inject
+  public PipelineStoreInjector(HttpServletRequest request) {
+    store = (PipelineStore) request.getServletContext().getAttribute(PIPELINE_STORE);
+  }
+
+  @Override
+  public PipelineStore provide() {
+    return store;
+  }
+
+  @Override
+  public void dispose(PipelineStore pipelineStore) {
   }
 
 }

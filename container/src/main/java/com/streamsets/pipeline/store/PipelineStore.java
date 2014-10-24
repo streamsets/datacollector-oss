@@ -35,7 +35,7 @@ public interface PipelineStore {
 
   public PipelineInfo getInfo(String name) throws PipelineStoreException;
 
-  public List<PipelineRevInfo> getRevisions(String name) throws PipelineStoreException;
+  public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException;
 
   public void save(String name, String user, String tag, String tagDescription, RuntimePipelineConfiguration pipeline)
       throws PipelineStoreException;

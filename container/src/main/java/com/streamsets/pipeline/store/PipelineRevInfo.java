@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,15 +19,39 @@ package com.streamsets.pipeline.store;
 
 import java.util.Date;
 
-public interface PipelineRevInfo {
+public class PipelineRevInfo {
+  private Date date;
+  private String user;
+  private String rev;
+  private String tag;
+  private String description;
 
-  Date getDate();
+  public PipelineRevInfo(PipelineInfo info) {
+    date = info.getLastModified();
+    user = info.getLastModifier();
+    rev = info.getLastRev();
+    tag = null;
+    description = null;
+  }
 
-  String getUser();
+  public Date getDate() {
+    return date;
+  }
 
-  String getRev();
+  public String getUser() {
+    return user;
+  }
 
-  String getTag();
+  public String getRev() {
+    return rev;
+  }
 
-  String getDescription();
+  public String getTag() {
+    return tag;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
 }

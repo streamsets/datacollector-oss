@@ -1,5 +1,8 @@
 package com.streamsets.pipeline.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by harikiran on 10/18/14.
  */
@@ -13,19 +16,15 @@ public class ConfigOption {
   private final boolean mandatory;
   private final String group;
 
-  public ConfigOption(String name, ConfigType type, String shortDescription
-    , String description, String defaultValue, boolean mandatory) {
-    this.name = name;
-    this.type = type;
-    this.shortDescription = shortDescription;
-    this.description = description;
-    this.defaultValue = defaultValue;
-    this.mandatory = mandatory;
-    this.group = "";
-  }
-
-  public ConfigOption(String name, ConfigType type, String shortDescription
-    , String description, String defaultValue, boolean mandatory, String group) {
+  @JsonCreator
+  public ConfigOption(
+      @JsonProperty("name") String name,
+      @JsonProperty("type") ConfigType type,
+      @JsonProperty("shortDescription") String shortDescription,
+      @JsonProperty("description") String description,
+      @JsonProperty("defaultValue")  String defaultValue,
+      @JsonProperty("mandatory")    boolean mandatory,
+      @JsonProperty("group")  String group) {
     this.name = name;
     this.type = type;
     this.shortDescription = shortDescription;

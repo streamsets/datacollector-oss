@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.agent;
 
 import com.streamsets.pipeline.http.WebServer;
+import com.streamsets.pipeline.store.PipelineStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,11 +28,13 @@ import java.util.concurrent.CountDownLatch;
 public class PipelineAgent implements Agent {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineAgent.class);
 
+  private final PipelineStore store;
   private final WebServer webServer;
   private final CountDownLatch latch;
 
   @Inject
-  public PipelineAgent(WebServer webServer) {
+  public PipelineAgent(PipelineStore store, WebServer webServer) {
+    this.store = store;
     this.webServer = webServer;
     latch = new CountDownLatch(1);
   }
@@ -39,6 +42,7 @@ public class PipelineAgent implements Agent {
   @Override
   public void init() {
     LOG.debug("Initializing");
+    store.init();
     webServer.init();
     LOG.debug("Initialized");
   }
@@ -66,6 +70,7 @@ public class PipelineAgent implements Agent {
   public void stop() {
     LOG.debug("Stopping");
     webServer.stop();
+    store.destroy();;
     LOG.debug("Stopped");
   }
 }

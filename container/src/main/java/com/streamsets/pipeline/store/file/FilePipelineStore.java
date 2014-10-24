@@ -27,8 +27,6 @@ import com.streamsets.pipeline.container.Configuration;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreErrors;
-import com.streamsets.pipeline.store.impl.PipelineInfoBean;
-import com.streamsets.pipeline.store.impl.PipelineRevInfoBean;
 import com.streamsets.pipeline.store.PipelineStore;
 import com.streamsets.pipeline.store.PipelineStoreException;
 
@@ -129,7 +127,7 @@ public class FilePipelineStore implements PipelineStore {
                                        String.format("'%s' mkdir failed", getPipelineDir(name)));
     }
     Date date = new Date();
-    PipelineInfo info = new PipelineInfoBean(name, description, date, date, user, user, REV);
+    PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV);
 
     RuntimePipelineConfiguration pc = new RuntimePipelineConfiguration();
     pc.setUuid(UUID.randomUUID().toString());
@@ -171,12 +169,12 @@ public class FilePipelineStore implements PipelineStore {
     cleanUp(name);
   }
 
-  private PipelineInfoBean getInfo(String name, boolean checkExistence) throws PipelineStoreException {
+  private PipelineInfo getInfo(String name, boolean checkExistence) throws PipelineStoreException {
     if (checkExistence && !doesPipelineExist(name)) {
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_DOES_NOT_EXIST, name);
     }
     try {
-      return json.readValue(getInfoFile(name), PipelineInfoBean.class);
+      return json.readValue(getInfoFile(name), PipelineInfo.class);
     } catch (Exception ex) {
       throw new PipelineStoreException(PipelineStoreErrors.COULD_NOT_LOAD_PIPELINE_INFO, name);
     }
@@ -202,9 +200,7 @@ public class FilePipelineStore implements PipelineStore {
     if (!doesPipelineExist(name)) {
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_DOES_NOT_EXIST, name);
     }
-    PipelineInfoBean info = getInfo(name, false);
-    info.setLastModifier(user);
-    info.setLastModified(new Date());
+    PipelineInfo info = new PipelineInfo(getInfo(name, false), new Date(), user, REV);
     try {
       json.writeValue(getInfoFile(name), info);
       json.writeValue(getPipelineFile(name), pipeline);
@@ -215,8 +211,8 @@ public class FilePipelineStore implements PipelineStore {
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<PipelineRevInfo> getRevisions(String name) throws PipelineStoreException {
-    return ImmutableList.of((PipelineRevInfo)new PipelineRevInfoBean(getInfo(name, true)));
+  public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException {
+    return ImmutableList.of(new PipelineRevInfo(getInfo(name, true)));
   }
 
   @Override

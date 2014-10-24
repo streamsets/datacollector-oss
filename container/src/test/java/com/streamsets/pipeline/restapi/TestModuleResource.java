@@ -14,7 +14,7 @@ public class TestModuleResource extends JerseyTest {
 
   @Override
   protected Application configure() {
-    return new ResourceConfig(ModuleResource.class);
+    return new ResourceConfig(StageLibraryResource.class);
   }
 
   @Test

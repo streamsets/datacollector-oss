@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.agent;
 
 import com.streamsets.pipeline.http.WebServer;
+import com.streamsets.pipeline.store.PipelineStore;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -26,11 +27,13 @@ public class TestPipelineAgent {
 
   @Test
   public void testPipelineAgentDelegation() {
+    PipelineStore store = Mockito.mock(PipelineStore.class);
     WebServer webServer = Mockito.mock(WebServer.class);
-    PipelineAgent agent = new PipelineAgent(webServer);
+    PipelineAgent agent = new PipelineAgent(store, webServer);
     //shutting down up front to disable the latch
     agent.shutdown();
     agent.init();
+    Mockito.verify(store, Mockito.times(1)).init();
     Mockito.verify(webServer, Mockito.times(1)).init();
     Mockito.verifyNoMoreInteractions(webServer);
     agent.run();
@@ -38,13 +41,15 @@ public class TestPipelineAgent {
     Mockito.verifyNoMoreInteractions(webServer);
     agent.stop();
     Mockito.verify(webServer, Mockito.times(1)).stop();
+    Mockito.verify(store, Mockito.times(1)).destroy();
     Mockito.verifyNoMoreInteractions(webServer);
   }
 
   @Test
   public void testLatch() throws Exception {
+    PipelineStore store = Mockito.mock(PipelineStore.class);
     WebServer webServer = Mockito.mock(WebServer.class);
-    final PipelineAgent agent = new PipelineAgent(webServer);
+    final PipelineAgent agent = new PipelineAgent(store, webServer);
     long now = System.currentTimeMillis();
     new Thread() {
       @Override

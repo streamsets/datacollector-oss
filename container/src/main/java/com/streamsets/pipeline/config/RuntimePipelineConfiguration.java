@@ -1,9 +1,6 @@
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.streamsets.pipeline.serde.RuntimePipelineConfigDeserializer;
-import com.streamsets.pipeline.serde.RuntimePipelineConfigSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -13,8 +10,6 @@ import java.util.Map;
 /**
  * Created by harikiran on 10/20/14.
  */
-@JsonSerialize(using = RuntimePipelineConfigSerializer.class)
-@JsonDeserialize(using = RuntimePipelineConfigDeserializer.class)
 public class RuntimePipelineConfiguration {
 
   private List<RuntimeModuleConfiguration> runtimeModuleConfigurations = null;
@@ -27,6 +22,7 @@ public class RuntimePipelineConfiguration {
     errorsMap = new LinkedHashMap<String, List<String>>();
   }
 
+  @JsonFormat()
   public List<RuntimeModuleConfiguration> getRuntimeModuleConfigurations() {
     return runtimeModuleConfigurations;
   }

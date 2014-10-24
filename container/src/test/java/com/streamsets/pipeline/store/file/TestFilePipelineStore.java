@@ -86,6 +86,8 @@ public class TestFilePipelineStore {
       Assert.assertNotNull(info.getCreated());
       Assert.assertEquals(info.getLastModified(), info.getCreated());
       Assert.assertEquals(FilePipelineStore.REV, info.getLastRev());
+      RuntimePipelineConfiguration pc = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
+      Assert.assertTrue(pc.getRuntimeModuleConfigurations().isEmpty());
     } finally {
       store.destroy();
     }
@@ -130,14 +132,16 @@ public class TestFilePipelineStore {
     }
   }
 
-  //@Test loading an empty rpc hangs
-  public void testLoad() throws Exception {
+  @Test
+  public void testSaveAndLoad() throws Exception {
     ObjectGraph dagger = ObjectGraph.create(new TModule(true));
     PipelineStore store = dagger.get(FilePipelineStore.class);
     try {
       store.init();
-      RuntimePipelineConfiguration pc = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
-      Assert.assertTrue(pc.getRuntimeModuleConfigurations().isEmpty());
+      RuntimePipelineConfiguration pc1 = MockConfigGenerator.getRuntimePipelineConfiguration();
+      store.save(FilePipelineStore.DEFAULT_PIPELINE_NAME, "foo", null, null, pc1);
+      RuntimePipelineConfiguration pc2 = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
+      Assert.assertFalse(pc2.getRuntimeModuleConfigurations().isEmpty());
     } finally {
       store.destroy();
     }

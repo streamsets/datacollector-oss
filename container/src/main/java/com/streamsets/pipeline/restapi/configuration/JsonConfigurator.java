@@ -15,23 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.agent;
+package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.http.WebServerModule;
-import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
-import com.streamsets.pipeline.store.PipelineStoreModule;
-import dagger.Module;
-import dagger.Provides;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
-import javax.inject.Singleton;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.ContextResolver;
+import javax.ws.rs.ext.Provider;
 
-@Module(injects = {MainAgent.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class},
-        includes = {RuntimeModule.class, WebServerModule.class, PipelineStoreModule.class})
-public class PipelineAgentModule {
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
+public class JsonConfigurator implements ContextResolver<ObjectMapper> {
+  private ObjectMapper objectMapper;
 
-  @Provides @Singleton
-  public Agent provideAgent(PipelineAgent agent) {
-    return agent;
+  public JsonConfigurator() throws Exception {
+    objectMapper = new ObjectMapper();
+    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+  }
+
+  @Override
+  public ObjectMapper getContext(Class<?> objectType) {
+    return objectMapper;
   }
 
 }

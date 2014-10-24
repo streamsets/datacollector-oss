@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,21 +17,69 @@
  */
 package com.streamsets.pipeline.store;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
-public interface PipelineInfo {
+public class PipelineInfo {
+  private String name;
+  private String description;
+  private Date created;
+  private Date lastModified;
+  private String creator;
+  private String lastModifier;
+  private String lastRev;
 
-  String getName();
+  @JsonCreator
+  public PipelineInfo(
+      @JsonProperty("name") String name,
+      @JsonProperty("description") String description,
+      @JsonProperty("created") Date created,
+      @JsonProperty("lastModified") Date lastModified,
+      @JsonProperty("creator") String creator,
+      @JsonProperty("lastModifier") String lastModifier,
+      @JsonProperty("lastRev") String lastRev) {
+    this.name = name;
+    this.description = description;
+    this.created = created;
+    this.lastModified = lastModified;
+    this.creator = creator;
+    this.lastModifier = lastModifier;
+    this.lastRev = lastRev;
+  }
 
-  String getDescription();
+  public PipelineInfo(PipelineInfo pipelineInfo, Date lastModified, String lastModifier, String lastRev) {
+    this(pipelineInfo.getName(), pipelineInfo.getDescription(), pipelineInfo.getCreated(), lastModified,
+         pipelineInfo.getCreator(), lastModifier, lastRev);
+  }
 
-  Date getCreated();
+  public String getName() {
+    return name;
+  }
 
-  Date getLastModified();
+  public String getDescription() {
+    return description;
+  }
 
-  String getCreator();
+  public Date getCreated() {
+    return created;
+  }
 
-  String getLastModifier();
+  public Date getLastModified() {
+    return lastModified;
+  }
 
-  String getLastRev();
+  public String getCreator() {
+    return creator;
+  }
+
+  public String getLastModifier() {
+    return lastModifier;
+  }
+
+  public String getLastRev() {
+    return lastRev;
+  }
+
 }

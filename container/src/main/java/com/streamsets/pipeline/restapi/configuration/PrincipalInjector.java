@@ -15,23 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.agent;
+package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.http.WebServerModule;
-import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
-import com.streamsets.pipeline.store.PipelineStoreModule;
-import dagger.Module;
-import dagger.Provides;
+import org.glassfish.hk2.api.Factory;
 
-import javax.inject.Singleton;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
-@Module(injects = {MainAgent.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class},
-        includes = {RuntimeModule.class, WebServerModule.class, PipelineStoreModule.class})
-public class PipelineAgentModule {
+public class PrincipalInjector implements Factory<Principal> {
+  private Principal principal;
 
-  @Provides @Singleton
-  public Agent provideAgent(PipelineAgent agent) {
-    return agent;
+  @Inject
+  public PrincipalInjector(HttpServletRequest request) {
+    principal = new Principal() {
+      @Override
+      public String getName() {
+        return "nobody";
+      }
+    };
+  }
+
+  @Override
+  public Principal provide() {
+    return principal;
+  }
+
+  @Override
+  public void dispose(Principal principal) {
   }
 
 }
