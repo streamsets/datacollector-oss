@@ -95,7 +95,7 @@ public class ConfigProcessor extends AbstractProcessor {
     try {
       if(!generated) {
         FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
-          "stageConfiguration.json", (Element[])null);
+          "PipelineStages.json", (Element[])null);
         SerializationUtil.serialize(stageCollection, resource.openOutputStream());
         generated = true;
       }

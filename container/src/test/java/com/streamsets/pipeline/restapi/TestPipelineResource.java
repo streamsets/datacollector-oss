@@ -30,19 +30,19 @@ public class TestPipelineResource extends JerseyTest {
     "          {\n" +
     "            \"name\" : \"fileLocation\",\n" +
     "            \"description\" : \"This is the location of the file from which the data must be read\",\n" +
-    "            \"shortDescription\" : \"file_location\",\n" +
+    "            \"label\" : \"file_location\",\n" +
     "            \"defaultValue\" : \"/etc/data\",\n" +
-    "            \"type\" : \"TEXT\",\n" +
-    "            \"mandatory\" : \"true\",\n" +
+    "            \"type\" : \"STRING\",\n" +
+    "            \"required\" : \"true\",\n" +
     "            \"group\" : \"FileOptions\"\n" +
     "          },\n" +
     "          {\n" +
     "            \"name\" : \"bufferSize\",\n" +
     "            \"description\" : \"This is the number of bytes that must be read in one go\",\n" +
-    "            \"shortDescription\" : \"buffer_size\",\n" +
+    "            \"label\" : \"buffer_size\",\n" +
     "            \"defaultValue\" : \"10000\",\n" +
     "            \"type\" : \"NUMBER\",\n" +
-    "            \"mandatory\" : \"true\",\n" +
+    "            \"required\" : \"true\",\n" +
     "            \"group\" : \"FileOptions\"\n" +
     "          }\n" +
     "        ],\n" +
@@ -70,10 +70,10 @@ public class TestPipelineResource extends JerseyTest {
     "          {\n" +
     "            \"name\" : \"mask\",\n" +
     "            \"description\" : \"This is the character used to mask the sensitive data.\",\n" +
-    "            \"shortDescription\" : \"mask\",\n" +
+    "            \"label\" : \"mask\",\n" +
     "            \"defaultValue\" : \"*\",\n" +
-    "            \"type\" : \"TEXT\",\n" +
-    "            \"mandatory\" : \"true\",\n" +
+    "            \"type\" : \"STRING\",\n" +
+    "            \"required\" : \"true\",\n" +
     "            \"group\" : \"MakingOption\"\n" +
     "          }\n" +
     "        ],\n" +
@@ -101,19 +101,19 @@ public class TestPipelineResource extends JerseyTest {
     "          {\n" +
     "            \"name\" : \"kafkaTopic\",\n" +
     "            \"description\" : \"This is the kafka topic to which the data must be written\",\n" +
-    "            \"shortDescription\" : \"kafka_topic\",\n" +
+    "            \"label\" : \"kafka_topic\",\n" +
     "            \"defaultValue\" : \"myTopic\",\n" +
-    "            \"type\" : \"TEXT\",\n" +
-    "            \"mandatory\" : \"true\",\n" +
+    "            \"type\" : \"STRING\",\n" +
+    "            \"required\" : \"true\",\n" +
     "            \"group\" : \"Kafka\"\n" +
     "          },\n" +
     "          {\n" +
     "            \"name\" : \"kafkaHost\",\n" +
     "            \"description\" : \"This is the host on which the kafka cluster is installed.\",\n" +
-    "            \"shortDescription\" : \"kafka_host\",\n" +
+    "            \"label\" : \"kafka_host\",\n" +
     "            \"defaultValue\" : \"localhost\",\n" +
-    "            \"type\" : \"TEXT\",\n" +
-    "            \"mandatory\" : \"true\",\n" +
+    "            \"type\" : \"STRING\",\n" +
+    "            \"required\" : \"true\",\n" +
     "            \"group\" : \"Kafka\"\n" +
     "          }\n" +
     "        ],\n" +

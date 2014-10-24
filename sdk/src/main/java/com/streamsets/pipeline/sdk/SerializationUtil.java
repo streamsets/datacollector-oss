@@ -40,7 +40,7 @@ public class SerializationUtil {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeStringField("name", option.get("name"));
         jsonGenerator.writeStringField("description", option.get("description"));
-        jsonGenerator.writeStringField("shortDescription", option.get("label"));
+        jsonGenerator.writeStringField("label", option.get("label"));
         jsonGenerator.writeStringField("defaultValue", option.get("defaultValue"));
         jsonGenerator.writeStringField("type", option.get("type"));
         jsonGenerator.writeStringField("required", option.get("required"));

@@ -5,7 +5,7 @@ package com.streamsets.pipeline.config;
  */
 public enum ConfigType {
 
-  TEXT,
+  STRING,
   NUMBER,
   PASSWORD
 }

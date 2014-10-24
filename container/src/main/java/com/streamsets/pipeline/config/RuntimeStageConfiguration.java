@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by harikiran on 10/20/14.
  */
-public class RuntimeModuleConfiguration {
+public class RuntimeStageConfiguration {
 
   //basic info
   private final String instanceName;
@@ -28,7 +28,7 @@ public class RuntimeModuleConfiguration {
   private List<String> outputLanes;
 
   @JsonCreator
-  public RuntimeModuleConfiguration(
+  public RuntimeStageConfiguration(
       @JsonProperty("instanceName") String instanceName,
       @JsonProperty("moduleName") String moduleName,
       @JsonProperty("moduleVersion") String moduleVersion,

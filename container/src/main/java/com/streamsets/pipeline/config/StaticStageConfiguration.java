@@ -3,20 +3,20 @@ package com.streamsets.pipeline.config;
 import java.util.List;
 
 /**
- * Created by harikiran on 10/20/14.
+ * Captures the configuration options for a {@link com.streamsets.pipeline.api.Stage}.
+ *
  */
-
-public class StaticModuleConfiguration {
+public class StaticStageConfiguration {
 
   private final String name;
   private final String version;
   private final String shortDescription;
   private final String description;
-  private final ModuleType moduleType;
+  private final StageType moduleType;
   private List<ConfigOption> configOptionList;
 
-  public StaticModuleConfiguration(String name, String version, String shortDescription,
-                                   String description, ModuleType moduleType, List<ConfigOption> configOptionList) {
+  public StaticStageConfiguration(String name, String version, String shortDescription,
+                                  String description, StageType moduleType, List<ConfigOption> configOptionList) {
     this.name = name;
     this.version = version;
     this.shortDescription = shortDescription;
@@ -41,7 +41,7 @@ public class StaticModuleConfiguration {
     return description;
   }
 
-  public ModuleType getModuleType() {
+  public StageType getModuleType() {
     return moduleType;
   }
 

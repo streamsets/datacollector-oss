@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Created by harikiran on 10/18/14.
+ * Captures attributes related to individual configuration options
  */
 public class ConfigOption {
 

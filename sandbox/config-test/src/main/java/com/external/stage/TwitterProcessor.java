@@ -11,39 +11,24 @@ import com.streamsets.pipeline.api.base.BaseProcessor;
 public class TwitterProcessor extends BaseProcessor{
 
   @ConfigDef(
-    name = "username",
-    defaultValue = "admin",
-    label = "username",
+    name = "regEx",
+    defaultValue = "[a-z][A-Z][0-9]",
+    label = "regEx",
     required = true,
-    description = "The user name of the twitter user",
+    description = "The regular expression used to parse the tweet",
     type = ConfigDef.Type.STRING
   )
-  private final String username;
-
-  @ConfigDef(
-    name = "password",
-    defaultValue = "admin",
-    label = "password",
-    required = true,
-    description = "The password the twitter user",
-    type = ConfigDef.Type.STRING
-  )
-  private final String password;
+  private final String regEx;
 
   public TwitterProcessor(String username, String password) {
-    this.username = username;
-    this.password = password;
+    this.regEx = username;
+
   }
 
-
-
-  public String getUsername() {
-    return username;
+  public String getRegEx() {
+    return regEx;
   }
 
-  public String getPassword() {
-    return password;
-  }
 
   @Override
   public void process(Batch batch, BatchMaker batchMaker) throws PipelineException {

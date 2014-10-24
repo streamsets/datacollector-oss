@@ -12,22 +12,22 @@ import java.util.Map;
  */
 public class RuntimePipelineConfiguration {
 
-  private List<RuntimeModuleConfiguration> runtimeModuleConfigurations = null;
+  private List<RuntimeStageConfiguration> runtimeModuleConfigurations = null;
   private String uuid = null;
   private Map<String, List<String>> errorsMap = null;
 
 
   public RuntimePipelineConfiguration() {
-    runtimeModuleConfigurations = new ArrayList<RuntimeModuleConfiguration>();
+    runtimeModuleConfigurations = new ArrayList<RuntimeStageConfiguration>();
     errorsMap = new LinkedHashMap<String, List<String>>();
   }
 
   @JsonFormat()
-  public List<RuntimeModuleConfiguration> getRuntimeModuleConfigurations() {
+  public List<RuntimeStageConfiguration> getRuntimeModuleConfigurations() {
     return runtimeModuleConfigurations;
   }
 
-  public void setRuntimeModuleConfigurations(List<RuntimeModuleConfiguration> runtimeModuleConfigurations) {
+  public void setRuntimeModuleConfigurations(List<RuntimeStageConfiguration> runtimeModuleConfigurations) {
     this.runtimeModuleConfigurations = runtimeModuleConfigurations;
   }
 
