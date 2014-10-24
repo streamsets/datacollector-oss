@@ -17,30 +17,13 @@
  */
 package com.streamsets.pipeline.store;
 
-import com.streamsets.pipeline.config.RuntimePipelineConfiguration;
+import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.api.PipelineException;
 
-import java.util.List;
+public class PipelineStoreException extends PipelineException {
 
-public interface PipelineStore {
-
-  public void init();
-
-  public void destroy();
-
-  public void create(String name, String description, String user) throws PipelineStoreException;
-
-  public void delete(String name) throws PipelineStoreException;
-
-  public List<PipelineInfo> getPipelines() throws PipelineStoreException;
-
-  public PipelineInfo getInfo(String name) throws PipelineStoreException;
-
-  public List<PipelineRevInfo> getRevisions(String name) throws PipelineStoreException;
-
-  public void save(String name, String user, String tag, String tagDescription, RuntimePipelineConfiguration pipeline)
-      throws PipelineStoreException;
-
-  public RuntimePipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException;
-
+  public PipelineStoreException(ErrorId id, Object... params) {
+    super(id, params);
+  }
 
 }

@@ -17,30 +17,26 @@
  */
 package com.streamsets.pipeline.store;
 
-import com.streamsets.pipeline.config.RuntimePipelineConfiguration;
+import com.streamsets.pipeline.api.ErrorId;
 
-import java.util.List;
+public enum PipelineStoreErrors implements ErrorId {
+  PIPELINE_DOES_NOT_EXIST("Pipeline '{}' does not exist"),
+  PIPELINE_ALREADY_EXISTS("Pipeline '{}' already exists"),
+  COULD_NOT_CREATE_PIPELINE("Could not create pipeline '{}', {}"),
+  COULD_NOT_DELETE_PIPELINE("Could not delete pipeline '{}', {}"),
+  COULD_NOT_SAVE_PIPELINE("Could not save pipeline '{}', {}"),
+  COULD_NOT_LOAD_PIPELINE_INFO("Could not load pipeline '{}' info, {}")
+  ;
 
-public interface PipelineStore {
+  private final String msgTemplate;
 
-  public void init();
+  PipelineStoreErrors(String msgTemplate) {
+    this.msgTemplate = msgTemplate;
+  }
 
-  public void destroy();
-
-  public void create(String name, String description, String user) throws PipelineStoreException;
-
-  public void delete(String name) throws PipelineStoreException;
-
-  public List<PipelineInfo> getPipelines() throws PipelineStoreException;
-
-  public PipelineInfo getInfo(String name) throws PipelineStoreException;
-
-  public List<PipelineRevInfo> getRevisions(String name) throws PipelineStoreException;
-
-  public void save(String name, String user, String tag, String tagDescription, RuntimePipelineConfiguration pipeline)
-      throws PipelineStoreException;
-
-  public RuntimePipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException;
-
+  @Override
+  public String getMessageTemplate() {
+    return msgTemplate;
+  }
 
 }
