@@ -1,0 +1,27 @@
+[
+  {
+    "name" : "TwitterSource",
+    "version" : "1.0",
+    "label" : "twitter_source",
+    "description" : "Produces twitter feeds",
+    "type" : "SOURCE",
+    "ConfigOptions" : [
+      {
+        "name" : "username",
+        "description" : "The user name of the twitter user",
+        "label" : "username",
+        "defaultValue" : "admin",
+        "type" : "STRING",
+        "required" : "true"
+      },
+      {
+        "name" : "password",
+        "description" : "The password the twitter user",
+        "label" : "password",
+        "defaultValue" : "admin",
+        "type" : "STRING",
+        "required" : "true"
+      }
+    ]
+  }
+]

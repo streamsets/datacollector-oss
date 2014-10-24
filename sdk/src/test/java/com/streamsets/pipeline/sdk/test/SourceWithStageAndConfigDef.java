@@ -1,4 +1,4 @@
-package com.external.stage;
+package com.streamsets.pipeline.sdk.test;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
  */
 @StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
 , version = "1.0")
-public class TwitterSource extends BaseSource{
+public class SourceWithStageAndConfigDef extends BaseSource{
 
   @ConfigDef(
     name = "username",
@@ -33,7 +33,7 @@ public class TwitterSource extends BaseSource{
   )
   private final String password;
 
-  public TwitterSource(String username, String password) {
+  public SourceWithStageAndConfigDef(String username, String password) {
     this.username = username;
     this.password = password;
   }
@@ -51,5 +51,3 @@ public class TwitterSource extends BaseSource{
     return null;
   }
 }
-
-

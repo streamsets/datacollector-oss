@@ -101,4 +101,5 @@ public class StageConfigurationDeserializer {
         group));
     }
     return configOptions;
-}}
+  }
+}
