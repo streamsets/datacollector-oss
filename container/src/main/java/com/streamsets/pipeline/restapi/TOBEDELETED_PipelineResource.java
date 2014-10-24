@@ -16,8 +16,8 @@ import java.util.List;
 /**
  * Created by harikiran on 10/19/14.
  */
-@Path("/v1/pipelines")
-public class PipelineResource {
+@Path("/v1/pipelinesxxx")
+public class TOBEDELETED_PipelineResource {
 
   private static final String PIPELINE = "pipeline";
   private PipelineRunner getRunner(ServletContext context) {

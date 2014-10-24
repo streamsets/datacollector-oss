@@ -38,7 +38,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 
-@Path("/v1/pipeline")
+@Path("/v1/pipelines")
 public class PipelineStoreResource {
   private final PipelineStore store;
   private final URI uri;

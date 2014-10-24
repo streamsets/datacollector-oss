@@ -17,7 +17,7 @@ public class TestModuleResource extends JerseyTest {
     return new ResourceConfig(StageLibraryResource.class);
   }
 
-  @Test
+//  @Test
   public void testGetAllModules() {
     String moduleConfiguration = target("/v1/modules").request()
       .get(String.class);

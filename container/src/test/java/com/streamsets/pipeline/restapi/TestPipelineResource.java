@@ -149,24 +149,24 @@ public class TestPipelineResource extends JerseyTest {
 
   @Override
   protected Application configure() {
-    return new ResourceConfig(PipelineResource.class);
+    return new ResourceConfig(TOBEDELETED_PipelineResource.class);
   }
 
- @Test
+// @Test
   public void testGetAllPipelines() {
     String pipelineConfigurationString = target("/v1/pipelines").request().get(String.class);
     //returns a List of Maps, where each map corresponds to a module info object
     System.out.println(pipelineConfigurationString);
   }
 
-  @Test
+//  @Test
   public void testGetConfiguration() {
     String pipelineConfigurationString = target("/v1/pipelines/myPipeline/config").request().get(String.class);
     //returns a List of Maps, where each map corresponds to a module info object
     System.out.println(pipelineConfigurationString);
   }
 
-  @Test
+//  @Test
   public void testSetConfiguration() {
     WebTarget pipelineResource = target("/v1/pipelines").path("{pipelineName}")
       .resolveTemplate("pipelineName","myPipeline").path("/config").queryParam("mode", "preview");
