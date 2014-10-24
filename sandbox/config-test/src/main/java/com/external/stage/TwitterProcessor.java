@@ -31,7 +31,7 @@ public class TwitterProcessor extends BaseProcessor{
 
 
   @Override
-  public void process(Batch batch, BatchMaker batchMaker) throws PipelineException {
+  public void process(Batch batch, BatchMaker batchMaker) throws StageException {
 
   }
 }

@@ -43,12 +43,12 @@ public class TwitterTarget implements Target {
   }
 
   @Override
-  public void write(Batch batch) throws PipelineException {
+  public void write(Batch batch) throws StageException {
 
   }
 
   @Override
-  public void init(Info info, Context context) throws PipelineException {
+  public void init(Info info, Context context) throws StageException {
 
   }
 

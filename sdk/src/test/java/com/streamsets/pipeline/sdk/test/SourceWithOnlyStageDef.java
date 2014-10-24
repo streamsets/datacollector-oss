@@ -1,8 +1,8 @@
 package com.streamsets.pipeline.sdk.test;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.PipelineException;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 
 /**
@@ -16,7 +16,7 @@ public class SourceWithOnlyStageDef extends BaseSource{
   }
 
   @Override
-  public String produce(String lastBatchId, BatchMaker batchMaker) throws PipelineException {
+  public String produce(String lastBatchId, BatchMaker batchMaker) throws StageException {
     return null;
   }
 }
