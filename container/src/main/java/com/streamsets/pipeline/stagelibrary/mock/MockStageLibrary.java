@@ -19,8 +19,8 @@ package com.streamsets.pipeline.stagelibrary.mock;
 
 import com.streamsets.pipeline.config.ConfigOption;
 import com.streamsets.pipeline.config.ConfigType;
-import com.streamsets.pipeline.config.ModuleType;
-import com.streamsets.pipeline.config.StaticModuleConfiguration;
+import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.config.StaticStageConfiguration;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
 import javax.inject.Inject;
@@ -28,22 +28,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MockStageLibrary implements StageLibrary {
-  private List<StaticModuleConfiguration> stages;
+  private List<StaticStageConfiguration> stages;
 
   @Inject
   public MockStageLibrary() {
-    stages = new ArrayList<StaticModuleConfiguration>();
+    stages = new ArrayList<StaticStageConfiguration>();
     List<ConfigOption> sourceConfigOption = new ArrayList<ConfigOption>();
-    StaticModuleConfiguration sourceConfig =
-        new StaticModuleConfiguration("CsvSource",
+    StaticStageConfiguration sourceConfig =
+        new StaticStageConfiguration("CsvSource",
                                       "1.0", "csv_source",
                                       "This is a CSV Source. This CSV source produces records in the a comma separated format.",
-                                      ModuleType.SOURCE,
+                                      StageType.SOURCE,
                                       sourceConfigOption);
 
     ConfigOption fileLocationOption = new ConfigOption(
         "fileLocation",
-        ConfigType.TEXT,
+        ConfigType.STRING,
         "file_location",
         "This is the location of the file from which the data must be read",
         "/etc/data",
@@ -66,16 +66,16 @@ public class MockStageLibrary implements StageLibrary {
     stages.add(sourceConfig);
 
     List<ConfigOption> processorConfigOption = new ArrayList<ConfigOption>();
-    StaticModuleConfiguration processorConfig =
-        new StaticModuleConfiguration("MaskingProcessor",
+    StaticStageConfiguration processorConfig =
+        new StaticStageConfiguration("MaskingProcessor",
                                       "1.0", "masking_processor",
                                       "This is a masking processor.",
-                                      ModuleType.PROCESSOR,
+                                      StageType.PROCESSOR,
                                       processorConfigOption);
 
     ConfigOption processorOption = new ConfigOption(
         "mask",
-        ConfigType.TEXT,
+        ConfigType.STRING,
         "masking_processor",
         "This is the character used to mask",
         "*",
@@ -87,16 +87,16 @@ public class MockStageLibrary implements StageLibrary {
     stages.add(processorConfig);
 
     List<ConfigOption> targetConfigOption = new ArrayList<ConfigOption>();
-    StaticModuleConfiguration targetConfig =
-        new StaticModuleConfiguration("KafkaTarget",
+    StaticStageConfiguration targetConfig =
+        new StaticStageConfiguration("KafkaTarget",
                                       "1.0", "kafka_target",
                                       "This is a kafka target. This target writes to kafka cluster.",
-                                      ModuleType.TARGET,
+                                      StageType.TARGET,
                                       targetConfigOption);
 
     ConfigOption topicOption = new ConfigOption(
         "kafkaTopic",
-        ConfigType.TEXT,
+        ConfigType.STRING,
         "kafka_topic",
         "This is the kafka topic to which the data must be written",
         "myTopic",
@@ -106,7 +106,7 @@ public class MockStageLibrary implements StageLibrary {
 
     ConfigOption hostOption = new ConfigOption(
         "kafkaHost",
-        ConfigType.TEXT,
+        ConfigType.STRING,
         "kafka_host",
         "This is the host on which the kafka cluster is installed.",
         "localhost",
@@ -120,7 +120,7 @@ public class MockStageLibrary implements StageLibrary {
 
   }
 
-  @Override public List<StaticModuleConfiguration> getStages() {
+  @Override public List<StaticStageConfiguration> getStages() {
     return stages;
   }
 

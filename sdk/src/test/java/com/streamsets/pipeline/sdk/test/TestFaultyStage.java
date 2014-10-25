@@ -12,14 +12,14 @@ import java.util.List;
 /**
  * Created by harikiran on 10/24/14.
  */
-public class TestFaultyStage extends TestConfigProcessorBase {
+public class TestFaultyStage /*extends TestConfigProcessorBase*/ {
 
-  @Override
+  //@Override
   public List<String> getClassesToProcess() {
     return Arrays.asList("com.streamsets.pipeline.sdk.test.FaultySource");
   }
 
-  @Override
+  //@Override
   public void test(List<Diagnostic<? extends JavaFileObject>> diagnostics, String compilerOutput, Boolean compilationResult) {
 
     //Compilation is expected to be successful
