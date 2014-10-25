@@ -1,0 +1,69 @@
+[
+  {
+    "name" : "TwitterTarget",
+    "version" : "1.3",
+    "label" : "twitter_target",
+    "description" : "Consumes twitter feeds",
+    "type" : "TARGET",
+    "ConfigOptions" : [
+      {
+        "name" : "username",
+        "description" : "The user name of the twitter user",
+        "label" : "username",
+        "defaultValue" : "admin",
+        "type" : "STRING",
+        "required" : "true"
+      },
+      {
+        "name" : "password",
+        "description" : "The password the twitter user",
+        "label" : "password",
+        "defaultValue" : "admin",
+        "type" : "STRING",
+        "required" : "true"
+      }
+    ]
+  },
+  {
+    "name" : "TwitterProcessor",
+    "version" : "1.0",
+    "label" : "twitter_processor",
+    "description" : "processes twitter feeds",
+    "type" : "PROCESSOR",
+    "ConfigOptions" : [
+      {
+        "name" : "regEx",
+        "description" : "The regular expression used to parse the tweet",
+        "label" : "regEx",
+        "defaultValue" : "[a-z][A-Z][0-9]",
+        "type" : "STRING",
+        "required" : "true"
+      }
+    ]
+  },
+  {
+    "name" : "TwitterSource",
+    "version" : "1.0",
+    "label" : "twitter_source",
+    "description" : "Produces twitter feeds",
+    "type" : "SOURCE",
+    "ConfigOptions" : [
+      {
+        "name" : "username",
+        "description" : "The user name of the twitter user",
+        "label" : "username",
+        "defaultValue" : "admin",
+        "type" : "STRING",
+        "required" : "true"
+      },
+      {
+        "name" : "password",
+        "description" : "The password the twitter user",
+        "label" : "password",
+        "defaultValue" : "admin",
+        "type" : "STRING",
+        "required" : "true"
+      }
+    ]
+  }
+]

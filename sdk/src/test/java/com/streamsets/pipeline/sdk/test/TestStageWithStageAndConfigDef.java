@@ -10,8 +10,7 @@ import java.util.List;
 /**
  * Created by harikiran on 10/24/14.
  */
-public class TestSourceWithStageAndConfigDef extends TestConfigProcessorBase {
-
+public class TestStageWithStageAndConfigDef extends TestConfigProcessorBase {
 
   @Override
   public List<String> getClassesToProcess() {
@@ -31,7 +30,7 @@ public class TestSourceWithStageAndConfigDef extends TestConfigProcessorBase {
     Assert.assertTrue(diagnostics.isEmpty());
 
     //PipelineStages.json is expected to be generated
-    TestUtil.testActualAndExpectedPipelineStagesJson("SourceWithStageAndConfigDef.json");
+    TestUtil.compareExpectedAndActualStages("SourceWithStageAndConfigDef.json");
 
   }
 }

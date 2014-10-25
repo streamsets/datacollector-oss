@@ -6,12 +6,14 @@ package com.streamsets.pipeline.sdk.test;
  * @author Juan Alberto López Cavallotti
  */
 
+import com.streamsets.pipeline.sdk.Constants;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.tools.*;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -35,6 +37,10 @@ public abstract class TestConfigProcessorBase {
     //configure the diagnostics collector.
     collector = new DiagnosticCollector<JavaFileObject>();
     fileManager = COMPILER.getStandardFileManager(collector, Locale.US, Charset.forName("UTF-8"));
+
+    //remove previously generated PipelineStages.json
+    File f = new File(Constants.PIPELINE_STAGES_JSON);
+    f.delete();
   }
 
   @Test

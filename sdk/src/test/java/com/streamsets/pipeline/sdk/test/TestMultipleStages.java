@@ -7,18 +7,16 @@ import javax.tools.JavaFileObject;
 import java.util.Arrays;
 import java.util.List;
 
-
 /**
  * Created by harikiran on 10/24/14.
  */
-public class TestSourceWithOnlyStageDef extends TestConfigProcessorBase {
-
-  public TestSourceWithOnlyStageDef() {
-  }
+public class TestMultipleStages extends TestConfigProcessorBase {
 
   @Override
   public List<String> getClassesToProcess() {
-    return Arrays.asList("com.streamsets.pipeline.sdk.test.SourceWithOnlyStageDef");
+    return Arrays.asList("com.streamsets.pipeline.sdk.test.TwitterSource",
+      "com.streamsets.pipeline.sdk.test.TwitterProcessor",
+      "com.streamsets.pipeline.sdk.test.TwitterTarget");
   }
 
   @Override
@@ -34,7 +32,7 @@ public class TestSourceWithOnlyStageDef extends TestConfigProcessorBase {
     Assert.assertTrue(diagnostics.isEmpty());
 
     //PipelineStages.json is expected to be generated
-    TestUtil.testActualAndExpectedPipelineStagesJson("SourceWithOnlyStageDef.json");
+    TestUtil.compareExpectedAndActualStages("MultipleStages.json");
 
   }
 }

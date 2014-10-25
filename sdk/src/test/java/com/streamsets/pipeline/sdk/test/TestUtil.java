@@ -2,6 +2,7 @@ package com.streamsets.pipeline.sdk.test;
 
 import com.streamsets.pipeline.sdk.SerializationUtil;
 import com.streamsets.pipeline.sdk.StageCollection;
+import com.streamsets.pipeline.sdk.StageConfiguration;
 import org.junit.Assert;
 
 import java.io.FileInputStream;
@@ -34,8 +35,8 @@ public class TestUtil {
     return stageCollection;
   }
 
-  public static void testActualAndExpectedPipelineStagesJson(String expectedJsonFileName) {
-    StageCollection actualStageCollection = TestUtil.getGeneratedStageCollection();
+  public static void compareExpectedAndActualStages(String expectedJsonFileName) {
+    StageCollection actualStages = TestUtil.getGeneratedStageCollection();
 
     InputStream in = null;
     try {
@@ -45,13 +46,27 @@ public class TestUtil {
       Assert.fail("Test failed for the following reason:");
       e.printStackTrace();
     }
-    StageCollection expectedtageCollection = TestUtil.getStageCollection(in);
+    StageCollection expectedStages = TestUtil.getStageCollection(in);
 
+    Assert.assertTrue(actualStages.getStageConfigurations().size() ==
+      expectedStages.getStageConfigurations().size());
     //check the deserialized StageCollections.
-    Assert.assertTrue(actualStageCollection.getStageConfigurations().size() == 1);
-    Assert.assertEquals(expectedtageCollection.getStageConfigurations().get(0).getStageOptions(),
-      actualStageCollection.getStageConfigurations().get(0).getStageOptions());
-    Assert.assertEquals(expectedtageCollection.getStageConfigurations().get(0).getConfigOptions(),
-      actualStageCollection.getStageConfigurations().get(0).getConfigOptions());
+    for(int i = 0; i < actualStages.getStageConfigurations().size(); i++) {
+      StageConfiguration expected = expectedStages.getStageConfigurations().get(i);
+      StageConfiguration actual = null;
+      for(StageConfiguration s : actualStages.getStageConfigurations()) {
+        if(s.getStageOptions().get("name").equals(expected.getStageOptions().get("name"))) {
+          actual = s;
+          break;
+        }
+      }
+      if(actual == null) {
+        Assert.fail("A Stage configuration with name " +
+          expected.getStageOptions().get("name") +
+          "is expected, but not found.");
+      }
+      Assert.assertEquals(expected.getStageOptions(), actual.getStageOptions());
+      Assert.assertEquals(expected.getConfigOptions(), actual.getConfigOptions());
+    }
   }
 }

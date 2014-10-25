@@ -34,6 +34,8 @@ public class ConfigProcessor extends AbstractProcessor {
   /*The compiler may call this annotation processor multiple times in different rounds.
   We just need to process and generate only once*/
   private boolean generated = false;
+  /*Captures if there is an error*/
+  private boolean error = false;
 
   public ConfigProcessor() {
     super();
@@ -66,6 +68,7 @@ public class ConfigProcessor extends AbstractProcessor {
             "Stage " + e.getSimpleName()
               + " neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, Processor, Target interface.");
           //Continue for now to find out if there are more issues.
+          error = true;
           continue;
         }
         stageConfiguration.getStageOptions().put("type", getTypeFromElement(typeElement));
@@ -93,7 +96,7 @@ public class ConfigProcessor extends AbstractProcessor {
 
     //generate a json file for the StageCollection object
     try {
-      if(!generated) {
+      if(!generated && !error) {
         FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
           "PipelineStages.json", (Element[])null);
         SerializationUtil.serialize(stageCollection, resource.openOutputStream());
@@ -130,7 +133,6 @@ public class ConfigProcessor extends AbstractProcessor {
     List<? extends TypeMirror> interfaces = typeElement.getInterfaces();
 
     if(interfaces.size() != 0) {
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, interfaces.get(0).toString());
       if (interfaces.get(0).toString().contains("Source")) {
         result = "SOURCE";
       } else if (interfaces.get(0).toString().contains("Processor")) {
