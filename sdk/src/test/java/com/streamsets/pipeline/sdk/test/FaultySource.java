@@ -1,13 +1,14 @@
 package com.streamsets.pipeline.sdk.test;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.StageDef;
 
 /**
  * The source has all the required annotations but it does not
  * implement the Source interface or extend the BaseSource abstract class
  */
-/*@StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
-  , version = "1.0")*/
+@StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
+  , version = "1.0")
 public class FaultySource {
 
   @ConfigDef(
