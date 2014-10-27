@@ -22,6 +22,8 @@ import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class Main {
   private final Class moduleClass;
 
@@ -84,7 +86,15 @@ public class Main {
     }
   }
 
+  public static void setClassLoaders(ClassLoader apiCL, ClassLoader containerCL, List<? extends ClassLoader> moduleCLs) {
+    RuntimeModule.setStageLibraryClassLoaders(moduleCLs);
+  }
+
   public static void main(String[] args) throws Exception {
+    main();
+  }
+
+  public static void main() throws Exception {
     System.exit(new Main().doMain());
   }
 

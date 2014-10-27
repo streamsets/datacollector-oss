@@ -24,6 +24,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
+import java.util.List;
+
 public class TestRuntimeInfo {
 
   @Before
@@ -37,12 +42,13 @@ public class TestRuntimeInfo {
 
   @Test
   public void testInfoDefault() {
-    RuntimeInfo info = new RuntimeInfo();
+    RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
     Assert.assertEquals(System.getProperty("user.dir"), info.getRuntimeDir());
     Assert.assertEquals(System.getProperty("user.dir") + "/static-web", info.getStaticWebDir());
     Assert.assertEquals(System.getProperty("user.dir") + "/etc", info.getConfigDir());
     Assert.assertEquals(System.getProperty("user.dir") + "/log", info.getLogDir());
     Assert.assertEquals(System.getProperty("user.dir") + "/var", info.getDataDir());
+    Assert.assertEquals(Arrays.asList(getClass().getClassLoader()), info.getStageLibraryClassLoaders());
     Logger log = Mockito.mock(Logger.class);
     info.log(log);
   }
@@ -54,12 +60,14 @@ public class TestRuntimeInfo {
     System.setProperty("pipeline.log.dir", "y");
     System.setProperty("pipeline.data.dir", "z");
 
-    RuntimeInfo info = new RuntimeInfo();
+    List<? extends ClassLoader> customCLs = Arrays.asList(new URLClassLoader(new URL[0], null));
+    RuntimeInfo info = new RuntimeInfo(customCLs);
     Assert.assertEquals(System.getProperty("user.dir"), info.getRuntimeDir());
     Assert.assertEquals("w", info.getStaticWebDir());
     Assert.assertEquals("x", info.getConfigDir());
     Assert.assertEquals("y", info.getLogDir());
     Assert.assertEquals("z", info.getDataDir());
+    Assert.assertEquals(customCLs, info.getStageLibraryClassLoaders());
     Logger log = Mockito.mock(Logger.class);
     info.log(log);
   }

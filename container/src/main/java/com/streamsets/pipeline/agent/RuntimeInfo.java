@@ -17,9 +17,17 @@
  */
 package com.streamsets.pipeline.agent;
 
+import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 
+import java.util.List;
+
 public class RuntimeInfo {
+  private final List<? extends ClassLoader> stageLibraryClassLoaders;
+
+  public RuntimeInfo(List<? extends ClassLoader> stageLibraryClassLoaders) {
+    this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
+  }
 
   public String getRuntimeDir() {
     return System.getProperty("user.dir");
@@ -39,6 +47,10 @@ public class RuntimeInfo {
 
   public String getDataDir() {
     return System.getProperty("pipeline.data.dir", getRuntimeDir() + "/var");
+  }
+
+  public List<? extends ClassLoader> getStageLibraryClassLoaders() {
+    return stageLibraryClassLoaders;
   }
 
   public void log(Logger log) {

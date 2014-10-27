@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.agent;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.container.Configuration;
 import com.streamsets.pipeline.http.WebServerModule;
 import dagger.Module;
@@ -27,9 +28,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 
 @Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class})
 public class RuntimeModule {
+  private static List<ClassLoader> stageLibraryClassLoaders = ImmutableList.of(RuntimeModule.class.getClassLoader());
+
+  public static synchronized void setStageLibraryClassLoaders(List<? extends ClassLoader> classLoaders) {
+    stageLibraryClassLoaders = ImmutableList.copyOf(classLoaders);
+  }
 
   @Provides @Singleton
   public BuildInfo provideBuildInfo() {
@@ -38,7 +45,7 @@ public class RuntimeModule {
 
   @Provides @Singleton
   public RuntimeInfo provideRuntimeInfo() {
-    return new RuntimeInfo();
+    return new RuntimeInfo(stageLibraryClassLoaders);
   }
 
   @Provides @Singleton
