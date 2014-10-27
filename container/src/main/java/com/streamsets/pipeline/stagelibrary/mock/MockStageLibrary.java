@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.stagelibrary.mock;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.agent.RuntimeInfo;
 import com.streamsets.pipeline.config.ConfigOption;
 import com.streamsets.pipeline.config.ConfigType;
 import com.streamsets.pipeline.config.StageType;
@@ -36,53 +38,61 @@ public class MockStageLibrary implements StageLibrary {
 
   private static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
 
-  private List<StaticStageConfiguration> stages = null;
+  private final List<? extends ClassLoader> stageClassLoaders;
+  private final List<StaticStageConfiguration> stages;
 
   @Inject
-  public MockStageLibrary() {
-    this.stages = new ArrayList<StaticStageConfiguration>();
+  public MockStageLibrary(RuntimeInfo runtimeInfo) {
+    stageClassLoaders = runtimeInfo.getStageLibraryClassLoaders();
+    this.stages = loadStages();
   }
 
-  @Override
-  public List<StaticStageConfiguration> getStages() {
+  @VisibleForTesting
+  List<StaticStageConfiguration> loadStages() {
+    List<StaticStageConfiguration> stages = new ArrayList<StaticStageConfiguration>();
     //go over all the "PipelineStages.json" files and collect stage information
 
-    //may have to go over multiple class loaders eventually
-    ClassLoader cl = Thread.currentThread().getContextClassLoader();
-    Enumeration<URL> resources = null;
-    try {
-      resources = cl.getResources(PIPELINE_STAGES_JSON);
-    } catch (IOException e) {
-      //TODO<Hari>: Introduce a new  exception?
-      e.printStackTrace();
-    }
-
-    if(!resources.hasMoreElements()) {
-      //No PipelineStages.json file found
-      //return mock stages
-      populateDefaultStages(stages);
-      return stages;
-    }
-
-    List<InputStream> inputStreams = new ArrayList<InputStream>();
-    while(resources.hasMoreElements()) {
+    for (ClassLoader cl : stageClassLoaders) {
+      Enumeration<URL> resources = null;
       try {
-        inputStreams.add(resources.nextElement().openStream());
+        resources = cl.getResources(PIPELINE_STAGES_JSON);
       } catch (IOException e) {
         //TODO<Hari>: Introduce a new  exception?
         e.printStackTrace();
       }
-    }
 
-    //get the StaticStageConfiguration objects from each of the streams
-    for(InputStream in : inputStreams) {
-      try {
-        stages.addAll(
-          StageConfigurationDeserializer.deserialize(in).getStaticStageConfigurations());
-      } catch (IOException e) {
-        e.printStackTrace();
+      if (!resources.hasMoreElements()) {
+        //No PipelineStages.json file found
+        //return mock stages
+        populateDefaultStages(stages);
+        return stages;
+      }
+
+      List<InputStream> inputStreams = new ArrayList<InputStream>();
+      while (resources.hasMoreElements()) {
+        try {
+          inputStreams.add(resources.nextElement().openStream());
+        } catch (IOException e) {
+          //TODO<Hari>: Introduce a new  exception?
+          e.printStackTrace();
+        }
+      }
+
+      //get the StaticStageConfiguration objects from each of the streams
+      for (InputStream in : inputStreams) {
+        try {
+          stages.addAll(
+              StageConfigurationDeserializer.deserialize(in).getStaticStageConfigurations());
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     }
+    return stages;
+  }
+
+  @Override
+  public List<StaticStageConfiguration> getStages() {
     return stages;
   }
 

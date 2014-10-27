@@ -17,13 +17,14 @@
  */
 package com.streamsets.pipeline.stagelibrary;
 
+import com.streamsets.pipeline.agent.RuntimeModule;
 import com.streamsets.pipeline.stagelibrary.mock.MockStageLibrary;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(library = true)
+@Module(library = true, includes = {RuntimeModule.class})
 public class StageLibraryModule {
 
   @Provides
