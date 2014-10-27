@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="panel-body">
-
+          <pipeline-graph chart-data="pipelineConfig" ></pipeline-graph>
         </div>
       </bg-pane>
 
@@ -43,11 +43,6 @@
               <li>
                 <a showtab="" href="#b" data-toggle="tab">
                   {{'admin.detailPane.attributes.title' | translate}}
-                </a>
-              </li>
-              <li>
-                <a showtab="" href="#c" data-toggle="tab">
-                  {{'admin.header.preview' | translate}}
                 </a>
               </li>
             </ul>
@@ -110,7 +105,7 @@
                       {{'admin.detailPane.configuration.requiredAttributes' | translate}}
                     </label>
                     <div class="col-sm-6">
-                      <tags-input ng-model="tags" placeholder="{{'admin.detailPane.configuration.requiredAttributes.placeholder' | translate}}"></tags-input>
+                      <tags-input ng-model="tags" placeholder="Add a attrubute"></tags-input>
                     </div>
                   </div>
 
@@ -148,9 +143,6 @@
                 </div>
               </div>
 
-              <div class="tab-pane" id="c">
-                <json-formatter open="1" json="preview"></json-formatter>
-              </div>
             </div>
           </div>
           <!-- /tabs -->

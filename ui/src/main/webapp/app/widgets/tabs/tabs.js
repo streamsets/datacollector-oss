@@ -1,4 +1,4 @@
-angular.module('pipelineAgentApp.tabDirectives', [])
+angular.module('tabDirectives', [])
   .directive('showtab',
     function () {
       return {

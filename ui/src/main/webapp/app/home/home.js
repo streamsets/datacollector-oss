@@ -7,8 +7,9 @@ angular
     'ngRoute',
     'ngTagsInput',
     'jsonFormatter',
-    'pipelineAgentApp.splitterDirectives',
-    'pipelineAgentApp.tabDirectives'
+    'splitterDirectives',
+    'tabDirectives',
+    'pipelineGraphDirectives'
   ])
   .config(['$routeProvider', function($routeProvider){
     $routeProvider.when("/",
@@ -19,8 +20,17 @@ angular
     );
   }])
   .controller('HomeController', function($scope, api){
+
+    //Temp
+    $scope.config = {
+      source: {
+        name: 'File Source'
+      }
+    };
+
+
     api.pipelineAgent.getConfig().success(function (res) {
-      $scope.config = res;
+      //$scope.config = res;
       console.log($scope.config);
     });
 
@@ -54,15 +64,15 @@ angular
     }];
 
     $scope.preview = {
-      first: 'John',
-      last: 'Smith',
-      ssn: 'xxx-xx-xxxx',
-      address1: '1234 Main St',
-      address2: 'APT #567',
-      city: 'San Francisco',
-      state: 'CA',
-      zip: '94014',
-      phone: '650-123-4567'
+      first: "John",
+      last: "Smith",
+      ssn: "xxx-xx-xxxx",
+      address1: "1234 Main St",
+      address2: "APT #567",
+      city: "San Francisco",
+      state: "CA",
+      zip: "94014",
+      phone: "650-123-4567"
     };
 
     $scope.createPipelineAgent = function() {
@@ -72,5 +82,7 @@ angular
         }
       };
     };
+
+    $scope.pipelineConfig = [40,100,80,15,25,60,10];
 
   });

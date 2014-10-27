@@ -826,3 +826,12 @@ ng-tags-input/bower.json
 ng-tags-input/ng-tags-input.bootstrap.min.css
 ng-tags-input/ng-tags-input.min.css
 ng-tags-input/ng-tags-input.min.js
+
+d3/d3.min.js
+d3/.spmignore
+d3/composer.json
+d3/CONTRIBUTING.md
+d3/bower.json
+d3/.bower.json
+d3/README.md
+d3/LICENSE

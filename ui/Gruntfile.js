@@ -68,6 +68,7 @@ module.exports = function(grunt) {
      */
     vendor_files: {
       js: [
+        'bower_components/d3/d3.js',
         'bower_components/jquery/dist/jquery.js',
         'bower_components/angular/angular.js',
         'bower_components/angular-route/angular-route.js',
@@ -438,7 +439,7 @@ module.exports = function(grunt) {
         files: [
           '<%= base_dir %>app/**/*.js'
         ],
-        tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs' ]
+        tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs', 'index:build' ]
       },
 
       /**

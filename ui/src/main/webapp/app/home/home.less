@@ -4,6 +4,16 @@
 
 .canvas-pane {
   margin-top: 50px;
+
+  .panel-body {
+    padding: 0;
+    height: calc(~"100% - 93px");
+    overflow: auto;
+
+    .draggable {
+      cursor: pointer;
+    }
+  }
 }
 
 .detail-pane {
