@@ -60,11 +60,11 @@ for i in "${PIPELINE_DIST}/api-lib/"*.jar; do
   CLASSPATH="${CLASSPATH}:$i"
 done
 
-for i in "${PIPELINE_DIST}/impl-lib/"*.jar; do
+for i in "${PIPELINE_DIST}/container-lib/"*.jar; do
   CLASSPATH="${CLASSPATH}:$i"
 done
 
-for i in "${PIPELINE_DIST}/stage-collections-lib/"*/; do
+for i in "${PIPELINE_DIST}/stage-libs/"*; do
   if [ -d "${i}" ]
   then
     for j in "${i}"/*.jar; do
