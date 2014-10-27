@@ -35,4 +35,3 @@ public class TwitterProcessor extends BaseProcessor{
 
   }
 }
-

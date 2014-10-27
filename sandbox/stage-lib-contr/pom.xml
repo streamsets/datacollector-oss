@@ -20,45 +20,17 @@
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../root</relativePath>
+    <relativePath>../../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-sandbox</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Sandbox</description>
-  <name>StreamSets Sandbox</name>
+  <artifactId>streamsets-sandbox-stage-lib-contr</artifactId>
+  <description>StreamSets Sandbox Stage Library Contributions</description>
+  <name>StreamSets Sandbox StageLibContr</name>
   <packaging>pom</packaging>
 
-  <profiles>
-    <profile>
-      <id>all.sandbox.modules</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>!sandbox.module</name>
-        </property>
-      </activation>
-      <modules>
-        <module>dagger</module>
-        <module>jetty</module>
-        <module>appclassloader</module>
-        <module>annotations</module>
-        <module>pipeline-api</module>
-        <module>pipeline-container</module>
-        <module>stage-lib-contr</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>sandbox.module</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>sandbox.module</name>
-        </property>
-      </activation>
-      <modules>
-        <module>${sandbox.module}</module>
-      </modules>
-    </profile>
-  </profiles>
+  <modules>
+    <module>twitter-stage-contr</module>
+    <module>facebook-stage-contr</module>
+  </modules>
+
 </project>
