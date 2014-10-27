@@ -35,6 +35,10 @@
       <artifactId>streamsets-pipeline-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-pipeline-sdk</artifactId>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
