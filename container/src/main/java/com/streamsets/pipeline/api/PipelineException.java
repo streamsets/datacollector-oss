@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.api;
 
+import com.streamsets.pipeline.api.impl._PipelineException;
+
 public class PipelineException extends _PipelineException {
   private static final String PIPELINE_AGENT_BUNDLE = "pipeline-container-bundle";
 

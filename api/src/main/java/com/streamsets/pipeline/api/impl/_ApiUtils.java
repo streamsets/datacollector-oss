@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
 import org.slf4j.helpers.MessageFormatter;
 
@@ -26,19 +26,19 @@ import java.util.Date;
 import java.util.TimeZone;
 
 // private class with utilities for the public API classes, not exposed as public API
-final class _ApiUtils {
+public final class _ApiUtils {
 
   _ApiUtils() {
   }
 
-  static <T> T checkNotNull(T value, String varName) {
+  public static <T> T checkNotNull(T value, String varName) {
     if (value == null) {
       throw new NullPointerException(format("{} cannot be null", varName));
     }
     return value;
   }
 
-  static String format(String template, Object... args) {
+  public static String format(String template, Object... args) {
     return MessageFormatter.arrayFormat(template, args).getMessage();
   }
 
@@ -54,7 +54,7 @@ final class _ApiUtils {
   }
 
   //TODO make format masks configurable and support scanning
-  static Date parse(String str) throws ParseException {
+  public static Date parse(String str) throws ParseException {
     return getISO8601DateFormat().parse(str);
   }
 

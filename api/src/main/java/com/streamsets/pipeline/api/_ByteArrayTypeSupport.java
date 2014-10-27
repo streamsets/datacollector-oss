@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.api;
 
+import com.streamsets.pipeline.api.impl._ApiUtils;
+
 class _ByteArrayTypeSupport extends _TypeSupport<byte[]> {
 
   @Override

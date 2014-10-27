@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
+import com.streamsets.pipeline.api.ErrorId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +26,7 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-class _PipelineException extends Exception {
+public class _PipelineException extends Exception {
   private static final Logger LOG = LoggerFactory.getLogger(_PipelineException.class);
 
   private static class ExceptionContext {
@@ -48,15 +49,15 @@ class _PipelineException extends Exception {
 
   private static final ThreadLocal<ExceptionContext> EXCEPTION_CONTEXT_TL = new ThreadLocal<ExceptionContext>();
 
-  static void setContext(String bundleName, ClassLoader stageClassLoader) {
+  public static void setContext(String bundleName, ClassLoader stageClassLoader) {
     EXCEPTION_CONTEXT_TL.set(new ExceptionContext(bundleName, stageClassLoader));
   }
 
-  static boolean isContextSet() {
+  public static boolean isContextSet() {
     return EXCEPTION_CONTEXT_TL.get() != null;
   }
 
-  static void resetContext() {
+  public static void resetContext() {
     EXCEPTION_CONTEXT_TL.remove();
   }
 
@@ -65,7 +66,7 @@ class _PipelineException extends Exception {
   private Object[] params;
   private ExceptionContext exceptionContext;
 
-  protected _PipelineException(String defaultBundle, ErrorId id, Object... params) {
+  public _PipelineException(String defaultBundle, ErrorId id, Object... params) {
     super(null, getCause(_ApiUtils.checkNotNull(params, "params")));
     this.defaultBundle = _ApiUtils.checkNotNull(defaultBundle, "defaultBundle");
     this.id = _ApiUtils.checkNotNull(id, "id");

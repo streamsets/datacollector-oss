@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.api;
 
+import com.streamsets.pipeline.api.impl._ApiUtils;
 import org.junit.Assert;
 import org.junit.Test;
 

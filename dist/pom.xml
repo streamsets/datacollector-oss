@@ -49,6 +49,10 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-pipeline-bootstrap</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-pipeline-stage-lib</artifactId>
     </dependency>
     <dependency>
@@ -128,6 +132,8 @@
                   <quiet>true</quiet>
                   <verbose>false</verbose>
                   <charset>UTF-8</charset>
+                  <!-- TODO: This exclusiong is not working, figure it out -->
+                  <excludePackageNames>com.streamsets.api.impl</excludePackageNames>
                   <groups>
                     <group>
                       <title>Pipeline API</title>

@@ -15,9 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
+import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.api.impl._PipelineException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,7 +27,7 @@ import java.util.Locale;
 
 public class Test_PipelineException {
   private static final String PIPELINE_BUNDLE_NAME = "pipeline-bundle";
-  
+
   public enum TErrorId implements ErrorId {
     ID0("hi"),
     ID1("hello '{}'");

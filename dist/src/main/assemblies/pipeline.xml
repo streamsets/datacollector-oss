@@ -41,6 +41,7 @@
       <includes>
         <include>bin/*</include>
       </includes>
+      <filtered>true</filtered>
       <fileMode>0755</fileMode>
     </fileSet>
 
@@ -87,7 +88,18 @@
   </fileSets>
 
   <dependencySets>
-    
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <outputDirectory>/bin</outputDirectory>
+      <unpack>false</unpack>
+      <scope>compile</scope>
+      <includes>
+        <include>com.streamsets:streamsets-pipeline-bootstrap</include>
+      </includes>
+    </dependencySet>
+
     <dependencySet>
       <useProjectArtifact>false</useProjectArtifact>
       <useTransitiveDependencies>true</useTransitiveDependencies>
@@ -119,7 +131,7 @@
       <useProjectArtifact>false</useProjectArtifact>
       <useTransitiveDependencies>true</useTransitiveDependencies>
       <useTransitiveFiltering>true</useTransitiveFiltering>
-      <outputDirectory>/stage-libs/streamsets-basic</outputDirectory>
+      <outputDirectory>/stage-libs/streamsets-basic/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>compile</scope>
       <includes>

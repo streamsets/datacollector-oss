@@ -21,13 +21,13 @@
 PRG="${0}"
 
 while [ -h "${PRG}" ]; do
-  ls=`ls -ld "${PRG}"`
-  link=`expr "$ls" : '.*-> \(.*\)$'`
-  if expr "$link" : '/.*' > /dev/null; then
-    PRG="$link"
-  else
-    PRG=`dirname "${PRG}"`/"$link"
-  fi
+ls=`ls -ld "${PRG}"`
+link=`expr "$ls" : '.*-> \(.*\)$'`
+if expr "$link" : '/.*' > /dev/null; then
+PRG="$link"
+else
+PRG=`dirname "${PRG}"`/"$link"
+fi
 done
 
 BASEDIR=`dirname ${PRG}`
@@ -39,7 +39,7 @@ PIPELINE_HOME=${PIPELINE_HOME:=${PIPELINE_DIST}}
 
 if [ -f ${PIPELINE_HOME}/libexec/pipeline-env.sh ]
 then
-  source ${PIPELINE_HOME}/libexec/pipeline-env.sh
+source ${PIPELINE_HOME}/libexec/pipeline-env.sh
 fi
 
 PIPELINE_CONF=${PIPELINE_CONF:=${PIPELINE_HOME}/etc}
@@ -52,50 +52,51 @@ PIPELINE_JAVA_OPTS="${PIPELINE_JAVA_OPTS} -Dpipeline.conf.dir=${PIPELINE_CONF}"
 PIPELINE_JAVA_OPTS="${PIPELINE_JAVA_OPTS} -Dpipeline.data.dir=${PIPELINE_DATA}"
 PIPELINE_JAVA_OPTS="${PIPELINE_JAVA_OPTS} -Dpipeline.log.dir=${PIPELINE_LOG}"
 
-CLASSPATH="${PIPELINE_CONF}"
+BOOTSTRAP_CLASSPATH="${PIPELINE_DIST}/bin/streamsets-pipeline-bootstrap-${project.version}.jar"
 
-# This way of building the CLASSPATH is temporary while we don't have separate classloaders.
+API_CLASSPATH="${PIPELINE_DIST}/api-lib/"'*.jar'
 
-for i in "${PIPELINE_DIST}/api-lib/"*.jar; do
-  CLASSPATH="${CLASSPATH}:$i"
-done
-
-for i in "${PIPELINE_DIST}/container-lib/"*.jar; do
-  CLASSPATH="${CLASSPATH}:$i"
-done
-
-for i in "${PIPELINE_DIST}/stage-libs/"*; do
-  if [ -d "${i}" ]
-  then
-    for j in "${i}"/*.jar; do
-      if [ -f "${j}" ]
-      then
-        CLASSPATH="${CLASSPATH}:$j"
-      fi
-    done
-  fi
-done
-
-CLASSPATH="${PIPELINE_PRE_CLASSPATH}:${CLASSPATH}:${PIPELINE_POST_CLASSPATH}:"
-
-if [ "$1" = "--verbose" ];
+if [ ! -z "${PIPELINE_PRE_CLASSPATH}" ]
 then
-  echo "Pipeline Agent:"
-  echo "  DIST         : ${PIPELINE_DIST}"
-  echo "  HOME         : ${PIPELINE_HOME}"
-  echo "  CONF         : ${PIPELINE_CONF}"
-  echo "  DATA         : ${PIPELINE_DATA}"
-  echo "  LOG          : ${PIPELINE_LOG}"
-  echo "  JAVA PATH    : `which java`"
-  echo "  CLASSPATH    : ${CLASSPATH}"
-  echo "  JAVA OPTS    : ${PIPELINE_JAVA_OPTS}"
-  echo "  MAIN CLASS   : ${PIPELINE_MAIN_CLASS}"
+  PIPELINE_PRE_CLASSPATH="${PIPELINE_PRE_CLASSPATH}:"
+fi
+if [ ! -z "${PIPELINE_POST_CLASSPATH}" ]
+then
+  PIPELINE_POST_CLASSPATH=":${PIPELINE_POST_CLASSPATH}"
+fi
+
+PIPELINE_PRE_CLASSPATH="${PIPELINE_PRE_CLASSPATH}"
+CONTAINER_CLASSPATH="${PIPELINE_CONF}:${PIPELINE_DIST}/container-lib/"'*.jar'
+CONTAINER_CLASSPATH="${PIPELINE_PRE_CLASSPATH}${CONTAINER_CLASSPATH}${PIPELINE_POST_CLASSPATH}"
+
+STAGE_LIBRARIES_DIR="${PIPELINE_HOME}/stage-libs"
+if [ ! -d "${STAGES_LIBRARY_DIR}" ]
+then
+  STAGE_LIBRARIES_DIR="${PIPELINE_DIST}/stage-libs"
+fi
+
+if [ "$1" = "-verbose" ];
+then
+echo "Pipeline Agent:"
+echo "  DIST               : ${PIPELINE_DIST}"
+echo "  HOME               : ${PIPELINE_HOME}"
+echo "  CONF               : ${PIPELINE_CONF}"
+echo "  DATA               : ${PIPELINE_DATA}"
+echo "  LOG                : ${PIPELINE_LOG}"
+echo "  JAVA PATH          : `which java`"
+echo "  BOOTSTRAP_CLASSPATH: ${BOOTSTRAP_CLASSPATH}"
+echo "  API_CLASSPATH      : ${API_CLASSPATH}"
+echo "  CONTAINER_CLASSPATH: ${CONTAINER_CLASSPATH}"
+echo "  STAGE_LIBRARIES_DIR: ${STAGE_LIBRARIES_DIR}"
+echo "  JAVA OPTS          : ${PIPELINE_JAVA_OPTS}"
+echo "  MAIN CLASS         : ${PIPELINE_MAIN_CLASS}"
 fi
 
 cd ${PIPELINE_DIST}
 
-exec java -classpath ${CLASSPATH} ${PIPELINE_JAVA_OPTS} ${PIPELINE_MAIN_CLASS}
+exec java -classpath ${BOOTSTRAP_CLASSPATH} ${PIPELINE_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
+-mainClass ${PIPELINE_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
+-stageLibrariesDir "${STAGE_LIBRARIES_DIR}"
 status=$?
 echo "Exit: $status"
 exit $status
-

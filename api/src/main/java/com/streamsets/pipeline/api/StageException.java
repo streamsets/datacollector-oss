@@ -18,6 +18,8 @@
 
 package com.streamsets.pipeline.api;
 
+import com.streamsets.pipeline.api.impl._ApiUtils;
+import com.streamsets.pipeline.api.impl._PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

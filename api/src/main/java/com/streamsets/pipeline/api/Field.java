@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.api;
 
+import com.streamsets.pipeline.api.impl._ApiUtils;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
