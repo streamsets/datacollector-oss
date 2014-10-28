@@ -7,11 +7,14 @@ angular.module('pipelineGraphDirectives', [])
     return {
       restrict: 'E',
       replace: false,
-      scope: {data: '=chartData'},
+      scope: {data: '=graphData'},
       controller: 'PipelineGraphController'
     };
   })
   .controller('PipelineGraphController', function($scope, $element){
+    console.log($scope);
+
+
     var consts = {
       defaultTitle: "random variable"
     };
@@ -588,49 +591,14 @@ angular.module('pipelineGraphDirectives', [])
       svg.attr("width", x).attr("height", y);
     };
 
-
-
-    /**** MAIN ****/
-    var docEl = document.documentElement,
-      bodyEl = document.getElementsByTagName('body')[0];
-
-    var width = window.innerWidth || docEl.clientWidth || bodyEl.clientWidth,
-      height =  window.innerHeight|| docEl.clientHeight|| bodyEl.clientHeight;
-
-    var xLoc = 200,
-      yLoc = 100;
-
-    var nodes = [{
-      title: 'File Source',
-      id: 0,
-      x: xLoc,
-      y: yLoc
-    },{
-      title: 'PII Transformer',
-      id: 1,
-      x: xLoc + 300,
-      y: yLoc
-    },{
-      title: 'Kafka Target',
-      id: 2,
-      x: xLoc + 300 + 300,
-      y: yLoc
-    }];
-
-    var edges = [{
-      source: nodes[0],
-      target: nodes[1]
-    }, {
-      source: nodes[1],
-      target: nodes[2]
-    }];
-
-
     /** MAIN SVG **/
-    var svg = d3.select($element[0]).append("svg")
-      .attr("width", "100%")
-      .attr("height", "90%");
-    var graph = new GraphCreator(svg, nodes, edges);
+    var data = $scope.data,
+      svg = d3.select($element[0]).append("svg")
+        .attr("width", "100%")
+        .attr("height", "90%"),
+      graph = new GraphCreator(svg, data.nodes, data.edges);
+
     graph.setIdCt(2);
     graph.updateGraph();
+
   });

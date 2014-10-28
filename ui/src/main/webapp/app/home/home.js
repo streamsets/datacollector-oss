@@ -83,6 +83,36 @@ angular
       };
     };
 
-    $scope.pipelineConfig = [40,100,80,15,25,60,10];
+    var xLoc = 200,
+      yLoc = 100;
 
+    var nodes = [{
+      title: 'File Source',
+      id: 100,
+      x: xLoc,
+      y: yLoc
+    },{
+      title: 'PII Processor',
+      id: 101,
+      x: xLoc + 300,
+      y: yLoc
+    },{
+      title: 'Kafka Target',
+      id: 102,
+      x: xLoc + 300 + 300,
+      y: yLoc
+    }];
+
+    var edges = [{
+      source: nodes[0],
+      target: nodes[1]
+    }, {
+      source: nodes[1],
+      target: nodes[2]
+    }];
+
+    $scope.pipelineConfig = {
+      nodes : nodes,
+      edges: edges
+    };
   });
