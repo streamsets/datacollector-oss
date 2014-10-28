@@ -18,20 +18,34 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-root</artifactId>
+    <artifactId>streamsets-sandbox-stage-lib-contr</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-sandbox-stage-lib-contr</artifactId>
-  <description>StreamSets Sandbox Stage Library Contributions</description>
-  <name>StreamSets Sandbox StageLibContr</name>
-  <packaging>pom</packaging>
+  <artifactId>streamsets-sandbox-linkedin-stage-lib</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <description>StreamSets Sandbox Linkedin Stage Library contribution</description>
+  <name>StreamSets Sandbox LinkedinStageLib</name>
+  <packaging>jar</packaging>
 
-  <modules>
-    <module>twitter-stage-contr</module>
-    <module>facebook-stage-contr</module>
-    <module>linkedin-stage-contr</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+      <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-pipeline-api</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-pipeline-sdk</artifactId>
+      </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+    </plugins>
+  </build>
 
 </project>

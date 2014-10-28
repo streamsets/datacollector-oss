@@ -8,21 +8,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by harikiran on 10/24/14.
+ * Created by harikiran on 10/28/14.
  */
-public class TestMultipleStages extends TestConfigProcessorBase {
+public class TestInnerClassStages extends TestConfigProcessorBase {
 
   @Override
   public List<String> getClassesToProcess() {
-    return Arrays.asList("com.streamsets.pipeline.sdk.test.TwitterSource",
-      "com.streamsets.pipeline.sdk.test.TwitterProcessor",
-      "com.streamsets.pipeline.sdk.test.TwitterTarget",
-      "com.streamsets.pipeline.sdk.test.TwitterError");
+    return Arrays.asList("com.streamsets.pipeline.sdk.test.TwitterStages");
   }
 
   @Override
   public void test(List<Diagnostic<? extends JavaFileObject>> diagnostics, String compilerOutput, Boolean compilationResult) {
 
+    System.out.println(TwitterStages.TwitterSource.class.getName());
     //Compilation is expected to be successful
     Assert.assertTrue(compilationResult);
 
