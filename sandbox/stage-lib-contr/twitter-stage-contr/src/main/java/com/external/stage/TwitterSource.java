@@ -47,7 +47,7 @@ public class TwitterSource extends BaseSource{
   }
 
   @Override
-  public String produce(String lastBatchId, BatchMaker batchMaker) throws StageException {
+  public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
     return null;
   }
 }

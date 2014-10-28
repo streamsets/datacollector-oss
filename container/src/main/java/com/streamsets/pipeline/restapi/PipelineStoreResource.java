@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.restapi;
 
-import com.streamsets.pipeline.config.RuntimePipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.store.PipelineStore;
 import com.streamsets.pipeline.store.PipelineStoreException;
 
@@ -106,7 +106,7 @@ public class PipelineStoreResource {
       @PathParam("name") String name,
       @QueryParam("tag") String tag,
       @QueryParam("tagDescription") String tagDescription,
-      RuntimePipelineConfiguration pipeline)
+      PipelineConfiguration pipeline)
       throws PipelineStoreException, URISyntaxException {
     store.save(name, user, tag, tagDescription, pipeline);
     return Response.ok().build();

@@ -3,6 +3,7 @@ package com.streamsets.pipeline.serde;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.config.*;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class StageConfigurationDeserializer {
 
     StageRegistry stageRegistry = new StageRegistry();
     String name = null, version = null, label = null, description = null, type = null;
-    List<ConfigOption> configOptions = null;
+    List<ConfigDefinition> configDefinitions = null;
     String fieldName;
 
     while(jsonParser.nextToken() != JsonToken.END_ARRAY) {
@@ -42,20 +43,20 @@ public class StageConfigurationDeserializer {
           jsonParser.nextToken();
           type = jsonParser.getText();
         } else if ("ConfigOptions".equals(fieldName)) {
-          configOptions = readConfigOptionArray(jsonParser);
+          configDefinitions = readConfigOptionArray(jsonParser);
         }
       }
-      stageRegistry.getStaticStageConfigurations().add(
-        new StaticStageConfiguration(name, version, label,
-          description, StageType.valueOf(type), configOptions)
+      stageRegistry.getStageDefinitions().add(
+        new StageDefinition(name, version, label,
+          description, StageType.valueOf(type), configDefinitions)
       );
     }
 
     return stageRegistry;
   }
 
-  private static List<ConfigOption> readConfigOptionArray(JsonParser jsonParser) throws IOException {
-    List<ConfigOption> configOptions = new ArrayList<ConfigOption>();
+  private static List<ConfigDefinition> readConfigOptionArray(JsonParser jsonParser) throws IOException {
+    List<ConfigDefinition> configDefinitions = new ArrayList<ConfigDefinition>();
     String fieldName;
     String name = null;
     String description = null;
@@ -92,14 +93,14 @@ public class StageConfigurationDeserializer {
           group = jsonParser.getText();
         }
       }
-      configOptions.add(new ConfigOption(name,
-        ConfigType.valueOf(type),
+      configDefinitions.add(new ConfigDefinition(name,
+        ConfigDef.Type.valueOf(type),
         shortDescription,
         description,
         defaultValue,
         "true".equals(mandatory)? true: false,
         group));
     }
-    return configOptions;
+    return configDefinitions;
   }
 }

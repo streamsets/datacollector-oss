@@ -1,9 +1,8 @@
 package com.streamsets.pipeline.restapi;
 
-import com.streamsets.pipeline.config.RuntimePipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -170,8 +169,8 @@ public class TestPipelineResource extends JerseyTest {
   public void testSetConfiguration() {
     WebTarget pipelineResource = target("/v1/pipelines").path("{pipelineName}")
       .resolveTemplate("pipelineName","myPipeline").path("/config").queryParam("mode", "preview");
-    RuntimePipelineConfiguration r = pipelineResource.request(MediaType.APPLICATION_JSON).post(Entity.json(REQUEST_JSON)
-    , RuntimePipelineConfiguration.class);
+    PipelineConfiguration r = pipelineResource.request(MediaType.APPLICATION_JSON).post(Entity.json(REQUEST_JSON)
+    , PipelineConfiguration.class);
     //returns a List of Maps, where each map corresponds to a module info object
     System.out.println(r.toString());
   }

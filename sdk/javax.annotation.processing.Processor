@@ -1,1 +1,1 @@
-com.streamsets.pipeline.sdk.ConfigProcessor
+com.streamsets.pipeline.sdk.PipelineAnnotationsProcessor

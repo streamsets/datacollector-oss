@@ -44,6 +44,7 @@ public class StageException extends Exception {
 
   private _PipelineException exception;
 
+  // last parameter can be a cause exception
   public StageException(ErrorId id, Object... params) {
     exception = new _PipelineException(PIPELINE_BUNDLE_NAME, id, params);
     if (!_PipelineException.isContextSet()) {

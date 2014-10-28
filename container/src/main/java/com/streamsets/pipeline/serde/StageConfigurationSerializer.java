@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.streamsets.pipeline.config.ConfigOption;
+import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageRegistry;
-import com.streamsets.pipeline.config.StaticStageConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public class StageConfigurationSerializer extends JsonSerializer<StageRegistry> 
 
     jsonGenerator.writeStartArray();
 
-    for(StaticStageConfiguration moduleInfo : moduleConfiguration.getStaticStageConfigurations()) {
+    for(StageDefinition moduleInfo : moduleConfiguration.getStageDefinitions()) {
       jsonGenerator.writeStartObject();
       jsonGenerator.writeStringField("name", moduleInfo.getName());
       jsonGenerator.writeStringField("version", moduleInfo.getVersion());
@@ -43,14 +43,14 @@ public class StageConfigurationSerializer extends JsonSerializer<StageRegistry> 
       jsonGenerator.writeStringField("type", moduleInfo.getModuleType().name());
       jsonGenerator.writeArrayFieldStart("ConfigOptions"); //start option groups array
 
-      for (ConfigOption option : moduleInfo.getConfigOptionList()) {
+      for (ConfigDefinition option : moduleInfo.getConfigDefinitionList()) {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeStringField("name", option.getName());
         jsonGenerator.writeStringField("description", option.getDescription());
-        jsonGenerator.writeStringField("label", option.getShortDescription());
+        jsonGenerator.writeStringField("label", option.getLabel());
         jsonGenerator.writeStringField("defaultValue", option.getDefaultValue());
         jsonGenerator.writeStringField("type", option.getType().name());
-        jsonGenerator.writeStringField("required", option.isMandatory() ? "true" : "false");
+        jsonGenerator.writeStringField("required", option.isRequired() ? "true" : "false");
         jsonGenerator.writeStringField("group", option.getGroup());
         jsonGenerator.writeEndObject();
 

@@ -95,7 +95,7 @@
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-pipeline-sdk</artifactId>
         <version>${project.version}</version>
-        <scope>compile</scope>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>

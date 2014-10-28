@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.store.file;
 
 import com.streamsets.pipeline.agent.RuntimeInfo;
-import com.streamsets.pipeline.config.RuntimePipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.Configuration;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStore;
@@ -86,7 +86,7 @@ public class TestFilePipelineStore {
       Assert.assertNotNull(info.getCreated());
       Assert.assertEquals(info.getLastModified(), info.getCreated());
       Assert.assertEquals(FilePipelineStore.REV, info.getLastRev());
-      RuntimePipelineConfiguration pc = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
+      PipelineConfiguration pc = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
       Assert.assertTrue(pc.getRuntimeModuleConfigurations().isEmpty());
     } finally {
       store.destroy();
@@ -117,7 +117,7 @@ public class TestFilePipelineStore {
     try {
       store.init();
       PipelineInfo info1 = store.getInfo(FilePipelineStore.DEFAULT_PIPELINE_NAME);
-      RuntimePipelineConfiguration pc0 = MockConfigGenerator.getRuntimePipelineConfiguration();
+      PipelineConfiguration pc0 = MockConfigGenerator.getRuntimePipelineConfiguration();
       Thread.sleep(5);
       store.save(FilePipelineStore.DEFAULT_PIPELINE_NAME, "foo", null, null, pc0);
       PipelineInfo info2 = store.getInfo(FilePipelineStore.DEFAULT_PIPELINE_NAME);
@@ -138,9 +138,9 @@ public class TestFilePipelineStore {
     PipelineStore store = dagger.get(FilePipelineStore.class);
     try {
       store.init();
-      RuntimePipelineConfiguration pc1 = MockConfigGenerator.getRuntimePipelineConfiguration();
+      PipelineConfiguration pc1 = MockConfigGenerator.getRuntimePipelineConfiguration();
       store.save(FilePipelineStore.DEFAULT_PIPELINE_NAME, "foo", null, null, pc1);
-      RuntimePipelineConfiguration pc2 = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
+      PipelineConfiguration pc2 = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
       Assert.assertFalse(pc2.getRuntimeModuleConfigurations().isEmpty());
     } finally {
       store.destroy();

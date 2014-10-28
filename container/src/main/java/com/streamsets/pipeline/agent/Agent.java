@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.agent;
 
+//TODO think of a better name
 public interface Agent {
 
   public void init();

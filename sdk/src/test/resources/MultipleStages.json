@@ -10,7 +10,7 @@
         "name" : "username",
         "description" : "The user name of the twitter user",
         "label" : "username",
-        "defaultValue" : "admin",
+        "default" : "admin",
         "type" : "STRING",
         "required" : "true"
       },
@@ -18,7 +18,7 @@
         "name" : "password",
         "description" : "The password the twitter user",
         "label" : "password",
-        "defaultValue" : "admin",
+        "default" : "admin",
         "type" : "STRING",
         "required" : "true"
       }
@@ -35,7 +35,7 @@
         "name" : "regEx",
         "description" : "The regular expression used to parse the tweet",
         "label" : "regEx",
-        "defaultValue" : "[a-z][A-Z][0-9]",
+        "default" : "[a-z][A-Z][0-9]",
         "type" : "STRING",
         "required" : "true"
       }
@@ -52,7 +52,7 @@
         "name" : "username",
         "description" : "The user name of the twitter user",
         "label" : "username",
-        "defaultValue" : "admin",
+        "default" : "admin",
         "type" : "STRING",
         "required" : "true"
       },
@@ -60,7 +60,7 @@
         "name" : "password",
         "description" : "The password the twitter user",
         "label" : "password",
-        "defaultValue" : "admin",
+        "default" : "admin",
         "type" : "STRING",
         "required" : "true"
       }

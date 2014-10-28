@@ -19,10 +19,10 @@ package com.streamsets.pipeline.stagelibrary.mock;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.agent.RuntimeInfo;
-import com.streamsets.pipeline.config.ConfigOption;
-import com.streamsets.pipeline.config.ConfigType;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.config.StaticStageConfiguration;
 import com.streamsets.pipeline.serde.StageConfigurationDeserializer;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
@@ -39,7 +39,7 @@ public class MockStageLibrary implements StageLibrary {
   private static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
 
   private final List<? extends ClassLoader> stageClassLoaders;
-  private final List<StaticStageConfiguration> stages;
+  private final List<StageDefinition> stages;
 
   @Inject
   public MockStageLibrary(RuntimeInfo runtimeInfo) {
@@ -48,8 +48,8 @@ public class MockStageLibrary implements StageLibrary {
   }
 
   @VisibleForTesting
-  List<StaticStageConfiguration> loadStages() {
-    List<StaticStageConfiguration> stages = new ArrayList<StaticStageConfiguration>();
+  List<StageDefinition> loadStages() {
+    List<StageDefinition> stages = new ArrayList<StageDefinition>();
     //go over all the "PipelineStages.json" files and collect stage information
 
     for (ClassLoader cl : stageClassLoaders) {
@@ -82,7 +82,7 @@ public class MockStageLibrary implements StageLibrary {
       for (InputStream in : inputStreams) {
         try {
           stages.addAll(
-              StageConfigurationDeserializer.deserialize(in).getStaticStageConfigurations());
+              StageConfigurationDeserializer.deserialize(in).getStageDefinitions());
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -92,22 +92,22 @@ public class MockStageLibrary implements StageLibrary {
   }
 
   @Override
-  public List<StaticStageConfiguration> getStages() {
+  public List<StageDefinition> getStages() {
     return stages;
   }
 
-  public void populateDefaultStages(List<StaticStageConfiguration> stages) {
-    List<ConfigOption> sourceConfigOption = new ArrayList<ConfigOption>();
-    StaticStageConfiguration sourceConfig =
-      new StaticStageConfiguration("CsvSource",
+  public void populateDefaultStages(List<StageDefinition> stages) {
+    List<ConfigDefinition> sourceConfigDefinition = new ArrayList<ConfigDefinition>();
+    StageDefinition sourceConfig =
+      new StageDefinition("CsvSource",
         "1.0", "csv_source",
         "This is a CSV Source. This CSV source produces records in the a comma separated format.",
         StageType.SOURCE,
-        sourceConfigOption);
+        sourceConfigDefinition);
 
-    ConfigOption fileLocationOption = new ConfigOption(
+    ConfigDefinition fileLocationOption = new ConfigDefinition(
       "fileLocation",
-      ConfigType.STRING,
+      ConfigDef.Type.STRING,
       "file_location",
       "This is the location of the file from which the data must be read",
       "/etc/data",
@@ -115,9 +115,9 @@ public class MockStageLibrary implements StageLibrary {
       "FileOptions"
     );
 
-    ConfigOption bufferSizeOption = new ConfigOption(
+    ConfigDefinition bufferSizeOption = new ConfigDefinition(
       "bufferSize",
-      ConfigType.NUMBER,
+      ConfigDef.Type.INTEGER,
       "buffer_size",
       "This is the number of bytes that must be read in one go",
       "10000",
@@ -125,21 +125,21 @@ public class MockStageLibrary implements StageLibrary {
       "FileOptions"
     );
 
-    sourceConfigOption.add(fileLocationOption);
-    sourceConfigOption.add(bufferSizeOption);
+    sourceConfigDefinition.add(fileLocationOption);
+    sourceConfigDefinition.add(bufferSizeOption);
     stages.add(sourceConfig);
 
-    List<ConfigOption> processorConfigOption = new ArrayList<ConfigOption>();
-    StaticStageConfiguration processorConfig =
-      new StaticStageConfiguration("MaskingProcessor",
+    List<ConfigDefinition> processorConfigDefinition = new ArrayList<ConfigDefinition>();
+    StageDefinition processorConfig =
+      new StageDefinition("MaskingProcessor",
         "1.0", "masking_processor",
         "This is a masking processor.",
         StageType.PROCESSOR,
-        processorConfigOption);
+        processorConfigDefinition);
 
-    ConfigOption processorOption = new ConfigOption(
+    ConfigDefinition processorOption = new ConfigDefinition(
       "mask",
-      ConfigType.STRING,
+      ConfigDef.Type.STRING,
       "masking_processor",
       "This is the character used to mask",
       "*",
@@ -147,20 +147,20 @@ public class MockStageLibrary implements StageLibrary {
       "Mask"
     );
 
-    processorConfigOption.add(processorOption);
+    processorConfigDefinition.add(processorOption);
     stages.add(processorConfig);
 
-    List<ConfigOption> targetConfigOption = new ArrayList<ConfigOption>();
-    StaticStageConfiguration targetConfig =
-      new StaticStageConfiguration("KafkaTarget",
+    List<ConfigDefinition> targetConfigDefinition = new ArrayList<ConfigDefinition>();
+    StageDefinition targetConfig =
+      new StageDefinition("KafkaTarget",
         "1.0", "kafka_target",
         "This is a kafka target. This target writes to kafka cluster.",
         StageType.TARGET,
-        targetConfigOption);
+        targetConfigDefinition);
 
-    ConfigOption topicOption = new ConfigOption(
+    ConfigDefinition topicOption = new ConfigDefinition(
       "kafkaTopic",
-      ConfigType.STRING,
+      ConfigDef.Type.STRING,
       "kafka_topic",
       "This is the kafka topic to which the data must be written",
       "myTopic",
@@ -168,9 +168,9 @@ public class MockStageLibrary implements StageLibrary {
       "Kafka"
     );
 
-    ConfigOption hostOption = new ConfigOption(
+    ConfigDefinition hostOption = new ConfigDefinition(
       "kafkaHost",
-      ConfigType.STRING,
+      ConfigDef.Type.STRING,
       "kafka_host",
       "This is the host on which the kafka cluster is installed.",
       "localhost",
@@ -178,8 +178,8 @@ public class MockStageLibrary implements StageLibrary {
       "Kafka"
     );
 
-    targetConfigOption.add(topicOption);
-    targetConfigOption.add(hostOption);
+    targetConfigDefinition.add(topicOption);
+    targetConfigDefinition.add(hostOption);
     stages.add(targetConfig);
   }
 

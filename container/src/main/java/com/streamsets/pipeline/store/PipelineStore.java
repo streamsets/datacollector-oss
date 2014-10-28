@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.store;
 
-import com.streamsets.pipeline.config.RuntimePipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 
 import java.util.List;
 
@@ -37,10 +37,10 @@ public interface PipelineStore {
 
   public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException;
 
-  public void save(String name, String user, String tag, String tagDescription, RuntimePipelineConfiguration pipeline)
+  public void save(String name, String user, String tag, String tagDescription, PipelineConfiguration pipeline)
       throws PipelineStoreException;
 
-  public RuntimePipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException;
+  public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException;
 
 
 }

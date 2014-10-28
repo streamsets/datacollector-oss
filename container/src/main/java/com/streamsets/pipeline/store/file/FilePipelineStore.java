@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.agent.RuntimeInfo;
-import com.streamsets.pipeline.config.RuntimePipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.Configuration;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineRevInfo;
@@ -129,7 +129,7 @@ public class FilePipelineStore implements PipelineStore {
     Date date = new Date();
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV);
 
-    RuntimePipelineConfiguration pc = new RuntimePipelineConfiguration();
+    PipelineConfiguration pc = new PipelineConfiguration();
     pc.setUuid(UUID.randomUUID().toString());
     try {
       json.writeValue(getInfoFile(name), info);
@@ -196,7 +196,7 @@ public class FilePipelineStore implements PipelineStore {
 
   @Override
   public void save(String name, String user, String tag, String tagDescription,
-      RuntimePipelineConfiguration pipeline) throws PipelineStoreException {
+      PipelineConfiguration pipeline) throws PipelineStoreException {
     if (!doesPipelineExist(name)) {
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_DOES_NOT_EXIST, name);
     }
@@ -216,12 +216,12 @@ public class FilePipelineStore implements PipelineStore {
   }
 
   @Override
-  public RuntimePipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException {
+  public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException {
     if (!doesPipelineExist(name)) {
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_DOES_NOT_EXIST, name);
     }
     try {
-      return json.readValue(getPipelineFile(name), RuntimePipelineConfiguration.class);
+      return json.readValue(getPipelineFile(name), PipelineConfiguration.class);
     } catch (Exception ex) {
       throw new PipelineStoreException(PipelineStoreErrors.COULD_NOT_LOAD_PIPELINE_INFO, name, ex.getMessage(), ex);
     }

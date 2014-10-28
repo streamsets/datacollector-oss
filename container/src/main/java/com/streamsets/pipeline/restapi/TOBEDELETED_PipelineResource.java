@@ -1,6 +1,6 @@
 package com.streamsets.pipeline.restapi;
 
-import com.streamsets.pipeline.config.RuntimePipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.PipelineRunner;
 import com.streamsets.pipeline.container.RunOutput;
 import com.streamsets.pipeline.util.MockConfigGenerator;
@@ -28,12 +28,12 @@ public class TOBEDELETED_PipelineResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getAllPipelines(@Context ServletContext context) {
     //Mock implementation, return 2 pipeline configuration objects
-    List<RuntimePipelineConfiguration> runtimePipelineConfigurations = new ArrayList<RuntimePipelineConfiguration>(2);
-    runtimePipelineConfigurations.add(MockConfigGenerator.getRuntimePipelineConfiguration());
-    runtimePipelineConfigurations.add(MockConfigGenerator.getRuntimePipelineConfiguration());
+    List<PipelineConfiguration> pipelineConfigurations = new ArrayList<PipelineConfiguration>(2);
+    pipelineConfigurations.add(MockConfigGenerator.getRuntimePipelineConfiguration());
+    pipelineConfigurations.add(MockConfigGenerator.getRuntimePipelineConfiguration());
 
     return Response.ok().type(MediaType.APPLICATION_JSON)
-      .entity(runtimePipelineConfigurations).build();
+      .entity(pipelineConfigurations).build();
   }
 
   @GET
@@ -42,7 +42,7 @@ public class TOBEDELETED_PipelineResource {
   public Response getConfiguration(@Context ServletContext context,
                                    @PathParam("pipelineName") String pipelineName) {
     //test
-    RuntimePipelineConfiguration r = MockConfigGenerator.getRuntimePipelineConfiguration();
+    PipelineConfiguration r = MockConfigGenerator.getRuntimePipelineConfiguration();
     return Response.ok().type(MediaType.APPLICATION_JSON)
       .entity(r).build();
   }
@@ -53,10 +53,10 @@ public class TOBEDELETED_PipelineResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response setConfiguration(@Context ServletContext context,
               @PathParam("pipelineName") String pipelineName,
-              RuntimePipelineConfiguration runtimePipelineConfiguration,
+              PipelineConfiguration pipelineConfiguration,
               @QueryParam("mode") String mode) {
     //Mock implementation
-    return Response.accepted().type(MediaType.APPLICATION_JSON).entity(runtimePipelineConfiguration).build();
+    return Response.accepted().type(MediaType.APPLICATION_JSON).entity(pipelineConfiguration).build();
   }
 
   @GET

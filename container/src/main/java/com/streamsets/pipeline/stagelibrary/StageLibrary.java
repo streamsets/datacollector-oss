@@ -17,12 +17,12 @@
  */
 package com.streamsets.pipeline.stagelibrary;
 
-import com.streamsets.pipeline.config.StaticStageConfiguration;
+import com.streamsets.pipeline.config.StageDefinition;
 
 import java.util.List;
 
 public interface StageLibrary {
 
-  List<StaticStageConfiguration> getStages();
+  List<StageDefinition> getStages();
 
 }

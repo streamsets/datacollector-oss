@@ -10,7 +10,7 @@
         "name" : "username",
         "description" : "The user name of the twitter user",
         "label" : "username",
-        "defaultValue" : "admin",
+        "default" : "admin",
         "type" : "STRING",
         "required" : "true"
       },
@@ -18,7 +18,7 @@
         "name" : "password",
         "description" : "The password the twitter user",
         "label" : "password",
-        "defaultValue" : "admin",
+        "default" : "admin",
         "type" : "STRING",
         "required" : "true"
       }

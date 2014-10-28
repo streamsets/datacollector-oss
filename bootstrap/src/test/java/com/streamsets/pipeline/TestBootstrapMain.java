@@ -230,5 +230,5 @@ public class TestBootstrapMain {
   public void testConstructor() {
     new BootstrapMain();
   }
-  
+
 }

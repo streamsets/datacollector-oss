@@ -33,6 +33,6 @@ public abstract class SingleLaneRecordProcessor extends SingleLaneProcessor {
     }
   }
 
-  protected abstract void process(Record record, SingleLaneBatchMaker batchMaker);
+  protected abstract void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException;
 
 }

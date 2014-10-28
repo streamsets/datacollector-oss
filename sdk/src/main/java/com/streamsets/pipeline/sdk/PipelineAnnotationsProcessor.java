@@ -1,3 +1,20 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.pipeline.api.ConfigDef;
@@ -28,7 +45,7 @@ import java.util.Set;
 @SupportedAnnotationTypes({"com.streamsets.pipeline.api.StageDef",
   "com.streamsets.pipeline.api.StageErrorDef"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-public class ConfigProcessor extends AbstractProcessor {
+public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   private Map<String, String> stageNameToVersionMap = null;
 
@@ -48,7 +65,7 @@ public class ConfigProcessor extends AbstractProcessor {
   /*literal vs value maps for the stage error def enum*/
   private Map<String, String> stageErrorDefLiteralMap;
 
-  public ConfigProcessor() {
+  public PipelineAnnotationsProcessor() {
     super();
     stageCollection = new StageCollection();
     stageNameToVersionMap = new HashMap<String, String>();
@@ -240,7 +257,7 @@ public class ConfigProcessor extends AbstractProcessor {
         option.put("type", configDefAnnot.type().name());
         option.put("label", configDefAnnot.label());
         option.put("description", configDefAnnot.description());
-        option.put("defaultValue", configDefAnnot.defaultValue());
+        option.put("default", configDefAnnot.defaultValue());
         option.put("required", String.valueOf(configDefAnnot.required()));
 
         stageConfiguration.getConfigOptions().add(option);

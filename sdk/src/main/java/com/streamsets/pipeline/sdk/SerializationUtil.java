@@ -1,3 +1,20 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.streamsets.pipeline.sdk;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -14,9 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by harikiran on 10/23/14.
- */
 public class SerializationUtil {
 
   public static void serialize(StageCollection stageCollection, OutputStream outputStream) throws IOException {
@@ -47,7 +61,7 @@ public class SerializationUtil {
           jsonGenerator.writeStringField("name", option.get("name"));
           jsonGenerator.writeStringField("description", option.get("description"));
           jsonGenerator.writeStringField("label", option.get("label"));
-          jsonGenerator.writeStringField("defaultValue", option.get("defaultValue"));
+          jsonGenerator.writeStringField("default", option.get("default"));
           jsonGenerator.writeStringField("type", option.get("type"));
           jsonGenerator.writeStringField("required", option.get("required"));
           //jsonGenerator.writeStringField("group", option.get("group"));
@@ -137,7 +151,7 @@ public class SerializationUtil {
         } else if ("label".equals(fieldName)) {
           jsonParser.nextToken();
           label = jsonParser.getText();
-        } else if ("defaultValue".equals(fieldName)) {
+        } else if ("default".equals(fieldName)) {
           jsonParser.nextToken();
           defaultValue = jsonParser.getText();
         } else if ("type".equals(fieldName)) {
@@ -155,7 +169,7 @@ public class SerializationUtil {
       configMap.put("name", name);
       configMap.put("description", description);
       configMap.put("label", label);
-      configMap.put("defaultValue", defaultValue);
+      configMap.put("default", defaultValue);
       configMap.put("type", type);
       configMap.put("required", required);
       configMap.put("group", group);

@@ -25,9 +25,9 @@ public interface Record {
 
   public static final String RESERVED_ATTRIBUTE_PREFIX = "_.";
 
-  public static final String PREVIOUS_MODULE_ATTR = RESERVED_ATTRIBUTE_PREFIX + "previous-module";
+  public static final String PREVIOUS_STAGE_ATTR = RESERVED_ATTRIBUTE_PREFIX + "previous-stage";
 
-  public static final String SOURCE_ATTR = RESERVED_ATTRIBUTE_PREFIX + "source";
+  public static final String RECORD_SOURCE_ID_ATTR = RESERVED_ATTRIBUTE_PREFIX + "record-source-id";
 
   public static final String PROCESSING_PATH_ATTR = RESERVED_ATTRIBUTE_PREFIX + "processing-path";
 

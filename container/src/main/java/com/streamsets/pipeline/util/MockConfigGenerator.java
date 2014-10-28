@@ -1,5 +1,7 @@
 package com.streamsets.pipeline.util;
 
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.config.*;
 
 import java.util.ArrayList;
@@ -11,15 +13,15 @@ import java.util.UUID;
  */
 public class MockConfigGenerator {
 
-  public static RuntimePipelineConfiguration getRuntimePipelineConfiguration() {
+  public static PipelineConfiguration getRuntimePipelineConfiguration() {
 
-    RuntimePipelineConfiguration r = new RuntimePipelineConfiguration();
+    PipelineConfiguration r = new PipelineConfiguration();
     //set uuid
     r.setUuid(UUID.randomUUID().toString());
 
-    ConfigOption fileLocationOption = new ConfigOption(
+    ConfigDefinition fileLocationOption = new ConfigDefinition(
       "fileLocation",
-      ConfigType.STRING,
+      ConfigDef.Type.STRING,
       "file_location",
       "This is the location of the file from which the data must be read",
       "/etc/data",
@@ -27,28 +29,28 @@ public class MockConfigGenerator {
       "FileOptions"
     );
 
-    ConfigOption bufferSizeOption = new ConfigOption(
+    ConfigDefinition bufferSizeOption = new ConfigDefinition(
       "bufferSize",
-      ConfigType.NUMBER,
+      Type.INTEGER,
       "buffer_size",
       "This is the number of bytes that must be read in one go",
       "10000",
       true,
       "FileOptions"
     );
-    List<ConfigOption> sourceConfigOptions = new ArrayList<ConfigOption>();
-    sourceConfigOptions.add(fileLocationOption);
-    sourceConfigOptions.add(bufferSizeOption);
+    List<ConfigDefinition> sourceConfigDefinitions = new ArrayList<ConfigDefinition>();
+    sourceConfigDefinitions.add(fileLocationOption);
+    sourceConfigDefinitions.add(bufferSizeOption);
     List<String> inputLanes  = new ArrayList<String>();
     List<String> outputLanes = new ArrayList<String>();
     inputLanes.add("csv->mask");
     outputLanes.add("csv->mask");
 
-    RuntimeStageConfiguration sourceConfig = new RuntimeStageConfiguration("myCsvSource",
+    StageConfiguration sourceConfig = new StageConfiguration("myCsvSource",
               "CSVSource",
               "1.0",
               "This is CSV Source [comma separated]",
-              sourceConfigOptions,
+              sourceConfigDefinitions,
               100,
               100,
               inputLanes,
@@ -56,9 +58,9 @@ public class MockConfigGenerator {
 
     r.getRuntimeModuleConfigurations().add(sourceConfig);
 
-    ConfigOption maskingOption = new ConfigOption(
+    ConfigDefinition maskingOption = new ConfigDefinition(
       "mask",
-      ConfigType.STRING,
+      Type.STRING,
       "mask",
       "This is the character used to mask the sensitive data.",
       "*",
@@ -66,18 +68,18 @@ public class MockConfigGenerator {
       "MakingOption"
     );
 
-    List<ConfigOption> processorConfigOptions = new ArrayList<ConfigOption>();
-    processorConfigOptions.add(maskingOption);
+    List<ConfigDefinition> processorConfigDefinitions = new ArrayList<ConfigDefinition>();
+    processorConfigDefinitions.add(maskingOption);
     List<String> pInputLanes  = new ArrayList<String>();
     List<String> pOutputLanes = new ArrayList<String>();
     pInputLanes.add("csv->mask");
     pOutputLanes.add("mask->kafka");
 
-    RuntimeStageConfiguration processorConfig = new RuntimeStageConfiguration("myMaskingProcessor",
+    StageConfiguration processorConfig = new StageConfiguration("myMaskingProcessor",
       "MaskingProcessor",
       "1.0",
       "This is masking processor.",
-      processorConfigOptions,
+      processorConfigDefinitions,
       500,
       500,
       pInputLanes,
@@ -85,9 +87,9 @@ public class MockConfigGenerator {
 
     r.getRuntimeModuleConfigurations().add(processorConfig);
 
-    ConfigOption topicOption = new ConfigOption(
+    ConfigDefinition topicOption = new ConfigDefinition(
       "kafkaTopic",
-      ConfigType.STRING,
+      Type.STRING,
       "kafka_topic",
       "This is the kafka topic to which the data must be written",
       "myTopic",
@@ -95,9 +97,9 @@ public class MockConfigGenerator {
       "Kafka"
     );
 
-    ConfigOption hostOption = new ConfigOption(
+    ConfigDefinition hostOption = new ConfigDefinition(
       "kafkaHost",
-      ConfigType.STRING,
+      Type.STRING,
       "kafka_host",
       "This is the host on which the kafka cluster is installed.",
       "localhost",
@@ -105,20 +107,20 @@ public class MockConfigGenerator {
       "Kafka"
     );
 
-    List<ConfigOption> targetConfigOptions = new ArrayList<ConfigOption>();
-    targetConfigOptions.add(topicOption);
-    targetConfigOptions.add(hostOption);
+    List<ConfigDefinition> targetConfigDefinitions = new ArrayList<ConfigDefinition>();
+    targetConfigDefinitions.add(topicOption);
+    targetConfigDefinitions.add(hostOption);
     List<String> tInputLanes  = new ArrayList<String>();
     List<String> tOutputLanes = new ArrayList<String>();
     tInputLanes.add("mask->kafka");
     tInputLanes.add("csv->kafka");
     tOutputLanes.add("kafka->hdfs");
 
-    RuntimeStageConfiguration targetConfig = new RuntimeStageConfiguration("myKafkaTarget",
+    StageConfiguration targetConfig = new StageConfiguration("myKafkaTarget",
       "KafkaTarget",
       "1.0",
       "This is kafka target.",
-      targetConfigOptions,
+      targetConfigDefinitions,
       900,
       900,
       tInputLanes,
@@ -141,17 +143,17 @@ public class MockConfigGenerator {
   public static StageRegistry getStaticModuleConfig() {
     StageRegistry moduleConfiguration = new StageRegistry();
 
-    List<ConfigOption> sourceConfigOption = new ArrayList<ConfigOption>();
-    StaticStageConfiguration sourceConfig =
-      new StaticStageConfiguration("CsvSource",
+    List<ConfigDefinition> sourceConfigDefinition = new ArrayList<ConfigDefinition>();
+    StageDefinition sourceConfig =
+      new StageDefinition("CsvSource",
         "1.0", "csv_source",
         "This is a CSV Source. This CSV source produces records in the a comma separated format.",
         StageType.SOURCE,
-        sourceConfigOption);
+        sourceConfigDefinition);
 
-    ConfigOption fileLocationOption = new ConfigOption(
+    ConfigDefinition fileLocationOption = new ConfigDefinition(
       "fileLocation",
-      ConfigType.STRING,
+      Type.STRING,
       "file_location",
       "This is the location of the file from which the data must be read",
       "/etc/data",
@@ -159,9 +161,9 @@ public class MockConfigGenerator {
       "FileOptions"
     );
 
-    ConfigOption bufferSizeOption = new ConfigOption(
+    ConfigDefinition bufferSizeOption = new ConfigDefinition(
       "bufferSize",
-      ConfigType.NUMBER,
+      Type.INTEGER,
       "buffer_size",
       "This is the number of bytes that must be read in one go",
       "10000",
@@ -169,21 +171,21 @@ public class MockConfigGenerator {
       "FileOptions"
     );
 
-    sourceConfigOption.add(fileLocationOption);
-    sourceConfigOption.add(bufferSizeOption);
-    moduleConfiguration.getStaticStageConfigurations().add(sourceConfig);
+    sourceConfigDefinition.add(fileLocationOption);
+    sourceConfigDefinition.add(bufferSizeOption);
+    moduleConfiguration.getStageDefinitions().add(sourceConfig);
 
-    List<ConfigOption> processorConfigOption = new ArrayList<ConfigOption>();
-    StaticStageConfiguration processorConfig =
-      new StaticStageConfiguration("MaskingProcessor",
+    List<ConfigDefinition> processorConfigDefinition = new ArrayList<ConfigDefinition>();
+    StageDefinition processorConfig =
+      new StageDefinition("MaskingProcessor",
         "1.0", "masking_processor",
         "This is a masking processor.",
         StageType.PROCESSOR,
-        processorConfigOption);
+        processorConfigDefinition);
 
-    ConfigOption processorOption = new ConfigOption(
+    ConfigDefinition processorOption = new ConfigDefinition(
       "mask",
-      ConfigType.STRING,
+      Type.STRING,
       "masking_processor",
       "This is the character used to mask",
       "*",
@@ -191,20 +193,20 @@ public class MockConfigGenerator {
       "Mask"
     );
 
-    processorConfigOption.add(processorOption);
-    moduleConfiguration.getStaticStageConfigurations().add(processorConfig);
+    processorConfigDefinition.add(processorOption);
+    moduleConfiguration.getStageDefinitions().add(processorConfig);
 
-    List<ConfigOption> targetConfigOption = new ArrayList<ConfigOption>();
-    StaticStageConfiguration targetConfig =
-      new StaticStageConfiguration("KafkaTarget",
+    List<ConfigDefinition> targetConfigDefinition = new ArrayList<ConfigDefinition>();
+    StageDefinition targetConfig =
+      new StageDefinition("KafkaTarget",
         "1.0", "kafka_target",
         "This is a kafka target. This target writes to kafka cluster.",
         StageType.TARGET,
-        targetConfigOption);
+        targetConfigDefinition);
 
-    ConfigOption topicOption = new ConfigOption(
+    ConfigDefinition topicOption = new ConfigDefinition(
       "kafkaTopic",
-      ConfigType.STRING,
+      Type.STRING,
       "kafka_topic",
       "This is the kafka topic to which the data must be written",
       "myTopic",
@@ -212,9 +214,9 @@ public class MockConfigGenerator {
       "Kafka"
     );
 
-    ConfigOption hostOption = new ConfigOption(
+    ConfigDefinition hostOption = new ConfigDefinition(
       "kafkaHost",
-      ConfigType.STRING,
+      Type.STRING,
       "kafka_host",
       "This is the host on which the kafka cluster is installed.",
       "localhost",
@@ -222,9 +224,9 @@ public class MockConfigGenerator {
       "Kafka"
     );
 
-    targetConfigOption.add(topicOption);
-    targetConfigOption.add(hostOption);
-    moduleConfiguration.getStaticStageConfigurations().add(targetConfig);
+    targetConfigDefinition.add(topicOption);
+    targetConfigDefinition.add(hostOption);
+    moduleConfiguration.getStageDefinitions().add(targetConfig);
 
     return moduleConfiguration;
   }

@@ -1,3 +1,20 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -5,10 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-/**
- * Created by harikiran on 10/20/14.
- */
-public class RuntimeStageConfiguration {
+public class StageConfiguration {
 
   //basic info
   private final String instanceName;
@@ -17,7 +31,7 @@ public class RuntimeStageConfiguration {
   private final String moduleDescription;
 
   //configuration values
-  private List<ConfigOption> configOptions = null;
+  private List<ConfigDefinition> configDefinitions = null;
 
   //ui options
   int xPos;
@@ -28,12 +42,12 @@ public class RuntimeStageConfiguration {
   private List<String> outputLanes;
 
   @JsonCreator
-  public RuntimeStageConfiguration(
+  public StageConfiguration(
       @JsonProperty("instanceName") String instanceName,
       @JsonProperty("moduleName") String moduleName,
       @JsonProperty("moduleVersion") String moduleVersion,
       @JsonProperty("moduleDescription") String moduleDescription,
-      @JsonProperty("configOptions") List<ConfigOption> configOptions,
+      @JsonProperty("configOptions") List<ConfigDefinition> configDefinitions,
       @JsonProperty("xPos") int xPos,
       @JsonProperty("yPos") int yPos,
       @JsonProperty("inputLanes") List<String> inputLanes,
@@ -42,7 +56,7 @@ public class RuntimeStageConfiguration {
     this.moduleName = moduleName;
     this.moduleVersion = moduleVersion;
     this.moduleDescription = moduleDescription;
-    this.configOptions = configOptions;
+    this.configDefinitions = configDefinitions;
     this.xPos = xPos;
     this.yPos = yPos;
     this.inputLanes = inputLanes;
@@ -65,12 +79,12 @@ public class RuntimeStageConfiguration {
     return moduleDescription;
   }
 
-  public List<ConfigOption> getConfigOptions() {
-    return configOptions;
+  public List<ConfigDefinition> getConfigDefinitions() {
+    return configDefinitions;
   }
 
-  public void setConfigOptions(List<ConfigOption> configOptions) {
-    this.configOptions = configOptions;
+  public void setConfigDefinitions(List<ConfigDefinition> configDefinitions) {
+    this.configDefinitions = configDefinitions;
   }
 
   public int getxPos() {
