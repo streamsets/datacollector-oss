@@ -28,8 +28,6 @@ import java.util.Map;
 
 public class BootstrapMain {
 
-  private static final boolean DEBUG = Boolean.getBoolean("pipeline.bootstrap.debug");
-
   private static final String[] PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES = {
       "com.streamsets.pipeline.api.",
       "com.streamsets.pipeline.container",
@@ -50,8 +48,8 @@ public class BootstrapMain {
   private static final String STAGE_LIB_CONF_DIR = "etc";
 
   private static final String JARS_WILDCARD = "*.jar";
-  private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-  private static final String CLASSPATH_SEPARATOR = System.getProperty("path.separator");
+  static final String FILE_SEPARATOR = System.getProperty("file.separator");
+  static final String CLASSPATH_SEPARATOR = System.getProperty("path.separator");
 
   private static final String MISSING_ARG_MSG = "Missing argument for '%s'";
   private static final String INVALID_OPTION_ARG_MSG = "Invalid option or argument '%s'";
@@ -65,6 +63,7 @@ public class BootstrapMain {
 
   @SuppressWarnings("unchecked")
   public static void main(String[] args) throws Exception {
+    boolean debug = Boolean.getBoolean("pipeline.bootstrap.debug");
     String mainClass = null;
     String apiClasspath = null;
     String containerClasspath = null;
@@ -116,7 +115,7 @@ public class BootstrapMain {
       throw new IllegalArgumentException(String.format(OPTION_NOT_SPECIFIED_MSG, STAGE_LIBRARIES_DIR_OPTION));
     }
 
-    if (DEBUG) {
+    if (debug) {
       System.out.println();
       System.out.println(String.format(DEBUG_MSG, MAIN_CLASS_OPTION, mainClass));
       System.out.println();
@@ -132,7 +131,7 @@ public class BootstrapMain {
     List<URL> containerUrls = getClasspathUrls(containerClasspath);
     Map<String, List<URL>> stageLibsUrls = getStageLibrariesClasspaths(stageLibrariesDir);
 
-    if (DEBUG) {
+    if (debug) {
       System.out.println();
       System.out.println(String.format(DEBUG_MSG, "API classpath            : ", apiUrls));
       System.out.println();
@@ -175,7 +174,7 @@ public class BootstrapMain {
         File jarsDir = new File(libDir, STAGE_LIB_JARS_DIR);
         File etc = new File(libDir, STAGE_LIB_CONF_DIR);
         if (!jarsDir.exists()) {
-          throw new RuntimeException(String.format(MISSING_STAGE_LIB_JARS_DIR_MSG, libDir));
+          throw new IllegalArgumentException(String.format(MISSING_STAGE_LIB_JARS_DIR_MSG, libDir));
         }
         StringBuilder sb = new StringBuilder();
         if (etc.exists()) {
@@ -185,7 +184,7 @@ public class BootstrapMain {
         map.put(libDir.getName(), getClasspathUrls(sb.toString()));
       }
     } else {
-      throw new RuntimeException(String.format(MISSING_STAGE_LIBRARIES_DIR_MSG, baseDir));
+      throw new IllegalArgumentException(String.format(MISSING_STAGE_LIBRARIES_DIR_MSG, baseDir));
     }
     return map;
   }
@@ -210,7 +209,7 @@ public class BootstrapMain {
               urls.add(jar.toURI().toURL());
             }
           } else {
-            throw new RuntimeException(String.format(CLASSPATH_DIR_DOES_NOT_EXIST_MSG, f));
+            throw new IllegalArgumentException(String.format(CLASSPATH_DIR_DOES_NOT_EXIST_MSG, f));
           }
         } else {
           if (!path.endsWith(FILE_SEPARATOR)) {
@@ -221,15 +220,19 @@ public class BootstrapMain {
             if (f.isDirectory()) {
               urls.add(f.toURI().toURL());
             } else {
-              throw new RuntimeException(String.format(CLASSPATH_PATH_S_IS_NOT_A_DIR_MSG, f));
+              throw new IllegalArgumentException(String.format(CLASSPATH_PATH_S_IS_NOT_A_DIR_MSG, f));
             }
           } else {
-            throw new RuntimeException(String.format(CLASSPATH_DIR_DOES_NOT_EXIST_MSG, f));
+            throw new IllegalArgumentException(String.format(CLASSPATH_DIR_DOES_NOT_EXIST_MSG, f));
           }
         }
       }
     }
     return urls;
+  }
+
+  // for test coverage purposes only
+  BootstrapMain() {
   }
 
 }
