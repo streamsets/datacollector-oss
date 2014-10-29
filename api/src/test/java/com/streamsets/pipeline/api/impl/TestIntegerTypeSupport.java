@@ -15,18 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class Test_IntegerTypeSupport {
+public class TestIntegerTypeSupport {
 
   @Test
   public void testConvertValid() {
-    _IntegerTypeSupport support = new _IntegerTypeSupport();
+    IntegerTypeSupport support = new IntegerTypeSupport();
     Assert.assertEquals(new Integer(1), support.convert("1"));
     Assert.assertEquals(new Integer(1), support.convert((byte)1));
     Assert.assertEquals(new Integer(1), support.convert((short)1));
@@ -39,12 +39,12 @@ public class Test_IntegerTypeSupport {
 
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
-    new _IntegerTypeSupport().convert(new Exception());
+    new IntegerTypeSupport().convert(new Exception());
   }
 
   @Test
   public void testSnapshot() {
-    _IntegerTypeSupport ts = new _IntegerTypeSupport();
+    IntegerTypeSupport ts = new IntegerTypeSupport();
     Integer d = 1;
     Assert.assertSame(d, ts.snapshot(d));
   }

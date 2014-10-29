@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
-class _StringTypeSupport extends _TypeSupport<String> {
+public class StringTypeSupport extends TypeSupport<String> {
 
   @Override
   public String convert(Object value) {

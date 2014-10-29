@@ -15,39 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-
-public class Test_LongTypeSupport {
+public class TestByteArrayTypeSupport {
 
   @Test
-  public void testConvertValid() {
-    _LongTypeSupport support = new _LongTypeSupport();
-    Assert.assertEquals(new Long(1), support.convert("1"));
-    Assert.assertEquals(new Long(1), support.convert((byte)1));
-    Assert.assertEquals(new Long(1), support.convert((short)1));
-    Assert.assertEquals(new Long(1), support.convert((int)1));
-    Assert.assertEquals(new Long(1), support.convert((long)1));
-    Assert.assertEquals(new Long(1), support.convert((float)1));
-    Assert.assertEquals(new Long(1), support.convert((double)1));
-    Assert.assertEquals(new Long(1), support.convert(new BigDecimal(1)));
+  public void testConvertValid() throws Exception {
+    ByteArrayTypeSupport support = new ByteArrayTypeSupport();
+    byte[] array = new byte[0];
+    Assert.assertArrayEquals(array, support.convert(array));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
-    _LongTypeSupport support = new _LongTypeSupport();
-    new _LongTypeSupport().convert(new Exception());
+    new ByteArrayTypeSupport().convert(new Exception());
   }
 
   @Test
   public void testSnapshot() {
-    _LongTypeSupport ts = new _LongTypeSupport();
-    Long d = (long)1;
-    Assert.assertSame(d, ts.snapshot(d));
+    ByteArrayTypeSupport ts = new ByteArrayTypeSupport();
+    byte[] array = new byte[0];
+    Assert.assertArrayEquals(array, (byte[])ts.snapshot(array));
+    Assert.assertNotSame(array, ts.snapshot(array));
   }
 
 }

@@ -18,8 +18,7 @@
 
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.impl._ApiUtils;
-import com.streamsets.pipeline.api.impl._PipelineException;
+import com.streamsets.pipeline.api.impl.PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,25 +28,14 @@ import java.util.Locale;
 
 public class StageException extends Exception {
   private static final Logger LOG = LoggerFactory.getLogger(StageException.class);
-  private static final String PIPELINE_BUNDLE_NAME = "pipeline-bundle";
+  private static final String PIPELINE_API_BUNDLE_NAME = "pipeline-api-bundle";
 
-  static void setContext(Stage.Info info, ClassLoader stageClassLoader) {
-    _ApiUtils.checkNotNull(info, "info");
-    _ApiUtils.checkNotNull(stageClassLoader, "stageClassLoader");
-    String bundleName = (info.getName() + "-" + info.getVersion()).replace('.', '_');
-    _PipelineException.setContext(bundleName, stageClassLoader);
-  }
-
-  static void resetContext() {
-    _PipelineException.resetContext();
-  }
-
-  private _PipelineException exception;
+  private PipelineException exception;
 
   // last parameter can be a cause exception
   public StageException(ErrorId id, Object... params) {
-    exception = new _PipelineException(PIPELINE_BUNDLE_NAME, id, params);
-    if (!_PipelineException.isContextSet()) {
+    exception = new PipelineException(PIPELINE_API_BUNDLE_NAME, id, params);
+    if (!PipelineException.isContextSet()) {
       // setting an exception to create a stack trace
       LOG.warn("The StageException context has not been set, messages won't be localized", new Exception());
     }

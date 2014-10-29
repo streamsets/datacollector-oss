@@ -15,24 +15,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
-import com.streamsets.pipeline.api.impl._ApiUtils;
+import java.text.ParseException;
+import java.util.Date;
 
-class _ByteArrayTypeSupport extends _TypeSupport<byte[]> {
+public class DateTypeSupport extends TypeSupport<Date> {
 
   @Override
-  public byte[] convert(Object value) {
-    if (value instanceof byte[]) {
-      return (byte[])value;
+  public Date convert(Object value) {
+    if (value instanceof Date) {
+      return (Date) value;
     }
-    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a byte[]",
-                                                        value.getClass().getSimpleName(), value));
+    if (value instanceof String) {
+      try {
+        return ApiUtils.parse((String) value);
+      } catch (ParseException ex) {
+        throw new IllegalArgumentException(ApiUtils.format("Cannot parse '{}' to a Date, format must be ISO8601 UTC" +
+                                                           "(yyyy-MM-dd'T'HH:mm'Z')", value));
+      }
+    }
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a Date",
+                                                       value.getClass().getSimpleName(), value));
   }
 
   @Override
   public Object snapshot(Object value) {
-    return ((byte[])value).clone();
+    return ((Date) value).clone();
   }
 
 }

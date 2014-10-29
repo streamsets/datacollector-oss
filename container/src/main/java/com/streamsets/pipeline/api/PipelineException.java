@@ -17,9 +17,7 @@
  */
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.impl._PipelineException;
-
-public class PipelineException extends _PipelineException {
+public class PipelineException extends com.streamsets.pipeline.api.impl.PipelineException {
   private static final String PIPELINE_AGENT_BUNDLE = "pipeline-container-bundle";
 
   public PipelineException(ErrorId id, Object... params) {
@@ -27,15 +25,15 @@ public class PipelineException extends _PipelineException {
   }
 
   public static void setContext(ClassLoader classLoader) {
-    _PipelineException.setContext(null, classLoader);
+    com.streamsets.pipeline.api.impl.PipelineException.setContext(null, classLoader);
   }
 
   public static boolean isContextSet() {
-    return _PipelineException.isContextSet();
+    return com.streamsets.pipeline.api.impl.PipelineException.isContextSet();
   }
 
   public static void resetContext() {
-    _PipelineException.resetContext();
+    com.streamsets.pipeline.api.impl.PipelineException.resetContext();
   }
 
 }

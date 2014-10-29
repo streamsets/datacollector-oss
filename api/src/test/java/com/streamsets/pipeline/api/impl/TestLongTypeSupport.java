@@ -15,37 +15,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class Test_DoubleTypeSupport {
+public class TestLongTypeSupport {
 
   @Test
   public void testConvertValid() {
-    _DoubleTypeSupport support = new _DoubleTypeSupport();
-    Assert.assertEquals(new Double(1), support.convert("1"));
-    Assert.assertEquals(new Double(1), support.convert((byte)1));
-    Assert.assertEquals(new Double(1), support.convert((short)1));
-    Assert.assertEquals(new Double(1), support.convert((int)1));
-    Assert.assertEquals(new Double(1), support.convert((long)1));
-    Assert.assertEquals(new Double(1), support.convert((float)1));
-    Assert.assertEquals(new Double(1), support.convert((double)1));
-    Assert.assertEquals(new Double(1), support.convert(new BigDecimal(1)));
+    LongTypeSupport support = new LongTypeSupport();
+    Assert.assertEquals(new Long(1), support.convert("1"));
+    Assert.assertEquals(new Long(1), support.convert((byte)1));
+    Assert.assertEquals(new Long(1), support.convert((short)1));
+    Assert.assertEquals(new Long(1), support.convert((int)1));
+    Assert.assertEquals(new Long(1), support.convert((long)1));
+    Assert.assertEquals(new Long(1), support.convert((float)1));
+    Assert.assertEquals(new Long(1), support.convert((double)1));
+    Assert.assertEquals(new Long(1), support.convert(new BigDecimal(1)));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
-    new _DoubleTypeSupport().convert(new Exception());
+    LongTypeSupport support = new LongTypeSupport();
+    new LongTypeSupport().convert(new Exception());
   }
 
   @Test
   public void testSnapshot() {
-    _DoubleTypeSupport ts = new _DoubleTypeSupport();
-    Double d = (double)1;
+    LongTypeSupport ts = new LongTypeSupport();
+    Long d = (long)1;
     Assert.assertSame(d, ts.snapshot(d));
   }
 

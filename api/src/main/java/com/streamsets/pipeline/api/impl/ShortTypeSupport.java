@@ -15,45 +15,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
-
-import com.streamsets.pipeline.api.impl._ApiUtils;
+package com.streamsets.pipeline.api.impl;
 
 import java.math.BigDecimal;
 
-class _BooleanTypeSupport extends _TypeSupport<Boolean> {
+public class ShortTypeSupport extends TypeSupport<Short> {
 
   @Override
-  public Boolean convert(Object value) {
-    if (value instanceof Boolean) {
-      return (Boolean) value;
+  public Short convert(Object value) {
+    if (value instanceof Short) {
+      return (Short) value;
     }
     if (value instanceof String) {
-      return Boolean.valueOf((String) value);
+      return Short.parseShort((String) value);
     }
     if (value instanceof Integer) {
-      return ((Integer)value) != 0;
+      return ((Integer)value).shortValue();
     }
     if (value instanceof Long) {
-      return ((Long)value) != 0;
-    }
-    if (value instanceof Short) {
-      return ((Short)value) != 0;
+      return ((Long)value).shortValue();
     }
     if (value instanceof Byte) {
-      return ((Byte)value) != 0;
+      return ((Byte)value).shortValue();
     }
     if (value instanceof Float) {
-      return ((Float)value) != 0;
+      return ((Float)value).shortValue();
     }
     if (value instanceof Double) {
-      return ((Double)value) != 0;
+      return ((Double)value).shortValue();
     }
     if (value instanceof BigDecimal) {
-      return ! value.equals(BigDecimal.ZERO);
+      return ((BigDecimal)value).shortValue();
     }
-    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a boolean",
-                                                        value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a short",
+                                                       value.getClass().getSimpleName(), value));
   }
 
 }

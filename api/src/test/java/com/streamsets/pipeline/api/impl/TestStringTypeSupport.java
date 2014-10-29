@@ -15,25 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
-import com.streamsets.pipeline.api.impl._ApiUtils;
+import org.junit.Assert;
+import org.junit.Test;
 
-class _CharTypeSupport extends _TypeSupport<Character> {
+public class TestStringTypeSupport {
 
-  @Override
-  public Character convert(Object value) {
-    if (value instanceof Character) {
-      return (Character) value;
-    }
-    if (value instanceof String) {
-      String s = (String) value;
-      if (s.length() > 0) {
-        return s.charAt(0);
-      }
-    }
-    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a char",
-                                                        value.getClass().getSimpleName(), value));
+  @Test
+  public void testConvertValid() {
+    StringTypeSupport support = new StringTypeSupport();
+    Assert.assertEquals("s", support.convert("s"));
+  }
+
+  @Test
+  public void testSnapshot() {
+    StringTypeSupport ts = new StringTypeSupport();
+    String s = "s";
+    Assert.assertSame(s, ts.snapshot(s));
   }
 
 }

@@ -15,18 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class Test_BooleanTypeSupport {
+public class TestBooleanTypeSupport {
 
   @Test
   public void testConvertValid() {
-    _BooleanTypeSupport support = new _BooleanTypeSupport();
+    BooleanTypeSupport support = new BooleanTypeSupport();
     Assert.assertEquals(true, support.convert(true));
     Assert.assertEquals(true, support.convert("true"));
     Assert.assertEquals(true, support.convert(1));
@@ -50,12 +50,12 @@ public class Test_BooleanTypeSupport {
 
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
-    new _BooleanTypeSupport().convert(new Exception());
+    new BooleanTypeSupport().convert(new Exception());
   }
 
   @Test
   public void testSnapshot() {
-    _BooleanTypeSupport ts = new _BooleanTypeSupport();
+    BooleanTypeSupport ts = new BooleanTypeSupport();
     Boolean b = true;
     Assert.assertSame(b, ts.snapshot(b));
   }

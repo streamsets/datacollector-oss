@@ -15,42 +15,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
-
-import com.streamsets.pipeline.api.impl._ApiUtils;
+package com.streamsets.pipeline.api.impl;
 
 import java.math.BigDecimal;
 
-class _ByteTypeSupport extends _TypeSupport<Byte> {
+public class FloatTypeSupport extends TypeSupport<Float> {
 
   @Override
-  public Byte convert(Object value) {
-    if (value instanceof Byte) {
-      return (Byte) value;
+  public Float convert(Object value) {
+    if (value instanceof Float) {
+      return (Float) value;
     }
     if (value instanceof String) {
-      return Byte.parseByte((String) value);
-    }
-    if (value instanceof Integer) {
-      return ((Integer)value).byteValue();
-    }
-    if (value instanceof Long) {
-      return ((Long)value).byteValue();
+      return Float.parseFloat((String) value);
     }
     if (value instanceof Short) {
-      return ((Short)value).byteValue();
+      return ((Short)value).floatValue();
     }
-    if (value instanceof Float) {
-      return ((Float)value).byteValue();
+    if (value instanceof Integer) {
+      return ((Integer)value).floatValue();
+    }
+    if (value instanceof Byte) {
+      return ((Byte)value).floatValue();
+    }
+    if (value instanceof Long) {
+      return ((Long)value).floatValue();
     }
     if (value instanceof Double) {
-      return ((Double)value).byteValue();
+      return ((Double)value).floatValue();
     }
     if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).byteValue();
+      return ((BigDecimal)value).floatValue();
     }
-    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a byte",
-                                                        value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a float",
+                                                       value.getClass().getSimpleName(), value));
   }
 
 }

@@ -16,6 +16,6 @@
  * limitations under the License.
  */
 /**
- * Convenience base Pipeline classes
+ * Convenience classes
  */
 package com.streamsets.pipeline.api.base;

@@ -15,42 +15,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
-
-import com.streamsets.pipeline.api.impl._ApiUtils;
+package com.streamsets.pipeline.api.impl;
 
 import java.math.BigDecimal;
 
-class _FloatTypeSupport extends _TypeSupport<Float> {
+public class DecimalTypeSupport extends TypeSupport<BigDecimal> {
 
   @Override
-  public Float convert(Object value) {
-    if (value instanceof Float) {
-      return (Float) value;
+  public BigDecimal convert(Object value) {
+    if (value instanceof BigDecimal) {
+      return (BigDecimal) value;
     }
     if (value instanceof String) {
-      return Float.parseFloat((String) value);
+      return new BigDecimal((String) value);
     }
     if (value instanceof Short) {
-      return ((Short)value).floatValue();
+      return new BigDecimal((Short)value);
     }
     if (value instanceof Integer) {
-      return ((Integer)value).floatValue();
-    }
-    if (value instanceof Byte) {
-      return ((Byte)value).floatValue();
+      return new BigDecimal((Integer)value);
     }
     if (value instanceof Long) {
-      return ((Long)value).floatValue();
+      return new BigDecimal((Long)value);
+    }
+    if (value instanceof Byte) {
+      return new BigDecimal((Byte)value);
+    }
+    if (value instanceof Float) {
+      return new BigDecimal((Float)value);
     }
     if (value instanceof Double) {
-      return ((Double)value).floatValue();
+      return new BigDecimal((Double)value);
     }
-    if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).floatValue();
-    }
-    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a float",
-                                                        value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a BigDecimal",
+                                                       value.getClass().getSimpleName(), value));
   }
 
 }

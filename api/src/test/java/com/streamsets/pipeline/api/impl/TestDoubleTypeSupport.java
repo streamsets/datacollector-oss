@@ -15,37 +15,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class Test_ShortTypeSupport {
+public class TestDoubleTypeSupport {
 
   @Test
   public void testConvertValid() {
-    _ShortTypeSupport support = new _ShortTypeSupport();
-    Assert.assertEquals(new Short((short)1), support.convert("1"));
-    Assert.assertEquals(new Short((short)1), support.convert((byte)1));
-    Assert.assertEquals(new Short((short)1), support.convert((short)1));
-    Assert.assertEquals(new Short((short)1), support.convert((int)1));
-    Assert.assertEquals(new Short((short)1), support.convert((long)1));
-    Assert.assertEquals(new Short((short)1), support.convert((float)1));
-    Assert.assertEquals(new Short((short)1), support.convert((double)1));
-    Assert.assertEquals(new Short((short)1), support.convert(new BigDecimal(1)));
+    DoubleTypeSupport support = new DoubleTypeSupport();
+    Assert.assertEquals(new Double(1), support.convert("1"));
+    Assert.assertEquals(new Double(1), support.convert((byte)1));
+    Assert.assertEquals(new Double(1), support.convert((short)1));
+    Assert.assertEquals(new Double(1), support.convert((int)1));
+    Assert.assertEquals(new Double(1), support.convert((long)1));
+    Assert.assertEquals(new Double(1), support.convert((float)1));
+    Assert.assertEquals(new Double(1), support.convert((double)1));
+    Assert.assertEquals(new Double(1), support.convert(new BigDecimal(1)));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
-    new _ShortTypeSupport().convert(new Exception());
+    new DoubleTypeSupport().convert(new Exception());
   }
 
   @Test
   public void testSnapshot() {
-    _ShortTypeSupport ts = new _ShortTypeSupport();
-    Short d = (short)1;
+    DoubleTypeSupport ts = new DoubleTypeSupport();
+    Double d = (double)1;
     Assert.assertSame(d, ts.snapshot(d));
   }
 

@@ -17,42 +17,38 @@
  */
 package com.streamsets.pipeline.api.impl;
 
-import com.streamsets.pipeline.api.impl._ApiUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.text.ParseException;
+import java.util.Date;
 
-public class Test_ApiUtils {
-
-  @Test
-  public void testConstructor() {
-    new _ApiUtils(); //dummy test to trick cobertura into not reporting constructor not covered
-  }
+public class TestDateTypeSupport {
 
   @Test
-  public void testCheckNotNullWithNotNull() {
-    Assert.assertEquals("s", _ApiUtils.checkNotNull("s","s"));
+  public void testConvertValid() throws Exception {
+    DateTypeSupport support = new DateTypeSupport();
+    Date d = new Date();
+    Assert.assertEquals(d, support.convert(d));
+    d = ApiUtils.parse("2014-10-22T13:30Z");
+    Assert.assertEquals(d, support.convert("2014-10-22T13:30Z"));
   }
 
-  @Test(expected = NullPointerException.class)
-  public void testCheckNotNullWithNull() {
-    _ApiUtils.checkNotNull(null, "s");
+  @Test(expected = IllegalArgumentException.class)
+  public void testConvertInValid1() {
+    new DateTypeSupport().convert(new Exception());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConvertInValid2() {
+    new DateTypeSupport().convert("2014");
   }
 
   @Test
-  public void testFormat() {
-    Assert.assertEquals("aAbB", _ApiUtils.format("a{}b{}", "A", "B"));
-  }
-
-  @Test
-  public void testDateParsingValid() throws ParseException {
-    Assert.assertNotNull(_ApiUtils.parse("2014-10-22T13:30Z"));
-  }
-
-  @Test(expected = ParseException.class)
-  public void testDateParsingInvalid() throws ParseException {
-    Assert.assertNotNull(_ApiUtils.parse("20141022T13:30Z"));
+  public void testSnapshot() {
+    DateTypeSupport ts = new DateTypeSupport();
+    Date d = new Date();
+    Assert.assertEquals(d, ts.snapshot(d));
+    Assert.assertNotSame(d, ts.snapshot(d));
   }
 
 }

@@ -15,41 +15,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
-import com.streamsets.pipeline.api.impl._ApiUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Date;
+import java.math.BigDecimal;
 
-public class Test_DateTypeSupport {
+public class TestByteTypeSupport {
 
   @Test
-  public void testConvertValid() throws Exception {
-    _DateTypeSupport support = new _DateTypeSupport();
-    Date d = new Date();
-    Assert.assertEquals(d, support.convert(d));
-    d = _ApiUtils.parse("2014-10-22T13:30Z");
-    Assert.assertEquals(d, support.convert("2014-10-22T13:30Z"));
+  public void testConvertValid() {
+    ByteTypeSupport support = new ByteTypeSupport();
+    Assert.assertEquals(new Byte((byte) 1), support.convert("1"));
+    Assert.assertEquals(new Byte((byte) 1), support.convert((byte) 1));
+    Assert.assertEquals(new Byte((byte) 1), support.convert((short) 1));
+    Assert.assertEquals(new Byte((byte) 1), support.convert((int) 1));
+    Assert.assertEquals(new Byte((byte) 1), support.convert((long) 1));
+    Assert.assertEquals(new Byte((byte) 1), support.convert((float) 1));
+    Assert.assertEquals(new Byte((byte) 1), support.convert((double) 1));
+    Assert.assertEquals(new Byte((byte) 1), support.convert(new BigDecimal(1)));
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testConvertInValid1() {
-    new _DateTypeSupport().convert(new Exception());
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testConvertInValid2() {
-    new _DateTypeSupport().convert("2014");
+  public void testConvertInValid() {
+    new ByteTypeSupport().convert(new Exception());
   }
 
   @Test
   public void testSnapshot() {
-    _DateTypeSupport ts = new _DateTypeSupport();
-    Date d = new Date();
-    Assert.assertEquals(d, ts.snapshot(d));
-    Assert.assertNotSame(d, ts.snapshot(d));
+    ByteTypeSupport ts = new ByteTypeSupport();
+    Byte b = 1;
+    Assert.assertSame(b, ts.snapshot(b));
   }
 
 }

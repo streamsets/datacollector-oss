@@ -15,42 +15,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
-
-import com.streamsets.pipeline.api.impl._ApiUtils;
+package com.streamsets.pipeline.api.impl;
 
 import java.math.BigDecimal;
 
-class _ShortTypeSupport extends _TypeSupport<Short> {
+public class IntegerTypeSupport extends TypeSupport<Integer> {
 
   @Override
-  public Short convert(Object value) {
-    if (value instanceof Short) {
-      return (Short) value;
+  public Integer convert(Object value) {
+    if (value instanceof Integer) {
+      return (Integer) value;
     }
     if (value instanceof String) {
-      return Short.parseShort((String) value);
+      return Integer.parseInt((String) value);
     }
-    if (value instanceof Integer) {
-      return ((Integer)value).shortValue();
+    if (value instanceof Short) {
+      return ((Short)value).intValue();
     }
     if (value instanceof Long) {
-      return ((Long)value).shortValue();
+      return ((Long)value).intValue();
     }
     if (value instanceof Byte) {
-      return ((Byte)value).shortValue();
+      return ((Byte)value).intValue();
     }
     if (value instanceof Float) {
-      return ((Float)value).shortValue();
+      return ((Float)value).intValue();
     }
     if (value instanceof Double) {
-      return ((Double)value).shortValue();
+      return ((Double)value).intValue();
     }
     if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).shortValue();
+      return ((BigDecimal)value).intValue();
     }
-    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a short",
-                                                        value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a int",
+                                                       value.getClass().getSimpleName(), value));
   }
 
 }

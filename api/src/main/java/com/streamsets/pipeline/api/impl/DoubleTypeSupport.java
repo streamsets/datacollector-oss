@@ -15,13 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
-
-import com.streamsets.pipeline.api.impl._ApiUtils;
+package com.streamsets.pipeline.api.impl;
 
 import java.math.BigDecimal;
 
-class _DoubleTypeSupport extends _TypeSupport<Double> {
+public class DoubleTypeSupport extends TypeSupport<Double> {
 
   @Override
   public Double convert(Object value) {
@@ -49,8 +47,8 @@ class _DoubleTypeSupport extends _TypeSupport<Double> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).doubleValue();
     }
-    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a double",
-                                                        value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a double",
+                                                       value.getClass().getSimpleName(), value));
   }
 
 }

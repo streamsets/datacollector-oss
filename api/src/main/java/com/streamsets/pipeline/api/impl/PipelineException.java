@@ -26,8 +26,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class _PipelineException extends Exception {
-  private static final Logger LOG = LoggerFactory.getLogger(_PipelineException.class);
+public class PipelineException extends Exception {
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineException.class);
 
   private static class ExceptionContext {
     private final String bundleName;
@@ -35,7 +35,7 @@ public class _PipelineException extends Exception {
 
     private ExceptionContext(String bundleName, ClassLoader classLoader) {
       this.bundleName = (bundleName != null) ? bundleName + "-bundle" : null;
-      this.classLoader = _ApiUtils.checkNotNull(classLoader, "classLoader");
+      this.classLoader = ApiUtils.checkNotNull(classLoader, "classLoader");
     }
 
     public String getBundleName() {
@@ -66,10 +66,10 @@ public class _PipelineException extends Exception {
   private Object[] params;
   private ExceptionContext exceptionContext;
 
-  public _PipelineException(String defaultBundle, ErrorId id, Object... params) {
-    super(null, getCause(_ApiUtils.checkNotNull(params, "params")));
-    this.defaultBundle = _ApiUtils.checkNotNull(defaultBundle, "defaultBundle");
-    this.id = _ApiUtils.checkNotNull(id, "id");
+  public PipelineException(String defaultBundle, ErrorId id, Object... params) {
+    super(null, getCause(ApiUtils.checkNotNull(params, "params")));
+    this.defaultBundle = ApiUtils.checkNotNull(defaultBundle, "defaultBundle");
+    this.id = ApiUtils.checkNotNull(id, "id");
     this.params = params.clone();
     exceptionContext = EXCEPTION_CONTEXT_TL.get();
   }
@@ -79,7 +79,7 @@ public class _PipelineException extends Exception {
   }
 
   public String getMessage() {
-    return _ApiUtils.format(id.getMessageTemplate(), params);
+    return ApiUtils.format(id.getMessageTemplate(), params);
   }
 
   public String getMessage(Locale locale) {
@@ -109,7 +109,7 @@ public class _PipelineException extends Exception {
       }
     }
     if (rb != null && rb.containsKey(key)) {
-      msg = _ApiUtils.format(rb.getString(key), params);
+      msg = ApiUtils.format(rb.getString(key), params);
     } else {
       msg = getMessage();
     }

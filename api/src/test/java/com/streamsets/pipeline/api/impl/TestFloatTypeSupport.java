@@ -15,39 +15,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class Test_DecimalTypeSupport {
+public class TestFloatTypeSupport {
 
   @Test
   public void testConvertValid() {
-    _DecimalTypeSupport support = new _DecimalTypeSupport();
-    Assert.assertEquals(new BigDecimal(1), support.convert("1"));
-    Assert.assertEquals(new BigDecimal(1), support.convert((byte)1));
-    Assert.assertEquals(new BigDecimal(1), support.convert((short)1));
-    Assert.assertEquals(new BigDecimal(1), support.convert((int)1));
-    Assert.assertEquals(new BigDecimal(1), support.convert((long)1));
-    Assert.assertEquals(new BigDecimal(1), support.convert((float)1));
-    Assert.assertEquals(new BigDecimal(1), support.convert((double)1));
-    Assert.assertEquals(new BigDecimal(1), support.convert(new BigDecimal(1)));
+    FloatTypeSupport support = new FloatTypeSupport();
+    Assert.assertEquals(new Float(1), support.convert("1"));
+    Assert.assertEquals(new Float(1), support.convert((byte)1));
+    Assert.assertEquals(new Float(1), support.convert((short)1));
+    Assert.assertEquals(new Float(1), support.convert((int)1));
+    Assert.assertEquals(new Float(1), support.convert((long)1));
+    Assert.assertEquals(new Float(1), support.convert((float)1));
+    Assert.assertEquals(new Float(1), support.convert((double)1));
+    Assert.assertEquals(new Float(1), support.convert(new BigDecimal(1)));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
-    new _DecimalTypeSupport().convert(new Exception());
+    new FloatTypeSupport().convert(new Exception());
   }
 
   @Test
   public void testSnapshot() {
-    _DecimalTypeSupport ts = new _DecimalTypeSupport();
-    BigDecimal b = new BigDecimal(1);
-    Assert.assertSame(b, ts.snapshot(b));
+    FloatTypeSupport ts = new FloatTypeSupport();
+    Float d = (float)1;
+    Assert.assertSame(d, ts.snapshot(d));
   }
-
 
 }

@@ -16,6 +16,6 @@
  * limitations under the License.
  */
 /**
- * Pipeline Stage SDK
+ * Pipeline SDK
  */
 package com.streamsets.pipeline.sdk;

@@ -15,36 +15,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-public class Test_CharTypeSupport {
+import java.math.BigDecimal;
+
+public class TestDecimalTypeSupport {
 
   @Test
   public void testConvertValid() {
-    _CharTypeSupport support = new _CharTypeSupport();
-    Assert.assertEquals(new Character('c'), support.convert('c'));
-    Assert.assertEquals(new Character('c'), support.convert("c"));
-    Assert.assertEquals(new Character('c'), support.convert("cX"));
+    DecimalTypeSupport support = new DecimalTypeSupport();
+    Assert.assertEquals(new BigDecimal(1), support.convert("1"));
+    Assert.assertEquals(new BigDecimal(1), support.convert((byte)1));
+    Assert.assertEquals(new BigDecimal(1), support.convert((short)1));
+    Assert.assertEquals(new BigDecimal(1), support.convert((int)1));
+    Assert.assertEquals(new BigDecimal(1), support.convert((long)1));
+    Assert.assertEquals(new BigDecimal(1), support.convert((float)1));
+    Assert.assertEquals(new BigDecimal(1), support.convert((double)1));
+    Assert.assertEquals(new BigDecimal(1), support.convert(new BigDecimal(1)));
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testConvertInValid1() {
-    new _CharTypeSupport().convert(new Exception());
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testConvertInValid2() {
-    new _CharTypeSupport().convert("");
+  public void testConvertInValid() {
+    new DecimalTypeSupport().convert(new Exception());
   }
 
   @Test
   public void testSnapshot() {
-    _CharTypeSupport ts = new _CharTypeSupport();
-    Character c = 'c';
-    Assert.assertSame(c, ts.snapshot(c));
+    DecimalTypeSupport ts = new DecimalTypeSupport();
+    BigDecimal b = new BigDecimal(1);
+    Assert.assertSame(b, ts.snapshot(b));
   }
+
 
 }

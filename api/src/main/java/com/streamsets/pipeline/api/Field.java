@@ -17,7 +17,20 @@
  */
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.impl._ApiUtils;
+import com.streamsets.pipeline.api.impl.ApiUtils;
+import com.streamsets.pipeline.api.impl.BooleanTypeSupport;
+import com.streamsets.pipeline.api.impl.ByteArrayTypeSupport;
+import com.streamsets.pipeline.api.impl.ByteTypeSupport;
+import com.streamsets.pipeline.api.impl.CharTypeSupport;
+import com.streamsets.pipeline.api.impl.DateTypeSupport;
+import com.streamsets.pipeline.api.impl.DecimalTypeSupport;
+import com.streamsets.pipeline.api.impl.DoubleTypeSupport;
+import com.streamsets.pipeline.api.impl.FloatTypeSupport;
+import com.streamsets.pipeline.api.impl.IntegerTypeSupport;
+import com.streamsets.pipeline.api.impl.LongTypeSupport;
+import com.streamsets.pipeline.api.impl.ShortTypeSupport;
+import com.streamsets.pipeline.api.impl.StringTypeSupport;
+import com.streamsets.pipeline.api.impl.TypeSupport;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -26,23 +39,23 @@ import java.util.Date;
 public class Field {
 
   public enum Type {
-    BOOLEAN(new _BooleanTypeSupport()),
-    CHAR(new _CharTypeSupport()),
-    BYTE(new _ByteTypeSupport()),
-    SHORT(new _ShortTypeSupport()),
-    INTEGER(new _IntegerTypeSupport()),
-    LONG(new _LongTypeSupport()),
-    FLOAT(new _FloatTypeSupport()),
-    DOUBLE(new _DoubleTypeSupport()),
-    DATE(new _DateTypeSupport()),
-    DATETIME(new _DateTypeSupport()),
-    DECIMAL(new _DecimalTypeSupport()),
-    STRING(new _StringTypeSupport()),
-    BYTE_ARRAY(new _ByteArrayTypeSupport());
+    BOOLEAN(new BooleanTypeSupport()),
+    CHAR(new CharTypeSupport()),
+    BYTE(new ByteTypeSupport()),
+    SHORT(new ShortTypeSupport()),
+    INTEGER(new IntegerTypeSupport()),
+    LONG(new LongTypeSupport()),
+    FLOAT(new FloatTypeSupport()),
+    DOUBLE(new DoubleTypeSupport()),
+    DATE(new DateTypeSupport()),
+    DATETIME(new DateTypeSupport()),
+    DECIMAL(new DecimalTypeSupport()),
+    STRING(new StringTypeSupport()),
+    BYTE_ARRAY(new ByteArrayTypeSupport());
 
-    final _TypeSupport<?> supporter;
+    final TypeSupport<?> supporter;
 
-    private Type(_TypeSupport<?> supporter) {
+    private Type(TypeSupport<?> supporter) {
       this.supporter = supporter;
     }
 
@@ -56,7 +69,7 @@ public class Field {
     }
 
     private String toString(Object value) {
-      return _ApiUtils.format("Field[{}:{}]", this, value);
+      return ApiUtils.format("Field[{}:{}]", this, value);
     }
 
   }
@@ -114,11 +127,11 @@ public class Field {
   }
 
   public static <T> Field create(Type type, T value) {
-    return new Field(_ApiUtils.checkNotNull(type, "type"), type.convert(value));
+    return new Field(ApiUtils.checkNotNull(type, "type"), type.convert(value));
   }
 
   public static <T> Field create(Field field, T value) {
-    return create(_ApiUtils.checkNotNull(field, "field").getType(), value);
+    return create(ApiUtils.checkNotNull(field, "field").getType(), value);
   }
 
   private Type type;

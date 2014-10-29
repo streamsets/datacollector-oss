@@ -15,42 +15,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
-
-import com.streamsets.pipeline.api.impl._ApiUtils;
+package com.streamsets.pipeline.api.impl;
 
 import java.math.BigDecimal;
 
-class _IntegerTypeSupport extends _TypeSupport<Integer> {
+public class ByteTypeSupport extends TypeSupport<Byte> {
 
   @Override
-  public Integer convert(Object value) {
-    if (value instanceof Integer) {
-      return (Integer) value;
+  public Byte convert(Object value) {
+    if (value instanceof Byte) {
+      return (Byte) value;
     }
     if (value instanceof String) {
-      return Integer.parseInt((String) value);
+      return Byte.parseByte((String) value);
     }
-    if (value instanceof Short) {
-      return ((Short)value).intValue();
+    if (value instanceof Integer) {
+      return ((Integer)value).byteValue();
     }
     if (value instanceof Long) {
-      return ((Long)value).intValue();
+      return ((Long)value).byteValue();
     }
-    if (value instanceof Byte) {
-      return ((Byte)value).intValue();
+    if (value instanceof Short) {
+      return ((Short)value).byteValue();
     }
     if (value instanceof Float) {
-      return ((Float)value).intValue();
+      return ((Float)value).byteValue();
     }
     if (value instanceof Double) {
-      return ((Double)value).intValue();
+      return ((Double)value).byteValue();
     }
     if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).intValue();
+      return ((BigDecimal)value).byteValue();
     }
-    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a int",
-                                                        value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a byte",
+                                                       value.getClass().getSimpleName(), value));
   }
 
 }

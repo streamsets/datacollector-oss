@@ -18,6 +18,18 @@
 package com.streamsets.pipeline.api;
 
 import com.streamsets.pipeline.api.Field.Type;
+import com.streamsets.pipeline.api.impl.BooleanTypeSupport;
+import com.streamsets.pipeline.api.impl.ByteArrayTypeSupport;
+import com.streamsets.pipeline.api.impl.ByteTypeSupport;
+import com.streamsets.pipeline.api.impl.CharTypeSupport;
+import com.streamsets.pipeline.api.impl.DateTypeSupport;
+import com.streamsets.pipeline.api.impl.DecimalTypeSupport;
+import com.streamsets.pipeline.api.impl.DoubleTypeSupport;
+import com.streamsets.pipeline.api.impl.FloatTypeSupport;
+import com.streamsets.pipeline.api.impl.IntegerTypeSupport;
+import com.streamsets.pipeline.api.impl.LongTypeSupport;
+import com.streamsets.pipeline.api.impl.ShortTypeSupport;
+import com.streamsets.pipeline.api.impl.StringTypeSupport;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,19 +40,19 @@ public class TestField {
 
   @Test
   public void testTypeSupporters() {
-    Assert.assertEquals(_BooleanTypeSupport.class, Type.BOOLEAN.supporter.getClass());
-    Assert.assertEquals(_CharTypeSupport.class, Type.CHAR.supporter.getClass());
-    Assert.assertEquals(_ByteTypeSupport.class, Type.BYTE.supporter.getClass());
-    Assert.assertEquals(_ShortTypeSupport.class, Type.SHORT.supporter.getClass());
-    Assert.assertEquals(_IntegerTypeSupport.class, Type.INTEGER.supporter.getClass());
-    Assert.assertEquals(_LongTypeSupport.class, Type.LONG.supporter.getClass());
-    Assert.assertEquals(_FloatTypeSupport.class, Type.FLOAT.supporter.getClass());
-    Assert.assertEquals(_DoubleTypeSupport.class, Type.DOUBLE.supporter.getClass());
-    Assert.assertEquals(_DecimalTypeSupport.class, Type.DECIMAL.supporter.getClass());
-    Assert.assertEquals(_DateTypeSupport.class, Type.DATE.supporter.getClass());
-    Assert.assertEquals(_DateTypeSupport.class, Type.DATETIME.supporter.getClass());
-    Assert.assertEquals(_StringTypeSupport.class, Type.STRING.supporter.getClass());
-    Assert.assertEquals(_ByteArrayTypeSupport.class, Type.BYTE_ARRAY.supporter.getClass());
+    Assert.assertEquals(BooleanTypeSupport.class, Type.BOOLEAN.supporter.getClass());
+    Assert.assertEquals(CharTypeSupport.class, Type.CHAR.supporter.getClass());
+    Assert.assertEquals(ByteTypeSupport.class, Type.BYTE.supporter.getClass());
+    Assert.assertEquals(ShortTypeSupport.class, Type.SHORT.supporter.getClass());
+    Assert.assertEquals(IntegerTypeSupport.class, Type.INTEGER.supporter.getClass());
+    Assert.assertEquals(LongTypeSupport.class, Type.LONG.supporter.getClass());
+    Assert.assertEquals(FloatTypeSupport.class, Type.FLOAT.supporter.getClass());
+    Assert.assertEquals(DoubleTypeSupport.class, Type.DOUBLE.supporter.getClass());
+    Assert.assertEquals(DecimalTypeSupport.class, Type.DECIMAL.supporter.getClass());
+    Assert.assertEquals(DateTypeSupport.class, Type.DATE.supporter.getClass());
+    Assert.assertEquals(DateTypeSupport.class, Type.DATETIME.supporter.getClass());
+    Assert.assertEquals(StringTypeSupport.class, Type.STRING.supporter.getClass());
+    Assert.assertEquals(ByteArrayTypeSupport.class, Type.BYTE_ARRAY.supporter.getClass());
   }
 
   @Test

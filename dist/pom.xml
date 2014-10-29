@@ -132,25 +132,20 @@
                   <quiet>true</quiet>
                   <verbose>false</verbose>
                   <charset>UTF-8</charset>
-                  <!-- TODO: This exclusiong is not working, figure it out -->
-                  <excludePackageNames>com.streamsets.api.impl</excludePackageNames>
+
+                  <excludePackageNames>com.streamsets.pipeline.api.impl:com.streamsets.pipeline.lib</excludePackageNames>
+
                   <groups>
                     <group>
                       <title>Pipeline API</title>
                       <packages>
-                        com.streamsets.pipeline.api
-                      </packages>
-                    </group>
-                    <group>
-                      <title>Pipeline API Convenience Classes</title>
-                      <packages>
-                        com.streamsets.pipeline.api.base
+                        com.streamsets.pipeline.api:com.streamsets.pipeline.api.base
                       </packages>
                     </group>
                     <group>
                       <title>Pipeline Stage Library</title>
                       <packages>
-                        com.streamsets.pipeline.lib:com.streamsets.pipeline.lib.*
+                        com.streamsets.pipeline.lib.*
                       </packages>
                     </group>
                     <group>

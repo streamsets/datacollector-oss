@@ -15,13 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
-
-import com.streamsets.pipeline.api.impl._ApiUtils;
+package com.streamsets.pipeline.api.impl;
 
 import java.math.BigDecimal;
 
-class _LongTypeSupport extends _TypeSupport<Long> {
+public class LongTypeSupport extends TypeSupport<Long> {
 
   @Override
   public Long convert(Object value) {
@@ -49,8 +47,8 @@ class _LongTypeSupport extends _TypeSupport<Long> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).longValue();
     }
-    throw new IllegalArgumentException(_ApiUtils.format("Cannot convert {} '{}' to a long",
-                                                        value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a long",
+                                                       value.getClass().getSimpleName(), value));
   }
 
 }
