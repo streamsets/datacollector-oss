@@ -140,8 +140,8 @@ public class MockConfigGenerator {
     return r;
   }
 
-  public static StageRegistry getStaticModuleConfig() {
-    StageRegistry moduleConfiguration = new StageRegistry();
+  public static TOBEDELETED_StageRegistry getStaticModuleConfig() {
+    TOBEDELETED_StageRegistry moduleConfiguration = new TOBEDELETED_StageRegistry();
 
     List<ConfigDefinition> sourceConfigDefinition = new ArrayList<ConfigDefinition>();
     StageDefinition sourceConfig =

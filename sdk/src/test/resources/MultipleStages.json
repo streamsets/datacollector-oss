@@ -5,7 +5,7 @@
     "label" : "twitter_target",
     "description" : "Consumes twitter feeds",
     "type" : "TARGET",
-    "ConfigOptions" : [
+    "configDefinitions" : [
       {
         "name" : "username",
         "description" : "The user name of the twitter user",
@@ -30,7 +30,7 @@
     "label" : "twitter_processor",
     "description" : "processes twitter feeds",
     "type" : "PROCESSOR",
-    "ConfigOptions" : [
+    "configDefinitions" : [
       {
         "name" : "regEx",
         "description" : "The regular expression used to parse the tweet",
@@ -47,7 +47,7 @@
     "label" : "twitter_source",
     "description" : "Produces twitter feeds",
     "type" : "SOURCE",
-    "ConfigOptions" : [
+    "configDefinitions" : [
       {
         "name" : "username",
         "description" : "The user name of the twitter user",

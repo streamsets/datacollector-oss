@@ -17,13 +17,14 @@
  */
 package com.streamsets.pipeline.stagelibrary.mock;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.agent.RuntimeInfo;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.serde.StageConfigurationDeserializer;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
 import javax.inject.Inject;
@@ -40,10 +41,13 @@ public class MockStageLibrary implements StageLibrary {
 
   private final List<? extends ClassLoader> stageClassLoaders;
   private final List<StageDefinition> stages;
+  private final ObjectMapper json;
 
   @Inject
   public MockStageLibrary(RuntimeInfo runtimeInfo) {
     stageClassLoaders = runtimeInfo.getStageLibraryClassLoaders();
+    json = new ObjectMapper();
+    json.enable(SerializationFeature.INDENT_OUTPUT);
     this.stages = loadStages();
   }
 
@@ -81,8 +85,11 @@ public class MockStageLibrary implements StageLibrary {
       //get the StaticStageConfiguration objects from each of the streams
       for (InputStream in : inputStreams) {
         try {
-          stages.addAll(
-              StageConfigurationDeserializer.deserialize(in).getStageDefinitions());
+          StageDefinition[] stageDefinitions = json.readValue(in,
+            StageDefinition[].class);
+          for(StageDefinition s : stageDefinitions) {
+            stages.add(s);
+          }
         } catch (IOException e) {
           e.printStackTrace();
         }

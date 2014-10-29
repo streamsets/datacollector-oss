@@ -15,28 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.sdk;
+package com.streamsets.pipeline.sdk.annotationsprocessor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+public class Constants {
 
-public class StageConfiguration {
+  public static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
 
-  Map<String, String> stageOptions = null;
-  List<Map<String, String>> configOptions = null;
-
-  public StageConfiguration() {
-    this.stageOptions = new HashMap<String, String>();
-    this.configOptions = new ArrayList<Map<String, String>>();
-  }
-
-  public Map<String, String> getStageOptions() {
-    return stageOptions;
-  }
-
-  public List<Map<String, String>> getConfigOptions() {
-    return configOptions;
-  }
 }

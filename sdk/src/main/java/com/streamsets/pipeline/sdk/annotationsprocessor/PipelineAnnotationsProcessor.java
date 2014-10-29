@@ -15,11 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.sdk;
+package com.streamsets.pipeline.sdk.annotationsprocessor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageErrorDef;
+import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageType;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -37,10 +42,7 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @SupportedAnnotationTypes({"com.streamsets.pipeline.api.StageDef",
   "com.streamsets.pipeline.api.StageErrorDef"})
@@ -51,7 +53,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   /*An instance of StageCollection collects all the stage definitions and configurations
   in maps and will later be serialized into json.*/
-  private StageCollection stageCollection = null;
+  private List<StageDefinition> stageDefinitions = null;
 
   /*The compiler may call this annotation processor multiple times in different rounds.
   We just need to process and generate only once*/
@@ -64,12 +66,18 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private String stageErrorDefEnumName = null;
   /*literal vs value maps for the stage error def enum*/
   private Map<String, String> stageErrorDefLiteralMap;
+  private Map<StageDefinition, String> stageDefinitionToClassMap;
+
+  private final ObjectMapper json;
 
   public PipelineAnnotationsProcessor() {
     super();
-    stageCollection = new StageCollection();
+    stageDefinitions = new ArrayList<StageDefinition>();
     stageNameToVersionMap = new HashMap<String, String>();
     stageErrorDefLiteralMap = new HashMap<String, String>();
+    json = new ObjectMapper();
+    json.enable(SerializationFeature.INDENT_OUTPUT);
+    stageDefinitionToClassMap = new HashMap<StageDefinition, String>();
   }
 
   @Override
@@ -87,8 +95,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         if(stageDefValidationError) {
           continue;
         }
-        StageConfiguration stageConfiguration = createStageConfig(stageDefAnnotation, typeElement);
-        stageCollection.getStageConfigurations().add(stageConfiguration);
+        stageDefinitions.add(createStageConfig(stageDefAnnotation, typeElement));
       }
     }
 
@@ -176,17 +183,18 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    */
   private void generateStageBundles() {
     //get source location
-    for(StageConfiguration s : stageCollection.getStageConfigurations()) {
+    for(StageDefinition s : stageDefinitions) {
       try {
+        String stageClass = stageDefinitionToClassMap.get(s);
         FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT,
-          s.getStageOptions().get("class").substring(0, s.getStageOptions().get("class").lastIndexOf('.')),
-          s.getStageOptions().get("name") + "-bundle.properties", (Element[]) null);
+          stageClass.substring(0, stageClass.lastIndexOf('.')),
+          s.getName() + "-bundle.properties", (Element[]) null);
         PrintWriter pw = new PrintWriter(resource.openWriter());
-        pw.println("stage.label=" + s.getStageOptions().get("label"));
-        pw.println("stage.description=" + s.getStageOptions().get("description"));
-        for(Map<String, String> configMap : s.getConfigOptions()) {
-          pw.println("config." + configMap.get("name") + ".label=" + configMap.get("label"));
-          pw.println("config." + configMap.get("name") + ".description=" + configMap.get("description"));
+        pw.println("stage.label=" + s.getLabel());
+        pw.println("stage.description=" + s.getDescription());
+        for(ConfigDefinition c : s.getConfigDefinitions()) {
+          pw.println("config." + c.getName() + ".label=" + c.getLabel());
+          pw.println("config." + c.getName() + ".description=" + c.getDescription());
         }
         pw.flush();
         pw.close();
@@ -203,7 +211,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     try {
         FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
           "PipelineStages.json", (Element[])null);
-        SerializationUtil.serialize(stageCollection, resource.openOutputStream());
+        json.writeValue(resource.openOutputStream(), stageDefinitions);
         generated = true;
     } catch (IOException e) {
       processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
@@ -237,33 +245,39 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * @param typeElement
    * @return
    */
-  private StageConfiguration createStageConfig(StageDef stageDefAnnotation, TypeElement typeElement) {
-    StageConfiguration stageConfiguration = new StageConfiguration();
-    stageConfiguration.getStageOptions().put("name", stageDefAnnotation.name());
-    stageConfiguration.getStageOptions().put("class", typeElement.getQualifiedName().toString());
-    stageConfiguration.getStageOptions().put("version", stageDefAnnotation.version());
-    stageConfiguration.getStageOptions().put("label", stageDefAnnotation.label());
-    stageConfiguration.getStageOptions().put("description", stageDefAnnotation.description());
-    stageConfiguration.getStageOptions().put("type", getTypeFromElement(typeElement));
+  private StageDefinition createStageConfig(StageDef stageDefAnnotation,
+                                            TypeElement typeElement) {
 
     //Process all fields with ConfigDef annotation
+    List< ConfigDefinition> configDefinitions = new ArrayList<ConfigDefinition>();
     List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
     List<VariableElement> variableElements = ElementFilter.fieldsIn(enclosedElements);
     for (VariableElement variableElement : variableElements) {
       ConfigDef configDefAnnot = variableElement.getAnnotation(ConfigDef.class);
       if(configDefAnnot != null) {
-        Map<String, String> option = new HashMap<String, String>();
-        option.put("name", configDefAnnot.name());
-        option.put("type", configDefAnnot.type().name());
-        option.put("label", configDefAnnot.label());
-        option.put("description", configDefAnnot.description());
-        option.put("default", configDefAnnot.defaultValue());
-        option.put("required", String.valueOf(configDefAnnot.required()));
 
-        stageConfiguration.getConfigOptions().add(option);
+        ConfigDefinition configDefinition = new ConfigDefinition(
+          configDefAnnot.name(),
+          configDefAnnot.type(),
+          configDefAnnot.label(),
+          configDefAnnot.description(),
+          configDefAnnot.defaultValue(),
+          configDefAnnot.required(),
+          ""/*group name - need to remove it*/);
+        configDefinitions.add(configDefinition);
       }
     }
-    return stageConfiguration;
+
+    StageDefinition stageDefinition = new StageDefinition(
+      stageDefAnnotation.name(),
+      stageDefAnnotation.version(),
+      stageDefAnnotation.label(),
+      stageDefAnnotation.description(),
+      StageType.valueOf(getTypeFromElement(typeElement)),
+      configDefinitions);
+
+    stageDefinitionToClassMap.put(stageDefinition, typeElement.getQualifiedName().toString());
+    return stageDefinition;
   }
 
   /**

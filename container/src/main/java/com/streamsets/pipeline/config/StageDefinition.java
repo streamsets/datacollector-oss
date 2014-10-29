@@ -17,6 +17,9 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
@@ -27,19 +30,25 @@ public class StageDefinition {
 
   private final String name;
   private final String version;
-  private final String shortDescription;
+  private final String label;
   private final String description;
-  private final StageType moduleType;
-  private List<ConfigDefinition> configDefinitionList;
+  private final StageType type;
+  private List<ConfigDefinition> configDefinitions;
 
-  public StageDefinition(String name, String version, String shortDescription,
-      String description, StageType moduleType, List<ConfigDefinition> configDefinitionList) {
+  @JsonCreator
+  public StageDefinition(
+    @JsonProperty("name") String name,
+    @JsonProperty("version") String version,
+    @JsonProperty("label") String label,
+    @JsonProperty("description") String description,
+    @JsonProperty("type") StageType type,
+    @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions) {
     this.name = name;
     this.version = version;
-    this.shortDescription = shortDescription;
+    this.label = label;
     this.description = description;
-    this.moduleType = moduleType;
-    this.configDefinitionList = configDefinitionList;
+    this.type = type;
+    this.configDefinitions = configDefinitions;
   }
 
   public String getName() {
@@ -50,23 +59,23 @@ public class StageDefinition {
     return version;
   }
 
-  public String getShortDescription() {
-    return shortDescription;
+  public String getLabel() {
+    return label;
   }
 
   public String getDescription() {
     return description;
   }
 
-  public StageType getModuleType() {
-    return moduleType;
+  public StageType getType() {
+    return type;
   }
 
-  public List<ConfigDefinition> getConfigDefinitionList() {
-    return configDefinitionList;
+  public List<ConfigDefinition> getConfigDefinitions() {
+    return configDefinitions;
   }
 
-  public void setConfigDefinitionList(List<ConfigDefinition> configDefinitionList) {
-    this.configDefinitionList = configDefinitionList;
+  public void setConfigDefinitions(List<ConfigDefinition> configDefinitions) {
+    this.configDefinitions = configDefinitions;
   }
 }

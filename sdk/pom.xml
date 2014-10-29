@@ -35,6 +35,10 @@
       <artifactId>streamsets-pipeline-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-pipeline-container</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
     </dependency>
@@ -115,7 +119,7 @@
               <outputDirectory>${basedir}/target/classes/META-INF/services</outputDirectory>
               <resources>
                 <resource>
-                  <directory>${basedir}</directory>
+                  <directory>${basedir}/src/main/services</directory>
 		          <includes>
                       <include>javax.annotation.processing.Processor</include>
 		          </includes>

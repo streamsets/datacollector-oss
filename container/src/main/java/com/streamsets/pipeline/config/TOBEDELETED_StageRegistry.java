@@ -17,9 +17,6 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.streamsets.pipeline.serde.StageConfigurationSerializer;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +24,11 @@ import java.util.List;
  * A registry of all {@link com.streamsets.pipeline.api.Stage} objects
  * available in an installation.
  */
-@JsonSerialize(using = StageConfigurationSerializer.class)
-public class StageRegistry {
+public class TOBEDELETED_StageRegistry {
 
   private List<StageDefinition> stageDefinitions = null;
 
-  public StageRegistry() {
+  public TOBEDELETED_StageRegistry() {
     this.stageDefinitions = new ArrayList<StageDefinition>();
   }
 

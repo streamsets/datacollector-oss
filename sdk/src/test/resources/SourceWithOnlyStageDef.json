@@ -4,6 +4,7 @@
     "version" : "1.0",
     "label" : "twitter_source",
     "description" : "Produces twitter feeds",
-    "type" : "SOURCE"
+    "type" : "SOURCE",
+    "configDefinitions" : [ ]
   }
 ]

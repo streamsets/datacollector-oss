@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.sdk.test;
 
-import com.streamsets.pipeline.sdk.Constants;
+import com.streamsets.pipeline.sdk.annotationsprocessor.Constants;
 import org.junit.Assert;
 
 import javax.tools.Diagnostic;

@@ -5,7 +5,7 @@
     "label" : "twitter_source",
     "description" : "Produces twitter feeds",
     "type" : "SOURCE",
-    "ConfigOptions" : [
+    "configDefinitions" : [
       {
         "name" : "username",
         "description" : "The user name of the twitter user",

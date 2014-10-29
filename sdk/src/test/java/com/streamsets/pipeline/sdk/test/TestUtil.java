@@ -17,40 +17,44 @@
  */
 package com.streamsets.pipeline.sdk.test;
 
-import com.streamsets.pipeline.sdk.SerializationUtil;
-import com.streamsets.pipeline.sdk.StageCollection;
-import com.streamsets.pipeline.sdk.StageConfiguration;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.StageDefinition;
 import org.junit.Assert;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import static com.streamsets.pipeline.sdk.Constants.PIPELINE_STAGES_JSON;
-import static junit.framework.TestCase.fail;
+import static com.streamsets.pipeline.sdk.annotationsprocessor.Constants.PIPELINE_STAGES_JSON;
 
 public class TestUtil {
 
-  public static StageCollection getGeneratedStageCollection() {
+  public static List<StageDefinition> getGeneratedStageCollection() {
     InputStream inputStream = Thread.currentThread().getContextClassLoader().
       getResourceAsStream(PIPELINE_STAGES_JSON);
     return getStageCollection(inputStream);
   }
 
-  public static StageCollection getStageCollection(InputStream inputStream) {
-    StageCollection stageCollection = null;
+  public static List<StageDefinition> getStageCollection(InputStream inputStream) {
+    ObjectMapper json = new ObjectMapper();
+    List<StageDefinition> stageDefinitions = new ArrayList<StageDefinition>();
     try {
-      stageCollection = SerializationUtil.deserialize(inputStream);
+      StageDefinition[] stageDefArray = json.readValue(inputStream, StageDefinition[].class);
+      for(StageDefinition s : stageDefArray) {
+        stageDefinitions.add(s);
+      }
     } catch (IOException e) {
-      fail("Failed during deserialing the generated PipelineStages.json file. Reason : " + e.getMessage());
       e.printStackTrace();
     }
-    return stageCollection;
+    return stageDefinitions;
   }
 
   public static void compareExpectedAndActualStages(String expectedJsonFileName) {
-    StageCollection actualStages = TestUtil.getGeneratedStageCollection();
+    List<StageDefinition> actualStages = TestUtil.getGeneratedStageCollection();
 
     InputStream in = null;
     try {
@@ -60,27 +64,39 @@ public class TestUtil {
       Assert.fail("Test failed for the following reason:");
       e.printStackTrace();
     }
-    StageCollection expectedStages = TestUtil.getStageCollection(in);
+    List<StageDefinition> expectedStages = TestUtil.getStageCollection(in);
 
-    Assert.assertTrue(actualStages.getStageConfigurations().size() ==
-      expectedStages.getStageConfigurations().size());
+    Assert.assertTrue(actualStages.size() == expectedStages.size());
     //check the deserialized StageCollections.
-    for(int i = 0; i < actualStages.getStageConfigurations().size(); i++) {
-      StageConfiguration expected = expectedStages.getStageConfigurations().get(i);
-      StageConfiguration actual = null;
-      for(StageConfiguration s : actualStages.getStageConfigurations()) {
-        if(s.getStageOptions().get("name").equals(expected.getStageOptions().get("name"))) {
+    for(int i = 0; i < actualStages.size(); i++) {
+      StageDefinition expected = expectedStages.get(i);
+      StageDefinition actual = null;
+      for(StageDefinition s : actualStages) {
+        if(s.getName().equals(expected.getName())) {
           actual = s;
           break;
         }
       }
       if(actual == null) {
         Assert.fail("A Stage configuration with name " +
-          expected.getStageOptions().get("name") +
+          expected.getName() +
           "is expected, but not found.");
       }
-      Assert.assertEquals(expected.getStageOptions(), actual.getStageOptions());
-      Assert.assertEquals(expected.getConfigOptions(), actual.getConfigOptions());
+      Assert.assertEquals(expected.getConfigDefinitions().size(), actual.getConfigDefinitions().size());
+      for(int j = 0; i < expected.getConfigDefinitions().size(); i++) {
+        ConfigDefinition e = expected.getConfigDefinitions().get(j);
+        ConfigDefinition a = actual.getConfigDefinitions().get(j);
+        Assert.assertEquals(e.getName(), a.getName());
+        Assert.assertEquals(e.getDefaultValue(), a.getDefaultValue());
+        Assert.assertEquals(e.getDescription(), a.getDescription());
+        Assert.assertEquals(e.getLabel(), a.getLabel());
+        Assert.assertEquals(e.getType(), a.getType());
+      }
+      Assert.assertEquals(expected.getName(), actual.getName());
+      Assert.assertEquals(expected.getVersion(), actual.getVersion());
+      Assert.assertEquals(expected.getLabel(), actual.getLabel());
+      Assert.assertEquals(expected.getDescription(), actual.getDescription());
+      Assert.assertEquals(expected.getType(), actual.getType());
     }
   }
 }
