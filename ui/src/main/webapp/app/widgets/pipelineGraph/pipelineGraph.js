@@ -44,7 +44,7 @@ angular.module('pipelineGraphDirectives', [])
       defs.append('svg:marker')
         .attr('id', 'end-arrow')
         .attr('viewBox', '0 -5 10 10')
-        .attr('refX', "32")
+        .attr('refX', "47")
         .attr('markerWidth', 3.5)
         .attr('markerHeight', 3.5)
         .attr('orient', 'auto')
@@ -195,7 +195,7 @@ angular.module('pipelineGraphDirectives', [])
       BACKSPACE_KEY: 8,
       DELETE_KEY: 46,
       ENTER_KEY: 13,
-      nodeRadius: 50
+      nodeRadius: 70
     };
 
     /* PROTOTYPE FUNCTIONS */
@@ -240,12 +240,14 @@ angular.module('pipelineGraphDirectives', [])
         nwords = words.length;
       var el = gEl.append("text")
         .attr("text-anchor","middle")
-        .attr("dy", "-" + (nwords-1)*7.5);
+        .attr("dy", "+" + (nwords-1)*60)
+        .attr("dx", "+" + (nwords-1)*75);
+
 
       for (var i = 0; i < words.length; i++) {
         var tspan = el.append('tspan').text(words[i]);
         if (i > 0) {
-          tspan.attr('x', 0).attr('dy', '15');
+          tspan.attr('x', 75).attr('dy', '15');
         }
 
       }
@@ -531,8 +533,7 @@ angular.module('pipelineGraphDirectives', [])
         })
         .on("mousedown", function(d){
           thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
-        }
-      )
+        })
         .on("mouseup", function(d){
           state.mouseDownLink = null;
         });
@@ -542,14 +543,14 @@ angular.module('pipelineGraphDirectives', [])
 
       // update existing nodes
       thisGraph.circles = thisGraph.circles.data(thisGraph.nodes, function(d){ return d.id;});
-      thisGraph.circles.attr("transform", function(d){return "translate(" + d.x + "," + d.y + ")";});
+      thisGraph.circles.attr("transform", function(d){return "translate(" + (d.x - 80) + "," + (d.y - 60) + ")";});
 
       // add new nodes
       var newGs= thisGraph.circles.enter()
         .append("g");
 
       newGs.classed(consts.circleGClass, true)
-        .attr("transform", function(d){return "translate(" + d.x + "," + d.y + ")";})
+        .attr("transform", function(d){return "translate(" + (d.x - 80) + "," + (d.y - 60) + ")";})
         .on("mouseover", function(d){
           if (state.shiftNodeDrag){
             d3.select(this).classed(consts.connectClass, true);
@@ -566,8 +567,16 @@ angular.module('pipelineGraphDirectives', [])
         })
         .call(thisGraph.drag);
 
-      newGs.append("circle")
-        .attr("r", String(consts.nodeRadius));
+      //newGs.append("circle")
+        //.attr("r", String(consts.nodeRadius));
+
+      newGs.append('rect')
+        .attr({
+          'height': 120,
+          'width': 160,
+          'rx': 20,
+          'ry': 20
+        });
 
       newGs.each(function(d){
         thisGraph.insertTitleLinebreaks(d3.select(this), d.title);

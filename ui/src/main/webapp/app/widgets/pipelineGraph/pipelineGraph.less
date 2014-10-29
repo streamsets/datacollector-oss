@@ -6,21 +6,30 @@ marker{
   fill: #EBEBEB;
 }
 
-g.conceptG circle{
+g.conceptG rect{
   fill: #EBEBEB;
   stroke: #8A8787;
   stroke-width: 2px;
 }
 
-g.conceptG:hover circle{
+g.conceptG:hover rect{
   fill: #8A8787;
 }
 
-g.selected circle{
+g.selected rect{
   fill: #8A8787;
 }
-g.selected:hover circle{
+g.selected:hover rect{
   fill: #8A8787;
+}
+
+
+g.selected text{
+  fill: white;
+}
+
+g.conceptG:hover text{
+  fill: white;
 }
 
 path.link {
@@ -34,7 +43,7 @@ path.link:hover{
   stroke: #8A8787;
 }
 
-g.connect-node circle{
+g.connect-node rect{
   fill: #BEFFFF;
 }
 
