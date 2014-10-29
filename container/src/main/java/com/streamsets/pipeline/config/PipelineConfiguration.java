@@ -17,47 +17,56 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Preconditions;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class PipelineConfiguration {
+  private UUID uuid = null;
+  private List<StageConfiguration> stages;
+  private Map<String, List<String>> issues;
 
-  private List<StageConfiguration> runtimeModuleConfigurations = null;
-  private String uuid = null;
-  private Map<String, List<String>> errorsMap = null;
-
-
-  public PipelineConfiguration() {
-    runtimeModuleConfigurations = new ArrayList<StageConfiguration>();
-    errorsMap = new LinkedHashMap<String, List<String>>();
+  @SuppressWarnings("unchecked")
+  public PipelineConfiguration(
+      @JsonProperty("uuid") UUID uuid,
+      @JsonProperty("stages") List<StageConfiguration> stages) {
+    this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
+    this.stages = (stages != null) ? stages : Collections.EMPTY_LIST;
+    issues = Collections.EMPTY_MAP;
   }
 
-  @JsonFormat()
-  public List<StageConfiguration> getRuntimeModuleConfigurations() {
-    return runtimeModuleConfigurations;
+  public List<StageConfiguration> getStages() {
+    return stages;
   }
 
-  public void setRuntimeModuleConfigurations(List<StageConfiguration> runtimeModuleConfigurations) {
-    this.runtimeModuleConfigurations = runtimeModuleConfigurations;
-  }
-
-  public String getUuid() {
-    return uuid;
-  }
-
-  public void setUuid(String uuid) {
+  public void setUuid(UUID uuid) {
     this.uuid = uuid;
   }
 
-  public Map<String, List<String>> getErrorsMap() {
-    return errorsMap;
+  public UUID getUuid() {
+    return uuid;
   }
 
-  public void setErrorsMap(Map<String, List<String>> errorsMap) {
-    this.errorsMap = errorsMap;
+  public void setIssues(Map<String, List<String>> issues) {
+    this.issues = null;
   }
+
+  public Map<String, List<String>> getIssues() {
+    return issues;
+  }
+
+  public void setValid(boolean dummy) {
+    //NOP, just for jackson
+  }
+
+  public boolean isValid() {
+    return issues == null || issues.isEmpty();
+  }
+
 }

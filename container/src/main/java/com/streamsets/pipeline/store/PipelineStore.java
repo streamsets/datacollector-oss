@@ -20,6 +20,7 @@ package com.streamsets.pipeline.store;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface PipelineStore {
 
@@ -27,7 +28,7 @@ public interface PipelineStore {
 
   public void destroy();
 
-  public void create(String name, String description, String user) throws PipelineStoreException;
+  public PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException;
 
   public void delete(String name) throws PipelineStoreException;
 
@@ -37,8 +38,8 @@ public interface PipelineStore {
 
   public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException;
 
-  public void save(String name, String user, String tag, String tagDescription, PipelineConfiguration pipeline)
-      throws PipelineStoreException;
+  public PipelineConfiguration save(String name, String user, String tag, String tagDescription,
+      PipelineConfiguration pipeline) throws PipelineStoreException;
 
   public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException;
 

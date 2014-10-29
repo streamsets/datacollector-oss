@@ -18,6 +18,8 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineConfigurationValidator;
+import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.store.PipelineStore;
 import com.streamsets.pipeline.store.PipelineStoreException;
 
@@ -37,17 +39,24 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
+import java.util.Locale;
 
 @Path("/v1/pipelines")
 public class PipelineStoreResource {
+  private final Locale locale;
   private final PipelineStore store;
+  private final StageLibrary stageLibrary;
   private final URI uri;
   private final String user;
 
+
+
   @Inject
-  public PipelineStoreResource(URI uri, Principal user, PipelineStore store) {
+  public PipelineStoreResource(URI uri, Principal user, StageLibrary stageLibrary, PipelineStore store) {
+    this.locale = Locale.getDefault(); //TODO inject
     this.uri = uri;
     this.user = user.getName();
+    this.stageLibrary = stageLibrary;
     this.store = store;
   }
 
@@ -66,7 +75,11 @@ public class PipelineStoreResource {
       throws PipelineStoreException, URISyntaxException {
     Object data;
     if (get.equals("pipeline")) {
-      data = store.load(name, rev);
+      PipelineConfiguration pipeline = store.load(name, rev);
+      PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
+      validator.validate();
+      pipeline.setIssues(validator.getIssues(locale));
+      data = pipeline;
     } else if (get.equals("info")) {
       data = store.getInfo(name);
     } else if (get.equals("history")) {
@@ -84,8 +97,11 @@ public class PipelineStoreResource {
       @PathParam("name") String name,
       @QueryParam("description") @DefaultValue("") String description)
       throws PipelineStoreException, URISyntaxException {
-    store.create(name, description, user);
-    return Response.created(new URI(uri.toString() + "/" + name)).build();
+    PipelineConfiguration pipeline = store.create(name, description, user);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
+    validator.validate();
+    pipeline.setIssues(validator.getIssues(locale));
+    return Response.created(new URI(uri.toString() + "/" + name)).entity(pipeline).build();
   }
 
   @Path("/{name}")
@@ -108,8 +124,11 @@ public class PipelineStoreResource {
       @QueryParam("tagDescription") String tagDescription,
       PipelineConfiguration pipeline)
       throws PipelineStoreException, URISyntaxException {
-    store.save(name, user, tag, tagDescription, pipeline);
-    return Response.ok().build();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
+    validator.validate();
+    pipeline.setIssues(validator.getIssues(locale));
+    pipeline = store.save(name, user, tag, tagDescription, pipeline);
+    return Response.ok().entity(pipeline).build();
   }
 
 }

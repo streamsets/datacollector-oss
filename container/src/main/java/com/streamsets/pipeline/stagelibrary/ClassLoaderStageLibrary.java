@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.agent.RuntimeInfo;
 import com.streamsets.pipeline.config.StageDefinition;
 import org.slf4j.Logger;
@@ -43,7 +44,8 @@ public class ClassLoaderStageLibrary implements StageLibrary {
   private static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
 
   private final List<? extends ClassLoader> stageClassLoaders;
-  private final List<StageDefinition> stages;
+  private Map<String, StageDefinition> stageMap;
+  private List<StageDefinition> stageList;
   private final ObjectMapper json;
 
   @Inject
@@ -51,19 +53,21 @@ public class ClassLoaderStageLibrary implements StageLibrary {
     stageClassLoaders = runtimeInfo.getStageLibraryClassLoaders();
     json = new ObjectMapper();
     json.enable(SerializationFeature.INDENT_OUTPUT);
-    this.stages = loadStages();
+    stageList = new ArrayList<StageDefinition>();
+    stageMap = new HashMap<String, StageDefinition>();
+    loadStages();
+    stageList = ImmutableList.copyOf(stageList);
+    stageMap = ImmutableMap.copyOf(stageMap);
+
   }
 
   @VisibleForTesting
-  List<StageDefinition> loadStages() {
+  void loadStages() {
     if (LOG.isDebugEnabled()) {
       for (ClassLoader cl : stageClassLoaders) {
         LOG.debug("About to load stages from library '{}'", getLibraryName(cl));
       }
     }
-    List<StageDefinition> list = new ArrayList<StageDefinition>();
-
-    //go over all the "PipelineStages.json" files of each library (ClassLoader) and collect stages information
     for (ClassLoader cl : stageClassLoaders) {
       String libraryName = getLibraryName(cl);
       LOG.debug("Loading stages from library '{}'", libraryName);
@@ -78,15 +82,16 @@ public class ClassLoaderStageLibrary implements StageLibrary {
           StageDefinition[] stages = json.readValue(is, StageDefinition[].class);
           for (StageDefinition stage : stages) {
             stage.setLibrary(libraryName, cl);
-            String key = stage.getName() + ":" + stage.getVersion();
-            LOG.debug("Loaded stage '{}' from library '{}'", key, libraryName);
+            String key = createKey(libraryName, stage.getName(), stage.getVersion());
+            LOG.debug("Loaded stage '{}' (library:name:version)", key);
             if (stagesInLibrary.containsKey(key)) {
               throw new IllegalStateException(String.format(
                   "Library '%s' contains more than one definition for stage '%s', class '%s' and class '%s'",
                   libraryName, key, stagesInLibrary.get(key), stage.getStageClass()));
             }
             stagesInLibrary.put(key, stage.getClassName());
-            list.add(stage);
+            stageList.add(stage);
+            stageMap.put(key, stage);
           }
         }
       } catch (IOException ex) {
@@ -94,12 +99,20 @@ public class ClassLoaderStageLibrary implements StageLibrary {
                                    ex);
       }
     }
-    return ImmutableList.copyOf(list);
+  }
+
+  private String createKey(String library, String name, String version) {
+    return library + ":" + name + ":" + version;
   }
 
   @Override
   public List<StageDefinition> getStages() {
-    return stages;
+    return stageList;
+  }
+
+  @Override
+  public StageDefinition getStage(String library, String name, String version) {
+    return stageMap.get(createKey(library, name, version));
   }
 
   private String getLibraryName(ClassLoader cl) {

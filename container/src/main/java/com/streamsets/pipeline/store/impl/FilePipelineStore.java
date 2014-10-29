@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.store.file;
+package com.streamsets.pipeline.store.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class FilePipelineStore implements PipelineStore {
@@ -118,7 +119,7 @@ public class FilePipelineStore implements PipelineStore {
   }
 
   @Override
-  public void create(String name, String description, String user) throws PipelineStoreException {
+  public PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException {
     if (doesPipelineExist(name)) {
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_ALREADY_EXISTS, name);
     }
@@ -127,17 +128,17 @@ public class FilePipelineStore implements PipelineStore {
                                        String.format("'%s' mkdir failed", getPipelineDir(name)));
     }
     Date date = new Date();
-    PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV);
-
-    PipelineConfiguration pc = new PipelineConfiguration();
-    pc.setUuid(UUID.randomUUID().toString());
+    UUID uuid = UUID.randomUUID();
+    PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
+    PipelineConfiguration pipeline = new PipelineConfiguration(uuid, null);
     try {
       json.writeValue(getInfoFile(name), info);
-      json.writeValue(getPipelineFile(name), pc);
+      json.writeValue(getPipelineFile(name), pipeline);
     } catch (Exception ex) {
       throw new PipelineStoreException(PipelineStoreErrors.COULD_NOT_CREATE_PIPELINE, name, ex.getMessage(),
                                        ex);
     }
+    return pipeline;
   }
 
   private boolean deleteAll(File path) {
@@ -195,18 +196,30 @@ public class FilePipelineStore implements PipelineStore {
   }
 
   @Override
-  public void save(String name, String user, String tag, String tagDescription,
+  public PipelineConfiguration save(String name, String user, String tag, String tagDescription,
       PipelineConfiguration pipeline) throws PipelineStoreException {
     if (!doesPipelineExist(name)) {
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_DOES_NOT_EXIST, name);
     }
-    PipelineInfo info = new PipelineInfo(getInfo(name, false), new Date(), user, REV);
+    PipelineInfo savedInfo = getInfo(name, false);
+    if (!savedInfo.getUuid().equals(pipeline.getUuid())) {
+      throw new PipelineStoreException(PipelineStoreErrors.INVALID_UUID_FOR_PIPELINE, name);
+    }
+    UUID uuid = UUID.randomUUID();
+    PipelineInfo info = new PipelineInfo(getInfo(name, false), new Date(), user, REV, uuid,
+                                         pipeline.isValid());
+    Map<String, List<String>> issues = pipeline.getIssues();
     try {
+      pipeline.setIssues(null);
+      pipeline.setUuid(uuid);
       json.writeValue(getInfoFile(name), info);
       json.writeValue(getPipelineFile(name), pipeline);
     } catch (Exception ex) {
       throw new PipelineStoreException(PipelineStoreErrors.COULD_NOT_SAVE_PIPELINE, name, ex.getMessage(), ex);
+    } finally {
+      pipeline.setIssues(issues);
     }
+    return pipeline;
   }
 
   @Override

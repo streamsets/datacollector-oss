@@ -23,6 +23,8 @@ import java.util.List;
 
 public interface StageLibrary {
 
-  List<StageDefinition> getStages();
+  public List<StageDefinition> getStages();
+
+  public StageDefinition getStage(String library, String name, String version);
 
 }

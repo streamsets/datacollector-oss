@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class PipelineInfo {
   private String name;
@@ -30,6 +31,8 @@ public class PipelineInfo {
   private String creator;
   private String lastModifier;
   private String lastRev;
+  private UUID uuid;
+  private boolean valid;
 
   @JsonCreator
   public PipelineInfo(
@@ -39,7 +42,9 @@ public class PipelineInfo {
       @JsonProperty("lastModified") Date lastModified,
       @JsonProperty("creator") String creator,
       @JsonProperty("lastModifier") String lastModifier,
-      @JsonProperty("lastRev") String lastRev) {
+      @JsonProperty("lastRev") String lastRev,
+      @JsonProperty("uuid") UUID uuid,
+      @JsonProperty("valid") boolean valid) {
     this.name = name;
     this.description = description;
     this.created = created;
@@ -47,11 +52,14 @@ public class PipelineInfo {
     this.creator = creator;
     this.lastModifier = lastModifier;
     this.lastRev = lastRev;
+    this.uuid = uuid;
+    this.valid = valid;
   }
 
-  public PipelineInfo(PipelineInfo pipelineInfo, Date lastModified, String lastModifier, String lastRev) {
+  public PipelineInfo(PipelineInfo pipelineInfo, Date lastModified, String lastModifier, String lastRev, UUID uuid,
+      boolean valid) {
     this(pipelineInfo.getName(), pipelineInfo.getDescription(), pipelineInfo.getCreated(), lastModified,
-         pipelineInfo.getCreator(), lastModifier, lastRev);
+         pipelineInfo.getCreator(), lastModifier, lastRev, uuid, valid);
   }
 
   public String getName() {
@@ -82,4 +90,11 @@ public class PipelineInfo {
     return lastRev;
   }
 
+  public UUID getUuid() {
+    return uuid;
+  }
+
+  public boolean isValid() {
+    return valid;
+  }
 }

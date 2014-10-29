@@ -21,7 +21,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Captures the configuration options for a {@link com.streamsets.pipeline.api.Stage}.
@@ -39,6 +41,7 @@ public class StageDefinition {
   private final String description;
   private final StageType type;
   private List<ConfigDefinition> configDefinitions;
+  private Map<String, ConfigDefinition> configDefinitionsMap;
 
   @JsonCreator
   public StageDefinition(
@@ -56,6 +59,10 @@ public class StageDefinition {
     this.description = description;
     this.type = type;
     this.configDefinitions = configDefinitions;
+    configDefinitionsMap = new HashMap<String, ConfigDefinition>();
+    for (ConfigDefinition conf : configDefinitions) {
+      configDefinitionsMap.put(conf.getName(), conf);
+    }
   }
 
   public void setLibrary(String library, ClassLoader classLoader) {
@@ -110,4 +117,7 @@ public class StageDefinition {
     return configDefinitions;
   }
 
+  public ConfigDefinition getConfigDefinition(String configName) {
+    return configDefinitionsMap.get(configName);
+  }
 }

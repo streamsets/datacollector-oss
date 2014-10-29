@@ -161,10 +161,10 @@ public class TestPipelineResource extends JerseyTest {
     "  ]\n" +
     "}";
 
-  @Override
-  protected Application configure() {
-    return new ResourceConfig(TOBEDELETED_PipelineResource.class);
-  }
+//  @Override
+//  protected Application configure() {
+//    return new ResourceConfig(TOBEDELETED_PipelineResource.class);
+//  }
 
 // @Test
   public void testGetAllPipelines() {

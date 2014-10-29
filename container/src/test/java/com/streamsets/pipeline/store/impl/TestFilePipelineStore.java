@@ -15,14 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.store.file;
+package com.streamsets.pipeline.store.impl;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.agent.RuntimeInfo;
+import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.container.Configuration;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStore;
-import com.streamsets.pipeline.util.MockConfigGenerator;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
@@ -30,7 +32,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestFilePipelineStore {
@@ -87,7 +92,7 @@ public class TestFilePipelineStore {
       Assert.assertEquals(info.getLastModified(), info.getCreated());
       Assert.assertEquals(FilePipelineStore.REV, info.getLastRev());
       PipelineConfiguration pc = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
-      Assert.assertTrue(pc.getRuntimeModuleConfigurations().isEmpty());
+      Assert.assertTrue(pc.getStages().isEmpty());
     } finally {
       store.destroy();
     }
@@ -110,6 +115,16 @@ public class TestFilePipelineStore {
     }
   }
 
+  private PipelineConfiguration createPipeline(UUID uuid) {
+    ConfigConfiguration config = new ConfigConfiguration("a", "B");
+    Map<String, Object> uiInfo = new LinkedHashMap<String, Object>();
+    uiInfo.put("ui", "UI");
+    StageConfiguration stage = new StageConfiguration("instance", "library", "name", "version",
+                                                      ImmutableList.of(config), uiInfo,
+                                                      new ArrayList<String>(), ImmutableList.of("a"));
+    return new PipelineConfiguration(uuid, ImmutableList.of(stage));
+  }
+
   @Test
   public void testSave() throws Exception {
     ObjectGraph dagger = ObjectGraph.create(new TModule(true));
@@ -117,7 +132,8 @@ public class TestFilePipelineStore {
     try {
       store.init();
       PipelineInfo info1 = store.getInfo(FilePipelineStore.DEFAULT_PIPELINE_NAME);
-      PipelineConfiguration pc0 = MockConfigGenerator.getRuntimePipelineConfiguration();
+      PipelineConfiguration pc0 = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
+      pc0 = createPipeline(pc0.getUuid());
       Thread.sleep(5);
       store.save(FilePipelineStore.DEFAULT_PIPELINE_NAME, "foo", null, null, pc0);
       PipelineInfo info2 = store.getInfo(FilePipelineStore.DEFAULT_PIPELINE_NAME);
@@ -138,10 +154,15 @@ public class TestFilePipelineStore {
     PipelineStore store = dagger.get(FilePipelineStore.class);
     try {
       store.init();
-      PipelineConfiguration pc1 = MockConfigGenerator.getRuntimePipelineConfiguration();
-      store.save(FilePipelineStore.DEFAULT_PIPELINE_NAME, "foo", null, null, pc1);
+      PipelineConfiguration pc = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
+      Assert.assertTrue(pc.getStages().isEmpty());
+      UUID uuid = pc.getUuid();
+      pc = createPipeline(pc.getUuid());
+      pc = store.save(FilePipelineStore.DEFAULT_PIPELINE_NAME, "foo", null, null, pc);
+      UUID newUuid = pc.getUuid();
+      Assert.assertNotEquals(uuid, newUuid);
       PipelineConfiguration pc2 = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
-      Assert.assertFalse(pc2.getRuntimeModuleConfigurations().isEmpty());
+      Assert.assertFalse(pc2.getStages().isEmpty());
     } finally {
       store.destroy();
     }

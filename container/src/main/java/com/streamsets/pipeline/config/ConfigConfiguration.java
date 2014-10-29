@@ -17,22 +17,24 @@
  */
 package com.streamsets.pipeline.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * A registry of all {@link com.streamsets.pipeline.api.Stage} objects
- * available in an installation.
- */
-public class TOBEDELETED_StageRegistry {
+public class ConfigConfiguration {
+  private final String name;
+  private final Object value;
 
-  private List<StageDefinition> stageDefinitions = null;
-
-  public TOBEDELETED_StageRegistry() {
-    this.stageDefinitions = new ArrayList<StageDefinition>();
+  public ConfigConfiguration(
+      @JsonProperty("name") String name,
+      @JsonProperty("value") Object value) {
+    this.name = name;
+    this.value = value;
   }
 
-  public List<StageDefinition> getStageDefinitions() {
-    return stageDefinitions;
+  public String getName() {
+    return name;
+  }
+
+  public Object getValue() {
+    return value;
   }
 }

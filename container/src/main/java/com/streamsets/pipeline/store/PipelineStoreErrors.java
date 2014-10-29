@@ -25,6 +25,7 @@ public enum PipelineStoreErrors implements ErrorId {
   COULD_NOT_CREATE_PIPELINE("Could not create pipeline '{}', {}"),
   COULD_NOT_DELETE_PIPELINE("Could not delete pipeline '{}', {}"),
   COULD_NOT_SAVE_PIPELINE("Could not save pipeline '{}', {}"),
+  INVALID_UUID_FOR_PIPELINE("The provided UUID does not match the stored one, please reload the pipeline '{}'"),
   COULD_NOT_LOAD_PIPELINE_INFO("Could not load pipeline '{}' info, {}");
 
   private final String msgTemplate;

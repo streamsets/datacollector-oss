@@ -20,11 +20,12 @@ package com.streamsets.pipeline.store;
 import java.util.Date;
 
 public class PipelineRevInfo {
-  private Date date;
-  private String user;
-  private String rev;
-  private String tag;
-  private String description;
+  private final Date date;
+  private final String user;
+  private final String rev;
+  private final String tag;
+  private final String description;
+  private final boolean valid;
 
   public PipelineRevInfo(PipelineInfo info) {
     date = info.getLastModified();
@@ -32,6 +33,7 @@ public class PipelineRevInfo {
     rev = info.getLastRev();
     tag = null;
     description = null;
+    valid = info.isValid();
   }
 
   public Date getDate() {
@@ -52,6 +54,10 @@ public class PipelineRevInfo {
 
   public String getDescription() {
     return description;
+  }
+
+  public boolean isValid() {
+    return valid;
   }
 
 }

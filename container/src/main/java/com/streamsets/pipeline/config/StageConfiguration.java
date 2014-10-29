@@ -20,102 +20,83 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StageConfiguration {
 
   //basic info
   private final String instanceName;
-  private final String moduleName;
-  private final String moduleVersion;
-  private final String moduleDescription;
-
-  //configuration values
-  private List<ConfigDefinition> configDefinitions = null;
-
-  //ui options
-  int xPos;
-  int yPos;
+  private final String library;
+  private final String stageName;
+  private final String stageVersion;
+  private final List<ConfigConfiguration> configuration;
+  private final Map<String, ConfigConfiguration> configurationMap;
+  private final Map<String, Object> uiInfo;
 
   //wiring with other components
-  private List<String> inputLanes;
-  private List<String> outputLanes;
+  private final List<String> inputLanes;
+  private final List<String> outputLanes;
 
   @JsonCreator
   public StageConfiguration(
       @JsonProperty("instanceName") String instanceName,
-      @JsonProperty("moduleName") String moduleName,
-      @JsonProperty("moduleVersion") String moduleVersion,
-      @JsonProperty("moduleDescription") String moduleDescription,
-      @JsonProperty("configOptions") List<ConfigDefinition> configDefinitions,
-      @JsonProperty("xPos") int xPos,
-      @JsonProperty("yPos") int yPos,
+      @JsonProperty("library") String library,
+      @JsonProperty("stageName") String stageName,
+      @JsonProperty("stageVersion") String stageVersion,
+      @JsonProperty("configuration") List<ConfigConfiguration> configuration,
+      @JsonProperty("uiInfo") Map<String, Object> uiInfo,
       @JsonProperty("inputLanes") List<String> inputLanes,
       @JsonProperty("outputLanes") List<String> outputLanes) {
     this.instanceName = instanceName;
-    this.moduleName = moduleName;
-    this.moduleVersion = moduleVersion;
-    this.moduleDescription = moduleDescription;
-    this.configDefinitions = configDefinitions;
-    this.xPos = xPos;
-    this.yPos = yPos;
+    this.library = library;
+    this.stageName = stageName;
+    this.stageVersion = stageVersion;
+    this.configuration = configuration;
+    this.uiInfo = uiInfo;
     this.inputLanes = inputLanes;
     this.outputLanes = outputLanes;
+    configurationMap = new HashMap<String, ConfigConfiguration>();
+    for (ConfigConfiguration conf : configuration) {
+      configurationMap.put(conf.getName(), conf);
+    }
   }
 
   public String getInstanceName() {
     return instanceName;
   }
 
-  public String getModuleName() {
-    return moduleName;
+  public String getLibrary() {
+    return library;
   }
 
-  public String getModuleVersion() {
-    return moduleVersion;
+  public String getStageName() {
+    return stageName;
   }
 
-  public String getModuleDescription() {
-    return moduleDescription;
+  public String getStageVersion() {
+    return stageVersion;
   }
 
-  public List<ConfigDefinition> getConfigDefinitions() {
-    return configDefinitions;
+  public List<ConfigConfiguration> getConfiguration() {
+    return configuration;
   }
 
-  public void setConfigDefinitions(List<ConfigDefinition> configDefinitions) {
-    this.configDefinitions = configDefinitions;
-  }
-
-  public int getxPos() {
-    return xPos;
-  }
-
-  public void setxPos(int xPos) {
-    this.xPos = xPos;
-  }
-
-  public int getyPos() {
-    return yPos;
-  }
-
-  public void setyPos(int yPos) {
-    this.yPos = yPos;
+  public Map<String, Object> getUiInfo() {
+    return uiInfo;
   }
 
   public List<String> getInputLanes() {
     return inputLanes;
   }
 
-  public void setInputLanes(List<String> inputLanes) {
-    this.inputLanes = inputLanes;
-  }
-
   public List<String> getOutputLanes() {
     return outputLanes;
   }
 
-  public void setOutputLanes(List<String> outputLanes) {
-    this.outputLanes = outputLanes;
+  public ConfigConfiguration getConfig(String name) {
+    return configurationMap.get(name);
   }
+
 }
