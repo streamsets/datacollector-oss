@@ -18,7 +18,6 @@
 package com.streamsets.pipeline.stagelibrary;
 
 import com.streamsets.pipeline.agent.RuntimeModule;
-import com.streamsets.pipeline.stagelibrary.mock.MockStageLibrary;
 import dagger.Module;
 import dagger.Provides;
 
@@ -29,7 +28,7 @@ public class StageLibraryModule {
 
   @Provides
   @Singleton
-  public StageLibrary provideStageLibrary(MockStageLibrary stageLibrary) {
+  public StageLibrary provideStageLibrary(ClassLoaderStageLibrary stageLibrary) {
     return stageLibrary;
   }
 

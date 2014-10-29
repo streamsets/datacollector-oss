@@ -269,6 +269,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
 
     StageDefinition stageDefinition = new StageDefinition(
+      typeElement.getQualifiedName().toString(),
       stageDefAnnotation.name(),
       stageDefAnnotation.version(),
       stageDefAnnotation.label(),

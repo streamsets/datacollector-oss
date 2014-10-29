@@ -24,11 +24,13 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class BlackListURLClassLoader extends URLClassLoader {
-  private String[] blacklistedPackages;
-  private String[] blacklistedDirs;
+  private final String name;
+  private final String[] blacklistedPackages;
+  private final String[] blacklistedDirs;
 
-  public BlackListURLClassLoader(List<URL> urls, ClassLoader parent, String[] blacklistedPackages) {
+  public BlackListURLClassLoader(String name, List<URL> urls, ClassLoader parent, String[] blacklistedPackages) {
     super(urls.toArray(new URL[urls.size()]), parent);
+    this.name = name;
     this.blacklistedPackages = (blacklistedPackages != null) ? blacklistedPackages : new String[0];
     blacklistedDirs = new String[this.blacklistedPackages.length];
     for (int i = 0; i < blacklistedDirs.length; i++) {
@@ -71,6 +73,14 @@ public class BlackListURLClassLoader extends URLClassLoader {
   public Enumeration<URL> findResources(String name) throws IOException {
     validateResource(name);
     return super.findResources(name);
+  }
+
+  public String toString() {
+    return String.format("BlackListURLClassLoader '%s' : %s", name, super.toString());
+  }
+
+  public String getName() {
+    return name;
   }
 
 }

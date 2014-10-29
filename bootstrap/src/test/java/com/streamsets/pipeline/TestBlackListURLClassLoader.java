@@ -29,15 +29,25 @@ public class TestBlackListURLClassLoader {
 
   @Test
   @SuppressWarnings("unchecked")
+  public void testToStringAndName() {
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("foo", Collections.EMPTY_LIST, getClass().getClassLoader(),
+                                                             null);
+    Assert.assertTrue(cl.toString().startsWith("BlackListURLClassLoader 'foo' :"));
+    Assert.assertEquals("foo", cl.getName());
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
   public void testValidateClass1() {
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Collections.EMPTY_LIST, getClass().getClassLoader(), null);
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Collections.EMPTY_LIST, getClass().getClassLoader(),
+                                                             null);
     cl.validateClass("x.x.X");
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void testValidateClass2() {
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Collections.EMPTY_LIST, getClass().getClassLoader(),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Collections.EMPTY_LIST, getClass().getClassLoader(),
                                                              new String[] { "a.b.", "c.d."});
     cl.validateClass("x.x.X");
   }
@@ -45,7 +55,7 @@ public class TestBlackListURLClassLoader {
   @Test(expected = IllegalArgumentException.class)
   @SuppressWarnings("unchecked")
   public void testValidateClassError1() {
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Collections.EMPTY_LIST, getClass().getClassLoader(),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Collections.EMPTY_LIST, getClass().getClassLoader(),
                                                              new String[] { "a.b.", "c.d."});
     cl.validateClass("a.b.X");
   }
@@ -53,7 +63,7 @@ public class TestBlackListURLClassLoader {
   @Test(expected = IllegalArgumentException.class)
   @SuppressWarnings("unchecked")
   public void testValidateClassError2() {
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Collections.EMPTY_LIST, getClass().getClassLoader(),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Collections.EMPTY_LIST, getClass().getClassLoader(),
                                                              new String[] { "a.b.", "c.d."});
     cl.validateClass("c.d.X");
   }
@@ -61,7 +71,7 @@ public class TestBlackListURLClassLoader {
   @Test
   @SuppressWarnings("unchecked")
   public void testValidateResource1() {
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Collections.EMPTY_LIST, getClass().getClassLoader(),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Collections.EMPTY_LIST, getClass().getClassLoader(),
                                                              new String[] { "a.b.", "c.d."});
     cl.validateResource("/x/x/X");
     cl.validateResource("x/x/X");
@@ -71,7 +81,7 @@ public class TestBlackListURLClassLoader {
   @Test(expected = IllegalArgumentException.class)
   @SuppressWarnings("unchecked")
   public void testValidateResourceError1() {
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Collections.EMPTY_LIST, getClass().getClassLoader(),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Collections.EMPTY_LIST, getClass().getClassLoader(),
                                                              new String[] { "a.b.", "c.d."});
     cl.validateResource("a/b/X");
   }
@@ -79,7 +89,7 @@ public class TestBlackListURLClassLoader {
   @Test(expected = IllegalArgumentException.class)
   @SuppressWarnings("unchecked")
   public void testValidateResourceError2() {
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Collections.EMPTY_LIST, getClass().getClassLoader(),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Collections.EMPTY_LIST, getClass().getClassLoader(),
                                                              new String[] { "a.b.", "c.d."});
     cl.validateResource("c/d/X");
   }
@@ -87,7 +97,7 @@ public class TestBlackListURLClassLoader {
   @Test(expected = IllegalArgumentException.class)
   @SuppressWarnings("unchecked")
   public void testValidateResourceError3() {
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Collections.EMPTY_LIST, getClass().getClassLoader(),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Collections.EMPTY_LIST, getClass().getClassLoader(),
                                                              new String[] { "a.b.", "c.d."});
     cl.validateResource("c/d/X.properties");
   }
@@ -108,7 +118,7 @@ public class TestBlackListURLClassLoader {
   @SuppressWarnings("unchecked")
   public void testFindResource() throws Exception {
     File dir = getBaseDir();
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Arrays.asList(dir.toURI().toURL()),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Arrays.asList(dir.toURI().toURL()),
                                                              getClass().getClassLoader(), new String[] { "a.b."});
     Assert.assertNotNull(cl.getResource("x/y/resource.properties"));
   }
@@ -117,7 +127,7 @@ public class TestBlackListURLClassLoader {
   @SuppressWarnings("unchecked")
   public void testFindResources() throws Exception {
     File dir = getBaseDir();
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Arrays.asList(dir.toURI().toURL()),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Arrays.asList(dir.toURI().toURL()),
                                                              getClass().getClassLoader(), new String[] { "a.b."});
     Assert.assertNotNull(cl.getResources("x/y/resource.properties").hasMoreElements());
   }
@@ -126,7 +136,7 @@ public class TestBlackListURLClassLoader {
   @SuppressWarnings("unchecked")
   public void testFindResourceBlacklisted() throws Exception {
     File dir = getBaseDir();
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Arrays.asList(dir.toURI().toURL()),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Arrays.asList(dir.toURI().toURL()),
                                                              getClass().getClassLoader(), new String[] { "a.b."});
     cl.getResource("a/b/resource.properties");
   }
@@ -135,7 +145,7 @@ public class TestBlackListURLClassLoader {
   @SuppressWarnings("unchecked")
   public void testFindResourcesBlacklisted() throws Exception {
     File dir = getBaseDir();
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Arrays.asList(dir.toURI().toURL()),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Arrays.asList(dir.toURI().toURL()),
                                                              getClass().getClassLoader(), new String[] { "a.b."});
     cl.getResources("a/b/resource.properties");
   }
@@ -144,7 +154,7 @@ public class TestBlackListURLClassLoader {
   @SuppressWarnings("unchecked")
   public void testLoadClassBlacklisted() throws Exception {
     File dir = getBaseDir();
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Arrays.asList(dir.toURI().toURL()),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Arrays.asList(dir.toURI().toURL()),
                                                              getClass().getClassLoader(), new String[] { "a.b."});
     Assert.assertNotNull(cl.loadClass("a.b.Dummy"));
   }
@@ -154,7 +164,7 @@ public class TestBlackListURLClassLoader {
   @SuppressWarnings("unchecked")
   public void testLoadClass() throws Exception {
     File dir = getBaseDir();
-    BlackListURLClassLoader cl = new BlackListURLClassLoader(Arrays.asList(dir.toURI().toURL()),
+    BlackListURLClassLoader cl = new BlackListURLClassLoader("", Arrays.asList(dir.toURI().toURL()),
                                                              getClass().getClassLoader(), new String[] { "a.b."});
     Assert.assertNotNull(cl.loadClass("x.y.Dummy"));
   }

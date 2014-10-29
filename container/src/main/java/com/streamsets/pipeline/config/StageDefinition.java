@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -27,7 +28,11 @@ import java.util.List;
  *
  */
 public class StageDefinition {
+  private String library;
+  private ClassLoader classLoader;
+  private Class klass;
 
+  private final String className;
   private final String name;
   private final String version;
   private final String label;
@@ -37,18 +42,48 @@ public class StageDefinition {
 
   @JsonCreator
   public StageDefinition(
+    @JsonProperty("className") String className,
     @JsonProperty("name") String name,
     @JsonProperty("version") String version,
     @JsonProperty("label") String label,
     @JsonProperty("description") String description,
     @JsonProperty("type") StageType type,
     @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions) {
+    this.className = className;
     this.name = name;
     this.version = version;
     this.label = label;
     this.description = description;
     this.type = type;
     this.configDefinitions = configDefinitions;
+  }
+
+  public void setLibrary(String library, ClassLoader classLoader) {
+    this.library = library;
+    this.classLoader = classLoader;
+    try {
+      klass = classLoader.loadClass(getClassName());
+    } catch (ClassNotFoundException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  public String getLibrary() {
+    return library;
+  }
+
+  @JsonIgnore
+  public ClassLoader getClassLoader() {
+    return classLoader;
+  }
+
+  public String getClassName() {
+    return className;
+  }
+
+  @JsonIgnore
+  public Class getStageClass() {
+    return klass;
   }
 
   public String getName() {
@@ -73,10 +108,6 @@ public class StageDefinition {
 
   public List<ConfigDefinition> getConfigDefinitions() {
     return configDefinitions;
-  }
-
-  public void setConfigDefinitions(List<ConfigDefinition> configDefinitions) {
-    this.configDefinitions = configDefinitions;
   }
 
 }

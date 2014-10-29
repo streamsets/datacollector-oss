@@ -159,7 +159,7 @@ public class MockConfigGenerator {
 
     List<ConfigDefinition> sourceConfigDefinition = new ArrayList<ConfigDefinition>();
     StageDefinition sourceConfig =
-      new StageDefinition("CsvSource",
+      new StageDefinition("klass", "CsvSource",
         "1.0", "csv_source",
         "This is a CSV Source. This CSV source produces records in the a comma separated format.",
         StageType.SOURCE,
@@ -191,7 +191,7 @@ public class MockConfigGenerator {
 
     List<ConfigDefinition> processorConfigDefinition = new ArrayList<ConfigDefinition>();
     StageDefinition processorConfig =
-      new StageDefinition("MaskingProcessor",
+      new StageDefinition("klass", "MaskingProcessor",
         "1.0", "masking_processor",
         "This is a masking processor.",
         StageType.PROCESSOR,
@@ -212,7 +212,7 @@ public class MockConfigGenerator {
 
     List<ConfigDefinition> targetConfigDefinition = new ArrayList<ConfigDefinition>();
     StageDefinition targetConfig =
-      new StageDefinition("KafkaTarget",
+      new StageDefinition("klass", "KafkaTarget",
         "1.0", "kafka_target",
         "This is a kafka target. This target writes to kafka cluster.",
         StageType.TARGET,

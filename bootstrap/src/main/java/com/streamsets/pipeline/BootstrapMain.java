@@ -142,11 +142,12 @@ public class BootstrapMain {
     }
 
     // Create all ClassLoaders
-    ClassLoader apiCL = new BlackListURLClassLoader(apiUrls, ClassLoader.getSystemClassLoader(), null);
-    ClassLoader containerCL = new BlackListURLClassLoader(containerUrls, apiCL, null);
+    ClassLoader apiCL = new BlackListURLClassLoader("API", apiUrls, ClassLoader.getSystemClassLoader(), null);
+    ClassLoader containerCL = new BlackListURLClassLoader("Container", containerUrls, apiCL, null);
     List<ClassLoader> stageLibrariesCLs = new ArrayList<ClassLoader>();
-    for (List<URL> stageLibUrls : stageLibsUrls.values()) {
-      stageLibrariesCLs.add(new BlackListURLClassLoader(stageLibUrls, apiCL, PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES));
+    for (Map.Entry<String,List<URL>> entry : stageLibsUrls.entrySet()) {
+      stageLibrariesCLs.add(new BlackListURLClassLoader(entry.getKey(), entry.getValue(), apiCL,
+                                                        PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES));
     }
 
     // Bootstrap container
