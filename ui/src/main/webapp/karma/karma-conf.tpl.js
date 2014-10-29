@@ -4,15 +4,15 @@ module.exports = function(config){
     /**
      * From where to look for files, starting with the location of this file.
      */
-    basePath: '../',
+    basePath: '../../',
 
     /**
      * This is the list of file patterns to load into the browser during testing.
      */
     files: [
-      <% scripts.forEach( function ( file ) { %>'<%= file %>',
+      <% scripts.forEach( function ( file ) { %>'target/<%= file %>',
         <% }); %>
-      'app/**/*.js'
+      'src/main/webapp/app/**/*.js'
     ],
 
     autoWatch : false,

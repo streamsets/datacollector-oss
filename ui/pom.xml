@@ -50,17 +50,6 @@
           <yeomanProjectDirectory>${project.basedir}</yeomanProjectDirectory>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <version>2.5</version>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>src/main/webapp/dist</directory>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 </project>

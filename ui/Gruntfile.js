@@ -19,7 +19,8 @@ module.exports = function(grunt) {
     /**
      * The `build_dir` folder is where our projects are compiled.
      */
-    build_dir: 'dist',
+    build_dir: 'target/dist',
+    target_dir: 'target',
     base_dir: 'src/main/webapp/',
 
     /**
@@ -82,8 +83,9 @@ module.exports = function(grunt) {
         'bower_components/json-formatter/dist/json-formatter.js'
       ],
       css: [
-        'bower_components/ng-tags-input/ng-tags-input.css',
-        'bower_components/json-formatter/dist/json-formatter.css'
+        'bower_components/bootstrap/dist/css/bootstrap.min.css',
+        'bower_components/ng-tags-input/ng-tags-input.min.css',
+        'bower_components/json-formatter/dist/json-formatter.min.css.css'
       ],
       assets: [
       ],
@@ -94,7 +96,7 @@ module.exports = function(grunt) {
         'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff'
       ],
       i18n: [
-        'bower_components/angular-i18n/*.js'
+        'bower_components/angular-i18n/angular-locale_en-us.js'
       ]
     }
   };
@@ -127,7 +129,7 @@ module.exports = function(grunt) {
      * The directories to delete when `grunt clean` is executed.
      */
     clean: [
-      '<%= base_dir %><%= build_dir %>'
+      '<%= build_dir %>'
     ],
 
     /**
@@ -140,7 +142,7 @@ module.exports = function(grunt) {
         files: [
           {
             src: [ '**' ],
-            dest: '<%= base_dir %><%= build_dir %>/assets/',
+            dest: '<%= build_dir %>/assets/',
             cwd: '<%= base_dir %>assets',
             expand: true
           }
@@ -150,8 +152,8 @@ module.exports = function(grunt) {
         files: [
           {
             src: [ '<%= vendor_files.assets %>' ],
-            dest: '<%= base_dir %><%= build_dir %>/assets/',
-            cwd: '<%= base_dir %>',
+            dest: '<%= build_dir %>/assets/',
+            cwd: '<%= target_dir %>',
             expand: true,
             flatten: true
           }
@@ -161,8 +163,8 @@ module.exports = function(grunt) {
         files: [
           {
             src: [ '<%= vendor_files.fonts %>' ],
-            dest: '<%= base_dir %><%= build_dir %>/fonts',
-            cwd: '<%= base_dir %>',
+            dest: '<%= build_dir %>/fonts',
+            cwd: '<%= target_dir %>',
             expand: true,
             flatten: true
           }
@@ -172,7 +174,7 @@ module.exports = function(grunt) {
         files: [
           {
             src: [ '<%= app_files.js %>', '<%= app_files.i18n %>' ],
-            dest: '<%= base_dir %><%= build_dir %>/',
+            dest: '<%= build_dir %>/',
             cwd: '<%= base_dir %>',
             expand: true
           }
@@ -182,8 +184,8 @@ module.exports = function(grunt) {
         files: [
           {
             src: [ '<%= vendor_files.js %>', '<%= vendor_files.i18n %>' ],
-            dest: '<%= base_dir %><%= build_dir %>/',
-            cwd: '<%= base_dir %>',
+            dest: '<%= build_dir %>/',
+            cwd: '<%= target_dir %>',
             expand: true
           }
         ]
@@ -206,7 +208,7 @@ module.exports = function(grunt) {
           base: '<%= base_dir %>'
         },
         src: [ '<%= base_dir %><%= app_files.atpl %>' ],
-        dest: '<%= base_dir %><%= build_dir %>/templates-app.js'
+        dest: '<%= build_dir %>/templates-app.js'
       },
 
       /**
@@ -217,7 +219,7 @@ module.exports = function(grunt) {
           base: '<%= base_dir %>'
         },
         src: [ '<%= app_files.ctpl %>' ],
-        dest: '<%= base_dir %><%= build_dir %>/templates-common.js'
+        dest: '<%= build_dir %>/templates-common.js'
       }
     },
 
@@ -231,7 +233,7 @@ module.exports = function(grunt) {
        */
       build_css: {
         src: getBuildConcatCSSFiles(),
-        dest: '<%= base_dir %><%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css'
+        dest: '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css'
       },
       /**
        * The `compile_js` target is the concatenation of our application source
@@ -242,7 +244,7 @@ module.exports = function(grunt) {
           banner: '<%= meta.banner %>'
         },
         src: getCompileJSFiles(),
-        dest: '<%= base_dir %><%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.js'
+        dest: '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.js'
       }
     },
 
@@ -255,8 +257,8 @@ module.exports = function(grunt) {
         files: [
           {
             src: [ '<%= app_files.js %>' ],
-            cwd: '<%= base_dir %><%= build_dir %>',
-            dest: '<%= base_dir %><%= build_dir %>',
+            cwd: '<%= build_dir %>',
+            dest: '<%= build_dir %>',
             expand: true
           }
         ]
@@ -285,12 +287,12 @@ module.exports = function(grunt) {
     less: {
       build: {
         files: {
-          '<%= base_dir %><%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= base_dir %><%= app_files.less %>'
+          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= base_dir %><%= app_files.less %>'
         }
       },
       compile: {
         files: {
-          '<%= base_dir %><%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= base_dir %><%= app_files.less %>'
+          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= base_dir %><%= app_files.less %>'
         },
         options: {
           cleancss: true,
@@ -335,11 +337,11 @@ module.exports = function(grunt) {
       unit: {
         src: [
           '<%= vendor_files.js %>',
-          '<%= build_dir %>/templates-app.js',
-          '<%= build_dir %>/templates-common.js',
-          '<%= test_files.js %>'
+          '<%= test_files.js %>',
+          'dist/templates-app.js',
+          'dist/templates-common.js'
         ],
-        cwd: '<%= base_dir %>'
+        cwd: '<%= target_dir %>'
       }
     },
 
@@ -348,7 +350,7 @@ module.exports = function(grunt) {
      */
     karma: {
       options: {
-        configFile: '<%= base_dir %><%= build_dir %>/karma-conf.js'
+        configFile: '<%= build_dir %>/karma-conf.js'
       },
       unit: {
         port: 9019,
@@ -372,7 +374,7 @@ module.exports = function(grunt) {
        * `src` property contains the list of included files.
        */
       build: {
-        cwd: '<%= base_dir %><%= build_dir %>',
+        cwd: '<%= build_dir %>',
         src: [
           '<%= vendor_files.js %>',
           'app/**/*.js',
@@ -389,7 +391,7 @@ module.exports = function(grunt) {
        * file. Now we're back!
        */
       compile: {
-        cwd: '<%= base_dir %><%= build_dir %>',
+        cwd: '<%= build_dir %>',
         src: [
           'assets/<%= pkg.name %>-<%= pkg.version %>.js',
           '<%= vendor_files.css %>',
@@ -531,7 +533,7 @@ module.exports = function(grunt) {
    * minifying your code.
    */
   grunt.registerTask( 'compile', [
-    'less:compile', 'ngAnnotate', 'concat:compile_js', 'uglify', 'index:compile'
+    'less:compile', 'concat:build_css', 'ngAnnotate', 'concat:compile_js', 'uglify', 'index:compile'
   ]);
 
   /**
@@ -558,16 +560,15 @@ module.exports = function(grunt) {
    */
   function getCompileJSFiles(files, prefix) {
     var compileJSFiles = [],
-      baseDir = userConfig.base_dir,
       buildDir = userConfig.build_dir,
       vendorFilesJS = userConfig.vendor_files.js;
 
     vendorFilesJS.forEach(function(file){
-      compileJSFiles.push(baseDir + buildDir + '/' + file);
+      compileJSFiles.push(buildDir + '/' + file);
     });
 
     compileJSFiles.push('module.prefix');
-    compileJSFiles.push(baseDir + buildDir + '/app/**/*.js');
+    compileJSFiles.push(buildDir + '/app/**/*.js');
     compileJSFiles.push('<%= html2js.app.dest %>');
     compileJSFiles.push('<%= html2js.common.dest %>');
     compileJSFiles.push('module.suffix');
@@ -580,15 +581,14 @@ module.exports = function(grunt) {
    */
   function getBuildConcatCSSFiles() {
     var cssFiles = [],
-      baseDir = userConfig.base_dir,
-      buildDir = userConfig.build_dir,
+      targetDir = userConfig.target_dir,
       vendorFilesCSS = userConfig.vendor_files.css;
 
     vendorFilesCSS.forEach(function(file){
-      cssFiles.push(baseDir + '/' + file);
+      cssFiles.push(targetDir + '/' + file);
     });
 
-    cssFiles.push('<%= base_dir %><%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css');
+    cssFiles.push('<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css');
 
     console.log(cssFiles);
 
@@ -612,7 +612,7 @@ module.exports = function(grunt) {
       return file.replace( dirRE, '' );
     });
 
-    grunt.file.copy(grunt.config( 'base_dir' ) +'index.html', grunt.config( 'base_dir' ) + grunt.config( 'build_dir' ) + '/index.html', {
+    grunt.file.copy(grunt.config( 'base_dir' ) +'index.html', grunt.config( 'build_dir' ) + '/index.html', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
@@ -633,7 +633,7 @@ module.exports = function(grunt) {
   grunt.registerMultiTask( 'karmaconfig', 'Process karma config templates', function () {
     var jsFiles = filterForJS( this.filesSrc );
 
-    grunt.file.copy( grunt.config( 'base_dir' ) + 'karma/karma-conf.tpl.js', grunt.config( 'base_dir' ) + grunt.config( 'build_dir' ) + '/karma-conf.js', {
+    grunt.file.copy( grunt.config( 'base_dir' ) + 'karma/karma-conf.tpl.js', grunt.config( 'build_dir' ) + '/karma-conf.js', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {

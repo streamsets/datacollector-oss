@@ -101,7 +101,7 @@
         <activeByDefault>false</activeByDefault>
       </activation>
       <properties>
-        <ui.dist-dir>${basedir}/../ui/src/main/webapp/dist</ui.dist-dir>
+        <ui.dist-dir>${basedir}/../ui/target/dist</ui.dist-dir>
       </properties>
       <dependencies>
         <dependency>
