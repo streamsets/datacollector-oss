@@ -54,6 +54,29 @@
           <skip>true</skip>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>0.8</version>
+        <configuration>
+          <excludeSubProjects>false</excludeSubProjects>
+          <excludes>
+            <exclude>.idea/**</exclude>
+            <exclude>**/*.iml</exclude>
+            <exclude>.gitignore</exclude>
+            <exclude>**/*.json</exclude>
+            <exclude>**/target/**</exclude>
+            <exclude>.git/**</exclude>
+            <exclude>**/META-INF/services/**</exclude>
+            <exclude>**/.empty</exclude>
+            <exclude>sdk/javax.annotation.processing.Processor</exclude>
+
+            <!--TODO check with Madhu on all this stuff -->
+            <exclude>ui/**</exclude>
+            <exclude>sandbox/webapp/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
