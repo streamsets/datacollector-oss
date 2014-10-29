@@ -15,15 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.store;
+package com.streamsets.pipeline.container;
 
-import com.streamsets.pipeline.api.ErrorId;
-import com.streamsets.pipeline.container.PipelineException;
+public class ByteArrayTypeSupport extends TypeSupport<byte[]> {
 
-public class PipelineStoreException extends PipelineException {
+  @Override
+  public byte[] convert(Object value) {
+    if (value instanceof byte[]) {
+      return (byte[])value;
+    }
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a byte[]",
+                                                       value.getClass().getSimpleName(), value));
+  }
 
-  public PipelineStoreException(ErrorId id, Object... params) {
-    super(id, params);
+  @Override
+  public Object snapshot(Object value) {
+    return ((byte[])value).clone();
   }
 
 }

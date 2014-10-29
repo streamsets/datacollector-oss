@@ -18,7 +18,7 @@
 
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.impl.PipelineException;
+import com.streamsets.pipeline.container.PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

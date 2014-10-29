@@ -15,15 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.store;
+package com.streamsets.pipeline.container;
 
-import com.streamsets.pipeline.api.ErrorId;
-import com.streamsets.pipeline.container.PipelineException;
+public abstract class TypeSupport<T> {
 
-public class PipelineStoreException extends PipelineException {
+  public abstract T convert(Object value);
 
-  public PipelineStoreException(ErrorId id, Object... params) {
-    super(id, params);
+  public Object snapshot(Object value) {
+    return value;
   }
 
 }

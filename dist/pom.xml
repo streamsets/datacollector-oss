@@ -133,7 +133,7 @@
                   <verbose>false</verbose>
                   <charset>UTF-8</charset>
 
-                  <excludePackageNames>com.streamsets.pipeline.api.impl:com.streamsets.pipeline.lib</excludePackageNames>
+                  <excludePackageNames>com.streamsets.pipeline.container:com.streamsets.pipeline.lib:com.streamsets.pipeline.sdk.annotationsprocessor</excludePackageNames>
 
                   <groups>
                     <group>

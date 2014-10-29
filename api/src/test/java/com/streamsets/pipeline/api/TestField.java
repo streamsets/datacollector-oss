@@ -18,18 +18,18 @@
 package com.streamsets.pipeline.api;
 
 import com.streamsets.pipeline.api.Field.Type;
-import com.streamsets.pipeline.api.impl.BooleanTypeSupport;
-import com.streamsets.pipeline.api.impl.ByteArrayTypeSupport;
-import com.streamsets.pipeline.api.impl.ByteTypeSupport;
-import com.streamsets.pipeline.api.impl.CharTypeSupport;
-import com.streamsets.pipeline.api.impl.DateTypeSupport;
-import com.streamsets.pipeline.api.impl.DecimalTypeSupport;
-import com.streamsets.pipeline.api.impl.DoubleTypeSupport;
-import com.streamsets.pipeline.api.impl.FloatTypeSupport;
-import com.streamsets.pipeline.api.impl.IntegerTypeSupport;
-import com.streamsets.pipeline.api.impl.LongTypeSupport;
-import com.streamsets.pipeline.api.impl.ShortTypeSupport;
-import com.streamsets.pipeline.api.impl.StringTypeSupport;
+import com.streamsets.pipeline.container.BooleanTypeSupport;
+import com.streamsets.pipeline.container.ByteArrayTypeSupport;
+import com.streamsets.pipeline.container.ByteTypeSupport;
+import com.streamsets.pipeline.container.CharTypeSupport;
+import com.streamsets.pipeline.container.DateTypeSupport;
+import com.streamsets.pipeline.container.DecimalTypeSupport;
+import com.streamsets.pipeline.container.DoubleTypeSupport;
+import com.streamsets.pipeline.container.FloatTypeSupport;
+import com.streamsets.pipeline.container.IntegerTypeSupport;
+import com.streamsets.pipeline.container.LongTypeSupport;
+import com.streamsets.pipeline.container.ShortTypeSupport;
+import com.streamsets.pipeline.container.StringTypeSupport;
 import org.junit.Assert;
 import org.junit.Test;
 

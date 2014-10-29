@@ -15,15 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.store;
+package com.streamsets.pipeline.container;
 
-import com.streamsets.pipeline.api.ErrorId;
-import com.streamsets.pipeline.container.PipelineException;
+public class CharTypeSupport extends TypeSupport<Character> {
 
-public class PipelineStoreException extends PipelineException {
-
-  public PipelineStoreException(ErrorId id, Object... params) {
-    super(id, params);
+  @Override
+  public Character convert(Object value) {
+    if (value instanceof Character) {
+      return (Character) value;
+    }
+    if (value instanceof String) {
+      String s = (String) value;
+      if (s.length() > 0) {
+        return s.charAt(0);
+      }
+    }
+    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a char",
+                                                       value.getClass().getSimpleName(), value));
   }
 
 }

@@ -15,15 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.store;
+package com.streamsets.pipeline.container;
 
-import com.streamsets.pipeline.api.ErrorId;
-import com.streamsets.pipeline.container.PipelineException;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class PipelineStoreException extends PipelineException {
+public class TestStringTypeSupport {
 
-  public PipelineStoreException(ErrorId id, Object... params) {
-    super(id, params);
+  @Test
+  public void testConvertValid() {
+    StringTypeSupport support = new StringTypeSupport();
+    Assert.assertEquals("s", support.convert("s"));
+  }
+
+  @Test
+  public void testSnapshot() {
+    StringTypeSupport ts = new StringTypeSupport();
+    String s = "s";
+    Assert.assertSame(s, ts.snapshot(s));
   }
 
 }

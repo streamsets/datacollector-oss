@@ -15,15 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.store;
+package com.streamsets.pipeline.container;
 
-import com.streamsets.pipeline.api.ErrorId;
-import com.streamsets.pipeline.container.PipelineException;
+public class StringTypeSupport extends TypeSupport<String> {
 
-public class PipelineStoreException extends PipelineException {
-
-  public PipelineStoreException(ErrorId id, Object... params) {
-    super(id, params);
+  @Override
+  public String convert(Object value) {
+    return value.toString();
   }
 
 }

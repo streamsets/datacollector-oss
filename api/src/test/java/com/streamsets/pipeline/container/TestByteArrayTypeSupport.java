@@ -15,15 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.store;
+package com.streamsets.pipeline.container;
 
-import com.streamsets.pipeline.api.ErrorId;
-import com.streamsets.pipeline.container.PipelineException;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class PipelineStoreException extends PipelineException {
+public class TestByteArrayTypeSupport {
 
-  public PipelineStoreException(ErrorId id, Object... params) {
-    super(id, params);
+  @Test
+  public void testConvertValid() throws Exception {
+    ByteArrayTypeSupport support = new ByteArrayTypeSupport();
+    byte[] array = new byte[0];
+    Assert.assertArrayEquals(array, support.convert(array));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConvertInValid() {
+    new ByteArrayTypeSupport().convert(new Exception());
+  }
+
+  @Test
+  public void testSnapshot() {
+    ByteArrayTypeSupport ts = new ByteArrayTypeSupport();
+    byte[] array = new byte[0];
+    Assert.assertArrayEquals(array, (byte[])ts.snapshot(array));
+    Assert.assertNotSame(array, ts.snapshot(array));
   }
 
 }

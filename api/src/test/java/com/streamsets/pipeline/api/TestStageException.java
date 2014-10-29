@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.api;
 
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
-import com.streamsets.pipeline.api.impl.ApiUtils;
+import com.streamsets.pipeline.container.ApiUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
