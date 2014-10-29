@@ -15,30 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.api.base;
 
-package com.streamsets.pipeline.api;
+import java.util.List;
 
+public interface ValuesProvider {
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+  public List<String> getValues();
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface ConfigDef {
-
-  public enum Type { BOOLEAN, INTEGER, LONG, STRING, MODEL}
-
-  String name();
-
-  Type type();
-
-  String defaultValue();
-
-  boolean required();
-
-  String label();
-
-  String description() default "";
 }

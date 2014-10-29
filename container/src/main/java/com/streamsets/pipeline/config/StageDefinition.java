@@ -78,4 +78,5 @@ public class StageDefinition {
   public void setConfigDefinitions(List<ConfigDefinition> configDefinitions) {
     this.configDefinitions = configDefinitions;
   }
+
 }

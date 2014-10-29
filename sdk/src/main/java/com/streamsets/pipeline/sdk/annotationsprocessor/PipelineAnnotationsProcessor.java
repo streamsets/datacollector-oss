@@ -346,11 +346,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //Check if the stage extends one of the abstract classes
     TypeMirror typeMirror = typeElement.getSuperclass();
     if(typeMirror != null) {
-      if (typeMirror.toString().contains("BaseSource")) {
+      if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseSource")) {
         result = "SOURCE";
-      } else if (typeMirror.toString().contains("BaseProcessor")) {
+      } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseProcessor")
+        || typeMirror.toString().equals("com.streamsets.pipeline.api.base.RecordProcessor")
+        || typeMirror.toString().equals("com.streamsets.pipeline.api.base.SingleLaneProcessor")
+        || typeMirror.toString().equals("com.streamsets.pipeline.api.base.SingleLaneRecordProcessor")) {
         result = "PROCESSOR";
-      } else if (typeMirror.toString().contains("BaseTarget")) {
+      } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseTarget")) {
         result = "TARGET";
       }
     }
