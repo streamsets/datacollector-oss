@@ -27,7 +27,7 @@ import java.util.List;
 public class TestTwitterError extends TestConfigProcessorBase {
   @Override
   public List<String> getClassesToProcess() {
-    return Arrays.asList("com.streamsets.pipeline.sdk.test.TwitterError");
+    return Arrays.asList("com.streamsets.pipeline.sdk.testData.TwitterError");
   }
 
   @Override

@@ -30,7 +30,7 @@ public class TestFaultyStage extends TestConfigProcessorBase {
 
   @Override
   public List<String> getClassesToProcess() {
-    return Arrays.asList("com.streamsets.pipeline.sdk.test.FaultySource");
+    return Arrays.asList("com.streamsets.pipeline.sdk.testData.FaultySource");
   }
 
   @Override

@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.sdk.test;
 
+import com.streamsets.pipeline.sdk.testData.TwitterStages;
 import org.junit.Assert;
 
 import javax.tools.Diagnostic;
@@ -28,7 +29,7 @@ public class TestInnerClassStages extends TestConfigProcessorBase {
 
   @Override
   public List<String> getClassesToProcess() {
-    return Arrays.asList("com.streamsets.pipeline.sdk.test.TwitterStages");
+    return Arrays.asList("com.streamsets.pipeline.sdk.testData.TwitterStages");
   }
 
   @Override

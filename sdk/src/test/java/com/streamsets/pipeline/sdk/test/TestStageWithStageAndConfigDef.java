@@ -28,7 +28,7 @@ public class TestStageWithStageAndConfigDef extends TestConfigProcessorBase {
 
   @Override
   public List<String> getClassesToProcess() {
-    return Arrays.asList("com.streamsets.pipeline.sdk.test.SourceWithStageAndConfigDef");
+    return Arrays.asList("com.streamsets.pipeline.sdk.testData.SourceWithStageAndConfigDef");
   }
 
   @Override

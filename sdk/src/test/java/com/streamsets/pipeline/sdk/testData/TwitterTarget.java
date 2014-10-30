@@ -15,17 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.sdk.test;
+package com.streamsets.pipeline.sdk.testData;
 
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.*;
 
-@StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
-, version = "1.0")
-public class SourceWithStageAndConfigDef extends BaseSource{
+@StageDef(name = "TwitterTarget", description = "Consumes twitter feeds", label = "twitter_target"
+, version = "1.3")
+public class TwitterTarget implements Target {
 
   @ConfigDef(
     name = "username",
@@ -47,11 +43,11 @@ public class SourceWithStageAndConfigDef extends BaseSource{
   )
   public String password;
 
-  public SourceWithStageAndConfigDef() {
+  public TwitterTarget() {
 
   }
 
-  public SourceWithStageAndConfigDef(String username, String password) {
+  public TwitterTarget(String username, String password) {
     this.username = username;
     this.password = password;
   }
@@ -65,7 +61,17 @@ public class SourceWithStageAndConfigDef extends BaseSource{
   }
 
   @Override
-  public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
-    return null;
+  public void write(Batch batch) throws StageException {
+
+  }
+
+  @Override
+  public void init(Info info, Context context) throws StageException {
+
+  }
+
+  @Override
+  public void destroy() {
+
   }
 }

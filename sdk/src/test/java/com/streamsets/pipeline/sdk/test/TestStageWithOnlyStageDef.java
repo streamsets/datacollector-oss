@@ -29,7 +29,7 @@ public class TestStageWithOnlyStageDef extends TestConfigProcessorBase {
 
   @Override
   public List<String> getClassesToProcess() {
-    return Arrays.asList("com.streamsets.pipeline.sdk.test.SourceWithOnlyStageDef");
+    return Arrays.asList("com.streamsets.pipeline.sdk.testData.SourceWithOnlyStageDef");
   }
 
   @Override

@@ -28,10 +28,10 @@ public class TestMultipleStages extends TestConfigProcessorBase {
 
   @Override
   public List<String> getClassesToProcess() {
-    return Arrays.asList("com.streamsets.pipeline.sdk.test.TwitterSource",
-      "com.streamsets.pipeline.sdk.test.TwitterProcessor",
-      "com.streamsets.pipeline.sdk.test.TwitterTarget",
-      "com.streamsets.pipeline.sdk.test.TwitterError");
+    return Arrays.asList("com.streamsets.pipeline.sdk.testData.TwitterSource",
+      "com.streamsets.pipeline.sdk.testData.TwitterProcessor",
+      "com.streamsets.pipeline.sdk.testData.TwitterTarget",
+      "com.streamsets.pipeline.sdk.testData.TwitterError");
   }
 
   @Override
