@@ -19,13 +19,13 @@ package com.streamsets.pipeline.config;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.util.Issue;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,9 +53,9 @@ public class PipelineConfigurationValidator {
     return issues.isEmpty();
   }
 
-  public Map<String, List<String>> getIssues(Locale locale) {
+  public List<Issue>  getIssues() {
     Preconditions.checkState(validated, String.format("validate() has not been called"));
-    return Issue.getLocalizedMessages(issues, locale);
+    return ImmutableList.copyOf(issues);
   }
 
   @VisibleForTesting
@@ -127,14 +127,13 @@ public class PipelineConfigurationValidator {
   void validatePipelineLanes() {
     Set<String> currentLines = new HashSet<String>();
     for (StageConfiguration stage : pipelineConfiguration.getStages()) {
-      if (!currentLines.containsAll(stage.getInputLanes())) {
-        Set<String> unavailableLanes = new HashSet<String>(stage.getInputLanes());
-        unavailableLanes.removeAll(currentLines);
+      if (!currentLines.contains(stage.getInputLane())) {
         issues.add(new Issue(stage.getInstanceName(),
                              "validation.instance.undefined.input.lane", "Instance '%s', undefined input lanes '%s'",
-                             stage.getInstanceName(), unavailableLanes));
+                             stage.getInstanceName(), stage.getInputLane()));
       }
-      Set<String> consumedLanes = new HashSet<String>(stage.getInputLanes());
+      Set<String> consumedLanes = new HashSet<String>();
+      consumedLanes.add(stage.getInputLane());
       consumedLanes.removeAll(stage.getOutputLanes());
       currentLines.removeAll(consumedLanes);
       currentLines.addAll(stage.getOutputLanes());

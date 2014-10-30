@@ -82,7 +82,7 @@ public class ProcessorPipe extends Pipe implements Context {
 
   @Override
   public Record cloneRecord(Record record) {
-    return new RecordImpl((RecordImpl)record, "(cloned)");
+    return new RecordImpl("(cloned)", (RecordImpl)record);
   }
 
   public Processor getProcessor() {

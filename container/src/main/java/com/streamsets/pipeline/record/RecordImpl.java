@@ -85,7 +85,7 @@ public class RecordImpl implements Record {
     header = new HeaderImpl(headerData);
   }
 
-  public RecordImpl(RecordImpl record, String module) {
+  public RecordImpl(String module, RecordImpl record) {
     Preconditions.checkNotNull(record, "record cannot be null");
     previous = record;
     raw = record.raw;

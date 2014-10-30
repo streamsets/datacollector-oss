@@ -234,7 +234,7 @@ public class TestFilePipelineStore {
     uiInfo.put("ui", "UI");
     StageConfiguration stage = new StageConfiguration("instance", "library", "name", "version",
                                                       ImmutableList.of(config), uiInfo,
-                                                      new ArrayList<String>(), ImmutableList.of("a"));
+                                                      null, ImmutableList.of("a"));
     return new PipelineConfiguration(uuid, ImmutableList.of(stage));
   }
 
