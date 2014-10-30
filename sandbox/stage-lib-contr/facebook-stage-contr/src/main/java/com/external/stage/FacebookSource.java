@@ -35,7 +35,7 @@ public class FacebookSource extends BaseSource{
     description = "The user name of the facebook user",
     type = ConfigDef.Type.STRING
   )
-  private final String username;
+  public String username;
 
   @ConfigDef(
     name = "password",
@@ -45,8 +45,11 @@ public class FacebookSource extends BaseSource{
     description = "The password the facebook user",
     type = ConfigDef.Type.STRING
   )
-  private final String password;
+  public String password;
 
+  public FacebookSource() {
+
+  }
   public FacebookSource(String username, String password) {
     this.username = username;
     this.password = password;

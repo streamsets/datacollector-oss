@@ -33,4 +33,14 @@ public class TypesProvider implements ValuesProvider {
 
     return values;
   }
+
+  @Override
+  public List<String> getLabels() {
+    List<String> labels = new ArrayList<String>();
+    labels.add("integer_value");
+    labels.add("string_value");
+    labels.add("date_value");
+
+    return labels;
+  }
 }

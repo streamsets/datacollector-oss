@@ -35,7 +35,7 @@ public class LinkedinStages {
       description = "The user name of the linkedin user",
       type = ConfigDef.Type.STRING
     )
-    private final String username;
+    public String username;
 
     @ConfigDef(
       name = "password",
@@ -45,7 +45,9 @@ public class LinkedinStages {
       description = "The password the linkedin user",
       type = ConfigDef.Type.STRING
     )
-    private final String password;
+    public String password;
+
+    public LinkedinTarget() {}
 
     public LinkedinTarget(String username, String password) {
       this.username = username;
@@ -88,7 +90,7 @@ public class LinkedinStages {
       description = "The user name of the linkedin user",
       type = ConfigDef.Type.STRING
     )
-    private final String username;
+    public String username;
 
     @ConfigDef(
       name = "password",
@@ -98,7 +100,10 @@ public class LinkedinStages {
       description = "The password the linkedin user",
       type = ConfigDef.Type.STRING
     )
-    private final String password;
+    public String password;
+
+    public LinkedinSource() {
+    }
 
     public LinkedinSource(String username, String password) {
       this.username = username;
@@ -131,7 +136,10 @@ public class LinkedinStages {
       description = "The regular expression used to parse the tweet",
       type = ConfigDef.Type.STRING
     )
-    private final String regEx;
+    public String regEx;
+
+    public LinkedinProcessor() {
+    }
 
     public LinkedinProcessor(String username, String password) {
       this.regEx = username;
@@ -149,7 +157,7 @@ public class LinkedinStages {
     }
   }
 
-  /*@StageErrorDef
+  @StageErrorDef
   public enum LinkedinError implements ErrorId {
     // We have an trailing whitespace for testing purposes
     INPUT_LANE_ERROR("There should be 1 input lane but there are '{}' "),
@@ -165,5 +173,5 @@ public class LinkedinStages {
     public String getMessageTemplate() {
       return msg;
     }
-  }*/
+  }
 }

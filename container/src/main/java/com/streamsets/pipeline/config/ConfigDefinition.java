@@ -36,6 +36,8 @@ public class ConfigDefinition {
   private final String defaultValue;
   private final boolean required;
   private final String group;
+  private final String fieldName;
+  private final ModelDefinition model;
 
   @JsonCreator
   public ConfigDefinition(
@@ -45,7 +47,9 @@ public class ConfigDefinition {
       @JsonProperty("description") String description,
       @JsonProperty("default") String defaultValue,
       @JsonProperty("required") boolean required,
-      @JsonProperty("group") String group) {
+      @JsonProperty("group") String group,
+      @JsonProperty("fieldName") String fieldName,
+      @JsonProperty("model") ModelDefinition model) {
     this.name = name;
     this.type = type;
     this.label = label;
@@ -53,6 +57,8 @@ public class ConfigDefinition {
     this.defaultValue = defaultValue;
     this.required = required;
     this.group = group;
+    this.fieldName = fieldName;
+    this.model = model;
   }
 
   public String getName() {
@@ -81,6 +87,14 @@ public class ConfigDefinition {
 
   public String getGroup() { return group; }
 
+  public ModelDefinition getModel() {
+    return model;
+  }
+
+  public String getFieldName() {
+    return fieldName;
+  }
+
   private final static String CONFIG_LABEL = "config.{}.label";
   private final static String CONFIG_DESCRIPTION = "config.{}.description";
 
@@ -89,7 +103,8 @@ public class ConfigDefinition {
     String descriptionKey = ApiUtils.format(CONFIG_DESCRIPTION, getName());
     String label = (rb.containsKey(ApiUtils.format(labelKey))) ? rb.getString(labelKey) : getLabel();
     String description = (rb.containsKey(descriptionKey)) ? rb.getString(descriptionKey) : getDescription();
-    return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(), isRequired(), getGroup());
+    return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(),
+      isRequired(), getGroup(), getFieldName(), getModel());
   }
 
 }

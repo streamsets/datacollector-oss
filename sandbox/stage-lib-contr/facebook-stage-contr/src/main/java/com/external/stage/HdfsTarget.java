@@ -31,7 +31,7 @@ public class HdfsTarget implements Target {
     description = "The user name of the hdfs user",
     type = ConfigDef.Type.STRING
   )
-  private final String username;
+  public String username;
 
   @ConfigDef(
     name = "password",
@@ -41,7 +41,10 @@ public class HdfsTarget implements Target {
     description = "The password the hdfs user",
     type = ConfigDef.Type.STRING
   )
-  private final String password;
+  public String password;
+
+  public HdfsTarget() {
+  }
 
   public HdfsTarget(String username, String password) {
     this.username = username;

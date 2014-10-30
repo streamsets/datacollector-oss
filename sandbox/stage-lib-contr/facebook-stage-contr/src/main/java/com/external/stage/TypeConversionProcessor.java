@@ -29,7 +29,7 @@ public class TypeConversionProcessor extends BaseProcessor {
   @FieldModifier(type = FieldModifier.Type.PROVIDED, valuesProvider =TypesProvider.class)
   @ConfigDef(name="fieldToTypeMap", type= ConfigDef.Type.MODEL, defaultValue = "",
     required = true, label = "field_to_type_map", description = "Contains the field and its target type as chosen by the user")
-  private Map<String, String> fieldToTypeMap;
+  public Map<String, String> fieldToTypeMap;
 
   @Override
   public void process(Batch batch, BatchMaker batchMaker) throws StageException {

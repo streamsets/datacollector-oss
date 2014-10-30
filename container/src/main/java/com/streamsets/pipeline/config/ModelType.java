@@ -15,32 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.external.stage;
+package com.streamsets.pipeline.config;
 
-import com.streamsets.pipeline.api.ValuesProvider;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class TypesProvider implements ValuesProvider {
-
-  @Override
-  public List<String> getValues() {
-    List<String> values = new ArrayList<String>();
-    values.add("INT");
-    values.add("STRING");
-    values.add("DATE");
-
-    return values;
-  }
-
-  @Override
-  public List<String> getLabels() {
-    List<String> labels = new ArrayList<String>();
-    labels.add("int_label");
-    labels.add("string_label");
-    labels.add("date_label");
-
-    return labels;
-  }
+public enum ModelType {
+  FIELD_SELECTOR,
+  FIELD_MODIFIER
 }

@@ -38,7 +38,7 @@ public class TwitterStages {
       description = "The user name of the twitter user",
       type = ConfigDef.Type.STRING
     )
-    private final String username;
+    public String username;
 
     @ConfigDef(
       name = "password",
@@ -48,7 +48,10 @@ public class TwitterStages {
       description = "The password the twitter user",
       type = ConfigDef.Type.STRING
     )
-    private final String password;
+    public String password;
+
+    public TwitterTarget() {
+    }
 
     public TwitterTarget(String username, String password) {
       this.username = username;
@@ -91,7 +94,7 @@ public class TwitterStages {
       description = "The user name of the twitter user",
       type = ConfigDef.Type.STRING
     )
-    private final String username;
+    public String username;
 
     @ConfigDef(
       name = "password",
@@ -101,7 +104,10 @@ public class TwitterStages {
       description = "The password the twitter user",
       type = ConfigDef.Type.STRING
     )
-    private final String password;
+    public String password;
+
+    public TwitterSource() {
+    }
 
     public TwitterSource(String username, String password) {
       this.username = username;
@@ -134,7 +140,10 @@ public class TwitterStages {
       description = "The regular expression used to parse the tweet",
       type = ConfigDef.Type.STRING
     )
-    private final String regEx;
+    public String regEx;
+
+    public TwitterProcessor() {
+    }
 
     public TwitterProcessor(String username, String password) {
       this.regEx = username;

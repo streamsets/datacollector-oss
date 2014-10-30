@@ -15,25 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.external.stage;
+package com.streamsets.pipeline.config;
 
-import com.streamsets.pipeline.api.ErrorId;
-import com.streamsets.pipeline.api.StageErrorDef;
+public enum FieldModifierType {
 
-@StageErrorDef
-  public enum LinkedinError implements ErrorId {
-    // We have an trailing whitespace for testing purposes
-    INPUT_LANE_ERROR("There should be 1 input lane but there are '{}' "),
-    OUTPUT_LANE_ERROR("There should be 1 output lane but there are '{}' ");
-
-    private String msg;
-
-    LinkedinError(String msg) {
-      this.msg = msg;
-    }
-
-    @Override
-    public String getMessageTemplate() {
-      return msg;
-    }
-  }
+  SUGGESTED,
+  PROVIDED
+}

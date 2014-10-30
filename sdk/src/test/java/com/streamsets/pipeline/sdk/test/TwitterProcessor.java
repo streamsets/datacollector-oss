@@ -20,6 +20,8 @@ package com.streamsets.pipeline.sdk.test;
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 
+import java.util.Map;
+
 @StageDef(name = "TwitterProcessor", description = "processes twitter feeds", label = "twitter_processor"
 , version = "1.0")
 public class TwitterProcessor extends BaseProcessor{
@@ -34,17 +36,14 @@ public class TwitterProcessor extends BaseProcessor{
     description = "The regular expression used to parse the tweet",
     type = ConfigDef.Type.MODEL
   )
-  private final String regEx;
+  public Map<String, String> regEx;
 
-  public TwitterProcessor(String username, String password) {
-    this.regEx = username;
-
+  public TwitterProcessor() {
   }
 
-  public String getRegEx() {
+  public Map<String, String> getRegEx() {
     return regEx;
   }
-
 
   @Override
   public void process(Batch batch, BatchMaker batchMaker) throws StageException {

@@ -29,7 +29,7 @@ public class MaskingProcessor extends BaseProcessor {
   @FieldSelector
   @ConfigDef(name="filedsToMask", type= ConfigDef.Type.MODEL, defaultValue = "",
     required = true, label = "fields_to_mask", description = "Indicates the fields to be masked")
-  private List<String> fieldsToMask;
+  public List<String> fieldsToMask;
 
   @Override
   public void process(Batch batch, BatchMaker batchMaker) throws StageException {

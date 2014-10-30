@@ -98,7 +98,6 @@ public class PipelineConfigurationValidator {
                 }
                 break;
               case INTEGER:
-              case LONG:
                 if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
                   issues.add(new Issue(stage.getInstanceName(),
                       "validation.stage.configuration.invalidType", "Instance '%s', configuration '%s' should be a '%s'",

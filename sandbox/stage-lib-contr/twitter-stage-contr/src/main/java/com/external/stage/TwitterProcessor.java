@@ -32,7 +32,11 @@ public class TwitterProcessor extends BaseProcessor{
     description = "The regular expression used to parse the tweet",
     type = ConfigDef.Type.STRING
   )
-  private final String regEx;
+  public String regEx;
+
+
+  public TwitterProcessor() {
+  }
 
   public TwitterProcessor(String regEx) {
     this.regEx = regEx;

@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface ConfigDef {
 
-  public enum Type { BOOLEAN, INTEGER, LONG, STRING, MODEL}
+  public enum Type { BOOLEAN, INTEGER, STRING, MODEL}
 
   String name();
 

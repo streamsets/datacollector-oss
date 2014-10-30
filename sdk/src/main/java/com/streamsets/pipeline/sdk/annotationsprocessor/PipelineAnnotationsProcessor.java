@@ -20,20 +20,16 @@ package com.streamsets.pipeline.sdk.annotationsprocessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.config.ConfigDefinition;
-import com.streamsets.pipeline.config.StageDefinition;
-import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.config.*;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
@@ -65,7 +61,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private String stageErrorDefEnumName = null;
   /*literal vs value maps for the stage error def enum*/
   private Map<String, String> stageErrorDefLiteralMap;
-  private Map<StageDefinition, String> stageDefinitionToClassMap;
+
 
   private final ObjectMapper json;
 
@@ -76,7 +72,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     stageErrorDefLiteralMap = new HashMap<String, String>();
     json = new ObjectMapper();
     json.enable(SerializationFeature.INDENT_OUTPUT);
-    stageDefinitionToClassMap = new HashMap<StageDefinition, String>();
   }
 
   @Override
@@ -90,18 +85,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         TypeElement typeElement = (TypeElement) e;
         StageDef stageDefAnnotation = e.getAnnotation(StageDef.class);
 
-        validateStages(typeElement, stageDefAnnotation);
-        if(stageDefValidationError) {
-          continue;
-        }
         stageDefinitions.add(createStageConfig(stageDefAnnotation, typeElement));
       }
     }
 
     //process enums with @StageErrorDef annotation
     if(roundEnv.getElementsAnnotatedWith(StageErrorDef.class).size() > 1) {
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-        "Expected one Stage Error Definition enum but found " +
+      printError("stagedeferror.validation.multiple.enums",
+        "Expected one Stage Error Definition enum but found %s",
         roundEnv.getElementsAnnotatedWith(StageErrorDef.class).size());
     } else {
       for (Element e : roundEnv.getElementsAnnotatedWith(StageErrorDef.class)) {
@@ -159,9 +150,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     if(typeElement.getKind() != ElementKind.ENUM) {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-        "Stage Error Definition " + typeElement.getQualifiedName()
-          + " must be an enum.");
+      printError("stagedeferror.validation.not.an.enum",
+        "Stage Error Definition %s must be an enum", typeElement.getQualifiedName());
       stageDefValidationError = true;
       return;
     }
@@ -170,9 +160,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     if(type.isEmpty() || !type.equals("ERROR")) {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-        "Stage Error Definition " + typeElement.getQualifiedName()
-          + " does not implement interface 'com.streamsets.pipeline.api.ErrorId'.");
+      printError("stagedeferror.validation.enum.does.not.implement.interface",
+        "Stage Error Definition %s does not implement interface 'com.streamsets.pipeline.api.ErrorId'.",
+        typeElement.getQualifiedName());
       stageDefValidationError = true;
       return;
     }
@@ -185,34 +175,15 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //get source location
     for(StageDefinition s : stageDefinitions) {
       try {
-        String stageClass = stageDefinitionToClassMap.get(s);
         FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT,
-          stageClass.substring(0, stageClass.lastIndexOf('.')),
-          stageClass.substring(stageClass.lastIndexOf(".") + 1) + "-bundle.properties", (Element[]) null);
+          s.getClassName().substring(0, s.getClassName().lastIndexOf('.')),
+          s.getClassName().substring(s.getClassName().lastIndexOf(".") + 1) + "-bundle.properties", (Element[]) null);
         PrintWriter pw = new PrintWriter(resource.openWriter());
         pw.println("stage.label=" + s.getLabel());
         pw.println("stage.description=" + s.getDescription());
         for(ConfigDefinition c : s.getConfigDefinitions()) {
           pw.println("config." + c.getName() + ".label=" + c.getLabel());
           pw.println("config." + c.getName() + ".description=" + c.getDescription());
-          if(c.getFieldModifierProvider() != null) {
-            //do some processing before generation i
-            //try {
-              /*((JavacProcessingEnvironment) processingEnv)..loadClass(stageErrorDefEnumName)
-              Class<?> aClass = Class.forName(c.getFieldModifierProvider());
-              List<String> values = ((ValuesProvider)aClass.newInstance()).getValues();*/
-              List<String> values = new ArrayList<String>();
-              for(String v : values) {
-                pw.println("config." + c.getName() + ".values." + v + "=" + v);
-              }/*
-            } catch (ClassNotFoundException e) {
-              e.printStackTrace();
-            } catch (InstantiationException e) {
-              e.printStackTrace();
-            } catch (IllegalAccessException e) {
-              e.printStackTrace();
-            }*/
-          }
         }
         pw.flush();
         pw.close();
@@ -247,15 +218,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         stageErrorDefEnumName.length())
         + "-bundle.properties", (Element[])null);
       PrintWriter pw = new PrintWriter(resource.openWriter());
-      /*try {
-        processingEnv.getElementUtils();
-        Class<?> c = Class.forName(stageErrorDefEnumName);
-        for(Object o : c.getEnumConstants()) {
-          pw.println(o.toString() + "=" + ((ErrorId)o).getMessageTemplate());
-        }
-      } catch (ClassNotFoundException e1) {
-        e1.printStackTrace();
-      }*/
       for(Map.Entry<String, String> e : stageErrorDefLiteralMap.entrySet()) {
         pw.println(e.getKey() + "=" + e.getValue());
       }
@@ -274,9 +236,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    */
   private StageDefinition createStageConfig(StageDef stageDefAnnotation,
                                             TypeElement typeElement) {
-
-    String fieldModifierProvider = null;
-    boolean fieldSelector = false;
     //Process all fields with ConfigDef annotation
     List< ConfigDefinition> configDefinitions = new ArrayList<ConfigDefinition>();
     List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
@@ -285,10 +244,23 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       ConfigDef configDefAnnot = variableElement.getAnnotation(ConfigDef.class);
       if(configDefAnnot != null) {
 
-        FieldModifier f = variableElement.getAnnotation(FieldModifier.class);
-        if(f != null) {
-          TypeMirror tm = getTypeProvider(f);
-          fieldModifierProvider = tm.toString();
+        //validate field with ConfigDef annotation
+        if(!validateConfigDefAnnotation(typeElement, variableElement, configDefAnnot)) {
+          continue;
+        }
+
+        ModelDefinition model = null;
+
+        if(configDefAnnot.type().equals(ConfigDef.Type.MODEL)) {
+          FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
+          if(fieldSelector != null) {
+            model = new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null);
+          }
+          FieldModifier fieldModifier = variableElement.getAnnotation(FieldModifier.class);
+          if (fieldModifier != null) {
+            model = new ModelDefinition(ModelType.FIELD_MODIFIER, getFieldModifierType(fieldModifier.type()),
+              null, null);
+          }
         }
 
         ConfigDefinition configDefinition = new ConfigDefinition(
@@ -299,34 +271,212 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           configDefAnnot.defaultValue(),
           configDefAnnot.required(),
           ""/*group name - need to remove it*/,
-          fieldSelector,
-          fieldModifierProvider );
+          variableElement.getSimpleName().toString(),
+          model);
         configDefinitions.add(configDefinition);
       }
     }
 
-    StageDefinition stageDefinition = new StageDefinition(
-      typeElement.getQualifiedName().toString(),
-      stageDefAnnotation.name(),
-      stageDefAnnotation.version(),
-      stageDefAnnotation.label(),
-      stageDefAnnotation.description(),
-      StageType.valueOf(getTypeFromElement(typeElement)),
-      configDefinitions);
+    StageDefinition stageDefinition = null;
+    if(validateStageDef(typeElement, stageDefAnnotation)) {
+      stageDefinition = new StageDefinition(
+        typeElement.getQualifiedName().toString(),
+        stageDefAnnotation.name(),
+        stageDefAnnotation.version(),
+        stageDefAnnotation.label(),
+        stageDefAnnotation.description(),
+        StageType.valueOf(getTypeFromElement(typeElement)),
+        configDefinitions);
+    } else {
+      stageDefValidationError = true;
+    }
 
-    stageDefinitionToClassMap.put(stageDefinition, typeElement.getQualifiedName().toString());
     return stageDefinition;
   }
 
   /**
-   * Runs validations on
-   *
+   * Validates that the Stage definition is valid.
+   * The following validations are done:
+   * <ul>
+   *   <li>The Stage implementation extends/implements the expected base classes/interfaces</li>
+   *   <li>Stage implementation or its base class must declare a public constructor</li>
+   * </ul>
    * @param typeElement
    * @param stageDefAnnotation
+   * @return
    */
-  private void validateStages(TypeElement typeElement, StageDef stageDefAnnotation) {
-    validateInterface(typeElement);
-    validateAndCacheStageDef(stageDefAnnotation);
+  private boolean validateStageDef(TypeElement typeElement, StageDef stageDefAnnotation) {
+    boolean validInterface = validateInterface(typeElement);
+    boolean validStage = validateAndCacheStageDef(stageDefAnnotation);
+    boolean validConstructor = validateStageForConstructor(typeElement);
+    return validInterface && validStage && validConstructor;
+  }
+
+  /**
+   * A stage implementation should have a default constructor or no constructor.
+   * In case, the stage implementation has no constructor, the same should
+   * also apply to all its parent classes.
+   *
+   * @param typeElement
+   * @return
+   */
+  private boolean validateStageForConstructor(TypeElement typeElement) {
+    //indicates whether validation failed
+    boolean validationError = false;
+    //indicates whether default constructor was found
+    boolean foundDefConstr = false;
+
+    TypeElement te = typeElement;
+
+    while(foundDefConstr == false &&
+      validationError == false && te != null) {
+      List<? extends Element> enclosedElements = te.getEnclosedElements();
+      List<ExecutableElement> executableElements = ElementFilter.constructorsIn(enclosedElements);
+      for(ExecutableElement e : executableElements) {
+        //found one or more constructors, check for default constr
+        if(e.getSimpleName().toString().equals("<init>")
+          && e.getModifiers().contains(Modifier.PUBLIC)) {
+          if(e.getParameters().size() == 0) {
+            //found default constructor
+            foundDefConstr = true;
+            break;
+          }
+        }
+      }
+      //There are constructors but did not find default constructor
+      if(executableElements.size() > 0 && !foundDefConstr) {
+        validationError = true;
+      }
+      //get super class and run the same checks
+      TypeMirror superClass = te.getSuperclass();
+      if(superClass != null) {
+
+        Element e = processingEnv.getTypeUtils().asElement(superClass);
+        if(e != null && e.getKind().equals(ElementKind.CLASS)) {
+          te = (TypeElement)e;
+        } else {
+          te = null;
+        }
+      } else {
+        te = null;
+      }
+    }
+    if(validationError) {
+      printError("stage.validation.no.default.constructor",
+        "The Stage %s has constructor with arguments but no default constructor.",
+        typeElement.getSimpleName());
+    }
+
+    return !validationError;
+  }
+
+  private FieldModifierType getFieldModifierType(FieldModifier.Type type) {
+    if(type.equals(FieldModifier.Type.PROVIDED)) {
+      return FieldModifierType.PROVIDED;
+    } else if (type.equals(FieldModifier.Type.SUGGESTED)) {
+      return FieldModifierType.SUGGESTED;
+    }
+    //default
+    return FieldModifierType.SUGGESTED;
+  }
+
+  /**
+   * Validates the field on which the ConfigDef annotation is specified.
+   * The following validations are done:
+   * <ul>
+   *   <li>The field must be declared as public</li>
+   *   <li>The type of the field must match the type specified in the ConfigDef annotation</li>
+   *   <li>If the type is "MODEL" then exactly one of "FieldSelector" or "FieldModifier" annotation must be present</li>
+   * </ul>
+   *
+   * @param variableElement
+   * @param configDefAnnot
+   */
+  private boolean validateConfigDefAnnotation(Element typeElement, VariableElement variableElement, ConfigDef configDefAnnot) {
+    boolean valid = true;
+    //field must be declared public
+    if(!variableElement.getModifiers().contains(Modifier.PUBLIC)) {
+      printError("field.validation.not.public",
+        "The field %s has \"ConfigDef\" annotation but is not declared public. Configuration fields must be declared public.",
+        typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
+      valid = false;
+    }
+
+    if(variableElement.getModifiers().contains(Modifier.FINAL)) {
+      printError("field.validation.final.field",
+        "The field %s has \"ConfigDef\" annotation and is declared final. Configuration fields must not be declared final.",
+        typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString()
+        );
+      valid = false;
+    }
+
+    if(variableElement.getModifiers().contains(Modifier.STATIC)) {
+      printError("field.validation.static.field",
+        "The field %s has \"ConfigDef\" annotation and is declared static. Configuration fields must not be declared final.",
+        typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
+      valid = false;
+    }
+
+    //type match
+    TypeMirror fieldType = variableElement.asType();
+    if(configDefAnnot.type().equals(ConfigDef.Type.MODEL)) {
+      FieldModifier fieldModifier = variableElement.getAnnotation(FieldModifier.class);
+      FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
+
+      if(fieldModifier == null && fieldSelector == null ) {
+        printError("field.validation.no.model.annotation",
+          "The type of field %s is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' annotation is expected.",
+          typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
+        valid = false;
+      } else if (fieldModifier !=null && fieldSelector != null) {
+        //both cannot be present
+        printError("field.validation.multiple.model.annotations",
+          "The field %s is annotated with both 'FieldSelector' and 'FieldModifier' annotations. Only one of those annotation is expected.",
+          typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
+        valid = false;
+      }
+
+      if(fieldModifier != null) {
+        if(!fieldType.toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
+          printError("field.validation.type.is.not.map",
+            "The type of the field %s is expected to be Map<String, String>.",
+            typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
+          valid = false;
+        }
+      }
+
+      if(fieldSelector != null) {
+        if(!fieldType.toString().equals("java.util.List<java.lang.String>")) {
+          printError("field.validation.type.is.not.list",
+            "The type of the field %s is expected to be List<String>.",
+            typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
+          valid = false;
+        }
+      }
+
+    } else if (configDefAnnot.type().equals(ConfigDef.Type.BOOLEAN)) {
+      if(!fieldType.getKind().equals(TypeKind.BOOLEAN)) {
+        printError("field.validation.type.is.not.boolean",
+          "The type of the field %s is expected to be boolean.",
+          typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
+        valid = false;
+      }
+    } else if (configDefAnnot.type().equals(ConfigDef.Type.INTEGER)) {
+      if(!(fieldType.getKind().equals(TypeKind.INT) || fieldType.getKind().equals(TypeKind.LONG))) {
+        printError("field.validation.type.is.not.int.or.long",
+          "The type of the field %s is expected to be either an int or a long.",
+          typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
+        valid = false;
+      }
+    } else if (configDefAnnot.type().equals(ConfigDef.Type.STRING)) {
+      if(!fieldType.toString().equals("java.lang.String")) {
+        printError("field.validation.type.is.not.string",
+          "The type of the field %s is expected to be String.",
+          typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
+        valid = false;
+      }
+    }
+    return valid;
   }
 
   /**
@@ -337,19 +487,19 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    *
    * @param stageDefAnnotation
    */
-  private void validateAndCacheStageDef(StageDef stageDefAnnotation) {
+  private boolean validateAndCacheStageDef(StageDef stageDefAnnotation) {
 
     if(stageNameToVersionMap.containsKey(stageDefAnnotation.name()) &&
       stageNameToVersionMap.get(stageDefAnnotation.name()).equals(stageDefAnnotation.version())) {
       //found more than one stage with same name and version
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-        "Multiple stage definitions found with the same name and version. Name : " + stageDefAnnotation.name() +
-          ", Version : " + stageDefAnnotation.version());
+      printError("stagedef.validation.duplicate.stages",
+        "Multiple stage definitions found with the same name and version. Name %s, Version %s",
+          stageDefAnnotation.name(), stageDefAnnotation.version());
       //Continue for now to find out if there are more issues.
-      stageDefValidationError = true;
-    } else {
-      stageNameToVersionMap.put(stageDefAnnotation.name(), stageDefAnnotation.version());
+      return false;
     }
+    stageNameToVersionMap.put(stageDefAnnotation.name(), stageDefAnnotation.version());
+    return true;
   }
 
   /**
@@ -358,16 +508,17 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    *
    * @param typeElement
    */
-  private void validateInterface(TypeElement typeElement) {
+  private boolean validateInterface(TypeElement typeElement) {
     if(getTypeFromElement(typeElement).isEmpty()) {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-        "Stage " + typeElement.getSimpleName()
-          + " neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, Processor, Target interface.");
+      printError("stagedef.validation.does.not.implement.interface",
+        "Stage %s neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, Processor, Target interface.",
+        typeElement.getQualifiedName().toString());
       //Continue for now to find out if there are more issues.
-      stageDefValidationError = true;
+      return false;
     }
+    return true;
   }
 
   /**
@@ -379,46 +530,24 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    */
   private String getTypeFromElement(TypeElement typeElement) {
 
-    String result = null;
-
     //Check if the stage extends one of the abstract classes
-    TypeMirror typeMirror = typeElement.getSuperclass();
-    if(typeMirror != null) {
-      if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseSource")) {
-        result = "SOURCE";
+    for(TypeMirror typeMirror : allSuperTypes(typeElement)) {
+      if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseSource")
+        || typeMirror.toString().equals("com.streamsets.pipeline.api.Source")) {
+        return "SOURCE";
       } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseProcessor")
         || typeMirror.toString().equals("com.streamsets.pipeline.api.base.RecordProcessor")
         || typeMirror.toString().equals("com.streamsets.pipeline.api.base.SingleLaneProcessor")
-        || typeMirror.toString().equals("com.streamsets.pipeline.api.base.SingleLaneRecordProcessor")) {
-        result = "PROCESSOR";
-      } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseTarget")) {
-        result = "TARGET";
+        || typeMirror.toString().equals("com.streamsets.pipeline.api.base.SingleLaneRecordProcessor")
+        || typeMirror.toString().equals("com.streamsets.pipeline.api.Processor")) {
+        return "PROCESSOR";
+      } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseTarget")
+        || typeMirror.toString().equals("com.streamsets.pipeline.api.Target")) {
+        return "TARGET";
+      } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.ErrorId")) {
+        return "ERROR";
       }
     }
-
-    if(result != null) {
-      return result;
-    }
-
-    //if not, check if it implements one of the interfaces
-    List<? extends TypeMirror> interfaces = typeElement.getInterfaces();
-
-    if(interfaces.size() != 0) {
-      if (interfaces.get(0).toString().contains("Source")) {
-        result = "SOURCE";
-      } else if (interfaces.get(0).toString().contains("Processor")) {
-        result = "PROCESSOR";
-      } else if (interfaces.get(0).toString().contains("Target")) {
-        result = "TARGET";
-      } else if (interfaces.get(0).toString().contains("ErrorId")) {
-        result = "ERROR";
-      }
-    }
-
-    if(result != null) {
-      return result;
-    }
-
     return "";
   }
 
@@ -433,5 +562,37 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
     return null;
   }
+
+  private List<TypeMirror> allSuperTypes(TypeElement element){
+    List<TypeMirror> allSuperTypes=new ArrayList<TypeMirror>();
+    Queue<TypeMirror> runningList=new LinkedList<TypeMirror>();
+    runningList.add(element.asType());
+    while (runningList.size() != 0) {
+      TypeMirror currentType=runningList.poll();
+      if (currentType.getKind() != TypeKind.NONE) {
+        allSuperTypes.add(currentType);
+        Element currentElement= processingEnv.getTypeUtils().asElement(currentType);
+        if (currentElement.getKind() == ElementKind.CLASS ||
+          currentElement.getKind() == ElementKind.INTERFACE||
+          currentElement.getKind() == ElementKind.ENUM) {
+          TypeElement currentTypeElement=(TypeElement)currentElement;
+          runningList.offer(currentTypeElement.getSuperclass());
+          for(TypeMirror t : currentTypeElement.getInterfaces()) {
+            runningList.offer(t);
+          }
+        }
+      }
+    }
+    allSuperTypes.remove(element.asType());
+    return allSuperTypes;
+  }
+  
+  private void printError(String bundleKey,
+                          String template, Object... args) {
+
+    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+      String.format(template, args));
+  }
+
 
 }

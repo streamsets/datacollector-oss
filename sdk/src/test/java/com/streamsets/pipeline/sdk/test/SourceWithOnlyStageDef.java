@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 , version = "1.0")
 public class SourceWithOnlyStageDef extends BaseSource{
 
-  public SourceWithOnlyStageDef() {
+  public SourceWithOnlyStageDef(String name, String version) {
   }
 
   @Override

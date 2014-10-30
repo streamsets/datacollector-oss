@@ -31,7 +31,7 @@ public class TwitterTarget implements Target {
     description = "The user name of the twitter user",
     type = ConfigDef.Type.STRING
   )
-  private final String username;
+  public String username;
 
   @ConfigDef(
     name = "password",
@@ -41,7 +41,10 @@ public class TwitterTarget implements Target {
     description = "The password the twitter user",
     type = ConfigDef.Type.STRING
   )
-  private final String password;
+  public String password;
+
+  public TwitterTarget() {
+  }
 
   public TwitterTarget(String username, String password) {
     this.username = username;

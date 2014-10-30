@@ -23,4 +23,6 @@ public interface ValuesProvider {
 
   public List<String> getValues();
 
+  public List<String> getLabels();
+
 }
