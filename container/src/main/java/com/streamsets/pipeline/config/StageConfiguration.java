@@ -36,7 +36,7 @@ public class StageConfiguration {
   private final Map<String, Object> uiInfo;
 
   //wiring with other components
-  private final String inputLane;
+  private final List<String> inputLanes;
   private final List<String> outputLanes;
 
   @JsonCreator
@@ -47,7 +47,7 @@ public class StageConfiguration {
       @JsonProperty("stageVersion") String stageVersion,
       @JsonProperty("configuration") List<ConfigConfiguration> configuration,
       @JsonProperty("uiInfo") Map<String, Object> uiInfo,
-      @JsonProperty("inputLane") String inputLane,
+      @JsonProperty("inputLanes") List<String> inputLanes,
       @JsonProperty("outputLanes") List<String> outputLanes) {
     this.instanceName = instanceName;
     this.library = library;
@@ -55,7 +55,7 @@ public class StageConfiguration {
     this.stageVersion = stageVersion;
     this.configuration = configuration;
     this.uiInfo = uiInfo;
-    this.inputLane = inputLane;
+    this.inputLanes = inputLanes;
     this.outputLanes = outputLanes;
     configurationMap = new HashMap<String, ConfigConfiguration>();
     for (ConfigConfiguration conf : configuration) {
@@ -87,8 +87,8 @@ public class StageConfiguration {
     return uiInfo;
   }
 
-  public String getInputLane() {
-    return inputLane;
+  public List<String> getInputLanes() {
+    return inputLanes;
   }
 
   public List<String> getOutputLanes() {

@@ -129,7 +129,7 @@ public class PipelineConfigurationValidator {
     Set<String> input = new HashSet<String>();
     for (StageConfiguration stage : pipelineConfiguration.getStages()) {
       output.addAll(stage.getOutputLanes());
-      input.add(stage.getInputLane());
+      input.addAll(stage.getInputLanes());
     }
     Set<String> open = new HashSet<String>(output);
     open.removeAll(input);
