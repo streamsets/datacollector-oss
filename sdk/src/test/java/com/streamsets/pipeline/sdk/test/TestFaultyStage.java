@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.sdk.test;
 
 import com.streamsets.pipeline.sdk.annotationsprocessor.Constants;
+import com.streamsets.pipeline.sdk.testBase.TestPipelineAnnotationProcessorBase;
 import org.junit.Assert;
 
 import javax.tools.Diagnostic;
@@ -26,7 +27,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class TestFaultyStage extends TestConfigProcessorBase {
+public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
 
   @Override
   public List<String> getClassesToProcess() {

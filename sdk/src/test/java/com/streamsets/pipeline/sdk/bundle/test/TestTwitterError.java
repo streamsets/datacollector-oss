@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.sdk.test;
+package com.streamsets.pipeline.sdk.bundle.test;
 
+import com.streamsets.pipeline.sdk.testBase.TestPipelineAnnotationProcessorBase;
 import org.junit.Assert;
 
 import javax.tools.Diagnostic;
@@ -24,14 +25,10 @@ import javax.tools.JavaFileObject;
 import java.util.Arrays;
 import java.util.List;
 
-public class TestMultipleStages extends TestConfigProcessorBase {
-
+public class TestTwitterError extends TestPipelineAnnotationProcessorBase {
   @Override
   public List<String> getClassesToProcess() {
-    return Arrays.asList("com.streamsets.pipeline.sdk.testData.TwitterSource",
-      "com.streamsets.pipeline.sdk.testData.TwitterProcessor",
-      "com.streamsets.pipeline.sdk.testData.TwitterTarget",
-      "com.streamsets.pipeline.sdk.testData.TwitterError");
+    return Arrays.asList("com.streamsets.pipeline.sdk.testData.TwitterError");
   }
 
   @Override
@@ -47,7 +44,7 @@ public class TestMultipleStages extends TestConfigProcessorBase {
     Assert.assertTrue(diagnostics.isEmpty());
 
     //PipelineStages.json is expected to be generated
-    TestUtil.compareExpectedAndActualStages("MultipleStages.json");
+    //TestUtil.compareExpectedAndActualStages("MultipleStages.json");
 
   }
 }

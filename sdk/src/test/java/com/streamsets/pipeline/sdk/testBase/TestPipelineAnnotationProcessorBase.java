@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.sdk.test;
+package com.streamsets.pipeline.sdk.testBase;
 
 /**
  * Test case for the compile time verifier.
@@ -36,8 +36,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-
-public abstract class TestConfigProcessorBase {
+/**
+ * Base class for all the annotation process test cases.
+ *
+ */
+public abstract class TestPipelineAnnotationProcessorBase {
 
     private static JavaCompiler COMPILER;
     private StandardJavaFileManager fileManager;
@@ -60,13 +63,20 @@ public abstract class TestConfigProcessorBase {
   }
 
   @Test
-  public void testConfigProcessor() throws Exception {
-
-    ByteArrayOutputStream stdoutStream = new ByteArrayOutputStream();
-    OutputStreamWriter stdout = new OutputStreamWriter(stdoutStream);
+  /**
+   * processes the annotations present on classes provided by {@link #getClassesToProcess()}
+   * method.
+   *
+   * Calls the {@link #test(java.util.List, String, Boolean)} method with the data collected by
+   * the compiler
+   */
+  public void testPipelineAnnotationProcessor() throws Exception {
 
     //get the list of classes to process fot this test case
     List<String> classesToProcess = getClassesToProcess();
+
+    ByteArrayOutputStream stdoutStream = new ByteArrayOutputStream();
+    OutputStreamWriter stdout = new OutputStreamWriter(stdoutStream);
 
     JavaCompiler.CompilationTask task = COMPILER.getTask(stdout, fileManager,
       collector, Arrays.asList("-proc:only" /*compiler option to just process annotation*/),
@@ -82,8 +92,20 @@ public abstract class TestConfigProcessorBase {
     test(collector.getDiagnostics(), ouptputString, compilationResult);
   }
 
+  /**
+   * @return the classes which must be "annotation processed" for the
+   * overriding test case.
+   */
   protected abstract List<String> getClassesToProcess();
 
+  /**
+   * Tests the expected and actual findings for the test case
+   *
+   * @param diagnostics the diagnostics coolected by the compiler after compiling the classes supplied by the
+   *                    {@link #getClassesToProcess()} method
+   * @param stdoutS additional output by the compiler
+   * @param result the result of annotatio processing on classes provided by {@link #getClassesToProcess()} method
+   */
   protected abstract void test(List<Diagnostic<? extends JavaFileObject>> diagnostics
     , String stdoutS, Boolean result);
 

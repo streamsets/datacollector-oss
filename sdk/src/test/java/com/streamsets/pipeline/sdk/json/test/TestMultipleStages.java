@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.sdk.test;
+package com.streamsets.pipeline.sdk.json.test;
 
+import com.streamsets.pipeline.sdk.testBase.TestPipelineAnnotationProcessorBase;
 import org.junit.Assert;
 
 import javax.tools.Diagnostic;
@@ -24,12 +25,16 @@ import javax.tools.JavaFileObject;
 import java.util.Arrays;
 import java.util.List;
 
-
-public class TestStageWithOnlyStageDef extends TestConfigProcessorBase {
+public class TestMultipleStages extends TestPipelineAnnotationProcessorBase {
 
   @Override
   public List<String> getClassesToProcess() {
-    return Arrays.asList("com.streamsets.pipeline.sdk.testData.SourceWithOnlyStageDef");
+    return Arrays.asList(
+      "com.streamsets.pipeline.sdk.testData.TwitterSource",
+      "com.streamsets.pipeline.sdk.testData.TwitterProcessor",
+      "com.streamsets.pipeline.sdk.testData.TwitterTarget",
+      "com.streamsets.pipeline.sdk.testData.TwitterError"
+    );
   }
 
   @Override
@@ -37,15 +42,13 @@ public class TestStageWithOnlyStageDef extends TestConfigProcessorBase {
 
     //Compilation is expected to be successful
     Assert.assertTrue(compilationResult);
-
     //No compiler output is expected
     Assert.assertTrue(compilerOutput.isEmpty());
-
     //No diagnostics
     Assert.assertTrue(diagnostics.isEmpty());
-
-    //PipelineStages.json is expected to be generated
-    TestUtil.compareExpectedAndActualStages("SourceWithOnlyStageDef.json");
+    //PipelineStages.json is expected to be generated and must match
+    //the contents of MultipleStages.json
+    TestUtil.compareExpectedAndActualStages("MultipleStages.json");
 
   }
 }
