@@ -69,11 +69,12 @@
             <exclude>.git/**</exclude>
             <exclude>**/META-INF/services/**</exclude>
             <exclude>**/.empty</exclude>
-            <exclude>sdk/javax.annotation.processing.Processor</exclude>
+            <exclude>sdk/src/main/services/**</exclude>
+
+            <exclude>sandbox/**</exclude>
 
             <!--TODO check with Madhu on all this stuff -->
             <exclude>ui/**</exclude>
-            <exclude>sandbox/webapp/**</exclude>
           </excludes>
         </configuration>
       </plugin>
