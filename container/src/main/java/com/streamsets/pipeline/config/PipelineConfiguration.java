@@ -60,7 +60,7 @@ public class PipelineConfiguration {
   }
 
   public void setIssues(Map<String, List<String>> issues) {
-    this.issues = null;
+    this.issues = issues;
   }
 
   public Map<String, List<String>> getIssues() {
