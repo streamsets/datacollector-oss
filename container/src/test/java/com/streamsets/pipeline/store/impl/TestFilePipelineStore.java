@@ -235,7 +235,7 @@ public class TestFilePipelineStore {
     StageConfiguration stage = new StageConfiguration("instance", "library", "name", "version",
                                                       ImmutableList.of(config), uiInfo,
                                                       null, ImmutableList.of("a"));
-    return new PipelineConfiguration(uuid, ImmutableList.of(stage));
+    return new PipelineConfiguration(uuid, ImmutableList.of(stage), PipelineConfiguration.OnError.DROP_BATCH);
   }
 
   @Test

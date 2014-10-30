@@ -125,22 +125,24 @@ public class PipelineConfigurationValidator {
 
   @VisibleForTesting
   void validatePipelineLanes() {
-    Set<String> currentLines = new HashSet<String>();
+    Set<String> output = new HashSet<String>();
+    Set<String> input = new HashSet<String>();
     for (StageConfiguration stage : pipelineConfiguration.getStages()) {
-      if (!currentLines.contains(stage.getInputLane())) {
-        issues.add(new Issue(stage.getInstanceName(),
-                             "validation.instance.undefined.input.lane", "Instance '%s', undefined input lanes '%s'",
-                             stage.getInstanceName(), stage.getInputLane()));
-      }
-      Set<String> consumedLanes = new HashSet<String>();
-      consumedLanes.add(stage.getInputLane());
-      consumedLanes.removeAll(stage.getOutputLanes());
-      currentLines.removeAll(consumedLanes);
-      currentLines.addAll(stage.getOutputLanes());
+      output.addAll(stage.getOutputLanes());
+      input.add(stage.getInputLane());
     }
-    if (!currentLines.isEmpty()) {
-      issues.add(new Issue("pipeline", "validation.pipeline.has.open.lanes", "The pipeline has open lanes '%s'",
-                           currentLines));
+    Set<String> open = new HashSet<String>(output);
+    open.removeAll(input);
+    if (!open.isEmpty()) {
+      for (String lane : open) {
+        for (StageConfiguration stage : pipelineConfiguration.getStages()) {
+          if (stage.getOutputLanes().contains(lane)) {
+            issues.add(new Issue(stage.getInstanceName(),
+                                 "validation.instance.open.output.lane", "Instance '%s' has an open lane '%s'",
+                                 stage.getInstanceName(), lane));
+          }
+        }
+      }
     }
   }
 

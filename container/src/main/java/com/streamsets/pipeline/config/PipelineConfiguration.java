@@ -28,17 +28,23 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PipelineConfiguration {
+
+  public enum OnError { DROP_RECORD, DROP_BATCH, STOP_PIPELINE }
+
   private UUID uuid = null;
   private List<StageConfiguration> stages;
   private Map<String, List<String>> issues;
+  private OnError onError;
 
   @SuppressWarnings("unchecked")
   public PipelineConfiguration(
       @JsonProperty("uuid") UUID uuid,
-      @JsonProperty("stages") List<StageConfiguration> stages) {
+      @JsonProperty("stages") List<StageConfiguration> stages,
+      @JsonProperty("onError") OnError onError) {
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.stages = (stages != null) ? stages : Collections.EMPTY_LIST;
     issues = Collections.EMPTY_MAP;
+    this.onError = Preconditions.checkNotNull(onError, "onError cannot be null");
   }
 
   public List<StageConfiguration> getStages() {
@@ -67,6 +73,10 @@ public class PipelineConfiguration {
 
   public boolean isValid() {
     return issues == null || issues.isEmpty();
+  }
+
+  public OnError getOnError() {
+    return onError;
   }
 
 }

@@ -128,7 +128,7 @@ public class FilePipelineStore implements PipelineStore {
     Date date = new Date();
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
-    PipelineConfiguration pipeline = new PipelineConfiguration(uuid, null);
+    PipelineConfiguration pipeline = new PipelineConfiguration(uuid, null, PipelineConfiguration.OnError.DROP_RECORD);
     try {
       json.writeValue(getInfoFile(name), info);
       json.writeValue(getPipelineFile(name), pipeline);
