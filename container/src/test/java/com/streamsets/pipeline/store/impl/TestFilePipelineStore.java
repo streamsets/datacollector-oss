@@ -25,13 +25,15 @@ import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.container.Configuration;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStore;
-import dagger.Module;
+import com.streamsets.pipeline.store.PipelineStoreException;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.inject.Singleton;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,11 +42,11 @@ import java.util.UUID;
 
 public class TestFilePipelineStore {
 
-  @Module(injects = FilePipelineStore.class)
-  public static class TModule {
+  @dagger.Module(injects = FilePipelineStore.class)
+  public static class Module {
     private boolean createDefaultPipeline;
 
-    public TModule(boolean createDefaultPipeline) {
+    public Module(boolean createDefaultPipeline) {
       this.createDefaultPipeline = createDefaultPipeline;
     }
 
@@ -56,6 +58,7 @@ public class TestFilePipelineStore {
     }
 
     @Provides
+    @Singleton
     public RuntimeInfo provideRuntimeInfo() {
       RuntimeInfo mock = Mockito.mock(RuntimeInfo.class);
       Mockito.when(mock.getDataDir()).thenReturn("target/" + UUID.randomUUID());
@@ -65,9 +68,18 @@ public class TestFilePipelineStore {
 
   @Test
   public void testStoreNoDefaultPipeline() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new TModule(false));
+    ObjectGraph dagger = ObjectGraph.create(new Module(false));
     PipelineStore store = dagger.get(FilePipelineStore.class);
     try {
+      //creating store dir
+      store.init();
+      Assert.assertTrue(store.getPipelines().isEmpty());
+    } finally {
+      store.destroy();
+    }
+    store = dagger.get(FilePipelineStore.class);
+    try {
+      //store dir already exists
       store.init();
       Assert.assertTrue(store.getPipelines().isEmpty());
     } finally {
@@ -77,13 +89,36 @@ public class TestFilePipelineStore {
 
   @Test
   public void testStoreDefaultPipeline() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new TModule(true));
+    ObjectGraph dagger = ObjectGraph.create(new Module(true));
+    PipelineStore store = dagger.get(FilePipelineStore.class);
+    try {
+      //creating store dir and default pipeline
+      store.init();
+      Assert.assertEquals(1, store.getPipelines().size());
+      Assert.assertEquals(1, store.getHistory(FilePipelineStore.DEFAULT_PIPELINE_NAME).size());
+    } finally {
+      store.destroy();
+    }
+    store = dagger.get(FilePipelineStore.class);
+    try {
+      //store dir exists and default pipeline already exists
+      store.init();
+      Assert.assertEquals(1, store.getPipelines().size());
+    } finally {
+      store.destroy();
+    }
+  }
+
+  @Test
+  public void testStoreDefaultPipelineInfo() throws Exception {
+    ObjectGraph dagger = ObjectGraph.create(new Module(true));
     PipelineStore store = dagger.get(FilePipelineStore.class);
     try {
       store.init();
       List<PipelineInfo> infos = store.getPipelines();
       Assert.assertEquals(1, infos.size());
       PipelineInfo info = infos.get(0);
+      Assert.assertNotNull(info.getUuid());
       Assert.assertEquals(FilePipelineStore.DEFAULT_PIPELINE_NAME, info.getName());
       Assert.assertEquals(FilePipelineStore.DEFAULT_PIPELINE_DESCRIPTION, info.getDescription());
       Assert.assertEquals(FilePipelineStore.SYSTEM_USER, info.getCreator());
@@ -91,7 +126,9 @@ public class TestFilePipelineStore {
       Assert.assertNotNull(info.getCreated());
       Assert.assertEquals(info.getLastModified(), info.getCreated());
       Assert.assertEquals(FilePipelineStore.REV, info.getLastRev());
+      Assert.assertFalse(info.isValid());
       PipelineConfiguration pc = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
+      Assert.assertEquals(info.getUuid(), pc.getUuid());
       Assert.assertTrue(pc.getStages().isEmpty());
     } finally {
       store.destroy();
@@ -100,7 +137,7 @@ public class TestFilePipelineStore {
 
   @Test
   public void testCreateDelete() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new TModule(false));
+    ObjectGraph dagger = ObjectGraph.create(new Module(false));
     PipelineStore store = dagger.get(FilePipelineStore.class);
     try {
       store.init();
@@ -110,6 +147,82 @@ public class TestFilePipelineStore {
       Assert.assertEquals("a", store.getInfo("a").getName());
       store.delete("a");
       Assert.assertEquals(0, store.getPipelines().size());
+    } finally {
+      store.destroy();
+    }
+  }
+
+  @Test(expected = PipelineStoreException.class)
+  public void testCreateExistingPipeline() throws Exception {
+    ObjectGraph dagger = ObjectGraph.create(new Module(false));
+    PipelineStore store = dagger.get(FilePipelineStore.class);
+    try {
+      store.init();
+      store.create("a", "A", "foo");
+      store.create("a", "A", "foo");
+    } finally {
+      store.destroy();
+    }
+  }
+
+  @Test(expected = PipelineStoreException.class)
+  public void testDeleteNotExisting() throws Exception {
+    ObjectGraph dagger = ObjectGraph.create(new Module(false));
+    FilePipelineStore store = dagger.get(FilePipelineStore.class);
+    try {
+      store.init();
+      store.delete("a");
+    } finally {
+      store.destroy();
+    }
+  }
+
+  @Test(expected = PipelineStoreException.class)
+  public void testSaveNotExisting() throws Exception {
+    ObjectGraph dagger = ObjectGraph.create(new Module(true));
+    FilePipelineStore store = dagger.get(FilePipelineStore.class);
+    try {
+      store.init();
+      PipelineConfiguration pc = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
+      store.save("a", "foo", null, null, pc);
+    } finally {
+      store.destroy();
+    }
+  }
+
+  @Test(expected = PipelineStoreException.class)
+  public void testSaveWrongUuid() throws Exception {
+    ObjectGraph dagger = ObjectGraph.create(new Module(true));
+    FilePipelineStore store = dagger.get(FilePipelineStore.class);
+    try {
+      store.init();
+      PipelineConfiguration pc = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
+      pc.setUuid(UUID.randomUUID());
+      store.save(FilePipelineStore.DEFAULT_PIPELINE_NAME, "foo", null, null, pc);
+    } finally {
+      store.destroy();
+    }
+  }
+
+  @Test(expected = PipelineStoreException.class)
+  public void testLoadNotExisting() throws Exception {
+    ObjectGraph dagger = ObjectGraph.create(new Module(false));
+    FilePipelineStore store = dagger.get(FilePipelineStore.class);
+    try {
+      store.init();
+      store.load("a", null);
+    } finally {
+      store.destroy();
+    }
+  }
+
+  @Test(expected = PipelineStoreException.class)
+  public void testHistoryNotExisting() throws Exception {
+    ObjectGraph dagger = ObjectGraph.create(new Module(false));
+    FilePipelineStore store = dagger.get(FilePipelineStore.class);
+    try {
+      store.init();
+      store.getHistory("a");
     } finally {
       store.destroy();
     }
@@ -127,7 +240,7 @@ public class TestFilePipelineStore {
 
   @Test
   public void testSave() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new TModule(true));
+    ObjectGraph dagger = ObjectGraph.create(new Module(true));
     PipelineStore store = dagger.get(FilePipelineStore.class);
     try {
       store.init();
@@ -150,7 +263,7 @@ public class TestFilePipelineStore {
 
   @Test
   public void testSaveAndLoad() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new TModule(true));
+    ObjectGraph dagger = ObjectGraph.create(new Module(true));
     PipelineStore store = dagger.get(FilePipelineStore.class);
     try {
       store.init();
@@ -163,8 +276,12 @@ public class TestFilePipelineStore {
       Assert.assertNotEquals(uuid, newUuid);
       PipelineConfiguration pc2 = store.load(FilePipelineStore.DEFAULT_PIPELINE_NAME, FilePipelineStore.REV);
       Assert.assertFalse(pc2.getStages().isEmpty());
+      Assert.assertEquals(pc.getUuid(), pc2.getUuid());
+      PipelineInfo info = store.getInfo(FilePipelineStore.DEFAULT_PIPELINE_NAME);
+      Assert.assertEquals(pc.getUuid(), info.getUuid());
     } finally {
       store.destroy();
     }
   }
+
 }

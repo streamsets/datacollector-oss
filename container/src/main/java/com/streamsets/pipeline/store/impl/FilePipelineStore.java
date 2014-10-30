@@ -71,6 +71,11 @@ public class FilePipelineStore implements PipelineStore {
     json.enable(SerializationFeature.INDENT_OUTPUT);
   }
 
+  @VisibleForTesting
+  File getStoreDir() {
+    return storeDir;
+  }
+
   @Override
   public void init()  {
     storeDir = new File(runtimeInfo.getDataDir(), "pipelines");
@@ -80,15 +85,11 @@ public class FilePipelineStore implements PipelineStore {
       }
     }
     if (conf.get(CREATE_DEFAULT_PIPELINE_KEY, CREATE_DEFAULT_PIPELINE_DEFAULT)) {
-      boolean create = !(doesPipelineExist(DEFAULT_PIPELINE_NAME) && isPipelineOK(DEFAULT_PIPELINE_NAME));
-      if (create) {
-        if (!doesPipelineExist(DEFAULT_PIPELINE_NAME)) {
-          try {
-            cleanUp(DEFAULT_PIPELINE_NAME);
-            create(DEFAULT_PIPELINE_NAME, DEFAULT_PIPELINE_DESCRIPTION, SYSTEM_USER);
-          } catch (PipelineStoreException ex) {
-            throw new RuntimeException(ex);
-          }
+      if (!doesPipelineExist(DEFAULT_PIPELINE_NAME)) {
+        try {
+          create(DEFAULT_PIPELINE_NAME, DEFAULT_PIPELINE_DESCRIPTION, SYSTEM_USER);
+        } catch (PipelineStoreException ex) {
+          throw new RuntimeException(ex);
         }
       }
     }
@@ -102,7 +103,8 @@ public class FilePipelineStore implements PipelineStore {
     return new File(storeDir, name);
   }
 
-  private File getInfoFile(String name) {
+  @VisibleForTesting
+  File getInfoFile(String name) {
     return new File(getPipelineDir(name), INFO_FILE);
   }
 
@@ -112,10 +114,6 @@ public class FilePipelineStore implements PipelineStore {
 
   private boolean doesPipelineExist(String name) {
     return getPipelineDir(name).exists();
-  }
-
-  private boolean isPipelineOK(String name) {
-    return getInfoFile(name).exists() && getPipelineFile(name).exists();
   }
 
   @Override
