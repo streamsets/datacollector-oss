@@ -15,12 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api.base;
+package com.external.stage;
 
+import com.streamsets.pipeline.api.ValuesProvider;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public interface ValuesProvider {
+public class TypesProvider implements ValuesProvider {
 
-  public List<String> getValues();
+  @Override
+  public List<String> getValues() {
+    List<String> values = new ArrayList<String>();
+    values.add("INT");
+    values.add("STRING");
+    values.add("DATE");
 
+    return values;
+  }
 }

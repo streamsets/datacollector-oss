@@ -34,7 +34,7 @@ public @interface ConfigDef {
 
   Type type();
 
-  String defaultValue();
+  String defaultValue() default "";
 
   boolean required();
 

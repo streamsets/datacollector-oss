@@ -17,37 +17,20 @@
  */
 package com.streamsets.pipeline.sdk.test;
 
-import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.base.BaseProcessor;
+import com.streamsets.pipeline.api.ValuesProvider;
 
-@StageDef(name = "TwitterProcessor", description = "processes twitter feeds", label = "twitter_processor"
-, version = "1.0")
-public class TwitterProcessor extends BaseProcessor{
+import java.util.ArrayList;
+import java.util.List;
 
-  @FieldModifier(type = FieldModifier.Type.PROVIDED,
-    valuesProvider = TypesProvider.class)
-  @ConfigDef(
-    name = "regEx",
-    defaultValue = "[a-z][A-Z][0-9]",
-    label = "regEx",
-    required = true,
-    description = "The regular expression used to parse the tweet",
-    type = ConfigDef.Type.MODEL
-  )
-  private final String regEx;
-
-  public TwitterProcessor(String username, String password) {
-    this.regEx = username;
-
-  }
-
-  public String getRegEx() {
-    return regEx;
-  }
-
+public class TypesProvider implements ValuesProvider {
 
   @Override
-  public void process(Batch batch, BatchMaker batchMaker) throws StageException {
+  public List<String> getValues() {
+    List<String> values = new ArrayList<String>();
+    values.add("INT");
+    values.add("STRING");
+    values.add("DATE");
 
+    return values;
   }
 }

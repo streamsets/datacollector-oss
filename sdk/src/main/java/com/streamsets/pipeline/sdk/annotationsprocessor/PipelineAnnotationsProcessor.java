@@ -19,9 +19,7 @@ package com.streamsets.pipeline.sdk.annotationsprocessor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.StageErrorDef;
+import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
@@ -35,6 +33,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
@@ -120,7 +119,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
     }
 
-    if(!generated) {
+    //generate stuff only in the last round
+    if(roundEnv.processingOver()) {
       //generate a json file for the StageCollection object
       if(!stageDefValidationError) {
         generateConfigFile();
@@ -133,7 +133,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
     }
 
-    return (true);
+    return true;
   }
 
   private void createStageErrorDef(TypeElement typeElement) {
@@ -195,6 +195,24 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         for(ConfigDefinition c : s.getConfigDefinitions()) {
           pw.println("config." + c.getName() + ".label=" + c.getLabel());
           pw.println("config." + c.getName() + ".description=" + c.getDescription());
+          if(c.getFieldModifierProvider() != null) {
+            //do some processing before generation i
+            //try {
+              /*((JavacProcessingEnvironment) processingEnv)..loadClass(stageErrorDefEnumName)
+              Class<?> aClass = Class.forName(c.getFieldModifierProvider());
+              List<String> values = ((ValuesProvider)aClass.newInstance()).getValues();*/
+              List<String> values = new ArrayList<String>();
+              for(String v : values) {
+                pw.println("config." + c.getName() + ".values." + v + "=" + v);
+              }/*
+            } catch (ClassNotFoundException e) {
+              e.printStackTrace();
+            } catch (InstantiationException e) {
+              e.printStackTrace();
+            } catch (IllegalAccessException e) {
+              e.printStackTrace();
+            }*/
+          }
         }
         pw.flush();
         pw.close();
@@ -229,6 +247,15 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         stageErrorDefEnumName.length())
         + "-bundle.properties", (Element[])null);
       PrintWriter pw = new PrintWriter(resource.openWriter());
+      /*try {
+        processingEnv.getElementUtils();
+        Class<?> c = Class.forName(stageErrorDefEnumName);
+        for(Object o : c.getEnumConstants()) {
+          pw.println(o.toString() + "=" + ((ErrorId)o).getMessageTemplate());
+        }
+      } catch (ClassNotFoundException e1) {
+        e1.printStackTrace();
+      }*/
       for(Map.Entry<String, String> e : stageErrorDefLiteralMap.entrySet()) {
         pw.println(e.getKey() + "=" + e.getValue());
       }
@@ -248,6 +275,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private StageDefinition createStageConfig(StageDef stageDefAnnotation,
                                             TypeElement typeElement) {
 
+    String fieldModifierProvider = null;
+    boolean fieldSelector = false;
     //Process all fields with ConfigDef annotation
     List< ConfigDefinition> configDefinitions = new ArrayList<ConfigDefinition>();
     List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
@@ -256,6 +285,12 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       ConfigDef configDefAnnot = variableElement.getAnnotation(ConfigDef.class);
       if(configDefAnnot != null) {
 
+        FieldModifier f = variableElement.getAnnotation(FieldModifier.class);
+        if(f != null) {
+          TypeMirror tm = getTypeProvider(f);
+          fieldModifierProvider = tm.toString();
+        }
+
         ConfigDefinition configDefinition = new ConfigDefinition(
           configDefAnnot.name(),
           configDefAnnot.type(),
@@ -263,7 +298,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           configDefAnnot.description(),
           configDefAnnot.defaultValue(),
           configDefAnnot.required(),
-          ""/*group name - need to remove it*/);
+          ""/*group name - need to remove it*/,
+          fieldSelector,
+          fieldModifierProvider );
         configDefinitions.add(configDefinition);
       }
     }
@@ -383,6 +420,18 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
 
     return "";
+  }
+
+  private static TypeMirror getTypeProvider(FieldModifier fieldModifier) {
+    try
+    {
+      fieldModifier.valuesProvider(); // this should throw
+    }
+    catch( MirroredTypeException mte )
+    {
+      return mte.getTypeMirror();
+    }
+    return null;
   }
 
 }

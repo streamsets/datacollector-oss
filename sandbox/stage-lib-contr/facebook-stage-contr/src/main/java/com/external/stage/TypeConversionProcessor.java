@@ -15,15 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api.base;
+package com.external.stage;
 
-public @interface FieldModifierModel {
-  public enum Type {
-    PROVIDED, SUGGESTED
+import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.base.BaseProcessor;
+
+import java.util.Map;
+
+@StageDef(name="TypeConversionProcessor", version="1.0", label="tc_processor"
+  , description = "This processor lets the user select the types for the fields")
+public class TypeConversionProcessor extends BaseProcessor {
+
+  @FieldModifier(type = FieldModifier.Type.PROVIDED, valuesProvider =TypesProvider.class)
+  @ConfigDef(name="fieldToTypeMap", type= ConfigDef.Type.MODEL, defaultValue = "",
+    required = true, label = "field_to_type_map", description = "Contains the field and its target type as chosen by the user")
+  private Map<String, String> fieldToTypeMap;
+
+  @Override
+  public void process(Batch batch, BatchMaker batchMaker) throws StageException {
+
   }
-
-  Type type();
-
-  Class valuesProvider();
-
 }

@@ -15,26 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.basics;
+package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.ConfigDef.Type;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import java.lang.annotation.*;
 
-import java.util.List;
-
-@StageDef(name = "fieldRemover", version="1.0.0", label="Field Remover")
-public class FieldRemoverProcessor extends SingleLaneRecordProcessor {
-
-  @ConfigDef(name = "fieldsToRemove", label = "Fields to remove", required = true,type = Type.MODEL, defaultValue="")
-  @FieldSelector
-  List<String> fields;
-
-  // the annotations processor will fail if variable is not List
-
-  @Override
-  protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-
+@Retention(RetentionPolicy.RUNTIME)
+@java.lang.annotation.Target(ElementType.FIELD)
+public @interface FieldModifier {
+  public enum Type {
+    PROVIDED, SUGGESTED
   }
+
+  Type type();
+
+  Class valuesProvider();
+
 }

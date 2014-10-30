@@ -15,26 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.basics;
+package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.ConfigDef.Type;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-@StageDef(name = "fieldRemover", version="1.0.0", label="Field Remover")
-public class FieldRemoverProcessor extends SingleLaneRecordProcessor {
-
-  @ConfigDef(name = "fieldsToRemove", label = "Fields to remove", required = true,type = Type.MODEL, defaultValue="")
-  @FieldSelector
-  List<String> fields;
-
-  // the annotations processor will fail if variable is not List
-
-  @Override
-  protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-
-  }
+@Retention(RetentionPolicy.RUNTIME)
+@java.lang.annotation.Target(ElementType.FIELD)
+/**
+ * Marker annotation to be applied on a field which shall hold the names of
+ * all the selected fields.
+ *
+ * The type of the field on which this annotation is applied should be "List<String>"
+ */
+public @interface FieldSelector {
 }

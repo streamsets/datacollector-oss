@@ -34,8 +34,8 @@ public class TwitterProcessor extends BaseProcessor{
   )
   private final String regEx;
 
-  public TwitterProcessor(String username, String password) {
-    this.regEx = username;
+  public TwitterProcessor(String regEx) {
+    this.regEx = regEx;
 
   }
 

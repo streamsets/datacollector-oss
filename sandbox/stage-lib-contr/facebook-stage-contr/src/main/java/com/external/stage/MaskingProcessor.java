@@ -15,36 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.sdk.test;
+package com.external.stage;
 
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 
-@StageDef(name = "TwitterProcessor", description = "processes twitter feeds", label = "twitter_processor"
-, version = "1.0")
-public class TwitterProcessor extends BaseProcessor{
+import java.util.List;
 
-  @FieldModifier(type = FieldModifier.Type.PROVIDED,
-    valuesProvider = TypesProvider.class)
-  @ConfigDef(
-    name = "regEx",
-    defaultValue = "[a-z][A-Z][0-9]",
-    label = "regEx",
-    required = true,
-    description = "The regular expression used to parse the tweet",
-    type = ConfigDef.Type.MODEL
-  )
-  private final String regEx;
+@StageDef(name="MaskingProcessor", version="1.0", label="masking_processor"
+, description = "This processor masks the fields selected by the user")
+public class MaskingProcessor extends BaseProcessor {
 
-  public TwitterProcessor(String username, String password) {
-    this.regEx = username;
-
-  }
-
-  public String getRegEx() {
-    return regEx;
-  }
-
+  @FieldSelector
+  @ConfigDef(name="filedsToMask", type= ConfigDef.Type.MODEL, defaultValue = "",
+    required = true, label = "fields_to_mask", description = "Indicates the fields to be masked")
+  private List<String> fieldsToMask;
 
   @Override
   public void process(Batch batch, BatchMaker batchMaker) throws StageException {
