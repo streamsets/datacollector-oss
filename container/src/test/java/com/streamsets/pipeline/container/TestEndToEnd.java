@@ -70,7 +70,7 @@ public class TestEndToEnd {
 
     @Override
     public void process(Batch batch, BatchMaker batchMaker) {
-      Iterator<Record> it = batch.getRecords("lane");
+      Iterator<Record> it = batch.getRecords();
       while (it.hasNext()) {
         Record record = it.next();
         record.setField("idx", Field.create(100 + counter++));
@@ -95,7 +95,7 @@ public class TestEndToEnd {
     @Override
     public void write(Batch batch) {
       System.out.println("Target processing batch: " + batch.getSourceOffset());
-      Iterator<Record> it = batch.getRecords("lane");
+      Iterator<Record> it = batch.getRecords();
       while (it.hasNext()) {
         Record record = it.next();
         System.out.println(" Record: " + record);

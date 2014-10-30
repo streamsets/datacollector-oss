@@ -94,7 +94,7 @@ public class TestPipelineException {
     Assert.assertNotNull("hello 'foo'", ex.getMessage(Locale.getDefault()));
 
     // testing pipeline-api bundle
-    ex = new PipelineException(PIPELINE_BUNDLE_NAME, SingleLaneProcessor.Error.INPUT_LANE_ERROR, 2);
+    ex = new PipelineException(PIPELINE_BUNDLE_NAME, SingleLaneProcessor.Error.OUTPUT_LANE_ERROR, 2);
     Assert.assertFalse(ex.getMessage(Locale.getDefault()).endsWith(" "));
   }
 
@@ -107,7 +107,7 @@ public class TestPipelineException {
     Assert.assertNotNull("hello 'foo'", ex.getMessage(Locale.getDefault()));
 
     // testing pipeline-api bundle
-    ex = new PipelineException("missing-bundle", SingleLaneProcessor.Error.INPUT_LANE_ERROR, 2);
+    ex = new PipelineException("missing-bundle", SingleLaneProcessor.Error.OUTPUT_LANE_ERROR, 2);
     Assert.assertTrue(ex.getMessage(Locale.getDefault()).endsWith(" "));
   }
 
@@ -123,7 +123,7 @@ public class TestPipelineException {
       Assert.assertNotNull("HELLO 'foo'", ex.getMessage(Locale.getDefault()));
 
       // testing pipeline-api bundle
-      ex = new PipelineException(PIPELINE_BUNDLE_NAME, SingleLaneProcessor.Error.INPUT_LANE_ERROR, 2);
+      ex = new PipelineException(PIPELINE_BUNDLE_NAME, SingleLaneProcessor.Error.OUTPUT_LANE_ERROR, 2);
       Assert.assertFalse(ex.getMessage(Locale.getDefault()).endsWith(" "));
 
     } finally {

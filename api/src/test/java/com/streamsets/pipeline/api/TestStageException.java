@@ -85,7 +85,7 @@ public class TestStageException {
     ex.printStackTrace(Mockito.mock(PrintStream.class));
     ex.printStackTrace(Mockito.mock(PrintWriter.class));
     ex.setStackTrace(new StackTraceElement[0]);
-    ex.toString();
+    Assert.assertNotNull(ex.toString());
   }
 
 
@@ -104,7 +104,7 @@ public class TestStageException {
       Assert.assertNotNull("HELLO 'foo'", ex.getMessage(Locale.getDefault()));
 
       // testing pipeline-api bundle
-      ex = new StageException(SingleLaneProcessor.Error.INPUT_LANE_ERROR, 2);
+      ex = new StageException(SingleLaneProcessor.Error.OUTPUT_LANE_ERROR, 2);
       Assert.assertFalse(ex.getMessage(Locale.getDefault()).endsWith(" "));
 
     } finally {

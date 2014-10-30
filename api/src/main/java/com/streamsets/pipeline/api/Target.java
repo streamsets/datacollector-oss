@@ -17,13 +17,9 @@
  */
 package com.streamsets.pipeline.api;
 
-import java.util.Set;
-
 public interface Target extends Stage<Target.Context> {
 
   public interface Context extends Stage.Context {
-
-    public Set<String> getInputLanes();
 
   }
 

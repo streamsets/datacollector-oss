@@ -38,8 +38,7 @@ public class TestSingleLaneRecordProcessor {
     Record record1 = Mockito.mock(Record.class);
     Record record2 = Mockito.mock(Record.class);
     Batch batch = Mockito.mock(Batch.class);
-    Mockito.when(batch.getLanes()).thenReturn(ImmutableSet.of("l1"));
-    Mockito.when(batch.getRecords(Mockito.eq("l1"))).thenReturn(ImmutableSet.of(record1, record2).iterator());
+    Mockito.when(batch.getRecords()).thenReturn(ImmutableSet.of(record1, record2).iterator());
     final BatchMaker batchMaker = Mockito.mock(BatchMaker.class);
 
     final List<Record> got = new ArrayList<Record>();
@@ -53,7 +52,6 @@ public class TestSingleLaneRecordProcessor {
 
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
-    Mockito.when(context.getInputLanes()).thenReturn(ImmutableSet.of("l1"));
     Mockito.when(context.getOutputLanes()).thenReturn(ImmutableSet.of("l2"));
     processor.init(info, context);
 

@@ -219,12 +219,10 @@ public class Pipeline {
     Preconditions.checkState(!destroyed, "pipeline has been destroyed");
     Preconditions.checkNotNull(batch, "batch cannot be null");
     for (Pipe pipe : pipes) {
-      batch.createLines(pipe.getOutputLanes());
       pipe.processBatch(batch);
-      batch.deleteLines(pipe.getConsumedLanes());
       batch.pipeCheckPoint(pipe);
     }
-    Preconditions.checkState(batch.isEmpty(), String.format("Batch should be empty, it has: %s", batch.getLanes()));
+    Preconditions.checkState(batch.isEmpty(), String.format("Batch should be empty, it has: %s", batch.getRecords().size()));
   }
 
   public Pipe[] getPipes() {

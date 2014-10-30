@@ -68,9 +68,6 @@ public class PipelineBatchRunOutput extends PipelineBatch implements RunOutput {
   }
 
   public void pipeCheckPoint(Pipe pipe) {
-    if (!(pipe instanceof ObserverPipe)) {
-      output.add(new ModuleOutputImpl(pipe.getModuleInfo(), clone(getRecords())));
-    }
   }
 
   @Override

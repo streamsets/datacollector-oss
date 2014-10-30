@@ -29,9 +29,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TestRecordProcessor {
 
@@ -40,32 +38,23 @@ public class TestRecordProcessor {
     Record record1 = Mockito.mock(Record.class);
     Record record2 = Mockito.mock(Record.class);
     Batch batch = Mockito.mock(Batch.class);
-    Mockito.when(batch.getLanes()).thenReturn(ImmutableSet.of("l1", "l2"));
-    Mockito.when(batch.getRecords(Mockito.eq("l1"))).thenReturn(ImmutableSet.of(record1).iterator());
-    Mockito.when(batch.getRecords(Mockito.eq("l2"))).thenReturn(ImmutableSet.of(record2).iterator());
+    Mockito.when(batch.getRecords()).thenReturn(ImmutableSet.of(record1, record2).iterator());
     final BatchMaker batchMaker = Mockito.mock(BatchMaker.class);
 
-    final Map<String, List<Record>> got = new LinkedHashMap<String, List<Record>>();
-
-    final int[] invocations = new int[1];
+    final List<Record> got = new ArrayList<Record>();
 
     Processor processor = new RecordProcessor() {
       @Override
-      protected void process(String lane, Record record, BatchMaker bm) throws StageException {
-        invocations[0]++;
+      protected void process(Record record, BatchMaker bm) throws StageException {
         Assert.assertEquals(batchMaker, bm);
-        if (!got.containsKey(lane)) {
-          got.put(lane, new ArrayList<Record>());
-        }
-        List<Record> list = got.get(lane);
-        list.add(record);
+        got.add(record);
       }
     };
     processor.process(batch, batchMaker);
 
-    Assert.assertEquals(2, invocations[0]);
-    Assert.assertEquals(ImmutableList.of(record1), got.get("l1"));
-    Assert.assertEquals(ImmutableList.of(record2), got.get("l2"));
+    Assert.assertEquals(2, got.size());
+    Assert.assertEquals(record1, got.get(0));
+    Assert.assertEquals(record2, got.get(1));
   }
 
 }

@@ -24,8 +24,6 @@ public interface Batch {
 
   public String getSourceOffset();
 
-  public Set<String> getLanes();
-
-  public Iterator<Record> getRecords(String... lanes);
+  public Iterator<Record> getRecords();
 
 }

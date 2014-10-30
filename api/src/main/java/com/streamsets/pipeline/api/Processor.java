@@ -23,8 +23,6 @@ public interface Processor extends Stage<Processor.Context> {
 
   public interface Context extends Stage.Context {
 
-    public Set<String> getInputLanes();
-
     public Set<String> getOutputLanes();
 
     public Record createRecord(String sourceInfo);

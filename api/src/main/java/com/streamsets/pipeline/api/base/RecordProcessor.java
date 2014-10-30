@@ -28,15 +28,12 @@ public abstract class RecordProcessor extends BaseProcessor {
 
   @Override
   public final void process(Batch batch, BatchMaker batchMaker) throws StageException {
-    for (String lane : batch.getLanes()) {
-      Iterator<Record> it = batch.getRecords(lane);
-      while (it.hasNext()) {
-        Record record = it.next();
-        process(lane, record, batchMaker);
-      }
+    Iterator<Record> it = batch.getRecords();
+    while (it.hasNext()) {
+      process(it.next(), batchMaker);
     }
   }
 
-  protected abstract void process(String lane, Record record, BatchMaker batchMaker) throws StageException;
+  protected abstract void process(Record record, BatchMaker batchMaker) throws StageException;
 
 }

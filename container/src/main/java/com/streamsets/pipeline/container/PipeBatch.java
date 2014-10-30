@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.record.RecordImpl;
+import jersey.repackaged.com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +36,7 @@ public class PipeBatch implements BatchMaker, Batch {
   private Pipe pipe;
   private PipelineBatch pipelineBatch;
   private boolean observer;
-  private Map<String, List<Record>> pipeInput;
+  private List<Record> pipeInput;
   private Map<String, List<Record>> pipeOutput;
 
   public PipeBatch(Pipe pipe, PipelineBatch pipelineBatch) {
@@ -77,16 +78,13 @@ public class PipeBatch implements BatchMaker, Batch {
 
   public void extractFromPipelineBatch() {
     if (!observer) {
-      pipeInput = pipelineBatch.drainLanes(pipe.getInputLanes());
+      pipeInput = pipelineBatch.drain();
     } else {
-      pipeInput = pipelineBatch.getLanes(pipe.getInputLanes());
+      pipeInput = pipelineBatch.getRecords();
     }
   }
 
   public void flushBackToPipelineBatch() {
-    if (!observer) {
-      pipelineBatch.populateLanes(pipeOutput);
-    }
   }
 
   // BatchMaker
@@ -122,18 +120,8 @@ public class PipeBatch implements BatchMaker, Batch {
   }
 
   @Override
-  public Iterator<Record> getRecords(String... lanes) {
-    List<Record> list = new ArrayList<Record>(512);
-    if (lanes.length == 0) {
-      for (List<Record> lane : pipeInput.values()) {
-        list.addAll(lane);
-      }
-      pipeInput.clear();
-    } else {
-      for (String lane : lanes) {
-        list.addAll(pipeInput.remove(lane));
-      }
-    }
+  public Iterator<Record> getRecords() {
+    List<Record> list = new ArrayList<Record>(pipeInput);
     snapshotRecords(list);
     list = Collections.unmodifiableList(list);
     return list.iterator();

@@ -21,21 +21,23 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseProcessor;
+import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 import java.util.Iterator;
 
 @StageDef(name = "identityProcessor", version = "1.0.0", label = "Identity",
           description = "It echoes every record it receives preserving the lanes")
-public class IdentityProcessor extends BaseProcessor {
+public class IdentityProcessor extends SingleLaneProcessor {
 
   @Override
-  public void process(Batch batch, BatchMaker batchMaker) {
-    for (String lane : batch.getLanes()) {
-      Iterator<Record> it = batch.getRecords(lane);
-      while (it.hasNext()) {
-        batchMaker.addRecord(it.next(), lane);
-      }
+  public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws
+      StageException {
+    Iterator<Record> it = batch.getRecords();
+    while (it.hasNext()) {
+      batchMaker.addRecord(it.next());
     }
   }
 
