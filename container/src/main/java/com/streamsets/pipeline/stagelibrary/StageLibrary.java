@@ -20,10 +20,13 @@ package com.streamsets.pipeline.stagelibrary;
 import com.streamsets.pipeline.config.StageDefinition;
 
 import java.util.List;
+import java.util.Locale;
 
 public interface StageLibrary {
 
   public List<StageDefinition> getStages();
+
+  public List<StageDefinition> getStages(Locale locale);
 
   public StageDefinition getStage(String library, String name, String version);
 

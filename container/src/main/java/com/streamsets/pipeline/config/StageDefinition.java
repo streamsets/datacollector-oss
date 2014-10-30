@@ -20,16 +20,25 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.container.ApiUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * Captures the configuration options for a {@link com.streamsets.pipeline.api.Stage}.
  *
  */
 public class StageDefinition {
+  private static final Logger LOG = LoggerFactory.getLogger(StageDefinition.class);
+
   private String library;
   private ClassLoader classLoader;
   private Class klass;
@@ -120,4 +129,36 @@ public class StageDefinition {
   public ConfigDefinition getConfigDefinition(String configName) {
     return configDefinitionsMap.get(configName);
   }
+
+  public String toString() {
+    return ApiUtils.format("{}:{}:{}", getLibrary(), getName(), getVersion());
+  }
+
+  public StageDefinition localize(Locale locale) {
+    String rbName = getClassName() + "-bundle";
+    try {
+      ResourceBundle rb = ResourceBundle.getBundle(rbName, locale, getClassLoader());
+      return localize(rb);
+    } catch (MissingResourceException ex) {
+      LOG.warn("Could not find resource bundle '{}' in library '{}'", rbName, getLibrary());
+      return this;
+    }
+  }
+
+  private final static String STAGE_LABEL = "stage.label";
+  private final static String STAGE_DESCRIPTION = "stage.description";
+
+  public StageDefinition localize(ResourceBundle rb) {
+    List<ConfigDefinition> configDefs = new ArrayList<ConfigDefinition>();
+    for (ConfigDefinition configDef : getConfigDefinitions()) {
+      configDefs.add(configDef.localize(rb));
+    }
+    String label = (rb.containsKey(STAGE_LABEL)) ? rb.getString(STAGE_LABEL) : getLabel();
+    String description = (rb.containsKey(STAGE_DESCRIPTION)) ? rb.getString(STAGE_DESCRIPTION) : getDescription();
+    StageDefinition def = new StageDefinition(getClassName(), getName(), getVersion(), label, description,
+                                              getType(), configDefs);
+    def.setLibrary(getLibrary(), getClassLoader());
+    return def;
+  }
+
 }

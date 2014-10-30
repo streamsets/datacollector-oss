@@ -188,7 +188,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         String stageClass = stageDefinitionToClassMap.get(s);
         FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT,
           stageClass.substring(0, stageClass.lastIndexOf('.')),
-          s.getName() + "-bundle.properties", (Element[]) null);
+          stageClass.substring(stageClass.lastIndexOf(".") + 1) + "-bundle.properties", (Element[]) null);
         PrintWriter pw = new PrintWriter(resource.openWriter());
         pw.println("stage.label=" + s.getLabel());
         pw.println("stage.description=" + s.getDescription());

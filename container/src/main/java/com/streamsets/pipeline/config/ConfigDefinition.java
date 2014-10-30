@@ -20,6 +20,9 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.container.ApiUtils;
+
+import java.util.ResourceBundle;
 
 /**
  * Captures attributes related to individual configuration options
@@ -77,5 +80,16 @@ public class ConfigDefinition {
   }
 
   public String getGroup() { return group; }
+
+  private final static String CONFIG_LABEL = "config.{}.label";
+  private final static String CONFIG_DESCRIPTION = "config.{}.description";
+
+  public ConfigDefinition localize(ResourceBundle rb) {
+    String labelKey = ApiUtils.format(CONFIG_LABEL, getName());
+    String descriptionKey = ApiUtils.format(CONFIG_DESCRIPTION, getName());
+    String label = (rb.containsKey(ApiUtils.format(labelKey))) ? rb.getString(labelKey) : getLabel();
+    String description = (rb.containsKey(descriptionKey)) ? rb.getString(descriptionKey) : getDescription();
+    return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(), isRequired(), getGroup());
+  }
 
 }

@@ -15,33 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.restapi;
+package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import org.glassfish.hk2.api.Factory;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
-@Path("/v1/stage-library")
-public class StageLibraryResource {
-  private final StageLibrary stageLibrary;
-  private final Locale locale;
+public class LocaleInjector implements Factory<Locale> {
+  private Locale Locale;
 
   @Inject
-  public StageLibraryResource(StageLibrary stageLibrary, Locale locale) {
-    this.stageLibrary = stageLibrary;
-    this.locale = locale;
+  public LocaleInjector(HttpServletRequest request) {
+      Locale = request.getLocale();
   }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAllRegisteredModules() {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(stageLibrary.getStages(locale)).build();
+  @Override
+  public Locale provide() {
+    return Locale;
+  }
+
+  @Override
+  public void dispose(Locale Locale) {
   }
 
 }

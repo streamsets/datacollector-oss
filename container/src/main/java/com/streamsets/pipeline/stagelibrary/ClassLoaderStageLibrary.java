@@ -20,6 +20,9 @@ package com.streamsets.pipeline.stagelibrary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.agent.RuntimeInfo;
@@ -36,7 +39,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class ClassLoaderStageLibrary implements StageLibrary {
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibrary.class);
@@ -46,6 +51,7 @@ public class ClassLoaderStageLibrary implements StageLibrary {
   private final List<? extends ClassLoader> stageClassLoaders;
   private Map<String, StageDefinition> stageMap;
   private List<StageDefinition> stageList;
+  private final LoadingCache<Locale, List<StageDefinition>> localizedStageList;
   private final ObjectMapper json;
 
   @Inject
@@ -58,6 +64,17 @@ public class ClassLoaderStageLibrary implements StageLibrary {
     loadStages();
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
+
+    localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
+      @Override
+      public List<StageDefinition> load(Locale key) throws Exception {
+        List<StageDefinition> list = new ArrayList<StageDefinition>();
+        for (StageDefinition stage : stageList) {
+          list.add(stage.localize(key));
+        }
+        return list;
+      }
+    });
 
   }
 
@@ -108,6 +125,16 @@ public class ClassLoaderStageLibrary implements StageLibrary {
   @Override
   public List<StageDefinition> getStages() {
     return stageList;
+  }
+
+  @Override
+  public List<StageDefinition> getStages(Locale locale) {
+    try {
+      return localizedStageList.get(locale);
+    } catch (ExecutionException ex) {
+      LOG.warn("Error loading locale '{}', {}", locale, ex.getLocalizedMessage(), ex);
+      return stageList;
+    }
   }
 
   @Override

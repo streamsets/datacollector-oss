@@ -24,6 +24,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import java.net.URI;
 import java.security.Principal;
+import java.util.Locale;
 
 public class RestAPIResourceConfig extends ResourceConfig {
 
@@ -35,6 +36,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(StageLibraryInjector.class).to(StageLibrary.class);
         bindFactory(PrincipalInjector.class).to(Principal.class);
         bindFactory(URIInjector.class).to(URI.class);
+        bindFactory(LocaleInjector.class).to(Locale.class);
       }
     });
   }
