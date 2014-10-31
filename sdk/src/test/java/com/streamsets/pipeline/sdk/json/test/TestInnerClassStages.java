@@ -43,6 +43,6 @@ public class TestInnerClassStages extends TestPipelineAnnotationProcessorBase {
     Assert.assertTrue(diagnostics.isEmpty());
     //PipelineStages.json is expected to be generated and must match
     //the contents of MultipleStages.json
-    TestUtil.compareExpectedAndActualStages("MultipleStages.json");
+    TestUtil.compareExpectedAndActualStages("InnerClassStages.json");
   }
 }

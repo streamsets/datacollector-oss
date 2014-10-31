@@ -1,7 +1,7 @@
 [ {
   "library" : null,
   "classLoader" : null,
-  "className" : "com.streamsets.pipeline.sdk.testData.TwitterProcessor",
+  "className" : "com.streamsets.pipeline.sdk.testData.TwitterStages.TwitterProcessor",
   "name" : "TwitterProcessor",
   "version" : "1.0",
   "label" : "twitter_processor",
@@ -27,7 +27,7 @@
 }, {
   "library" : null,
   "classLoader" : null,
-  "className" : "com.streamsets.pipeline.sdk.testData.TwitterSource",
+  "className" : "com.streamsets.pipeline.sdk.testData.TwitterStages.TwitterSource",
   "name" : "TwitterSource",
   "version" : "1.0",
   "label" : "twitter_source",
@@ -63,7 +63,7 @@
 }, {
   "library" : null,
   "classLoader" : null,
-  "className" : "com.streamsets.pipeline.sdk.testData.TwitterTarget",
+  "className" : "com.streamsets.pipeline.sdk.testData.TwitterStages.TwitterTarget",
   "name" : "TwitterTarget",
   "version" : "1.3",
   "label" : "twitter_target",

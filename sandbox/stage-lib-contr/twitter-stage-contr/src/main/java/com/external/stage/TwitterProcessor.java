@@ -20,30 +20,33 @@ package com.external.stage;
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 
+import java.util.Map;
+
 @StageDef(name = "TwitterProcessor", description = "processes twitter feeds", label = "twitter_processor"
 , version = "1.0")
 public class TwitterProcessor extends BaseProcessor{
 
+  @FieldModifier(type = FieldModifier.Type.PROVIDED, valuesProvider = TypesProvider.class)
   @ConfigDef(
     name = "regEx",
     defaultValue = "[a-z][A-Z][0-9]",
     label = "regEx",
     required = true,
     description = "The regular expression used to parse the tweet",
-    type = ConfigDef.Type.STRING
+    type = ConfigDef.Type.MODEL
   )
-  public String regEx;
+  public Map<String, String> regEx;
 
 
   public TwitterProcessor() {
   }
 
-  public TwitterProcessor(String regEx) {
+  public TwitterProcessor(Map<String, String> regEx) {
     this.regEx = regEx;
 
   }
 
-  public String getRegEx() {
+  public Map<String, String> getRegEx() {
     return regEx;
   }
 

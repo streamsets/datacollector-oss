@@ -68,6 +68,11 @@ public class TestUtil {
 
     Assert.assertTrue(actualStages.size() == expectedStages.size());
     //check the deserialized StageCollections.
+    deepCompareStageDefinitions(expectedStages, actualStages);
+  }
+
+  public static void deepCompareStageDefinitions(
+    List<StageDefinition> expectedStages, List<StageDefinition> actualStages) {
     for(int i = 0; i < actualStages.size(); i++) {
       StageDefinition expected = expectedStages.get(i);
       StageDefinition actual = null;
@@ -82,21 +87,43 @@ public class TestUtil {
           expected.getName() +
           "is expected, but not found.");
       }
-      Assert.assertEquals(expected.getConfigDefinitions().size(), actual.getConfigDefinitions().size());
-      for(int j = 0; i < expected.getConfigDefinitions().size(); i++) {
-        ConfigDefinition e = expected.getConfigDefinitions().get(j);
-        ConfigDefinition a = actual.getConfigDefinitions().get(j);
-        Assert.assertEquals(e.getName(), a.getName());
-        Assert.assertEquals(e.getDefaultValue(), a.getDefaultValue());
-        Assert.assertEquals(e.getDescription(), a.getDescription());
-        Assert.assertEquals(e.getLabel(), a.getLabel());
-        Assert.assertEquals(e.getType(), a.getType());
-      }
+
+      //compare stage definition properties
       Assert.assertEquals(expected.getName(), actual.getName());
       Assert.assertEquals(expected.getVersion(), actual.getVersion());
       Assert.assertEquals(expected.getLabel(), actual.getLabel());
       Assert.assertEquals(expected.getDescription(), actual.getDescription());
       Assert.assertEquals(expected.getType(), actual.getType());
+      Assert.assertEquals(expected.getClassLoader(), actual.getClassLoader());
+      Assert.assertEquals(expected.getClassName(), actual.getClassName());
+      Assert.assertEquals(expected.getLibrary(), actual.getLibrary());
+      Assert.assertEquals(expected.getStageClass(), actual.getStageClass());
+      Assert.assertEquals(expected.getConfigDefinitions().size(),
+        actual.getConfigDefinitions().size());
+      //compare the config definitions
+      for(int j = 0; i < expected.getConfigDefinitions().size(); i++) {
+        ConfigDefinition e = expected.getConfigDefinitions().get(j);
+        ConfigDefinition a = actual.getConfigDefinitions().get(j);
+
+        Assert.assertEquals(e.getName(), a.getName());
+        Assert.assertEquals(e.getDefaultValue(), a.getDefaultValue());
+        Assert.assertEquals(e.getDescription(), a.getDescription());
+        Assert.assertEquals(e.getLabel(), a.getLabel());
+        Assert.assertEquals(e.getType(), a.getType());
+        Assert.assertEquals(e.getFieldName(), a.getFieldName());
+        Assert.assertEquals(e.isRequired(), a.isRequired());
+        Assert.assertEquals(e.getGroup(), a.getGroup());
+
+        if(e.getModel() != null) {
+          Assert.assertNotNull(a.getModel());
+          Assert.assertEquals(e.getModel().getFieldModifierType(), a.getModel().getFieldModifierType());
+          Assert.assertEquals(e.getModel().getLabels(), a.getModel().getLabels());
+          Assert.assertEquals(e.getModel().getModelType(), a.getModel().getModelType());
+          Assert.assertEquals(e.getModel().getValues(), a.getModel().getValues());
+        }
+
+      }
+
     }
   }
 }

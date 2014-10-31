@@ -1,5 +1,8 @@
 [
   {
+    "library" : null,
+    "classLoader" : null,
+    "className" : "com.streamsets.pipeline.sdk.testData.SourceWithOnlyStageDef",
     "name" : "TwitterSource",
     "version" : "1.0",
     "label" : "twitter_source",

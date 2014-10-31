@@ -1,5 +1,8 @@
 [
   {
+    "library" : null,
+    "classLoader" : null,
+    "className" : "com.streamsets.pipeline.sdk.testData.SourceWithStageAndConfigDef",
     "name" : "TwitterSource",
     "version" : "1.0",
     "label" : "twitter_source",
@@ -12,7 +15,9 @@
         "label" : "username",
         "default" : "admin",
         "type" : "STRING",
-        "required" : "true"
+        "fieldName" : "username",
+        "required" : "true",
+        "group" : ""
       },
       {
         "name" : "password",
@@ -20,7 +25,9 @@
         "label" : "password",
         "default" : "admin",
         "type" : "STRING",
-        "required" : "true"
+        "fieldName" : "password",
+        "required" : "true",
+        "group" : ""
       }
     ]
   }

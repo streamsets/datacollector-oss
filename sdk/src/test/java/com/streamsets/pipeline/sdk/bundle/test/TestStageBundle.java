@@ -30,10 +30,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TestTwitterError extends TestPipelineAnnotationProcessorBase {
+/**
+ * Tests that the expected bundle file for a stage is generated and that
+ * it contains the required labels and values
+ *
+ */
+public class TestStageBundle extends TestPipelineAnnotationProcessorBase {
+
   @Override
   public List<String> getClassesToProcess() {
-    return Arrays.asList("com.streamsets.pipeline.sdk.testData.TwitterError");
+    return Arrays.asList("com.streamsets.pipeline.sdk.testData.TwitterSource");
   }
 
   @Override
@@ -46,15 +52,26 @@ public class TestTwitterError extends TestPipelineAnnotationProcessorBase {
     Assert.assertTrue(compilerOutput.isEmpty());
     //No diagnostics
     Assert.assertTrue(diagnostics.isEmpty());
-    //A bundle file "TwitterError-bundle.properties" is generated which contains 2 lines
-    //INPUT_LANE_ERROR=null
-    //OUTPUT_LANE_ERROR=null
-    List<String> expectedStrings = new ArrayList<String>(2);
-    expectedStrings.add("INPUT_LANE_ERROR=null");
-    expectedStrings.add("OUTPUT_LANE_ERROR=null");
+    //A bundle file "TwitterSource-bundle.properties" is generated which contains 2 lines
+    /*
+    stage.label=twitter_source
+    stage.description=Produces twitter feeds
+    config.username.label=username
+    config.username.description=The user name of the twitter user
+    config.password.label=password
+    config.password.description=The password the twitter use
+     */
+    List<String> expectedStrings = new ArrayList<String>(6);
+    expectedStrings.add("stage.label=twitter_source");
+    expectedStrings.add("stage.description=Produces twitter feeds");
+    expectedStrings.add("config.username.label=username");
+    expectedStrings.add("config.username.description=The user name of the twitter user");
+    expectedStrings.add("config.password.label=password");
+    expectedStrings.add("config.password.description=The password the twitter user");
+
 
     InputStream inputStream = Thread.currentThread().getContextClassLoader().
-      getResourceAsStream("TwitterError-bundle.properties");
+      getResourceAsStream("TwitterSource-bundle.properties");
     BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
     List<String> actualStrings = new ArrayList<String>();
     String line;
@@ -68,7 +85,10 @@ public class TestTwitterError extends TestPipelineAnnotationProcessorBase {
 
     //compare expected and actual Strings
     Assert.assertTrue("The expected and actual lines in the files are different", expectedStrings.size() == actualStrings.size());
-    Assert.assertTrue(expectedStrings.get(0).equals(actualStrings.get(0)));
-    Assert.assertTrue(expectedStrings.get(1).equals(actualStrings.get(1)));
+    for(int i = 0; i < expectedStrings.size(); i++) {
+      Assert.assertTrue(expectedStrings.get(i).equals(actualStrings.get(i)));
+    }
+
   }
+
 }

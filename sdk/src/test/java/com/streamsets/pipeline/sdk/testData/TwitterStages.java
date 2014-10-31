@@ -21,10 +21,92 @@ import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Defines multiple stages as inner class
  */
 public class TwitterStages {
+
+  @StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
+    , version = "1.0")
+  public class TwitterSource extends BaseSource{
+
+    @FieldSelector
+    @ConfigDef(
+      name = "username",
+      defaultValue = "admin",
+      label = "username",
+      required = true,
+      description = "The user name of the twitter user",
+      type = ConfigDef.Type.MODEL
+    )
+    public List<String> username;
+
+    @ConfigDef(
+      name = "password",
+      defaultValue = "admin",
+      label = "password",
+      required = true,
+      description = "The password the twitter user",
+      type = ConfigDef.Type.STRING
+    )
+    public String password;
+
+    public TwitterSource() {
+    }
+
+    public List<String> getUsername() {
+      return username;
+    }
+
+    public String getPassword() {
+      return password;
+    }
+
+    @Override
+    public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
+      return null;
+    }
+  }
+
+  @StageDef(name = "TwitterProcessor", description = "processes twitter feeds", label = "twitter_processor"
+    , version = "1.0")
+  public class TwitterProcessor extends BaseProcessor {
+
+    @FieldModifier(type = FieldModifier.Type.PROVIDED, valuesProvider = TypesProvider.class)
+    @ConfigDef(
+      name = "regEx",
+      defaultValue = "[a-z][A-Z][0-9]",
+      label = "regEx",
+      required = true,
+      description = "The regular expression used to parse the tweet",
+      type = ConfigDef.Type.MODEL
+    )
+    public Map<String, String> regEx;
+
+
+    public TwitterProcessor() {
+    }
+
+    public TwitterProcessor(Map<String, String> regEx) {
+      this.regEx = regEx;
+
+    }
+
+    public Map<String, String> getRegEx() {
+      return regEx;
+    }
+
+
+    @Override
+    public void process(Batch batch, BatchMaker batchMaker) throws StageException {
+
+    }
+
+  }
+
 
   @StageDef(name = "TwitterTarget", description = "Consumes twitter feeds", label = "twitter_target"
     , version = "1.3")
@@ -80,85 +162,7 @@ public class TwitterStages {
     public void destroy() {
 
     }
-  }
 
-  @StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
-    , version = "1.0")
-  public class TwitterSource extends BaseSource {
-
-    @ConfigDef(
-      name = "username",
-      defaultValue = "admin",
-      label = "username",
-      required = true,
-      description = "The user name of the twitter user",
-      type = ConfigDef.Type.STRING
-    )
-    public String username;
-
-    @ConfigDef(
-      name = "password",
-      defaultValue = "admin",
-      label = "password",
-      required = true,
-      description = "The password the twitter user",
-      type = ConfigDef.Type.STRING
-    )
-    public String password;
-
-    public TwitterSource() {
-    }
-
-    public TwitterSource(String username, String password) {
-      this.username = username;
-      this.password = password;
-    }
-
-    public String getUsername() {
-      return username;
-    }
-
-    public String getPassword() {
-      return password;
-    }
-
-    @Override
-    public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
-      return null;
-    }
-  }
-
-  @StageDef(name = "TwitterProcessor", description = "processes twitter feeds", label = "twitter_processor"
-    , version = "1.0")
-  public class TwitterProcessor extends BaseProcessor {
-
-    @ConfigDef(
-      name = "regEx",
-      defaultValue = "[a-z][A-Z][0-9]",
-      label = "regEx",
-      required = true,
-      description = "The regular expression used to parse the tweet",
-      type = ConfigDef.Type.STRING
-    )
-    public String regEx;
-
-    public TwitterProcessor() {
-    }
-
-    public TwitterProcessor(String username, String password) {
-      this.regEx = username;
-
-    }
-
-    public String getRegEx() {
-      return regEx;
-    }
-
-
-    @Override
-    public void process(Batch batch, BatchMaker batchMaker) throws StageException {
-
-    }
   }
 
   @StageErrorDef

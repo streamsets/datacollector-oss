@@ -44,7 +44,6 @@ public class TwitterTarget implements Target {
   public String password;
 
   public TwitterTarget() {
-
   }
 
   public TwitterTarget(String username, String password) {

@@ -26,8 +26,7 @@ import java.util.Map;
 , version = "1.0")
 public class TwitterProcessor extends BaseProcessor{
 
-  @FieldModifier(type = FieldModifier.Type.PROVIDED,
-    valuesProvider = TypesProvider.class)
+  @FieldModifier(type = FieldModifier.Type.PROVIDED, valuesProvider = TypesProvider.class)
   @ConfigDef(
     name = "regEx",
     defaultValue = "[a-z][A-Z][0-9]",
@@ -38,12 +37,19 @@ public class TwitterProcessor extends BaseProcessor{
   )
   public Map<String, String> regEx;
 
+
   public TwitterProcessor() {
+  }
+
+  public TwitterProcessor(Map<String, String> regEx) {
+    this.regEx = regEx;
+
   }
 
   public Map<String, String> getRegEx() {
     return regEx;
   }
+
 
   @Override
   public void process(Batch batch, BatchMaker batchMaker) throws StageException {
