@@ -420,6 +420,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //type match
     TypeMirror fieldType = variableElement.asType();
     if(configDefAnnot.type().equals(ConfigDef.Type.MODEL)) {
+      //Field is marked as model.
+      //Carry out model related validations
       FieldModifier fieldModifier = variableElement.getAnnotation(FieldModifier.class);
       FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
 
@@ -434,23 +436,23 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           "The field %s is annotated with both 'FieldSelector' and 'FieldModifier' annotations. Only one of those annotation is expected.",
           typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
         valid = false;
-      }
-
-      if(fieldModifier != null) {
-        if(!fieldType.toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
-          printError("field.validation.type.is.not.map",
-            "The type of the field %s is expected to be Map<String, String>.",
-            typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
-          valid = false;
+      } else {
+        if (fieldModifier != null) {
+          if (!fieldType.toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
+            printError("field.validation.type.is.not.map",
+              "The type of the field %s is expected to be Map<String, String>.",
+              typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
+            valid = false;
+          }
         }
-      }
 
-      if(fieldSelector != null) {
-        if(!fieldType.toString().equals("java.util.List<java.lang.String>")) {
-          printError("field.validation.type.is.not.list",
-            "The type of the field %s is expected to be List<String>.",
-            typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
-          valid = false;
+        if (fieldSelector != null) {
+          if (!fieldType.toString().equals("java.util.List<java.lang.String>")) {
+            printError("field.validation.type.is.not.list",
+              "The type of the field %s is expected to be List<String>.",
+              typeElement.getSimpleName().toString() + variableElement.getSimpleName().toString());
+            valid = false;
+          }
         }
       }
 

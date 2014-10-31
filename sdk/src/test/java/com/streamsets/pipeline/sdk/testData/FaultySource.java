@@ -18,16 +18,30 @@
 package com.streamsets.pipeline.sdk.testData;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.FieldModifier;
+import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.StageDef;
 
+import java.util.List;
+
 /**
- * The source has all the required annotations but it does not
- * implement the Source interface or extend the BaseSource abstract class
+ * This class has the following issues:
+ * 1. Configuration field is final
+ * 2. Configuration field is static
+ * 3. Configuration field is not public
+ * 4. Configuration field is marked as "MODEL" but not annotated with either FieldSelector or FieldModifier annotation
+ * 5. No default constructor
+ * 6. Does not implement interface or extend base stage
+ * 7. Data type of field does not match type indicated in the config def annotation
+ * 8. Configuration field marked with FieldSelector annotation must be of type List<String>
+ * 9. Configuration field marked with FieldModifier annotation must be of type Map<String, String>
+ * 10. Both FieldSelector and FieldModifier annotations are present
  */
 @StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
   , version = "1.0")
 public class FaultySource {
 
+  //1.Faulty config should not be final
   @ConfigDef(
     name = "username",
     defaultValue = "admin",
@@ -36,8 +50,9 @@ public class FaultySource {
     description = "The user name of the twitter user",
     type = ConfigDef.Type.STRING
   )
-  public String username;
+  public final String username;
 
+  //2.faulty string, should not be static
   @ConfigDef(
     name = "password",
     defaultValue = "admin",
@@ -46,14 +61,81 @@ public class FaultySource {
     description = "The password the twitter user",
     type = ConfigDef.Type.STRING
   )
-  public String password;
+  public static String password;
 
-  public FaultySource() {
+  //3.Faulty field, should be public
+  @ConfigDef(
+    name = "streetAddress2",
+    defaultValue = "",
+    label = "streetAddress2",
+    required = true,
+    description = "The domain of the twitter user",
+    type = ConfigDef.Type.STRING
+  )
+  private String streetAddress2;
 
-  }
+  //4. Expected either FieldSelector or FieldModifier annotation
+  @ConfigDef(
+    name = "company",
+    defaultValue = "ss",
+    label = "company",
+    required = true,
+    description = "The domain of the twitter user",
+    type = ConfigDef.Type.MODEL
+  )
+  public String company;
 
+  //5. No default constructor
   public FaultySource(String username, String password) {
     this.username = username;
     this.password = password;
   }
+
+  //6. The class neither implements an interface nor extends from a base class
+
+  //7. The type is expected to be string but is int
+  @ConfigDef(
+    name = "zip",
+    defaultValue = "94040",
+    label = "zip",
+    required = true,
+    description = "The domain of the twitter user",
+    type = ConfigDef.Type.STRING)
+  public int zip;
+
+  //8. Field selector should be modeled as List<String>
+  @FieldSelector
+  @ConfigDef(
+    name = "state",
+    defaultValue = "CA",
+    label = "state",
+    required = true,
+    description = "The domain of the twitter user",
+    type = ConfigDef.Type.MODEL)
+  public String state;
+
+
+  //9. Field modifier should be modeled as Map<String, String>
+  @FieldModifier(type = FieldModifier.Type.PROVIDED, valuesProvider = TypesProvider.class)
+  @ConfigDef(
+    name = "streetAddress",
+    defaultValue = "180 Sansome",
+    label = "street_address",
+    required = true,
+    description = "The domain of the twitter user",
+    type = ConfigDef.Type.MODEL)
+  public String streetAddress;
+
+  //10. Both FieldSelector and FieldModifier present
+  @FieldSelector
+  @FieldModifier(type = FieldModifier.Type.PROVIDED, valuesProvider = TypesProvider.class)
+  @ConfigDef(
+    name = "ste",
+    defaultValue = "400",
+    label = "ste",
+    required = true,
+    description = "The domain of the twitter user",
+    type = ConfigDef.Type.MODEL)
+  public List<String> ste;
+
 }
