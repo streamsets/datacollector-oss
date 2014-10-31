@@ -22,7 +22,6 @@ import com.streamsets.pipeline.container.PipelineException;
 import com.streamsets.pipeline.util.Issue;
 
 import java.util.List;
-import java.util.Map;
 
 public class PipelineRuntimeException extends PipelineException {
 

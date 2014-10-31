@@ -17,18 +17,27 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 
 import java.util.Collections;
+import java.util.List;
 
 public class StagePipe extends Pipe {
   private final StageRuntime stage;
+  private final List<String> inputLanes;
 
   public StagePipe(StageRuntime stage) {
     this.stage = stage;
+    this.inputLanes = ImmutableList.of();
+  }
+
+  public StagePipe(StageRuntime stage, String inputLane) {
+    this.stage = stage;
+    this.inputLanes = ImmutableList.of(inputLane);
   }
 
   @Override
@@ -64,6 +73,11 @@ public class StagePipe extends Pipe {
   @Override
   public void destroy() {
     stage.destroy();
+  }
+
+  @Override
+  public List<String> getOutputLanes() {
+    return stage.getConfiguration().getOutputLanes();
   }
 
 }

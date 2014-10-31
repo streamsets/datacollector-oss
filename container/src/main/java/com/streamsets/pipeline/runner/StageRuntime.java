@@ -135,7 +135,7 @@ public class StageRuntime {
         throws PipelineRuntimeException {
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
         ConfigConfiguration confConf = stageConf.getConfig(confDef.getName());
-        String instanceVar = confDef.getName(); //TODO getInstanceVariable
+        String instanceVar = confDef.getFieldName();
         Object value = confConf.getValue();
         try {
           Field var = klass.getField(instanceVar);

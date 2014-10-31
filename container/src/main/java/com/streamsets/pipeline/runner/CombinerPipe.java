@@ -18,12 +18,20 @@
 package com.streamsets.pipeline.runner;
 
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.List;
+
 public class CombinerPipe extends Pipe {
   private final StageRuntime stage;
+  private List<String> incomingLanes;
+  private List<String> toLanes;
   private final boolean combine;
 
-  public CombinerPipe(StageRuntime stage) {
+  public CombinerPipe(StageRuntime stage, List<String> incomingLanes, String toLanes) {
     this.stage = stage;
+    this.incomingLanes = incomingLanes;
+    this.toLanes = ImmutableList.of(toLanes);
     combine = false;
   }
 
@@ -35,4 +43,8 @@ public class CombinerPipe extends Pipe {
     pipeBatch.flip();
   }
 
+  @Override
+  public List<String> getOutputLanes() {
+    return toLanes;
+  }
 }

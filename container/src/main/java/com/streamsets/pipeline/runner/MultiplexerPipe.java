@@ -18,12 +18,16 @@
 package com.streamsets.pipeline.runner;
 
 
+import java.util.List;
+
 public class MultiplexerPipe extends Pipe {
   private final StageRuntime stage;
+  private final List<String> outputLanes;
   private final boolean multiplex;
 
-  public MultiplexerPipe(StageRuntime stage) {
+  public MultiplexerPipe(StageRuntime stage, List<String> outputLanes) {
     this.stage = stage;
+    this.outputLanes = outputLanes;
     multiplex = false;
   }
 
@@ -33,6 +37,11 @@ public class MultiplexerPipe extends Pipe {
 
     }
     pipeBatch.flip();
+  }
+
+  @Override
+  public List<String> getOutputLanes() {
+    return outputLanes;
   }
 
 }

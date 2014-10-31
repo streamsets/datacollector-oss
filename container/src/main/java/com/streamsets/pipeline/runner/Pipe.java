@@ -20,6 +20,8 @@ package com.streamsets.pipeline.runner;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.container.Configuration;
 
+import java.util.List;
+
 public abstract class Pipe {
 
   public void init() throws StageException {
@@ -32,5 +34,7 @@ public abstract class Pipe {
 
   public void reconfigure(Configuration conf) {
   }
+
+  public abstract List<String> getOutputLanes();
 
 }

@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
@@ -159,27 +160,74 @@ public class Pipeline {
       }
     }
 
+    @VisibleForTesting
+    protected List<String> computeMultiplexerOutputLanes(StageRuntime currentStage, StageRuntime[] stages, int stageIdx) {
+      List<String> outputLanes = new ArrayList<String>();
+      for (String output : currentStage.getConfiguration().getOutputLanes()) {
+        for (int i = stageIdx + 1; i < stages.length; i++) {
+          for (String input : stages[i].getConfiguration().getInputLanes()) {
+            if (input.equals(output)) {
+              outputLanes.add(output + "::" + input);
+            }
+          }
+        }
+      }
+      return Collections.unmodifiableList(outputLanes);
+    }
+
+    @VisibleForTesting
+    protected List<String> computeCombinerInputLanes(StageRuntime currentStage, StageRuntime[] stages, int stageIdx) {
+      List<String> inputLanes = new ArrayList<String>();
+      for (String input : currentStage.getConfiguration().getInputLanes()) {
+        for (int i = 0; i < stageIdx; i++) {
+          for (String output : stages[i].getConfiguration().getOutputLanes()) {
+            if (output.equals(input)) {
+              inputLanes.add(output + "::" + input);
+            }
+          }
+        }
+      }
+      return Collections.unmodifiableList(inputLanes);
+    }
+
+    protected String computeCombinerInput(StageRuntime currentStage) {
+      return "::" + currentStage.getConfiguration().getInstanceName();
+    }
+
     Pipe[] createPipes(StageRuntime[] stages) throws PipelineRuntimeException {
       List<Pipe> pipes = new ArrayList<Pipe>(stages.length * 3);
-      for (StageRuntime stage : stages) {
+      for (int stageIdx = 0; stageIdx < stages.length; stageIdx++) {
+        Pipe pipe;
+        StageRuntime stage = stages[stageIdx];
         switch (stage.getDefinition().getType()) {
           case SOURCE:
-            pipes.add(new StagePipe(stage));
-            pipes.add(new ObserverPipe(stage));
-            pipes.add(new MultiplexerPipe(stage));
+            pipe = new StagePipe(stage);
+            pipes.add(pipe);
+            pipe = new ObserverPipe(stage, pipe.getOutputLanes());
+            pipes.add(pipe);
+            pipe = new MultiplexerPipe(stage, computeMultiplexerOutputLanes(stage, stages, stageIdx));
+            pipes.add(pipe);
             break;
           case PROCESSOR:
-            pipes.add(new CombinerPipe(stage));
-            pipes.add(new StagePipe(stage));
-            pipes.add(new ObserverPipe(stage));
-            pipes.add(new MultiplexerPipe(stage));
+            pipe = new CombinerPipe(stage, computeCombinerInputLanes(stage, stages, stageIdx),
+                                    computeCombinerInput(stage));
+            pipes.add(pipe);
+            pipe = new StagePipe(stage, computeCombinerInput(stage));
+            pipes.add(pipe);
+            pipe = new ObserverPipe(stage, pipe.getOutputLanes());
+            pipes.add(pipe);
+            pipe = new MultiplexerPipe(stage, computeMultiplexerOutputLanes(stage, stages, stageIdx));
+            pipes.add(pipe);
             break;
           case TARGET:
-            pipes.add(new CombinerPipe(stage));
-            pipes.add(new StagePipe(stage));
+            pipe = new CombinerPipe(stage, computeCombinerInputLanes(stage, stages, stageIdx),
+                                    computeCombinerInput(stage));
+            pipes.add(pipe);
+            pipe = new StagePipe(stage, computeCombinerInput(stage));
+            pipes.add(pipe);
             break;
           default:
-            throw new RuntimeException(String.format("Stage '%s' does not define a stage type",
+            throw new RuntimeException(String.format("Stage '%s' does not have a stage type",
                                                      stage.getInfo().getInstanceName()));
         }
       }

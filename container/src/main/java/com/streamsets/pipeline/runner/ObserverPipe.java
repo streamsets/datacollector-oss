@@ -19,12 +19,16 @@ package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.container.Configuration;
 
+import java.util.List;
+
 public class ObserverPipe extends Pipe {
   private final StageRuntime stage;
+  private final List<String> lanes;
   private volatile boolean active;
 
-  public ObserverPipe(StageRuntime stage) {
+  public ObserverPipe(StageRuntime stage, List<String> lanes) {
     this.stage = stage;
+    this.lanes = lanes;
   }
 
   public void reconfigure(Configuration conf) {
@@ -41,4 +45,8 @@ public class ObserverPipe extends Pipe {
   protected void observe(PipeBatch pipeBatch) throws PipelineRuntimeException {
   }
 
+  @Override
+  public List<String> getOutputLanes() {
+    return lanes;
+  }
 }
