@@ -131,7 +131,7 @@ public class StageRuntime {
       }
     }
 
-    void configureStage(StageDefinition stageDef, StageConfiguration stageConf, Class klass, Stage stage)
+    private void configureStage(StageDefinition stageDef, StageConfiguration stageConf, Class klass, Stage stage)
         throws PipelineRuntimeException {
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
         ConfigConfiguration confConf = stageConf.getConfig(confDef.getName());
