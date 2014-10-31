@@ -10,17 +10,60 @@
       <bg-pane min-size="100" class="panel panel-default canvas-pane">
         <div class="panel-heading clearfix">
           <h3 class="panel-title pull-left">{{'admin.header.pipelineFlow' | translate}}</h3>
+
+
           <div class="pull-right">
-            <button type="button" class="btn btn-primary btn-xs">
+            <button type="button" class="btn btn-default btn-sm">
               <span class="glyphicon glyphicon-eye-open"></span> {{'admin.header.preview' | translate}}
             </button>
-            <button type="button" class="btn btn-primary btn-xs">
+            <button type="button" class="btn btn-default btn-sm">
               <span class="glyphicon glyphicon-play"></span> {{'admin.header.start' | translate}}
             </button>
-            <button type="button" class="btn btn-primary btn-xs">
+            <button type="button" class="btn btn-default btn-sm">
               <span class="glyphicon glyphicon-stop"></span> {{'admin.header.stop' | translate}}
             </button>
           </div>
+
+          <div class="dropdown pull-right stage-dropdown">
+            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+              <span class="glyphicon glyphicon-screenshot"></span>
+              Add Target
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation" ng-repeat="stageLibrary in targets">
+                <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="dropdown pull-right stage-dropdown">
+            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+              <span class="glyphicon glyphicon-cog"></span>
+              Add Processor
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation" ng-repeat="stageLibrary in processors">
+                <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="dropdown pull-right stage-dropdown">
+            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+              <span class="glyphicon glyphicon-list-alt"></span>
+              Add Source
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation" ng-repeat="stageLibrary in sources">
+                <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
+              </li>
+            </ul>
+          </div>
+
+
         </div>
         <div class="panel-body">
           <pipeline-graph graph-data="pipelineConfig" ></pipeline-graph>
@@ -29,7 +72,7 @@
 
       <bg-pane min-size="50" class="panel panel-default detail-pane">
         <div class="panel-heading">
-          <h3 class="panel-title">File Source</h3>
+          <h3 class="panel-title">{{selectedNode.label}}</h3>
         </div>
         <div class="panel-body">
           <div class="tabbable tabs-left">

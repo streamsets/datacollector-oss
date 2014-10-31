@@ -17,17 +17,32 @@
  */
 
 body {
-  padding-top: 50px;
+  padding-top: 60px;
+
+  .navbar-fixed-top {
+    height: 60px;
+
+    .logo {
+      padding: 0 20px;
+
+      img {
+        width: 240px;
+        margin-top: -19px;
+      }
+    }
+
+    .navbar-nav {
+      li {
+        a {
+          padding-top: 20px;
+          padding-bottom: 20px;
+        }
+      }
+    }
+  }
+
 }
 
-
-/**
- * Header
- */
-
-.logo {
-  padding: 0 20px;
-}
 
 /**
  * Now that all app-wide styles have been applied, we can load the styles for

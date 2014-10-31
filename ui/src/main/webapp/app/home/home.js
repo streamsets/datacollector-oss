@@ -9,7 +9,8 @@ angular
     'jsonFormatter',
     'splitterDirectives',
     'tabDirectives',
-    'pipelineGraphDirectives'
+    'pipelineGraphDirectives',
+    'underscore'
   ])
   .config(['$routeProvider', function($routeProvider){
     $routeProvider.when("/",
@@ -19,7 +20,28 @@ angular
       }
     );
   }])
-  .controller('HomeController', function($scope, api){
+  .controller('HomeController', function($scope, api, _){
+
+    $scope.stageLibraries = [];
+
+    api.pipelineAgent.getStageLibrary().success(function(res){
+      console.log('From GET /api/stage-library');
+      console.log(res);
+      $scope.stageLibraries = res;
+
+      $scope.sources = _.filter(res, function(stageLibrary) {
+        return (stageLibrary.type === 'SOURCE');
+      });
+
+      $scope.processors = _.filter(res, function(stageLibrary) {
+        return (stageLibrary.type === 'PROCESSOR');
+      });
+
+      $scope.targets = _.filter(res, function(stageLibrary) {
+        return (stageLibrary.type === 'TARGET');
+      });
+
+    });
 
     //Temp
     $scope.config = {
@@ -28,11 +50,11 @@ angular
       }
     };
 
-
     api.pipelineAgent.getConfig().success(function (res) {
       //$scope.config = res;
       console.log($scope.config);
     });
+
 
     $scope.attributes = [{
       name: 'first',
@@ -87,17 +109,17 @@ angular
       yLoc = 100;
 
     var nodes = [{
-      title: 'File Source',
+      label: 'Log File Source',
       id: 100,
       x: xLoc,
       y: yLoc
     },{
-      title: 'PII Processor',
+      label: 'Field Type Converter',
       id: 101,
       x: xLoc + 300,
       y: yLoc
     },{
-      title: 'Kafka Target',
+      label: 'HBase Target',
       id: 102,
       x: xLoc + 300 + 300,
       y: yLoc
@@ -112,7 +134,22 @@ angular
     }];
 
     $scope.pipelineConfig = {
-      nodes : nodes,
-      edges: edges
+      nodes : [],
+      edges: []
     };
+
+    $scope.selectedNode = {
+      label : 'Pipeline Configuration'
+    };
+
+    $scope.$on('onNodeSelection', function(event, selectedNode){
+      $scope.selectedNode = selectedNode;
+      console.log(selectedNode);
+
+    });
+
+    $scope.addStage = function(stage) {
+      $scope.$broadcast('addNode', stage);
+    };
+
   });

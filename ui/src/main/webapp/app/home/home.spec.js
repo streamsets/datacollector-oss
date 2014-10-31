@@ -1,5 +1,9 @@
 describe('Controller: modules/home/HomeCtrl', function() {
-  var $rootScope, $scope, $controller, $httpBackend, mockedApi;
+  var $rootScope, $scope, $controller, $httpBackend, mockedApi,
+    mockedUnderscore = {
+      filter : function() {}
+    };
+
 
   beforeEach(module('pipelineAgentApp'));
 
@@ -15,7 +19,8 @@ describe('Controller: modules/home/HomeCtrl', function() {
     $controller('HomeController', {
       '$rootScope' : $rootScope,
       '$scope': $scope,
-      'api' : mockedApi
+      'api' : mockedApi,
+      '_': mockedUnderscore
     });
 
     expect($rootScope.common.active.home == 'active');
@@ -28,7 +33,8 @@ describe('Controller: modules/home/HomeCtrl', function() {
     $controller('HomeController', {
       '$rootScope' : $rootScope,
       '$scope': $scope,
-      'api' : mockedApi
+      'api' : mockedApi,
+      '_': mockedUnderscore
     });
 
     //expect($scope.config).toBeUndefined();

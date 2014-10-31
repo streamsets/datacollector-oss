@@ -69,6 +69,7 @@ module.exports = function(grunt) {
      */
     vendor_files: {
       js: [
+        'bower_components/underscore/underscore.js',
         'bower_components/d3/d3.js',
         'bower_components/jquery/dist/jquery.js',
         'bower_components/angular/angular.js',
@@ -478,7 +479,7 @@ module.exports = function(grunt) {
        */
       less: {
         files: [ 'src/**/*.less' ],
-        tasks: [ 'less:build' ]
+        tasks: [ 'less:build', 'concat:build_css' ]
       },
 
       /**

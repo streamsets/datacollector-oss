@@ -7,13 +7,10 @@ angular.module('pipelineGraphDirectives', [])
     return {
       restrict: 'E',
       replace: false,
-      scope: {data: '=graphData'},
       controller: 'PipelineGraphController'
     };
   })
   .controller('PipelineGraphController', function($scope, $element){
-    console.log($scope);
-
 
     var consts = {
       defaultTitle: "random variable"
@@ -195,7 +192,10 @@ angular.module('pipelineGraphDirectives', [])
       BACKSPACE_KEY: 8,
       DELETE_KEY: 46,
       ENTER_KEY: 13,
-      nodeRadius: 70
+      nodeRadius: 70,
+      rectWidth: 160,
+      rectHeight: 120,
+      rectRound: 20
     };
 
     /* PROTOTYPE FUNCTIONS */
@@ -238,19 +238,21 @@ angular.module('pipelineGraphDirectives', [])
     GraphCreator.prototype.insertTitleLinebreaks = function (gEl, title) {
       var words = title.split(/\s+/g),
         nwords = words.length;
+
       var el = gEl.append("text")
         .attr("text-anchor","middle")
-        .attr("dy", "+" + (nwords-1)*60)
-        .attr("dx", "+" + (nwords-1)*75);
-
+        .attr("x", 80)
+        .attr("y", 60)
+        .attr("dy", "-" + (nwords-1)*7.5);
 
       for (var i = 0; i < words.length; i++) {
         var tspan = el.append('tspan').text(words[i]);
         if (i > 0) {
-          tspan.attr('x', 75).attr('dy', '15');
+          tspan.attr('x', 80)
+            .attr('dy', '15');
         }
-
       }
+
     };
 
 
@@ -503,6 +505,11 @@ angular.module('pipelineGraphDirectives', [])
       this.state.lastKeyDown = -1;
     };
 
+    GraphCreator.prototype.addNode = function(node) {
+      this.nodes.push(node);
+      this.updateGraph();
+    };
+
     // call to propagate changes to graph
     GraphCreator.prototype.updateGraph = function(){
 
@@ -543,14 +550,14 @@ angular.module('pipelineGraphDirectives', [])
 
       // update existing nodes
       thisGraph.circles = thisGraph.circles.data(thisGraph.nodes, function(d){ return d.id;});
-      thisGraph.circles.attr("transform", function(d){return "translate(" + (d.x - 80) + "," + (d.y - 60) + ")";});
+      thisGraph.circles.attr("transform", function(d){return "translate(" + (d.x - consts.rectWidth/2) + "," + (d.y - consts.rectHeight/2) + ")";});
 
       // add new nodes
       var newGs= thisGraph.circles.enter()
         .append("g");
 
       newGs.classed(consts.circleGClass, true)
-        .attr("transform", function(d){return "translate(" + (d.x - 80) + "," + (d.y - 60) + ")";})
+        .attr("transform", function(d){return "translate(" + (d.x - consts.rectWidth/2) + "," + (d.y - consts.rectHeight/2) + ")";})
         .on("mouseover", function(d){
           if (state.shiftNodeDrag){
             d3.select(this).classed(consts.connectClass, true);
@@ -564,22 +571,24 @@ angular.module('pipelineGraphDirectives', [])
         })
         .on("mouseup", function(d){
           thisGraph.circleMouseUp.call(thisGraph, d3.select(this), d);
+          var self = this;
+          $scope.$apply(function(){
+            $scope.$emit('onNodeSelection', self.__data__);
+          });
+
         })
         .call(thisGraph.drag);
 
-      //newGs.append("circle")
-        //.attr("r", String(consts.nodeRadius));
-
       newGs.append('rect')
         .attr({
-          'height': 120,
-          'width': 160,
-          'rx': 20,
-          'ry': 20
+          'height': this.consts.rectHeight,
+          'width': this.consts.rectWidth,
+          'rx': this.consts.rectRound,
+          'ry': this.consts.rectRound
         });
 
       newGs.each(function(d){
-        thisGraph.insertTitleLinebreaks(d3.select(this), d.title);
+        thisGraph.insertTitleLinebreaks(d3.select(this), d.label);
       });
 
       // remove old nodes
@@ -601,13 +610,25 @@ angular.module('pipelineGraphDirectives', [])
     };
 
     /** MAIN SVG **/
-    var data = $scope.data,
+    var pipelineConfig = $scope.pipelineConfig,
       svg = d3.select($element[0]).append("svg")
         .attr("width", "100%")
         .attr("height", "90%"),
-      graph = new GraphCreator(svg, data.nodes, data.edges);
+      graph = new GraphCreator(svg, pipelineConfig.nodes, pipelineConfig.edges);
 
     graph.setIdCt(2);
     graph.updateGraph();
+
+    $scope.$on('addNode', function(event, stage){
+      var xPos = (graph.nodes && graph.nodes.length) ?  graph.nodes[graph.nodes.length - 1].x + 300 : 200,
+        node = {
+        id: graph.idct++,
+        label: stage.label,
+        stage: stage,
+        x: xPos,
+        y: 100
+      };
+      graph.addNode(node);
+    });
 
   });
