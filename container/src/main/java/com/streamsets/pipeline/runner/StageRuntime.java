@@ -81,7 +81,7 @@ public class StageRuntime {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T getContext() {
+  public <T extends Stage.Context> T getContext() {
     return (T) context;
   }
 

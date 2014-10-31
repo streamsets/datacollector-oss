@@ -39,10 +39,6 @@ public class CombinerPipe extends Pipe {
   }
 
   @Override
-  public void reconfigure(Configuration conf) {
-  }
-
-  @Override
   public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
     if (combine) {
 

@@ -81,6 +81,11 @@ public class ProcessorPipe extends Pipe implements Context {
   }
 
   @Override
+  public Record createRecord(String sourceInfo, byte[] raw, String rawMime) {
+    return new RecordImpl(getModuleInfo().getName(), sourceInfo, raw, rawMime);
+  }
+
+  @Override
   public Record cloneRecord(Record record) {
     return new RecordImpl("(cloned)", (RecordImpl)record);
   }

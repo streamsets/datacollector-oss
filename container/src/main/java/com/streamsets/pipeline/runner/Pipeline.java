@@ -40,19 +40,22 @@ import java.util.Set;
 public class Pipeline {
   private final Pipe[] pipes;
   private final PipelineRunner runner;
+  private final Observer observer;
 
-  private Pipeline(Pipe[] pipes, PipelineRunner runner) {
+  private Pipeline(Pipe[] pipes, Observer observer, PipelineRunner runner) {
     this.pipes = pipes;
+    this.observer = observer;
     this.runner = runner;
   }
 
-  public void reconfigure(Configuration conf) {
-    for (Pipe pipe : pipes) {
-      try {
-        pipe.reconfigure(conf);
-      } catch (RuntimeException ex) {
-        //LOG WARN
-      }
+  @VisibleForTesting
+  Pipe[] getPipes() {
+    return pipes;
+  }
+
+  public void configure(Configuration conf) {
+    if (observer != null) {
+      observer.configure(conf);
     }
   }
 
@@ -68,7 +71,7 @@ public class Pipeline {
       throw ex;
     } catch (RuntimeException ex) {
       destroy(idx);
-      throw new RuntimeException(ex);
+      throw ex;
     }
   }
 
@@ -138,20 +141,26 @@ public class Pipeline {
   public static class Builder {
     private final StageLibrary stageLib;
     private final PipelineConfiguration pipelineConf;
+    private Observer observer;
 
     public Builder(StageLibrary stageLib, PipelineConfiguration pipelineConf) {
       this.stageLib = stageLib;
       this.pipelineConf = pipelineConf;
     }
 
+    public Builder setObserver(Observer observer) {
+      this.observer = observer;
+      return this;
+    }
+
     public Pipeline build(PipelineRunner runner) throws PipelineRuntimeException {
       StageRuntime[] stages = new StageRuntime.Builder(stageLib, pipelineConf).build();
       setStagesContext(stages, runner);
       Pipe[] pipes = createPipes(stages);
-      return new Pipeline(pipes, runner);
+      return new Pipeline(pipes, observer, runner);
     }
 
-    void setStagesContext(StageRuntime[] stages, PipelineRunner runner) {
+    private void setStagesContext(StageRuntime[] stages, PipelineRunner runner) {
       List<Stage.Info> infos = new ArrayList<Stage.Info>(stages.length);
       List<Stage.Info> infosUnmodifiable = Collections.unmodifiableList(infos);
       for (StageRuntime stage : stages) {
@@ -160,13 +169,7 @@ public class Pipeline {
       }
     }
 
-    protected String computeCombinerInput(StageRuntime currentStage) {
-      return "::" + currentStage.getConfiguration().getInstanceName();
-    }
-
-
-
-    Pipe[] createPipes(StageRuntime[] stages) throws PipelineRuntimeException {
+    private Pipe[] createPipes(StageRuntime[] stages) throws PipelineRuntimeException {
       LaneResolver laneResolver = new LaneResolver(stages);
       List<Pipe> pipes = new ArrayList<Pipe>(stages.length * 3);
       for (int idx = 0; idx < stages.length; idx++) {
@@ -174,10 +177,10 @@ public class Pipeline {
         StageRuntime stage = stages[idx];
         switch (stage.getDefinition().getType()) {
           case SOURCE:
-            pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx), laneResolver.getStageInputLanes(idx));
+            pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx), laneResolver.getStageOutputLanes(idx));
             pipes.add(pipe);
             pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
-                                    laneResolver.getObserverOutputLanes(idx));
+                                    laneResolver.getObserverOutputLanes(idx), observer);
             pipes.add(pipe);
             pipe = new MultiplexerPipe(stage, laneResolver.getMultiplexerInputLanes(idx),
                                        laneResolver.getMultiplexerOutputLanes(idx));
@@ -188,23 +191,25 @@ public class Pipeline {
                                     laneResolver.getCombinerOutputLanes(idx));
             pipes.add(pipe);
             pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx),
-                                 laneResolver.getStageInputLanes(idx));
+                                 laneResolver.getStageOutputLanes(idx));
             pipes.add(pipe);
             pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
-                                    laneResolver.getObserverOutputLanes(idx));
+                                    laneResolver.getObserverOutputLanes(idx), observer);
             pipes.add(pipe);
             pipe = new MultiplexerPipe(stage, laneResolver.getMultiplexerInputLanes(idx),
                                        laneResolver.getMultiplexerOutputLanes(idx));
             pipes.add(pipe);
             break;
           case TARGET:
-            pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx), laneResolver.getCombinerOutputLanes(idx));
+            pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx),
+                                    laneResolver.getCombinerOutputLanes(idx));
             pipes.add(pipe);
-            pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx), laneResolver.getStageInputLanes(idx));
+            pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx), laneResolver.getStageOutputLanes(idx));
             pipes.add(pipe);
             break;
           default:
-            throw new RuntimeException(String.format("Stage '%s' does not have a stage type", stage.getInfo().getInstanceName()));
+            throw new RuntimeException(String.format("Stage '%s' does not have a stage type",
+                                                     stage.getInfo().getInstanceName()));
         }
       }
       return pipes.toArray(new Pipe[pipes.size()]);

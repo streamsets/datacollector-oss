@@ -33,10 +33,6 @@ public class StagePipe extends Pipe {
   }
 
   @Override
-  public void reconfigure(Configuration conf) {
-  }
-
-  @Override
   public void init() throws StageException {
     getStage().init();
   }

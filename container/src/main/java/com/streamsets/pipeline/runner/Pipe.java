@@ -18,7 +18,6 @@
 package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.container.Configuration;
 
 import java.util.List;
 
@@ -50,7 +49,5 @@ public abstract class Pipe {
   public abstract void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException;
 
   public abstract void destroy();
-
-  public abstract void reconfigure(Configuration conf);
 
 }

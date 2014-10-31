@@ -17,32 +17,14 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.container.Configuration;
 
-import java.util.List;
+public interface Observer {
 
-public class ObserverPipe extends Pipe {
-  private final Observer observer;
+  public void configure(Configuration conf);
 
-  public ObserverPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, Observer observer) {
-    super(stage, inputLanes, outputLanes);
-    this.observer = observer;
-  }
-
-  @Override
-  public void init() throws StageException {
-  }
-
-  @Override
-  public void destroy() {
-  }
-
-  @Override
-  public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
-    if (observer != null) {
-      observer.observe(getStage().getInfo(), pipeBatch.getBatch());
-    }
-    pipeBatch.flip();
-  }
+  public void observe(Stage.Info stageInfo, Batch batch);
 
 }

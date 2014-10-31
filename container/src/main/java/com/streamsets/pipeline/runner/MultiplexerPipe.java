@@ -40,10 +40,6 @@ public class MultiplexerPipe extends Pipe {
   }
 
   @Override
-  public void reconfigure(Configuration conf) {
-  }
-
-  @Override
   public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
     if (multiplex) {
 

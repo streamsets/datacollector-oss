@@ -25,7 +25,7 @@ public interface Record {
 
   public static final String RESERVED_ATTRIBUTE_PREFIX = "_.";
 
-  public static final String PREVIOUS_STAGE_ATTR = RESERVED_ATTRIBUTE_PREFIX + "previous-stage";
+  public static final String STAGE_INSTANCE_ATTR = RESERVED_ATTRIBUTE_PREFIX + "previous-stage";
 
   public static final String RECORD_SOURCE_ID_ATTR = RESERVED_ATTRIBUTE_PREFIX + "record-source-id";
 

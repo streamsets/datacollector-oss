@@ -27,6 +27,8 @@ public interface Processor extends Stage<Processor.Context> {
 
     public Record createRecord(String sourceInfo);
 
+    public Record createRecord(String sourceInfo, byte[] raw, String rawMime);
+
     public Record cloneRecord(Record record);
 
   }

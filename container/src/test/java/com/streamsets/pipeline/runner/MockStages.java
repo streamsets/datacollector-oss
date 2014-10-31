@@ -1,0 +1,188 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.runner;
+
+import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.stagelibrary.StageLibrary;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+
+public class MockStages {
+
+  public static StageLibrary createStageLibrary() {
+    return new MockStageLibrary();
+  }
+
+  @SuppressWarnings("unchecked")
+  public static StageConfiguration createSource(String instanceName, List<String> outputs) {
+    return new StageConfiguration(instanceName, "default", "sourceName", "1.0.0",
+                                                       Collections.EMPTY_LIST, null, Collections.EMPTY_LIST, outputs);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static StageConfiguration createProcessor(String instanceName, List<String> inputs, List<String> outputs) {
+    return new StageConfiguration(instanceName, "default", "processorName", "1.0.0",
+                                  Collections.EMPTY_LIST, null, inputs, outputs);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static StageConfiguration createTarget(String instanceName, List<String> inputs) {
+    return new StageConfiguration(instanceName, "default", "targetName", "1.0.0",
+                                  Collections.EMPTY_LIST, null, inputs, Collections.EMPTY_LIST);
+  }
+
+  private static Source source;
+  private static Processor processor;
+  private static Target target;
+
+  public static void setSourceCapture(Source s) {
+    source = s;
+  }
+
+  public static void setProcessorCapture(Processor p) {
+    processor = p;
+  }
+
+  public static void setTargetCapture(Target t) {
+    target = t;
+  }
+
+  private static class MockStageLibrary implements StageLibrary {
+
+    public static class MSource implements Source {
+      @Override
+      public void init(Info info, Context context) throws StageException {
+        if (source != null) {
+          source.init(info, context);
+        }
+      }
+
+      @Override
+      public void destroy() {
+        if (source != null) {
+          source.destroy();
+        }
+      }
+
+      @Override
+      public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
+        if (source != null) {
+          return source.produce(lastSourceOffset, batchMaker);
+        }
+        return null;
+      }
+    }
+
+    public static class MProcessor implements Processor {
+
+      @Override
+      public void init(Info info, Context context) throws StageException {
+        if (processor != null) {
+          processor.init(info, context);
+        }
+      }
+
+      @Override
+      public void destroy() {
+        if (processor != null) {
+          processor.destroy();
+        }
+      }
+
+      @Override
+      public void process(Batch batch, BatchMaker batchMaker) throws StageException {
+        if (processor != null) {
+          processor.process(batch, batchMaker);
+        }
+      }
+    }
+
+    public static class MTarget implements Target {
+      @Override
+      public void init(Info info, Context context) throws StageException {
+        if (target != null) {
+          target.init(info, context);
+        }
+      }
+
+      @Override
+      public void destroy() {
+        if (target != null) {
+          target.destroy();
+        }
+      }
+
+      @Override
+      public void write(Batch batch) throws StageException {
+        if (target != null) {
+          target.write(batch);
+        }
+      }
+    }
+
+    private List<StageDefinition> stages;
+
+    @SuppressWarnings("unchecked")
+    public MockStageLibrary() {
+      stages = new ArrayList<StageDefinition>();
+      StageDefinition sDef = new StageDefinition(MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
+                                                 "sourceDesc", StageType.SOURCE, Collections.EMPTY_LIST);
+      sDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
+      StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "processorLabel",
+                                                "processorDesc", StageType.PROCESSOR, Collections.EMPTY_LIST);
+      pDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
+      StageDefinition tDef = new StageDefinition(MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
+                                                 "targetDesc", StageType.TARGET, Collections.EMPTY_LIST);
+      tDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
+      stages = ImmutableList.of(sDef, pDef, tDef);
+    }
+
+    @Override
+    public List<StageDefinition> getStages() {
+      return stages;
+    }
+
+    @Override
+    public List<StageDefinition> getStages(Locale locale) {
+      return stages;
+    }
+
+    @Override
+    public StageDefinition getStage(String library, String name, String version) {
+      for (StageDefinition def : stages) {
+        if (def.getLibrary().equals(library) && def.getName().equals(name) && def.getVersion().equals(version)) {
+          return def;
+        }
+      }
+      return null;
+    }
+
+  }
+}
