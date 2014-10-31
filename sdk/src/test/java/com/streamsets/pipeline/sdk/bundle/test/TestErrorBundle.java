@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TestTwitterError extends TestPipelineAnnotationProcessorBase {
+public class TestErrorBundle extends TestPipelineAnnotationProcessorBase {
   @Override
   public List<String> getClassesToProcess() {
     return Arrays.asList("com.streamsets.pipeline.sdk.testData.TwitterError");

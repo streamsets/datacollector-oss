@@ -29,6 +29,19 @@ import java.util.*;
 public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
 
   @Override
+  /**
+   * This class has the following issues:
+   * 1. Configuration field is final
+   * 2. Configuration field is static
+   * 3. Configuration field is not public
+   * 4. Configuration field is marked as "MODEL" but not annotated with either FieldSelector or FieldModifier annotation
+   * 5. No default constructor
+   * 6. Does not implement interface or extend base stage
+   * 7. Data type of field does not match type indicated in the config def annotation
+   * 8. Configuration field marked with FieldSelector annotation must be of type List<String>
+   * 9. Configuration field marked with FieldModifier annotation must be of type Map<String, String>
+   * 10. Both FieldSelector and FieldModifier annotations are present
+   */
   public List<String> getClassesToProcess() {
     return Arrays.asList("com.streamsets.pipeline.sdk.testData.FaultySource");
   }
