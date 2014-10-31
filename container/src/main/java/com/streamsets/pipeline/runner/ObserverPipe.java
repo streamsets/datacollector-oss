@@ -17,20 +17,27 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.container.Configuration;
 
 import java.util.List;
 
 public class ObserverPipe extends Pipe {
-  private final StageRuntime stage;
-  private final List<String> lanes;
   private volatile boolean active;
 
-  public ObserverPipe(StageRuntime stage, List<String> lanes) {
-    this.stage = stage;
-    this.lanes = lanes;
+  public ObserverPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
+    super(stage, inputLanes, outputLanes);
   }
 
+  @Override
+  public void init() throws StageException {
+  }
+
+  @Override
+  public void destroy() {
+  }
+
+  @Override
   public void reconfigure(Configuration conf) {
   }
 
@@ -45,8 +52,4 @@ public class ObserverPipe extends Pipe {
   protected void observe(PipeBatch pipeBatch) throws PipelineRuntimeException {
   }
 
-  @Override
-  public List<String> getOutputLanes() {
-    return lanes;
-  }
 }

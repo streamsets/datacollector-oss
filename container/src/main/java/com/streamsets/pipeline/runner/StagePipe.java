@@ -17,54 +17,49 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.container.Configuration;
 
 import java.util.Collections;
 import java.util.List;
 
 public class StagePipe extends Pipe {
-  private final StageRuntime stage;
-  private final List<String> inputLanes;
 
-  public StagePipe(StageRuntime stage) {
-    this.stage = stage;
-    this.inputLanes = ImmutableList.of();
+  public StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
+    super(stage, inputLanes, outputLanes);
   }
 
-  public StagePipe(StageRuntime stage, String inputLane) {
-    this.stage = stage;
-    this.inputLanes = ImmutableList.of(inputLane);
+  @Override
+  public void reconfigure(Configuration conf) {
   }
 
   @Override
   public void init() throws StageException {
-    stage.init();
+    getStage().init();
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
-    switch (stage.getDefinition().getType()) {
+    switch (getStage().getDefinition().getType()) {
       case SOURCE:
-        Source.Context sourceContext = stage.getContext();
+        Source.Context sourceContext = getStage().getContext();
         pipeBatch.configure(sourceContext.getOutputLanes());
-        String newOffset = ((Source) stage.getStage()).produce(pipeBatch.getPreviousOffset(),
+        String newOffset = ((Source) getStage().getStage()).produce(pipeBatch.getPreviousOffset(),
                                                                pipeBatch.getBatchMaker());
         pipeBatch.setNewOffset(newOffset);
         break;
       case PROCESSOR:
-        Processor.Context processorContext = stage.getContext();
+        Processor.Context processorContext = getStage().getContext();
         pipeBatch.configure(processorContext.getOutputLanes());
-        ((Processor) stage.getStage()).process(pipeBatch.getBatch(), pipeBatch.getBatchMaker());
+        ((Processor) getStage().getStage()).process(pipeBatch.getBatch(), pipeBatch.getBatchMaker());
         break;
       case TARGET:
-        Target.Context targetContext = stage.getContext();
         pipeBatch.configure(Collections.EMPTY_SET);
-        ((Target) stage.getStage()).write(pipeBatch.getBatch());
+        ((Target) getStage().getStage()).write(pipeBatch.getBatch());
         break;
     }
     pipeBatch.flip();
@@ -72,12 +67,8 @@ public class StagePipe extends Pipe {
 
   @Override
   public void destroy() {
-    stage.destroy();
+    getStage().destroy();
   }
 
-  @Override
-  public List<String> getOutputLanes() {
-    return stage.getConfiguration().getOutputLanes();
-  }
 
 }

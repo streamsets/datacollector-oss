@@ -17,22 +17,29 @@
  */
 package com.streamsets.pipeline.runner;
 
-
-import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.container.Configuration;
 
 import java.util.List;
 
 public class CombinerPipe extends Pipe {
-  private final StageRuntime stage;
-  private List<String> incomingLanes;
-  private List<String> toLanes;
   private final boolean combine;
 
-  public CombinerPipe(StageRuntime stage, List<String> incomingLanes, String toLanes) {
-    this.stage = stage;
-    this.incomingLanes = incomingLanes;
-    this.toLanes = ImmutableList.of(toLanes);
+  public CombinerPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
+    super(stage, inputLanes, outputLanes);
     combine = false;
+  }
+
+  @Override
+  public void init() throws StageException {
+  }
+
+  @Override
+  public void destroy() {
+  }
+
+  @Override
+  public void reconfigure(Configuration conf) {
   }
 
   @Override
@@ -43,8 +50,4 @@ public class CombinerPipe extends Pipe {
     pipeBatch.flip();
   }
 
-  @Override
-  public List<String> getOutputLanes() {
-    return toLanes;
-  }
 }

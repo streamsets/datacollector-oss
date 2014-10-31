@@ -23,18 +23,34 @@ import com.streamsets.pipeline.container.Configuration;
 import java.util.List;
 
 public abstract class Pipe {
+  private final StageRuntime stage;
+  private final List<String> inputLanes;
+  private final List<String> outputLanes;
 
-  public void init() throws StageException {
+  public Pipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
+    this.stage = stage;
+    this.inputLanes = inputLanes;
+    this.outputLanes = outputLanes;
   }
+
+  public StageRuntime getStage() {
+    return stage;
+  }
+
+  public List<String> getInputLanes() {
+    return inputLanes;
+  }
+
+  public List<String> getOutputLanes() {
+    return outputLanes;
+  }
+
+  public abstract void init() throws StageException;
 
   public abstract void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException;
 
-  public void destroy() {
-  }
+  public abstract void destroy();
 
-  public void reconfigure(Configuration conf) {
-  }
-
-  public abstract List<String> getOutputLanes();
+  public abstract void reconfigure(Configuration conf);
 
 }

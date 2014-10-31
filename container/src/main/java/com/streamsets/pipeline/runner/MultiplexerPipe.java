@@ -18,17 +18,29 @@
 package com.streamsets.pipeline.runner;
 
 
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.container.Configuration;
+
 import java.util.List;
 
 public class MultiplexerPipe extends Pipe {
-  private final StageRuntime stage;
-  private final List<String> outputLanes;
   private final boolean multiplex;
 
-  public MultiplexerPipe(StageRuntime stage, List<String> outputLanes) {
-    this.stage = stage;
-    this.outputLanes = outputLanes;
+  public MultiplexerPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
+    super(stage, inputLanes, outputLanes);
     multiplex = false;
+  }
+
+  @Override
+  public void init() throws StageException {
+  }
+
+  @Override
+  public void destroy() {
+  }
+
+  @Override
+  public void reconfigure(Configuration conf) {
   }
 
   @Override
@@ -37,11 +49,6 @@ public class MultiplexerPipe extends Pipe {
 
     }
     pipeBatch.flip();
-  }
-
-  @Override
-  public List<String> getOutputLanes() {
-    return outputLanes;
   }
 
 }

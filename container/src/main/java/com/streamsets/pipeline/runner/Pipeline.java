@@ -160,75 +160,51 @@ public class Pipeline {
       }
     }
 
-    @VisibleForTesting
-    protected List<String> computeMultiplexerOutputLanes(StageRuntime currentStage, StageRuntime[] stages, int stageIdx) {
-      List<String> outputLanes = new ArrayList<String>();
-      for (String output : currentStage.getConfiguration().getOutputLanes()) {
-        for (int i = stageIdx + 1; i < stages.length; i++) {
-          for (String input : stages[i].getConfiguration().getInputLanes()) {
-            if (input.equals(output)) {
-              outputLanes.add(output + "::" + input);
-            }
-          }
-        }
-      }
-      return Collections.unmodifiableList(outputLanes);
-    }
-
-    @VisibleForTesting
-    protected List<String> computeCombinerInputLanes(StageRuntime currentStage, StageRuntime[] stages, int stageIdx) {
-      List<String> inputLanes = new ArrayList<String>();
-      for (String input : currentStage.getConfiguration().getInputLanes()) {
-        for (int i = 0; i < stageIdx; i++) {
-          for (String output : stages[i].getConfiguration().getOutputLanes()) {
-            if (output.equals(input)) {
-              inputLanes.add(output + "::" + input);
-            }
-          }
-        }
-      }
-      return Collections.unmodifiableList(inputLanes);
-    }
-
     protected String computeCombinerInput(StageRuntime currentStage) {
       return "::" + currentStage.getConfiguration().getInstanceName();
     }
 
+
+
     Pipe[] createPipes(StageRuntime[] stages) throws PipelineRuntimeException {
+      LaneResolver laneResolver = new LaneResolver(stages);
       List<Pipe> pipes = new ArrayList<Pipe>(stages.length * 3);
-      for (int stageIdx = 0; stageIdx < stages.length; stageIdx++) {
+      for (int idx = 0; idx < stages.length; idx++) {
         Pipe pipe;
-        StageRuntime stage = stages[stageIdx];
+        StageRuntime stage = stages[idx];
         switch (stage.getDefinition().getType()) {
           case SOURCE:
-            pipe = new StagePipe(stage);
+            pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx), laneResolver.getStageInputLanes(idx));
             pipes.add(pipe);
-            pipe = new ObserverPipe(stage, pipe.getOutputLanes());
+            pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
+                                    laneResolver.getObserverOutputLanes(idx));
             pipes.add(pipe);
-            pipe = new MultiplexerPipe(stage, computeMultiplexerOutputLanes(stage, stages, stageIdx));
+            pipe = new MultiplexerPipe(stage, laneResolver.getMultiplexerInputLanes(idx),
+                                       laneResolver.getMultiplexerOutputLanes(idx));
             pipes.add(pipe);
             break;
           case PROCESSOR:
-            pipe = new CombinerPipe(stage, computeCombinerInputLanes(stage, stages, stageIdx),
-                                    computeCombinerInput(stage));
+            pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx),
+                                    laneResolver.getCombinerOutputLanes(idx));
             pipes.add(pipe);
-            pipe = new StagePipe(stage, computeCombinerInput(stage));
+            pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx),
+                                 laneResolver.getStageInputLanes(idx));
             pipes.add(pipe);
-            pipe = new ObserverPipe(stage, pipe.getOutputLanes());
+            pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
+                                    laneResolver.getObserverOutputLanes(idx));
             pipes.add(pipe);
-            pipe = new MultiplexerPipe(stage, computeMultiplexerOutputLanes(stage, stages, stageIdx));
+            pipe = new MultiplexerPipe(stage, laneResolver.getMultiplexerInputLanes(idx),
+                                       laneResolver.getMultiplexerOutputLanes(idx));
             pipes.add(pipe);
             break;
           case TARGET:
-            pipe = new CombinerPipe(stage, computeCombinerInputLanes(stage, stages, stageIdx),
-                                    computeCombinerInput(stage));
+            pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx), laneResolver.getCombinerOutputLanes(idx));
             pipes.add(pipe);
-            pipe = new StagePipe(stage, computeCombinerInput(stage));
+            pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx), laneResolver.getStageInputLanes(idx));
             pipes.add(pipe);
             break;
           default:
-            throw new RuntimeException(String.format("Stage '%s' does not have a stage type",
-                                                     stage.getInfo().getInstanceName()));
+            throw new RuntimeException(String.format("Stage '%s' does not have a stage type", stage.getInfo().getInstanceName()));
         }
       }
       return pipes.toArray(new Pipe[pipes.size()]);
