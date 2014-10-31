@@ -29,7 +29,7 @@ public class FieldRemoverProcessor extends SingleLaneRecordProcessor {
 
   @ConfigDef(name = "fieldsToRemove", label = "Fields to remove", required = true,type = Type.MODEL, defaultValue="")
   @FieldSelector
-  List<String> fields;
+  public List<String> fields;
 
   // the annotations processor will fail if variable is not List
 
