@@ -16,10 +16,10 @@
             <button type="button" class="btn btn-default btn-sm">
               <span class="glyphicon glyphicon-eye-open"></span> {{'admin.header.preview' | translate}}
             </button>
-            <button type="button" class="btn btn-default btn-sm">
+            <button type="button" class="btn btn-default btn-sm" ng-hide="isPipelineRunning" disabled="{{isPipelineInValid}}">
               <span class="glyphicon glyphicon-play"></span> {{'admin.header.start' | translate}}
             </button>
-            <button type="button" class="btn btn-default btn-sm">
+            <button type="button" class="btn btn-default btn-sm" ng-show="isPipelineRunning">
               <span class="glyphicon glyphicon-stop"></span> {{'admin.header.stop' | translate}}
             </button>
           </div>
@@ -72,118 +72,37 @@
 
       <bg-pane min-size="50" class="panel panel-default detail-pane">
         <div class="panel-heading">
-          <h3 class="panel-title">{{selectedNode.label}}</h3>
+          <h3 class="panel-title">{{detailPaneConfig.label}}</h3>
         </div>
         <div class="panel-body">
+
+
           <div class="tabbable tabs-left">
 
             <ul class="nav nav-tabs">
               <li class="active">
-                <a showtab="" href="#a" data-toggle="tab">
+                <a showtab="" href="#configuration" data-toggle="tab">
                   {{'admin.detailPane.configuration.title' | translate}}
-                </a>
-              </li>
-              <li>
-                <a showtab="" href="#b" data-toggle="tab">
-                  {{'admin.detailPane.attributes.title' | translate}}
                 </a>
               </li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane active" id="a">
+              <div class="tab-pane active" id="configuration">
 
-                <form class="form-horizontal" role="form">
+                <form class="form-horizontal" role="form" ng-repeat="configDefinition in detailPaneConfig.configDefinitions">
 
                   <div class="form-group">
                     <label class="col-sm-2 control-label">
-                      {{'admin.detailPane.configuration.location' | translate}}
+                      {{configDefinition.label}}
                     </label>
                     <div class="col-sm-6">
-                      <input type="text" class="form-control"
-                             placeholder="{{'admin.detailPane.configuration.location.placeholder' | translate}}">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label  class="col-sm-2 control-label">
-                      {{'admin.detailPane.configuration.type' | translate}}
-                    </label>
-                    <div class="col-sm-6">
-                      <select class="form-control">
-                        <option>
-                          {{'admin.detailPane.configuration.type.json' | translate}}
-                        </option>
-                        <option>
-                          {{'admin.detailPane.configuration.type.csv' | translate}}
-                        </option>
-                        <option>
-                          {{'admin.detailPane.configuration.type.logFile' | translate}}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label  class="col-sm-2 control-label">
-                      {{'admin.detailPane.configuration.batchSize' | translate}}
-                    </label>
-                    <div class="col-sm-6">
-                      <input type="text" class="form-control" placeholder="{{'admin.detailPane.configuration.batchSize.placeholder' | translate}}">
-                    </div>
-                  </div>
-
-
-                  <div class="form-group">
-                    <label  class="col-sm-2 control-label">
-                      {{'admin.detailPane.configuration.maximumRecordSize' | translate}}
-                    </label>
-                    <div class="col-sm-6">
-                      <input type="text" class="form-control" placeholder="{{'admin.detailPane.configuration.maximumRecordSize.placeholder' | translate}}">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label  class="col-sm-2 control-label">
-                      {{'admin.detailPane.configuration.requiredAttributes' | translate}}
-                    </label>
-                    <div class="col-sm-6">
-                      <tags-input ng-model="tags" placeholder="Add a attrubute"></tags-input>
+                      <input type="text" class="form-control">
                     </div>
                   </div>
 
                 </form>
 
-              </div>
-
-              <div class="tab-pane" id="b">
-                <div class="col-sm-6">
-
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>{{'admin.detailPane.attributes.attributeName' | translate}}</th>
-                        <th>{{'admin.detailPane.attributes.type' | translate}}</th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      <tr ng-repeat="attribute in attributes">
-                        <td>{{attribute.name}}</td>
-                        <td>
-                          <select class="form-control attribute-type">
-                            <option>String</option>
-                            <option>Integer</option>
-                            <option>Long</option>
-                            <option>Date</option>
-                            <option>Binary</option>
-                          </select>
-                        </td>
-                      </tr>
-                    </tbody>
-
-                  </table>
-                </div>
               </div>
 
             </div>

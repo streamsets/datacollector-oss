@@ -12,7 +12,7 @@ angular
     'pipelineGraphDirectives',
     'underscore'
   ])
-  .config(['$routeProvider', function($routeProvider){
+  .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when("/",
       {
         templateUrl: "app/home/home.tpl.html",
@@ -20,8 +20,9 @@ angular
       }
     );
   }])
-  .controller('HomeController', function($scope, api, _){
-
+  .controller('HomeController', function($scope, api, _) {
+    $scope.isPipelineRunning = false;
+    $scope.isPipelineInValid = true;
     $scope.stageLibraries = [];
 
     api.pipelineAgent.getStageLibrary().success(function(res){
@@ -105,7 +106,7 @@ angular
       };
     };
 
-    var xLoc = 200,
+    /*var xLoc = 200,
       yLoc = 100;
 
     var nodes = [{
@@ -131,25 +132,32 @@ angular
     }, {
       source: nodes[1],
       target: nodes[2]
-    }];
+    }];*/
 
     $scope.pipelineConfig = {
       nodes : [],
       edges: []
     };
 
-    $scope.selectedNode = {
+    var pipelineConfig = {
       label : 'Pipeline Configuration'
     };
 
-    $scope.$on('onNodeSelection', function(event, selectedNode){
-      $scope.selectedNode = selectedNode;
-      console.log(selectedNode);
+    $scope.detailPaneConfig = pipelineConfig;
 
+    $scope.$on('onNodeSelection', function(event, selectedNode){
+      $scope.detailPaneConfig = selectedNode;
+
+      console.log(selectedNode);
+    });
+
+    $scope.$on('onRemoveNodeSelection', function(){
+      $scope.detailPaneConfig = pipelineConfig;
     });
 
     $scope.addStage = function(stage) {
       $scope.$broadcast('addNode', stage);
+      $scope.detailPaneConfig = stage;
     };
 
   });

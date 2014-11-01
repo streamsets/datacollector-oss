@@ -406,10 +406,10 @@ angular.module('pipelineGraphDirectives', [])
         }
       } else{
         // we're in the same node
-        if (state.justDragged) {
+        //if (state.justDragged) {
           // dragged, not clicked
           state.justDragged = false;
-        } else{
+        //} else{
           // clicked, not dragged
           if (d3.event.shiftKey){
             // shift-clicked node: edit text content
@@ -429,7 +429,7 @@ angular.module('pipelineGraphDirectives', [])
               thisGraph.removeSelectFromNode();
             }
           }
-        }
+        //}
       }
       state.mouseDownNode = null;
       return;
@@ -439,6 +439,17 @@ angular.module('pipelineGraphDirectives', [])
     // mousedown on main svg
     GraphCreator.prototype.svgMouseDown = function(){
       this.state.graphMouseDown = true;
+
+      if(this.state.selectedNode) {
+        this.removeSelectFromNode();
+      } else if(this.state.selectedEdge) {
+        this.removeSelectFromEdge();
+      }
+
+      $scope.$apply(function(){
+        $scope.$emit('onRemoveNodeSelection');
+      });
+
     };
 
     // mouseup on main svg
@@ -506,8 +517,15 @@ angular.module('pipelineGraphDirectives', [])
     };
 
     GraphCreator.prototype.addNode = function(node) {
-      this.nodes.push(node);
-      this.updateGraph();
+      var thisGraph = this;
+      thisGraph.nodes.push(node);
+      thisGraph.updateGraph();
+
+      var addedNode = thisGraph.circles.filter(function(cd){
+        return cd.id === node.id;
+      });
+
+      thisGraph.replaceSelectNode(addedNode, node);
     };
 
     // call to propagate changes to graph
@@ -568,14 +586,12 @@ angular.module('pipelineGraphDirectives', [])
         })
         .on("mousedown", function(d){
           thisGraph.circleMouseDown.call(thisGraph, d3.select(this), d);
+          $scope.$apply(function(){
+            $scope.$emit('onNodeSelection', d.stage);
+          });
         })
         .on("mouseup", function(d){
           thisGraph.circleMouseUp.call(thisGraph, d3.select(this), d);
-          var self = this;
-          $scope.$apply(function(){
-            $scope.$emit('onNodeSelection', self.__data__);
-          });
-
         })
         .call(thisGraph.drag);
 
