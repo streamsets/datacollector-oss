@@ -15,15 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.sdk.json.test;
+package com.streamsets.pipeline.sdk.validation.test;
 
 import com.streamsets.pipeline.sdk.testBase.TestPipelineAnnotationProcessorBase;
 import org.junit.Assert;
 
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class TestInnerClassStages extends TestPipelineAnnotationProcessorBase {
 
@@ -36,13 +38,19 @@ public class TestInnerClassStages extends TestPipelineAnnotationProcessorBase {
   public void test(List<Diagnostic<? extends JavaFileObject>> diagnostics, String compilerOutput, Boolean compilationResult) {
 
     //Compilation is expected to be successful
-    Assert.assertTrue(compilationResult);
+    Assert.assertFalse(compilationResult);
     //No compiler output is expected
     Assert.assertTrue(compilerOutput.isEmpty());
     //No diagnostics
-    Assert.assertTrue(diagnostics.isEmpty());
-    //PipelineStages.json is expected to be generated and must match
-    //the contents of MultipleStages.json
-    TestUtil.compareExpectedAndActualStages("InnerClassStages.json");
+    Assert.assertTrue(diagnostics.size() == 3);
+
+    List<String> expectedErrors = new ArrayList<String>(3);
+    expectedErrors.add("Stage TwitterTarget is an inner class. Inner class Stage implementations are not supported");
+    expectedErrors.add("Stage TwitterProcessor is an inner class. Inner class Stage implementations are not supported");
+    expectedErrors.add("Stage TwitterSource is an inner class. Inner class Stage implementations are not supported");
+
+    for(Diagnostic d : diagnostics) {
+      Assert.assertTrue(expectedErrors.contains(d.getMessage(Locale.ENGLISH)));
+    }
   }
 }

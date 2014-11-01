@@ -24,13 +24,8 @@ import com.streamsets.pipeline.container.ApiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * Captures the configuration options for a {@link com.streamsets.pipeline.api.Stage}.
@@ -38,6 +33,10 @@ import java.util.ResourceBundle;
  */
 public class StageDefinition {
   private static final Logger LOG = LoggerFactory.getLogger(StageDefinition.class);
+
+  private static final String SEPERATOR = ".";
+  private static final String CONFIG = "config";
+  private static final String FIELD_MODIFIER = "FieldModifier";
 
   private String library;
   private ClassLoader classLoader;
@@ -82,6 +81,7 @@ public class StageDefinition {
     } catch (ClassNotFoundException ex) {
       throw new RuntimeException(ex);
     }
+    updateValuesAndLabelsFromValuesProvider();
   }
 
   public String getLibrary() {
@@ -158,7 +158,76 @@ public class StageDefinition {
     StageDefinition def = new StageDefinition(getClassName(), getName(), getVersion(), label, description,
                                               getType(), configDefs);
     def.setLibrary(getLibrary(), getClassLoader());
+
+    for(ConfigDefinition configDef : def.getConfigDefinitions()) {
+      if(configDef.getModel() != null &&
+        configDef.getModel().getValues() != null &&
+        !configDef.getModel().getValues().isEmpty()) {
+
+        if(!(configDef.getModel().getLabels() != null &&
+        !configDef.getModel().getLabels().isEmpty() &&
+          configDef.getModel().getLabels().size() == configDef.getModel().getValues().size())) {
+          //TODO: throw the correct exception
+          //As of now we cannot validate the implementation of values provider during the compile time
+          LOG.error(
+            "The ValuesProvider implementation for configuration {} in stage {} does not have the same number of values and labels.",
+            configDef.getName(), def.getName());
+          throw new RuntimeException(String.format(
+            "The ValuesProvider implementation for configuration {} in stage {} does not have the same number of values and labels.",
+            configDef.getName(), def.getName()));
+        }
+
+        List<String> values = configDef.getModel().getValues();
+        List<String> labels = configDef.getModel().getLabels();
+        for(int i = 0; i < values.size(); i++) {
+          StringBuilder sb = new StringBuilder();
+          sb.append(CONFIG)
+            .append(SEPERATOR)
+            .append(configDef.getName())
+            .append(SEPERATOR)
+            .append(FIELD_MODIFIER)
+            .append(SEPERATOR)
+            .append(values.get(i));
+          String key = sb.toString();
+          String l = rb.containsKey(key) ? rb.getString(key) : labels.get(i);
+          labels.set(i, l);
+        }
+      }
+    }
     return def;
   }
+
+  private void updateValuesAndLabelsFromValuesProvider() {
+    for(ConfigDefinition configDef : getConfigDefinitions()) {
+      if(configDef.getModel() != null &&
+        configDef.getModel().getValuesProviderClass() != null &&
+        !configDef.getModel().getValuesProviderClass().isEmpty()) {
+        try {
+          Class valueProviderClass = classLoader.loadClass(configDef.getModel().getValuesProviderClass());
+          Object valueProvider = valueProviderClass.newInstance();
+          List<String> values = (List<String>)
+            valueProviderClass.getMethod("getValues").invoke(valueProvider);
+          List<String> labels = (List<String>)
+            valueProviderClass.getMethod("getLabels").invoke(valueProvider);
+
+          configDef.getModel().setValues(values);
+          configDef.getModel().setLabels(labels);
+
+        } catch (ClassNotFoundException e) {
+          throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+          throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+          throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+          throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }
+  }
+
+
 
 }

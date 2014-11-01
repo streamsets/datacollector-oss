@@ -26,17 +26,20 @@ public class ModelDefinition {
 
   private final ModelType modelType;
   private final FieldModifierType fieldModifierType;
-  private final List<String> values;
-  private final List<String> labels;
+  private final String valuesProviderClass;
+  private List<String> values;
+  private List<String> labels;
 
   @JsonCreator
   public ModelDefinition(
-      @JsonProperty("modelType") ModelType modelType,
-      @JsonProperty("fieldModifierType") FieldModifierType fieldModifierType,
-      @JsonProperty("values") List<String> values,
-      @JsonProperty("labels") List<String> labels) {
+    @JsonProperty("modelType") ModelType modelType,
+    @JsonProperty("fieldModifierType") FieldModifierType fieldModifierType,
+    @JsonProperty("valuesProviderClass")String valuesProviderClass,
+    @JsonProperty("values") List<String> values,
+    @JsonProperty("labels") List<String> labels) {
     this.modelType = modelType;
     this.fieldModifierType = fieldModifierType;
+    this.valuesProviderClass = valuesProviderClass;
     this.values = values;
     this.labels = labels;
   }
@@ -55,5 +58,17 @@ public class ModelDefinition {
 
   public List<String> getLabels() {
     return labels;
+  }
+
+  public String getValuesProviderClass() {
+    return valuesProviderClass;
+  }
+
+  public void setValues(List<String> values) {
+    this.values = values;
+  }
+
+  public void setLabels(List<String> labels) {
+    this.labels = labels;
   }
 }

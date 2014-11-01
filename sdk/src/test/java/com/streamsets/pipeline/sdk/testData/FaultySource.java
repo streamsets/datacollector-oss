@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.StageDef;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class has the following issues:
@@ -137,5 +138,16 @@ public class FaultySource {
     description = "The domain of the twitter user",
     type = ConfigDef.Type.MODEL)
   public List<String> ste;
+
+  //11. The ValuesProvider implementation used here does not implement the interface
+  @FieldModifier(type = FieldModifier.Type.PROVIDED, valuesProvider = DatatypeProvider.class)
+  @ConfigDef(
+    name = "areaCode",
+    defaultValue = "650",
+    label = "area_code",
+    required = true,
+    description = "The area code",
+    type = ConfigDef.Type.MODEL)
+  public Map<String, String> areaCode;
 
 }

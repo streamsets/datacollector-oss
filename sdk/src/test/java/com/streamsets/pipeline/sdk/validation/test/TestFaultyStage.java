@@ -41,6 +41,7 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
    * 8. Configuration field marked with FieldSelector annotation must be of type List<String>
    * 9. Configuration field marked with FieldModifier annotation must be of type Map<String, String>
    * 10. Both FieldSelector and FieldModifier annotations are present
+   * 11. ValuesProvider implementation not implement 'com.streamsets.pipeline.api.ValuesProvider' interface.
    */
   public List<String> getClassesToProcess() {
     return Arrays.asList("com.streamsets.pipeline.sdk.testData.FaultySource");
@@ -57,18 +58,22 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
 
     //The following error messages are expected
     Set<String> expectedSet = new HashSet<String>();
-    expectedSet.add("The field FaultySourceusername has \"ConfigDef\" annotation and is declared final. Configuration fields must not be declared final.");
-    expectedSet.add("The field FaultySourcepassword has \"ConfigDef\" annotation and is declared static. Configuration fields must not be declared final.");
-    expectedSet.add("The field FaultySourcestreetAddress2 has \"ConfigDef\" annotation but is not declared public. Configuration fields must be declared public.");
-    expectedSet.add("The type of field FaultySourcecompany is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' annotation is expected.");
-    expectedSet.add("The type of the field FaultySourcezip is expected to be String.");
-    expectedSet.add("The type of the field FaultySourcestate is expected to be List<String>.");
-    expectedSet.add("The type of the field FaultySourcestreetAddress is expected to be Map<String, String>.");
-    expectedSet.add("The field FaultySourceste is annotated with both 'FieldSelector' and 'FieldModifier' annotations. Only one of those annotation is expected.");
+    expectedSet.add("The field FaultySource.username has \"ConfigDef\" annotation and is declared final. Configuration fields must not be declared final.");
+    expectedSet.add("The field FaultySource.password has \"ConfigDef\" annotation and is declared static. Configuration fields must not be declared final.");
+    expectedSet.add("The field FaultySource.streetAddress2 has \"ConfigDef\" annotation but is not declared public. Configuration fields must be declared public.");
+    expectedSet.add("The type of field FaultySource.company is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' annotation is expected.");
+    expectedSet.add("The type of the field FaultySource.zip is expected to be String.");
+    expectedSet.add("The type of the field FaultySource.state is expected to be List<String>.");
+    expectedSet.add("The type of the field FaultySource.streetAddress is expected to be Map<String, String>.");
+    expectedSet.add("The field FaultySource.ste is annotated with both 'FieldSelector' and 'FieldModifier' annotations. Only one of those annotation is expected.");
     expectedSet.add("Stage com.streamsets.pipeline.sdk.testData.FaultySource neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, Processor, Target interface.");
     expectedSet.add("The Stage FaultySource has constructor with arguments but no default constructor.");
+    expectedSet.add("Class com.streamsets.pipeline.sdk.testData.DatatypeProvider does not implement 'com.streamsets.pipeline.api.ValuesProvider' interface.");
 
-    Assert.assertTrue(diagnostics.size() == 10);
+    for(Diagnostic d : diagnostics) {
+      System.out.println(d.toString());
+    }
+    Assert.assertEquals(11, diagnostics.size());
     for(Diagnostic d : diagnostics) {
       Assert.assertTrue(expectedSet.contains(d.getMessage(Locale.ENGLISH)));
     }

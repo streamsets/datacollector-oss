@@ -21,32 +21,10 @@ import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @StageDef(name = "fieldTypeConverter", version="1.0.0", label="Field Type Converter")
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
-
-  public static class ConverterValuesProvider implements ValuesProvider {
-    @Override
-    public List<String> getValues() {
-      List<String> values = new ArrayList<String>();
-      for (Field.Type type : Field.Type.values()) {
-        values.add(type.toString());
-      }
-      return values;
-    }
-
-    @Override
-    public List<String> getLabels() {
-      List<String> labels = new ArrayList<String>();
-      for (Field.Type type : Field.Type.values()) {
-        labels.add(type.name());
-      }
-      return labels;
-    }
-  }
 
   @ConfigDef(name = "fieldsToConvert", label = "Fields to convert", required = true,type = Type.MODEL, defaultValue="")
   @FieldModifier(type= FieldModifier.Type.PROVIDED, valuesProvider = ConverterValuesProvider.class)

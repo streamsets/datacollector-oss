@@ -31,7 +31,6 @@
   <modules>
     <module>twitter-stage-contr</module>
     <module>facebook-stage-contr</module>
-    <module>linkedin-stage-contr</module>
   </modules>
 
   <build>
