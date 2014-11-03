@@ -20,6 +20,7 @@ package com.streamsets.pipeline.store.impl;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.agent.RuntimeInfo;
 import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.container.Configuration;
@@ -33,12 +34,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class TestFilePipelineStore {
 
@@ -232,10 +228,14 @@ public class TestFilePipelineStore {
     ConfigConfiguration config = new ConfigConfiguration("a", "B");
     Map<String, Object> uiInfo = new LinkedHashMap<String, Object>();
     uiInfo.put("ui", "UI");
-    StageConfiguration stage = new StageConfiguration("instance", "library", "name", "version",
-                                                      ImmutableList.of(config), uiInfo,
-                                                      null, ImmutableList.of("a"));
-    return new PipelineConfiguration(uuid, ImmutableList.of(stage), PipelineConfiguration.OnError.DROP_BATCH);
+    StageConfiguration stage = new StageConfiguration(
+      "instance", "instance", "description", "library", "name", "version",
+      ImmutableList.of(config), uiInfo, null, ImmutableList.of("a"));
+    List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(3);
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
+
+    return new PipelineConfiguration(uuid, "This is the pipeline description", pipelineConfigs, ImmutableList.of(stage));
   }
 
   @Test

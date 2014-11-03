@@ -27,6 +27,9 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.container.Configuration;
@@ -49,8 +52,11 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(), stageDefs,
-                                                                   PipelineConfiguration.OnError.DROP_RECORD);
+    List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(), "This is the pipeline description",
+      pipelineConfigs, stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
@@ -135,8 +141,12 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(), stageDefs,
-                                                                   PipelineConfiguration.OnError.DROP_RECORD);
+    List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
+      "This is the pipeline description", pipelineConfigs,
+      stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
@@ -180,8 +190,12 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(), stageDefs,
-                                                                   PipelineConfiguration.OnError.DROP_RECORD);
+    List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
+
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
+      "This is the pipeline description", pipelineConfigs, stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
@@ -239,8 +253,12 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(), stageDefs,
-                                                                   PipelineConfiguration.OnError.DROP_RECORD);
+    List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
+
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
+      "This is the pipeline description", pipelineConfigs, stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);

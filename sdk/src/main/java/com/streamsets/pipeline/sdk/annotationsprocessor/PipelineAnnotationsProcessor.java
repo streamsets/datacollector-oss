@@ -287,7 +287,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         stageDefAnnotation.label(),
         stageDefAnnotation.description(),
         StageType.valueOf(getTypeFromElement(typeElement)),
-        configDefinitions);
+        configDefinitions,
+        stageDefAnnotation.onError());
     } else {
       stageDefValidationError = true;
     }

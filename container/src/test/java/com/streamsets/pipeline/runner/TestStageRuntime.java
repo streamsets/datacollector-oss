@@ -18,19 +18,10 @@
 package com.streamsets.pipeline.runner;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.config.ConfigConfiguration;
-import com.streamsets.pipeline.config.ConfigDefinition;
-import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.StageConfiguration;
-import com.streamsets.pipeline.config.StageDefinition;
-import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.config.*;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import org.junit.Assert;
 import org.junit.Test;
@@ -98,11 +89,13 @@ public class TestStageRuntime {
     configDefs.add(configDef);
     configDef = new ConfigDefinition("boolean", ConfigDef.Type.BOOLEAN, "l4", "d4", "false", true, "g", "booleanVar", null);
     configDefs.add(configDef);
-    StageDefinition sourceDef = new StageDefinition(TSource.class.getName(), "source", "1.0.0", "label", "description",
-                                                   StageType.SOURCE, configDefs);
+    StageDefinition sourceDef = new StageDefinition(
+      TSource.class.getName(), "source", "1.0.0", "label", "description",
+      StageType.SOURCE, configDefs, StageDef.OnError.DROP_RECORD);
     sourceDef.setLibrary("library", Thread.currentThread().getContextClassLoader());
-    StageDefinition targetDef = new StageDefinition(TTarget.class.getName(), "target", "1.0.0", "label", "description",
-                                                    StageType.TARGET, Collections.EMPTY_LIST);
+    StageDefinition targetDef = new StageDefinition(
+      TTarget.class.getName(), "target", "1.0.0", "label", "description",
+      StageType.TARGET, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD);
     targetDef.setLibrary("library", Thread.currentThread().getContextClassLoader());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"))).thenReturn(targetDef);
@@ -121,14 +114,21 @@ public class TestStageRuntime {
     config = new ConfigConfiguration("boolean", true);
     configs.add(config);
     List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
-    StageConfiguration source = new StageConfiguration("isource", "library", "source", "1.0.0",
-                                                      configs, null, Collections.EMPTY_LIST, ImmutableList.of("a"));
+    StageConfiguration source = new StageConfiguration(
+      "isource", "isource", "description", "library", "source", "1.0.0",
+      configs, null, Collections.EMPTY_LIST, ImmutableList.of("a"));
     stages.add(source);
-    StageConfiguration stage = new StageConfiguration("itarget", "library", "target", "1.0.0",
-                                                      Collections.EMPTY_LIST, null, ImmutableList.of("a"),
-                                                      Collections.EMPTY_LIST);
+    StageConfiguration stage = new StageConfiguration(
+      "itarget", "itarget", "description", "library", "target", "1.0.0",
+      Collections.EMPTY_LIST, null, ImmutableList.of("a"),
+      Collections.EMPTY_LIST);
     stages.add(stage);
-    return new PipelineConfiguration(UUID.randomUUID(), stages, PipelineConfiguration.OnError.DROP_RECORD);
+    List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
+
+    return new PipelineConfiguration(UUID.randomUUID(), "This is the pipeline description", pipelineConfigs,
+      stages);
   }
 
   @Test

@@ -15,29 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.config;
 
-package com.streamsets.pipeline.api;
-
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface StageDef {
-
-  public enum OnError {DROP_RECORD, DROP_BATCH}
-
-  String name();
-
-  String version();
-
-  String label();
-
-  String description() default "";
-
-  OnError onError() default OnError.DROP_RECORD;
-
+public enum DeliveryGuarantee {
+  ATLEAST_ONCE,
+  ATMOST_ONCE
 }

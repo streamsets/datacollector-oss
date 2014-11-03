@@ -20,6 +20,7 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.container.ApiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,7 @@ public class StageDefinition {
   private final String label;
   private final String description;
   private final StageType type;
+  private final StageDef.OnError onError;
   private List<ConfigDefinition> configDefinitions;
   private Map<String, ConfigDefinition> configDefinitionsMap;
 
@@ -59,7 +61,8 @@ public class StageDefinition {
     @JsonProperty("label") String label,
     @JsonProperty("description") String description,
     @JsonProperty("type") StageType type,
-    @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions) {
+    @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions,
+    @JsonProperty("onError") StageDef.OnError onError) {
     this.className = className;
     this.name = name;
     this.version = version;
@@ -71,6 +74,7 @@ public class StageDefinition {
     for (ConfigDefinition conf : configDefinitions) {
       configDefinitionsMap.put(conf.getName(), conf);
     }
+    this.onError = onError;
   }
 
   public void setLibrary(String library, ClassLoader classLoader) {
@@ -134,6 +138,10 @@ public class StageDefinition {
     return ApiUtils.format("{}:{}:{}", getLibrary(), getName(), getVersion());
   }
 
+  public StageDef.OnError getOnError() {
+    return onError;
+  }
+
   public StageDefinition localize(Locale locale) {
     String rbName = getClassName() + "-bundle";
     try {
@@ -155,8 +163,9 @@ public class StageDefinition {
     }
     String label = (rb.containsKey(STAGE_LABEL)) ? rb.getString(STAGE_LABEL) : getLabel();
     String description = (rb.containsKey(STAGE_DESCRIPTION)) ? rb.getString(STAGE_DESCRIPTION) : getDescription();
-    StageDefinition def = new StageDefinition(getClassName(), getName(), getVersion(), label, description,
-                                              getType(), configDefs);
+    StageDefinition def = new StageDefinition(
+      getClassName(), getName(), getVersion(), label, description,
+      getType(), configDefs, getOnError());
     def.setLibrary(getLibrary(), getClassLoader());
 
     for(ConfigDefinition configDef : def.getConfigDefinitions()) {
@@ -227,7 +236,4 @@ public class StageDefinition {
       }
     }
   }
-
-
-
 }

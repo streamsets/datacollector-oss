@@ -22,22 +22,15 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.agent.RuntimeInfo;
+import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.Configuration;
-import com.streamsets.pipeline.store.PipelineInfo;
-import com.streamsets.pipeline.store.PipelineRevInfo;
-import com.streamsets.pipeline.store.PipelineStoreErrors;
-import com.streamsets.pipeline.store.PipelineStore;
-import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.store.*;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class FilePipelineStore implements PipelineStore {
   public static final String CREATE_DEFAULT_PIPELINE_KEY = "create.default.pipeline";
@@ -128,7 +121,11 @@ public class FilePipelineStore implements PipelineStore {
     Date date = new Date();
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
-    PipelineConfiguration pipeline = new PipelineConfiguration(uuid, null, PipelineConfiguration.OnError.DROP_RECORD);
+    List<ConfigConfiguration> configuration = new ArrayList<ConfigConfiguration>(2);
+    configuration.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    configuration.add(new ConfigConfiguration("stopPipelineOnError", false));
+    PipelineConfiguration pipeline = new PipelineConfiguration(uuid, description, configuration,
+      null);
     try {
       json.writeValue(getInfoFile(name), info);
       json.writeValue(getPipelineFile(name), pipeline);

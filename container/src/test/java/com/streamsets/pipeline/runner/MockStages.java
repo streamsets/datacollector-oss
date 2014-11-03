@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
@@ -50,14 +51,16 @@ public class MockStages {
 
   @SuppressWarnings("unchecked")
   public static StageConfiguration createProcessor(String instanceName, List<String> inputs, List<String> outputs) {
-    return new StageConfiguration(instanceName, "default", "processorName", "1.0.0",
-                                  Collections.EMPTY_LIST, null, inputs, outputs);
+    return new StageConfiguration(
+      instanceName, instanceName, "description","default", "processorName",  "1.0.0",
+      Collections.EMPTY_LIST, null, inputs, outputs);
   }
 
   @SuppressWarnings("unchecked")
   public static StageConfiguration createTarget(String instanceName, List<String> inputs) {
-    return new StageConfiguration(instanceName, "default", "targetName", "1.0.0",
-                                  Collections.EMPTY_LIST, null, inputs, Collections.EMPTY_LIST);
+    return new StageConfiguration(
+      instanceName, instanceName, "description","default", "targetName",  "1.0.0",
+      Collections.EMPTY_LIST, null, inputs, Collections.EMPTY_LIST);
   }
 
   private static Source source;
@@ -154,14 +157,17 @@ public class MockStages {
     @SuppressWarnings("unchecked")
     public MockStageLibrary() {
       stages = new ArrayList<StageDefinition>();
-      StageDefinition sDef = new StageDefinition(MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
-                                                 "sourceDesc", StageType.SOURCE, Collections.EMPTY_LIST);
+      StageDefinition sDef = new StageDefinition(
+        MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
+        "sourceDesc", StageType.SOURCE, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD);
       sDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
       StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "processorLabel",
                                                  "processorDesc", StageType.PROCESSOR, Collections.EMPTY_LIST);
+
       pDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
-      StageDefinition tDef = new StageDefinition(MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
-                                                 "targetDesc", StageType.TARGET, Collections.EMPTY_LIST);
+      StageDefinition tDef = new StageDefinition(
+        MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
+        "targetDesc", StageType.TARGET, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD);
       tDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
       stages = ImmutableList.of(sDef, pDef, tDef);
     }

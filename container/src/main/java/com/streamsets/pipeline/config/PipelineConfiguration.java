@@ -17,8 +17,6 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 
@@ -32,19 +30,21 @@ public class PipelineConfiguration {
   public enum OnError { DROP_RECORD, DROP_BATCH, STOP_PIPELINE }
 
   private UUID uuid = null;
+  private final String description;
+  private List<ConfigConfiguration> configuration;
   private List<StageConfiguration> stages;
   private Map<String, List<String>> issues;
-  private OnError onError;
 
   @SuppressWarnings("unchecked")
-  public PipelineConfiguration(
-      @JsonProperty("uuid") UUID uuid,
-      @JsonProperty("stages") List<StageConfiguration> stages,
-      @JsonProperty("onError") OnError onError) {
+  public PipelineConfiguration(@JsonProperty("uuid") UUID uuid,
+      @JsonProperty("description") String description,
+      @JsonProperty("configuration") List<ConfigConfiguration> configuration,
+      @JsonProperty("stages") List<StageConfiguration> stages) {
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
+    this.description = description;
+    this.configuration = configuration;
     this.stages = (stages != null) ? stages : Collections.EMPTY_LIST;
     issues = Collections.EMPTY_MAP;
-    this.onError = Preconditions.checkNotNull(onError, "onError cannot be null");
   }
 
   public List<StageConfiguration> getStages() {
@@ -75,8 +75,11 @@ public class PipelineConfiguration {
     return issues == null || issues.isEmpty();
   }
 
-  public OnError getOnError() {
-    return onError;
+  public List<ConfigConfiguration> getConfiguration() {
+    return configuration;
   }
 
+  public String getDescription() {
+    return description;
+  }
 }
