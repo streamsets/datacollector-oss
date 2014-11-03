@@ -22,15 +22,8 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.record.RecordImpl;
-import jersey.repackaged.com.google.common.collect.ImmutableList;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class PipeBatch implements BatchMaker, Batch {
   private Pipe pipe;
@@ -85,6 +78,13 @@ public class PipeBatch implements BatchMaker, Batch {
   }
 
   public void flushBackToPipelineBatch() {
+    //FIXME<Hari>: temp implementation. Check with Tucu
+    if(pipeOutput != null && !pipeOutput.isEmpty()) {
+      List<Record> records = pipeOutput.get("lane");
+      if (records != null && !records.isEmpty()) {
+        pipelineBatch.populate(records);
+      }
+    }
   }
 
   // BatchMaker
