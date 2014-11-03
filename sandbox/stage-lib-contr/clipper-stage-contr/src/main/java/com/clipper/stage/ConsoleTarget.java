@@ -37,12 +37,16 @@ public class ConsoleTarget implements Target {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       Record record = it.next();
+      pw.write("Travel log : " + (String)record.getField("transactionLog").getValue());
+      pw.println();
       pw.write("Transaction Fare : " + (String)record.getField("transactionFare").getValue());
       pw.write(" | ");
-      pw.write("Total Claim : " + String.valueOf((Double)record.getField("TotalClaim").getValue()));
+      pw.write("Cumulative commute expense : " + String.valueOf((Double)record.getField("TotalClaim").getValue()));
       pw.println();
-      pw.flush();
+      pw.write("------------------------------------------------------------------------------------");
+      pw.println();
     }
+    pw.flush();
     pw.close();
   }
 

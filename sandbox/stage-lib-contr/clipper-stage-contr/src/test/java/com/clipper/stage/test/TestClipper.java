@@ -51,7 +51,7 @@ public class TestClipper {
       "1.0",
       "Produces records containing clipper transactions",
       "pdfProd");
-    Source source = new PDFLineProducer("/Users/Harikiran/Documents/ridehistory.pdf");
+    Source source = new PDFLineProducer("/Users/Harikiran/Downloads/madhuridehistory.pdf");
     Pipeline.Builder pb = new Pipeline.Builder(metrics, sourceInfo, source, ImmutableSet.of("lane"));
 
     Processor.Info processorInfo = new ModuleInfo(
