@@ -19,11 +19,16 @@ package com.clipper.stage;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
 
+@StageDef(description = "Prints the travel log, fare and the cumulative sum on the Console",
+  label = "console_target",
+  name = "ConsoleTarget",
+  version = "1.0")
 public class ConsoleTarget implements Target {
 
   @Override
@@ -41,7 +46,7 @@ public class ConsoleTarget implements Target {
       pw.println();
       pw.write("Transaction Fare : " + (String)record.getField("transactionFare").getValue());
       pw.write(" | ");
-      pw.write("Cumulative commute expense : " + String.valueOf((Double)record.getField("TotalClaim").getValue()));
+      pw.write("Cumulative commute expense : " + String.valueOf((Double) record.getField("TotalClaim").getValue()));
       pw.println();
       pw.write("------------------------------------------------------------------------------------");
       pw.println();
