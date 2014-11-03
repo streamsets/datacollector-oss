@@ -76,7 +76,7 @@ angular.module('pipelineGraphDirectives', [])
 
       thisGraph.drag = d3.behavior.drag()
         .origin(function(d){
-          return {x: d.x, y: d.y};
+          return {x: d.uiInfo.xPos, y: d.uiInfo.yPos};
         })
         .on("drag", function(args){
           thisGraph.state.justDragged = true;
@@ -87,17 +87,22 @@ angular.module('pipelineGraphDirectives', [])
         });
 
       // listen for key events
-      d3.select(window).on("keydown", function(){
+      svg.on("keydown", function() {
         thisGraph.svgKeyDown.call(thisGraph);
       })
-        .on("keyup", function(){
-          thisGraph.svgKeyUp.call(thisGraph);
-        });
-      svg.on("mousedown", function(d){thisGraph.svgMouseDown.call(thisGraph, d);});
-      svg.on("mouseup", function(d){thisGraph.svgMouseUp.call(thisGraph, d);});
+      .on("keyup", function() {
+        thisGraph.svgKeyUp.call(thisGraph);
+      })
+      .on("mousedown", function(d) {
+        thisGraph.svgMouseDown.call(thisGraph, d);
+      })
+      .on("mouseup", function(d) {
+        thisGraph.svgMouseUp.call(thisGraph, d);
+      });
 
       // listen for dragging
       var dragSvg = d3.behavior.zoom()
+        .scaleExtent([0.1, 10])
         .on("zoom", function(){
           if (d3.event.sourceEvent.shiftKey){
             // TODO  the internal d3 state is still changing
@@ -203,25 +208,23 @@ angular.module('pipelineGraphDirectives', [])
     GraphCreator.prototype.dragmove = function(d) {
       var thisGraph = this;
       if (thisGraph.state.shiftNodeDrag){
-        thisGraph.dragLine.attr('d', 'M' + d.x + ',' + d.y + 'L' + d3.mouse(thisGraph.svgG.node())[0] + ',' + d3.mouse(this.svgG.node())[1]);
+        thisGraph.dragLine.attr('d', 'M' + d.uiInfo.xPos + ',' + d.uiInfo.yPos + 'L' + d3.mouse(thisGraph.svgG.node())[0] + ',' + d3.mouse(this.svgG.node())[1]);
       } else{
-        d.x += d3.event.dx;
-        d.y +=  d3.event.dy;
-        thisGraph.updateGraph();
+        $scope.$apply(function() {
+          d.uiInfo.xPos += d3.event.dx;
+          d.uiInfo.yPos +=  d3.event.dy;
+          thisGraph.updateGraph();
+        });
       }
     };
 
     GraphCreator.prototype.deleteGraph = function(skipPrompt){
-      var thisGraph = this,
-        doDelete = true;
-      if (!skipPrompt){
-        doDelete = window.confirm("Press OK to delete this graph");
-      }
-      if(doDelete){
-        thisGraph.nodes = [];
-        thisGraph.edges = [];
-        thisGraph.updateGraph();
-      }
+      var thisGraph = this;
+      thisGraph.nodes = [];
+      thisGraph.edges = [];
+      thisGraph.state.selectedNode = null;
+      thisGraph.state.selectedEdge = null;
+      thisGraph.updateGraph();
     };
 
     /* select all text in element: taken from http://stackoverflow.com/questions/6139107/programatically-select-text-in-a-contenteditable-html-element */
@@ -252,9 +255,7 @@ angular.module('pipelineGraphDirectives', [])
             .attr('dy', '15');
         }
       }
-
     };
-
 
     // remove edges associated with a node
     GraphCreator.prototype.spliceLinksForNode = function(node) {
@@ -288,7 +289,7 @@ angular.module('pipelineGraphDirectives', [])
     GraphCreator.prototype.removeSelectFromNode = function(){
       var thisGraph = this;
       thisGraph.circles.filter(function(cd){
-        return cd.id === thisGraph.state.selectedNode.id;
+        return cd.instanceName === thisGraph.state.selectedNode.instanceName;
       }).classed(thisGraph.consts.selectedClass, false);
       thisGraph.state.selectedNode = null;
     };
@@ -329,7 +330,7 @@ angular.module('pipelineGraphDirectives', [])
         state.shiftNodeDrag = d3.event.shiftKey;
         // reposition dragged directed edge
         thisGraph.dragLine.classed('hidden', false)
-          .attr('d', 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + d.y);
+          .attr('d', 'M' + d.uiInfo.xPos + ',' + d.uiInfo.yPos + 'L' + d.uiInfo.xPos + ',' + d.uiInfo.yPos);
         return;
       }
     };
@@ -401,8 +402,14 @@ angular.module('pipelineGraphDirectives', [])
           return d.source === newEdge.source && d.target === newEdge.target;
         });
         if (!filtRes[0].length){
+          console.log(newEdge);
           thisGraph.edges.push(newEdge);
           thisGraph.updateGraph();
+
+          $scope.$apply(function() {
+            newEdge.source.outputLanes = [newEdge.source.instanceName + 'outputLane'];
+            newEdge.target.inputLanes = [newEdge.source.instanceName + 'outputLane'];
+          });
         }
       } else{
         // we're in the same node
@@ -411,29 +418,27 @@ angular.module('pipelineGraphDirectives', [])
           state.justDragged = false;
         //} else{
           // clicked, not dragged
-          if (d3.event.shiftKey){
+          /*if (d3.event.shiftKey){
             // shift-clicked node: edit text content
             var d3txt = thisGraph.changeTextOfNode(d3node, d);
             var txtNode = d3txt.node();
             thisGraph.selectElementContents(txtNode);
             txtNode.focus();
-          } else{
+          } else{*/
             if (state.selectedEdge){
               thisGraph.removeSelectFromEdge();
             }
             var prevNode = state.selectedNode;
 
-            if (!prevNode || prevNode.id !== d.id){
+            if (!prevNode || prevNode.instanceName !== d.instanceName){
               thisGraph.replaceSelectNode(d3node, d);
             } else{
-              thisGraph.removeSelectFromNode();
+              //thisGraph.removeSelectFromNode();
             }
-          }
+          //}
         //}
       }
       state.mouseDownNode = null;
-      return;
-
     }; // end of circles mouseup
 
     // mousedown on main svg
@@ -467,7 +472,7 @@ angular.module('pipelineGraphDirectives', [])
         thisGraph.updateGraph();
         // make title of text immediently editable
         var d3txt = thisGraph.changeTextOfNode(thisGraph.circles.filter(function(dval){
-            return dval.id === d.id;
+            return dval.instanceName === d.instanceName;
           }), d),
           txtNode = d3txt.node();
         thisGraph.selectElementContents(txtNode);
@@ -498,15 +503,19 @@ angular.module('pipelineGraphDirectives', [])
         case consts.BACKSPACE_KEY:
         case consts.DELETE_KEY:
           d3.event.preventDefault();
-          if (selectedNode){
-            thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
-            thisGraph.spliceLinksForNode(selectedNode);
-            state.selectedNode = null;
-            thisGraph.updateGraph();
-          } else if (selectedEdge){
-            thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1);
-            state.selectedEdge = null;
-            thisGraph.updateGraph();
+          if (selectedNode) {
+            $scope.$apply(function() {
+              thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
+              thisGraph.spliceLinksForNode(selectedNode);
+              state.selectedNode = null;
+              thisGraph.updateGraph();
+            });
+          } else if (selectedEdge) {
+            $scope.$apply(function() {
+              thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1);
+              state.selectedEdge = null;
+              thisGraph.updateGraph();
+            });
           }
           break;
       }
@@ -522,7 +531,7 @@ angular.module('pipelineGraphDirectives', [])
       thisGraph.updateGraph();
 
       var addedNode = thisGraph.circles.filter(function(cd){
-        return cd.id === node.id;
+        return cd.instanceName === node.instanceName;
       });
 
       thisGraph.replaceSelectNode(addedNode, node);
@@ -536,7 +545,7 @@ angular.module('pipelineGraphDirectives', [])
         state = thisGraph.state;
 
       thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d){
-        return String(d.source.id) + "+" + String(d.target.id);
+        return String(d.source.instanceName) + "+" + String(d.target.instanceName);
       });
       var paths = thisGraph.paths;
       // update existing paths
@@ -545,7 +554,7 @@ angular.module('pipelineGraphDirectives', [])
           return d === state.selectedEdge;
         })
         .attr("d", function(d){
-          return "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y;
+          return "M" + d.source.uiInfo.xPos + "," + d.source.uiInfo.yPos + "L" + d.target.uiInfo.xPos + "," + d.target.uiInfo.yPos;
         });
 
       // add new paths
@@ -554,7 +563,7 @@ angular.module('pipelineGraphDirectives', [])
         .style('marker-end','url(#end-arrow)')
         .classed("link", true)
         .attr("d", function(d){
-          return "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y;
+          return "M" + d.source.uiInfo.xPos + "," + d.source.uiInfo.yPos + "L" + d.target.uiInfo.xPos + "," + d.target.uiInfo.yPos;
         })
         .on("mousedown", function(d){
           thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
@@ -567,15 +576,15 @@ angular.module('pipelineGraphDirectives', [])
       paths.exit().remove();
 
       // update existing nodes
-      thisGraph.circles = thisGraph.circles.data(thisGraph.nodes, function(d){ return d.id;});
-      thisGraph.circles.attr("transform", function(d){return "translate(" + (d.x - consts.rectWidth/2) + "," + (d.y - consts.rectHeight/2) + ")";});
+      thisGraph.circles = thisGraph.circles.data(thisGraph.nodes, function(d){ return d.instanceName;});
+      thisGraph.circles.attr("transform", function(d){return "translate(" + (d.uiInfo.xPos - consts.rectWidth/2) + "," + (d.uiInfo.yPos - consts.rectHeight/2) + ")";});
 
       // add new nodes
       var newGs= thisGraph.circles.enter()
         .append("g");
 
       newGs.classed(consts.circleGClass, true)
-        .attr("transform", function(d){return "translate(" + (d.x - consts.rectWidth/2) + "," + (d.y - consts.rectHeight/2) + ")";})
+        .attr("transform", function(d){return "translate(" + (d.uiInfo.xPos - consts.rectWidth/2) + "," + (d.uiInfo.yPos - consts.rectHeight/2) + ")";})
         .on("mouseover", function(d){
           if (state.shiftNodeDrag){
             d3.select(this).classed(consts.connectClass, true);
@@ -587,7 +596,7 @@ angular.module('pipelineGraphDirectives', [])
         .on("mousedown", function(d){
           thisGraph.circleMouseDown.call(thisGraph, d3.select(this), d);
           $scope.$apply(function(){
-            $scope.$emit('onNodeSelection', d.stage);
+            $scope.$emit('onNodeSelection', d);
           });
         })
         .on("mouseup", function(d){
@@ -604,7 +613,7 @@ angular.module('pipelineGraphDirectives', [])
         });
 
       newGs.each(function(d){
-        thisGraph.insertTitleLinebreaks(d3.select(this), d.label);
+        thisGraph.insertTitleLinebreaks(d3.select(this), d.instanceName);
       });
 
       // remove old nodes
@@ -626,25 +635,38 @@ angular.module('pipelineGraphDirectives', [])
     };
 
     /** MAIN SVG **/
-    var pipelineConfig = $scope.pipelineConfig,
-      svg = d3.select($element[0]).append("svg")
-        .attr("width", "100%")
-        .attr("height", "90%"),
-      graph = new GraphCreator(svg, pipelineConfig.nodes, pipelineConfig.edges);
+    var svg, graph;
 
-    graph.setIdCt(2);
-    graph.updateGraph();
+    $scope.$on('updateGraph', function(event, nodes, edges, selectNode) {
 
-    $scope.$on('addNode', function(event, stage){
-      var xPos = (graph.nodes && graph.nodes.length) ?  graph.nodes[graph.nodes.length - 1].x + 300 : 200,
-        node = {
-        id: graph.idct++,
-        label: stage.label,
-        stage: stage,
-        x: xPos,
-        y: 100
-      };
-      graph.addNode(node);
+      if(graph !== undefined) {
+        graph.deleteGraph();
+      } else {
+        svg = d3.select($element[0]).append("svg")
+          .attr("width", "100%")
+          .attr("height", "100%")
+          .attr("tabindex", 0);
+        graph = new GraphCreator(svg, nodes, edges || []);
+        graph.setIdCt(2);
+      }
+
+      graph.nodes = nodes;
+      graph.edges = edges;
+      graph.updateGraph();
+
+      if(selectNode) {
+        var selectNodeDom = graph.circles.filter(function(cd){
+          return cd.instanceName === selectNode.instanceName;
+        });
+
+        if(selectNodeDom) {
+          graph.replaceSelectNode(selectNodeDom, selectNode);
+        }
+      }
+    });
+
+    $scope.$on('addNode', function(event, stageInstance){
+      graph.addNode(stageInstance);
     });
 
   });

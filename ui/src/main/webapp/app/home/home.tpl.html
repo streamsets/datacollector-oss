@@ -1,116 +1,143 @@
 <div class="row">
-  <button type="button" class="btn btn-primary btn-create-pipeline" ng-hide="config" ng-click="createPipelineAgent()">
-    <span class="glyphicon glyphicon-plus"></span>
-    <span>{{'admin.createPipelineFLow' | translate}}</span>
-  </button>
+  <bg-splitter orientation="vertical">
 
-  <div ng-show="config" >
-    <bg-splitter orientation="vertical">
-
-      <bg-pane min-size="100" class="panel panel-default canvas-pane">
-        <div class="panel-heading clearfix">
-          <h3 class="panel-title pull-left">{{'admin.header.pipelineFlow' | translate}}</h3>
+    <bg-pane min-size="100" class="panel panel-default canvas-pane">
+      <div class="panel-heading clearfix">
+        <h3 class="panel-title pull-left">{{'admin.header.pipelineFlow' | translate}}</h3>
 
 
-          <div class="pull-right">
-            <button type="button" class="btn btn-default btn-sm">
-              <span class="glyphicon glyphicon-eye-open"></span> {{'admin.header.preview' | translate}}
-            </button>
-            <button type="button" class="btn btn-default btn-sm" ng-hide="isPipelineRunning" disabled="{{isPipelineInValid}}">
-              <span class="glyphicon glyphicon-play"></span> {{'admin.header.start' | translate}}
-            </button>
-            <button type="button" class="btn btn-default btn-sm" ng-show="isPipelineRunning">
-              <span class="glyphicon glyphicon-stop"></span> {{'admin.header.stop' | translate}}
-            </button>
-          </div>
-
-          <div class="dropdown pull-right stage-dropdown">
-            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-              <span class="glyphicon glyphicon-screenshot"></span>
-              Add Target
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li role="presentation" ng-repeat="stageLibrary in targets">
-                <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="dropdown pull-right stage-dropdown">
-            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-              <span class="glyphicon glyphicon-cog"></span>
-              Add Processor
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li role="presentation" ng-repeat="stageLibrary in processors">
-                <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="dropdown pull-right stage-dropdown">
-            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-              <span class="glyphicon glyphicon-list-alt"></span>
-              Add Source
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li role="presentation" ng-repeat="stageLibrary in sources">
-                <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
-              </li>
-            </ul>
-          </div>
-
-
+        <div class="pull-right">
+          <button type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-eye-open"></span> {{'admin.header.preview' | translate}}
+          </button>
+          <button type="button" class="btn btn-default btn-sm" ng-hide="isPipelineRunning" disabled="{{!pipelineConfig.valid}}">
+            <span class="glyphicon glyphicon-play"></span> {{'admin.header.start' | translate}}
+          </button>
+          <button type="button" class="btn btn-default btn-sm" ng-show="isPipelineRunning">
+            <span class="glyphicon glyphicon-stop"></span> {{'admin.header.stop' | translate}}
+          </button>
         </div>
-        <div class="panel-body">
-          <pipeline-graph graph-data="pipelineConfig" ></pipeline-graph>
+
+        <div class="dropdown pull-right stage-dropdown">
+          <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-screenshot"></span>
+            Add Target
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation" ng-repeat="stageLibrary in targets">
+              <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
+            </li>
+          </ul>
         </div>
-      </bg-pane>
 
-      <bg-pane min-size="50" class="panel panel-default detail-pane">
-        <div class="panel-heading">
-          <h3 class="panel-title">{{detailPaneConfig.label}}</h3>
+        <div class="dropdown pull-right stage-dropdown">
+          <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-cog"></span>
+            Add Processor
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation" ng-repeat="stageLibrary in processors">
+              <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
+            </li>
+          </ul>
         </div>
-        <div class="panel-body">
+
+        <div class="dropdown pull-right stage-dropdown">
+          <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-list-alt"></span>
+            Add Source
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation" ng-repeat="stageLibrary in sources">
+              <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
+            </li>
+          </ul>
+        </div>
 
 
-          <div class="tabbable tabs-left">
+      </div>
+      <div class="panel-body">
+        <pipeline-graph graph-data="pipelineConfig" ></pipeline-graph>
+      </div>
+    </bg-pane>
 
-            <ul class="nav nav-tabs">
-              <li class="active">
-                <a showtab="" href="#configuration" data-toggle="tab">
-                  {{'admin.detailPane.configuration.title' | translate}}
-                </a>
-              </li>
-            </ul>
+    <bg-pane min-size="50" class="panel panel-default detail-pane">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{detailPaneConfig.name || detailPaneConfig.instanceName}}</h3>
+      </div>
+      <div class="panel-body">
 
-            <div class="tab-content">
-              <div class="tab-pane active" id="configuration">
 
-                <form class="form-horizontal" role="form" ng-repeat="configDefinition in detailPaneConfig.configDefinitions">
+        <div class="tabbable tabs-left">
 
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">
-                      {{configDefinition.label}}
-                    </label>
-                    <div class="col-sm-6">
-                      <input type="text" class="form-control">
-                    </div>
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a showtab="" href="#general" data-toggle="tab">
+                General
+              </a>
+            </li>
+            <li>
+              <a showtab="" href="#configuration" data-toggle="tab">
+                {{'admin.detailPane.configuration.title' | translate}}
+              </a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+
+            <div class="tab-pane active" id="general">
+              <form class="form-horizontal" role="form">
+                <div class="form-group" ng-repeat="configDefinition in detailPaneGeneralConfigDefn">
+                  <label class="col-sm-2 control-label">{{configDefinition.label}}</label>
+
+                  <div class="col-sm-6" ng-if="configDefinition.name !== 'description'">
+                    <input type="text" class="form-control" ng-model="detailPaneConfig[configDefinition.name]">
                   </div>
 
-                </form>
-
-              </div>
-
+                  <div class="col-sm-6" ng-if="configDefinition.name === 'description'">
+                    <textarea class="form-control" ng-model="detailPaneConfig[configDefinition.name]"></textarea>
+                  </div>
+                </div>
+              </form>
             </div>
+
+            <div class="tab-pane" id="configuration">
+              <form class="form-horizontal" role="form">
+                <div class="form-group" ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions">
+                  <label class="col-sm-2 control-label">{{configDefinition.label}}</label>
+
+                  <div class="col-sm-6" ng-if="configDefinition.type === 'BOOLEAN'">
+                    <input type="checkbox" ng-model="detailPaneConfig.configuration[$index].value">
+                  </div>
+
+                  <div class="col-sm-6" ng-if="configDefinition.type === 'INTEGER'">
+                    <input type="number" class="form-control" ng-model="detailPaneConfig.configuration[$index].value">
+                  </div>
+
+                  <div class="col-sm-6" ng-if="!configDefinition.listValues && configDefinition.type === 'STRING'">
+                    <input type="text" class="form-control" ng-model="detailPaneConfig.configuration[$index].value">
+                  </div>
+
+                  <div class="col-sm-6"
+                       ng-if="configDefinition.listValues && configDefinition.listValues.length && configDefinition.type === 'STRING'">
+                    <select class="form-control" ng-model="detailPaneConfig.configuration[$index].value">
+                      <option ng-repeat="listValue in configDefinition.listValues" value="{{listValue.value}}">
+                        {{listValue.label}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </form>
+            </div>
+
           </div>
-          <!-- /tabs -->
         </div>
-      </bg-pane>
-    </bg-splitter>
-  </div>
+        <!-- /tabs -->
+      </div>
+    </bg-pane>
+  </bg-splitter>
 </div>
 

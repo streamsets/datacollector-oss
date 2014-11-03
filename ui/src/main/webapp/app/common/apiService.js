@@ -9,6 +9,7 @@ angular.module('pipelineAgentApp.common')
 
     //api http endpoints
     api.pipelineAgent = {
+
       getStageLibrary: function() {
         var url = apiBase + '/stage-library';
         return $http({
@@ -16,11 +17,29 @@ angular.module('pipelineAgentApp.common')
           url: url
         });
       },
-      getConfig: function() {
+
+      getPipelineConfig: function() {
         var url = apiBase + '/pipelines/xyz';
         return $http({
           method: 'GET',
           url: url
+        });
+      },
+
+      getPipelineConfigInfo: function() {
+        var url = apiBase + '/pipelines/xyz?get=info';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      savePipelineConfig: function(config) {
+        var url = apiBase + '/pipelines/xyz';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: config
         });
       }
     };
