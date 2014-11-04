@@ -69,6 +69,11 @@ public class BatchMakerImpl implements BatchMaker {
           "No lane has been specified and the stage '%s' has multiple output lanes '%s'", instanceName, outputLanes));
       stageOutput.get(singleOutputLane).add(outputRecord);
     } else {
+      if (lanes.length > 1) {
+        Set<String> laneSet = ImmutableSet.copyOf(lanes);
+        Preconditions.checkArgument(laneSet.size() == lanes.length, String.format(
+            "Specified lanes cannot have duplicates '%s'", laneSet));
+      }
       for (String lane : lanes) {
         Preconditions.checkArgument(outputLanes.contains(lane), String.format(
             "Invalid output lane '%s' for stage '%s', available lanes '%s'", lane, instanceName, outputLanes));
@@ -91,7 +96,7 @@ public class BatchMakerImpl implements BatchMaker {
   }
 
   public Map<String, List<Record>> getStageOutputSnapshot() {
-    return stageOutput;
+    return stageOutputSnaphost;
   }
 
 }

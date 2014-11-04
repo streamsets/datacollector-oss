@@ -32,7 +32,7 @@ public class ReservedPrefixSimpleMap<V> implements SimpleMap<String, V> {
 
   private void assertKey(String key) {
     Preconditions.checkNotNull(key, "key cannot be null");
-    Preconditions.checkArgument(key.startsWith(reservedPrefix), String.format(
+    Preconditions.checkArgument(!key.startsWith(reservedPrefix), String.format(
         "Invalid key, cannot start with '%s'", reservedPrefix));
   }
   @Override
