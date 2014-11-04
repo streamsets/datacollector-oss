@@ -41,7 +41,7 @@ angular.module('pipelineGraphDirectives', [])
       defs.append('svg:marker')
         .attr('id', 'end-arrow')
         .attr('viewBox', '0 -5 10 10')
-        .attr('refX', "47")
+        .attr('refX', "13")
         .attr('markerWidth', 3.5)
         .attr('markerHeight', 3.5)
         .attr('orient', 'auto')
@@ -49,7 +49,7 @@ angular.module('pipelineGraphDirectives', [])
         .attr('d', 'M0,-5L10,0L0,5');
 
       // define arrow markers for leading arrow
-      defs.append('svg:marker')
+      /*defs.append('svg:marker')
         .attr('id', 'mark-end-arrow')
         .attr('viewBox', '0 -5 10 10')
         .attr('refX', 7)
@@ -57,7 +57,7 @@ angular.module('pipelineGraphDirectives', [])
         .attr('markerHeight', 3.5)
         .attr('orient', 'auto')
         .append('svg:path')
-        .attr('d', 'M0,-5L10,0L0,5');
+        .attr('d', 'M0,-5L10,0L0,5');*/
 
       thisGraph.svg = svg;
       thisGraph.svgG = svg.append("g")
@@ -72,7 +72,7 @@ angular.module('pipelineGraphDirectives', [])
 
       // svg nodes and edges
       thisGraph.paths = svgG.append("g").selectAll("g");
-      thisGraph.circles = svgG.append("g").selectAll("g");
+      thisGraph.rects = svgG.append("g").selectAll("g");
 
       thisGraph.drag = d3.behavior.drag()
         .origin(function(d){
@@ -130,58 +130,6 @@ angular.module('pipelineGraphDirectives', [])
       // listen for resize
       window.onresize = function(){thisGraph.updateWindow(svg);};
 
-      // handle download data
-      d3.select("#download-input").on("click", function(){
-        var saveEdges = [];
-        thisGraph.edges.forEach(function(val, i){
-          saveEdges.push({source: val.source.id, target: val.target.id});
-        });
-        var blob = new Blob([window.JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "mydag.json");
-      });
-
-
-      // handle uploaded data
-      d3.select("#upload-input").on("click", function(){
-        document.getElementById("hidden-file-upload").click();
-      });
-      d3.select("#hidden-file-upload").on("change", function(){
-        if (window.File && window.FileReader && window.FileList && window.Blob) {
-          var uploadFile = this.files[0];
-          var filereader = new window.FileReader();
-
-          filereader.onload = function(){
-            var txtRes = filereader.result;
-            // TODO better error handling
-            try{
-              var jsonObj = JSON.parse(txtRes);
-              thisGraph.deleteGraph(true);
-              thisGraph.nodes = jsonObj.nodes;
-              thisGraph.setIdCt(jsonObj.nodes.length + 1);
-              var newEdges = jsonObj.edges;
-              newEdges.forEach(function(e, i){
-                newEdges[i] = {source: thisGraph.nodes.filter(function(n){return n.id == e.source;})[0],
-                  target: thisGraph.nodes.filter(function(n){return n.id == e.target;})[0]};
-              });
-              thisGraph.edges = newEdges;
-              thisGraph.updateGraph();
-            }catch(err){
-              window.alert("Error parsing uploaded file\nerror message: " + err.message);
-              return;
-            }
-          };
-          filereader.readAsText(uploadFile);
-
-        } else {
-          alert("Your browser won't let you save this graph -- try upgrading your browser to IE 10+ or Chrome or Firefox.");
-        }
-
-      });
-
-      // handle delete graph
-      d3.select("#delete-graph").on("click", function(){
-        thisGraph.deleteGraph(false);
-      });
     };
 
     GraphCreator.prototype.setIdCt = function(idct){
@@ -208,7 +156,8 @@ angular.module('pipelineGraphDirectives', [])
     GraphCreator.prototype.dragmove = function(d) {
       var thisGraph = this;
       if (thisGraph.state.shiftNodeDrag){
-        thisGraph.dragLine.attr('d', 'M' + d.uiInfo.xPos + ',' + d.uiInfo.yPos + 'L' + d3.mouse(thisGraph.svgG.node())[0] + ',' + d3.mouse(this.svgG.node())[1]);
+        thisGraph.dragLine.attr('d', 'M' + (d.uiInfo.xPos + thisGraph.consts.rectWidth) + ',' + (d.uiInfo.yPos + thisGraph.consts.rectHeight/2) +
+          'L' + d3.mouse(thisGraph.svgG.node())[0] + ',' + d3.mouse(this.svgG.node())[1]);
       } else{
         $scope.$apply(function() {
           d.uiInfo.xPos += d3.event.dx;
@@ -288,7 +237,7 @@ angular.module('pipelineGraphDirectives', [])
 
     GraphCreator.prototype.removeSelectFromNode = function(){
       var thisGraph = this;
-      thisGraph.circles.filter(function(cd){
+      thisGraph.rects.filter(function(cd){
         return cd.instanceName === thisGraph.state.selectedNode.instanceName;
       }).classed(thisGraph.consts.selectedClass, false);
       thisGraph.state.selectedNode = null;
@@ -326,8 +275,7 @@ angular.module('pipelineGraphDirectives', [])
         state = thisGraph.state;
       d3.event.stopPropagation();
       state.mouseDownNode = d;
-      if (d3.event.shiftKey){
-        state.shiftNodeDrag = d3.event.shiftKey;
+      if (state.shiftNodeDrag){
         // reposition dragged directed edge
         thisGraph.dragLine.classed('hidden', false)
           .attr('d', 'M' + d.uiInfo.xPos + ',' + d.uiInfo.yPos + 'L' + d.uiInfo.xPos + ',' + d.uiInfo.yPos);
@@ -402,7 +350,6 @@ angular.module('pipelineGraphDirectives', [])
           return d.source === newEdge.source && d.target === newEdge.target;
         });
         if (!filtRes[0].length){
-          console.log(newEdge);
           thisGraph.edges.push(newEdge);
           thisGraph.updateGraph();
 
@@ -412,34 +359,18 @@ angular.module('pipelineGraphDirectives', [])
           });
         }
       } else{
-        // we're in the same node
-        //if (state.justDragged) {
-          // dragged, not clicked
-          state.justDragged = false;
-        //} else{
-          // clicked, not dragged
-          /*if (d3.event.shiftKey){
-            // shift-clicked node: edit text content
-            var d3txt = thisGraph.changeTextOfNode(d3node, d);
-            var txtNode = d3txt.node();
-            thisGraph.selectElementContents(txtNode);
-            txtNode.focus();
-          } else{*/
-            if (state.selectedEdge){
-              thisGraph.removeSelectFromEdge();
-            }
-            var prevNode = state.selectedNode;
+        state.justDragged = false;
+        if (state.selectedEdge){
+          thisGraph.removeSelectFromEdge();
+        }
+        var prevNode = state.selectedNode;
 
-            if (!prevNode || prevNode.instanceName !== d.instanceName){
-              thisGraph.replaceSelectNode(d3node, d);
-            } else{
-              //thisGraph.removeSelectFromNode();
-            }
-          //}
-        //}
+        if (!prevNode || prevNode.instanceName !== d.instanceName){
+          thisGraph.replaceSelectNode(d3node, d);
+        }
       }
       state.mouseDownNode = null;
-    }; // end of circles mouseup
+    }; // end of rects mouseup
 
     // mousedown on main svg
     GraphCreator.prototype.svgMouseDown = function(){
@@ -471,7 +402,7 @@ angular.module('pipelineGraphDirectives', [])
         thisGraph.nodes.push(d);
         thisGraph.updateGraph();
         // make title of text immediently editable
-        var d3txt = thisGraph.changeTextOfNode(thisGraph.circles.filter(function(dval){
+        var d3txt = thisGraph.changeTextOfNode(thisGraph.rects.filter(function(dval){
             return dval.instanceName === d.instanceName;
           }), d),
           txtNode = d3txt.node();
@@ -530,7 +461,7 @@ angular.module('pipelineGraphDirectives', [])
       thisGraph.nodes.push(node);
       thisGraph.updateGraph();
 
-      var addedNode = thisGraph.circles.filter(function(cd){
+      var addedNode = thisGraph.rects.filter(function(cd){
         return cd.instanceName === node.instanceName;
       });
 
@@ -544,47 +475,24 @@ angular.module('pipelineGraphDirectives', [])
         consts = thisGraph.consts,
         state = thisGraph.state;
 
+
+
       thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d){
         return String(d.source.instanceName) + "+" + String(d.target.instanceName);
       });
-      var paths = thisGraph.paths;
-      // update existing paths
-      paths.style('marker-end', 'url(#end-arrow)')
-        .classed(consts.selectedClass, function(d){
-          return d === state.selectedEdge;
-        })
-        .attr("d", function(d){
-          return "M" + d.source.uiInfo.xPos + "," + d.source.uiInfo.yPos + "L" + d.target.uiInfo.xPos + "," + d.target.uiInfo.yPos;
-        });
-
-      // add new paths
-      paths.enter()
-        .append("path")
-        .style('marker-end','url(#end-arrow)')
-        .classed("link", true)
-        .attr("d", function(d){
-          return "M" + d.source.uiInfo.xPos + "," + d.source.uiInfo.yPos + "L" + d.target.uiInfo.xPos + "," + d.target.uiInfo.yPos;
-        })
-        .on("mousedown", function(d){
-          thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
-        })
-        .on("mouseup", function(d){
-          state.mouseDownLink = null;
-        });
-
-      // remove old links
-      paths.exit().remove();
 
       // update existing nodes
-      thisGraph.circles = thisGraph.circles.data(thisGraph.nodes, function(d){ return d.instanceName;});
-      thisGraph.circles.attr("transform", function(d){return "translate(" + (d.uiInfo.xPos - consts.rectWidth/2) + "," + (d.uiInfo.yPos - consts.rectHeight/2) + ")";});
+      thisGraph.rects = thisGraph.rects.data(thisGraph.nodes, function(d){ return d.instanceName;});
+      thisGraph.rects.attr("transform", function(d) {
+        return "translate(" + (d.uiInfo.xPos) + "," + (d.uiInfo.yPos) + ")";
+      });
 
       // add new nodes
-      var newGs= thisGraph.circles.enter()
+      var newGs= thisGraph.rects.enter()
         .append("g");
 
       newGs.classed(consts.circleGClass, true)
-        .attr("transform", function(d){return "translate(" + (d.uiInfo.xPos - consts.rectWidth/2) + "," + (d.uiInfo.yPos - consts.rectHeight/2) + ")";})
+        .attr("transform", function(d){return "translate(" + d.uiInfo.xPos + "," + d.uiInfo.yPos + ")";})
         .on("mouseover", function(d){
           if (state.shiftNodeDrag){
             d3.select(this).classed(consts.connectClass, true);
@@ -612,12 +520,69 @@ angular.module('pipelineGraphDirectives', [])
           'ry': this.consts.rectRound
         });
 
+
+      //Input Connectors
+      newGs.append('circle')
+        .filter(function(d) {
+          return d.uiInfo.inputConnectors && d.uiInfo.inputConnectors.length;
+        })
+        .attr({
+          'cx': 0,
+          'cy': consts.rectWidth/2 - 20,
+          'r': 10
+        });
+
+      //Output Connectors
+      newGs.append('circle')
+        .filter(function(d) {
+          return d.uiInfo.outputConnectors && d.uiInfo.outputConnectors.length;
+        })
+        .attr({
+          'cx': consts.rectWidth,
+          'cy': consts.rectWidth/2 - 20,
+          'r': 10
+        }).on("mousedown", function(d){
+          thisGraph.state.shiftNodeDrag = true;
+        });
+
       newGs.each(function(d){
         thisGraph.insertTitleLinebreaks(d3.select(this), d.instanceName);
       });
 
       // remove old nodes
-      thisGraph.circles.exit().remove();
+      thisGraph.rects.exit().remove();
+
+
+      var paths = thisGraph.paths;
+      // update existing paths
+      paths.style('marker-end', 'url(#end-arrow)')
+        .classed(consts.selectedClass, function(d){
+        return d === state.selectedEdge;
+      })
+        .attr("d", function(d){
+          return "M" + (d.source.uiInfo.xPos + consts.rectWidth) + "," + (d.source.uiInfo.yPos + consts.rectWidth/2 - 20) +
+            "L" + d.target.uiInfo.xPos + "," + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
+        });
+
+      // add new paths
+      paths.enter()
+        .append("path")
+        .style('marker-end','url(#end-arrow)')
+        .classed("link", true)
+        .attr("d", function(d){
+          return "M" + (d.source.uiInfo.xPos + consts.rectWidth) + "," + (d.source.uiInfo.yPos + consts.rectWidth/2 - 20) +
+            "L" + d.target.uiInfo.xPos + "," + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
+        })
+        .on("mousedown", function(d){
+          thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
+        })
+        .on("mouseup", function(d){
+          state.mouseDownLink = null;
+        });
+
+      // remove old links
+      paths.exit().remove();
+
     };
 
     GraphCreator.prototype.zoomed = function(){
@@ -655,7 +620,7 @@ angular.module('pipelineGraphDirectives', [])
       graph.updateGraph();
 
       if(selectNode) {
-        var selectNodeDom = graph.circles.filter(function(cd){
+        var selectNodeDom = graph.rects.filter(function(cd){
           return cd.instanceName === selectNode.instanceName;
         });
 

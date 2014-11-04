@@ -124,9 +124,6 @@ angular
     });
 
     saveUpdates = function() {
-      console.log('Saving Pipeline Config');
-      console.log($scope.pipelineConfig);
-
       var pipelineConfigClone = _.clone($scope.pipelineConfig);
 
       //TODO: Remove this once backend is updated.
@@ -162,16 +159,12 @@ angular
 
       $scope.pipelineConfig = pipelineConfig;
 
-
       _.each(pipelineConfig.issues, function(issue) {
         if(_.isArray(issue)) {
           issueCount += issue.length;
         }
       });
-
       $scope.issuesLength = issueCount;
-
-      console.log($scope.issuesLength);
 
       //Determine edges from input lanes and output lanes
       edges = [];
@@ -255,21 +248,24 @@ angular
     $scope.addStage = function(stage) {
       var xPos = ($scope.pipelineConfig.stages && $scope.pipelineConfig.stages.length) ?
                     $scope.pipelineConfig.stages[$scope.pipelineConfig.stages.length - 1].uiInfo.xPos + 300 : 200,
-        yPos = 100;
-
-      var stageInstance = {
-        instanceName : stage.label + (++stageCounter),
-        library : stage.library,
-        stageName : stage.name,
-        stageVersion : stage.version,
-        configuration : [],
-        uiInfo : {
-          xPos : xPos,
-          yPos : yPos
-        },
-        inputLanes : [],
-        outputLanes : []
-      };
+        yPos = 70,
+        inputConnectors = (stage.type !== 'SOURCE') ? ['i1'] : [],
+        outputConnectors = (stage.type !== 'TARGET') ? ['01'] : [],
+        stageInstance = {
+          instanceName : stage.label + (++stageCounter),
+          library : stage.library,
+          stageName : stage.name,
+          stageVersion : stage.version,
+          configuration : [],
+          uiInfo : {
+            xPos : xPos,
+            yPos : yPos,
+            inputConnectors: inputConnectors,
+            outputConnectors: outputConnectors
+          },
+          inputLanes : [],
+          outputLanes : []
+        };
 
       angular.forEach(stage.configDefinitions, function(configDefinition) {
         stageInstance.configuration.push({
