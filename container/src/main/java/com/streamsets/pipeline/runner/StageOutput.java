@@ -17,34 +17,25 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Record;
 
 import java.util.List;
+import java.util.Map;
 
-public class ObserverPipe extends Pipe {
-  private final Observer observer;
+public class StageOutput {
+  private String instanceName;
+  private Map<String, List<Record>> output;
 
-  public ObserverPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, Observer observer) {
-    super(stage, inputLanes, outputLanes);
-    this.observer = observer;
+  public StageOutput(String instanceName, Map<String, List<Record>> output) {
+    this.instanceName = instanceName;
+    this.output = output;
   }
 
-  @Override
-  public void init() throws StageException {
+  public String getInstanceName() {
+    return instanceName;
   }
 
-  @Override
-  public void destroy() {
+  public Map<String, List<Record>> getOutput() {
+    return output;
   }
-
-  @Override
-  public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
-    if (observer != null && observer.isObserving(getStage().getInfo())) {
-      observer.observe(this, pipeBatch.getPipeLanesSnapshot(getInputLanes()));
-    }
-    for (int i = 0; i < getInputLanes().size(); i++) {
-      pipeBatch.moveLane(getInputLanes().get(i), getOutputLanes().get(i));
-    }
-  }
-
 }

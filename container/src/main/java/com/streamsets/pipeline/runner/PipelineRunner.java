@@ -20,10 +20,14 @@ package com.streamsets.pipeline.runner;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.StageException;
 
+import java.util.List;
+
 public interface PipelineRunner {
 
   public MetricRegistry getMetrics();
 
   public void run(Pipe[] pipes)  throws StageException, PipelineRuntimeException;
+
+  public List<StageOutput> getStagesOutputSnapshot();
 
 }

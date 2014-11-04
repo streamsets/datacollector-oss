@@ -379,6 +379,23 @@ public class TestLaneResolver {
     // target multiplexer
     Assert.assertEquals(0, resolver.getMultiplexerInputLanes(3).size());
     Assert.assertEquals(0, resolver.getMultiplexerOutputLanes(3).size());
+
+    // getMatchingOutputLanes
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("s1", "p1")),
+                                                  LaneResolver.MULTIPLEXER_OUT),
+                        LaneResolver.getMatchingOutputLanes("s1", resolver.getMultiplexerOutputLanes(0)));
+
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1", "p2")),
+                                                  LaneResolver.MULTIPLEXER_OUT),
+                        LaneResolver.getMatchingOutputLanes("p1", resolver.getMultiplexerOutputLanes(1)));
+
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p2", "t1")),
+                                                  LaneResolver.MULTIPLEXER_OUT),
+                        LaneResolver.getMatchingOutputLanes("p2", resolver.getMultiplexerOutputLanes(2)));
+
+    // getMatchingOutputLanes, negative test
+    Assert.assertEquals(Collections.EMPTY_LIST,
+                        LaneResolver.getMatchingOutputLanes("p1", resolver.getMultiplexerOutputLanes(0)));
   }
 
   // single output processors
@@ -523,6 +540,22 @@ public class TestLaneResolver {
     // target multiplexer
     Assert.assertEquals(0, resolver.getMultiplexerInputLanes(3).size());
     Assert.assertEquals(0, resolver.getMultiplexerOutputLanes(3).size());
+
+
+    // getMatchingOutputLanes
+
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1", "p2"),
+                                                                   LaneResolver.createLane("p1", "t1")),
+                                                  LaneResolver.MULTIPLEXER_OUT),
+                        LaneResolver.getMatchingOutputLanes("p1", resolver.getMultiplexerOutputLanes(1)));
+
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p2", "t1")),
+                                                  LaneResolver.MULTIPLEXER_OUT),
+                        LaneResolver.getMatchingOutputLanes("p2", resolver.getMultiplexerOutputLanes(2)));
+
+    // getMatchingOutputLanes, negative test
+    Assert.assertEquals(Collections.EMPTY_LIST,
+                        LaneResolver.getMatchingOutputLanes("p1", resolver.getMultiplexerOutputLanes(0)));
   }
 
   // multiple output processor (p1)
@@ -669,6 +702,24 @@ public class TestLaneResolver {
     // target multiplexer
     Assert.assertEquals(0, resolver.getMultiplexerInputLanes(3).size());
     Assert.assertEquals(0, resolver.getMultiplexerOutputLanes(3).size());
+
+    // getMatchingOutputLanes
+
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1a", "p2")),
+                                                  LaneResolver.MULTIPLEXER_OUT),
+                        LaneResolver.getMatchingOutputLanes("p1a", resolver.getMultiplexerOutputLanes(1)));
+
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1b", "t1")),
+                                                  LaneResolver.MULTIPLEXER_OUT),
+                        LaneResolver.getMatchingOutputLanes("p1b", resolver.getMultiplexerOutputLanes(1)));
+
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p2", "t1")),
+                                                  LaneResolver.MULTIPLEXER_OUT),
+                        LaneResolver.getMatchingOutputLanes("p2", resolver.getMultiplexerOutputLanes(2)));
+
+    // getMatchingOutputLanes, negative test
+    Assert.assertEquals(Collections.EMPTY_LIST,
+                        LaneResolver.getMatchingOutputLanes("p1", resolver.getMultiplexerOutputLanes(0)));
   }
 
 }

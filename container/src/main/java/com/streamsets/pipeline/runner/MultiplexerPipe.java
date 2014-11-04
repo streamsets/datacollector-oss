@@ -19,16 +19,13 @@ package com.streamsets.pipeline.runner;
 
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.container.Configuration;
 
 import java.util.List;
 
 public class MultiplexerPipe extends Pipe {
-  private final boolean multiplex;
 
   public MultiplexerPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
     super(stage, inputLanes, outputLanes);
-    multiplex = false;
   }
 
   @Override
@@ -41,10 +38,14 @@ public class MultiplexerPipe extends Pipe {
 
   @Override
   public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
-    if (multiplex) {
-
+    for (String lane : getStage().getConfiguration().getInputLanes()) {
+      List<String> outputLanes = LaneResolver.getMatchingOutputLanes(lane, getOutputLanes());
+      if (outputLanes.size() == 1) {
+        pipeBatch.moveLane(lane, outputLanes.get(0));
+      } else {
+        pipeBatch.moveLaneCloning(lane, outputLanes);
+      }
     }
-    pipeBatch.flip();
   }
 
 }

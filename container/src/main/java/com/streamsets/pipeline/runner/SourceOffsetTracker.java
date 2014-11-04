@@ -17,34 +17,14 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.streamsets.pipeline.api.StageException;
+public interface SourceOffsetTracker {
 
-import java.util.List;
+  public boolean isFinished();
 
-public class ObserverPipe extends Pipe {
-  private final Observer observer;
+  public String getOffset();
 
-  public ObserverPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, Observer observer) {
-    super(stage, inputLanes, outputLanes);
-    this.observer = observer;
-  }
+  public void setOffset(String newOffset);
 
-  @Override
-  public void init() throws StageException {
-  }
-
-  @Override
-  public void destroy() {
-  }
-
-  @Override
-  public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
-    if (observer != null && observer.isObserving(getStage().getInfo())) {
-      observer.observe(this, pipeBatch.getPipeLanesSnapshot(getInputLanes()));
-    }
-    for (int i = 0; i < getInputLanes().size(); i++) {
-      pipeBatch.moveLane(getInputLanes().get(i), getOutputLanes().get(i));
-    }
-  }
+  public void commitOffset();
 
 }

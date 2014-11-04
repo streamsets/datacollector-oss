@@ -18,13 +18,19 @@
 package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.container.Configuration;
+
+import java.util.List;
+import java.util.Map;
 
 public interface Observer {
 
   public void configure(Configuration conf);
 
-  public void observe(Stage.Info stageInfo, Batch batch);
+  public boolean isObserving(Stage.Info info);
+
+  public void observe(Pipe pipe, Map<String, List<Record>> snapshot);
 
 }

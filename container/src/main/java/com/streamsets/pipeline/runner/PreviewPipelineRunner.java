@@ -17,34 +17,38 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.StageException;
 
 import java.util.List;
 
-public class ObserverPipe extends Pipe {
-  private final Observer observer;
+public class PreviewPipelineRunner implements PipelineRunner {
+  private final SourceOffsetTracker offsetTracker;
+  private final MetricRegistry metrics;
+  private volatile List<StageOutput> stageOutput;
 
-  public ObserverPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, Observer observer) {
-    super(stage, inputLanes, outputLanes);
-    this.observer = observer;
+  public PreviewPipelineRunner(SourceOffsetTracker offsetTracker) {
+    this.offsetTracker = offsetTracker;
+    metrics = new MetricRegistry();
   }
 
   @Override
-  public void init() throws StageException {
+  public MetricRegistry getMetrics() {
+    return metrics;
   }
 
   @Override
-  public void destroy() {
-  }
-
-  @Override
-  public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
-    if (observer != null && observer.isObserving(getStage().getInfo())) {
-      observer.observe(this, pipeBatch.getPipeLanesSnapshot(getInputLanes()));
+  public void run(Pipe[] pipes) throws StageException, PipelineRuntimeException {
+    PipeBatch pipeBatch = new PipeBatch(offsetTracker, true);
+    for (Pipe pipe : pipes) {
+      pipe.process(pipeBatch);
     }
-    for (int i = 0; i < getInputLanes().size(); i++) {
-      pipeBatch.moveLane(getInputLanes().get(i), getOutputLanes().get(i));
-    }
+    stageOutput = pipeBatch.getOutputSnapshot();
+  }
+
+  @Override
+  public List<StageOutput> getStagesOutputSnapshot() {
+    return stageOutput;
   }
 
 }

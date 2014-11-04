@@ -18,16 +18,13 @@
 package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.container.Configuration;
 
 import java.util.List;
 
 public class CombinerPipe extends Pipe {
-  private final boolean combine;
 
   public CombinerPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
     super(stage, inputLanes, outputLanes);
-    combine = false;
   }
 
   @Override
@@ -40,10 +37,7 @@ public class CombinerPipe extends Pipe {
 
   @Override
   public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
-    if (combine) {
-
-    }
-    pipeBatch.flip();
+    pipeBatch.combineLanes(getInputLanes(), getOutputLanes().get(0));
   }
 
 }

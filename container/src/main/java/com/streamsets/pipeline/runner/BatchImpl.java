@@ -17,34 +17,36 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.streamsets.pipeline.api.StageException;
+import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Record;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-public class ObserverPipe extends Pipe {
-  private final Observer observer;
+public class BatchImpl implements Batch {
+  private final List<Record> records;
+  private boolean got;
+  private final String sourceOffset;
 
-  public ObserverPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, Observer observer) {
-    super(stage, inputLanes, outputLanes);
-    this.observer = observer;
+  public BatchImpl(SourceOffsetTracker offsetTracker, List<Record> records) {
+    this.records = records;
+    sourceOffset = offsetTracker.getOffset();
+    got = false;
   }
 
   @Override
-  public void init() throws StageException {
+  public String getSourceOffset() {
+    return sourceOffset;
   }
 
   @Override
-  public void destroy() {
+  public Iterator<Record> getRecords() {
+    Preconditions.checkState(!got, "The record iterator can be obtained only once");
+    got = true;
+    return Collections.unmodifiableList(records).iterator();
   }
 
-  @Override
-  public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
-    if (observer != null && observer.isObserving(getStage().getInfo())) {
-      observer.observe(this, pipeBatch.getPipeLanesSnapshot(getInputLanes()));
-    }
-    for (int i = 0; i < getInputLanes().size(); i++) {
-      pipeBatch.moveLane(getInputLanes().get(i), getOutputLanes().get(i));
-    }
-  }
 
 }

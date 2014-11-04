@@ -85,14 +85,20 @@ public class RecordImpl implements Record {
     header = new HeaderImpl(headerData);
   }
 
+  public RecordImpl(RecordImpl record) {
+    this(null, record);
+  }
+
   public RecordImpl(String module, RecordImpl record) {
     Preconditions.checkNotNull(record, "record cannot be null");
     previous = record;
     raw = record.raw;
     rawMime = record.rawMime;
     headerData = new VersionedSimpleMap<String, String>(record.headerData);
-    headerData.put(STAGE_INSTANCE_ATTR, module);
-    headerData.put(PROCESSING_PATH_ATTR, headerData.get(PROCESSING_PATH_ATTR) + ":" + module);
+    if (module != null) {
+      headerData.put(STAGE_INSTANCE_ATTR, module);
+      headerData.put(PROCESSING_PATH_ATTR, headerData.get(PROCESSING_PATH_ATTR) + ":" + module);
+    }
     fieldData = new VersionedSimpleMap<String, Field>(record.fieldData);
     header = new HeaderImpl(headerData);
   }

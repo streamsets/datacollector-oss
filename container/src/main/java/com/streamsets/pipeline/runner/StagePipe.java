@@ -21,9 +21,7 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.container.Configuration;
 
-import java.util.Collections;
 import java.util.List;
 
 public class StagePipe extends Pipe {
@@ -41,24 +39,27 @@ public class StagePipe extends Pipe {
   @SuppressWarnings("unchecked")
   public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
     switch (getStage().getDefinition().getType()) {
-      case SOURCE:
-        Source.Context sourceContext = getStage().getContext();
-        pipeBatch.configure(sourceContext.getOutputLanes());
-        String newOffset = ((Source) getStage().getStage()).produce(pipeBatch.getPreviousOffset(),
-                                                               pipeBatch.getBatchMaker());
+      case SOURCE: {
+        BatchMakerImpl batchMaker = pipeBatch.startStage(this);
+        String newOffset = ((Source) getStage().getStage()).produce(pipeBatch.getPreviousOffset(), batchMaker);
         pipeBatch.setNewOffset(newOffset);
+        pipeBatch.completeStage(batchMaker);
         break;
-      case PROCESSOR:
-        Processor.Context processorContext = getStage().getContext();
-        pipeBatch.configure(processorContext.getOutputLanes());
-        ((Processor) getStage().getStage()).process(pipeBatch.getBatch(), pipeBatch.getBatchMaker());
+      }
+      case PROCESSOR: {
+        BatchImpl batch = pipeBatch.getBatch(this);
+        BatchMakerImpl batchMaker = pipeBatch.startStage(this);
+        ((Processor) getStage().getStage()).process(batch, batchMaker);
+        pipeBatch.completeStage(batchMaker);
         break;
-      case TARGET:
-        pipeBatch.configure(Collections.EMPTY_SET);
-        ((Target) getStage().getStage()).write(pipeBatch.getBatch());
+
+      }
+      case TARGET: {
+        BatchImpl batch = pipeBatch.getBatch(this);
+        ((Target) getStage().getStage()).write(batch);
         break;
+      }
     }
-    pipeBatch.flip();
   }
 
   @Override

@@ -28,6 +28,7 @@ public class LaneResolver {
   static final String OBSERVER_OUT    = "::o";
   static final String MULTIPLEXER_OUT = "::m";
   static final String COMBINER_OUT    = "::c";
+  private static final String ROUTING_SEPARATOR = "--";
 
   static List<String> getPostFixed(List<String> lanes, String postfix) {
     List<String> postFixed = new ArrayList<String>(lanes.size());
@@ -38,7 +39,7 @@ public class LaneResolver {
   }
 
   static String createLane(String from, String to) {
-    return from + "--" + to;
+    return from + ROUTING_SEPARATOR + to;
   }
 
   private final StageRuntime[] stages;
@@ -100,6 +101,18 @@ public class LaneResolver {
     boolean noInput = stages[idx].getConfiguration().getInputLanes().isEmpty();
     return (noInput) ? Collections.EMPTY_LIST : getPostFixed(ImmutableList.of(stages[idx].getInfo().getInstanceName()),
                                                              COMBINER_OUT);
+  }
+
+
+  public static List<String> getMatchingOutputLanes(String source, List<String> output) {
+    String prefix = source + ROUTING_SEPARATOR;
+    List<String> list = new ArrayList<String>();
+    for (String lane : output) {
+      if (lane.startsWith(prefix)) {
+        list.add(lane);
+      }
+    }
+    return list;
   }
 
 }
