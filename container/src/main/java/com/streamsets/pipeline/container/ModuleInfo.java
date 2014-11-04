@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.Stage;
 public class ModuleInfo implements Stage.Info {
   private String name;
   private String version;
-  private String description;
   private String instanceName;
 
 
@@ -63,7 +62,6 @@ public class ModuleInfo implements Stage.Info {
     }
     this.name = name;
     this.version = version;
-    this.description = description;
     this.instanceName = instanceName;
   }
 
@@ -75,11 +73,6 @@ public class ModuleInfo implements Stage.Info {
   @Override
   public String getVersion() {
     return version;
-  }
-
-  @Override
-  public String getDescription() {
-    return description;
   }
 
   @Override

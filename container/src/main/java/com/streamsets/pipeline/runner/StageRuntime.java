@@ -53,11 +53,6 @@ public class StageRuntime {
       }
 
       @Override
-      public String getDescription() {
-        return def.getDescription();
-      }
-
-      @Override
       public String getInstanceName() {
         return conf.getInstanceName();
       }

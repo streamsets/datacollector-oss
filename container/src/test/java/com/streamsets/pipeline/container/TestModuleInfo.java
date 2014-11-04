@@ -77,7 +77,6 @@ public class TestModuleInfo {
     ModuleInfo info = new ModuleInfo("n", "v", "d", "in");
     Assert.assertEquals("n", info.getName());
     Assert.assertEquals("v", info.getVersion());
-    Assert.assertEquals("d", info.getDescription());
     Assert.assertEquals("in", info.getInstanceName());
   }
 }
