@@ -35,7 +35,7 @@ public class BatchMakerImpl implements BatchMaker {
   private final Set<String> outputLanes;
   private final String singleOutputLane;
   private final Map<String, List<Record>> stageOutput;
-  private final Map<String, List<Record>> stageOutputSnaphost;
+  private final Map<String, List<Record>> stageOutputSnapshot;
 
   public BatchMakerImpl(StagePipe stagePipe, boolean keepSnapshot) {
     this.stagePipe = stagePipe;
@@ -43,11 +43,11 @@ public class BatchMakerImpl implements BatchMaker {
     outputLanes = ImmutableSet.copyOf(stagePipe.getStage().getConfiguration().getOutputLanes());
     singleOutputLane = (outputLanes.size() == 1) ? outputLanes.iterator().next() : null;
     stageOutput = new HashMap<String, List<Record>>();
-    stageOutputSnaphost = (keepSnapshot) ? new HashMap<String, List<Record>>() : null;
+    stageOutputSnapshot = (keepSnapshot) ? new HashMap<String, List<Record>>() : null;
     for (String outputLane : outputLanes) {
       stageOutput.put(outputLane, new ArrayList<Record>());
-      if (stageOutputSnaphost != null) {
-        stageOutputSnaphost.put(outputLane, new ArrayList<Record>());
+      if (stageOutputSnapshot != null) {
+        stageOutputSnapshot.put(outputLane, new ArrayList<Record>());
       }
     }
   }
@@ -80,12 +80,12 @@ public class BatchMakerImpl implements BatchMaker {
         stageOutput.get(lane).add(outputRecord);
       }
     }
-    if (stageOutputSnaphost != null) {
+    if (stageOutputSnapshot != null) {
       if (lanes.length == 0) {
-        stageOutputSnaphost.get(singleOutputLane).add(record);
+        stageOutputSnapshot.get(singleOutputLane).add(record);
       } else {
         for (String lane : lanes) {
-          stageOutputSnaphost.get(lane).add(record);
+          stageOutputSnapshot.get(lane).add(record);
         }
       }
     }
@@ -96,7 +96,7 @@ public class BatchMakerImpl implements BatchMaker {
   }
 
   public Map<String, List<Record>> getStageOutputSnapshot() {
-    return stageOutputSnaphost;
+    return stageOutputSnapshot;
   }
 
 }
