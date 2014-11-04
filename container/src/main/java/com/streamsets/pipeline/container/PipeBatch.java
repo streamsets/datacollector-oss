@@ -115,7 +115,7 @@ public class PipeBatch implements BatchMaker, Batch {
   private void snapshotRecords(List<Record> records) {
     String moduleName = pipe.getModuleInfo().getInstanceName();
     for (int i = 0; i < records.size(); i++) {
-      records.set(i, new RecordImpl(moduleName, (RecordImpl) records.get(i)));
+      records.set(i, ((RecordImpl)records.get(i)).createCopy());
     }
   }
 

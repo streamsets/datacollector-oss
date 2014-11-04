@@ -17,7 +17,6 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.container.Configuration;

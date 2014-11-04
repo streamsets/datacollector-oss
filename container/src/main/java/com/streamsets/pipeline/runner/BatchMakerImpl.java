@@ -63,11 +63,14 @@ public class BatchMakerImpl implements BatchMaker {
 
   @Override
   public void addRecord(Record record, String... lanes) {
-    Record outputRecord = new RecordImpl((RecordImpl) record);
+    Preconditions.checkNotNull(record, "record cannot be null");
+    record = ((RecordImpl)record).createCopy();
+    ((RecordImpl)record).setStage(instanceName);
+
     if (lanes.length == 0) {
       Preconditions.checkArgument(outputLanes.size() == 1, String.format(
           "No lane has been specified and the stage '%s' has multiple output lanes '%s'", instanceName, outputLanes));
-      stageOutput.get(singleOutputLane).add(outputRecord);
+      stageOutput.get(singleOutputLane).add(record);
     } else {
       if (lanes.length > 1) {
         Set<String> laneSet = ImmutableSet.copyOf(lanes);
@@ -77,10 +80,11 @@ public class BatchMakerImpl implements BatchMaker {
       for (String lane : lanes) {
         Preconditions.checkArgument(outputLanes.contains(lane), String.format(
             "Invalid output lane '%s' for stage '%s', available lanes '%s'", lane, instanceName, outputLanes));
-        stageOutput.get(lane).add(outputRecord);
+        stageOutput.get(lane).add(record);
       }
     }
     if (stageOutputSnapshot != null) {
+      record = ((RecordImpl)record).createSnapshot();
       if (lanes.length == 0) {
         stageOutputSnapshot.get(singleOutputLane).add(record);
       } else {

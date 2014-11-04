@@ -18,20 +18,17 @@
 package com.streamsets.pipeline.api;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 
 public interface Record {
 
-  public static final String RESERVED_ATTRIBUTE_PREFIX = "_.";
-
-  public static final String STAGE_INSTANCE_ATTR = RESERVED_ATTRIBUTE_PREFIX + "previous-stage";
-
-  public static final String RECORD_SOURCE_ID_ATTR = RESERVED_ATTRIBUTE_PREFIX + "record-source-id";
-
-  public static final String PROCESSING_PATH_ATTR = RESERVED_ATTRIBUTE_PREFIX + "processing-path";
-
   public interface Header {
+
+    public String getCreatorStage();
+
+    public String getRecordSourceId();
+
+    public String getStagesPath();
 
     public byte[] getRaw();
 
@@ -47,9 +44,7 @@ public interface Record {
 
   }
 
-  public Record getPreviousVersion();
-
-  public Header getHeader();
+  Header getHeader();
 
   public Iterator<String> getFieldNames();
 

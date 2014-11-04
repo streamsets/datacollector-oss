@@ -134,7 +134,7 @@ public class Pipeline {
 
     @Override
     public Record cloneRecord(Record record) {
-      return new RecordImpl(instanceName, (RecordImpl)record);
+      return ((RecordImpl)record).createCopy();
     }
   }
 

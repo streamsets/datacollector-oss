@@ -19,6 +19,8 @@ package com.streamsets.pipeline.record;
 
 import com.google.common.base.Preconditions;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ReservedPrefixSimpleMap<V> implements SimpleMap<String, V> {
@@ -30,23 +32,35 @@ public class ReservedPrefixSimpleMap<V> implements SimpleMap<String, V> {
     this.map = map;
   }
 
-  private void assertKey(String key) {
+  private boolean isReserved(String key) {
     Preconditions.checkNotNull(key, "key cannot be null");
-    Preconditions.checkArgument(!key.startsWith(reservedPrefix), String.format(
-        "Invalid key, cannot start with '%s'", reservedPrefix));
+    return key.startsWith(reservedPrefix);
   }
+
+  private void assertKey(String key) {
+    Preconditions.checkArgument(!isReserved(key), String.format("Invalid key, cannot start with '%s'", reservedPrefix));
+  }
+
   @Override
   public Set<String> getKeys() {
-    return map.getKeys();
+    Set<String> keys = new HashSet<String>();
+    for (String key : map.getKeys()) {
+      if (!key.startsWith(reservedPrefix)) {
+        keys.add(key);
+      }
+    }
+    return Collections.unmodifiableSet(keys);
   }
 
   @Override
   public boolean hasKey(String key) {
+    assertKey(key);
     return map.hasKey(key);
   }
 
   @Override
   public V get(String key) {
+    assertKey(key);
     return map.get(key);
   }
 

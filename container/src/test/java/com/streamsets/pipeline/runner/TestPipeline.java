@@ -20,7 +20,6 @@ package com.streamsets.pipeline.runner;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
@@ -155,20 +154,20 @@ public class TestPipeline {
     Processor.Context processorContext = pipes[3].getStage().getContext();
 
     Record record = sourceContext.createRecord("a");
-    Assert.assertEquals("a", record.getHeader().getAttribute(Record.RECORD_SOURCE_ID_ATTR));
-    Assert.assertEquals("s", record.getHeader().getAttribute(Record.STAGE_INSTANCE_ATTR));
+    Assert.assertEquals("a", record.getHeader().getRecordSourceId());
+    Assert.assertEquals("s", record.getHeader().getCreatorStage());
     Assert.assertNull(record.getHeader().getRaw());
     Assert.assertNull(record.getHeader().getRawMime());
 
     record = processorContext.createRecord("b", new byte[0], "mime");
-    Assert.assertEquals("b", record.getHeader().getAttribute(Record.RECORD_SOURCE_ID_ATTR));
-    Assert.assertEquals("p", record.getHeader().getAttribute(Record.STAGE_INSTANCE_ATTR));
+    Assert.assertEquals("b", record.getHeader().getRecordSourceId());
+    Assert.assertEquals("p", record.getHeader().getCreatorStage());
     Assert.assertArrayEquals(new byte[0], record.getHeader().getRaw());
     Assert.assertEquals("mime", record.getHeader().getRawMime());
 
     record = processorContext.cloneRecord(record);
-    Assert.assertEquals("b", record.getHeader().getAttribute(Record.RECORD_SOURCE_ID_ATTR));
-    Assert.assertEquals("p", record.getHeader().getAttribute(Record.STAGE_INSTANCE_ATTR));
+    Assert.assertEquals("b", record.getHeader().getRecordSourceId());
+    Assert.assertEquals("p", record.getHeader().getCreatorStage());
     Assert.assertArrayEquals(new byte[0], record.getHeader().getRaw());
     Assert.assertEquals("mime", record.getHeader().getRawMime());
   }

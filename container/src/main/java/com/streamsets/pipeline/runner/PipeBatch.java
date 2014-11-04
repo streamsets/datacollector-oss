@@ -92,16 +92,15 @@ public class PipeBatch {
   public Map<String, List<Record>> getPipeLanesSnapshot(List<String> pipeLanes) {
     Map<String, List<Record>> snapshot = new HashMap<String, List<Record>>();
     for (String pipeLane : pipeLanes) {
-      List<Record> records = fullPayload.put(pipeLane, snapshotRecords(fullPayload.get(pipeLane)));
-      snapshot.put(pipeLane, records);
+      snapshot.put(pipeLane, createSnapshot(fullPayload.get(pipeLane)));
     }
     return snapshot;
   }
 
-  private List<Record> snapshotRecords(List<Record> records) {
+  private List<Record> createSnapshot(List<Record> records) {
     List<Record> list = new ArrayList<Record>(records.size());
     for (Record record : records) {
-      list.add(new RecordImpl((RecordImpl) record));
+      list.add(((RecordImpl) record).createSnapshot());
     }
     return list;
   }
@@ -120,8 +119,16 @@ public class PipeBatch {
         "Lane '%s' does not exist", inputLane));
     for (String lane : outputLanes) {
       Preconditions.checkNotNull(fullPayload.containsKey(lane), String.format("Lane '%s' does not exist", lane));
-      fullPayload.put(lane, snapshotRecords(records));
+      fullPayload.put(lane, createCopy(records));
     }
+  }
+
+  private List<Record> createCopy(List<Record> records) {
+    List<Record> list = new ArrayList<Record>(records.size());
+    for (Record record : records) {
+      list.add(((RecordImpl) record).createCopy());
+    }
+    return list;
   }
 
   public void combineLanes(List<String> lanes, String to) {
