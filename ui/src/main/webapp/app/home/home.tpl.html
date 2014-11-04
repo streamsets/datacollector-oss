@@ -5,12 +5,27 @@
       <div class="panel-heading clearfix">
         <h3 class="panel-title pull-left">{{'admin.header.pipelineFlow' | translate}}</h3>
 
+        <div class="btn-group pull-right issues-dropdown" ng-show="issuesLength > 0">
+          <button class="btn btn-danger btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-warning-sign"></span>
+            Issues <span class="badge alert-danger" ng-bind="issuesLength"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation" class="dropdown-header" ng-repeat-start="(key, value) in pipelineConfig.issues">
+              {{key}}
+            </li>
+            <li role="presentation" ng-repeat="issue in value">
+              <a role="menuitem" tabindex="-1" href="#">{{issue}}</a>
+            </li>
+            <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+          </ul>
+        </div>
 
         <div class="pull-right">
           <button type="button" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-eye-open"></span> {{'admin.header.preview' | translate}}
           </button>
-          <button type="button" class="btn btn-default btn-sm" ng-hide="isPipelineRunning" disabled="{{!pipelineConfig.valid}}">
+          <button type="button" class="btn btn-default btn-sm" ng-hide="isPipelineRunning" ng-disabled="!pipelineConfig.valid">
             <span class="glyphicon glyphicon-play"></span> {{'admin.header.start' | translate}}
           </button>
           <button type="button" class="btn btn-default btn-sm" ng-show="isPipelineRunning">
@@ -18,7 +33,7 @@
           </button>
         </div>
 
-        <div class="dropdown pull-right stage-dropdown">
+        <div class="btn-group pull-right stage-dropdown">
           <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
             <span class="glyphicon glyphicon-screenshot"></span>
             Add Target
@@ -31,7 +46,7 @@
           </ul>
         </div>
 
-        <div class="dropdown pull-right stage-dropdown">
+        <div class="btn-group pull-right stage-dropdown">
           <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
             <span class="glyphicon glyphicon-cog"></span>
             Add Processor
@@ -44,7 +59,7 @@
           </ul>
         </div>
 
-        <div class="dropdown pull-right stage-dropdown">
+        <div class="btn-group pull-right stage-dropdown">
           <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
             <span class="glyphicon glyphicon-list-alt"></span>
             Add Source

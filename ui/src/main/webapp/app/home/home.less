@@ -11,8 +11,28 @@
 
   .panel-heading {
     .panel-title {
-      padding-top: @smallPadding;
+      padding-top: 2px;
       font-size: 20px;
+    }
+
+    .issues-dropdown {
+
+      li {
+        a {
+          white-space: normal;
+          width: 400px;
+        }
+
+        &.dropdown-header {
+          text-transform: capitalize;
+        }
+      }
+
+
+      .badge {
+        color: #d9534f;
+        background-color: #fff;
+      }
     }
 
     .btn {

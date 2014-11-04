@@ -92,6 +92,7 @@ angular
     $scope.stageLibraries = [];
     $scope.pipelineConfigInfo={};
     $scope.pipelineGraphData = {};
+    $scope.issuesLength = 0;
 
     $q.all([api.pipelineAgent.getStageLibrary(),
       api.pipelineAgent.getPipelineConfig(),
@@ -124,6 +125,7 @@ angular
 
     saveUpdates = function() {
       console.log('Saving Pipeline Config');
+      console.log($scope.pipelineConfig);
 
       var pipelineConfigClone = _.clone($scope.pipelineConfig);
 
@@ -142,7 +144,8 @@ angular
     };
 
     updateGraph = function(pipelineConfig) {
-      var selectedStageInstance;
+      var selectedStageInstance,
+        issueCount = 0;
       ignoreUpdate = true;
       pipelineConfig.name = $scope.pipelineConfigInfo.name;
       pipelineConfig.description = $scope.pipelineConfigInfo.description;
@@ -155,7 +158,20 @@ angular
         value: pipelineConfig.deliveryGuarantee
       }];
 
+
+
       $scope.pipelineConfig = pipelineConfig;
+
+
+      _.each(pipelineConfig.issues, function(issue) {
+        if(_.isArray(issue)) {
+          issueCount += issue.length;
+        }
+      });
+
+      $scope.issuesLength = issueCount;
+
+      console.log($scope.issuesLength);
 
       //Determine edges from input lanes and output lanes
       edges = [];
