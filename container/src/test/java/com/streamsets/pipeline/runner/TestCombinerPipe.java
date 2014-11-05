@@ -17,35 +17,22 @@
  */
 package com.streamsets.pipeline.runner;
 
+import org.junit.Test;
+import org.mockito.Mockito;
 
-import com.streamsets.pipeline.api.StageException;
+public class TestCombinerPipe {
 
-import java.util.List;
-
-public class MultiplexerPipe extends Pipe {
-
-  public MultiplexerPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
-    super(stage, inputLanes, outputLanes);
-  }
-
-  @Override
-  public void init() throws StageException {
-  }
-
-  @Override
-  public void destroy() {
-  }
-
-  @Override
-  public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
-    for (String lane : getStage().getConfiguration().getOutputLanes()) {
-      List<String> outputLanes = LaneResolver.getMatchingOutputLanes(lane, getOutputLanes());
-      if (outputLanes.size() == 1) {
-        pipeBatch.moveLane(lane, outputLanes.get(0));
-      } else {
-        pipeBatch.moveLaneCopying(lane, outputLanes);
-      }
-    }
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testCombinerPipe() throws Exception {
+    PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
+                                             MockStages.createPipelineConfigurationSourceTarget()).build(pipelineRunner);
+    CombinerPipe pipe = (CombinerPipe) pipeline.getPipes()[3];
+    PipeBatch pipeBatch = Mockito.mock(PipeBatch.class);
+    pipe.process(pipeBatch);
+    Mockito.verify(pipeBatch, Mockito.times(1)).combineLanes(Mockito.anyList(), Mockito.anyString());
+    Mockito.verifyNoMoreInteractions(pipeBatch);
   }
 
 }

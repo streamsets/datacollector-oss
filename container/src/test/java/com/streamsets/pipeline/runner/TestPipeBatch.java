@@ -52,7 +52,7 @@ public class TestPipeBatch {
     Mockito.verifyNoMoreInteractions(tracker);
 
     StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
-                                                    MockStages.createPipelineConfiguration()).build();
+                                                    MockStages.createPipelineConfigurationSourceTarget()).build();
 
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
                                              LaneResolver.getPostFixed(stages[0].getConfiguration().getOutputLanes(),
@@ -69,7 +69,7 @@ public class TestPipeBatch {
     PipeBatch pipeBatch = new PipeBatch(tracker, false);
 
     StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
-                                                     MockStages.createPipelineConfiguration()).build();
+                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
                                    LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
@@ -119,7 +119,7 @@ public class TestPipeBatch {
     PipeBatch pipeBatch = new PipeBatch(tracker, true);
 
     StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
-                                                     MockStages.createPipelineConfiguration()).build();
+                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe sourcePipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
                                    LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
@@ -176,7 +176,7 @@ public class TestPipeBatch {
     PipeBatch pipeBatch = new PipeBatch(tracker, true);
 
     StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
-                                                     MockStages.createPipelineConfiguration()).build();
+                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
                                    LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
@@ -210,7 +210,7 @@ public class TestPipeBatch {
     PipeBatch pipeBatch = new PipeBatch(tracker, true);
 
     StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
-                                                     MockStages.createPipelineConfiguration()).build();
+                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
                                    LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
@@ -252,7 +252,7 @@ public class TestPipeBatch {
     PipeBatch pipeBatch = new PipeBatch(tracker, true);
 
     StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
-                                                     MockStages.createPipelineConfiguration()).build();
+                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
                                    LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
