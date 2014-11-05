@@ -21,8 +21,6 @@ import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.agent.RuntimeModule;
 import com.streamsets.pipeline.agent.RuntimeInfo;
-import com.streamsets.pipeline.container.ContainerModule;
-import com.streamsets.pipeline.container.PipelineRunner;
 import com.streamsets.pipeline.metrics.MetricsModule;
 import com.streamsets.pipeline.restapi.RestAPI;
 import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;
@@ -41,7 +39,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 
-@Module(library = true, includes = {RuntimeModule.class, MetricsModule.class, ContainerModule.class,
+@Module(library = true, includes = {RuntimeModule.class, MetricsModule.class,
     PipelineStoreModule.class, StageLibraryModule.class})
 public class WebServerModule {
 
@@ -99,16 +97,6 @@ public class WebServerModule {
         servlet.setInitParameter("jersey.config.server.provider.packages", RestAPI.class.getPackage().getName());
         servlet.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, RestAPIResourceConfig.class.getName());
         context.addServlet(servlet, "/rest/*");
-      }
-    };
-  }
-
-  @Provides(type = Type.SET)
-  ContextConfigurator providePipelineRunnerForPreview(final PipelineRunner pipelineRunner) {
-    return new ContextConfigurator() {
-      @Override
-      public void init(ServletContextHandler context) {
-//        context.setAttribute(PipelineRestAPI.PIPELINE, pipelineRunner);
       }
     };
   }
