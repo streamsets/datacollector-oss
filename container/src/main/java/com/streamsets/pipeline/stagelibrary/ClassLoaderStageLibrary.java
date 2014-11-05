@@ -27,6 +27,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.agent.RuntimeInfo;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.runner.preview.PlugTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +38,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -138,8 +141,19 @@ public class ClassLoaderStageLibrary implements StageLibrary {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public StageDefinition getStage(String library, String name, String version) {
-    return stageMap.get(createKey(library, name, version));
+    StageDefinition def = null;
+    if (library.equals("system")) {
+      if (name.equals(":plug:")) {
+        def = new StageDefinition(PlugTarget.class.getName(), ":plug:", "1.0.0", "plug", "plug", StageType.TARGET,
+                                  Collections.EMPTY_LIST);
+        def.setLibrary("system", getClass().getClassLoader());
+      }
+    } else {
+      def = stageMap.get(createKey(library, name, version));
+    }
+    return def;
   }
 
   private String getLibraryName(ClassLoader cl) {

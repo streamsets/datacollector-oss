@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRunner;
@@ -67,6 +68,38 @@ public class TestPreviewRun {
     PipelineRunner runner = new PreviewPipelineRunner(tracker);
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
                                              MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
+    pipeline.init();
+    pipeline.run();
+    pipeline.destroy();
+    List<StageOutput> output = runner.getStagesOutputSnapshot();
+    Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).getField("f").getValue());
+    Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).getField("f").getValue());
+  }
+
+  @Test
+  public void testPreviewPipelineBuilder() throws Exception {
+    MockStages.setSourceCapture(new BaseSource() {
+      @Override
+      public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
+        Record record = getContext().createRecord("x");
+        record.setField("f", Field.create(1));
+        batchMaker.addRecord(record);
+        return "1";
+      }
+    });
+    MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
+      @Override
+      protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+        record.setField("f", Field.create(2));
+        batchMaker.addRecord(record);
+      }
+    });
+    SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker);
+    PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
+    pipelineConfiguration.getStages().remove(2);
+
+    Pipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), pipelineConfiguration).build(runner);
     pipeline.init();
     pipeline.run();
     pipeline.destroy();

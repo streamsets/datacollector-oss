@@ -33,7 +33,9 @@ public class PipelineConfigurationValidator {
   private final StageLibrary stageLibrary;
   private final PipelineConfiguration pipelineConfiguration;
   private final List<Issue> issues;
+  private final List<String> openLanes;
   private boolean validated;
+  private boolean canPreview = true;
 
   public PipelineConfigurationValidator(StageLibrary stageLibrary, PipelineConfiguration pipelineConfiguration) {
     Preconditions.checkNotNull(stageLibrary, "stageLibrary cannot be null");
@@ -41,21 +43,32 @@ public class PipelineConfigurationValidator {
     this.stageLibrary = stageLibrary;
     this.pipelineConfiguration = pipelineConfiguration;
     issues = new ArrayList<Issue>();
+    openLanes = new ArrayList<String>();
   }
 
   public boolean validate() {
     validated = true;
     if (pipelineConfiguration.getStages().isEmpty()) {
       issues.add(new Issue("pipeline", "validation.pipeline.is.empty", "The pipeline is empty"));
+      canPreview = false;
     }
     validatePipelineConfiguration();
+    canPreview = canPreview && issues.isEmpty();
     validatePipelineLanes();
     return issues.isEmpty();
+  }
+
+  public boolean canPreview() {
+    return canPreview;
   }
 
   public List<Issue>  getIssues() {
     Preconditions.checkState(validated, String.format("validate() has not been called"));
     return ImmutableList.copyOf(issues);
+  }
+
+  public List<String> getOpenLanes() {
+    return openLanes;
   }
 
   @VisibleForTesting
@@ -132,6 +145,7 @@ public class PipelineConfigurationValidator {
     }
     Set<String> open = new HashSet<String>(output);
     open.removeAll(input);
+    openLanes.addAll(open);
     if (!open.isEmpty()) {
       for (String lane : open) {
         for (StageConfiguration stage : pipelineConfiguration.getStages()) {

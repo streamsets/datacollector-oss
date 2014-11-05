@@ -29,7 +29,8 @@ public class PipelineRuntimeException extends PipelineException {
   public enum ERROR implements ErrorId {
     PIPELINE_CONFIGURATION("Pipeline configuration error, {}"),
     PIPELINE_BUILD("Pipeline build error, {}"),
-    STAGE_CONFIG_INJECTION("Stage '{}', instance '{}', variable '{}', value '{}', configuration injection error, {}");
+    STAGE_CONFIG_INJECTION("Stage '{}', instance '{}', variable '{}', value '{}', configuration injection error, {}"),
+    CANNOT_PREVIEW("Cannot preview, {}");
 
     private String msg;
 
@@ -45,13 +46,13 @@ public class PipelineRuntimeException extends PipelineException {
 
   private final List<Issue> issues;
 
-  protected PipelineRuntimeException(ErrorId id, List<Issue> issues) {
+  public PipelineRuntimeException(ErrorId id, List<Issue> issues) {
     super(id, issues);
     this.issues = issues;
   }
 
   @SuppressWarnings("unchecked")
-  protected PipelineRuntimeException(ErrorId id, Object... params) {
+  public PipelineRuntimeException(ErrorId id, Object... params) {
     super(id, params);
     issues = Collections.EMPTY_LIST;
   }
