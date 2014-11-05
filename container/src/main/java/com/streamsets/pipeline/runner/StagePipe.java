@@ -38,19 +38,16 @@ public class StagePipe extends Pipe {
   @Override
   @SuppressWarnings("unchecked")
   public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
+    BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     switch (getStage().getDefinition().getType()) {
       case SOURCE: {
-        BatchMakerImpl batchMaker = pipeBatch.startStage(this);
         String newOffset = ((Source) getStage().getStage()).produce(pipeBatch.getPreviousOffset(), batchMaker);
         pipeBatch.setNewOffset(newOffset);
-        pipeBatch.completeStage(batchMaker);
         break;
       }
       case PROCESSOR: {
         BatchImpl batch = pipeBatch.getBatch(this);
-        BatchMakerImpl batchMaker = pipeBatch.startStage(this);
         ((Processor) getStage().getStage()).process(batch, batchMaker);
-        pipeBatch.completeStage(batchMaker);
         break;
 
       }
@@ -60,6 +57,7 @@ public class StagePipe extends Pipe {
         break;
       }
     }
+    pipeBatch.completeStage(batchMaker);
   }
 
   @Override

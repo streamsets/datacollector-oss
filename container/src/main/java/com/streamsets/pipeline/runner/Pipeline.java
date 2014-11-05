@@ -207,9 +207,6 @@ public class Pipeline {
             pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx), laneResolver.getStageOutputLanes(idx));
             pipes.add(pipe);
             break;
-          default:
-            throw new RuntimeException(String.format("Stage '%s' does not have a stage type",
-                                                     stage.getInfo().getInstanceName()));
         }
       }
       return pipes.toArray(new Pipe[pipes.size()]);

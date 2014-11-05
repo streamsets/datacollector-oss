@@ -190,6 +190,25 @@ public class MockStages {
   }
 
   @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationSourceProcessorTarget() {
+    List<String> lanes = ImmutableList.of("a");
+    List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
+    StageConfiguration source = new StageConfiguration("s", "default", "sourceName", "1.0.0",
+                                                       Collections.EMPTY_LIST, null, Collections.EMPTY_LIST,
+                                                       ImmutableList.of("s"));
+    stages.add(source);
+    StageConfiguration processor = new StageConfiguration("p", "default", "processorName", "1.0.0",
+                                                          Collections.EMPTY_LIST, null, ImmutableList.of("s"),
+                                                          ImmutableList.of("p"));
+    stages.add(processor);
+    StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
+                                                       Collections.EMPTY_LIST, null, ImmutableList.of("p"),
+                                                       Collections.EMPTY_LIST);
+    stages.add(target);
+    return new PipelineConfiguration(UUID.randomUUID(), stages, PipelineConfiguration.OnError.DROP_RECORD);
+  }
+
+  @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineConfigurationSourceTarget() {
     List<String> lanes = ImmutableList.of("a");
     List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
