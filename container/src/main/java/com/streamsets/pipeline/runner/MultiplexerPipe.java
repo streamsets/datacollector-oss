@@ -38,12 +38,14 @@ public class MultiplexerPipe extends Pipe {
 
   @Override
   public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
-    for (String lane : getStage().getConfiguration().getOutputLanes()) {
-      List<String> outputLanes = LaneResolver.getMatchingOutputLanes(lane, getOutputLanes());
+    for (int i = 0; i < getInputLanes().size(); i++) {
+      String inputStageLane = getStage().getConfiguration().getOutputLanes().get(i);
+      String inputPipeLane = getInputLanes().get(i);
+      List<String> outputLanes = LaneResolver.getMatchingOutputLanes(inputStageLane, getOutputLanes());
       if (outputLanes.size() == 1) {
-        pipeBatch.moveLane(lane, outputLanes.get(0));
+        pipeBatch.moveLane(inputPipeLane, outputLanes.get(0));
       } else {
-        pipeBatch.moveLaneCopying(lane, outputLanes);
+        pipeBatch.moveLaneCopying(inputPipeLane, outputLanes);
       }
     }
   }
