@@ -40,4 +40,6 @@ public @interface StageDef {
 
   OnError onError() default OnError.DROP_RECORD;
 
+  String icon() default "";
+
 }

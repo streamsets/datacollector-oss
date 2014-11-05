@@ -30,19 +30,19 @@ public class PipelineConfiguration {
   public enum OnError { DROP_RECORD, DROP_BATCH, STOP_PIPELINE }
 
   private UUID uuid = null;
-  private final String description;
   private List<ConfigConfiguration> configuration;
+  private final Map<String, Object> uiInfo;
   private List<StageConfiguration> stages;
   private Map<String, List<String>> issues;
 
   @SuppressWarnings("unchecked")
   public PipelineConfiguration(@JsonProperty("uuid") UUID uuid,
-      @JsonProperty("description") String description,
       @JsonProperty("configuration") List<ConfigConfiguration> configuration,
+      @JsonProperty("uiInfo") Map<String, Object> uiInfo,
       @JsonProperty("stages") List<StageConfiguration> stages) {
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
-    this.description = description;
     this.configuration = configuration;
+    this.uiInfo = uiInfo;
     this.stages = (stages != null) ? stages : Collections.EMPTY_LIST;
     issues = Collections.EMPTY_MAP;
   }
@@ -79,7 +79,7 @@ public class PipelineConfiguration {
     return configuration;
   }
 
-  public String getDescription() {
-    return description;
+  public Map<String, Object> getUiInfo() {
+    return uiInfo;
   }
 }

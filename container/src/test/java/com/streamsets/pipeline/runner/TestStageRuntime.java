@@ -91,11 +91,11 @@ public class TestStageRuntime {
     configDefs.add(configDef);
     StageDefinition sourceDef = new StageDefinition(
       TSource.class.getName(), "source", "1.0.0", "label", "description",
-      StageType.SOURCE, configDefs, StageDef.OnError.DROP_RECORD);
+      StageType.SOURCE, configDefs, StageDef.OnError.DROP_RECORD, "");
     sourceDef.setLibrary("library", Thread.currentThread().getContextClassLoader());
     StageDefinition targetDef = new StageDefinition(
       TTarget.class.getName(), "target", "1.0.0", "label", "description",
-      StageType.TARGET, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD);
+      StageType.TARGET, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD, "");
     targetDef.setLibrary("library", Thread.currentThread().getContextClassLoader());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"))).thenReturn(targetDef);
@@ -114,12 +114,11 @@ public class TestStageRuntime {
     config = new ConfigConfiguration("boolean", true);
     configs.add(config);
     List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
-    StageConfiguration source = new StageConfiguration(
-      "isource", "isource", "description", "library", "source", "1.0.0",
+    StageConfiguration source = new StageConfiguration("isource", "library", "source", "1.0.0",
       configs, null, Collections.EMPTY_LIST, ImmutableList.of("a"));
     stages.add(source);
     StageConfiguration stage = new StageConfiguration(
-      "itarget", "itarget", "description", "library", "target", "1.0.0",
+      "itarget", "library", "target", "1.0.0",
       Collections.EMPTY_LIST, null, ImmutableList.of("a"),
       Collections.EMPTY_LIST);
     stages.add(stage);
@@ -127,7 +126,7 @@ public class TestStageRuntime {
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
-    return new PipelineConfiguration(UUID.randomUUID(), "This is the pipeline description", pipelineConfigs,
+    return new PipelineConfiguration(UUID.randomUUID(), pipelineConfigs, null,
       stages);
   }
 

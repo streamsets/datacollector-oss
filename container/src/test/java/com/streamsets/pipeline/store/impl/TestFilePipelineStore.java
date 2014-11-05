@@ -229,13 +229,13 @@ public class TestFilePipelineStore {
     Map<String, Object> uiInfo = new LinkedHashMap<String, Object>();
     uiInfo.put("ui", "UI");
     StageConfiguration stage = new StageConfiguration(
-      "instance", "instance", "description", "library", "name", "version",
+      "instance", "library", "name", "version",
       ImmutableList.of(config), uiInfo, null, ImmutableList.of("a"));
     List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(3);
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
-    return new PipelineConfiguration(uuid, "This is the pipeline description", pipelineConfigs, ImmutableList.of(stage));
+    return new PipelineConfiguration(uuid, pipelineConfigs, null, ImmutableList.of(stage));
   }
 
   @Test

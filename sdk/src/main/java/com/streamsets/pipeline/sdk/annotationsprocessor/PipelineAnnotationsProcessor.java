@@ -288,7 +288,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         stageDefAnnotation.description(),
         StageType.valueOf(getTypeFromElement(typeElement)),
         configDefinitions,
-        stageDefAnnotation.onError());
+        stageDefAnnotation.onError(),
+        stageDefAnnotation.icon());
     } else {
       stageDefValidationError = true;
     }
@@ -490,7 +491,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           if(fieldModifier.type().equals(FieldModifier.Type.PROVIDED)) {
             //A valuesProvider is expected.
             //check if the valuesProvider is specified and that implements the correct base class
-            //TODO<Hari>:
             //Not the best way of getting the TypeMirror of the ValuesProvider implementation
             //Find a better solution
             TypeMirror valueProviderTypeMirror = null;
@@ -602,7 +602,50 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     boolean validInterface = validateInterface(typeElement);
     boolean validStage = validateAndCacheStageDef(stageDefAnnotation);
     boolean validConstructor = validateStageForConstructor(typeElement);
-    return validInterface && validStage && validConstructor;
+    boolean validateIcon = validateIconExists(typeElement, stageDefAnnotation);
+
+    return validInterface && validStage && validConstructor && validateIcon;
+  }
+
+  /**
+   * Validates that there exists a file as specified in the "icon" literal
+   * of the StageDef annotation and that it ends with a ".svg" extension
+   *
+   * @param stageDefAnnotation
+   * @return
+   */
+  private boolean validateIconExists(TypeElement typeElement, StageDef stageDefAnnotation) {
+    // The following validations are done in the specified order in order to flag maximum
+    // errors in one go
+    //1. Check if the file exists
+    //2. Access it
+    //3. Check if it ends with .svg extension
+    boolean valid = true;
+    if(stageDefAnnotation.icon() != null && !stageDefAnnotation.icon().isEmpty()) {
+      try {
+        FileObject resource = processingEnv.getFiler().getResource(StandardLocation.CLASS_PATH, ""
+          , stageDefAnnotation.icon());
+        if (resource == null) {
+          printError("stagedef.validation.icon.file.does.not.exist",
+            "Stage Definition %s supplies an icon %s which does not exist.",
+            typeElement.getQualifiedName(), stageDefAnnotation.icon());
+          valid = false;
+        }
+      } catch (IOException e) {
+        printError("stagedef.validation.cannot.access.icon.file",
+          "Stage Definition %s supplies an icon %s which cannot be accessed for the following reason : %s.",
+          typeElement.getQualifiedName(), stageDefAnnotation.icon(), e.getMessage());
+        valid = false;
+      }
+
+      if (!stageDefAnnotation.icon().endsWith(".svg")) {
+        printError("stagedef.validation.icon.not.svg",
+          "Stage Definition %s supplies an icon %s which is not in an \"svg\" file.",
+          typeElement.getQualifiedName(), stageDefAnnotation.icon());
+        valid = false;
+      }
+    }
+    return valid;
   }
 
   /**

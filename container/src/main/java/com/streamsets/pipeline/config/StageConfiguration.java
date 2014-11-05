@@ -28,8 +28,6 @@ public class StageConfiguration {
 
   //basic info
   private final String instanceName;
-  private final String label;
-  private final String description;
   private final String library;
   private final String stageName;
   private final String stageVersion;
@@ -44,8 +42,6 @@ public class StageConfiguration {
   @JsonCreator
   public StageConfiguration(
       @JsonProperty("instanceName") String instanceName,
-      @JsonProperty("label") String label,
-      @JsonProperty("description") String description,
       @JsonProperty("library") String library,
       @JsonProperty("stageName") String stageName,
       @JsonProperty("stageVersion") String stageVersion,
@@ -54,8 +50,6 @@ public class StageConfiguration {
       @JsonProperty("inputLanes") List<String> inputLanes,
       @JsonProperty("outputLanes") List<String> outputLanes) {
     this.instanceName = instanceName;
-    this.label = label;
-    this.description = description;
     this.library = library;
     this.stageName = stageName;
     this.stageVersion = stageVersion;
@@ -105,11 +99,4 @@ public class StageConfiguration {
     return configurationMap.get(name);
   }
 
-  public String getLabel() {
-    return label;
-  }
-
-  public String getDescription() {
-    return description;
-  }
 }

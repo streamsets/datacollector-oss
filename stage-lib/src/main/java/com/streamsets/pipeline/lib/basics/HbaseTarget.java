@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 
 
-@StageDef(name = "hbaseTarget", version="1.0.0", label="Hbase Target")
+@StageDef(name = "hbaseTarget", version="1.0.0", label="Hbase Target", icon = "HbaseTarget.svg")
 public class HbaseTarget extends BaseTarget {
 
   @ConfigDef(name="uri", required = true, type = ConfigDef.Type.STRING, label = "Hbase URI", defaultValue = "",

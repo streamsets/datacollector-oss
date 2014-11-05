@@ -121,10 +121,11 @@ public class FilePipelineStore implements PipelineStore {
     Date date = new Date();
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
+
     List<ConfigConfiguration> configuration = new ArrayList<ConfigConfiguration>(2);
     configuration.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
     configuration.add(new ConfigConfiguration("stopPipelineOnError", false));
-    PipelineConfiguration pipeline = new PipelineConfiguration(uuid, description, configuration,
+    PipelineConfiguration pipeline = new PipelineConfiguration(uuid, configuration, null,
       null);
     try {
       json.writeValue(getInfoFile(name), info);

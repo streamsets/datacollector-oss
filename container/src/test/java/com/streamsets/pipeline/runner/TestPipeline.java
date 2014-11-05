@@ -55,8 +55,8 @@ public class TestPipeline {
     List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(), "This is the pipeline description",
-      pipelineConfigs, stageDefs);
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
+      pipelineConfigs, null, stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
@@ -145,7 +145,7 @@ public class TestPipeline {
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
-      "This is the pipeline description", pipelineConfigs,
+       pipelineConfigs, null,
       stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
 
@@ -195,7 +195,7 @@ public class TestPipeline {
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
-      "This is the pipeline description", pipelineConfigs, stageDefs);
+       pipelineConfigs, null, stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
@@ -258,7 +258,7 @@ public class TestPipeline {
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
-      "This is the pipeline description", pipelineConfigs, stageDefs);
+       pipelineConfigs, null, stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);

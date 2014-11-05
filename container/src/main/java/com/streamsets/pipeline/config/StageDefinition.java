@@ -52,6 +52,7 @@ public class StageDefinition {
   private final StageDef.OnError onError;
   private List<ConfigDefinition> configDefinitions;
   private Map<String, ConfigDefinition> configDefinitionsMap;
+  private final String icon;
 
   @JsonCreator
   public StageDefinition(
@@ -62,7 +63,8 @@ public class StageDefinition {
     @JsonProperty("description") String description,
     @JsonProperty("type") StageType type,
     @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions,
-    @JsonProperty("onError") StageDef.OnError onError) {
+    @JsonProperty("onError") StageDef.OnError onError,
+    @JsonProperty("icon") String icon) {
     this.className = className;
     this.name = name;
     this.version = version;
@@ -75,6 +77,7 @@ public class StageDefinition {
       configDefinitionsMap.put(conf.getName(), conf);
     }
     this.onError = onError;
+    this.icon = icon;
   }
 
   public void setLibrary(String library, ClassLoader classLoader) {
@@ -142,6 +145,10 @@ public class StageDefinition {
     return onError;
   }
 
+  public String getIcon() {
+    return icon;
+  }
+
   public StageDefinition localize(Locale locale) {
     String rbName = getClassName() + "-bundle";
     try {
@@ -165,7 +172,7 @@ public class StageDefinition {
     String description = (rb.containsKey(STAGE_DESCRIPTION)) ? rb.getString(STAGE_DESCRIPTION) : getDescription();
     StageDefinition def = new StageDefinition(
       getClassName(), getName(), getVersion(), label, description,
-      getType(), configDefs, getOnError());
+      getType(), configDefs, getOnError(), getIcon());
     def.setLibrary(getLibrary(), getClassLoader());
 
     for(ConfigDefinition configDef : def.getConfigDefinitions()) {

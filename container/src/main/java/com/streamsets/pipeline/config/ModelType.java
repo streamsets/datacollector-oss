@@ -19,5 +19,6 @@ package com.streamsets.pipeline.config;
 
 public enum ModelType {
   FIELD_SELECTOR,
-  FIELD_MODIFIER
+  FIELD_MODIFIER,
+  DROPDOWN
 }

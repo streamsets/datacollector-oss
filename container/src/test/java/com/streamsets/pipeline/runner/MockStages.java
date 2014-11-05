@@ -45,6 +45,7 @@ public class MockStages {
 
   @SuppressWarnings("unchecked")
   public static StageConfiguration createSource(String instanceName, List<String> outputs) {
+
     return new StageConfiguration(instanceName, "default", "sourceName", "1.0.0",
                                   Collections.EMPTY_LIST, null, Collections.EMPTY_LIST, outputs);
   }
@@ -52,14 +53,14 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static StageConfiguration createProcessor(String instanceName, List<String> inputs, List<String> outputs) {
     return new StageConfiguration(
-      instanceName, instanceName, "description","default", "processorName",  "1.0.0",
+      instanceName, "default", "processorName",  "1.0.0",
       Collections.EMPTY_LIST, null, inputs, outputs);
   }
 
   @SuppressWarnings("unchecked")
   public static StageConfiguration createTarget(String instanceName, List<String> inputs) {
     return new StageConfiguration(
-      instanceName, instanceName, "description","default", "targetName",  "1.0.0",
+      instanceName, "default", "targetName",  "1.0.0",
       Collections.EMPTY_LIST, null, inputs, Collections.EMPTY_LIST);
   }
 
@@ -159,15 +160,15 @@ public class MockStages {
       stages = new ArrayList<StageDefinition>();
       StageDefinition sDef = new StageDefinition(
         MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
-        "sourceDesc", StageType.SOURCE, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD);
+        "sourceDesc", StageType.SOURCE, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD, "");
       sDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
-      StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "processorLabel",
-                                                 "processorDesc", StageType.PROCESSOR, Collections.EMPTY_LIST);
+      StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0",
+        StageType.PROCESSOR, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD, "");
 
       pDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
       StageDefinition tDef = new StageDefinition(
         MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
-        "targetDesc", StageType.TARGET, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD);
+        "targetDesc", StageType.TARGET, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD, "");
       tDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
       stages = ImmutableList.of(sDef, pDef, tDef);
     }
