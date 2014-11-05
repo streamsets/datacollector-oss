@@ -91,6 +91,10 @@ public class StageLibraryResource {
     return Response.ok().type(MediaType.APPLICATION_SVG_XML_TYPE).entity(stream).build();
   }
 
+  /*******************************************************************/
+  /*********************** private methods ***************************/
+  /*******************************************************************/
+  
   /**
    * Copies data from the argument input stream into the argument output stream
    * @param in
