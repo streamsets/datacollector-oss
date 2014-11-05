@@ -18,50 +18,44 @@
 package com.streamsets.pipeline.runner.preview;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.runner.Pipe;
-import com.streamsets.pipeline.runner.PipeBatch;
-import com.streamsets.pipeline.runner.PipelineRunner;
-import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
+import com.streamsets.pipeline.util.Issue;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-public class PreviewPipelineRunner implements PipelineRunner {
-  private final SourceOffsetTracker offsetTracker;
+public class PreviewPipelineOutput {
+  private Locale locale;
+  private final List<Issue> issues;
   private final MetricRegistry metrics;
-  private volatile List<StageOutput> stageOutput;
+  private final List<StageOutput> stagesOutput;
   private String sourceOffset;
   private String newSourceOffset;
 
-  public PreviewPipelineRunner(SourceOffsetTracker offsetTracker) {
-    this.offsetTracker = offsetTracker;
-    this.metrics = new MetricRegistry();
+  public PreviewPipelineOutput(List<Issue> issues, PreviewPipelineRunner runner) {
+    this.issues = issues;
+    this.metrics = runner.getMetrics();
+    this.stagesOutput = runner.getStagesOutputSnapshot();
+    this.sourceOffset = runner.getSourceOffset();
+    this.newSourceOffset = runner.getNewSourceOffset();
   }
 
-  @Override
+  public void setLocale(Locale locale) {
+    this.locale = locale;
+  }
+
+  public Map<String, List<String>> getIssues() {
+    return Issue.getLocalizedMessages(issues, locale);
+  }
+
   public MetricRegistry getMetrics() {
     return metrics;
   }
 
-  @Override
-  public void run(Pipe[] pipes) throws StageException, PipelineRuntimeException {
-    PipeBatch pipeBatch = new PipeBatch(offsetTracker, true);
-    sourceOffset = pipeBatch.getPreviousOffset();
-    for (Pipe pipe : pipes) {
-      pipe.process(pipeBatch);
-    }
-    offsetTracker.commitOffset();
-    newSourceOffset = offsetTracker.getOffset();
-    stageOutput = pipeBatch.getSnapshotsOfAllStagesOutput();
+  public List<StageOutput> getStagesOutput() {
+    return stagesOutput;
   }
-
-  @Override
-  public List<StageOutput> getStagesOutputSnapshot() {
-    return stageOutput;
-  }
-
 
   public String getSourceOffset() {
     return sourceOffset;
@@ -70,4 +64,5 @@ public class PreviewPipelineRunner implements PipelineRunner {
   public String getNewSourceOffset() {
     return newSourceOffset;
   }
+
 }

@@ -53,6 +53,10 @@ public class Pipeline {
     return pipes;
   }
 
+  public PipelineRunner getRunner() {
+    return runner;
+  }
+
   public void configure(Configuration conf) {
     if (observer != null) {
       observer.configure(conf);

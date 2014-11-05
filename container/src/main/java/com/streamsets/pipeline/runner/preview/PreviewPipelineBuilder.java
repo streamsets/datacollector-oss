@@ -20,7 +20,6 @@ package com.streamsets.pipeline.runner.preview;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
-import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
@@ -31,6 +30,7 @@ import java.util.UUID;
 
 public class PreviewPipelineBuilder {
 
+  @SuppressWarnings("unchecked")
   private StageConfiguration createPlugStage(List<String> lanes) {
     return new StageConfiguration("plug" + UUID.randomUUID().toString(), "system", ":plug:", "1.0.0",
                                   Collections.EMPTY_LIST, Collections.EMPTY_MAP, lanes, Collections.EMPTY_LIST);
@@ -38,14 +38,13 @@ public class PreviewPipelineBuilder {
 
   private final StageLibrary stageLib;
   private final PipelineConfiguration pipelineConf;
-  private Observer observer;
 
   public PreviewPipelineBuilder(StageLibrary stageLib, PipelineConfiguration pipelineConf) {
     this.stageLib = stageLib;
     this.pipelineConf = pipelineConf;
   }
 
-  public Pipeline build(PreviewPipelineRunner runner) throws PipelineRuntimeException {
+  public PreviewPipeline build(PreviewPipelineRunner runner) throws PipelineRuntimeException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, pipelineConf);
     if (validator.validate() || validator.canPreview()) {
       List<String> openLanes = validator.getOpenLanes();
@@ -53,7 +52,8 @@ public class PreviewPipelineBuilder {
     } else {
       throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_PREVIEW, validator.getIssues());
     }
-    return new Pipeline.Builder(stageLib, pipelineConf).build(runner);
+    Pipeline pipeline = new Pipeline.Builder(stageLib, pipelineConf).build(runner);
+    return new PreviewPipeline(pipeline, validator.getIssues());
   }
 
 }

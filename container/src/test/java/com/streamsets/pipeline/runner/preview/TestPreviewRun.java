@@ -99,11 +99,9 @@ public class TestPreviewRun {
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
 
-    Pipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), pipelineConfiguration).build(runner);
-    pipeline.init();
-    pipeline.run();
-    pipeline.destroy();
-    List<StageOutput> output = runner.getStagesOutputSnapshot();
+    PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), pipelineConfiguration).build(runner);
+    PreviewPipelineOutput previewOutput = pipeline.run();
+    List<StageOutput> output = previewOutput.getStagesOutput();
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).getField("f").getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).getField("f").getValue());
   }
