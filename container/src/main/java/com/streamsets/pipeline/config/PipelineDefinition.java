@@ -74,7 +74,7 @@ public class PipelineDefinition {
 
     //create configuration for guaranteed delivery option
     ConfigDefinition seConfigDef = new ConfigDefinition(
-      "Stop On Error",
+      "stopPipelineOnError",
       ConfigDef.Type.BOOLEAN,
       seLabel,
       seDescription,
@@ -94,15 +94,15 @@ public class PipelineDefinition {
       rb != null ?
         (rb.containsKey(DELIVERY_GUARENTEE_AT_LEAST_ONCE) ?
           rb.getString(DELIVERY_GUARENTEE_AT_LEAST_ONCE) :
-          DeliveryGuarantee.AT_LEAST_ONCE.name())
-        : DeliveryGuarantee.AT_LEAST_ONCE.name());
+          "At Least Once")
+        : "At Least Once");
 
     gdLabels.add(
       rb != null ?
         (rb.containsKey(DELIVERY_GUARENTEE_AT_MOST_ONCE) ?
           rb.getString(DELIVERY_GUARENTEE_AT_MOST_ONCE) :
-          DeliveryGuarantee.AT_MOST_ONCE.name())
-        : DeliveryGuarantee.AT_MOST_ONCE.name());
+          "At Most Once")
+        : "At Most Once");
 
     List<String> gdValues = new ArrayList<String>(2);
     gdValues.add(DeliveryGuarantee.AT_LEAST_ONCE.name());
