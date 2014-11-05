@@ -43,7 +43,7 @@ public class MultiplexerPipe extends Pipe {
       if (outputLanes.size() == 1) {
         pipeBatch.moveLane(lane, outputLanes.get(0));
       } else {
-        pipeBatch.moveLaneCloning(lane, outputLanes);
+        pipeBatch.moveLaneCopying(lane, outputLanes);
       }
     }
   }

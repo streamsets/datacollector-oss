@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 public class MockStages {
 
@@ -185,4 +188,19 @@ public class MockStages {
     }
 
   }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfiguration() {
+    List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
+    StageConfiguration source = new StageConfiguration("s", "default", "sourceName", "1.0.0",
+                                                       Collections.EMPTY_LIST, null, Collections.EMPTY_LIST,
+                                                       ImmutableList.of("a"));
+    stages.add(source);
+    StageConfiguration stage = new StageConfiguration("t", "default", "targetName", "1.0.0",
+                                                      Collections.EMPTY_LIST, null, ImmutableList.of("a"),
+                                                      Collections.EMPTY_LIST);
+    stages.add(stage);
+    return new PipelineConfiguration(UUID.randomUUID(), stages, PipelineConfiguration.OnError.DROP_RECORD);
+  }
+
 }

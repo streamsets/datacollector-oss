@@ -17,11 +17,13 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -34,11 +36,16 @@ public class PipeBatch {
   private final Set<String> processedStages;
   private final List<StageOutput> stageOutputSnapshot;
 
-  public PipeBatch(SourceOffsetTracker offsetTracker, boolean snapshotStages) {
+  public PipeBatch(SourceOffsetTracker offsetTracker, boolean snapshotStagesOutput) {
     this.offsetTracker = offsetTracker;
     fullPayload = new HashMap<String, List<Record>>();
     processedStages = new HashSet<String>();
-    stageOutputSnapshot = (snapshotStages) ? new ArrayList<StageOutput>() : null;
+    stageOutputSnapshot = (snapshotStagesOutput) ? new ArrayList<StageOutput>() : null;
+  }
+
+  @VisibleForTesting
+  Map<String, List<Record>> getFullPayload() {
+    return fullPayload;
   }
 
   public String getPreviousOffset() {
@@ -105,7 +112,7 @@ public class PipeBatch {
     return list;
   }
 
-  public List<StageOutput> getOutputSnapshot() {
+  public List<StageOutput> getSnapshotsOfAllStagesOutput() {
     return stageOutputSnapshot;
   }
 
@@ -114,7 +121,7 @@ public class PipeBatch {
         "Lane '%s' does not exist", inputLane)));
   }
 
-  public void moveLaneCloning(String inputLane, List<String> outputLanes) {
+  public void moveLaneCopying(String inputLane, List<String> outputLanes) {
     List<Record> records = Preconditions.checkNotNull(fullPayload.remove(inputLane), String.format(
         "Lane '%s' does not exist", inputLane));
     for (String lane : outputLanes) {
@@ -131,8 +138,15 @@ public class PipeBatch {
     return list;
   }
 
+  private List<String> remove(List<String> from, Collection<String> values) {
+    List<String> list = new ArrayList<String>(from);
+    list.removeAll(values);
+    return list;
+  }
+
   public void combineLanes(List<String> lanes, String to) {
-    Preconditions.checkState(fullPayload.containsKey(to), "Lane '%s' does not exist");
+    List<String> undefLanes = remove(lanes, fullPayload.keySet());
+    Preconditions.checkState(undefLanes.isEmpty(), String.format("Lanes '%s' does not exist", undefLanes));
     fullPayload.put(to, new ArrayList<Record>());
     for (String lane : lanes) {
       List<Record> records = Preconditions.checkNotNull(fullPayload.remove(lane), String.format(

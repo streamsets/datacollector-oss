@@ -122,6 +122,9 @@ public class RecordImpl implements Record {
     header = new HeaderImpl(headerData);
   }
 
+
+  //TODO comment on implementation difference between snapshot and copy
+
   public RecordImpl createCopy() {
     return new RecordImpl(this);
   }

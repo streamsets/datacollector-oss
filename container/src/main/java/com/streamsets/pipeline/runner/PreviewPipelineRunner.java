@@ -43,7 +43,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
     for (Pipe pipe : pipes) {
       pipe.process(pipeBatch);
     }
-    stageOutput = pipeBatch.getOutputSnapshot();
+    stageOutput = pipeBatch.getSnapshotsOfAllStagesOutput();
   }
 
   @Override
