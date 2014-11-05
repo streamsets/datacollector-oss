@@ -32,8 +32,8 @@ public class PipelineDefinition {
   private final static String CONFIG_DELIVERY_GUARENTEE_DESCRIPTION = "config.deliveryGuarantee.description";
   private final static String CONFIG_STOP_ON_ERROR_LABEL = "config.stopOnError.label";
   private final static String CONFIG_STOP_ON_ERROR_DESCRIPTION = "config.stopOnError.description";
-  private final static String DELIVERY_GUARENTEE_ATLEAST_ONCE = "config.deliveryGuarantee.ATLEAST_ONCE";
-  private final static String DELIVERY_GUARENTEE_ATMOST_ONCE = "config.deliveryGuarantee.ATMOST_ONCE";
+  private final static String DELIVERY_GUARENTEE_AT_LEAST_ONCE = "config.deliveryGuarantee.AT_LEAST_ONCE";
+  private final static String DELIVERY_GUARENTEE_AT_MOST_ONCE = "config.deliveryGuarantee.AT_MOST_ONCE";
 
   /*The config definitions of the pipeline*/
   private List<ConfigDefinition> configDefinitions;
@@ -92,15 +92,15 @@ public class PipelineDefinition {
     List<String> gdLabels = new ArrayList<String>(2);
     gdLabels.add(
       rb != null ?
-        (rb.containsKey(DELIVERY_GUARENTEE_ATLEAST_ONCE) ?
-          rb.getString(DELIVERY_GUARENTEE_ATLEAST_ONCE) :
+        (rb.containsKey(DELIVERY_GUARENTEE_AT_LEAST_ONCE) ?
+          rb.getString(DELIVERY_GUARENTEE_AT_LEAST_ONCE) :
           DeliveryGuarantee.AT_LEAST_ONCE.name())
         : DeliveryGuarantee.AT_LEAST_ONCE.name());
 
     gdLabels.add(
       rb != null ?
-        (rb.containsKey(DELIVERY_GUARENTEE_ATMOST_ONCE) ?
-          rb.getString(DELIVERY_GUARENTEE_ATMOST_ONCE) :
+        (rb.containsKey(DELIVERY_GUARENTEE_AT_MOST_ONCE) ?
+          rb.getString(DELIVERY_GUARENTEE_AT_MOST_ONCE) :
           DeliveryGuarantee.AT_MOST_ONCE.name())
         : DeliveryGuarantee.AT_MOST_ONCE.name());
 
