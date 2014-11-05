@@ -21,28 +21,43 @@ import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.container.PipelineException;
 import com.streamsets.pipeline.util.Issue;
 
+import java.util.Collections;
 import java.util.List;
 
 public class PipelineRuntimeException extends PipelineException {
 
   public enum ERROR implements ErrorId {
-    PIPELINE_CONFIGURATION,
-    PIPELINE_BUILD,
-    STAGE_CONFIG_INJECTION;
+    PIPELINE_CONFIGURATION("Pipeline configuration error, {}"),
+    PIPELINE_BUILD("Pipeline build error, {}"),
+    STAGE_CONFIG_INJECTION("Stage '{}', instance '{}', variable '{}', value '{}', configuration injection error, {}");
 
+    private String msg;
+
+    private ERROR(String msg) {
+      this.msg = msg;
+    }
     @Override
     public String getMessageTemplate() {
-      return "";
+      return msg;
     }
 
   }
 
+  private final List<Issue> issues;
+
   protected PipelineRuntimeException(ErrorId id, List<Issue> issues) {
-    super(id);
+    super(id, issues);
+    this.issues = issues;
   }
 
+  @SuppressWarnings("unchecked")
   protected PipelineRuntimeException(ErrorId id, Object... params) {
     super(id, params);
+    issues = Collections.EMPTY_LIST;
+  }
+
+  public List<Issue> getIssues() {
+    return issues;
   }
 
 }
