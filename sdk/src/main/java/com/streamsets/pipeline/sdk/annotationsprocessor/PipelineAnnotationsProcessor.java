@@ -197,9 +197,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    */
   private void generateConfigFile() {
     try {
-        FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
-          PIPELINE_STAGES_JSON, (Element[])null);
-        json.writeValue(resource.openOutputStream(), stageDefinitions);
+      FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
+        PIPELINE_STAGES_JSON);
+      json.writeValue(resource.openOutputStream(), stageDefinitions);
     } catch (IOException e) {
       processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
     }

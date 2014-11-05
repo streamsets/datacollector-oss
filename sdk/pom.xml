@@ -106,6 +106,12 @@
         </configuration>
       </plugin>
 
+      <!-- Need to copy the javax.annotation.processing.Processor file into
+      /target/classes/META-INF/services before running the tests. This is
+      required because this file defines the annotation processor class for the
+      java compiler to run.
+      Without this the tests defined in this module will not run the annotation
+      processor.-->
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
@@ -130,14 +136,42 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- Explicitly setting the working directory. Otherwise the annotation
+          processor generates files in ${basedir} while running the tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-            <!-- Explicitly setting the working directory. Otherwise the annotation
-            processor generates files in ${basedir} while running the tests -->
-            <workingDirectory>${basedir}/target/test-classes</workingDirectory>
+          <workingDirectory>${basedir}/target/test-classes</workingDirectory>
         </configuration>
+      </plugin>
+
+      <!-- The clean plugin is called in the initialization phase to knock off the target
+      directory before compiling the source files. This is required because:
+
+      The file which defines the annotation processor - javax.annotation.processing.Processor
+      is copied into the target directory in the test-compile phase in order for the
+      tests to find the annotation processor.
+
+      Subsequent install or test without clean triggers annotation processing while compiling the
+      PipelineAnnotationProcessor class itself. This results in a compilation failure
+      of PipelineAnnotationProcessor [Because the javac compiler is trying to find the PipelineAnnotationProcessor
+      class while compiling PipelineAnnotationProcessor!!!].
+
+      A clean before every compile solves the problem for now.-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>clean</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
