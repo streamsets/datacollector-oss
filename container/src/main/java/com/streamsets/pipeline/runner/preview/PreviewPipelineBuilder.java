@@ -49,7 +49,9 @@ public class PreviewPipelineBuilder {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, pipelineConf);
     if (validator.validate() || validator.canPreview()) {
       List<String> openLanes = validator.getOpenLanes();
-      pipelineConf.getStages().add(createPlugStage(openLanes));
+      if (!openLanes.isEmpty()) {
+        pipelineConf.getStages().add(createPlugStage(openLanes));
+      }
     } else {
       throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_PREVIEW, validator.getIssues());
     }
