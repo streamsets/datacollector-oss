@@ -37,9 +37,16 @@ public class PDFLineProducer extends BaseSource {
     name = "pdfLocation", required = true, type = ConfigDef.Type.STRING)
   public String pdfLocation;
 
-  @Override
-  public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
+  public PDFLineProducer(String pdfLocation) {
+    this.pdfLocation = pdfLocation;
+  }
 
+  public PDFLineProducer() {
+
+  }
+
+  @Override
+  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     String rideHistory = pdftoText(pdfLocation);
     String[] transactions = rideHistory.split(System.lineSeparator());
 
@@ -52,14 +59,6 @@ public class PDFLineProducer extends BaseSource {
     //In the first cut each line is a record and one batch has all records.
     //No more records
     return null;
-  }
-
-  public PDFLineProducer(String pdfLocation) {
-    this.pdfLocation = pdfLocation;
-  }
-
-  public PDFLineProducer() {
-
   }
 
   private String pdftoText(String inputFileName) {

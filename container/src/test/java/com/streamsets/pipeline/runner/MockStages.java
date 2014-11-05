@@ -162,7 +162,7 @@ public class MockStages {
         MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
         "sourceDesc", StageType.SOURCE, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD, "");
       sDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
-      StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0",
+      StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel", "sourceDescription",
         StageType.PROCESSOR, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD, "");
 
       pDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
@@ -211,7 +211,7 @@ public class MockStages {
                                                        Collections.EMPTY_LIST, null, ImmutableList.of("p"),
                                                        Collections.EMPTY_LIST);
     stages.add(target);
-    return new PipelineConfiguration(UUID.randomUUID(), stages, PipelineConfiguration.OnError.DROP_RECORD);
+    return new PipelineConfiguration(UUID.randomUUID(), null, null, stages);
   }
 
   @SuppressWarnings("unchecked")
@@ -224,7 +224,7 @@ public class MockStages {
     StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
                                                       Collections.EMPTY_LIST, null, lanes, Collections.EMPTY_LIST);
     stages.add(target);
-    return new PipelineConfiguration(UUID.randomUUID(), stages, PipelineConfiguration.OnError.DROP_RECORD);
+    return new PipelineConfiguration(UUID.randomUUID(), null, null, stages);
   }
 
   public static PipelineConfiguration createPipelineConfigurationSourceTwoTargets() {
@@ -239,7 +239,7 @@ public class MockStages {
     target = new StageConfiguration("t2", "default", "targetName", "1.0.0",
                                                       Collections.EMPTY_LIST, null, lanes, Collections.EMPTY_LIST);
     stages.add(target);
-    return new PipelineConfiguration(UUID.randomUUID(), stages, PipelineConfiguration.OnError.DROP_RECORD);
+    return new PipelineConfiguration(UUID.randomUUID(), null, null, stages);
   }
 
 }
