@@ -128,7 +128,7 @@ public class FilePipelineStore implements PipelineStore {
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
 
     List<ConfigConfiguration> configuration = new ArrayList<ConfigConfiguration>(2);
-    configuration.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    configuration.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     configuration.add(new ConfigConfiguration("stopPipelineOnError", false));
     PipelineConfiguration pipeline = new PipelineConfiguration(uuid, configuration, null,
       null);

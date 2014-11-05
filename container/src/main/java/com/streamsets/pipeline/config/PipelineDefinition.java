@@ -94,19 +94,19 @@ public class PipelineDefinition {
       rb != null ?
         (rb.containsKey(DELIVERY_GUARENTEE_ATLEAST_ONCE) ?
           rb.getString(DELIVERY_GUARENTEE_ATLEAST_ONCE) :
-          DeliveryGuarantee.ATLEAST_ONCE.name())
-        : DeliveryGuarantee.ATLEAST_ONCE.name());
+          DeliveryGuarantee.AT_LEAST_ONCE.name())
+        : DeliveryGuarantee.AT_LEAST_ONCE.name());
 
     gdLabels.add(
       rb != null ?
         (rb.containsKey(DELIVERY_GUARENTEE_ATMOST_ONCE) ?
           rb.getString(DELIVERY_GUARENTEE_ATMOST_ONCE) :
-          DeliveryGuarantee.ATMOST_ONCE.name())
-        : DeliveryGuarantee.ATMOST_ONCE.name());
+          DeliveryGuarantee.AT_MOST_ONCE.name())
+        : DeliveryGuarantee.AT_MOST_ONCE.name());
 
     List<String> gdValues = new ArrayList<String>(2);
-    gdValues.add(DeliveryGuarantee.ATLEAST_ONCE.name());
-    gdValues.add(DeliveryGuarantee.ATMOST_ONCE.name());
+    gdValues.add(DeliveryGuarantee.AT_LEAST_ONCE.name());
+    gdValues.add(DeliveryGuarantee.AT_MOST_ONCE.name());
 
     ModelDefinition gdModelDefinition = new ModelDefinition(ModelType.DROPDOWN,
       FieldModifierType.PROVIDED, "",  gdValues, gdLabels);
@@ -124,7 +124,7 @@ public class PipelineDefinition {
       ConfigDef.Type.MODEL,
       dgLabel,
       dgDescription,
-      DeliveryGuarantee.ATLEAST_ONCE.name(),
+      DeliveryGuarantee.AT_LEAST_ONCE.name(),
       true,
       "",
       "",

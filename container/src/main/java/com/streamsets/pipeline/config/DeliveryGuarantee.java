@@ -18,6 +18,6 @@
 package com.streamsets.pipeline.config;
 
 public enum DeliveryGuarantee {
-  ATLEAST_ONCE,
-  ATMOST_ONCE
+  AT_LEAST_ONCE,
+  AT_MOST_ONCE
 }

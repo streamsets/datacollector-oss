@@ -27,7 +27,6 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -53,7 +52,7 @@ public class TestPipeline {
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
     List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
-    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
       pipelineConfigs, null, stageDefs);
@@ -142,7 +141,7 @@ public class TestPipeline {
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
     List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
-    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
        pipelineConfigs, null,
@@ -191,7 +190,7 @@ public class TestPipeline {
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
     List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
-    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
@@ -254,7 +253,7 @@ public class TestPipeline {
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
     List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
-    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),

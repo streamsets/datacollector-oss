@@ -232,7 +232,7 @@ public class TestFilePipelineStore {
       "instance", "library", "name", "version",
       ImmutableList.of(config), uiInfo, null, ImmutableList.of("a"));
     List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(3);
-    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
     return new PipelineConfiguration(uuid, pipelineConfigs, null, ImmutableList.of(stage));

@@ -123,7 +123,7 @@ public class TestStageRuntime {
       Collections.EMPTY_LIST);
     stages.add(stage);
     List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
-    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.ATLEAST_ONCE));
+    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
     return new PipelineConfiguration(UUID.randomUUID(), pipelineConfigs, null,
