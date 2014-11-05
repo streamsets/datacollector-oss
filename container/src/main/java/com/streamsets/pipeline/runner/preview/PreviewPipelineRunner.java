@@ -15,10 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.runner;
+package com.streamsets.pipeline.runner.preview;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.runner.Pipe;
+import com.streamsets.pipeline.runner.PipeBatch;
+import com.streamsets.pipeline.runner.PipelineRunner;
+import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.runner.SourceOffsetTracker;
+import com.streamsets.pipeline.runner.StageOutput;
 
 import java.util.List;
 

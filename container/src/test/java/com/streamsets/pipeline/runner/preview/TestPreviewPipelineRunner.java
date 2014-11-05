@@ -15,8 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.runner;
+package com.streamsets.pipeline.runner.preview;
 
+import com.streamsets.pipeline.runner.Pipe;
+import com.streamsets.pipeline.runner.PipelineRunner;
+import com.streamsets.pipeline.runner.SourceOffsetTracker;
+import com.streamsets.pipeline.runner.preview.PreviewPipelineRunner;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
