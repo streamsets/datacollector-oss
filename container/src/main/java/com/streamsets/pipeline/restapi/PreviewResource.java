@@ -70,7 +70,7 @@ public class PreviewResource {
       throws PipelineStoreException, PipelineRuntimeException, StageException {
     PipelineConfiguration pipelineConf = store.load(name, rev);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(sourceOffset);
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize);
     PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, pipelineConf).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     previewOutput.setLocale(locale);

@@ -67,7 +67,7 @@ public class SourcePipe extends Pipe implements Source.Context {
     Preconditions.checkNotNull(batch, "batch cannot be null");
     String newBatchId = null;
     try {
-      newBatchId = source.produce(batch.getPreviousBatchId(), batch);
+      newBatchId = source.produce(batch.getPreviousBatchId(), -1, batch);
     } catch (StageException e) {
       e.printStackTrace();
     }

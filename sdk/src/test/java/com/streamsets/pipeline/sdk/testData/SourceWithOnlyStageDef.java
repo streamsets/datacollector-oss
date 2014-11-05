@@ -30,7 +30,7 @@ public class SourceWithOnlyStageDef extends BaseSource{
   }
 
   @Override
-  public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
+  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     return null;
   }
 }

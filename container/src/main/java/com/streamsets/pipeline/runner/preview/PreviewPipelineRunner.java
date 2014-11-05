@@ -30,13 +30,15 @@ import java.util.List;
 
 public class PreviewPipelineRunner implements PipelineRunner {
   private final SourceOffsetTracker offsetTracker;
+  private final int batchSize;
   private final MetricRegistry metrics;
   private volatile List<StageOutput> stageOutput;
   private String sourceOffset;
   private String newSourceOffset;
 
-  public PreviewPipelineRunner(SourceOffsetTracker offsetTracker) {
+  public PreviewPipelineRunner(SourceOffsetTracker offsetTracker, int batchSize) {
     this.offsetTracker = offsetTracker;
+    this.batchSize = batchSize;
     this.metrics = new MetricRegistry();
   }
 
@@ -47,7 +49,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
 
   @Override
   public void run(Pipe[] pipes) throws StageException, PipelineRuntimeException {
-    PipeBatch pipeBatch = new PipeBatch(offsetTracker, true);
+    PipeBatch pipeBatch = new PipeBatch(offsetTracker, batchSize, true);
     sourceOffset = pipeBatch.getPreviousOffset();
     for (Pipe pipe : pipes) {
       pipe.process(pipeBatch);

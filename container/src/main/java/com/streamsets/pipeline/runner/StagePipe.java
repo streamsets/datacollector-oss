@@ -41,7 +41,8 @@ public class StagePipe extends Pipe {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     switch (getStage().getDefinition().getType()) {
       case SOURCE: {
-        String newOffset = ((Source) getStage().getStage()).produce(pipeBatch.getPreviousOffset(), batchMaker);
+        String newOffset = ((Source) getStage().getStage()).produce(pipeBatch.getPreviousOffset(),
+                                                                    pipeBatch.getBatchSize(), batchMaker);
         pipeBatch.setNewOffset(newOffset);
         break;
       }

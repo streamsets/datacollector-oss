@@ -31,6 +31,7 @@ public interface Source extends Stage<Source.Context> {
 
   }
 
-  public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException; // returns offset NULL if done
+  // returns offset NULL if done
+  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException;
 
 }

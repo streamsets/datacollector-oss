@@ -42,7 +42,7 @@ public class TestEndToEnd {
     }
 
     @Override
-    public String produce(String lastSourceOffset, BatchMaker batchMaker) {
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) {
       int count = (lastSourceOffset == null) ? 0 : Integer.parseInt(lastSourceOffset);
       for (int i = 0; i < 2; i++) {
         Record record = context.createRecord("id:" + count + ":" + i);

@@ -62,7 +62,7 @@ public class TestStageRuntime {
     }
 
     @Override
-    public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
       return null;
     }
   }
@@ -187,7 +187,7 @@ public class TestStageRuntime {
     PipelineConfiguration pipelineConf = createMockPipelineConfiguration();
     StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, pipelineConf);
     StageRuntime[] runtimes = builder.build();
-    Assert.assertFalse(((TSource)runtimes[0].getStage()).inited);
+    Assert.assertFalse(((TSource) runtimes[0].getStage()).inited);
     runtimes[0].init();
   }
 

@@ -359,7 +359,7 @@ public class TestPipeline {
     Mockito.verifyNoMoreInteractions(target);
 
     pipeline.runBatch(new PipelineBatch("1"));
-    Mockito.verify(source).produce(Mockito.anyString(), Mockito.any(BatchMaker.class));
+    Mockito.verify(source).produce(Mockito.anyString(), Mockito.eq(-1), Mockito.any(BatchMaker.class));
     Mockito.verify(sourceObserver).isActive();
     Mockito.verify(processor).process(Mockito.any(Batch.class), Mockito.any(BatchMaker.class));
     Mockito.verify(processorObserver).isActive();

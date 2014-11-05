@@ -39,7 +39,7 @@ public class TestStagePipe {
     produce = false;
     MockStages.setSourceCapture(new Source() {
       @Override
-      public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
         produce = true;
         Assert.assertEquals("offset1", lastSourceOffset);
         Assert.assertEquals(ImmutableSet.of("s"), batchMaker.getLanes());
@@ -67,6 +67,7 @@ public class TestStagePipe {
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
     pipe.process(pipeBatch);
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
+    Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
     Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
     Mockito.verify(pipeBatch, Mockito.times(1)).setNewOffset(Mockito.eq("offset2"));
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker));

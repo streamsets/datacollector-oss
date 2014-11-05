@@ -32,12 +32,14 @@ import java.util.Set;
 
 public class PipeBatch {
   private final SourceOffsetTracker offsetTracker;
+  private final int batchSize;
   private final Map<String, List<Record>> fullPayload;
   private final Set<String> processedStages;
   private final List<StageOutput> stageOutputSnapshot;
 
-  public PipeBatch(SourceOffsetTracker offsetTracker, boolean snapshotStagesOutput) {
+  public PipeBatch(SourceOffsetTracker offsetTracker, int batchSize, boolean snapshotStagesOutput) {
     this.offsetTracker = offsetTracker;
+    this.batchSize = batchSize;
     fullPayload = new HashMap<String, List<Record>>();
     processedStages = new HashSet<String>();
     stageOutputSnapshot = (snapshotStagesOutput) ? new ArrayList<StageOutput>() : null;
@@ -46,6 +48,10 @@ public class PipeBatch {
   @VisibleForTesting
   Map<String, List<Record>> getFullPayload() {
     return fullPayload;
+  }
+
+  public int getBatchSize() {
+    return batchSize;
   }
 
   public String getPreviousOffset() {

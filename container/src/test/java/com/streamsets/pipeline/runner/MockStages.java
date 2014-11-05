@@ -94,9 +94,9 @@ public class MockStages {
       }
 
       @Override
-      public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
         if (source != null) {
-          return source.produce(lastSourceOffset, batchMaker);
+          return source.produce(lastSourceOffset, -1, batchMaker);
         }
         return null;
       }

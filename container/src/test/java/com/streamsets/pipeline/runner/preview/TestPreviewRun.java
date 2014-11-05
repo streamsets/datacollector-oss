@@ -44,7 +44,7 @@ public class TestPreviewRun {
   public void testPreviewRun() throws Exception {
     MockStages.setSourceCapture(new BaseSource() {
       @Override
-      public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
         Record record = getContext().createRecord("x");
         record.setField("f", Field.create(1));
         batchMaker.addRecord(record);
@@ -64,7 +64,7 @@ public class TestPreviewRun {
       }
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PipelineRunner runner = new PreviewPipelineRunner(tracker);
+    PipelineRunner runner = new PreviewPipelineRunner(tracker, -1);
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
                                              MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
     pipeline.init();
@@ -79,7 +79,7 @@ public class TestPreviewRun {
   public void testPreviewPipelineBuilder() throws Exception {
     MockStages.setSourceCapture(new BaseSource() {
       @Override
-      public String produce(String lastSourceOffset, BatchMaker batchMaker) throws StageException {
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
         Record record = getContext().createRecord("x");
         record.setField("f", Field.create(1));
         batchMaker.addRecord(record);
@@ -94,7 +94,7 @@ public class TestPreviewRun {
       }
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, -1);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
 

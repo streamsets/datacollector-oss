@@ -20,7 +20,6 @@ package com.streamsets.pipeline.runner.preview;
 import com.streamsets.pipeline.runner.Pipe;
 import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
-import com.streamsets.pipeline.runner.preview.PreviewPipelineRunner;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -30,7 +29,7 @@ public class TestPreviewPipelineRunner {
   @Test
   public void testRunner() throws Exception {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PipelineRunner runner = new PreviewPipelineRunner(tracker);
+    PipelineRunner runner = new PreviewPipelineRunner(tracker, -1);
     Assert.assertNotNull(runner.getMetrics());
     Assert.assertNull(runner.getStagesOutputSnapshot());
 
