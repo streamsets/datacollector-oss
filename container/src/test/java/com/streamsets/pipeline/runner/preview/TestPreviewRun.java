@@ -31,7 +31,6 @@ import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
-import com.streamsets.pipeline.runner.preview.PreviewPipelineRunner;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;

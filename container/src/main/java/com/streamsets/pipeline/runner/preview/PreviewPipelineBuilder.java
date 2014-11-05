@@ -32,15 +32,16 @@ public class PreviewPipelineBuilder {
 
   @SuppressWarnings("unchecked")
   private StageConfiguration createPlugStage(List<String> lanes) {
-    return new StageConfiguration("plug" + UUID.randomUUID().toString(), "system", ":plug:", "1.0.0",
-                                  Collections.EMPTY_LIST, Collections.EMPTY_MAP, lanes, Collections.EMPTY_LIST);
+    return new StageConfiguration(PreviewStageLibrary.NAME + UUID.randomUUID().toString(), PreviewStageLibrary.LIBRARY,
+                                  PreviewStageLibrary.NAME, PreviewStageLibrary.VERSION, Collections.EMPTY_LIST,
+                                  Collections.EMPTY_MAP, lanes, Collections.EMPTY_LIST);
   }
 
   private final StageLibrary stageLib;
   private final PipelineConfiguration pipelineConf;
 
   public PreviewPipelineBuilder(StageLibrary stageLib, PipelineConfiguration pipelineConf) {
-    this.stageLib = stageLib;
+    this.stageLib = new PreviewStageLibrary(stageLib);
     this.pipelineConf = pipelineConf;
   }
 

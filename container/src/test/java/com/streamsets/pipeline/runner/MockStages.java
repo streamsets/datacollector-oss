@@ -24,12 +24,10 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.runner.preview.PlugTarget;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
 import java.util.ArrayList;
@@ -165,10 +163,7 @@ public class MockStages {
       StageDefinition tDef = new StageDefinition(MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
                                                  "targetDesc", StageType.TARGET, Collections.EMPTY_LIST);
       tDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
-      StageDefinition plugDef = new StageDefinition(PlugTarget.class.getName(), ":plug:", "1.0.0", "plug",
-                                                 "plug", StageType.TARGET, Collections.EMPTY_LIST);
-      plugDef.setLibrary("system", Thread.currentThread().getContextClassLoader());
-      stages = ImmutableList.of(sDef, pDef, tDef, plugDef);
+      stages = ImmutableList.of(sDef, pDef, tDef);
     }
 
     @Override

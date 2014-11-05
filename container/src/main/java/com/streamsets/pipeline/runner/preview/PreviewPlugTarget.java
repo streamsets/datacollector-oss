@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 
-public class PlugTarget extends BaseTarget {
-  private final Logger LOG = LoggerFactory.getLogger(PlugTarget.class);
+public class PreviewPlugTarget extends BaseTarget {
+  private final Logger LOG = LoggerFactory.getLogger(PreviewPlugTarget.class);
 
   @Override
   public void write(Batch batch) throws StageException {
