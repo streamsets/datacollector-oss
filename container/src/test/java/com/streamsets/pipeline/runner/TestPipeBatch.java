@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
@@ -39,7 +40,7 @@ public class TestPipeBatch {
   public void testSourceOffsetTracker() throws Exception {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     Mockito.when(tracker.getOffset()).thenReturn("foo");
-    PipeBatch pipeBatch = new PipeBatch(tracker, -1, false);
+    PipeBatch pipeBatch = new PipeBatch(tracker, new MetricRegistry(), -1, false);
     Assert.assertEquals("foo", pipeBatch.getPreviousOffset());
     Mockito.verify(tracker, Mockito.times(1)).getOffset();
     Mockito.verifyNoMoreInteractions(tracker);
@@ -66,7 +67,7 @@ public class TestPipeBatch {
   @SuppressWarnings("unchecked")
   public void testStageMethodsNoSnapshot() throws Exception {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PipeBatch pipeBatch = new PipeBatch(tracker, -1, false);
+    PipeBatch pipeBatch = new PipeBatch(tracker, new MetricRegistry(), -1, false);
 
     StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
@@ -116,7 +117,7 @@ public class TestPipeBatch {
   @SuppressWarnings("unchecked")
   public void testStageMethodsWithSnapshot() throws Exception {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PipeBatch pipeBatch = new PipeBatch(tracker, -1, true);
+    PipeBatch pipeBatch = new PipeBatch(tracker, new MetricRegistry(), -1, true);
 
     StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
@@ -173,7 +174,7 @@ public class TestPipeBatch {
   @SuppressWarnings("unchecked")
   public void testMoveLane() throws Exception {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PipeBatch pipeBatch = new PipeBatch(tracker, -1, true);
+    PipeBatch pipeBatch = new PipeBatch(tracker, new MetricRegistry(), -1, true);
 
     StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
@@ -207,7 +208,7 @@ public class TestPipeBatch {
   @SuppressWarnings("unchecked")
   public void testMoveLaneCopying() throws Exception {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PipeBatch pipeBatch = new PipeBatch(tracker, -1, true);
+    PipeBatch pipeBatch = new PipeBatch(tracker, new MetricRegistry(), -1, true);
 
     StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
@@ -249,7 +250,7 @@ public class TestPipeBatch {
   @SuppressWarnings("unchecked")
   public void testCombineLanes() throws Exception {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PipeBatch pipeBatch = new PipeBatch(tracker, -1, true);
+    PipeBatch pipeBatch = new PipeBatch(tracker, new MetricRegistry(), -1, true);
 
     StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();

@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
@@ -160,7 +161,7 @@ public class Pipeline {
     public Pipeline build(PipelineRunner runner) throws PipelineRuntimeException {
       StageRuntime[] stages = new StageRuntime.Builder(stageLib, pipelineConf).build();
       setStagesContext(stages, runner);
-      Pipe[] pipes = createPipes(stages);
+      Pipe[] pipes = createPipes(stages, runner);
       return new Pipeline(pipes, observer, runner);
     }
 
@@ -173,7 +174,7 @@ public class Pipeline {
       }
     }
 
-    private Pipe[] createPipes(StageRuntime[] stages) throws PipelineRuntimeException {
+    private Pipe[] createPipes(StageRuntime[] stages, PipelineRunner runner) throws PipelineRuntimeException {
       LaneResolver laneResolver = new LaneResolver(stages);
       List<Pipe> pipes = new ArrayList<Pipe>(stages.length * 3);
       for (int idx = 0; idx < stages.length; idx++) {
@@ -189,6 +190,7 @@ public class Pipeline {
             pipe = new MultiplexerPipe(stage, laneResolver.getMultiplexerInputLanes(idx),
                                        laneResolver.getMultiplexerOutputLanes(idx));
             pipes.add(pipe);
+            runner.getMetrics().register(stage.getInfo().getInstanceName() + ".output-records", new Counter());
             break;
           case PROCESSOR:
             pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx),
@@ -203,6 +205,8 @@ public class Pipeline {
             pipe = new MultiplexerPipe(stage, laneResolver.getMultiplexerInputLanes(idx),
                                        laneResolver.getMultiplexerOutputLanes(idx));
             pipes.add(pipe);
+            runner.getMetrics().register(stage.getInfo().getInstanceName() + ".input-records", new Counter());
+            runner.getMetrics().register(stage.getInfo().getInstanceName() + ".output-records", new Counter());
             break;
           case TARGET:
             pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx),
@@ -210,6 +214,7 @@ public class Pipeline {
             pipes.add(pipe);
             pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx), laneResolver.getStageOutputLanes(idx));
             pipes.add(pipe);
+            runner.getMetrics().register(stage.getInfo().getInstanceName() + ".input-records", new Counter());
             break;
         }
       }

@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -55,6 +56,7 @@ public class TestStagePipe {
       }
     });
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
+    Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
@@ -97,6 +99,7 @@ public class TestStagePipe {
       }
     });
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
+    Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
@@ -140,6 +143,7 @@ public class TestStagePipe {
     });
 
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
+    Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
