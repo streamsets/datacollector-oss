@@ -53,8 +53,8 @@ public class PipelineStoreResource {
 
 
   @Inject
-  public PipelineStoreResource(URI uri, Principal user, StageLibrary stageLibrary, PipelineStore store) {
-    this.locale = Locale.getDefault(); //TODO inject
+  public PipelineStoreResource(URI uri, Principal user, StageLibrary stageLibrary, PipelineStore store, Locale locale) {
+    this.locale = locale;
     this.uri = uri;
     this.user = user.getName();
     this.stageLibrary = stageLibrary;
