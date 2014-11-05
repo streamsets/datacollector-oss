@@ -17,12 +17,14 @@
  */
 package com.streamsets.pipeline.record;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 public class RecordImpl implements Record {
   private SimpleMap<String, Object> headerData;
@@ -57,6 +59,7 @@ public class RecordImpl implements Record {
     }
 
     @Override
+    @JsonIgnore
     public Iterator<String> getAttributeNames() {
       return headers.getKeys().iterator();
     }
@@ -88,6 +91,10 @@ public class RecordImpl implements Record {
       return (String) rawHeaders.get(STAGES_PATH_ATTR);
     }
 
+    public Map<String, Object> getValues() {
+      return headers.getValues();
+    }
+    
   }
 
   public RecordImpl(String stage, String source, byte[] raw, String rawMime) {
@@ -148,6 +155,7 @@ public class RecordImpl implements Record {
   }
 
   @Override
+  @JsonIgnore
   public Iterator<String> getFieldNames() {
     return fieldData.getKeys().iterator();
   }
@@ -170,6 +178,10 @@ public class RecordImpl implements Record {
   @Override
   public String toString(Locale locale) {
     return null;
+  }
+
+  public Map<String, Field> getValues() {
+    return fieldData.getValues();
   }
 
   public String toString() {

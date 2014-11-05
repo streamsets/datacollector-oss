@@ -20,6 +20,7 @@ package com.streamsets.pipeline.record;
 import com.google.common.base.Preconditions;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -110,6 +111,15 @@ public class VersionedSimpleMap<K, V>implements SimpleMap<K,V> {
       }
     }
     return keys;
+  }
+
+  @Override
+  public Map<K, V> getValues() {
+    Map<K, V> map = new HashMap<K, V>();
+    for (K key : getKeys()) {
+      map.put(key, get(key));
+    }
+    return map;
   }
 
   public String toString() {

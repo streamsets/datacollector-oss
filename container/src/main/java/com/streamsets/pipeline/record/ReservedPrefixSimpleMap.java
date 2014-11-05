@@ -20,7 +20,9 @@ package com.streamsets.pipeline.record;
 import com.google.common.base.Preconditions;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class ReservedPrefixSimpleMap<V> implements SimpleMap<String, V> {
@@ -74,6 +76,15 @@ public class ReservedPrefixSimpleMap<V> implements SimpleMap<String, V> {
   public V remove(String key) {
     assertKey(key);
     return map.remove(key);
+  }
+
+  @Override
+  public Map<String, V> getValues() {
+    Map<String, V> map = new HashMap<String, V>();
+    for (String key : getKeys()) {
+      map.put(key, get(key));
+    }
+    return map;
   }
 
 }

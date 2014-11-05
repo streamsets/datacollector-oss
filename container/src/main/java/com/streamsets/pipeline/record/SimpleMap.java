@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.record;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface SimpleMap<K, V> {
@@ -30,5 +31,7 @@ public interface SimpleMap<K, V> {
   public V put(K key, V value);
 
   public V remove(K key);
+
+  public Map<K, V> getValues();
 
 }
