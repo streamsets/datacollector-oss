@@ -27,10 +27,15 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.Configuration;
 import com.streamsets.pipeline.store.*;
+import com.streamsets.pipeline.validation.Issues;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 public class FilePipelineStore implements PipelineStore {
   public static final String CREATE_DEFAULT_PIPELINE_KEY = "create.default.pipeline";
@@ -204,9 +209,8 @@ public class FilePipelineStore implements PipelineStore {
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(getInfo(name, false), new Date(), user, REV, uuid,
                                          pipeline.isValid());
-    Map<String, List<String>> issues = pipeline.getIssues();
+    Issues issues = pipeline.getIssues();
     try {
-      pipeline.setIssues(null);
       pipeline.setUuid(uuid);
       json.writeValue(getInfoFile(name), info);
       json.writeValue(getPipelineFile(name), pipeline);

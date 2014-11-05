@@ -15,27 +15,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.runner.preview;
+package com.streamsets.pipeline.validation;
 
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.runner.Pipeline;
-import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.validation.Issues;
+public class StageIssue extends Issue {
+  private final String instanceName;
+  private final String configName;
 
-public class PreviewPipeline {
-  private final Pipeline pipeline;
-  private final Issues issues;
-
-  public PreviewPipeline(Pipeline pipeline, Issues issues) {
-    this.issues = issues;
-    this.pipeline = pipeline;
+  public StageIssue(String instanceName, String configName, String bundleKey, String defaultTemplate, Object... args) {
+    super(bundleKey, defaultTemplate, args);
+    this.instanceName = instanceName;
+    this.configName = configName;
   }
 
-  public PreviewPipelineOutput run() throws StageException, PipelineRuntimeException{
-    pipeline.init();
-    pipeline.run();
-    pipeline.destroy();
-    return new PreviewPipelineOutput(issues, (PreviewPipelineRunner) pipeline.getRunner());
+  public StageIssue(String instanceName, String bundleKey, String defaultTemplate, Object... args) {
+    this(instanceName, null, bundleKey, defaultTemplate, args);
+  }
+
+  public String getInstanceName() {
+    return instanceName;
+  }
+
+  public String getConfigName() {
+    return configName;
+  }
+
+  public String getLevel() {
+    return (configName == null) ? "STAGE" : "STAGE_CONFIG";
   }
 
 }

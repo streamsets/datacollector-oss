@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.runner.preview;
 
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.PipelineConfigurationValidator;
+import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;

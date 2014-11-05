@@ -23,7 +23,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.PipelineConfigurationValidator;
+import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;

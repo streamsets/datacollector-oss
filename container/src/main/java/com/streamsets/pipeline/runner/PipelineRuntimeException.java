@@ -19,7 +19,7 @@ package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.container.PipelineException;
-import com.streamsets.pipeline.util.Issue;
+import com.streamsets.pipeline.validation.Issue;
 
 import java.util.Collections;
 import java.util.List;

@@ -15,13 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline.validation;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
-import com.streamsets.pipeline.util.Issue;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,9 +33,26 @@ import java.util.Map;
 import java.util.Set;
 
 public class PipelineConfigurationValidator {
+
+  private static final String PIPELINE_IS_EMPTY_KEY = "validation.pipeline.is.empty";
+  private static final String PIPELINE_IS_EMPTY_DEFAULT = "The pipeline is empty";
+  private static final String INSTANCE_ALREADY_DEFINED_KEY = "validation.instance.already.defined";
+  private static final String INSTANCE_ALREADY_DEFINED_DEFAULT = "Instance name '%s' already defined";
+  private static final String STAGE_DOES_NOT_EXIST_KEY = "validation.stage.does.not.exist";
+  private static final String STAGE_DOES_NOT_EXIST_DEFAULT =
+      "Instance '%s', stage does not exist, library '%s' name '%s' version '%s'";
+  private static final String STAGE_MISSING_CONFIGURATION_KEY = "validation.stage.missing.configuration";
+  private static final String STAGE_MISSING_CONFIGURATION_DEFAULT =
+      "Instance '%s', configuration '%s' value is required";
+  private static final String STAGE_CONFIGURATION_INVALID_TYPE_KEY = "validation.stage.configuration.invalidType";
+  private static final String STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT =
+      "Instance '%s', configuration '%s' should be a '%s'";
+  private static final String INSTANCE_OPEN_OUTPUT_LANE_KEY = "validation.instance.open.output.lane";
+  private static final String INSTANCE_OPEN_OUTPUT_LANE_DEFAULT = "Instance '%s' has an open lane '%s'";
+
   private final StageLibrary stageLibrary;
   private final PipelineConfiguration pipelineConfiguration;
-  private final List<Issue> issues;
+  private final Issues issues;
   private final List<String> openLanes;
   private boolean validated;
   private boolean canPreview = true;
@@ -42,29 +62,29 @@ public class PipelineConfigurationValidator {
     Preconditions.checkNotNull(pipelineConfiguration, "pipelineConfiguration cannot be null");
     this.stageLibrary = stageLibrary;
     this.pipelineConfiguration = pipelineConfiguration;
-    issues = new ArrayList<Issue>();
+    issues = new Issues();
     openLanes = new ArrayList<String>();
   }
 
   public boolean validate() {
     validated = true;
     if (pipelineConfiguration.getStages().isEmpty()) {
-      issues.add(new Issue("pipeline", "validation.pipeline.is.empty", "The pipeline is empty"));
+      issues.addP(new Issue(PIPELINE_IS_EMPTY_KEY, PIPELINE_IS_EMPTY_DEFAULT));
       canPreview = false;
     }
     validatePipelineConfiguration();
-    canPreview = canPreview && issues.isEmpty();
+    canPreview = canPreview && issues.hasIssues();
     validatePipelineLanes();
-    return issues.isEmpty();
+    return issues.hasIssues();
   }
 
   public boolean canPreview() {
     return canPreview;
   }
 
-  public List<Issue>  getIssues() {
+  public Issues getIssues() {
     Preconditions.checkState(validated, String.format("validate() has not been called"));
-    return ImmutableList.copyOf(issues);
+    return issues;
   }
 
   public List<String> getOpenLanes() {
@@ -76,45 +96,43 @@ public class PipelineConfigurationValidator {
     Set<String> stageNames = new HashSet<String>();
     for (StageConfiguration stage : pipelineConfiguration.getStages()) {
       if (stageNames.contains(stage.getInstanceName())) {
-        issues.add(new Issue(stage.getInstanceName(),
-                             "validation.instance.already.defined", "Instance '%s' already defined",
-                             stage.getInstanceName()));
+        issues.add(new StageIssue(stage.getInstanceName(),
+                                  INSTANCE_ALREADY_DEFINED_KEY, INSTANCE_ALREADY_DEFINED_DEFAULT,
+                                  stage.getInstanceName()));
       }
       StageDefinition stageDef = stageLibrary.getStage(stage.getLibrary(), stage.getStageName(),
                                                        stage.getStageVersion());
       if (stageDef == null) {
-        issues.add(new Issue(stage.getInstanceName(),
-            "validation.stage.does.not.exist", "Instance '%s', stage does not exist library '%s' name '%s' version '%s'",
-            stage.getInstanceName(), stage.getLibrary(), stage.getStageName(), stage.getStageVersion()));
+        issues.add(new StageIssue(stage.getInstanceName(),
+                                  STAGE_DOES_NOT_EXIST_KEY, STAGE_DOES_NOT_EXIST_DEFAULT,
+                                  stage.getInstanceName(), stage.getLibrary(), stage.getStageName(),
+                                  stage.getStageVersion()));
       } else {
         for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
           if (stage.getConfig(confDef.getName()) == null && confDef.isRequired()) {
-            issues.add(new Issue(stage.getInstanceName(),
-                "validation.stage.missing.configuration", "Instance '%s', stage requires configuration for '%s'",
-                stage.getInstanceName(), confDef.getName()));
+            issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
+                                      STAGE_MISSING_CONFIGURATION_KEY, STAGE_MISSING_CONFIGURATION_DEFAULT,
+                                      stage.getInstanceName(), confDef.getName()));
           }
         }
         for (ConfigConfiguration conf : stage.getConfiguration()) {
-          ConfigDefinition def = stageDef.getConfigDefinition(conf.getName());
-          if (conf.getValue() == null && def.isRequired()) {
-            issues.add(new Issue(stage.getInstanceName(),
-                "validation.stage.configuration.missing.value", "Instance '%s', stage requires a configuration value for '%s'",
-                stage.getInstanceName(), def.getName()));
-          }
+          ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
           if (conf.getValue() != null) {
-            switch (def.getType()) {
+            switch (confDef.getType()) {
               case BOOLEAN:
                 if (!(conf.getValue() instanceof Boolean)) {
-                  issues.add(new Issue(stage.getInstanceName(),
-                      "validation.stage.configuration.invalidType", "Instance '%s', configuration '%s' should be a '%s'",
-                      stage.getInstanceName(), def.getName(), def.getType()));
+                  issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
+                                            STAGE_CONFIGURATION_INVALID_TYPE_KEY,
+                                            STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT,
+                                            stage.getInstanceName(), confDef.getName(), confDef.getType()));
                 }
                 break;
               case INTEGER:
                 if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
-                  issues.add(new Issue(stage.getInstanceName(),
-                      "validation.stage.configuration.invalidType", "Instance '%s', configuration '%s' should be a '%s'",
-                      stage.getInstanceName(), def.getName(), def.getType()));
+                  issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
+                                            STAGE_CONFIGURATION_INVALID_TYPE_KEY,
+                                            STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT,
+                                            stage.getInstanceName(), confDef.getName(), confDef.getType()));
                 }
                 break;
               case STRING:
@@ -122,9 +140,10 @@ public class PipelineConfigurationValidator {
                 break;
               case MODEL:
                 if (!(conf.getValue() instanceof Map || conf.getValue() instanceof List)) {
-                  issues.add(new Issue(stage.getInstanceName(),
-                      "validation.stage.configuration.invalidType", "Instance '%s', configuration '%s' should be a '%s'",
-                      stage.getInstanceName(), def.getName(), def.getType()));
+                  issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
+                                            STAGE_CONFIGURATION_INVALID_TYPE_KEY,
+                                            STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT,
+                                            stage.getInstanceName(), confDef.getName(), confDef.getType()));
                 }
                 break;
             }
@@ -150,9 +169,8 @@ public class PipelineConfigurationValidator {
       for (String lane : open) {
         for (StageConfiguration stage : pipelineConfiguration.getStages()) {
           if (stage.getOutputLanes().contains(lane)) {
-            issues.add(new Issue(stage.getInstanceName(),
-                                 "validation.instance.open.output.lane", "Instance '%s' has an open lane '%s'",
-                                 stage.getInstanceName(), lane));
+            issues.add(new StageIssue(stage.getInstanceName(), INSTANCE_OPEN_OUTPUT_LANE_KEY,
+                                      INSTANCE_OPEN_OUTPUT_LANE_DEFAULT, stage.getInstanceName(), lane));
           }
         }
       }

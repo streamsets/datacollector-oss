@@ -18,11 +18,11 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.PipelineConfigurationValidator;
+import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.store.PipelineStore;
 import com.streamsets.pipeline.store.PipelineStoreException;
-import com.streamsets.pipeline.util.Issue;
+import com.streamsets.pipeline.validation.Issue;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -79,7 +79,8 @@ public class PipelineStoreResource {
       PipelineConfiguration pipeline = store.load(name, rev);
       PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
       validator.validate();
-      pipeline.setIssues(Issue.getLocalizedMessages(validator.getIssues(), locale));
+      validator.getIssues().setLocale(locale);
+      pipeline.setIssues(validator.getIssues());
       data = pipeline;
     } else if (get.equals("info")) {
       data = store.getInfo(name);
@@ -101,7 +102,8 @@ public class PipelineStoreResource {
     PipelineConfiguration pipeline = store.create(name, description, user);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
     validator.validate();
-    pipeline.setIssues(Issue.getLocalizedMessages(validator.getIssues(), locale));
+    validator.getIssues().setLocale(locale);
+    pipeline.setIssues(validator.getIssues());
     return Response.created(new URI(uri.toString() + "/" + name)).entity(pipeline).build();
   }
 
@@ -127,7 +129,8 @@ public class PipelineStoreResource {
       throws PipelineStoreException, URISyntaxException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
     validator.validate();
-    pipeline.setIssues(Issue.getLocalizedMessages(validator.getIssues(), locale));
+    validator.getIssues().setLocale(locale);
+    pipeline.setIssues(validator.getIssues());
     pipeline = store.save(name, user, tag, tagDescription, pipeline);
     return Response.ok().entity(pipeline).build();
   }

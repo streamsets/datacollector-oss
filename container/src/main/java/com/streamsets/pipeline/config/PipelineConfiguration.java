@@ -19,6 +19,7 @@ package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.validation.Issues;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +34,7 @@ public class PipelineConfiguration {
   private List<ConfigConfiguration> configuration;
   private final Map<String, Object> uiInfo;
   private List<StageConfiguration> stages;
-  private Map<String, List<String>> issues;
+  private Issues issues;
 
   @SuppressWarnings("unchecked")
   public PipelineConfiguration(@JsonProperty("uuid") UUID uuid,
@@ -44,7 +45,7 @@ public class PipelineConfiguration {
     this.configuration = configuration;
     this.uiInfo = uiInfo;
     this.stages = (stages != null) ? stages : Collections.EMPTY_LIST;
-    issues = Collections.EMPTY_MAP;
+    issues = new Issues();
   }
 
   public List<StageConfiguration> getStages() {
@@ -59,11 +60,11 @@ public class PipelineConfiguration {
     return uuid;
   }
 
-  public void setIssues(Map<String, List<String>> issues) {
-    this.issues = issues;
+  public void setIssues(Issues issues) {
+    this.issues = Preconditions.checkNotNull(issues, "issues cannot be null");
   }
 
-  public Map<String, List<String>> getIssues() {
+  public Issues getIssues() {
     return issues;
   }
 
@@ -72,7 +73,7 @@ public class PipelineConfiguration {
   }
 
   public boolean isValid() {
-    return issues == null || issues.isEmpty();
+    return !issues.hasIssues();
   }
 
   public List<ConfigConfiguration> getConfiguration() {

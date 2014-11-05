@@ -19,21 +19,19 @@ package com.streamsets.pipeline.runner.preview;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.runner.StageOutput;
-import com.streamsets.pipeline.util.Issue;
+import com.streamsets.pipeline.validation.Issues;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class PreviewPipelineOutput {
-  private Locale locale;
-  private final List<Issue> issues;
+  private final Issues issues;
   private final MetricRegistry metrics;
   private final List<StageOutput> stagesOutput;
   private String sourceOffset;
   private String newSourceOffset;
 
-  public PreviewPipelineOutput(List<Issue> issues, PreviewPipelineRunner runner) {
+  public PreviewPipelineOutput(Issues issues, PreviewPipelineRunner runner) {
     this.issues = issues;
     this.metrics = runner.getMetrics();
     this.stagesOutput = runner.getStagesOutputSnapshot();
@@ -42,11 +40,11 @@ public class PreviewPipelineOutput {
   }
 
   public void setLocale(Locale locale) {
-    this.locale = locale;
+    issues.setLocale(locale);
   }
 
-  public Map<String, List<String>> getIssues() {
-    return Issue.getLocalizedMessages(issues, locale);
+  public Issues getIssues() {
+    return issues;
   }
 
   public MetricRegistry getMetrics() {
