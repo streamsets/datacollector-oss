@@ -24,6 +24,7 @@ import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
 import java.util.ArrayList;
@@ -36,6 +37,12 @@ public class PipelineConfigurationValidator {
 
   private static final String PIPELINE_IS_EMPTY_KEY = "validation.pipeline.is.empty";
   private static final String PIPELINE_IS_EMPTY_DEFAULT = "The pipeline is empty";
+
+  private static final String FIRST_STAGE_MUST_BE_A_SOURCE_KEY = "validation.first.stage.must.be.source";
+  private static final String FIRST_STAGE_MUST_BE_A_SOURCE_DEFAULT = "The first stage must be a Source";
+  private static final String STAGE_CANNOT_BE_SOURCE_KEY = "validation.stage.cannot.be.source";
+  private static final String STAGE_CANNOT_BE_SOURCE_DEFAULT = "Instance '%s' cannot be a Source";
+
   private static final String INSTANCE_ALREADY_DEFINED_KEY = "validation.instance.already.defined";
   private static final String INSTANCE_ALREADY_DEFINED_DEFAULT = "Instance name '%s' already defined";
   private static final String STAGE_DOES_NOT_EXIST_KEY = "validation.stage.does.not.exist";
@@ -94,6 +101,7 @@ public class PipelineConfigurationValidator {
   @VisibleForTesting
   void validatePipelineConfiguration() {
     Set<String> stageNames = new HashSet<String>();
+    boolean shouldBeSource = true;
     for (StageConfiguration stage : pipelineConfiguration.getStages()) {
       if (stageNames.contains(stage.getInstanceName())) {
         issues.add(new StageIssue(stage.getInstanceName(),
@@ -108,6 +116,20 @@ public class PipelineConfigurationValidator {
                                   stage.getInstanceName(), stage.getLibrary(), stage.getStageName(),
                                   stage.getStageVersion()));
       } else {
+        if (shouldBeSource) {
+          if (stageDef.getType() != StageType.SOURCE) {
+            issues.add(new StageIssue(stage.getInstanceName(),
+                                      FIRST_STAGE_MUST_BE_A_SOURCE_KEY, FIRST_STAGE_MUST_BE_A_SOURCE_DEFAULT,
+                                      stage.getInstanceName()));
+          }
+        } else {
+          if (stageDef.getType() == StageType.SOURCE) {
+            issues.add(new StageIssue(stage.getInstanceName(),
+                                      STAGE_CANNOT_BE_SOURCE_KEY, STAGE_CANNOT_BE_SOURCE_DEFAULT,
+                                      stage.getInstanceName()));
+          }
+        }
+        shouldBeSource = false;
         for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
           if (stage.getConfig(confDef.getName()) == null && confDef.isRequired()) {
             issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
