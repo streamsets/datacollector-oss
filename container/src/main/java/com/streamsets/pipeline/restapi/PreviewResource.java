@@ -19,6 +19,7 @@ package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.container.Configuration;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.preview.PreviewPipeline;
@@ -44,15 +45,21 @@ import java.util.Locale;
 
 @Path("/v1/pipelines")
 public class PreviewResource {
+  private static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
+  private static final int MAX_BATCH_SIZE_DEFAULT = 10;
+
+  //preview.maxBatchSize
+  private final Configuration configuration;
   private final Locale locale;
   private final PipelineStore store;
   private final StageLibrary stageLibrary;
   private final String user;
 
 
-
   @Inject
-  public PreviewResource(Principal user, StageLibrary stageLibrary, PipelineStore store, Locale locale) {
+  public PreviewResource(Configuration configuration, Principal user, StageLibrary stageLibrary, PipelineStore store,
+      Locale locale) {
+    this.configuration = configuration;
     this.locale = locale;
     this.user = user.getName();
     this.stageLibrary = stageLibrary;
@@ -66,8 +73,10 @@ public class PreviewResource {
       @PathParam("name") String name,
       @QueryParam("rev") String rev,
       @QueryParam("sourceOffset") String sourceOffset,
-      @QueryParam("batchSize") @DefaultValue("-1") int batchSize)
+      @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize)
       throws PipelineStoreException, PipelineRuntimeException, StageException {
+    int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
+    batchSize = Math.min(maxBatchSize, batchSize);
     PipelineConfiguration pipelineConf = store.load(name, rev);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(sourceOffset);
     PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize);

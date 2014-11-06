@@ -183,4 +183,23 @@ public class TestBatchMakerImpl {
     Assert.assertEquals("2", records.get(0).getHeader().getAttribute("r"));
   }
 
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testMaxRecordsWithInLimit() {
+    StagePipe pipe = createStagePipe(ImmutableList.of("o"));
+    BatchMakerImpl batchMaker = new BatchMakerImpl(pipe, false, 1);
+    Record record = new RecordImpl("i", "source", null, null);
+    batchMaker.addRecord(record);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  @SuppressWarnings("unchecked")
+  public void testMaxRecordsBeyondLimit() {
+    StagePipe pipe = createStagePipe(ImmutableList.of("o"));
+    BatchMakerImpl batchMaker = new BatchMakerImpl(pipe, false, 1);
+    Record record = new RecordImpl("i", "source", null, null);
+    batchMaker.addRecord(record);
+    batchMaker.addRecord(record);
+  }
+
 }

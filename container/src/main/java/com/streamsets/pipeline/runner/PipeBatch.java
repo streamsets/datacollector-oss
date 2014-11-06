@@ -84,7 +84,7 @@ public class PipeBatch {
     for (String output : pipe.getOutputLanes()) {
       fullPayload.put(output, null);
     }
-    return new BatchMakerImpl(pipe, stageOutputSnapshot != null);
+    return new BatchMakerImpl(pipe, stageOutputSnapshot != null, getBatchSize());
   }
 
   public void completeStage(BatchMakerImpl batchMaker) {

@@ -36,8 +36,13 @@ public class BatchMakerImpl implements BatchMaker {
   private final String singleOutputLane;
   private final Map<String, List<Record>> stageOutput;
   private final Map<String, List<Record>> stageOutputSnapshot;
+  private int recordAllowance;
 
   public BatchMakerImpl(StagePipe stagePipe, boolean keepSnapshot) {
+    this(stagePipe, keepSnapshot, Integer.MAX_VALUE);
+  }
+
+  public BatchMakerImpl(StagePipe stagePipe, boolean keepSnapshot, int recordAllowance) {
     this.stagePipe = stagePipe;
     this.instanceName= stagePipe.getStage().getInfo().getInstanceName();
     outputLanes = ImmutableSet.copyOf(stagePipe.getStage().getConfiguration().getOutputLanes());
@@ -50,6 +55,7 @@ public class BatchMakerImpl implements BatchMaker {
         stageOutputSnapshot.put(outputLane, new ArrayList<Record>());
       }
     }
+    this.recordAllowance = recordAllowance;
   }
 
   public StagePipe getStagePipe() {
@@ -63,6 +69,9 @@ public class BatchMakerImpl implements BatchMaker {
 
   @Override
   public void addRecord(Record record, String... lanes) {
+    if (recordAllowance-- == 0) {
+      throw new IllegalStateException("The maximum number of records has been reached");
+    }
     Preconditions.checkNotNull(record, "record cannot be null");
     record = ((RecordImpl)record).createCopy();
     ((RecordImpl)record).setStage(instanceName);

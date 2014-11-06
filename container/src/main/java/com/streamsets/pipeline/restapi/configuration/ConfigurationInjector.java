@@ -18,29 +18,28 @@
 package com.streamsets.pipeline.restapi.configuration;
 
 import com.streamsets.pipeline.container.Configuration;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
-import com.streamsets.pipeline.store.PipelineStore;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.hk2.api.Factory;
 
-import java.net.URI;
-import java.security.Principal;
-import java.util.Locale;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
-public class RestAPIResourceConfig extends ResourceConfig {
+public class ConfigurationInjector implements Factory<Configuration> {
+  public static final String CONFIGURATION = "configuration";
 
-  public RestAPIResourceConfig() {
-    register(new AbstractBinder() {
-      @Override
-      protected void configure() {
-        bindFactory(PipelineStoreInjector.class).to(PipelineStore.class);
-        bindFactory(StageLibraryInjector.class).to(StageLibrary.class);
-        bindFactory(PrincipalInjector.class).to(Principal.class);
-        bindFactory(URIInjector.class).to(URI.class);
-        bindFactory(LocaleInjector.class).to(Locale.class);
-        bindFactory(ConfigurationInjector.class).to(Configuration.class);
-      }
-    });
+  private Configuration configuration;
+
+  @Inject
+  public ConfigurationInjector(HttpServletRequest request) {
+    configuration = (Configuration) request.getServletContext().getAttribute(CONFIGURATION);
+  }
+
+  @Override
+  public Configuration provide() {
+    return configuration;
+  }
+
+  @Override
+  public void dispose(Configuration configuration) {
   }
 
 }
