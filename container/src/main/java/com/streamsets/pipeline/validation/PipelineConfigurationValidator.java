@@ -41,21 +41,18 @@ public class PipelineConfigurationValidator {
   private static final String FIRST_STAGE_MUST_BE_A_SOURCE_KEY = "validation.first.stage.must.be.source";
   private static final String FIRST_STAGE_MUST_BE_A_SOURCE_DEFAULT = "The first stage must be a Source";
   private static final String STAGE_CANNOT_BE_SOURCE_KEY = "validation.stage.cannot.be.source";
-  private static final String STAGE_CANNOT_BE_SOURCE_DEFAULT = "Instance '%s' cannot be a Source";
+  private static final String STAGE_CANNOT_BE_SOURCE_DEFAULT = "This stage cannot be a Source";
 
   private static final String INSTANCE_ALREADY_DEFINED_KEY = "validation.instance.already.defined";
-  private static final String INSTANCE_ALREADY_DEFINED_DEFAULT = "Instance name '%s' already defined";
+  private static final String INSTANCE_ALREADY_DEFINED_DEFAULT = "Instance name already defined";
   private static final String STAGE_DOES_NOT_EXIST_KEY = "validation.stage.does.not.exist";
-  private static final String STAGE_DOES_NOT_EXIST_DEFAULT =
-      "Instance '%s', stage does not exist, library '%s' name '%s' version '%s'";
+  private static final String STAGE_DOES_NOT_EXIST_DEFAULT = "Stage definition does not exist, library '%s' name '%s' version '%s'";
   private static final String STAGE_MISSING_CONFIGURATION_KEY = "validation.stage.missing.configuration";
-  private static final String STAGE_MISSING_CONFIGURATION_DEFAULT =
-      "Instance '%s', configuration '%s' value is required";
+  private static final String STAGE_MISSING_CONFIGURATION_DEFAULT = "Configuration value is required";
   private static final String STAGE_CONFIGURATION_INVALID_TYPE_KEY = "validation.stage.configuration.invalidType";
-  private static final String STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT =
-      "Instance '%s', configuration '%s' should be a '%s'";
+  private static final String STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT = "Configuration should be a '%s'";
   private static final String INSTANCE_OPEN_OUTPUT_LANE_KEY = "validation.instance.open.output.lane";
-  private static final String INSTANCE_OPEN_OUTPUT_LANE_DEFAULT = "Instance '%s' has an open lane '%s'";
+  private static final String INSTANCE_OPEN_OUTPUT_LANE_DEFAULT = "Instance has an open lane '%s'";
 
   private final StageLibrary stageLibrary;
   private final PipelineConfiguration pipelineConfiguration;
@@ -105,44 +102,38 @@ public class PipelineConfigurationValidator {
     for (StageConfiguration stage : pipelineConfiguration.getStages()) {
       if (stageNames.contains(stage.getInstanceName())) {
         issues.add(new StageIssue(stage.getInstanceName(),
-                                  INSTANCE_ALREADY_DEFINED_KEY, INSTANCE_ALREADY_DEFINED_DEFAULT,
-                                  stage.getInstanceName()));
+                                  INSTANCE_ALREADY_DEFINED_KEY, INSTANCE_ALREADY_DEFINED_DEFAULT));
       }
       StageDefinition stageDef = stageLibrary.getStage(stage.getLibrary(), stage.getStageName(),
                                                        stage.getStageVersion());
       if (stageDef == null) {
         issues.add(new StageIssue(stage.getInstanceName(),
                                   STAGE_DOES_NOT_EXIST_KEY, STAGE_DOES_NOT_EXIST_DEFAULT,
-                                  stage.getInstanceName(), stage.getLibrary(), stage.getStageName(),
-                                  stage.getStageVersion()));
+                                  stage.getLibrary(), stage.getStageName(), stage.getStageVersion()));
       } else {
         if (shouldBeSource) {
           if (stageDef.getType() != StageType.SOURCE) {
             issues.add(new StageIssue(stage.getInstanceName(),
-                                      FIRST_STAGE_MUST_BE_A_SOURCE_KEY, FIRST_STAGE_MUST_BE_A_SOURCE_DEFAULT,
-                                      stage.getInstanceName()));
+                                      FIRST_STAGE_MUST_BE_A_SOURCE_KEY, FIRST_STAGE_MUST_BE_A_SOURCE_DEFAULT));
           }
         } else {
           if (stageDef.getType() == StageType.SOURCE) {
             issues.add(new StageIssue(stage.getInstanceName(),
-                                      STAGE_CANNOT_BE_SOURCE_KEY, STAGE_CANNOT_BE_SOURCE_DEFAULT,
-                                      stage.getInstanceName()));
+                                      STAGE_CANNOT_BE_SOURCE_KEY, STAGE_CANNOT_BE_SOURCE_DEFAULT));
           }
         }
         shouldBeSource = false;
         for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
           if (stage.getConfig(confDef.getName()) == null && confDef.isRequired()) {
             issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
-                                      STAGE_MISSING_CONFIGURATION_KEY, STAGE_MISSING_CONFIGURATION_DEFAULT,
-                                      stage.getInstanceName(), confDef.getName()));
+                                      STAGE_MISSING_CONFIGURATION_KEY, STAGE_MISSING_CONFIGURATION_DEFAULT));
           }
         }
         for (ConfigConfiguration conf : stage.getConfiguration()) {
           ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
           if (conf.getValue() == null && confDef.isRequired()) {
             issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
-                                      STAGE_MISSING_CONFIGURATION_KEY, STAGE_MISSING_CONFIGURATION_DEFAULT,
-                                      stage.getInstanceName(), confDef.getName()));
+                                      STAGE_MISSING_CONFIGURATION_KEY, STAGE_MISSING_CONFIGURATION_DEFAULT));
           }
           if (conf.getValue() != null) {
             switch (confDef.getType()) {
@@ -150,16 +141,14 @@ public class PipelineConfigurationValidator {
                 if (!(conf.getValue() instanceof Boolean)) {
                   issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
                                             STAGE_CONFIGURATION_INVALID_TYPE_KEY,
-                                            STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT,
-                                            stage.getInstanceName(), confDef.getName(), confDef.getType()));
+                                            STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT, confDef.getType()));
                 }
                 break;
               case INTEGER:
                 if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
                   issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
                                             STAGE_CONFIGURATION_INVALID_TYPE_KEY,
-                                            STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT,
-                                            stage.getInstanceName(), confDef.getName(), confDef.getType()));
+                                            STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT, confDef.getType()));
                 }
                 break;
               case STRING:
@@ -169,8 +158,7 @@ public class PipelineConfigurationValidator {
                 if (!(conf.getValue() instanceof Map || conf.getValue() instanceof List)) {
                   issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
                                             STAGE_CONFIGURATION_INVALID_TYPE_KEY,
-                                            STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT,
-                                            stage.getInstanceName(), confDef.getName(), confDef.getType()));
+                                            STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT, confDef.getType()));
                 }
                 break;
             }
@@ -197,7 +185,7 @@ public class PipelineConfigurationValidator {
         for (StageConfiguration stage : pipelineConfiguration.getStages()) {
           if (stage.getOutputLanes().contains(lane)) {
             issues.add(new StageIssue(stage.getInstanceName(), INSTANCE_OPEN_OUTPUT_LANE_KEY,
-                                      INSTANCE_OPEN_OUTPUT_LANE_DEFAULT, stage.getInstanceName(), lane));
+                                      INSTANCE_OPEN_OUTPUT_LANE_DEFAULT, lane));
           }
         }
       }
