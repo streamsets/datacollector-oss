@@ -17,5 +17,15 @@
  */
 package com.streamsets.pipeline.restapi;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+
+@Path("/ping")
 public class RestAPI {
+
+  @GET
+  public String ping() {
+    return "pong" + System.lineSeparator();
+  }
+
 }
