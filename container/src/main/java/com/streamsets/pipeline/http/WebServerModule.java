@@ -36,6 +36,7 @@ import dagger.Provides.Type;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 
@@ -94,7 +95,7 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         ServletHolder servlet = new ServletHolder(new ServletContainer());
-        servlet.setInitParameter("jersey.config.server.provider.packages", RestAPI.class.getPackage().getName());
+        servlet.setInitParameter(ServerProperties.PROVIDER_PACKAGES, RestAPI.class.getPackage().getName());
         servlet.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, RestAPIResourceConfig.class.getName());
         context.addServlet(servlet, "/rest/*");
       }

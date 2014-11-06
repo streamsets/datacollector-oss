@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.restapi.configuration;
 
+import com.codahale.metrics.MetricFilter;
+import com.codahale.metrics.json.MetricsModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -24,6 +26,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
+import java.util.concurrent.TimeUnit;
 
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
@@ -32,6 +35,7 @@ public class JsonConfigurator implements ContextResolver<ObjectMapper> {
 
   public JsonConfigurator() throws Exception {
     objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new MetricsModule(TimeUnit.SECONDS, TimeUnit.SECONDS, false, MetricFilter.ALL));
     objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
   }
 
