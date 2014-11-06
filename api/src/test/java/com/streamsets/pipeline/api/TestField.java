@@ -183,14 +183,4 @@ public class TestField {
     Assert.assertFalse(f3.equals(f1));
   }
 
-  @Test
-  public void testClone() throws Exception {
-    Field f0 = Field.create(Type.STRING, null);
-    Field f1 = (Field) f0.clone();
-    Assert.assertEquals(f0, f1);
-    f0 = Field.create(Type.STRING, "a");
-    f1 = (Field) f0.clone();
-    Assert.assertEquals(f0, f1);
-  }
-
 }

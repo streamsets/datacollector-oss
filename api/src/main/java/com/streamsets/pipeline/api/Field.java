@@ -174,12 +174,4 @@ public class Field implements Cloneable {
     return eq;
   }
 
-  @Override
-  protected Object clone() throws CloneNotSupportedException {
-    Field clone = (Field) super.clone();
-    clone.type = type;
-    clone.value = value;
-    return clone;
-  }
-
 }
