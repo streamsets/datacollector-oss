@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.validation.Issues;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PipelineConfiguration {
 
   public enum OnError { DROP_RECORD, DROP_BATCH, STOP_PIPELINE }
@@ -61,7 +63,7 @@ public class PipelineConfiguration {
   }
 
   public void setIssues(Issues issues) {
-    this.issues = Preconditions.checkNotNull(issues, "issues cannot be null");
+    this.issues = issues;
   }
 
   public Issues getIssues() {
@@ -73,7 +75,7 @@ public class PipelineConfiguration {
   }
 
   public boolean isValid() {
-    return !issues.hasIssues();
+    return (issues != null) && !issues.hasIssues();
   }
 
   public List<ConfigConfiguration> getConfiguration() {

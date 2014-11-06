@@ -18,6 +18,8 @@
 package com.streamsets.pipeline.validation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.streamsets.pipeline.util.NullDeserializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+@JsonDeserialize(using = NullDeserializer.class)
 public class Issues implements Issue.ResourceBundleProvider {
   private static final String PIPELINE_CONTAINER_BUNDLE = "pipeline-container-bundle";
 
