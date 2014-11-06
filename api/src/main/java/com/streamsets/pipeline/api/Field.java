@@ -36,7 +36,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 // A field is immutable
-public class Field {
+public class Field implements Cloneable {
 
   public enum Type {
     BOOLEAN(new BooleanTypeSupport()),
@@ -150,8 +150,36 @@ public class Field {
     return type.snapshot(value);
   }
 
+  @Override
   public String toString() {
     return type.toString(value);
+  }
+
+  @Override
+  public int hashCode() {
+    return (value != null) ? value.hashCode() : 0;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean eq = false;
+    if (obj != null) {
+      if (obj instanceof Field) {
+        Field other = (Field) obj;
+        if (type == other.type) {
+          eq = (value == other.value) || (value != null && value.equals(other.value));
+        }
+      }
+    }
+    return eq;
+  }
+
+  @Override
+  protected Object clone() throws CloneNotSupportedException {
+    Field clone = (Field) super.clone();
+    clone.type = type;
+    clone.value = value;
+    return clone;
   }
 
 }

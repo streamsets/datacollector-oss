@@ -162,4 +162,35 @@ public class TestField {
     Assert.assertNotNull(f.toString());
   }
 
+  @Test
+  @SuppressWarnings("ObjectEqualsNull")
+  public void testHashCodeEquals() {
+    Field f0 = Field.create(Type.STRING, null);
+    Field f1 = Field.create(Type.STRING, "a");
+    Field f2 = Field.create(Type.STRING, "a");
+    Field f3 = Field.create(Type.STRING, "b");
+    Assert.assertEquals(0, f0.hashCode());
+    Assert.assertNotEquals(f0.hashCode(), f1.hashCode());
+    Assert.assertEquals(f1.hashCode(), f2.hashCode());
+    Assert.assertNotEquals(f1.hashCode(), f3.hashCode());
+    Assert.assertFalse(f0.equals(null));
+    Assert.assertFalse(f0.equals(new Object()));
+    Assert.assertFalse(f0.equals(f1));
+    Assert.assertTrue(f1.equals(f1));
+    Assert.assertTrue(f1.equals(f2));
+    Assert.assertTrue(f2.equals(f1));
+    Assert.assertFalse(f1.equals(f3));
+    Assert.assertFalse(f3.equals(f1));
+  }
+
+  @Test
+  public void testClone() throws Exception {
+    Field f0 = Field.create(Type.STRING, null);
+    Field f1 = (Field) f0.clone();
+    Assert.assertEquals(f0, f1);
+    f0 = Field.create(Type.STRING, "a");
+    f1 = (Field) f0.clone();
+    Assert.assertEquals(f0, f1);
+  }
+
 }
