@@ -66,10 +66,18 @@ public class TestStagePipe {
 
     PipeBatch pipeBatch = Mockito.mock(PipeBatch.class);
     Mockito.when(pipeBatch.getPreviousOffset()).thenReturn("offset1");
+
+    BatchImpl batch = Mockito.mock(BatchImpl.class);
+    Mockito.when(batch.getSize()).thenReturn(1);
+    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
+
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
+    pipe.init();
     pipe.process(pipeBatch);
+    pipe.destroy();
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
+    Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.any(Pipe.class));
     Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
     Mockito.verify(pipeBatch, Mockito.times(1)).setNewOffset(Mockito.eq("offset2"));
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker));
@@ -109,12 +117,16 @@ public class TestStagePipe {
 
     BatchImpl batch = Mockito.mock(BatchImpl.class);
     Mockito.when(batch.getSourceOffset()).thenReturn("offset2");
+    Mockito.when(batch.getSize()).thenReturn(1);
 
     PipeBatch pipeBatch = Mockito.mock(PipeBatch.class);
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
     Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
 
+    pipe.init();
     pipe.process(pipeBatch);
+    pipe.destroy();
+
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker));
@@ -153,12 +165,16 @@ public class TestStagePipe {
 
     BatchImpl batch = Mockito.mock(BatchImpl.class);
     Mockito.when(batch.getSourceOffset()).thenReturn("offset2");
+    Mockito.when(batch.getSize()).thenReturn(1);
 
     PipeBatch pipeBatch = Mockito.mock(PipeBatch.class);
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
     Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
 
+    pipe.init();
     pipe.process(pipeBatch);
+    pipe.destroy();
+
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker));

@@ -18,7 +18,9 @@
 package com.streamsets.pipeline.runner.preview;
 
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.Pipe;
 import com.streamsets.pipeline.runner.PipeBatch;
 import com.streamsets.pipeline.runner.PipelineRunner;
@@ -27,19 +29,22 @@ import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PreviewPipelineRunner implements PipelineRunner {
   private final SourceOffsetTracker offsetTracker;
   private final int batchSize;
   private final MetricRegistry metrics;
-  private volatile List<StageOutput> stageOutput;
+  private List<StageOutput> stageOutput;
   private String sourceOffset;
   private String newSourceOffset;
+  private Timer processingTimer;
 
   public PreviewPipelineRunner(SourceOffsetTracker offsetTracker, int batchSize) {
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
     this.metrics = new MetricRegistry();
+    processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
   }
 
   @Override
@@ -50,11 +55,13 @@ public class PreviewPipelineRunner implements PipelineRunner {
   @Override
   public void run(Pipe[] pipes) throws StageException, PipelineRuntimeException {
     PipeBatch pipeBatch = new PipeBatch(offsetTracker, metrics, batchSize, true);
+    long start = System.currentTimeMillis();
     sourceOffset = pipeBatch.getPreviousOffset();
     for (Pipe pipe : pipes) {
       pipe.process(pipeBatch);
     }
     offsetTracker.commitOffset();
+    processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     newSourceOffset = offsetTracker.getOffset();
     stageOutput = pipeBatch.getSnapshotsOfAllStagesOutput();
   }

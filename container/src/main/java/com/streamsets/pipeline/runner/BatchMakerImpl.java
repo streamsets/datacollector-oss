@@ -37,6 +37,7 @@ public class BatchMakerImpl implements BatchMaker {
   private final Map<String, List<Record>> stageOutput;
   private final Map<String, List<Record>> stageOutputSnapshot;
   private int recordAllowance;
+  private int size;
 
   public BatchMakerImpl(StagePipe stagePipe, boolean keepSnapshot) {
     this(stagePipe, keepSnapshot, Integer.MAX_VALUE);
@@ -102,6 +103,7 @@ public class BatchMakerImpl implements BatchMaker {
         }
       }
     }
+    size++;
   }
 
   public Map<String, List<Record>> getStageOutput() {
@@ -110,6 +112,14 @@ public class BatchMakerImpl implements BatchMaker {
 
   public Map<String, List<Record>> getStageOutputSnapshot() {
     return stageOutputSnapshot;
+  }
+
+  public int getSize() {
+    return size;
+  }
+
+  public int getSize(String lane) {
+    return stageOutput.get(lane).size();
   }
 
 }

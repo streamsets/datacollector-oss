@@ -36,18 +36,20 @@ public class RandomSource extends BaseSource {
 
   private String[] fieldArr;
   private Random random;
+  private String[] lanes;
 
   @Override
   protected void init() throws StageException {
     fieldArr = fields.split(",");
     random = new Random();
+    lanes = getContext().getOutputLanes().toArray(new String[getContext().getOutputLanes().size()]);
   }
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     maxBatchSize = (maxBatchSize > -1) ? maxBatchSize : 10;
     for (int i = 0; i < maxBatchSize; i++ ) {
-      batchMaker.addRecord(createRecord(lastSourceOffset, i));
+      batchMaker.addRecord(createRecord(lastSourceOffset, i), lanes[i % lanes.length]);
     }
     return "random";
   }

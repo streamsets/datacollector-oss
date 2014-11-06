@@ -48,5 +48,8 @@ public class BatchImpl implements Batch {
     return Collections.unmodifiableList(records).iterator();
   }
 
+  public int getSize() {
+    return records.size();
+  }
 
 }

@@ -17,14 +17,29 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.metrics.MetricsConfigurator;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class StagePipe extends Pipe {
+  private Timer processingTimer;
+  private Counter inputRecordsCounter;
+  private Counter outputRecordsCounter;
+  private Meter inputRecordsMeter;
+  private Meter outputRecordsMeter;
+  private Map<String, Counter> outputRecordsPerLaneCounter;
+  private Map<String, Meter> outputRecordsPerLaneMeter;
 
   public StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
     super(stage, inputLanes, outputLanes);
@@ -33,12 +48,33 @@ public class StagePipe extends Pipe {
   @Override
   public void init() throws StageException {
     getStage().init();
+    MetricRegistry metrics = getStage().getContext().getMetrics();
+    String metricsKey = "stage." + getStage().getConfiguration().getInstanceName();
+    processingTimer = MetricsConfigurator.createTimer(metrics, metricsKey + ".batchProcessing");
+    inputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".inputRecords");
+    outputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".outputRecords");
+    inputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".inputRecords");
+    outputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".outputRecords");
+    if (getStage().getConfiguration().getOutputLanes().size() > 1) {
+      outputRecordsPerLaneCounter = new HashMap<String, Counter>();
+      outputRecordsPerLaneMeter = new HashMap<String, Meter>();
+      for (String lane : getStage().getConfiguration().getOutputLanes()) {
+        outputRecordsPerLaneCounter.put(lane, MetricsConfigurator.createCounter(
+            metrics, metricsKey + ":" + lane + ".outputRecords"));
+        outputRecordsPerLaneMeter.put(lane, MetricsConfigurator.createMeter(
+            metrics, metricsKey + ":" + lane + ".outputRecords"));
+      }
+    }
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
+    BatchImpl batch = pipeBatch.getBatch(this);
+    inputRecordsCounter.inc(batch.getSize());
+    inputRecordsMeter.mark(batch.getSize());
+    long start = System.currentTimeMillis();
     switch (getStage().getDefinition().getType()) {
       case SOURCE: {
         String newOffset = ((Source) getStage().getStage()).produce(pipeBatch.getPreviousOffset(),
@@ -47,15 +83,22 @@ public class StagePipe extends Pipe {
         break;
       }
       case PROCESSOR: {
-        BatchImpl batch = pipeBatch.getBatch(this);
         ((Processor) getStage().getStage()).process(batch, batchMaker);
         break;
 
       }
       case TARGET: {
-        BatchImpl batch = pipeBatch.getBatch(this);
         ((Target) getStage().getStage()).write(batch);
         break;
+      }
+    }
+    processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+    outputRecordsCounter.inc(batchMaker.getSize());
+    outputRecordsMeter.mark(batchMaker.getSize());
+    if (getStage().getConfiguration().getOutputLanes().size() > 1) {
+      for (String lane : getStage().getConfiguration().getOutputLanes()) {
+        outputRecordsPerLaneCounter.get(lane).inc(batchMaker.getSize(lane));
+        outputRecordsPerLaneMeter.get(lane).mark(batchMaker.getSize(lane));
       }
     }
     pipeBatch.completeStage(batchMaker);
