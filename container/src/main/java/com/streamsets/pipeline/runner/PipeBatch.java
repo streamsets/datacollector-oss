@@ -20,6 +20,7 @@ package com.streamsets.pipeline.runner;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.ArrayList;
@@ -78,7 +79,9 @@ public class PipeBatch {
     for (String output : pipe.getOutputLanes()) {
       fullPayload.put(output, null);
     }
-    return new BatchMakerImpl(pipe, stageOutputSnapshot != null, getBatchSize());
+    int recordAllowance = (pipe.getStage().getDefinition().getType() == StageType.SOURCE)
+                          ? getBatchSize() : Integer.MAX_VALUE;
+    return new BatchMakerImpl(pipe, stageOutputSnapshot != null, recordAllowance);
   }
 
   public void completeStage(BatchMakerImpl batchMaker) {
