@@ -32,34 +32,53 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class PipelineConfigurationValidator {
 
   private static final String PIPELINE_IS_EMPTY_KEY = "validation.pipeline.is.empty";
   private static final String PIPELINE_IS_EMPTY_DEFAULT = "The pipeline is empty";
-
   private static final String FIRST_STAGE_MUST_BE_A_SOURCE_KEY = "validation.first.stage.must.be.source";
   private static final String FIRST_STAGE_MUST_BE_A_SOURCE_DEFAULT = "The first stage must be a Source";
   private static final String STAGE_CANNOT_BE_SOURCE_KEY = "validation.stage.cannot.be.source";
   private static final String STAGE_CANNOT_BE_SOURCE_DEFAULT = "This stage cannot be a Source";
-
   private static final String INSTANCE_ALREADY_DEFINED_KEY = "validation.instance.already.defined";
   private static final String INSTANCE_ALREADY_DEFINED_DEFAULT = "Instance name already defined";
   private static final String STAGE_DOES_NOT_EXIST_KEY = "validation.stage.does.not.exist";
-  private static final String STAGE_DOES_NOT_EXIST_DEFAULT = "Stage definition does not exist, library '%s' name '%s' version '%s'";
+  private static final String STAGE_DOES_NOT_EXIST_DEFAULT =
+      "Stage definition does not exist, library '%s' name '%s' version '%s'";
   private static final String STAGE_MISSING_CONFIGURATION_KEY = "validation.stage.missing.configuration";
   private static final String STAGE_MISSING_CONFIGURATION_DEFAULT = "Configuration value is required";
   private static final String STAGE_CONFIGURATION_INVALID_TYPE_KEY = "validation.stage.configuration.invalidType";
   private static final String STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT = "Configuration should be a '%s'";
   private static final String INSTANCE_OPEN_OUTPUT_LANE_KEY = "validation.instance.open.output.lane";
   private static final String INSTANCE_OPEN_OUTPUT_LANE_DEFAULT = "Instance has an open lane '%s'";
+  private static final String STAGE_CANNOT_HAVE_INPUT_KEY = "validation.stage.cannot.have.input.lanes";
+  private static final String STAGE_CANNOT_HAVE_INPUT_DEFAULT = "%s cannot have input lanes '%s'";
+  private static final String STAGE_CANNOT_HAVE_OUTPUT_KEY = "validation.stage.cannot.have.output.lanes";
+  private static final String STAGE_CANNOT_HAVE_OUTPUT_DEFAULT = "%s cannot have output lanes '%s'";
+  private static final String STAGE_MUST_HAVE_INPUT_KEY = "validation.stage.must.have.input.lanes";
+  private static final String STAGE_MUST_HAVE_INPUT_DEFAULT = "%s must have input lanes";
+  private static final String STAGE_MUST_HAVE_OUTPUT_KEY = "validation.stage.must.have.output.lanes";
+  private static final String STAGE_MUST_HAVE_OUTPUT_DEFAULT = "%s must have output lanes";
+  private static final String STAGE_INVALID_INSTANCE_NAME_KEY = "validation.invalid.instance.name";
+  private static final String STAGE_INVALID_INSTANCE_NAME_DEFAULT =
+      "Invalid instance name, names can only contain the following characters '%s'";
+  private static final String STAGE_INVALID_INPUT_LANE_NAME_KEY = "validation.invalid.input.lane.name";
+  private static final String STAGE_INVALID_INPUT_LANE_DEFAULT =
+      "Invalid input lane names '%s', lanes can only contain the following characters '%s'";
+  private static final String STAGE_INVALID_OUTPUT_LANE_NAME_KEY = "validation.invalid.output.lane.name";
+  private static final String STAGE_INVALID_OUTPUT_LANE_DEFAULT =
+      "Invalid output lane names '%s', lanes can only contain the following characters '%s'";
+
+  private static final String VALID_NAME= "[0-9A-Za-z_]";
 
   private final StageLibrary stageLibrary;
   private final PipelineConfiguration pipelineConfiguration;
   private final Issues issues;
   private final List<String> openLanes;
   private boolean validated;
-  private boolean canPreview = true;
+  private boolean canPreview;
 
   public PipelineConfigurationValidator(StageLibrary stageLibrary, PipelineConfiguration pipelineConfiguration) {
     Preconditions.checkNotNull(stageLibrary, "stageLibrary cannot be null");
@@ -71,18 +90,20 @@ public class PipelineConfigurationValidator {
   }
 
   public boolean validate() {
+    canPreview = true;
     validated = true;
     if (pipelineConfiguration.getStages().isEmpty()) {
       issues.addP(new Issue(PIPELINE_IS_EMPTY_KEY, PIPELINE_IS_EMPTY_DEFAULT));
       canPreview = false;
     }
     validatePipelineConfiguration();
-    canPreview = canPreview && issues.hasIssues();
+    canPreview = canPreview && !issues.hasIssues();
     validatePipelineLanes();
-    return issues.hasIssues();
+    return !issues.hasIssues();
   }
 
   public boolean canPreview() {
+    Preconditions.checkState(validated, String.format("validate() has not been called"));
     return canPreview;
   }
 
@@ -92,61 +113,124 @@ public class PipelineConfigurationValidator {
   }
 
   public List<String> getOpenLanes() {
+    Preconditions.checkState(validated, String.format("validate() has not been called"));
     return openLanes;
+  }
+
+  private static final Pattern VALID_NAME_PATTERN = Pattern.compile(VALID_NAME + "+");
+
+  @VisibleForTesting
+  static boolean isValidName(String name) {
+    return (name != null) && VALID_NAME_PATTERN.matcher(name).matches();
   }
 
   @VisibleForTesting
   void validatePipelineConfiguration() {
     Set<String> stageNames = new HashSet<String>();
     boolean shouldBeSource = true;
-    for (StageConfiguration stage : pipelineConfiguration.getStages()) {
-      if (stageNames.contains(stage.getInstanceName())) {
-        issues.add(new StageIssue(stage.getInstanceName(),
+    for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
+      if (stageNames.contains(stageConf.getInstanceName())) {
+        issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                   INSTANCE_ALREADY_DEFINED_KEY, INSTANCE_ALREADY_DEFINED_DEFAULT));
       }
-      StageDefinition stageDef = stageLibrary.getStage(stage.getLibrary(), stage.getStageName(),
-                                                       stage.getStageVersion());
+      StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
+                                                       stageConf.getStageVersion());
       if (stageDef == null) {
-        issues.add(new StageIssue(stage.getInstanceName(),
+        issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                   STAGE_DOES_NOT_EXIST_KEY, STAGE_DOES_NOT_EXIST_DEFAULT,
-                                  stage.getLibrary(), stage.getStageName(), stage.getStageVersion()));
+                                  stageConf.getLibrary(), stageConf.getStageName(), stageConf.getStageVersion()));
       } else {
         if (shouldBeSource) {
           if (stageDef.getType() != StageType.SOURCE) {
-            issues.add(new StageIssue(stage.getInstanceName(),
+            issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                       FIRST_STAGE_MUST_BE_A_SOURCE_KEY, FIRST_STAGE_MUST_BE_A_SOURCE_DEFAULT));
           }
         } else {
           if (stageDef.getType() == StageType.SOURCE) {
-            issues.add(new StageIssue(stage.getInstanceName(),
+            issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                       STAGE_CANNOT_BE_SOURCE_KEY, STAGE_CANNOT_BE_SOURCE_DEFAULT));
           }
         }
         shouldBeSource = false;
+        if (!stageConf.isSystemGenerated() && !isValidName(stageConf.getInstanceName())) {
+          issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
+                                    STAGE_INVALID_INSTANCE_NAME_KEY, STAGE_INVALID_INSTANCE_NAME_DEFAULT, VALID_NAME));
+        }
+        for (String lane : stageConf.getInputLanes()) {
+          if (!isValidName(lane)) {
+            issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
+                                      STAGE_INVALID_INPUT_LANE_NAME_KEY, STAGE_INVALID_INPUT_LANE_DEFAULT, lane,
+                                      VALID_NAME));
+          }
+        }
+        for (String lane : stageConf.getOutputLanes()) {
+          if (!isValidName(lane)) {
+            issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
+                                      STAGE_INVALID_OUTPUT_LANE_NAME_KEY, STAGE_INVALID_OUTPUT_LANE_DEFAULT, lane,
+                                      VALID_NAME));
+          }
+        }
+        switch (stageDef.getType()) {
+          case SOURCE:
+            if (!stageConf.getInputLanes().isEmpty()) {
+              issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
+                                        STAGE_CANNOT_HAVE_INPUT_KEY, STAGE_CANNOT_HAVE_INPUT_DEFAULT,
+                                        stageDef.getType(), stageConf.getInputLanes()));
+            }
+            if (stageConf.getOutputLanes().isEmpty()) {
+              issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
+                                                     STAGE_MUST_HAVE_OUTPUT_KEY, STAGE_MUST_HAVE_OUTPUT_DEFAULT,
+                                                     stageDef.getType()));
+            }
+            break;
+          case PROCESSOR:
+            if (stageConf.getInputLanes().isEmpty()) {
+              issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
+                                        STAGE_MUST_HAVE_INPUT_KEY, STAGE_MUST_HAVE_INPUT_DEFAULT, stageDef.getType()));
+            }
+            if (stageConf.getOutputLanes().isEmpty()) {
+              issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
+                                        STAGE_MUST_HAVE_OUTPUT_KEY, STAGE_MUST_HAVE_OUTPUT_DEFAULT,
+                                        stageDef.getType()));
+            }
+            break;
+          case TARGET:
+            if (stageConf.getInputLanes().isEmpty()) {
+              issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
+                                                     STAGE_MUST_HAVE_INPUT_KEY, STAGE_MUST_HAVE_INPUT_DEFAULT,
+                                                     stageDef.getType()));
+            }
+            if (!stageConf.getOutputLanes().isEmpty()) {
+              issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
+                                        STAGE_CANNOT_HAVE_OUTPUT_KEY, STAGE_CANNOT_HAVE_OUTPUT_DEFAULT,
+                                        stageDef.getType(), stageConf.getOutputLanes()));
+            }
+            break;
+        }
         for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
-          if (stage.getConfig(confDef.getName()) == null && confDef.isRequired()) {
-            issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
+          if (stageConf.getConfig(confDef.getName()) == null && confDef.isRequired()) {
+            issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                       STAGE_MISSING_CONFIGURATION_KEY, STAGE_MISSING_CONFIGURATION_DEFAULT));
           }
         }
-        for (ConfigConfiguration conf : stage.getConfiguration()) {
+        for (ConfigConfiguration conf : stageConf.getConfiguration()) {
           ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
           if (conf.getValue() == null && confDef.isRequired()) {
-            issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
+            issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                       STAGE_MISSING_CONFIGURATION_KEY, STAGE_MISSING_CONFIGURATION_DEFAULT));
           }
           if (conf.getValue() != null) {
             switch (confDef.getType()) {
               case BOOLEAN:
                 if (!(conf.getValue() instanceof Boolean)) {
-                  issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
+                  issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                             STAGE_CONFIGURATION_INVALID_TYPE_KEY,
                                             STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT, confDef.getType()));
                 }
                 break;
               case INTEGER:
                 if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
-                  issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
+                  issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                             STAGE_CONFIGURATION_INVALID_TYPE_KEY,
                                             STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT, confDef.getType()));
                 }
@@ -156,7 +240,7 @@ public class PipelineConfigurationValidator {
                 break;
               case MODEL:
                 if (!(conf.getValue() instanceof Map || conf.getValue() instanceof List)) {
-                  issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
+                  issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                             STAGE_CONFIGURATION_INVALID_TYPE_KEY,
                                             STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT, confDef.getType()));
                 }
@@ -165,7 +249,7 @@ public class PipelineConfigurationValidator {
           }
         }
       }
-      stageNames.add(stage.getInstanceName());
+      stageNames.add(stageConf.getInstanceName());
     }
   }
 
@@ -184,7 +268,7 @@ public class PipelineConfigurationValidator {
       for (String lane : open) {
         for (StageConfiguration stage : pipelineConfiguration.getStages()) {
           if (stage.getOutputLanes().contains(lane)) {
-            issues.add(new StageIssue(stage.getInstanceName(), INSTANCE_OPEN_OUTPUT_LANE_KEY,
+            issues.add(StageIssue.createStageIssue(stage.getInstanceName(), INSTANCE_OPEN_OUTPUT_LANE_KEY,
                                       INSTANCE_OPEN_OUTPUT_LANE_DEFAULT, lane));
           }
         }

@@ -45,13 +45,21 @@ public class Issue {
     this.resourceBundleProvider = resourceBundleProvider;
   }
 
+  private String getMessage(String template) {
+    return String.format(template, args);
+  }
+
   public String getMessage() {
     ResourceBundle rb = (resourceBundleProvider != null) ? resourceBundleProvider.get() : null;
     String template = defaultTemplate;
     if (rb != null && rb.containsKey(bundleKey)) {
       template = rb.getString(bundleKey);
     }
-    return String.format(template, args);
+    return getMessage(template);
+  }
+
+  public String toString() {
+    return getMessage(defaultTemplate);
   }
 
 }

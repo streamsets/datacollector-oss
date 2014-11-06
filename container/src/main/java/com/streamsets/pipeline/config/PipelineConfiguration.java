@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.validation.Issues;
+import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +38,7 @@ public class PipelineConfiguration {
   private final Map<String, Object> uiInfo;
   private List<StageConfiguration> stages;
   private Issues issues;
+  private boolean previewable;
 
   @SuppressWarnings("unchecked")
   public PipelineConfiguration(@JsonProperty("uuid") UUID uuid,
@@ -63,7 +65,12 @@ public class PipelineConfiguration {
   }
 
   public void setIssues(Issues issues) {
-    this.issues = issues;
+    //NOP, just for jackson
+  }
+
+  public void setValidation(PipelineConfigurationValidator validation) {
+    issues = validation.getIssues();
+    previewable = validation.canPreview();
   }
 
   public Issues getIssues() {
@@ -73,9 +80,16 @@ public class PipelineConfiguration {
   public void setValid(boolean dummy) {
     //NOP, just for jackson
   }
+  public void setPreviewable(boolean dummy) {
+    //NOP, just for jackson
+  }
 
   public boolean isValid() {
     return (issues != null) && !issues.hasIssues();
+  }
+
+  public boolean isPreviewable() {
+    return (issues !=null) && previewable;
   }
 
   public List<ConfigConfiguration> getConfiguration() {

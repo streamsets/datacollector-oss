@@ -21,14 +21,20 @@ public class StageIssue extends Issue {
   private final String instanceName;
   private final String configName;
 
-  public StageIssue(String instanceName, String configName, String bundleKey, String defaultTemplate, Object... args) {
+  public static StageIssue createStageIssue(String instanceName, String bundleKey, String defaultTemplate,
+      Object... args) {
+    return new StageIssue(instanceName, null, bundleKey, defaultTemplate, args);
+  }
+
+  public static StageIssue createConfigIssue(String instanceName, String configName, String bundleKey,
+      String defaultTemplate, Object... args) {
+    return new StageIssue(instanceName, configName, bundleKey, defaultTemplate, args);
+  }
+
+  private StageIssue(String instanceName, String configName, String bundleKey, String defaultTemplate, Object... args) {
     super(bundleKey, defaultTemplate, args);
     this.instanceName = instanceName;
     this.configName = configName;
-  }
-
-  public StageIssue(String instanceName, String bundleKey, String defaultTemplate, Object... args) {
-    this(instanceName, null, bundleKey, defaultTemplate, args);
   }
 
   public String getInstanceName() {
@@ -43,4 +49,9 @@ public class StageIssue extends Issue {
     return (configName == null) ? "STAGE" : "STAGE_CONFIG";
   }
 
+  public String toString() {
+    return (configName == null)
+           ? String.format("Instance '%s': %s", getInstanceName(), super.toString())
+           : String.format("Instance '%s' config '%s': %s", getInstanceName(), getConfigName(), super.toString());
+  }
 }

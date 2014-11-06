@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
@@ -38,6 +39,8 @@ public class StageConfiguration {
   //wiring with other components
   private final List<String> inputLanes;
   private final List<String> outputLanes;
+
+  private boolean systemGenerated;
 
   @JsonCreator
   public StageConfiguration(
@@ -99,4 +102,12 @@ public class StageConfiguration {
     return configurationMap.get(name);
   }
 
+  public void setSystemGenerated() {
+    systemGenerated = true;
+  }
+
+  @JsonIgnore
+  public boolean isSystemGenerated() {
+    return systemGenerated;
+  }
 }

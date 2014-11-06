@@ -35,7 +35,6 @@ public class Issues implements Issue.ResourceBundleProvider {
   private final List<Issue> pipeline;
   private final Map<String, List<StageIssue>> stages;
   private ResourceBundle resourceBundle;
-  private Locale locale;
 
   public Issues() {
     pipeline = new ArrayList<Issue>();
@@ -76,7 +75,11 @@ public class Issues implements Issue.ResourceBundleProvider {
   }
 
   public boolean hasIssues() {
-    return !pipeline.isEmpty() || !!stages.isEmpty();
+    return !pipeline.isEmpty() || !stages.isEmpty();
+  }
+
+  public String toString() {
+    return String.format("Issues: pipeline [%s] stages [%s]", pipeline, stages);
   }
 
 }

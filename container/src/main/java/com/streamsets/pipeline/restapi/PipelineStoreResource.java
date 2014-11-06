@@ -80,7 +80,7 @@ public class PipelineStoreResource {
       PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
       validator.validate();
       validator.getIssues().setLocale(locale);
-      pipeline.setIssues(validator.getIssues());
+      pipeline.setValidation(validator);
       data = pipeline;
     } else if (get.equals("info")) {
       data = store.getInfo(name);
@@ -103,7 +103,7 @@ public class PipelineStoreResource {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
     validator.validate();
     validator.getIssues().setLocale(locale);
-    pipeline.setIssues(validator.getIssues());
+    pipeline.setValidation(validator);
     return Response.created(new URI(uri.toString() + "/" + name)).entity(pipeline).build();
   }
 
@@ -130,7 +130,7 @@ public class PipelineStoreResource {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
     validator.validate();
     validator.getIssues().setLocale(locale);
-    pipeline.setIssues(validator.getIssues());
+    pipeline.setValidation(validator);
     pipeline = store.save(name, user, tag, tagDescription, pipeline);
     return Response.ok().entity(pipeline).build();
   }

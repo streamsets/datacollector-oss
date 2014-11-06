@@ -209,15 +209,12 @@ public class FilePipelineStore implements PipelineStore {
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(getInfo(name, false), new Date(), user, REV, uuid,
                                          pipeline.isValid());
-    Issues issues = pipeline.getIssues();
     try {
       pipeline.setUuid(uuid);
       json.writeValue(getInfoFile(name), info);
       json.writeValue(getPipelineFile(name), pipeline);
     } catch (Exception ex) {
       throw new PipelineStoreException(PipelineStoreErrors.COULD_NOT_SAVE_PIPELINE, name, ex.getMessage(), ex);
-    } finally {
-      pipeline.setIssues(issues);
     }
     return pipeline;
   }
