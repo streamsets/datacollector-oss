@@ -94,7 +94,7 @@ public class RecordImpl implements Record {
     public Map<String, Object> getValues() {
       return headers.getValues();
     }
-
+    
   }
 
   public RecordImpl(String stage, String source, byte[] raw, String rawMime) {

@@ -17,7 +17,6 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.codahale.metrics.MetricRegistry;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -27,7 +26,6 @@ public class TestMultiplexerPipe {
   @SuppressWarnings("unchecked")
   public void testMultiplexerPipeOneLane() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
-    Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
                                              MockStages.createPipelineConfigurationSourceTarget()).build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getPipes()[2];
@@ -41,7 +39,6 @@ public class TestMultiplexerPipe {
   @SuppressWarnings("unchecked")
   public void testMultiplexerPipeTwoLane() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
-    Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
                                              MockStages.createPipelineConfigurationSourceTwoTargets()).build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getPipes()[2];

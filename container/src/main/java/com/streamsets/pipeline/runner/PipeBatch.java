@@ -17,8 +17,6 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.codahale.metrics.Counter;
-import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Record;
@@ -33,16 +31,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class PipeBatch {
-  private final MetricRegistry metrics;
   private final SourceOffsetTracker offsetTracker;
   private final int batchSize;
   private final Map<String, List<Record>> fullPayload;
   private final Set<String> processedStages;
   private final List<StageOutput> stageOutputSnapshot;
 
-  public PipeBatch(SourceOffsetTracker offsetTracker, MetricRegistry metrics, int batchSize,
-      boolean snapshotStagesOutput) {
-    this.metrics = metrics;
+  public PipeBatch(SourceOffsetTracker offsetTracker, int batchSize, boolean snapshotStagesOutput) {
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
     fullPayload = new HashMap<String, List<Record>>();
@@ -72,7 +67,6 @@ public class PipeBatch {
     for (String inputLane : pipe.getInputLanes()) {
       records.addAll(fullPayload.remove(inputLane));
     }
-    metrics.counter(pipe.getStage().getInfo().getInstanceName() + ".input-records.counter").inc(records.size());
     return new BatchImpl(offsetTracker, records);
   }
 
@@ -93,15 +87,11 @@ public class PipeBatch {
     // convert lane names from stage naming to pipe naming when adding to the payload
     // leveraging the fact that the stage output lanes and the pipe output lanes are in the same order
     List<String> stageLaneNames = pipe.getStage().getConfiguration().getOutputLanes();
-    long count = 0;
     for (int i = 0; i < stageLaneNames.size() ; i++) {
       String stageLaneName = stageLaneNames.get(i);
       String pipeLaneName = pipe.getOutputLanes().get(i);
-      List<Record> records = stageOutput.get(stageLaneName);
-      count += records.size();
-      fullPayload.put(pipeLaneName, records);
+      fullPayload.put(pipeLaneName, stageOutput.get(stageLaneName));
     }
-    metrics.counter(pipe.getStage().getInfo().getInstanceName() + ".output-records.counter").inc(count);
     if (stageOutputSnapshot != null) {
       stageOutputSnapshot.add(new StageOutput(pipe.getStage().getInfo().getInstanceName(),
                               batchMaker.getStageOutputSnapshot()));

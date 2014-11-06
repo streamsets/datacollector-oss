@@ -54,7 +54,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
 
   @Override
   public void run(Pipe[] pipes) throws StageException, PipelineRuntimeException {
-    PipeBatch pipeBatch = new PipeBatch(offsetTracker, metrics, batchSize, true);
+    PipeBatch pipeBatch = new PipeBatch(offsetTracker, batchSize, true);
     long start = System.currentTimeMillis();
     sourceOffset = pipeBatch.getPreviousOffset();
     for (Pipe pipe : pipes) {
