@@ -139,6 +139,11 @@ public class PipelineConfigurationValidator {
         }
         for (ConfigConfiguration conf : stage.getConfiguration()) {
           ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
+          if (conf.getValue() == null && confDef.isRequired()) {
+            issues.add(new StageIssue(stage.getInstanceName(), confDef.getName(),
+                                      STAGE_MISSING_CONFIGURATION_KEY, STAGE_MISSING_CONFIGURATION_DEFAULT,
+                                      stage.getInstanceName(), confDef.getName()));
+          }
           if (conf.getValue() != null) {
             switch (confDef.getType()) {
               case BOOLEAN:
