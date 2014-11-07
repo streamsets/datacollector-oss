@@ -33,7 +33,8 @@ public class TestVersionedSimpleMap {
     Assert.assertTrue(m.hasKey("a"));
     Assert.assertTrue(m.getKeys().contains("a"));
     Assert.assertEquals(1, m.getKeys().size());
-    m.remove("a");
+    Assert.assertEquals("A", m.remove("a"));
+    Assert.assertNull(m.remove("b"));
     Assert.assertFalse(m.hasKey("a"));
     Assert.assertTrue(m.getKeys().isEmpty());
     Assert.assertEquals(null, m.get("a"));
@@ -96,28 +97,47 @@ public class TestVersionedSimpleMap {
     m.put("a", "A");
     m = new VersionedSimpleMap<String, String>(m);
     Assert.assertEquals("A", m.get("a"));
-    m.put("a", "B");
+    Assert.assertEquals("A", m.put("a", "B"));
     Assert.assertEquals("B", m.get("a"));
     Assert.assertTrue(m.hasKey("a"));
     Assert.assertEquals(1, m.getKeys().size());
     Assert.assertTrue(m.getKeys().contains("a"));
+    Assert.assertEquals("B", m.put("a", "C"));
   }
 
   @Test
   public void testParentWithChildShadowingRemove() {
     SimpleMap<String, String> m = new VersionedSimpleMap<String, String>();
     m.put("a", "A");
+    m.put("b", "B");
+
     m = new VersionedSimpleMap<String, String>(m);
     Assert.assertEquals("A", m.get("a"));
     m.put("a", "B");
     Assert.assertEquals("B", m.get("a"));
     Assert.assertTrue(m.hasKey("a"));
-    Assert.assertEquals(1, m.getKeys().size());
+    Assert.assertEquals(2, m.getKeys().size());
     Assert.assertTrue(m.getKeys().contains("a"));
-    m.remove("a");
+    Assert.assertEquals("B", m.remove("a"));
     Assert.assertFalse(m.hasKey("a"));
+    Assert.assertEquals(1, m.getKeys().size());
+    Assert.assertNull(m.get("a"));
+
+    Assert.assertEquals(null, m.remove("a"));
+
+    Assert.assertEquals("B", m.remove("b"));
+    Assert.assertNull(m.get("b"));
     Assert.assertTrue(m.getKeys().isEmpty());
-    Assert.assertEquals(null, m.get("a"));
+
+    Assert.assertNull(m.remove("c"));
+  }
+
+  @Test
+  public void testValuesToString() {
+    VersionedSimpleMap<String, String> m = new VersionedSimpleMap<String, String>();
+    m.put("a", "A");
+    Assert.assertEquals(1, m.getValues().size());
+    Assert.assertNotNull(m.toString());
   }
 
 }

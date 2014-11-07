@@ -25,10 +25,113 @@ import org.junit.Assert;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
 
+import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
 public class TestRecordImpl {
+
+  @Test(expected = NullPointerException.class)
+  public void testConstructorInvalid1() {
+    new RecordImpl(null, null, null, null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testConstructorInvalid2() {
+    new RecordImpl("s", null, null, null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testConstructorInvalid3() {
+    new RecordImpl(null, "s", null, null);
+  }
+
+  @Test
+  public void testFieldMethods() {
+    RecordImpl record = new RecordImpl("stage", "source", null, null);
+    Assert.assertFalse(record.getFieldNames().hasNext());
+    try {
+      record.setField("a", null);
+      Assert.fail();
+    } catch (NullPointerException ex) {
+      //expected
+    }
+    Assert.assertFalse(record.getFieldNames().hasNext());
+    Assert.assertTrue(record.getValues().isEmpty());
+    Field f =  Field.create(true);
+    record.setField("a", f);
+    Assert.assertTrue(record.getFieldNames().hasNext());
+    Iterator<String> it = record.getFieldNames();
+    Assert.assertEquals("a", it.next());
+    Assert.assertFalse(it.hasNext());
+    Assert.assertEquals(f, record.getField("a"));
+    Assert.assertEquals(1, record.getValues().size());
+    Assert.assertEquals(f, record.getValues().get("a"));
+    record.deleteField("a");
+    Assert.assertNull(record.getField("a"));
+    Assert.assertFalse(record.getFieldNames().hasNext());
+    Assert.assertTrue(record.getValues().isEmpty());
+  }
+
+  @Test
+  public void testHeaderMethods() {
+    RecordImpl record = new RecordImpl("stage", "source", null, null);
+    Record.Header header = record.getHeader();
+    Assert.assertNull(header.getRaw());
+    Assert.assertNull(header.getRawMime());
+
+    record = new RecordImpl("stage", "source", new byte[0], "M");
+    header = record.getHeader();
+    Assert.assertArrayEquals(new byte[0], header.getRaw());
+    Assert.assertEquals("M", header.getRawMime());
+
+    Assert.assertEquals("stage", header.getCreatorStage());
+    Assert.assertEquals("source", header.getRecordSourceId());
+    Assert.assertEquals("stage", header.getStagesPath());
+
+    Assert.assertFalse(header.getAttributeNames().hasNext());
+    try {
+      header.setAttribute("a", null);
+      Assert.fail();
+    } catch (NullPointerException ex) {
+      //expected
+    }
+    Assert.assertFalse(header.getAttributeNames().hasNext());
+    RecordImpl.HeaderImpl headerImpl = ((RecordImpl.HeaderImpl)header);
+    Assert.assertTrue(headerImpl.getValues().isEmpty());
+    header.setAttribute("a", "A");
+    Assert.assertTrue(header.getAttributeNames().hasNext());
+    Iterator<String> it = header.getAttributeNames();
+    Assert.assertEquals("a", it.next());
+    Assert.assertFalse(it.hasNext());
+    Assert.assertEquals("A", header.getAttribute("a"));
+    Assert.assertEquals(1, headerImpl.getValues().size());
+    Assert.assertEquals("A", headerImpl.getValues().get("a"));
+    header.deleteAttribute("a");
+    Assert.assertNull(header.getAttribute("a"));
+    Assert.assertFalse(header.getAttributeNames().hasNext());
+    Assert.assertTrue(headerImpl.getValues().isEmpty());
+
+    record.toString();
+  }
+
+  @Test
+  public void testRaw() {
+    RecordImpl record = new RecordImpl("stage", "source", new byte[0], "M");
+    Assert.assertArrayEquals(new byte[0], record.getHeader().getRaw());
+    Assert.assertNotSame(new byte[0], record.getHeader().getRaw());
+    Assert.assertNotSame(record.getHeader().getRaw(), record.getHeader().getRaw());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testRawInvalid1() {
+    new RecordImpl("stage", "source", new byte[0], null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testRawInvalid2() {
+    new RecordImpl("stage", "source", null, "M");
+  }
 
   public static void assertIsSnapshot(Record original, Record snapshot) {
     Set<String> sFields = Sets.newHashSet(Iterators.filter(snapshot.getFieldNames(), String.class));
@@ -52,7 +155,7 @@ public class TestRecordImpl {
       Assert.assertEquals(snapshot.getHeader().getRawMime(), original.getHeader().getRawMime());
       Assert.assertEquals(snapshot.getHeader().getRecordSourceId(), original.getHeader().getRecordSourceId());
     } finally {
-      snapshot.getHeader().removeAttribute(randomKey);
+      snapshot.getHeader().deleteAttribute(randomKey);
     }
   }
 
@@ -77,7 +180,7 @@ public class TestRecordImpl {
         Assert.assertEquals(copy.getHeader().getStagesPath(), original.getHeader().getStagesPath());
       }
     } finally {
-      copy.getHeader().removeAttribute(randomKey);
+      copy.getHeader().deleteAttribute(randomKey);
     }
   }
 

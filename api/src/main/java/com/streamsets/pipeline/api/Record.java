@@ -40,7 +40,7 @@ public interface Record {
 
     public void setAttribute(String name, String value);
 
-    public void removeAttribute(String name);
+    public void deleteAttribute(String name);
 
   }
 
@@ -53,7 +53,5 @@ public interface Record {
   public void setField(String name, Field field);
 
   public void deleteField(String name);
-
-  public String toString(Locale locale);
 
 }
