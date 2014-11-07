@@ -19,6 +19,7 @@ package com.streamsets.pipeline.validation;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -49,10 +50,15 @@ public class PipelineConfigurationValidator {
       "Stage definition does not exist, library '%s' name '%s' version '%s'";
   private static final String STAGE_MISSING_CONFIGURATION_KEY = "validation.stage.missing.configuration";
   private static final String STAGE_MISSING_CONFIGURATION_DEFAULT = "Configuration value is required";
+  private static final String STAGE_INVALID_CONFIGURATION_KEY = "validation.stage.invalid.configuration";
+  private static final String STAGE_INVALID_CONFIGURATION_DEFAULT = "Invalid configuration";
   private static final String STAGE_CONFIGURATION_INVALID_TYPE_KEY = "validation.stage.configuration.invalidType";
   private static final String STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT = "Configuration should be a '%s'";
-  private static final String INSTANCE_OPEN_OUTPUT_LANE_KEY = "validation.instance.open.output.lane";
-  private static final String INSTANCE_OPEN_OUTPUT_LANE_DEFAULT = "Instance has an open lane '%s'";
+  private static final String STAGE_OUTPUT_LANES_ALREADY_EXISTS_KEY = "validation.stage.output.lane.already.exists";
+  private static final String STAGE_OUTPUT_LANES_ALREADY_EXISTS_DEFAULT =
+      "Output lanes '%s' already defined by stage instance '%s'";
+  private static final String INSTANCE_OPEN_OUTPUT_LANES_KEY = "validation.instance.open.output.lanes";
+  private static final String INSTANCE_OPEN_OUTPUT_LANES_DEFAULT = "Instance has open lanes '%s'";
   private static final String STAGE_CANNOT_HAVE_INPUT_KEY = "validation.stage.cannot.have.input.lanes";
   private static final String STAGE_CANNOT_HAVE_INPUT_DEFAULT = "%s cannot have input lanes '%s'";
   private static final String STAGE_CANNOT_HAVE_OUTPUT_KEY = "validation.stage.cannot.have.output.lanes";
@@ -123,6 +129,7 @@ public class PipelineConfigurationValidator {
   boolean checkIfPipelineIsEmpty() {
     boolean preview = true;
     if (pipelineConfiguration.getStages().isEmpty()) {
+      // pipeline has not stages at all
       issues.addP(new Issue(PIPELINE_IS_EMPTY_KEY, PIPELINE_IS_EMPTY_DEFAULT));
       preview = false;
     }
@@ -136,6 +143,7 @@ public class PipelineConfigurationValidator {
     boolean shouldBeSource = true;
     for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
       if (stageNames.contains(stageConf.getInstanceName())) {
+        // duplicate stage instance name in the pipeline
         issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                                INSTANCE_ALREADY_DEFINED_KEY, INSTANCE_ALREADY_DEFINED_DEFAULT));
         preview = false;
@@ -143,6 +151,7 @@ public class PipelineConfigurationValidator {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
                                                        stageConf.getStageVersion());
       if (stageDef == null) {
+        // stage configuration refers to an undefined stage definition
         issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                   STAGE_DOES_NOT_EXIST_KEY, STAGE_DOES_NOT_EXIST_DEFAULT,
                                   stageConf.getLibrary(), stageConf.getStageName(), stageConf.getStageVersion()));
@@ -150,12 +159,14 @@ public class PipelineConfigurationValidator {
       } else {
         if (shouldBeSource) {
           if (stageDef.getType() != StageType.SOURCE) {
+            // first stage must be a Source
             issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                       FIRST_STAGE_MUST_BE_A_SOURCE_KEY, FIRST_STAGE_MUST_BE_A_SOURCE_DEFAULT));
             preview = false;
           }
         } else {
           if (stageDef.getType() == StageType.SOURCE) {
+            // no stage other than first stage can be a Source
             issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                       STAGE_CANNOT_BE_SOURCE_KEY, STAGE_CANNOT_BE_SOURCE_DEFAULT));
             preview = false;
@@ -163,12 +174,14 @@ public class PipelineConfigurationValidator {
         }
         shouldBeSource = false;
         if (!stageConf.isSystemGenerated() && !isValidName(stageConf.getInstanceName())) {
+          // stage instance name has an invalid name (it must match '[0-9A-Za-z_]+')
           issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                     STAGE_INVALID_INSTANCE_NAME_KEY, STAGE_INVALID_INSTANCE_NAME_DEFAULT, VALID_NAME));
           preview = false;
         }
         for (String lane : stageConf.getInputLanes()) {
           if (!isValidName(lane)) {
+            // stage instance input lane has an invalid name (it must match '[0-9A-Za-z_]+')
             issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                       STAGE_INVALID_INPUT_LANE_NAME_KEY, STAGE_INVALID_INPUT_LANE_DEFAULT, lane,
                                       VALID_NAME));
@@ -177,6 +190,7 @@ public class PipelineConfigurationValidator {
         }
         for (String lane : stageConf.getOutputLanes()) {
           if (!isValidName(lane)) {
+            // stage instance output lane has an invalid name (it must match '[0-9A-Za-z_]+')
             issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                       STAGE_INVALID_OUTPUT_LANE_NAME_KEY, STAGE_INVALID_OUTPUT_LANE_DEFAULT, lane,
                                       VALID_NAME));
@@ -186,12 +200,14 @@ public class PipelineConfigurationValidator {
         switch (stageDef.getType()) {
           case SOURCE:
             if (!stageConf.getInputLanes().isEmpty()) {
+              // source stage cannot have input lanes
               issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                         STAGE_CANNOT_HAVE_INPUT_KEY, STAGE_CANNOT_HAVE_INPUT_DEFAULT,
                                         stageDef.getType(), stageConf.getInputLanes()));
               preview = false;
             }
             if (stageConf.getOutputLanes().isEmpty()) {
+              // source stage must have at least one output lane
               issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                                      STAGE_MUST_HAVE_OUTPUT_KEY, STAGE_MUST_HAVE_OUTPUT_DEFAULT,
                                                      stageDef.getType()));
@@ -199,11 +215,13 @@ public class PipelineConfigurationValidator {
             break;
           case PROCESSOR:
             if (stageConf.getInputLanes().isEmpty()) {
+              // processor stage must have at least one input lane
               issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                         STAGE_MUST_HAVE_INPUT_KEY, STAGE_MUST_HAVE_INPUT_DEFAULT, stageDef.getType()));
               preview = false;
             }
             if (stageConf.getOutputLanes().isEmpty()) {
+              // processor stage must have at least one ouput lane
               issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                         STAGE_MUST_HAVE_OUTPUT_KEY, STAGE_MUST_HAVE_OUTPUT_DEFAULT,
                                         stageDef.getType()));
@@ -211,12 +229,14 @@ public class PipelineConfigurationValidator {
             break;
           case TARGET:
             if (stageConf.getInputLanes().isEmpty()) {
+              // target stage must have at least one input lane
               issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                                      STAGE_MUST_HAVE_INPUT_KEY, STAGE_MUST_HAVE_INPUT_DEFAULT,
                                                      stageDef.getType()));
               preview = false;
             }
             if (!stageConf.getOutputLanes().isEmpty()) {
+              // target stage cannot have output lanes
               issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(),
                                         STAGE_CANNOT_HAVE_OUTPUT_KEY, STAGE_CANNOT_HAVE_OUTPUT_DEFAULT,
                                         stageDef.getType(), stageConf.getOutputLanes()));
@@ -226,6 +246,7 @@ public class PipelineConfigurationValidator {
         }
         for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
           if (stageConf.getConfig(confDef.getName()) == null && confDef.isRequired()) {
+            // stage configuration does not have a configuration that is required
             issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                                     STAGE_MISSING_CONFIGURATION_KEY,
                                                     STAGE_MISSING_CONFIGURATION_DEFAULT));
@@ -234,7 +255,12 @@ public class PipelineConfigurationValidator {
         }
         for (ConfigConfiguration conf : stageConf.getConfiguration()) {
           ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
-          if (conf.getValue() == null && confDef.isRequired()) {
+          if (confDef == null) {
+            // stage configuration defines an invalid configuration
+            issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), conf.getName(),
+                                                    STAGE_INVALID_CONFIGURATION_KEY, STAGE_INVALID_CONFIGURATION_DEFAULT));
+          } else if (conf.getValue() == null && confDef.isRequired()) {
+            // stage configuration has a NULL value for a configuration that requires a value
             issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                       STAGE_MISSING_CONFIGURATION_KEY, STAGE_MISSING_CONFIGURATION_DEFAULT));
             preview = false;
@@ -243,6 +269,7 @@ public class PipelineConfigurationValidator {
             switch (confDef.getType()) {
               case BOOLEAN:
                 if (!(conf.getValue() instanceof Boolean)) {
+                  // stage configuration must be a boolean
                   issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                             STAGE_CONFIGURATION_INVALID_TYPE_KEY,
                                             STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT, confDef.getType()));
@@ -251,6 +278,7 @@ public class PipelineConfigurationValidator {
                 break;
               case INTEGER:
                 if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
+                  // stage configuration must be a number
                   issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                             STAGE_CONFIGURATION_INVALID_TYPE_KEY,
                                             STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT, confDef.getType()));
@@ -261,7 +289,9 @@ public class PipelineConfigurationValidator {
                 //NOP
                 break;
               case MODEL:
+                //TODO introduce schema for models so we can validate
                 if (!(conf.getValue() instanceof Map || conf.getValue() instanceof List)) {
+                  // stage configuration must be a model
                   issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                             STAGE_CONFIGURATION_INVALID_TYPE_KEY,
                                             STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT, confDef.getType()));
@@ -280,23 +310,30 @@ public class PipelineConfigurationValidator {
   @VisibleForTesting
   boolean validatePipelineLanes() {
     boolean preview = true;
-    Set<String> output = new HashSet<String>();
-    Set<String> input = new HashSet<String>();
-    for (StageConfiguration stage : pipelineConfiguration.getStages()) {
-      output.addAll(stage.getOutputLanes());
-      input.addAll(stage.getInputLanes());
-    }
-    Set<String> open = new HashSet<String>(output);
-    open.removeAll(input);
-    openLanes.addAll(open);
-    if (!open.isEmpty()) {
-      for (String lane : open) {
-        for (StageConfiguration stage : pipelineConfiguration.getStages()) {
-          if (stage.getOutputLanes().contains(lane)) {
-            issues.add(StageIssue.createStageIssue(stage.getInstanceName(), INSTANCE_OPEN_OUTPUT_LANE_KEY,
-                                                   INSTANCE_OPEN_OUTPUT_LANE_DEFAULT, lane));
-          }
+    List<StageConfiguration> stagesConf = pipelineConfiguration.getStages();
+    for (int i = 0; i < stagesConf.size(); i++) {
+      StageConfiguration stageConf = stagesConf.get(i);
+      Set<String> openOutputs = new HashSet<String>(stageConf.getOutputLanes());
+      for (int j = i + 1; j < stagesConf.size(); j++) {
+        StageConfiguration downStreamStageConf = stagesConf.get(j);
+        Set<String> duplicateOutputs = Sets.intersection(new HashSet<String>(stageConf.getOutputLanes()),
+                                                         new HashSet<String>(downStreamStageConf.getOutputLanes()));
+        if (!duplicateOutputs.isEmpty()) {
+          // there is more than one stage defining the same output lane
+          issues.add(StageIssue.createStageIssue(downStreamStageConf.getInstanceName(),
+                                                 STAGE_OUTPUT_LANES_ALREADY_EXISTS_KEY,
+                                                 STAGE_OUTPUT_LANES_ALREADY_EXISTS_DEFAULT,
+                                                 duplicateOutputs, stageConf.getInstanceName()));
+          preview = false;
         }
+
+        openOutputs.removeAll(downStreamStageConf.getInputLanes());
+      }
+      if (!openOutputs.isEmpty()) {
+        openLanes.addAll(openOutputs);
+        // the stage has open output lanes
+        issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), INSTANCE_OPEN_OUTPUT_LANES_KEY,
+                                               INSTANCE_OPEN_OUTPUT_LANES_DEFAULT, openOutputs));
       }
     }
     return preview;
