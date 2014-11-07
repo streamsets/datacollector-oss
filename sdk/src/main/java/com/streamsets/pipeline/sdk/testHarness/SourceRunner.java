@@ -18,7 +18,8 @@
 package com.streamsets.pipeline.sdk.testharness;
 
 import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.container.ModuleInfo;
+import com.streamsets.pipeline.sdk.testharness.internal.Constants;
+import com.streamsets.pipeline.sdk.testharness.internal.StageInfo;
 import com.streamsets.pipeline.sdk.testharness.internal.BatchMakerImpl;
 import com.streamsets.pipeline.sdk.testharness.internal.SourceContextImpl;
 import com.streamsets.pipeline.sdk.testharness.internal.StageBuilder;
@@ -127,9 +128,8 @@ public class SourceRunner <T extends Source> {
 
       //extract name and version of the stage from the stage def annotation
       StageDef stageDefAnnot = stage.getClass().getAnnotation(StageDef.class);
-      info = new ModuleInfo(
-        stageDefAnnot.name(), stageDefAnnot.version(),
-        stageDefAnnot.description(), instanceName);
+      info = new StageInfo(
+        stageDefAnnot.name(), stageDefAnnot.version(), instanceName);
       //mockInfoAndContextForStage and stub Source.Context
       context = new SourceContextImpl(instanceName, outputLanes);
 

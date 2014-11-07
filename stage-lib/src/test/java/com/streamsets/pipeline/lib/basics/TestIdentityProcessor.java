@@ -20,7 +20,7 @@ package com.streamsets.pipeline.lib.basics;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.sdk.testharness.Constants;
+import com.streamsets.pipeline.sdk.testharness.internal.Constants;
 import com.streamsets.pipeline.sdk.testharness.ProcessorRunner;
 import com.streamsets.pipeline.sdk.testharness.RecordProducer;
 import org.junit.Assert;

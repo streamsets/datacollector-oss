@@ -17,22 +17,9 @@
  */
 package com.clipper.stage.test;
 
-import com.clipper.stage.ConsoleTarget;
-import com.clipper.stage.FareCalculatorProcessor;
-import com.clipper.stage.PDFLineProducer;
-import com.clipper.stage.TSourceTracker;
-import com.codahale.metrics.MetricRegistry;
-import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.container.ModuleInfo;
-import com.streamsets.pipeline.container.Pipeline;
-import com.streamsets.pipeline.container.PipelineRunner;
-
 public class TestClipper {
 
-  //@Test
+  /*//@Test
   public void testRun() {
     Pipeline pipeline = createPipeline(true);
 
@@ -72,5 +59,5 @@ public class TestClipper {
     }
 
     return (complete) ? pb.build() : pb.buildPreview();
-  }
+  }*/
 }

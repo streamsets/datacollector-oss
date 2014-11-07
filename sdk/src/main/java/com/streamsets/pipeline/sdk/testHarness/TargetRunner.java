@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.container.ModuleInfo;
+import com.streamsets.pipeline.sdk.testharness.internal.StageInfo;
 import com.streamsets.pipeline.sdk.testharness.internal.BatchBuilder;
 import com.streamsets.pipeline.sdk.testharness.internal.StageBuilder;
 import com.streamsets.pipeline.sdk.testharness.internal.TargetContextImpl;
@@ -113,9 +113,8 @@ public class TargetRunner <T extends Target> {
 
       //extract name and version of the stage from the stage def annotation
       StageDef stageDefAnnot = stage.getClass().getAnnotation(StageDef.class);
-      info = new ModuleInfo(
-        stageDefAnnot.name(), stageDefAnnot.version(),
-        stageDefAnnot.description(), instanceName);
+      info = new StageInfo(
+        stageDefAnnot.name(), stageDefAnnot.version(), instanceName);
       //mockInfoAndContextForStage and stub Source.Context
       context = new TargetContextImpl();
 

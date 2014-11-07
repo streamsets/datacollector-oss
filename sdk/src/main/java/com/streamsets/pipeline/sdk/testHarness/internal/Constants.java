@@ -15,26 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.clipper.stage;
+package com.streamsets.pipeline.sdk.testharness.internal;
 
-import com.streamsets.pipeline.container.SourceTracker;
+public class Constants {
 
-public class TSourceTracker implements SourceTracker {
-  private boolean finished;
-  private String batchId;
+  public static final String DEFAULT_LANE = "lane";
+  public static final String DEFAULT_INSTANCE_NAME = "MyStageInstance";
+  public static final String DEFAULT_SOURCE_OFFSET = null;
+  public static final int DEFAULT_MAX_BATCH_SIZE = 10;
 
-  public boolean isFinished() {
-    return finished;
-  }
 
-  @Override
-  public String getLastBatchId() {
-    return batchId;
-  }
-
-  @Override
-  public void udpateLastBatchId(String batchId) {
-    this.batchId = batchId;
-    finished = batchId == null;
-  }
 }

@@ -15,14 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.sdk.testharness;
+package com.streamsets.pipeline.sdk.testharness.internal;
 
-public class Constants {
+import com.streamsets.pipeline.api.Stage;
 
-  public static final String DEFAULT_LANE = "lane";
-  public static final String DEFAULT_INSTANCE_NAME = "MyStageInstance";
-  public static final String DEFAULT_SOURCE_OFFSET = null;
-  public static final int DEFAULT_MAX_BATCH_SIZE = 10;
+public class StageInfo implements Stage.Info {
 
+  private final String name;
+  private final String version;
+  private final String instanceName;
 
+  public StageInfo(String name, String version, String instanceName) {
+    this.name = name;
+    this.version = version;
+    this.instanceName = instanceName;
+  }
+
+  @Override
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public String getVersion() {
+    return version;
+  }
+
+  @Override
+  public String getInstanceName() {
+    return instanceName;
+  }
 }

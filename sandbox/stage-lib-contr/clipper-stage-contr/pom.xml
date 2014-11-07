@@ -38,9 +38,13 @@
           <artifactId>streamsets-pipeline-api</artifactId>
       </dependency>
       <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-pipeline-sdk</artifactId>
-      </dependency>
+    <groupId>com.streamsets</groupId>
+    <artifactId>streamsets-pipeline-sdk</artifactId>
+  </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-pipeline-container</artifactId>
+    </dependency>
       <dependency>
         <groupId>org.apache.pdfbox</groupId>
         <artifactId>pdfbox</artifactId>
