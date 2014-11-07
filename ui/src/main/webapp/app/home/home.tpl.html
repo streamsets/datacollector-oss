@@ -11,29 +11,53 @@
             Issues <span class="badge alert-danger" ng-bind="issuesLength"></span>
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li role="presentation" class="dropdown-header" ng-repeat-start="(key, value) in pipelineConfig.issues">
-              {{key}}
+
+            <li role="presentation" class="dropdown-header"
+                ng-repeat-start="issue in pipelineConfig.issues.pipelineIssues">
+              Pipeline Issues
             </li>
-            <li role="presentation" ng-repeat="issue in value">
-              <a role="menuitem" tabindex="-1" href="#">{{issue}}</a>
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1" href="#">{{issue.message}}</a>
             </li>
             <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+
+            <li role="presentation" class="dropdown-header"
+                ng-repeat-start="(instanceName, issues) in pipelineConfig.issues.stageIssues"
+                ng-bind="getStageInstanceLabel(instanceName)">
+            </li>
+            <li role="presentation" ng-repeat="issue in issues">
+              <a role="menuitem" tabindex="-1" href="#" ng-bind="getIssuesMessage(instanceName, issue)"></a>
+            </li>
+            <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+
           </ul>
         </div>
 
         <div class="pull-right">
-          <button type="button" class="btn btn-default btn-sm">
+          <button type="button" class="btn btn-default btn-sm"
+                  ng-hide="previewMode"
+                  ng-click="previewPipeline()"
+                  ng-disabled="!pipelineConfig.previewable">
             <span class="glyphicon glyphicon-eye-open"></span> {{'admin.header.preview' | translate}}
           </button>
+
+          <button type="button" class="btn btn-default btn-sm"
+                  ng-show="previewMode"
+                  ng-click="closePreview()">
+            <span class="glyphicon glyphicon-eye-close"></span> Close Preview
+          </button>
+
+
           <button type="button" class="btn btn-default btn-sm" ng-hide="isPipelineRunning" ng-disabled="!pipelineConfig.valid">
             <span class="glyphicon glyphicon-play"></span> {{'admin.header.start' | translate}}
           </button>
+
           <button type="button" class="btn btn-default btn-sm" ng-show="isPipelineRunning">
             <span class="glyphicon glyphicon-stop"></span> {{'admin.header.stop' | translate}}
           </button>
         </div>
 
-        <div class="btn-group pull-right stage-dropdown">
+        <div class="btn-group pull-right stage-dropdown" ng-hide="previewMode">
           <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
             <span class="glyphicon glyphicon-screenshot"></span>
             Add Target
@@ -46,7 +70,7 @@
           </ul>
         </div>
 
-        <div class="btn-group pull-right stage-dropdown">
+        <div class="btn-group pull-right stage-dropdown" ng-hide="previewMode">
           <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
             <span class="glyphicon glyphicon-cog"></span>
             Add Processor
@@ -59,7 +83,7 @@
           </ul>
         </div>
 
-        <div class="btn-group pull-right stage-dropdown">
+        <div class="btn-group pull-right stage-dropdown" ng-hide="previewMode">
           <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
             <span class="glyphicon glyphicon-list-alt"></span>
             Add Source
@@ -81,12 +105,13 @@
 
     <bg-pane min-size="50" class="panel panel-default detail-pane">
       <div class="panel-heading">
-        <h3 class="panel-title">{{detailPaneConfig.name || detailPaneConfig.instanceName}}</h3>
+        <h3 class="panel-title">{{detailPaneConfig.uiInfo.label}}</h3>
       </div>
       <div class="panel-body">
 
+        <!-- Configuration Details -->
 
-        <div class="tabbable tabs-left">
+        <div class="tabbable tabs-left" ng-hide="previewMode">
 
           <ul class="nav nav-tabs">
             <li class="active">
@@ -108,39 +133,56 @@
                 <div class="form-group" ng-repeat="configDefinition in detailPaneGeneralConfigDefn">
                   <label class="col-sm-2 control-label">{{configDefinition.label}}</label>
 
-                  <div class="col-sm-6" ng-if="configDefinition.name !== 'description'">
-                    <input type="text" class="form-control" ng-model="detailPaneConfig[configDefinition.name]">
+                  <div class="col-sm-6" ng-if="configDefinition.readOnly">
+                    <span ng-bind="detailPaneConfig[configDefinition.name]"></span>
                   </div>
 
-                  <div class="col-sm-6" ng-if="configDefinition.name === 'description'">
-                    <textarea class="form-control" ng-model="detailPaneConfig[configDefinition.name]"></textarea>
+                  <div class="col-sm-6" ng-if="!configDefinition.readOnly">
+                    <input type="text" class="form-control" name="{{configDefinition.name}}"
+                           ng-if="configDefinition.name !== 'description'"
+                           ng-model="detailPaneConfig.uiInfo[configDefinition.name]">
+
+                    <textarea class="form-control" name="{{configDefinition.name}}"
+                              ng-if="configDefinition.name === 'description'"
+                              ng-model="detailPaneConfig.uiInfo[configDefinition.name]"></textarea>
                   </div>
+
                 </div>
               </form>
             </div>
 
             <div class="tab-pane" id="configuration">
-              <form class="form-horizontal" role="form">
-                <div class="form-group" ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions">
+              <form class="form-horizontal" role="form" name="{{detailPaneConfig.instanceName || 'pipeline'}}">
+                <div class="form-group"
+                     ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions" show-errors>
                   <label class="col-sm-2 control-label">{{configDefinition.label}}</label>
 
                   <div class="col-sm-6" ng-if="configDefinition.type === 'BOOLEAN'">
-                    <input type="checkbox" ng-model="detailPaneConfig.configuration[$index].value">
+                    <input type="checkbox" name="{{configDefinition.name}}"
+                           ng-model="detailPaneConfig.configuration[$index].value">
                   </div>
 
                   <div class="col-sm-6" ng-if="configDefinition.type === 'INTEGER'">
-                    <input type="number" class="form-control" ng-model="detailPaneConfig.configuration[$index].value">
+                    <input type="number" class="form-control" name="{{configDefinition.name}}"
+                           ng-model="detailPaneConfig.configuration[$index].value"
+                           ng-required="configDefinition.required">
                   </div>
 
                   <div class="col-sm-6" ng-if="!configDefinition.listValues && configDefinition.type === 'STRING'">
-                    <input type="text" class="form-control" ng-model="detailPaneConfig.configuration[$index].value">
+                    <input type="text" class="form-control" name="{{configDefinition.name}}"
+                           ng-model="detailPaneConfig.configuration[$index].value"
+                           ng-required="configDefinition.required">
                   </div>
 
                   <div class="col-sm-6"
-                       ng-if="configDefinition.listValues && configDefinition.listValues.length && configDefinition.type === 'STRING'">
-                    <select class="form-control" ng-model="detailPaneConfig.configuration[$index].value">
-                      <option ng-repeat="listValue in configDefinition.listValues" value="{{listValue.value}}">
-                        {{listValue.label}}
+                       ng-if="configDefinition.type === 'MODEL'">
+                    <select class="form-control" name="{{configDefinition.name}}"
+                            ng-if="configDefinition.model.modelType === 'DROPDOWN'"
+                            ng-model="detailPaneConfig.configuration[$index].value">
+                      <option ng-repeat="listValue in configDefinition.model.values"
+                              value="{{listValue}}"
+                              ng-selected="listValue === detailPaneConfig.configuration[$parent.$index].value">
+                        {{configDefinition.model.labels[$index]}}
                       </option>
                     </select>
                   </div>
@@ -150,7 +192,32 @@
 
           </div>
         </div>
-        <!-- /tabs -->
+        <!-- Configuration Details  -->
+
+
+        <div ng-show="previewMode">
+          <!--json-formatter json="previewData" open="3"></json-formatter -->
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Input Data</th>
+                <th>Output Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <json-formatter json="stagePreviewData.input" open="1"></json-formatter>
+                </td>
+                <td>
+                  <json-formatter json="stagePreviewData.output" open="1"></json-formatter>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
       </div>
     </bg-pane>
   </bg-splitter>

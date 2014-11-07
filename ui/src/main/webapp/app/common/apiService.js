@@ -7,11 +7,10 @@ angular.module('pipelineAgentApp.common')
     var apiBase = 'rest/v1',
       api = {events: {}};
 
-    //api http endpoints
     api.pipelineAgent = {
 
-      getStageLibrary: function() {
-        var url = apiBase + '/stage-library';
+      getDefinitions: function() {
+        var url = apiBase + '/definitions';
         return $http({
           method: 'GET',
           url: url
@@ -41,7 +40,16 @@ angular.module('pipelineAgentApp.common')
           url: url,
           data: config
         });
+      },
+
+      previewPipeline: function() {
+        var url = apiBase + '/pipelines/xyz/preview';
+        return $http({
+          method: 'GET',
+          url: url
+        });
       }
+
     };
 
     return api;

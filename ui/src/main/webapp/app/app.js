@@ -34,7 +34,9 @@ angular.module('pipelineAgentApp', [
     var defaultTitle = 'StreamSets | Data In Motion';
     $rootScope.common = $rootScope.common || {
       title : defaultTitle,
-      active: {}
+      active: {
+        home: 'active'
+      }
     };
 
     // set actions to be taken each time the user navigates
@@ -52,4 +54,8 @@ angular.module('pipelineAgentApp', [
         }
       }
     });
+
+    $rootScope.go = function ( path ) {
+      $location.path( path );
+    };
   });

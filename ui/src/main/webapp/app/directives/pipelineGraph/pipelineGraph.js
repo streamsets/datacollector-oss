@@ -546,7 +546,7 @@ angular.module('pipelineGraphDirectives', [])
         });
 
       newGs.each(function(d){
-        thisGraph.insertTitleLinebreaks(d3.select(this), d.instanceName);
+        thisGraph.insertTitleLinebreaks(d3.select(this), d.uiInfo.label);
       });
 
       // remove old nodes
@@ -609,7 +609,7 @@ angular.module('pipelineGraphDirectives', [])
       } else {
         svg = d3.select($element[0]).append("svg")
           .attr("width", "100%")
-          .attr("height", "100%")
+          .attr("height", "98%")
           .attr("tabindex", 0);
         graph = new GraphCreator(svg, nodes, edges || []);
         graph.setIdCt(2);

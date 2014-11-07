@@ -80,8 +80,7 @@ module.exports = function(grunt) {
         'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
         'bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js',
         'bower_components/bootstrap/dist/js/bootstrap.js',
-        'bower_components/ng-tags-input/ng-tags-input.js',
-        'bower_components/json-formatter/dist/json-formatter.js'
+        'bower_components/ng-tags-input/ng-tags-input.js'
       ],
       css: [
         'bower_components/bootstrap/dist/css/bootstrap.min.css',

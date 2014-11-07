@@ -10,6 +10,7 @@ angular
     'splitterDirectives',
     'tabDirectives',
     'pipelineGraphDirectives',
+    'showErrorsDirectives',
     'underscore'
   ])
   .config(['$routeProvider', function($routeProvider) {
@@ -25,12 +26,13 @@ angular
       timeout,
       saveUpdates,
       updateGraph,
+      getConfigurationLabel,
       ignoreUpdate = false,
       edges = [],
       pipelineGeneralConfigDefinitions = [
         {
-          name: 'name',
-          label: 'Name'
+          name: 'label',
+          label: 'Label'
         },
         {
           name: 'description',
@@ -39,68 +41,36 @@ angular
       ],
       stageGeneralConfigDefinitions = [
         {
-          name: 'instanceName',
-          label: 'Name'
+          name: 'label',
+          label: 'Label'
         },
         {
           name: 'description',
           label: 'Description'
         }
-      ],
-      pipelineConfigDefinition = {
-        label : 'Pipeline Configuration',
-        configDefinitions: [
-          {
-            name: 'onError',
-            type: 'STRING',
-            label: 'On Error',
-            description: 'Action on error during pipeline execution.',
-            required: true,
-            group: '',
-            defaultValue: '',
-            listValues: [{
-              value: 'DROP_BATCH',
-              label: 'Drop Batch'
-            },{
-              value: 'DROP_RECORD',
-              label: 'Drop Record'
-            },{
-              value: 'STOP_PIPELINE',
-              label: 'Stop Pipeline'
-            }]
-          },
-          {
-            name: 'deliveryGuarantee',
-            type: 'STRING',
-            label: 'Delivery Guarantee',
-            description: '',
-            required: true,
-            group: '',
-            defaultValue: '',
-            listValues: [{
-              value: 'AT_LEAST_ONCE',
-              label: 'At Least Once (There may be duplicates, no data lost)'
-            },{
-              value: 'AT_MOST_ONCE',
-              label: 'At Most Once (No duplicates, potential data lost)'
-            }]
-          }
-        ]
-      };
+      ];
 
     $scope.isPipelineRunning = false;
     $scope.stageLibraries = [];
     $scope.pipelineConfigInfo={};
     $scope.pipelineGraphData = {};
     $scope.issuesLength = 0;
+    $scope.previewMode = false;
+    $scope.previewData = {};
+    $scope.stagePreviewData = {
+      input: {},
+      output: {}
+    };
 
-    $q.all([api.pipelineAgent.getStageLibrary(),
+    $q.all([api.pipelineAgent.getDefinitions(),
       api.pipelineAgent.getPipelineConfig(),
       api.pipelineAgent.getPipelineConfigInfo()])
       .then(function(results){
 
-        //Stage Libraries
-        $scope.stageLibraries = results[0].data;
+        //Definitions
+        var definitions = results[0].data;
+        $scope.pipelineConfigDefinition = definitions.pipeline[0];
+        $scope.stageLibraries = definitions.stages;
 
         $scope.sources = _.filter($scope.stageLibraries, function(stageLibrary) {
           return (stageLibrary.type === 'SOURCE');
@@ -120,50 +90,47 @@ angular
         //Pipeline Configuration
         updateGraph(results[1].data);
 
-        stageCounter = $scope.pipelineConfig.stages.length;
+        stageCounter = ($scope.pipelineConfig && $scope.pipelineConfig.stages) ? $scope.pipelineConfig.stages.length : 0;
     });
 
     saveUpdates = function() {
       var pipelineConfigClone = _.clone($scope.pipelineConfig);
 
-      //TODO: Remove this once backend is updated.
-      delete pipelineConfigClone.name;
-      delete pipelineConfigClone.description;
-
-      pipelineConfigClone.onError = $scope.pipelineConfig.configuration[0].value;
-      delete pipelineConfigClone.configuration;
-      //pipelineConfigClone.stages = [];
-
+      delete pipelineConfigClone.info;
       api.pipelineAgent.savePipelineConfig(pipelineConfigClone).success(function(res) {
         updateGraph(res);
       });
-
     };
 
     updateGraph = function(pipelineConfig) {
       var selectedStageInstance,
         issueCount = 0;
       ignoreUpdate = true;
-      pipelineConfig.name = $scope.pipelineConfigInfo.name;
-      pipelineConfig.description = $scope.pipelineConfigInfo.description;
 
-      pipelineConfig.configuration = [{
-        name: 'onError',
-        value: pipelineConfig.onError
-      },{
-        name: 'deliveryGuarantee',
-        value: pipelineConfig.deliveryGuarantee
-      }];
+      //Force Validity Check - showErrors directive
+      $scope.$broadcast('show-errors-check-validity');
 
+      if(!pipelineConfig.uiInfo) {
+        pipelineConfig.uiInfo = {
+          label : 'Pipeline',
+          description: 'Default Pipeline'
+        };
+      }
 
+      $scope.pipelineConfig = pipelineConfig || {};
 
-      $scope.pipelineConfig = pipelineConfig;
-
-      _.each(pipelineConfig.issues, function(issue) {
-        if(_.isArray(issue)) {
-          issueCount += issue.length;
+      _.each(pipelineConfig.issues, function(value, key) {
+        if(_.isArray(value)) {
+          issueCount += value.length;
+        } else if(_.isObject(value)) {
+          _.each(value, function(stageInstanceIssues, stageInstanceName){
+            if(_.isArray(stageInstanceIssues)) {
+              issueCount += stageInstanceIssues.length;
+            }
+          });
         }
       });
+
       $scope.issuesLength = issueCount;
 
       //Determine edges from input lanes and output lanes
@@ -189,9 +156,9 @@ angular
 
       if($scope.detailPaneConfig === undefined) {
         //First time
-        $scope.detailPaneConfig = $scope.pipelineConfig;
         $scope.detailPaneGeneralConfigDefn = pipelineGeneralConfigDefinitions;
-        $scope.detailPaneConfigDefn = pipelineConfigDefinition;
+        $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
+        $scope.detailPaneConfig = $scope.pipelineConfig;
       } else {
         //Check
         if($scope.detailPaneConfig.stages) {
@@ -210,7 +177,7 @@ angular
           } else {
             $scope.detailPaneConfig = $scope.pipelineConfig;
             $scope.detailPaneGeneralConfigDefn = pipelineGeneralConfigDefinitions;
-            $scope.detailPaneConfigDefn = pipelineConfigDefinition;
+            $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
           }
 
         }
@@ -237,12 +204,24 @@ angular
           stageLibrary.version === stageInstance.stageVersion;
       });
       $scope.detailPaneGeneralConfigDefn = stageGeneralConfigDefinitions;
+
+      if($scope.previewMode) {
+        $scope.stagePreviewData = getPreviewDataForStage($scope.previewData, $scope.detailPaneConfig);
+      }
     });
 
     $scope.$on('onRemoveNodeSelection', function() {
-      $scope.detailPaneConfigDefn = pipelineConfigDefinition;
+      $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
       $scope.detailPaneConfig = $scope.pipelineConfig;
       $scope.detailPaneGeneralConfigDefn = pipelineGeneralConfigDefinitions;
+
+      if($scope.previewMode) {
+        $scope.stagePreviewData = {
+          input: {},
+          output: {}
+        };
+      }
+
     });
 
     $scope.addStage = function(stage) {
@@ -252,12 +231,14 @@ angular
         inputConnectors = (stage.type !== 'SOURCE') ? ['i1'] : [],
         outputConnectors = (stage.type !== 'TARGET') ? ['01'] : [],
         stageInstance = {
-          instanceName : stage.label + (++stageCounter),
+          instanceName : stage.name + (new Date()).getTime(),
           library : stage.library,
           stageName : stage.name,
           stageVersion : stage.version,
           configuration : [],
           uiInfo : {
+            label: stage.label + (++stageCounter),
+            description: stage.description,
             xPos : xPos,
             yPos : yPos,
             inputConnectors: inputConnectors,
@@ -267,10 +248,14 @@ angular
           outputLanes : []
         };
 
+      if(stage.type !== 'TARGET') {
+        stageInstance.outputLanes = [stageInstance.instanceName + 'OutputLane1'];
+      }
+
       angular.forEach(stage.configDefinitions, function(configDefinition) {
         stageInstance.configuration.push({
           name: configDefinition.name,
-          value: undefined
+          value: null
         });
       });
 
@@ -280,6 +265,80 @@ angular
       $scope.detailPaneConfigDefn = stage;
       $scope.detailPaneGeneralConfigDefn = stageGeneralConfigDefinitions;
 
+    };
+
+    $scope.getStageInstanceLabel = function(stageInstanceName) {
+      var instance;
+      angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
+        if(stageInstance.instanceName === stageInstanceName) {
+          instance = stageInstance;
+        }
+      });
+      return (instance && instance.uiInfo) ? instance.uiInfo.label : undefined;
+    };
+
+    $scope.getIssuesMessage = function(stageInstanceName, issue) {
+      var msg = issue.message;
+
+      if(issue.level === 'STAGE_CONFIG') {
+        var stageInstance = _.find($scope.pipelineConfig.stages, function(stage) {
+          return stage.instanceName === stageInstanceName;
+        });
+
+        if(stageInstance) {
+          msg += ' : ' + getConfigurationLabel(stageInstance, issue.configName);
+        }
+      }
+
+      return msg;
+    };
+
+    getConfigurationLabel = function (stageInstance, configName) {
+      var stageDefinition = _.find($scope.stageLibraries, function(stage) {
+          return stageInstance.library === stage.library &&
+                  stageInstance.stageName === stage.name &&
+                  stageInstance.stageVersion === stage.version;
+        }),
+        configDefinition =  _.find(stageDefinition.configDefinitions, function(configDefinition) {
+          return configDefinition.name === configName;
+        });
+
+      return configDefinition ? configDefinition.label : configName;
+    };
+
+    $scope.previewPipeline = function() {
+      $scope.previewMode = true;
+
+      api.pipelineAgent.previewPipeline().success(function(previewData) {
+        $scope.previewData = previewData;
+
+        if(!$scope.detailPaneConfig.stages) {
+          $scope.stagePreviewData = getPreviewDataForStage(previewData, $scope.detailPaneConfig);
+        }
+      });
+    };
+
+    $scope.closePreview = function() {
+      $scope.previewMode = false;
+    };
+
+    getPreviewDataForStage = function(previewData, stageInstance) {
+      var inputLane = (stageInstance.inputLanes && stageInstance.inputLanes.length) ? stageInstance.inputLanes[0] : undefined,
+        outputLane = (stageInstance.outputLanes && stageInstance.outputLanes.length) ? stageInstance.outputLanes[0] : undefined,
+        stagePreviewData = {
+          input: {},
+          output: {}
+        };
+
+      angular.forEach(previewData.stagesOutput, function(stageOutput) {
+        if(inputLane && stageOutput.output[inputLane] && stageOutput.output) {
+          stagePreviewData.input = stageOutput.output[inputLane];
+        } else if(outputLane && stageOutput.output[outputLane] && stageOutput.output) {
+          stagePreviewData.output = stageOutput.output[outputLane];
+        }
+      });
+
+      return stagePreviewData;
     };
 
   });
