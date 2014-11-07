@@ -47,6 +47,13 @@ public class TailLogSource extends BaseSource {
              label = "Log file")
   public String logFileName;
 
+  @ConfigDef(name="tailFromEnd",
+             required = false,
+             type = ConfigDef.Type.BOOLEAN,
+             label = "Tail from end of log file",
+             defaultValue = "true")
+  public boolean tailFromEnd;
+
   @ConfigDef(name="maxLinesPrefetch",
              required = false,
              type = ConfigDef.Type.INTEGER,
@@ -102,7 +109,7 @@ public class TailLogSource extends BaseSource {
       throw new StageException(ERROR.NO_PERMISSION_TO_READ_LOG_FILE, logFile);
     }
     logLinesQueue = new ArrayBlockingQueue<String>(maxLinesPrefetch);
-    tailLog = new TailLog(logFile, getInfo(), logLinesQueue);
+    tailLog = new TailLog(logFile, tailFromEnd, getInfo(), logLinesQueue);
     tailLog.start();
   }
 

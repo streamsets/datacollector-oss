@@ -33,7 +33,7 @@ public class TailLog {
   private final Tailer tailer;
   private Thread thread;
 
-  public TailLog(final File logFile, Stage.Info info, final BlockingQueue<String> logLinesQueue) {
+  public TailLog(final File logFile, boolean tailFromEnd, Stage.Info info, final BlockingQueue<String> logLinesQueue) {
     TailerListener listener = new TailerListenerAdapter(){
       @Override
       public void handle(String line) {
@@ -51,7 +51,7 @@ public class TailLog {
       }
     };
 
-    tailer = new Tailer(logFile, listener, 1000, true, true);
+    tailer = new Tailer(logFile, listener, 1000, tailFromEnd, true);
     thread = new Thread(tailer, info.getInstanceName() + "-tailLog");
     thread.setDaemon(true);
   }
