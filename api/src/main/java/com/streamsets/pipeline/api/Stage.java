@@ -39,7 +39,9 @@ public interface Stage<C extends Stage.Context> {
 
     public MetricRegistry getMetrics();
 
-    public void toError(Record record);
+    public void toError(Record record, Exception exception);
+
+    public void toError(Record record, String errorMessage);
 
   }
 

@@ -122,9 +122,15 @@ public class Pipeline {
     }
 
     @Override
-    public void toError(Record record) {
+    public void toError(Record record, Exception exception) {
       //TODO
     }
+
+    @Override
+    public void toError(Record record, String errorMessage) {
+      //TODO
+    }
+
 
     @Override
     public Set<String> getOutputLanes() {

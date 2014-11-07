@@ -37,7 +37,13 @@ public class TargetContextImpl implements Target.Context {
   }
 
   @Override
-  public void toError(Record record) {
+  public void toError(Record record, Exception exception) {
 
   }
+
+  @Override
+  public void toError(Record record, String errorMessage) {
+
+  }
+
 }
