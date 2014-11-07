@@ -130,8 +130,12 @@ public class StageRuntime {
         throws PipelineRuntimeException {
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
         ConfigConfiguration confConf = stageConf.getConfig(confDef.getName());
-        String instanceVar = confDef.getFieldName();
+        if (confConf == null) {
+          throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.STAGE_MISSING_CONFIG,
+                                             stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
+        }
         Object value = confConf.getValue();
+        String instanceVar = confDef.getFieldName();
         try {
           Field var = klass.getField(instanceVar);
           var.set(stage, value);

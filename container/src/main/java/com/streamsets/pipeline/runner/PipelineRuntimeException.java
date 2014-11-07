@@ -30,6 +30,7 @@ public class PipelineRuntimeException extends PipelineException {
     PIPELINE_CONFIGURATION("Pipeline configuration error, {}"),
     PIPELINE_BUILD("Pipeline build error, {}"),
     STAGE_CONFIG_INJECTION("Stage '{}', instance '{}', variable '{}', value '{}', configuration injection error, {}"),
+    STAGE_MISSING_CONFIG("Stage '{}', instance '{}', missing configuration '{}'"),
     CANNOT_PREVIEW("Cannot preview, {}");
 
     private String msg;
