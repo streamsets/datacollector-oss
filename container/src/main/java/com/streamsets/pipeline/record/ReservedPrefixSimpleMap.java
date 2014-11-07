@@ -30,8 +30,10 @@ public class ReservedPrefixSimpleMap<V> implements SimpleMap<String, V> {
   private SimpleMap<String, V> map;
 
   public ReservedPrefixSimpleMap(String reservedPrefix, SimpleMap<String, V> map) {
+    Preconditions.checkNotNull(reservedPrefix, "reservedPrefix cannot be null");
+    Preconditions.checkArgument(!reservedPrefix.isEmpty(), "reservedPrefix cannot be empty");
     this.reservedPrefix = reservedPrefix;
-    this.map = map;
+    this.map = Preconditions.checkNotNull(map, "map cannot be null");
   }
 
   private boolean isReserved(String key) {
