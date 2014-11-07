@@ -134,7 +134,7 @@ public class TestStageRuntime {
   public void testBuilderValidPipeline() throws Exception {
     StageLibrary stageLibrary = createMockStageLibrary();
     PipelineConfiguration pipelineConf = createMockPipelineConfiguration();
-    StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, pipelineConf);
+    StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, "name", pipelineConf);
     StageRuntime[] runtimes = builder.build();
     Assert.assertEquals(2, runtimes.length);
     Assert.assertEquals(stageLibrary.getStage("library", "source", "1.0.0"), runtimes[0].getDefinition());
@@ -159,7 +159,7 @@ public class TestStageRuntime {
     StageLibrary stageLibrary = createMockStageLibrary();
     PipelineConfiguration pipelineConf = createMockPipelineConfiguration();
     pipelineConf.getStages().remove(1);
-    StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, pipelineConf);
+    StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, "name", pipelineConf);
     StageRuntime[] runtimes = builder.build();
   }
 
@@ -167,7 +167,7 @@ public class TestStageRuntime {
   public void testBuilderValidPipelineContextInitDestroy() throws Exception {
     StageLibrary stageLibrary = createMockStageLibrary();
     PipelineConfiguration pipelineConf = createMockPipelineConfiguration();
-    StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, pipelineConf);
+    StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, "name", pipelineConf);
     StageRuntime[] runtimes = builder.build();
     Assert.assertFalse(((TSource)runtimes[0].getStage()).inited);
     Source.Context context = Mockito.mock(Source.Context.class);
@@ -184,7 +184,7 @@ public class TestStageRuntime {
   public void testBuilderValidPipelineContextNotSet() throws Exception {
     StageLibrary stageLibrary = createMockStageLibrary();
     PipelineConfiguration pipelineConf = createMockPipelineConfiguration();
-    StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, pipelineConf);
+    StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, "name", pipelineConf);
     StageRuntime[] runtimes = builder.build();
     Assert.assertFalse(((TSource) runtimes[0].getStage()).inited);
     runtimes[0].init();

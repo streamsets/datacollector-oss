@@ -57,7 +57,7 @@ public class TestStagePipe {
     });
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
-    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
     StagePipe pipe = (StagePipe) pipeline.getPipes()[0];
@@ -108,7 +108,7 @@ public class TestStagePipe {
     });
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
-    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
     StagePipe pipe = (StagePipe) pipeline.getPipes()[4];
@@ -156,7 +156,7 @@ public class TestStagePipe {
 
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
-    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
     StagePipe pipe = (StagePipe) pipeline.getPipes()[8];

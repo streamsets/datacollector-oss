@@ -56,7 +56,7 @@ public class TestPipeline {
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
       pipelineConfigs, null, stageDefs);
-    Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
+    Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
@@ -146,7 +146,7 @@ public class TestPipeline {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
        pipelineConfigs, null,
       stageDefs);
-    Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
+    Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
@@ -195,7 +195,7 @@ public class TestPipeline {
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
        pipelineConfigs, null, stageDefs);
-    Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
+    Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
@@ -258,7 +258,7 @@ public class TestPipeline {
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
        pipelineConfigs, null, stageDefs);
-    Pipeline.Builder builder = new Pipeline.Builder(lib, pipelineConf);
+    Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);

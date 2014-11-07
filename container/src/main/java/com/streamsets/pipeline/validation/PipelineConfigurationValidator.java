@@ -27,6 +27,8 @@ import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,6 +38,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class PipelineConfigurationValidator {
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigurationValidator.class);
 
   private static final String PIPELINE_IS_EMPTY_KEY = "validation.pipeline.is.empty";
   private static final String PIPELINE_IS_EMPTY_DEFAULT = "The pipeline is empty";
@@ -80,16 +83,19 @@ public class PipelineConfigurationValidator {
   private static final String VALID_NAME= "[0-9A-Za-z_]";
 
   private final StageLibrary stageLibrary;
+  private final String name;
   private final PipelineConfiguration pipelineConfiguration;
   private final Issues issues;
   private final List<String> openLanes;
   private boolean validated;
   private boolean canPreview;
 
-  public PipelineConfigurationValidator(StageLibrary stageLibrary, PipelineConfiguration pipelineConfiguration) {
+  public PipelineConfigurationValidator(StageLibrary stageLibrary, String name, PipelineConfiguration pipelineConfiguration) {
     Preconditions.checkNotNull(stageLibrary, "stageLibrary cannot be null");
+    Preconditions.checkNotNull(name, "name cannot be null");
     Preconditions.checkNotNull(pipelineConfiguration, "pipelineConfiguration cannot be null");
     this.stageLibrary = stageLibrary;
+    this.name = name;
     this.pipelineConfiguration = pipelineConfiguration;
     issues = new Issues();
     openLanes = new ArrayList<String>();
@@ -98,24 +104,37 @@ public class PipelineConfigurationValidator {
   public boolean validate() {
     Preconditions.checkState(!validated, "Already validated");
     validated = true;
+    LOG.trace("Pipeline '{}' starting validation", name);
     canPreview = checkIfPipelineIsEmpty();
     canPreview &= validatePipelineConfiguration();
     canPreview &= validatePipelineLanes();
+    if (LOG.isTraceEnabled() && issues.hasIssues()) {
+      for (Issue issue : issues.getPipelineIssues()) {
+        LOG.trace("Pipeline '{}', {}", name, issue);
+      }
+      for (List<StageIssue> stageIssues : issues.getStageIssues().values()) {
+        for (StageIssue stageIssue  :stageIssues) {
+          LOG.trace("Pipeline '{}', {}", name, stageIssue);
+        }
+      }
+    }
+    LOG.debug("Pipeline '{}' validation. valid={}, canPreview={}, issuesCount={}", name, !issues.hasIssues(),
+              canPreview, issues.getIssueCount());
     return !issues.hasIssues();
   }
 
   public boolean canPreview() {
-    Preconditions.checkState(validated, String.format("validate() has not been called"));
+    Preconditions.checkState(validated, "validate() has not been called");
     return canPreview;
   }
 
   public Issues getIssues() {
-    Preconditions.checkState(validated, String.format("validate() has not been called"));
+    Preconditions.checkState(validated, "validate() has not been called");
     return issues;
   }
 
   public List<String> getOpenLanes() {
-    Preconditions.checkState(validated, String.format("validate() has not been called"));
+    Preconditions.checkState(validated, "validate() has not been called");
     return openLanes;
   }
 

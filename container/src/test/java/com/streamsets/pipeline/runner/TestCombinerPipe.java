@@ -26,7 +26,7 @@ public class TestCombinerPipe {
   @SuppressWarnings("unchecked")
   public void testCombinerPipe() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
-    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceTarget()).build(pipelineRunner);
     CombinerPipe pipe = (CombinerPipe) pipeline.getPipes()[3];
     PipeBatch pipeBatch = Mockito.mock(PipeBatch.class);

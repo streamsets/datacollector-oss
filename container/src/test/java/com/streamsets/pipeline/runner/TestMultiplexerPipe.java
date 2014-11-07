@@ -26,7 +26,7 @@ public class TestMultiplexerPipe {
   @SuppressWarnings("unchecked")
   public void testMultiplexerPipeOneLane() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
-    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceTarget()).build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getPipes()[2];
     PipeBatch pipeBatch = Mockito.mock(PipeBatch.class);
@@ -39,7 +39,7 @@ public class TestMultiplexerPipe {
   @SuppressWarnings("unchecked")
   public void testMultiplexerPipeTwoLane() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
-    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceTwoTargets()).build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getPipes()[2];
     PipeBatch pipeBatch = Mockito.mock(PipeBatch.class);

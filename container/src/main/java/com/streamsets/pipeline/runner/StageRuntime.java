@@ -96,15 +96,17 @@ public class StageRuntime {
 
   public static class Builder {
     private final StageLibrary stageLib;
+    private final String name;
     private final PipelineConfiguration pipelineConf;
 
-    public Builder(StageLibrary stageLib, PipelineConfiguration pipelineConf) {
+    public Builder(StageLibrary stageLib, String name, PipelineConfiguration pipelineConf) {
       this.stageLib = stageLib;
+      this.name = name;
       this.pipelineConf = pipelineConf;
     }
 
     public StageRuntime[] build() throws PipelineRuntimeException {
-      PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, pipelineConf);
+      PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
       if (!validator.validate()) {
         throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.PIPELINE_CONFIGURATION, validator.getIssues());
       }

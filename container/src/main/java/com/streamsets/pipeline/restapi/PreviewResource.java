@@ -80,7 +80,7 @@ public class PreviewResource {
     PipelineConfiguration pipelineConf = store.load(name, rev);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(sourceOffset);
     PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize);
-    PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, pipelineConf).build(runner);
+    PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     previewOutput.setLocale(locale);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewOutput).build();

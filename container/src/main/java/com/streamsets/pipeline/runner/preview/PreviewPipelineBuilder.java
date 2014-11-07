@@ -41,15 +41,17 @@ public class PreviewPipelineBuilder {
   }
 
   private final StageLibrary stageLib;
+  private final String name;
   private final PipelineConfiguration pipelineConf;
 
-  public PreviewPipelineBuilder(StageLibrary stageLib, PipelineConfiguration pipelineConf) {
+  public PreviewPipelineBuilder(StageLibrary stageLib, String name, PipelineConfiguration pipelineConf) {
     this.stageLib = new PreviewStageLibrary(stageLib);
+    this.name = name;
     this.pipelineConf = pipelineConf;
   }
 
   public PreviewPipeline build(PreviewPipelineRunner runner) throws PipelineRuntimeException {
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, pipelineConf);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     if (validator.validate() || validator.canPreview()) {
       List<String> openLanes = validator.getOpenLanes();
       if (!openLanes.isEmpty()) {
@@ -58,7 +60,7 @@ public class PreviewPipelineBuilder {
     } else {
       throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_PREVIEW, validator.getIssues());
     }
-    Pipeline pipeline = new Pipeline.Builder(stageLib, pipelineConf).build(runner);
+    Pipeline pipeline = new Pipeline.Builder(stageLib, name, pipelineConf).build(runner);
     return new PreviewPipeline(pipeline, validator.getIssues());
   }
 

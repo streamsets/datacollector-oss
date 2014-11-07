@@ -77,7 +77,7 @@ public class PipelineStoreResource {
     Object data;
     if (get.equals("pipeline")) {
       PipelineConfiguration pipeline = store.load(name, rev);
-      PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
+      PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
       validator.validate();
       validator.getIssues().setLocale(locale);
       pipeline.setValidation(validator);
@@ -100,7 +100,7 @@ public class PipelineStoreResource {
       @QueryParam("description") @DefaultValue("") String description)
       throws PipelineStoreException, URISyntaxException {
     PipelineConfiguration pipeline = store.create(name, description, user);
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
     validator.validate();
     validator.getIssues().setLocale(locale);
     pipeline.setValidation(validator);
@@ -127,7 +127,7 @@ public class PipelineStoreResource {
       @QueryParam("tagDescription") String tagDescription,
       PipelineConfiguration pipeline)
       throws PipelineStoreException, URISyntaxException {
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipeline);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
     validator.validate();
     validator.getIssues().setLocale(locale);
     pipeline.setValidation(validator);

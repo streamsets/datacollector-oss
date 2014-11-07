@@ -78,6 +78,10 @@ public class Issues implements Issue.ResourceBundleProvider {
     return !pipeline.isEmpty() || !stages.isEmpty();
   }
 
+  public int getIssueCount() {
+    return pipeline.size() + stages.size();
+  }
+
   public String toString() {
     return String.format("Issues: pipeline [%s] stages [%s]", pipeline, stages);
   }

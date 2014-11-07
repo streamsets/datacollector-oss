@@ -155,11 +155,13 @@ public class Pipeline {
 
   public static class Builder {
     private final StageLibrary stageLib;
+    private final String name;
     private final PipelineConfiguration pipelineConf;
     private Observer observer;
 
-    public Builder(StageLibrary stageLib, PipelineConfiguration pipelineConf) {
+    public Builder(StageLibrary stageLib, String name, PipelineConfiguration pipelineConf) {
       this.stageLib = stageLib;
+      this.name = name;
       this.pipelineConf = pipelineConf;
     }
 
@@ -169,7 +171,7 @@ public class Pipeline {
     }
 
     public Pipeline build(PipelineRunner runner) throws PipelineRuntimeException {
-      StageRuntime[] stages = new StageRuntime.Builder(stageLib, pipelineConf).build();
+      StageRuntime[] stages = new StageRuntime.Builder(stageLib, name, pipelineConf).build();
       setStagesContext(stages, runner);
       Pipe[] pipes = createPipes(stages);
       return new Pipeline(pipes, observer, runner);

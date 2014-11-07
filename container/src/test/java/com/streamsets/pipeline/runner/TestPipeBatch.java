@@ -51,7 +51,7 @@ public class TestPipeBatch {
     Mockito.verify(tracker, Mockito.times(1)).commitOffset();
     Mockito.verifyNoMoreInteractions(tracker);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
+    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
 
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
@@ -68,7 +68,7 @@ public class TestPipeBatch {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipeBatch pipeBatch = new PipeBatch(tracker, -1, false);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
+    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
@@ -118,7 +118,7 @@ public class TestPipeBatch {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipeBatch pipeBatch = new PipeBatch(tracker, -1, true);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
+    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe sourcePipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
@@ -175,7 +175,7 @@ public class TestPipeBatch {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipeBatch pipeBatch = new PipeBatch(tracker, -1, true);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
+    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
@@ -209,7 +209,7 @@ public class TestPipeBatch {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipeBatch pipeBatch = new PipeBatch(tracker, -1, true);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
+    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
@@ -251,7 +251,7 @@ public class TestPipeBatch {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipeBatch pipeBatch = new PipeBatch(tracker, -1, true);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(),
+    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,

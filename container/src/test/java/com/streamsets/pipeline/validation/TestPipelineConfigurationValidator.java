@@ -41,7 +41,7 @@ public class TestPipelineConfigurationValidator {
   public void testValidConfiguration() {
     StageLibrary lib = MockStages.createStageLibrary();
     PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceProcessorTarget();
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, conf);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
     Assert.assertTrue(validator.validate());
     Assert.assertTrue(validator.canPreview());
     Assert.assertFalse(validator.getIssues().hasIssues());
