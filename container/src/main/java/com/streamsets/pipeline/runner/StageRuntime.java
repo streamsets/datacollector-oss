@@ -121,7 +121,7 @@ public class StageRuntime {
         return runtimes;
       } catch (PipelineRuntimeException ex) {
         throw ex;
-      } catch (Exception ex) {
+        } catch (Exception ex) {
         throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.PIPELINE_BUILD, ex.getMessage(), ex);
       }
     }
