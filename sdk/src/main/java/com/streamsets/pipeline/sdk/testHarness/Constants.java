@@ -15,36 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.sdk.testharness;
 
-import com.codahale.metrics.MetricRegistry;
+public class Constants {
 
-import java.util.List;
+  public static final String DEFAULT_LANE = "lane";
+  public static final String DEFAULT_INSTANCE_NAME = "MyStageInstance";
+  public static final String DEFAULT_SOURCE_OFFSET = null;
+  public static final int DEFAULT_MAX_BATCH_SIZE = 10;
 
-public interface Stage<C extends Stage.Context> {
-
-  public interface Info {
-
-    public String getName();
-
-    public String getVersion();
-
-    public String getInstanceName();
-
-  }
-
-  public interface Context {
-
-    public List<Info> getPipelineInfo();
-
-    public MetricRegistry getMetrics();
-
-    public void toError(Record record);
-
-  }
-
-  public void init(Info info, C context) throws StageException;
-
-  public void destroy();
 
 }

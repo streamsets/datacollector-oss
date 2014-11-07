@@ -55,7 +55,6 @@ public class PDFLineProducer extends BaseSource {
       r.setField("transactionLog", Field.create(Field.Type.STRING, transactions[i]));
       batchMaker.addRecord(r, "lane");
     }
-
     //In the first cut each line is a record and one batch has all records.
     //No more records
     return null;

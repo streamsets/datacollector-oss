@@ -15,36 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.sdk.testharness.internal;
 
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Target;
 
 import java.util.List;
 
-public interface Stage<C extends Stage.Context> {
-
-  public interface Info {
-
-    public String getName();
-
-    public String getVersion();
-
-    public String getInstanceName();
-
+public class TargetContextImpl implements Target.Context {
+  @Override
+  public List<Stage.Info> getPipelineInfo() {
+    return ImmutableList.of();
   }
 
-  public interface Context {
-
-    public List<Info> getPipelineInfo();
-
-    public MetricRegistry getMetrics();
-
-    public void toError(Record record);
-
+  @Override
+  public MetricRegistry getMetrics() {
+    return null;
   }
 
-  public void init(Info info, C context) throws StageException;
+  @Override
+  public void toError(Record record) {
 
-  public void destroy();
-
+  }
 }

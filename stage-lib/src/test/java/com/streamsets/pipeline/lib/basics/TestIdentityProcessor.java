@@ -19,16 +19,21 @@ package com.streamsets.pipeline.lib.basics;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.sdk.testharness.Constants;
+import com.streamsets.pipeline.sdk.testharness.ProcessorRunner;
+import com.streamsets.pipeline.sdk.testharness.RecordProducer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import java.util.List;
+import java.util.Map;
+
 public class TestIdentityProcessor {
+
+  private static final String DEFAULT_LANE = "lane";
 
   @Test
   public void testProcessor() throws Exception {
@@ -48,5 +53,49 @@ public class TestIdentityProcessor {
     Assert.assertEquals(ImmutableList.of(record1, record2), recordCaptor.getAllValues());
    // Assert.assertEquals(ImmutableList.of(null, null), laneCaptor.getAllValues());
   }
+
+  @Test
+  public void testIdentityProcDefaultConfig() throws StageException {
+    //Build record producer
+    RecordProducer rp = new RecordProducer();
+    rp.addFiled("transactionLog", RecordProducer.Type.STRING);
+    rp.addFiled("transactionFare", RecordProducer.Type.DOUBLE);
+    rp.addFiled("transactionDay", RecordProducer.Type.INTEGER);
+
+    Map<String, List<Record>> result = new ProcessorRunner.Builder<IdentityProcessor>(rp)
+      .addProcessor(IdentityProcessor.class)
+      .build()
+      .run();
+
+    Assert.assertNotNull(result);
+    Assert.assertNotNull(result.get(DEFAULT_LANE));
+    Assert.assertTrue(result.get(DEFAULT_LANE).size() == 10);
+  }
+
+  @Test
+  public void testIdentityProc() throws StageException {
+    //Build record producer
+    RecordProducer rp = new RecordProducer();
+    rp.addFiled("transactionLog", RecordProducer.Type.STRING);
+    rp.addFiled("transactionFare", RecordProducer.Type.DOUBLE);
+    rp.addFiled("transactionDay", RecordProducer.Type.INTEGER);
+
+    Map<String, List<Record>> result = new ProcessorRunner.Builder<IdentityProcessor>(rp)
+      .addProcessor(IdentityProcessor.class)
+      .maxBatchSize(35)
+      .outputLanes(ImmutableSet.of("outputLane"))
+      .sourceOffset(Constants.DEFAULT_SOURCE_OFFSET)
+      .build()
+      .run();
+
+    Assert.assertNotNull(result);
+
+    //No records in default lane
+    Assert.assertNull(result.get(DEFAULT_LANE));
+    //All records in the configured lane
+    Assert.assertNotNull(result.get("outputLane"));
+    Assert.assertTrue(result.get("outputLane").size() == 35);
+  }
+
 
 }

@@ -29,11 +29,10 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.container.ModuleInfo;
 import com.streamsets.pipeline.container.Pipeline;
 import com.streamsets.pipeline.container.PipelineRunner;
-import org.junit.Test;
 
 public class TestClipper {
 
-  @Test
+  //@Test
   public void testRun() {
     Pipeline pipeline = createPipeline(true);
 

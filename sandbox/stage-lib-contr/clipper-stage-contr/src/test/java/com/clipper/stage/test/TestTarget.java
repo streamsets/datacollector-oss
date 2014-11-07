@@ -15,7 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.sdk;
+package com.clipper.stage.test;
 
-public class StageRunner {
+import com.clipper.stage.ConsoleTarget;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.sdk.testharness.RecordProducer;
+import com.streamsets.pipeline.sdk.testharness.TargetRunner;
+import org.junit.Test;
+
+public class TestTarget {
+
+  @Test
+  public void testConsoleTarget() throws StageException {
+    //Build record producer
+    RecordProducer rp = new RecordProducer();
+    rp.addFiled("transactionLog", RecordProducer.Type.STRING);
+    rp.addFiled("transactionFare", RecordProducer.Type.STRING);
+    rp.addFiled("TotalClaim", RecordProducer.Type.DOUBLE);
+
+    new TargetRunner.Builder<ConsoleTarget>(rp)
+      .addTarget(ConsoleTarget.class).build().run();
+
+  }
 }

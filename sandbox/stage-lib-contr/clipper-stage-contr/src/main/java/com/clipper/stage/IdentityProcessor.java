@@ -15,36 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.clipper.stage;
 
-import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 
-import java.util.List;
+import java.util.Iterator;
 
-public interface Stage<C extends Stage.Context> {
+@StageDef(name = "identityProcessor", version = "1.0.0", label = "Identity",
+          description = "It echoes every record it receives preserving the lanes")
+public class IdentityProcessor extends SingleLaneProcessor {
 
-  public interface Info {
-
-    public String getName();
-
-    public String getVersion();
-
-    public String getInstanceName();
-
+  @Override
+  public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws
+      StageException {
+    Iterator<Record> it = batch.getRecords();
+    while (it.hasNext()) {
+      batchMaker.addRecord(it.next());
+    }
   }
-
-  public interface Context {
-
-    public List<Info> getPipelineInfo();
-
-    public MetricRegistry getMetrics();
-
-    public void toError(Record record);
-
-  }
-
-  public void init(Info info, C context) throws StageException;
-
-  public void destroy();
 
 }

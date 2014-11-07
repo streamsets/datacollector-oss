@@ -122,6 +122,11 @@ public class Pipeline {
     }
 
     @Override
+    public void toError(Record record) {
+      //TODO
+    }
+
+    @Override
     public Set<String> getOutputLanes() {
       return outputLanes;
     }
