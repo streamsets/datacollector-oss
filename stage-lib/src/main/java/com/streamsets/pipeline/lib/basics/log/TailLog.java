@@ -37,7 +37,11 @@ public class TailLog {
     TailerListener listener = new TailerListenerAdapter(){
       @Override
       public void handle(String line) {
-        logLinesQueue.add(line);
+        try {
+          logLinesQueue.put(line);
+        } catch (InterruptedException ex) {
+          LOG.warn("Interrupted while waiting to put log line in queue, {}", ex.getMessage(), ex);
+        }
       }
 
       @Override
