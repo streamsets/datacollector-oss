@@ -17,24 +17,42 @@ angular.module('pipelineAgentApp.common')
         });
       },
 
-      getPipelineConfig: function() {
-        var url = apiBase + '/pipelines/xyz';
+      getPipelineConfig: function(name) {
+        var url;
+
+        if(!name) {
+          name = 'xyz';
+        }
+
+        url = apiBase + '/pipelines/' + name;
         return $http({
           method: 'GET',
           url: url
         });
       },
 
-      getPipelineConfigInfo: function() {
-        var url = apiBase + '/pipelines/xyz?get=info';
+      getPipelineConfigInfo: function(name) {
+        var url;
+
+        if(!name) {
+          name = 'xyz';
+        }
+
+        url = apiBase + '/pipelines/' + name + '?get=info';
         return $http({
           method: 'GET',
           url: url
         });
       },
 
-      savePipelineConfig: function(config) {
-        var url = apiBase + '/pipelines/xyz';
+      savePipelineConfig: function(name, config) {
+        var url;
+
+        if(!name) {
+          name = 'xyz';
+        }
+
+        url = apiBase + '/pipelines/' + name;
         return $http({
           method: 'POST',
           url: url,
@@ -42,8 +60,24 @@ angular.module('pipelineAgentApp.common')
         });
       },
 
-      previewPipeline: function() {
-        var url = apiBase + '/pipelines/xyz/preview';
+      previewPipeline: function(name, sourceOffset, batchSize, rev) {
+        var url;
+
+        if(!name) {
+          name = 'xyz';
+        }
+
+        if(!sourceOffset) {
+          sourceOffset = 0;
+        }
+
+        if(!batchSize) {
+          batchSize = 10;
+        }
+
+        url = apiBase + '/pipelines/' + name + '/preview?sourceOffset' + sourceOffset +
+          '&batchSize=' + batchSize + '&rev=' + rev;
+
         return $http({
           method: 'GET',
           url: url

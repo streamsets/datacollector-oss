@@ -60,12 +60,13 @@
   margin-bottom: 0;
 
   .panel-body {
-    padding: 0 @smallPadding * 3;
+    padding: 0;
     height: calc(~"100% - 40px");
     overflow: auto;
 
     .tabbable {
       height: 100%;
+      padding: 0 0 0 @smallPadding * 3;
 
       .nav-tabs {
         height: 100%;
@@ -82,6 +83,16 @@
         .attribute-type {
           height: 24px;
         }
+      }
+    }
+
+    .preview-page-detail {
+      padding-right: @defaultPadding;
+    }
+
+    .pipeline-preview {
+      th, td {
+        padding-left: @smallPadding*3;
       }
     }
   }

@@ -27,6 +27,8 @@ angular
       saveUpdates,
       updateGraph,
       getConfigurationLabel,
+      getPreviewDataForStage,
+      extractOutputData,
       ignoreUpdate = false,
       edges = [],
       pipelineGeneralConfigDefinitions = [
@@ -58,13 +60,15 @@ angular
     $scope.previewMode = false;
     $scope.previewData = {};
     $scope.stagePreviewData = {
-      input: {},
-      output: {}
+      input: [],
+      output: []
     };
+    $scope.previewSourceOffset = 0;
+    $scope.previewBatchSize = 10;
 
     $q.all([api.pipelineAgent.getDefinitions(),
-      api.pipelineAgent.getPipelineConfig(),
-      api.pipelineAgent.getPipelineConfigInfo()])
+      api.pipelineAgent.getPipelineConfig('xyz'),
+      api.pipelineAgent.getPipelineConfigInfo('xyz')])
       .then(function(results){
 
         //Definitions
@@ -97,7 +101,7 @@ angular
       var pipelineConfigClone = _.clone($scope.pipelineConfig);
 
       delete pipelineConfigClone.info;
-      api.pipelineAgent.savePipelineConfig(pipelineConfigClone).success(function(res) {
+      api.pipelineAgent.savePipelineConfig('xyz', pipelineConfigClone).success(function(res) {
         updateGraph(res);
       });
     };
@@ -306,10 +310,16 @@ angular
       return configDefinition ? configDefinition.label : configName;
     };
 
-    $scope.previewPipeline = function() {
+    $scope.previewPipeline = function(nextBatch) {
       $scope.previewMode = true;
 
-      api.pipelineAgent.previewPipeline().success(function(previewData) {
+      if(nextBatch) {
+        $scope.previewSourceOffset += $scope.previewBatchSize;
+      } else {
+        $scope.previewSourceOffset = 0;
+      }
+
+      api.pipelineAgent.previewPipeline('xyz', $scope.previewSourceOffset, $scope.previewBatchSize).success(function(previewData) {
         $scope.previewData = previewData;
 
         if(!$scope.detailPaneConfig.stages) {
@@ -326,8 +336,8 @@ angular
       var inputLane = (stageInstance.inputLanes && stageInstance.inputLanes.length) ? stageInstance.inputLanes[0] : undefined,
         outputLane = (stageInstance.outputLanes && stageInstance.outputLanes.length) ? stageInstance.outputLanes[0] : undefined,
         stagePreviewData = {
-          input: {},
-          output: {}
+          input: [],
+          output: []
         };
 
       angular.forEach(previewData.stagesOutput, function(stageOutput) {
@@ -335,10 +345,39 @@ angular
           stagePreviewData.input = stageOutput.output[inputLane];
         } else if(outputLane && stageOutput.output[outputLane] && stageOutput.output) {
           stagePreviewData.output = stageOutput.output[outputLane];
+          console.log(stagePreviewData.output);
         }
       });
 
       return stagePreviewData;
+    };
+
+    extractOutputData = function(outputs) {
+      var outputData = [];
+
+      angular.forEach(outputs, function(output) {
+        var data = {};
+        angular.forEach(output.values, function(valueObj, key) {
+          data[key] = valueObj.value;
+        });
+        outputData.push(data);
+      });
+
+      return outputData;
+    };
+
+    $scope.getPreviewRange = function() {
+      var range = 0;
+
+      if($scope.stagePreviewData && $scope.stagePreviewData.input &&
+        $scope.stagePreviewData.input.length) {
+        range = $scope.stagePreviewData.input.length;
+      } else if($scope.stagePreviewData && $scope.stagePreviewData.output &&
+        $scope.stagePreviewData.output.length) {
+        range = $scope.stagePreviewData.output.length;
+      }
+
+      return new Array(range);
     };
 
   });

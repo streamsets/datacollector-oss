@@ -35,6 +35,12 @@
 
         <div class="pull-right">
           <button type="button" class="btn btn-default btn-sm"
+                  ng-show="previewMode"
+                  ng-click="previewPipeline(true)">
+            <span class="glyphicon glyphicon-chevron-right"></span> Next Batch
+          </button>
+
+          <button type="button" class="btn btn-default btn-sm"
                   ng-hide="previewMode"
                   ng-click="previewPipeline()"
                   ng-disabled="!pipelineConfig.previewable">
@@ -104,8 +110,12 @@
     </bg-pane>
 
     <bg-pane min-size="50" class="panel panel-default detail-pane">
-      <div class="panel-heading">
-        <h3 class="panel-title">{{detailPaneConfig.uiInfo.label}}</h3>
+      <div class="panel-heading clearfix">
+        <h3 class="panel-title pull-left">{{detailPaneConfig.uiInfo.label}}</h3>
+
+        <div class="pull-right preview-page-detail" ng-show="previewMode">
+          <span>{{previewSourceOffset + 1}}</span> - <span>{{previewSourceOffset + previewBatchSize}}</span>
+        </div>
       </div>
       <div class="panel-body">
 
@@ -195,24 +205,63 @@
         <!-- Configuration Details  -->
 
 
-        <div ng-show="previewMode">
-          <!--json-formatter json="previewData" open="3"></json-formatter -->
+        <div ng-show="previewMode" class="pipeline-preview">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Input Data</th>
-                <th>Output Data</th>
+                <th class="col-md-6" ng-show="stagePreviewData.input && stagePreviewData.input.length">
+                  Input Data
+                </th>
+
+                <th class="col-md-6" ng-show="stagePreviewData.output && stagePreviewData.output.length">
+                  Output Data
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  <json-formatter json="stagePreviewData.input" open="1"></json-formatter>
+              <tr ng-repeat="inputRecord in getPreviewRange() track by $index">
+
+                <td ng-show="stagePreviewData.input && stagePreviewData.input.length">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Field Name</th>
+                        <th>Type</th>
+                        <th>Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="(fieldName, recordValue) in stagePreviewData.input[$index].values">
+                        <td>{{fieldName}}</td>
+                        <td>{{recordValue.type}}</td>
+                        <td>{{recordValue.value}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </td>
-                <td>
-                  <json-formatter json="stagePreviewData.output" open="1"></json-formatter>
+
+                <td ng-show="stagePreviewData.output && stagePreviewData.output.length">
+                  <table class="table table-striped">
+                    <thead>
+                    <tr>
+                      <th>Field Name</th>
+                      <th>Type</th>
+                      <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(fieldName, recordValue) in stagePreviewData.output[$index].values">
+                      <td>{{fieldName}}</td>
+                      <td>{{recordValue.type}}</td>
+                      <td>{{recordValue.value}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
                 </td>
+
+                </tr>
               </tr>
+
             </tbody>
           </table>
         </div>
