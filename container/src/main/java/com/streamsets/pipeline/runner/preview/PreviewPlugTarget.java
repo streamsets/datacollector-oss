@@ -18,25 +18,13 @@
 package com.streamsets.pipeline.runner.preview;
 
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Iterator;
 
 public class PreviewPlugTarget extends BaseTarget {
-  private final Logger LOG = LoggerFactory.getLogger(PreviewPlugTarget.class);
 
   @Override
   public void write(Batch batch) throws StageException {
-    String offset = batch.getSourceOffset();
-    LOG.debug("Target '{}', writing batch '{}'", getInfo().getInstanceName(), offset);
-    Iterator<Record> it = batch.getRecords();
-    while (it.hasNext()) {
-      LOG.debug("Writing record '{}'", it.next().getHeader().getRecordSourceId());
-    }
   }
 
 }
