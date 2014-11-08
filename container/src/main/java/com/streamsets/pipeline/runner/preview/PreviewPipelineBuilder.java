@@ -60,7 +60,7 @@ public class PreviewPipelineBuilder {
     } else {
       throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_PREVIEW, validator.getIssues());
     }
-    Pipeline pipeline = new Pipeline.Builder(stageLib, name, pipelineConf).build(runner);
+    Pipeline pipeline = new Pipeline.Builder(stageLib, name + ":preview", pipelineConf).build(runner);
     return new PreviewPipeline(pipeline, validator.getIssues());
   }
 
