@@ -106,6 +106,18 @@ angular
           });
         });
 
+        switch(stage.type) {
+          case 'SOURCE':
+            stageInstance.uiInfo.icon = 'assets/stage/ic_insert_drive_file_48px.svg';
+            break;
+          case 'PROCESSOR':
+            stageInstance.uiInfo.icon = 'assets/stage/ic_settings_48px.svg';
+            break;
+          case 'TARGET':
+            stageInstance.uiInfo.icon = 'assets/stage/ic_storage_48px.svg';
+            break;
+        }
+
         $scope.$broadcast('addNode', stageInstance);
 
         $scope.detailPaneConfig = stageInstance;

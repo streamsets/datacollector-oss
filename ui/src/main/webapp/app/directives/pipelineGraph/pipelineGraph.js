@@ -194,7 +194,7 @@ angular.module('pipelineGraphDirectives', [])
       var el = gEl.append("text")
         .attr("text-anchor","middle")
         .attr("x", 80)
-        .attr("y", 60)
+        .attr("y", 90)
         .attr("dy", "-" + (nwords-1)*7.5);
 
       for (var i = 0; i < words.length; i++) {
@@ -550,9 +550,21 @@ angular.module('pipelineGraphDirectives', [])
           thisGraph.state.shiftNodeDrag = true;
         });
 
-      newGs.each(function(d){
+      newGs.each(function(d) {
         thisGraph.insertTitleLinebreaks(d3.select(this), d.uiInfo.label);
       });
+
+      //Add Stage icons
+      newGs.append("svg:image")
+        .attr('class', 'node-icon')
+        .attr('x',(consts.rectWidth - 48)/2)
+        .attr('y',10)
+        .attr('width', 48)
+        .attr('height', 48)
+        .attr("xlink:href", function(d) {
+          return d.uiInfo.icon;
+        });
+
 
       // remove old nodes
       thisGraph.rects.exit().remove();
