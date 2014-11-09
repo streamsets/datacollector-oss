@@ -118,8 +118,17 @@ public abstract class StageBuilder {
       if(configDef != null) {
         if(!configMap.containsKey(f.getName())) {
           if(configDef.required()) {
-            LOG.error("Configuration for a required field %s is missing.", f.getName());
+            LOG.error("Configuration for a required field {} is missing.", f.getName());
             valid = false;
+          } else {
+            //populate the field with default value
+            String defaultVal = configDef.defaultValue();
+            try {
+              f.set(stage, getValueFromType(configDef.type(), defaultVal));
+            } catch (IllegalAccessException e) {
+              e.printStackTrace();
+
+            }
           }
         } else {
           valid = validateType(configDef, fieldModifier, fieldSelector, f, configMap.get(f.getName()));
@@ -128,6 +137,21 @@ public abstract class StageBuilder {
     }
     //The configuration type must match
     return valid;
+  }
+
+  private Object getValueFromType(ConfigDef.Type type, String value) {
+    switch(type) {
+      case INTEGER:
+        return Integer.parseInt(value);
+      case BOOLEAN:
+        return Boolean.parseBoolean(value);
+      case MODEL:
+        //TODO
+      case STRING:
+        return value;
+      default:
+        return null;
+    }
   }
 
   /**
@@ -149,30 +173,30 @@ public abstract class StageBuilder {
     switch(configDef.type()) {
       case INTEGER:
         if(!(value instanceof Integer)) {
-          LOG.error("The configuration value for field %s does not match the expected type %s",
+          LOG.error("The configuration value for field '{}' does not match the expected type '{}'",
             f.getName(), configDef.type().name());
         }
         return false;
       case BOOLEAN:
         if(!(value instanceof Boolean)) {
-          LOG.error("The configuration value for field %s does not match the expected type %s",
+          LOG.error("The configuration value for field '{}' does not match the expected type '{}'",
             f.getName(), configDef.type().name());
         }
         return false;
       case MODEL:
         if(fieldSelector != null && !(value instanceof Boolean)) {
-          LOG.error("The field %s is marked as FieldSelector. A boolean value is expected.",
+          LOG.error("The field '{}' is marked as FieldSelector. A boolean value is expected.",
             f.getName());
           return false;
         }
         if(fieldModifier != null && !(value instanceof String)) {
-          LOG.error("The field %s is marked as FieldSelector. A String value is expected.",
+          LOG.error("The field '{}' is marked as FieldSelector. A String value is expected.",
             f.getName());
           return false;
         }
       case STRING:
         if(!(value instanceof String)) {
-          LOG.error("The configuration value for field %s does not match the expected type %s",
+          LOG.error("The configuration value for field '{}' does not match the expected type '{}'",
             f.getName(), configDef.type().name());
           return false;
         }
