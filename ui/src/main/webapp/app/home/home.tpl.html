@@ -5,10 +5,10 @@
       <div class="panel-heading clearfix">
         <h3 class="panel-title pull-left">{{'admin.header.pipelineFlow' | translate}}</h3>
 
-        <div class="btn-group pull-right issues-dropdown" ng-show="issuesLength > 0">
+        <div class="btn-group pull-right issues-dropdown" ng-show="pipelineConfig.issues.issueCount > 0">
           <button class="btn btn-danger btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
             <span class="glyphicon glyphicon-warning-sign"></span>
-            Issues <span class="badge alert-danger" ng-bind="issuesLength"></span>
+            Issues <span class="badge alert-danger" ng-bind="pipelineConfig.issues.issueCount"></span>
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 
@@ -17,7 +17,8 @@
               Pipeline Issues
             </li>
             <li role="presentation">
-              <a role="menuitem" tabindex="-1" href="#">{{issue.message}}</a>
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="onIssueClick(issue)">{{issue.message}}</a>
             </li>
             <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
 
@@ -26,7 +27,9 @@
                 ng-bind="getStageInstanceLabel(instanceName)">
             </li>
             <li role="presentation" ng-repeat="issue in issues">
-              <a role="menuitem" tabindex="-1" href="#" ng-bind="getIssuesMessage(instanceName, issue)"></a>
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="onIssueClick(issue, instanceName)"
+                 ng-bind="getIssuesMessage(instanceName, issue)"></a>
             </li>
             <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
 
@@ -71,7 +74,7 @@
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
             <li role="presentation" ng-repeat="stageLibrary in targets">
-              <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
+              <a role="menuitem" tabindex="-1" href="#" ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
             </li>
           </ul>
         </div>
@@ -84,7 +87,7 @@
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
             <li role="presentation" ng-repeat="stageLibrary in processors">
-              <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
+              <a role="menuitem" tabindex="-1" href="#" ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
             </li>
           </ul>
         </div>
@@ -97,7 +100,7 @@
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
             <li role="presentation" ng-repeat="stageLibrary in sources">
-              <a role="menuitem" tabindex="-1" href="#" ng-click="addStage(stageLibrary)">{{stageLibrary.label}}</a>
+              <a role="menuitem" tabindex="-1" href="#" ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
             </li>
           </ul>
         </div>
@@ -114,14 +117,15 @@
         <h3 class="panel-title pull-left">{{detailPaneConfig.uiInfo.label}}</h3>
 
         <div class="pull-right preview-page-detail" ng-show="previewMode">
+          <span>Preview Records</span>
           <span>{{previewSourceOffset + 1}}</span> - <span>{{previewSourceOffset + previewBatchSize}}</span>
         </div>
-      </div>
+       </div>
       <div class="panel-body">
 
         <!-- Configuration Details -->
 
-        <div class="tabbable tabs-left" ng-hide="previewMode">
+        <div class="tabbable tabs-left configuration-tabs" ng-hide="previewMode">
 
           <ul class="nav nav-tabs">
             <li class="active">
@@ -132,6 +136,7 @@
             <li>
               <a showtab="" href="#configuration" data-toggle="tab">
                 {{'admin.detailPane.configuration.title' | translate}}
+                <span class="glyphicon glyphicon-warning-sign icon-danger" ng-show="hasConfigurationIssues(detailPaneConfig)"></span>
               </a>
             </li>
           </ul>
@@ -170,18 +175,25 @@
                   <div class="col-sm-6" ng-if="configDefinition.type === 'BOOLEAN'">
                     <input type="checkbox" name="{{configDefinition.name}}"
                            ng-model="detailPaneConfig.configuration[$index].value">
+
+                    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
                   </div>
 
                   <div class="col-sm-6" ng-if="configDefinition.type === 'INTEGER'">
                     <input type="number" class="form-control" name="{{configDefinition.name}}"
                            ng-model="detailPaneConfig.configuration[$index].value"
                            ng-required="configDefinition.required">
+
+                    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
                   </div>
 
                   <div class="col-sm-6" ng-if="!configDefinition.listValues && configDefinition.type === 'STRING'">
                     <input type="text" class="form-control" name="{{configDefinition.name}}"
                            ng-model="detailPaneConfig.configuration[$index].value"
                            ng-required="configDefinition.required">
+
+                    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+
                   </div>
 
                   <div class="col-sm-6"

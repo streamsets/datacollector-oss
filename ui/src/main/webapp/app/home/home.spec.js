@@ -441,7 +441,6 @@ describe('Controller: modules/home/HomeCtrl', function () {
 
   it('should call the getPipelineConfig api function to get Pipeline Configuration', function () {
     expect($scope.pipelineConfig).toBeUndefined();
-    expect($scope.issuesLength).toEqual(0);
 
     $httpBackend.flush();
 
@@ -465,7 +464,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
     expect($scope.pipelineConfig.stages.length).toEqual(3);
 
     spyOn($scope, '$broadcast');
-    $scope.addStage($scope.sources[0]);
+    $scope.addStageInstance($scope.sources[0]);
 
     //expect($scope.$broadcast).toHaveBeenCalledWith('addNode');
   });

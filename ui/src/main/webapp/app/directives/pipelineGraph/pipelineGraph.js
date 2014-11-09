@@ -228,10 +228,10 @@ angular.module('pipelineGraphDirectives', [])
 
     GraphCreator.prototype.replaceSelectNode = function(d3Node, nodeData){
       var thisGraph = this;
-      d3Node.classed(this.consts.selectedClass, true);
       if (thisGraph.state.selectedNode){
         thisGraph.removeSelectFromNode();
       }
+      d3Node.classed(this.consts.selectedClass, true);
       thisGraph.state.selectedNode = nodeData;
     };
 
@@ -460,7 +460,12 @@ angular.module('pipelineGraphDirectives', [])
       var thisGraph = this;
       thisGraph.nodes.push(node);
       thisGraph.updateGraph();
+      thisGraph.selectNode(node);
+    };
 
+
+    GraphCreator.prototype.selectNode = function(node) {
+      var thisGraph = this;
       var addedNode = thisGraph.rects.filter(function(cd){
         return cd.instanceName === node.instanceName;
       });
@@ -632,6 +637,10 @@ angular.module('pipelineGraphDirectives', [])
 
     $scope.$on('addNode', function(event, stageInstance){
       graph.addNode(stageInstance);
+    });
+
+    $scope.$on('selectNode', function(event, stageInstance){
+      graph.selectNode(stageInstance);
     });
 
   });

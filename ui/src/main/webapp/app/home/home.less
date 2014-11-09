@@ -58,18 +58,23 @@
 
 .detail-pane {
   margin-bottom: 0;
+  border-bottom: none;
+
+  .preview-page-detail {
+    padding-right: @defaultPadding;
+  }
 
   .panel-body {
     padding: 0;
-    height: calc(~"100% - 40px");
-    overflow: auto;
+    //height: calc(~"100% - 40px");
+    //overflow: auto;
 
     .tabbable {
       height: 100%;
-      padding: 0 0 0 @smallPadding * 3;
+      padding: 0 @smallPadding * 3;
 
       .nav-tabs {
-        height: 100%;
+        height: 200px;
         padding-top: @smallPadding * 3;
       }
 
@@ -83,11 +88,15 @@
         .attribute-type {
           height: 24px;
         }
-      }
-    }
 
-    .preview-page-detail {
-      padding-right: @defaultPadding;
+        .form-group .help-block {
+          display: none;
+        }
+
+        .form-group.has-error .help-block {
+          display: block;
+        }
+      }
     }
 
     .pipeline-preview {
