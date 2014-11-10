@@ -26,7 +26,7 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 
 @StageDef(description = "Prints the travel log, fare and the cumulative sum on the Console",
-  label = "console_target",
+  label = "Console Target",
   name = "ConsoleTarget",
   version = "1.0")
 public class ConsoleTarget implements Target {

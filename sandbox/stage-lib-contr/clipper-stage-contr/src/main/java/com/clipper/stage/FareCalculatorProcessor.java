@@ -23,7 +23,7 @@ import com.streamsets.pipeline.api.base.BaseProcessor;
 import java.util.Iterator;
 
 @StageDef(description = "FareCalculatorProcessor inspects the transaction log, extracts the fares and adds new fields to the record - one for the fare and cone for cumulative sum",
-  label = "fare_calculator_processor",
+  label = "Clipper Fare Calculator",
   name = "FareCalculatorProcessor",
   version = "1.0")
 public class FareCalculatorProcessor extends BaseProcessor{

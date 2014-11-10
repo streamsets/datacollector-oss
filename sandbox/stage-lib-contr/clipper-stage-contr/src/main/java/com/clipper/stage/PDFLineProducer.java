@@ -33,7 +33,7 @@ public class PDFLineProducer extends BaseSource {
 
   private static final String MODULE = "PdfLineProducer";
 
-  @ConfigDef(defaultValue = "", label = "pdf_location", description = "Absolute file name of the PDF",
+  @ConfigDef(defaultValue = "", label = "Clipper Travel Log Producer", description = "Absolute file name of the PDF",
     name = "pdfLocation", required = true, type = ConfigDef.Type.STRING)
   public String pdfLocation;
 
