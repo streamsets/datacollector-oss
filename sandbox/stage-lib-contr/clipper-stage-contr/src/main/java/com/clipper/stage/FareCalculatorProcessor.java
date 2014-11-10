@@ -20,7 +20,9 @@ package com.clipper.stage;
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 @StageDef(description = "FareCalculatorProcessor inspects the transaction log, extracts the fares and adds new fields to the record - one for the fare and cone for cumulative sum",
   label = "Clipper Fare Calculator",
@@ -28,7 +30,22 @@ import java.util.Iterator;
   version = "1.0")
 public class FareCalculatorProcessor extends BaseProcessor{
 
-  private double totalClaim = 0.0;
+  private double caltrainClaim = 0.0;
+  private double bartClaim = 0.0;
+  private double muniClaim = 0.0;
+  private double vtaClaim = 0.0;
+  private Set<String> caltrainDates = new HashSet<String>();
+  private Set<String> bartDates = new HashSet<String>();
+  private Set<String> muniDates = new HashSet<String>();
+  private Set<String> vtaDates = new HashSet<String>();
+
+  private String[] lanes;
+
+  @Override
+  protected void init() throws StageException {
+    lanes = getContext().getOutputLanes().toArray(
+      new String[getContext().getOutputLanes().size()]);
+  }
 
   @Override
   public void process(Batch batch, BatchMaker batchMaker) throws StageException {
@@ -44,14 +61,61 @@ public class FareCalculatorProcessor extends BaseProcessor{
         || transactionLog.contains("Single-tag fare payment")
         || transactionLog.contains("Dual-tag exit transaction, fare payment")) {
         transactionFare = extractFareFromLine(transactionLog);
+        if(transactionLog.contains("BART")) {
+          bartClaim += transactionFare;
+          String date = extractDateFromLine(transactionLog);
+          bartDates.add(date);
+          record.setField("Travel Date, Mode and Fare", Field.create(Field.Type.STRING, date + ", " + "BART" + ", " + String.valueOf(transactionFare)));
+        } else if (transactionLog.contains("Muni")) {
+          muniClaim += transactionFare;
+          String date = extractDateFromLine(transactionLog);
+          muniDates.add(date);
+          record.setField("Travel Date, Mode and Fare", Field.create(Field.Type.STRING, date + ", " + "MUNI" + ", " + String.valueOf(transactionFare)));
+        } else if (transactionLog.contains("VTA")) {
+          vtaClaim += transactionFare;
+          String date = extractDateFromLine(transactionLog);
+          vtaDates.add(date);
+          record.setField("Travel Date, Mode and Fare", Field.create(Field.Type.STRING, date + ", " + "LIGHT RAIL" + ", " + String.valueOf(transactionFare)));
+        } else {
+          caltrainClaim += transactionFare;
+          String date = extractDateFromLine(transactionLog);
+          caltrainDates.add(date);
+          record.setField("Travel Date, Mode and Fare", Field.create(Field.Type.STRING, date + " ," + "CALTRAIN" + ", " + String.valueOf(transactionFare)));
+        }
       } else if (transactionLog.contains("Dual-tag exit transaction, fare adjustment")) {
-        transactionFare = -extractFareFromLine(transactionLog);
+        transactionFare = extractFareFromLine(transactionLog);
+        caltrainClaim -= transactionFare;
       }
-      totalClaim += transactionFare;
-      record.setField("transactionFare", Field.create(Field.Type.STRING, String.valueOf(transactionFare)));
-      record.setField("TotalClaim", Field.create(Field.Type.DOUBLE, totalClaim));
-      batchMaker.addRecord(record, "lane");
+
+      record.setField("All Bart travel dates", Field.create(Field.Type.STRING, getTravelDates(bartDates)));
+      record.setField("Total Bart travel fare", Field.create(Field.Type.DOUBLE, bartClaim));
+      record.setField("All Caltrain travel dates", Field.create(Field.Type.STRING, getTravelDates(caltrainDates)));
+      record.setField("Total Caltrain travel fare", Field.create(Field.Type.DOUBLE, caltrainClaim));
+      record.setField("All Light rail travel dates", Field.create(Field.Type.STRING, getTravelDates(vtaDates)));
+      record.setField("Total Light Rail travel fare", Field.create(Field.Type.DOUBLE, vtaClaim));
+      record.setField("All Muni travel dates", Field.create(Field.Type.STRING, getTravelDates(muniDates)));
+      record.setField("Total Muni travel fare", Field.create(Field.Type.DOUBLE, muniClaim));
+
+      record.setField("Total Travel Expenditure As of this travel", Field.create(Field.Type.DOUBLE,
+        caltrainClaim + bartClaim + muniClaim + vtaClaim));
+      batchMaker.addRecord(record, lanes[0]);
     }
+  }
+
+  private String getTravelDates(Set<String> bartDates) {
+    StringBuilder sb = new StringBuilder();
+    for(String d : bartDates) {
+      sb.append(d).append(", ");
+    }
+    if(sb.length() > 1) {
+      sb.deleteCharAt(sb.length() - 1);
+    }
+    return sb.toString();
+  }
+
+  private String extractDateFromLine(String line) {
+    String[] tokens = line.split(" ");
+    return new String(tokens[0]);
   }
 
   private Double extractFareFromLine(String line) {

@@ -28,14 +28,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-@StageDef(name = "PdfLineProducer", version = "1.0", label = "pdf_line_producer", description = "Produces lines from a PDF file")
+@StageDef(name = "PdfLineProducer", version = "1.0", label = "Clipper Travel Log Producer", description = "Produces lines from a PDF file")
 public class PDFLineProducer extends BaseSource {
 
   private static final String MODULE = "PdfLineProducer";
 
-  @ConfigDef(defaultValue = "", label = "Clipper Travel Log Producer", description = "Absolute file name of the PDF",
+  @ConfigDef(defaultValue = "", label = "PDF Location", description = "Absolute file name of the PDF",
     name = "pdfLocation", required = true, type = ConfigDef.Type.STRING)
   public String pdfLocation;
+
+  private String[] lanes;
+  private String[] transactions = null;
+  private int linesPendingRead = 0;
+  //Skip first 5 lines of clipper pdf
+  private int index = 5;
+
 
   public PDFLineProducer(String pdfLocation) {
     this.pdfLocation = pdfLocation;
@@ -46,17 +53,38 @@ public class PDFLineProducer extends BaseSource {
   }
 
   @Override
-  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    String rideHistory = pdftoText(pdfLocation);
-    String[] transactions = rideHistory.split(System.lineSeparator());
+  protected void init() throws StageException {
+    lanes = getContext().getOutputLanes().toArray(
+      new String[getContext().getOutputLanes().size()]);
+    transactions = pdftoText(pdfLocation).split(System.lineSeparator());
+    linesPendingRead = transactions.length;
+  }
 
-    for(int i = 0; i < transactions.length; i++) {
-      Record r = getContext().createRecord("LineNumber[" + i + "]");
-      r.setField("transactionLog", Field.create(Field.Type.STRING, transactions[i]));
-      batchMaker.addRecord(r, "lane");
+  @Override
+  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    maxBatchSize = (maxBatchSize > -1) ? maxBatchSize : 10;
+    int batchSize = Math.min(maxBatchSize, linesPendingRead);
+
+    //calculate the line number in pdf based on the source offset
+    try {
+      index = Integer.parseInt(lastSourceOffset);
+    } catch (NumberFormatException e) {
+      index = 5;
     }
-    //In the first cut each line is a record and one batch has all records.
-    //No more records
+
+    for(int i = 0; i < batchSize; i++) {
+      Record r = getContext().createRecord("LineNumber[" + i + "]");
+      r.setField("transactionLog", Field.create(Field.Type.STRING, transactions[i + index]));
+      batchMaker.addRecord(r, lanes[0]);
+    }
+    //update the line number after reading
+    index += batchSize;
+    //update pending lines
+    linesPendingRead -= batchSize;
+
+    if(linesPendingRead > 0) {
+      return String.valueOf(index);
+    }
     return null;
   }
 

@@ -17,47 +17,31 @@
  */
 package com.clipper.stage.test;
 
+import com.clipper.stage.PDFLineProducer;
+import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.sdk.testharness.SourceRunner;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Map;
+
 public class TestClipper {
 
-  /*//@Test
-  public void testRun() {
-    Pipeline pipeline = createPipeline(true);
+  @Test
+  public void testClipper() throws StageException {
+    Map<String, List<Record>> run = new SourceRunner.Builder<PDFLineProducer>()
+      .addSource(PDFLineProducer.class)
+      .maxBatchSize(10)
+      .outputLanes(ImmutableSet.of("lane"))
+      .configure("pdfLocation", "/Users/harikiran/Downloads/madhuridehistory.pdf")
+      .build()
+      .run();
 
-    pipeline.init();
-    PipelineRunner pr = new PipelineRunner(pipeline, new TSourceTracker(), false);
-    pr.run();
-    pipeline.destroy();
-  }
-
-  private Pipeline createPipeline(boolean complete) {
-    MetricRegistry metrics = new MetricRegistry();
-
-    Source.Info sourceInfo = new ModuleInfo(
-      "PdfLineProducer",
-      "1.0",
-      "Produces records containing clipper transactions",
-      "pdfProd");
-    Source source = new PDFLineProducer("/Users/Harikiran/Downloads/madhuridehistory.pdf");
-    Pipeline.Builder pb = new Pipeline.Builder(metrics, sourceInfo, source, ImmutableSet.of("lane"));
-
-    Processor.Info processorInfo = new ModuleInfo(
-      "FareCalculatorProcessor",
-      "1.0",
-      "Produces 2 additional fields per transaction in the record - transactionFare and totalClaim",
-      "fareCalcProc");
-    Processor processor = new FareCalculatorProcessor();
-    pb.add(processorInfo, processor, ImmutableSet.of("lane"), ImmutableSet.of("lane"));
-
-    if (complete) {
-      Target.Info targetInfo = new ModuleInfo(
-        "ConsoleTarget",
-        "1.0",
-        "Produces transaction line, fare and totalClaim",
-        "ct");
-      Target target = new ConsoleTarget();
-      pb.add(targetInfo, target, ImmutableSet.of("lane"));
+    System.out.println("Fin. Number of lines read :" + run.get("lane").size());
+    for(Record r : run.get("lane")) {
+      System.out.println(r.toString());
     }
-
-    return (complete) ? pb.build() : pb.buildPreview();
-  }*/
+  }
 }
