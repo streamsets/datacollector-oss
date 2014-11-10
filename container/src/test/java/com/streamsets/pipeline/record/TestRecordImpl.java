@@ -33,12 +33,12 @@ public class TestRecordImpl {
 
   @Test(expected = NullPointerException.class)
   public void testConstructorInvalid1() {
-    new RecordImpl(null, null, null, null);
+    new RecordImpl((String)null, (String) null, null, null);
   }
 
   @Test(expected = NullPointerException.class)
   public void testConstructorInvalid2() {
-    new RecordImpl("s", null, null, null);
+    new RecordImpl("s", (String) null, null, null);
   }
 
   @Test(expected = NullPointerException.class)
