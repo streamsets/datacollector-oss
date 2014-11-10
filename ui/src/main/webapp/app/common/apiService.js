@@ -75,7 +75,7 @@ angular.module('pipelineAgentApp.common')
           batchSize = 10;
         }
 
-        url = apiBase + '/pipelines/' + name + '/preview?sourceOffset' + sourceOffset +
+        url = apiBase + '/pipelines/' + name + '/preview?sourceOffset=' + sourceOffset +
           '&batchSize=' + batchSize + '&rev=' + rev;
 
         return $http({
