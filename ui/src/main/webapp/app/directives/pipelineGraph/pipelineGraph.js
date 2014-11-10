@@ -60,6 +60,36 @@ angular.module('pipelineGraphDirectives', [])
         .attr('d', 'M0,-5L10,0L0,5');*/
 
       thisGraph.svg = svg;
+
+
+      //Background lines
+      var margin = {top: -5, right: -5, bottom: -5, left: -5},
+        svgWidth = svg.style('width').replace('px', ''),
+        svgHeight = svg.style('height').replace('px', ''),
+        width = svgWidth - margin.left - margin.right,
+        height = svgHeight - margin.top - margin.bottom;
+
+      var container = svg.append("g");
+      container.append("g")
+        .attr("class", "x axis")
+        .selectAll("line")
+        .data(d3.range(0, width, 10))
+        .enter().append("line")
+        .attr("x1", function(d) { return d; })
+        .attr("y1", 0)
+        .attr("x2", function(d) { return d; })
+        .attr("y2", height);
+
+      container.append("g")
+        .attr("class", "y axis")
+        .selectAll("line")
+        .data(d3.range(0, height, 10))
+        .enter().append("line")
+        .attr("x1", 0)
+        .attr("y1", function(d) { return d; })
+        .attr("x2", width)
+        .attr("y2", function(d) { return d; });
+
       thisGraph.svgG = svg.append("g")
         .classed(thisGraph.consts.graphClass, true);
       var svgG = thisGraph.svgG;
@@ -624,7 +654,7 @@ angular.module('pipelineGraphDirectives', [])
       } else {
         svg = d3.select($element[0]).append("svg")
           .attr("width", "100%")
-          .attr("height", "98%")
+          .attr("height", "100%")
           .attr("tabindex", 0);
         graph = new GraphCreator(svg, nodes, edges || []);
         graph.setIdCt(2);
