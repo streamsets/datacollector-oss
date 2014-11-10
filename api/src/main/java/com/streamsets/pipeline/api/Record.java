@@ -24,15 +24,19 @@ public interface Record {
 
   public interface Header {
 
-    public String getCreatorStage();
+    public String getStageCreator();
 
-    public String getRecordSourceId();
+    public String getSourceId();
+
+    public String getTrackingId();
+
+    public String getPreviousStageTrackingId();
 
     public String getStagesPath();
 
     public byte[] getRaw();
 
-    public String getRawMime();
+    public String getRawMimeType();
 
     public Iterator<String> getAttributeNames();
 

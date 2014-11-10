@@ -25,9 +25,9 @@ public interface Processor extends Stage<Processor.Context> {
 
     public Set<String> getOutputLanes();
 
-    public Record createRecord(String sourceInfo);
+    public Record createRecord(Record originatorRecord);
 
-    public Record createRecord(String sourceInfo, byte[] raw, String rawMime);
+    public Record createRecord(Record originatorRecord, byte[] raw, String rawMime);
 
     public Record cloneRecord(Record record);
 

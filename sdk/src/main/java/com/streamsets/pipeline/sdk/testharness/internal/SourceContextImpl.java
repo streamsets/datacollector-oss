@@ -39,13 +39,13 @@ public class SourceContextImpl implements Source.Context {
   }
 
   @Override
-  public Record createRecord(String sourceInfo) {
-    return new RecordImpl(instanceName, sourceInfo, null, null);
+  public Record createRecord(String recordSourceId) {
+    return new RecordImpl(instanceName, recordSourceId, null, null);
   }
 
   @Override
-  public Record createRecord(String sourceInfo, byte[] raw, String rawMime) {
-    return new RecordImpl(instanceName, sourceInfo, raw, rawMime);
+  public Record createRecord(String recordSourceId, byte[] raw, String rawMime) {
+    return new RecordImpl(instanceName, recordSourceId, raw, rawMime);
   }
 
   @Override

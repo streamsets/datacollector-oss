@@ -78,15 +78,15 @@ public class TestRecordImpl {
     RecordImpl record = new RecordImpl("stage", "source", null, null);
     Record.Header header = record.getHeader();
     Assert.assertNull(header.getRaw());
-    Assert.assertNull(header.getRawMime());
+    Assert.assertNull(header.getRawMimeType());
 
     record = new RecordImpl("stage", "source", new byte[0], "M");
     header = record.getHeader();
     Assert.assertArrayEquals(new byte[0], header.getRaw());
-    Assert.assertEquals("M", header.getRawMime());
+    Assert.assertEquals("M", header.getRawMimeType());
 
-    Assert.assertEquals("stage", header.getCreatorStage());
-    Assert.assertEquals("source", header.getRecordSourceId());
+    Assert.assertEquals("stage", header.getStageCreator());
+    Assert.assertEquals("source", header.getSourceId());
     Assert.assertEquals("stage", header.getStagesPath());
 
     Assert.assertFalse(header.getAttributeNames().hasNext());
@@ -150,10 +150,10 @@ public class TestRecordImpl {
     try {
       snapshot.getHeader().setAttribute(randomKey, "X");
       Assert.assertEquals("X", original.getHeader().getAttribute(randomKey));
-      Assert.assertEquals(snapshot.getHeader().getCreatorStage(), original.getHeader().getCreatorStage());
+      Assert.assertEquals(snapshot.getHeader().getStageCreator(), original.getHeader().getStageCreator());
       Assert.assertEquals(snapshot.getHeader().getRaw(), original.getHeader().getRaw());
-      Assert.assertEquals(snapshot.getHeader().getRawMime(), original.getHeader().getRawMime());
-      Assert.assertEquals(snapshot.getHeader().getRecordSourceId(), original.getHeader().getRecordSourceId());
+      Assert.assertEquals(snapshot.getHeader().getRawMimeType(), original.getHeader().getRawMimeType());
+      Assert.assertEquals(snapshot.getHeader().getSourceId(), original.getHeader().getSourceId());
     } finally {
       snapshot.getHeader().deleteAttribute(randomKey);
     }

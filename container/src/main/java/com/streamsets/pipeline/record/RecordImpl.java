@@ -18,13 +18,13 @@
 package com.streamsets.pipeline.record;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 
 public class RecordImpl implements Record {
   private SimpleMap<String, Object> headerData;
@@ -32,11 +32,13 @@ public class RecordImpl implements Record {
   private Header header;
 
   private static final String RESERVED_PREFIX = "_.";
-  private static final String CREATOR_STAGE_INSTANCE_ATTR = RESERVED_PREFIX + "creatorStage";
+  private static final String STAGE_CREATOR_INSTANCE_ATTR = RESERVED_PREFIX + "stageCreator";
   private static final String RECORD_SOURCE_ID_ATTR = RESERVED_PREFIX + "recordSourceId";
   private static final String STAGES_PATH_ATTR = RESERVED_PREFIX + "stagePath";
   private static final String RAW_DATA_ATTR = RESERVED_PREFIX + "rawData";
-  private static final String RAW_MIME_ATTR = RESERVED_PREFIX + "rawMIME";
+  private static final String RAW_MIME_TYPE_ATTR = RESERVED_PREFIX + "rawMimeType";
+  private static final String TRACKING_ID_ATTR = RESERVED_PREFIX + "trackingId";
+  private static final String PREVIOUS_STAGE_TRACKING_ID_ATTR = RESERVED_PREFIX + "previousStageTrackingId";
 
   static class HeaderImpl implements Header {
     private final SimpleMap<String, Object> rawHeaders;
@@ -48,14 +50,24 @@ public class RecordImpl implements Record {
     }
 
     @Override
+    public String getTrackingId() {
+      return (String) rawHeaders.get(TRACKING_ID_ATTR);
+    }
+
+    @Override
+    public String getPreviousStageTrackingId() {
+      return (String) rawHeaders.get(PREVIOUS_STAGE_TRACKING_ID_ATTR);
+    }
+
+    @Override
     public byte[] getRaw() {
       byte[] raw = (byte[]) rawHeaders.get(RAW_DATA_ATTR);
       return (raw != null) ? raw.clone() : null;
     }
 
     @Override
-    public String getRawMime() {
-      return (String) rawHeaders.get(RAW_MIME_ATTR);
+    public String getRawMimeType() {
+      return (String) rawHeaders.get(RAW_MIME_TYPE_ATTR);
     }
 
     @Override
@@ -79,11 +91,11 @@ public class RecordImpl implements Record {
       headers.remove(name);
     }
 
-    public String getCreatorStage() {
-      return (String) rawHeaders.get(CREATOR_STAGE_INSTANCE_ATTR);
+    public String getStageCreator() {
+      return (String) rawHeaders.get(STAGE_CREATOR_INSTANCE_ATTR);
     }
 
-    public String getRecordSourceId() {
+    public String getSourceId() {
       return (String) rawHeaders.get(RECORD_SOURCE_ID_ATTR);
     }
 
@@ -97,22 +109,30 @@ public class RecordImpl implements Record {
     
   }
 
-  public RecordImpl(String stage, String source, byte[] raw, String rawMime) {
-    Preconditions.checkNotNull(stage, "stage cannot be null");
-    Preconditions.checkNotNull(source, "source cannot be null");
+  public RecordImpl(String stageCreator, String recordSourceId, byte[] raw, String rawMime) {
+    Preconditions.checkNotNull(stageCreator, "stage cannot be null");
+    Preconditions.checkNotNull(recordSourceId, "source cannot be null");
     Preconditions.checkArgument((raw != null && rawMime != null) || (raw == null && rawMime == null),
                                 "raw and rawMime have both to be null or not null");
     headerData = new VersionedSimpleMap<String, Object>();
     if (raw != null) {
       headerData.put(RAW_DATA_ATTR, raw.clone());
-      headerData.put(RAW_MIME_ATTR, rawMime);
+      headerData.put(RAW_MIME_TYPE_ATTR, rawMime);
     }
-    headerData.put(CREATOR_STAGE_INSTANCE_ATTR, stage);
-    headerData.put(RECORD_SOURCE_ID_ATTR, source);
-    headerData.put(STAGES_PATH_ATTR, stage);
+    headerData.put(STAGE_CREATOR_INSTANCE_ATTR, stageCreator);
+    headerData.put(RECORD_SOURCE_ID_ATTR, recordSourceId);
+    headerData.put(STAGES_PATH_ATTR, stageCreator);
 
     fieldData = new VersionedSimpleMap<String, Field>();
     header = new HeaderImpl(headerData);
+  }
+
+  public RecordImpl(String stageCreator, Record originatorRecord, byte[] raw, String rawMime) {
+    this(stageCreator, originatorRecord.getHeader().getSourceId(), raw, rawMime);
+    String trackingId = originatorRecord.getHeader().getTrackingId();
+    if (trackingId != null) {
+      headerData.put(TRACKING_ID_ATTR, trackingId);
+    }
   }
 
   private RecordImpl(SimpleMap<String, Object> headers, SimpleMap<String, Field> data) {
@@ -127,6 +147,10 @@ public class RecordImpl implements Record {
     headerData = new VersionedSimpleMap<String, Object>(snapshot.headerData);
     fieldData = new VersionedSimpleMap<String, Field>(snapshot.fieldData);
     header = new HeaderImpl(headerData);
+    String trackingId = record.getHeader().getTrackingId();
+    if (trackingId != null) {
+      headerData.put(TRACKING_ID_ATTR, trackingId);
+    }
   }
 
 
@@ -147,6 +171,16 @@ public class RecordImpl implements Record {
   public void setStage(String stage) {
     Preconditions.checkNotNull(stage, "stage cannot be null");
     headerData.put(STAGES_PATH_ATTR, headerData.get(STAGES_PATH_ATTR) + ":" + stage);
+  }
+
+  public void setTrackingId() {
+    String newTrackingId = UUID.randomUUID().toString();
+    Preconditions.checkNotNull(newTrackingId, "newTrackingId cannot be null");
+    String currentTrackingId = (String) headerData.get(TRACKING_ID_ATTR);
+    if (currentTrackingId != null) {
+      headerData.put(PREVIOUS_STAGE_TRACKING_ID_ATTR, currentTrackingId);
+    }
+    headerData.put(TRACKING_ID_ATTR, newTrackingId);
   }
 
   @Override

@@ -23,9 +23,9 @@ public interface Source extends Stage<Source.Context> {
 
   public interface Context extends Stage.Context {
 
-    public Record createRecord(String sourceInfo);
+    public Record createRecord(String recordSourceId);
 
-    public Record createRecord(String sourceInfo, byte[] raw, String rawMime);
+    public Record createRecord(String recordSourceId, byte[] raw, String rawMime);
 
     public Set<String> getOutputLanes();
 

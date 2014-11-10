@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.sdk.testharness.internal;
 
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
@@ -43,13 +44,15 @@ public class ProcessorContextImpl implements Processor.Context {
   }
 
   @Override
-  public Record createRecord(String sourceInfo) {
-    return new RecordImpl(instanceName, sourceInfo, null, null);
+  public Record createRecord(Record originatorRecord) {
+    Preconditions.checkNotNull(originatorRecord, "originatorRecord cannot be null");
+    return new RecordImpl(instanceName, originatorRecord.getHeader().getSourceId(), null, null);
   }
 
   @Override
-  public Record createRecord(String sourceInfo, byte[] raw, String rawMime) {
-    return new RecordImpl(instanceName, sourceInfo, raw, rawMime);
+  public Record createRecord(Record originatorRecord, byte[] raw, String rawMime) {
+    Preconditions.checkNotNull(originatorRecord, "originatorRecord cannot be null");
+    return new RecordImpl(instanceName, originatorRecord.getHeader().getSourceId(), raw, rawMime);
   }
 
   @Override

@@ -76,6 +76,7 @@ public class BatchMakerImpl implements BatchMaker {
     Preconditions.checkNotNull(record, "record cannot be null");
     record = ((RecordImpl)record).createCopy();
     ((RecordImpl)record).setStage(instanceName);
+    ((RecordImpl)record).setTrackingId();
 
     if (lanes.length == 0) {
       Preconditions.checkArgument(outputLanes.size() == 1, String.format(

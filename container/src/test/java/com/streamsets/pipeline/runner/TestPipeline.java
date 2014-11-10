@@ -163,22 +163,22 @@ public class TestPipeline {
     Processor.Context processorContext = pipes[3].getStage().getContext();
 
     Record record = sourceContext.createRecord("a");
-    Assert.assertEquals("a", record.getHeader().getRecordSourceId());
-    Assert.assertEquals("s", record.getHeader().getCreatorStage());
+    Assert.assertEquals("a", record.getHeader().getSourceId());
+    Assert.assertEquals("s", record.getHeader().getStageCreator());
     Assert.assertNull(record.getHeader().getRaw());
-    Assert.assertNull(record.getHeader().getRawMime());
+    Assert.assertNull(record.getHeader().getRawMimeType());
 
-    record = processorContext.createRecord("b", new byte[0], "mime");
-    Assert.assertEquals("b", record.getHeader().getRecordSourceId());
-    Assert.assertEquals("p", record.getHeader().getCreatorStage());
+    record = processorContext.createRecord(record, new byte[0], "mime");
+    Assert.assertEquals("a", record.getHeader().getSourceId());
+    Assert.assertEquals("p", record.getHeader().getStageCreator());
     Assert.assertArrayEquals(new byte[0], record.getHeader().getRaw());
-    Assert.assertEquals("mime", record.getHeader().getRawMime());
+    Assert.assertEquals("mime", record.getHeader().getRawMimeType());
 
     record = processorContext.cloneRecord(record);
-    Assert.assertEquals("b", record.getHeader().getRecordSourceId());
-    Assert.assertEquals("p", record.getHeader().getCreatorStage());
+    Assert.assertEquals("a", record.getHeader().getSourceId());
+    Assert.assertEquals("p", record.getHeader().getStageCreator());
     Assert.assertArrayEquals(new byte[0], record.getHeader().getRaw());
-    Assert.assertEquals("mime", record.getHeader().getRawMime());
+    Assert.assertEquals("mime", record.getHeader().getRawMimeType());
   }
 
   @Test

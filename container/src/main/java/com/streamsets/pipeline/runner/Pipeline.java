@@ -19,6 +19,7 @@ package com.streamsets.pipeline.runner;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
@@ -137,16 +138,34 @@ public class Pipeline {
       return outputLanes;
     }
 
+    //Stage.Context
     @Override
-    public Record createRecord(String sourceInfo) {
-      return new RecordImpl(instanceName, sourceInfo, null, null);
+    public Record createRecord(String recordSourceId) {
+      return new RecordImpl(instanceName, recordSourceId, null, null);
     }
 
+    //Stage.Context
     @Override
-    public Record createRecord(String sourceInfo, byte[] raw, String rawMime) {
-      return new RecordImpl(instanceName, sourceInfo, raw, rawMime);
+    public Record createRecord(String recordSourceId, byte[] raw, String rawMime) {
+      return new RecordImpl(instanceName, recordSourceId, raw, rawMime);
     }
 
+    //Processor.Context
+    @Override
+    public Record createRecord(Record originatorRecord) {
+      Preconditions.checkNotNull(originatorRecord, "originatorRecord cannot be null");
+      RecordImpl record = new RecordImpl(instanceName, originatorRecord, null, null);
+      return record;
+    }
+
+    //Processor.Context
+    @Override
+    public Record createRecord(Record originatorRecord, byte[] raw, String rawMime) {
+      RecordImpl record = new RecordImpl(instanceName, originatorRecord, raw, rawMime);
+      return record;
+    }
+
+    //Processor.Context
     @Override
     public Record cloneRecord(Record record) {
       return ((RecordImpl)record).createCopy();
