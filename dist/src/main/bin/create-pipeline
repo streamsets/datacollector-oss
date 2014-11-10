@@ -93,12 +93,12 @@ PIPELINE_HOME=`cd ${PIPELINE_HOME};pwd`
 
 run mkdir "${PIPELINE_HOME}/bin"
 run mkdir "${PIPELINE_HOME}/etc"
-run sed -e "s|#PIPELINE_HOME#|${PIPELINE_HOME}|" -e "s|#PIPELINE_DIST#|${PIPELINE_DIST}|" < \
-    "${PIPELINE_DIST}/bin/_pipeline_prototype" > "${PIPELINE_HOME}/bin/pipeline"
+run sed -e "s|#PIPELINE_HOME#|${PIPELINE_HOME}|" -e "s|#PIPELINE_DIST#|${PIPELINE_DIST}|" \
+    < "${PIPELINE_DIST}/bin/_pipeline_prototype" > "${PIPELINE_HOME}/bin/pipeline"
 run chmod a+x "${PIPELINE_HOME}/bin/pipeline"
 run cp "${PIPELINE_DIST}/etc/log4j.properties" "${PIPELINE_HOME}/etc"
-run sed -e "s|http.port=8080|http.port=${PIPELINE_PORT}|" < "${PIPELINE_DIST}/etc/pipeline-agent.properties" \
-    > "${PIPELINE_HOME}/etc/pipeline-agent.properties"
+run sed -e "s|http.port=8080|http.port=${PIPELINE_PORT}|" \
+    < "${PIPELINE_DIST}/etc/pipeline.properties" > "${PIPELINE_HOME}/etc/pipeline.properties"
 
 echo ""
 echo "New pipeline created at ${PIPELINE_HOME} on port ${PIPELINE_PORT}"

@@ -51,7 +51,7 @@ public class RuntimeModule {
   @Provides @Singleton
   public Configuration provideConfiguration(RuntimeInfo runtimeInfo) {
     Configuration conf = new Configuration();
-    File configFile = new File(runtimeInfo.getConfigDir(), "pipeline-agent.properties");
+    File configFile = new File(runtimeInfo.getConfigDir(), "pipeline.properties");
     if (configFile.exists()) {
       try {
         conf.load(new FileReader(configFile));
