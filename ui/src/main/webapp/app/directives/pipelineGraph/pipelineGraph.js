@@ -354,11 +354,10 @@ angular.module('pipelineGraphDirectives', [])
           thisGraph.updateGraph();
 
           $scope.$apply(function() {
-            newEdge.source.outputLanes = [newEdge.source.instanceName + 'outputLane'];
-            newEdge.target.inputLanes = [newEdge.source.instanceName + 'outputLane'];
+            newEdge.target.inputLanes = [newEdge.source.outputLanes[0]];
           });
         }
-      } else{
+      } else {
         state.justDragged = false;
         if (state.selectedEdge){
           thisGraph.removeSelectFromEdge();
@@ -568,7 +567,6 @@ angular.module('pipelineGraphDirectives', [])
 
       // remove old nodes
       thisGraph.rects.exit().remove();
-
 
       var paths = thisGraph.paths;
       // update existing paths

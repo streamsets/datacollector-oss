@@ -16,6 +16,15 @@
  * Main Body
  */
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak],
+.ng-cloak, .x-ng-cloak,
+.ng-hide:not(.ng-hide-animate) {
+  display: none !important;
+}
+
+ng\:form {
+  display: block;
+}
 body {
   //padding-top: 60px;
 
@@ -38,6 +47,12 @@ body {
           padding-bottom: 20px;
         }
       }
+
+      .pipelineAgent-status {
+        padding: @defaultPadding * 2.5 @defaultPadding * 4  @defaultPadding*2 @defaultPadding;
+        color: #ACACAC;
+        font-size: 12px;
+      }
     }
   }
 
@@ -46,7 +61,6 @@ body {
   }
 
 }
-
 
 /**
  * Now that all app-wide styles have been applied, we can load the styles for

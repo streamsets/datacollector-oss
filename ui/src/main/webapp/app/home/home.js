@@ -21,11 +21,10 @@ angular
       }
     );
   }])
-  .controller('HomeController', function ($scope, $timeout, api, _, $q) {
+  .controller('HomeController', function ($scope, $rootScope, $timeout, api, _, $q) {
     var stageCounter = 0,
       timeout,
       dirty = false,
-      saveOperationRunning,
       saveUpdates,
       updateGraph,
       updateDetailPane,
@@ -97,7 +96,7 @@ angular
           };
 
         if (stage.type !== 'TARGET') {
-          stageInstance.outputLanes = [stageInstance.instanceName + 'OutputLane1'];
+          stageInstance.outputLanes = [stageInstance.instanceName + 'OutputLane'];
         }
 
         angular.forEach(stage.configDefinitions, function (configDefinition) {
@@ -330,7 +329,7 @@ angular
      * @param config
      */
     saveUpdates = function (config) {
-      if (saveOperationRunning) {
+      if ($rootScope.common.saveOperationInProgress) {
         return;
       }
 
@@ -341,13 +340,21 @@ angular
       delete config.info;
 
       dirty = false;
-      saveOperationRunning = true;
+      $rootScope.common.saveOperationInProgress = true;
       api.pipelineAgent.savePipelineConfig('xyz', config).success(function (res) {
-        saveOperationRunning = false;
+
+        $rootScope.common.saveOperationInProgress = false;
+
         if (dirty) {
           config = _.clone($scope.pipelineConfig);
           config.uuid = res.uuid;
-          //saveUpdates(config);
+
+          //Updated new changes in return config
+          res.configuration = config.configuration;
+          res.uiInfo = config.uiInfo;
+          res.stages = config.stages;
+
+          saveUpdates(config);
         }
         updateGraph(res);
       });

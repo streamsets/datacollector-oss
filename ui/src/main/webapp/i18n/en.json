@@ -4,7 +4,8 @@
     "menu": {
       "admin": "Admin",
       "flow": "Flow",
-      "data": "Data"
+      "data": "Data",
+      "toggleNavigation": "Toggle navigation"
     },
     "form": {
       "username": "Login",
@@ -12,6 +13,8 @@
     },
     "messages": {
       "info": {
+        "saveOperationInProgress" : "All Changes Saved",
+        "savingConfiguration" : "Saving..."
       },
       "error": {
       },
@@ -20,36 +23,28 @@
     }
   },
   "admin": {
-    "createPipelineFLow": "Create Pipeline Flow",
     "header" : {
       "pipelineFlow": "Pipeline Flow",
       "preview": "Preview",
+      "closePreview": "Close Preview",
       "start": "Start",
-      "stop": "Stop"
+      "stop": "Stop",
+      "pipelineIssues": "Pipeline Issues",
+      "nextBatch": "Next Batch",
+      "addSource": "Add Source",
+      "addProcessor": "Add Processor",
+      "addTarget": "Add Target"
     },
     "detailPane": {
-      "attributes": {
-        "title": "Attributes",
-        "attributeName": "Attribute Name",
-        "type": "Type"
-      },
-      "configuration": {
-        "title": "Configuration",
-        "location": "Location",
-        "location.placeholder": "Enter Source Location",
+      "previewRecords": "Preview Records",
+      "general": "General",
+      "configuration":  "Configuration",
+      "preview": {
+        "inputData": "Input Data",
+        "outputData": "Output Data",
+        "fieldName": "Field Name",
         "type": "Type",
-        "type.json": "JSON",
-        "type.csv": "CSV",
-        "type.logFile": "Log File",
-
-        "batchSize": "Batch Size",
-        "batchSize.placeholder": "Enter number of records in batch.",
-
-        "maximumRecordSize": "Maximum Record Size",
-        "maximumRecordSize.placeholder": "Enter allowed maximum size of Record in bytes.",
-
-        "requiredAttributes": "Required Attributes",
-        "requiredAttributes.placeholder": "Add a attribute"
+        "value": "Value"
       }
     }
   },

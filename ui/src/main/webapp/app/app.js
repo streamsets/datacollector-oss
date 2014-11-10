@@ -36,7 +36,8 @@ angular.module('pipelineAgentApp', [
       title : defaultTitle,
       active: {
         home: 'active'
-      }
+      },
+      saveOperationInProgress: false
     };
 
     // set actions to be taken each time the user navigates
