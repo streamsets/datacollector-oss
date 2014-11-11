@@ -29,14 +29,14 @@ public class TestPreviewPipelineRunner {
   @Test
   public void testRunner() throws Exception {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PipelineRunner runner = new PreviewPipelineRunner(tracker, -1);
+    PipelineRunner runner = new PreviewPipelineRunner(tracker, -1, 1);
     Assert.assertNotNull(runner.getMetrics());
-    Assert.assertNull(runner.getStagesOutputSnapshot());
+    Assert.assertTrue(runner.getBatchesOutput().isEmpty());
 
     Pipe pipe = Mockito.mock(Pipe.class);
     Pipe[] pipes = { pipe };
     runner.run(pipes);
-    Assert.assertNotNull(runner.getStagesOutputSnapshot());
+    Assert.assertNotNull(runner.getBatchesOutput());
 
   }
 

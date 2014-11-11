@@ -47,6 +47,8 @@ import java.util.Locale;
 public class PreviewResource {
   private static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
   private static final int MAX_BATCH_SIZE_DEFAULT = 10;
+  private static final String MAX_BATCHES_KEY = "preview.maxBatches";
+  private static final int MAX_BATCHES_DEFAULT = 10;
 
   //preview.maxBatchSize
   private final Configuration configuration;
@@ -73,13 +75,16 @@ public class PreviewResource {
       @PathParam("name") String name,
       @QueryParam("rev") String rev,
       @QueryParam("sourceOffset") String sourceOffset,
-      @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize)
+      @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize,
+      @QueryParam("batches") @DefaultValue("1") int batches)
       throws PipelineStoreException, PipelineRuntimeException, StageException {
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
+    int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
+    batches = Math.min(maxBatches, batches);
     PipelineConfiguration pipelineConf = store.load(name, rev);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(sourceOffset);
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize, batches);
     PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     previewOutput.setLocale(locale);

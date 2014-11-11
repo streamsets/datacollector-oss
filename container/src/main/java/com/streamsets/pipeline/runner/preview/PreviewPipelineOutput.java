@@ -27,14 +27,14 @@ import java.util.Locale;
 public class PreviewPipelineOutput {
   private final Issues issues;
   private final MetricRegistry metrics;
-  private final List<StageOutput> stagesOutput;
+  private final List<List<StageOutput>> batchesOutput;
   private String sourceOffset;
   private String newSourceOffset;
 
   public PreviewPipelineOutput(Issues issues, PreviewPipelineRunner runner) {
     this.issues = issues;
     this.metrics = runner.getMetrics();
-    this.stagesOutput = runner.getStagesOutputSnapshot();
+    this.batchesOutput = runner.getBatchesOutput();
     this.sourceOffset = runner.getSourceOffset();
     this.newSourceOffset = runner.getNewSourceOffset();
   }
@@ -51,8 +51,8 @@ public class PreviewPipelineOutput {
     return metrics;
   }
 
-  public List<StageOutput> getStagesOutput() {
-    return stagesOutput;
+  public List<List<StageOutput>> getBatchesOutput() {
+    return batchesOutput;
   }
 
   public String getSourceOffset() {

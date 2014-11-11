@@ -64,13 +64,13 @@ public class TestPreviewRun {
       }
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PipelineRunner runner = new PreviewPipelineRunner(tracker, -1);
+    PipelineRunner runner = new PreviewPipelineRunner(tracker, -1, 1);
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
     pipeline.init();
     pipeline.run();
     pipeline.destroy();
-    List<StageOutput> output = runner.getStagesOutputSnapshot();
+    List<StageOutput> output = runner.getBatchesOutput().get(0);
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).getField("f").getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).getField("f").getValue());
   }
@@ -94,13 +94,13 @@ public class TestPreviewRun {
       }
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, -1);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, -1, 1);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
 
     PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name", pipelineConfiguration).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
-    List<StageOutput> output = previewOutput.getStagesOutput();
+    List<StageOutput> output = previewOutput.getBatchesOutput().get(0);
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).getField("f").getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).getField("f").getValue());
   }

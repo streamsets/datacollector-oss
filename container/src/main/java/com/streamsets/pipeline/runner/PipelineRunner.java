@@ -28,6 +28,6 @@ public interface PipelineRunner {
 
   public void run(Pipe[] pipes)  throws StageException, PipelineRuntimeException;
 
-  public List<StageOutput> getStagesOutputSnapshot();
+  public List<List<StageOutput>> getBatchesOutput();
 
 }

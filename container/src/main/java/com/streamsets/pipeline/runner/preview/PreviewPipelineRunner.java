@@ -28,23 +28,27 @@ import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PreviewPipelineRunner implements PipelineRunner {
   private final SourceOffsetTracker offsetTracker;
   private final int batchSize;
+  private final int batches;
   private final MetricRegistry metrics;
-  private List<StageOutput> stageOutput;
+  private final List<List<StageOutput>> batchesOuptut;
   private String sourceOffset;
   private String newSourceOffset;
   private Timer processingTimer;
 
-  public PreviewPipelineRunner(SourceOffsetTracker offsetTracker, int batchSize) {
+  public PreviewPipelineRunner(SourceOffsetTracker offsetTracker, int batchSize, int batches) {
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
+    this.batches = batches;
     this.metrics = new MetricRegistry();
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
+    batchesOuptut = new ArrayList<List<StageOutput>>();
   }
 
   @Override
@@ -54,21 +58,23 @@ public class PreviewPipelineRunner implements PipelineRunner {
 
   @Override
   public void run(Pipe[] pipes) throws StageException, PipelineRuntimeException {
-    PipeBatch pipeBatch = new PipeBatch(offsetTracker, batchSize, true);
-    long start = System.currentTimeMillis();
-    sourceOffset = pipeBatch.getPreviousOffset();
-    for (Pipe pipe : pipes) {
-      pipe.process(pipeBatch);
+    for (int i = 0; i < batches; i++) {
+      PipeBatch pipeBatch = new PipeBatch(offsetTracker, batchSize, true);
+      long start = System.currentTimeMillis();
+      sourceOffset = pipeBatch.getPreviousOffset();
+      for (Pipe pipe : pipes) {
+        pipe.process(pipeBatch);
+      }
+      offsetTracker.commitOffset();
+      processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+      newSourceOffset = offsetTracker.getOffset();
+      batchesOuptut.add(pipeBatch.getSnapshotsOfAllStagesOutput());
     }
-    offsetTracker.commitOffset();
-    processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
-    newSourceOffset = offsetTracker.getOffset();
-    stageOutput = pipeBatch.getSnapshotsOfAllStagesOutput();
   }
 
   @Override
-  public List<StageOutput> getStagesOutputSnapshot() {
-    return stageOutput;
+  public List<List<StageOutput>> getBatchesOutput() {
+    return batchesOuptut;
   }
 
 
