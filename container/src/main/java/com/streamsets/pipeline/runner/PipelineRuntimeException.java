@@ -34,8 +34,8 @@ public class PipelineRuntimeException extends PipelineException {
     CANNOT_PREVIEW("Cannot preview, {}"),
     INVALID_REQUIRED_FIELDS_CONFIG_VALUE("Instance '{}', required fields configuration must be a List, it is a '{}'"),
     INVALID_INSTANCE_STAGE("Invalid instance '{}'"),
-    CANNOT_PREVIEW_STAGE_ON_SOURCE("Cannot do a preview stage run on a source, instance '{}'")
-    ;
+    CANNOT_PREVIEW_STAGE_ON_SOURCE("Cannot do a preview stage run on a source, instance '{}'"),
+    CANNOT_RUN("Cannot run, {}");
 
     private String msg;
 

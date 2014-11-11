@@ -24,13 +24,12 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.metrics.MetricsModule;
 import com.streamsets.pipeline.restapi.RestAPI;
-import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
-import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;
-import com.streamsets.pipeline.restapi.configuration.RestAPIResourceConfig;
-import com.streamsets.pipeline.restapi.configuration.StageLibraryInjector;
+import com.streamsets.pipeline.restapi.configuration.*;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
 import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.state.PipelineStateManager;
+import com.streamsets.pipeline.state.PipelineStateModule;
 import com.streamsets.pipeline.store.PipelineStoreModule;
 import dagger.Module;
 import dagger.Provides;
@@ -47,7 +46,7 @@ import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 
 @Module(library = true, includes = {RuntimeModule.class, MetricsModule.class,
-    PipelineStoreModule.class, StageLibraryModule.class})
+    PipelineStoreModule.class, StageLibraryModule.class, PipelineStateModule.class})
 public class WebServerModule {
 
   @Provides(type = Type.SET)
@@ -140,6 +139,26 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(ConfigurationInjector.CONFIGURATION, configuration);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator providePipelineStateManager(final PipelineStateManager pipelineStateManager) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(PipelineStateMgrInjector.PIPELINE_STATE_MGR, pipelineStateManager);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideRuntimeInfo(final RuntimeInfo runtimeInfo) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(RuntimeInfoInjector.RUNTIME_INFO, runtimeInfo);
       }
     };
   }

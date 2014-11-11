@@ -15,45 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.main;
+package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.state.PipelineStateManager;
-import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.task.AbstractTask;
+import org.glassfish.hk2.api.Factory;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
-public class PipelineTask extends AbstractTask {
-  private final PipelineStoreTask store;
-  private final WebServerTask webServer;
-  private final PipelineStateManager stateMgr;
+public class PipelineStateMgrInjector implements Factory<PipelineStateManager> {
+
+  public static final String PIPELINE_STATE_MGR = "pipeline-state-mgr";
+  private PipelineStateManager stateMgr;
 
   @Inject
-  public PipelineTask(PipelineStoreTask store, WebServerTask webServer, PipelineStateManager stateMgr) {
-    super("pipeline");
-    this.store = store;
-    this.webServer = webServer;
-    this.stateMgr = stateMgr;
+  public PipelineStateMgrInjector(HttpServletRequest request) {
+    stateMgr = (PipelineStateManager) request.getServletContext().getAttribute(PIPELINE_STATE_MGR);
   }
 
   @Override
-  protected void initTask() {
-    store.init();
-    webServer.init();
-    stateMgr.init();
+  public PipelineStateManager provide() {
+    return stateMgr;
   }
 
   @Override
-  protected void runTask() {
-    store.run();
-    webServer.run();
-  }
-
-  @Override
-  protected void stopTask() {
-    webServer.stop();
-    store.stop();
-    stateMgr.destroy();
+  public void dispose(PipelineStateManager pipelineStore) {
   }
 }

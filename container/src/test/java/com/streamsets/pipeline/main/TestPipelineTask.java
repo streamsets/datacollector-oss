@@ -19,6 +19,7 @@ package com.streamsets.pipeline.main;
 
 import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.state.PipelineStateManager;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -29,8 +30,10 @@ public class TestPipelineTask {
   public void testPipelineAgentDelegation() {
     PipelineStoreTask store = Mockito.mock(PipelineStoreTask.class);
     WebServerTask webServer = Mockito.mock(WebServerTask.class);
-    PipelineTask task = new PipelineTask(store, webServer);
+    PipelineStateManager stateMgr = Mockito.mock(PipelineStateManager.class);
+    PipelineTask task = new PipelineTask(store, webServer, stateMgr);
     task.init();
+
     Mockito.verify(store, Mockito.times(1)).init();
     Mockito.verify(webServer, Mockito.times(1)).init();
     Mockito.verifyNoMoreInteractions(webServer);
@@ -47,7 +50,8 @@ public class TestPipelineTask {
   public void testLatch() throws Exception {
     PipelineStoreTask store = Mockito.mock(PipelineStoreTask.class);
     WebServerTask webServer = Mockito.mock(WebServerTask.class);
-    final PipelineTask task = new PipelineTask(store, webServer);
+    PipelineStateManager stateMgr = Mockito.mock(PipelineStateManager.class);
+    final PipelineTask task = new PipelineTask(store, webServer, stateMgr);
     task.init();
     long now = System.currentTimeMillis();
     new Thread() {

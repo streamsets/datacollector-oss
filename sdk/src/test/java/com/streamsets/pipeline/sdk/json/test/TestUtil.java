@@ -56,14 +56,9 @@ public class TestUtil {
   public static void compareExpectedAndActualStages(String expectedJsonFileName) {
     List<StageDefinition> actualStages = TestUtil.getGeneratedStageCollection();
 
-    InputStream in = null;
-    try {
-      in = new FileInputStream(expectedJsonFileName);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-      Assert.fail("Test failed for the following reason:");
-      e.printStackTrace();
-    }
+    InputStream in = Thread.currentThread().getContextClassLoader().
+          getResourceAsStream(expectedJsonFileName);
+
     List<StageDefinition> expectedStages = TestUtil.getStageCollection(in);
 
     Assert.assertTrue(actualStages.size() == expectedStages.size());
