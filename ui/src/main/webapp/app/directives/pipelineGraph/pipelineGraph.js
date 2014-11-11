@@ -509,14 +509,14 @@ angular.module('pipelineGraphDirectives', [])
         consts = thisGraph.consts,
         state = thisGraph.state;
 
-
-
       thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d){
         return String(d.source.instanceName) + "+" + String(d.target.instanceName);
       });
 
       // update existing nodes
-      thisGraph.rects = thisGraph.rects.data(thisGraph.nodes, function(d){ return d.instanceName;});
+      thisGraph.rects = thisGraph.rects.data(thisGraph.nodes, function(d) {
+        return d.instanceName;
+      });
       thisGraph.rects.attr("transform", function(d) {
         return "translate(" + (d.uiInfo.xPos) + "," + (d.uiInfo.yPos) + ")";
       });
@@ -553,7 +553,6 @@ angular.module('pipelineGraphDirectives', [])
           'rx': this.consts.rectRound,
           'ry': this.consts.rectRound
         });
-
 
       //Input Connectors
       newGs.append('circle')

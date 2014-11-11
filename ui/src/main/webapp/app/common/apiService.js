@@ -9,6 +9,11 @@ angular.module('pipelineAgentApp.common')
 
     api.pipelineAgent = {
 
+      /**
+       * Fetches all configuration definitions of Pipeline and Stage Configuration.
+       *
+       * @returns {*}
+       */
       getDefinitions: function() {
         var url = apiBase + '/definitions';
         return $http({
@@ -17,6 +22,12 @@ angular.module('pipelineAgentApp.common')
         });
       },
 
+      /**
+       * Fetches Pipeline Configuration.
+       *
+       * @param name
+       * @returns {*}
+       */
       getPipelineConfig: function(name) {
         var url;
 
@@ -31,6 +42,12 @@ angular.module('pipelineAgentApp.common')
         });
       },
 
+      /**
+       * Fetches Pipeline Configuration Information
+       *
+       * @param name
+       * @returns {*}
+       */
       getPipelineConfigInfo: function(name) {
         var url;
 
@@ -45,6 +62,13 @@ angular.module('pipelineAgentApp.common')
         });
       },
 
+      /**
+       * Sends updated Pipeline configuration to server for update.
+       *
+       * @param name - Pipeline Name
+       * @param config - Modified Pipeline Configuration
+       * @returns Updated Pipeline Configuration
+       */
       savePipelineConfig: function(name, config) {
         var url;
 
@@ -60,6 +84,15 @@ angular.module('pipelineAgentApp.common')
         });
       },
 
+      /**
+       * Fetches Preview Data for Pipeline
+       *
+       * @param name
+       * @param sourceOffset
+       * @param batchSize
+       * @param rev
+       * @returns {*}
+       */
       previewPipeline: function(name, sourceOffset, batchSize, rev) {
         var url;
 
