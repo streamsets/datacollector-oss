@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 
 import java.util.Iterator;
 
-@StageDef(name = "recordCreator", version = "1.0.0", label = "Identity",
+@StageDef(name = "recordCreator", version = "1.0.0", label = "Record Creator",
           description = "It creates 2 records from each original record")
 public class RecordCreatorProcessor extends SingleLaneProcessor {
 
