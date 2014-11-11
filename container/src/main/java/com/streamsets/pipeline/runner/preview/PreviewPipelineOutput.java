@@ -30,6 +30,7 @@ public class PreviewPipelineOutput {
   private final List<List<StageOutput>> batchesOutput;
   private String sourceOffset;
   private String newSourceOffset;
+  private Locale locale;
 
   public PreviewPipelineOutput(Issues issues, PreviewPipelineRunner runner) {
     this.issues = issues;
@@ -52,6 +53,11 @@ public class PreviewPipelineOutput {
   }
 
   public List<List<StageOutput>> getBatchesOutput() {
+    for (List<StageOutput> batchOutput : batchesOutput) {
+      for (StageOutput stageOutput : batchOutput) {
+        stageOutput.setLocale(locale);
+      }
+    }
     return batchesOutput;
   }
 

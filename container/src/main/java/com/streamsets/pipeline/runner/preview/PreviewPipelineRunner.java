@@ -21,6 +21,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.runner.ErrorRecordSink;
 import com.streamsets.pipeline.runner.Pipe;
 import com.streamsets.pipeline.runner.PipeBatch;
 import com.streamsets.pipeline.runner.PipelineRunner;

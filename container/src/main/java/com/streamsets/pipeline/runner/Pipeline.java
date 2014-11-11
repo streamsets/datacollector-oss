@@ -17,26 +17,16 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.container.Configuration;
-import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 public class Pipeline {
   private final Pipe[] pipes;
@@ -96,80 +86,6 @@ public class Pipeline {
 
   public void run() throws StageException, PipelineRuntimeException {
     runner.run(pipes);
-  }
-
-  static class StageContext implements Source.Context, Target.Context, Processor.Context {
-    private final List<Stage.Info> pipelineInfo;
-    private final MetricRegistry metrics;
-    private final String instanceName;
-    private final Set<String> outputLanes;
-
-    public StageContext(List<Stage.Info> pipelineInfo, MetricRegistry metrics, StageConfiguration conf) {
-      this.pipelineInfo = pipelineInfo;
-      this.metrics = metrics;
-      this.instanceName = conf.getInstanceName();
-      this.outputLanes = ImmutableSet.copyOf(conf.getOutputLanes());
-
-    }
-
-    @Override
-    public List<Stage.Info> getPipelineInfo() {
-      return pipelineInfo;
-    }
-
-    @Override
-    public MetricRegistry getMetrics() {
-      return metrics;
-    }
-
-    @Override
-    public void toError(Record record, Exception exception) {
-      //TODO
-    }
-
-    @Override
-    public void toError(Record record, String errorMessage) {
-      //TODO
-    }
-
-
-    @Override
-    public Set<String> getOutputLanes() {
-      return outputLanes;
-    }
-
-    //Stage.Context
-    @Override
-    public Record createRecord(String recordSourceId) {
-      return new RecordImpl(instanceName, recordSourceId, null, null);
-    }
-
-    //Stage.Context
-    @Override
-    public Record createRecord(String recordSourceId, byte[] raw, String rawMime) {
-      return new RecordImpl(instanceName, recordSourceId, raw, rawMime);
-    }
-
-    //Processor.Context
-    @Override
-    public Record createRecord(Record originatorRecord) {
-      Preconditions.checkNotNull(originatorRecord, "originatorRecord cannot be null");
-      RecordImpl record = new RecordImpl(instanceName, originatorRecord, null, null);
-      return record;
-    }
-
-    //Processor.Context
-    @Override
-    public Record createRecord(Record originatorRecord, byte[] raw, String rawMime) {
-      RecordImpl record = new RecordImpl(instanceName, originatorRecord, raw, rawMime);
-      return record;
-    }
-
-    //Processor.Context
-    @Override
-    public Record cloneRecord(Record record) {
-      return ((RecordImpl)record).createCopy();
-    }
   }
 
   public static class Builder {

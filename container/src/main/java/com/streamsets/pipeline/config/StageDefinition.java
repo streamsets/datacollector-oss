@@ -129,6 +129,15 @@ public class StageDefinition {
     return type;
   }
 
+  public void addConfiguration(ConfigDefinition confDef) {
+    if (configDefinitionsMap.containsKey(confDef.getName())) {
+      throw new IllegalArgumentException(String.format("Stage '%s:%s:%s', configuration definition '%s' already exists",
+                                                       getLibrary(), getName(), getVersion(), confDef.getName()));
+    }
+    configDefinitionsMap.put(confDef.getName(), confDef);
+    configDefinitions.add(confDef);
+  }
+
   public List<ConfigDefinition> getConfigDefinitions() {
     return configDefinitions;
   }

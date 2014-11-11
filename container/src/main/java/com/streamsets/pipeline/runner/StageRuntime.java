@@ -34,17 +34,21 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class StageRuntime {
   private final StageDefinition def;
   private final StageConfiguration conf;
   private final Stage stage;
   private final Stage.Info info;
-  private Stage.Context context;
+  private final List<String> requiredFields;
+  private StageContext context;
 
-  private StageRuntime(final StageDefinition def, final StageConfiguration conf, Stage stage) {
+  private StageRuntime(final StageDefinition def, final StageConfiguration conf, List<String> requiredFields,
+      Stage stage) {
     this.def = def;
     this.conf = conf;
+    this.requiredFields = requiredFields;
     this.stage = stage;
     info = new Stage.Info() {
       @Override
@@ -72,12 +76,20 @@ public class StageRuntime {
     return conf;
   }
 
+  public List<String> getRequiredFields() {
+    return requiredFields;
+  }
+
   public Stage getStage() {
     return stage;
   }
 
-  public void setContext(Stage.Context context) {
+  public void setContext(StageContext context) {
     this.context = context;
+  }
+
+  public void setErrorRecordSink(ErrorRecordSink errorRecordSink) {
+    context.setErrorRecordSink(errorRecordSink);
   }
 
   @SuppressWarnings("unchecked")
@@ -97,11 +109,13 @@ public class StageRuntime {
     }
   }
 
-  public String execute(String previousOffset, int batchSize, Batch batch, BatchMaker batchMaker)
+  public String execute(String previousOffset, int batchSize, Batch batch, BatchMaker batchMaker,
+      ErrorRecordSink errorRecordSink)
       throws StageException {
     String newOffset = null;
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
+      setErrorRecordSink(errorRecordSink);
       Thread.currentThread().setContextClassLoader(getDefinition().getClassLoader());
       switch (getDefinition().getType()) {
         case SOURCE: {
@@ -119,6 +133,7 @@ public class StageRuntime {
         }
       }
     } finally {
+      setErrorRecordSink(null);
       Thread.currentThread().setContextClassLoader(cl);
     }
     return newOffset;
@@ -142,6 +157,7 @@ public class StageRuntime {
     private final StageLibrary stageLib;
     private final String name;
     private final PipelineConfiguration pipelineConf;
+    private List<String> requiredFields;
 
     public Builder(StageLibrary stageLib, String name, PipelineConfiguration pipelineConf) {
       this.stageLib = stageLib;
@@ -162,7 +178,7 @@ public class StageRuntime {
           Class klass = def.getClassLoader().loadClass(def.getClassName());
           Stage stage = (Stage) klass.newInstance();
           configureStage(def, conf, klass, stage);
-          runtimes[i] = new StageRuntime(def, conf, stage);
+          runtimes[i] = new StageRuntime(def, conf, requiredFields, stage);
         }
         return runtimes;
       } catch (PipelineRuntimeException ex) {
@@ -172,6 +188,7 @@ public class StageRuntime {
       }
     }
 
+    @SuppressWarnings("unchecked")
     private void configureStage(StageDefinition stageDef, StageConfiguration stageConf, Class klass, Stage stage)
         throws PipelineRuntimeException {
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
@@ -182,13 +199,19 @@ public class StageRuntime {
         }
         Object value = confConf.getValue();
         String instanceVar = confDef.getFieldName();
-        try {
-          Field var = klass.getField(instanceVar);
-          var.set(stage, value);
-        } catch (Exception ex) {
-          throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.STAGE_CONFIG_INJECTION,
-                                           stageDef.getClassName(), stageConf.getInstanceName(), instanceVar, value,
-                                           ex.getMessage(), ex);
+        if (ConfigDefinition.SYSTEM_CONFIGS.contains(confDef.getName())) {
+          if (ConfigDefinition.REQUIRED_FIELDS.equals(confDef.getName())) {
+            requiredFields = (List<String>) value;
+          }
+        } else {
+          try {
+            Field var = klass.getField(instanceVar);
+            var.set(stage, value);
+          } catch (Exception ex) {
+            throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.STAGE_CONFIG_INJECTION,
+                                               stageDef.getClassName(), stageConf.getInstanceName(), instanceVar, value,
+                                               ex.getMessage(), ex);
+          }
         }
       }
     }

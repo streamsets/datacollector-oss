@@ -195,6 +195,11 @@ public class RecordImpl implements Record {
   }
 
   @Override
+  public boolean hasField(String name) {
+    return fieldData.hasKey(name);
+  }
+
+  @Override
   public Field getField(String name) {
     return fieldData.get(name);
   }

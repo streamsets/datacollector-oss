@@ -18,21 +18,30 @@
 package com.streamsets.pipeline.runner;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.Iterators;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class BatchImpl implements Batch {
+  private final String stageInstance;
+  private final List<String> requiredFields;
   private final List<Record> records;
-  private boolean got;
   private final String sourceOffset;
+  private final ErrorRecordSink errorSink;
+  private boolean got;
 
-  public BatchImpl(SourceOffsetTracker offsetTracker, List<Record> records) {
+  public BatchImpl(String stageInstance, SourceOffsetTracker offsetTracker, List<String> requiredFields,
+      List<Record> records, ErrorRecordSink errorSink) {
+    this.stageInstance = stageInstance;
+    this.requiredFields = requiredFields;
     this.records = records;
     sourceOffset = offsetTracker.getOffset();
+    this.errorSink = errorSink;
     got = false;
   }
 
@@ -45,11 +54,48 @@ public class BatchImpl implements Batch {
   public Iterator<Record> getRecords() {
     Preconditions.checkState(!got, "The record iterator can be obtained only once");
     got = true;
-    return Collections.unmodifiableList(records).iterator();
+    Iterator<Record> iterator = records.iterator();
+    if (requiredFields != null) {
+      iterator = new RecordIterator(records.iterator());
+    } else {
+      iterator = Iterators.unmodifiableIterator(iterator);
+    }
+    return iterator;
   }
 
   public int getSize() {
     return records.size();
+  }
+
+  class RecordIterator extends AbstractIterator<Record> {
+    private Iterator<Record> iterator;
+
+    public RecordIterator(Iterator<Record> iterator) {
+      this.iterator = iterator;
+    }
+
+    @Override
+    protected Record computeNext() {
+      Record next = null;
+      while (next == null && iterator.hasNext()) {
+        Record record = iterator.next();
+        List<String> missingFields = new ArrayList<String>();
+        for (String field : requiredFields) {
+          if (!record.hasField(field)) {
+            missingFields.add(field);
+          }
+        }
+        if (missingFields.isEmpty()) {
+          next = record;
+        } else {
+          errorSink.addRecord(stageInstance, record, ErrorRecord.ERROR.REQUIRED_FIELDS_MISSING, missingFields);
+        }
+      }
+      if (next == null && !iterator.hasNext()) {
+        endOfData();
+      }
+      return next;
+    }
   }
 
 }

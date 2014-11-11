@@ -19,16 +19,24 @@ package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.container.ApiUtils;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Captures attributes related to individual configuration options
  */
 public class ConfigDefinition {
 
+  public static final String REQUIRED_FIELDS = "stageRequiredFields";
+
+  // we are not using Guava ImmutableSet.of() because this breaks the annotation processor
+  public static final Set<String> SYSTEM_CONFIGS = new HashSet<String>(Arrays.asList(REQUIRED_FIELDS));
   private final String name;
   private final ConfigDef.Type type;
   private final String label;

@@ -24,6 +24,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,8 +34,10 @@ public class TestBatchImpl {
   public void testBatch() {
     SourceOffsetTracker offsetTracker = Mockito.mock(SourceOffsetTracker.class);
     Mockito.when(offsetTracker.getOffset()).thenReturn("offset");
+    List<String> requiredFields = new ArrayList<String>();
     List<Record> records = ImmutableList.of(Mockito.mock(Record.class), Mockito.mock(Record.class));
-    Batch batch = new BatchImpl(offsetTracker, records);
+    ErrorRecordSink errorRecordSink = Mockito.mock(ErrorRecordSink.class);
+    Batch batch = new BatchImpl("i", offsetTracker, requiredFields, records, errorRecordSink);
 
     Assert.assertEquals("offset", batch.getSourceOffset());
     Iterator<Record> it = batch.getRecords();

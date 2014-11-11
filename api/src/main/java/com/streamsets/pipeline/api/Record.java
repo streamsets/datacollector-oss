@@ -52,6 +52,8 @@ public interface Record {
 
   public Iterator<String> getFieldNames();
 
+  public boolean hasField(String name);
+
   public Field getField(String name);
 
   public void setField(String name, Field field);

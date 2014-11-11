@@ -26,7 +26,12 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.agent.RuntimeInfo;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.ModelDefinition;
+import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,6 +110,7 @@ public class ClassLoaderStageLibrary implements StageLibrary {
                   "Library '%s' contains more than one definition for stage '%s', class '%s' and class '%s'",
                   libraryName, key, stagesInLibrary.get(key), stage.getStageClass()));
             }
+            addSystemConfigurations(stage);
             stagesInLibrary.put(key, stage.getClassName());
             stageList.add(stage);
             stageMap.put(key, stage);
@@ -114,6 +120,16 @@ public class ClassLoaderStageLibrary implements StageLibrary {
         throw new RuntimeException(String.format("Could not load stages definition from '%s', %s", cl, ex.getMessage()),
                                    ex);
       }
+    }
+  }
+
+  private static final ConfigDefinition REQUIRED_FIELDS_CONFIG = new ConfigDefinition(
+      ConfigDefinition.REQUIRED_FIELDS, ConfigDef.Type.MODEL, "Required Fields", "Record required fields",
+      null, false, "system", null, new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null, null));
+
+  private void addSystemConfigurations(StageDefinition stage) {
+    if (stage.getType() != StageType.SOURCE) {
+      stage.addConfiguration(REQUIRED_FIELDS_CONFIG);
     }
   }
 

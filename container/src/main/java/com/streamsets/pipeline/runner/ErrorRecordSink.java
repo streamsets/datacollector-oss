@@ -19,44 +19,40 @@ package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.Record;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-public class StageOutput {
-  private final String instanceName;
-  private final Map<String, List<Record>> output;
-  private final List<ErrorRecord> errorRecords;
-  private Locale locale;
+public class ErrorRecordSink {
+  private final Map<String, List<ErrorRecord>> errorRecords;
+  private int size;
 
-  public StageOutput(String instanceName, Map<String, List<Record>> output, List<ErrorRecord> errorRecords) {
-    this.instanceName = instanceName;
-    this.output = output;
-    this.errorRecords = errorRecords;
+  public ErrorRecordSink() {
+    errorRecords = new HashMap<String, List<ErrorRecord>>();
+    size = 0;
   }
 
-  public String getInstanceName() {
-    return instanceName;
-  }
-
-  public Map<String, List<Record>> getOutput() {
-    return output;
-  }
-
-  public void setLocale(Locale locale) {
-    this.locale = locale;
-  }
-
-  @SuppressWarnings("unchecked")
-  public List<ErrorRecord> getErrorRecords() {
-    List<ErrorRecord> ret = Collections.EMPTY_LIST;
-    if (errorRecords != null) {
-      for (ErrorRecord errorRecord : errorRecords) {
-        errorRecord.setLocale(locale);
-      }
-      ret = errorRecords;
+  public void addRecord(String stageInstance, Record record, ErrorRecord.ERROR error, Object... args) {
+    List<ErrorRecord> stageErrors = errorRecords.get(stageInstance);
+    if (stageErrors == null) {
+      stageErrors = new ArrayList<ErrorRecord>();
+      errorRecords.put(stageInstance, stageErrors);
     }
-    return ret;
+    stageErrors.add(new ErrorRecord(record, error, args));
+    size++;
   }
+
+  public Map<String, List<ErrorRecord>> getErrorRecords() {
+    return errorRecords;
+  }
+
+  public List<ErrorRecord> getErrorRecords(String stageInstance) {
+    return errorRecords.get(stageInstance);
+  }
+
+  public int size() {
+    return size;
+  }
+
 }

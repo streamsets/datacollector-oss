@@ -31,7 +31,8 @@ public class PipelineRuntimeException extends PipelineException {
     PIPELINE_BUILD("Pipeline build error, {}"),
     STAGE_CONFIG_INJECTION("Stage '{}', instance '{}', variable '{}', value '{}', configuration injection error, {}"),
     STAGE_MISSING_CONFIG("Stage '{}', instance '{}', missing configuration '{}'"),
-    CANNOT_PREVIEW("Cannot preview, {}");
+    CANNOT_PREVIEW("Cannot preview, {}"),
+    INVALID_REQUIRED_FIELDS_CONFIG_VALUE("Instance '{}', required fields configuration must be a List, it is a '{}'");
 
     private String msg;
 

@@ -170,7 +170,7 @@ public class TestStageRuntime {
     StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, "name", pipelineConf);
     StageRuntime[] runtimes = builder.build();
     Assert.assertFalse(((TSource)runtimes[0].getStage()).inited);
-    Source.Context context = Mockito.mock(Source.Context.class);
+    StageContext context = Mockito.mock(StageContext.class);
     runtimes[0].setContext(context);
     Assert.assertEquals(context, runtimes[0].getContext());
     runtimes[0].init();

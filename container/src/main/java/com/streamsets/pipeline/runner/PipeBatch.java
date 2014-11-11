@@ -37,6 +37,7 @@ public class PipeBatch {
   private final Map<String, List<Record>> fullPayload;
   private final Set<String> processedStages;
   private final List<StageOutput> stageOutputSnapshot;
+  private final ErrorRecordSink errorRecordSink;
 
   public PipeBatch(SourceOffsetTracker offsetTracker, int batchSize, boolean snapshotStagesOutput) {
     this.offsetTracker = offsetTracker;
@@ -44,6 +45,7 @@ public class PipeBatch {
     fullPayload = new HashMap<String, List<Record>>();
     processedStages = new HashSet<String>();
     stageOutputSnapshot = (snapshotStagesOutput) ? new ArrayList<StageOutput>() : null;
+    this.errorRecordSink = new ErrorRecordSink();
   }
 
   @VisibleForTesting
@@ -68,7 +70,8 @@ public class PipeBatch {
     for (String inputLane : pipe.getInputLanes()) {
       records.addAll(fullPayload.remove(inputLane));
     }
-    return new BatchImpl(offsetTracker, records);
+    return new BatchImpl(pipe.getStage().getInfo().getInstanceName(), offsetTracker,
+                         pipe.getStage().getRequiredFields(), records, errorRecordSink);
   }
 
   public BatchMakerImpl startStage(StagePipe pipe) {
@@ -96,8 +99,9 @@ public class PipeBatch {
       fullPayload.put(pipeLaneName, stageOutput.get(stageLaneName));
     }
     if (stageOutputSnapshot != null) {
-      stageOutputSnapshot.add(new StageOutput(pipe.getStage().getInfo().getInstanceName(),
-                              batchMaker.getStageOutputSnapshot()));
+      String instanceName = pipe.getStage().getInfo().getInstanceName();
+      stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(),
+                                              errorRecordSink.getErrorRecords(instanceName)));
     }
   }
 
@@ -123,6 +127,10 @@ public class PipeBatch {
 
   public List<StageOutput> getSnapshotsOfAllStagesOutput() {
     return stageOutputSnapshot;
+  }
+
+  public ErrorRecordSink getErrorRecordSink() {
+    return errorRecordSink;
   }
 
   public void moveLane(String inputLane, String outputLane) {
