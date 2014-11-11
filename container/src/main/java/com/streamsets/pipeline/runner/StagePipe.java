@@ -21,10 +21,8 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 
 import java.util.HashMap;
@@ -75,22 +73,9 @@ public class StagePipe extends Pipe {
     inputRecordsCounter.inc(batch.getSize());
     inputRecordsMeter.mark(batch.getSize());
     long start = System.currentTimeMillis();
-    switch (getStage().getDefinition().getType()) {
-      case SOURCE: {
-        String newOffset = ((Source) getStage().getStage()).produce(pipeBatch.getPreviousOffset(),
-                                                                    pipeBatch.getBatchSize(), batchMaker);
-        pipeBatch.setNewOffset(newOffset);
-        break;
-      }
-      case PROCESSOR: {
-        ((Processor) getStage().getStage()).process(batch, batchMaker);
-        break;
-
-      }
-      case TARGET: {
-        ((Target) getStage().getStage()).write(batch);
-        break;
-      }
+    String newOffset = getStage().execute(pipeBatch.getPreviousOffset(), pipeBatch.getBatchSize(), batch, batchMaker);
+    if (getStage().getDefinition().getType() == StageType.SOURCE) {
+      pipeBatch.setNewOffset(newOffset);
     }
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     outputRecordsCounter.inc(batchMaker.getSize());

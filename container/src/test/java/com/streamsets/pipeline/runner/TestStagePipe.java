@@ -129,6 +129,8 @@ public class TestStagePipe {
 
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe));
+    Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
+    Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker));
     Mockito.verifyNoMoreInteractions(pipeBatch);
     Assert.assertTrue(process);
@@ -177,6 +179,8 @@ public class TestStagePipe {
 
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe));
+    Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
+    Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker));
     Mockito.verifyNoMoreInteractions(pipeBatch);
     Assert.assertTrue(write);

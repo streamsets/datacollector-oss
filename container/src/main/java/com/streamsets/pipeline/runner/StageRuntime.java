@@ -18,8 +18,13 @@
 package com.streamsets.pipeline.runner;
 
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -83,11 +88,50 @@ public class StageRuntime {
   @SuppressWarnings("unchecked")
   public void init() throws StageException {
     Preconditions.checkState(context != null, "context has not been set");
-    stage.init(info, context);
+    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(getDefinition().getClassLoader());
+      stage.init(info, context);
+    } finally {
+      Thread.currentThread().setContextClassLoader(cl);
+    }
+  }
+
+  public String execute(String previousOffset, int batchSize, Batch batch, BatchMaker batchMaker)
+      throws StageException {
+    String newOffset = null;
+    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(getDefinition().getClassLoader());
+      switch (getDefinition().getType()) {
+        case SOURCE: {
+          newOffset = ((Source) getStage()).produce(previousOffset, batchSize, batchMaker);
+          break;
+        }
+        case PROCESSOR: {
+          ((Processor) getStage()).process(batch, batchMaker);
+          break;
+
+        }
+        case TARGET: {
+          ((Target) getStage()).write(batch);
+          break;
+        }
+      }
+    } finally {
+      Thread.currentThread().setContextClassLoader(cl);
+    }
+    return newOffset;
   }
 
   public void destroy() {
-    stage.destroy();
+    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(getDefinition().getClassLoader());
+      stage.destroy();
+    } finally {
+      Thread.currentThread().setContextClassLoader(cl);
+    }
   }
 
   public Stage.Info getInfo() {
