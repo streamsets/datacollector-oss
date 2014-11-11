@@ -18,8 +18,9 @@
 package com.streamsets.pipeline.lib.basics;
 
 import java.io.*;
+import java.util.concurrent.CountDownLatch;
 
-public class LogGenerator implements Runnable {
+public class LogGenerator extends Thread {
 
   private final String sourceFile;
   private final String targetFile;
@@ -34,14 +35,17 @@ public class LogGenerator implements Runnable {
     BufferedReader br = null;
     BufferedWriter bw = null;
     try {
-      br = new BufferedReader(new FileReader(sourceFile));
+      br = new BufferedReader(
+          new InputStreamReader((Thread.currentThread().getContextClassLoader().getResourceAsStream(sourceFile))));
       bw = new BufferedWriter(new FileWriter(targetFile));
+      createFileLatch.countDown();
       String line;
       while((line = br.readLine()) != null) {
         bw.write(line);
         bw.newLine();
         bw.flush();
-        Thread.sleep(2);
+        writeToFileLatch.await();
+        Thread.sleep(1);
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
@@ -58,5 +62,20 @@ public class LogGenerator implements Runnable {
         e.printStackTrace();
       }
     }
+  }
+
+  private CountDownLatch createFileLatch = new CountDownLatch(1);
+  private CountDownLatch writeToFileLatch = new CountDownLatch(1);
+
+  public void waitUntilFileCreation() {
+    try {
+      createFileLatch.await();
+    } catch (InterruptedException ex) {
+      //nop
+    }
+  }
+
+  public void startGeneratingLog() {
+    writeToFileLatch.countDown();
   }
 }

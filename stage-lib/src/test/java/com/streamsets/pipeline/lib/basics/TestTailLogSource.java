@@ -27,50 +27,58 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class TestTailLogSource {
 
-  private static final String TARGET_LOG_FILE = "logFile.txt";
-  private static final String SOURCE_LOG_FILE = "testLogFile.txt";
-  private Thread logProducerThread;
+  private String logFile = "logFile.txt";
+  private static final String SOURCE_LOG_FILE_RESOURCE = "testLogFile.txt";
+  private LogGenerator logGen;
 
   @Before
   public void setUp() throws IOException {
+    File testDataDir = new File("target", UUID.randomUUID().toString());
+    testDataDir.mkdirs();
+    logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
     //spawn a thread that starts writing to the file from which the
     //TailLogSource will read lines
-    Files.createFile(Paths.get(TARGET_LOG_FILE));
-    assert(Files.exists(Paths.get(TARGET_LOG_FILE)));
-    logProducerThread = new Thread(new LogGenerator(SOURCE_LOG_FILE, TARGET_LOG_FILE));
-    logProducerThread.start();
+    Files.createFile(Paths.get(logFile));
+    assert(Files.exists(Paths.get(logFile)));
+    logGen = new LogGenerator(SOURCE_LOG_FILE_RESOURCE, logFile);
+    this.logGen.start();
+    logGen.waitUntilFileCreation();
   }
 
   @After
   public void tearDown() {
     //wait for the log generator thread to complete writing
     try {
-      logProducerThread.join();
+      logGen.interrupt();
+      logGen.join();
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
     //remove the file in the target directory
     try {
-      Files.deleteIfExists(Paths.get(TARGET_LOG_FILE));
+      Files.deleteIfExists(Paths.get(logFile));
     } catch (IOException e) {
       e.printStackTrace();
     }
-    assert(!Files.exists(Paths.get(TARGET_LOG_FILE)));
+    assert(!Files.exists(Paths.get(logFile)));
   }
 
   @Test
   public void testTailLogSourceAllOptions() {
     try {
+      logGen.startGeneratingLog();
       Map<String, List<Record>> result = new SourceRunner.Builder<TailLogSource>().addSource(TailLogSource.class)
-        .configure("logFileName", "logFile.txt")
+        .configure("logFileName", logFile)
         .configure("tailFromEnd", true)
         .configure("maxLinesPrefetch", 50)
         .configure("batchSize", 25)
@@ -85,7 +93,7 @@ public class TestTailLogSource {
       Assert.assertNotNull(result);
       Assert.assertNotNull(result.get("lane"));
       //Expected 25 records as the "batchSize" property is set to 25
-      Assert.assertTrue(result.get("lane").size() == 25);
+      Assert.assertEquals(25, result.get("lane").size());
 
       printRecords(result.get("lane"));
 
@@ -97,8 +105,9 @@ public class TestTailLogSource {
   @Test
   public void testTailLogSourceFromBegining() {
     try {
+      logGen.startGeneratingLog();
       Map<String, List<Record>> result = new SourceRunner.Builder<TailLogSource>().addSource(TailLogSource.class)
-        .configure("logFileName", "logFile.txt")
+        .configure("logFileName", logFile)
         .configure("tailFromEnd", false)
         .configure("maxLinesPrefetch", 50)
         .configure("batchSize", 25)
@@ -134,8 +143,9 @@ public class TestTailLogSource {
   @Test
   public void testTailLogSourceDefaultPipelineOptions() {
     try {
+      logGen.startGeneratingLog();
       Map<String, List<Record>> result = new SourceRunner.Builder<TailLogSource>().addSource(TailLogSource.class)
-        .configure("logFileName", "logFile.txt")
+        .configure("logFileName", logFile)
         .configure("tailFromEnd", true)
         .configure("maxLinesPrefetch", 50)
         .configure("batchSize", 25)
@@ -161,8 +171,9 @@ public class TestTailLogSource {
   @Test
   public void testTailLogSourceNoConfig() {
     try {
+      logGen.startGeneratingLog();
       Map<String, List<Record>> result = new SourceRunner.Builder<TailLogSource>().addSource(TailLogSource.class)
-        .configure("logFileName", "logFile.txt")
+        .configure("logFileName", logFile)
         .build()
         .run();
 
@@ -198,6 +209,7 @@ public class TestTailLogSource {
   @Test
   public void testTailLogSourceWrongOptions() {
     try {
+      logGen.startGeneratingLog();
       Map<String, List<Record>> result = new SourceRunner.Builder<TailLogSource>()
         .addSource(TailLogSource.class)
         .configure("logFileName", 50)
