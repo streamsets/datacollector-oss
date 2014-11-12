@@ -22,11 +22,14 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.Configuration;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Pipeline {
   private final Pipe[] pipes;
@@ -164,6 +167,17 @@ public class Pipeline {
       return pipes.toArray(new Pipe[pipes.size()]);
     }
 
+  }
+
+  @Override
+  public String toString() {
+    Set<String> instances = new LinkedHashSet<String>();
+    for (Pipe pipe : pipes) {
+      instances.add(pipe.getStage().getInfo().getInstanceName());
+    }
+    String observerName = (observer != null) ? observer.getClass().getSimpleName() : null;
+    return Utils.format("Pipeline[stages='{}' runner='{}' observer='{}']", instances, runner.getClass().getSimpleName(),
+                        observerName);
   }
 
 }

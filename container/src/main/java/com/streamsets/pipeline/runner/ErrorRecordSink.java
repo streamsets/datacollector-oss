@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.streamsets.pipeline.container.Utils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +53,11 @@ public class ErrorRecordSink {
 
   public int size() {
     return size;
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format("ErrorRecordSink[reportingInstances='{}' size='{}']", errorRecords.keySet(), size());
   }
 
 }

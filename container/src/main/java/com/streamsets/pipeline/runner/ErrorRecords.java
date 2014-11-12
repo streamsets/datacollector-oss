@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.validation.Issue;
 
 import java.util.ArrayList;
@@ -56,4 +57,10 @@ public class ErrorRecords {
   public List<ErrorRecord> getErrorRecords() {
     return errors;
   }
+
+  @Override
+  public String toString() {
+    return Utils.format("ErrorRecords[size='{}']", errors.size());
+  }
+
 }

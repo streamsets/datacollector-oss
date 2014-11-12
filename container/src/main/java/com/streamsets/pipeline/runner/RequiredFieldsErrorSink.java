@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.validation.Issue;
 
 public class RequiredFieldsErrorSink implements FilterRecordBatch.Sink {
@@ -38,6 +39,11 @@ public class RequiredFieldsErrorSink implements FilterRecordBatch.Sink {
 
   public int size() {
     return counter;
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format("RequiredFieldsErrorSink[size='{}']", size());
   }
 
 }

@@ -90,4 +90,8 @@ public class ReservedPrefixSimpleMap<V> implements SimpleMap<String, V> {
     return map;
   }
 
+  @Override
+  public String toString() {
+    return map.toString();
+  }
 }

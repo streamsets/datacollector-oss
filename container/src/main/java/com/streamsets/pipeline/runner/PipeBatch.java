@@ -39,6 +39,7 @@ public class PipeBatch {
   private final Set<String> processedStages;
   private final List<StageOutput> stageOutputSnapshot;
   private final ErrorRecordSink errorRecordSink;
+  private String newOffset;
 
   public PipeBatch(SourceOffsetTracker offsetTracker, int batchSize, boolean snapshotStagesOutput) {
     this.offsetTracker = offsetTracker;
@@ -63,6 +64,7 @@ public class PipeBatch {
   }
 
   public void setNewOffset(String offset) {
+    newOffset = offset;
     offsetTracker.setOffset(offset);
   }
 
@@ -71,7 +73,7 @@ public class PipeBatch {
     for (String inputLane : pipe.getInputLanes()) {
       records.addAll(fullPayload.remove(inputLane));
     }
-    return new BatchImpl(offsetTracker, records);
+    return new BatchImpl(pipe.getStage().getInfo().getInstanceName(), offsetTracker, records);
   }
 
   public BatchMakerImpl startStage(StagePipe pipe) {
@@ -170,6 +172,13 @@ public class PipeBatch {
           "Lane '{}' does not exist", lane));
       fullPayload.get(to).addAll(records);
     }
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format(
+        "PipeBatch[previousOffset='{}' currentOffset='{}' batchSize='{}' keepSnapshot='{}' errorRecords='{}]'",
+        offsetTracker.getOffset(), newOffset, batchSize, stageOutputSnapshot != null, errorRecordSink.size());
   }
 
 }

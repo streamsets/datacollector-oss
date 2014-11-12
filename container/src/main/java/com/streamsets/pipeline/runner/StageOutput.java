@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.Utils;
 
 import java.util.List;
 import java.util.Locale;
@@ -50,4 +51,10 @@ public class StageOutput {
   public ErrorRecords getErrorRecords() {
     return errorRecords;
   }
+
+  @Override
+  public String toString() {
+    return Utils.format("StageOutput[instance='{}' lanes='{}']", instanceName, output.keySet());
+  }
+
 }

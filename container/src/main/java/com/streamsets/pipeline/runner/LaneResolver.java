@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.container.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,6 +114,15 @@ public class LaneResolver {
       }
     }
     return list;
+  }
+
+  @Override
+  public String toString() {
+    List<String> names = new ArrayList<String>(stages.length);
+    for (StageRuntime stage : stages) {
+      names.add(stage.getInfo().getInstanceName());
+    }
+    return Utils.format("LaneResolver[stages='{}']", names);
   }
 
 }

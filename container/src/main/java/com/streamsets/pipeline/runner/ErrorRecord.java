@@ -41,4 +41,9 @@ public class ErrorRecord {
     return issue;
   }
 
+  @Override
+  public String toString() {
+    return Utils.format("ErrorRecord[record='{}' issue='{}'", getRecord(), getIssue());
+  }
+
 }

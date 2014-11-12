@@ -220,7 +220,7 @@ public class RecordImpl implements Record {
   }
 
   public String toString() {
-    return Utils.format("Record headers {}, fields {}", headerData, fieldData);
+    return Utils.format("Record[headers='{}' fields='{}']", headerData, fieldData);
   }
 
 }

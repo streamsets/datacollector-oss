@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.container.Utils;
 
 import java.util.List;
 
@@ -50,4 +51,9 @@ public abstract class Pipe {
 
   public abstract void destroy();
 
+  @Override
+  public String toString() {
+    return Utils.format("{}[instance='{}' input='{}' output='{}']", getClass().getSimpleName(),
+                        getStage().getInfo().getInstanceName(), getInputLanes(), getOutputLanes());
+  }
 }

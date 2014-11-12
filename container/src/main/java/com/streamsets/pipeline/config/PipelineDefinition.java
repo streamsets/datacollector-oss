@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.container.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,11 @@ public class PipelineDefinition {
   /*Need this API for Jackson to serialize*/
   public List<ConfigDefinition> getConfigDefinitions() {
     return configDefinitions;
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format("PipelineDefinition[configDefinitions='{}']", configDefinitions);
   }
 
   /**************************************************************/

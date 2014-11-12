@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.validation.Issue;
 
@@ -117,4 +118,10 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public Record cloneRecord(Record record) {
     return ((RecordImpl)record).createCopy();
   }
+
+  @Override
+  public String toString() {
+    return Utils.format("StageContext[instance='{}']", instanceName);
+  }
+
 }

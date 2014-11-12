@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
@@ -64,6 +65,11 @@ public class StageRuntime {
       @Override
       public String getInstanceName() {
         return conf.getInstanceName();
+      }
+
+      @Override
+      public String toString() {
+        return Utils.format("Info[instance='{}' name='{}' version='{}']", getInstanceName(), getName(), getVersion());
       }
     };
   }
@@ -216,6 +222,11 @@ public class StageRuntime {
       }
     }
 
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format("StageRuntime[{}]", getInfo());
   }
 
 }

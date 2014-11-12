@@ -114,4 +114,10 @@ public class ConfigDefinition {
       isRequired(), getGroup(), getFieldName(), getModel());
   }
 
+  @Override
+  public String toString() {
+    return Utils.format("ConfigDefinition[name='{}' type='{}' required='{}' default='{}']", getName(), getType(),
+                        isRequired(), getDefaultValue());
+  }
+
 }

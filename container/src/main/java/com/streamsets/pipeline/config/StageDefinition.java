@@ -146,8 +146,10 @@ public class StageDefinition {
     return configDefinitionsMap.get(configName);
   }
 
+  @Override
   public String toString() {
-    return Utils.format("{}:{}:{}", getLibrary(), getName(), getVersion());
+    return Utils.format("StageDefinition[library='{}' name='{}' version='{}' type='{}' class='{}']", getLibrary(),
+                        getName(), getVersion(), getType(), getStageClass());
   }
 
   public StageDef.OnError getOnError() {

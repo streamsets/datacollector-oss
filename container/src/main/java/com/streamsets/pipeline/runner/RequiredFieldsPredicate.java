@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.validation.Issue;
 
 import java.util.ArrayList;
@@ -54,6 +55,11 @@ public class RequiredFieldsPredicate implements FilterRecordBatch.Predicate {
   public Issue getRejectedReason() {
     return (missingFields.isEmpty()) ? null : new Issue(MISSING_REQUIRED_FIELDS_KEY, MISSING_REQUIRED_FIELDS_DEFAULT,
                                                         missingFields);
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format("RequiredFieldsPredicate[fields='{}']", requiredFields);
   }
 
 }

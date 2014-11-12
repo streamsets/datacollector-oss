@@ -121,4 +121,9 @@ public class Configuration {
     writer.close();
   }
 
+  @Override
+  public String toString() {
+    return Utils.format("Configuration['{}']", map);
+  }
+
 }

@@ -20,16 +20,19 @@ package com.streamsets.pipeline.runner;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.Utils;
 
 import java.util.Iterator;
 import java.util.List;
 
 public class BatchImpl implements Batch {
+  private final String instanceName;
   private final List<Record> records;
   private final String sourceOffset;
   private boolean got;
 
-  public BatchImpl(SourceOffsetTracker offsetTracker, List<Record> records) {
+  public BatchImpl(String instanceName, SourceOffsetTracker offsetTracker, List<Record> records) {
+    this.instanceName = instanceName;
     this.records = records;
     sourceOffset = offsetTracker.getOffset();
     got = false;
@@ -49,6 +52,11 @@ public class BatchImpl implements Batch {
 
   public int getSize() {
     return records.size();
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format("BatchImpl[instance='{}' size='{}', iterated='{}']", instanceName, records.size(), got);
   }
 
 }

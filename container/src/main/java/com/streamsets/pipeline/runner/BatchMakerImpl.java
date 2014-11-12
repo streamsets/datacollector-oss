@@ -124,4 +124,9 @@ public class BatchMakerImpl implements BatchMaker {
     return stageOutput.get(lane).size();
   }
 
+  @Override
+  public String toString() {
+    return Utils.format("BatchMakerImpl[instance='{}' lanes='{}' size='{}' keepsSnapshot='{}']", instanceName,
+                        getLanes(), getSize(), stageOutputSnapshot != null);
+  }
 }

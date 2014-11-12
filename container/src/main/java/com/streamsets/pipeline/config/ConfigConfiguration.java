@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.container.Utils;
 
 public class ConfigConfiguration {
   private final String name;
@@ -37,4 +38,10 @@ public class ConfigConfiguration {
   public Object getValue() {
     return value;
   }
+
+  @Override
+  public String toString() {
+    return Utils.format("ConfigConfiguration[name='{}' value='{}']", getName(), getValue());
+  }
+
 }

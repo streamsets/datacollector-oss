@@ -20,6 +20,7 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.container.Utils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -110,4 +111,12 @@ public class StageConfiguration {
   public boolean isSystemGenerated() {
     return systemGenerated;
   }
+
+  @Override
+  public String toString() {
+    return Utils.format(
+        "StageConfiguration[instanceName='{}' library='{}' name='{}' version='{}' input='{}' output='{}']",
+        getInstanceName(), getLibrary(), getStageName(), getStageVersion(), getInputLanes(), getOutputLanes());
+  }
+
 }

@@ -20,6 +20,7 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 
@@ -99,4 +100,11 @@ public class PipelineConfiguration {
   public Map<String, Object> getUiInfo() {
     return uiInfo;
   }
+
+  @Override
+  public String toString() {
+    return Utils.format("PipelineConfiguration[uuid='{}' valid='{}' previewable='{}' configuration='{}']", getUuid(),
+                        isValid(), isPreviewable(), getConfiguration());
+  }
+
 }
