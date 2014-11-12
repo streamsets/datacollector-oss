@@ -6,9 +6,7 @@ angular.module('pipelineAgentApp', [
   'templates-app',
   'templates-common',
   'pipelineAgentApp.common',
-  'pipelineAgentApp.home',
-  'pipelineAgentApp.flow',
-  'pipelineAgentApp.data'
+  'pipelineAgentApp.home'
 ])
   .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider){
     $locationProvider.html5Mode(true);

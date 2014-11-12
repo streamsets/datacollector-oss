@@ -121,8 +121,6 @@ angular
 
         $scope.detailPaneConfig = stageInstance;
         $scope.detailPaneConfigDefn = stage;
-        $scope.detailPaneGeneralConfigDefn = stageGeneralConfigDefinitions;
-
       },
 
       /**
@@ -406,7 +404,6 @@ angular
 
       if ($scope.detailPaneConfig === undefined) {
         //First time
-        $scope.detailPaneGeneralConfigDefn = pipelineGeneralConfigDefinitions;
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
         $scope.detailPaneConfig = $scope.pipelineConfig;
       } else {
@@ -426,7 +423,6 @@ angular
             $scope.detailPaneConfig = selectedStageInstance;
           } else {
             $scope.detailPaneConfig = $scope.pipelineConfig;
-            $scope.detailPaneGeneralConfigDefn = pipelineGeneralConfigDefinitions;
             $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
           }
 
@@ -447,7 +443,6 @@ angular
           return stageLibrary.name === stageInstance.stageName &&
             stageLibrary.version === stageInstance.stageVersion;
         });
-        $scope.detailPaneGeneralConfigDefn = stageGeneralConfigDefinitions;
 
         if ($scope.previewMode) {
           $scope.stagePreviewData = getPreviewDataForStage($scope.previewData, $scope.detailPaneConfig);
@@ -456,7 +451,6 @@ angular
         //Pipeline Configuration
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
         $scope.detailPaneConfig = $scope.pipelineConfig;
-        $scope.detailPaneGeneralConfigDefn = pipelineGeneralConfigDefinitions;
 
         if ($scope.previewMode) {
           $scope.stagePreviewData = {
@@ -489,6 +483,7 @@ angular
 
 
     /**
+     * Returns Preview input lane & output lane data for the given Stage Instance.
      *
      * @param previewData
      * @param stageInstance
@@ -502,9 +497,10 @@ angular
         stagePreviewData = {
           input: [],
           output: []
-        };
+        },
+        batchData = previewData.batchesOutput[0];
 
-      angular.forEach(previewData.stagesOutput, function (stageOutput) {
+      angular.forEach(batchData, function (stageOutput) {
         if (inputLane && stageOutput.output[inputLane] && stageOutput.output) {
           stagePreviewData.input = stageOutput.output[inputLane];
         } else if (outputLane && stageOutput.output[outputLane] && stageOutput.output) {

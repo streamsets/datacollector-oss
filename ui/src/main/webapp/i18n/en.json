@@ -2,14 +2,16 @@
   "global": {
     "title": "Pipeline Agent",
     "menu": {
-      "admin": "Admin",
-      "flow": "Flow",
-      "data": "Data",
+      "import": "Import",
+      "export": "Export",
+      "logout": "Logout",
       "toggleNavigation": "Toggle navigation"
     },
     "form": {
       "username": "Login",
-      "username.placeholder": "Your login"
+      "username.placeholder": "Your login",
+      "label": "Label",
+      "description": "Description"
     },
     "messages": {
       "info": {

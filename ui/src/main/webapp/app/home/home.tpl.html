@@ -135,11 +135,6 @@
 
           <ul class="nav nav-tabs">
             <li class="active">
-              <a showtab="" href="#general" data-toggle="tab">
-                <span translate="admin.detailPane.general">General</span>
-              </a>
-            </li>
-            <li>
               <a showtab="" href="#configuration" data-toggle="tab">
                 <span translate="admin.detailPane.configuration">Configuration</span>
                 <span class="glyphicon glyphicon-warning-sign icon-danger" ng-show="hasConfigurationIssues(detailPaneConfig)"></span>
@@ -149,31 +144,30 @@
 
           <div class="tab-content">
 
-            <div class="tab-pane active" id="general">
-              <form class="form-horizontal" role="form">
-                <div class="form-group" ng-repeat="configDefinition in detailPaneGeneralConfigDefn">
-                  <label class="col-sm-2 control-label">{{configDefinition.label}}</label>
-
-                  <div class="col-sm-6" ng-if="configDefinition.readOnly">
-                    <span ng-bind="detailPaneConfig[configDefinition.name]"></span>
-                  </div>
-
-                  <div class="col-sm-6" ng-if="!configDefinition.readOnly">
-                    <input type="text" class="form-control" name="{{configDefinition.name}}"
-                           ng-if="configDefinition.name !== 'description'"
-                           ng-model="detailPaneConfig.uiInfo[configDefinition.name]">
-
-                    <textarea class="form-control" name="{{configDefinition.name}}"
-                              ng-if="configDefinition.name === 'description'"
-                              ng-model="detailPaneConfig.uiInfo[configDefinition.name]"></textarea>
-                  </div>
-
-                </div>
-              </form>
-            </div>
-
-            <div class="tab-pane" id="configuration">
+            <div class="tab-pane active" id="configuration">
               <form class="form-horizontal" role="form" name="{{detailPaneConfig.instanceName || 'pipeline'}}">
+
+                <!-- General Configuration-->
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" translate="global.form.label">Label</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" name="name"
+                           ng-model="detailPaneConfig.uiInfo.label">
+                  </div>
+                </div>
+
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" translate="global.form.description">Description</label>
+                  <div class="col-sm-6">
+                    <textarea class="form-control" name="description"
+                              ng-model="detailPaneConfig.uiInfo.description"></textarea>
+                  </div>
+                </div>
+
+                <!--- /General Configuration-->
+
+
                 <div class="form-group"
                      ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions" show-errors>
                   <label class="col-sm-2 control-label">{{configDefinition.label}}</label>
