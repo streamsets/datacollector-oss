@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.validation;
 
+import com.streamsets.pipeline.container.Utils;
+
 public class StageIssue extends Issue {
   private final String instanceName;
   private final String configName;
@@ -51,7 +53,7 @@ public class StageIssue extends Issue {
 
   public String toString() {
     return (configName == null)
-           ? String.format("Instance '%s': %s", getInstanceName(), super.toString())
-           : String.format("Instance '%s' config '%s': %s", getInstanceName(), getConfigName(), super.toString());
+           ? Utils.format("Instance '{}': {}", getInstanceName(), super.toString())
+           : Utils.format("Instance '{}' config '{}': {}", getInstanceName(), getConfigName(), super.toString());
   }
 }

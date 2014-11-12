@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.config.*;
+import com.streamsets.pipeline.container.Utils;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -112,7 +113,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //process enums with @StageErrorDef annotation
     if(roundEnv.getElementsAnnotatedWith(StageErrorDef.class).size() > 1) {
       printError("stagedeferror.validation.multiple.enums",
-        "Expected one Stage Error Definition enum but found %s",
+        "Expected one Stage Error Definition enum but found {}",
         roundEnv.getElementsAnnotatedWith(StageErrorDef.class).size());
     } else {
       for (Element e : roundEnv.getElementsAnnotatedWith(StageErrorDef.class)) {
@@ -370,7 +371,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
                           String template, Object... args) {
 
     processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-      String.format(template, args));
+      Utils.format(template, args));
   }
 
   private String getValuesProvider(FieldModifier fieldModifier) {
@@ -407,14 +408,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     Element enclosingElement = typeElement.getEnclosingElement();
     if(!enclosingElement.getKind().equals(ElementKind.PACKAGE)) {
       printError("stagedef.validation.not.outer.class",
-        "Stage %s is an inner class. Inner class Stage implementations are not supported",
+        "Stage {} is an inner class. Inner class Stage implementations are not supported",
         typeElement.getSimpleName().toString());
     }
     if(getTypeFromElement(typeElement).isEmpty()) {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.
       printError("stagedef.validation.does.not.implement.interface",
-        "Stage %s neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, Processor, Target interface.",
+        "Stage {} neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, Processor, Target interface.",
         typeElement.getQualifiedName().toString());
       //Continue for now to find out if there are more issues.
       return false;
@@ -440,14 +441,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //field must be declared public
     if(!variableElement.getModifiers().contains(Modifier.PUBLIC)) {
       printError("field.validation.not.public",
-        "The field %s has \"ConfigDef\" annotation but is not declared public. Configuration fields must be declared public.",
+        "The field {} has \"ConfigDef\" annotation but is not declared public. Configuration fields must be declared public.",
         typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
       valid = false;
     }
 
     if(variableElement.getModifiers().contains(Modifier.FINAL)) {
       printError("field.validation.final.field",
-        "The field %s has \"ConfigDef\" annotation and is declared final. Configuration fields must not be declared final.",
+        "The field {} has \"ConfigDef\" annotation and is declared final. Configuration fields must not be declared final.",
         typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString()
       );
       valid = false;
@@ -455,7 +456,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
     if(variableElement.getModifiers().contains(Modifier.STATIC)) {
       printError("field.validation.static.field",
-        "The field %s has \"ConfigDef\" annotation and is declared static. Configuration fields must not be declared final.",
+        "The field {} has \"ConfigDef\" annotation and is declared static. Configuration fields must not be declared final.",
         typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
       valid = false;
     }
@@ -470,20 +471,20 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
       if(fieldModifier == null && fieldSelector == null ) {
         printError("field.validation.no.model.annotation",
-          "The type of field %s is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' annotation is expected.",
+          "The type of field {} is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' annotation is expected.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       } else if (fieldModifier !=null && fieldSelector != null) {
         //both cannot be present
         printError("field.validation.multiple.model.annotations",
-          "The field %s is annotated with both 'FieldSelector' and 'FieldModifier' annotations. Only one of those annotation is expected.",
+          "The field {} is annotated with both 'FieldSelector' and 'FieldModifier' annotations. Only one of those annotation is expected.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       } else {
         if (fieldModifier != null) {
           if (!fieldType.toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
             printError("field.validation.type.is.not.map",
-              "The type of the field %s is expected to be Map<String, String>.",
+              "The type of the field {} is expected to be Map<String, String>.",
               typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
             valid = false;
           }
@@ -502,7 +503,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
             if (valueProviderTypeMirror == null) {
               printError("field.validation.valuesProvider.not.supplied",
-                "The field %s marked with FieldModifier annotation and the type is \"PROVIDED\" but no ValuesProvider implementation is supplied",
+                "The field {} marked with FieldModifier annotation and the type is \"PROVIDED\" but no ValuesProvider implementation is supplied",
                 typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
             } else {
               //Make sure values provider implementation is top level
@@ -510,7 +511,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
               Element enclosingElement = e.getEnclosingElement();
               if(!enclosingElement.getKind().equals(ElementKind.PACKAGE)) {
                 printError("field.validation.valuesProvider.not.outer.class",
-                  "ValuesProvider %s is an inner class. Inner class ValuesProvider implementations are not supported",
+                  "ValuesProvider {} is an inner class. Inner class ValuesProvider implementations are not supported",
                   valueProviderTypeMirror.toString());
               }
               //make sure ValuesProvider implements the required interface
@@ -522,7 +523,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
               }
               if(!implementsValuesProvider) {
                 printError("field.validation.valuesProvider.does.not.implement.interface",
-                  "Class %s does not implement 'com.streamsets.pipeline.api.ValuesProvider' interface.",
+                  "Class {} does not implement 'com.streamsets.pipeline.api.ValuesProvider' interface.",
                   valueProviderTypeMirror.toString());
               }
             }
@@ -532,7 +533,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         if (fieldSelector != null) {
           if (!fieldType.toString().equals("java.util.List<java.lang.String>")) {
             printError("field.validation.type.is.not.list",
-              "The type of the field %s is expected to be List<String>.",
+              "The type of the field {} is expected to be List<String>.",
               typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
             valid = false;
           }
@@ -542,21 +543,21 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     } else if (configDefAnnot.type().equals(ConfigDef.Type.BOOLEAN)) {
       if(!fieldType.getKind().equals(TypeKind.BOOLEAN)) {
         printError("field.validation.type.is.not.boolean",
-          "The type of the field %s is expected to be boolean.",
+          "The type of the field {} is expected to be boolean.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }
     } else if (configDefAnnot.type().equals(ConfigDef.Type.INTEGER)) {
       if(!(fieldType.getKind().equals(TypeKind.INT) || fieldType.getKind().equals(TypeKind.LONG))) {
         printError("field.validation.type.is.not.int.or.long",
-          "The type of the field %s is expected to be either an int or a long.",
+          "The type of the field {} is expected to be either an int or a long.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }
     } else if (configDefAnnot.type().equals(ConfigDef.Type.STRING)) {
       if(!fieldType.toString().equals("java.lang.String")) {
         printError("field.validation.type.is.not.string",
-          "The type of the field %s is expected to be String.",
+          "The type of the field {} is expected to be String.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }
@@ -578,7 +579,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       stageNameToVersionMap.get(stageDefAnnotation.name()).equals(stageDefAnnotation.version())) {
       //found more than one stage with same name and version
       printError("stagedef.validation.duplicate.stages",
-        "Multiple stage definitions found with the same name and version. Name %s, Version %s",
+        "Multiple stage definitions found with the same name and version. Name {}, Version {}",
         stageDefAnnotation.name(), stageDefAnnotation.version());
       //Continue for now to find out if there are more issues.
       return false;
@@ -627,20 +628,20 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           , stageDefAnnotation.icon());
         if (resource == null) {
           printError("stagedef.validation.icon.file.does.not.exist",
-            "Stage Definition %s supplies an icon %s which does not exist.",
+            "Stage Definition {} supplies an icon {} which does not exist.",
             typeElement.getQualifiedName(), stageDefAnnotation.icon());
           valid = false;
         }
       } catch (IOException e) {
         printError("stagedef.validation.cannot.access.icon.file",
-          "Stage Definition %s supplies an icon %s which cannot be accessed for the following reason : %s.",
+          "Stage Definition {} supplies an icon {} which cannot be accessed for the following reason : {}.",
           typeElement.getQualifiedName(), stageDefAnnotation.icon(), e.getMessage());
         valid = false;
       }
 
       if (!stageDefAnnotation.icon().endsWith(".svg")) {
         printError("stagedef.validation.icon.not.svg",
-          "Stage Definition %s supplies an icon %s which is not in an \"svg\" file.",
+          "Stage Definition {} supplies an icon {} which is not in an \"svg\" file.",
           typeElement.getQualifiedName(), stageDefAnnotation.icon());
         valid = false;
       }
@@ -699,7 +700,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
     if(validationError) {
       printError("stage.validation.no.default.constructor",
-        "The Stage %s has constructor with arguments but no default constructor.",
+        "The Stage {} has constructor with arguments but no default constructor.",
         typeElement.getSimpleName());
     }
 
@@ -718,7 +719,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.
       printError("stagedeferror.validation.not.an.enum",
-        "Stage Error Definition %s must be an enum", typeElement.getQualifiedName());
+        "Stage Error Definition {} must be an enum", typeElement.getQualifiedName());
       stageErrorDefValidationFailure = true;
     }
     //must implement com.streamsets.pipeline.api.ErrorId
@@ -727,7 +728,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.
       printError("stagedeferror.validation.enum.does.not.implement.interface",
-        "Stage Error Definition %s does not implement interface 'com.streamsets.pipeline.api.ErrorId'.",
+        "Stage Error Definition {} does not implement interface 'com.streamsets.pipeline.api.ErrorId'.",
         typeElement.getQualifiedName());
       stageErrorDefValidationFailure = true;
     }

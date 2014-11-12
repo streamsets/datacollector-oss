@@ -21,6 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.ArrayList;
@@ -79,18 +80,18 @@ public class BatchMakerImpl implements BatchMaker {
     ((RecordImpl)record).setTrackingId();
 
     if (lanes.length == 0) {
-      Preconditions.checkArgument(outputLanes.size() == 1, String.format(
-          "No lane has been specified and the stage '%s' has multiple output lanes '%s'", instanceName, outputLanes));
+      Preconditions.checkArgument(outputLanes.size() == 1, Utils.format(
+          "No lane has been specified and the stage '{}' has multiple output lanes '{}'", instanceName, outputLanes));
       stageOutput.get(singleOutputLane).add(record);
     } else {
       if (lanes.length > 1) {
         Set<String> laneSet = ImmutableSet.copyOf(lanes);
-        Preconditions.checkArgument(laneSet.size() == lanes.length, String.format(
-            "Specified lanes cannot have duplicates '%s'", laneSet));
+        Preconditions.checkArgument(laneSet.size() == lanes.length, Utils.format(
+            "Specified lanes cannot have duplicates '{}'", laneSet));
       }
       for (String lane : lanes) {
-        Preconditions.checkArgument(outputLanes.contains(lane), String.format(
-            "Invalid output lane '%s' for stage '%s', available lanes '%s'", lane, instanceName, outputLanes));
+        Preconditions.checkArgument(outputLanes.contains(lane), Utils.format(
+            "Invalid output lane '{}' for stage '{}', available lanes '{}'", lane, instanceName, outputLanes));
         stageOutput.get(lane).add(record);
       }
     }

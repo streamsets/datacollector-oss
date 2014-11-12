@@ -19,6 +19,7 @@ package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.Utils;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -26,8 +27,8 @@ import java.util.ResourceBundle;
 public class ErrorRecord {
 
   public enum ERROR implements ErrorId {
-    REQUIRED_FIELDS_MISSING("Required fields missing '%s'"),
-    STAGE_CAUGHT_ERROR("Stage caught error: %s");
+    REQUIRED_FIELDS_MISSING("Required fields missing '{}'"),
+    STAGE_CAUGHT_ERROR("Stage caught error: {}");
 
     private String template;
 
@@ -42,7 +43,7 @@ public class ErrorRecord {
 
     public String getMessage(String template, Object... args) {
       template = (template != null) ? template : this.template;
-      return String.format(template, args);
+      return Utils.format(template, args);
     }
   }
 

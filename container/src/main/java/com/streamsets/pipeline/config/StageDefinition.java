@@ -131,7 +131,7 @@ public class StageDefinition {
 
   public void addConfiguration(ConfigDefinition confDef) {
     if (configDefinitionsMap.containsKey(confDef.getName())) {
-      throw new IllegalArgumentException(String.format("Stage '%s:%s:%s', configuration definition '%s' already exists",
+      throw new IllegalArgumentException(Utils.format("Stage '{}:{}:{}', configuration definition '{}' already exists",
                                                        getLibrary(), getName(), getVersion(), confDef.getName()));
     }
     configDefinitionsMap.put(confDef.getName(), confDef);
@@ -197,7 +197,7 @@ public class StageDefinition {
           LOG.error(
             "The ValuesProvider implementation for configuration {} in stage {} does not have the same number of values and labels.",
             configDef.getName(), def.getName());
-          throw new RuntimeException(String.format(
+          throw new RuntimeException(Utils.format(
             "The ValuesProvider implementation for configuration {} in stage {} does not have the same number of values and labels.",
             configDef.getName(), def.getName()));
         }

@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.record;
 
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.container.Utils;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class ReservedPrefixSimpleMap<V> implements SimpleMap<String, V> {
   }
 
   private void assertKey(String key) {
-    Preconditions.checkArgument(!isReserved(key), String.format("Invalid key, cannot start with '%s'", reservedPrefix));
+    Preconditions.checkArgument(!isReserved(key), Utils.format("Invalid key, cannot start with '{}'", reservedPrefix));
   }
 
   @Override

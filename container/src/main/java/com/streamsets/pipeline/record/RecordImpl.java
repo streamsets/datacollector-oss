@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.Utils;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -219,7 +220,7 @@ public class RecordImpl implements Record {
   }
 
   public String toString() {
-    return String.format("Record headers %s, fields %s", headerData.toString(), fieldData.toString());
+    return Utils.format("Record headers {}, fields {}", headerData, fieldData);
   }
 
 }

@@ -50,6 +50,7 @@ public class TestInnerClassStages extends TestPipelineAnnotationProcessorBase {
     expectedErrors.add("Stage TwitterSource is an inner class. Inner class Stage implementations are not supported");
 
     for(Diagnostic d : diagnostics) {
+      System.out.println(d.getMessage(Locale.ENGLISH));
       Assert.assertTrue(expectedErrors.contains(d.getMessage(Locale.ENGLISH)));
     }
   }

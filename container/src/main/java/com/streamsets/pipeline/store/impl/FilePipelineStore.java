@@ -26,6 +26,7 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.Configuration;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.store.*;
 import com.streamsets.pipeline.validation.Issues;
 
@@ -79,7 +80,7 @@ public class FilePipelineStore implements PipelineStore {
     storeDir = new File(runtimeInfo.getDataDir(), "pipelines");
     if (!storeDir.exists()) {
       if (!storeDir.mkdirs()) {
-        throw new RuntimeException(String.format("Could not create directory '%s'", storeDir.getAbsolutePath()));
+        throw new RuntimeException(Utils.format("Could not create directory '{}'", storeDir.getAbsolutePath()));
       }
     }
     if (conf.get(CREATE_DEFAULT_PIPELINE_KEY, CREATE_DEFAULT_PIPELINE_DEFAULT)) {
@@ -121,7 +122,7 @@ public class FilePipelineStore implements PipelineStore {
     }
     if (!getPipelineDir(name).mkdir()) {
       throw new PipelineStoreException(PipelineStoreErrors.COULD_NOT_CREATE_PIPELINE, name,
-                                       String.format("'%s' mkdir failed", getPipelineDir(name)));
+                                       Utils.format("'{}' mkdir failed", getPipelineDir(name)));
     }
     Date date = new Date();
     UUID uuid = UUID.randomUUID();

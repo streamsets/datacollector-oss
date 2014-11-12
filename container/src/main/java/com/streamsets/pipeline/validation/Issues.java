@@ -19,6 +19,7 @@ package com.streamsets.pipeline.validation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.util.NullDeserializer;
 
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class Issues implements Issue.ResourceBundleProvider {
   }
 
   public String toString() {
-    return String.format("Issues: pipeline [%s] stages [%s]", pipeline, stages);
+    return Utils.format("Issues: pipeline '{}' stages '{}'", pipeline, stages);
   }
 
 }

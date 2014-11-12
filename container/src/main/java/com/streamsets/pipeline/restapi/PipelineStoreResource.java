@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.store.PipelineStore;
@@ -87,7 +88,7 @@ public class PipelineStoreResource {
     } else if (get.equals("history")) {
       data = store.getHistory(name);
     } else {
-      throw new IllegalArgumentException(String.format("Invalid value for parameter 'get': %s", get));
+      throw new IllegalArgumentException(Utils.format("Invalid value for parameter 'get': {}", get));
     }
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(data).build();
   }

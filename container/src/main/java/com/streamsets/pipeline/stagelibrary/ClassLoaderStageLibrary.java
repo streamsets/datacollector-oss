@@ -32,6 +32,7 @@ import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.container.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,8 +107,8 @@ public class ClassLoaderStageLibrary implements StageLibrary {
             String key = createKey(libraryName, stage.getName(), stage.getVersion());
             LOG.debug("Loaded stage '{}' (library:name:version)", key);
             if (stagesInLibrary.containsKey(key)) {
-              throw new IllegalStateException(String.format(
-                  "Library '%s' contains more than one definition for stage '%s', class '%s' and class '%s'",
+              throw new IllegalStateException(Utils.format(
+                  "Library '{}' contains more than one definition for stage '{}', class '{}' and class '{}'",
                   libraryName, key, stagesInLibrary.get(key), stage.getStageClass()));
             }
             addSystemConfigurations(stage);
@@ -117,7 +118,7 @@ public class ClassLoaderStageLibrary implements StageLibrary {
           }
         }
       } catch (IOException ex) {
-        throw new RuntimeException(String.format("Could not load stages definition from '%s', %s", cl, ex.getMessage()),
+        throw new RuntimeException(Utils.format("Could not load stages definition from '{}', {}", cl, ex.getMessage()),
                                    ex);
       }
     }

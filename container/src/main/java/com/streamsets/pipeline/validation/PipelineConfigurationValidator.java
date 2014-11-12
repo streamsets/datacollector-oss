@@ -50,35 +50,35 @@ public class PipelineConfigurationValidator {
   private static final String INSTANCE_ALREADY_DEFINED_DEFAULT = "Instance name already defined";
   private static final String STAGE_DOES_NOT_EXIST_KEY = "validation.stage.does.not.exist";
   private static final String STAGE_DOES_NOT_EXIST_DEFAULT =
-      "Stage definition does not exist, library '%s' name '%s' version '%s'";
+      "Stage definition does not exist, library '{}' name '{}' version '{}'";
   private static final String STAGE_MISSING_CONFIGURATION_KEY = "validation.stage.missing.configuration";
   private static final String STAGE_MISSING_CONFIGURATION_DEFAULT = "Configuration value is required";
   private static final String STAGE_INVALID_CONFIGURATION_KEY = "validation.stage.invalid.configuration";
   private static final String STAGE_INVALID_CONFIGURATION_DEFAULT = "Invalid configuration";
   private static final String STAGE_CONFIGURATION_INVALID_TYPE_KEY = "validation.stage.configuration.invalidType";
-  private static final String STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT = "Configuration should be a '%s'";
+  private static final String STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT = "Configuration should be a '{}'";
   private static final String STAGE_OUTPUT_LANES_ALREADY_EXISTS_KEY = "validation.stage.output.lane.already.exists";
   private static final String STAGE_OUTPUT_LANES_ALREADY_EXISTS_DEFAULT =
-      "Output lanes '%s' already defined by stage instance '%s'";
+      "Output lanes '{}' already defined by stage instance '{}'";
   private static final String INSTANCE_OPEN_OUTPUT_LANES_KEY = "validation.instance.open.output.lanes";
-  private static final String INSTANCE_OPEN_OUTPUT_LANES_DEFAULT = "Instance has open lanes '%s'";
+  private static final String INSTANCE_OPEN_OUTPUT_LANES_DEFAULT = "Instance has open lanes '{}'";
   private static final String STAGE_CANNOT_HAVE_INPUT_KEY = "validation.stage.cannot.have.input.lanes";
-  private static final String STAGE_CANNOT_HAVE_INPUT_DEFAULT = "%s cannot have input lanes '%s'";
+  private static final String STAGE_CANNOT_HAVE_INPUT_DEFAULT = "{} cannot have input lanes '{}'";
   private static final String STAGE_CANNOT_HAVE_OUTPUT_KEY = "validation.stage.cannot.have.output.lanes";
-  private static final String STAGE_CANNOT_HAVE_OUTPUT_DEFAULT = "%s cannot have output lanes '%s'";
+  private static final String STAGE_CANNOT_HAVE_OUTPUT_DEFAULT = "{} cannot have output lanes '{}'";
   private static final String STAGE_MUST_HAVE_INPUT_KEY = "validation.stage.must.have.input.lanes";
-  private static final String STAGE_MUST_HAVE_INPUT_DEFAULT = "%s must have input lanes";
+  private static final String STAGE_MUST_HAVE_INPUT_DEFAULT = "{} must have input lanes";
   private static final String STAGE_MUST_HAVE_OUTPUT_KEY = "validation.stage.must.have.output.lanes";
-  private static final String STAGE_MUST_HAVE_OUTPUT_DEFAULT = "%s must have output lanes";
+  private static final String STAGE_MUST_HAVE_OUTPUT_DEFAULT = "{} must have output lanes";
   private static final String STAGE_INVALID_INSTANCE_NAME_KEY = "validation.invalid.instance.name";
   private static final String STAGE_INVALID_INSTANCE_NAME_DEFAULT =
-      "Invalid instance name, names can only contain the following characters '%s'";
+      "Invalid instance name, names can only contain the following characters '{}'";
   private static final String STAGE_INVALID_INPUT_LANE_NAME_KEY = "validation.invalid.input.lane.name";
   private static final String STAGE_INVALID_INPUT_LANE_DEFAULT =
-      "Invalid input lane names '%s', lanes can only contain the following characters '%s'";
+      "Invalid input lane names '{}', lanes can only contain the following characters '{}'";
   private static final String STAGE_INVALID_OUTPUT_LANE_NAME_KEY = "validation.invalid.output.lane.name";
   private static final String STAGE_INVALID_OUTPUT_LANE_DEFAULT =
-      "Invalid output lane names '%s', lanes can only contain the following characters '%s'";
+      "Invalid output lane names '{}', lanes can only contain the following characters '{}'";
 
   private static final String VALID_NAME= "[0-9A-Za-z_]";
 

@@ -21,6 +21,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.ArrayList;
@@ -76,8 +77,8 @@ public class PipeBatch {
 
   public BatchMakerImpl startStage(StagePipe pipe) {
     String stageName = pipe.getStage().getInfo().getInstanceName();
-    Preconditions.checkState(!processedStages.contains(stageName), String.format(
-        "The stage '%s' has been processed already", stageName));
+    Preconditions.checkState(!processedStages.contains(stageName), Utils.format(
+        "The stage '{}' has been processed already", stageName));
     processedStages.add(stageName);
     for (String output : pipe.getOutputLanes()) {
       fullPayload.put(output, null);
@@ -134,15 +135,15 @@ public class PipeBatch {
   }
 
   public void moveLane(String inputLane, String outputLane) {
-    fullPayload.put(outputLane, Preconditions.checkNotNull(fullPayload.remove(inputLane), String.format(
-        "Lane '%s' does not exist", inputLane)));
+    fullPayload.put(outputLane, Preconditions.checkNotNull(fullPayload.remove(inputLane), Utils.format(
+        "Lane '{}' does not exist", inputLane)));
   }
 
   public void moveLaneCopying(String inputLane, List<String> outputLanes) {
-    List<Record> records = Preconditions.checkNotNull(fullPayload.remove(inputLane), String.format(
-        "Lane '%s' does not exist", inputLane));
+    List<Record> records = Preconditions.checkNotNull(fullPayload.remove(inputLane), Utils.format(
+        "Lane '{}' does not exist", inputLane));
     for (String lane : outputLanes) {
-      Preconditions.checkNotNull(fullPayload.containsKey(lane), String.format("Lane '%s' does not exist", lane));
+      Preconditions.checkNotNull(fullPayload.containsKey(lane), Utils.format("Lane '{}' does not exist", lane));
       fullPayload.put(lane, createCopy(records));
     }
   }
@@ -163,11 +164,11 @@ public class PipeBatch {
 
   public void combineLanes(List<String> lanes, String to) {
     List<String> undefLanes = remove(lanes, fullPayload.keySet());
-    Preconditions.checkState(undefLanes.isEmpty(), String.format("Lanes '%s' does not exist", undefLanes));
+    Preconditions.checkState(undefLanes.isEmpty(), Utils.format("Lanes '{}' does not exist", undefLanes));
     fullPayload.put(to, new ArrayList<Record>());
     for (String lane : lanes) {
-      List<Record> records = Preconditions.checkNotNull(fullPayload.remove(lane), String.format(
-          "Lane '%s' does not exist", lane));
+      List<Record> records = Preconditions.checkNotNull(fullPayload.remove(lane), Utils.format(
+          "Lane '{}' does not exist", lane));
       fullPayload.get(to).addAll(records);
     }
   }

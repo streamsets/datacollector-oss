@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.validation;
 
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.container.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class Issue {
   }
 
   private String getMessage(String template) {
-    return String.format(template, args);
+    return Utils.format(template, args);
   }
 
   public String getMessage() {

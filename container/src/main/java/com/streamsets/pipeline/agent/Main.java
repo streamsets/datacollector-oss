@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.agent;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.container.Utils;
 import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +77,7 @@ public class Main {
         log.error("Abnormal exit: {}", ex.getMessage(), ex);
       }
       System.out.println();
-      System.out.printf("Abnormal exit: %s", ex.getMessage());
+      System.out.printf(Utils.format("Abnormal exit: {}", ex.getMessage()));
       System.out.printf("Check STDERR for more details");
       System.out.println();
       System.err.println();
