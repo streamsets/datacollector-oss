@@ -19,37 +19,54 @@ package com.streamsets.pipeline.runner.production;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ProductionPipelineRunner implements PipelineRunner {
 
+  private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunner.class);
+
   private final MetricRegistry metrics;
   private final SourceOffsetTracker offsetTracker;
-  private final int batchSize;
-  private List<List<StageOutput>> stageOutput;
+  private final SnapshotPersister snapshotPersister;
+  private int batchSize;
   private Timer processingTimer;
   private String sourceOffset;
   private String newSourceOffset;
   private DeliveryGuarantee deliveryGuarantee;
+
+
+  /*For each batch of data, holds output from each stage for that batch*/
+  private List<List<StageOutput>> batchOutputs;
+  /*indicates if the execution must be stopped after the current batch*/
   private volatile boolean stop = false;
+  /*indicates if the next batch of data should be captured, only the next batch*/
+  private volatile boolean captureNextBatch = false;
+  /*indicates the batch size to be captured*/
+  private volatile int snapshotBatchSize;
 
-
-  public ProductionPipelineRunner(SourceOffsetTracker offsetTracker
+  public ProductionPipelineRunner(SnapshotPersister snapshotPersister, SourceOffsetTracker offsetTracker
     , int batchSize, DeliveryGuarantee deliveryGuarantee) {
     this.metrics = new MetricRegistry();
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
     this.deliveryGuarantee = deliveryGuarantee;
-    stageOutput = new ArrayList<List<StageOutput>>();
+    batchOutputs = new ArrayList<List<StageOutput>>();
+    this.snapshotPersister = snapshotPersister;
   }
 
   @Override
@@ -60,30 +77,13 @@ public class ProductionPipelineRunner implements PipelineRunner {
   @Override
   public void run(Pipe[] pipes) throws StageException, PipelineRuntimeException {
     while(!offsetTracker.isFinished() && !stop) {
-      PipeBatch pipeBatch = new PipeBatch(offsetTracker, batchSize, false /*snapshot stage output*/);
-      long start = System.currentTimeMillis();
-
-      sourceOffset = pipeBatch.getPreviousOffset();
-      for (Pipe pipe : pipes) {
-        if (deliveryGuarantee == DeliveryGuarantee.AT_MOST_ONCE
-          && pipe.getStage().getDefinition().getType() == StageType.TARGET) {
-          //AT_MOST ONCE delivery
-          offsetTracker.commitOffset();
-        }
-        pipe.process(pipeBatch);
-      }
-      if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
-        offsetTracker.commitOffset();
-      }
-      processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
-      newSourceOffset = offsetTracker.getOffset();
-      stageOutput.add(pipeBatch.getSnapshotsOfAllStagesOutput());
+      runBatch(pipes);
     }
   }
 
   @Override
   public List<List<StageOutput>> getBatchesOutput() {
-    return stageOutput;
+    return batchOutputs;
   }
 
   public String getSourceOffset() {
@@ -94,7 +94,70 @@ public class ProductionPipelineRunner implements PipelineRunner {
     return newSourceOffset;
   }
 
+  public String getCommittedOffset() {
+    return offsetTracker.getOffset();
+  }
+
+  /**
+   * Stops execution of the pipeline after the current batch completes
+   */
   public void stop() {
     this.stop = true;
   }
+
+  public boolean wasStopped() {
+    return stop;
+  }
+
+  public void captureNextBatch(int batchSize) {
+    Preconditions.checkArgument(batchSize > 0);
+    this.captureNextBatch = true;
+    this.snapshotBatchSize = batchSize;
+  }
+
+  private void runBatch(Pipe[] pipes) throws PipelineRuntimeException, StageException {
+    boolean committed = false;
+    PipeBatch pipeBatch;
+
+    if(captureNextBatch) {
+      pipeBatch = new FullPipeBatch(offsetTracker, snapshotBatchSize, true /*snapshot stage output*/);
+    } else {
+      pipeBatch = new FullPipeBatch(offsetTracker, batchSize, false /*snapshot stage output*/);
+    }
+
+    long start = System.currentTimeMillis();
+    sourceOffset = pipeBatch.getPreviousOffset();
+    for (Pipe pipe : pipes) {
+      //TODO Define an interface to handle delivery guarantee
+      if (deliveryGuarantee == DeliveryGuarantee.AT_MOST_ONCE
+          && pipe.getStage().getDefinition().getType() == StageType.TARGET
+          && !committed) {
+        offsetTracker.commitOffset();
+        committed = true;
+      }
+      pipe.process(pipeBatch);
+    }
+    if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
+      offsetTracker.commitOffset();
+    }
+    processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+    newSourceOffset = offsetTracker.getOffset();
+    List<StageOutput> snapShot = pipeBatch.getSnapshotsOfAllStagesOutput();
+    if(snapShot != null) {
+      snapshotPersister.persistSnapshot(snapShot);
+      batchOutputs.add(snapShot);
+      afterSnapshot();
+    }
+
+  }
+
+  private void afterSnapshot() {
+    /*
+    * Reset the capture snapshot variable only after capturing the snapshot
+    * This guarantees that once captureSnapshot is called, the output is captured exactly once
+    * */
+    captureNextBatch = false;
+    snapshotBatchSize = 0;
+  }
+
 }

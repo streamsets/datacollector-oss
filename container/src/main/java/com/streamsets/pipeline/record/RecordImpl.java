@@ -178,7 +178,6 @@ public class RecordImpl implements Record {
 
   public void setTrackingId() {
     String newTrackingId = UUID.randomUUID().toString();
-    Preconditions.checkNotNull(newTrackingId, "newTrackingId cannot be null");
     String currentTrackingId = (String) headerData.get(TRACKING_ID_ATTR);
     if (currentTrackingId != null) {
       headerData.put(PREVIOUS_STAGE_TRACKING_ID_ATTR, currentTrackingId);

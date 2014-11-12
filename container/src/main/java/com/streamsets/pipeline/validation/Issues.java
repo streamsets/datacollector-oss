@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@JsonDeserialize(using = NullDeserializer.class)
+@JsonDeserialize(using = NullDeserializer.Object.class)
 public class Issues {
   private final List<Issue> pipeline;
   private final Map<String, List<StageIssue>> stages;

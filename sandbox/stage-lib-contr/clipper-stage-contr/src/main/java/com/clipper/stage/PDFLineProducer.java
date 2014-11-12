@@ -69,7 +69,7 @@ public class PDFLineProducer extends BaseSource {
     try {
       index = Integer.parseInt(lastSourceOffset);
     } catch (NumberFormatException e) {
-      index = 5;
+      index = 0;
     }
 
     for(int i = 0; i < batchSize; i++) {
@@ -82,10 +82,17 @@ public class PDFLineProducer extends BaseSource {
     //update pending lines
     linesPendingRead -= batchSize;
 
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     if(linesPendingRead > 0) {
       return String.valueOf(index);
+    } else {
+      linesPendingRead = transactions.length;
+      return String.valueOf(0);
     }
-    return null;
   }
 
   private String pdftoText(String inputFileName) {

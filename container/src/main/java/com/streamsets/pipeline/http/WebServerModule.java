@@ -28,7 +28,7 @@ import com.streamsets.pipeline.restapi.configuration.*;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
 import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.state.PipelineStateManager;
+import com.streamsets.pipeline.state.PipelineManager;
 import com.streamsets.pipeline.state.PipelineStateModule;
 import com.streamsets.pipeline.store.PipelineStoreModule;
 import dagger.Module;
@@ -144,21 +144,11 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
-  ContextConfigurator providePipelineStateManager(final PipelineStateManager pipelineStateManager) {
+  ContextConfigurator providePipelineStateManager(final PipelineManager pipelineStateManager) {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(PipelineStateMgrInjector.PIPELINE_STATE_MGR, pipelineStateManager);
-      }
-    };
-  }
-
-  @Provides(type = Type.SET)
-  ContextConfigurator provideRuntimeInfo(final RuntimeInfo runtimeInfo) {
-    return new ContextConfigurator() {
-      @Override
-      public void init(ServletContextHandler context) {
-        context.setAttribute(RuntimeInfoInjector.RUNTIME_INFO, runtimeInfo);
       }
     };
   }

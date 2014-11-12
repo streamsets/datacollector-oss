@@ -17,20 +17,21 @@
  */
 package com.streamsets.pipeline.main;
 
+
 import com.streamsets.pipeline.http.WebServerTask;
-import com.streamsets.pipeline.state.PipelineStateManager;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
+import com.streamsets.pipeline.state.PipelineManager;
 
 import javax.inject.Inject;
 
 public class PipelineTask extends AbstractTask {
   private final PipelineStoreTask store;
   private final WebServerTask webServer;
-  private final PipelineStateManager stateMgr;
+  private final PipelineManager stateMgr;
 
   @Inject
-  public PipelineTask(PipelineStoreTask store, WebServerTask webServer, PipelineStateManager stateMgr) {
+  public PipelineTask(PipelineStoreTask store, WebServerTask webServer, PipelineManager stateMgr) {
     super("pipeline");
     this.store = store;
     this.webServer = webServer;

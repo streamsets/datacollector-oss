@@ -24,8 +24,8 @@ import java.util.Set;
 public enum State {
 
   NOT_RUNNING(ImmutableSet.of("RUNNING")),
-  RUNNING(ImmutableSet.of("ERROR", "NOT_RUNNING")),
-  ERROR(ImmutableSet.of("NOT_RUNNING"));
+  RUNNING(ImmutableSet.of("NOT_RUNNING")),
+  ERROR(ImmutableSet.of("NOT_RUNNING", "RUNNING"));
 
   private Set<String> validTransitions = null;
 

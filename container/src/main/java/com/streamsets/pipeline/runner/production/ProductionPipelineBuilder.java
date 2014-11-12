@@ -39,7 +39,7 @@ public class ProductionPipelineBuilder {
   public ProductionPipeline build(ProductionPipelineRunner runner) throws PipelineRuntimeException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     if (!validator.validate()) {
-      throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_PREVIEW, validator.getIssues());
+      throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_RUN, validator.getIssues());
     }
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + ":production", pipelineConf).build(runner);
     return new ProductionPipeline(pipeline);

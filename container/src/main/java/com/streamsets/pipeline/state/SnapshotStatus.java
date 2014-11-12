@@ -20,24 +20,22 @@ package com.streamsets.pipeline.state;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PipelineState {
-  private final State pipelineState;
-  private final String message;
+public class SnapshotStatus {
+
+  private final boolean exists;
+  private final SnapshotState state;
 
   @JsonCreator
-  public PipelineState(
-      @JsonProperty("pipelineState") State pipelineState,
-      @JsonProperty("message") String message) {
-    this.pipelineState = pipelineState;
-    this.message = message;
+  public SnapshotStatus(@JsonProperty("exists") boolean exists, @JsonProperty("state") SnapshotState state) {
+    this.exists = exists;
+    this.state = state;
   }
 
-  public State getPipelineState() {
-    return this.pipelineState;
+  public boolean isExists() {
+    return exists;
   }
 
-  public String getMessage() {
-    return this.message;
+  public SnapshotState getState() {
+    return state;
   }
-
 }

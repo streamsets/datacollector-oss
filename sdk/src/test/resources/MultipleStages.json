@@ -1,6 +1,5 @@
 [ {
   "library" : null,
-  "classLoader" : null,
   "className" : "com.streamsets.pipeline.sdk.testData.TwitterProcessor",
   "name" : "TwitterProcessor",
   "version" : "1.0",
@@ -26,7 +25,6 @@
   "stageClass" : null
 }, {
   "library" : null,
-  "classLoader" : null,
   "className" : "com.streamsets.pipeline.sdk.testData.TwitterSource",
   "name" : "TwitterSource",
   "version" : "1.0",
@@ -62,7 +60,6 @@
   "stageClass" : null
 }, {
   "library" : null,
-  "classLoader" : null,
   "className" : "com.streamsets.pipeline.sdk.testData.TwitterTarget",
   "name" : "TwitterTarget",
   "version" : "1.3",

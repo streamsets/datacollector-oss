@@ -23,7 +23,10 @@ public enum PipelineStateErrors implements ErrorId {
 
   COULD_NOT_SET_STATE("Could not set state, {}"),
   COULD_NOT_GET_STATE("Could not get state, {}"),
-  INVALID_STATE_TRANSITION("Cannot change state from {} to {}");
+  INVALID_STATE_TRANSITION("Cannot change state from {} to {}"),
+  CANNOT_SET_OFFSET_RUNNING_STATE("Cannot set the source offset during a run."),
+  CANNOT_CAPTURE_SNAPSHOT_WHEN_PIPELINE_NOT_RUNNING("Cannot capture snapshot when pipeline is not running."),
+  INVALID_BATCH_SIZE("Invalid batch size supplied {}.");
 
   private final String msgTemplate;
 

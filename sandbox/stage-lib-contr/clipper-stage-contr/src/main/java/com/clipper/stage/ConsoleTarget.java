@@ -22,6 +22,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 
+import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.Iterator;
 
@@ -31,6 +34,7 @@ import java.util.Iterator;
   version = "1.0")
 public class ConsoleTarget implements Target {
 
+  int batchCounter = 0;
   @Override
   public void init(Info info, Target.Context context) {
 
@@ -38,11 +42,22 @@ public class ConsoleTarget implements Target {
 
   @Override
   public void write(Batch batch) {
-    PrintWriter pw = new PrintWriter(System.out);
+    PrintWriter pw = null;
+    try {
+      pw = new PrintWriter(new BufferedOutputStream(
+          new FileOutputStream("/Users/harikiran/Documents/workspace/streamsets/"
+              + "dev/dist/target/streamsets-pipeline-0.0.1-SNAPSHOT/streamsets-pipeline-0.0.1-SNAPSHOT/clipperOut.txt"
+          , true /*append*/)));
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
     Iterator<Record> it = batch.getRecords();
+    pw.write(String.format("******************* Batch %d Start *********************", batchCounter++));
+
     while (it.hasNext()) {
       Record record = it.next();
       Iterator<String> filedNames = record.getFieldNames();
+      pw.write("------------------------------------------------------------------------------------");
       while(filedNames.hasNext()) {
         String fieldName = filedNames.next();
         pw.write(fieldName);
@@ -53,6 +68,7 @@ public class ConsoleTarget implements Target {
       pw.write("------------------------------------------------------------------------------------");
       pw.println();
     }
+    pw.write("******************* Batch end *********************");
     pw.flush();
     pw.close();
   }

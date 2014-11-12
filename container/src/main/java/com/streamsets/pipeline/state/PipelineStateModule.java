@@ -17,8 +17,8 @@
  */
 package com.streamsets.pipeline.state;
 
-import com.streamsets.pipeline.agent.RuntimeInfo;
-import com.streamsets.pipeline.agent.RuntimeModule;
+import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import dagger.Module;
 import dagger.Provides;
 
@@ -29,7 +29,7 @@ public class PipelineStateModule {
 
   @Provides
   @Singleton
-  public PipelineStateManager provideStateManager(RuntimeInfo runtimeInfo) {
-    return new PipelineStateManager(runtimeInfo);
+  public PipelineManager provideStateManager(RuntimeInfo runtimeInfo) {
+    return new PipelineManager(runtimeInfo);
   }
 }

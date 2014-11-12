@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.agent.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import org.glassfish.hk2.api.Factory;
 
 

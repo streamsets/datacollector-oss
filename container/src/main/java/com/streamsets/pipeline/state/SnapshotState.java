@@ -17,27 +17,8 @@
  */
 package com.streamsets.pipeline.state;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+public enum SnapshotState {
 
-public class PipelineState {
-  private final State pipelineState;
-  private final String message;
-
-  @JsonCreator
-  public PipelineState(
-      @JsonProperty("pipelineState") State pipelineState,
-      @JsonProperty("message") String message) {
-    this.pipelineState = pipelineState;
-    this.message = message;
-  }
-
-  public State getPipelineState() {
-    return this.pipelineState;
-  }
-
-  public String getMessage() {
-    return this.message;
-  }
-
+  RUNNING,
+  NOT_RUNNING
 }

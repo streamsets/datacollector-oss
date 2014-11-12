@@ -35,6 +35,9 @@ import org.mockito.Mockito;
 
 import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 public class TestStageLibraryResource {
@@ -181,9 +184,9 @@ public class TestStageLibraryResource {
   }
 
   @Test
-  public void testGetIcon() {
+  public void testGetIcon() throws IOException {
     Response response = r.getIcon("target", "library", "1.0.0");
-    response.getEntity();
+    Assert.assertTrue(response.getEntity() != null);
   }
 
 }

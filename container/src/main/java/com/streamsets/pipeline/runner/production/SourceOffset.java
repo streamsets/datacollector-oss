@@ -22,19 +22,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SourceOffset {
 
-  private final String pipelineName;
   private final String offset;
 
   @JsonCreator
   public SourceOffset(
-      @JsonProperty("pipelineName") String source,
       @JsonProperty("offset") String offset) {
-    this.pipelineName = source;
     this.offset = offset;
-  }
-
-  public String getPipelineName() {
-    return pipelineName;
   }
 
   public String getOffset() {

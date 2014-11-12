@@ -19,47 +19,45 @@ package com.streamsets.pipeline.state;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.streamsets.pipeline.agent.RuntimeInfo;
-import com.streamsets.pipeline.runner.production.ProdPipelineRunnerThread;
-import com.streamsets.pipeline.runner.production.ProductionPipeline;
+import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.main.RuntimeInfo;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.concurrent.Executors;
 
-
-public class PipelineStateManager {
+public class StateTracker {
 
   static final String DEFAULT_PIPELINE_NAME = "xyz";
-  private static final String PIPELINE_STATE_FILE = "state.json";
+  private static final String STATE_FILE = "pipelineState.json";
+  private static final String STATE_DIR = "runInfo";
+  private static final String DEFAULT_STATE = "NOT_RUNNING";
 
-  private final RuntimeInfo runtimeInfo;
   private File stateDir;
-  private volatile State state;
-  private ObjectMapper json;
-  private ProdPipelineRunnerThread t;
+  private PipelineState pipelineState;
+  private final ObjectMapper json;
+  private final RuntimeInfo runtimeInfo;
 
-  @Inject
-  public PipelineStateManager(RuntimeInfo runtimeInfo) {
-    this.runtimeInfo = runtimeInfo;
+  public StateTracker(RuntimeInfo runtimeInfo) {
     json = new ObjectMapper();
     json.enable(SerializationFeature.INDENT_OUTPUT);
+    this.runtimeInfo = runtimeInfo;
   }
 
-  public State getState() {
-    return this.state;
+  public PipelineState getState() {
+    return this.pipelineState;
   }
 
-  public void setState(State state) throws PipelineStateException {
-    //persist default state
-    PipelineState ps = new PipelineState(DEFAULT_PIPELINE_NAME, state, Collections.EMPTY_LIST);
+  @VisibleForTesting
+  public File getStateFile() {
+    return new File(stateDir, STATE_FILE);
+  }
+
+  public void setState(State state, String message) throws PipelineStateException {
+    //persist default pipelineState
+    pipelineState = new PipelineState(state, message);
     try {
-      json.writeValue(getStateFile(), ps);
-      this.state = state;
+      json.writeValue(getStateFile(), pipelineState);
     } catch (IOException e) {
-      //TODO localize
       throw new PipelineStateException(PipelineStateErrors.COULD_NOT_SET_STATE, e.getMessage(), e);
     }
   }
@@ -70,47 +68,38 @@ public class PipelineStateManager {
       if (!stateDir.mkdirs()) {
         throw new RuntimeException(String.format("Could not create directory '%s'", stateDir.getAbsolutePath()));
       } else {
-        //persist default state
+        persistDefaultState();
+      }
+    } else {
+      //There exists a pipelineState directory already, check for file
+      if(getStateFile().exists()) {
         try {
-          setState(State.NOT_RUNNING);
+          this.pipelineState = getStateFromDir();
         } catch (PipelineStateException e) {
           throw new RuntimeException(e);
         }
-      }
-    } else {
-      //There exists a state directory already, read state from it.
-      try {
-        this.state = getStateFromDir();
-      } catch (PipelineStateException e) {
-        throw new RuntimeException(e);
+      } else {
+        persistDefaultState();
       }
     }
   }
 
-  public void destroy() {
-
-  }
-
-  private File getStateFile() {
-    return new File(stateDir, PIPELINE_STATE_FILE);
-  }
-
-  private State getStateFromDir() throws PipelineStateException {
+  private void persistDefaultState() {
+    //persist default pipelineState
     try {
-      PipelineState pipelineState = json.readValue(getStateFile(), PipelineState.class);
-      return pipelineState.getPipelineState();
+      setState(State.NOT_RUNNING, null);
+    } catch (PipelineStateException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private PipelineState getStateFromDir() throws PipelineStateException {
+    try {
+      return json.readValue(getStateFile(), PipelineState.class);
     } catch (IOException e) {
-      //TODO localize
       throw new PipelineStateException(PipelineStateErrors.COULD_NOT_GET_STATE, e.getMessage(), e);
     }
   }
 
-  public void runPipeline(ProductionPipeline pipeline) {
-    t = new ProdPipelineRunnerThread(this, pipeline);
-    Executors.newSingleThreadExecutor().submit(t);
-  }
 
-  public void stopPipeline() {
-    t.stop();
-  }
 }

@@ -21,6 +21,7 @@ import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.container.LocaleInContext;
+import org.apache.commons.io.IOUtils;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -81,7 +82,7 @@ public class StageLibraryResource {
       @Override
       public void write(OutputStream output) throws IOException, WebApplicationException {
         try {
-          copy(resourceAsStream, output);
+          IOUtils.copy(resourceAsStream, output);
         } catch (Exception e) {
           throw new WebApplicationException(e);
         }
@@ -89,26 +90,4 @@ public class StageLibraryResource {
     };
     return Response.ok().type(MediaType.APPLICATION_SVG_XML_TYPE).entity(stream).build();
   }
-
-  /*******************************************************************/
-  /*********************** private methods ***************************/
-  /*******************************************************************/
-  
-  /**
-   * Copies data from the argument input stream into the argument output stream
-   * @param in
-   * @param out
-   * @throws IOException
-   */
-  private void copy(InputStream in, OutputStream out) throws IOException {
-    byte[] buffer = new byte[1024];
-    int bytesRead;
-    while ((bytesRead = in.read(buffer)) > -1) {
-      out.write(buffer, 0, bytesRead);
-    }
-    out.close();
-    out.flush();
-    in.close();
-  }
-
 }

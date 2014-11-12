@@ -21,6 +21,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 
+import java.io.InputStream;
+
 public class ProductionPipeline {
   private final Pipeline pipeline;
 
@@ -36,5 +38,21 @@ public class ProductionPipeline {
 
   public Pipeline getPipeline() {
     return this.pipeline;
+  }
+
+  public void stop() {
+    ((ProductionPipelineRunner)pipeline.getRunner()).stop();
+  }
+
+  public boolean wasStopped() {
+    return ((ProductionPipelineRunner)pipeline.getRunner()).wasStopped();
+  }
+
+  public String getCommittedOffset() {
+    return ((ProductionPipelineRunner)pipeline.getRunner()).getCommittedOffset();
+  }
+
+  public void captureSnapshot(int batchSize) {
+    ((ProductionPipelineRunner)pipeline.getRunner()).captureNextBatch(batchSize);
   }
 }

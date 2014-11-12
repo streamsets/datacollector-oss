@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
 
@@ -34,6 +36,15 @@ public class StageOutput {
     this.errorRecords = errorRecords;
   }
 
+  @JsonCreator
+  public StageOutput(
+      @JsonProperty("instanceName") String instanceName,
+      @JsonProperty("output") Map<String, List<Record>> output) {
+    this.instanceName = instanceName;
+    this.output = output;
+    this.errorRecords = null;
+  }
+
   public String getInstanceName() {
     return instanceName;
   }
@@ -42,6 +53,9 @@ public class StageOutput {
     return output;
   }
 
+  public void setErrorRecords(ErrorRecords errorRecords) {
+    //NOP, to trick jackson
+  }
   public ErrorRecords getErrorRecords() {
     return errorRecords;
   }

@@ -21,10 +21,13 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
-public class NullDeserializer extends JsonDeserializer<Object> {
+public class NullDeserializer<T> extends JsonDeserializer<T> {
+
+  public static class Object extends NullDeserializer<Object> {
+  }
 
   @Override
-  public Object deserialize(JsonParser jp, DeserializationContext ctxt) {
+  public T deserialize(JsonParser jp, DeserializationContext ctxt) {
     return null;
   }
 

@@ -17,27 +17,24 @@
  */
 package com.streamsets.pipeline.state;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class PipelineState {
-  private final State pipelineState;
-  private final String message;
+public class TestValidStateTransition {
 
-  @JsonCreator
-  public PipelineState(
-      @JsonProperty("pipelineState") State pipelineState,
-      @JsonProperty("message") String message) {
-    this.pipelineState = pipelineState;
-    this.message = message;
+  @Test
+  public void testValidTransition() {
+
+    Assert.assertTrue(State.NOT_RUNNING.isValidTransition("RUNNING"));
+
+    Assert.assertTrue(State.RUNNING.isValidTransition("NOT_RUNNING"));
+
+    Assert.assertTrue(State.ERROR.isValidTransition("RUNNING"));
+    Assert.assertTrue(State.ERROR.isValidTransition("NOT_RUNNING"));
+
+    Assert.assertFalse(State.ERROR.isValidTransition("ERROR"));
+    Assert.assertFalse(State.NOT_RUNNING.isValidTransition("ERROR"));
+    Assert.assertFalse(State.NOT_RUNNING.isValidTransition("XYZ"));
+
   }
-
-  public State getPipelineState() {
-    return this.pipelineState;
-  }
-
-  public String getMessage() {
-    return this.message;
-  }
-
 }
