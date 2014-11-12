@@ -37,7 +37,7 @@ public class TestBatchImpl {
     List<String> requiredFields = new ArrayList<String>();
     List<Record> records = ImmutableList.of(Mockito.mock(Record.class), Mockito.mock(Record.class));
     ErrorRecordSink errorRecordSink = Mockito.mock(ErrorRecordSink.class);
-    Batch batch = new BatchImpl("i", offsetTracker, requiredFields, records, errorRecordSink);
+    Batch batch = new BatchImpl(offsetTracker, records);
 
     Assert.assertEquals("offset", batch.getSourceOffset());
     Iterator<Record> it = batch.getRecords();

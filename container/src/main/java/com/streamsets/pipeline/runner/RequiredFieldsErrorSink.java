@@ -17,38 +17,27 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.validation.Issue;
 
-import java.util.Iterator;
-import java.util.List;
+public class RequiredFieldsErrorSink implements FilterRecordBatch.Sink {
+  private final String instanceName;
+  private final ErrorRecordSink errorSink;
+  private int counter;
 
-public class BatchImpl implements Batch {
-  private final List<Record> records;
-  private final String sourceOffset;
-  private boolean got;
-
-  public BatchImpl(SourceOffsetTracker offsetTracker, List<Record> records) {
-    this.records = records;
-    sourceOffset = offsetTracker.getOffset();
-    got = false;
+  public RequiredFieldsErrorSink(String instanceName, ErrorRecordSink errorSink) {
+    this.instanceName = instanceName;
+    this.errorSink = errorSink;
   }
 
   @Override
-  public String getSourceOffset() {
-    return sourceOffset;
+  public void add(Record record, Issue issue) {
+    errorSink.addRecord(instanceName, new ErrorRecord(record, issue));
+    counter++;
   }
 
-  @Override
-  public Iterator<Record> getRecords() {
-    Preconditions.checkState(!got, "The record iterator can be obtained only once");
-    got = true;
-    return records.iterator();
-  }
-
-  public int getSize() {
-    return records.size();
+  public int size() {
+    return counter;
   }
 
 }

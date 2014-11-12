@@ -71,8 +71,7 @@ public class PipeBatch {
     for (String inputLane : pipe.getInputLanes()) {
       records.addAll(fullPayload.remove(inputLane));
     }
-    return new BatchImpl(pipe.getStage().getInfo().getInstanceName(), offsetTracker,
-                         pipe.getStage().getRequiredFields(), records, errorRecordSink);
+    return new BatchImpl(offsetTracker, records);
   }
 
   public BatchMakerImpl startStage(StagePipe pipe) {

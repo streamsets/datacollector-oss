@@ -20,59 +20,25 @@ package com.streamsets.pipeline.runner;
 import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.validation.Issue;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class ErrorRecord {
-
-  public enum ERROR implements ErrorId {
-    REQUIRED_FIELDS_MISSING("Required fields missing '{}'"),
-    STAGE_CAUGHT_ERROR("Stage caught error: {}");
-
-    private String template;
-
-    ERROR(String template) {
-      this.template = template;
-    }
-
-    @Override
-    public String getMessageTemplate() {
-      return template;
-    }
-
-    public String getMessage(String template, Object... args) {
-      template = (template != null) ? template : this.template;
-      return Utils.format(template, args);
-    }
-  }
-
   private final Record record;
-  private final ERROR error;
-  private final Object[] args;
-  private Locale locale;
+  private final Issue issue;
 
-  public ErrorRecord(Record record, ERROR error, Object[] args) {
+  public ErrorRecord(Record record, Issue issue) {
     this.record = record;
-    this.error = error;
-    this.args = args;
-  }
-
-  public void setLocale(Locale locale) {
-    this.locale = locale;
+    this.issue = issue;
   }
 
   public Record getRecord() {
     return record;
   }
 
-  public ERROR getError() {
-    return error;
-  }
-
-  public String getMessage() {
-    // TODO localize
-    return error.getMessage(null, args);
+  public Issue getIssue() {
+    return issue;
   }
 
 }

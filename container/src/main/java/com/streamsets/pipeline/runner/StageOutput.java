@@ -19,7 +19,6 @@ package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.Record;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -27,10 +26,9 @@ import java.util.Map;
 public class StageOutput {
   private final String instanceName;
   private final Map<String, List<Record>> output;
-  private final List<ErrorRecord> errorRecords;
-  private Locale locale;
+  private final ErrorRecords errorRecords;
 
-  public StageOutput(String instanceName, Map<String, List<Record>> output, List<ErrorRecord> errorRecords) {
+  public StageOutput(String instanceName, Map<String, List<Record>> output, ErrorRecords errorRecords) {
     this.instanceName = instanceName;
     this.output = output;
     this.errorRecords = errorRecords;
@@ -45,18 +43,11 @@ public class StageOutput {
   }
 
   public void setLocale(Locale locale) {
-    this.locale = locale;
+    errorRecords.setLocale(locale);
   }
 
   @SuppressWarnings("unchecked")
-  public List<ErrorRecord> getErrorRecords() {
-    List<ErrorRecord> ret = Collections.EMPTY_LIST;
-    if (errorRecords != null) {
-      for (ErrorRecord errorRecord : errorRecords) {
-        errorRecord.setLocale(locale);
-      }
-      ret = errorRecords;
-    }
-    return ret;
+  public ErrorRecords getErrorRecords() {
+    return errorRecords;
   }
 }

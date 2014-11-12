@@ -17,38 +17,36 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.streamsets.pipeline.api.Record;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ErrorRecordSink {
-  private final Map<String, List<ErrorRecord>> errorRecords;
+  private final static ErrorRecords EMPTY = new ErrorRecords();
+  private final Map<String, ErrorRecords> errorRecords;
   private int size;
 
   public ErrorRecordSink() {
-    errorRecords = new HashMap<String, List<ErrorRecord>>();
+    errorRecords = new HashMap<String, ErrorRecords>();
     size = 0;
   }
 
-  public void addRecord(String stageInstance, Record record, ErrorRecord.ERROR error, Object... args) {
-    List<ErrorRecord> stageErrors = errorRecords.get(stageInstance);
+  public void addRecord(String stageInstance, ErrorRecord errorRecord) {
+    ErrorRecords stageErrors = errorRecords.get(stageInstance);
     if (stageErrors == null) {
-      stageErrors = new ArrayList<ErrorRecord>();
+      stageErrors = new ErrorRecords();
       errorRecords.put(stageInstance, stageErrors);
     }
-    stageErrors.add(new ErrorRecord(record, error, args));
+    stageErrors.addErrorRecord(errorRecord);
     size++;
   }
 
-  public Map<String, List<ErrorRecord>> getErrorRecords() {
+  public Map<String, ErrorRecords> getErrorRecords() {
     return errorRecords;
   }
 
-  public List<ErrorRecord> getErrorRecords(String stageInstance) {
-    return errorRecords.get(stageInstance);
+  public ErrorRecords getErrorRecords(String stageInstance) {
+    ErrorRecords errors = errorRecords.get(stageInstance);
+    return (errors != null) ? errors : EMPTY;
   }
 
   public int size() {

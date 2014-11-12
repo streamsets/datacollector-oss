@@ -21,6 +21,7 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
@@ -73,11 +74,16 @@ public class StagePipe extends Pipe {
   @SuppressWarnings("unchecked")
   public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
-    BatchImpl batch = pipeBatch.getBatch(this);
+    BatchImpl batchImpl = pipeBatch.getBatch(this);
     ErrorRecordSink errorRecordSink = pipeBatch.getErrorRecordSink();
-    inputRecordsCounter.inc(batch.getSize());
-    inputRecordsMeter.mark(batch.getSize());
-    int preErrorCount = errorRecordSink.size();
+    inputRecordsCounter.inc(batchImpl.getSize());
+    inputRecordsMeter.mark(batchImpl.getSize());
+
+    RequiredFieldsErrorSink requiredFieldsErrorSink = new RequiredFieldsErrorSink(
+        getStage().getInfo().getInstanceName(), errorRecordSink);
+    Batch batch = new FilterRecordBatch(batchImpl, new RequiredFieldsPredicate(getStage().getRequiredFields()),
+                                  requiredFieldsErrorSink);
+
     long start = System.currentTimeMillis();
     String newOffset = getStage().execute(pipeBatch.getPreviousOffset(), pipeBatch.getBatchSize(), batch, batchMaker,
                                           errorRecordSink);
@@ -87,8 +93,8 @@ public class StagePipe extends Pipe {
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     outputRecordsCounter.inc(batchMaker.getSize());
     outputRecordsMeter.mark(batchMaker.getSize());
-    errorRecordsCounter.inc(errorRecordSink.size() - preErrorCount);
-    errorRecordsMeter.mark(errorRecordSink.size() - preErrorCount);
+    errorRecordsCounter.inc(requiredFieldsErrorSink.size());
+    errorRecordsMeter.mark(requiredFieldsErrorSink.size());
     if (getStage().getConfiguration().getOutputLanes().size() > 1) {
       for (String lane : getStage().getConfiguration().getOutputLanes()) {
         outputRecordsPerLaneCounter.get(lane).inc(batchMaker.getSize(lane));

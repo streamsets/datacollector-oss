@@ -27,11 +27,15 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.validation.Issue;
 
 import java.util.List;
 import java.util.Set;
 
 public class StageContext implements Source.Context, Target.Context, Processor.Context {
+  private static final String STAGE_CAUGHT_ERROR_KEY = "stage.caught.record.error";
+  private static final String STAGE_CAUGHT_ERROR_DEFAULT = "Stage caught record error: {}";
+
   private final List<Stage.Info> pipelineInfo;
   private final MetricRegistry metrics;
   private final String instanceName;
@@ -62,14 +66,19 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
     @Override
   public void toError(Record record, Exception exception) {
-      errorRecordSink.addRecord(instanceName, record, ErrorRecord.ERROR.STAGE_CAUGHT_ERROR, exception.getMessage());
+      Preconditions.checkNotNull(record, "record cannot be null");
+      Preconditions.checkNotNull(exception, "exception cannot be null");
+      errorRecordSink.addRecord(instanceName, new ErrorRecord(record, new Issue(
+        STAGE_CAUGHT_ERROR_KEY, STAGE_CAUGHT_ERROR_DEFAULT, exception.getMessage())));
   }
 
   @Override
   public void toError(Record record, String errorMessage) {
-    errorRecordSink.addRecord(instanceName, record, ErrorRecord.ERROR.STAGE_CAUGHT_ERROR, errorMessage);
+    Preconditions.checkNotNull(record, "record cannot be null");
+    Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
+    errorRecordSink.addRecord(instanceName, new ErrorRecord(record, new Issue(
+        STAGE_CAUGHT_ERROR_KEY, STAGE_CAUGHT_ERROR_DEFAULT, errorMessage)));
   }
-
 
   @Override
   public Set<String> getOutputLanes() {

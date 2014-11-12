@@ -20,7 +20,6 @@ package com.streamsets.pipeline.sdk.testharness.internal;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.runner.BatchImpl;
-import com.streamsets.pipeline.runner.ErrorRecordSink;
 import com.streamsets.pipeline.sdk.testharness.RecordProducer;
 
 import java.util.ArrayList;
@@ -72,7 +71,6 @@ public class BatchBuilder {
     for(int i = 0; i < maxBatchSize; i++) {
       records.add(recordProducer.produce());
     }
-    return new BatchImpl("instance", new SourceOffsetTrackerImpl(null), new ArrayList<String>(), records,
-                         new ErrorRecordSink());
+    return new BatchImpl(new SourceOffsetTrackerImpl(null), records);
   }
 }
