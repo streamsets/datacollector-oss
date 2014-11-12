@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.api;
 
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
-import com.streamsets.pipeline.container.ApiUtils;
+import com.streamsets.pipeline.container.Utils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -95,7 +95,7 @@ public class TestStageException {
       Stage.Info info = Mockito.mock(Stage.Info.class);
       Mockito.when(info.getName()).thenReturn("stage");
       Mockito.when(info.getVersion()).thenReturn("1.0.0");
-      ApiUtils.setStageExceptionContext(info, getClass().getClassLoader());
+      Utils.setStageExceptionContext(info, getClass().getClassLoader());
 
       StageException ex = new StageException(TErrorId.ID0);
       Assert.assertNotNull("HI", ex.getMessage(null));
@@ -108,7 +108,7 @@ public class TestStageException {
       Assert.assertFalse(ex.getMessage(Locale.getDefault()).endsWith(" "));
 
     } finally {
-      ApiUtils.resetStageExceptionContext();
+      Utils.resetStageExceptionContext();
     }
   }
 
@@ -118,13 +118,13 @@ public class TestStageException {
       Stage.Info info = Mockito.mock(Stage.Info.class);
       Mockito.when(info.getName()).thenReturn("missing");
       Mockito.when(info.getVersion()).thenReturn("1.0.0");
-      ApiUtils.setStageExceptionContext(info, getClass().getClassLoader());
+      Utils.setStageExceptionContext(info, getClass().getClassLoader());
 
       StageException ex = new StageException(TErrorId.ID0);
       Assert.assertNotNull("hi", ex.getMessage(null));
 
     } finally {
-      ApiUtils.resetStageExceptionContext();
+      Utils.resetStageExceptionContext();
     }
   }
 

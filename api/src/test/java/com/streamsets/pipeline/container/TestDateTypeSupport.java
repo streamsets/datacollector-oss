@@ -29,7 +29,7 @@ public class TestDateTypeSupport {
     DateTypeSupport support = new DateTypeSupport();
     Date d = new Date();
     Assert.assertEquals(d, support.convert(d));
-    d = ApiUtils.parse("2014-10-22T13:30Z");
+    d = Utils.parse("2014-10-22T13:30Z");
     Assert.assertEquals(d, support.convert("2014-10-22T13:30Z"));
   }
 

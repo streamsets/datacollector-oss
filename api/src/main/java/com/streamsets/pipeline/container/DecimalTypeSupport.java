@@ -47,8 +47,8 @@ public class DecimalTypeSupport extends TypeSupport<BigDecimal> {
     if (value instanceof Double) {
       return new BigDecimal((Double)value);
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a BigDecimal",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a BigDecimal",
+                                                    value.getClass().getSimpleName(), value));
   }
 
 }

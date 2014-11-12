@@ -47,8 +47,8 @@ public class ShortTypeSupport extends TypeSupport<Short> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).shortValue();
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a short",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a short",
+                                                    value.getClass().getSimpleName(), value));
   }
 
 }

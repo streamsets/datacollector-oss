@@ -47,8 +47,8 @@ public class ByteTypeSupport extends TypeSupport<Byte> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).byteValue();
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a byte",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a byte",
+                                                    value.getClass().getSimpleName(), value));
   }
 
 }

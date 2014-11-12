@@ -47,8 +47,8 @@ public class FloatTypeSupport extends TypeSupport<Float> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).floatValue();
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a float",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a float",
+                                                    value.getClass().getSimpleName(), value));
   }
 
 }

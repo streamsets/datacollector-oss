@@ -24,8 +24,8 @@ public class ByteArrayTypeSupport extends TypeSupport<byte[]> {
     if (value instanceof byte[]) {
       return (byte[])value;
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a byte[]",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a byte[]",
+                                                    value.getClass().getSimpleName(), value));
   }
 
   @Override

@@ -29,14 +29,14 @@ public class DateTypeSupport extends TypeSupport<Date> {
     }
     if (value instanceof String) {
       try {
-        return ApiUtils.parse((String) value);
+        return Utils.parse((String) value);
       } catch (ParseException ex) {
-        throw new IllegalArgumentException(ApiUtils.format("Cannot parse '{}' to a Date, format must be ISO8601 UTC" +
-                                                           "(yyyy-MM-dd'T'HH:mm'Z')", value));
+        throw new IllegalArgumentException(Utils.format("Cannot parse '{}' to a Date, format must be ISO8601 UTC" +
+                                                        "(yyyy-MM-dd'T'HH:mm'Z')", value));
       }
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a Date",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a Date",
+                                                    value.getClass().getSimpleName(), value));
   }
 
   @Override

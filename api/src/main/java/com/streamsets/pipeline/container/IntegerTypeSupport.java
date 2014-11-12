@@ -47,8 +47,8 @@ public class IntegerTypeSupport extends TypeSupport<Integer> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).intValue();
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a int",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a int",
+                                                    value.getClass().getSimpleName(), value));
   }
 
 }

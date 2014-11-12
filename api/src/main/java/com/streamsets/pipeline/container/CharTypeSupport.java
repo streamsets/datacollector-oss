@@ -30,8 +30,8 @@ public class CharTypeSupport extends TypeSupport<Character> {
         return s.charAt(0);
       }
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a char",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a char",
+                                                    value.getClass().getSimpleName(), value));
   }
 
 }

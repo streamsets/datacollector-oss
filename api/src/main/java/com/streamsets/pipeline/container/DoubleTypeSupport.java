@@ -47,8 +47,8 @@ public class DoubleTypeSupport extends TypeSupport<Double> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).doubleValue();
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a double",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a double",
+                                                    value.getClass().getSimpleName(), value));
   }
 
 }

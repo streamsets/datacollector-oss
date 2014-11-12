@@ -50,8 +50,8 @@ public class BooleanTypeSupport extends TypeSupport<Boolean> {
     if (value instanceof BigDecimal) {
       return ! value.equals(BigDecimal.ZERO);
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a boolean",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a boolean",
+                                                    value.getClass().getSimpleName(), value));
   }
 
 }

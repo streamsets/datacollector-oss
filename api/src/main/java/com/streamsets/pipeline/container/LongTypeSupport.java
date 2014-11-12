@@ -47,8 +47,8 @@ public class LongTypeSupport extends TypeSupport<Long> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).longValue();
     }
-    throw new IllegalArgumentException(ApiUtils.format("Cannot convert {} '{}' to a long",
-                                                       value.getClass().getSimpleName(), value));
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a long",
+                                                    value.getClass().getSimpleName(), value));
   }
 
 }

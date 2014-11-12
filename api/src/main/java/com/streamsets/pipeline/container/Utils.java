@@ -27,9 +27,9 @@ import java.util.Date;
 import java.util.TimeZone;
 
 // private class with utilities for the public API classes, not exposed as public API
-public final class ApiUtils {
+public final class Utils {
 
-  ApiUtils() {
+  Utils() {
   }
 
   public static <T> T checkNotNull(T value, String varName) {

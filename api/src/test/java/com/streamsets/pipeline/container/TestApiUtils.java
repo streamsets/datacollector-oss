@@ -26,32 +26,32 @@ public class TestApiUtils {
 
   @Test
   public void testConstructor() {
-    new ApiUtils(); //dummy test to trick cobertura into not reporting constructor not covered
+    new Utils(); //dummy test to trick cobertura into not reporting constructor not covered
   }
 
   @Test
   public void testCheckNotNullWithNotNull() {
-    Assert.assertEquals("s", ApiUtils.checkNotNull("s", "s"));
+    Assert.assertEquals("s", Utils.checkNotNull("s", "s"));
   }
 
   @Test(expected = NullPointerException.class)
   public void testCheckNotNullWithNull() {
-    ApiUtils.checkNotNull(null, "s");
+    Utils.checkNotNull(null, "s");
   }
 
   @Test
   public void testFormat() {
-    Assert.assertEquals("aAbB", ApiUtils.format("a{}b{}", "A", "B"));
+    Assert.assertEquals("aAbB", Utils.format("a{}b{}", "A", "B"));
   }
 
   @Test
   public void testDateParsingValid() throws ParseException {
-    Assert.assertNotNull(ApiUtils.parse("2014-10-22T13:30Z"));
+    Assert.assertNotNull(Utils.parse("2014-10-22T13:30Z"));
   }
 
   @Test(expected = ParseException.class)
   public void testDateParsingInvalid() throws ParseException {
-    Assert.assertNotNull(ApiUtils.parse("20141022T13:30Z"));
+    Assert.assertNotNull(Utils.parse("20141022T13:30Z"));
   }
 
 }

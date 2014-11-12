@@ -36,7 +36,7 @@ public class PipelineException extends Exception {
 
     private ExceptionContext(String bundleName, ClassLoader classLoader) {
       this.bundleName = (bundleName != null) ? bundleName + "-bundle" : null;
-      this.classLoader = ApiUtils.checkNotNull(classLoader, "classLoader");
+      this.classLoader = Utils.checkNotNull(classLoader, "classLoader");
     }
 
     public String getBundleName() {
@@ -55,8 +55,8 @@ public class PipelineException extends Exception {
   }
 
   public static void setContext(String bundleName, ClassLoader stageClassLoader) {
-    ApiUtils.checkNotNull(bundleName, "bundleName");
-    ApiUtils.checkNotNull(stageClassLoader, "stageClassLoader");
+    Utils.checkNotNull(bundleName, "bundleName");
+    Utils.checkNotNull(stageClassLoader, "stageClassLoader");
     EXCEPTION_CONTEXT_TL.set(new ExceptionContext(bundleName, stageClassLoader));
   }
 
@@ -78,9 +78,9 @@ public class PipelineException extends Exception {
   }
 
   public PipelineException(String defaultBundle, ErrorId id, Object... params) {
-    super(null, getCause(ApiUtils.checkNotNull(params, "params")));
-    this.defaultBundle = ApiUtils.checkNotNull(defaultBundle, "defaultBundle");
-    this.id = ApiUtils.checkNotNull(id, "id");
+    super(null, getCause(Utils.checkNotNull(params, "params")));
+    this.defaultBundle = Utils.checkNotNull(defaultBundle, "defaultBundle");
+    this.id = Utils.checkNotNull(id, "id");
     this.params = params.clone();
     exceptionContext = EXCEPTION_CONTEXT_TL.get();
   }
@@ -90,7 +90,7 @@ public class PipelineException extends Exception {
   }
 
   public String getMessage() {
-    return ApiUtils.format(id.getMessageTemplate(), params);
+    return Utils.format(id.getMessageTemplate(), params);
   }
 
   public String getMessage(Locale locale) {
@@ -120,7 +120,7 @@ public class PipelineException extends Exception {
       }
     }
     if (rb != null && rb.containsKey(key)) {
-      msg = ApiUtils.format(rb.getString(key), params);
+      msg = Utils.format(rb.getString(key), params);
     } else {
       msg = getMessage();
     }

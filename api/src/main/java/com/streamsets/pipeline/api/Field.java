@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.container.ApiUtils;
+import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.container.BooleanTypeSupport;
 import com.streamsets.pipeline.container.ByteArrayTypeSupport;
 import com.streamsets.pipeline.container.ByteTypeSupport;
@@ -69,7 +69,7 @@ public class Field implements Cloneable {
     }
 
     private String toString(Object value) {
-      return ApiUtils.format("Field[{}:{}]", this, value);
+      return Utils.format("Field[{}:{}]", this, value);
     }
 
   }
@@ -127,11 +127,11 @@ public class Field implements Cloneable {
   }
 
   public static <T> Field create(Type type, T value) {
-    return new Field(ApiUtils.checkNotNull(type, "type"), type.convert(value));
+    return new Field(Utils.checkNotNull(type, "type"), type.convert(value));
   }
 
   public static <T> Field create(Field field, T value) {
-    return create(ApiUtils.checkNotNull(field, "field").getType(), value);
+    return create(Utils.checkNotNull(field, "field").getType(), value);
   }
 
   private Type type;

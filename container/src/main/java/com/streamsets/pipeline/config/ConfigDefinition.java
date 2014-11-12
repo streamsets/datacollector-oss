@@ -19,9 +19,8 @@ package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.container.ApiUtils;
+import com.streamsets.pipeline.container.Utils;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -107,9 +106,9 @@ public class ConfigDefinition {
   private final static String CONFIG_DESCRIPTION = "config.{}.description";
 
   public ConfigDefinition localize(ResourceBundle rb) {
-    String labelKey = ApiUtils.format(CONFIG_LABEL, getName());
-    String descriptionKey = ApiUtils.format(CONFIG_DESCRIPTION, getName());
-    String label = (rb.containsKey(ApiUtils.format(labelKey))) ? rb.getString(labelKey) : getLabel();
+    String labelKey = Utils.format(CONFIG_LABEL, getName());
+    String descriptionKey = Utils.format(CONFIG_DESCRIPTION, getName());
+    String label = (rb.containsKey(Utils.format(labelKey))) ? rb.getString(labelKey) : getLabel();
     String description = (rb.containsKey(descriptionKey)) ? rb.getString(descriptionKey) : getDescription();
     return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(),
       isRequired(), getGroup(), getFieldName(), getModel());
