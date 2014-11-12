@@ -54,7 +54,7 @@
         <include>bin/_*</include>
       </includes>
       <filtered>true</filtered>
-      <fileMode>0444</fileMode>
+      <fileMode>0644</fileMode>
     </fileSet>
 
     <!-- libexec -->
