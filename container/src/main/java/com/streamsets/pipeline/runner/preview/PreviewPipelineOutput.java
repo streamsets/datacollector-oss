@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.runner.preview;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.validation.Issues;
 
@@ -32,7 +33,7 @@ public class PreviewPipelineOutput {
   private String newSourceOffset;
   private Locale locale;
 
-  public PreviewPipelineOutput(Issues issues, PreviewPipelineRunner runner) {
+  public PreviewPipelineOutput(Issues issues, PipelineRunner runner) {
     this.issues = issues;
     this.metrics = runner.getMetrics();
     this.batchesOutput = runner.getBatchesOutput();

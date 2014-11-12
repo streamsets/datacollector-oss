@@ -29,7 +29,7 @@ public class TestMultiplexerPipe {
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceTarget()).build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getPipes()[2];
-    PipeBatch pipeBatch = Mockito.mock(PipeBatch.class);
+    PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
     Mockito.verify(pipeBatch, Mockito.times(1)).moveLane(Mockito.anyString(), Mockito.anyString());
     Mockito.verifyNoMoreInteractions(pipeBatch);
@@ -42,7 +42,7 @@ public class TestMultiplexerPipe {
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceTwoTargets()).build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getPipes()[2];
-    PipeBatch pipeBatch = Mockito.mock(PipeBatch.class);
+    PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
     Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(Mockito.anyString(), Mockito.anyList());
     Mockito.verifyNoMoreInteractions(pipeBatch);

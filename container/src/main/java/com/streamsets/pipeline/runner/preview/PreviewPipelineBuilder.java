@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.runner.preview;
 
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.runner.Pipeline;
@@ -50,7 +51,7 @@ public class PreviewPipelineBuilder {
     this.pipelineConf = pipelineConf;
   }
 
-  public PreviewPipeline build(PreviewPipelineRunner runner) throws PipelineRuntimeException {
+  public PreviewPipeline build(PipelineRunner runner) throws PipelineRuntimeException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     if (validator.validate() || validator.canPreview()) {
       List<String> openLanes = validator.getOpenLanes();

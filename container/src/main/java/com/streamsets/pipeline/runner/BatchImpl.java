@@ -31,10 +31,10 @@ public class BatchImpl implements Batch {
   private final String sourceOffset;
   private boolean got;
 
-  public BatchImpl(String instanceName, SourceOffsetTracker offsetTracker, List<Record> records) {
+  public BatchImpl(String instanceName, String sourceOffset, List<Record> records) {
     this.instanceName = instanceName;
     this.records = records;
-    sourceOffset = offsetTracker.getOffset();
+    this.sourceOffset = sourceOffset;
     got = false;
   }
 

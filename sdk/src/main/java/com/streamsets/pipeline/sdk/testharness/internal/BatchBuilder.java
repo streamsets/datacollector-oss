@@ -71,6 +71,6 @@ public class BatchBuilder {
     for(int i = 0; i < maxBatchSize; i++) {
       records.add(recordProducer.produce());
     }
-    return new BatchImpl("instance", new SourceOffsetTrackerImpl(null), records);
+    return new BatchImpl("instance", null, records);
   }
 }

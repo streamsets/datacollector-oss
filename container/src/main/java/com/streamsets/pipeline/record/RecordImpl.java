@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.record;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -27,19 +28,20 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
+@JsonDeserialize(using = RecordImplDeserializer.class)
 public class RecordImpl implements Record {
   private SimpleMap<String, Object> headerData;
   private SimpleMap<String, Field> fieldData;
   private Header header;
 
   private static final String RESERVED_PREFIX = "_.";
-  private static final String STAGE_CREATOR_INSTANCE_ATTR = RESERVED_PREFIX + "stageCreator";
-  private static final String RECORD_SOURCE_ID_ATTR = RESERVED_PREFIX + "recordSourceId";
-  private static final String STAGES_PATH_ATTR = RESERVED_PREFIX + "stagePath";
-  private static final String RAW_DATA_ATTR = RESERVED_PREFIX + "rawData";
-  private static final String RAW_MIME_TYPE_ATTR = RESERVED_PREFIX + "rawMimeType";
-  private static final String TRACKING_ID_ATTR = RESERVED_PREFIX + "trackingId";
-  private static final String PREVIOUS_STAGE_TRACKING_ID_ATTR = RESERVED_PREFIX + "previousStageTrackingId";
+  static final String STAGE_CREATOR_INSTANCE_ATTR = RESERVED_PREFIX + "stageCreator";
+  static final String RECORD_SOURCE_ID_ATTR = RESERVED_PREFIX + "recordSourceId";
+  static final String STAGES_PATH_ATTR = RESERVED_PREFIX + "stagePath";
+  static final String RAW_DATA_ATTR = RESERVED_PREFIX + "rawData";
+  static final String RAW_MIME_TYPE_ATTR = RESERVED_PREFIX + "rawMimeType";
+  static final String TRACKING_ID_ATTR = RESERVED_PREFIX + "trackingId";
+  static final String PREVIOUS_STAGE_TRACKING_ID_ATTR = RESERVED_PREFIX + "previousStageTrackingId";
 
   static class HeaderImpl implements Header {
     private final SimpleMap<String, Object> rawHeaders;
@@ -136,7 +138,7 @@ public class RecordImpl implements Record {
     }
   }
 
-  private RecordImpl(SimpleMap<String, Object> headers, SimpleMap<String, Field> data) {
+  RecordImpl(SimpleMap<String, Object> headers, SimpleMap<String, Field> data) {
     headerData = headers;
     fieldData = data;
     header = new HeaderImpl(headerData);

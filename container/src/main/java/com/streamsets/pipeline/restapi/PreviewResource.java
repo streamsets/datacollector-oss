@@ -17,9 +17,12 @@
  */
 package com.streamsets.pipeline.restapi;
 
+import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.Configuration;
+import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.preview.PreviewPipeline;
@@ -27,6 +30,7 @@ import com.streamsets.pipeline.runner.preview.PreviewPipelineBuilder;
 import com.streamsets.pipeline.runner.preview.PreviewPipelineOutput;
 import com.streamsets.pipeline.runner.preview.PreviewPipelineRunner;
 import com.streamsets.pipeline.runner.preview.PreviewSourceOffsetTracker;
+import com.streamsets.pipeline.runner.preview.PreviewStageRunner;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.store.PipelineStore;
 import com.streamsets.pipeline.store.PipelineStoreException;
@@ -34,6 +38,7 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -41,6 +46,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.Principal;
+import java.util.List;
 import java.util.Locale;
 
 @Path("/v1/pipelines")
@@ -85,6 +91,25 @@ public class PreviewResource {
     PipelineConfiguration pipelineConf = store.load(name, rev);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(sourceOffset);
     PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize, batches);
+    PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
+    PreviewPipelineOutput previewOutput = pipeline.run();
+    previewOutput.setLocale(locale);
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewOutput).build();
+  }
+
+  @Path("/{name}/preview")
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @SuppressWarnings("unchecked")
+  public Response previewRunStage(
+      @PathParam("name") String name,
+      @QueryParam("rev") String rev,
+      @QueryParam("stageInstance") String stageInstance, List<RecordImpl> records)
+      throws PipelineStoreException, PipelineRuntimeException, StageException {
+    Preconditions.checkNotNull(stageInstance, "stageInstance cannot be null");
+    Preconditions.checkNotNull(records, "records (POST payload) cannot be null");
+    PipelineConfiguration pipelineConf = store.load(name, rev);
+    PreviewStageRunner runner = new PreviewStageRunner(stageInstance, (List<Record>) (List) records);
     PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     previewOutput.setLocale(locale);

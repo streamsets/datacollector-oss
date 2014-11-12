@@ -30,4 +30,8 @@ public interface PipelineRunner {
 
   public List<List<StageOutput>> getBatchesOutput();
 
+  public String getSourceOffset();
+
+  public String getNewSourceOffset();
+
 }

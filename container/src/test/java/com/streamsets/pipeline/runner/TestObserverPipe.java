@@ -30,7 +30,7 @@ public class TestObserverPipe {
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceTarget()).build(pipelineRunner);
     ObserverPipe pipe = (ObserverPipe) pipeline.getPipes()[1];
-    PipeBatch pipeBatch = Mockito.mock(PipeBatch.class);
+    PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
     Mockito.verify(pipeBatch, Mockito.times(1)).moveLane(Mockito.anyString(), Mockito.anyString());
     Mockito.verifyNoMoreInteractions(pipeBatch);
@@ -44,7 +44,7 @@ public class TestObserverPipe {
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceTarget()).setObserver(observer).build(pipelineRunner);
     ObserverPipe pipe = (ObserverPipe) pipeline.getPipes()[1];
-    PipeBatch pipeBatch = Mockito.mock(PipeBatch.class);
+    PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
     Mockito.verify(observer, Mockito.times(1)).isObserving(Mockito.any(Stage.Info.class));
     Mockito.verify(pipeBatch, Mockito.times(1)).moveLane(Mockito.anyString(), Mockito.anyString());

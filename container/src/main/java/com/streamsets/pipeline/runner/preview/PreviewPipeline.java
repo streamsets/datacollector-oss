@@ -35,7 +35,7 @@ public class PreviewPipeline {
     pipeline.init();
     pipeline.run();
     pipeline.destroy();
-    return new PreviewPipelineOutput(issues, (PreviewPipelineRunner) pipeline.getRunner());
+    return new PreviewPipelineOutput(issues, pipeline.getRunner());
   }
 
 }
