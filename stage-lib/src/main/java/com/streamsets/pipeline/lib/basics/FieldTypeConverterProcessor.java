@@ -26,7 +26,7 @@ import java.util.Map;
 @StageDef(name = "fieldTypeConverter", version="1.0.0", label="Field Type Converter")
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
-  @ConfigDef(name = "fieldsToConvert", label = "Fields to convert", required = true,type = Type.MODEL, defaultValue="")
+  @ConfigDef(name = "fieldsToConvert", label = "Fields to convert", required = false,type = Type.MODEL, defaultValue="")
   @FieldModifier(type= FieldModifier.Type.PROVIDED, valuesProvider = ConverterValuesProvider.class)
   public Map<String, String> fields;
 
