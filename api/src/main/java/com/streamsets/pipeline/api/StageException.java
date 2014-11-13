@@ -18,6 +18,7 @@
 
 package com.streamsets.pipeline.api;
 
+import com.streamsets.pipeline.container.LocaleInContext;
 import com.streamsets.pipeline.container.PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,10 +48,6 @@ public class StageException extends Exception {
 
   public String getMessage() {
     return exception.getMessage();
-  }
-
-  public String getMessage(Locale locale) {
-    return exception.getMessage(locale);
   }
 
   @Override

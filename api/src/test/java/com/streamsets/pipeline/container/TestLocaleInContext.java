@@ -15,37 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.http;
+package com.streamsets.pipeline.container;
 
-import com.streamsets.pipeline.container.LocaleInContext;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import java.io.IOException;
+import java.util.Locale;
 
-public class LocaleDetectorFilter implements Filter {
+public class TestLocaleInContext {
 
-  @Override
-  public void init(FilterConfig filterConfig) throws ServletException {
+  @After
+  public void cleanUp() {
+    LocaleInContext.set(null);
   }
 
-  @Override
-  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-      ServletException {
-    try {
-      LocaleInContext.set(request.getLocale());
-      chain.doFilter(request, response);
-    } finally {
-      LocaleInContext.set(null);
-    }
-  }
-
-  @Override
-  public void destroy() {
+  @Test
+  public void testLocaleInContext() {
+    LocaleInContext.set(Locale.US);
+    Assert.assertEquals(Locale.US, LocaleInContext.get());
+    LocaleInContext.set(null);
+    Assert.assertNull(LocaleInContext.get());
   }
 
 }

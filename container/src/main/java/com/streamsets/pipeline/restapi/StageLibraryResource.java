@@ -20,7 +20,7 @@ package com.streamsets.pipeline.restapi;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
-import com.streamsets.pipeline.util.LocaleInContext;
+import com.streamsets.pipeline.container.LocaleInContext;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

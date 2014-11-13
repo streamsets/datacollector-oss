@@ -18,7 +18,6 @@
 package com.streamsets.pipeline.api;
 
 import java.util.Iterator;
-import java.util.Locale;
 
 public interface Record {
 

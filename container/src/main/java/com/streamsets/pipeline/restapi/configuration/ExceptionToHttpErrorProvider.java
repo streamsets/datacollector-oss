@@ -40,11 +40,13 @@ public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> 
   private static final String ERROR_EXCEPTION_JSON = "exception";
   private static final String ERROR_CLASSNAME_JSON = "javaClassName";
   private static final String ERROR_MESSAGE_JSON = "message";
+  private static final String ERROR_LOCALIZED_MESSAGE_JSON = "localizedMessage";
   private static final String ENTER = System.getProperty("line.separator");
 
   protected Response createResponse(Response.Status status, Throwable ex) {
     Map<String, Object> json = new LinkedHashMap<String, Object>();
-    json.put(ERROR_MESSAGE_JSON, getOneLineMessage(ex));
+    json.put(ERROR_MESSAGE_JSON, getOneLineMessage(ex, false));
+    json.put(ERROR_LOCALIZED_MESSAGE_JSON, getOneLineMessage(ex, true));
     json.put(ERROR_EXCEPTION_JSON, ex.getClass().getSimpleName());
     json.put(ERROR_CLASSNAME_JSON, ex.getClass().getName());
     Map<String, Object> response = new LinkedHashMap<String, Object>();
@@ -53,8 +55,8 @@ public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> 
         entity(response).build();
   }
 
-  protected String getOneLineMessage(Throwable exception) {
-    String message = exception.getMessage();
+  protected String getOneLineMessage(Throwable exception, boolean localized) {
+    String message = (localized) ? exception.getLocalizedMessage() : exception.getMessage();
     if (message != null) {
       int i = message.indexOf(ENTER);
       if (i > -1) {

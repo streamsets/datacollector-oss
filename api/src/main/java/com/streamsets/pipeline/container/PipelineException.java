@@ -93,7 +93,9 @@ public class PipelineException extends Exception {
     return Utils.format(id.getMessageTemplate(), params);
   }
 
-  public String getMessage(Locale locale) {
+  @Override
+  public String getLocalizedMessage() {
+    Locale locale = LocaleInContext.get();
     locale = (locale != null) ? locale : Locale.getDefault();
     ResourceBundle rb = null;
     String bundleName = (exceptionContext != null) ? exceptionContext.getBundleName() : null;
@@ -106,10 +108,10 @@ public class PipelineException extends Exception {
         LOG.warn("Cannot find resource bundle '{}'", bundleName, new Exception());
       }
     }
-    String key = id.toString();
+    String key = id.getClass().getName() + "." + id.toString();
     if (rb == null || !rb.containsKey(key)) {
       if (rb != null) {
-        LOG.warn("ResourceBundle '{}' does not contain ErrorId '{}'", bundleName, id.getClass() + ":" + id.toString());
+        LOG.warn("ResourceBundle '{}' does not contain key '{}'", bundleName, key);
       }
       bundleName = defaultBundle;
       try {

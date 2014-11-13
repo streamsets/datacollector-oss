@@ -19,6 +19,7 @@ package com.streamsets.pipeline.container;
 
 import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,6 +27,11 @@ import java.util.Locale;
 
 public class TestPipelineException {
   private static final String PIPELINE_BUNDLE_NAME = "pipeline-api-bundle";
+
+  @After
+  public void cleanUp() {
+    LocaleInContext.set(null);
+  }
 
   public enum TErrorId implements ErrorId {
     ID0("hi"),
@@ -88,27 +94,33 @@ public class TestPipelineException {
   @Test
   public void testMessageLocalizationWithDefaultBundleAndNoContext() {
     PipelineException ex = new PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID0);
-    Assert.assertNotNull("hi", ex.getMessage(null));
+    LocaleInContext.set(null);
+    Assert.assertNotNull("hi", ex.getLocalizedMessage());
 
     ex = new PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID1, "foo");
-    Assert.assertNotNull("hello 'foo'", ex.getMessage(Locale.getDefault()));
+    LocaleInContext.set(Locale.getDefault());
+    Assert.assertNotNull("hello 'foo'", ex.getLocalizedMessage());
 
     // testing pipeline-api bundle
-    ex = new PipelineException(PIPELINE_BUNDLE_NAME, SingleLaneProcessor.Error.OUTPUT_LANE_ERROR, 2);
-    Assert.assertFalse(ex.getMessage(Locale.getDefault()).endsWith(" "));
+    ex = new PipelineException(PIPELINE_BUNDLE_NAME, SingleLaneProcessor.ERROR.OUTPUT_LANE_ERROR, 2);
+    LocaleInContext.set(Locale.getDefault());
+    Assert.assertFalse(ex.getLocalizedMessage().endsWith(" "));
   }
 
   @Test
   public void testMessageLocalizationWithMissingBundleAndNoContext() {
     PipelineException ex = new PipelineException("missing-bundle", TErrorId.ID0);
-    Assert.assertNotNull("hi", ex.getMessage(null));
+    LocaleInContext.set(null);
+    Assert.assertNotNull("hi", ex.getLocalizedMessage());
 
     ex = new PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID1, "foo");
-    Assert.assertNotNull("hello 'foo'", ex.getMessage(Locale.getDefault()));
+    LocaleInContext.set(Locale.getDefault());
+    Assert.assertNotNull("hello 'foo'", ex.getLocalizedMessage());
 
     // testing pipeline-api bundle
-    ex = new PipelineException("missing-bundle", SingleLaneProcessor.Error.OUTPUT_LANE_ERROR, 2);
-    Assert.assertTrue(ex.getMessage(Locale.getDefault()).endsWith(" "));
+    ex = new PipelineException("missing-bundle", SingleLaneProcessor.ERROR.OUTPUT_LANE_ERROR, 2);
+    LocaleInContext.set(Locale.getDefault());
+    Assert.assertTrue(ex.getLocalizedMessage().endsWith(" "));
   }
 
   @Test
@@ -117,14 +129,17 @@ public class TestPipelineException {
       PipelineException.setContext("test", getClass().getClassLoader());
 
       PipelineException ex = new PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID0);
-      Assert.assertNotNull("HI", ex.getMessage(null));
+      LocaleInContext.set(null);
+      Assert.assertNotNull("HI", ex.getLocalizedMessage());
 
       ex = new PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID1, "foo");
-      Assert.assertNotNull("HELLO 'foo'", ex.getMessage(Locale.getDefault()));
+      LocaleInContext.set(Locale.getDefault());
+      Assert.assertNotNull("HELLO 'foo'", ex.getLocalizedMessage());
 
       // testing pipeline-api bundle
-      ex = new PipelineException(PIPELINE_BUNDLE_NAME, SingleLaneProcessor.Error.OUTPUT_LANE_ERROR, 2);
-      Assert.assertFalse(ex.getMessage(Locale.getDefault()).endsWith(" "));
+      ex = new PipelineException(PIPELINE_BUNDLE_NAME, SingleLaneProcessor.ERROR.OUTPUT_LANE_ERROR, 2);
+      LocaleInContext.set(Locale.getDefault());
+      Assert.assertFalse(ex.getLocalizedMessage().endsWith(" "));
 
     } finally {
       PipelineException.resetContext();
@@ -137,7 +152,8 @@ public class TestPipelineException {
       PipelineException.setContext("invalid", getClass().getClassLoader());
 
       PipelineException ex = new PipelineException(PIPELINE_BUNDLE_NAME, TErrorId.ID0);
-      Assert.assertNotNull("hi", ex.getMessage(null));
+      LocaleInContext.set(null);
+      Assert.assertNotNull("hi", ex.getLocalizedMessage());
 
     } finally {
       PipelineException.resetContext();
@@ -147,7 +163,8 @@ public class TestPipelineException {
   @Test
   public void testPipelineContainerBundle() {
     PipelineException ex = new PipelineException(TErrorId.ID1, "foo");
-    Assert.assertNotNull("HOLA 'foo'", ex.getMessage(Locale.getDefault()));
+    LocaleInContext.set(Locale.getDefault());
+    Assert.assertNotNull("HOLA 'foo'", ex.getLocalizedMessage());
   }
 
 }

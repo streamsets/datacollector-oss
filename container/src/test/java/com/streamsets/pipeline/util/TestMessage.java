@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.util;
 
+import com.streamsets.pipeline.container.LocaleInContext;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;

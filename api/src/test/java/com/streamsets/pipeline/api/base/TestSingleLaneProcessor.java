@@ -37,7 +37,7 @@ public class TestSingleLaneProcessor {
 
   @Test
   public void testError() {
-    Assert.assertNotNull(SingleLaneProcessor.Error.OUTPUT_LANE_ERROR.getMessageTemplate());
+    Assert.assertNotNull(SingleLaneProcessor.ERROR.OUTPUT_LANE_ERROR.getMessageTemplate());
   }
 
   @Test(expected = StageException.class)
@@ -53,7 +53,12 @@ public class TestSingleLaneProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOutputLanes()).thenReturn(Collections.EMPTY_SET);
-    processor.init(info, context);
+    try {
+      processor.init(info, context);
+    } catch (Exception ex) {
+      ex.getLocalizedMessage();
+      throw ex;
+    }
   }
 
   @Test(expected = StageException.class)

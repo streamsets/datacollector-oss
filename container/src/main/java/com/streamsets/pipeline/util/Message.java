@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.util;
 
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.container.LocaleInContext;
 import com.streamsets.pipeline.container.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

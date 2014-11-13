@@ -18,7 +18,9 @@
 package com.streamsets.pipeline.api;
 
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.container.LocaleInContext;
 import com.streamsets.pipeline.container.Utils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -28,6 +30,11 @@ import java.io.PrintWriter;
 import java.util.Locale;
 
 public class TestStageException {
+
+  @After
+  public void cleanUp() {
+    LocaleInContext.set(null);
+  }
 
   public enum TErrorId implements ErrorId {
     ID0("hi"),
@@ -98,14 +105,17 @@ public class TestStageException {
       Utils.setStageExceptionContext(info, getClass().getClassLoader());
 
       StageException ex = new StageException(TErrorId.ID0);
-      Assert.assertNotNull("HI", ex.getMessage(null));
+      LocaleInContext.set(null);
+      Assert.assertNotNull("HI", ex.getLocalizedMessage());
 
       ex = new StageException(TErrorId.ID1, "foo");
-      Assert.assertNotNull("HELLO 'foo'", ex.getMessage(Locale.getDefault()));
+      LocaleInContext.set(Locale.getDefault());
+      Assert.assertNotNull("HELLO 'foo'", ex.getLocalizedMessage());
 
       // testing pipeline-api bundle
-      ex = new StageException(SingleLaneProcessor.Error.OUTPUT_LANE_ERROR, 2);
-      Assert.assertFalse(ex.getMessage(Locale.getDefault()).endsWith(" "));
+      ex = new StageException(SingleLaneProcessor.ERROR.OUTPUT_LANE_ERROR, 2);
+      LocaleInContext.set(Locale.getDefault());
+      Assert.assertFalse(ex.getLocalizedMessage().endsWith(" "));
 
     } finally {
       Utils.resetStageExceptionContext();
@@ -121,7 +131,8 @@ public class TestStageException {
       Utils.setStageExceptionContext(info, getClass().getClassLoader());
 
       StageException ex = new StageException(TErrorId.ID0);
-      Assert.assertNotNull("hi", ex.getMessage(null));
+      LocaleInContext.set(null);
+      Assert.assertNotNull("hi", ex.getLocalizedMessage());
 
     } finally {
       Utils.resetStageExceptionContext();
