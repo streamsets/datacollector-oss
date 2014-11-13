@@ -34,7 +34,6 @@ import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 public class MockStages {
@@ -175,11 +174,6 @@ public class MockStages {
 
     @Override
     public List<StageDefinition> getStages() {
-      return stages;
-    }
-
-    @Override
-    public List<StageDefinition> getStages(Locale locale) {
       return stages;
     }
 

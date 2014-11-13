@@ -49,7 +49,7 @@ public class StageLibraryResource {
     Map<String, List<Object>> definitions = new HashMap<String, List<Object>>();
 
     //Populate the definitions with all the stage definitions
-    List<StageDefinition> stageDefinitions = stageLibrary.getStages(LocaleInContext.get());
+    List<StageDefinition> stageDefinitions = stageLibrary.getStages();
     List<Object> stages = new ArrayList<Object>(stageDefinitions.size());
     stages.addAll(stageDefinitions);
     definitions.put("stages", stages);

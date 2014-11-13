@@ -197,10 +197,10 @@ public class StageDefinition {
           //TODO: throw the correct exception
           //As of now we cannot validate the implementation of values provider during the compile time
           LOG.error(
-            "The ValuesProvider implementation for configuration {} in stage {} does not have the same number of values and labels.",
+            "The ValuesProvider implementation for configuration '{}' in stage '{}' does not have the same number of values and labels.",
             configDef.getName(), def.getName());
           throw new RuntimeException(Utils.format(
-            "The ValuesProvider implementation for configuration {} in stage {} does not have the same number of values and labels.",
+            "The ValuesProvider implementation for configuration '{}' in stage '{}' does not have the same number of values and labels.",
             configDef.getName(), def.getName()));
         }
 

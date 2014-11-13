@@ -32,6 +32,7 @@ import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.container.LocaleInContext;
 import com.streamsets.pipeline.container.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,15 +141,10 @@ public class ClassLoaderStageLibrary implements StageLibrary {
 
   @Override
   public List<StageDefinition> getStages() {
-    return stageList;
-  }
-
-  @Override
-  public List<StageDefinition> getStages(Locale locale) {
     try {
-      return (locale == null) ? stageList : localizedStageList.get(locale);
+      return (LocaleInContext.get() == null) ? stageList : localizedStageList.get(LocaleInContext.get());
     } catch (ExecutionException ex) {
-      LOG.warn("Error loading locale '{}', {}", locale, ex.getLocalizedMessage(), ex);
+      LOG.warn("Error loading locale '{}', {}", LocaleInContext.get(), ex.getMessage(), ex);
       return stageList;
     }
   }

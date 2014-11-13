@@ -116,7 +116,7 @@ public class TestStageLibraryResource {
     List<StageDefinition> stages = new ArrayList<StageDefinition>(2);
     stages.add(sourceDef);
     stages.add(targetDef);
-    Mockito.when(lib.getStages(Mockito.any(Locale.class))).thenReturn(stages);
+    Mockito.when(lib.getStages()).thenReturn(stages);
     return lib;
   }
 

@@ -24,7 +24,6 @@ import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class PreviewStageLibrary implements StageLibrary {
   public static final String LIBRARY = ":system:";
@@ -40,11 +39,6 @@ public class PreviewStageLibrary implements StageLibrary {
   @Override
   public List<StageDefinition> getStages() {
     return stageLibrary.getStages();
-  }
-
-  @Override
-  public List<StageDefinition> getStages(Locale locale) {
-    return stageLibrary.getStages(locale);
   }
 
   @Override
