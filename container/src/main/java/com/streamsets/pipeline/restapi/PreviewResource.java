@@ -82,7 +82,8 @@ public class PreviewResource {
       @QueryParam("rev") String rev,
       @QueryParam("sourceOffset") String sourceOffset,
       @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize,
-      @QueryParam("batches") @DefaultValue("1") int batches)
+      @QueryParam("batches") @DefaultValue("1") int batches,
+      @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets)
       throws PipelineStoreException, PipelineRuntimeException, StageException {
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
@@ -90,7 +91,7 @@ public class PreviewResource {
     batches = Math.min(maxBatches, batches);
     PipelineConfiguration pipelineConf = store.load(name, rev);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(sourceOffset);
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize, batches);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize, batches, skipTargets);
     PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     previewOutput.setLocale(locale);

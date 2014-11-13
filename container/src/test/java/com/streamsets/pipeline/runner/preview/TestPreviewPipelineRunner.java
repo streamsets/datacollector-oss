@@ -29,7 +29,7 @@ public class TestPreviewPipelineRunner {
   @Test
   public void testRunner() throws Exception {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    PipelineRunner runner = new PreviewPipelineRunner(tracker, -1, 1);
+    PipelineRunner runner = new PreviewPipelineRunner(tracker, -1, 1, true);
     Assert.assertNotNull(runner.getMetrics());
     Assert.assertTrue(runner.getBatchesOutput().isEmpty());
 
