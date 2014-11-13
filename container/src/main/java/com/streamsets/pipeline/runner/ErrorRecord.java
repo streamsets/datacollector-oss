@@ -17,16 +17,19 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.validation.Issue;
+import com.streamsets.pipeline.util.Message;
 
 public class ErrorRecord {
   private final Record record;
-  private final Issue issue;
+  private final ErrorId errorId;
+  private final Message issue;
 
-  public ErrorRecord(Record record, Issue issue) {
+  public ErrorRecord(Record record, ErrorId errorId, Message issue) {
     this.record = record;
+    this.errorId = errorId;
     this.issue = issue;
   }
 
@@ -34,13 +37,17 @@ public class ErrorRecord {
     return record;
   }
 
-  public Issue getIssue() {
+  public ErrorId getErrorId() {
+    return errorId;
+  }
+
+  public Message getMessage() {
     return issue;
   }
 
   @Override
   public String toString() {
-    return Utils.format("ErrorRecord[record='{}' issue='{}'", getRecord(), getIssue());
+    return Utils.format("ErrorRecord[record='{}' errorId='{}' message='{}'", getRecord(), getErrorId(), getMessage());
   }
 
 }

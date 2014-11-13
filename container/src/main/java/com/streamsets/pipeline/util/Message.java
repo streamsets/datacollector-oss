@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.util;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.LocaleInContext;
 import com.streamsets.pipeline.container.Utils;
@@ -55,6 +57,7 @@ public class Message {
     return Utils.format(defaultTemplate, args);
   }
 
+  @JsonValue
   public String getMessage() {
     String template = defaultTemplate;
     Locale locale = LocaleInContext.get();

@@ -79,10 +79,9 @@ public class StagePipe extends Pipe {
     inputRecordsCounter.inc(batchImpl.getSize());
     inputRecordsMeter.mark(batchImpl.getSize());
 
-    RequiredFieldsErrorSink requiredFieldsErrorSink = new RequiredFieldsErrorSink(
-        getStage().getInfo().getInstanceName(), errorRecordSink);
-    Batch batch = new FilterRecordBatch(batchImpl, new RequiredFieldsPredicate(getStage().getRequiredFields()),
-                                  requiredFieldsErrorSink);
+    RequiredFieldsErrorPredicateSink predicateSink = new RequiredFieldsErrorPredicateSink(
+        getStage().getInfo().getInstanceName(), getStage().getRequiredFields(), errorRecordSink);
+    Batch batch = new FilterRecordBatch(batchImpl, predicateSink, predicateSink);
 
     long start = System.currentTimeMillis();
     String newOffset = getStage().execute(pipeBatch.getPreviousOffset(), pipeBatch.getBatchSize(), batch, batchMaker,
@@ -93,8 +92,8 @@ public class StagePipe extends Pipe {
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     outputRecordsCounter.inc(batchMaker.getSize());
     outputRecordsMeter.mark(batchMaker.getSize());
-    errorRecordsCounter.inc(requiredFieldsErrorSink.size());
-    errorRecordsMeter.mark(requiredFieldsErrorSink.size());
+    errorRecordsCounter.inc(predicateSink.size());
+    errorRecordsMeter.mark(predicateSink.size());
     if (getStage().getConfiguration().getOutputLanes().size() > 1) {
       for (String lane : getStage().getConfiguration().getOutputLanes()) {
         outputRecordsPerLaneCounter.get(lane).inc(batchMaker.getSize(lane));

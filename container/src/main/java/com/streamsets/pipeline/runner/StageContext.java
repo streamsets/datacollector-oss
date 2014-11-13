@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.util.Message;
 import com.streamsets.pipeline.validation.Issue;
 
 import java.util.List;
@@ -74,7 +75,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, Exception exception) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(exception, "exception cannot be null");
-    errorRecordSink.addRecord(instanceName, new ErrorRecord(record, new Issue(
+    errorRecordSink.addRecord(instanceName, new ErrorRecord(record, null, new Message(
         STAGE_CAUGHT_ERROR_KEY, STAGE_CAUGHT_ERROR_DEFAULT, exception.getMessage())));
   }
 
@@ -82,7 +83,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, String errorMessage) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    errorRecordSink.addRecord(instanceName, new ErrorRecord(record, new Issue(
+    errorRecordSink.addRecord(instanceName, new ErrorRecord(record, null, new Message(
         STAGE_CAUGHT_ERROR_KEY, STAGE_CAUGHT_ERROR_DEFAULT, errorMessage)));
   }
 
@@ -91,8 +92,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorId, "errorId cannot be null");
     String bundleKey = errorId.getClass().getName() + "." + errorId.toString();
-    errorRecordSink.addRecord(instanceName, new ErrorRecord(record, new Issue(classLoader, bundleName, bundleKey,
-                                                                              errorId.getMessageTemplate(), args)));
+    errorRecordSink.addRecord(instanceName, new ErrorRecord(record, errorId, new Message(
+        classLoader, bundleName, bundleKey, errorId.getMessageTemplate(), args)));
   }
 
   @Override

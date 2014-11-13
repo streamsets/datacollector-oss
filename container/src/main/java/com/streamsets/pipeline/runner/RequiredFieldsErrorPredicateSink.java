@@ -17,23 +17,55 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.util.Message;
 import com.streamsets.pipeline.validation.Issue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequiredFieldsPredicate implements FilterRecordBatch.Predicate {
+public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predicate, FilterRecordBatch.Sink {
+
+  public enum ERROR implements ErrorId {
+    MISSING_FIELDS("The record misses the following required fields {}");
+
+    private final String template;
+
+    ERROR(String template) {
+      this.template = template;
+    }
+
+    @Override
+    public String getMessageTemplate() {
+      return template;
+    }
+  }
+
   private static final String MISSING_REQUIRED_FIELDS_KEY = "missing.required.fields";
-  private static final String MISSING_REQUIRED_FIELDS_DEFAULT = "The record misses the following required fields {}";
 
   private final List<String> requiredFields;
+  private final String instanceName;
+  private final ErrorRecordSink errorSink;
   private final List<String> missingFields;
+  private int counter;
 
-  public RequiredFieldsPredicate(List<String> requiredFields) {
+  public RequiredFieldsErrorPredicateSink(String instanceName, List<String> requiredFields, ErrorRecordSink errorSink) {
     this.requiredFields = requiredFields;
+    this.instanceName = instanceName;
+    this.errorSink = errorSink;
     missingFields = new ArrayList<String>();
+  }
+
+  @Override
+  public void add(Record record, Message msg) {
+    errorSink.addRecord(instanceName, new ErrorRecord(record, ERROR.MISSING_FIELDS, msg));
+    counter++;
+  }
+
+  public int size() {
+    return counter;
   }
 
   @Override
@@ -52,14 +84,19 @@ public class RequiredFieldsPredicate implements FilterRecordBatch.Predicate {
   }
 
   @Override
-  public Issue getRejectedReason() {
-    return (missingFields.isEmpty()) ? null : new Issue(MISSING_REQUIRED_FIELDS_KEY, MISSING_REQUIRED_FIELDS_DEFAULT,
-                                                        missingFields);
+  public ErrorId getRejectedReason() {
+    return ERROR.MISSING_FIELDS;
+  }
+
+  @Override
+  public Message getRejectedMessage() {
+    return (missingFields.isEmpty()) ? null : new Message(
+        MISSING_REQUIRED_FIELDS_KEY, ERROR.MISSING_FIELDS.getMessageTemplate(), missingFields);
   }
 
   @Override
   public String toString() {
-    return Utils.format("RequiredFieldsPredicate[fields='{}']", requiredFields);
+    return Utils.format("RequiredFieldsPredicateSink[fields='{}' size='{}']", requiredFields, size());
   }
 
 }

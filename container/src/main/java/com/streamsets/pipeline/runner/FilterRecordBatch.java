@@ -19,9 +19,10 @@ package com.streamsets.pipeline.runner;
 
 import com.google.common.collect.AbstractIterator;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.validation.Issue;
+import com.streamsets.pipeline.util.Message;
 
 import java.util.Iterator;
 
@@ -31,12 +32,19 @@ public class FilterRecordBatch implements Batch {
   private final Sink filteredOutRecordsSink;
 
   public interface Predicate {
+
     public boolean evaluate(Record record);
-    public Issue getRejectedReason();
+
+    public ErrorId getRejectedReason();
+
+    public Message getRejectedMessage();
+
   }
 
   public interface Sink {
-    public void add(Record record, Issue issue);
+
+    public void add(Record record, Message message);
+
   }
 
   public FilterRecordBatch(Batch batch, Predicate predicate, Sink filteredOutRecordsSink) {
@@ -70,7 +78,7 @@ public class FilterRecordBatch implements Batch {
         if (predicate.evaluate(record)) {
           next = record;
         } else {
-          filteredOutRecordsSink.add(record, predicate.getRejectedReason());
+          filteredOutRecordsSink.add(record, predicate.getRejectedMessage());
         }
       }
       if (next == null && !iterator.hasNext()) {
