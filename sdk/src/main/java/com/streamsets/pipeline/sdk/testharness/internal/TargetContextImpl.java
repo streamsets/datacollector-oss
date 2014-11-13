@@ -19,6 +19,7 @@ package com.streamsets.pipeline.sdk.testharness.internal;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
@@ -45,5 +46,11 @@ public class TargetContextImpl implements Target.Context {
   public void toError(Record record, String errorMessage) {
 
   }
+
+  @Override
+  public void toError(Record record, ErrorId errorId, String... args) {
+
+  }
+
 
 }

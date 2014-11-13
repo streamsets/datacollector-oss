@@ -35,7 +35,7 @@ import java.util.*;
 public class StageDefinition {
   private static final Logger LOG = LoggerFactory.getLogger(StageDefinition.class);
 
-  private static final String SEPERATOR = ".";
+  private static final String SEPARATOR = ".";
   private static final String CONFIG = "config";
   private static final String FIELD_MODIFIER = "FieldModifier";
 
@@ -96,12 +96,17 @@ public class StageDefinition {
   }
 
   @JsonIgnore
-  public ClassLoader getClassLoader() {
+  public ClassLoader getStageClassLoader() {
     return classLoader;
   }
 
   public String getClassName() {
     return className;
+  }
+
+  @JsonIgnore
+  public String getBundle() {
+    return className + "-bundle";
   }
 
   @JsonIgnore
@@ -163,7 +168,7 @@ public class StageDefinition {
   public StageDefinition localize(Locale locale) {
     String rbName = getClassName() + "-bundle";
     try {
-      ResourceBundle rb = ResourceBundle.getBundle(rbName, locale, getClassLoader());
+      ResourceBundle rb = ResourceBundle.getBundle(rbName, locale, getStageClassLoader());
       return localize(rb);
     } catch (MissingResourceException ex) {
       LOG.warn("Could not find resource bundle '{}' in library '{}'", rbName, getLibrary());
@@ -184,7 +189,7 @@ public class StageDefinition {
     StageDefinition def = new StageDefinition(
       getClassName(), getName(), getVersion(), label, description,
       getType(), configDefs, getOnError(), getIcon());
-    def.setLibrary(getLibrary(), getClassLoader());
+    def.setLibrary(getLibrary(), getStageClassLoader());
 
     for(ConfigDefinition configDef : def.getConfigDefinitions()) {
       if(configDef.getModel() != null &&
@@ -209,11 +214,11 @@ public class StageDefinition {
         for(int i = 0; i < values.size(); i++) {
           StringBuilder sb = new StringBuilder();
           sb.append(CONFIG)
-            .append(SEPERATOR)
+            .append(SEPARATOR)
             .append(configDef.getName())
-            .append(SEPERATOR)
+            .append(SEPARATOR)
             .append(FIELD_MODIFIER)
-            .append(SEPERATOR)
+            .append(SEPARATOR)
             .append(values.get(i));
           String key = sb.toString();
           String l = rb.containsKey(key) ? rb.getString(key) : labels.get(i);

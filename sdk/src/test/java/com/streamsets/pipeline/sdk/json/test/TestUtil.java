@@ -94,7 +94,7 @@ public class TestUtil {
       Assert.assertEquals(expected.getLabel(), actual.getLabel());
       Assert.assertEquals(expected.getDescription(), actual.getDescription());
       Assert.assertEquals(expected.getType(), actual.getType());
-      Assert.assertEquals(expected.getClassLoader(), actual.getClassLoader());
+      Assert.assertEquals(expected.getStageClassLoader(), actual.getStageClassLoader());
       Assert.assertEquals(expected.getClassName(), actual.getClassName());
       Assert.assertEquals(expected.getLibrary(), actual.getLibrary());
       Assert.assertEquals(expected.getStageClass(), actual.getStageClass());

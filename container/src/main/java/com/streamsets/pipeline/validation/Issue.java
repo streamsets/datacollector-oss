@@ -23,6 +23,10 @@ import com.streamsets.pipeline.util.Message;
 public class Issue {
   private final Message message;
 
+  public Issue(ClassLoader classLoader, String bundleName, String bundleKey, String defaultTemplate, Object... args) {
+    message = new Message(classLoader, bundleName, bundleKey, defaultTemplate, args);
+  }
+
   public Issue(String bundleKey, String defaultTemplate, Object... args) {
     message = new Message(bundleKey, defaultTemplate, args);
   }

@@ -108,7 +108,7 @@ public class StageRuntime {
     Preconditions.checkState(context != null, "context has not been set");
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
-      Thread.currentThread().setContextClassLoader(getDefinition().getClassLoader());
+      Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
       stage.init(info, context);
     } finally {
       Thread.currentThread().setContextClassLoader(cl);
@@ -122,7 +122,7 @@ public class StageRuntime {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
       setErrorRecordSink(errorRecordSink);
-      Thread.currentThread().setContextClassLoader(getDefinition().getClassLoader());
+      Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
       switch (getDefinition().getType()) {
         case SOURCE: {
           newOffset = ((Source) getStage()).produce(previousOffset, batchSize, batchMaker);
@@ -148,7 +148,7 @@ public class StageRuntime {
   public void destroy() {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
-      Thread.currentThread().setContextClassLoader(getDefinition().getClassLoader());
+      Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
       stage.destroy();
     } finally {
       Thread.currentThread().setContextClassLoader(cl);
@@ -181,7 +181,7 @@ public class StageRuntime {
         for (int i = 0; i < pipelineConf.getStages().size(); i++) {
           StageConfiguration conf = pipelineConf.getStages().get(i);
           StageDefinition def = stageLib.getStage(conf.getLibrary(), conf.getStageName(), conf.getStageVersion());
-          Class klass = def.getClassLoader().loadClass(def.getClassName());
+          Class klass = def.getStageClassLoader().loadClass(def.getClassName());
           Stage stage = (Stage) klass.newInstance();
           configureStage(def, conf, klass, stage);
           runtimes[i] = new StageRuntime(def, conf, requiredFields, stage);

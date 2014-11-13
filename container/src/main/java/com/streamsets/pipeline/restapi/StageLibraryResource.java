@@ -75,7 +75,7 @@ public class StageLibraryResource {
       iconFile = DEFAULT_ICON_FILE;
     }
 
-    final InputStream resourceAsStream = stage.getClassLoader().getResourceAsStream(
+    final InputStream resourceAsStream = stage.getStageClassLoader().getResourceAsStream(
       iconFile);
     StreamingOutput stream = new StreamingOutput() {
       @Override
