@@ -17,12 +17,9 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.validation.Issue;
-
-import java.util.Locale;
 
 public class ErrorRecord {
   private final Record record;

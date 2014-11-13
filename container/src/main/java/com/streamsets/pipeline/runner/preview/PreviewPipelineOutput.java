@@ -23,7 +23,6 @@ import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.validation.Issues;
 
 import java.util.List;
-import java.util.Locale;
 
 public class PreviewPipelineOutput {
   private final Issues issues;
@@ -31,7 +30,6 @@ public class PreviewPipelineOutput {
   private final List<List<StageOutput>> batchesOutput;
   private String sourceOffset;
   private String newSourceOffset;
-  private Locale locale;
 
   public PreviewPipelineOutput(Issues issues, PipelineRunner runner) {
     this.issues = issues;
@@ -39,10 +37,6 @@ public class PreviewPipelineOutput {
     this.batchesOutput = runner.getBatchesOutput();
     this.sourceOffset = runner.getSourceOffset();
     this.newSourceOffset = runner.getNewSourceOffset();
-  }
-
-  public void setLocale(Locale locale) {
-    issues.setLocale(locale);
   }
 
   public Issues getIssues() {
@@ -54,11 +48,6 @@ public class PreviewPipelineOutput {
   }
 
   public List<List<StageOutput>> getBatchesOutput() {
-    for (List<StageOutput> batchOutput : batchesOutput) {
-      for (StageOutput stageOutput : batchOutput) {
-        stageOutput.setLocale(locale);
-      }
-    }
     return batchesOutput;
   }
 

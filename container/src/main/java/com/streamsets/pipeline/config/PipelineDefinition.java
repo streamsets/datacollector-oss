@@ -62,10 +62,12 @@ public class PipelineDefinition {
 
   private ResourceBundle getResourceBundle(Locale locale) {
     ResourceBundle rb = null;
-    try {
-      rb = ResourceBundle.getBundle(PIPELINE_RESOURCE_BUNDLE, locale, getClass().getClassLoader());
-    } catch (MissingResourceException ex) {
-      LOG.warn("Could not find resource bundle '{}'." , PIPELINE_RESOURCE_BUNDLE);
+    if (locale != null) {
+      try {
+        rb = ResourceBundle.getBundle(PIPELINE_RESOURCE_BUNDLE, locale, getClass().getClassLoader());
+      } catch (MissingResourceException ex) {
+        LOG.warn("Could not find resource bundle '{}'.", PIPELINE_RESOURCE_BUNDLE);
+      }
     }
     return rb;
   }

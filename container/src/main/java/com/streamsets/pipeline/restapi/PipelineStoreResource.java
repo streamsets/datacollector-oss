@@ -23,7 +23,6 @@ import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.store.PipelineStore;
 import com.streamsets.pipeline.store.PipelineStoreException;
-import com.streamsets.pipeline.validation.Issue;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -41,11 +40,9 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
-import java.util.Locale;
 
 @Path("/v1/pipelines")
 public class PipelineStoreResource {
-  private final Locale locale;
   private final PipelineStore store;
   private final StageLibrary stageLibrary;
   private final URI uri;
@@ -54,8 +51,7 @@ public class PipelineStoreResource {
 
 
   @Inject
-  public PipelineStoreResource(URI uri, Principal user, StageLibrary stageLibrary, PipelineStore store, Locale locale) {
-    this.locale = locale;
+  public PipelineStoreResource(URI uri, Principal user, StageLibrary stageLibrary, PipelineStore store) {
     this.uri = uri;
     this.user = user.getName();
     this.stageLibrary = stageLibrary;
@@ -80,7 +76,6 @@ public class PipelineStoreResource {
       PipelineConfiguration pipeline = store.load(name, rev);
       PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
       validator.validate();
-      validator.getIssues().setLocale(locale);
       pipeline.setValidation(validator);
       data = pipeline;
     } else if (get.equals("info")) {
@@ -103,7 +98,6 @@ public class PipelineStoreResource {
     PipelineConfiguration pipeline = store.create(name, description, user);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
     validator.validate();
-    validator.getIssues().setLocale(locale);
     pipeline.setValidation(validator);
     return Response.created(new URI(uri.toString() + "/" + name)).entity(pipeline).build();
   }
@@ -130,7 +124,6 @@ public class PipelineStoreResource {
       throws PipelineStoreException, URISyntaxException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
     validator.validate();
-    validator.getIssues().setLocale(locale);
     pipeline.setValidation(validator);
     pipeline = store.save(name, user, tag, tagDescription, pipeline);
     return Response.ok().entity(pipeline).build();

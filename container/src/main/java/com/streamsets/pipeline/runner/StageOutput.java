@@ -21,7 +21,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class StageOutput {
@@ -43,11 +42,6 @@ public class StageOutput {
     return output;
   }
 
-  public void setLocale(Locale locale) {
-    errorRecords.setLocale(locale);
-  }
-
-  @SuppressWarnings("unchecked")
   public ErrorRecords getErrorRecords() {
     return errorRecords;
   }

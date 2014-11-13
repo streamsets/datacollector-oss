@@ -116,7 +116,7 @@ public class TestStageLibraryResource {
     List<StageDefinition> stages = new ArrayList<StageDefinition>(2);
     stages.add(sourceDef);
     stages.add(targetDef);
-    Mockito.when(lib.getStages(Mockito.eq(Locale.ENGLISH))).thenReturn(stages);
+    Mockito.when(lib.getStages(Mockito.any(Locale.class))).thenReturn(stages);
     return lib;
   }
 
@@ -124,11 +124,6 @@ public class TestStageLibraryResource {
   public static class TestStageLibraryResourceModule {
 
     public TestStageLibraryResourceModule() {
-    }
-
-    @Provides
-    public Locale provideLocale() {
-      return Locale.ENGLISH;
     }
 
     @Provides
@@ -157,12 +152,12 @@ public class TestStageLibraryResource {
 
     PipelineDefinition pd = (PipelineDefinition)pipelineDefinition.get(0);
     Assert.assertNotNull(pd.getConfigDefinitions());
-    Assert.assertTrue(pd.getConfigDefinitions().size() == 2);
+    Assert.assertEquals(2, pd.getConfigDefinitions().size());
 
     //check the stages
     Assert.assertTrue(definitions.containsKey("stages"));
     List<Object> stages = definitions.get("stages");
-    Assert.assertTrue(stages.size() == 2);
+    Assert.assertEquals(2, stages.size());
     //check the first stage
     Assert.assertTrue(stages.get(0) instanceof StageDefinition);
     StageDefinition s1 = (StageDefinition) stages.get(0);
@@ -172,7 +167,7 @@ public class TestStageLibraryResource {
     Assert.assertEquals("1.0.0", s1.getVersion());
     Assert.assertEquals("label", s1.getLabel());
     Assert.assertEquals("description", s1.getDescription());
-    Assert.assertTrue(s1.getConfigDefinitions().size() == 4);
+    Assert.assertEquals(4, s1.getConfigDefinitions().size());
 
     Assert.assertTrue(stages.get(1) instanceof StageDefinition);
     StageDefinition s2 = (StageDefinition) stages.get(1);
@@ -182,7 +177,7 @@ public class TestStageLibraryResource {
     Assert.assertEquals("1.0.0", s2.getVersion());
     Assert.assertEquals("label", s2.getLabel());
     Assert.assertEquals("description", s2.getDescription());
-    Assert.assertTrue(s2.getConfigDefinitions().size() == 0);
+    Assert.assertTrue(s2.getConfigDefinitions().isEmpty());
   }
 
   @Test

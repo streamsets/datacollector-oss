@@ -47,7 +47,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.Principal;
 import java.util.List;
-import java.util.Locale;
 
 @Path("/v1/pipelines")
 public class PreviewResource {
@@ -58,17 +57,14 @@ public class PreviewResource {
 
   //preview.maxBatchSize
   private final Configuration configuration;
-  private final Locale locale;
   private final PipelineStore store;
   private final StageLibrary stageLibrary;
   private final String user;
 
 
   @Inject
-  public PreviewResource(Configuration configuration, Principal user, StageLibrary stageLibrary, PipelineStore store,
-      Locale locale) {
+  public PreviewResource(Configuration configuration, Principal user, StageLibrary stageLibrary, PipelineStore store) {
     this.configuration = configuration;
-    this.locale = locale;
     this.user = user.getName();
     this.stageLibrary = stageLibrary;
     this.store = store;
@@ -94,7 +90,6 @@ public class PreviewResource {
     PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize, batches, skipTargets);
     PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
-    previewOutput.setLocale(locale);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewOutput).build();
   }
 
@@ -113,7 +108,6 @@ public class PreviewResource {
     PreviewStageRunner runner = new PreviewStageRunner(stageInstance, (List<Record>) (List) records);
     PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
-    previewOutput.setLocale(locale);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewOutput).build();
   }
 

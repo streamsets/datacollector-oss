@@ -17,50 +17,22 @@
  */
 package com.streamsets.pipeline.validation;
 
-import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import com.streamsets.pipeline.util.Message;
 
 public class Issue {
-
-  public interface ResourceBundleProvider {
-    public ResourceBundle get();
-  }
-
-  private final String bundleKey;
-  private final String defaultTemplate;
-  private final Object[] args;
-  private ResourceBundleProvider resourceBundleProvider;
+  private final Message message;
 
   public Issue(String bundleKey, String defaultTemplate, Object... args) {
-    this.bundleKey = Preconditions.checkNotNull(bundleKey, "bundleKey cannot be null");
-    this.defaultTemplate = Preconditions.checkNotNull(defaultTemplate, "defaultTemplate cannot be null");
-    this.args = args;
-  }
-
-  public void setResourceBundleProvider(ResourceBundleProvider resourceBundleProvider) {
-    this.resourceBundleProvider = resourceBundleProvider;
-  }
-
-  private String getMessage(String template) {
-    return Utils.format(template, args);
+    message = new Message(bundleKey, defaultTemplate, args);
   }
 
   public String getMessage() {
-    ResourceBundle rb = (resourceBundleProvider != null) ? resourceBundleProvider.get() : null;
-    String template = defaultTemplate;
-    if (rb != null && rb.containsKey(bundleKey)) {
-      template = rb.getString(bundleKey);
-    }
-    return getMessage(template);
+    return message.getMessage();
   }
 
   public String toString() {
-    return getMessage(defaultTemplate);
+    return Utils.format("Issue[message='{}']", message.getDefaultMessage());
   }
 
 }

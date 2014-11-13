@@ -146,7 +146,7 @@ public class ClassLoaderStageLibrary implements StageLibrary {
   @Override
   public List<StageDefinition> getStages(Locale locale) {
     try {
-      return localizedStageList.get(locale);
+      return (locale == null) ? stageList : localizedStageList.get(locale);
     } catch (ExecutionException ex) {
       LOG.warn("Error loading locale '{}', {}", locale, ex.getLocalizedMessage(), ex);
       return stageList;

@@ -15,29 +15,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.restapi.configuration;
+package com.streamsets.pipeline.http;
 
-import org.glassfish.hk2.api.Factory;
+import com.streamsets.pipeline.util.LocaleInContext;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import java.io.IOException;
 
-public class LocaleInjector implements Factory<Locale> {
-  private Locale Locale;
+public class LocaleDetectorFilter implements Filter {
 
-  @Inject
-  public LocaleInjector(HttpServletRequest request) {
-      Locale = request.getLocale();
+  @Override
+  public void init(FilterConfig filterConfig) throws ServletException {
   }
 
   @Override
-  public Locale provide() {
-    return Locale;
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+      ServletException {
+    try {
+      LocaleInContext.set(request.getLocale());
+      chain.doFilter(request, response);
+    } finally {
+      LocaleInContext.set(null);
+    }
   }
 
   @Override
-  public void dispose(Locale Locale) {
+  public void destroy() {
   }
 
 }

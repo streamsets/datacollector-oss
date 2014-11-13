@@ -17,7 +17,6 @@
  */
 package com.streamsets.pipeline.validation;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.util.NullDeserializer;
@@ -25,17 +24,12 @@ import com.streamsets.pipeline.util.NullDeserializer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 @JsonDeserialize(using = NullDeserializer.class)
-public class Issues implements Issue.ResourceBundleProvider {
-  private static final String PIPELINE_CONTAINER_BUNDLE = "pipeline-container-bundle";
-
+public class Issues {
   private final List<Issue> pipeline;
   private final Map<String, List<StageIssue>> stages;
-  private ResourceBundle resourceBundle;
 
   public Issues() {
     pipeline = new ArrayList<Issue>();
@@ -43,28 +37,16 @@ public class Issues implements Issue.ResourceBundleProvider {
   }
 
   public void addP(Issue issue) {
-    issue.setResourceBundleProvider(this);
     pipeline.add(issue);
   }
 
   public void add(StageIssue issue) {
-    issue.setResourceBundleProvider(this);
     List<StageIssue> stageIssues = stages.get(issue.getInstanceName());
     if (stageIssues == null) {
       stageIssues = new ArrayList<StageIssue>();
       stages.put(issue.getInstanceName(), stageIssues);
     }
     stageIssues.add(issue);
-  }
-
-  @Override
-  @JsonIgnore
-  public ResourceBundle get() {
-    return resourceBundle;
-  }
-
-  public void setLocale(Locale locale) {
-    resourceBundle = ResourceBundle.getBundle(PIPELINE_CONTAINER_BUNDLE, locale);
   }
 
   public List<Issue> getPipelineIssues() {
@@ -84,7 +66,7 @@ public class Issues implements Issue.ResourceBundleProvider {
   }
 
   public String toString() {
-    return Utils.format("Issues: pipeline '{}' stages '{}'", pipeline, stages);
+    return Utils.format("Issues[pipeline='{}' stage='{}']", pipeline.size(), stages.size());
   }
 
 }

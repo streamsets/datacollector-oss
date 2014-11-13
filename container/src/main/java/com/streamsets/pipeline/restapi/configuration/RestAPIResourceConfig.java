@@ -37,7 +37,6 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(StageLibraryInjector.class).to(StageLibrary.class);
         bindFactory(PrincipalInjector.class).to(Principal.class);
         bindFactory(URIInjector.class).to(URI.class);
-        bindFactory(LocaleInjector.class).to(Locale.class);
         bindFactory(ConfigurationInjector.class).to(Configuration.class);
       }
     });

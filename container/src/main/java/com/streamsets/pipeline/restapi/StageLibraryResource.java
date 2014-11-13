@@ -20,6 +20,7 @@ package com.streamsets.pipeline.restapi;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.util.LocaleInContext;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -35,12 +36,10 @@ import java.util.*;
 public class StageLibraryResource {
   private static final String DEFAULT_ICON_FILE = "PipelineDefinition-bundle.properties";
   private final StageLibrary stageLibrary;
-  private final Locale locale;
 
   @Inject
-  public StageLibraryResource(StageLibrary stageLibrary, Locale locale) {
+  public StageLibraryResource(StageLibrary stageLibrary) {
     this.stageLibrary = stageLibrary;
-    this.locale = locale;
   }
 
   @GET
@@ -50,14 +49,14 @@ public class StageLibraryResource {
     Map<String, List<Object>> definitions = new HashMap<String, List<Object>>();
 
     //Populate the definitions with all the stage definitions
-    List<StageDefinition> stageDefinitions = stageLibrary.getStages(locale);
+    List<StageDefinition> stageDefinitions = stageLibrary.getStages(LocaleInContext.get());
     List<Object> stages = new ArrayList<Object>(stageDefinitions.size());
     stages.addAll(stageDefinitions);
     definitions.put("stages", stages);
 
     //Populate the definitions with the PipelineDefinition
     List<Object> pipeline = new ArrayList<Object>(1);
-    pipeline.add(new PipelineDefinition(locale));
+    pipeline.add(new PipelineDefinition(LocaleInContext.get()));
     definitions.put("pipeline", pipeline);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();
   }

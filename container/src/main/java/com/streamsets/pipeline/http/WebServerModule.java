@@ -36,11 +36,16 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.Provides.Type;
 import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.RequestDispatcher;
+import java.util.EnumSet;
 
 @Module(library = true, includes = {RuntimeModule.class, MetricsModule.class,
     PipelineStoreModule.class, StageLibraryModule.class})
@@ -63,6 +68,17 @@ public class WebServerModule {
         context.addServlet(servlet, "/*");
       }
 
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideLocaleDetector() {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        FilterHolder filter = new FilterHolder(new LocaleDetectorFilter());
+        context.addFilter(filter, "/rest/*", EnumSet.of(DispatcherType.REQUEST));
+      }
     };
   }
 
