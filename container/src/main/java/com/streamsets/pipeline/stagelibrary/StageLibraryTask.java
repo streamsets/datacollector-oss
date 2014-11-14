@@ -23,7 +23,7 @@ import com.streamsets.pipeline.task.Task;
 import java.util.List;
 import java.util.Locale;
 
-public interface StageLibrary extends Task {
+public interface StageLibraryTask extends Task {
 
   public List<StageDefinition> getStages();
 

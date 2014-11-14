@@ -21,12 +21,12 @@ import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.state.PipelineManagerTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.metrics.MetricsModule;
 import com.streamsets.pipeline.restapi.RestAPI;
 import com.streamsets.pipeline.restapi.configuration.*;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.state.PipelineStateModule;
@@ -124,7 +124,7 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
-  ContextConfigurator providePipelineStore(final StageLibrary stageLibrary) {
+  ContextConfigurator providePipelineStore(final StageLibraryTask stageLibrary) {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {

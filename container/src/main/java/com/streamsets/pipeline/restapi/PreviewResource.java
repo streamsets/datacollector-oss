@@ -21,6 +21,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -31,7 +32,6 @@ import com.streamsets.pipeline.runner.preview.PreviewPipelineOutput;
 import com.streamsets.pipeline.runner.preview.PreviewPipelineRunner;
 import com.streamsets.pipeline.runner.preview.PreviewSourceOffsetTracker;
 import com.streamsets.pipeline.runner.preview.PreviewStageRunner;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 
@@ -58,12 +58,12 @@ public class PreviewResource {
   //preview.maxBatchSize
   private final Configuration configuration;
   private final PipelineStoreTask store;
-  private final StageLibrary stageLibrary;
+  private final StageLibraryTask stageLibrary;
   private final String user;
 
 
   @Inject
-  public PreviewResource(Configuration configuration, Principal user, StageLibrary stageLibrary, PipelineStoreTask store) {
+  public PreviewResource(Configuration configuration, Principal user, StageLibraryTask stageLibrary, PipelineStoreTask store) {
     this.configuration = configuration;
     this.user = user.getName();
     this.stageLibrary = stageLibrary;

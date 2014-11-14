@@ -19,7 +19,7 @@ package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.container.LocaleInContext;
 import org.apache.commons.io.IOUtils;
 
@@ -36,10 +36,10 @@ import java.util.*;
 @Path("/v1/definitions")
 public class StageLibraryResource {
   private static final String DEFAULT_ICON_FILE = "PipelineDefinition-bundle.properties";
-  private final StageLibrary stageLibrary;
+  private final StageLibraryTask stageLibrary;
 
   @Inject
-  public StageLibraryResource(StageLibrary stageLibrary) {
+  public StageLibraryResource(StageLibraryTask stageLibrary) {
     this.stageLibrary = stageLibrary;
   }
 

@@ -29,10 +29,10 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -160,12 +160,12 @@ public class StageRuntime {
   }
 
   public static class Builder {
-    private final StageLibrary stageLib;
+    private final StageLibraryTask stageLib;
     private final String name;
     private final PipelineConfiguration pipelineConf;
     private List<String> requiredFields;
 
-    public Builder(StageLibrary stageLib, String name, PipelineConfiguration pipelineConf) {
+    public Builder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf) {
       this.stageLib = stageLib;
       this.name = name;
       this.pipelineConf = pipelineConf;

@@ -19,11 +19,11 @@ package com.streamsets.pipeline.runner.preview;
 
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.PipelineRunner;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,20 +33,20 @@ public class PreviewPipelineBuilder {
 
   @SuppressWarnings("unchecked")
   private StageConfiguration createPlugStage(List<String> lanes) {
-    StageConfiguration stageConf = new StageConfiguration(PreviewStageLibrary.NAME + UUID.randomUUID().toString(),
-                                                          PreviewStageLibrary.LIBRARY, PreviewStageLibrary.NAME,
-                                                          PreviewStageLibrary.VERSION, Collections.EMPTY_LIST,
+    StageConfiguration stageConf = new StageConfiguration(PreviewStageLibraryTask.NAME + UUID.randomUUID().toString(),
+                                                          PreviewStageLibraryTask.LIBRARY, PreviewStageLibraryTask.NAME,
+                                                          PreviewStageLibraryTask.VERSION, Collections.EMPTY_LIST,
                                                           Collections.EMPTY_MAP, lanes, Collections.EMPTY_LIST);
     stageConf.setSystemGenerated();
     return stageConf;
   }
 
-  private final StageLibrary stageLib;
+  private final StageLibraryTask stageLib;
   private final String name;
   private final PipelineConfiguration pipelineConf;
 
-  public PreviewPipelineBuilder(StageLibrary stageLib, String name, PipelineConfiguration pipelineConf) {
-    this.stageLib = new PreviewStageLibrary(stageLib);
+  public PreviewPipelineBuilder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf) {
+    this.stageLib = new PreviewStageLibraryTask(stageLib);
     this.name = name;
     this.pipelineConf = pipelineConf;
   }

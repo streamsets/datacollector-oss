@@ -21,9 +21,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,12 +92,12 @@ public class Pipeline {
   }
 
   public static class Builder {
-    private final StageLibrary stageLib;
+    private final StageLibraryTask stageLib;
     private final String name;
     private final PipelineConfiguration pipelineConf;
     private Observer observer;
 
-    public Builder(StageLibrary stageLib, String name, PipelineConfiguration pipelineConf) {
+    public Builder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf) {
       this.stageLib = stageLib;
       this.name = name;
       this.pipelineConf = pipelineConf;

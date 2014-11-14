@@ -51,8 +51,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class ClassLoaderStageLibrary extends AbstractTask implements StageLibrary {
-  private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibrary.class);
+public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLibraryTask {
+  private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
 
   private static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
 
@@ -64,7 +64,7 @@ public class ClassLoaderStageLibrary extends AbstractTask implements StageLibrar
   private ObjectMapper json;
 
   @Inject
-  public ClassLoaderStageLibrary(RuntimeInfo runtimeInfo) {
+  public ClassLoaderStageLibraryTask(RuntimeInfo runtimeInfo) {
     super("stageLibrary");
     this.runtimeInfo = runtimeInfo;
   }

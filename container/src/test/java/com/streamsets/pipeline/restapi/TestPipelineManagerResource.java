@@ -18,8 +18,8 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.state.*;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import dagger.Module;
@@ -48,8 +48,8 @@ public class TestPipelineManagerResource {
 
     @Provides
     @Singleton
-    public StageLibrary provideStageLibrary() {
-      return Mockito.mock(StageLibrary.class);
+    public StageLibraryTask provideStageLibrary() {
+      return Mockito.mock(StageLibraryTask.class);
     }
 
     @Provides

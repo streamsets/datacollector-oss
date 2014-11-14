@@ -18,10 +18,10 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.SourceOffset;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.state.*;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
@@ -42,13 +42,13 @@ public class PipelineManagerResource {
   private final PipelineManagerTask pipelineManager;
   private final Configuration configuration;
   private final PipelineStoreTask pipelineStore;
-  private final StageLibrary stageLibrary;
+  private final StageLibraryTask stageLibrary;
 
   @Inject
   public PipelineManagerResource(PipelineManagerTask pipelineManager,
                                  Configuration configuration,
                                  PipelineStoreTask pipelineStore,
-                                 StageLibrary stageLib) {
+                                 StageLibraryTask stageLib) {
     this.pipelineManager = pipelineManager;
     this.configuration = configuration;
     this.pipelineStore = pipelineStore;

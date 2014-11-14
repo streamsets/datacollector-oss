@@ -20,18 +20,18 @@ package com.streamsets.pipeline.runner.production;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.runner.preview.PreviewStageLibrary;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.runner.preview.PreviewStageLibraryTask;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 
 public class ProductionPipelineBuilder {
 
-  private final StageLibrary stageLib;
+  private final StageLibraryTask stageLib;
   private final String name;
   private final PipelineConfiguration pipelineConf;
 
-  public ProductionPipelineBuilder(StageLibrary stageLib, String name, PipelineConfiguration pipelineConf) {
-    this.stageLib = new PreviewStageLibrary(stageLib);
+  public ProductionPipelineBuilder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf) {
+    this.stageLib = new PreviewStageLibraryTask(stageLib);
     this.name = name;
     this.pipelineConf = pipelineConf;
   }

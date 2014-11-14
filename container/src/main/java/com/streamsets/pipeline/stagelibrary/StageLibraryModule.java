@@ -28,7 +28,7 @@ public class StageLibraryModule {
 
   @Provides
   @Singleton
-  public StageLibrary provideStageLibrary(ClassLoaderStageLibrary stageLibrary) {
+  public StageLibraryTask provideStageLibrary(ClassLoaderStageLibraryTask stageLibrary) {
     return stageLibrary;
   }
 

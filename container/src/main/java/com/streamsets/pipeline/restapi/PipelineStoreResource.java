@@ -19,8 +19,8 @@ package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 
@@ -44,14 +44,14 @@ import java.security.Principal;
 @Path("/v1/pipelines")
 public class PipelineStoreResource {
   private final PipelineStoreTask store;
-  private final StageLibrary stageLibrary;
+  private final StageLibraryTask stageLibrary;
   private final URI uri;
   private final String user;
 
 
 
   @Inject
-  public PipelineStoreResource(URI uri, Principal user, StageLibrary stageLibrary, PipelineStoreTask store) {
+  public PipelineStoreResource(URI uri, Principal user, StageLibraryTask stageLibrary, PipelineStoreTask store) {
     this.uri = uri;
     this.user = user.getName();
     this.stageLibrary = stageLibrary;

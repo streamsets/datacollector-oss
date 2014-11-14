@@ -26,7 +26,7 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +86,7 @@ public class PipelineConfigurationValidator {
 
   private static final String VALID_NAME= "[0-9A-Za-z_]";
 
-  private final StageLibrary stageLibrary;
+  private final StageLibraryTask stageLibrary;
   private final String name;
   private final PipelineConfiguration pipelineConfiguration;
   private final Issues issues;
@@ -94,7 +94,7 @@ public class PipelineConfigurationValidator {
   private boolean validated;
   private boolean canPreview;
 
-  public PipelineConfigurationValidator(StageLibrary stageLibrary, String name, PipelineConfiguration pipelineConfiguration) {
+  public PipelineConfigurationValidator(StageLibraryTask stageLibrary, String name, PipelineConfiguration pipelineConfiguration) {
     Preconditions.checkNotNull(stageLibrary, "stageLibrary cannot be null");
     Preconditions.checkNotNull(name, "name cannot be null");
     Preconditions.checkNotNull(pipelineConfiguration, "pipelineConfiguration cannot be null");

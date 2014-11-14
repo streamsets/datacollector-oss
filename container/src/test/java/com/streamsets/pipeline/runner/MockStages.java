@@ -29,8 +29,7 @@ import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
-import com.streamsets.pipeline.task.Task;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,8 +38,8 @@ import java.util.UUID;
 
 public class MockStages {
 
-  public static StageLibrary createStageLibrary() {
-    return new MockStageLibrary();
+  public static StageLibraryTask createStageLibrary() {
+    return new MockStageLibraryTask();
   }
 
   @SuppressWarnings("unchecked")
@@ -80,7 +79,7 @@ public class MockStages {
     target = t;
   }
 
-  private static class MockStageLibrary implements StageLibrary {
+  private static class MockStageLibraryTask implements StageLibraryTask {
 
     public static class MSource implements Source {
       @Override
@@ -156,7 +155,7 @@ public class MockStages {
     private List<StageDefinition> stages;
 
     @SuppressWarnings("unchecked")
-    public MockStageLibrary() {
+    public MockStageLibraryTask() {
       stages = new ArrayList<StageDefinition>();
       StageDefinition sDef = new StageDefinition(
         MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",

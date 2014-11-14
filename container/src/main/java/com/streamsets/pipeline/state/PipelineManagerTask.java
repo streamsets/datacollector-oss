@@ -22,11 +22,11 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.*;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import org.slf4j.Logger;
@@ -139,7 +139,7 @@ public class PipelineManagerTask extends AbstractTask {
   }
 
   public PipelineState handleStateTransition(String name, String rev, State state
-      , Configuration configuration, PipelineStoreTask pipelineStore, StageLibrary stageLib)
+      , Configuration configuration, PipelineStoreTask pipelineStore, StageLibraryTask stageLib)
       throws PipelineStateException, StageException, PipelineRuntimeException, PipelineStoreException {
 
     State currentState = getState().getPipelineState();
@@ -184,7 +184,7 @@ public class PipelineManagerTask extends AbstractTask {
   }
 
   private synchronized PipelineState handleStartRequest(String name, String rev, Configuration configuration
-      , PipelineStoreTask pipelineStore, StageLibrary stageLibrary) throws PipelineStateException, StageException
+      , PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) throws PipelineStateException, StageException
       , PipelineRuntimeException, PipelineStoreException {
 
     prodPipeline = createProductionPipeline(name, rev, configuration, pipelineStore, stageLibrary);
@@ -202,7 +202,7 @@ public class PipelineManagerTask extends AbstractTask {
   }
 
   private ProductionPipeline createProductionPipeline(
-      String name, String rev, Configuration configuration, PipelineStoreTask pipelineStore, StageLibrary stageLibrary)
+      String name, String rev, Configuration configuration, PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary)
       throws PipelineStoreException, PipelineRuntimeException, StageException {
 
     //retrieve pipeline properties from the pipeline configuration

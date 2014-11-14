@@ -22,7 +22,7 @@ import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.config.*;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -77,8 +77,8 @@ public class TestStageRuntime {
   }
 
   @SuppressWarnings("unchecked")
-  public static StageLibrary createMockStageLibrary() {
-    StageLibrary lib = Mockito.mock(StageLibrary.class);
+  public static StageLibraryTask createMockStageLibrary() {
+    StageLibraryTask lib = Mockito.mock(StageLibraryTask.class);
     List<ConfigDefinition> configDefs = new ArrayList<ConfigDefinition>();
     ConfigDefinition configDef = new ConfigDefinition("string", ConfigDef.Type.STRING, "l1", "d1", "--", true, "g",
                                                       "stringVar", null);
@@ -132,7 +132,7 @@ public class TestStageRuntime {
 
   @Test
   public void testBuilderValidPipeline() throws Exception {
-    StageLibrary stageLibrary = createMockStageLibrary();
+    StageLibraryTask stageLibrary = createMockStageLibrary();
     PipelineConfiguration pipelineConf = createMockPipelineConfiguration();
     StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, "name", pipelineConf);
     StageRuntime[] runtimes = builder.build();
@@ -156,7 +156,7 @@ public class TestStageRuntime {
 
   @Test(expected = PipelineRuntimeException.class)
   public void testBuilderInvalidPipeline() throws Exception {
-    StageLibrary stageLibrary = createMockStageLibrary();
+    StageLibraryTask stageLibrary = createMockStageLibrary();
     PipelineConfiguration pipelineConf = createMockPipelineConfiguration();
     pipelineConf.getStages().remove(1);
     StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, "name", pipelineConf);
@@ -165,7 +165,7 @@ public class TestStageRuntime {
 
   @Test
   public void testBuilderValidPipelineContextInitDestroy() throws Exception {
-    StageLibrary stageLibrary = createMockStageLibrary();
+    StageLibraryTask stageLibrary = createMockStageLibrary();
     PipelineConfiguration pipelineConf = createMockPipelineConfiguration();
     StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, "name", pipelineConf);
     StageRuntime[] runtimes = builder.build();
@@ -182,7 +182,7 @@ public class TestStageRuntime {
 
   @Test(expected = IllegalStateException.class)
   public void testBuilderValidPipelineContextNotSet() throws Exception {
-    StageLibrary stageLibrary = createMockStageLibrary();
+    StageLibraryTask stageLibrary = createMockStageLibrary();
     PipelineConfiguration pipelineConf = createMockPipelineConfiguration();
     StageRuntime.Builder builder = new StageRuntime.Builder(stageLibrary, "name", pipelineConf);
     StageRuntime[] runtimes = builder.build();

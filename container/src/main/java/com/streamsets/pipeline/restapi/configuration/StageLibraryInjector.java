@@ -17,29 +17,29 @@
  */
 package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import org.glassfish.hk2.api.Factory;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-public class StageLibraryInjector implements Factory<StageLibrary> {
+public class StageLibraryInjector implements Factory<StageLibraryTask> {
   public static final String STAGE_LIBRARY = "stage-library";
 
-  private StageLibrary library;
+  private StageLibraryTask library;
 
   @Inject
   public StageLibraryInjector(HttpServletRequest request) {
-    library = (StageLibrary) request.getServletContext().getAttribute(STAGE_LIBRARY);
+    library = (StageLibraryTask) request.getServletContext().getAttribute(STAGE_LIBRARY);
   }
 
   @Override
-  public StageLibrary provide() {
+  public StageLibraryTask provide() {
     return library;
   }
 
   @Override
-  public void dispose(StageLibrary library) {
+  public void dispose(StageLibraryTask library) {
   }
 
 }

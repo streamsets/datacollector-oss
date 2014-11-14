@@ -24,7 +24,7 @@ import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
@@ -35,9 +35,7 @@ import org.mockito.Mockito;
 
 import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 public class TestStageLibraryResource {
@@ -93,8 +91,8 @@ public class TestStageLibraryResource {
    *
    * @return Mock stage library implementation
    */
-  public static StageLibrary createMockStageLibrary() {
-    StageLibrary lib = Mockito.mock(StageLibrary.class);
+  public static StageLibraryTask createMockStageLibrary() {
+    StageLibraryTask lib = Mockito.mock(StageLibraryTask.class);
     List<ConfigDefinition> configDefs = new ArrayList<ConfigDefinition>();
     ConfigDefinition configDef = new ConfigDefinition("string", ConfigDef.Type.STRING, "l1", "d1", "--", true, "g",
       "stringVar", null);
@@ -131,7 +129,7 @@ public class TestStageLibraryResource {
 
     @Provides
     @Singleton
-    public StageLibrary provideStageLibrary() {
+    public StageLibraryTask provideStageLibrary() {
       return createMockStageLibrary();
     }
   }

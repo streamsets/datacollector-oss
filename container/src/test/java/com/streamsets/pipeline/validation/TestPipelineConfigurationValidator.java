@@ -19,7 +19,7 @@ package com.streamsets.pipeline.validation;
 
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.MockStages;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,7 +39,7 @@ public class TestPipelineConfigurationValidator {
 
   @Test
   public void testValidConfiguration() {
-    StageLibrary lib = MockStages.createStageLibrary();
+    StageLibraryTask lib = MockStages.createStageLibrary();
     PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceProcessorTarget();
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
     Assert.assertTrue(validator.validate());

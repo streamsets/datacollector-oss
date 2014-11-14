@@ -31,8 +31,8 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
-import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -45,7 +45,7 @@ public class TestPipeline {
 
   @Test
   public void testBuilder() throws Exception {
-    StageLibrary lib = MockStages.createStageLibrary();
+    StageLibraryTask lib = MockStages.createStageLibrary();
     List<StageConfiguration> stageDefs = ImmutableList.of(
         MockStages.createSource("s", ImmutableList.of("s")),
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
@@ -134,7 +134,7 @@ public class TestPipeline {
 
   @Test
   public void testContextRecordCreation() throws Exception {
-    StageLibrary lib = MockStages.createStageLibrary();
+    StageLibraryTask lib = MockStages.createStageLibrary();
     List<StageConfiguration> stageDefs = ImmutableList.of(
         MockStages.createSource("s", ImmutableList.of("s")),
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
@@ -183,7 +183,7 @@ public class TestPipeline {
 
   @Test
   public void testLifecycleDelegation() throws Exception {
-    StageLibrary lib = MockStages.createStageLibrary();
+    StageLibraryTask lib = MockStages.createStageLibrary();
     List<StageConfiguration> stageDefs = ImmutableList.of(
         MockStages.createSource("s", ImmutableList.of("s")),
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
@@ -246,7 +246,7 @@ public class TestPipeline {
 
   @Test
   public void testInitDestroyException() throws Exception {
-    StageLibrary lib = MockStages.createStageLibrary();
+    StageLibraryTask lib = MockStages.createStageLibrary();
     List<StageConfiguration> stageDefs = ImmutableList.of(
         MockStages.createSource("s", ImmutableList.of("s")),
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
