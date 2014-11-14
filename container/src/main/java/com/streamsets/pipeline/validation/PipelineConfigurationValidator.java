@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,6 +43,9 @@ public class PipelineConfigurationValidator {
 
   private static final String PIPELINE_IS_EMPTY_KEY = "validation.pipeline.is.empty";
   private static final String PIPELINE_IS_EMPTY_DEFAULT = "The pipeline is empty";
+  private static final String STAGES_ARE_NOT_FULLY_WIRED_KEY = "validation.pipeline.stages.not.fully.wired";
+  private static final String STAGES_ARE_NOT_FULLY_WIRED_DEFAULT =
+      "Stages are not fully wired, cannot reach the following stages '{}'";
   private static final String FIRST_STAGE_MUST_BE_A_SOURCE_KEY = "validation.first.stage.must.be.source";
   private static final String FIRST_STAGE_MUST_BE_A_SOURCE_DEFAULT = "The first stage must be a Source";
   private static final String STAGE_CANNOT_BE_SOURCE_KEY = "validation.stage.cannot.be.source";
@@ -101,11 +105,42 @@ public class PipelineConfigurationValidator {
     openLanes = new ArrayList<String>();
   }
 
+  boolean sortStages() {
+    boolean ok = true;
+    List<StageConfiguration> original = new ArrayList<StageConfiguration>(pipelineConfiguration.getStages());
+    List<StageConfiguration> sorted = new ArrayList<StageConfiguration>();
+    Set<String> producedOutputs = new HashSet<String>();
+    while (ok && !original.isEmpty()) {
+      int prior = sorted.size();
+      Iterator<StageConfiguration> it = original.iterator();
+      while (it.hasNext()) {
+        StageConfiguration stage = it.next();
+        if (producedOutputs.containsAll(stage.getInputLanes())) {
+          producedOutputs.addAll(stage.getOutputLanes());
+          it.remove();
+          sorted.add(stage);
+        }
+      }
+      if (prior == sorted.size()) {
+        // pipeline has not stages at all
+        List<String> names = new ArrayList<String>(original.size());
+        for (StageConfiguration stage : original) {
+          names.add(stage.getInstanceName());
+        }
+        issues.addP(new Issue(STAGES_ARE_NOT_FULLY_WIRED_KEY, STAGES_ARE_NOT_FULLY_WIRED_DEFAULT, names));
+        ok = false;
+      }
+    }
+    pipelineConfiguration.setStages(sorted);
+    return ok;
+  }
+
   public boolean validate() {
     Preconditions.checkState(!validated, "Already validated");
     validated = true;
     LOG.trace("Pipeline '{}' starting validation", name);
-    canPreview = checkIfPipelineIsEmpty();
+    canPreview = sortStages();
+    canPreview &= checkIfPipelineIsEmpty();
     canPreview &= validatePipelineConfiguration();
     canPreview &= validatePipelineLanes();
     if (LOG.isTraceEnabled() && issues.hasIssues()) {

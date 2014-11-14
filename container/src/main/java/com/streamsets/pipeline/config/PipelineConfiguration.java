@@ -57,6 +57,10 @@ public class PipelineConfiguration {
     return stages;
   }
 
+  public void setStages(List<StageConfiguration> stages) {
+    this.stages = stages;
+  }
+
   public void setUuid(UUID uuid) {
     this.uuid = uuid;
   }
