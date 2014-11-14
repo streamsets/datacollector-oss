@@ -19,22 +19,38 @@ package com.streamsets.pipeline.agent;
 
 import javax.inject.Inject;
 
-public class MainAgent implements Agent {
-  public @Inject Agent agent;
+public class TaskWrapper implements Task {
+  @Inject
+  public Task task;
+
+  @Override
+  public String getName() {
+    return task.getName();
+  }
+
+  @Override
+  public Status getStatus() {
+    return task.getStatus();
+  }
 
   @Override
   public void init() {
-    agent.init();
+    task.init();
   }
 
   @Override
   public void run() {
-    agent.run();
+    task.run();
   }
 
   @Override
   public void stop() {
-    agent.stop();
+    task.stop();
+  }
+
+  @Override
+  public void waitWhileRunning() throws InterruptedException {
+    task.waitWhileRunning();
   }
 
 }

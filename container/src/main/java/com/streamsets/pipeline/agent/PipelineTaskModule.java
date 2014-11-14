@@ -18,19 +18,18 @@
 package com.streamsets.pipeline.agent;
 
 import com.streamsets.pipeline.http.WebServerModule;
-import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
 import com.streamsets.pipeline.store.PipelineStoreModule;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(injects = {MainAgent.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class},
+@Module(injects = {TaskWrapper.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class},
         includes = {RuntimeModule.class, WebServerModule.class, PipelineStoreModule.class})
-public class PipelineAgentModule {
+public class PipelineTaskModule {
 
   @Provides @Singleton
-  public Agent provideAgent(PipelineAgent agent) {
+  public Task provideAgent(PipelineTask agent) {
     return agent;
   }
 

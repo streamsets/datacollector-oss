@@ -23,54 +23,42 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.concurrent.CountDownLatch;
 
-public class PipelineAgent implements Agent {
-  private static final Logger LOG = LoggerFactory.getLogger(PipelineAgent.class);
+public class PipelineTask extends AbstractTask {
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineTask.class);
 
   private final PipelineStore store;
   private final WebServer webServer;
-  private final CountDownLatch latch;
 
   @Inject
-  public PipelineAgent(PipelineStore store, WebServer webServer) {
+  public PipelineTask(PipelineStore store, WebServer webServer) {
+    super("pipeline");
     this.store = store;
     this.webServer = webServer;
-    latch = new CountDownLatch(1);
   }
 
   @Override
-  public void init() {
-    LOG.debug("Initializing");
+  protected void initTask() {
     store.init();
     webServer.init();
-    LOG.debug("Initialized");
   }
 
   @Override
-  public void run() {
-    LOG.debug("Starting");
+  protected void runTask() {
     webServer.start();
-
-
-    LOG.debug("Running");
-    try {
-      latch.await();
-    } catch (InterruptedException ex) {
-
-    }
-  }
-
-  public void shutdown() {
-    LOG.debug("Shutting down");
-    latch.countDown();
   }
 
   @Override
-  public void stop() {
-    LOG.debug("Stopping");
-    webServer.stop();
-    store.destroy();;
-    LOG.debug("Stopped");
+  protected void stopTask() {
+    try {
+      webServer.stop();
+    } catch (RuntimeException ex) {
+      LOG.warn("Error while stopping the WebServer: {}", ex.getMessage(), ex);
+    }
+    try {
+      store.destroy();
+    } catch (RuntimeException ex) {
+      LOG.warn("Error while destroying the PipelineStore: {}", ex.getMessage(), ex);
+    }
   }
 }

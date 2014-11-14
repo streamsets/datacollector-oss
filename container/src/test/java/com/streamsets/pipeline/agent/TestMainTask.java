@@ -17,12 +17,25 @@
  */
 package com.streamsets.pipeline.agent;
 
-//TODO think of a better name
-public interface Agent {
+import org.junit.Test;
+import org.mockito.Mockito;
 
-  public void init();
+public class TestMainTask {
 
-  public void run();
+  @Test
+  public void testMainAgentDelegation() {
+    Task mock = Mockito.mock(Task.class);
+    TaskWrapper agent = new TaskWrapper();
+    agent.task = mock;
+    agent.init();
+    Mockito.verify(mock, Mockito.times(1)).init();
+    Mockito.verifyNoMoreInteractions(mock);
+    agent.run();
+    Mockito.verify(mock, Mockito.times(1)).run();
+    Mockito.verifyNoMoreInteractions(mock);
+    agent.stop();
+    Mockito.verify(mock, Mockito.times(1)).stop();
+    Mockito.verifyNoMoreInteractions(mock);
+  }
 
-  public void stop();
 }

@@ -29,7 +29,7 @@ public class Main {
   private final Class moduleClass;
 
   public Main() {
-    this(PipelineAgentModule.class);
+    this(PipelineTaskModule.class);
   }
 
   @VisibleForTesting
@@ -46,7 +46,7 @@ public class Main {
     Logger log = null;
     try {
       ObjectGraph dagger = ObjectGraph.create(moduleClass);
-      final Agent agent = dagger.get(MainAgent.class);
+      final Task task = dagger.get(TaskWrapper.class);
 
       dagger.get(LogConfigurator.class).configure();
       log = LoggerFactory.getLogger(Main.class);
@@ -57,20 +57,20 @@ public class Main {
       log.info("-----------------------------------------------------------------");
       log.info("Starting ...");
 
-      agent.init();
+      task.init();
       final Logger finalLog = log;
       Thread shutdownHookThread = new Thread("Main.shutdownHook") {
         @Override
         public void run() {
           finalLog.debug("Stopping, reason: SIGTERM (kill)");
-          agent.stop();
+          task.stop();
         }
       };
       getRuntime().addShutdownHook(shutdownHookThread);
-      agent.run();
+      task.run();
+      task.waitWhileRunning();
       getRuntime().removeShutdownHook(shutdownHookThread);
-      log.debug("Stopping, reason: shutdown");
-      agent.stop();
+      log.debug("Stopping, reason: programmatic stop()");
       return 0;
     } catch (Throwable ex) {
       if (log != null) {

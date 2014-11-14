@@ -31,9 +31,9 @@ public class TestMain {
   private static LogConfigurator logConfigurator = Mockito.mock(LogConfigurator.class);
   private static BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
   private static RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-  private static Agent agent = Mockito.mock(Agent.class);
+  private static Task task = Mockito.mock(Task.class);
 
-  @Module(injects = {MainAgent.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class})
+  @Module(injects = {TaskWrapper.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class})
   public static class TPipelineAgentModule {
 
     @Provides
@@ -52,8 +52,8 @@ public class TestMain {
     }
 
     @Provides
-    public Agent provideAgent() {
-      return agent;
+    public Task provideAgent() {
+      return task;
     }
   }
 
@@ -75,7 +75,7 @@ public class TestMain {
     Mockito.reset(logConfigurator);
     Mockito.reset(buildInfo);
     Mockito.reset(runtimeInfo);
-    Mockito.reset(agent);
+    Mockito.reset(task);
   }
 
   @Test
@@ -91,59 +91,43 @@ public class TestMain {
     Mockito.verifyZeroInteractions(logConfigurator);
     Mockito.verifyZeroInteractions(buildInfo);
     Mockito.verifyZeroInteractions(runtimeInfo);
-    Mockito.verifyZeroInteractions(agent);
+    Mockito.verifyZeroInteractions(task);
     Assert.assertEquals(0, main.doMain());
     Mockito.verify(logConfigurator, Mockito.times(1)).configure();
     Mockito.verify(buildInfo, Mockito.times(1)).log(Mockito.any(Logger.class));
     Mockito.verify(runtimeInfo, Mockito.times(1)).log(Mockito.any(Logger.class));
-    Mockito.verify(agent, Mockito.times(1)).init();
+    Mockito.verify(task, Mockito.times(1)).init();
     Mockito.verify(runtime, Mockito.times(1)).addShutdownHook(Mockito.any(Thread.class));
-    Mockito.verify(agent, Mockito.times(1)).run();
+    Mockito.verify(task, Mockito.times(1)).run();
     Mockito.verify(runtime, Mockito.times(1)).removeShutdownHook(Mockito.any(Thread.class));
-    Mockito.verify(agent, Mockito.times(1)).stop();
   }
 
   @Test
   public void testInitException() {
-    Mockito.doThrow(new RuntimeException()).when(agent).init();
+    Mockito.doThrow(new RuntimeException()).when(task).init();
     Main main = new TMain();
     Assert.assertEquals(1, main.doMain());
     Mockito.verify(logConfigurator, Mockito.times(1)).configure();
     Mockito.verify(buildInfo, Mockito.times(1)).log(Mockito.any(Logger.class));
     Mockito.verify(runtimeInfo, Mockito.times(1)).log(Mockito.any(Logger.class));
-    Mockito.verify(agent, Mockito.times(1)).init();
+    Mockito.verify(task, Mockito.times(1)).init();
     Mockito.verify(runtime, Mockito.times(0)).addShutdownHook(Mockito.any(Thread.class));
-    Mockito.verify(agent, Mockito.times(0)).run();
+    Mockito.verify(task, Mockito.times(0)).run();
     Mockito.verify(runtime, Mockito.times(0)).removeShutdownHook(Mockito.any(Thread.class));
   }
 
   @Test
   public void testRunException() {
-    Mockito.doThrow(new RuntimeException()).when(agent).run();
+    Mockito.doThrow(new RuntimeException()).when(task).run();
     Main main = new TMain();
     Assert.assertEquals(1, main.doMain());
     Mockito.verify(logConfigurator, Mockito.times(1)).configure();
     Mockito.verify(buildInfo, Mockito.times(1)).log(Mockito.any(Logger.class));
     Mockito.verify(runtimeInfo, Mockito.times(1)).log(Mockito.any(Logger.class));
-    Mockito.verify(agent, Mockito.times(1)).init();
+    Mockito.verify(task, Mockito.times(1)).init();
     Mockito.verify(runtime, Mockito.times(1)).addShutdownHook(Mockito.any(Thread.class));
-    Mockito.verify(agent, Mockito.times(1)).run();
+    Mockito.verify(task, Mockito.times(1)).run();
     Mockito.verify(runtime, Mockito.times(0)).removeShutdownHook(Mockito.any(Thread.class));
-  }
-
-  @Test
-  public void testStopException() {
-    Mockito.doThrow(new RuntimeException()).when(agent).stop();
-    Main main = new TMain();
-    Assert.assertEquals(1, main.doMain());
-    Mockito.verify(logConfigurator, Mockito.times(1)).configure();
-    Mockito.verify(buildInfo, Mockito.times(1)).log(Mockito.any(Logger.class));
-    Mockito.verify(runtimeInfo, Mockito.times(1)).log(Mockito.any(Logger.class));
-    Mockito.verify(agent, Mockito.times(1)).init();
-    Mockito.verify(runtime, Mockito.times(1)).addShutdownHook(Mockito.any(Thread.class));
-    Mockito.verify(agent, Mockito.times(1)).run();
-    Mockito.verify(runtime, Mockito.times(1)).removeShutdownHook(Mockito.any(Thread.class));
-    Mockito.verify(agent, Mockito.times(1)).stop();
   }
 
   @Test
@@ -152,9 +136,9 @@ public class TestMain {
     Main main = new TMain();
     Assert.assertEquals(0, main.doMain());
     Mockito.verify(runtime, Mockito.times(1)).addShutdownHook(shutdownHookCaptor.capture());
-    Mockito.reset(agent);
+    Mockito.reset(task);
     shutdownHookCaptor.getValue().run();
-    Mockito.verify(agent, Mockito.times(1)).stop();
+    Mockito.verify(task, Mockito.times(1)).stop();
   }
 
 }

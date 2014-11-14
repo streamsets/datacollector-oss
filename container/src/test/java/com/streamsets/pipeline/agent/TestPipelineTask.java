@@ -23,23 +23,21 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class TestPipelineAgent {
+public class TestPipelineTask {
 
   @Test
   public void testPipelineAgentDelegation() {
     PipelineStore store = Mockito.mock(PipelineStore.class);
     WebServer webServer = Mockito.mock(WebServer.class);
-    PipelineAgent agent = new PipelineAgent(store, webServer);
-    //shutting down up front to disable the latch
-    agent.shutdown();
-    agent.init();
+    PipelineTask task = new PipelineTask(store, webServer);
+    task.init();
     Mockito.verify(store, Mockito.times(1)).init();
     Mockito.verify(webServer, Mockito.times(1)).init();
     Mockito.verifyNoMoreInteractions(webServer);
-    agent.run();
+    task.run();
     Mockito.verify(webServer, Mockito.times(1)).start();
     Mockito.verifyNoMoreInteractions(webServer);
-    agent.stop();
+    task.stop();
     Mockito.verify(webServer, Mockito.times(1)).stop();
     Mockito.verify(store, Mockito.times(1)).destroy();
     Mockito.verifyNoMoreInteractions(webServer);
@@ -49,21 +47,23 @@ public class TestPipelineAgent {
   public void testLatch() throws Exception {
     PipelineStore store = Mockito.mock(PipelineStore.class);
     WebServer webServer = Mockito.mock(WebServer.class);
-    final PipelineAgent agent = new PipelineAgent(store, webServer);
+    final PipelineTask task = new PipelineTask(store, webServer);
+    task.init();
     long now = System.currentTimeMillis();
     new Thread() {
       @Override
       public void run() {
         try {
-          Thread.sleep(50);
+          Thread.sleep(100);
         } catch (InterruptedException ex) {
           //NOP
         }
-        agent.shutdown();
+        task.stop();
       }
     }.start();
-    agent.run();
-    Assert.assertTrue(System.currentTimeMillis() - now >= 50);
+    task.run();
+    task.waitWhileRunning();
+    Assert.assertTrue(System.currentTimeMillis() - now >= 100);
   }
 
 }
