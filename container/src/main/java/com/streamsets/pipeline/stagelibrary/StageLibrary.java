@@ -18,11 +18,12 @@
 package com.streamsets.pipeline.stagelibrary;
 
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.task.Task;
 
 import java.util.List;
 import java.util.Locale;
 
-public interface StageLibrary {
+public interface StageLibrary extends Task {
 
   public List<StageDefinition> getStages();
 

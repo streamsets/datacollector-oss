@@ -21,24 +21,26 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.task.TaskWrapper;
 
 import java.util.Collections;
 import java.util.List;
 
-public class PreviewStageLibrary implements StageLibrary {
+public class PreviewStageLibrary extends TaskWrapper implements StageLibrary {
   public static final String LIBRARY = ":system:";
   public static final String NAME = ":plug:";
   public static final String VERSION = "1.0.0";
 
-  private final StageLibrary stageLibrary;
+  private final StageLibrary library;
 
-  public PreviewStageLibrary(StageLibrary stageLibrary) {
-    this.stageLibrary = stageLibrary;
+  public PreviewStageLibrary(StageLibrary library) {
+    super(library);
+    this.library = library;
   }
 
   @Override
   public List<StageDefinition> getStages() {
-    return stageLibrary.getStages();
+    return library.getStages();
   }
 
   @Override
@@ -49,7 +51,7 @@ public class PreviewStageLibrary implements StageLibrary {
                                 StageType.TARGET, Collections.EMPTY_LIST, StageDef.OnError.DROP_BATCH, "");
       def.setLibrary(LIBRARY, getClass().getClassLoader());
     } else {
-      def = stageLibrary.getStage(library, name, version);
+      def = this.library.getStage(library, name, version);
     }
     return def;
   }

@@ -20,8 +20,12 @@ package com.streamsets.pipeline.task;
 import javax.inject.Inject;
 
 public class TaskWrapper implements Task {
+  private Task task;
+
   @Inject
-  public Task task;
+  public TaskWrapper(Task task) {
+    this.task = task;
+  }
 
   @Override
   public String getName() {

@@ -30,6 +30,7 @@ import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.task.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -170,6 +171,36 @@ public class MockStages {
         "targetDesc", StageType.TARGET, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD, "");
       tDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
       stages = ImmutableList.of(sDef, pDef, tDef);
+    }
+
+    @Override
+    public String getName() {
+      return null;
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void run() {
+
+    }
+
+    @Override
+    public void waitWhileRunning() throws InterruptedException {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public Status getStatus() {
+      return null;
     }
 
     @Override

@@ -34,6 +34,7 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.container.LocaleInContext;
 import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.task.AbstractTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,19 +51,26 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class ClassLoaderStageLibrary implements StageLibrary {
+public class ClassLoaderStageLibrary extends AbstractTask implements StageLibrary {
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibrary.class);
 
   private static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
 
-  private final List<? extends ClassLoader> stageClassLoaders;
+  private final RuntimeInfo runtimeInfo;
+  private List<? extends ClassLoader> stageClassLoaders;
   private Map<String, StageDefinition> stageMap;
   private List<StageDefinition> stageList;
-  private final LoadingCache<Locale, List<StageDefinition>> localizedStageList;
-  private final ObjectMapper json;
+  private LoadingCache<Locale, List<StageDefinition>> localizedStageList;
+  private ObjectMapper json;
 
   @Inject
   public ClassLoaderStageLibrary(RuntimeInfo runtimeInfo) {
+    super("stageLibrary");
+    this.runtimeInfo = runtimeInfo;
+  }
+
+  @Override
+  protected void initTask() {
     stageClassLoaders = runtimeInfo.getStageLibraryClassLoaders();
     json = new ObjectMapper();
     json.enable(SerializationFeature.INDENT_OUTPUT);

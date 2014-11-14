@@ -17,8 +17,6 @@
  */
 package com.streamsets.pipeline.task;
 
-import com.streamsets.pipeline.task.Task;
-import com.streamsets.pipeline.task.TaskWrapper;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -27,8 +25,7 @@ public class TestTaskWrapper {
   @Test
   public void testMainAgentDelegation() throws Exception {
     Task mock = Mockito.mock(Task.class);
-    TaskWrapper agent = new TaskWrapper();
-    agent.task = mock;
+    TaskWrapper agent = new TaskWrapper(mock);
     agent.init();
     Mockito.verify(mock, Mockito.times(1)).init();
     Mockito.verifyNoMoreInteractions(mock);
