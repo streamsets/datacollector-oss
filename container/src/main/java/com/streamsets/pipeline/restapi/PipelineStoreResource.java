@@ -21,7 +21,7 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
-import com.streamsets.pipeline.store.PipelineStore;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 
 import javax.inject.Inject;
@@ -43,7 +43,7 @@ import java.security.Principal;
 
 @Path("/v1/pipelines")
 public class PipelineStoreResource {
-  private final PipelineStore store;
+  private final PipelineStoreTask store;
   private final StageLibrary stageLibrary;
   private final URI uri;
   private final String user;
@@ -51,7 +51,7 @@ public class PipelineStoreResource {
 
 
   @Inject
-  public PipelineStoreResource(URI uri, Principal user, StageLibrary stageLibrary, PipelineStore store) {
+  public PipelineStoreResource(URI uri, Principal user, StageLibrary stageLibrary, PipelineStoreTask store) {
     this.uri = uri;
     this.user = user.getName();
     this.stageLibrary = stageLibrary;

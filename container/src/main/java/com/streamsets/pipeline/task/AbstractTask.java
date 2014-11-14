@@ -32,7 +32,7 @@ public abstract class AbstractTask implements Task {
   private static final Logger LOG = LoggerFactory.getLogger(AbstractTask.class);
   private static final Map<Status, Set<Status>> VALID_TRANSITIONS = ImmutableMap.of(
       Status.CREATED, (Set<Status>)ImmutableSet.of(Status.INITIALIZED),
-      Status.INITIALIZED, ImmutableSet.of(Status.RUNNING),
+      Status.INITIALIZED, ImmutableSet.of(Status.RUNNING, Status.STOPPED),
       Status.RUNNING, ImmutableSet.of(Status.STOPPED),
       Status.STOPPED, ImmutableSet.of(Status.INITIALIZED, Status.STOPPED),
       Status.ERROR, ImmutableSet.<Status>of()

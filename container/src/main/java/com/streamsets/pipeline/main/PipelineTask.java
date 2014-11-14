@@ -18,21 +18,17 @@
 package com.streamsets.pipeline.main;
 
 import com.streamsets.pipeline.http.WebServerTask;
-import com.streamsets.pipeline.store.PipelineStore;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
 public class PipelineTask extends AbstractTask {
-  private static final Logger LOG = LoggerFactory.getLogger(PipelineTask.class);
-
-  private final PipelineStore store;
+  private final PipelineStoreTask store;
   private final WebServerTask webServer;
 
   @Inject
-  public PipelineTask(PipelineStore store, WebServerTask webServer) {
+  public PipelineTask(PipelineStoreTask store, WebServerTask webServer) {
     super("pipeline");
     this.store = store;
     this.webServer = webServer;
@@ -46,20 +42,13 @@ public class PipelineTask extends AbstractTask {
 
   @Override
   protected void runTask() {
+    store.run();
     webServer.run();
   }
 
   @Override
   protected void stopTask() {
-    try {
-      webServer.stop();
-    } catch (RuntimeException ex) {
-      LOG.warn("Error while stopping the WebServer: {}", ex.getMessage(), ex);
-    }
-    try {
-      store.destroy();
-    } catch (RuntimeException ex) {
-      LOG.warn("Error while destroying the PipelineStore: {}", ex.getMessage(), ex);
-    }
+    webServer.stop();
+    store.stop();
   }
 }

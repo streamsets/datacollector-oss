@@ -18,15 +18,12 @@
 package com.streamsets.pipeline.store;
 
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.task.Task;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface PipelineStore {
-
-  public void init();
-
-  public void destroy();
+public interface PipelineStoreTask extends Task {
 
   public PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException;
 

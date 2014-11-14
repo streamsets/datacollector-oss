@@ -30,7 +30,7 @@ import com.streamsets.pipeline.restapi.configuration.RestAPIResourceConfig;
 import com.streamsets.pipeline.restapi.configuration.StageLibraryInjector;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
-import com.streamsets.pipeline.store.PipelineStore;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreModule;
 import dagger.Module;
 import dagger.Provides;
@@ -115,7 +115,7 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
-  ContextConfigurator providePipelineStore(final PipelineStore pipelineStore) {
+  ContextConfigurator providePipelineStore(final PipelineStoreTask pipelineStore) {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {

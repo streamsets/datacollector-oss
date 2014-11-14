@@ -17,28 +17,28 @@
  */
 package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.store.PipelineStore;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import org.glassfish.hk2.api.Factory;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-public class PipelineStoreInjector implements Factory<PipelineStore> {
+public class PipelineStoreInjector implements Factory<PipelineStoreTask> {
   public static final String PIPELINE_STORE = "pipeline-store";
-  private PipelineStore store;
+  private PipelineStoreTask store;
 
   @Inject
   public PipelineStoreInjector(HttpServletRequest request) {
-    store = (PipelineStore) request.getServletContext().getAttribute(PIPELINE_STORE);
+    store = (PipelineStoreTask) request.getServletContext().getAttribute(PIPELINE_STORE);
   }
 
   @Override
-  public PipelineStore provide() {
+  public PipelineStoreTask provide() {
     return store;
   }
 
   @Override
-  public void dispose(PipelineStore pipelineStore) {
+  public void dispose(PipelineStoreTask pipelineStore) {
   }
 
 }

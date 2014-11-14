@@ -32,7 +32,7 @@ import com.streamsets.pipeline.runner.preview.PreviewPipelineRunner;
 import com.streamsets.pipeline.runner.preview.PreviewSourceOffsetTracker;
 import com.streamsets.pipeline.runner.preview.PreviewStageRunner;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
-import com.streamsets.pipeline.store.PipelineStore;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 
 import javax.inject.Inject;
@@ -57,13 +57,13 @@ public class PreviewResource {
 
   //preview.maxBatchSize
   private final Configuration configuration;
-  private final PipelineStore store;
+  private final PipelineStoreTask store;
   private final StageLibrary stageLibrary;
   private final String user;
 
 
   @Inject
-  public PreviewResource(Configuration configuration, Principal user, StageLibrary stageLibrary, PipelineStore store) {
+  public PreviewResource(Configuration configuration, Principal user, StageLibrary stageLibrary, PipelineStoreTask store) {
     this.configuration = configuration;
     this.user = user.getName();
     this.stageLibrary = stageLibrary;

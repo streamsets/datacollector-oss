@@ -25,6 +25,7 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.store.*;
@@ -37,7 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public class FilePipelineStore implements PipelineStore {
+public class FilePipelineStoreTask extends AbstractTask implements PipelineStoreTask {
   public static final String CREATE_DEFAULT_PIPELINE_KEY = "create.default.pipeline";
   public static final boolean CREATE_DEFAULT_PIPELINE_DEFAULT = true;
 
@@ -62,7 +63,8 @@ public class FilePipelineStore implements PipelineStore {
   private ObjectMapper json;
 
   @Inject
-  public FilePipelineStore(RuntimeInfo runtimeInfo, Configuration conf) {
+  public FilePipelineStoreTask(RuntimeInfo runtimeInfo, Configuration conf) {
+    super("filePipelineStore");
     this.runtimeInfo = runtimeInfo;
     this.conf = conf;
     json = new ObjectMapper();
@@ -75,7 +77,7 @@ public class FilePipelineStore implements PipelineStore {
   }
 
   @Override
-  public void init()  {
+  protected void initTask()  {
     storeDir = new File(runtimeInfo.getDataDir(), "pipelines");
     if (!storeDir.exists()) {
       if (!storeDir.mkdirs()) {
@@ -94,7 +96,7 @@ public class FilePipelineStore implements PipelineStore {
   }
 
   @Override
-  public void destroy() {
+  protected void stopTask() {
   }
 
   private File getPipelineDir(String name) {

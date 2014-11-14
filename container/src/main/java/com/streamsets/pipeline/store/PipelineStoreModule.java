@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.store;
 
 import com.streamsets.pipeline.main.RuntimeModule;
-import com.streamsets.pipeline.store.impl.FilePipelineStore;
+import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import dagger.Module;
 import dagger.Provides;
 
@@ -29,7 +29,7 @@ public class PipelineStoreModule {
 
   @Provides
   @Singleton
-  public PipelineStore provideStore(FilePipelineStore store) {
+  public PipelineStoreTask provideStore(FilePipelineStoreTask store) {
     return store;
   }
 
