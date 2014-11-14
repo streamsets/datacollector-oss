@@ -39,23 +39,29 @@ public class LogConfigurator {
   public void configure() {
     if (System.getProperty("log4j.configuration") == null) {
       System.setProperty("log4j.defaultInitOverride", "true");
+      boolean foundConfig = false;
       boolean fromClasspath = true;
       File log4jConf = new File(runtimeInfo.getConfigDir(), LOG4J_PROPERTIES).getAbsoluteFile();
       if (log4jConf.exists()) {
         PropertyConfigurator.configureAndWatch(log4jConf.getPath(), 1000);
         fromClasspath = false;
+        foundConfig = true;
       } else {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         URL log4jUrl = cl.getResource(LOG4J_PROPERTIES);
         if (log4jUrl != null) {
           PropertyConfigurator.configure(log4jUrl);
+          foundConfig = true;
         }
       }
       Logger log = LoggerFactory.getLogger(this.getClass());
       log.debug("Log starting, from configuration: {}", log4jConf.getAbsoluteFile());
-      if (fromClasspath) {
+      if (!foundConfig) {
         log.warn("Log4j configuration file '{}' not found", LOG4J_PROPERTIES);
-        log.warn("Logging with INFO level to standard output");
+      } else if (fromClasspath) {
+        log.warn("Log4j configuration file '{}' read from classpath, reload not enabled", LOG4J_PROPERTIES);
+      } else {
+        log.debug("Log4j configuration file '{}', auto reload enabled", log4jConf.getAbsoluteFile());
       }
     }
   }
