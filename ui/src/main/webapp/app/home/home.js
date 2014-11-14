@@ -167,9 +167,13 @@ angular
         api.pipelineAgent.previewPipeline('xyz', $scope.previewSourceOffset, $scope.previewBatchSize).success(function (previewData) {
           $scope.previewData = previewData;
 
-          if (!$scope.detailPaneConfig.stages) {
+          var firstStageInstance = $scope.pipelineConfig.stages[0];
+          $scope.$broadcast('selectNode', firstStageInstance);
+          updateDetailPane(firstStageInstance);
+
+          /*if (!$scope.detailPaneConfig.stages) {
             $scope.stagePreviewData = getPreviewDataForStage(previewData, $scope.detailPaneConfig);
-          }
+          }*/
         });
       },
 
@@ -316,6 +320,60 @@ angular
             name: this.newFieldName
           });
           this.newFieldName = '';
+        }
+      },
+
+
+      /**
+       * Returns output records produced by input record.
+       *
+       * @param outputRecords
+       * @param inputRecord
+       * @returns {*}
+       */
+      getOutputRecords: function(outputRecords, inputRecord) {
+        var matchedRecords = _.filter(outputRecords, function(outputRecord) {
+          return outputRecord.header.previousStageTrackingId === inputRecord.header.trackingId;
+        });
+
+        return matchedRecords;
+      },
+
+
+      /**
+       * Preview Previous Stage Instance for the given Stage Instance.
+       *
+       * @param stageInstance
+       */
+      previewPreviousStage: function(stageInstance) {
+        var stageInstances = $scope.pipelineConfig.stages,
+          inputLane = stageInstance.inputLanes[0],
+          previousInstances = _.filter(stageInstances, function(instance) {
+            return _.contains(instance.outputLanes, inputLane);
+          });
+
+        if(previousInstances && previousInstances.length) {
+          $scope.$broadcast('selectNode', previousInstances[0]);
+          updateDetailPane(previousInstances[0]);
+        }
+      },
+
+
+      /**
+       * Preview Next Stage Instance for the given Stage Instance.
+       *
+       * @param stageInstance
+       */
+      previewNextStage: function(stageInstance) {
+        var stageInstances = $scope.pipelineConfig.stages,
+          outputLane = stageInstance.outputLanes[0],
+          nextInstances = _.filter(stageInstances, function(instance) {
+            return _.contains(instance.inputLanes, outputLane);
+          });
+
+        if(nextInstances && nextInstances.length) {
+          $scope.$broadcast('selectNode', nextInstances[0]);
+          updateDetailPane(nextInstances[0]);
         }
       }
     });
