@@ -74,7 +74,7 @@
 
         <div class="btn-group pull-right stage-dropdown" ng-hide="previewMode">
           <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-            <span class="glyphicon glyphicon-screenshot"></span>
+            <span class="glyphicon glyphicon-plus"></span>
             <span translate="admin.header.addStage">Add Stage</span>
             <span class="caret"></span>
           </button>
@@ -111,6 +111,9 @@
 
       </div>
       <div class="panel-body">
+        <div class="alert alert-warning" role="alert" ng-show="pipelineConfig.issues.pipelineIssues[0]">
+          {{pipelineConfig.issues.pipelineIssues[0].message}}
+        </div>
         <pipeline-graph graph-data="pipelineConfig" ></pipeline-graph>
       </div>
     </bg-pane>
