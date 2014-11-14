@@ -79,12 +79,10 @@ module.exports = function(grunt) {
         'bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js',
         'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
         'bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js',
-        'bower_components/bootstrap/dist/js/bootstrap.js',
-        'bower_components/ng-tags-input/ng-tags-input.js'
+        'bower_components/bootstrap/dist/js/bootstrap.js'
       ],
       css: [
         'bower_components/bootstrap/dist/css/bootstrap.min.css',
-        'bower_components/ng-tags-input/ng-tags-input.min.css',
         'bower_components/json-formatter/dist/json-formatter.min.css.css'
       ],
       assets: [
@@ -323,7 +321,8 @@ module.exports = function(grunt) {
         noarg: true,
         sub: true,
         boss: true,
-        eqnull: true
+        eqnull: true,
+        debug: true  //TODO: Set this flag only for development mode.
       },
       globals: {}
     },

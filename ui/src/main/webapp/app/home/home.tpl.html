@@ -75,42 +75,39 @@
         <div class="btn-group pull-right stage-dropdown" ng-hide="previewMode">
           <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
             <span class="glyphicon glyphicon-screenshot"></span>
-            <span translate="admin.header.addTarget">Add Target</span>
+            <span translate="admin.header.addStage">Add Stage</span>
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li role="presentation" ng-repeat="stageLibrary in targets">
-              <a role="menuitem" tabindex="-1" href="#" ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
-            </li>
-          </ul>
-        </div>
 
-        <div class="btn-group pull-right stage-dropdown" ng-hide="previewMode">
-          <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-            <span class="glyphicon glyphicon-cog"></span>
-            <span translate="admin.header.addProcessor">Add Processor</span>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation" class="dropdown-header"
+                translate="admin.header.sources">Sources</li>
+            <li role="presentation"
+                ng-repeat="stageLibrary in sources" ng-class="{disabled: sourceExists}">
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
+            </li>
+
+            <li role="presentation" class="divider"></li>
+
+            <li role="presentation" class="dropdown-header"
+                translate="admin.header.processors">Processors</li>
             <li role="presentation" ng-repeat="stageLibrary in processors">
-              <a role="menuitem" tabindex="-1" href="#" ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
             </li>
+
+            <li role="presentation" class="divider"></li>
+
+            <li role="presentation" class="dropdown-header"
+                translate="admin.header.targets">Targets</li>
+            <li role="presentation" ng-repeat="stageLibrary in targets">
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
+            </li>
+
           </ul>
         </div>
-
-        <div class="btn-group pull-right stage-dropdown" ng-hide="previewMode">
-          <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-            <span class="glyphicon glyphicon-list-alt"></span>
-            <span translate="admin.header.addSource">Add Source</span>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li role="presentation" ng-repeat="stageLibrary in sources">
-              <a role="menuitem" tabindex="-1" href="#" ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
-            </li>
-          </ul>
-        </div>
-
 
       </div>
       <div class="panel-body">
@@ -142,7 +139,7 @@
             </li>
           </ul>
 
-          <div class="tab-content">
+          <div class="tab-content container-fluid">
 
             <div class="tab-pane active" id="configuration">
               <form class="form-horizontal" role="form" name="{{detailPaneConfig.instanceName || 'pipeline'}}">
@@ -198,6 +195,9 @@
 
                   <div class="col-sm-6"
                        ng-if="configDefinition.type === 'MODEL'">
+
+
+                    <!-- Model Type === DROPDOWN -->
                     <select class="form-control" name="{{configDefinition.name}}"
                             ng-if="configDefinition.model.modelType === 'DROPDOWN'"
                             ng-model="detailPaneConfig.configuration[$index].value">
@@ -207,6 +207,56 @@
                         {{configDefinition.model.labels[$index]}}
                       </option>
                     </select>
+
+
+                    <!-- Model Type === Field Selector -->
+
+                    <table class="table table-bordered"
+                           ng-if="configDefinition.model.modelType === 'FIELD_SELECTOR'">
+                      <thead>
+                        <tr>
+                          <th class="col-md-1"></th>
+                          <th class="col-md-5" translate="global.form.fieldName">Field Name</th>
+                          <th class="col-md-2" translate="global.form.type">Type</th>
+                          <th class="col-md-4" translate="global.form.sampleValue">Sample Value</th>
+                          <th class="text-center col-md-2" translate="global.form.required">Required</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="field in detailPaneConfig.uiInfo.inputFields">
+                          <td>
+                            <span class="glyphicon glyphicon-minus-sign icon-danger pointer"
+                                  ng-click="removeFieldSelector(detailPaneConfig.uiInfo.inputFields, $index, detailPaneConfig.configuration[$parent.$index].value)">
+                            </span>
+                          </td>
+                          <td>{{field.name}}</td>
+                          <td>{{field.type}}</td>
+                          <td>{{field.sampleValue}}</td>
+                          <td class="text-center">
+                            <input type="checkbox"
+                                   ng-checked="detailPaneConfig.configuration[$parent.$index].value.indexOf(field.name) > -1"
+                                   ng-click="toggleSelector(detailPaneConfig.configuration[$parent.$index].value, field.name)">
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div class="row"
+                         ng-if="configDefinition.model.modelType === 'FIELD_SELECTOR'">
+                      <div class="col-md-5">
+                        <input class="form-control input-sm" type="text"
+                               ng-enter="addNewField(detailPaneConfig.uiInfo.inputFields)"
+                               ng-model="newFieldName"
+                               placeholder="{{'global.form.fieldName.placeholder' | translate}}">
+                      </div>
+                      <div class="col-md-1">
+                        <button type="button" class="btn btn-primary btn-sm"
+                                ng-click="addNewField(detailPaneConfig.uiInfo.inputFields)">
+                          <span class="glyphicon glyphicon-plus"></span> Add
+                        </button>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </form>
@@ -231,7 +281,6 @@
                     translate="admin.detailPane.preview.outputData"
                     ng-show="stagePreviewData.output && stagePreviewData.output.length">
                   Output Data
-
                 </th>
               </tr>
             </thead>
@@ -242,9 +291,9 @@
                   <table class="table table-striped">
                     <thead>
                       <tr>
-                        <th translate="admin.detailPane.preview.fieldName">Field Name</th>
-                        <th translate="admin.detailPane.preview.type">Type</th>
-                        <th translate="admin.detailPane.preview.value">Value</th>
+                        <th translate="global.form.fieldName">Field Name</th>
+                        <th translate="global.form.type">Type</th>
+                        <th translate="global.form.value">Value</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -261,9 +310,9 @@
                   <table class="table table-striped">
                     <thead>
                     <tr>
-                      <th translate="admin.detailPane.preview.fieldName">Field Name</th>
-                      <th translate="admin.detailPane.preview.type">Type</th>
-                      <th translate="admin.detailPane.preview.value">Value</th>
+                      <th translate="global.form.fieldName">Field Name</th>
+                      <th translate="global.form.type">Type</th>
+                      <th translate="global.form.value">Value</th>
                     </tr>
                     </thead>
                     <tbody>

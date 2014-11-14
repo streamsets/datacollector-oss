@@ -2,7 +2,7 @@
  * Module definition for Pipeline Graph.
  */
 
-angular.module('pipelineGraphDirectives', [])
+angular.module('pipelineGraphDirectives', ['underscore'])
   .directive('pipelineGraph', function() {
     return {
       restrict: 'E',
@@ -10,19 +10,20 @@ angular.module('pipelineGraphDirectives', [])
       controller: 'PipelineGraphController'
     };
   })
-  .controller('PipelineGraphController', function($scope, $element){
+  .controller('PipelineGraphController', function($scope, $element, _){
 
     var consts = {
       defaultTitle: "random variable"
     };
 
     // define graphcreator object
-    var GraphCreator = function(svg, nodes, edges){
+    var GraphCreator = function(svg, nodes, edges, issues){
       var thisGraph = this;
       thisGraph.idct = 0;
 
       thisGraph.nodes = nodes || [];
       thisGraph.edges = edges || [];
+      thisGraph.issues = issues || {};
 
       thisGraph.state = {
         selectedNode: null,
@@ -48,19 +49,7 @@ angular.module('pipelineGraphDirectives', [])
         .append('svg:path')
         .attr('d', 'M0,-5L10,0L0,5');
 
-      // define arrow markers for leading arrow
-      /*defs.append('svg:marker')
-        .attr('id', 'mark-end-arrow')
-        .attr('viewBox', '0 -5 10 10')
-        .attr('refX', 7)
-        .attr('markerWidth', 3.5)
-        .attr('markerHeight', 3.5)
-        .attr('orient', 'auto')
-        .append('svg:path')
-        .attr('d', 'M0,-5L10,0L0,5');*/
-
       thisGraph.svg = svg;
-
 
       //Background lines
       var margin = {top: -5, right: -5, bottom: -5, left: -5},
@@ -593,6 +582,19 @@ angular.module('pipelineGraphDirectives', [])
           return d.uiInfo.icon;
         });
 
+      //Add Error icons
+      newGs.append("svg:foreignObject")
+        .filter(function(d) {
+          return thisGraph.issues && thisGraph.issues.stageIssues &&
+            thisGraph.issues.stageIssues[d.instanceName];
+        })
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("x", consts.rectWidth - 30)
+        .attr("y", consts.rectHeight - 30)
+        .append("xhtml:span")
+        .attr("class", "node-warning glyphicon glyphicon-warning-sign icon-danger");
+
 
       // remove old nodes
       thisGraph.rects.exit().remove();
@@ -646,7 +648,7 @@ angular.module('pipelineGraphDirectives', [])
     /** MAIN SVG **/
     var svg, graph;
 
-    $scope.$on('updateGraph', function(event, nodes, edges, selectNode) {
+    $scope.$on('updateGraph', function(event, nodes, edges, issues, selectNode) {
 
       if(graph !== undefined) {
         graph.deleteGraph();
@@ -655,12 +657,13 @@ angular.module('pipelineGraphDirectives', [])
           .attr("width", "100%")
           .attr("height", "100%")
           .attr("tabindex", 0);
-        graph = new GraphCreator(svg, nodes, edges || []);
+        graph = new GraphCreator(svg, nodes, edges || [], issues);
         graph.setIdCt(2);
       }
 
       graph.nodes = nodes;
       graph.edges = edges;
+      graph.issues = issues;
       graph.updateGraph();
 
       if(selectNode) {

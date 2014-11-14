@@ -11,6 +11,7 @@ angular
     'tabDirectives',
     'pipelineGraphDirectives',
     'showErrorsDirectives',
+    'ngEnterDirectives',
     'underscore'
   ])
   .config(['$routeProvider', function ($routeProvider) {
@@ -25,36 +26,15 @@ angular
     var stageCounter = 0,
       timeout,
       dirty = false,
-      saveUpdates,
-      updateGraph,
-      updateDetailPane,
-      getConfigurationLabel,
-      getPreviewDataForStage,
       ignoreUpdate = false,
       edges = [],
-      pipelineGeneralConfigDefinitions = [
-        {
-          name: 'label',
-          label: 'Label'
-        },
-        {
-          name: 'description',
-          label: 'Description'
-        }
-      ],
-      stageGeneralConfigDefinitions = [
-        {
-          name: 'label',
-          label: 'Label'
-        },
-        {
-          name: 'description',
-          label: 'Description'
-        }
-      ];
+      SOURCE_STAGE_TYPE = 'SOURCE',
+      PROCESSOR_STAGE_TYPE = 'PROCESSOR',
+      TARGET_STAGE_TYPE = 'TARGET';
 
     angular.extend($scope, {
       isPipelineRunning: false,
+      sourceExists: false,
       stageLibraries: [],
       pipelineConfigInfo: {},
       pipelineGraphData: {},
@@ -75,8 +55,8 @@ angular
         var xPos = ($scope.pipelineConfig.stages && $scope.pipelineConfig.stages.length) ?
             $scope.pipelineConfig.stages[$scope.pipelineConfig.stages.length - 1].uiInfo.xPos + 300 : 200,
           yPos = 70,
-          inputConnectors = (stage.type !== 'SOURCE') ? ['i1'] : [],
-          outputConnectors = (stage.type !== 'TARGET') ? ['01'] : [],
+          inputConnectors = (stage.type !== SOURCE_STAGE_TYPE) ? ['i1'] : [],
+          outputConnectors = (stage.type !== TARGET_STAGE_TYPE) ? ['01'] : [],
           stageInstance = {
             instanceName: stage.name + (new Date()).getTime(),
             library: stage.library,
@@ -89,30 +69,37 @@ angular
               xPos: xPos,
               yPos: yPos,
               inputConnectors: inputConnectors,
-              outputConnectors: outputConnectors
+              outputConnectors: outputConnectors,
+              stageType: stage.type
             },
             inputLanes: [],
             outputLanes: []
           };
 
-        if (stage.type !== 'TARGET') {
+        if (stage.type !== TARGET_STAGE_TYPE) {
           stageInstance.outputLanes = [stageInstance.instanceName + 'OutputLane'];
         }
 
         angular.forEach(stage.configDefinitions, function (configDefinition) {
-          stageInstance.configuration.push({
+          var config = {
             name: configDefinition.name
-          });
+          };
+
+          if(configDefinition.type === 'MODEL' && configDefinition.model.modelType === 'FIELD_SELECTOR') {
+            config.value = [];
+          }
+
+          stageInstance.configuration.push(config);
         });
 
         switch(stage.type) {
-          case 'SOURCE':
+          case SOURCE_STAGE_TYPE:
             stageInstance.uiInfo.icon = 'assets/stage/ic_insert_drive_file_48px.svg';
             break;
-          case 'PROCESSOR':
+          case PROCESSOR_STAGE_TYPE:
             stageInstance.uiInfo.icon = 'assets/stage/ic_settings_48px.svg';
             break;
-          case 'TARGET':
+          case TARGET_STAGE_TYPE:
             stageInstance.uiInfo.icon = 'assets/stage/ic_storage_48px.svg';
             break;
         }
@@ -280,16 +267,63 @@ angular
           });
           $scope.$broadcast('selectNode', stageInstance);
           updateDetailPane(stageInstance);
-          $('.configuration-tabs a:last').tab('show');
+          //$('.configuration-tabs a:last').tab('show');
         } else {
           //Select Pipeline Config
           $scope.$broadcast('selectNode');
           updateDetailPane();
         }
+      },
+
+      /**
+       * Toggles selection of value in given Array.
+       *
+       * @param arr
+       * @param value
+       */
+      toggleSelector: function(arr, value) {
+        var index = _.indexOf(arr, value);
+        if(index !== -1) {
+          arr.splice(index, 1);
+        } else {
+          arr.push(value);
+        }
+      },
+
+      /**
+       * Remove the field from uiInfo.inputFields and passed array.
+       * @param fieldArr
+       * @param index
+       * @param configValueArr
+       */
+      removeFieldSelector: function(fieldArr, index, configValueArr) {
+        var field = fieldArr[index];
+        fieldArr.splice(index, 1);
+
+        index = _.indexOf(configValueArr, field.name);
+        if(index !== -1) {
+          configValueArr.splice(index, 1);
+        }
+      },
+
+      /**
+       * Adds new field to the array uiInfo.inputFields
+       * @param fieldArr
+       */
+      addNewField: function(fieldArr) {
+        if(this.newFieldName) {
+          fieldArr.push({
+            name: this.newFieldName
+          });
+          this.newFieldName = '';
+        }
       }
     });
 
 
+    /**
+     * Fetch definitions for Pipeline and Stages, Pipeline Configuration and Pipeline Information.
+     */
     $q.all([api.pipelineAgent.getDefinitions(),
       api.pipelineAgent.getPipelineConfig('xyz'),
       api.pipelineAgent.getPipelineConfigInfo('xyz')])
@@ -301,15 +335,15 @@ angular
         $scope.stageLibraries = definitions.stages;
 
         $scope.sources = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return (stageLibrary.type === 'SOURCE');
+          return stageLibrary.type === SOURCE_STAGE_TYPE;
         });
 
         $scope.processors = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return (stageLibrary.type === 'PROCESSOR');
+          return (stageLibrary.type === PROCESSOR_STAGE_TYPE);
         });
 
         $scope.targets = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return (stageLibrary.type === 'TARGET');
+          return (stageLibrary.type === TARGET_STAGE_TYPE);
         });
 
         //Pipeline Configuration Info
@@ -326,7 +360,7 @@ angular
      * Save Updates
      * @param config
      */
-    saveUpdates = function (config) {
+    var saveUpdates = function (config) {
       if ($rootScope.common.saveOperationInProgress) {
         return;
       }
@@ -363,7 +397,7 @@ angular
      *
      * @param pipelineConfig
      */
-    updateGraph = function (pipelineConfig) {
+    var updateGraph = function (pipelineConfig) {
       var selectedStageInstance;
 
       ignoreUpdate = true;
@@ -382,8 +416,14 @@ angular
 
 
       //Determine edges from input lanes and output lanes
+      //And also set flag sourceExists if pipeline Config contains source
       edges = [];
+      $scope.sourceExists = false;
       angular.forEach($scope.pipelineConfig.stages, function (sourceStageInstance) {
+        if(sourceStageInstance.uiInfo.stageType === SOURCE_STAGE_TYPE) {
+          $scope.sourceExists = true;
+        }
+
         if (sourceStageInstance.outputLanes && sourceStageInstance.outputLanes.length) {
           angular.forEach(sourceStageInstance.outputLanes, function (outputLane) {
             angular.forEach($scope.pipelineConfig.stages, function (targetStageInstance) {
@@ -400,6 +440,7 @@ angular
       });
 
       $scope.$broadcast('updateGraph', $scope.pipelineConfig.stages, edges,
+        $scope.pipelineConfig.issues,
         ($scope.detailPaneConfig && !$scope.detailPaneConfig.stages) ? $scope.detailPaneConfig : undefined);
 
       if ($scope.detailPaneConfig === undefined) {
@@ -431,12 +472,13 @@ angular
     };
 
     /**
-     * Update Detail Pane
+     * Update Detail Pane when selection changes in Pipeline Graph.
      *
      * @param stageInstance
      */
-    updateDetailPane = function(stageInstance) {
+    var updateDetailPane = function(stageInstance) {
       if(stageInstance) {
+        //Stage Instance Configuration
         //Stage Instance Configuration
         $scope.detailPaneConfig = stageInstance;
         $scope.detailPaneConfigDefn = _.find($scope.stageLibraries, function (stageLibrary) {
@@ -446,6 +488,20 @@ angular
 
         if ($scope.previewMode) {
           $scope.stagePreviewData = getPreviewDataForStage($scope.previewData, $scope.detailPaneConfig);
+        } else {
+
+          //In case of processors and targets run the preview to get input fields
+          // if current state of config is previewable.
+          if(stageInstance.uiInfo.stageType !== SOURCE_STAGE_TYPE) {
+            if(!stageInstance.uiInfo.inputFields || stageInstance.uiInfo.inputFields.length === 0) {
+              if($scope.pipelineConfig.previewable) {
+                api.pipelineAgent.previewPipeline('xyz', $scope.previewSourceOffset, $scope.previewBatchSize).success(function (previewData) {
+                  var stagePreviewData = getPreviewDataForStage(previewData, stageInstance);
+                  stageInstance.uiInfo.inputFields = getFields(stagePreviewData.input);
+                });
+              }
+            }
+          }
         }
       } else {
         //Pipeline Configuration
@@ -468,7 +524,7 @@ angular
      * @param configName
      * @returns {*}
      */
-    getConfigurationLabel = function (stageInstance, configName) {
+    var getConfigurationLabel = function (stageInstance, configName) {
       var stageDefinition = _.find($scope.stageLibraries, function (stage) {
           return stageInstance.library === stage.library &&
             stageInstance.stageName === stage.name &&
@@ -489,7 +545,7 @@ angular
      * @param stageInstance
      * @returns {{input: Array, output: Array}}
      */
-    getPreviewDataForStage = function (previewData, stageInstance) {
+    var getPreviewDataForStage = function (previewData, stageInstance) {
       var inputLane = (stageInstance.inputLanes && stageInstance.inputLanes.length) ?
           stageInstance.inputLanes[0] : undefined,
         outputLane = (stageInstance.outputLanes && stageInstance.outputLanes.length) ?
@@ -509,6 +565,27 @@ angular
       });
 
       return stagePreviewData;
+    };
+
+    /**
+     * Fetch fields information from Preview Data.
+     *
+     * @param lanePreviewData
+     * @returns {Array}
+     */
+    var getFields = function(lanePreviewData) {
+      var recordValues = _.isArray(lanePreviewData) && lanePreviewData.length ? lanePreviewData[0].values : [],
+        fields = [];
+
+      angular.forEach(recordValues, function(typeObject, fieldName) {
+        fields.push({
+          name : fieldName,
+          type: typeObject.type,
+          sampleValue: typeObject.value
+        });
+      });
+
+      return fields;
     };
 
     //Event Handling

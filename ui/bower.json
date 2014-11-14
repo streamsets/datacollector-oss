@@ -14,7 +14,6 @@
     "angular-translate-loader-static-files": "2.4.1",
     "angular-translate-storage-cookie": "2.4.1",
     "angular-dynamic-locale": "0.1.21",
-    "ng-tags-input": "2.1.1",
     "underscore": "1.7.0"
   },
   "devDependencies": {

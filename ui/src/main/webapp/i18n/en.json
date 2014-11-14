@@ -8,10 +8,17 @@
       "toggleNavigation": "Toggle navigation"
     },
     "form": {
+      "add": "Add",
+      "description": "Description",
+      "fieldName": "Field Name",
+      "fieldName.placeholder": "New Field Name",
+      "label": "Label",
+      "required": "Required",
+      "sampleValue": "Sample Value",
+      "type": "Type",
       "username": "Login",
       "username.placeholder": "Your login",
-      "label": "Label",
-      "description": "Description"
+      "value": "Value"
     },
     "messages": {
       "info": {
@@ -33,20 +40,18 @@
       "stop": "Stop",
       "pipelineIssues": "Pipeline Issues",
       "nextBatch": "Next Batch",
-      "addSource": "Add Source",
-      "addProcessor": "Add Processor",
-      "addTarget": "Add Target"
+      "addStage": "Add Stage",
+      "sources": "Sources",
+      "processors": "Processors",
+      "targets": "Targets"
     },
     "detailPane": {
       "previewRecords": "Preview Records",
       "general": "General",
-      "configuration":  "Configuration",
+      "configuration": "Configuration",
       "preview": {
         "inputData": "Input Data",
-        "outputData": "Output Data",
-        "fieldName": "Field Name",
-        "type": "Type",
-        "value": "Value"
+        "outputData": "Output Data"
       }
     }
   },
