@@ -191,7 +191,6 @@ public class MockStages {
 
   @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineConfigurationSourceProcessorTarget() {
-    List<String> lanes = ImmutableList.of("a");
     List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
     StageConfiguration source = new StageConfiguration("s", "default", "sourceName", "1.0.0",
                                                        Collections.EMPTY_LIST, null, Collections.EMPTY_LIST,

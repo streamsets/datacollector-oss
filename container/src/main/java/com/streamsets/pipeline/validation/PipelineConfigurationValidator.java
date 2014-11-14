@@ -131,6 +131,7 @@ public class PipelineConfigurationValidator {
         ok = false;
       }
     }
+    sorted.addAll(original);
     pipelineConfiguration.setStages(sorted);
     return ok;
   }
