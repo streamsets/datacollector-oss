@@ -25,7 +25,7 @@ import org.mockito.Mockito;
 public class TestTaskWrapper {
 
   @Test
-  public void testMainAgentDelegation() {
+  public void testMainAgentDelegation() throws Exception {
     Task mock = Mockito.mock(Task.class);
     TaskWrapper agent = new TaskWrapper();
     agent.task = mock;
@@ -37,6 +37,15 @@ public class TestTaskWrapper {
     Mockito.verifyNoMoreInteractions(mock);
     agent.stop();
     Mockito.verify(mock, Mockito.times(1)).stop();
+    Mockito.verifyNoMoreInteractions(mock);
+    agent.waitWhileRunning();
+    Mockito.verify(mock, Mockito.times(1)).waitWhileRunning();
+    Mockito.verifyNoMoreInteractions(mock);
+    agent.getName();
+    Mockito.verify(mock, Mockito.times(1)).getName();
+    Mockito.verifyNoMoreInteractions(mock);
+    agent.getStatus();
+    Mockito.verify(mock, Mockito.times(1)).getStatus();
     Mockito.verifyNoMoreInteractions(mock);
   }
 

@@ -45,7 +45,7 @@ public abstract class AbstractTask implements Task {
 
   public AbstractTask(String name) {
     this.name = Preconditions.checkNotNull(name, "name cannot be null");
-    status = Status.CREATED;
+    setStatus(Status.CREATED);
     latch = new CountDownLatch(1);
   }
 
@@ -56,8 +56,8 @@ public abstract class AbstractTask implements Task {
 
   @Override
   public synchronized void init() {
-    Preconditions.checkState(VALID_TRANSITIONS.get(status).contains(Status.INITIALIZED),
-                             Utils.format(STATE_ERROR_MSG, status));
+    Preconditions.checkState(VALID_TRANSITIONS.get(getStatus()).contains(Status.INITIALIZED),
+                             Utils.format(STATE_ERROR_MSG, getStatus()));
     try {
       LOG.debug("Task '{}' initializing", getName());
       initTask();
@@ -68,13 +68,13 @@ public abstract class AbstractTask implements Task {
       safeStop(Status.ERROR);
       throw ex;
     }
-    status = Status.INITIALIZED;
+    setStatus(Status.INITIALIZED);
   }
 
   @Override
   public synchronized void run() {
-    Preconditions.checkState(VALID_TRANSITIONS.get(status).contains(Status.RUNNING),
-                             Utils.format(STATE_ERROR_MSG, status));
+    Preconditions.checkState(VALID_TRANSITIONS.get(getStatus()).contains(Status.RUNNING),
+                             Utils.format(STATE_ERROR_MSG, getStatus()));
     try {
       LOG.debug("Task '{}' starting", getName());
       runTask();
@@ -85,32 +85,35 @@ public abstract class AbstractTask implements Task {
       safeStop(Status.ERROR);
       throw ex;
     }
-    status = Status.RUNNING;
+    setStatus(Status.RUNNING);
   }
 
   @Override
   public synchronized void stop() {
-    Preconditions.checkState(VALID_TRANSITIONS.get(status).contains(Status.STOPPED),
-                             Utils.format(STATE_ERROR_MSG, status));
-    if (status == Status.INITIALIZED || status == Status.RUNNING) {
-      boolean wasRunning = status == Status.RUNNING;
+    Preconditions.checkState(VALID_TRANSITIONS.get(getStatus()).contains(Status.STOPPED),
+                             Utils.format(STATE_ERROR_MSG, getStatus()));
+    if (getStatus() != Status.STOPPED) {
       LOG.debug("Task '{}' stopping", getName());
       safeStop(Status.STOPPED);
-      if (wasRunning) {
-        latch.countDown();
-      }
     }
   }
 
   private void safeStop(Status endStatus) {
     try {
       stopTask();
-      LOG.debug("Task '{}' stopped with status '{}'", getName(), status);
-      status = endStatus;
+      LOG.debug("Task '{}' stopped with status '{}'", getName(), getStatus());
+      setStatus(endStatus);
     } catch (RuntimeException ex) {
       LOG.warn("Task '{}' failed to stop properly, {}", getName(), ex.getMessage(), ex);
-      status = Status.ERROR;
+      setStatus(Status.ERROR);
     }
+  }
+
+  private void setStatus(Status status) {
+    if (this.status == Status.RUNNING) {
+      latch.countDown();
+    }
+    this.status = status;
   }
 
   @Override
@@ -120,13 +123,13 @@ public abstract class AbstractTask implements Task {
 
   @Override
   public void waitWhileRunning() throws InterruptedException {
-    Preconditions.checkState(status == Status.RUNNING, Utils.format(STATE_ERROR_MSG, status));
+    Preconditions.checkState(getStatus() == Status.RUNNING, Utils.format(STATE_ERROR_MSG, getStatus()));
     latch.await();
   }
 
   @Override
   public String toString() {
-    return Utils.format("{}[status='{}']", getName(),status);
+    return Utils.format("{}[status='{}']", getName(), getStatus());
   }
 
   protected void initTask() {
