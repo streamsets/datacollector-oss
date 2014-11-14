@@ -21,7 +21,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.container.Configuration;
+import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 

@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.http;
 
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.container.Configuration;
+import com.streamsets.pipeline.util.Configuration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.slf4j.Logger;

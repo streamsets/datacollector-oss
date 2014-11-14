@@ -31,7 +31,7 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
-import com.streamsets.pipeline.container.Configuration;
+import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import org.junit.Assert;
 import org.junit.Test;

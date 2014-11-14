@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.container.Configuration;
+import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.store.PipelineStore;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -25,7 +25,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.Locale;
 
 public class RestAPIResourceConfig extends ResourceConfig {
 

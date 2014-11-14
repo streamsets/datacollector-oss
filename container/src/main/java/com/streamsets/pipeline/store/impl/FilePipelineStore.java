@@ -25,10 +25,9 @@ import com.streamsets.pipeline.agent.RuntimeInfo;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.container.Configuration;
+import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.store.*;
-import com.streamsets.pipeline.validation.Issues;
 
 import javax.inject.Inject;
 import java.io.File;

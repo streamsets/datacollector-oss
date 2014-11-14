@@ -15,9 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.container;
+package com.streamsets.pipeline.util;
 
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.util.Configuration;
 import org.junit.Assert;
 import org.junit.Test;
 

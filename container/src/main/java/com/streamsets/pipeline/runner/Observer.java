@@ -19,7 +19,7 @@ package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.container.Configuration;
+import com.streamsets.pipeline.util.Configuration;
 
 import java.util.List;
 import java.util.Map;

@@ -21,7 +21,7 @@ import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.agent.RuntimeModule;
 import com.streamsets.pipeline.agent.RuntimeInfo;
-import com.streamsets.pipeline.container.Configuration;
+import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.metrics.MetricsModule;
 import com.streamsets.pipeline.restapi.RestAPI;
 import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
@@ -44,7 +44,6 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 
 import javax.servlet.DispatcherType;
-import javax.servlet.RequestDispatcher;
 import java.util.EnumSet;
 
 @Module(library = true, includes = {RuntimeModule.class, MetricsModule.class,

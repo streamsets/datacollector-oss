@@ -18,8 +18,7 @@
 package com.streamsets.pipeline.agent;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.container.Configuration;
-import com.streamsets.pipeline.http.WebServerModule;
+import com.streamsets.pipeline.util.Configuration;
 import dagger.Module;
 import dagger.Provides;
 
@@ -27,7 +26,6 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.List;
 
 @Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class})

@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.container.Configuration;
+import com.streamsets.pipeline.util.Configuration;
 import org.glassfish.hk2.api.Factory;
 
 import javax.inject.Inject;
