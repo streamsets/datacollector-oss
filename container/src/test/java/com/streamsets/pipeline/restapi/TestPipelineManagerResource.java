@@ -18,13 +18,10 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.util.Configuration;
-import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.state.*;
 import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.store.PipelineStoreException;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
@@ -38,8 +35,6 @@ import javax.ws.rs.core.Response;
 import java.util.Arrays;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
 
 public class TestPipelineManagerResource {
 
@@ -70,10 +65,10 @@ public class TestPipelineManagerResource {
     }
 
     @Provides
-    public PipelineManager providePipelineManager() {
+    public PipelineManagerTask providePipelineManager() {
       System.setProperty("pipeline.data.dir", "./target/var");
       RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
-      PipelineManager manager = new PipelineManager(info);
+      PipelineManagerTask manager = new PipelineManagerTask(info);
       manager.init();
 
       return manager;

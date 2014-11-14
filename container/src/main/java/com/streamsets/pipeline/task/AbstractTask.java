@@ -101,7 +101,7 @@ public abstract class AbstractTask implements Task {
   private void safeStop(Status endStatus) {
     try {
       stopTask();
-      LOG.debug("Task '{}' stopped with status '{}'", getName(), getStatus());
+      LOG.debug("Task '{}' stopped from status '{}'", getName(), getStatus());
       setStatus(endStatus);
     } catch (RuntimeException ex) {
       LOG.warn("Task '{}' failed to stop properly, {}", getName(), ex.getMessage(), ex);
@@ -123,8 +123,11 @@ public abstract class AbstractTask implements Task {
 
   @Override
   public void waitWhileRunning() throws InterruptedException {
-    Preconditions.checkState(getStatus() == Status.RUNNING, Utils.format(STATE_ERROR_MSG, getStatus()));
-    latch.await();
+    Preconditions.checkState(getStatus() == Status.RUNNING || getStatus() == Status.STOPPED,
+                             Utils.format(STATE_ERROR_MSG, getStatus()));
+    if (getStatus() == Status.RUNNING) {
+      latch.await();
+    }
   }
 
   @Override

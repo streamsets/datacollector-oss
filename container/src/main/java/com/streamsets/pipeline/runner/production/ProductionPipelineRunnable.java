@@ -18,22 +18,20 @@
 package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.state.PipelineManagerTask;
 import com.streamsets.pipeline.state.PipelineStateException;
-import com.streamsets.pipeline.state.PipelineManager;
 import com.streamsets.pipeline.state.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.InputStream;
 
 public class ProductionPipelineRunnable implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunnable.class);
 
-  private final PipelineManager pipelineManager;
+  private final PipelineManagerTask pipelineManager;
   private final ProductionPipeline pipeline;
 
-  public ProductionPipelineRunnable(PipelineManager pipelineManager, ProductionPipeline pipeline) {
+  public ProductionPipelineRunnable(PipelineManagerTask pipelineManager, ProductionPipeline pipeline) {
     this.pipelineManager = pipelineManager;
     this.pipeline = pipeline;
   }

@@ -17,50 +17,20 @@
  */
 package com.streamsets.pipeline.main;
 
-
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.state.PipelineManagerTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.task.AbstractTask;
-import com.streamsets.pipeline.state.PipelineManager;
+import com.streamsets.pipeline.task.CompositeTask;
 
 import javax.inject.Inject;
 
-public class PipelineTask extends AbstractTask {
-  private final StageLibrary library;
-  private final PipelineStoreTask store;
-  private final WebServerTask webServer;
-  private final PipelineManager stateMgr;
+public class PipelineTask extends CompositeTask {
 
   @Inject
-  public PipelineTask(StageLibrary library, PipelineStoreTask store, WebServerTask webServer, PipelineManager stateMgr) {
-    super("pipeline");
-    this.library = library;
-    this.store = store;
-    this.webServer = webServer;
-    this.stateMgr = stateMgr;
+  public PipelineTask(StageLibrary library, PipelineStoreTask store, PipelineManagerTask pipelineManager, WebServerTask webServer) {
+    super("pipelineNode", ImmutableList.of(library, store, pipelineManager, webServer));
   }
 
-  @Override
-  protected void initTask() {
-    library.init();
-    store.init();
-    webServer.init();
-    stateMgr.init();
-  }
-
-  @Override
-  protected void runTask() {
-    library.run();
-    store.run();
-    webServer.run();
-  }
-
-  @Override
-  protected void stopTask() {
-    webServer.stop();
-    store.stop();
-    stateMgr.destroy();
-    library.stop();
-  }
 }

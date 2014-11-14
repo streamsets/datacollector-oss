@@ -22,6 +22,7 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.*;
@@ -40,9 +41,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 
-public class PipelineManager {
+public class PipelineManagerTask extends AbstractTask {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PipelineManager.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineManagerTask.class);
 
   private static final String MAX_BATCH_SIZE_KEY = "maxBatchSize";
   private static final int MAX_BATCH_SIZE_DEFAULT = 10;
@@ -62,7 +63,8 @@ public class PipelineManager {
   private ProductionPipeline prodPipeline;
 
   @Inject
-  public PipelineManager(RuntimeInfo runtimeInfo) {
+  public PipelineManagerTask(RuntimeInfo runtimeInfo) {
+    super("pipelineManager");
     this.runtimeInfo = runtimeInfo;
     stateTracker = new StateTracker(runtimeInfo);
     offsetTracker = new ProductionSourceOffsetTracker(this.runtimeInfo);
@@ -78,11 +80,13 @@ public class PipelineManager {
     stateTracker.setState(state, message);
   }
 
-  public void init() {
+  @Override
+  public void initTask() {
     stateTracker.init();
   }
 
-  public void destroy() {
+  @Override
+  public void stopTask() {
     stopPipeline();
     if(e != null) {
       e.shutdown();

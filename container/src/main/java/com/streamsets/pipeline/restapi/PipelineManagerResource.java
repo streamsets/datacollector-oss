@@ -17,7 +17,6 @@
  */
 package com.streamsets.pipeline.restapi;
 
-import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -40,13 +39,13 @@ import java.io.OutputStream;
 @Path("/v1/pipelines")
 public class PipelineManagerResource {
 
-  private final PipelineManager pipelineManager;
+  private final PipelineManagerTask pipelineManager;
   private final Configuration configuration;
   private final PipelineStoreTask pipelineStore;
   private final StageLibrary stageLibrary;
 
   @Inject
-  public PipelineManagerResource(PipelineManager pipelineManager,
+  public PipelineManagerResource(PipelineManagerTask pipelineManager,
                                  Configuration configuration,
                                  PipelineStoreTask pipelineStore,
                                  StageLibrary stageLib) {

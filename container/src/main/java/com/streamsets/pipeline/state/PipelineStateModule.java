@@ -29,7 +29,7 @@ public class PipelineStateModule {
 
   @Provides
   @Singleton
-  public PipelineManager provideStateManager(RuntimeInfo runtimeInfo) {
-    return new PipelineManager(runtimeInfo);
+  public PipelineManagerTask provideStateManager(RuntimeInfo runtimeInfo) {
+    return new PipelineManagerTask(runtimeInfo);
   }
 }

@@ -188,6 +188,15 @@ public class TestAbstractTask {
     waiter.join();
   }
 
+  @Test
+  public void testInvalidWaitWhileRunningWhenStopped() throws Exception {
+    final Task task = new AbstractTask("name"){};
+    task.init();
+    task.run();
+    task.stop();
+    task.waitWhileRunning();
+  }
+
   @Test(expected = IllegalStateException.class)
   public void testInvalidWaitWhileRunning1() throws Exception {
     final Task task = new AbstractTask("name"){};
@@ -198,15 +207,6 @@ public class TestAbstractTask {
   public void testInvalidWaitWhileRunning2() throws Exception {
     final Task task = new AbstractTask("name"){};
     task.init();
-    task.waitWhileRunning();
-  }
-
-  @Test(expected = IllegalStateException.class)
-  public void testInvalidWaitWhileRunning3() throws Exception {
-    final Task task = new AbstractTask("name"){};
-    task.init();
-    task.run();
-    task.stop();
     task.waitWhileRunning();
   }
 

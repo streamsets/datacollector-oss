@@ -25,7 +25,7 @@ import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
-import com.streamsets.pipeline.state.PipelineManager;
+import com.streamsets.pipeline.state.PipelineManagerTask;
 import com.streamsets.pipeline.state.State;
 import com.streamsets.pipeline.util.TestUtil;
 import org.junit.*;
@@ -36,7 +36,7 @@ import java.util.List;
 
 public class TestProdPipelineRunnable {
 
-  private PipelineManager manager = null;
+  private PipelineManagerTask manager = null;
 
   @BeforeClass
   public static void beforeClass() {
@@ -46,13 +46,13 @@ public class TestProdPipelineRunnable {
   @Before()
   public void setUp() {
     RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
-    manager = new PipelineManager(info);
+    manager = new PipelineManagerTask(info);
     manager.init();
   }
 
   @After
   public void tearDown() {
-    manager.destroy();
+    manager.stop();
     manager.getStateTracker().getStateFile().delete();
   }
 

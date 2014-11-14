@@ -17,28 +17,28 @@
  */
 package com.streamsets.pipeline.restapi.configuration;
 
-import com.streamsets.pipeline.state.PipelineManager;
+import com.streamsets.pipeline.state.PipelineManagerTask;
 import org.glassfish.hk2.api.Factory;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-public class PipelineStateMgrInjector implements Factory<PipelineManager> {
+public class PipelineStateMgrInjector implements Factory<PipelineManagerTask> {
 
   public static final String PIPELINE_STATE_MGR = "pipeline-state-mgr";
-  private PipelineManager stateMgr;
+  private PipelineManagerTask stateMgr;
 
   @Inject
   public PipelineStateMgrInjector(HttpServletRequest request) {
-    stateMgr = (PipelineManager) request.getServletContext().getAttribute(PIPELINE_STATE_MGR);
+    stateMgr = (PipelineManagerTask) request.getServletContext().getAttribute(PIPELINE_STATE_MGR);
   }
 
   @Override
-  public PipelineManager provide() {
+  public PipelineManagerTask provide() {
     return stateMgr;
   }
 
   @Override
-  public void dispose(PipelineManager pipelineStore) {
+  public void dispose(PipelineManagerTask pipelineStore) {
   }
 }

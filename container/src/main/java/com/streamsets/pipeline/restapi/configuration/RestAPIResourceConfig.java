@@ -17,10 +17,10 @@
  */
 package com.streamsets.pipeline.restapi.configuration;
 
+import com.streamsets.pipeline.state.PipelineManagerTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
 import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.state.PipelineManager;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -38,7 +38,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(PrincipalInjector.class).to(Principal.class);
         bindFactory(URIInjector.class).to(URI.class);
         bindFactory(ConfigurationInjector.class).to(Configuration.class);
-        bindFactory(PipelineStateMgrInjector.class).to(PipelineManager.class);
+        bindFactory(PipelineStateMgrInjector.class).to(PipelineManagerTask.class);
       }
     });
   }

@@ -20,8 +20,8 @@ package com.streamsets.pipeline.main;
 
 import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.stagelibrary.StageLibrary;
+import com.streamsets.pipeline.state.PipelineManagerTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.state.PipelineManager;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -33,45 +33,9 @@ public class TestPipelineTask {
     StageLibrary library = Mockito.mock(StageLibrary.class);
     PipelineStoreTask store = Mockito.mock(PipelineStoreTask.class);
     WebServerTask webServer = Mockito.mock(WebServerTask.class);
-    PipelineManager stateMgr = Mockito.mock(PipelineManager.class);
-    PipelineTask task = new PipelineTask(library, store, webServer, stateMgr);
-    task.init();
-
-    Mockito.verify(store, Mockito.times(1)).init();
-    Mockito.verify(webServer, Mockito.times(1)).init();
-    Mockito.verifyNoMoreInteractions(webServer);
-    task.run();
-    Mockito.verify(webServer, Mockito.times(1)).run();
-    Mockito.verifyNoMoreInteractions(webServer);
-    task.stop();
-    Mockito.verify(webServer, Mockito.times(1)).stop();
-    Mockito.verify(store, Mockito.times(1)).stop();
-    Mockito.verifyNoMoreInteractions(webServer);
-  }
-
-  @Test
-  public void testLatch() throws Exception {
-    StageLibrary library = Mockito.mock(StageLibrary.class);
-    PipelineStoreTask store = Mockito.mock(PipelineStoreTask.class);
-    WebServerTask webServer = Mockito.mock(WebServerTask.class);
-    PipelineManager stateMgr = Mockito.mock(PipelineManager.class);
-    final PipelineTask task = new PipelineTask(library, store, webServer, stateMgr);
-    task.init();
-    long now = System.currentTimeMillis();
-    new Thread() {
-      @Override
-      public void run() {
-        try {
-          Thread.sleep(100);
-        } catch (InterruptedException ex) {
-          //NOP
-        }
-        task.stop();
-      }
-    }.start();
-    task.run();
-    task.waitWhileRunning();
-    Assert.assertTrue(System.currentTimeMillis() - now >= 100);
+    PipelineManagerTask pipelineManager = Mockito.mock(PipelineManagerTask.class);
+    PipelineTask task = new PipelineTask(library, store, pipelineManager, webServer);
+    Assert.assertEquals("pipelineNode", task.getName());
   }
 
 }
