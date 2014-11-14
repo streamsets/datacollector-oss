@@ -341,39 +341,14 @@ angular
 
 
       /**
-       * Preview Previous Stage Instance for the given Stage Instance.
+       * Update Preview Stage Instance.
        *
        * @param stageInstance
        */
-      previewPreviousStage: function(stageInstance) {
-        var stageInstances = $scope.pipelineConfig.stages,
-          inputLane = stageInstance.inputLanes[0],
-          previousInstances = _.filter(stageInstances, function(instance) {
-            return _.contains(instance.outputLanes, inputLane);
-          });
-
-        if(previousInstances && previousInstances.length) {
-          $scope.$broadcast('selectNode', previousInstances[0]);
-          updateDetailPane(previousInstances[0]);
-        }
-      },
-
-
-      /**
-       * Preview Next Stage Instance for the given Stage Instance.
-       *
-       * @param stageInstance
-       */
-      previewNextStage: function(stageInstance) {
-        var stageInstances = $scope.pipelineConfig.stages,
-          outputLane = stageInstance.outputLanes[0],
-          nextInstances = _.filter(stageInstances, function(instance) {
-            return _.contains(instance.inputLanes, outputLane);
-          });
-
-        if(nextInstances && nextInstances.length) {
-          $scope.$broadcast('selectNode', nextInstances[0]);
-          updateDetailPane(nextInstances[0]);
+      updatePreviewStage: function(stageInstance) {
+        if(stageInstance) {
+          $scope.$broadcast('selectNode', stageInstance);
+          updateDetailPane(stageInstance);
         }
       }
     });
@@ -535,6 +510,10 @@ angular
      * @param stageInstance
      */
     var updateDetailPane = function(stageInstance) {
+      var stageInstances = $scope.pipelineConfig.stages,
+        inputLane,
+        outputLane;
+
       if(stageInstance) {
         //Stage Instance Configuration
         //Stage Instance Configuration
@@ -546,6 +525,26 @@ angular
 
         if ($scope.previewMode) {
           $scope.stagePreviewData = getPreviewDataForStage($scope.previewData, $scope.detailPaneConfig);
+
+
+          if(stageInstance.inputLanes && stageInstance.inputLanes.length) {
+            inputLane = stageInstance.inputLanes[0];
+            $scope.previousStageInstances = _.filter(stageInstances, function(instance) {
+              return _.contains(instance.outputLanes, inputLane);
+            });
+          } else {
+            $scope.previousStageInstances = [];
+          }
+
+          if(stageInstance.outputLanes && stageInstance.outputLanes.length) {
+            outputLane = stageInstance.outputLanes[0];
+            $scope.nextStageInstances = _.filter(stageInstances, function(instance) {
+              return _.contains(instance.inputLanes, outputLane);
+            });
+          } else {
+            $scope.nextStageInstances = [];
+          }
+
         } else {
 
           //In case of processors and targets run the preview to get input fields
