@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.main;
 
-import com.streamsets.pipeline.http.WebServer;
+import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.store.PipelineStore;
 import com.streamsets.pipeline.task.AbstractTask;
 import org.slf4j.Logger;
@@ -29,10 +29,10 @@ public class PipelineTask extends AbstractTask {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineTask.class);
 
   private final PipelineStore store;
-  private final WebServer webServer;
+  private final WebServerTask webServer;
 
   @Inject
-  public PipelineTask(PipelineStore store, WebServer webServer) {
+  public PipelineTask(PipelineStore store, WebServerTask webServer) {
     super("pipeline");
     this.store = store;
     this.webServer = webServer;
@@ -46,7 +46,7 @@ public class PipelineTask extends AbstractTask {
 
   @Override
   protected void runTask() {
-    webServer.start();
+    webServer.run();
   }
 
   @Override

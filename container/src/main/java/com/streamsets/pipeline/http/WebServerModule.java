@@ -50,11 +50,6 @@ import java.util.EnumSet;
     PipelineStoreModule.class, StageLibraryModule.class})
 public class WebServerModule {
 
-  @Provides
-  WebServer provideWebServer(WebServerImpl webServer) {
-    return webServer;
-  }
-
   @Provides(type = Type.SET)
   ContextConfigurator provideStaticWeb(final RuntimeInfo runtimeInfo) {
     return new ContextConfigurator() {

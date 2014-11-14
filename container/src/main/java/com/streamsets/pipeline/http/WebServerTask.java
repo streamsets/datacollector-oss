@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.http;
 
-import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -27,27 +27,26 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.Set;
 
-public class WebServerImpl implements WebServer {
+public class WebServerTask extends AbstractTask {
   private static final String PORT_NUMBER_KEY = "http.port";
   private static final int PORT_NUMBER_DEFAULT = 8080;
 
-  private static final Logger LOG = LoggerFactory.getLogger(WebServerImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WebServerTask.class);
 
   private final Configuration conf;
   private final Set<ContextConfigurator> contextConfigurators;
   private int port;
   private Server server;
-  private volatile boolean started;
-  private volatile boolean destroyed;
 
   @Inject
-  public WebServerImpl(Configuration conf, Set<ContextConfigurator> contextConfigurators) {
+  public WebServerTask(Configuration conf, Set<ContextConfigurator> contextConfigurators) {
+    super("webServer");
     this.conf = conf;
     this.contextConfigurators = contextConfigurators;
   }
 
-  public void init() {
-    LOG.debug("Initializing");
+  @Override
+  protected void initTask() {
     port = conf.get(PORT_NUMBER_KEY, PORT_NUMBER_DEFAULT);
     server = new Server(port);
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
@@ -57,15 +56,10 @@ public class WebServerImpl implements WebServer {
       cc.init(context);
     }
     server.setHandler(context);
-    LOG.debug("Initialized");
   }
 
   @Override
-  public synchronized void start() {
-    LOG.debug("Starting");
-    Preconditions.checkState(!started, "Already started");
-    Preconditions.checkState(!destroyed, "Already destroyed");
-    started = true;
+  protected void runTask() {
     for (ContextConfigurator cc : contextConfigurators) {
       cc.start();
     }
@@ -74,29 +68,23 @@ public class WebServerImpl implements WebServer {
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
-    LOG.debug("Started on port '{}'", port);
+    LOG.debug("Running on port '{}'", port);
   }
 
   @Override
-  public synchronized void stop() {
-    Preconditions.checkState(started, "Not started");
-    if (!destroyed) {
-      LOG.debug("Stopping");
-      destroyed = true;
-      try {
-        server.stop();
-      } catch (Exception ex) {
-        LOG.error("Stopping Jetty: {}", ex.getMessage(), ex);
-      } finally {
-        for (ContextConfigurator cc : contextConfigurators) {
-          try {
-            cc.stop();
-          } catch (Exception ex) {
-            LOG.error("Stopping ContextConfigurator: {}", ex.getMessage(), ex);
-          }
+  protected void stopTask() {
+    try {
+      server.stop();
+    } catch (Exception ex) {
+      LOG.error("Error while stopping Jetty, {}", ex.getMessage(), ex);
+    } finally {
+      for (ContextConfigurator cc : contextConfigurators) {
+        try {
+          cc.stop();
+        } catch (Exception ex) {
+          LOG.error("Error while stopping '{}', {}", cc.getClass().getSimpleName(), ex.getMessage(), ex);
         }
       }
-      LOG.debug("Stopped");
     }
   }
 }
