@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.agent.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;

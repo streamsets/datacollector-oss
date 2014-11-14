@@ -25,7 +25,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.pipeline.agent.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;

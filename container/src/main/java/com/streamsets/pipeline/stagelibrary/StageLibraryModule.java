@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.stagelibrary;
 
-import com.streamsets.pipeline.agent.RuntimeModule;
+import com.streamsets.pipeline.main.RuntimeModule;
 import dagger.Module;
 import dagger.Provides;
 

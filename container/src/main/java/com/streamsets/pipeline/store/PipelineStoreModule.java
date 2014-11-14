@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.store;
 
-import com.streamsets.pipeline.agent.RuntimeModule;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.store.impl.FilePipelineStore;
 import dagger.Module;
 import dagger.Provides;

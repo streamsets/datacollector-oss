@@ -15,8 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.agent;
+package com.streamsets.pipeline.main;
 
+import com.streamsets.pipeline.task.Task;
+import com.streamsets.pipeline.task.TaskWrapper;
 import dagger.Module;
 import dagger.Provides;
 import org.junit.Assert;
@@ -41,7 +43,7 @@ public class TestMain {
       return logConfigurator;
     }
 
-    @Provides 
+    @Provides
     public BuildInfo provideBuildInfo() {
       return buildInfo;
     }

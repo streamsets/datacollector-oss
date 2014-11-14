@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.store.impl;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.agent.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;

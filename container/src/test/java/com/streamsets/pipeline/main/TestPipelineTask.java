@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.agent;
+package com.streamsets.pipeline.main;
 
 import com.streamsets.pipeline.http.WebServer;
 import com.streamsets.pipeline.store.PipelineStore;

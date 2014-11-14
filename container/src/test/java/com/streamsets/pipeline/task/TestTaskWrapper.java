@@ -15,25 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.agent;
+package com.streamsets.pipeline.task;
 
-import org.junit.Assert;
+import com.streamsets.pipeline.task.Task;
+import com.streamsets.pipeline.task.TaskWrapper;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
-public class TestBuildInfo {
+public class TestTaskWrapper {
 
   @Test
-  public void testInfo() {
-    BuildInfo info = new BuildInfo();
-    Assert.assertEquals("1", info.getVersion());
-    Assert.assertEquals("today", info.getBuiltDate());
-    Assert.assertEquals("foo", info.getBuiltBy());
-    Assert.assertEquals("sha", info.getBuiltRepoSha());
-    Assert.assertEquals("container-checksum", info.getImplSourceMd5Checksum());
-    Assert.assertEquals("api-checksum", info.getApiSourceMd5Checksum());
-    Logger log = Mockito.mock(Logger.class);
-    info.log(log);
+  public void testMainAgentDelegation() {
+    Task mock = Mockito.mock(Task.class);
+    TaskWrapper agent = new TaskWrapper();
+    agent.task = mock;
+    agent.init();
+    Mockito.verify(mock, Mockito.times(1)).init();
+    Mockito.verifyNoMoreInteractions(mock);
+    agent.run();
+    Mockito.verify(mock, Mockito.times(1)).run();
+    Mockito.verifyNoMoreInteractions(mock);
+    agent.stop();
+    Mockito.verify(mock, Mockito.times(1)).stop();
+    Mockito.verifyNoMoreInteractions(mock);
   }
+
 }
