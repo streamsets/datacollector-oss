@@ -267,8 +267,6 @@
           </div>
         </div>
         <!-- Configuration Details  -->
-
-
         <div ng-show="previewMode" class="pipeline-preview">
 
           <div class="row preview-heading">
@@ -366,7 +364,17 @@
 
                 </td>
                 <td>
-                  <ul class="preview-list">
+                  <label>
+                    <span class="glyphicon glyphicon-expand"
+                          ng-if="outputRecord.expand !== true"
+                          ng-click="outputRecord.expand = true"></span>
+                    <span class="glyphicon glyphicon-collapse-down"
+                          ng-if="outputRecord.expand === true"
+                          ng-click="outputRecord.expand = false"></span>
+
+                    Record{{$index+1}}
+                  </label>
+                  <ul class="preview-list" ng-if="outputRecord.expand === true">
                     <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.values">
                       <span class="field-name"> {{fieldName}} : </span>
                       <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
@@ -379,7 +387,16 @@
               <tr ng-if="detailPaneConfig.uiInfo.stageType === 'PROCESSOR'"
                   ng-repeat="inputRecord in stagePreviewData.input">
                 <td>
-                  <ul class="preview-list">
+                  <label>
+                    <span class="glyphicon glyphicon-expand"
+                          ng-if="inputRecord.expand !== true"
+                          ng-click="inputRecord.expand = true"></span>
+                    <span class="glyphicon glyphicon-collapse-down"
+                          ng-if="inputRecord.expand === true"
+                          ng-click="inputRecord.expand = false"></span>
+                    Record{{$index+1}}
+                  </label>
+                  <ul class="preview-list" ng-if="inputRecord.expand === true">
                     <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in inputRecord.values">
                       <span class="field-name"> {{fieldName}} : </span>
                       <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
@@ -387,12 +404,23 @@
                   </ul>
                 </td>
                 <td>
-                  <ul class="preview-list" ng-repeat="outputRecord in getOutputRecords(stagePreviewData.output, inputRecord)">
-                    <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.values">
-                      <span class="field-name"> {{fieldName}} : </span>
-                      <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
-                    </li>
-                  </ul>
+                  <div ng-repeat="outputRecord in getOutputRecords(stagePreviewData.output, inputRecord)">
+                    <label>
+                      <span class="glyphicon glyphicon-expand"
+                            ng-if="outputRecord.expand !== true"
+                            ng-click="outputRecord.expand = true"></span>
+                      <span class="glyphicon glyphicon-collapse-down"
+                          ng-if="outputRecord.expand === true"
+                          ng-click="outputRecord.expand = false"></span>
+                      Record{{$parent.$index+1}} - Output Record{{$index + 1}}
+                    </label>
+                    <ul class="preview-list" ng-if="outputRecord.expand === true">
+                      <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.values">
+                        <span class="field-name"> {{fieldName}} : </span>
+                        <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
               </tr>
 
@@ -400,7 +428,16 @@
               <tr ng-if="detailPaneConfig.uiInfo.stageType === 'TARGET'"
                   ng-repeat="inputRecord in stagePreviewData.input">
                 <td>
-                  <ul class="preview-list">
+                  <label>
+                    <span class="glyphicon glyphicon-expand"
+                          ng-if="inputRecord.expand !== true"
+                          ng-click="inputRecord.expand = true"></span>
+                    <span class="glyphicon glyphicon-collapse-down"
+                          ng-if="inputRecord.expand === true"
+                          ng-click="inputRecord.expand = false"></span>
+                    Record{{$index+1}}
+                  </label>
+                  <ul class="preview-list" ng-if="inputRecord.expand === true">
                     <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in inputRecord.values">
                       <span class="field-name"> {{fieldName}} : </span>
                       <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>

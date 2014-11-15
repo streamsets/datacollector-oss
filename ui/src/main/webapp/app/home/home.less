@@ -111,10 +111,14 @@
 
     .pipeline-preview {
       .preview-heading {
-        padding: @defaultPadding @defaultPadding*3;
+        padding: @defaultPadding @defaultPadding;
+        margin-left: 0px;
+        margin-right: 0px;
       }
 
       .preview-list {
+
+        padding-left: @smallPadding * 3;
 
         .preview-list-item {
           list-style: none;
@@ -143,6 +147,12 @@
 
       th, td {
         padding-left: @smallPadding*3;
+
+
+        label {
+          margin-bottom: 0px;
+        }
+
       }
     }
   }
