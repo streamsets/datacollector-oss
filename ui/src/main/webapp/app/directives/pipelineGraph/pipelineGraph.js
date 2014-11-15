@@ -458,8 +458,19 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           if (selectedNode) {
             $scope.$apply(function() {
               thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
+
+              //Remove the input lanes in all stages having output lanes of delete node.
+              _.each(thisGraph.edges, function(edge) {
+                if(edge.source === selectedNode) {
+                  edge.target.inputLanes = _.filter(edge.target.inputLanes, function(inputLane) {
+                    return !_.contains(edge.source.outputLanes, inputLane);
+                  });
+                }
+              });
+
               thisGraph.spliceLinksForNode(selectedNode);
               state.selectedNode = null;
+
               thisGraph.updateGraph();
             });
           } else if (selectedEdge) {
