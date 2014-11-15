@@ -528,18 +528,16 @@ angular
 
 
           if(stageInstance.inputLanes && stageInstance.inputLanes.length) {
-            inputLane = stageInstance.inputLanes[0];
             $scope.previousStageInstances = _.filter(stageInstances, function(instance) {
-              return _.contains(instance.outputLanes, inputLane);
+              return (_.intersection(instance.outputLanes, stageInstance.inputLanes)).length > 0;
             });
           } else {
             $scope.previousStageInstances = [];
           }
 
           if(stageInstance.outputLanes && stageInstance.outputLanes.length) {
-            outputLane = stageInstance.outputLanes[0];
             $scope.nextStageInstances = _.filter(stageInstances, function(instance) {
-              return _.contains(instance.inputLanes, outputLane);
+              return (_.intersection(instance.inputLanes, stageInstance.outputLanes)).length > 0;
             });
           } else {
             $scope.nextStageInstances = [];

@@ -373,7 +373,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           thisGraph.updateGraph();
 
           $scope.$apply(function() {
-            newEdge.target.inputLanes = [newEdge.source.outputLanes[0]];
+            if(!newEdge.target.inputLanes) {
+              newEdge.target.inputLanes = [];
+            }
+            newEdge.target.inputLanes.push(newEdge.source.outputLanes[0]);
           });
         }
       } else {
