@@ -376,7 +376,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             if(!newEdge.target.inputLanes) {
               newEdge.target.inputLanes = [];
             }
-            newEdge.target.inputLanes.push(newEdge.source.outputLanes[0]);
+
+            if(newEdge.source.outputLanes && newEdge.source.outputLanes.length) {
+              newEdge.target.inputLanes.push(newEdge.source.outputLanes[0]);
+            }
           });
         }
       } else {
