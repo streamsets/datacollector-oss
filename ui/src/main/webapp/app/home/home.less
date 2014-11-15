@@ -61,11 +61,21 @@
 }
 
 .detail-pane {
+  height: calc(~"100% - 11px");
   margin-bottom: 0;
   border-bottom: none;
 
   .preview-page-detail {
     padding-right: @defaultPadding;
+  }
+
+  .panel-heading {
+    .preview-heading {
+      div {
+        padding-left: @defaultPadding;
+      }
+
+    }
   }
 
   .panel-body {

@@ -42,7 +42,7 @@
       "start": "Start",
       "stop": "Stop",
       "pipelineIssues": "Pipeline Issues",
-      "nextBatch": "Next Batch",
+      "nextBatch": "Preview Next Batch",
       "addStage": "Add Stage",
       "sources": "Sources",
       "processors": "Processors",

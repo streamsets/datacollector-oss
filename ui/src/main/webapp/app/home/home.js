@@ -12,12 +12,13 @@ angular
     'pipelineGraphDirectives',
     'showErrorsDirectives',
     'ngEnterDirectives',
+    'contenteditableDirectives',
     'underscore'
   ])
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/',
       {
-        templateUrl: 'app/home/home.tpl.html',
+        templateUrl: 'app/home/tpl/home.tpl.html',
         controller: 'HomeController'
       }
     );

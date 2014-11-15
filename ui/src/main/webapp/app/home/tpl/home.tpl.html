@@ -1,0 +1,23 @@
+<div class="row" ng-cloak>
+  <bg-splitter orientation="vertical">
+
+    <bg-pane min-size="100" class="panel panel-default canvas-pane">
+      <div class="panel-heading clearfix">
+        <ng-include src="'app/home/tpl/header.tpl.html'">
+        </ng-include>
+      </div>
+      <div class="panel-body">
+        <ng-include src="'app/home/tpl/graph.tpl.html'"></ng-include>
+      </div>
+    </bg-pane>
+
+    <bg-pane min-size="50">
+      <!-- Detail Panel -->
+      <ng-include src="'app/home/tpl/detail.tpl.html'"></ng-include>
+
+      <!-- Preview Panel -->
+      <ng-include src="'app/home/tpl/preview.tpl.html'"></ng-include>
+    </bg-pane>
+  </bg-splitter>
+</div>
+
