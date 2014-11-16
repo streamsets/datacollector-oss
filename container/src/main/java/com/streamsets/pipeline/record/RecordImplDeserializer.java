@@ -44,7 +44,9 @@ public class RecordImplDeserializer extends JsonDeserializer<RecordImpl> {
     headers.put(RecordImpl.STAGE_CREATOR_INSTANCE_ATTR, map.get("stageCreator"));
     headers.put(RecordImpl.RECORD_SOURCE_ID_ATTR, map.get("sourceId"));
     headers.put(RecordImpl.TRACKING_ID_ATTR, map.get("trackingId"));
-    headers.put(RecordImpl.PREVIOUS_STAGE_TRACKING_ID_ATTR, map.get("previousStageTrackingId"));
+    if(map.get("previousStageTrackingId") != null) {
+      headers.put(RecordImpl.PREVIOUS_STAGE_TRACKING_ID_ATTR, map.get("previousStageTrackingId"));
+    }
     headers.put(RecordImpl.STAGES_PATH_ATTR, map.get("stagesPath"));
     if (map.get("raw") != null) {
       headers.put(RecordImpl.RAW_DATA_ATTR, map.get("raw"));

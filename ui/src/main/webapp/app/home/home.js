@@ -47,6 +47,7 @@ angular
       },
       previewSourceOffset: 0,
       previewBatchSize: 10,
+      previewDataUpdated: false,
 
       /**
        * Add Stage Instance to the Pipeline Graph.
@@ -165,17 +166,19 @@ angular
           $scope.previewSourceOffset = 0;
         }
 
-        api.pipelineAgent.previewPipeline('xyz', $scope.previewSourceOffset, $scope.previewBatchSize).success(function (previewData) {
-          $scope.previewData = previewData;
+        api.pipelineAgent.previewPipeline('xyz', $scope.previewSourceOffset, $scope.previewBatchSize).
+          success(function (previewData) {
 
-          var firstStageInstance = $scope.pipelineConfig.stages[0];
-          $scope.$broadcast('selectNode', firstStageInstance);
-          updateDetailPane(firstStageInstance);
+            $scope.previewData = previewData;
+            $scope.previewDataUpdated = false;
 
-          /*if (!$scope.detailPaneConfig.stages) {
-            $scope.stagePreviewData = getPreviewDataForStage(previewData, $scope.detailPaneConfig);
-          }*/
-        });
+            var firstStageInstance = $scope.pipelineConfig.stages[0];
+            $scope.$broadcast('selectNode', firstStageInstance);
+            updateDetailPane(firstStageInstance);
+          }).
+          error(function(data, status, headers, config) {
+            $scope.httpErrors = [data];
+          });
       },
 
       /**
@@ -351,6 +354,60 @@ angular
           $scope.$broadcast('selectNode', stageInstance);
           updateDetailPane(stageInstance);
         }
+      },
+
+      /**
+       * Set dirty flag to true when record is updated in Preview Mode.
+       *
+       * @param recordUpdated
+       * @param fieldName
+       * @param stageInstance
+       */
+      recordValueUpdated: function(recordUpdated, fieldName, stageInstance) {
+        $scope.previewDataUpdated = true;
+        recordUpdated.dirty = true;
+        recordUpdated.values[fieldName].dirty = true;
+      },
+
+
+      /**
+       * Run Preview with user updated records.
+       *
+       * @param stageInstance
+       * @param inputRecords
+       */
+      stepPreview: function(stageInstance, inputRecords) {
+        var instanceName = stageInstance.instanceName,
+          records = _.map(inputRecords, _.clone);
+
+        _.each(records, function(record) {
+          delete record.dirty;
+
+          _.each(record.values, function(key, value) {
+            delete value.dirty;
+          });
+
+        });
+
+        api.pipelineAgent.previewPipelineRunStage('xyz', instanceName, records).
+          success(function (previewData) {
+
+            var targetInstanceData = previewData.batchesOutput[0][0];
+
+            _.each($scope.previewData.batchesOutput[0], function(instanceRecords) {
+              if(instanceRecords.instanceName === targetInstanceData.instanceName) {
+                instanceRecords.output = targetInstanceData.output;
+                instanceRecords.errorRecords = targetInstanceData.errorRecords;
+              }
+            });
+
+            updateDetailPane(stageInstance);
+
+            console.log(previewData);
+          }).
+          error(function(data, status, headers, config) {
+            $scope.httpErrors = [data];
+          });
       }
     });
 
@@ -388,6 +445,8 @@ angular
 
         stageCounter = ($scope.pipelineConfig && $scope.pipelineConfig.stages) ?
           $scope.pipelineConfig.stages.length : 0;
+      },function(data, status, headers, config) {
+          $scope.httpErrors = [data];
       });
 
     /**
@@ -407,23 +466,26 @@ angular
 
       dirty = false;
       $rootScope.common.saveOperationInProgress = true;
-      api.pipelineAgent.savePipelineConfig('xyz', config).success(function (res) {
+      api.pipelineAgent.savePipelineConfig('xyz', config).
+        success(function (res) {
+          $rootScope.common.saveOperationInProgress = false;
 
-        $rootScope.common.saveOperationInProgress = false;
+          if (dirty) {
+            config = _.clone($scope.pipelineConfig);
+            config.uuid = res.uuid;
 
-        if (dirty) {
-          config = _.clone($scope.pipelineConfig);
-          config.uuid = res.uuid;
+            //Updated new changes in return config
+            res.configuration = config.configuration;
+            res.uiInfo = config.uiInfo;
+            res.stages = config.stages;
 
-          //Updated new changes in return config
-          res.configuration = config.configuration;
-          res.uiInfo = config.uiInfo;
-          res.stages = config.stages;
-
-          saveUpdates(config);
-        }
-        updateGraph(res);
-      });
+            saveUpdates(config);
+          }
+          updateGraph(res);
+        }).
+        error(function(data, status, headers, config) {
+          $scope.httpErrors = [data];
+        });
     };
 
     /**
@@ -551,10 +613,14 @@ angular
           if(stageInstance.uiInfo.stageType !== SOURCE_STAGE_TYPE) {
             if(!stageInstance.uiInfo.inputFields || stageInstance.uiInfo.inputFields.length === 0) {
               if($scope.pipelineConfig.previewable) {
-                api.pipelineAgent.previewPipeline('xyz', $scope.previewSourceOffset, $scope.previewBatchSize).success(function (previewData) {
-                  var stagePreviewData = getPreviewDataForStage(previewData, stageInstance);
-                  stageInstance.uiInfo.inputFields = getFields(stagePreviewData.input);
-                });
+                api.pipelineAgent.previewPipeline('xyz', $scope.previewSourceOffset, $scope.previewBatchSize).
+                  success(function (previewData) {
+                    var stagePreviewData = getPreviewDataForStage(previewData, stageInstance);
+                    stageInstance.uiInfo.inputFields = getFields(stagePreviewData.input);
+                  }).
+                  error(function(data, status, headers, config) {
+                    $scope.httpErrors = [data];
+                  });
               }
             }
           }

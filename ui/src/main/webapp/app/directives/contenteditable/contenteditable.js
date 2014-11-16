@@ -3,10 +3,10 @@
  */
 
 angular.module('contenteditableDirectives', [])
-  .directive("contenteditable", function() {
+  .directive('contenteditable', function() {
     return {
-      restrict: "A",
-      require: "ngModel",
+      restrict: 'A',
+      require: 'ngModel',
       link: function(scope, element, attrs, ngModel) {
 
         function read() {
@@ -14,10 +14,10 @@ angular.module('contenteditableDirectives', [])
         }
 
         ngModel.$render = function() {
-          element.html(ngModel.$viewValue || "");
+          element.html(ngModel.$viewValue || '');
         };
 
-        element.bind("blur keyup change", function() {
+        element.bind('input', function() {
           scope.$apply(read);
         });
       }

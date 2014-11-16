@@ -373,12 +373,15 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           thisGraph.updateGraph();
 
           $scope.$apply(function() {
-            if(!newEdge.target.inputLanes) {
-              newEdge.target.inputLanes = [];
-            }
+            //Double Check
+            if(newEdge.source.instanceName !== newEdge.target.instanceName) {
+              if(!newEdge.target.inputLanes) {
+                newEdge.target.inputLanes = [];
+              }
 
-            if(newEdge.source.outputLanes && newEdge.source.outputLanes.length) {
-              newEdge.target.inputLanes.push(newEdge.source.outputLanes[0]);
+              if(newEdge.source.outputLanes && newEdge.source.outputLanes.length) {
+                newEdge.target.inputLanes.push(newEdge.source.outputLanes[0]);
+              }
             }
           });
         }

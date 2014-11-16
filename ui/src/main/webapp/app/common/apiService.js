@@ -115,6 +115,30 @@ angular.module('pipelineAgentApp.common')
           method: 'GET',
           url: url
         });
+      },
+
+      /**
+       * Preview Stage by running with passed input records.
+       *
+       * @param name
+       * @param stageInstanceName
+       * @param inputRecords
+       * @returns {*}
+       */
+      previewPipelineRunStage: function(name, stageInstanceName, inputRecords) {
+        var url;
+
+        if(!name) {
+          name = 'xyz';
+        }
+
+        url = apiBase + '/pipelines/' + name + '/preview?stageInstance=' + stageInstanceName + '&rev=0';
+
+        return $http({
+          method: 'POST',
+          url: url,
+          data: inputRecords
+        });
       }
 
     };

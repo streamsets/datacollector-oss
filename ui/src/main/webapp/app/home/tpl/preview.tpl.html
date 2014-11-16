@@ -33,7 +33,8 @@
 
       <div class="pull-left">
         <button type="button" class="btn btn-primary btn-sm center-block"
-                ng-click="previewPipeline(true)">
+                ng-disabled="!previewDataUpdated"
+                ng-click="stepPreview(detailPaneConfig, stagePreviewData.input)">
           <span class="glyphicon glyphicon-refresh"></span>
           <span translate="global.form.step">Step</span>
         </button>
@@ -75,70 +76,6 @@
     <!-- Configuration Details  -->
     <div ng-show="previewMode" class="pipeline-preview">
 
-      <!--div class="row preview-heading">
-
-
-
-        <div ng-if="previousStageInstances.length > 1" class="col-md-4 btn-group">
-          <button type="button" class="btn btn-primary btn-sm"
-                  data-toggle="dropdown">
-            <span class="glyphicon glyphicon-arrow-left"></span>
-            <span translate="global.form.previousStage">Previous Stage</span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <li ng-repeat="previousStageInstance in previousStageInstances">
-              <a href="#" ng-click="updatePreviewStage(previousStageInstance)">
-                {{previousStageInstance.uiInfo.label}}
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div ng-if="previousStageInstances.length <= 1" class="col-md-4 btn-group">
-          <button type="button" class="btn btn-primary btn-sm"
-                  ng-click="updatePreviewStage(previousStageInstances[0])"
-                  ng-disabled="previousStageInstances.length === 0">
-            <span class="glyphicon glyphicon-arrow-left"></span>
-            <span translate="global.form.previousStage">Previous Stage</span>
-          </button>
-        </div>
-
-
-        <div class="col-md-4">
-          <button type="button" class="btn btn-primary btn-sm center-block"
-                  ng-click="previewPipeline(true)">
-            <span class="glyphicon glyphicon-refresh"></span>
-            <span translate="global.form.step">Step</span>
-          </button>
-        </div>
-
-
-        <div ng-if="nextStageInstances.length > 1" class="col-md-4 btn-group">
-          <button type="button" class="btn btn-primary btn-sm pull-right"
-                  data-toggle="dropdown">
-            <span translate="global.form.nextStage">Next Stage</span>
-            <span class="glyphicon glyphicon-arrow-right"></span>
-          </button>
-          <ul class="dropdown-menu pull-right" role="menu">
-            <li ng-repeat="nextStageInstance in nextStageInstances">
-              <a href="#" ng-click="updatePreviewStage(nextStageInstance)">
-                {{nextStageInstance.uiInfo.label}}
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div ng-if="nextStageInstances.length <= 1" class="col-md-4">
-          <button type="button" class="btn btn-primary btn-sm pull-right"
-                  ng-disabled="nextStageInstances.length === 0"
-                  ng-click="updatePreviewStage(nextStageInstances[0])">
-            <span translate="global.form.nextStage">Next Stage</span>
-            <span class="glyphicon glyphicon-arrow-right"></span>
-          </button>
-        </div>
-
-      </div-->
-
       <table class="table">
         <thead>
         <tr>
@@ -163,10 +100,10 @@
           </td>
           <td>
             <label class="pointer" ng-click="outputRecord.expand = !outputRecord.expand">
-                      <span class="glyphicon glyphicon-expand"
-                            ng-if="outputRecord.expand !== true"></span>
-                      <span class="glyphicon glyphicon-collapse-down"
-                            ng-if="outputRecord.expand === true"></span>
+              <span class="glyphicon glyphicon-expand"
+                    ng-if="outputRecord.expand !== true"></span>
+              <span class="glyphicon glyphicon-collapse-down"
+                    ng-if="outputRecord.expand === true"></span>
 
               Record{{$index+1}}
             </label>
@@ -184,29 +121,34 @@
             ng-repeat="inputRecord in stagePreviewData.input">
           <td>
             <label class="pointer" ng-click="inputRecord.expand = !inputRecord.expand">
-                      <span class="glyphicon glyphicon-expand"
-                            ng-if="inputRecord.expand !== true"></span>
-                      <span class="glyphicon glyphicon-collapse-down"
-                            ng-if="inputRecord.expand === true"></span>
+              <span class="glyphicon glyphicon-expand"
+                    ng-if="inputRecord.expand !== true"></span>
+              <span class="glyphicon glyphicon-collapse-down"
+                    ng-if="inputRecord.expand === true"></span>
               Record{{$index+1}}
+              <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="inputRecord.dirty"></span>
             </label>
             <ul class="preview-list" ng-if="inputRecord.expand === true">
-              <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in inputRecord.values">
+              <li class="preview-list-item"
+                  ng-repeat="(fieldName, recordValue) in inputRecord.values"
+                  ng-class="{'dirty' : recordValue.dirty}">
                 <span class="field-name"> {{fieldName}} : </span>
-                        <span class="field-value" ng-class="recordValue.type"
-                              contenteditable="true"
-                              ng-model="recordValue.value">
-                        </span>
+                <span class="field-value"
+                      ng-class="recordValue.dirty ? 'dirty' : recordValue.type"
+                      contenteditable="true"
+                      ng-change="recordValueUpdated(inputRecord, fieldName, detailPaneConfig)"
+                      ng-model="recordValue.value">
+                </span>
               </li>
             </ul>
           </td>
           <td>
             <div ng-repeat="outputRecord in getOutputRecords(stagePreviewData.output, inputRecord)">
               <label class="pointer" ng-click="outputRecord.expand = !outputRecord.expand">
-                        <span class="glyphicon glyphicon-expand"
-                              ng-if="outputRecord.expand !== true"></span>
-                        <span class="glyphicon glyphicon-collapse-down"
-                              ng-if="outputRecord.expand === true"></span>
+                <span class="glyphicon glyphicon-expand"
+                      ng-if="outputRecord.expand !== true"></span>
+                <span class="glyphicon glyphicon-collapse-down"
+                      ng-if="outputRecord.expand === true"></span>
                 Record{{$parent.$index+1}} - Output Record{{$index + 1}}
               </label>
               <ul class="preview-list" ng-if="outputRecord.expand === true">
@@ -224,10 +166,10 @@
             ng-repeat="inputRecord in stagePreviewData.input">
           <td>
             <label class="pointer" ng-click="inputRecord.expand = !inputRecord.expand">
-                      <span class="glyphicon glyphicon-expand"
-                            ng-if="inputRecord.expand !== true"></span>
-                      <span class="glyphicon glyphicon-collapse-down"
-                            ng-if="inputRecord.expand === true"></span>
+              <span class="glyphicon glyphicon-expand"
+                    ng-if="inputRecord.expand !== true"></span>
+              <span class="glyphicon glyphicon-collapse-down"
+                    ng-if="inputRecord.expand === true"></span>
               Record{{$index+1}}
             </label>
             <ul class="preview-list" ng-if="inputRecord.expand === true">
@@ -243,7 +185,9 @@
         </tr>
 
         </tbody>
+
       </table>
+
     </div>
 
 
