@@ -19,17 +19,24 @@ package com.streamsets.pipeline.task;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.container.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompositeTask extends AbstractTask {
+  private static final Logger LOG = LoggerFactory.getLogger(CompositeTask.class);
+
   private final List<Task> subTasks;
   private int initedTaskIndex;
+  private final boolean monitorSubTasksStatus;
+  private Thread monitorThread;
 
-  public CompositeTask(String name, List<Task> subTasks) {
+  public CompositeTask(String name, List<Task> subTasks, boolean monitorSubTasksStatus) {
     super(name);
     this.subTasks = ImmutableList.copyOf(subTasks);
+    this.monitorSubTasksStatus = monitorSubTasksStatus;
   }
 
   @Override
@@ -43,6 +50,35 @@ public class CompositeTask extends AbstractTask {
   protected void runTask() {
     for (Task subTask : subTasks) {
       subTask.run();
+    }
+    if (monitorSubTasksStatus) {
+
+      //TODO convert this monitoring to wait/interrupt pattern
+
+      LOG.debug("'{}' creating subTasks status monitor thread", getName());
+      monitorThread = new Thread(Utils.format("CompositeTask '{}' monitor thread", getName())) {
+        @Override
+        public void run() {
+          while (getStatus() == Status.RUNNING) {
+            for (Task subTask : subTasks) {
+              if (subTask.getStatus() != Status.RUNNING) {
+                if (getStatus() == Status.RUNNING) {
+                  LOG.warn("'{}' status monitor thread detected that subTask '{}' is not running anymore, stopping",
+                           getName(), subTask.getName());
+                  CompositeTask.this.stop();
+                }
+              }
+            }
+            try {
+              Thread.sleep(50);
+            } catch (InterruptedException ex) {
+              // NOP
+            }
+          }
+        }
+      };
+      monitorThread.setDaemon(true);
+      monitorThread.start();
     }
   }
 

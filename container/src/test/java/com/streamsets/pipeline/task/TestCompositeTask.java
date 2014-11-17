@@ -23,7 +23,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class TestCompositeTask {
   private final List<String> initOrder = new ArrayList<String>();
@@ -63,7 +62,7 @@ public class TestCompositeTask {
   public void testCompositeTask() throws Exception {
     Task task1 = new SubTask("t1");
     Task task2 = new SubTask("t2");
-    Task task = new CompositeTask("ct", ImmutableList.of(task1, task2));
+    Task task = new CompositeTask("ct", ImmutableList.of(task1, task2), false);
     Assert.assertEquals("ct", task.getName());
     Assert.assertTrue(task.toString().contains("ct"));
     Assert.assertTrue(task.toString().contains("t1"));
@@ -92,6 +91,24 @@ public class TestCompositeTask {
     Assert.assertEquals(ImmutableList.of("t1", "t2"), runOrder);
     Assert.assertEquals(ImmutableList.of("t2", "t1"), stopOrder);
     Assert.assertEquals(ImmutableList.of("t1", "t2"), waitWhileRunningOrder);
+  }
+
+  @Test
+  public void testCompositeTaskWithMonitor() throws Exception {
+    Task task1 = new SubTask("t1");
+    Task task2 = new SubTask("t2");
+    Task task = new CompositeTask("ct", ImmutableList.of(task1, task2), true);
+    task.init();
+    task.run();
+    task1.stop();
+    long start = System.currentTimeMillis();
+    while (System.currentTimeMillis() - start < 500 && task.getStatus() == Task.Status.RUNNING) {
+      Thread.sleep(50);
+    }
+    Assert.assertFalse("Test Waiting for stop detection timed out", task.getStatus() == Task.Status.RUNNING);
+    Assert.assertEquals(Task.Status.STOPPED, task.getStatus());
+    Assert.assertEquals(Task.Status.STOPPED, task1.getStatus());
+    Assert.assertEquals(Task.Status.STOPPED, task2.getStatus());
   }
 
 }

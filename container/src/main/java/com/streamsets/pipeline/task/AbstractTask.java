@@ -60,6 +60,7 @@ public abstract class AbstractTask implements Task {
                              Utils.format(STATE_ERROR_MSG, getStatus()));
     try {
       LOG.debug("Task '{}' initializing", getName());
+      setStatus(Status.INITIALIZED);
       initTask();
       LOG.debug("Task '{}' initialized", getName());
     } catch (RuntimeException ex) {
@@ -68,13 +69,13 @@ public abstract class AbstractTask implements Task {
       safeStop(Status.ERROR);
       throw ex;
     }
-    setStatus(Status.INITIALIZED);
   }
 
   @Override
   public synchronized void run() {
     Preconditions.checkState(VALID_TRANSITIONS.get(getStatus()).contains(Status.RUNNING),
                              Utils.format(STATE_ERROR_MSG, getStatus()));
+    setStatus(Status.RUNNING);
     try {
       LOG.debug("Task '{}' starting", getName());
       runTask();
@@ -85,7 +86,6 @@ public abstract class AbstractTask implements Task {
       safeStop(Status.ERROR);
       throw ex;
     }
-    setStatus(Status.RUNNING);
   }
 
   @Override
@@ -99,10 +99,11 @@ public abstract class AbstractTask implements Task {
   }
 
   private void safeStop(Status endStatus) {
+    Status priorStatus = getStatus();
     try {
-      stopTask();
-      LOG.debug("Task '{}' stopped from status '{}'", getName(), getStatus());
       setStatus(endStatus);
+      stopTask();
+      LOG.debug("Task '{}' stopped from status '{}'", getName(), priorStatus);
     } catch (RuntimeException ex) {
       LOG.warn("Task '{}' failed to stop properly, {}", getName(), ex.getMessage(), ex);
       setStatus(Status.ERROR);

@@ -31,7 +31,7 @@ public class PipelineTask extends CompositeTask {
   @Inject
   public PipelineTask(StageLibraryTask library, PipelineStoreTask store, PipelineManagerTask pipelineManager,
       WebServerTask webServer) {
-    super("pipelineNode", ImmutableList.of(library, store, pipelineManager, webServer));
+    super("pipelineNode", ImmutableList.of(library, store, pipelineManager, webServer), true);
   }
 
 }
