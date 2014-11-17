@@ -69,7 +69,9 @@ public class PipelineStoreResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getInfo(
       @PathParam("name") String name,
-      @QueryParam("rev") String rev, @QueryParam("get") @DefaultValue("pipeline") String get)
+      @QueryParam("rev") String rev,
+      @QueryParam("get") @DefaultValue("pipeline") String get,
+      @QueryParam("attachment") @DefaultValue("false") Boolean attachment)
       throws PipelineStoreException, URISyntaxException {
     Object data;
     if (get.equals("pipeline")) {
@@ -85,7 +87,14 @@ public class PipelineStoreResource {
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid value for parameter 'get': {}", get));
     }
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(data).build();
+
+    if(attachment)
+      return Response.ok().
+        header("Content-Disposition", "attachment; filename=" + name + ".json").
+        type(MediaType.APPLICATION_JSON).entity(data).build();
+    else
+      return Response.ok().type(MediaType.APPLICATION_JSON).entity(data).build();
+
   }
 
   @Path("/{name}")

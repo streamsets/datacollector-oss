@@ -35,7 +35,28 @@ angular.module('pipelineAgentApp', [
       active: {
         home: 'active'
       },
-      saveOperationInProgress: false
+      saveOperationInProgress: false,
+
+      /**
+       * Import link command handler
+       */
+      importPipelineConfig: function() {
+        $rootScope.$broadcast('importPipelineConfig');
+      },
+
+      /**
+       * Export link command handler
+       */
+      exportPipelineConfig: function() {
+        $rootScope.$broadcast('exportPipelineConfig');
+      },
+
+      /**
+       * Logout header link command handler
+       */
+      logout: function() {
+
+      }
     };
 
     // set actions to be taken each time the user navigates

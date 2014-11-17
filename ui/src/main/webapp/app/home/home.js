@@ -736,4 +736,9 @@ angular
       updateDetailPane();
     });
 
+
+    $scope.$on('exportPipelineConfig', function() {
+      api.pipelineAgent.exportPipelineConfig('xyz');
+    });
+
   });

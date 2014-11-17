@@ -85,6 +85,23 @@ angular.module('pipelineAgentApp.common')
       },
 
       /**
+       * Export Pipeline Configuration.
+       *
+       * @param name
+       */
+      exportPipelineConfig: function(name) {
+        var url;
+
+        if(!name) {
+          name = 'xyz';
+        }
+
+        url = apiBase + '/pipelines/' + name + '?attachment=true';
+
+        window.open(url, '_blank', '');
+      },
+
+      /**
        * Fetches Preview Data for Pipeline
        *
        * @param name
