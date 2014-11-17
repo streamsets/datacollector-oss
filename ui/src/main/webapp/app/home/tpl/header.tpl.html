@@ -49,7 +49,7 @@
       <span translate="admin.header.preview">Preview</span>
     </button>
 
-    <button type="button" class="btn btn-primary btn-sm"
+    <button type="button" class="btn btn-danger btn-sm"
             ng-show="previewMode"
             ng-click="closePreview()">
       <span class="glyphicon glyphicon-eye-close"></span>
@@ -57,12 +57,14 @@
     </button>
 
 
-    <button type="button" class="btn btn-primary btn-sm" ng-hide="isPipelineRunning" ng-disabled="!pipelineConfig.valid">
+    <button type="button" class="btn btn-primary btn-sm"
+            ng-hide="isPipelineRunning || previewMode"
+            ng-disabled="!pipelineConfig.valid">
       <span class="glyphicon glyphicon-play"></span>
       <span translate="admin.header.start">Start</span>
     </button>
 
-    <button type="button" class="btn btn-primary btn-sm" ng-show="isPipelineRunning">
+    <button type="button" class="btn btn-danger btn-sm" ng-show="isPipelineRunning">
       <span class="glyphicon glyphicon-stop"></span>
       <span translate="admin.header.stop">Stop</span>
     </button>

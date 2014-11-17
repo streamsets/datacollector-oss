@@ -79,7 +79,9 @@ module.exports = function(grunt) {
         'bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js',
         'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
         'bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js',
-        'bower_components/bootstrap/dist/js/bootstrap.js'
+        'bower_components/bootstrap/dist/js/bootstrap.js',
+        'bower_components/angular-bootstrap/ui-bootstrap.js',
+        'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
       ],
       css: [
         'bower_components/bootstrap/dist/css/bootstrap.min.css',

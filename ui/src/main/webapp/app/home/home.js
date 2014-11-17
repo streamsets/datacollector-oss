@@ -13,7 +13,9 @@ angular
     'showErrorsDirectives',
     'ngEnterDirectives',
     'contenteditableDirectives',
-    'underscore'
+    'underscore',
+    'ui.bootstrap',
+    'filereadDirectives'
   ])
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/',
@@ -23,7 +25,7 @@ angular
       }
     );
   }])
-  .controller('HomeController', function ($scope, $rootScope, $timeout, api, _, $q) {
+  .controller('HomeController', function ($scope, $rootScope, $timeout, api, _, $q, $modal) {
     var stageCounter = 0,
       timeout,
       dirty = false,
@@ -736,9 +738,56 @@ angular
       updateDetailPane();
     });
 
-
-    $scope.$on('exportPipelineConfig', function() {
+    $scope.$on('exportPipelineConfig', function () {
       api.pipelineAgent.exportPipelineConfig('xyz');
     });
+
+    $scope.$on('importPipelineConfig', function () {
+      var modalInstance = $modal.open({
+        templateUrl: 'importModalContent.html',
+        controller: 'ImportModalInstanceCtrl',
+        size: '',
+        backdrop: true
+      });
+
+      modalInstance.result.then(function (jsonConfigObj) {
+        //Update uuid of imported file and save the configuration.
+        jsonConfigObj.uuid = $scope.pipelineConfig.uuid;
+        saveUpdates(jsonConfigObj);
+      }, function () {
+
+      });
+    });
+  })
+  .controller('ImportModalInstanceCtrl', function ($scope, $modalInstance) {
+    var errorMsg = 'Not a valid Pipeline Configuration file.';
+
+    $scope.uploadFile = {};
+
+    $scope.import = function () {
+      var reader = new FileReader();
+
+      reader.onload = function (loadEvent) {
+        try {
+          var jsonConfigObj = JSON.parse(loadEvent.target.result);
+          if(jsonConfigObj.uuid) {
+            $modalInstance.close(jsonConfigObj);
+          } else {
+            $scope.$apply(function() {
+              $scope.issues = [errorMsg];
+            });
+          }
+        } catch(e) {
+          $scope.$apply(function() {
+            $scope.issues = [errorMsg];
+          });
+        }
+      };
+      reader.readAsText($scope.uploadFile);
+    };
+
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
 
   });
