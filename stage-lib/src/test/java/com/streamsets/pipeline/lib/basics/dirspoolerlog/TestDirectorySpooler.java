@@ -1,0 +1,255 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.lib.basics.dirspoolerlog;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+public class TestDirectorySpooler {
+  private File spoolDir;
+  private File archiveDir;
+
+  @Before
+  public void setUp() {
+    File dir = new File("target", UUID.randomUUID().toString());
+    spoolDir = new File(dir, "spool");
+    archiveDir = new File(dir, "archive");
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testNoSpoolDir() {
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern(
+        "x[0-9]*.log").setMaxSpoolFiles(1).build();
+    spooler.init("x2");
+    spooler.destroy();
+  }
+
+  @Test
+  public void testEmptySpoolDir() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
+    spooler.init("x2");
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
+  @Test
+  public void testMatchingFileSpoolDir() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    File logFile = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile).close();
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
+    spooler.init("x1.log");
+    Assert.assertEquals(logFile, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
+  @Test
+  public void testOlderMatchingFileSpoolDir() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    File logFile = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile).close();
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
+    spooler.init("x3.log");
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
+  @Test
+  public void testSpoolingOutOfOrderOK() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").setMaxSpoolFiles(3).build();
+    spooler.init("x1.log");
+    Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+    //nasty but the FS watcher has a delay of aprox 10 sec
+    Thread.sleep(20000);
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
+  @Test
+  public void testOlderMultipleNewerMatchingFileSpoolDir() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").setMaxSpoolFiles(3).build();
+    spooler.init("x1.log");
+    Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
+  @Test
+  public void testDelete() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").
+        setMaxSpoolFiles(3).setPostProcessing(DirectorySpooler.FilePostProcessing.DELETE).build();
+
+    Assert.assertEquals(3, spoolDir.list().length);
+    Assert.assertTrue(logFile1.exists());
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
+
+    spooler.init("x2.log");
+    Assert.assertEquals(2, spoolDir.list().length);
+    Assert.assertFalse(logFile1.exists());
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
+
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(2, spoolDir.list().length);
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
+
+    Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(1, spoolDir.list().length);
+    Assert.assertTrue(logFile3.exists());
+
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(0, spoolDir.list().length);
+
+    spooler.destroy();
+  }
+
+  @Test
+  public void testArchive() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    Assert.assertTrue(archiveDir.mkdirs());
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").
+        setMaxSpoolFiles(3).setPostProcessing(DirectorySpooler.FilePostProcessing.ARCHIVE).
+        setArchiveDir(archiveDir.getAbsolutePath()).build();
+
+    Assert.assertEquals(3, spoolDir.list().length);
+    Assert.assertEquals(0, archiveDir.list().length);
+    Assert.assertTrue(logFile1.exists());
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
+
+    spooler.init("x2.log");
+    Assert.assertEquals(2, spoolDir.list().length);
+    Assert.assertEquals(1, archiveDir.list().length);
+    Assert.assertFalse(logFile1.exists());
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
+    Assert.assertTrue(new File(archiveDir, "x1.log").exists());
+
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(2, spoolDir.list().length);
+    Assert.assertEquals(1, archiveDir.list().length);
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
+    Assert.assertTrue(new File(archiveDir, "x1.log").exists());
+
+    Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(1, spoolDir.list().length);
+    Assert.assertEquals(2, archiveDir.list().length);
+    Assert.assertTrue(logFile3.exists());
+    Assert.assertTrue(new File(archiveDir, "x1.log").exists());
+    Assert.assertTrue(new File(archiveDir, "x2.log").exists());
+
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(0, spoolDir.list().length);
+    Assert.assertEquals(3, archiveDir.list().length);
+    Assert.assertTrue(new File(archiveDir, "x1.log").exists());
+    Assert.assertTrue(new File(archiveDir, "x2.log").exists());
+    Assert.assertTrue(new File(archiveDir, "x3.log").exists());
+
+    spooler.destroy();
+  }
+
+  @Test
+  public void testRetentionPurging() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    Assert.assertTrue(archiveDir.mkdirs());
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").
+        setMaxSpoolFiles(3).setPostProcessing(DirectorySpooler.FilePostProcessing.ARCHIVE).
+        setArchiveDir(archiveDir.getAbsolutePath()).setArchiveRetention(1000, TimeUnit.MILLISECONDS).build();
+
+    Assert.assertEquals(3, spoolDir.list().length);
+
+    spooler.init("x2.log");
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(0, spoolDir.list().length);
+    Assert.assertEquals(3, archiveDir.list().length);
+    Assert.assertTrue(new File(archiveDir, "x1.log").exists());
+    Assert.assertTrue(new File(archiveDir, "x2.log").exists());
+    Assert.assertTrue(new File(archiveDir, "x3.log").exists());
+
+    // no purging
+    spooler.purger.run();
+    Assert.assertEquals(3, archiveDir.list().length);
+
+    // purging
+    Thread.sleep(1100);
+    spooler.purger.run();
+    Assert.assertEquals(0, archiveDir.list().length);
+
+    spooler.destroy();
+  }
+
+}
