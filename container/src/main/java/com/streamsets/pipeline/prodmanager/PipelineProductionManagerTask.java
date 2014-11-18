@@ -79,8 +79,9 @@ public class PipelineProductionManagerTask extends AbstractTask {
   /*The pipeline being executed*/
   private ProductionPipeline prodPipeline;
 
-  private Object startPipelineMutex = new Object();
-  private Object stopPipelineMutex = new Object();
+  /*Mutex objects to synchronize start and stop pipeline methods*/
+  private final Object startPipelineMutex = new Object();
+  private final Object stopPipelineMutex = new Object();
 
   @Inject
   public PipelineProductionManagerTask(RuntimeInfo runtimeInfo, Configuration configuration
