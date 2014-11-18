@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.lib.basics.dirspoolerlog;
 
+import com.codahale.metrics.Meter;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.container.Utils;
 import jersey.repackaged.com.google.common.base.Preconditions;
 import jersey.repackaged.com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -50,6 +52,7 @@ public class DirectorySpooler {
   }
 
   public static class Builder {
+    private Source.Context context;
     private String spoolDir;
     private int maxSpoolFiles;
     private String pattern;
@@ -59,6 +62,11 @@ public class DirectorySpooler {
 
     private Builder() {
       postProcessing = FilePostProcessing.NONE;
+    }
+
+    public Builder setContext(Source.Context context) {
+      this.context = Preconditions.checkNotNull(context, "context cannot be null");
+      return this;
     }
 
     public Builder setDir(String dir) {
@@ -97,16 +105,19 @@ public class DirectorySpooler {
     }
 
     public DirectorySpooler build() {
+      Preconditions.checkArgument(context != null, "context not specified");
       Preconditions.checkArgument(spoolDir != null, "spool dir not specified");
       Preconditions.checkArgument(maxSpoolFiles > 0, "max spool files not specified");
       Preconditions.checkArgument(pattern != null, "file pattern not specified");
       if (postProcessing == FilePostProcessing.ARCHIVE) {
         Preconditions.checkArgument(archiveDir != null, "archive dir not specified");
       }
-      return new DirectorySpooler(spoolDir, maxSpoolFiles, pattern, postProcessing, archiveDir, archiveRetentionMillis);
+      return new DirectorySpooler(context, spoolDir, maxSpoolFiles, pattern, postProcessing, archiveDir,
+                                  archiveRetentionMillis);
     }
   }
 
+  private final Source.Context context;
   private final String spoolDir;
   private final int maxSpoolFiles;
   private final String pattern;
@@ -114,8 +125,9 @@ public class DirectorySpooler {
   private final String archiveDir;
   private final long archiveRetentionMillis;
 
-  public DirectorySpooler(String spoolDir, int maxSpoolFiles, String pattern, FilePostProcessing postProcessing,
-      String archiveDir, long archiveRetentionMillis) {
+  public DirectorySpooler(Source.Context context, String spoolDir, int maxSpoolFiles, String pattern,
+      FilePostProcessing postProcessing, String archiveDir, long archiveRetentionMillis) {
+    this.context = context;
     this.spoolDir = spoolDir;
     this.maxSpoolFiles = maxSpoolFiles;
     this.pattern = pattern;
@@ -133,6 +145,8 @@ public class DirectorySpooler {
   private Watcher watcher;
   private Path previousFile;
   private ScheduledExecutorService scheduledExecutor;
+
+  private Meter spoolQueueMeter;
 
   volatile FilePurger purger;
 
@@ -167,6 +181,8 @@ public class DirectorySpooler {
 
       filesQueue = new PriorityBlockingQueue<Path>();
 
+      spoolQueueMeter = context.createMeter("spoolQueue");
+
       handleOlderFiles();
       queueExistingFiles();
 
@@ -178,6 +194,8 @@ public class DirectorySpooler {
         purger = new FilePurger();
         scheduledExecutor.scheduleAtFixedRate(purger, 1, 1, TimeUnit.MINUTES);
       }
+
+
     } catch (IOException ex) {
       destroy();
       throw new RuntimeException(ex);
@@ -223,6 +241,7 @@ public class DirectorySpooler {
         throw new IllegalStateException(Utils.format("Exceeded max number '{}' of queued files", maxSpoolFiles));
       }
       filesQueue.add(file);
+      spoolQueueMeter.mark(filesQueue.size());
     } else {
       LOG.warn("File '{}' already in queue, ignoring", file);
     }

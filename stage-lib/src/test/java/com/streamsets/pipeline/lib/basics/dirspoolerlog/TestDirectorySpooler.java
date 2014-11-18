@@ -17,9 +17,14 @@
  */
 package com.streamsets.pipeline.lib.basics.dirspoolerlog;
 
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.runner.StageContext;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -30,18 +35,25 @@ public class TestDirectorySpooler {
   private File spoolDir;
   private File archiveDir;
 
+  private MetricRegistry metrics;
+  private Source.Context context;
+
   @Before
   public void setUp() {
     File dir = new File("target", UUID.randomUUID().toString());
     spoolDir = new File(dir, "spool");
     archiveDir = new File(dir, "archive");
+    metrics = new MetricRegistry();
+    context = Mockito.mock(StageContext.class);
+    Mockito.when(context.getMetrics()).thenReturn(metrics);
+    Mockito.when(context.createMeter(Mockito.anyString())).thenCallRealMethod();
   }
 
   @Test(expected = IllegalStateException.class)
   public void testNoSpoolDir() {
     DirectorySpooler.Builder builder = DirectorySpooler.builder();
-    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern(
-        "x[0-9]*.log").setMaxSpoolFiles(1).build();
+    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
     spooler.init("x2");
     spooler.destroy();
   }
@@ -50,7 +62,8 @@ public class TestDirectorySpooler {
   public void testEmptySpoolDir() throws Exception {
     Assert.assertTrue(spoolDir.mkdirs());
     DirectorySpooler.Builder builder = DirectorySpooler.builder();
-    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
+    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
     spooler.init("x2");
     Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     spooler.destroy();
@@ -62,10 +75,14 @@ public class TestDirectorySpooler {
     File logFile = new File(spoolDir, "x2.log").getAbsoluteFile();
     new FileWriter(logFile).close();
     DirectorySpooler.Builder builder = DirectorySpooler.builder();
-    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
+    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
     spooler.init("x1.log");
     Assert.assertEquals(logFile, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Meter meter = metrics.getMeters().values().iterator().next();
+    Assert.assertNotNull(meter);
+    Assert.assertTrue(meter.getCount() > 0);
     spooler.destroy();
   }
 
@@ -75,7 +92,8 @@ public class TestDirectorySpooler {
     File logFile = new File(spoolDir, "x2.log").getAbsoluteFile();
     new FileWriter(logFile).close();
     DirectorySpooler.Builder builder = DirectorySpooler.builder();
-    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
+    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
     spooler.init("x3.log");
     Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     spooler.destroy();
@@ -89,7 +107,8 @@ public class TestDirectorySpooler {
     File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
     new FileWriter(logFile1).close();
     DirectorySpooler.Builder builder = DirectorySpooler.builder();
-    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").setMaxSpoolFiles(3).build();
+    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(3).build();
     spooler.init("x1.log");
     Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
@@ -112,7 +131,8 @@ public class TestDirectorySpooler {
     File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
     new FileWriter(logFile2).close();
     DirectorySpooler.Builder builder = DirectorySpooler.builder();
-    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").setMaxSpoolFiles(3).build();
+    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(3).build();
     spooler.init("x1.log");
     Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
@@ -131,8 +151,9 @@ public class TestDirectorySpooler {
     File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
     new FileWriter(logFile2).close();
     DirectorySpooler.Builder builder = DirectorySpooler.builder();
-    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").
-        setMaxSpoolFiles(3).setPostProcessing(DirectorySpooler.FilePostProcessing.DELETE).build();
+    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(3).setPostProcessing(DirectorySpooler.FilePostProcessing.DELETE).
+        build();
 
     Assert.assertEquals(3, spoolDir.list().length);
     Assert.assertTrue(logFile1.exists());
@@ -171,9 +192,10 @@ public class TestDirectorySpooler {
     File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
     new FileWriter(logFile2).close();
     DirectorySpooler.Builder builder = DirectorySpooler.builder();
-    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").
-        setMaxSpoolFiles(3).setPostProcessing(DirectorySpooler.FilePostProcessing.ARCHIVE).
-        setArchiveDir(archiveDir.getAbsolutePath()).build();
+    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(3).
+        setPostProcessing(DirectorySpooler.FilePostProcessing.ARCHIVE).setArchiveDir(archiveDir.getAbsolutePath()).
+        build();
 
     Assert.assertEquals(3, spoolDir.list().length);
     Assert.assertEquals(0, archiveDir.list().length);
@@ -224,9 +246,10 @@ public class TestDirectorySpooler {
     File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
     new FileWriter(logFile2).close();
     DirectorySpooler.Builder builder = DirectorySpooler.builder();
-    DirectorySpooler spooler = builder.setDir(spoolDir.getAbsolutePath()).setFilePattern("x[0-9]*.log").
-        setMaxSpoolFiles(3).setPostProcessing(DirectorySpooler.FilePostProcessing.ARCHIVE).
-        setArchiveDir(archiveDir.getAbsolutePath()).setArchiveRetention(1000, TimeUnit.MILLISECONDS).build();
+    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(3).
+        setPostProcessing(DirectorySpooler.FilePostProcessing.ARCHIVE).setArchiveDir(archiveDir.getAbsolutePath()).
+        setArchiveRetention(1000, TimeUnit.MILLISECONDS).build();
 
     Assert.assertEquals(3, spoolDir.list().length);
 
