@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.runner.production;
+package com.streamsets.pipeline.snapshotstore.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -25,19 +25,22 @@ import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.ErrorRecord;
 import com.streamsets.pipeline.runner.ErrorRecords;
 import com.streamsets.pipeline.runner.StageOutput;
+import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
+import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import org.junit.*;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestSnapshotPersister {
+public class TestFileSnapshotStore {
 
   private static final String TEST_STRING = "TestSnapshotPersister";
   private static final String MIME = "application/octet-stream";
 
-  private SnapshotPersister snapshotPersister = null;
+  private FileSnapshotStore snapshotStore = null;
 
   @BeforeClass
   public static void beforeClass() {
@@ -52,15 +55,72 @@ public class TestSnapshotPersister {
   @Before
   public void setUp() {
     RuntimeInfo info = new RuntimeInfo(ImmutableList.of(getClass().getClassLoader()));
-    snapshotPersister = new SnapshotPersister(info);
-    snapshotPersister.getSnapshotFile().delete();
+    snapshotStore = new FileSnapshotStore(info);
+    ((FileSnapshotStore)snapshotStore).getSnapshotFile().delete();
   }
 
-  //@Test
-  public void testSnapShotPersister() {
+  @After
+  public void tearDown() {
+    snapshotStore.getSnapshotFile().delete();
+  }
 
-    Assert.assertTrue(snapshotPersister.retrieveSnapshot().isEmpty());
+  @Test
+  public void testStoreSnapshot() {
+    Assert.assertTrue(snapshotStore.retrieveSnapshot().isEmpty());
+    List<StageOutput> snapshot = createSnapshotData();
+    snapshotStore.storeSnapshot(snapshot);
 
+    InputStream in = snapshotStore.getSnapshot();
+    Assert.assertNotNull(in);
+
+    //TODO: Retrieve snapshot and compare contents once de-serializer is ready
+    //Assert.assertEquals(2, snapshotStore.retrieveSnapshot().size());
+    //StageOutput actualS1 = snapshotStore.retrieveSnapshot().get(0);
+    //Assert.assertEquals(2);
+  }
+
+  @Test
+  public void testGetSnapshotStatus() {
+    SnapshotStatus snapshotStatus = snapshotStore.getSnapshotStatus();
+    Assert.assertNotNull(snapshotStatus);
+    Assert.assertEquals(false, snapshotStatus.isExists());
+    Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
+
+    //create snapshot
+    List<StageOutput> snapshot = createSnapshotData();
+    snapshotStore.storeSnapshot(snapshot);
+
+    snapshotStatus = snapshotStore.getSnapshotStatus();
+    Assert.assertNotNull(snapshotStatus);
+    Assert.assertEquals(true, snapshotStatus.isExists());
+    Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
+
+  }
+
+  @Test
+  public void testDeleteSnapshot() {
+    //create snapshot
+    List<StageOutput> snapshot = createSnapshotData();
+    snapshotStore.storeSnapshot(snapshot);
+
+    SnapshotStatus snapshotStatus = snapshotStore.getSnapshotStatus();
+    Assert.assertNotNull(snapshotStatus);
+    Assert.assertEquals(true, snapshotStatus.isExists());
+    Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
+
+    //delete
+    snapshotStore.deleteSnapshot();
+
+    snapshotStatus = snapshotStore.getSnapshotStatus();
+    Assert.assertNotNull(snapshotStatus);
+    Assert.assertEquals(false, snapshotStatus.isExists());
+    Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
+
+    Assert.assertFalse(snapshotStore.getSnapshotFile().exists());
+
+  }
+
+  private List<StageOutput> createSnapshotData() {
     List<StageOutput> snapshot = new ArrayList<StageOutput>(2);
 
     List<Record> records1 = new ArrayList<Record>(2);
@@ -99,7 +159,6 @@ public class TestSnapshotPersister {
     ((RecordImpl)r4).setTrackingId();
     ((RecordImpl)r4).setTrackingId();
 
-   //TODO
     ErrorRecord e = new ErrorRecord(r4, null, null);
     ErrorRecords ers = new ErrorRecords();
     ers.addErrorRecord(e);
@@ -111,11 +170,9 @@ public class TestSnapshotPersister {
     StageOutput s2 = new StageOutput("processor", so2, ers);
     snapshot.add(s2);
 
-    snapshotPersister.persistSnapshot(snapshot);
-
-    //Assert.assertEquals(2, snapshotPersister.retrieveSnapshot().size());
-
-    //StageOutput actualS1 = snapshotPersister.retrieveSnapshot().get(0);
-    //Assert.assertEquals(2);
+    return snapshot;
   }
+
+
+
 }

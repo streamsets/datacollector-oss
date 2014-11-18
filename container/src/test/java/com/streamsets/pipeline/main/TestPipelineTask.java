@@ -19,8 +19,8 @@ package com.streamsets.pipeline.main;
 
 
 import com.streamsets.pipeline.http.WebServerTask;
+import com.streamsets.pipeline.prodmanager.PipelineProductionManagerTask;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.state.PipelineManagerTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class TestPipelineTask {
     StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
     PipelineStoreTask store = Mockito.mock(PipelineStoreTask.class);
     WebServerTask webServer = Mockito.mock(WebServerTask.class);
-    PipelineManagerTask pipelineManager = Mockito.mock(PipelineManagerTask.class);
+    PipelineProductionManagerTask pipelineManager = Mockito.mock(PipelineProductionManagerTask.class);
     PipelineTask task = new PipelineTask(library, store, pipelineManager, webServer);
     Assert.assertEquals("pipelineNode", task.getName());
   }

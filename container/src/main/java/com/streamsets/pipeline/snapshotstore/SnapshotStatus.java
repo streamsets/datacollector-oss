@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.state;
+package com.streamsets.pipeline.snapshotstore;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,19 +23,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class SnapshotStatus {
 
   private final boolean exists;
-  private final SnapshotState state;
+  private final boolean snapshotInProgress;
 
   @JsonCreator
-  public SnapshotStatus(@JsonProperty("exists") boolean exists, @JsonProperty("state") SnapshotState state) {
+  public SnapshotStatus(@JsonProperty("exists") boolean exists, @JsonProperty("snapshotInProgress") boolean snapshotInProgress) {
     this.exists = exists;
-    this.state = state;
+    this.snapshotInProgress = snapshotInProgress;
   }
 
   public boolean isExists() {
     return exists;
   }
 
-  public SnapshotState getState() {
-    return state;
+  public boolean isSnapshotInProgress() {
+    return snapshotInProgress;
   }
 }

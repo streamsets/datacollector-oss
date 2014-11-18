@@ -29,12 +29,12 @@ public class PipelineDefinition {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineDefinition.class);
 
   private static final String PIPELINE_RESOURCE_BUNDLE = "PipelineDefinition-bundle";
-  private final static String CONFIG_DELIVERY_GUARENTEE_LABEL = "config.deliveryGuarantee.label";
-  private final static String CONFIG_DELIVERY_GUARENTEE_DESCRIPTION = "config.deliveryGuarantee.description";
+  private final static String CONFIG_DELIVERY_GUARANTEE_LABEL = "config.deliveryGuarantee.label";
+  private final static String CONFIG_DELIVERY_GUARANTEE_DESCRIPTION = "config.deliveryGuarantee.description";
   private final static String CONFIG_STOP_ON_ERROR_LABEL = "config.stopOnError.label";
   private final static String CONFIG_STOP_ON_ERROR_DESCRIPTION = "config.stopOnError.description";
-  private final static String DELIVERY_GUARENTEE_AT_LEAST_ONCE = "config.deliveryGuarantee.AT_LEAST_ONCE";
-  private final static String DELIVERY_GUARENTEE_AT_MOST_ONCE = "config.deliveryGuarantee.AT_MOST_ONCE";
+  private final static String DELIVERY_GUARANTEE_AT_LEAST_ONCE = "config.deliveryGuarantee.AT_LEAST_ONCE";
+  private final static String DELIVERY_GUARANTEE_AT_MOST_ONCE = "config.deliveryGuarantee.AT_MOST_ONCE";
 
   /*The config definitions of the pipeline*/
   private List<ConfigDefinition> configDefinitions;
@@ -100,15 +100,15 @@ public class PipelineDefinition {
     List<String> gdLabels = new ArrayList<String>(2);
     gdLabels.add(
       rb != null ?
-        (rb.containsKey(DELIVERY_GUARENTEE_AT_LEAST_ONCE) ?
-          rb.getString(DELIVERY_GUARENTEE_AT_LEAST_ONCE) :
+        (rb.containsKey(DELIVERY_GUARANTEE_AT_LEAST_ONCE) ?
+          rb.getString(DELIVERY_GUARANTEE_AT_LEAST_ONCE) :
           "At Least Once")
         : "At Least Once");
 
     gdLabels.add(
       rb != null ?
-        (rb.containsKey(DELIVERY_GUARENTEE_AT_MOST_ONCE) ?
-          rb.getString(DELIVERY_GUARENTEE_AT_MOST_ONCE) :
+        (rb.containsKey(DELIVERY_GUARANTEE_AT_MOST_ONCE) ?
+          rb.getString(DELIVERY_GUARANTEE_AT_MOST_ONCE) :
           "At Most Once")
         : "At Most Once");
 
@@ -120,11 +120,11 @@ public class PipelineDefinition {
       FieldModifierType.PROVIDED, "",  gdValues, gdLabels);
 
     //Localize label and description for "delivery guarantee" config option
-    String dgLabel = rb != null ? (rb.containsKey(CONFIG_DELIVERY_GUARENTEE_LABEL) ?
-      rb.getString(CONFIG_DELIVERY_GUARENTEE_LABEL) : "Delivery Guarantee")
+    String dgLabel = rb != null ? (rb.containsKey(CONFIG_DELIVERY_GUARANTEE_LABEL) ?
+      rb.getString(CONFIG_DELIVERY_GUARANTEE_LABEL) : "Delivery Guarantee")
       : "Delivery Guarantee";
-    String dgDescription = rb != null ? (rb.containsKey(CONFIG_DELIVERY_GUARENTEE_DESCRIPTION) ?
-      rb.getString(CONFIG_DELIVERY_GUARENTEE_DESCRIPTION) : "This is the option for the delivery guarantee")
+    String dgDescription = rb != null ? (rb.containsKey(CONFIG_DELIVERY_GUARANTEE_DESCRIPTION) ?
+      rb.getString(CONFIG_DELIVERY_GUARANTEE_DESCRIPTION) : "This is the option for the delivery guarantee")
       : "This is the option for the delivery guarantee";
 
     ConfigDefinition dgConfigDef = new ConfigDefinition(

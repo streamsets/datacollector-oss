@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.state;
+package com.streamsets.pipeline.prodmanager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -31,6 +31,7 @@ public class StateTracker {
   private static final String STATE_FILE = "pipelineState.json";
   private static final String STATE_DIR = "runInfo";
   private static final String DEFAULT_STATE = "NOT_RUNNING";
+  private static final String DEFAULT_PIPELINE_REVISION = "1.0";
 
   private File stateDir;
   private PipelineState pipelineState;
@@ -52,13 +53,13 @@ public class StateTracker {
     return new File(stateDir, STATE_FILE);
   }
 
-  public void setState(State state, String message) throws PipelineStateException {
+  public void setState(String rev, State state, String message) throws PipelineStateException {
     //persist default pipelineState
-    pipelineState = new PipelineState(state, message);
+    pipelineState = new PipelineState(rev, state, message, System.currentTimeMillis());
     try {
       json.writeValue(getStateFile(), pipelineState);
     } catch (IOException e) {
-      throw new PipelineStateException(PipelineStateErrors.COULD_NOT_SET_STATE, e.getMessage(), e);
+      throw new PipelineStateException(PipelineStateException.ERROR.COULD_NOT_SET_STATE, e.getMessage(), e);
     }
   }
 
@@ -87,7 +88,7 @@ public class StateTracker {
   private void persistDefaultState() {
     //persist default pipelineState
     try {
-      setState(State.NOT_RUNNING, null);
+      setState(DEFAULT_PIPELINE_REVISION, State.NOT_RUNNING, null);
     } catch (PipelineStateException e) {
       throw new RuntimeException(e);
     }
@@ -97,7 +98,7 @@ public class StateTracker {
     try {
       return json.readValue(getStateFile(), PipelineState.class);
     } catch (IOException e) {
-      throw new PipelineStateException(PipelineStateErrors.COULD_NOT_GET_STATE, e.getMessage(), e);
+      throw new PipelineStateException(PipelineStateException.ERROR.COULD_NOT_GET_STATE, e.getMessage(), e);
     }
   }
 

@@ -25,12 +25,11 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.*;
+import com.streamsets.pipeline.snapshotstore.SnapshotStore;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +40,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   private final MetricRegistry metrics;
   private final SourceOffsetTracker offsetTracker;
-  private final SnapshotPersister snapshotPersister;
+  private final SnapshotStore snapshotStore;
   private int batchSize;
   private Timer processingTimer;
   private String sourceOffset;
@@ -58,7 +57,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   /*indicates the batch size to be captured*/
   private volatile int snapshotBatchSize;
 
-  public ProductionPipelineRunner(SnapshotPersister snapshotPersister, SourceOffsetTracker offsetTracker
+  public ProductionPipelineRunner(SnapshotStore snapshotStore, SourceOffsetTracker offsetTracker
     , int batchSize, DeliveryGuarantee deliveryGuarantee) {
     this.metrics = new MetricRegistry();
     this.offsetTracker = offsetTracker;
@@ -66,7 +65,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
     this.deliveryGuarantee = deliveryGuarantee;
     batchOutputs = new ArrayList<List<StageOutput>>();
-    this.snapshotPersister = snapshotPersister;
+    this.snapshotStore = snapshotStore;
   }
 
   @Override
@@ -111,8 +110,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   public void captureNextBatch(int batchSize) {
     Preconditions.checkArgument(batchSize > 0);
-    this.captureNextBatch = true;
     this.snapshotBatchSize = batchSize;
+    this.captureNextBatch = true;
+
   }
 
   private void runBatch(Pipe[] pipes) throws PipelineRuntimeException, StageException {
@@ -144,7 +144,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     newSourceOffset = offsetTracker.getOffset();
     List<StageOutput> snapShot = pipeBatch.getSnapshotsOfAllStagesOutput();
     if(snapShot != null) {
-      snapshotPersister.persistSnapshot(snapShot);
+      snapshotStore.storeSnapshot(snapShot);
       batchOutputs.add(snapShot);
       afterSnapshot();
     }

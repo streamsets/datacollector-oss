@@ -17,12 +17,9 @@
  */
 package com.streamsets.pipeline.runner.production;
 
-import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
-import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.*;
+import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.util.TestUtil;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -42,11 +39,7 @@ public class TestProductionRun {
   @Test
   public void testStopPipeline() throws Exception {
 
-    SourceOffsetTracker mockTracker = Mockito.mock(SourceOffsetTracker.class);
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(SnapshotPersister.class),mockTracker, 5
-        , DeliveryGuarantee.AT_LEAST_ONCE);
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
-        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
+    ProductionPipeline pipeline = createPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false);
     pipeline.stop();
     Assert.assertTrue(pipeline.wasStopped());
 
@@ -55,57 +48,37 @@ public class TestProductionRun {
   @Test
   public void testGetCommittedOffset() throws Exception {
 
-    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(SnapshotPersister.class),tracker, 5
-        , DeliveryGuarantee.AT_LEAST_ONCE);
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
-        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
-    Assert.assertNotNull(pipeline.getPipeline());
-    Assert.assertEquals(pipeline.getPipeline().getRunner(), runner);
-
+    ProductionPipeline pipeline = createPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false);
     pipeline.run();
 
     //The source returns null offset the first time.
     Assert.assertEquals(null, pipeline.getCommittedOffset());
-    Assert.assertTrue(runner.getBatchesOutput().isEmpty());
+    Assert.assertTrue(pipeline.getPipeline().getRunner().getBatchesOutput().isEmpty());
 
   }
 
   @Test
   public void testProductionRunnerOffsetAPIs() throws Exception {
 
-    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(SnapshotPersister.class),tracker, 5
-        , DeliveryGuarantee.AT_LEAST_ONCE);
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
-        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
-    Assert.assertNotNull(pipeline.getPipeline());
-    Assert.assertEquals(pipeline.getPipeline().getRunner(), runner);
-
+    ProductionPipeline pipeline = createPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false);
     pipeline.run();
 
     //The source returns null offset the first time.
-    Assert.assertEquals("1", runner.getSourceOffset());
-    Assert.assertEquals(null, runner.getNewSourceOffset());
+    Assert.assertEquals("1", pipeline.getPipeline().getRunner().getSourceOffset());
+    Assert.assertEquals(null, pipeline.getPipeline().getRunner().getNewSourceOffset());
 
   }
 
   @Test
   public void testProductionRunAtLeastOnce() throws Exception {
 
-    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(SnapshotPersister.class),tracker, 5
-        , DeliveryGuarantee.AT_LEAST_ONCE);
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
-        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
-
-    runner.captureNextBatch(1);
+    ProductionPipeline pipeline = createPipeline(DeliveryGuarantee.AT_LEAST_ONCE, true);
     pipeline.run();
 
     //The source returns null offset the first time.
     Assert.assertNull(pipeline.getCommittedOffset());
 
-    List<StageOutput> output = runner.getBatchesOutput().get(0);
+    List<StageOutput> output = pipeline.getPipeline().getRunner().getBatchesOutput().get(0);
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).getField("f").getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).getField("f").getValue());
   }
@@ -113,21 +86,28 @@ public class TestProductionRun {
   @Test
   public void testProductionRunAtMostOnce() throws Exception {
 
-    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(SnapshotPersister.class), tracker, 5
-        , DeliveryGuarantee.AT_MOST_ONCE);
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
-        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
-
-    runner.captureNextBatch(1);
+    ProductionPipeline pipeline = createPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
     pipeline.run();
-
     //The source returns null offset the first time.
     Assert.assertNull(pipeline.getCommittedOffset());
 
-    List<StageOutput> output = runner.getBatchesOutput().get(0);
+    List<StageOutput> output = pipeline.getPipeline().getRunner().getBatchesOutput().get(0);
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).getField("f").getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).getField("f").getValue());
   }
+
+  private ProductionPipeline createPipeline(DeliveryGuarantee deliveryGuarantee, boolean captureNextBatch)
+      throws PipelineRuntimeException {
+    SourceOffsetTracker mockTracker = new TestUtil.SourceOffsetTrackerImpl("1");
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(FileSnapshotStore.class),mockTracker, 5
+        , DeliveryGuarantee.AT_LEAST_ONCE);
+    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
+        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
+    if(captureNextBatch) {
+      runner.captureNextBatch(1);
+    }
+    return pipeline;
+  }
+
 
 }

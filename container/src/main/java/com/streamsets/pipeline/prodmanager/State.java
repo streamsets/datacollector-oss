@@ -15,29 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.state;
+package com.streamsets.pipeline.prodmanager;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableSet;
 
-public class PipelineState {
-  private final State pipelineState;
-  private final String message;
+import java.util.Set;
 
-  @JsonCreator
-  public PipelineState(
-      @JsonProperty("pipelineState") State pipelineState,
-      @JsonProperty("message") String message) {
-    this.pipelineState = pipelineState;
-    this.message = message;
-  }
+public enum State {
 
-  public State getPipelineState() {
-    return this.pipelineState;
-  }
-
-  public String getMessage() {
-    return this.message;
-  }
-
+  NOT_RUNNING,
+  RUNNING,
+  STOPPING,
+  ERROR
 }

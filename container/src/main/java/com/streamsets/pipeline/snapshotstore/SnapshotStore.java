@@ -15,28 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.state;
+package com.streamsets.pipeline.snapshotstore;
 
-import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.runner.StageOutput;
 
-public enum PipelineStateErrors implements ErrorId {
+import java.io.InputStream;
+import java.util.List;
 
-  COULD_NOT_SET_STATE("Could not set state, {}"),
-  COULD_NOT_GET_STATE("Could not get state, {}"),
-  INVALID_STATE_TRANSITION("Cannot change state from {} to {}"),
-  CANNOT_SET_OFFSET_RUNNING_STATE("Cannot set the source offset during a run."),
-  CANNOT_CAPTURE_SNAPSHOT_WHEN_PIPELINE_NOT_RUNNING("Cannot capture snapshot when pipeline is not running."),
-  INVALID_BATCH_SIZE("Invalid batch size supplied {}.");
+public interface SnapshotStore {
 
-  private final String msgTemplate;
+  void storeSnapshot(List<StageOutput> snapshot);
 
-  PipelineStateErrors(String msgTemplate) {
-    this.msgTemplate = msgTemplate;
-  }
+  List<StageOutput> retrieveSnapshot();
 
-  @Override
-  public String getMessageTemplate() {
-    return msgTemplate;
-  }
+  SnapshotStatus getSnapshotStatus();
 
+  void deleteSnapshot();
+
+  InputStream getSnapshot();
 }

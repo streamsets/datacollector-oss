@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.runner.production;
+package com.streamsets.pipeline.snapshotstore.impl;
 
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,15 +29,20 @@ import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.record.RecordImplDeserializer;
 import com.streamsets.pipeline.runner.ErrorRecords;
 import com.streamsets.pipeline.runner.StageOutput;
+import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
+import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.util.NullDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SnapshotPersister {
+public class FileSnapshotStore implements SnapshotStore {
+
+  private static final Logger LOG = LoggerFactory.getLogger(FileSnapshotStore.class);
 
   static final String DEFAULT_PIPELINE_NAME = "xyz";
   private static final String SNAPSHOT_FILE = "snapshot.json";
@@ -49,7 +54,7 @@ public class SnapshotPersister {
   private File snapshotStageFile;
   private ObjectMapper json;
 
-  public SnapshotPersister(RuntimeInfo runtimeInfo) {
+  public FileSnapshotStore(RuntimeInfo runtimeInfo) {
     this.snapshotDir = new File(runtimeInfo.getDataDir(),
         SNAPSHOT_DIR + File.separator + DEFAULT_PIPELINE_NAME);
     this.snapshotFile = new File(snapshotDir, SNAPSHOT_FILE);
@@ -66,7 +71,7 @@ public class SnapshotPersister {
     json.registerModule(module);
   }
 
-  public void persistSnapshot(List<StageOutput> snapshot) {
+  public void storeSnapshot(List<StageOutput> snapshot) {
     if(!snapshotDir.exists()) {
       if(!snapshotDir.mkdirs()) {
         throw new RuntimeException(Utils.format("Could not create directory '{}'", snapshotDir.getAbsolutePath()));
@@ -94,11 +99,52 @@ public class SnapshotPersister {
     }
   }
 
-  public File getSnapshotFile() {
+  @Override
+  public SnapshotStatus getSnapshotStatus() {
+    boolean snapshotFileExists = getSnapshotFile().exists();
+    boolean snapshotStageFileExists = getSnapshotStageFile().exists();
+
+    if(snapshotFileExists) {
+      if(snapshotStageFileExists) {
+        return new SnapshotStatus(true, true);
+      } else {
+        return new SnapshotStatus(true, false);
+      }
+    } else {
+      if(snapshotStageFileExists) {
+        return new SnapshotStatus(false, true);
+      } else {
+        return new SnapshotStatus(false, false);
+      }
+    }
+  }
+
+  @Override
+  public void deleteSnapshot() {
+    if(getSnapshotFile().exists()) {
+      getSnapshotFile().delete();
+    }
+  }
+
+  @Override
+  public InputStream getSnapshot() {
+    if(getSnapshotFile().exists()) {
+      try {
+        return new FileInputStream(getSnapshotFile());
+      } catch (FileNotFoundException e) {
+        LOG.warn(e.getMessage());
+        return null;
+      }
+    }
+    return null;
+  }
+
+  @VisibleForTesting
+  File getSnapshotFile() {
     return snapshotFile;
   }
 
-  public File getSnapshotStageFile() {
+  private File getSnapshotStageFile() {
     return snapshotStageFile;
   }
 

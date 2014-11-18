@@ -18,11 +18,12 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.prodmanager.*;
+import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.SourceOffset;
-import com.streamsets.pipeline.state.*;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import org.apache.commons.io.IOUtils;
@@ -36,23 +37,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-@Path("/v1/pipelines")
+@Path("/v1/pipeline")
 public class PipelineManagerResource {
 
-  private final PipelineManagerTask pipelineManager;
-  private final Configuration configuration;
-  private final PipelineStoreTask pipelineStore;
-  private final StageLibraryTask stageLibrary;
+  private final PipelineProductionManagerTask pipelineManager;
 
   @Inject
-  public PipelineManagerResource(PipelineManagerTask pipelineManager,
-                                 Configuration configuration,
-                                 PipelineStoreTask pipelineStore,
-                                 StageLibraryTask stageLib) {
+  public PipelineManagerResource(PipelineProductionManagerTask pipelineManager) {
     this.pipelineManager = pipelineManager;
-    this.configuration = configuration;
-    this.pipelineStore = pipelineStore;
-    this.stageLibrary = stageLib;
+
   }
 
   @Path("/status")
@@ -60,20 +53,27 @@ public class PipelineManagerResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getStatus() throws PipelineStateException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getState()).build();
+      pipelineManager.getPipelineState()).build();
   }
 
-  @Path("/status")
+  @Path("/start")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response setStatus(
-    @QueryParam("name") String name,
-    @QueryParam("rev") String rev,
-    @QueryParam("state") State state) throws PipelineStoreException, PipelineRuntimeException, StageException
+  public Response startPipeline(@QueryParam("rev") String rev) throws PipelineStoreException, PipelineRuntimeException
+      , StageException
       , PipelineStateException {
 
-    PipelineState ps = pipelineManager.handleStateTransition(name, rev, state, configuration, pipelineStore
-        , stageLibrary);
+    PipelineState ps = pipelineManager.startPipeline(rev);
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
+        ps).build();
+  }
+
+  @Path("/stop")
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response stopPipeline() throws PipelineStateException {
+
+    PipelineState ps = pipelineManager.stopPipeline();
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
         ps).build();
   }
@@ -129,7 +129,10 @@ public class PipelineManagerResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response snapshotStatus() {
     SnapshotStatus status = pipelineManager.snapshotStatus();
-    return Response.ok().type(MediaType.APPLICATION_JSON).header("exists", status.isExists()).header("state", status.getState()).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).header("exists", status.isExists())
+        .header("snapshotInProgress", status.isSnapshotInProgress()).build();
   }
+
+  //TODO metrics
 
 }

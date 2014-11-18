@@ -15,28 +15,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.state;
+package com.streamsets.pipeline.prodmanager;
 
-import com.google.common.collect.ImmutableSet;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Set;
+public class PipelineState {
+  private final String rev;
+  private final State state;
+  private final String message;
+  private final long since;
 
-public enum State {
-
-  NOT_RUNNING(ImmutableSet.of("RUNNING")),
-  RUNNING(ImmutableSet.of("NOT_RUNNING")),
-  ERROR(ImmutableSet.of("NOT_RUNNING", "RUNNING"));
-
-  private Set<String> validTransitions = null;
-
-  private State(Set<String> validTransitions) {
-    this.validTransitions = validTransitions;
+  @JsonCreator
+  public PipelineState(
+      @JsonProperty("rev") String rev,
+      @JsonProperty("state") State state,
+      @JsonProperty("message") String message,
+      @JsonProperty("since") long since) {
+    this.rev = rev;
+    this.state = state;
+    this.message = message;
+    this.since = since;
   }
 
-  public boolean isValidTransition(String state) {
-    if(validTransitions.contains(state)) {
-      return true;
-    }
-    return false;
+  public String getRev() {
+    return rev;
+  }
+
+  public State getState() {
+    return this.state;
+  }
+
+  public String getMessage() {
+    return this.message;
+  }
+
+  public long getSince() {
+    return since;
   }
 }

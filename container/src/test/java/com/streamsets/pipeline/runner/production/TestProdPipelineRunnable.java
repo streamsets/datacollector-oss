@@ -25,8 +25,12 @@ import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
-import com.streamsets.pipeline.state.PipelineManagerTask;
-import com.streamsets.pipeline.state.State;
+import com.streamsets.pipeline.prodmanager.PipelineProductionManagerTask;
+import com.streamsets.pipeline.prodmanager.State;
+import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
+import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.TestUtil;
 import org.junit.*;
 import org.mockito.Mockito;
@@ -36,7 +40,7 @@ import java.util.List;
 
 public class TestProdPipelineRunnable {
 
-  private PipelineManagerTask manager = null;
+  private PipelineProductionManagerTask manager = null;
 
   @BeforeClass
   public static void beforeClass() {
@@ -46,7 +50,8 @@ public class TestProdPipelineRunnable {
   @Before()
   public void setUp() {
     RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
-    manager = new PipelineManagerTask(info);
+    manager = new PipelineProductionManagerTask(info, Mockito.mock(Configuration.class)
+        , Mockito.mock(FilePipelineStoreTask.class), Mockito.mock(StageLibraryTask.class));
     manager.init();
   }
 
@@ -61,21 +66,15 @@ public class TestProdPipelineRunnable {
 
     TestUtil.captureMockStages();
 
-    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(SnapshotPersister.class), tracker, 5
-        , DeliveryGuarantee.AT_MOST_ONCE);
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
-        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
-
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline);
-    runner.captureNextBatch(1);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "1.0");
     runnable.run();
 
     //The source returns null offset because all the data from source was read
     Assert.assertNull(pipeline.getCommittedOffset());
 
     //output expected as capture snapshot was set to true
-    List<StageOutput> output = runner.getBatchesOutput().get(0);
+    List<StageOutput> output = pipeline.getPipeline().getRunner().getBatchesOutput().get(0);
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).getField("f").getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).getField("f").getValue());
   }
@@ -85,13 +84,8 @@ public class TestProdPipelineRunnable {
 
     TestUtil.captureMockStages();
 
-    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(SnapshotPersister.class), tracker, 5
-        , DeliveryGuarantee.AT_MOST_ONCE);
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
-        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
-
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "1.0");
 
     runnable.stop();
     Assert.assertTrue(pipeline.wasStopped());
@@ -102,11 +96,11 @@ public class TestProdPipelineRunnable {
     //Offset 1 expected as pipeline was stopped after the first batch
     Assert.assertEquals("1", pipeline.getCommittedOffset());
     //no output as capture was not set to true
-    Assert.assertTrue(runner.getBatchesOutput().isEmpty());
+    Assert.assertTrue(pipeline.getPipeline().getRunner().getBatchesOutput().isEmpty());
   }
 
   @Test
-  public void testException() throws PipelineRuntimeException {
+  public void testErrorState() throws PipelineRuntimeException {
     System.setProperty("pipeline.data.dir", "./target/var");
 
     MockStages.setSourceCapture(new BaseSource() {
@@ -116,22 +110,32 @@ public class TestProdPipelineRunnable {
       }
     });
 
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "1.0");
+
+    //Stops after the first batch
+    runnable.run();
+
+    Assert.assertEquals(State.ERROR, manager.getPipelineState().getState());
+    //Offset 1 expected as there was a Runtime exception
+    Assert.assertEquals("1", pipeline.getCommittedOffset());
+    //no output as captured as there was an exception in source
+    Assert.assertTrue(pipeline.getPipeline().getRunner().getBatchesOutput().isEmpty());
+  }
+
+  private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee,
+                                                                      boolean capturenextBatch) throws PipelineRuntimeException {
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(SnapshotPersister.class), tracker, 5
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(FileSnapshotStore.class), tracker, 5
         , DeliveryGuarantee.AT_MOST_ONCE);
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
         MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
 
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline);
-    runner.captureNextBatch(1);
-    //Stops after the first batch
-    runnable.run();
+    if(capturenextBatch) {
+      runner.captureNextBatch(1);
+    }
 
-    Assert.assertEquals(State.ERROR, manager.getState().getPipelineState());
-    //Offset 1 expected as there was a Runtime exception
-    Assert.assertEquals("1", pipeline.getCommittedOffset());
-    //no output as captured as there was an exception in source
-    Assert.assertTrue(runner.getBatchesOutput().isEmpty());
+    return pipeline;
   }
 
 }
