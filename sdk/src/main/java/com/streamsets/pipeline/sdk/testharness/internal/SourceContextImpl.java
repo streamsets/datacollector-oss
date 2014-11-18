@@ -17,12 +17,16 @@
  */
 package com.streamsets.pipeline.sdk.testharness.internal;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.List;
@@ -62,6 +66,24 @@ public class SourceContextImpl implements Source.Context {
   @Override
   public MetricRegistry getMetrics() {
     return null;
+  }
+
+  private String getMetricsName(String name) {
+    return "stage." +instanceName + "." + name;
+  }
+  @Override
+  public Timer createTimer(String name) {
+    return MetricsConfigurator.createTimer(getMetrics(), getMetricsName(name));
+  }
+
+  @Override
+  public Meter createMeter(String name) {
+    return MetricsConfigurator.createMeter(getMetrics(), getMetricsName(name));
+  }
+
+  @Override
+  public Counter createCounter(String name) {
+    return MetricsConfigurator.createCounter(getMetrics(), getMetricsName(name));
   }
 
   @Override

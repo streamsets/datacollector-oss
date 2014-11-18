@@ -17,7 +17,10 @@
  */
 package com.streamsets.pipeline.api;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 
 import java.util.List;
 
@@ -38,6 +41,12 @@ public interface Stage<C extends Stage.Context> {
     public List<Info> getPipelineInfo();
 
     public MetricRegistry getMetrics();
+
+    public Timer createTimer(String name);
+
+    public Meter createMeter(String name);
+
+    public Counter createCounter(String name);
 
     public void toError(Record record, Exception exception);
 

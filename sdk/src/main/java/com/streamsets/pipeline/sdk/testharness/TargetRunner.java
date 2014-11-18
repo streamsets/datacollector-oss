@@ -116,7 +116,7 @@ public class TargetRunner <T extends Target> {
       info = new StageInfo(
         stageDefAnnot.name(), stageDefAnnot.version(), instanceName);
       //mockInfoAndContextForStage and stub Source.Context
-      context = new TargetContextImpl();
+      context = new TargetContextImpl(instanceName);
 
       //update batchbuilder
       batchBuilder.setSourceOffset(sourceOffset);

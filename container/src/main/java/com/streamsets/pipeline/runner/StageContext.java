@@ -17,7 +17,10 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ErrorId;
@@ -27,9 +30,9 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.util.Message;
-import com.streamsets.pipeline.validation.Issue;
 
 import java.util.List;
 import java.util.Set;
@@ -64,6 +67,21 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public MetricRegistry getMetrics() {
     return metrics;
+  }
+
+  @Override
+  public Timer createTimer(String name) {
+    return MetricsConfigurator.createTimer(getMetrics(), instanceName + "." + name);
+  }
+
+  @Override
+  public Meter createMeter(String name) {
+    return MetricsConfigurator.createMeter(getMetrics(), instanceName + "." + name);
+  }
+
+  @Override
+  public Counter createCounter(String name) {
+    return MetricsConfigurator.createCounter(getMetrics(), instanceName + "." + name);
   }
 
   public void setErrorRecordSink(ErrorRecordSink errorRecordSink) {
