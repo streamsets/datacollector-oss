@@ -17,9 +17,12 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.TestUtil;
 import org.junit.*;
+import org.mockito.Mockito;
+import org.omg.SendingContext.RunTime;
 
 import java.util.Arrays;
 
@@ -100,6 +103,16 @@ public class TestStateTracker {
     Assert.assertEquals("1.0", state.getRev());
     Assert.assertEquals(null, state.getMessage());
     Assert.assertEquals(State.NOT_RUNNING, state.getState());
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testInitInvalidDir() {
+    RuntimeInfo info = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(info.getDataDir()).thenReturn("\0");
+    stateTracker = new StateTracker(info);
+
+    stateTracker.init();
+
   }
 
 }

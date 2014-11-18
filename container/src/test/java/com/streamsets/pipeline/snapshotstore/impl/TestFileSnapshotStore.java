@@ -28,12 +28,10 @@ import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import org.junit.*;
+import org.mockito.Mockito;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TestFileSnapshotStore {
 
@@ -120,6 +118,23 @@ public class TestFileSnapshotStore {
 
   }
 
+  @Test(expected = RuntimeException.class)
+  public void testStoreInvalidDir() {
+    RuntimeInfo info = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(info.getDataDir()).thenReturn("\0");
+    snapshotStore = new FileSnapshotStore(info);
+
+    //Runtime exception expected
+    snapshotStore.storeSnapshot(Collections.EMPTY_LIST);
+
+  }
+
+  @Test
+  public void testGetSnapshotWhenItDoesNotExist() {
+    snapshotStore.getSnapshotFile().delete();
+    Assert.assertNull(snapshotStore.getSnapshot());
+  }
+
   private List<StageOutput> createSnapshotData() {
     List<StageOutput> snapshot = new ArrayList<StageOutput>(2);
 
@@ -172,7 +187,4 @@ public class TestFileSnapshotStore {
 
     return snapshot;
   }
-
-
-
 }

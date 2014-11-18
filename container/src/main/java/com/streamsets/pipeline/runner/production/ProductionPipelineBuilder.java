@@ -31,7 +31,7 @@ public class ProductionPipelineBuilder {
   private final PipelineConfiguration pipelineConf;
 
   public ProductionPipelineBuilder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf) {
-    this.stageLib = new PreviewStageLibraryTask(stageLib);
+    this.stageLib = stageLib;
     this.name = name;
     this.pipelineConf = pipelineConf;
   }

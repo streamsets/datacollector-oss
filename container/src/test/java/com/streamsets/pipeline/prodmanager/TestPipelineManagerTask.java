@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
@@ -48,10 +49,17 @@ public class TestPipelineManagerTask {
   }
 
   @Before()
-  public void setUp() {
+  public void setUp() throws PipelineStoreException {
     RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
-    manager = new PipelineProductionManagerTask(info, Mockito.mock(Configuration.class)
-        , Mockito.mock(FilePipelineStoreTask.class), Mockito.mock(StageLibraryTask.class));
+    Configuration configuration = Mockito.mock(Configuration.class);
+    Mockito.when(configuration.get("maxBatchSize", 10)).thenReturn(10);
+    FilePipelineStoreTask filePipelineStoreTask = Mockito.mock(FilePipelineStoreTask.class);
+    Mockito.when(filePipelineStoreTask.load("xyz", "1.0")).thenReturn(Mockito.mock(PipelineConfiguration.class));
+
+    StageLibraryTask stageLibraryTask = Mockito.mock(StageLibraryTask.class);
+
+    manager = new PipelineProductionManagerTask(info, configuration
+        , filePipelineStoreTask, stageLibraryTask);
     manager.init();
   }
 
@@ -112,6 +120,11 @@ public class TestPipelineManagerTask {
     manager.stopPipeline();
   }
 
+  /*@Test
+  public void testStartPipeline() throws PipelineStoreException, PipelineStateException, PipelineRuntimeException, StageException {
+    manager.startPipeline("1.0");
+
+  }*/
 
   /*
 
