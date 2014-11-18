@@ -104,19 +104,7 @@ public class FileSnapshotStore implements SnapshotStore {
     boolean snapshotFileExists = getSnapshotFile().exists();
     boolean snapshotStageFileExists = getSnapshotStageFile().exists();
 
-    if(snapshotFileExists) {
-      if(snapshotStageFileExists) {
-        return new SnapshotStatus(true, true);
-      } else {
-        return new SnapshotStatus(true, false);
-      }
-    } else {
-      if(snapshotStageFileExists) {
-        return new SnapshotStatus(false, true);
-      } else {
-        return new SnapshotStatus(false, false);
-      }
-    }
+    return new SnapshotStatus(snapshotFileExists, snapshotStageFileExists);
   }
 
   @Override
