@@ -17,10 +17,12 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 
@@ -35,6 +37,8 @@ public class PipelineConfiguration {
   public enum OnError { DROP_RECORD, DROP_BATCH, STOP_PIPELINE }
 
   private UUID uuid = null;
+  private PipelineInfo info;
+  private String description;
   private List<ConfigConfiguration> configuration;
   private final Map<String, Object> uiInfo;
   private List<StageConfiguration> stages;
@@ -51,6 +55,27 @@ public class PipelineConfiguration {
     this.uiInfo = uiInfo;
     this.stages = (stages != null) ? stages : Collections.EMPTY_LIST;
     issues = new Issues();
+  }
+
+  public void setInfo(PipelineInfo info) {
+    //NOP, just for jackson
+  }
+
+  @JsonIgnore
+  public void setPipelineInfo(PipelineInfo info) {
+    this.info = info;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public PipelineInfo getInfo() {
+    return info;
   }
 
   public List<StageConfiguration> getStages() {

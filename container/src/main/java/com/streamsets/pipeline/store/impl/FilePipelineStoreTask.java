@@ -134,6 +134,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     configuration.add(new ConfigConfiguration("stopPipelineOnError", false));
     PipelineConfiguration pipeline = new PipelineConfiguration(uuid, configuration, null,
       null);
+    pipeline.setDescription(description);
     try {
       json.writeValue(getInfoFile(name), info);
       json.writeValue(getPipelineFile(name), pipeline);
@@ -209,7 +210,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       throw new PipelineStoreException(PipelineStoreErrors.INVALID_UUID_FOR_PIPELINE, name);
     }
     UUID uuid = UUID.randomUUID();
-    PipelineInfo info = new PipelineInfo(getInfo(name, false), new Date(), user, REV, uuid,
+    PipelineInfo info = new PipelineInfo(getInfo(name, false), pipeline.getDescription(), new Date(), user, REV, uuid,
                                          pipeline.isValid());
     try {
       pipeline.setUuid(uuid);
@@ -233,7 +234,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_DOES_NOT_EXIST, name);
     }
     try {
-      return json.readValue(getPipelineFile(name), PipelineConfiguration.class);
+      PipelineInfo info = getInfo(name);
+      PipelineConfiguration pipeline = json.readValue(getPipelineFile(name), PipelineConfiguration.class);
+      pipeline.setPipelineInfo(info);
+      return pipeline;
     } catch (Exception ex) {
       throw new PipelineStoreException(PipelineStoreErrors.COULD_NOT_LOAD_PIPELINE_INFO, name, ex.getMessage(), ex);
     }

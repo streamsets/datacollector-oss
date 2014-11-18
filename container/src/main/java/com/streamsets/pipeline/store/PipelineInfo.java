@@ -56,9 +56,9 @@ public class PipelineInfo {
     this.valid = valid;
   }
 
-  public PipelineInfo(PipelineInfo pipelineInfo, Date lastModified, String lastModifier, String lastRev, UUID uuid,
-      boolean valid) {
-    this(pipelineInfo.getName(), pipelineInfo.getDescription(), pipelineInfo.getCreated(), lastModified,
+  public PipelineInfo(PipelineInfo pipelineInfo, String description, Date lastModified, String lastModifier,
+      String lastRev, UUID uuid, boolean valid) {
+    this(pipelineInfo.getName(), description, pipelineInfo.getCreated(), lastModified,
          pipelineInfo.getCreator(), lastModifier, lastRev, uuid, valid);
   }
 
