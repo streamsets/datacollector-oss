@@ -1,26 +1,13 @@
 /**
- * Home module for displaying home page content
+ * Home module for displaying home page content.
  */
 
 angular
-  .module('pipelineAgentApp.home', [
-    'ngRoute',
-    'ngTagsInput',
-    'jsonFormatter',
-    'splitterDirectives',
-    'tabDirectives',
-    'pipelineGraphDirectives',
-    'showErrorsDirectives',
-    'ngEnterDirectives',
-    'contenteditableDirectives',
-    'underscore',
-    'ui.bootstrap',
-    'filereadDirectives'
-  ])
+  .module('pipelineAgentApp.home')
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/',
       {
-        templateUrl: 'app/home/tpl/home.tpl.html',
+        templateUrl: 'app/home/home.tpl.html',
         controller: 'HomeController'
       }
     );
@@ -36,10 +23,10 @@ angular
       TARGET_STAGE_TYPE = 'TARGET';
 
     angular.extend($scope, {
+      pipelines: [],
       isPipelineRunning: false,
       sourceExists: false,
       stageLibraries: [],
-      pipelineConfigInfo: {},
       pipelineGraphData: {},
       previewMode: false,
       previewData: {},
@@ -50,6 +37,7 @@ angular
       previewSourceOffset: 0,
       previewBatchSize: 10,
       previewDataUpdated: false,
+      hideLibraryPanel: true,
 
       /**
        * Add Stage Instance to the Pipeline Graph.
@@ -410,6 +398,10 @@ angular
           error(function(data, status, headers, config) {
             $scope.httpErrors = [data];
           });
+      },
+
+      toggleLibraryPanel: function() {
+        $scope.hideLibraryPanel = ! $scope.hideLibraryPanel;
       }
     });
 
@@ -419,7 +411,7 @@ angular
      */
     $q.all([api.pipelineAgent.getDefinitions(),
       api.pipelineAgent.getPipelineConfig('xyz'),
-      api.pipelineAgent.getPipelineConfigInfo('xyz')])
+      api.pipelineAgent.getPipelines()])
       .then(function (results) {
 
         //Definitions
@@ -439,14 +431,15 @@ angular
           return (stageLibrary.type === TARGET_STAGE_TYPE);
         });
 
-        //Pipeline Configuration Info
-        $scope.pipelineConfigInfo = results[2].data;
-
         //Pipeline Configuration
         updateGraph(results[1].data);
 
         stageCounter = ($scope.pipelineConfig && $scope.pipelineConfig.stages) ?
           $scope.pipelineConfig.stages.length : 0;
+
+        //Pipelines
+        $scope.pipelines = results[2].data;
+
       },function(data, status, headers, config) {
           $scope.httpErrors = [data];
       });
@@ -463,8 +456,6 @@ angular
       if (!config) {
         config = _.clone($scope.pipelineConfig);
       }
-
-      delete config.info;
 
       dirty = false;
       $rootScope.common.saveOperationInProgress = true;
@@ -503,12 +494,12 @@ angular
       //Force Validity Check - showErrors directive
       $scope.$broadcast('show-errors-check-validity');
 
-      if (!pipelineConfig.uiInfo) {
+      /*if (!pipelineConfig.uiInfo) {
         pipelineConfig.uiInfo = {
           label: 'Pipeline',
           description: 'Default Pipeline'
         };
-      }
+      }*/
 
       $scope.pipelineConfig = pipelineConfig || {};
 
@@ -745,7 +736,7 @@ angular
     $scope.$on('importPipelineConfig', function () {
       var modalInstance = $modal.open({
         templateUrl: 'importModalContent.html',
-        controller: 'ImportModalInstanceCtrl',
+        controller: 'ImportModalInstanceController',
         size: '',
         backdrop: true
       });
@@ -758,36 +749,4 @@ angular
 
       });
     });
-  })
-  .controller('ImportModalInstanceCtrl', function ($scope, $modalInstance) {
-    var errorMsg = 'Not a valid Pipeline Configuration file.';
-
-    $scope.uploadFile = {};
-
-    $scope.import = function () {
-      var reader = new FileReader();
-
-      reader.onload = function (loadEvent) {
-        try {
-          var jsonConfigObj = JSON.parse(loadEvent.target.result);
-          if(jsonConfigObj.uuid) {
-            $modalInstance.close(jsonConfigObj);
-          } else {
-            $scope.$apply(function() {
-              $scope.issues = [errorMsg];
-            });
-          }
-        } catch(e) {
-          $scope.$apply(function() {
-            $scope.issues = [errorMsg];
-          });
-        }
-      };
-      reader.readAsText($scope.uploadFile);
-    };
-
-    $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
-    };
-
   });

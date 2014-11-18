@@ -1,0 +1,23 @@
+<div class="panel panel-default library-pane" ng-controller="LibraryController">
+  <div class="panel-heading clearfix">
+    <h3 class="panel-title pull-left" translate="global.form.library">Library</h3>
+
+    <button type="button" class="btn btn-primary btn-sm pull-right"
+            ng-click="addPipelineConfig()">
+      <span class="glyphicon glyphicon-plus"></span>
+    </button>
+
+  </div>
+
+  <div class="panel-body">
+    <div class="list-group">
+      <a href="#" class="list-group-item"
+         ng-class="{'active' : pipeline.name === pipelineConfig.info.name}"
+         ng-repeat="pipeline in pipelines">
+        <h5 class="list-group-item-heading">{{pipeline.name}}</h5>
+        <p class="list-group-item-text">{{pipeline.description}}</p>
+      </a>
+    </div>
+  </div>
+
+ </div>

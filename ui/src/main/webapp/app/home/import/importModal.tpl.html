@@ -5,7 +5,7 @@
         <span aria-hidden="true">&times;</span>
         <span class="sr-only">Close</span>
       </button>
-      <h3 class="modal-title">Import Pipeline Configuration</h3>
+      <h3 class="modal-title" translate="admin.import.headerLabel">Import Pipeline Definition</h3>
     </div>
     <div class="modal-body">
 
@@ -27,16 +27,21 @@
         <div class="input-group">
           <span class="input-group-btn">
               <span class="btn btn-primary btn-file">
-                  Browse&hellip; <input type="file" fileread="uploadFile">
+                  {{'admin.import.browse' | translate}}&hellip; <input type="file" fileread="uploadFile">
               </span>
           </span>
-          <input type="text" class="form-control" readonly ng-model="uploadFile.name" placeholder="No file chosen">
+          <input type="text" class="form-control" readonly ng-model="uploadFile.name"
+                 placeholder="{{'admin.import.fileUploadPlaceholder' | translate}}">
         </div>
 
     </div>
     <div class="modal-footer">
-      <button type="reset" class="btn btn-default" ng-click="cancel()">Cancel</button>
-      <button type="submit" class="btn btn-primary" ng-disabled="!uploadFile.name">Import</button>
+      <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.cancel">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" ng-disabled="!uploadFile.name" translate="global.menu.import">
+        Import
+      </button>
     </div>
   </form>
 </script>

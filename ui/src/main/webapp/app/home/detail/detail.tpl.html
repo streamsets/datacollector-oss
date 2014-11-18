@@ -1,7 +1,7 @@
 <div class="panel panel-default detail-pane" ng-hide="previewMode">
 
   <div class="panel-heading clearfix">
-    <h3 class="panel-title pull-left">{{detailPaneConfig.uiInfo.label}}</h3>
+    <h3 class="panel-title pull-left">{{detailPaneConfig.uiInfo.label || pipelineConfig.info.name}}</h3>
   </div>
 
   <div class="panel-body">
@@ -22,8 +22,27 @@
         <div class="tab-pane active" id="configuration">
           <form class="form-horizontal" role="form" name="{{detailPaneConfig.instanceName || 'pipeline'}}">
 
-            <!-- General Configuration-->
-            <div class="form-group">
+
+            <!-- General Configuration for Pipeline-->
+            <div class="form-group" ng-if="detailPaneConfig.stages !== undefined">
+              <label class="col-sm-2 control-label" translate="global.form.name">Name</label>
+              <div class="col-sm-6">
+                <p class="form-control-static" ng-bind="pipelineConfig.info.name"> </p>
+              </div>
+            </div>
+
+            <div class="form-group" ng-if="detailPaneConfig.stages !== undefined">
+              <label class="col-sm-2 control-label" translate="global.form.description">Description</label>
+              <div class="col-sm-6">
+                <textarea class="form-control" name="description"
+                          ng-model="pipelineConfig.description"></textarea>
+              </div>
+            </div>
+            <!--- /General Configuration-->
+
+
+            <!-- General Configuration for Stages-->
+            <div class="form-group" ng-if="detailPaneConfig.stages === undefined">
               <label class="col-sm-2 control-label" translate="global.form.label">Label</label>
               <div class="col-sm-6">
                 <input type="text" class="form-control" name="name"
@@ -32,7 +51,7 @@
             </div>
 
 
-            <div class="form-group">
+            <div class="form-group" ng-if="detailPaneConfig.stages === undefined">
               <label class="col-sm-2 control-label" translate="global.form.description">Description</label>
               <div class="col-sm-6">
                 <textarea class="form-control" name="description"

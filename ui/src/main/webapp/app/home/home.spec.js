@@ -386,17 +386,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
     });
 
 
-    $httpBackend.expectGET('rest/v1/pipelines/xyz?get=info').respond({
-      name: "xyz",
-      description: "Default Pipeline",
-      created: 1415208585520,
-      lastModified: 1415208630065,
-      creator: "system",
-      lastModifier: "nobody",
-      lastRev: "0",
-      uuid: "cdf08ac9-2a97-4167-8a2c-ed48cfcf600e",
-      valid: false
-    });
+    $httpBackend.expectGET('rest/v1/pipelines').respond({});
 
     $controller('HomeController', {
       '$rootScope': $rootScope,
@@ -431,12 +421,6 @@ describe('Controller: modules/home/HomeCtrl', function () {
     expect($scope.targets).toBeDefined();
     expect($scope.targets.length).toEqual(2);
 
-  });
-
-  it('should call the getPipelineConfigInfo api function to fetch all Information about pipeline', function () {
-    expect($scope.pipelineConfigInfo).toEqual({});
-    $httpBackend.flush();
-    expect($scope.pipelineConfigInfo.name).toEqual('xyz');
   });
 
   it('should call the getPipelineConfig api function to get Pipeline Configuration', function () {

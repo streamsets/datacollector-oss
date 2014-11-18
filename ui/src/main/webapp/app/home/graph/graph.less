@@ -1,0 +1,84 @@
+.graph-pane {
+  margin-top: 60px;
+  height: 100%;
+
+  .panel-heading {
+
+    padding: @smallPadding @smallPadding*3;
+
+    button {
+      margin-top: 2px;
+    }
+
+    .navbar-toggle {
+      display: block;
+      float: left;
+      margin-top: 0;
+      margin-bottom: 0;
+
+      &:hover{
+        background-color: #ddd;
+      }
+
+      .icon-bar {
+        background-color: #888;
+      }
+
+      &.selected {
+        .icon-bar {
+          background-color: #2BB8E9;
+        }
+      }
+    }
+
+
+    .panel-title {
+      padding-top: 5px;
+      font-size: 20px;
+    }
+
+    .issues-dropdown {
+
+      li {
+        a {
+          white-space: normal;
+          width: 400px;
+        }
+
+        &.dropdown-header {
+          text-transform: capitalize;
+        }
+      }
+
+
+      .badge {
+        color: #d9534f;
+        background-color: #fff;
+      }
+    }
+
+    .btn {
+      margin-left: @defaultPadding;
+    }
+
+    .stage-dropdown {
+      padding-right: @smallPadding;
+    }
+
+  }
+
+  .panel-body {
+    padding: 0;
+    height: calc(~"100% - 114px");
+    overflow: auto;
+
+    .alert {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    .draggable {
+      cursor: pointer;
+    }
+  }
+}

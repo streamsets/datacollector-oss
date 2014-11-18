@@ -9,14 +9,18 @@
     },
     "form": {
       "add": "Add",
+      "cancel": "Cancel",
       "description": "Description",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
       "label": "Label",
+      "library": "Library",
+      "name": "Name",
       "nextStage": "Next Stage",
       "previousStage": "Previous Stage",
       "required": "Required",
       "sampleValue": "Sample Value",
+      "save": "Save",
       "step": "Step",
       "type": "Type",
       "username": "Login",
@@ -36,7 +40,7 @@
   },
   "admin": {
     "header" : {
-      "pipelineFlow": "Pipeline Flow",
+      "definePipeline": "Define Pipeline",
       "preview": "Preview",
       "closePreview": "Close Preview",
       "start": "Start",
@@ -56,6 +60,16 @@
         "inputData": "Input Data",
         "outputData": "Output Data"
       }
+    },
+    "library": {
+      "newPipelineDefinition": "New Pipeline Definition",
+      "namePlaceholder": "Pipeline Definition Name",
+      "descriptionPlaceholder": "Pipeline Definition Description"
+    },
+    "import": {
+      "headerLabel" : "Import Pipeline Definition",
+      "fileUploadPlaceholder": "No file chosen",
+      "browse": "Browse"
     }
   },
   "flow": {

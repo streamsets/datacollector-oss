@@ -55,8 +55,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       var margin = {top: -5, right: -5, bottom: -5, left: -5},
         svgWidth = svg.style('width').replace('px', ''),
         svgHeight = svg.style('height').replace('px', ''),
-        width = svgWidth - margin.left - margin.right,
-        height = svgHeight - margin.top - margin.bottom;
+        width = 2000 - margin.left - margin.right,
+        height = 2000 - margin.top - margin.bottom;
 
       var container = svg.append("g");
       container.append("g")
@@ -658,11 +658,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
     GraphCreator.prototype.updateWindow = function(svg){
-      var docEl = document.documentElement,
-        bodyEl = document.getElementsByTagName('body')[0];
-      var x = window.innerWidth || docEl.clientWidth || bodyEl.clientWidth;
-      var y = window.innerHeight|| docEl.clientHeight|| bodyEl.clientHeight;
-      svg.attr("width", x).attr("height", y);
+      /*var svgEl = $element.parent();
+      var x = svgEl.width();
+      var y = svgEl.height();
+      svg.attr("width", x).attr("height", y);*/
     };
 
     /** MAIN SVG **/

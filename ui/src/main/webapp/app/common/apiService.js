@@ -23,6 +23,19 @@ angular.module('pipelineAgentApp.common')
       },
 
       /**
+       * Fetches all Pipeline Configuration Info.
+       *
+       * @returns {*}
+       */
+      getPipelines: function() {
+        var url = apiBase + '/pipelines';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Fetches Pipeline Configuration.
        *
        * @param name
@@ -81,6 +94,21 @@ angular.module('pipelineAgentApp.common')
           method: 'POST',
           url: url,
           data: config
+        });
+      },
+
+      /**
+       * Create new Pipeline Configuration.
+       *
+       * @param name
+       * @param description
+       */
+      createNewPipelineConfig: function(name, description) {
+        var url = apiBase + '/pipelines/' + name + '?description=' + description;
+
+        return $http({
+          method: 'PUT',
+          url: url
         });
       },
 
