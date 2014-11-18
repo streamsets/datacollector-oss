@@ -219,6 +219,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     } catch (Exception ex) {
       throw new PipelineStoreException(PipelineStoreErrors.COULD_NOT_SAVE_PIPELINE, name, ex.getMessage(), ex);
     }
+    pipeline.setPipelineInfo(info);
     return pipeline;
   }
 
