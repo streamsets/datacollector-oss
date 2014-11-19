@@ -20,14 +20,37 @@
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../root</relativePath>
+    <relativePath>../../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-sandbox</artifactId>
+  <artifactId>streamsets-sandbox-json</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Sandbox</description>
-  <name>StreamSets Sandbox</name>
-  <packaging>pom</packaging>
+  <description>StreamSets Sandbox JSON</description>
+  <name>StreamSets Sandbox JSON</name>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -41,37 +64,4 @@
     </plugins>
   </build>
 
-  <profiles>
-    <profile>
-      <id>all.sandbox.modules</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>!sandbox.module</name>
-        </property>
-      </activation>
-      <modules>
-        <module>dagger</module>
-        <module>jetty</module>
-        <module>appclassloader</module>
-        <module>annotations</module>
-        <module>pipeline-api</module>
-        <module>pipeline-container</module>
-        <module>stage-lib-contr</module>
-        <module>json</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>sandbox.module</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>sandbox.module</name>
-        </property>
-      </activation>
-      <modules>
-        <module>${sandbox.module}</module>
-      </modules>
-    </profile>
-  </profiles>
 </project>
