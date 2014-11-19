@@ -21,21 +21,24 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PipelineState {
+  private final String name;
   private final String rev;
   private final State state;
   private final String message;
-  private final long since;
+  private final long lastStatusChange;
 
   @JsonCreator
   public PipelineState(
+      @JsonProperty("name") String name,
       @JsonProperty("rev") String rev,
       @JsonProperty("state") State state,
       @JsonProperty("message") String message,
-      @JsonProperty("since") long since) {
+      @JsonProperty("lastStatusChange") long lastStatusChange) {
+    this.name = name;
     this.rev = rev;
     this.state = state;
     this.message = message;
-    this.since = since;
+    this.lastStatusChange = lastStatusChange;
   }
 
   public String getRev() {
@@ -50,7 +53,11 @@ public class PipelineState {
     return this.message;
   }
 
-  public long getSince() {
-    return since;
+  public long getLastStatusChange() {
+    return lastStatusChange;
+  }
+
+  public String getName() {
+    return name;
   }
 }

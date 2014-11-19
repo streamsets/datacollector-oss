@@ -21,8 +21,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 
-import java.io.InputStream;
-
 public class ProductionPipeline {
   private final Pipeline pipeline;
 

@@ -19,31 +19,22 @@ package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.prodmanager.*;
-import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
-import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.SourceOffset;
-import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
-import org.apache.commons.io.IOUtils;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 @Path("/v1/pipeline")
 public class PipelineManagerResource {
 
-  private final PipelineProductionManagerTask pipelineManager;
+  private final ProductionPipelineManagerTask pipelineManager;
 
   @Inject
-  public PipelineManagerResource(PipelineProductionManagerTask pipelineManager) {
+  public PipelineManagerResource(ProductionPipelineManagerTask pipelineManager) {
     this.pipelineManager = pipelineManager;
 
   }
@@ -52,20 +43,17 @@ public class PipelineManagerResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getStatus() throws PipelineStateException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getPipelineState()).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getPipelineState()).build();
   }
 
   @Path("/start")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response startPipeline(@QueryParam("rev") String rev) throws PipelineStoreException, PipelineRuntimeException
-      , StageException
-      , PipelineStateException {
+  public Response startPipeline(@QueryParam("name") String name, @QueryParam("rev") @DefaultValue("0") String rev)
+      throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineStateException {
 
-    PipelineState ps = pipelineManager.startPipeline(rev);
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-        ps).build();
+    PipelineState ps = pipelineManager.startPipeline(name, rev);
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ps).build();
   }
 
   @Path("/stop")
@@ -74,8 +62,7 @@ public class PipelineManagerResource {
   public Response stopPipeline() throws PipelineStateException {
 
     PipelineState ps = pipelineManager.stopPipeline();
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-        ps).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ps).build();
   }
 
   @Path("/offset")
@@ -84,8 +71,7 @@ public class PipelineManagerResource {
   public Response setOffset(@QueryParam("name") String name, @QueryParam("rev") String rev
       , @QueryParam("offset") String offset) throws PipelineStateException {
     SourceOffset so = new SourceOffset(pipelineManager.setOffset(offset));
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-        so).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(so).build();
   }
 
   @Path("/snapshot")
@@ -98,22 +84,11 @@ public class PipelineManagerResource {
   @Path("/snapshot")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getSnapshot() {
-    final InputStream snapshot = pipelineManager.getSnapshot();
-    if(snapshot == null) {
-      return Response.ok().type(MediaType.APPLICATION_JSON).entity(null).build();
+  public Response getSnapshot(@QueryParam("get") @DefaultValue("data") String get) {
+    if(get.equals("status")) {
+      return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshotStatus()).build();
     }
-    StreamingOutput stream = new StreamingOutput() {
-      @Override
-      public void write(OutputStream output) throws IOException, WebApplicationException {
-        try {
-          IOUtils.copy(snapshot, output);
-        } catch (Exception e) {
-          throw new WebApplicationException(e);
-        }
-      }
-    };
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(stream).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshot()).build();
   }
 
   @Path("/snapshot")
@@ -122,15 +97,6 @@ public class PipelineManagerResource {
   public Response deleteSnapshot() {
     pipelineManager.deleteSnapshot();
     return Response.ok().build();
-  }
-
-  @Path("/snapshot")
-  @HEAD
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response snapshotStatus() {
-    SnapshotStatus status = pipelineManager.snapshotStatus();
-    return Response.ok().type(MediaType.APPLICATION_JSON).header("exists", status.isExists())
-        .header("snapshotInProgress", status.isSnapshotInProgress()).build();
   }
 
   //TODO metrics

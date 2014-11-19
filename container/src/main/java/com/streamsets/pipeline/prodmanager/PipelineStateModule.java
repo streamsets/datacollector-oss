@@ -17,7 +17,6 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
-import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
@@ -35,8 +34,8 @@ public class PipelineStateModule {
 
   @Provides
   @Singleton
-  public PipelineProductionManagerTask provideStateManager(RuntimeInfo runtimeInfo, Configuration configuration
+  public ProductionPipelineManagerTask provideStateManager(RuntimeInfo runtimeInfo, Configuration configuration
       ,PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
-    return new PipelineProductionManagerTask(runtimeInfo, configuration, pipelineStore, stageLibrary);
+    return new ProductionPipelineManagerTask(runtimeInfo, configuration, pipelineStore, stageLibrary);
   }
 }

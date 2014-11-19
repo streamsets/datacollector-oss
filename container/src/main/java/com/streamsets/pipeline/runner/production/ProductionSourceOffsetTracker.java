@@ -23,11 +23,15 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 
 public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ProductionSourceOffsetTracker.class);
 
   static final String DEFAULT_PIPELINE_NAME = "xyz";
   private static final String OFFSET_FILE = "offset.json";
@@ -113,8 +117,7 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     try {
       json.writeValue(offsetFile, s);
     } catch (IOException e) {
-      //TODO throw correct exception and localize
-      //capture offset that could not be written and log it and it should be part fo state error message
+      LOG.error(Utils.format("Failed to save offset value {}. Reason {}", s.getOffset(), e.getMessage()));
       throw new RuntimeException(e);
     }
   }

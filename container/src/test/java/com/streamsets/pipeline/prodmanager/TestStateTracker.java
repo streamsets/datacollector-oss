@@ -67,7 +67,7 @@ public class TestStateTracker {
   @Test
   public void testSetState() throws PipelineStateException {
     stateTracker.init();
-    stateTracker.setState("2.0", State.RUNNING, "Started pipeline");
+    stateTracker.setState("xyz", "2.0", State.RUNNING, "Started pipeline");
 
     PipelineState state = stateTracker.getState();
 

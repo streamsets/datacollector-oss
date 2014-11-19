@@ -20,11 +20,12 @@ package com.streamsets.pipeline.runner.production;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.runner.preview.PreviewStageLibraryTask;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 
 public class ProductionPipelineBuilder {
+
+  private static final String PRODUCTION_PIPELINE_SUFFIX = ":production";
 
   private final StageLibraryTask stageLib;
   private final String name;
@@ -41,7 +42,7 @@ public class ProductionPipelineBuilder {
     if (!validator.validate()) {
       throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_RUN, validator.getIssues());
     }
-    Pipeline pipeline = new Pipeline.Builder(stageLib, name + ":production", pipelineConf).build(runner);
+    Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, pipelineConf).build(runner);
     return new ProductionPipeline(pipeline);
   }
 

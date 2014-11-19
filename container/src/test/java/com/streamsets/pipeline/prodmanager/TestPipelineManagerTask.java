@@ -20,14 +20,8 @@ package com.streamsets.pipeline.prodmanager;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.config.DeliveryGuarantee;
-import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.runner.SourceOffsetTracker;
-import com.streamsets.pipeline.runner.production.*;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
-import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
@@ -40,7 +34,7 @@ import java.util.Arrays;
 
 public class TestPipelineManagerTask {
 
-  private PipelineProductionManagerTask manager = null;
+  private ProductionPipelineManagerTask manager = null;
 
   @BeforeClass
   public static void beforeClass() {
@@ -58,7 +52,7 @@ public class TestPipelineManagerTask {
 
     StageLibraryTask stageLibraryTask = Mockito.mock(StageLibraryTask.class);
 
-    manager = new PipelineProductionManagerTask(info, configuration
+    manager = new ProductionPipelineManagerTask(info, configuration
         , filePipelineStoreTask, stageLibraryTask);
     manager.init();
   }
@@ -73,11 +67,11 @@ public class TestPipelineManagerTask {
   @Test
   public void testGetAndSetPipelineState() throws PipelineStateException {
     Assert.assertEquals(State.NOT_RUNNING, manager.getPipelineState().getState());
-    manager.setState("1.0", State.RUNNING, "Started Running");
+    manager.setState("xyz", "1.0", State.RUNNING, "Started Running");
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
     Assert.assertEquals("Started Running", manager.getPipelineState().getMessage());
 
-    manager.setState("1.0", State.ERROR, "Error");
+    manager.setState("xyz", "1.0", State.ERROR, "Error");
     Assert.assertEquals(State.ERROR, manager.getPipelineState().getState());
     Assert.assertEquals("Error", manager.getPipelineState().getMessage());
   }
@@ -92,14 +86,14 @@ public class TestPipelineManagerTask {
 
   @Test(expected = PipelineStateException.class)
   public void testSetOffsetWhenRunning() throws PipelineStateException, StageException, PipelineRuntimeException, PipelineStoreException {
-    manager.setState("1.0", State.RUNNING, "Started Running");
+    manager.setState("xyz", "1.0", State.RUNNING, "Started Running");
     manager.setOffset("abc");
   }
 
 
   @Test
   public void testSnapshotStatus() {
-    SnapshotStatus snapshotStatus = manager.snapshotStatus();
+    SnapshotStatus snapshotStatus = manager.getSnapshotStatus();
     Assert.assertEquals(false, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
 
@@ -109,10 +103,10 @@ public class TestPipelineManagerTask {
   public void testStartPipelineWhenRunning() throws PipelineStateException, StageException, PipelineRuntimeException, PipelineStoreException {
 
     Assert.assertEquals(State.NOT_RUNNING, manager.getPipelineState().getState());
-    manager.setState("1.0", State.RUNNING, "Started Running");
+    manager.setState("xyz", "1.0", State.RUNNING, "Started Running");
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
 
-    manager.startPipeline("1.0");
+    manager.startPipeline("xyz", "1.0");
   }
 
   @Test(expected = PipelineStateException.class)
@@ -210,7 +204,7 @@ public class TestPipelineManagerTask {
   @Test(expected = PipelineStateException.class)
   public void testCaptureSnapshotInvalidBatch() throws PipelineStateException {
     //cannot capture snapshot when pipeline is not running
-    manager.setState("1.0", State.RUNNING, "Started Running");
+    manager.setState("xyz", "1.0", State.RUNNING, "Started Running");
     manager.captureSnapshot(0);
   }
 

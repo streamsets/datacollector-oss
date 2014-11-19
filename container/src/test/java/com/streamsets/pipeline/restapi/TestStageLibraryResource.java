@@ -21,26 +21,14 @@ import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.config.ConfigDefinition;
-import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.prodmanager.PipelineProductionManagerTask;
-import com.streamsets.pipeline.prodmanager.PipelineState;
-import com.streamsets.pipeline.prodmanager.PipelineStateException;
-import com.streamsets.pipeline.prodmanager.State;
-import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.store.PipelineStoreException;
-import dagger.Module;
-import dagger.ObjectGraph;
-import dagger.Provides;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -50,8 +38,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
-
-import static org.mockito.Matchers.anyString;
 
 public class TestStageLibraryResource extends JerseyTest {
 

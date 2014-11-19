@@ -25,7 +25,7 @@ import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
-import com.streamsets.pipeline.prodmanager.PipelineProductionManagerTask;
+import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -40,7 +40,7 @@ import java.util.List;
 
 public class TestProdPipelineRunnable {
 
-  private PipelineProductionManagerTask manager = null;
+  private ProductionPipelineManagerTask manager = null;
 
   @BeforeClass
   public static void beforeClass() {
@@ -50,7 +50,7 @@ public class TestProdPipelineRunnable {
   @Before()
   public void setUp() {
     RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
-    manager = new PipelineProductionManagerTask(info, Mockito.mock(Configuration.class)
+    manager = new ProductionPipelineManagerTask(info, Mockito.mock(Configuration.class)
         , Mockito.mock(FilePipelineStoreTask.class), Mockito.mock(StageLibraryTask.class));
     manager.init();
   }
@@ -67,7 +67,7 @@ public class TestProdPipelineRunnable {
     TestUtil.captureMockStages();
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "1.0");
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "xyz", "1.0");
     runnable.run();
 
     //The source returns null offset because all the data from source was read
@@ -85,7 +85,7 @@ public class TestProdPipelineRunnable {
     TestUtil.captureMockStages();
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "1.0");
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "xyz", "1.0");
 
     runnable.stop();
     Assert.assertTrue(pipeline.wasStopped());
@@ -111,7 +111,7 @@ public class TestProdPipelineRunnable {
     });
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "1.0");
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "xyz", "1.0");
 
     //Stops after the first batch
     runnable.run();

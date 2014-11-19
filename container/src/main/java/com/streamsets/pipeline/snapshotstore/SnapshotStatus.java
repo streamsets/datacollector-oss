@@ -26,7 +26,8 @@ public class SnapshotStatus {
   private final boolean snapshotInProgress;
 
   @JsonCreator
-  public SnapshotStatus(@JsonProperty("exists") boolean exists, @JsonProperty("snapshotInProgress") boolean snapshotInProgress) {
+  public SnapshotStatus(@JsonProperty("exists") boolean exists,
+                        @JsonProperty("snapshotInProgress") boolean snapshotInProgress) {
     this.exists = exists;
     this.snapshotInProgress = snapshotInProgress;
   }

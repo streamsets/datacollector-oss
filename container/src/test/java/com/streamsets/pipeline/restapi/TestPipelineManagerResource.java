@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.prodmanager.PipelineProductionManagerTask;
+import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.PipelineStateException;
 import com.streamsets.pipeline.prodmanager.State;
@@ -58,7 +58,7 @@ public class TestPipelineManagerResource extends JerseyTest {
 
   @Test
   public void testStartPipelineAPI() {
-    Response r = target("/v1/pipeline/start").queryParam("rev", "2.0")
+    Response r = target("/v1/pipeline/start").queryParam("name", "xyz").queryParam("rev", "2.0")
         .request().post(null);
     Assert.assertNotNull(r);
     PipelineState state = r.readEntity(PipelineState.class);
@@ -107,10 +107,6 @@ public class TestPipelineManagerResource extends JerseyTest {
     IOUtils.copy((InputStream)r.getEntity(), writer);
     Assert.assertEquals("{\"offset\" : \"abc\"}", writer.toString());
 
-    /*r = target("/v1/pipeline/snapshot").request().get();
-    Assert.assertNotNull(r);
-    Assert.assertNull((InputStream)r.getEntity());*/
-
   }
 
   @Test
@@ -122,15 +118,13 @@ public class TestPipelineManagerResource extends JerseyTest {
 
   @Test
   public void testSnapshotStatusAPI() throws IOException {
-    Response r = target("/v1/pipeline/snapshot").request().head();
+    Response r = target("/v1/pipeline/snapshot").queryParam("get","status").request().get();
     Assert.assertNotNull(r);
-    MultivaluedMap<String, Object> headers = r.getHeaders();
 
-    Assert.assertEquals(1, headers.get("exists").size());
-    Assert.assertEquals(1, headers.get("snapshotInProgress").size());
+    SnapshotStatus s = r.readEntity(SnapshotStatus.class);
 
-    Assert.assertEquals("false", headers.get("exists").get(0));
-    Assert.assertEquals("true", headers.get("snapshotInProgress").get(0));
+    Assert.assertEquals(false, s.isExists());
+    Assert.assertEquals(true, s.isSnapshotInProgress());
   }
 
   @Override
@@ -146,24 +140,24 @@ public class TestPipelineManagerResource extends JerseyTest {
   static class PipelineManagerResourceConfig extends AbstractBinder {
     @Override
     protected void configure() {
-      bindFactory(PipelineManagerTestInjector.class).to(PipelineProductionManagerTask.class);
+      bindFactory(PipelineManagerTestInjector.class).to(ProductionPipelineManagerTask.class);
     }
   }
 
-  static class PipelineManagerTestInjector implements Factory<PipelineProductionManagerTask> {
+  static class PipelineManagerTestInjector implements Factory<ProductionPipelineManagerTask> {
 
     public PipelineManagerTestInjector() {
     }
 
     @Singleton
     @Override
-    public PipelineProductionManagerTask provide() {
+    public ProductionPipelineManagerTask provide() {
 
 
-      PipelineProductionManagerTask pipelineManager = Mockito.mock(PipelineProductionManagerTask.class);
+      ProductionPipelineManagerTask pipelineManager = Mockito.mock(ProductionPipelineManagerTask.class);
       try {
-        Mockito.when(pipelineManager.startPipeline("2.0")).thenReturn(new PipelineState(
-            "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis()));
+        Mockito.when(pipelineManager.startPipeline("xyz", "2.0")).thenReturn(new PipelineState(
+            "xyz", "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis()));
       } catch (PipelineStateException e) {
         e.printStackTrace();
       } catch (StageException e) {
@@ -176,12 +170,12 @@ public class TestPipelineManagerResource extends JerseyTest {
 
       try {
         Mockito.when(pipelineManager.stopPipeline()).thenReturn(
-            new PipelineState("2.0", State.NOT_RUNNING, "The pipeline is not running", System.currentTimeMillis()));
+            new PipelineState("xyz", "2.0", State.NOT_RUNNING, "The pipeline is not running", System.currentTimeMillis()));
       } catch (PipelineStateException e) {
         e.printStackTrace();
       }
 
-      Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState("2.0", State.NOT_RUNNING
+      Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState("xyz", "2.0", State.NOT_RUNNING
           , "Pipeline is not running", System.currentTimeMillis()));
       try {
         Mockito.when(pipelineManager.setOffset(anyString())).thenReturn("fileX:line10");
@@ -193,13 +187,13 @@ public class TestPipelineManagerResource extends JerseyTest {
           .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
           .thenReturn(null);
 
-      Mockito.when(pipelineManager.snapshotStatus()).thenReturn(new SnapshotStatus(false, true));
+      Mockito.when(pipelineManager.getSnapshotStatus()).thenReturn(new SnapshotStatus(false, true));
 
       return pipelineManager;
     }
 
     @Override
-    public void dispose(PipelineProductionManagerTask pipelineStore) {
+    public void dispose(ProductionPipelineManagerTask pipelineStore) {
     }
   }
 }

@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.io.Files;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
@@ -35,7 +34,14 @@ import com.streamsets.pipeline.util.NullDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,8 +85,8 @@ public class FileSnapshotStore implements SnapshotStore {
     }
     try {
       json.writeValue(snapshotStageFile, snapshot);
-      Files.copy(snapshotStageFile, snapshotFile);
-      snapshotStageFile.delete();
+      Files.move(snapshotStageFile.toPath(), snapshotFile.toPath(), StandardCopyOption.ATOMIC_MOVE
+          , StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
