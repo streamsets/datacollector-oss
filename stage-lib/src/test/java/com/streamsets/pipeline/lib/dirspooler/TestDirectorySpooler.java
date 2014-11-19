@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.runner.StageContext;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -100,6 +101,7 @@ public class TestDirectorySpooler {
   }
 
   @Test
+  @Ignore("Switch off by default as it takes 20secs")
   public void testSpoolingOutOfOrderOK() throws Exception {
     Assert.assertTrue(spoolDir.mkdirs());
     File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
