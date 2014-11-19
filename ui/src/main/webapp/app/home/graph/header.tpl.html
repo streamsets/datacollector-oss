@@ -94,7 +94,7 @@
       <li role="presentation"
           ng-repeat="stageLibrary in sources" ng-class="{disabled: sourceExists}">
         <a role="menuitem" tabindex="-1" href="#"
-           ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
+           ng-click="sourceExists || addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
       </li>
 
       <li role="presentation" class="divider"></li>

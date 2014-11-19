@@ -12,7 +12,8 @@
   <div class="panel-body">
     <div class="list-group">
       <a href="#" class="list-group-item"
-         ng-class="{'active' : pipeline.name === pipelineConfig.info.name}"
+         ng-class="{'active' : pipeline.name === acitveConfigName}"
+         ng-click="onSelect(pipeline)"
          ng-repeat="pipeline in pipelines">
         <h5 class="list-group-item-heading">{{pipeline.name}}</h5>
         <p class="list-group-item-text">{{pipeline.description}}</p>

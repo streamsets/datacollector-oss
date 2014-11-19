@@ -5,7 +5,10 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('LibraryController', function ($scope, $modal) {
+  .controller('LibraryController', function ($scope, $modal, _, api) {
+
+    $scope.acitveConfigName = 'xyz';
+
     $scope.addPipelineConfig = function() {
       var modalInstance = $modal.open({
         templateUrl: 'app/home/library/createModal.tpl.html',
@@ -15,10 +18,22 @@ angular
       });
 
       modalInstance.result.then(function (configObject) {
-        $scope.pipelines.push(configObject.info);
+        var index = _.sortedIndex($scope.pipelines, configObject.info, function(obj) {
+          return obj.name.toLowerCase();
+        });
+
+        $scope.pipelines.splice(index, 0, configObject.info);
+
+
       }, function () {
 
       });
+    };
+
+
+    $scope.onSelect = function(pipeline) {
+      $scope.acitveConfigName  = pipeline.name;
+      $scope.$emit('onPipelineConfigSelect', pipeline.name);
     };
   })
 
@@ -30,7 +45,6 @@ angular
     };
 
     $scope.save = function () {
-
       api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
         success(function(configObject) {
           console.log('Save new configuration');
@@ -40,9 +54,6 @@ angular
         error(function(data, status, headers, config) {
           $scope.issues = [data];
         });
-
-
-
     };
 
     $scope.cancel = function () {

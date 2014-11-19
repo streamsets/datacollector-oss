@@ -38,6 +38,7 @@ angular
       previewBatchSize: 10,
       previewDataUpdated: false,
       hideLibraryPanel: true,
+      configName: 'xyz',
 
       /**
        * Add Stage Instance to the Pipeline Graph.
@@ -156,7 +157,7 @@ angular
           $scope.previewSourceOffset = 0;
         }
 
-        api.pipelineAgent.previewPipeline('xyz', $scope.previewSourceOffset, $scope.previewBatchSize).
+        api.pipelineAgent.previewPipeline($scope.configName, $scope.previewSourceOffset, $scope.previewBatchSize).
           success(function (previewData) {
 
             $scope.previewData = previewData;
@@ -379,7 +380,7 @@ angular
 
         });
 
-        api.pipelineAgent.previewPipelineRunStage('xyz', instanceName, records).
+        api.pipelineAgent.previewPipelineRunStage($scope.configName, instanceName, records).
           success(function (previewData) {
 
             var targetInstanceData = previewData.batchesOutput[0][0];
@@ -410,7 +411,7 @@ angular
      * Fetch definitions for Pipeline and Stages, Pipeline Configuration and Pipeline Information.
      */
     $q.all([api.pipelineAgent.getDefinitions(),
-      api.pipelineAgent.getPipelineConfig('xyz'),
+      api.pipelineAgent.getPipelineConfig($scope.configName),
       api.pipelineAgent.getPipelines()])
       .then(function (results) {
 
@@ -434,15 +435,28 @@ angular
         //Pipeline Configuration
         updateGraph(results[1].data);
 
-        stageCounter = ($scope.pipelineConfig && $scope.pipelineConfig.stages) ?
-          $scope.pipelineConfig.stages.length : 0;
-
         //Pipelines
         $scope.pipelines = results[2].data;
 
       },function(data, status, headers, config) {
           $scope.httpErrors = [data];
       });
+
+
+    /**
+     * Load Pipeline Configuration by fetching it from server for the given Pipeline Configuration name.
+     * @param configName
+     */
+    var loadPipelineConfig = function(configName) {
+      api.pipelineAgent.getPipelineConfig(configName).
+        success(function(res) {
+          $scope.configName = configName;
+          updateGraph(res);
+        }).
+        error(function(data, status, headers, config) {
+          $scope.httpErrors = [data];
+        });
+    };
 
     /**
      * Save Updates
@@ -459,7 +473,7 @@ angular
 
       dirty = false;
       $rootScope.common.saveOperationInProgress = true;
-      api.pipelineAgent.savePipelineConfig('xyz', config).
+      api.pipelineAgent.savePipelineConfig($scope.configName, config).
         success(function (res) {
           $rootScope.common.saveOperationInProgress = false;
 
@@ -503,6 +517,8 @@ angular
 
       $scope.pipelineConfig = pipelineConfig || {};
 
+      stageCounter = ($scope.pipelineConfig && $scope.pipelineConfig.stages) ?
+        $scope.pipelineConfig.stages.length : 0;
 
       //Determine edges from input lanes and output lanes
       //And also set flag sourceExists if pipeline Config contains source
@@ -606,7 +622,7 @@ angular
           if(stageInstance.uiInfo.stageType !== SOURCE_STAGE_TYPE) {
             if(!stageInstance.uiInfo.inputFields || stageInstance.uiInfo.inputFields.length === 0) {
               if($scope.pipelineConfig.previewable) {
-                api.pipelineAgent.previewPipeline('xyz', $scope.previewSourceOffset, $scope.previewBatchSize).
+                api.pipelineAgent.previewPipeline($scope.configName, $scope.previewSourceOffset, $scope.previewBatchSize).
                   success(function (previewData) {
                     var stagePreviewData = getPreviewDataForStage(previewData, stageInstance);
                     stageInstance.uiInfo.inputFields = getFields(stagePreviewData.input);
@@ -730,7 +746,7 @@ angular
     });
 
     $scope.$on('exportPipelineConfig', function () {
-      api.pipelineAgent.exportPipelineConfig('xyz');
+      api.pipelineAgent.exportPipelineConfig($scope.configName);
     });
 
     $scope.$on('importPipelineConfig', function () {
@@ -749,4 +765,9 @@ angular
 
       });
     });
+
+    $scope.$on('onPipelineConfigSelect', function(event, configName) {
+      loadPipelineConfig(configName);
+    });
+
   });
