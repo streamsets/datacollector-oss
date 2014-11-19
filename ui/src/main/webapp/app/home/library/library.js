@@ -7,57 +7,119 @@ angular
 
   .controller('LibraryController', function ($scope, $modal, _, api) {
 
-    $scope.acitveConfigName = 'xyz';
+    angular.extend($scope, {
 
-    $scope.addPipelineConfig = function() {
-      var modalInstance = $modal.open({
-        templateUrl: 'app/home/library/createModal.tpl.html',
-        controller: 'CreateModalInstanceController',
-        size: '',
-        backdrop: true
-      });
+      /**
+       * Emit 'onPipelineConfigSelect' event when new configuration is selected in library panel.
+       *
+       * @param pipeline
+       */
+      onSelect : function(pipeline) {
+        $scope.$emit('onPipelineConfigSelect', pipeline);
+      },
 
-      modalInstance.result.then(function (configObject) {
-        var index = _.sortedIndex($scope.pipelines, configObject.info, function(obj) {
-          return obj.name.toLowerCase();
+      /**
+       * Add New Pipeline Configuration
+       */
+      addPipelineConfig: function() {
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/library/create.tpl.html',
+          controller: 'CreateModalInstanceController',
+          size: '',
+          backdrop: true
         });
 
-        $scope.pipelines.splice(index, 0, configObject.info);
+        modalInstance.result.then(function (configObject) {
+          var index = _.sortedIndex($scope.pipelines, configObject.info, function(obj) {
+            return obj.name.toLowerCase();
+          });
 
+          $scope.pipelines.splice(index, 0, configObject.info);
+          $scope.$emit('onPipelineConfigSelect', configObject.info);
 
-      }, function () {
+        }, function () {
 
-      });
-    };
+        });
+      },
 
+      /**
+       * Delete Pipeline Configuration
+       */
+      deletePipelineConfig: function() {
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/library/delete.tpl.html',
+          controller: 'DeleteModalInstanceController',
+          size: '',
+          backdrop: true,
+          resolve: {
+            activeConfigInfo: function () {
+              return $scope.activeConfigInfo;
+            }
+          }
+        });
 
-    $scope.onSelect = function(pipeline) {
-      $scope.acitveConfigName  = pipeline.name;
-      $scope.$emit('onPipelineConfigSelect', pipeline.name);
-    };
+        modalInstance.result.then(function (configInfo) {
+          var index = _.indexOf($scope.pipelines, _.find($scope.pipelines, function(pipeline){
+            return pipeline.name === configInfo.name;
+          }));
+
+          $scope.pipelines.splice(index, 1);
+          $scope.$emit('onPipelineConfigSelect', $scope.pipelines[0]);
+
+        }, function () {
+
+        });
+      },
+
+      /**
+       * Duplicate Pipeline Configuration
+       */
+      duplicatePipelineConfig: function() {
+
+      }
+
+    });
+
   })
 
   .controller('CreateModalInstanceController', function ($scope, $modalInstance, api) {
-    $scope.issues = [];
-    $scope.newConfig = {
-      name: '',
-      description: ''
-    };
+    angular.extend($scope, {
+      issues: [],
+      newConfig : {
+        name: '',
+        description: ''
+      },
+      save : function () {
+        api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
+          success(function(configObject) {
+            $modalInstance.close(configObject);
+          }).
+          error(function(data) {
+            $scope.issues = [data];
+          });
+      },
+      cancel : function () {
+        $modalInstance.dismiss('cancel');
+      }
+    });
+  })
 
-    $scope.save = function () {
-      api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
-        success(function(configObject) {
-          console.log('Save new configuration');
-          console.log(configObject);
-          $modalInstance.close(configObject);
-        }).
-        error(function(data, status, headers, config) {
-          $scope.issues = [data];
-        });
-    };
+  .controller('DeleteModalInstanceController', function ($scope, $modalInstance, activeConfigInfo, api) {
+    angular.extend($scope, {
+      issues: [],
+      activeConfigInfo: activeConfigInfo,
 
-    $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
-    };
-
+      yes: function() {
+        api.pipelineAgent.deletePipelineConfig(activeConfigInfo.name).
+          success(function() {
+            $modalInstance.close(activeConfigInfo);
+          }).
+          error(function(data) {
+            $scope.issues = [data];
+          });
+      },
+      no: function() {
+        $modalInstance.dismiss('cancel');
+      }
+    });
   });

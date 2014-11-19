@@ -2,21 +2,45 @@
   <div class="panel-heading clearfix">
     <h3 class="panel-title pull-left" translate="global.form.library">Library</h3>
 
-    <button type="button" class="btn btn-primary btn-sm pull-right"
+    <!--button type="button" class="btn btn-primary btn-sm pull-right"
             ng-click="addPipelineConfig()">
       <span class="glyphicon glyphicon-plus"></span>
-    </button>
+    </button-->
+
+    <div class="dropdown pull-right">
+      <button class="btn btn-primary btn-sm" type="button" data-toggle="dropdown" aria-expanded="true">
+        <span class="glyphicon glyphicon-cog"></span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1" href="#" ng-click="addPipelineConfig()">
+            Add
+          </a>
+        </li>
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1" href="#" ng-click="deletePipelineConfig()">
+            Delete
+          </a>
+        </li>
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1" href="#" ng-click="duplicatePipelineConfig()">
+            Duplicate
+          </a>
+        </li>
+      </ul>
+    </div>
 
   </div>
 
   <div class="panel-body">
     <div class="list-group">
       <a href="#" class="list-group-item"
-         ng-class="{'active' : pipeline.name === acitveConfigName}"
+         ng-class="{'active' : pipeline.name === activeConfigInfo.name}"
          ng-click="onSelect(pipeline)"
          ng-repeat="pipeline in pipelines">
-        <h5 class="list-group-item-heading">{{pipeline.name}}</h5>
-        <p class="list-group-item-text">{{pipeline.description}}</p>
+          <h5 class="list-group-item-heading">{{pipeline.name}}</h5>
+          <p class="list-group-item-text">{{pipeline.description}}</p>
       </a>
     </div>
   </div>

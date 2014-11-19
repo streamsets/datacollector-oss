@@ -17,6 +17,7 @@
       "library": "Library",
       "name": "Name",
       "nextStage": "Next Stage",
+      "no": "No",
       "previousStage": "Previous Stage",
       "required": "Required",
       "sampleValue": "Sample Value",
@@ -25,7 +26,8 @@
       "type": "Type",
       "username": "Login",
       "username.placeholder": "Your login",
-      "value": "Value"
+      "value": "Value",
+      "yes": "Yes"
     },
     "messages": {
       "info": {
@@ -64,7 +66,9 @@
     "library": {
       "newPipelineDefinition": "New Pipeline Definition",
       "namePlaceholder": "Pipeline Definition Name",
-      "descriptionPlaceholder": "Pipeline Definition Description"
+      "descriptionPlaceholder": "Pipeline Definition Description",
+      "deleteConfirmationTitle": "Delete Confirmation",
+      "deleteConfirmationMessage": "Are you sure you want to delete Pipeline Configuration '{{name}}'?"
     },
     "import": {
       "headerLabel" : "Import Pipeline Definition",

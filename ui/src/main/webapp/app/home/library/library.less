@@ -1,6 +1,8 @@
 .library-pane {
 
-  height: calc(~"100% - 65px");
+  height: 100%;
+  box-sizing: border-box;
+
 
   .panel-heading {
     padding: @smallPadding @smallPadding*3;
@@ -17,11 +19,13 @@
 
   .panel-body {
     padding: 0;
-    height: 100%;
+    height: calc(~"100% - 45px");
+    box-sizing: border-box;
 
     .list-group {
       height: 100%;
       overflow: auto;
+      box-sizing: border-box;
 
       .list-group-item {
         border-right: none;

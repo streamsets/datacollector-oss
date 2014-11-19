@@ -39,6 +39,9 @@ angular
       previewDataUpdated: false,
       hideLibraryPanel: true,
       configName: 'xyz',
+      activeConfigInfo: {
+        name: 'xyz'
+      },
 
       /**
        * Add Stage Instance to the Pipeline Graph.
@@ -157,7 +160,7 @@ angular
           $scope.previewSourceOffset = 0;
         }
 
-        api.pipelineAgent.previewPipeline($scope.configName, $scope.previewSourceOffset, $scope.previewBatchSize).
+        api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
           success(function (previewData) {
 
             $scope.previewData = previewData;
@@ -380,7 +383,7 @@ angular
 
         });
 
-        api.pipelineAgent.previewPipelineRunStage($scope.configName, instanceName, records).
+        api.pipelineAgent.previewPipelineRunStage($scope.activeConfigInfo.name, instanceName, records).
           success(function (previewData) {
 
             var targetInstanceData = previewData.batchesOutput[0][0];
@@ -411,7 +414,7 @@ angular
      * Fetch definitions for Pipeline and Stages, Pipeline Configuration and Pipeline Information.
      */
     $q.all([api.pipelineAgent.getDefinitions(),
-      api.pipelineAgent.getPipelineConfig($scope.configName),
+      api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name),
       api.pipelineAgent.getPipelines()])
       .then(function (results) {
 
@@ -450,7 +453,6 @@ angular
     var loadPipelineConfig = function(configName) {
       api.pipelineAgent.getPipelineConfig(configName).
         success(function(res) {
-          $scope.configName = configName;
           updateGraph(res);
         }).
         error(function(data, status, headers, config) {
@@ -473,7 +475,7 @@ angular
 
       dirty = false;
       $rootScope.common.saveOperationInProgress = true;
-      api.pipelineAgent.savePipelineConfig($scope.configName, config).
+      api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.name, config).
         success(function (res) {
           $rootScope.common.saveOperationInProgress = false;
 
@@ -508,14 +510,8 @@ angular
       //Force Validity Check - showErrors directive
       $scope.$broadcast('show-errors-check-validity');
 
-      /*if (!pipelineConfig.uiInfo) {
-        pipelineConfig.uiInfo = {
-          label: 'Pipeline',
-          description: 'Default Pipeline'
-        };
-      }*/
-
       $scope.pipelineConfig = pipelineConfig || {};
+      $scope.activeConfigInfo = pipelineConfig.info;
 
       stageCounter = ($scope.pipelineConfig && $scope.pipelineConfig.stages) ?
         $scope.pipelineConfig.stages.length : 0;
@@ -622,7 +618,7 @@ angular
           if(stageInstance.uiInfo.stageType !== SOURCE_STAGE_TYPE) {
             if(!stageInstance.uiInfo.inputFields || stageInstance.uiInfo.inputFields.length === 0) {
               if($scope.pipelineConfig.previewable) {
-                api.pipelineAgent.previewPipeline($scope.configName, $scope.previewSourceOffset, $scope.previewBatchSize).
+                api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
                   success(function (previewData) {
                     var stagePreviewData = getPreviewDataForStage(previewData, stageInstance);
                     stageInstance.uiInfo.inputFields = getFields(stagePreviewData.input);
@@ -746,7 +742,7 @@ angular
     });
 
     $scope.$on('exportPipelineConfig', function () {
-      api.pipelineAgent.exportPipelineConfig($scope.configName);
+      api.pipelineAgent.exportPipelineConfig($scope.activeConfigInfo.name);
     });
 
     $scope.$on('importPipelineConfig', function () {
@@ -766,8 +762,9 @@ angular
       });
     });
 
-    $scope.$on('onPipelineConfigSelect', function(event, configName) {
-      loadPipelineConfig(configName);
+    $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
+      $scope.activeConfigInfo = configInfo;
+      loadPipelineConfig($scope.activeConfigInfo.name);
     });
 
   });

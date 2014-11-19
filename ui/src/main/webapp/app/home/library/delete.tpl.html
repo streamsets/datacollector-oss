@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title" translate="admin.library.deleteConfirmationTitle">Delete Confirmation</h3>
+</div>
+<div class="modal-body">
+  <p translate="admin.library.deleteConfirmationMessage" translate-values="{name: activeConfigInfo.name}">
+  </p>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="no()" translate="global.form.no">
+    No
+  </button>
+  <button type="button" class="btn btn-primary" ng-click="yes()" translate="global.form.yes">
+    Yes
+  </button>
+</div>

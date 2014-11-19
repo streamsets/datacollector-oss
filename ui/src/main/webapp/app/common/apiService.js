@@ -113,6 +113,22 @@ angular.module('pipelineAgentApp.common')
       },
 
       /**
+       * Delete Pipeline Cofiguration.
+       *
+       * @param name
+       * @returns {*}
+       */
+      deletePipelineConfig: function(name) {
+        var url = apiBase + '/pipelines/' + name;
+
+        return $http({
+          method: 'DELETE',
+          url: url
+        });
+      },
+
+
+      /**
        * Export Pipeline Configuration.
        *
        * @param name
