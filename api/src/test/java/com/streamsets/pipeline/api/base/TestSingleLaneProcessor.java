@@ -76,6 +76,27 @@ public class TestSingleLaneProcessor {
     processor.init(info, context);
   }
 
+  @Test(expected = IllegalStateException.class)
+  @SuppressWarnings("unchecked")
+  public void testInvalidConfigMissingSuperInit() throws Exception {
+
+    Processor processor = new SingleLaneProcessor() {
+
+      @Override
+      protected void init() throws StageException {
+      }
+
+      @Override
+      public void process(Batch batch, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
+      }
+    };
+
+    Stage.Info info = Mockito.mock(Stage.Info.class);
+    Processor.Context context = Mockito.mock(Processor.Context.class);
+    Mockito.when(context.getOutputLanes()).thenReturn(Collections.EMPTY_SET);
+    processor.init(info, context);
+  }
+
   @Test
   public void testProcessor() throws Exception {
     Record record1 = Mockito.mock(Record.class);
@@ -85,6 +106,12 @@ public class TestSingleLaneProcessor {
     final BatchMaker batchMaker = Mockito.mock(BatchMaker.class);
 
     Processor processor = new SingleLaneProcessor() {
+
+      @Override
+      protected void init() throws StageException {
+        super.init();
+      }
+
       @Override
       public void process(Batch batch, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
         Iterator<Record> it = batch.getRecords();

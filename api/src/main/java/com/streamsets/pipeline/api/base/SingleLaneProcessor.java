@@ -47,12 +47,17 @@ public abstract class SingleLaneProcessor extends BaseProcessor {
 
   private String outputLane;
 
+  public SingleLaneProcessor() {
+    setRequiresSuperInit();
+  }
+
   @Override
   protected void init() throws StageException {
     if (getContext().getOutputLanes().size() != 1) {
       throw new StageException(ERROR.OUTPUT_LANE_ERROR, getContext().getOutputLanes().size());
     }
     outputLane = getContext().getOutputLanes().iterator().next();
+    setSuperInitCalled();
   }
 
   @Override

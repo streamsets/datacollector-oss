@@ -24,12 +24,25 @@ import com.streamsets.pipeline.api.Stage.Context;
 public abstract class BaseStage<C extends Context> implements Stage<C> {
   private Info info;
   private C context;
+  private boolean requiresSuperInit;
+  private boolean superInitCalled;
 
   @Override
   public final void init(Info info, C context) throws StageException {
     this.info = info;
     this.context = context;
     init();
+    if (requiresSuperInit && !superInitCalled) {
+      throw new IllegalStateException("The stage implementation overridden the init() but didn't call super.init()");
+    }
+  }
+
+  void setRequiresSuperInit() {
+    requiresSuperInit = true;
+  }
+
+  void setSuperInitCalled() {
+    superInitCalled = true;
   }
 
   protected Info getInfo() {
