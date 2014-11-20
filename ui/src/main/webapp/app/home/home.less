@@ -100,11 +100,12 @@
 
     &.maximize-pane2 {
       >.split-handler {
-        height: 4px;
-        top: 12% !important;
+        display: none;
+        /*height: 4px;
+        top: 105px !important;
         left: 0;
         right: 0;
-        cursor: ns-resize;
+        cursor: ns-resize;*/
       }
 
       >.split-pane1, >.split-pane2 {
@@ -113,11 +114,11 @@
       }
 
       >.split-pane1 {
-        height: 10% !important;
+        height: 0 !important;
       }
 
       >.split-pane2 {
-        top: 12% !important;
+        top: 105px !important;
         bottom: 0;
         border-top: 1px solid #aaa;
       }
@@ -126,11 +127,12 @@
 
     &.minimize-pane2 {
       >.split-handler {
-        height: 4px;
+        display: none;
+        /*height: 4px;
         top: 95% ;
         left: 0;
         right: 0;
-        cursor: ns-resize;
+        cursor: ns-resize;*/
       }
 
       >.split-pane1, >.split-pane2 {

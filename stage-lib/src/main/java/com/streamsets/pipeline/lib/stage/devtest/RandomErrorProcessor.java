@@ -49,6 +49,7 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
         getContext().toError(it.next(), "Random error");
       } else {
         // we eat the record
+        it.next();
       }
     }
   }

@@ -185,25 +185,6 @@ angular
       },
 
       /**
-       * Returns length of the preview collection.
-       *
-       * @returns {Array}
-       */
-      getPreviewRange: function () {
-        var range = 0;
-
-        if ($scope.stagePreviewData && $scope.stagePreviewData.input &&
-          $scope.stagePreviewData.input.length) {
-          range = $scope.stagePreviewData.input.length;
-        } else if ($scope.stagePreviewData && $scope.stagePreviewData.output &&
-          $scope.stagePreviewData.output.length) {
-          range = $scope.stagePreviewData.output.length;
-        }
-
-        return new Array(range);
-      },
-
-      /**
        * Checks if configuration has any issue.
        *
        * @param {Object} configObject - The Pipeline Configuration/Stage Configuration Object.
@@ -323,87 +304,16 @@ angular
         }
       },
 
-
-      /**
-       * Returns output records produced by input record.
-       *
-       * @param outputRecords
-       * @param inputRecord
-       * @returns {*}
-       */
-      getOutputRecords: function(outputRecords, inputRecord) {
-        var matchedRecords = _.filter(outputRecords, function(outputRecord) {
-          return outputRecord.header.previousStageTrackingId === inputRecord.header.trackingId;
-        });
-
-        return matchedRecords;
-      },
-
-
       /**
        * Update Preview Stage Instance.
        *
        * @param stageInstance
        */
-      updatePreviewStage: function(stageInstance) {
+      changeStageSelection: function(stageInstance) {
         if(stageInstance) {
           $scope.$broadcast('selectNode', stageInstance);
           updateDetailPane(stageInstance);
         }
-      },
-
-      /**
-       * Set dirty flag to true when record is updated in Preview Mode.
-       *
-       * @param recordUpdated
-       * @param fieldName
-       * @param stageInstance
-       */
-      recordValueUpdated: function(recordUpdated, fieldName, stageInstance) {
-        $scope.previewDataUpdated = true;
-        recordUpdated.dirty = true;
-        recordUpdated.values[fieldName].dirty = true;
-      },
-
-
-      /**
-       * Run Preview with user updated records.
-       *
-       * @param stageInstance
-       * @param inputRecords
-       */
-      stepPreview: function(stageInstance, inputRecords) {
-        var instanceName = stageInstance.instanceName,
-          records = _.map(inputRecords, _.clone);
-
-        _.each(records, function(record) {
-          delete record.dirty;
-
-          _.each(record.values, function(key, value) {
-            delete value.dirty;
-          });
-
-        });
-
-        api.pipelineAgent.previewPipelineRunStage($scope.activeConfigInfo.name, instanceName, records).
-          success(function (previewData) {
-
-            var targetInstanceData = previewData.batchesOutput[0][0];
-
-            _.each($scope.previewData.batchesOutput[0], function(instanceRecords) {
-              if(instanceRecords.instanceName === targetInstanceData.instanceName) {
-                instanceRecords.output = targetInstanceData.output;
-                instanceRecords.errorRecords = targetInstanceData.errorRecords;
-              }
-            });
-
-            updateDetailPane(stageInstance);
-
-            console.log(previewData);
-          }).
-          error(function(data, status, headers, config) {
-            $scope.httpErrors = [data];
-          });
       },
 
       toggleLibraryPanel: function() {
@@ -414,7 +324,6 @@ angular
         $scope.maximizeDetailPane = false;
         $scope.minimizeDetailPane = !$scope.minimizeDetailPane;
       },
-
 
       onMaximizeDetailPane: function() {
         $scope.minimizeDetailPane = false;
@@ -709,7 +618,8 @@ angular
           stageInstance.outputLanes[0] : undefined,
         stagePreviewData = {
           input: [],
-          output: []
+          output: [],
+          errorRecords: []
         },
         batchData = previewData.batchesOutput[0];
 
@@ -718,6 +628,7 @@ angular
           stagePreviewData.input = stageOutput.output[inputLane];
         } else if (outputLane && stageOutput.output[outputLane] && stageOutput.output) {
           stagePreviewData.output = stageOutput.output[outputLane];
+          stagePreviewData.errorRecords = stageOutput.errorRecords;
         }
       });
 
@@ -801,6 +712,12 @@ angular
         ignoreUpdate = true;
         $scope.pipelineConfig = undefined;
       }
+    });
+
+
+    //Preview Panel Events
+    $scope.$on('changeStateInstance', function (event, stageInstance) {
+      updateDetailPane(stageInstance);
     });
 
   });

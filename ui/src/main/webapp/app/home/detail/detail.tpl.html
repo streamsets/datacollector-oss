@@ -3,13 +3,17 @@
   <div class="panel-heading clearfix">
     <h3 class="panel-title pull-left">{{detailPaneConfig.uiInfo.label || pipelineConfig.info.name}}</h3>
 
-
     <div class="pull-right size-toolbar">
-      <span class="glyphicon glyphicon-minus pointer" ng-click="onMinimizeDetailPane()"></span>
       <span class="glyphicon pointer"
+            ng-hide="maximizeDetailPane"
+            ng-class="{'glyphicon-minus' : !minimizeDetailPane , 'glyphicon-resize-full': minimizeDetailPane}"
+            ng-click="onMinimizeDetailPane()"></span>
+      <span class="glyphicon pointer"
+            ng-hide="minimizeDetailPane"
             ng-class="{'glyphicon-fullscreen' : !maximizeDetailPane , 'glyphicon-resize-small': maximizeDetailPane}"
             ng-click="onMaximizeDetailPane()"></span>
     </div>
+
   </div>
 
   <div class="panel-body">
