@@ -96,6 +96,58 @@
       bottom: 0;
       border-top: 1px solid #aaa;
     }
+
+
+    &.maximize-pane2 {
+      >.split-handler {
+        height: 4px;
+        top: 12% !important;
+        left: 0;
+        right: 0;
+        cursor: ns-resize;
+      }
+
+      >.split-pane1, >.split-pane2 {
+        position: absolute;
+        width: 100%;
+      }
+
+      >.split-pane1 {
+        height: 10% !important;
+      }
+
+      >.split-pane2 {
+        top: 12% !important;
+        bottom: 0;
+        border-top: 1px solid #aaa;
+      }
+    }
+
+
+    &.minimize-pane2 {
+      >.split-handler {
+        height: 4px;
+        top: 95% ;
+        left: 0;
+        right: 0;
+        cursor: ns-resize;
+      }
+
+      >.split-pane1, >.split-pane2 {
+        position: absolute;
+        width: 100%;
+      }
+
+      >.split-pane1 {
+        height: 95% !important;
+      }
+
+      >.split-pane2 {
+        top: 95% !important;
+        bottom: 0;
+        border-top: 1px solid #aaa;
+      }
+    }
   }
 }
 
@@ -108,6 +160,7 @@
 
 @import 'graph/graph.less';
 @import 'detail/detail.less';
+@import 'preview/preview.less';
 @import 'library/library.less';
 @import 'import/import.less';
 

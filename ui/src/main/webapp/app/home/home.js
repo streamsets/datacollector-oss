@@ -42,6 +42,8 @@ angular
       activeConfigInfo: {
         name: 'xyz'
       },
+      minimizeDetailPane: false,
+      maximizeDetailPane: false,
 
       /**
        * Add Stage Instance to the Pipeline Graph.
@@ -406,7 +408,19 @@ angular
 
       toggleLibraryPanel: function() {
         $scope.hideLibraryPanel = ! $scope.hideLibraryPanel;
-      }
+      },
+
+      onMinimizeDetailPane: function() {
+        $scope.maximizeDetailPane = false;
+        $scope.minimizeDetailPane = !$scope.minimizeDetailPane;
+      },
+
+
+      onMaximizeDetailPane: function() {
+        $scope.minimizeDetailPane = false;
+        $scope.maximizeDetailPane = !$scope.maximizeDetailPane;
+      },
+
     });
 
 

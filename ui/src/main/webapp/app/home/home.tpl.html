@@ -3,19 +3,19 @@
 <div class="row home-bg-splitter" ng-cloak>
   <bg-splitter orientation="horizontal" ng-class="{'hide-library-panel': hideLibraryPanel}">
 
-    <bg-pane min-size="100">
+    <bg-pane min-size="0">
       <ng-include src="'app/home/library/library.tpl.html'"></ng-include>
     </bg-pane>
 
     <bg-pane min-size="0">
 
-      <bg-splitter orientation="vertical">
+      <bg-splitter orientation="vertical" ng-class="{'minimize-pane2': minimizeDetailPane, 'maximize-pane2': maximizeDetailPane}">
 
-        <bg-pane min-size="100">
+        <bg-pane min-size="0">
           <ng-include src="'app/home/graph/graph.tpl.html'"></ng-include>
         </bg-pane>
 
-        <bg-pane min-size="50" ng-show="pipelineConfig">
+        <bg-pane min-size="0" ng-show="pipelineConfig">
           <ng-include src="'app/home/detail/detail.tpl.html'"></ng-include>
           <ng-include src="'app/home/preview/preview.tpl.html'"></ng-include>
         </bg-pane>
