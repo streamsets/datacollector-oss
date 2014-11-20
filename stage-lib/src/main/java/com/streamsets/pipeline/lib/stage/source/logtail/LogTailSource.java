@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.basics.log;
+package com.streamsets.pipeline.lib.stage.source.logtail;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -35,7 +35,7 @@ import java.util.concurrent.BlockingQueue;
 @StageDef(name = "tailLog",
           version="1.0.1",
           label="Tail log files")
-public class TailLogSource extends BaseSource {
+public class LogTailSource extends BaseSource {
 
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
 
@@ -99,7 +99,7 @@ public class TailLogSource extends BaseSource {
   }
 
   private BlockingQueue<String> logLinesQueue;
-  private TailLog tailLog;
+  private LogTail logTail;
 
   @Override
   protected void init() throws StageException {
@@ -109,13 +109,13 @@ public class TailLogSource extends BaseSource {
       throw new StageException(ERROR.NO_PERMISSION_TO_READ_LOG_FILE, logFile);
     }
     logLinesQueue = new ArrayBlockingQueue<String>(maxLinesPrefetch);
-    tailLog = new TailLog(logFile, tailFromEnd, getInfo(), logLinesQueue);
-    tailLog.start();
+    logTail = new LogTail(logFile, tailFromEnd, getInfo(), logLinesQueue);
+    logTail.start();
   }
 
   @Override
   public void destroy() {
-    tailLog.stop();
+    logTail.stop();
     super.destroy();
   }
 

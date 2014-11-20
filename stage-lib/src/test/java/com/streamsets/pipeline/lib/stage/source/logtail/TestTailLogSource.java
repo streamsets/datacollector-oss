@@ -15,16 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.basics;
+package com.streamsets.pipeline.lib.stage.source.logtail;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.basics.log.TailLogSource;
+import com.streamsets.pipeline.lib.stage.source.logtail.LogTailSource;
 import com.streamsets.pipeline.sdk.testharness.SourceRunner;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,7 +53,7 @@ public class TestTailLogSource {
   @Test
   public void testTailFromEnd() throws Exception {
     long start = System.currentTimeMillis();
-    Map<String, List<Record>> result = new SourceRunner.Builder<TailLogSource>().addSource(TailLogSource.class)
+    Map<String, List<Record>> result = new SourceRunner.Builder<LogTailSource>().addSource(LogTailSource.class)
       .configure("logFileName", logFile)
       .configure("tailFromEnd", true)
       .configure("maxLinesPrefetch", 50)
@@ -74,7 +72,7 @@ public class TestTailLogSource {
 
   @Test
   public void testTailFromBeginning() throws Exception {
-    Map<String, List<Record>> result = new SourceRunner.Builder<TailLogSource>().addSource(TailLogSource.class)
+    Map<String, List<Record>> result = new SourceRunner.Builder<LogTailSource>().addSource(LogTailSource.class)
       .configure("logFileName", logFile)
       .configure("tailFromEnd", false)
       .configure("maxLinesPrefetch", 50)

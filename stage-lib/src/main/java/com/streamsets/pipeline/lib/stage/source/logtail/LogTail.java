@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.basics.log;
+package com.streamsets.pipeline.lib.stage.source.logtail;
 
 import com.streamsets.pipeline.api.Stage;
 import org.apache.commons.io.input.Tailer;
@@ -27,13 +27,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.concurrent.BlockingQueue;
 
-public class TailLog {
-  private final Logger LOG = LoggerFactory.getLogger(TailLog.class);
+public class LogTail {
+  private final Logger LOG = LoggerFactory.getLogger(LogTail.class);
 
   private final Tailer tailer;
   private Thread thread;
 
-  public TailLog(final File logFile, boolean tailFromEnd, Stage.Info info, final BlockingQueue<String> logLinesQueue) {
+  public LogTail(final File logFile, boolean tailFromEnd, Stage.Info info, final BlockingQueue<String> logLinesQueue) {
     TailerListener listener = new TailerListenerAdapter(){
       @Override
       public void handle(String line) {
