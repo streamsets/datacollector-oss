@@ -3,7 +3,7 @@
  */
 
 angular.module('pipelineAgentApp.common')
-  .factory('api', function($rootScope, $http) {
+  .factory('api', function($rootScope, $http, $q) {
     var apiBase = 'rest/v1',
       api = {events: {}};
 
@@ -125,6 +125,33 @@ angular.module('pipelineAgentApp.common')
           method: 'DELETE',
           url: url
         });
+      },
+
+
+      duplicatePipelineConfig: function(name, description, originalConfig) {
+        var deferred = $q.defer();
+        var url = apiBase + '/pipelines/' + name + '?description=' + description;
+
+        //First create new config object and then copy the configuration from original configuration.
+        $http({
+          method: 'PUT',
+          url: url
+        }).then(function(res) {
+          var newConfigObect = res.data;
+          newConfigObect.configuration = originalConfig.configuration;
+          newConfigObect.uiInfo = originalConfig.uiInfo;
+          newConfigObect.stages = originalConfig.stages;
+
+          return $http({
+            method: 'POST',
+            url: url,
+            data: newConfigObect
+          });
+        }).then(function(res) {
+          deferred.resolve(res.data);
+        });
+
+        return deferred.promise;
       },
 
 

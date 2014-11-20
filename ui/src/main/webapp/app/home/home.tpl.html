@@ -15,7 +15,7 @@
           <ng-include src="'app/home/graph/graph.tpl.html'"></ng-include>
         </bg-pane>
 
-        <bg-pane min-size="50">
+        <bg-pane min-size="50" ng-show="pipelineConfig">
           <ng-include src="'app/home/detail/detail.tpl.html'"></ng-include>
           <ng-include src="'app/home/preview/preview.tpl.html'"></ng-include>
         </bg-pane>

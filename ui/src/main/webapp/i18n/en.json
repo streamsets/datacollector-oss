@@ -11,6 +11,7 @@
       "add": "Add",
       "cancel": "Cancel",
       "description": "Description",
+      "duplicate": "Duplicate",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
       "label": "Label",
@@ -68,7 +69,8 @@
       "namePlaceholder": "Pipeline Definition Name",
       "descriptionPlaceholder": "Pipeline Definition Description",
       "deleteConfirmationTitle": "Delete Confirmation",
-      "deleteConfirmationMessage": "Are you sure you want to delete Pipeline Configuration '{{name}}'?"
+      "deleteConfirmationMessage": "Are you sure you want to delete Pipeline Configuration '{{name}}'?",
+      "duplicatePipelineDefinition": "Duplicate Pipeline Definition"
     },
     "import": {
       "headerLabel" : "Import Pipeline Definition",

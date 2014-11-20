@@ -4,7 +4,7 @@
     <ng-include src="'app/home/graph/header.tpl.html'"></ng-include>
   </div>
 
-  <div class="panel-body">
+  <div class="panel-body" ng-show="pipelineConfig">
     <div class="alert alert-danger alert-dismissible" role="alert"
          ng-repeat="issues in pipelineConfig.issues.pipelineIssues">
 

@@ -64,7 +64,13 @@ angular
           }));
 
           $scope.pipelines.splice(index, 1);
-          $scope.$emit('onPipelineConfigSelect', $scope.pipelines[0]);
+
+          if($scope.pipelines.length) {
+            $scope.$emit('onPipelineConfigSelect', $scope.pipelines[0]);
+          } else {
+            $scope.$emit('onPipelineConfigSelect');
+          }
+
 
         }, function () {
 
@@ -75,6 +81,29 @@ angular
        * Duplicate Pipeline Configuration
        */
       duplicatePipelineConfig: function() {
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/library/duplicate.tpl.html',
+          controller: 'DuplicateModalInstanceController',
+          size: '',
+          backdrop: true,
+          resolve: {
+            originalPipelineConfig: function () {
+              return $scope.pipelineConfig;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (configObject) {
+          var index = _.sortedIndex($scope.pipelines, configObject.info, function(obj) {
+            return obj.name.toLowerCase();
+          });
+
+          $scope.pipelines.splice(index, 0, configObject.info);
+          $scope.$emit('onPipelineConfigSelect', configObject.info);
+
+        }, function () {
+
+        });
 
       }
 
@@ -119,6 +148,28 @@ angular
           });
       },
       no: function() {
+        $modalInstance.dismiss('cancel');
+      }
+    });
+  })
+
+  .controller('DuplicateModalInstanceController', function ($scope, $modalInstance, originalPipelineConfig, api, $q) {
+    angular.extend($scope, {
+      issues: [],
+      newConfig : {
+        name: originalPipelineConfig.info.name + 'copy',
+        description: originalPipelineConfig.description
+      },
+      save : function () {
+        $q.when(api.pipelineAgent.duplicatePipelineConfig($scope.newConfig.name, $scope.newConfig.description,
+          originalPipelineConfig)).
+          then(function(configObject) {
+            $modalInstance.close(configObject);
+          },function(data) {
+            $scope.issues = [data];
+          });
+      },
+      cancel : function () {
         $modalInstance.dismiss('cancel');
       }
     });

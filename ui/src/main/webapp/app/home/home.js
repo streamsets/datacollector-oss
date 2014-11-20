@@ -414,7 +414,6 @@ angular
      * Fetch definitions for Pipeline and Stages, Pipeline Configuration and Pipeline Information.
      */
     $q.all([api.pipelineAgent.getDefinitions(),
-      api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name),
       api.pipelineAgent.getPipelines()])
       .then(function (results) {
 
@@ -435,16 +434,27 @@ angular
           return (stageLibrary.type === TARGET_STAGE_TYPE);
         });
 
-        //Pipeline Configuration
-        updateGraph(results[1].data);
-
         //Pipelines
-        $scope.pipelines = results[2].data;
+        $scope.pipelines = results[1].data;
+
+        //TODO: Determine active pipeline
+        $scope.activeConfigInfo = $scope.pipelines && $scope.pipelines.length ? $scope.pipelines[0] : undefined;
+
+        if($scope.activeConfigInfo) {
+          return api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name);
+        }
 
       },function(data, status, headers, config) {
           $scope.httpErrors = [data];
+      })
+      .then(function(res) {
+        //Pipeline Configuration
+        if(res && res.data) {
+          updateGraph(res.data);
+        }
+      },function(data, status, headers, config) {
+        $scope.httpErrors = [data];
       });
-
 
     /**
      * Load Pipeline Configuration by fetching it from server for the given Pipeline Configuration name.
@@ -512,6 +522,12 @@ angular
 
       $scope.pipelineConfig = pipelineConfig || {};
       $scope.activeConfigInfo = pipelineConfig.info;
+
+      //Update Pipeline Info list
+      var index = _.indexOf($scope.pipelines, _.find($scope.pipelines, function(pipeline){
+        return pipeline.name === pipelineConfig.info.name;
+      }));
+      $scope.pipelines[index] = pipelineConfig.info;
 
       stageCounter = ($scope.pipelineConfig && $scope.pipelineConfig.stages) ?
         $scope.pipelineConfig.stages.length : 0;
@@ -763,8 +779,14 @@ angular
     });
 
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
-      $scope.activeConfigInfo = configInfo;
-      loadPipelineConfig($scope.activeConfigInfo.name);
+      if(configInfo) {
+        $scope.activeConfigInfo = configInfo;
+        loadPipelineConfig($scope.activeConfigInfo.name);
+      } else {
+        //No Pipieline config exists
+        ignoreUpdate = true;
+        $scope.pipelineConfig = undefined;
+      }
     });
 
   });

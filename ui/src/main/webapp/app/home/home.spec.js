@@ -274,9 +274,24 @@ describe('Controller: modules/home/HomeCtrl', function () {
       ]
     });
 
+    $httpBackend.expectGET('rest/v1/pipelines').respond(
+      [ {
+        "name" : "xyz",
+        "description" : "asdsad",
+        "created" : 1416442346879,
+        "lastModified" : 1416442355947,
+        "creator" : "nobody",
+        "lastModifier" : "nobody",
+        "lastRev" : "0",
+        "uuid" : "b8b47507-56f3-4478-87ea-9e59865b6458",
+        "valid" : true
+      } ]);
 
     $httpBackend.expectGET('rest/v1/pipelines/xyz').respond({
       uuid: "cdf08ac9-2a97-4167-8a2c-ed48cfcf600e",
+      info: {
+        name: 'xyz'
+      },
       stages: [
         {
           instanceName: "Log files Source1",
@@ -384,9 +399,6 @@ describe('Controller: modules/home/HomeCtrl', function () {
       },
       valid: false
     });
-
-
-    $httpBackend.expectGET('rest/v1/pipelines').respond({});
 
     $controller('HomeController', {
       '$rootScope': $rootScope,
