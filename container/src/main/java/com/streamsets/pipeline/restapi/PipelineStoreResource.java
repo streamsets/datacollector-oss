@@ -41,7 +41,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 
-@Path("/v1/pipelines")
+@Path("/v1/pipeline-library")
 public class PipelineStoreResource {
   private final PipelineStoreTask store;
   private final StageLibraryTask stageLibrary;

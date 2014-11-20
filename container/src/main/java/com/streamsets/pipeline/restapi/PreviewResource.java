@@ -48,7 +48,7 @@ import javax.ws.rs.core.Response;
 import java.security.Principal;
 import java.util.List;
 
-@Path("/v1/pipelines")
+@Path("/v1/pipeline-library")
 public class PreviewResource {
   private static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
   private static final int MAX_BATCH_SIZE_DEFAULT = 10;

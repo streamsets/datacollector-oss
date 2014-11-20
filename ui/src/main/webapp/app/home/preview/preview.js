@@ -15,13 +15,10 @@ angular
        * @returns {*}
        */
       getOutputRecords: function(outputRecords, inputRecord) {
-        var matchedRecords = _.filter(outputRecords, function(outputRecord) {
+        return _.filter(outputRecords, function(outputRecord) {
           return outputRecord.header.previousStageTrackingId === inputRecord.header.trackingId;
         });
-
-        return matchedRecords;
       },
-
 
       /**
        * Returns error records produced by input record.
@@ -31,12 +28,9 @@ angular
        * @returns {*}
        */
       getErrorRecords: function(errorRecords, inputRecord) {
-        debugger;
-        var matchedRecords = _.filter(errorRecords, function(outputRecord) {
+        return _.filter(errorRecords, function(outputRecord) {
           return outputRecord.record.header.trackingId === inputRecord.header.trackingId;
         });
-
-        return matchedRecords;
       },
 
       /**
@@ -51,7 +45,6 @@ angular
         recordUpdated.dirty = true;
         recordUpdated.values[fieldName].dirty = true;
       },
-
 
       /**
        * Run Preview with user updated records.
@@ -85,8 +78,6 @@ angular
             });
 
             $scope.changeStageSelection(stageInstance);
-
-
           }).
           error(function(data, status, headers, config) {
             $scope.httpErrors = [data];

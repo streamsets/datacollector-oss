@@ -28,7 +28,7 @@ angular.module('pipelineAgentApp.common')
        * @returns {*}
        */
       getPipelines: function() {
-        var url = apiBase + '/pipelines';
+        var url = apiBase + '/pipeline-library';
         return $http({
           method: 'GET',
           url: url
@@ -48,7 +48,7 @@ angular.module('pipelineAgentApp.common')
           name = 'xyz';
         }
 
-        url = apiBase + '/pipelines/' + name;
+        url = apiBase + '/pipeline-library/' + name;
         return $http({
           method: 'GET',
           url: url
@@ -68,7 +68,7 @@ angular.module('pipelineAgentApp.common')
           name = 'xyz';
         }
 
-        url = apiBase + '/pipelines/' + name + '?get=info';
+        url = apiBase + '/pipeline-library/' + name + '?get=info';
         return $http({
           method: 'GET',
           url: url
@@ -89,7 +89,7 @@ angular.module('pipelineAgentApp.common')
           name = 'xyz';
         }
 
-        url = apiBase + '/pipelines/' + name;
+        url = apiBase + '/pipeline-library/' + name;
         return $http({
           method: 'POST',
           url: url,
@@ -104,7 +104,7 @@ angular.module('pipelineAgentApp.common')
        * @param description
        */
       createNewPipelineConfig: function(name, description) {
-        var url = apiBase + '/pipelines/' + name + '?description=' + description;
+        var url = apiBase + '/pipeline-library/' + name + '?description=' + description;
 
         return $http({
           method: 'PUT',
@@ -119,7 +119,7 @@ angular.module('pipelineAgentApp.common')
        * @returns {*}
        */
       deletePipelineConfig: function(name) {
-        var url = apiBase + '/pipelines/' + name;
+        var url = apiBase + '/pipeline-library/' + name;
 
         return $http({
           method: 'DELETE',
@@ -130,7 +130,7 @@ angular.module('pipelineAgentApp.common')
 
       duplicatePipelineConfig: function(name, description, originalConfig) {
         var deferred = $q.defer();
-        var url = apiBase + '/pipelines/' + name + '?description=' + description;
+        var url = apiBase + '/pipeline-library/' + name + '?description=' + description;
 
         //First create new config object and then copy the configuration from original configuration.
         $http({
@@ -167,7 +167,7 @@ angular.module('pipelineAgentApp.common')
           name = 'xyz';
         }
 
-        url = apiBase + '/pipelines/' + name + '?attachment=true';
+        url = apiBase + '/pipeline-library/' + name + '?attachment=true';
 
         window.open(url, '_blank', '');
       },
@@ -196,7 +196,7 @@ angular.module('pipelineAgentApp.common')
           batchSize = 10;
         }
 
-        url = apiBase + '/pipelines/' + name + '/preview?sourceOffset=' + sourceOffset +
+        url = apiBase + '/pipeline-library/' + name + '/preview?sourceOffset=' + sourceOffset +
           '&batchSize=' + batchSize + '&rev=' + rev;
 
         return $http({
@@ -220,7 +220,7 @@ angular.module('pipelineAgentApp.common')
           name = 'xyz';
         }
 
-        url = apiBase + '/pipelines/' + name + '/preview?stageInstance=' + stageInstanceName + '&rev=0';
+        url = apiBase + '/pipeline-library/' + name + '/preview?stageInstance=' + stageInstanceName + '&rev=0';
 
         return $http({
           method: 'POST',

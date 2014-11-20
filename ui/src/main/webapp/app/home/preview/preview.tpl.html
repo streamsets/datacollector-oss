@@ -89,18 +89,17 @@
         <thead>
         <tr>
           <th class="col-md-6"
-              translate="admin.detailPane.preview.inputData">
+              translate="admin.previewPane.inputData">
             Input Data
           </th>
 
           <th class="col-md-6"
-              translate="admin.detailPane.preview.outputData">
+              translate="admin.previewPane.outputData">
             Output Data
           </th>
         </tr>
         </thead>
         <tbody>
-
 
         <tr ng-if="detailPaneConfig.uiInfo.stageType === 'SOURCE'"
             ng-repeat="outputRecord in stagePreviewData.output">
@@ -114,7 +113,7 @@
               <span class="glyphicon glyphicon-collapse-down"
                     ng-if="outputRecord.expand === true"></span>
 
-              Record{{$index+1}}
+              {{'global.form.record' | translate}}{{$index+1}}
             </label>
             <ul class="preview-list" ng-if="outputRecord.expand === true">
               <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.values">
@@ -125,7 +124,6 @@
           </td>
         </tr>
 
-
         <tr ng-if="detailPaneConfig.uiInfo.stageType === 'PROCESSOR'"
             ng-repeat="inputRecord in stagePreviewData.input">
           <td>
@@ -134,7 +132,7 @@
                     ng-if="inputRecord.expand !== true"></span>
               <span class="glyphicon glyphicon-collapse-down"
                     ng-if="inputRecord.expand === true"></span>
-              Record{{$index+1}}
+              {{'global.form.record' | translate}}{{$index+1}}
               <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="inputRecord.dirty"></span>
             </label>
             <ul class="preview-list" ng-if="inputRecord.expand === true">
@@ -152,13 +150,13 @@
             </ul>
           </td>
           <td>
-            <div ng-repeat="outputRecord in getOutputRecords(stagePreviewData.output, inputRecord)">
+            <div ng-repeat="outputRecord in outputRecords = getOutputRecords(stagePreviewData.output, inputRecord)">
               <label class="pointer" ng-click="outputRecord.expand = !outputRecord.expand">
                 <span class="glyphicon glyphicon-expand"
                       ng-if="outputRecord.expand !== true"></span>
                 <span class="glyphicon glyphicon-collapse-down"
                       ng-if="outputRecord.expand === true"></span>
-                Record{{$parent.$index+1}} - Output Record{{$index + 1}}
+                {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.outputRecord' | translate}} {{$index + 1}}
               </label>
               <ul class="preview-list" ng-if="outputRecord.expand === true">
                 <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.values">
@@ -168,14 +166,13 @@
               </ul>
             </div>
 
-
-            <div ng-repeat="errorRecord in getErrorRecords(stagePreviewData.errorRecords, inputRecord)">
+            <div ng-repeat="errorRecord in errorsRecords = getErrorRecords(stagePreviewData.errorRecords, inputRecord)">
               <label class="pointer label label-danger" ng-click="errorRecord.expand = !errorRecord.expand">
                 <span class="glyphicon glyphicon-expand"
                       ng-if="errorRecord.expand !== true"></span>
                 <span class="glyphicon glyphicon-collapse-down"
                       ng-if="errorRecord.expand === true"></span>
-                Record{{$parent.$index+1}} - Error Record - {{errorRecord.message}}
+                {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.message}}
               </label>
               <ul class="preview-list" ng-if="errorRecord.expand === true">
                 <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in errorRecord.record.values">
@@ -184,9 +181,13 @@
                 </li>
               </ul>
             </div>
+
+            <div ng-if="outputRecords.length === 0 && errorsRecords.length === 0">
+              <label class="label label-warning">{{'admin.previewPane.noOutputWarning' | translate}}</label>
+            </div>
+
           </td>
         </tr>
-
 
         <tr ng-if="detailPaneConfig.uiInfo.stageType === 'TARGET'"
             ng-repeat="inputRecord in stagePreviewData.input">
@@ -196,7 +197,7 @@
                     ng-if="inputRecord.expand !== true"></span>
               <span class="glyphicon glyphicon-collapse-down"
                     ng-if="inputRecord.expand === true"></span>
-              Record{{$index+1}}
+              {{'global.form.record' | translate}}{{$index+1}}
             </label>
             <ul class="preview-list" ng-if="inputRecord.expand === true">
               <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in inputRecord.values">

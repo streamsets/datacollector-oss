@@ -12,6 +12,7 @@
       "cancel": "Cancel",
       "description": "Description",
       "duplicate": "Duplicate",
+      "errorRecord": "Error Record",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
       "label": "Label",
@@ -19,7 +20,9 @@
       "name": "Name",
       "nextStage": "Next Stage",
       "no": "No",
+      "outputRecord": "Output Record",
       "previousStage": "Previous Stage",
+      "record": "Record",
       "required": "Required",
       "sampleValue": "Sample Value",
       "save": "Save",
@@ -56,13 +59,14 @@
       "targets": "Targets"
     },
     "detailPane": {
-      "previewRecords": "Preview Records",
       "general": "General",
-      "configuration": "Configuration",
-      "preview": {
-        "inputData": "Input Data",
-        "outputData": "Output Data"
-      }
+      "configuration": "Configuration"
+    },
+    "previewPane": {
+      "previewRecords": "Preview Records",
+      "inputData": "Input Data",
+      "outputData": "Output Data",
+      "noOutputWarning": "No output records produced."
     },
     "library": {
       "newPipelineDefinition": "New Pipeline Definition",
