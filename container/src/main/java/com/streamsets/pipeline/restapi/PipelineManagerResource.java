@@ -49,7 +49,9 @@ public class PipelineManagerResource {
   @Path("/start")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response startPipeline(@QueryParam("name") String name, @QueryParam("rev") @DefaultValue("0") String rev)
+  public Response startPipeline(
+      @QueryParam("name") String name,
+      @QueryParam("rev") @DefaultValue("0") String rev)
       throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineStateException {
 
     PipelineState ps = pipelineManager.startPipeline(name, rev);
@@ -66,17 +68,20 @@ public class PipelineManagerResource {
   }
 
   @Path("/offset")
-  @PUT
+  @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response setOffset(@QueryParam("name") String name, @QueryParam("rev") String rev
-      , @QueryParam("offset") String offset) throws PipelineStateException {
+  public Response setOffset(
+      @QueryParam("name") String name,
+      @QueryParam("rev") String rev,
+      @QueryParam("offset") String offset) throws PipelineStateException {
     SourceOffset so = new SourceOffset(pipelineManager.setOffset(offset));
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(so).build();
   }
 
   @Path("/snapshot")
   @PUT
-  public Response captureSnapshot(@QueryParam("batchSize") int batchSize) throws PipelineStateException {
+  public Response captureSnapshot(
+      @QueryParam("batchSize") int batchSize) throws PipelineStateException {
     pipelineManager.captureSnapshot(batchSize);
     return Response.ok().build();
   }
@@ -84,11 +89,10 @@ public class PipelineManagerResource {
   @Path("/snapshot")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getSnapshot(@QueryParam("get") @DefaultValue("data") String get) {
-    if(get.equals("status")) {
-      return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshotStatus()).build();
-    }
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshot()).build();
+  public Response getSnapshot(
+      @QueryParam("get") @DefaultValue("data") String get) {
+    Object response = get.equals("status") ? pipelineManager.getSnapshotStatus() : pipelineManager.getSnapshot();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(response).build();
   }
 
   @Path("/snapshot")

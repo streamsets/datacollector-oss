@@ -111,7 +111,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     PipelineState ps = getPipelineState();
     if(State.RUNNING.equals(ps.getState())) {
       try {
-        LOG.debug(Utils.format("Starting pipeline {} {}", ps.getName(), ps.getRev()));
+        LOG.debug("Starting pipeline {} {}", ps.getName(), ps.getRev());
         handleStartRequest(ps.getName(), ps.getRev());
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -125,7 +125,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     LOG.debug("Stopping Production Pipeline Manager");
     PipelineState ps = getPipelineState();
     if(State.RUNNING.equals(ps.getState())) {
-      LOG.debug(Utils.format("Stopping pipeline {} {}", ps.getName(), ps.getRev()));
+      LOG.debug("Stopping pipeline {} {}", ps.getName(), ps.getRev());
       try {
         stopPipeline();
       } catch (PipelineStateException e) {
@@ -145,25 +145,24 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   }
 
   public String setOffset(String offset) throws PipelineStateException {
-    LOG.debug(Utils.format("Setting offset {}", offset));
+    LOG.debug("Setting offset {}", offset);
     //cannot set offset if current state is RUNNING
     checkState(!getPipelineState().getState().equals(State.RUNNING),
         PipelineStateException.ERROR.CANNOT_SET_OFFSET_RUNNING_STATE);
     offsetTracker.setOffset(offset);
     offsetTracker.commitOffset();
-    LOG.debug(Utils.format("Offset set to {}", offset));
     return offsetTracker.getOffset();
   }
 
   public void captureSnapshot(int batchSize) throws PipelineStateException {
-    LOG.debug(Utils.format("Capturing snapshot with batch size {}", batchSize));
+    LOG.debug("Capturing snapshot with batch size {}", batchSize);
     checkState(getPipelineState().getState().equals(State.RUNNING),
         PipelineStateException.ERROR.CANNOT_CAPTURE_SNAPSHOT_WHEN_PIPELINE_NOT_RUNNING);
     if(batchSize <= 0) {
       throw new PipelineStateException(PipelineStateException.ERROR.INVALID_BATCH_SIZE, batchSize);
     }
     prodPipeline.captureSnapshot(batchSize);
-    LOG.debug(Utils.format("Captured snapshot with batch size {}", batchSize));
+    LOG.debug("Captured snapshot with batch size {}", batchSize);
   }
 
   public SnapshotStatus getSnapshotStatus() {
@@ -183,7 +182,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public PipelineState startPipeline(String name, String rev) throws PipelineStoreException
       , PipelineStateException, PipelineRuntimeException, StageException {
     synchronized (pipelineMutex) {
-      LOG.debug(Utils.format("Starting pipeline {} {}", name, rev));
+      LOG.info("Starting pipeline {} {}", name, rev);
       validateStateTransition(State.RUNNING);
       return handleStartRequest(name, rev);
     }
@@ -191,9 +190,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
   public PipelineState stopPipeline() throws PipelineStateException {
     synchronized (pipelineMutex) {
-      LOG.debug("Stopping pipeline ");
       validateStateTransition(State.STOPPING);
       setState(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING, Constants.STOP_PIPELINE_MESSAGE);
+      LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
       return handleStopRequest();
     }
   }
@@ -205,7 +204,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     pipelineRunnable = new ProductionPipelineRunnable(this, prodPipeline, name, rev);
     executor.submit(pipelineRunnable);
     setState(name, rev, State.RUNNING, null);
-    LOG.debug(Utils.format("Started pipeline {} {}", name, rev));
+    LOG.debug("Started pipeline {} {}", name, rev);
     return getPipelineState();
   }
 

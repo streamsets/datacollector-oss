@@ -39,7 +39,6 @@ import javax.inject.Singleton;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import java.io.*;
@@ -80,9 +79,8 @@ public class TestPipelineManagerResource extends JerseyTest {
 
   @Test
   public void testSetOffsetAPI() {
-    Entity<String> stringEntity = Entity.entity("", MediaType.APPLICATION_JSON);
     Response r = target("/v1/pipeline/offset").queryParam("name", "xyz").queryParam("rev", "1.0")
-        .queryParam("offset", "myOffset").request().put(stringEntity);
+        .queryParam("offset", "myOffset").request().post(null);
 
     Assert.assertNotNull(r);
     SourceOffset so = r.readEntity(SourceOffset.class);
@@ -193,7 +191,7 @@ public class TestPipelineManagerResource extends JerseyTest {
     }
 
     @Override
-    public void dispose(ProductionPipelineManagerTask pipelineStore) {
+    public void dispose(ProductionPipelineManagerTask pipelineManagerTask) {
     }
   }
 }

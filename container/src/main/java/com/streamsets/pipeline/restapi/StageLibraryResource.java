@@ -69,25 +69,14 @@ public class StageLibraryResource {
                           @QueryParam("library") String library,
                           @QueryParam("version") String version) {
     StageDefinition stage = stageLibrary.getStage(library, name, version);
-    String iconFile = null;
+    String iconFile;
     if(stage.getIcon() != null && !stage.getIcon().isEmpty()) {
       iconFile = stage.getIcon();
     } else {
       iconFile = DEFAULT_ICON_FILE;
     }
-
     final InputStream resourceAsStream = stage.getStageClassLoader().getResourceAsStream(
       iconFile);
-    StreamingOutput stream = new StreamingOutput() {
-      @Override
-      public void write(OutputStream output) throws IOException, WebApplicationException {
-        try {
-          IOUtils.copy(resourceAsStream, output);
-        } catch (Exception e) {
-          throw new WebApplicationException(e);
-        }
-      }
-    };
-    return Response.ok().type(MediaType.APPLICATION_SVG_XML_TYPE).entity(stream).build();
+    return Response.ok().type(MediaType.APPLICATION_SVG_XML_TYPE).entity(resourceAsStream).build();
   }
 }

@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -47,9 +48,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private String newSourceOffset;
   private DeliveryGuarantee deliveryGuarantee;
 
-
-  /*For each batch of data, holds output from each stage for that batch*/
-  private List<List<StageOutput>> batchOutputs;
   /*indicates if the execution must be stopped after the current batch*/
   private volatile boolean stop = false;
   /*indicates if the next batch of data should be captured, only the next batch*/
@@ -64,7 +62,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.batchSize = batchSize;
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
     this.deliveryGuarantee = deliveryGuarantee;
-    batchOutputs = new ArrayList<List<StageOutput>>();
     this.snapshotStore = snapshotStore;
   }
 
@@ -81,8 +78,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   @Override
-  public List<List<StageOutput>> getBatchesOutput() {
-    return batchOutputs;
+  public List<StageOutput> getBatchesOutput() {
+    if(snapshotStore.getSnapshotStatus().isExists()) {
+      return snapshotStore.retrieveSnapshot();
+    }
+    return Collections.EMPTY_LIST;
   }
 
   public String getSourceOffset() {
@@ -117,9 +117,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   private void runBatch(Pipe[] pipes) throws PipelineRuntimeException, StageException {
     boolean committed = false;
+    /*value true indicates that this batch is captured */
+    boolean batchCaptured = false;
     PipeBatch pipeBatch;
 
     if(captureNextBatch) {
+      batchCaptured = true;
       pipeBatch = new FullPipeBatch(offsetTracker, snapshotBatchSize, true /*snapshot stage output*/);
     } else {
       pipeBatch = new FullPipeBatch(offsetTracker, batchSize, false /*snapshot stage output*/);
@@ -141,22 +144,18 @@ public class ProductionPipelineRunner implements PipelineRunner {
     }
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     newSourceOffset = offsetTracker.getOffset();
-    List<StageOutput> snapShot = pipeBatch.getSnapshotsOfAllStagesOutput();
-    if(snapShot != null) {
-      snapshotStore.storeSnapshot(snapShot);
-      batchOutputs.add(snapShot);
-      afterSnapshot();
+
+    if(batchCaptured) {
+      List<StageOutput> snapshot = pipeBatch.getSnapshotsOfAllStagesOutput();
+      snapshotStore.storeSnapshot(snapshot);
+      /*
+       * Reset the capture snapshot variable only after capturing the snapshot
+       * This guarantees that once captureSnapshot is called, the output is captured exactly once
+       * */
+      captureNextBatch = false;
+      snapshotBatchSize = 0;
     }
 
-  }
-
-  private void afterSnapshot() {
-    /*
-    * Reset the capture snapshot variable only after capturing the snapshot
-    * This guarantees that once captureSnapshot is called, the output is captured exactly once
-    * */
-    captureNextBatch = false;
-    snapshotBatchSize = 0;
   }
 
 }

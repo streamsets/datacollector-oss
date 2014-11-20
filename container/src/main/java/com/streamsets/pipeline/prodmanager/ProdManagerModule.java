@@ -30,12 +30,12 @@ import dagger.Provides;
 import javax.inject.Singleton;
 
 @Module(library = true, includes = {RuntimeModule.class, PipelineStoreModule.class, StageLibraryModule.class})
-public class PipelineStateModule {
+public class ProdManagerModule {
 
   @Provides
   @Singleton
-  public ProductionPipelineManagerTask provideStateManager(RuntimeInfo runtimeInfo, Configuration configuration
-      ,PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
+  public ProductionPipelineManagerTask provideProdPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration
+      , PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
     return new ProductionPipelineManagerTask(runtimeInfo, configuration, pipelineStore, stageLibrary);
   }
 }

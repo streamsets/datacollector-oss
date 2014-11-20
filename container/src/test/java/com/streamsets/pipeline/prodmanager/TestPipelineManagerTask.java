@@ -27,9 +27,12 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.TestUtil;
+import org.apache.commons.io.FileUtils;
 import org.junit.*;
 import org.mockito.Mockito;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class TestPipelineManagerTask {
@@ -37,9 +40,16 @@ public class TestPipelineManagerTask {
   private ProductionPipelineManagerTask manager = null;
 
   @BeforeClass
-  public static void beforeClass() {
+  public static void beforeClass() throws IOException {
     System.setProperty("pipeline.data.dir", "./target/var");
+    File f = new File(System.getProperty("pipeline.data.dir"));
+    FileUtils.deleteDirectory(f);
     TestUtil.captureMockStages();
+  }
+
+  @AfterClass
+  public static void afterClass() throws IOException {
+    System.getProperties().remove("pipeline.data.dir");
   }
 
   @Before()
@@ -110,92 +120,6 @@ public class TestPipelineManagerTask {
   }
 
   @Test(expected = PipelineStateException.class)
-  public void testStopPipelineWhenNotRunning() throws PipelineStateException, StageException, PipelineRuntimeException, PipelineStoreException {
-    manager.stopPipeline();
-  }
-
-  /*@Test
-  public void testStartPipeline() throws PipelineStoreException, PipelineStateException, PipelineRuntimeException, StageException {
-    manager.startPipeline("1.0");
-
-  }*/
-
-  /*
-
-  @Test
-  public void testRunningToError() throws PipelineStateException {
-
-    Assert.assertEquals(State.NOT_RUNNING, manager.getPipelineState().getState());
-
-    manager.setState("1.0", State.RUNNING, "Started Running");
-    Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
-    Assert.assertEquals("Started Running", manager.getPipelineState().getMessage());
-
-    manager.setState("1.0", State.ERROR, "Error");
-    Assert.assertEquals(State.ERROR, manager.getPipelineState().getState());
-    Assert.assertEquals("Error", manager.getPipelineState().getMessage());
-
-  }
-
-  @Test
-  public void testSuccessState() throws PipelineRuntimeException {
-    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(FileSnapshotStore.class),tracker, 5
-        , DeliveryGuarantee.AT_MOST_ONCE);
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
-        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
-
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "1.0");
-
-    //state should be not running
-    Assert.assertEquals(State.NOT_RUNNING, manager.getPipelineState().getState());
-
-    //Stops after the first batch
-    runnable.run();
-
-    Assert.assertTrue(manager.getPipelineState() != null);
-    Assert.assertEquals(State.NOT_RUNNING, manager.getPipelineState().getState());
-    Assert.assertEquals("Completed successfully.", manager.getPipelineState().getMessage());
-    //Offset 1 expected as there was a Runtime exception
-    Assert.assertEquals(null, pipeline.getCommittedOffset());
-    //no output as captured as there was an exception in source
-    Assert.assertTrue(runner.getBatchesOutput().isEmpty());
-
-  }
-
-  @Test
-  public void testErrorState() throws PipelineRuntimeException {
-    MockStages.setSourceCapture(new BaseSource() {
-      @Override
-      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-        throw new RuntimeException("Simulate runtime failure in source");
-      }
-    });
-
-    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(FileSnapshotStore.class),tracker, 5
-        , DeliveryGuarantee.AT_MOST_ONCE);
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
-        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
-
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "1.0");
-    runner.captureNextBatch(1);
-
-    //state should be not running
-
-    Assert.assertEquals(State.NOT_RUNNING, manager.getPipelineState().getState());
-    runnable.run();
-
-    Assert.assertTrue(manager.getPipelineState() != null);
-    Assert.assertEquals(State.ERROR, manager.getPipelineState().getState());
-    Assert.assertTrue(manager.getPipelineState().getMessage() != null && !manager.getPipelineState().getMessage().isEmpty());
-    //Offset 1 expected as there was a Runtime exception
-    Assert.assertEquals("1", pipeline.getCommittedOffset());
-    //no output as captured as there was an exception in source
-    Assert.assertTrue(runner.getBatchesOutput().isEmpty());
-  }*/
-
-  @Test(expected = PipelineStateException.class)
   public void testCaptureSnapshot() throws PipelineStateException {
     //cannot capture snapshot when pipeline is not running
     manager.captureSnapshot(10);
@@ -203,9 +127,15 @@ public class TestPipelineManagerTask {
 
   @Test(expected = PipelineStateException.class)
   public void testCaptureSnapshotInvalidBatch() throws PipelineStateException {
-    //cannot capture snapshot when pipeline is not running
+    //cannot capture snapshot with wrong batch size
     manager.setState("xyz", "1.0", State.RUNNING, "Started Running");
     manager.captureSnapshot(0);
+  }
+
+  @Test(expected = PipelineStateException.class)
+  public void testStopPipelineWhenNotRunning() throws PipelineStateException, StageException, PipelineRuntimeException, PipelineStoreException {
+    Assert.assertEquals(State.NOT_RUNNING, manager.getPipelineState().getState());
+    manager.stopPipeline();
   }
 
 }

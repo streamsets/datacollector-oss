@@ -38,7 +38,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(PrincipalInjector.class).to(Principal.class);
         bindFactory(URIInjector.class).to(URI.class);
         bindFactory(ConfigurationInjector.class).to(Configuration.class);
-        bindFactory(PipelineStateMgrInjector.class).to(ProductionPipelineManagerTask.class);
+        bindFactory(ProductionPipelineManagerInjector.class).to(ProductionPipelineManagerTask.class);
       }
     });
   }

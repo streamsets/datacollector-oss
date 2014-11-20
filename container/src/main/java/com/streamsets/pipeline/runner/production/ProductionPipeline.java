@@ -23,15 +23,20 @@ import com.streamsets.pipeline.runner.PipelineRuntimeException;
 
 public class ProductionPipeline {
   private final Pipeline pipeline;
+  private final ProductionPipelineRunner pipelineRunner;
 
   public ProductionPipeline(Pipeline pipeline) {
     this.pipeline = pipeline;
+    this.pipelineRunner =  (ProductionPipelineRunner)pipeline.getRunner();
   }
 
   public void run() throws StageException, PipelineRuntimeException{
     pipeline.init();
-    pipeline.run();
-    pipeline.destroy();
+    try {
+      pipeline.run();
+    } finally {
+      pipeline.destroy();
+    }
   }
 
   public Pipeline getPipeline() {
@@ -39,18 +44,18 @@ public class ProductionPipeline {
   }
 
   public void stop() {
-    ((ProductionPipelineRunner)pipeline.getRunner()).stop();
+    pipelineRunner.stop();
   }
 
   public boolean wasStopped() {
-    return ((ProductionPipelineRunner)pipeline.getRunner()).wasStopped();
+    return pipelineRunner.wasStopped();
   }
 
   public String getCommittedOffset() {
-    return ((ProductionPipelineRunner)pipeline.getRunner()).getCommittedOffset();
+    return pipelineRunner.getCommittedOffset();
   }
 
   public void captureSnapshot(int batchSize) {
-    ((ProductionPipelineRunner)pipeline.getRunner()).captureNextBatch(batchSize);
+    pipelineRunner.captureNextBatch(batchSize);
   }
 }

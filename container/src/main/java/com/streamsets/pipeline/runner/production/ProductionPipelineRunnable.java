@@ -63,7 +63,7 @@ public class ProductionPipelineRunnable implements Runnable {
         LOG.error(Utils.format("An exception occurred while committing the state, {}", ex.getMessage()));
       }
     } catch (Error e) {
-      LOG.error(Utils.format("An error occurred while running the pipeline, {}", e.getMessage()));
+      LOG.error(Utils.format("A JVM error occurred while running the pipeline, {}", e.getMessage()));
       throw e;
     }
   }

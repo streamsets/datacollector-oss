@@ -40,7 +40,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
   private final int batches;
   private final boolean skipTargets;
   private final MetricRegistry metrics;
-  private final List<List<StageOutput>> batchesOuptut;
+  private final List<StageOutput> batchesOuptut;
   private String sourceOffset;
   private String newSourceOffset;
   private Timer processingTimer;
@@ -52,7 +52,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
     this.skipTargets = skipTargets;
     this.metrics = new MetricRegistry();
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
-    batchesOuptut = new ArrayList<List<StageOutput>>();
+    batchesOuptut = new ArrayList<StageOutput>();
   }
 
   @Override
@@ -74,12 +74,12 @@ public class PreviewPipelineRunner implements PipelineRunner {
       offsetTracker.commitOffset();
       processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
       newSourceOffset = offsetTracker.getOffset();
-      batchesOuptut.add(pipeBatch.getSnapshotsOfAllStagesOutput());
+      batchesOuptut.addAll(pipeBatch.getSnapshotsOfAllStagesOutput());
     }
   }
 
   @Override
-  public List<List<StageOutput>> getBatchesOutput() {
+  public List<StageOutput> getBatchesOutput() {
     return batchesOuptut;
   }
 

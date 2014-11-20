@@ -24,6 +24,9 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 
+import java.util.Random;
+import java.util.UUID;
+
 public class TestUtil {
 
   public static class SourceOffsetTrackerImpl implements SourceOffsetTracker {
@@ -81,6 +84,39 @@ public class TestUtil {
       @Override
       protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
         record.setField("f", Field.create(2));
+        batchMaker.addRecord(record);
+      }
+    });
+    MockStages.setTargetCapture(new BaseTarget() {
+      @Override
+      public void write(Batch batch) throws StageException {
+      }
+    });
+  }
+
+  public static void captureStagesForProductionRun() {
+    MockStages.setSourceCapture(new BaseSource() {
+
+      @Override
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+        maxBatchSize = (maxBatchSize > -1) ? maxBatchSize : 10;
+        for (int i = 0; i < maxBatchSize; i++ ) {
+          batchMaker.addRecord(createRecord(lastSourceOffset, i));
+        }
+        return "random";
+      }
+
+      private Record createRecord(String lastSourceOffset, int batchOffset) {
+        Record record = getContext().createRecord("random:" + batchOffset);
+        record.setField("name", Field.create(UUID.randomUUID().toString()));
+        record.setField("time", Field.create(System.currentTimeMillis()));
+        return record;
+      }
+    });
+    MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
+      @Override
+      protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+        record.setField("uuid", Field.create(UUID.randomUUID().toString()));
         batchMaker.addRecord(record);
       }
     });

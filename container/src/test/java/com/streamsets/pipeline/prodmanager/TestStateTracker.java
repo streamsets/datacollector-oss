@@ -20,10 +20,13 @@ package com.streamsets.pipeline.prodmanager;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.TestUtil;
+import org.apache.commons.io.FileUtils;
 import org.junit.*;
 import org.mockito.Mockito;
 import org.omg.SendingContext.RunTime;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class TestStateTracker {
@@ -31,9 +34,16 @@ public class TestStateTracker {
   private StateTracker stateTracker;
 
   @BeforeClass
-  public static void beforeClass() {
+  public static void beforeClass() throws IOException {
     System.setProperty("pipeline.data.dir", "./target/var");
+    File f = new File(System.getProperty("pipeline.data.dir"));
+    FileUtils.deleteDirectory(f);
     TestUtil.captureMockStages();
+  }
+
+  @AfterClass
+  public static void afterClass() throws IOException {
+    System.getProperties().remove("pipeline.data.dir");
   }
 
   @Before()

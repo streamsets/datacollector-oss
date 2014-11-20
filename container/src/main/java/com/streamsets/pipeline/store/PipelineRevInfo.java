@@ -17,6 +17,9 @@
  */
 package com.streamsets.pipeline.store;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 public class PipelineRevInfo {
@@ -34,6 +37,22 @@ public class PipelineRevInfo {
     tag = null;
     description = null;
     valid = info.isValid();
+  }
+
+  @JsonCreator
+  public PipelineRevInfo(
+      @JsonProperty("date") Date date,
+      @JsonProperty("user") String user,
+      @JsonProperty("rev") String rev,
+      @JsonProperty("tag") String tag,
+      @JsonProperty("description") String description,
+      @JsonProperty("valid") boolean valid) {
+    this.date = date;
+    this.user = user;
+    this.rev = rev;
+    this.tag = tag;
+    this.description = description;
+    this.valid = valid;
   }
 
   public Date getDate() {
