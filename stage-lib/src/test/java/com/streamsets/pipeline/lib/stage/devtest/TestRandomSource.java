@@ -15,11 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.basics;
+package com.streamsets.pipeline.lib.stage.devtest;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.stage.devtest.RandomSource;
 import com.streamsets.pipeline.sdk.testharness.internal.Constants;
 import com.streamsets.pipeline.sdk.testharness.SourceRunner;
 import org.junit.Assert;

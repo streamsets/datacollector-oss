@@ -1,4 +1,4 @@
-package com.streamsets.pipeline.lib.basics;
+package com.streamsets.pipeline.lib.stage.devtest;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.ValuesProvider;

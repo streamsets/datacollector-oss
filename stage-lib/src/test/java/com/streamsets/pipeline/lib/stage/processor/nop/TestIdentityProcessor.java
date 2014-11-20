@@ -15,11 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.basics;
+package com.streamsets.pipeline.lib.stage.processor.nop;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.lib.stage.processor.nop.IdentityProcessor;
 import com.streamsets.pipeline.sdk.testharness.internal.Constants;
 import com.streamsets.pipeline.sdk.testharness.ProcessorRunner;
 import com.streamsets.pipeline.sdk.testharness.RecordProducer;

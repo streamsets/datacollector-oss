@@ -15,34 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.basics;
+package com.streamsets.pipeline.lib.stage.devtest;
 
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.ConfigDef.Type;
+import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
-import java.util.Map;
+import java.util.List;
 
-@StageDef(name = "fieldTypeConverter", version="1.0.0", label="Field Type Converter")
-public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
+@StageDef(name = "fieldRemover", version="1.0.0", label="Field Remover")
+public class FieldRemoverProcessor extends SingleLaneRecordProcessor {
 
-  @ConfigDef(name = "fieldsToConvert", label = "Fields to convert", required = false,type = Type.MODEL, defaultValue="")
-  @FieldModifier(type= FieldModifier.Type.PROVIDED, valuesProvider = ConverterValuesProvider.class)
-  public Map<String, String> fields;
+  @ConfigDef(name = "fieldsToRemove", label = "Fields to remove", required = true,type = Type.MODEL, defaultValue="")
+  @FieldSelector
+  public List<String> fields;
 
-  // the annotations processor will fail if variable is not Map
-
-  /* bundle
-   stage.label=
-   stage.description=
-   config.#NAME#.label=
-   config.#NAME#.description=
-   config.#NAME#.value.BOOLEAN=
-   config.#NAME#.value.BYTE=
-   config.#NAME#.value.CHAR=
-   config.#NAME#.value.INTEGER=
-   config.#NAME#.value.LONG=
-   */
+  // the annotations processor will fail if variable is not List
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {

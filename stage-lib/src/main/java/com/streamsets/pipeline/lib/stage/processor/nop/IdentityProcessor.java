@@ -15,39 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.basics;
+package com.streamsets.pipeline.lib.stage.processor.nop;
 
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 import java.util.Iterator;
 
-@StageDef(name = "recordCreator", version = "1.0.0", label = "Record Creator",
-          description = "It creates 2 records from each original record")
-public class RecordCreatorProcessor extends SingleLaneProcessor {
+@StageDef(name = "identityProcessor", version = "1.0.0", label = "Identity",
+          description = "It echoes every record it receives preserving the lanes")
+public class IdentityProcessor extends SingleLaneProcessor {
 
   @Override
   public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws
       StageException {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
-      Record record = it.next();
-      Record record1 = getContext().createRecord(record);
-      Record record2 = getContext().createRecord(record);
-      Iterator<String> fIt = record.getFieldNames();
-      while (fIt.hasNext()) {
-        String name = fIt.next();
-        record1.setField(name, record.getField(name));
-        record2.setField(name, record.getField(name));
-      }
-      record1.setField("expanded", Field.create(1));
-      record2.setField("expanded", Field.create(2));
-      batchMaker.addRecord(record1);
-      batchMaker.addRecord(record2);
+      batchMaker.addRecord(it.next());
     }
   }
 

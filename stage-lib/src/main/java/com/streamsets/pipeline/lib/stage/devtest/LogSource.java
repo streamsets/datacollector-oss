@@ -15,32 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.basics;
+package com.streamsets.pipeline.lib.stage.devtest;
 
-import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.BaseSource;
 
+@StageDef(name = "logSource", version="1.0.1", label="Log files Source")
+public class LogSource extends BaseSource {
 
-@StageDef(name = "hbaseTarget", version="1.0.0", label="Hbase Target", icon = "HbaseTarget.svg")
-public class HbaseTarget extends BaseTarget {
+  @ConfigDef(name="logsDir", required = true, type = ConfigDef.Type.STRING, label = "Logs directory", defaultValue = "")
+  public String logsDir;
 
-  @ConfigDef(name="uri", required = true, type = ConfigDef.Type.STRING, label = "Hbase URI", defaultValue = "",
-            description = "Hbase server URI")
-  public String uri;
-
-  @ConfigDef(name="security", required = true, type = ConfigDef.Type.BOOLEAN, label = "Security enabled",
-             defaultValue = "false", description = "Kerberos enabled for Hbase")
-  public boolean security;
-
-  @ConfigDef(name="table", required = true, type = ConfigDef.Type.STRING, label = "Table", defaultValue = "",
-             description = "Hbase table name")
-  public String table;
+  @ConfigDef(name="rotationFreq", required = true, type = ConfigDef.Type.INTEGER, label = "Rotation frequency (in hr)",
+             defaultValue = "")
+  public int rotationFrequency;
 
   @Override
-  public void write(Batch batch) throws StageException {
+  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    return null;
   }
-
 }
