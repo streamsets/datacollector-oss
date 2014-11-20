@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 @StageDef(name = "randomErrorProcessor", version = "1.0.0", label = "Random Error",
-          description = "Randomly 50/50 sends records to error")
+          description = "Randomly do something with the record 60% to output, 20% to error, 20% eats up the record")
 public class RandomErrorProcessor extends SingleLaneProcessor {
   private Random random;
 
@@ -42,10 +42,13 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
       StageException {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
-      if (random.nextBoolean()) {
+      float action = random.nextFloat();
+      if (action < 0.6) {
         batchMaker.addRecord(it.next());
-      } else {
+      } else if (action < 0.8) {
         getContext().toError(it.next(), "Random error");
+      } else {
+        // we eat the record
       }
     }
   }
