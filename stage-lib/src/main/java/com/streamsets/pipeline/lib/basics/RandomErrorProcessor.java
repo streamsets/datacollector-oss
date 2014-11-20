@@ -33,6 +33,7 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
 
   @Override
   protected void init() throws StageException {
+    super.init();
     random = new Random();
   }
 
