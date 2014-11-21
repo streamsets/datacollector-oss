@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import com.streamsets.pipeline.container.Utils;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class StreamingJsonParser {
 
   public static enum Mode {ARRAY_OBJECTS, MULTIPLE_OBJECTS}
 
-  private final InputStream inputStream;
+  private final Reader reader;
   private final JsonParser jsonParser;
   private final Mode mode;
   private boolean starting = true;
@@ -49,14 +49,14 @@ public class StreamingJsonParser {
     return new ObjectMapper();
   }
 
-  public StreamingJsonParser(InputStream inputStream, Mode mode) throws IOException {
-    this.inputStream = inputStream;
-    jsonParser = getObjectMapper().getFactory().createParser(inputStream);
+  public StreamingJsonParser(Reader reader, Mode mode) throws IOException {
+    this.reader = reader;
+    jsonParser = getObjectMapper().getFactory().createParser(reader);
     this.mode = mode;
   }
 
-  protected InputStream getInputStream() {
-    return inputStream;
+  protected Reader getReader() {
+    return reader;
   }
 
   protected JsonParser getJsonParser() {

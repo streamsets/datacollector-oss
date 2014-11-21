@@ -24,12 +24,12 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.streamsets.pipeline.lib.io.OverrunException;
-import com.streamsets.pipeline.lib.io.OverrunInputStream;
+import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
 import jersey.repackaged.com.google.common.base.Preconditions;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -136,14 +136,14 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   private static final ThreadLocal<OverrunStreamingJsonParser> TL = new ThreadLocal<OverrunStreamingJsonParser>();
 
-  private final OverrunInputStream overrunInputStream;
+  private final OverrunReader overrunReader;
   private final int maxObjectLen;
   private long limit;
   private boolean overrun;
 
-  public OverrunStreamingJsonParser(InputStream inputStream, Mode mode, int maxObjectLen) throws IOException {
-    super(new OverrunInputStream(inputStream, MAX_STREAM_READ), mode);
-    overrunInputStream = (OverrunInputStream) getInputStream();
+  public OverrunStreamingJsonParser(Reader reader, Mode mode, int maxObjectLen) throws IOException {
+    super(new OverrunReader(reader, MAX_STREAM_READ), mode);
+    overrunReader = (OverrunReader) getReader();
     this.maxObjectLen = maxObjectLen;
   }
 
@@ -160,8 +160,8 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
   @Override
   protected <T> T readObjectFromArray(Class<T> klass) throws IOException {
     Preconditions.checkState(!overrun, "The underlying input stream had and overrun, the parser is not usable anymore");
-    overrunInputStream.resetByteCount();
-    limit = getJsonParser().getCurrentLocation().getByteOffset() + maxObjectLen;
+    overrunReader.resetCharCount();
+    limit = getJsonParser().getCurrentLocation().getCharOffset() + maxObjectLen;
     try {
       TL.set(this);
       return super.readObjectFromArray(klass);
@@ -193,8 +193,8 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
   @Override
   protected <T> T readObjectFromStream(Class<T> klass) throws IOException {
     Preconditions.checkState(!overrun, "The underlying input stream had and overrun, the parser is not usable anymore");
-    overrunInputStream.resetByteCount();
-    limit = getJsonParser().getCurrentLocation().getByteOffset() + maxObjectLen;
+    overrunReader.resetCharCount();
+    limit = getJsonParser().getCurrentLocation().getCharOffset() + maxObjectLen;
     try {
       TL.set(this);
       return super.readObjectFromStream(klass);
@@ -233,7 +233,7 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   private static void checkIfLengthExceededForObjectRead(Object json) {
     OverrunStreamingJsonParser enforcer = TL.get();
-    if (enforcer.getJsonParser().getCurrentLocation().getByteOffset() > enforcer.limit) {
+    if (enforcer.getJsonParser().getCurrentLocation().getCharOffset() > enforcer.limit) {
       ExceptionUtils.throwUndeclared(new JsonObjectLengthException("Exceeded the Object max length [" + json + "]"));
     }
   }

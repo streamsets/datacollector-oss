@@ -24,20 +24,23 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
 public class TestStreamingJsonParser {
 
-  private InputStream getJsonStream(String name) throws Exception {
-    return Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+  private Reader getJsonReader(String name) throws Exception {
+    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+    return (is != null) ? new InputStreamReader(is) : null;
   }
 
   // Array of Maps
 
   @Test
   public void testArrayOfMaps() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-arrayOfMaps.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-arrayOfMaps.json"),
                                                          StreamingJsonParser.Mode.ARRAY_OBJECTS);
     Map m1 = parser.readMap();
     Assert.assertNotNull(m1);
@@ -50,21 +53,21 @@ public class TestStreamingJsonParser {
 
   @Test(expected = IOException.class)
   public void testArrayOfMapsInvalid1() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-arrayOfArrays.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-arrayOfArrays.json"),
                                                          StreamingJsonParser.Mode.ARRAY_OBJECTS);
     parser.readMap();
   }
 
   @Test(expected = IOException.class)
   public void testArrayOfMapsInvalid2() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-multipleArrays.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleArrays.json"),
                                                          StreamingJsonParser.Mode.ARRAY_OBJECTS);
     parser.readMap();
   }
 
   @Test(expected = IOException.class)
   public void testArrayOfMapsInvalid3() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-multipleMaps.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleMaps.json"),
                                                          StreamingJsonParser.Mode.ARRAY_OBJECTS);
     parser.readMap();
   }
@@ -73,7 +76,7 @@ public class TestStreamingJsonParser {
 
   @Test
   public void testArrayOfArrays() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-arrayOfArrays.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-arrayOfArrays.json"),
                                                          StreamingJsonParser.Mode.ARRAY_OBJECTS);
     List a1 = parser.readList();
     Assert.assertNotNull(a1);
@@ -86,21 +89,21 @@ public class TestStreamingJsonParser {
 
   @Test(expected = IOException.class)
   public void testArrayOfArraysInvalid1() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-arrayOfMaps.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-arrayOfMaps.json"),
                                                          StreamingJsonParser.Mode.ARRAY_OBJECTS);
     parser.readList();
   }
 
   @Test(expected = IOException.class)
   public void testArrayOfArraysInvalid2() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-multipleArrays.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleArrays.json"),
                                                          StreamingJsonParser.Mode.ARRAY_OBJECTS);
     parser.readList();
   }
 
   @Test(expected = IOException.class)
   public void testArrayOfArraysInvalid3() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-multipleMaps.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleMaps.json"),
                                                          StreamingJsonParser.Mode.ARRAY_OBJECTS);
     parser.readList();
   }
@@ -109,7 +112,7 @@ public class TestStreamingJsonParser {
 
   @Test
   public void testMultipleMaps() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-multipleMaps.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleMaps.json"),
                                                          StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
     Map m1 = parser.readMap();
     Assert.assertNotNull(m1);
@@ -122,21 +125,21 @@ public class TestStreamingJsonParser {
 
   @Test(expected = IOException.class)
   public void testMultipleMapsInvalid1() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-arrayOfArrays.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-arrayOfArrays.json"),
                                                          StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
     parser.readMap();
   }
 
   @Test(expected = IOException.class)
   public void testMultipleMapsInvalid2() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-multipleArrays.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleArrays.json"),
                                                          StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
     parser.readMap();
   }
 
   @Test(expected = IOException.class)
   public void testMultipleMapsInvalid3() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-arrayOfMaps.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-arrayOfMaps.json"),
                                                          StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
     parser.readMap();
   }
@@ -146,7 +149,7 @@ public class TestStreamingJsonParser {
 
   @Test
   public void testMultipleArrays() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-multipleArrays.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleArrays.json"),
                                                          StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
     List a1 = parser.readList();
     Assert.assertNotNull(a1);
@@ -159,7 +162,7 @@ public class TestStreamingJsonParser {
 
   @Test(expected = IOException.class)
   public void testMultipleArraysInvalid2() throws Exception {
-    StreamingJsonParser parser = new StreamingJsonParser(getJsonStream("TestStreamingJsonParser-multipleMaps.json"),
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleMaps.json"),
                                                          StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
     parser.readList();
   }

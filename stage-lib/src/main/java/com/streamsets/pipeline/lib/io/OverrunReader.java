@@ -19,20 +19,17 @@ package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
-import org.apache.commons.io.input.CountingInputStream;
 
-import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * Caps amount of data read to avoid OOM issues, max size should be 64K or more ot avoid issues with implicit
  * stream buffers by JDK and libraries.
- *
- * IMPORTANT: commons-io CountingInputStream does not take into account mark()/reset() calls, BUG?
  */
-public class OverrunInputStream extends CountingInputStream {
+public class OverrunReader extends CountingReader {
   private final int maxUnsupervisedReadSize;
 
-  public OverrunInputStream(InputStream in, int maxUnsupervisedReadSize) {
+  public OverrunReader(Reader in, int maxUnsupervisedReadSize) {
     super(in);
     this.maxUnsupervisedReadSize = maxUnsupervisedReadSize;
   }
@@ -40,9 +37,9 @@ public class OverrunInputStream extends CountingInputStream {
   @Override
   protected synchronized void afterRead(int n) {
     super.afterRead(n);
-    if (getCount() > maxUnsupervisedReadSize) {
+    if (getCharCount() > maxUnsupervisedReadSize) {
       ExceptionUtils.throwUndeclared(new OverrunException(Utils.format(
-          "Stream exceeded the maximum unsupervised read size '{}'", maxUnsupervisedReadSize)));
+          "Reader exceeded the maximum unsupervised read size '{}'", maxUnsupervisedReadSize)));
     }
   }
 

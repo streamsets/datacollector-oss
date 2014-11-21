@@ -25,8 +25,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.List;
 
 public class TestOverrunStreamingJsonParser {
@@ -41,8 +43,9 @@ public class TestOverrunStreamingJsonParser {
     setUp();
   }
 
-  private InputStream getJsonStream(String name) throws Exception {
-    return Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+  private Reader getJsonReader(String name) throws Exception {
+    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+    return (is != null) ? new InputStreamReader(is) : null;
   }
 
   // Parser level overrun, Array
@@ -50,7 +53,7 @@ public class TestOverrunStreamingJsonParser {
   @Test
   public void testArrayOfObjects() throws Exception {
     StreamingJsonParser parser = new OverrunStreamingJsonParser(
-        getJsonStream("TestOverrunStreamingJsonParser-arrayOfObjects.json"), StreamingJsonParser.Mode.ARRAY_OBJECTS,
+        getJsonReader("TestOverrunStreamingJsonParser-arrayOfObjects.json"), StreamingJsonParser.Mode.ARRAY_OBJECTS,
         50);
     List a1 = parser.readList();
     Assert.assertNotNull(a1);
@@ -72,7 +75,7 @@ public class TestOverrunStreamingJsonParser {
   @Test
   public void testMultipleObjects() throws Exception {
     StreamingJsonParser parser = new OverrunStreamingJsonParser(
-        getJsonStream("TestOverrunStreamingJsonParser-multipleObjects.json"), StreamingJsonParser.Mode.MULTIPLE_OBJECTS,
+        getJsonReader("TestOverrunStreamingJsonParser-multipleObjects.json"), StreamingJsonParser.Mode.MULTIPLE_OBJECTS,
         50);
     List a1 = parser.readList();
     Assert.assertNotNull(a1);
@@ -94,7 +97,7 @@ public class TestOverrunStreamingJsonParser {
   public void testStreamLevelOverrunArray(boolean attemptNextRead) throws Exception {
     System.setProperty(OverrunStreamingJsonParser.OVERRUN_LIMIT_SYS_PROP, "10000");
     String json = "[[\"a\"],[\"" + Strings.repeat("a", 20000) + "\"],[\"b\"]]";
-    StreamingJsonParser parser = new OverrunStreamingJsonParser(new ByteArrayInputStream(json.getBytes()),
+    StreamingJsonParser parser = new OverrunStreamingJsonParser(new StringReader(json),
                                                                 StreamingJsonParser.Mode.ARRAY_OBJECTS, 50);
     List a1 = parser.readList();
     Assert.assertNotNull(a1);
@@ -127,7 +130,7 @@ public class TestOverrunStreamingJsonParser {
   public void testStreamLevelOverrunMultipleObjects(boolean attemptNextRead) throws Exception {
     System.setProperty(OverrunStreamingJsonParser.OVERRUN_LIMIT_SYS_PROP, "10000");
     String json = "[\"a\"][\"" + Strings.repeat("a", 20000) + "\"][\"b\"]";
-    StreamingJsonParser parser = new OverrunStreamingJsonParser(new ByteArrayInputStream(json.getBytes()),
+    StreamingJsonParser parser = new OverrunStreamingJsonParser(new StringReader(json),
                                                                 StreamingJsonParser.Mode.MULTIPLE_OBJECTS, 50);
     List a1 = parser.readList();
     Assert.assertNotNull(a1);
