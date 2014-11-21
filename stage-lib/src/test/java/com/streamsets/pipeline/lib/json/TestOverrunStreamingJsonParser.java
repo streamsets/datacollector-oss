@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
+import java.util.Map;
 
 public class TestOverrunStreamingJsonParser {
 
@@ -156,6 +157,111 @@ public class TestOverrunStreamingJsonParser {
   @Test(expected = IllegalStateException.class)
   public void testStreamLevelOverrunMultipleObjectsAttemptNextRead() throws Exception {
     testStreamLevelOverrunMultipleObjects(true);
+  }
+
+  @Test
+  public void testArrayPositionable() throws Exception {
+    StreamingJsonParser parser = new OverrunStreamingJsonParser(
+      getJsonReader("TestOverrunStreamingJsonParser-arrayOfObjects.json"), StreamingJsonParser.Mode.ARRAY_OBJECTS, 50);
+    List l1 = parser.readList();
+    long firstObjectPos = parser.getReaderPosition();
+    Assert.assertNotNull(l1);
+    try {
+      parser.readList();
+      Assert.fail();
+    } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
+      //NOP
+    }
+    List l2 = parser.readList();
+    long secondObjectPos = parser.getReaderPosition();
+    Assert.assertNotNull(l1);
+    Assert.assertNotNull(l2);
+    long lastObjectPos = parser.getReaderPosition();
+    Assert.assertNotNull(l1);
+    Assert.assertNull(parser.readList());
+    long endPos = parser.getReaderPosition();
+    Assert.assertNotNull(l1);
+
+    parser = new OverrunStreamingJsonParser(getJsonReader("TestOverrunStreamingJsonParser-arrayOfObjects.json"),
+                                            firstObjectPos, StreamingJsonParser.Mode.ARRAY_OBJECTS, 50);
+    Assert.assertEquals(firstObjectPos, parser.getReaderPosition());
+    try {
+      parser.readList();
+      Assert.fail();
+    } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
+      //NOP
+    }
+    List l2a = parser.readList();
+    Assert.assertEquals(l2, l2a);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readList());
+    Assert.assertEquals(endPos, parser.getReaderPosition());
+
+    parser = new OverrunStreamingJsonParser(getJsonReader("TestOverrunStreamingJsonParser-arrayOfObjects.json"),
+                                            secondObjectPos, StreamingJsonParser.Mode.ARRAY_OBJECTS, 50);
+    Assert.assertEquals(secondObjectPos, parser.getReaderPosition());
+    Assert.assertEquals(l2, l2a);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readList());
+    Assert.assertEquals(endPos, parser.getReaderPosition());
+
+    parser = new OverrunStreamingJsonParser(getJsonReader("TestOverrunStreamingJsonParser-arrayOfObjects.json"),
+                                            lastObjectPos, StreamingJsonParser.Mode.ARRAY_OBJECTS, 50);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readList());
+    Assert.assertEquals(endPos, parser.getReaderPosition());
+
+    parser = new OverrunStreamingJsonParser(getJsonReader("TestOverrunStreamingJsonParser-arrayOfObjects.json"),
+                                            endPos, StreamingJsonParser.Mode.ARRAY_OBJECTS, 50);
+    Assert.assertEquals(endPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readList());
+    Assert.assertEquals(endPos, parser.getReaderPosition());
+  }
+
+  @Test
+  public void testMultipleObjectsPositionable() throws Exception {
+    StreamingJsonParser parser = new OverrunStreamingJsonParser(
+        getJsonReader("TestOverrunStreamingJsonParser-multipleObjects.json"), StreamingJsonParser.Mode.MULTIPLE_OBJECTS,
+        50);
+    List l1 = parser.readList();
+    long firstObjectPos = parser.getReaderPosition();    Assert.assertNotNull(l1);
+    try {
+      parser.readList();
+      Assert.fail();
+    } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
+      //NOP
+    }
+    List l2 = parser.readList();
+    long secondObjectPos = parser.getReaderPosition();    Assert.assertNotNull(l1);
+    Assert.assertNotNull(l2);
+    long lastObjectPos = parser.getReaderPosition();    Assert.assertNotNull(l1);
+
+    parser = new OverrunStreamingJsonParser(getJsonReader("TestOverrunStreamingJsonParser-multipleObjects.json"),
+                                            firstObjectPos, StreamingJsonParser.Mode.MULTIPLE_OBJECTS, 50);
+    Assert.assertEquals(firstObjectPos, parser.getReaderPosition());
+    try {
+      parser.readList();
+      Assert.fail();
+    } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
+      //NOP
+    }
+    List l2a = parser.readList();
+    Assert.assertEquals(secondObjectPos, parser.getReaderPosition());
+    Assert.assertEquals(l2, l2a);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readList());
+
+    parser = new OverrunStreamingJsonParser(getJsonReader("TestOverrunStreamingJsonParser-multipleObjects.json"),
+                                            secondObjectPos, StreamingJsonParser.Mode.MULTIPLE_OBJECTS, 50);
+    Assert.assertEquals(secondObjectPos, parser.getReaderPosition());
+    Assert.assertEquals(l2, l2a);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readList());
+
+    parser = new OverrunStreamingJsonParser(getJsonReader("TestOverrunStreamingJsonParser-multipleObjects.json"),
+                                            lastObjectPos, StreamingJsonParser.Mode.MULTIPLE_OBJECTS, 50);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readList());
   }
 
 }

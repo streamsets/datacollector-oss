@@ -27,10 +27,12 @@ import java.io.Reader;
 /**
  * Just because Reader.skip() does not work as a seek
  */
-public class PositionableReader extends ProxyReader {
+public class PositionableReader extends ProxyReader implements ResettableCount {
+  private final CountingReader countingReader;
 
-  public PositionableReader(Reader proxy, long initialPosition) throws IOException {
-    super(proxy);
+  public PositionableReader(Reader reader, long initialPosition) throws IOException {
+    super(reader);
+    countingReader = (reader instanceof CountingReader) ? (CountingReader) reader : null;
     Preconditions.checkArgument(initialPosition >= 0, "initialPosition must be greater than zero");
     char[] arr = new char[4096];
     long reminder = initialPosition;
@@ -47,6 +49,15 @@ public class PositionableReader extends ProxyReader {
     if (eof) {
       throw new IOException(Utils.format("Reached end of reader at '{}' before reaching position '{}'",
                                          initialPosition - reminder, initialPosition));
+    }
+  }
+
+  @Override
+  public long resetCount() {
+    if (countingReader != null) {
+      return countingReader.resetCount();
+    } else {
+      throw new UnsupportedOperationException("Reader does not implement ResettableCount");
     }
   }
 

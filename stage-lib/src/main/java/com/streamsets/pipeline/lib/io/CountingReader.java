@@ -60,7 +60,7 @@ public class CountingReader extends ProxyReader {
     return this.count;
   }
 
-  public synchronized long resetCharCount() {
+  public synchronized long resetCount() {
     long tmp = this.count;
     this.count = 0;
     markLimit = 0;

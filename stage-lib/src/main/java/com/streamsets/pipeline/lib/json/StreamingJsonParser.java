@@ -24,6 +24,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.lib.io.PositionableReader;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -41,18 +42,46 @@ public class StreamingJsonParser {
   private final Reader reader;
   private final JsonParser jsonParser;
   private final Mode mode;
-  private boolean starting = true;
+  private boolean starting;
   private JsonStreamContext rootContext;
   private Iterator<?> multipleObjectsIterator;
+  private long posCorrection;
 
   protected ObjectMapper getObjectMapper() {
     return new ObjectMapper();
   }
 
   public StreamingJsonParser(Reader reader, Mode mode) throws IOException {
-    this.reader = reader;
+    this(reader, 0, mode);
+  }
+
+  public StreamingJsonParser(Reader reader, long initialPosition, Mode mode) throws IOException {
+    starting = true;
+    if (mode == Mode.MULTIPLE_OBJECTS && initialPosition > 0) {
+      posCorrection += initialPosition;
+      this.reader = new PositionableReader(reader, initialPosition);
+    } else {
+      this.reader = reader;
+    }
     jsonParser = getObjectMapper().getFactory().createParser(reader);
+    if (mode == Mode.ARRAY_OBJECTS && initialPosition > 0) {
+      fastForwardJsonParser(initialPosition);
+    }
     this.mode = mode;
+  }
+
+  private void fastForwardJsonParser(long initialPosition) throws IOException {
+    while (jsonParser.getTokenLocation().getCharOffset() < initialPosition) {
+      jsonParser.nextToken();
+      if (starting) {
+        rootContext = jsonParser.getParsingContext();
+        starting = false;
+      }
+      fastForwardLeaseReader();
+    }
+  }
+
+  protected void fastForwardLeaseReader() {
   }
 
   protected Reader getReader() {
@@ -115,6 +144,11 @@ public class StreamingJsonParser {
     } catch (RuntimeJsonMappingException ex) {
       throw new JsonParseException(ex.getMessage(), jsonParser.getTokenLocation(), ex);
     }
+  }
+
+  public long getReaderPosition() {
+    return (mode == Mode.ARRAY_OBJECTS) ? jsonParser.getTokenLocation().getCharOffset()
+                                        : jsonParser.getCurrentLocation().getCharOffset() + posCorrection;
   }
 
   public Map readMap() throws IOException {

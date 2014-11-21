@@ -26,7 +26,7 @@ import java.io.Reader;
  * Caps amount of data read to avoid OOM issues, max size should be 64K or more ot avoid issues with implicit
  * stream buffers by JDK and libraries.
  */
-public class OverrunReader extends CountingReader {
+public class OverrunReader extends CountingReader implements ResettableCount {
   private final int maxUnsupervisedReadSize;
 
   public OverrunReader(Reader in, int maxUnsupervisedReadSize) {
@@ -42,5 +42,6 @@ public class OverrunReader extends CountingReader {
           "Reader exceeded the maximum unsupervised read size '{}'", maxUnsupervisedReadSize)));
     }
   }
+
 
 }

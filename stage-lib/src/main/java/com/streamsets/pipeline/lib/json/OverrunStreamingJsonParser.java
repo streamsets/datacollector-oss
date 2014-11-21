@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.lib.io.ResettableCount;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
 import jersey.repackaged.com.google.common.base.Preconditions;
 
@@ -134,17 +135,27 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
   private static final int MAX_STREAM_READ = Integer.parseInt(System.getProperty(
       OVERRUN_LIMIT_SYS_PROP, "102400"));
 
-  private static final ThreadLocal<OverrunStreamingJsonParser> TL = new ThreadLocal<OverrunStreamingJsonParser>();
+  private static final ThreadLocal<OverrunStreamingJsonParser> TL = new ThreadLocal<>();
 
-  private final OverrunReader overrunReader;
+  private final ResettableCount resettableCount;
   private final int maxObjectLen;
   private long limit;
   private boolean overrun;
 
   public OverrunStreamingJsonParser(Reader reader, Mode mode, int maxObjectLen) throws IOException {
-    super(new OverrunReader(reader, MAX_STREAM_READ), mode);
-    overrunReader = (OverrunReader) getReader();
+    this(reader, 0, mode, maxObjectLen);
+  }
+
+  public OverrunStreamingJsonParser(Reader reader, long initialPosition, Mode mode, int maxObjectLen)
+      throws IOException {
+    super(new OverrunReader(reader, MAX_STREAM_READ), initialPosition, mode);
+    resettableCount = (ResettableCount) getReader();
     this.maxObjectLen = maxObjectLen;
+  }
+
+  @Override
+  protected void fastForwardLeaseReader() {
+    ((ResettableCount) getReader()).resetCount();
   }
 
   @Override
@@ -160,7 +171,7 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
   @Override
   protected <T> T readObjectFromArray(Class<T> klass) throws IOException {
     Preconditions.checkState(!overrun, "The underlying input stream had and overrun, the parser is not usable anymore");
-    overrunReader.resetCharCount();
+    resettableCount.resetCount();
     limit = getJsonParser().getCurrentLocation().getCharOffset() + maxObjectLen;
     try {
       TL.set(this);
@@ -193,7 +204,7 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
   @Override
   protected <T> T readObjectFromStream(Class<T> klass) throws IOException {
     Preconditions.checkState(!overrun, "The underlying input stream had and overrun, the parser is not usable anymore");
-    overrunReader.resetCharCount();
+    resettableCount.resetCount();
     limit = getJsonParser().getCurrentLocation().getCharOffset() + maxObjectLen;
     try {
       TL.set(this);

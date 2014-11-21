@@ -49,7 +49,7 @@ public class TestCountingReader {
     reader.reset();
     Assert.assertEquals(6, reader.getCharCount());
     reader.mark(1);
-    reader.resetCharCount();
+    reader.resetCount();
     Assert.assertEquals(0, reader.getCharCount());
     reader.reset();
     Assert.assertEquals(0, reader.getCharCount());
@@ -57,7 +57,7 @@ public class TestCountingReader {
     Assert.assertEquals(1, reader.getCharCount());
     reader.mark(1);
     Assert.assertNotEquals(-1, reader.read());
-    reader.resetCharCount();
+    reader.resetCount();
     Assert.assertEquals(0, reader.getCharCount());
     reader.reset();
     Assert.assertEquals(0, reader.getCharCount());

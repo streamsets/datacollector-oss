@@ -170,4 +170,89 @@ public class TestStreamingJsonParser {
   // cannot test array of arrays negative test because it cannot be differentiated from a single array file
   // cannot test array of maps negative test because it cannot be differentiated from a single array file
 
+
+  @Test
+  public void testArrayPositionable() throws Exception {
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-arrayOfMaps.json"),
+                                                         StreamingJsonParser.Mode.ARRAY_OBJECTS);
+    Map m1 = parser.readMap();
+    long firstObjectPos = parser.getReaderPosition();
+    Assert.assertNotNull(m1);
+    Map m2 = parser.readMap();
+    long secondObjectPos = parser.getReaderPosition();
+    Assert.assertNotNull(m1);
+    Assert.assertNotNull(m2);
+    long lastObjectPos = parser.getReaderPosition();
+    Assert.assertNotNull(m1);
+    Assert.assertNull(parser.readMap());
+    long endPos = parser.getReaderPosition();
+    Assert.assertNotNull(m1);
+
+    parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-arrayOfMaps.json"), firstObjectPos,
+                                     StreamingJsonParser.Mode.ARRAY_OBJECTS);
+    Assert.assertEquals(firstObjectPos, parser.getReaderPosition());
+    Map m2a = parser.readMap();
+    Assert.assertEquals(secondObjectPos, parser.getReaderPosition());
+    Assert.assertEquals(m2, m2a);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readMap());
+    Assert.assertEquals(endPos, parser.getReaderPosition());
+
+    parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-arrayOfMaps.json"), secondObjectPos,
+                                     StreamingJsonParser.Mode.ARRAY_OBJECTS);
+    Assert.assertEquals(secondObjectPos, parser.getReaderPosition());
+    Assert.assertEquals(m2, m2a);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readMap());
+    Assert.assertEquals(endPos, parser.getReaderPosition());
+
+    parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-arrayOfMaps.json"), lastObjectPos,
+                                     StreamingJsonParser.Mode.ARRAY_OBJECTS);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readMap());
+    Assert.assertEquals(endPos, parser.getReaderPosition());
+
+    parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-arrayOfMaps.json"), endPos,
+                                     StreamingJsonParser.Mode.ARRAY_OBJECTS);
+    Assert.assertEquals(endPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readMap());
+    Assert.assertEquals(endPos, parser.getReaderPosition());
+  }
+
+  @Test
+  public void testMultipleObjectsPositionable() throws Exception {
+    StreamingJsonParser parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleMaps.json"),
+                                                         StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
+    Map m1 = parser.readMap();
+    long firstObjectPos = parser.getReaderPosition();
+    Assert.assertNotNull(m1);
+    Map m2 = parser.readMap();
+    long secondObjectPos = parser.getReaderPosition();
+    Assert.assertNotNull(m1);
+    Assert.assertNotNull(m2);
+    long lastObjectPos = parser.getReaderPosition();
+    Assert.assertNotNull(m1);
+
+    parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleMaps.json"), firstObjectPos,
+                                                         StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
+    Assert.assertEquals(firstObjectPos, parser.getReaderPosition());
+    Map m2a = parser.readMap();
+    Assert.assertEquals(secondObjectPos, parser.getReaderPosition());
+    Assert.assertEquals(m2, m2a);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readMap());
+
+    parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleMaps.json"), secondObjectPos,
+                                     StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
+    Assert.assertEquals(secondObjectPos, parser.getReaderPosition());
+    Assert.assertEquals(m2, m2a);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readMap());
+
+    parser = new StreamingJsonParser(getJsonReader("TestStreamingJsonParser-multipleMaps.json"), lastObjectPos,
+                                     StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
+    Assert.assertEquals(lastObjectPos, parser.getReaderPosition());
+    Assert.assertNull(parser.readMap());
+  }
+
 }

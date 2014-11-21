@@ -19,6 +19,7 @@ package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.container.Utils;
 import jersey.repackaged.com.google.common.base.Preconditions;
+import org.apache.commons.io.input.CountingInputStream;
 import org.apache.commons.io.input.ProxyInputStream;
 
 import java.io.IOException;
@@ -27,10 +28,12 @@ import java.io.InputStream;
 /**
  * Just because InputStream.skip() does not work as a seek
  */
-public class PositionableInputStream extends ProxyInputStream {
+public class PositionableInputStream extends ProxyInputStream implements ResettableCount {
+  private CountingInputStream countingInputStream;
 
-  public PositionableInputStream(InputStream proxy, long initialPosition) throws IOException {
-    super(proxy);
+  public PositionableInputStream(InputStream inputStream, long initialPosition) throws IOException {
+    super(inputStream);
+    countingInputStream = (inputStream instanceof CountingInputStream) ? (CountingInputStream) inputStream : null;
     Preconditions.checkArgument(initialPosition >= 0, "initialPosition must be greater than zero");
     byte[] arr = new byte[4096];
     long reminder = initialPosition;
@@ -47,6 +50,15 @@ public class PositionableInputStream extends ProxyInputStream {
     if (eof) {
       throw new IOException(Utils.format("Reached end of inputStream at '{}' before reaching position '{}'",
                                          initialPosition - reminder, initialPosition));
+    }
+  }
+
+  @Override
+  public long resetCount() {
+    if (countingInputStream != null) {
+      return countingInputStream.resetCount();
+    } else {
+      throw new UnsupportedOperationException("InputStream does not implement ResettableCount");
     }
   }
 
