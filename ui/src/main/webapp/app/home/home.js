@@ -29,16 +29,7 @@ angular
       stageLibraries: [],
       pipelineGraphData: {},
       previewMode: false,
-      previewData: {},
-      stagePreviewData: {
-        input: [],
-        output: []
-      },
-      previewSourceOffset: 0,
-      previewBatchSize: 10,
-      previewDataUpdated: false,
       hideLibraryPanel: true,
-      configName: 'xyz',
       activeConfigInfo: {
         name: 'xyz'
       },
@@ -155,26 +146,7 @@ angular
        */
       previewPipeline: function (nextBatch) {
         $scope.previewMode = true;
-
-        if (nextBatch) {
-          $scope.previewSourceOffset += $scope.previewBatchSize;
-        } else {
-          $scope.previewSourceOffset = 0;
-        }
-
-        api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
-          success(function (previewData) {
-
-            $scope.previewData = previewData;
-            $scope.previewDataUpdated = false;
-
-            var firstStageInstance = $scope.pipelineConfig.stages[0];
-            $scope.$broadcast('selectNode', firstStageInstance);
-            updateDetailPane(firstStageInstance);
-          }).
-          error(function(data, status, headers, config) {
-            $scope.httpErrors = [data];
-          });
+        $scope.$broadcast('previewPipeline', nextBatch);
       },
 
       /**
@@ -316,19 +288,28 @@ angular
         }
       },
 
+      /**
+       * Toggle Library Panel
+       */
       toggleLibraryPanel: function() {
         $scope.hideLibraryPanel = ! $scope.hideLibraryPanel;
       },
 
+      /**
+       * On Detail Pane Minimize button is clicked.
+       */
       onMinimizeDetailPane: function() {
         $scope.maximizeDetailPane = false;
         $scope.minimizeDetailPane = !$scope.minimizeDetailPane;
       },
 
+      /**
+       * On Detail Pane Maximize button is clicked.
+       */
       onMaximizeDetailPane: function() {
         $scope.minimizeDetailPane = false;
         $scope.maximizeDetailPane = !$scope.maximizeDetailPane;
-      },
+      }
 
     });
 
@@ -517,10 +498,6 @@ angular
      * @param stageInstance
      */
     var updateDetailPane = function(stageInstance) {
-      var stageInstances = $scope.pipelineConfig.stages,
-        inputLane,
-        outputLane;
-
       if(stageInstance) {
         //Stage Instance Configuration
         //Stage Instance Configuration
@@ -530,28 +507,10 @@ angular
             stageLibrary.version === stageInstance.stageVersion;
         });
 
-        if ($scope.previewMode) {
-          $scope.stagePreviewData = getPreviewDataForStage($scope.previewData, $scope.detailPaneConfig);
 
+        $scope.$broadcast('onStageSelection', stageInstance);
 
-          if(stageInstance.inputLanes && stageInstance.inputLanes.length) {
-            $scope.previousStageInstances = _.filter(stageInstances, function(instance) {
-              return (_.intersection(instance.outputLanes, stageInstance.inputLanes)).length > 0;
-            });
-          } else {
-            $scope.previousStageInstances = [];
-          }
-
-          if(stageInstance.outputLanes && stageInstance.outputLanes.length) {
-            $scope.nextStageInstances = _.filter(stageInstances, function(instance) {
-              return (_.intersection(instance.inputLanes, stageInstance.outputLanes)).length > 0;
-            });
-          } else {
-            $scope.nextStageInstances = [];
-          }
-
-        } else {
-
+        if (!$scope.previewMode) {
           //In case of processors and targets run the preview to get input fields
           // if current state of config is previewable.
           if(stageInstance.uiInfo.stageType !== SOURCE_STAGE_TYPE) {
@@ -569,6 +528,7 @@ angular
             }
           }
         }
+
       } else {
         //Pipeline Configuration
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
@@ -601,38 +561,6 @@ angular
         });
 
       return configDefinition ? configDefinition.label : configName;
-    };
-
-
-    /**
-     * Returns Preview input lane & output lane data for the given Stage Instance.
-     *
-     * @param previewData
-     * @param stageInstance
-     * @returns {{input: Array, output: Array}}
-     */
-    var getPreviewDataForStage = function (previewData, stageInstance) {
-      var inputLane = (stageInstance.inputLanes && stageInstance.inputLanes.length) ?
-          stageInstance.inputLanes[0] : undefined,
-        outputLane = (stageInstance.outputLanes && stageInstance.outputLanes.length) ?
-          stageInstance.outputLanes[0] : undefined,
-        stagePreviewData = {
-          input: [],
-          output: [],
-          errorRecords: []
-        },
-        batchData = previewData.batchesOutput[0];
-
-      angular.forEach(batchData, function (stageOutput) {
-        if (inputLane && stageOutput.output[inputLane] && stageOutput.output) {
-          stagePreviewData.input = stageOutput.output[inputLane];
-        } else if (outputLane && stageOutput.output[outputLane] && stageOutput.output) {
-          stagePreviewData.output = stageOutput.output[outputLane];
-          stagePreviewData.errorRecords = stageOutput.errorRecords;
-        }
-      });
-
-      return stagePreviewData;
     };
 
     /**

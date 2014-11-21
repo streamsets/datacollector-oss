@@ -7,6 +7,16 @@ angular
 
   .controller('PreviewController', function ($scope, _, api) {
     angular.extend($scope, {
+      previewSourceOffset: 0,
+      previewBatchSize: 10,
+      previewData: {},
+      stagePreviewData: {
+        input: [],
+        output: []
+      },
+      previewDataUpdated: false,
+      stepExecuted: false,
+
       /**
        * Returns output records produced by input record.
        *
@@ -16,7 +26,12 @@ angular
        */
       getOutputRecords: function(outputRecords, inputRecord) {
         return _.filter(outputRecords, function(outputRecord) {
-          return outputRecord.header.previousStageTrackingId === inputRecord.header.trackingId;
+          if(outputRecord.header.previousStageTrackingId === inputRecord.header.trackingId) {
+            if(inputRecord.expand) {
+              outputRecord.expand = true;
+            }
+            return true;
+          }
         });
       },
 
@@ -46,6 +61,29 @@ angular
         recordUpdated.values[fieldName].dirty = true;
       },
 
+
+      /**
+       * Preview Data for previous stage instance.
+       *
+       * @param stageInstance
+       */
+      previousStagePreview: function(stageInstance) {
+        $scope.changeStageSelection(stageInstance);
+      },
+
+      /**
+       * Preview Data for next stage instance.
+       * @param stageInstance
+       * @param inputRecords
+       */
+      nextStagePreview: function(stageInstance, inputRecords) {
+        if($scope.stepExecuted && stageInstance.uiInfo.stageType === 'PROCESSOR') {
+          $scope.stepPreview(stageInstance, inputRecords);
+        } else {
+          $scope.changeStageSelection(stageInstance);
+        }
+      },
+
       /**
        * Run Preview with user updated records.
        *
@@ -67,7 +105,6 @@ angular
 
         api.pipelineAgent.previewPipelineRunStage($scope.activeConfigInfo.name, instanceName, records).
           success(function (previewData) {
-
             var targetInstanceData = previewData.batchesOutput[0][0];
 
             _.each($scope.previewData.batchesOutput[0], function(instanceRecords) {
@@ -78,10 +115,95 @@ angular
             });
 
             $scope.changeStageSelection(stageInstance);
+            $scope.stepExecuted = true;
           }).
-          error(function(data, status, headers, config) {
+          error(function(data) {
             $scope.httpErrors = [data];
           });
       }
     });
+
+    /**
+     * Returns Preview input lane & output lane data for the given Stage Instance.
+     *
+     * @param previewData
+     * @param stageInstance
+     * @returns {{input: Array, output: Array}}
+     */
+    var getPreviewDataForStage = function (previewData, stageInstance) {
+      var inputLane = (stageInstance.inputLanes && stageInstance.inputLanes.length) ?
+          stageInstance.inputLanes[0] : undefined,
+        outputLane = (stageInstance.outputLanes && stageInstance.outputLanes.length) ?
+          stageInstance.outputLanes[0] : undefined,
+        stagePreviewData = {
+          input: [],
+          output: [],
+          errorRecords: []
+        },
+        batchData = previewData.batchesOutput[0];
+
+      angular.forEach(batchData, function (stageOutput) {
+        if (inputLane && stageOutput.output[inputLane] && stageOutput.output) {
+          stagePreviewData.input = stageOutput.output[inputLane];
+        } else if (outputLane && stageOutput.output[outputLane] && stageOutput.output) {
+          stagePreviewData.output = stageOutput.output[outputLane];
+          stagePreviewData.errorRecords = stageOutput.errorRecords;
+        }
+      });
+
+      return stagePreviewData;
+    };
+
+
+    var updatePreviewDataForStage = function(stageInstance) {
+      if($scope.previewMode) {
+        var stageInstances = $scope.pipelineConfig.stages;
+
+        $scope.stagePreviewData = getPreviewDataForStage($scope.previewData, $scope.detailPaneConfig);
+
+        if(stageInstance.inputLanes && stageInstance.inputLanes.length) {
+          $scope.previousStageInstances = _.filter(stageInstances, function(instance) {
+            return (_.intersection(instance.outputLanes, stageInstance.inputLanes)).length > 0;
+          });
+        } else {
+          $scope.previousStageInstances = [];
+        }
+
+        if(stageInstance.outputLanes && stageInstance.outputLanes.length) {
+          $scope.nextStageInstances = _.filter(stageInstances, function(instance) {
+            return (_.intersection(instance.inputLanes, stageInstance.outputLanes)).length > 0;
+          });
+        } else {
+          $scope.nextStageInstances = [];
+        }
+      }
+    };
+
+    $scope.$on('previewPipeline', function(event, nextBatch) {
+      $scope.stepExecuted = false;
+
+      if (nextBatch) {
+        $scope.previewSourceOffset += $scope.previewBatchSize;
+      } else {
+        $scope.previewSourceOffset = 0;
+      }
+
+      api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
+        success(function (previewData) {
+
+          $scope.previewData = previewData;
+          $scope.previewDataUpdated = false;
+
+          var firstStageInstance = $scope.pipelineConfig.stages[0];
+          $scope.changeStageSelection(firstStageInstance);
+        }).
+        error(function(data) {
+          $scope.httpErrors = [data];
+        });
+    });
+
+    $scope.$on('onStageSelection', function(event, stageInstance) {
+      updatePreviewDataForStage(stageInstance);
+    });
+
   });

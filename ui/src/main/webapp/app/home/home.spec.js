@@ -274,7 +274,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
       ]
     });
 
-    $httpBackend.expectGET('rest/v1/pipelines').respond(
+    $httpBackend.expectGET('rest/v1/pipeline-library').respond(
       [ {
         "name" : "xyz",
         "description" : "asdsad",
@@ -287,7 +287,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
         "valid" : true
       } ]);
 
-    $httpBackend.expectGET('rest/v1/pipelines/xyz').respond({
+    $httpBackend.expectGET('rest/v1/pipeline-library/xyz').respond({
       uuid: "cdf08ac9-2a97-4167-8a2c-ed48cfcf600e",
       info: {
         name: 'xyz'
