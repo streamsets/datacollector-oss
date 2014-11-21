@@ -22,7 +22,7 @@ import org.apache.commons.io.input.ProxyReader;
 import java.io.IOException;
 import java.io.Reader;
 
-public class CountingReader extends ProxyReader {
+public class CountingReader extends ProxyReader implements Countable {
   private long count;
   private long markLimit = 0;
   private long readAfterMark = 0;
@@ -56,10 +56,12 @@ public class CountingReader extends ProxyReader {
     }
   }
 
-  public synchronized long getCharCount() {
+  @Override
+  public synchronized long getCount() {
     return this.count;
   }
 
+  @Override
   public synchronized long resetCount() {
     long tmp = this.count;
     this.count = 0;

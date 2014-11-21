@@ -17,7 +17,9 @@
  */
 package com.streamsets.pipeline.lib.io;
 
-public interface ResettableCount {
+public interface Countable {
+
+  public long getCount();
 
   public long resetCount();
 

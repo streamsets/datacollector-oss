@@ -28,12 +28,13 @@ import java.io.InputStream;
 /**
  * Just because InputStream.skip() does not work as a seek
  */
-public class PositionableInputStream extends ProxyInputStream implements ResettableCount {
-  private CountingInputStream countingInputStream;
+public class PositionableInputStream extends ProxyInputStream implements Countable {
+  // using directly CountingInputStream because it comes from commons-io
+  private CountingInputStream countable;
 
   public PositionableInputStream(InputStream inputStream, long initialPosition) throws IOException {
     super(inputStream);
-    countingInputStream = (inputStream instanceof CountingInputStream) ? (CountingInputStream) inputStream : null;
+    countable = (inputStream instanceof CountingInputStream) ? (CountingInputStream) inputStream : null;
     Preconditions.checkArgument(initialPosition >= 0, "initialPosition must be greater than zero");
     byte[] arr = new byte[4096];
     long reminder = initialPosition;
@@ -55,10 +56,19 @@ public class PositionableInputStream extends ProxyInputStream implements Resetta
 
   @Override
   public long resetCount() {
-    if (countingInputStream != null) {
-      return countingInputStream.resetCount();
+    if (countable != null) {
+      return countable.resetCount();
     } else {
-      throw new UnsupportedOperationException("InputStream does not implement ResettableCount");
+      throw new UnsupportedOperationException("InputStream does not implement Countable");
+    }
+  }
+
+  @Override
+  public long getCount() {
+    if (countable != null) {
+      return countable.getByteCount();
+    } else {
+      throw new UnsupportedOperationException("InputStream does not implement Countable");
     }
   }
 

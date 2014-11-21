@@ -30,37 +30,37 @@ public class TestCountingReader {
   @Test
   public void test() throws IOException {
     CountingReader reader = new CountingReader(new StringReader(DATA));
-    Assert.assertEquals(0, reader.getCharCount());
+    Assert.assertEquals(0, reader.getCount());
     Assert.assertNotEquals(-1, reader.read());
-    Assert.assertEquals(1, reader.getCharCount());
+    Assert.assertEquals(1, reader.getCount());
     Assert.assertEquals(2, reader.read(new char[2]));
-    Assert.assertEquals(3, reader.getCharCount());
+    Assert.assertEquals(3, reader.getCount());
     Assert.assertEquals(1, reader.skip(1));
-    Assert.assertEquals(4, reader.getCharCount());
+    Assert.assertEquals(4, reader.getCount());
     reader.mark(2);
-    Assert.assertEquals(4, reader.getCharCount());
+    Assert.assertEquals(4, reader.getCount());
     Assert.assertNotEquals(-1, reader.read());
-    Assert.assertEquals(5, reader.getCharCount());
+    Assert.assertEquals(5, reader.getCount());
     reader.reset();
-    Assert.assertEquals(4, reader.getCharCount());
+    Assert.assertEquals(4, reader.getCount());
     reader.mark(1);
     Assert.assertEquals(2, reader.read(new char[2]));
-    Assert.assertEquals(6, reader.getCharCount());
+    Assert.assertEquals(6, reader.getCount());
     reader.reset();
-    Assert.assertEquals(6, reader.getCharCount());
+    Assert.assertEquals(6, reader.getCount());
     reader.mark(1);
     reader.resetCount();
-    Assert.assertEquals(0, reader.getCharCount());
+    Assert.assertEquals(0, reader.getCount());
     reader.reset();
-    Assert.assertEquals(0, reader.getCharCount());
+    Assert.assertEquals(0, reader.getCount());
     Assert.assertNotEquals(-1, reader.read());
-    Assert.assertEquals(1, reader.getCharCount());
+    Assert.assertEquals(1, reader.getCount());
     reader.mark(1);
     Assert.assertNotEquals(-1, reader.read());
     reader.resetCount();
-    Assert.assertEquals(0, reader.getCharCount());
+    Assert.assertEquals(0, reader.getCount());
     reader.reset();
-    Assert.assertEquals(0, reader.getCharCount());
+    Assert.assertEquals(0, reader.getCount());
   }
 
 }
