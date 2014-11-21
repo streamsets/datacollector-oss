@@ -24,30 +24,28 @@ import java.io.Reader;
 /**
  * BufferedReader that reads a line up to a maximum length and then discards the rest of line
  */
-public class OverrunLineReader extends BufferedReader implements Countable {
-  private final Countable countable;
+public class OverrunLineReader extends BufferedReader {
+  private final CountingReader countingReader;
   private final int maxLine;
   private StringBuilder readLineSb;
 
   public OverrunLineReader(Reader reader, int bufferSize, int maxLine) {
     super(reader, bufferSize);
-    countable = (reader instanceof Countable) ? (Countable) reader : null;
+    countingReader = (reader instanceof CountingReader) ? (CountingReader) reader : null;
     this.maxLine = maxLine;
   }
 
-  @Override
   public long getCount() {
-    if (countable != null) {
-      return countable.getCount();
+    if (countingReader != null) {
+      return countingReader.getCount();
     } else {
       throw new UnsupportedOperationException("Underlying reader does not implement Countable");
     }
   }
 
-  @Override
   public long resetCount() {
-    if (countable != null) {
-      return countable.resetCount();
+    if (countingReader != null) {
+      return countingReader.resetCount();
     } else {
       throw new UnsupportedOperationException("Underlying reader does not implement Countable");
     }

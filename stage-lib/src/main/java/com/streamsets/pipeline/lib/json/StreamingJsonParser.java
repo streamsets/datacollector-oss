@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.lib.io.PositionableReader;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -57,11 +57,10 @@ public class StreamingJsonParser {
 
   public StreamingJsonParser(Reader reader, long initialPosition, Mode mode) throws IOException {
     starting = true;
+    this.reader = reader;
     if (mode == Mode.MULTIPLE_OBJECTS && initialPosition > 0) {
+      IOUtils.skipFully(reader, initialPosition);
       posCorrection += initialPosition;
-      this.reader = new PositionableReader(reader, initialPosition);
-    } else {
-      this.reader = reader;
     }
     jsonParser = getObjectMapper().getFactory().createParser(reader);
     if (mode == Mode.ARRAY_OBJECTS && initialPosition > 0) {

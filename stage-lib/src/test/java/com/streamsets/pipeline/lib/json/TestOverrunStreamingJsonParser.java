@@ -19,6 +19,7 @@ package com.streamsets.pipeline.lib.json;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import org.junit.After;
 import org.junit.Assert;
@@ -44,9 +45,9 @@ public class TestOverrunStreamingJsonParser {
     setUp();
   }
 
-  private Reader getJsonReader(String name) throws Exception {
+  private CountingReader getJsonReader(String name) throws Exception {
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
-    return (is != null) ? new InputStreamReader(is) : null;
+    return (is != null) ? new CountingReader(new InputStreamReader(is)) : null;
   }
 
   // Parser level overrun, Array
@@ -98,7 +99,7 @@ public class TestOverrunStreamingJsonParser {
   public void testStreamLevelOverrunArray(boolean attemptNextRead) throws Exception {
     System.setProperty(OverrunStreamingJsonParser.OVERRUN_LIMIT_SYS_PROP, "10000");
     String json = "[[\"a\"],[\"" + Strings.repeat("a", 20000) + "\"],[\"b\"]]";
-    StreamingJsonParser parser = new OverrunStreamingJsonParser(new StringReader(json),
+    StreamingJsonParser parser = new OverrunStreamingJsonParser(new CountingReader(new StringReader(json)),
                                                                 StreamingJsonParser.Mode.ARRAY_OBJECTS, 50);
     List a1 = parser.readList();
     Assert.assertNotNull(a1);
@@ -131,7 +132,7 @@ public class TestOverrunStreamingJsonParser {
   public void testStreamLevelOverrunMultipleObjects(boolean attemptNextRead) throws Exception {
     System.setProperty(OverrunStreamingJsonParser.OVERRUN_LIMIT_SYS_PROP, "10000");
     String json = "[\"a\"][\"" + Strings.repeat("a", 20000) + "\"][\"b\"]";
-    StreamingJsonParser parser = new OverrunStreamingJsonParser(new StringReader(json),
+    StreamingJsonParser parser = new OverrunStreamingJsonParser(new CountingReader(new StringReader(json)),
                                                                 StreamingJsonParser.Mode.MULTIPLE_OBJECTS, 50);
     List a1 = parser.readList();
     Assert.assertNotNull(a1);

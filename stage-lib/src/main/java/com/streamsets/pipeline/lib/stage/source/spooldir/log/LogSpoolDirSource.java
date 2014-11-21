@@ -23,9 +23,11 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunLineReader;
-import com.streamsets.pipeline.lib.io.PositionableReader;
 import com.streamsets.pipeline.lib.stage.source.spooldir.AbstractSpoolDirSource;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,8 +61,9 @@ public class LogSpoolDirSource extends AbstractSpoolDirSource {
   @Override
   protected long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     String sourceFile = file.getName();
-    try (OverrunLineReader lineReader =
-             new OverrunLineReader(new PositionableReader(new FileReader(file), offset), 8192, maxLogLineLength)) {
+    try (CountingReader reader = new CountingReader(new FileReader(file))) {
+      IOUtils.skipFully(reader, offset);
+      OverrunLineReader lineReader = new OverrunLineReader(reader, 8192, maxLogLineLength);
       return produce(sourceFile, offset, lineReader, maxBatchSize, batchMaker);
     } catch (IOException ex) {
       throw new StageException(null, ex.getMessage(), ex);
@@ -77,12 +80,15 @@ public class LogSpoolDirSource extends AbstractSpoolDirSource {
         LOG.warn("Log line exceeds maximum length '{}', log file '{}', line starts at offset '{}'", maxLogLineLength,
                  sourceFile, offset);
       }
-
-      Record record = getContext().createRecord(sourceFile + "::" + offset);
-      record.setField(logLineFieldName, Field.create(sb.toString()));
-      batchMaker.addRecord(record);
-
-      offset = lineReader.getCount();
+      if (len > -1) {
+        Record record = getContext().createRecord(Utils.format("file={} offset={}", sourceFile, offset));
+        record.setField(logLineFieldName, Field.create(sb.toString()));
+        batchMaker.addRecord(record);
+        offset = lineReader.getCount();
+      } else {
+        offset = -1;
+        break;
+      }
     }
     return offset;
   }
