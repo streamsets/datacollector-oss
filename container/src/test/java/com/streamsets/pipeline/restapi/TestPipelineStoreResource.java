@@ -55,7 +55,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testGetPipelines() {
-    Response response = target("/v1/pipelines").request().get();
+    Response response = target("/v1/pipeline-library").request().get();
     List<PipelineInfo> pipelineInfos = response.readEntity(new GenericType<List<PipelineInfo>>() {});
     Assert.assertNotNull(pipelineInfos);
     Assert.assertEquals(1, pipelineInfos.size());
@@ -63,8 +63,8 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testGetInfoPipeline() {
-    Response response = target("/v1/pipelines/xyz").queryParam("rev", "1.0.0").queryParam("get", "pipeline").request()
-        .get();
+    Response response = target("/v1/pipeline-library/xyz").queryParam("rev", "1.0.0").queryParam("get", "pipeline").
+        request().get();
     PipelineConfiguration pipelineConfig = response.readEntity(PipelineConfiguration.class);
     Assert.assertNotNull(pipelineConfig);
 
@@ -72,23 +72,23 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testGetInfoInfo() {
-    Response response = target("/v1/pipelines/xyz").queryParam("rev", "1.0.0").queryParam("get", "info").request()
-        .get();
+    Response response = target("/v1/pipeline-library/xyz").queryParam("rev", "1.0.0").queryParam("get", "info").
+        request().get();
     PipelineInfo pipelineInfo = response.readEntity(PipelineInfo.class);
     Assert.assertNotNull(pipelineInfo);
   }
 
   @Test
   public void testGetInfoHistory() {
-    Response response = target("/v1/pipelines/xyz").queryParam("rev", "1.0.0").queryParam("get", "history").request()
-        .get();
+    Response response = target("/v1/pipeline-library/xyz").queryParam("rev", "1.0.0").queryParam("get", "history").
+        request().get();
     List<PipelineRevInfo> pipelineRevInfo = response.readEntity(new GenericType<List<PipelineRevInfo>>() {});
     Assert.assertNotNull(pipelineRevInfo);
   }
 
   @Test
   public void testCreate() {
-    Response response = target("/v1/pipelines/myPipeline").queryParam("description", "my description").request()
+    Response response = target("/v1/pipeline-library/myPipeline").queryParam("description", "my description").request()
         .put(Entity.json("abc"));
     PipelineConfiguration pipelineConfig = response.readEntity(PipelineConfiguration.class);
     Assert.assertEquals(201, response.getStatusInfo().getStatusCode());
@@ -106,14 +106,14 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testDelete() {
-    Response response = target("/v1/pipelines/myPipeline").request().delete();
+    Response response = target("/v1/pipeline-library/myPipeline").request().delete();
     Assert.assertEquals(200, response.getStatus());
   }
 
   @Test
   public void testSave() {
     PipelineConfiguration toSave = MockStages.createPipelineConfigurationSourceProcessorTarget();
-    Response response = target("/v1/pipelines/myPipeline")
+    Response response = target("/v1/pipeline-library/myPipeline")
         .queryParam("tag", "tag")
         .queryParam("tagDescription", "tagDescription").request()
         .post(Entity.json(toSave));
