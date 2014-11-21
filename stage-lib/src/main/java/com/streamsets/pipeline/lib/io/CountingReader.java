@@ -27,8 +27,8 @@ public class CountingReader extends ProxyReader {
   private long markLimit = 0;
   private long readAfterMark = 0;
 
-  public CountingReader(Reader proxy) {
-    super(proxy);
+  public CountingReader(Reader reader) {
+    super(reader);
   }
 
   @Override
@@ -63,6 +63,8 @@ public class CountingReader extends ProxyReader {
   public synchronized long resetCharCount() {
     long tmp = this.count;
     this.count = 0;
+    markLimit = 0;
+    readAfterMark = 0;
     return tmp;
   }
 
