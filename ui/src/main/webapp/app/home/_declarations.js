@@ -15,5 +15,9 @@ angular
     'contenteditableDirectives',
     'underscore',
     'ui.bootstrap',
-    'filereadDirectives'
-  ]);
+    'filereadDirectives',
+    'angularMoment'
+  ])
+  .constant('amTimeAgoConfig', {
+    withoutSuffix: true
+  });

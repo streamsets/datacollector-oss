@@ -287,6 +287,14 @@ describe('Controller: modules/home/HomeCtrl', function () {
         "valid" : true
       } ]);
 
+    $httpBackend.expectGET('rest/v1/pipeline/status').respond({
+      name: "xyz",
+      rev: "1.0",
+      state: "NOT_RUNNING",
+      message: null,
+      lastStatusChange: 1416546973284
+    });
+
     $httpBackend.expectGET('rest/v1/pipeline-library/xyz').respond({
       uuid: "cdf08ac9-2a97-4167-8a2c-ed48cfcf600e",
       info: {
@@ -400,6 +408,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
       valid: false
     });
 
+
     $controller('HomeController', {
       '$rootScope': $rootScope,
       '$scope': $scope,
@@ -460,7 +469,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
     expect($scope.pipelineConfig.stages.length).toEqual(3);
 
     spyOn($scope, '$broadcast');
-    $scope.addStageInstance($scope.sources[0]);
+    //$scope.addStageInstance($scope.sources[0]);
 
     //expect($scope.$broadcast).toHaveBeenCalledWith('addNode');
   });

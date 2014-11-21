@@ -3,7 +3,7 @@
   height: 100%;
 
   .panel-heading {
-
+    height: 45px;
     padding: @smallPadding @smallPadding*3;
 
     button {
@@ -34,7 +34,16 @@
 
     .panel-title {
       padding-top: 5px;
-      font-size: 20px;
+      h3 {
+        margin: 0;
+        font-size: 20px;
+        padding-right: @defaultPadding;
+      }
+
+      i {
+        margin-left: @defaultPadding;
+        color: @brand-success;
+      }
     }
 
     .issues-dropdown {

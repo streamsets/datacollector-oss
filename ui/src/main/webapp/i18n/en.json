@@ -46,16 +46,17 @@
   },
   "admin": {
     "header" : {
+      "addStage": "Add Stage",
       "definePipeline": "Define Pipeline",
-      "preview": "Preview",
       "closePreview": "Close Preview",
+      "nextBatch": "Preview Next Batch",
+      "pipelineIssues": "Pipeline Issues",
+      "preview": "Preview",
+      "processors": "Processors",
+      "snapshot": "Snapshot",
+      "sources": "Sources",
       "start": "Start",
       "stop": "Stop",
-      "pipelineIssues": "Pipeline Issues",
-      "nextBatch": "Preview Next Batch",
-      "addStage": "Add Stage",
-      "sources": "Sources",
-      "processors": "Processors",
       "targets": "Targets"
     },
     "detailPane": {

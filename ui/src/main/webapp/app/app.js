@@ -36,6 +36,7 @@ angular.module('pipelineAgentApp', [
         home: 'active'
       },
       saveOperationInProgress: false,
+      pipelineStatus: {},
 
       /**
        * Import link command handler

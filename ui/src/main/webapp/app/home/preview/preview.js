@@ -1,11 +1,15 @@
 /**
- * Controller for Library Pane.
+ * Controller for Preview Pane.
  */
 
 angular
   .module('pipelineAgentApp.home')
 
   .controller('PreviewController', function ($scope, _, api) {
+    var SOURCE_STAGE_TYPE = 'SOURCE',
+      PROCESSOR_STAGE_TYPE = 'PROCESSOR',
+      TARGET_STAGE_TYPE = 'TARGET';
+
     angular.extend($scope, {
       previewSourceOffset: 0,
       previewBatchSize: 10,
@@ -77,7 +81,7 @@ angular
        * @param inputRecords
        */
       nextStagePreview: function(stageInstance, inputRecords) {
-        if($scope.stepExecuted && stageInstance.uiInfo.stageType === 'PROCESSOR') {
+        if($scope.stepExecuted && stageInstance.uiInfo.stageType === PROCESSOR_STAGE_TYPE) {
           $scope.stepPreview(stageInstance, inputRecords);
         } else {
           $scope.changeStageSelection(stageInstance);
@@ -154,7 +158,32 @@ angular
       return stagePreviewData;
     };
 
+    /**
+     * Fetch fields information from Preview Data.
+     *
+     * @param lanePreviewData
+     * @returns {Array}
+     */
+    var getFields = function(lanePreviewData) {
+      var recordValues = _.isArray(lanePreviewData) && lanePreviewData.length ? lanePreviewData[0].values : [],
+        fields = [];
 
+      angular.forEach(recordValues, function(typeObject, fieldName) {
+        fields.push({
+          name : fieldName,
+          type: typeObject.type,
+          sampleValue: typeObject.value
+        });
+      });
+
+      return fields;
+    };
+
+    /**
+     * Update Stage Preview Data when stage selection changed.
+     *
+     * @param stageInstance
+     */
     var updatePreviewDataForStage = function(stageInstance) {
       if($scope.previewMode) {
         var stageInstances = $scope.pipelineConfig.stages;
@@ -175,6 +204,23 @@ angular
           });
         } else {
           $scope.nextStageInstances = [];
+        }
+      } else {
+        //In case of processors and targets run the preview to get input fields
+        // if current state of config is previewable.
+        if(stageInstance.uiInfo.stageType !== SOURCE_STAGE_TYPE) {
+          if(!stageInstance.uiInfo.inputFields || stageInstance.uiInfo.inputFields.length === 0) {
+            if($scope.pipelineConfig.previewable) {
+              api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
+                success(function (previewData) {
+                  var stagePreviewData = getPreviewDataForStage(previewData, stageInstance);
+                  stageInstance.uiInfo.inputFields = getFields(stagePreviewData.input);
+                }).
+                error(function(data) {
+                  $scope.httpErrors = [data];
+                });
+            }
+          }
         }
       }
     };

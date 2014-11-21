@@ -81,11 +81,14 @@ module.exports = function(grunt) {
         'bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js',
         'bower_components/bootstrap/dist/js/bootstrap.js',
         'bower_components/angular-bootstrap/ui-bootstrap.js',
-        'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
+        'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+        'bower_components/moment/moment.js',
+        'bower_components/angular-moment/angular-moment.js'
       ],
       css: [
         'bower_components/bootstrap/dist/css/bootstrap.min.css',
-        'bower_components/json-formatter/dist/json-formatter.min.css.css'
+        'bower_components/json-formatter/dist/json-formatter.min.css.css',
+        'bower_components/fontawesome/css/font-awesome.css'
       ],
       assets: [
       ],
@@ -93,7 +96,12 @@ module.exports = function(grunt) {
         'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.eot',
         'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.svg',
         'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf',
-        'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff'
+        'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff',
+        'bower_components/fontawesome/fonts/FontAwesome.woff',
+        'bower_components/fontawesome/fonts/fontawesome-webfont.eot',
+        'bower_components/fontawesome/fonts/fontawesome-webfont.svg',
+        'bower_components/fontawesome/fonts/fontawesome-webfont.ttf',
+        'bower_components/fontawesome/fonts/fontawesome-webfont.woff'
       ],
       i18n: [
         'bower_components/angular-i18n/angular-locale_en-us.js'

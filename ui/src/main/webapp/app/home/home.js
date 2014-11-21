@@ -23,8 +23,8 @@ angular
       TARGET_STAGE_TYPE = 'TARGET';
 
     angular.extend($scope, {
-      pipelines: [],
       isPipelineRunning: false,
+      pipelines: [],
       sourceExists: false,
       stageLibraries: [],
       pipelineGraphData: {},
@@ -35,108 +35,6 @@ angular
       },
       minimizeDetailPane: false,
       maximizeDetailPane: false,
-
-      /**
-       * Add Stage Instance to the Pipeline Graph.
-       * @param stage
-       */
-      addStageInstance: function (stage) {
-        var xPos = ($scope.pipelineConfig.stages && $scope.pipelineConfig.stages.length) ?
-            $scope.pipelineConfig.stages[$scope.pipelineConfig.stages.length - 1].uiInfo.xPos + 300 : 200,
-          yPos = 70,
-          inputConnectors = (stage.type !== SOURCE_STAGE_TYPE) ? ['i1'] : [],
-          outputConnectors = (stage.type !== TARGET_STAGE_TYPE) ? ['01'] : [],
-          stageInstance = {
-            instanceName: stage.name + (new Date()).getTime(),
-            library: stage.library,
-            stageName: stage.name,
-            stageVersion: stage.version,
-            configuration: [],
-            uiInfo: {
-              label: stage.label + (++stageCounter),
-              description: stage.description,
-              xPos: xPos,
-              yPos: yPos,
-              inputConnectors: inputConnectors,
-              outputConnectors: outputConnectors,
-              stageType: stage.type
-            },
-            inputLanes: [],
-            outputLanes: []
-          };
-
-        if (stage.type !== TARGET_STAGE_TYPE) {
-          stageInstance.outputLanes = [stageInstance.instanceName + 'OutputLane'];
-        }
-
-        angular.forEach(stage.configDefinitions, function (configDefinition) {
-          var config = {
-            name: configDefinition.name
-          };
-
-          if(configDefinition.type === 'MODEL' && configDefinition.model.modelType === 'FIELD_SELECTOR') {
-            config.value = [];
-          }
-
-          stageInstance.configuration.push(config);
-        });
-
-        switch(stage.type) {
-          case SOURCE_STAGE_TYPE:
-            stageInstance.uiInfo.icon = 'assets/stage/ic_insert_drive_file_48px.svg';
-            break;
-          case PROCESSOR_STAGE_TYPE:
-            stageInstance.uiInfo.icon = 'assets/stage/ic_settings_48px.svg';
-            break;
-          case TARGET_STAGE_TYPE:
-            stageInstance.uiInfo.icon = 'assets/stage/ic_storage_48px.svg';
-            break;
-        }
-
-        $scope.$broadcast('addNode', stageInstance);
-
-        $scope.detailPaneConfig = stageInstance;
-        $scope.detailPaneConfigDefn = stage;
-      },
-
-      /**
-       * Returns label of the Stage Instance.
-       *
-       * @param stageInstanceName
-       * @returns {*|string}
-       */
-      getStageInstanceLabel: function (stageInstanceName) {
-        var instance;
-        angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
-          if (stageInstance.instanceName === stageInstanceName) {
-            instance = stageInstance;
-          }
-        });
-        return (instance && instance.uiInfo) ? instance.uiInfo.label : undefined;
-      },
-
-      /**
-       * Returns message string of the issue.
-       *
-       * @param stageInstanceName
-       * @param issue
-       * @returns {*}
-       */
-      getIssuesMessage: function (stageInstanceName, issue) {
-        var msg = issue.message;
-
-        if (issue.level === 'STAGE_CONFIG') {
-          var stageInstance = _.find($scope.pipelineConfig.stages, function (stage) {
-            return stage.instanceName === stageInstanceName;
-          });
-
-          if (stageInstance) {
-            msg += ' : ' + getConfigurationLabel(stageInstance, issue.configName);
-          }
-        }
-
-        return msg;
-      },
 
       /**
        * Fetches preview data for the pipeline and sets previewMode flag to true.
@@ -154,126 +52,6 @@ angular
        */
       closePreview: function () {
         $scope.previewMode = false;
-      },
-
-      /**
-       * Checks if configuration has any issue.
-       *
-       * @param {Object} configObject - The Pipeline Configuration/Stage Configuration Object.
-       * @returns {Boolean} - Returns true if configuration has any issue otherwise false.
-       */
-      hasConfigurationIssues: function(configObject) {
-        var config = $scope.pipelineConfig,
-          issues;
-
-        if(config && config.issues) {
-          if(configObject.instanceName && config.issues.stageIssues &&
-            config.issues.stageIssues && config.issues.stageIssues[configObject.instanceName]) {
-            issues = config.issues.stageIssues[configObject.instanceName];
-          } else if(config.issues.pipelineIssues){
-            issues = config.issues.pipelineIssues;
-          }
-        }
-
-        return _.find(issues, function(issue) {
-          return issue.level === 'STAGE_CONFIG';
-        });
-      },
-
-      /**
-       * Returns message for the give Configuration Object and Definition.
-       *
-       * @param configObject
-       * @param configDefinition
-       */
-      getConfigurationIssueMessage: function(configObject, configDefinition) {
-        var config = $scope.pipelineConfig,
-          issues,
-          issue;
-
-        if(config && config.issues) {
-          if(configObject.instanceName && config.issues.stageIssues &&
-            config.issues.stageIssues && config.issues.stageIssues[configObject.instanceName]) {
-            issues = config.issues.stageIssues[configObject.instanceName];
-          } else if(config.issues.pipelineIssues){
-            issues = config.issues.pipelineIssues;
-          }
-        }
-
-        issue = _.find(issues, function(issue) {
-           return (issue.level === 'STAGE_CONFIG' && issue.configName === configDefinition.name);
-        });
-
-        return issue ? issue.message : '';
-      },
-
-      /**
-       * On clicking issue in Issues dropdown selects the stage and if issue level is STAGE_CONFIG
-       * Configuration is
-       * @param issue
-       * @param instanceName
-       */
-      onIssueClick: function(issue, instanceName) {
-        var pipelineConfig = $scope.pipelineConfig,
-          stageInstance;
-
-        if(instanceName) {
-          //Select stage instance
-          stageInstance = _.find(pipelineConfig.stages, function(stage) {
-            return stage.instanceName === instanceName;
-          });
-          $scope.$broadcast('selectNode', stageInstance);
-          updateDetailPane(stageInstance);
-          //$('.configuration-tabs a:last').tab('show');
-        } else {
-          //Select Pipeline Config
-          $scope.$broadcast('selectNode');
-          updateDetailPane();
-        }
-      },
-
-      /**
-       * Toggles selection of value in given Array.
-       *
-       * @param arr
-       * @param value
-       */
-      toggleSelector: function(arr, value) {
-        var index = _.indexOf(arr, value);
-        if(index !== -1) {
-          arr.splice(index, 1);
-        } else {
-          arr.push(value);
-        }
-      },
-
-      /**
-       * Remove the field from uiInfo.inputFields and passed array.
-       * @param fieldArr
-       * @param index
-       * @param configValueArr
-       */
-      removeFieldSelector: function(fieldArr, index, configValueArr) {
-        var field = fieldArr[index];
-        fieldArr.splice(index, 1);
-
-        index = _.indexOf(configValueArr, field.name);
-        if(index !== -1) {
-          configValueArr.splice(index, 1);
-        }
-      },
-
-      /**
-       * Adds new field to the array uiInfo.inputFields
-       * @param fieldArr
-       */
-      addNewField: function(fieldArr) {
-        if(this.newFieldName) {
-          fieldArr.push({
-            name: this.newFieldName
-          });
-          this.newFieldName = '';
-        }
       },
 
       /**
@@ -318,11 +96,15 @@ angular
      * Fetch definitions for Pipeline and Stages, Pipeline Configuration and Pipeline Information.
      */
     $q.all([api.pipelineAgent.getDefinitions(),
-      api.pipelineAgent.getPipelines()])
+      api.pipelineAgent.getPipelines(),
+      api.pipelineAgent.getPipelineStatus()
+    ])
       .then(function (results) {
+        var definitions = results[0].data,
+          pipelines = results[1].data,
+          pipelineStatus = results[2].data;
 
         //Definitions
-        var definitions = results[0].data;
         $scope.pipelineConfigDefinition = definitions.pipeline[0];
         $scope.stageLibraries = definitions.stages;
 
@@ -339,10 +121,19 @@ angular
         });
 
         //Pipelines
-        $scope.pipelines = results[1].data;
+        $scope.pipelines = pipelines;
 
-        //TODO: Determine active pipeline
-        $scope.activeConfigInfo = $scope.pipelines && $scope.pipelines.length ? $scope.pipelines[0] : undefined;
+        $rootScope.common.pipelineStatus = pipelineStatus;
+
+        if(pipelineStatus.state === 'RUNNING') {
+          $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
+            return pipelineDefn.name === pipelineStatus.name;
+          });
+        } else if($scope.pipelines && $scope.pipelines.length) {
+          $scope.activeConfigInfo =   $scope.pipelines[0];
+        } else {
+          $scope.activeConfigInfo = undefined;
+        }
 
         if($scope.activeConfigInfo) {
           return api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name);
@@ -507,27 +298,7 @@ angular
             stageLibrary.version === stageInstance.stageVersion;
         });
 
-
         $scope.$broadcast('onStageSelection', stageInstance);
-
-        if (!$scope.previewMode) {
-          //In case of processors and targets run the preview to get input fields
-          // if current state of config is previewable.
-          if(stageInstance.uiInfo.stageType !== SOURCE_STAGE_TYPE) {
-            if(!stageInstance.uiInfo.inputFields || stageInstance.uiInfo.inputFields.length === 0) {
-              if($scope.pipelineConfig.previewable) {
-                api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
-                  success(function (previewData) {
-                    var stagePreviewData = getPreviewDataForStage(previewData, stageInstance);
-                    stageInstance.uiInfo.inputFields = getFields(stagePreviewData.input);
-                  }).
-                  error(function(data, status, headers, config) {
-                    $scope.httpErrors = [data];
-                  });
-              }
-            }
-          }
-        }
 
       } else {
         //Pipeline Configuration
@@ -543,46 +314,6 @@ angular
       }
     };
 
-    /**
-     * Returns label of Configuration for given Stage Instance object and Configuration Name.
-     *
-     * @param stageInstance
-     * @param configName
-     * @returns {*}
-     */
-    var getConfigurationLabel = function (stageInstance, configName) {
-      var stageDefinition = _.find($scope.stageLibraries, function (stage) {
-          return stageInstance.library === stage.library &&
-            stageInstance.stageName === stage.name &&
-            stageInstance.stageVersion === stage.version;
-        }),
-        configDefinition = _.find(stageDefinition.configDefinitions, function (configDefinition) {
-          return configDefinition.name === configName;
-        });
-
-      return configDefinition ? configDefinition.label : configName;
-    };
-
-    /**
-     * Fetch fields information from Preview Data.
-     *
-     * @param lanePreviewData
-     * @returns {Array}
-     */
-    var getFields = function(lanePreviewData) {
-      var recordValues = _.isArray(lanePreviewData) && lanePreviewData.length ? lanePreviewData[0].values : [],
-        fields = [];
-
-      angular.forEach(recordValues, function(typeObject, fieldName) {
-        fields.push({
-          name : fieldName,
-          type: typeObject.type,
-          sampleValue: typeObject.value
-        });
-      });
-
-      return fields;
-    };
 
     //Event Handling
 
@@ -646,6 +377,21 @@ angular
     //Preview Panel Events
     $scope.$on('changeStateInstance', function (event, stageInstance) {
       updateDetailPane(stageInstance);
+    });
+
+    var derivePipelineRunning = function() {
+      var pipelineStatus = $rootScope.common.pipelineStatus,
+        config = $scope.pipelineConfig;
+      return (pipelineStatus && config && pipelineStatus.name === config.info.name &&
+        pipelineStatus.state === 'RUNNING');
+    };
+
+    $scope.$watch('pipelineConfig.info.name', function() {
+      $scope.isPipelineRunning = derivePipelineRunning();
+    });
+
+    $rootScope.$watch('common.pipelineStatus', function() {
+      $scope.isPipelineRunning = derivePipelineRunning();
     });
 
   });

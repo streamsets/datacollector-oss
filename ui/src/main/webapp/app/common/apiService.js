@@ -227,6 +227,47 @@ angular.module('pipelineAgentApp.common')
           url: url,
           data: inputRecords
         });
+      },
+
+      /**
+       * Fetch the Pipeline Status
+       *
+       * @returns {*}
+       */
+      getPipelineStatus: function() {
+        var url = apiBase + '/pipeline/status';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Start the Pipeline
+       *
+       * @param name
+       * @param rev
+       * @returns {*}
+       */
+      startPipeline: function(name, rev) {
+        var url = apiBase + '/pipeline/start?name=' + name + '&rev=' + rev ;
+        return $http({
+          method: 'POST',
+          url: url
+        });
+      },
+
+      /**
+       * Stop the Pipeline
+       *
+       * @returns {*}
+       */
+      stopPipeline: function() {
+        var url = apiBase + '/pipeline/stop';
+        return $http({
+          method: 'POST',
+          url: url
+        });
       }
 
     };
