@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 
 @StageDef(name = "logSpoolDirectory",
     version = "1.0.0",
@@ -60,29 +59,32 @@ public class LogSpoolDirSource extends AbstractSpoolDirSource {
   @Override
   protected long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     String sourceFile = file.getName();
-    try {
-      Reader reader = new PositionableReader(new FileReader(file), offset);
-      OverrunLineReader lineReader = new OverrunLineReader(reader, 8192, maxLogLineLength);
-      StringBuilder sb = new StringBuilder(maxLogLineLength);
-      for (int i = 0; i < maxBatchSize; i++) {
-
-        sb.setLength(0);
-        int len = lineReader.readLine(sb);
-        if (len > maxLogLineLength) {
-          LOG.warn("Log line exceeds maximum length '{}', log file '{}', line starts at offset '{}'", maxLogLineLength,
-                   sourceFile, offset);
-        }
-
-        Record record = getContext().createRecord(sourceFile + "::" + offset);
-        record.setField(logLineFieldName, Field.create(sb.toString()));
-        batchMaker.addRecord(record);
-
-        offset = lineReader.getCount();
-      }
-      return offset;
+    try (OverrunLineReader lineReader =
+             new OverrunLineReader(new PositionableReader(new FileReader(file), offset), 8192, maxLogLineLength)) {
+      return produce(sourceFile, offset, lineReader, maxBatchSize, batchMaker);
     } catch (IOException ex) {
       throw new StageException(null, ex.getMessage(), ex);
     }
+  }
+
+  protected long produce(String sourceFile, long offset, OverrunLineReader lineReader, int maxBatchSize,
+      BatchMaker batchMaker) throws IOException {
+    StringBuilder sb = new StringBuilder(maxLogLineLength);
+    for (int i = 0; i < maxBatchSize; i++) {
+      sb.setLength(0);
+      int len = lineReader.readLine(sb);
+      if (len > maxLogLineLength) {
+        LOG.warn("Log line exceeds maximum length '{}', log file '{}', line starts at offset '{}'", maxLogLineLength,
+                 sourceFile, offset);
+      }
+
+      Record record = getContext().createRecord(sourceFile + "::" + offset);
+      record.setField(logLineFieldName, Field.create(sb.toString()));
+      batchMaker.addRecord(record);
+
+      offset = lineReader.getCount();
+    }
+    return offset;
   }
 
 }

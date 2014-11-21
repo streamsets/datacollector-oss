@@ -97,10 +97,15 @@ public class DirectorySpooler {
       return this;
     }
 
-    public Builder setArchiveRetention(long time, TimeUnit unit) {
+    public Builder setArchiveRetention(long minutes) {
+      return setArchiveRetention(minutes, TimeUnit.MINUTES);
+    }
+
+    //for testing only
+    Builder setArchiveRetention(long time, TimeUnit unit) {
       Preconditions.checkArgument(time >= 0, "archive retention must be zero or greater");
       Preconditions.checkNotNull(unit, "archive retention unit cannot be null");
-      archiveRetentionMillis = unit.convert(time, TimeUnit.MILLISECONDS);
+      archiveRetentionMillis = TimeUnit.MILLISECONDS.convert(time, unit);
       return this;
     }
 
@@ -170,7 +175,8 @@ public class DirectorySpooler {
       LOG.debug("Spool directory '{}', file pattern '{}', current file '{}'", spoolDirPath, pattern, currentFile);
       String extraInfo = "";
       if (postProcessing == FilePostProcessing.ARCHIVE) {
-        extraInfo = Utils.format(", archive directory '{}', retention '{}'ms", archiveDirPath);
+        extraInfo = Utils.format(", archive directory '{}', retention '{}' minutes", archiveDirPath ,
+                                 archiveRetentionMillis / 60 / 1000);
       }
       LOG.debug("Post processing mode '{}'{}", postProcessing, extraInfo);
 
@@ -229,6 +235,42 @@ public class DirectorySpooler {
     } catch (RuntimeException ex) {
       LOG.warn("Error during watchService.close(), {}", ex.getMessage(), ex);
     }
+  }
+
+  public boolean isRunning() {
+    return watchService != null;
+  }
+
+  public Source.Context getContext() {
+    return context;
+  }
+
+  public String getSpoolDir() {
+    return spoolDir;
+  }
+
+  public int getMaxSpoolFiles() {
+    return maxSpoolFiles;
+  }
+
+  public String getFilePattern() {
+    return pattern;
+  }
+
+  public FilePostProcessing getPostProcessing() {
+    return postProcessing;
+  }
+
+  public String getArchiveDir() {
+    return archiveDir;
+  }
+
+  public long getArchiveRetentionMillis() {
+    return archiveRetentionMillis;
+  }
+
+  public String getCurrentFile() {
+    return currentFile;
   }
 
   void addFileToQueue(Path file, boolean checkCurrent) {
@@ -301,7 +343,8 @@ public class DirectorySpooler {
     DirectoryStream<Path> matchingFile = Files.newDirectoryStream(spoolDirPath, new DirectoryStream.Filter<Path>() {
       @Override
       public boolean accept(Path entry) throws IOException {
-        return fileMatcher.matches(entry.getFileName()) && entry.getFileName().toString().compareTo(currentFile) >= 0;
+        return fileMatcher.matches(entry.getFileName()) &&
+               (currentFile == null || entry.getFileName().toString().compareTo(currentFile) >= 0);
       }
     });
     for (Path file : matchingFile) {
@@ -315,7 +358,8 @@ public class DirectorySpooler {
       DirectoryStream<Path> matchingFile = Files.newDirectoryStream(spoolDirPath, new DirectoryStream.Filter<Path>() {
         @Override
         public boolean accept(Path entry) throws IOException {
-          return fileMatcher.matches(entry.getFileName()) && entry.getFileName().toString().compareTo(currentFile) < 0;
+          return fileMatcher.matches(entry.getFileName()) &&
+                 (currentFile != null && entry.getFileName().toString().compareTo(currentFile) < 0);
         }
       });
       for (Path file : matchingFile) {
