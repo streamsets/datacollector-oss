@@ -17,10 +17,13 @@
  */
 package com.streamsets.pipeline.lib.stage.source.spooldir.log;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -53,32 +56,51 @@ public class TestLogSpoolDirSource {
     return f;
   }
 
+  private Source.Context getMockContext() {
+    Source.Context context = Mockito.mock(Source.Context.class);
+    Mockito.when(context.createMeter(Mockito.anyString())).thenReturn(new Meter());
+    Mockito.when(context.createCounter(Mockito.anyString())).thenReturn(new Counter());
+    Mockito.when(context.createRecord(Mockito.anyString())).thenReturn(Mockito.mock(Record.class));
+    return context;
+  }
+
   @Test
   public void testProduceFullFile() throws Exception {
     LogSpoolDirSource source = new LogSpoolDirSource() {
       @Override
       protected Source.Context getContext() {
-        Source.Context context = Mockito.mock(Source.Context.class);
-        Mockito.when(context.createRecord(Mockito.anyString())).thenReturn(Mockito.mock(Record.class));
-        return context;
+        return getMockContext();
       }
     };
+    source.postProcessing = DirectorySpooler.FilePostProcessing.ARCHIVE.toString();
+    source.filePattern = "file-[0-9].log";
+    source.maxSpoolFiles = 10;
+    source.spoolDir = createTestDir();
+    source.archiveDir = createTestDir();
+    source.retentionTimeMins = 10;
+    source.initialFileToProcess = null;
+    source.poolingTimeoutSecs = 0;
     source.logLineFieldName = "line";
     source.maxLogLineLength = 10;
-    BatchMaker batchMaker = Mockito.mock(BatchMaker.class);
+    source.init();
+    try {
+      BatchMaker batchMaker = Mockito.mock(BatchMaker.class);
 
-    Assert.assertEquals(-1, source.produce(createLogFile(), 0, 10, batchMaker));
+      Assert.assertEquals(-1, source.produce(createLogFile(), 0, 10, batchMaker));
 
-    Mockito.verify(batchMaker, Mockito.times(2)).addRecord(Mockito.any(Record.class));
-    ArgumentCaptor<Record> records = ArgumentCaptor.forClass(Record.class);
-    Mockito.verify(batchMaker, Mockito.times(2)).addRecord(records.capture());
-    List<Record> list = records.getAllValues();
-    ArgumentCaptor<Field> field = ArgumentCaptor.forClass(Field.class);
-    Mockito.verify(list.get(0)).setField(Mockito.eq("line"), field.capture());
-    Assert.assertEquals(LINE1, field.getValue().getValue());
-    field = ArgumentCaptor.forClass(Field.class);
-    Mockito.verify(list.get(1)).setField(Mockito.eq("line"), field.capture());
-    Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValue());
+      Mockito.verify(batchMaker, Mockito.times(2)).addRecord(Mockito.any(Record.class));
+      ArgumentCaptor<Record> records = ArgumentCaptor.forClass(Record.class);
+      Mockito.verify(batchMaker, Mockito.times(2)).addRecord(records.capture());
+      List<Record> list = records.getAllValues();
+      ArgumentCaptor<Field> field = ArgumentCaptor.forClass(Field.class);
+      Mockito.verify(list.get(0)).setField(Mockito.eq("line"), field.capture());
+      Assert.assertEquals(LINE1, field.getValue().getValue());
+      field = ArgumentCaptor.forClass(Field.class);
+      Mockito.verify(list.get(1)).setField(Mockito.eq("line"), field.capture());
+      Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValue());
+    } finally {
+      source.destroy();
+    }
   }
 
   @Test
@@ -86,45 +108,56 @@ public class TestLogSpoolDirSource {
     LogSpoolDirSource source = new LogSpoolDirSource() {
       @Override
       protected Source.Context getContext() {
-        Source.Context context = Mockito.mock(Source.Context.class);
-        Mockito.when(context.createRecord(Mockito.anyString())).thenReturn(Mockito.mock(Record.class));
-        return context;
+        return getMockContext();
       }
     };
+    source.postProcessing = DirectorySpooler.FilePostProcessing.ARCHIVE.toString();
+    source.filePattern = "file-[0-9].log";
+    source.maxSpoolFiles = 10;
+    source.spoolDir = createTestDir();
+    source.archiveDir = createTestDir();
+    source.retentionTimeMins = 10;
+    source.initialFileToProcess = null;
+    source.poolingTimeoutSecs = 0;
     source.logLineFieldName = "line";
     source.maxLogLineLength = 10;
-    BatchMaker batchMaker = Mockito.mock(BatchMaker.class);
+    source.init();
+    try {
+      BatchMaker batchMaker = Mockito.mock(BatchMaker.class);
 
-    //reads first line
-    long offset = source.produce(createLogFile(), 0, 1, batchMaker);
-    Assert.assertEquals(11, offset);
+      //reads first line
+      long offset = source.produce(createLogFile(), 0, 1, batchMaker);
+      Assert.assertEquals(11, offset);
 
-    ArgumentCaptor<Record> records = ArgumentCaptor.forClass(Record.class);
-    Mockito.verify(batchMaker, Mockito.times(1)).addRecord(records.capture());
-    List<Record> list = records.getAllValues();
-    ArgumentCaptor<Field> field = ArgumentCaptor.forClass(Field.class);
-    Mockito.verify(list.get(0)).setField(Mockito.eq("line"), field.capture());
-    Assert.assertEquals(LINE1, field.getValue().getValue());
+      ArgumentCaptor<Record> records = ArgumentCaptor.forClass(Record.class);
+      Mockito.verify(batchMaker, Mockito.times(1)).addRecord(records.capture());
+      List<Record> list = records.getAllValues();
+      ArgumentCaptor<Field> field = ArgumentCaptor.forClass(Field.class);
+      Mockito.verify(list.get(0)).setField(Mockito.eq("line"), field.capture());
+      Assert.assertEquals(LINE1, field.getValue().getValue());
 
 
-    //reads second line
-    Mockito.reset(batchMaker);
-    offset = source.produce(createLogFile(), offset, 1, batchMaker);
-    Assert.assertEquals(22, offset);
+      //reads second line
+      Mockito.reset(batchMaker);
+      offset = source.produce(createLogFile(), offset, 1, batchMaker);
+      Assert.assertEquals(22, offset);
 
-    records = ArgumentCaptor.forClass(Record.class);
-    Mockito.verify(batchMaker, Mockito.times(1)).addRecord(records.capture());
-    list = records.getAllValues();
-    field = ArgumentCaptor.forClass(Field.class);
-    Mockito.verify(list.get(0)).setField(Mockito.eq("line"), field.capture());
-    Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValue());
+      records = ArgumentCaptor.forClass(Record.class);
+      Mockito.verify(batchMaker, Mockito.times(1)).addRecord(records.capture());
+      list = records.getAllValues();
+      field = ArgumentCaptor.forClass(Field.class);
+      Mockito.verify(list.get(0)).setField(Mockito.eq("line"), field.capture());
+      Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValue());
 
-    //reads EOF
-    Mockito.reset(batchMaker);
-    offset = source.produce(createLogFile(), offset, 1, batchMaker);
-    Assert.assertEquals(-1, offset);
+      //reads EOF
+      Mockito.reset(batchMaker);
+      offset = source.produce(createLogFile(), offset, 1, batchMaker);
+      Assert.assertEquals(-1, offset);
 
-    Mockito.verify(batchMaker, Mockito.times(0)).addRecord(Mockito.any(Record.class));
+      Mockito.verify(batchMaker, Mockito.times(0)).addRecord(Mockito.any(Record.class));
+    } finally {
+      source.destroy();
+    }
   }
 
 }

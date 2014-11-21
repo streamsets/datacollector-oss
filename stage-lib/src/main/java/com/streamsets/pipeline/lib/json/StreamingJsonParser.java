@@ -128,7 +128,12 @@ public class StreamingJsonParser {
     multipleObjectsIterator = null;
   }
 
-  private <T> T read(Class<T> klass) throws IOException {
+  public long getReaderPosition() {
+    return (mode == Mode.ARRAY_OBJECTS) ? jsonParser.getTokenLocation().getCharOffset()
+                                        : jsonParser.getCurrentLocation().getCharOffset() + posCorrection;
+  }
+
+  public <T> T read(Class<T> klass) throws IOException {
     try {
       T value = null;
       switch (mode) {
@@ -143,11 +148,6 @@ public class StreamingJsonParser {
     } catch (RuntimeJsonMappingException ex) {
       throw new JsonParseException(ex.getMessage(), jsonParser.getTokenLocation(), ex);
     }
-  }
-
-  public long getReaderPosition() {
-    return (mode == Mode.ARRAY_OBJECTS) ? jsonParser.getTokenLocation().getCharOffset()
-                                        : jsonParser.getCurrentLocation().getCharOffset() + posCorrection;
   }
 
   public Map readMap() throws IOException {

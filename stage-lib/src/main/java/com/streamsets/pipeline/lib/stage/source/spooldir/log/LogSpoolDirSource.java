@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.lib.stage.source.spooldir.log;
 
+import com.codahale.metrics.Counter;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
@@ -58,6 +59,16 @@ public class LogSpoolDirSource extends AbstractSpoolDirSource {
       defaultValue = "1024")
   public int maxLogLineLength;
 
+  private StringBuilder line;
+  private Counter linesOverMaxLengthCounter;
+
+  @Override
+  protected void init() throws StageException {
+    super.init();
+    line = new StringBuilder(maxLogLineLength);
+    linesOverMaxLengthCounter = getContext().createCounter("linesOverMaxLen");
+  }
+
   @Override
   protected long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     String sourceFile = file.getName();
@@ -72,17 +83,17 @@ public class LogSpoolDirSource extends AbstractSpoolDirSource {
 
   protected long produce(String sourceFile, long offset, OverrunLineReader lineReader, int maxBatchSize,
       BatchMaker batchMaker) throws IOException {
-    StringBuilder sb = new StringBuilder(maxLogLineLength);
     for (int i = 0; i < maxBatchSize; i++) {
-      sb.setLength(0);
-      int len = lineReader.readLine(sb);
+      line.setLength(0);
+      int len = lineReader.readLine(line);
       if (len > maxLogLineLength) {
+        linesOverMaxLengthCounter.inc();
         LOG.warn("Log line exceeds maximum length '{}', log file '{}', line starts at offset '{}'", maxLogLineLength,
                  sourceFile, offset);
       }
       if (len > -1) {
         Record record = getContext().createRecord(Utils.format("file={} offset={}", sourceFile, offset));
-        record.setField(logLineFieldName, Field.create(sb.toString()));
+        record.setField(logLineFieldName, Field.create(line.toString()));
         batchMaker.addRecord(record);
         offset = lineReader.getCount();
       } else {

@@ -236,15 +236,23 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
   }
 
   public static class JsonObjectLengthException extends IOException {
-    public JsonObjectLengthException(String message) {
+    private String objectSnippet;
+
+    public JsonObjectLengthException(String message, Object json) {
       super(message);
+      objectSnippet = json.toString();
     }
+
+    public String getJsonSnippet() {
+      return objectSnippet;
+    }
+
   }
 
   private static void checkIfLengthExceededForObjectRead(Object json) {
     OverrunStreamingJsonParser enforcer = TL.get();
     if (enforcer.getJsonParser().getCurrentLocation().getCharOffset() > enforcer.limit) {
-      ExceptionUtils.throwUndeclared(new JsonObjectLengthException("Exceeded the Object max length [" + json + "]"));
+      ExceptionUtils.throwUndeclared(new JsonObjectLengthException("Json Object exceeds max length", json));
     }
   }
 
