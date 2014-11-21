@@ -58,4 +58,10 @@ public class ProductionPipeline {
   public void captureSnapshot(int batchSize) {
     pipelineRunner.captureNextBatch(batchSize);
   }
+
+  public void setOffset(String offset) {
+    ProductionSourceOffsetTracker offsetTracker = (ProductionSourceOffsetTracker) pipelineRunner.getOffSetTracker();
+    offsetTracker.setOffset(offset);
+    offsetTracker.commitOffset();
+  }
 }

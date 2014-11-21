@@ -34,6 +34,8 @@ import org.mockito.Mockito;
 
 public class TestFailedProdRun {
 
+  private static final String PIPELINE_NAME = "xyz";
+
   @Test(expected = PipelineRuntimeException.class)
   public void testPipelineOpenLanes() throws PipelineRuntimeException {
     MockStages.setSourceCapture(new BaseSource() {
@@ -54,12 +56,12 @@ public class TestFailedProdRun {
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(FileSnapshotStore.class), tracker, 5
-        , DeliveryGuarantee.AT_MOST_ONCE);
+        , DeliveryGuarantee.AT_MOST_ONCE, PIPELINE_NAME);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
 
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(),
-          "name", pipelineConfiguration).build(runner);
+        PIPELINE_NAME, pipelineConfiguration).build(runner);
 
   }
 

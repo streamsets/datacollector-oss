@@ -24,13 +24,13 @@ import java.util.List;
 
 public interface SnapshotStore {
 
-  void storeSnapshot(List<StageOutput> snapshot);
+  void storeSnapshot(String pipelineName, List<StageOutput> snapshot);
 
-  List<StageOutput> retrieveSnapshot();
+  List<StageOutput> retrieveSnapshot(String pipelineName);
 
-  SnapshotStatus getSnapshotStatus();
+  SnapshotStatus getSnapshotStatus(String pipelineName);
 
-  void deleteSnapshot();
+  void deleteSnapshot(String pipelineName);
 
-  InputStream getSnapshot();
+  InputStream getSnapshot(String pipelineName);
 }

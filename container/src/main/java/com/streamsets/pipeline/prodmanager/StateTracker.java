@@ -17,32 +17,33 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.util.JsonFileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 public class StateTracker {
+
+  private static final Logger LOG = LoggerFactory.getLogger(StateTracker.class);
 
   public static final String STATE_FILE = "pipelineState.json";
   public static final String TEMP_STATE_FILE = "pipelineState.json.tmp";
   public static final String STATE_DIR = "runInfo";
 
   private File stateDir;
-  private PipelineState pipelineState;
-  private final ObjectMapper json;
-  private final RuntimeInfo runtimeInfo;
+  private volatile PipelineState pipelineState;
+  private final JsonFileUtil<PipelineState> json;
 
   public StateTracker(RuntimeInfo runtimeInfo) {
-    json = new ObjectMapper();
-    json.enable(SerializationFeature.INDENT_OUTPUT);
-    this.runtimeInfo = runtimeInfo;
+    Preconditions.checkArgument(runtimeInfo != null);
+    stateDir = new File(runtimeInfo.getDataDir(), STATE_DIR);
+    json = new JsonFileUtil<>();
   }
 
   public PipelineState getState() {
@@ -62,17 +63,12 @@ public class StateTracker {
   public void setState(String name, String rev, State state, String message) throws PipelineStateException {
     //persist default pipelineState
     pipelineState = new PipelineState(name, rev, state, message, System.currentTimeMillis());
-    try {
-      json.writeValue(getTempStateFile(), pipelineState);
-      Files.move(getTempStateFile().toPath(), getStateFile().toPath(), StandardCopyOption.ATOMIC_MOVE
-          , StandardCopyOption.REPLACE_EXISTING);
-    } catch (IOException e) {
-      throw new PipelineStateException(PipelineStateException.ERROR.COULD_NOT_SET_STATE, e.getMessage(), e);
+    if(state != State.STOPPING) {
+      persistPipelineState();
     }
   }
 
   public void init() {
-    stateDir = new File(runtimeInfo.getDataDir(), STATE_DIR + File.separator + Constants.DEFAULT_PIPELINE_NAME);
     if (!stateDir.exists()) {
       if (!stateDir.mkdirs()) {
         throw new RuntimeException(Utils.format("Could not create directory {}", stateDir.getAbsolutePath()));
@@ -96,7 +92,7 @@ public class StateTracker {
   private void persistDefaultState() {
     //persist default pipelineState
     try {
-      setState(Constants.DEFAULT_PIPELINE_NAME, Constants.DEFAULT_PIPELINE_REVISION, State.NOT_RUNNING, null);
+      setState(Constants.DEFAULT_PIPELINE_NAME, Constants.DEFAULT_PIPELINE_REVISION, State.STOPPED, null);
     } catch (PipelineStateException e) {
       throw new RuntimeException(e);
     }
@@ -104,11 +100,47 @@ public class StateTracker {
 
   private PipelineState getStateFromDir() throws PipelineStateException {
     try {
-      return json.readValue(getStateFile(), PipelineState.class);
+      return json.readObjectFromFile(getStateFile(), PipelineState.class);
     } catch (IOException e) {
+      LOG.error(PipelineStateException.ERROR.COULD_NOT_GET_STATE.getMessageTemplate(), e.getMessage());
       throw new PipelineStateException(PipelineStateException.ERROR.COULD_NOT_GET_STATE, e.getMessage(), e);
     }
   }
 
+  private void persistPipelineState() throws PipelineStateException {
+    //write to runInfo/pipelineState.json as well as /runInfo/<pipelineName>/pipelineState.json
+    try {
+      json.writeObjectToFile(getTempStateFile(), getStateFile(), pipelineState);
+
+      //In addition, append the state of the pipeline to the pipelineState.json present in the directory of that
+      //pipeline
+      File pipelineStateTempFile = getPipelineStateTempFile(pipelineState.getName());
+      File pipelineStateFile = getPipelineStateFile(pipelineState.getName());
+      json.appendObjectToFile(pipelineStateTempFile, pipelineStateFile, pipelineState);
+
+    } catch (IOException e) {
+      LOG.error(PipelineStateException.ERROR.COULD_NOT_SET_STATE.getMessageTemplate(), e.getMessage());
+      throw new PipelineStateException(PipelineStateException.ERROR.COULD_NOT_SET_STATE, e.getMessage(), e);
+    }
+  }
+
+  private File getPipelineStateFile(String name) {
+    return new File(getPipelineDir(name), STATE_FILE);
+  }
+
+  private File getPipelineStateTempFile(String name) {
+    return new File(getPipelineDir(name), TEMP_STATE_FILE);
+  }
+
+  private File getPipelineDir(String name) {
+    File pipelineDir = new File(stateDir, name);
+    if(!pipelineDir.exists()) {
+      if(!pipelineDir.mkdirs()) {
+        LOG.error("Could not create directory '{}'", pipelineDir.getAbsolutePath());
+        throw new RuntimeException(Utils.format("Could not create directory '{}'", pipelineDir.getAbsolutePath()));
+      }
+    }
+    return pipelineDir;
+  }
 
 }

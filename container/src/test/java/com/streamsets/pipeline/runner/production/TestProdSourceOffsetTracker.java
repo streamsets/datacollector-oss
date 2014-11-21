@@ -24,6 +24,8 @@ import java.util.Arrays;
 
 public class TestProdSourceOffsetTracker {
 
+  private static final String PIPELINE_NAME = "myPipeline";
+
   @BeforeClass
   public static void beforeClass() {
     System.setProperty("pipeline.data.dir", "./target/var");
@@ -38,10 +40,7 @@ public class TestProdSourceOffsetTracker {
   public void testProductionSourceOffsetTracker() {
 
     RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
-    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(info);
-    if(offsetTracker.getOffsetFile() != null ) {
-      offsetTracker.getOffsetFile().delete();
-    }
+    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(PIPELINE_NAME, info);
 
     Assert.assertEquals(false, offsetTracker.isFinished());
     Assert.assertEquals(null, offsetTracker.getOffset());

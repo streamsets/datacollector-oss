@@ -42,6 +42,7 @@ import java.util.List;
 
 public class TestProdPipelineRunnable {
 
+  private static final String PIPELINE_NAME = "xyz";
   private ProductionPipelineManagerTask manager = null;
 
   @BeforeClass
@@ -115,7 +116,7 @@ public class TestProdPipelineRunnable {
     });
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "xyz", "1.0");
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, "1.0");
 
     //Stops after the first batch
     runnable.run();
@@ -132,9 +133,9 @@ public class TestProdPipelineRunnable {
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
-    Mockito.when(snapshotStore.getSnapshotStatus()).thenReturn(new SnapshotStatus(false, false));
+    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME)).thenReturn(new SnapshotStatus(false, false));
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, tracker, 5
-        , deliveryGuarantee);
+        , deliveryGuarantee, PIPELINE_NAME);
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
         MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
 

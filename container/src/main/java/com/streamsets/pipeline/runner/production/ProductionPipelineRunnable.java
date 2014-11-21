@@ -47,13 +47,14 @@ public class ProductionPipelineRunnable implements Runnable {
       pipeline.run();
       //finished running pipeline without errors.
       //before switching state make sure the transition is valid
-      pipelineManager.validateStateTransition(State.NOT_RUNNING);
       if(pipeline.wasStopped()) {
-        pipelineManager.setState(name, rev, State.NOT_RUNNING,
+        pipelineManager.validateStateTransition(State.STOPPED);
+        pipelineManager.setState(name, rev, State.STOPPED,
             Utils.format("The pipeline was stopped. The last committed source offset is {}."
                 , pipeline.getCommittedOffset()));
       } else {
-        pipelineManager.setState(name, rev, State.NOT_RUNNING, "Completed successfully.");
+        pipelineManager.validateStateTransition(State.FINISHED);
+        pipelineManager.setState(name, rev, State.FINISHED, "Completed successfully.");
       }
     } catch (Exception e) {
       LOG.error(Utils.format("An exception occurred while running the pipeline, {}", e.getMessage()));

@@ -89,21 +89,40 @@ public class PipelineManagerResource {
   @Path("/snapshot")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getSnapshot(
-      @QueryParam("get") @DefaultValue("data") String get) {
-    Object response = get.equals("status") ? pipelineManager.getSnapshotStatus() : pipelineManager.getSnapshot();
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(response).build();
+  public Response getSnapshotStatus() {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshotStatus()).build();
   }
 
-  @Path("/snapshot")
+  @Path("/snapshot/{name}")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getSnapshot(
+      @PathParam("name") String name) {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshot(name)).build();
+  }
+
+  @Path("/snapshot/{name}")
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
-  public Response deleteSnapshot() {
-    pipelineManager.deleteSnapshot();
+  public Response deleteSnapshot(
+      @PathParam("name") String name) {
+    pipelineManager.deleteSnapshot(name);
     return Response.ok().build();
   }
 
-  //TODO metrics
+  @Path("/metrics")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getMetrics() {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getMetrics()).build();
+  }
 
-  //TODO history - /history/<name>
+  //TODO: working on it
+  /*@Path("/history/{name}")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getHistory(
+      @PathParam("name") String name) {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity().build();
+  }*/
 }

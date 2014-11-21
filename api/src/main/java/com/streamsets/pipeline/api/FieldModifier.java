@@ -28,6 +28,8 @@ public @interface FieldModifier {
 
   Type type();
 
-  Class valuesProvider();
+  //TODO: Fix annotation processor validation to check that the implementation implements this interface
+  //TODO: Also verify that @ConfigDef can be present in parent classes using Tucu's DirectorySpooler stage
+  Class<? extends ValuesProvider> valuesProvider();
 
 }

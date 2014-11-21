@@ -15,13 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.prodmanager;
+package com.streamsets.pipeline.snapshotstore;
 
-public enum State {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.runner.StageOutput;
 
-  STOPPED,
-  RUNNING,
-  STOPPING,
-  ERROR,
-  FINISHED
+import java.util.List;
+
+public class Snapshot {
+
+  private final List<StageOutput> snapshot;
+
+  @JsonCreator
+  public Snapshot(
+      @JsonProperty("snapshot") List<StageOutput> snapshot) {
+    this.snapshot = snapshot;
+  }
+
+  public List<StageOutput> getSnapshot() {
+    return snapshot;
+  }
 }

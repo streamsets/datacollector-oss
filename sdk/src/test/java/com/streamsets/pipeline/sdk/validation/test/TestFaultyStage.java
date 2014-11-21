@@ -41,7 +41,6 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
    * 8. Configuration field marked with FieldSelector annotation must be of type List<String>
    * 9. Configuration field marked with FieldModifier annotation must be of type Map<String, String>
    * 10. Both FieldSelector and FieldModifier annotations are present
-   * 11. ValuesProvider implementation not implement 'com.streamsets.pipeline.api.ValuesProvider' interface.
    */
   public List<String> getClassesToProcess() {
     return Arrays.asList("com.streamsets.pipeline.sdk.testData.FaultySource");
@@ -68,12 +67,11 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The field FaultySource.ste is annotated with both 'FieldSelector' and 'FieldModifier' annotations. Only one of those annotation is expected.");
     expectedSet.add("Stage com.streamsets.pipeline.sdk.testData.FaultySource neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, Processor, Target interface.");
     expectedSet.add("The Stage FaultySource has constructor with arguments but no default constructor.");
-    expectedSet.add("Class com.streamsets.pipeline.sdk.testData.DatatypeProvider does not implement 'com.streamsets.pipeline.api.ValuesProvider' interface.");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());
     }
-    Assert.assertEquals(11, diagnostics.size());
+    Assert.assertEquals(10, diagnostics.size());
     for(Diagnostic d : diagnostics) {
       Assert.assertTrue(expectedSet.contains(d.getMessage(Locale.ENGLISH)));
     }

@@ -48,6 +48,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private String sourceOffset;
   private String newSourceOffset;
   private DeliveryGuarantee deliveryGuarantee;
+  private final String pipelineName;
 
   /*indicates if the execution must be stopped after the current batch*/
   private volatile boolean stop = false;
@@ -57,13 +58,14 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private volatile int snapshotBatchSize;
 
   public ProductionPipelineRunner(SnapshotStore snapshotStore, SourceOffsetTracker offsetTracker
-    , int batchSize, DeliveryGuarantee deliveryGuarantee) {
+    , int batchSize, DeliveryGuarantee deliveryGuarantee, String pipelineName) {
     this.metrics = new MetricRegistry();
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
     this.deliveryGuarantee = deliveryGuarantee;
     this.snapshotStore = snapshotStore;
+    this.pipelineName = pipelineName;
   }
 
   @Override
@@ -81,8 +83,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
   @Override
   public List<List<StageOutput>> getBatchesOutput() {
     List<List<StageOutput>> batchOutput = new ArrayList<>();
-    if(snapshotStore.getSnapshotStatus().isExists()) {
-      batchOutput.add(snapshotStore.retrieveSnapshot());
+    if(snapshotStore.getSnapshotStatus(pipelineName).isExists()) {
+      batchOutput.add(snapshotStore.retrieveSnapshot(pipelineName));
     }
     return batchOutput;
   }
@@ -149,7 +151,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     if(batchCaptured) {
       List<StageOutput> snapshot = pipeBatch.getSnapshotsOfAllStagesOutput();
-      snapshotStore.storeSnapshot(snapshot);
+      snapshotStore.storeSnapshot(pipelineName, snapshot);
       /*
        * Reset the capture snapshot variable only after capturing the snapshot
        * This guarantees that once captureSnapshot is called, the output is captured exactly once
@@ -157,7 +159,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
       captureNextBatch = false;
       snapshotBatchSize = 0;
     }
+  }
 
+  public SourceOffsetTracker getOffSetTracker() {
+    return this.offsetTracker;
   }
 
 }

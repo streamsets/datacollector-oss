@@ -73,9 +73,6 @@ public class TestProductionRun {
   @After
   public void tearDown() {
     manager.stop();
-    manager.getStateTracker().getStateFile().delete();
-    manager.getOffsetTracker().getOffsetFile().delete();
-
   }
 
   @Test(expected = PipelineRuntimeException.class)
@@ -102,7 +99,7 @@ public class TestProductionRun {
     manager.stop();
     manager.init();
     //Stopping the pipeline also stops the pipeline
-    Assert.assertEquals(State.NOT_RUNNING, manager.getPipelineState().getState());
+    Assert.assertEquals(State.STOPPED, manager.getPipelineState().getState());
 
   }
 
@@ -120,15 +117,19 @@ public class TestProductionRun {
     Assert.assertEquals(true, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
 
-    InputStream snapshot = manager.getSnapshot();
+    InputStream snapshot = manager.getSnapshot(MY_PIPELINE);
     //read the input snapshot into String format and Use de-serializer when ready
 
-    manager.deleteSnapshot();
+    manager.deleteSnapshot(MY_PIPELINE);
     snapshotStatus = manager.getSnapshotStatus();
     Assert.assertEquals(false, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
 
   }
+
+  //TODO:
+  //Add test to create multiple pipelines and run one of them
+  //Add test to create multiple pipelines and run one of them and see snapshot of other pipelines etc
 
   /*********************************************/
   /*********************************************/

@@ -27,9 +27,12 @@ import com.streamsets.pipeline.runner.ErrorRecords;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
+import org.apache.commons.io.FileUtils;
 import org.junit.*;
 import org.mockito.Mockito;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -37,6 +40,7 @@ public class TestFileSnapshotStore {
 
   private static final String TEST_STRING = "TestSnapshotPersister";
   private static final String MIME = "application/octet-stream";
+  private static final String PIPELINE_NAME = "myPipeline";
 
   private FileSnapshotStore snapshotStore = null;
 
@@ -51,24 +55,25 @@ public class TestFileSnapshotStore {
   }
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
+    File f = new File(System.getProperty("pipeline.data.dir"));
+    FileUtils.deleteDirectory(f);
     RuntimeInfo info = new RuntimeInfo(ImmutableList.of(getClass().getClassLoader()));
     snapshotStore = new FileSnapshotStore(info);
-    ((FileSnapshotStore)snapshotStore).getSnapshotFile().delete();
   }
 
   @After
   public void tearDown() {
-    snapshotStore.getSnapshotFile().delete();
+
   }
 
   @Test
   public void testStoreSnapshot() {
-    Assert.assertTrue(snapshotStore.retrieveSnapshot().isEmpty());
+    Assert.assertTrue(snapshotStore.retrieveSnapshot(PIPELINE_NAME).isEmpty());
     List<StageOutput> snapshot = createSnapshotData();
-    snapshotStore.storeSnapshot(snapshot);
+    snapshotStore.storeSnapshot(PIPELINE_NAME, snapshot);
 
-    InputStream in = snapshotStore.getSnapshot();
+    InputStream in = snapshotStore.getSnapshot(PIPELINE_NAME);
     Assert.assertNotNull(in);
 
     //TODO: Retrieve snapshot and compare contents once de-serializer is ready
@@ -79,16 +84,16 @@ public class TestFileSnapshotStore {
 
   @Test
   public void testGetSnapshotStatus() {
-    SnapshotStatus snapshotStatus = snapshotStore.getSnapshotStatus();
+    SnapshotStatus snapshotStatus = snapshotStore.getSnapshotStatus(PIPELINE_NAME);
     Assert.assertNotNull(snapshotStatus);
     Assert.assertEquals(false, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
 
     //create snapshot
     List<StageOutput> snapshot = createSnapshotData();
-    snapshotStore.storeSnapshot(snapshot);
+    snapshotStore.storeSnapshot(PIPELINE_NAME, snapshot);
 
-    snapshotStatus = snapshotStore.getSnapshotStatus();
+    snapshotStatus = snapshotStore.getSnapshotStatus(PIPELINE_NAME);
     Assert.assertNotNull(snapshotStatus);
     Assert.assertEquals(true, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
@@ -99,22 +104,20 @@ public class TestFileSnapshotStore {
   public void testDeleteSnapshot() {
     //create snapshot
     List<StageOutput> snapshot = createSnapshotData();
-    snapshotStore.storeSnapshot(snapshot);
+    snapshotStore.storeSnapshot(PIPELINE_NAME, snapshot);
 
-    SnapshotStatus snapshotStatus = snapshotStore.getSnapshotStatus();
+    SnapshotStatus snapshotStatus = snapshotStore.getSnapshotStatus(PIPELINE_NAME);
     Assert.assertNotNull(snapshotStatus);
     Assert.assertEquals(true, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
 
     //delete
-    snapshotStore.deleteSnapshot();
+    snapshotStore.deleteSnapshot(PIPELINE_NAME);
 
-    snapshotStatus = snapshotStore.getSnapshotStatus();
+    snapshotStatus = snapshotStore.getSnapshotStatus(PIPELINE_NAME);
     Assert.assertNotNull(snapshotStatus);
     Assert.assertEquals(false, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
-
-    Assert.assertFalse(snapshotStore.getSnapshotFile().exists());
 
   }
 
@@ -125,14 +128,13 @@ public class TestFileSnapshotStore {
     snapshotStore = new FileSnapshotStore(info);
 
     //Runtime exception expected
-    snapshotStore.storeSnapshot(Collections.EMPTY_LIST);
+    snapshotStore.storeSnapshot(PIPELINE_NAME, Collections.EMPTY_LIST);
 
   }
 
   @Test
   public void testGetSnapshotWhenItDoesNotExist() {
-    snapshotStore.getSnapshotFile().delete();
-    Assert.assertNull(snapshotStore.getSnapshot());
+    Assert.assertNull(snapshotStore.getSnapshot("randomPipelineName"));
   }
 
   private List<StageOutput> createSnapshotData() {

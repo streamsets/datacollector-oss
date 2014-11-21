@@ -46,18 +46,20 @@ import java.io.*;
 import static org.mockito.Matchers.anyString;
 
 public class TestPipelineManagerResource extends JerseyTest {
+  
+  private static final String PIPELINE_NAME = "myPipeline";
 
   @Test
   public void testGetStatusAPI() {
     PipelineState state = target("/v1/pipeline/status").request().get(PipelineState.class);
     Assert.assertNotNull(state);
-    Assert.assertEquals(State.NOT_RUNNING, state.getState());
+    Assert.assertEquals(State.STOPPED, state.getState());
     Assert.assertEquals("Pipeline is not running", state.getMessage());
   }
 
   @Test
   public void testStartPipelineAPI() {
-    Response r = target("/v1/pipeline/start").queryParam("name", "xyz").queryParam("rev", "2.0")
+    Response r = target("/v1/pipeline/start").queryParam("name", PIPELINE_NAME).queryParam("rev", "2.0")
         .request().post(null);
     Assert.assertNotNull(r);
     PipelineState state = r.readEntity(PipelineState.class);
@@ -73,13 +75,13 @@ public class TestPipelineManagerResource extends JerseyTest {
     Assert.assertNotNull(r);
     PipelineState state = r.readEntity(PipelineState.class);
     Assert.assertNotNull(state);
-    Assert.assertEquals(State.NOT_RUNNING, state.getState());
+    Assert.assertEquals(State.STOPPED, state.getState());
     Assert.assertEquals("The pipeline is not running", state.getMessage());
   }
 
   @Test
   public void testSetOffsetAPI() {
-    Response r = target("/v1/pipeline/offset").queryParam("name", "xyz").queryParam("rev", "1.0")
+    Response r = target("/v1/pipeline/offset").queryParam("name", PIPELINE_NAME).queryParam("rev", "1.0")
         .queryParam("offset", "myOffset").request().post(null);
 
     Assert.assertNotNull(r);
@@ -98,7 +100,7 @@ public class TestPipelineManagerResource extends JerseyTest {
 
   @Test
   public void testGetSnapshotAPI() throws IOException {
-    Response r = target("/v1/pipeline/snapshot").request().get();
+    Response r = target("/v1/pipeline/snapshot/myPipeline").request().get();
     Assert.assertNotNull(r);
 
     StringWriter writer = new StringWriter();
@@ -154,8 +156,8 @@ public class TestPipelineManagerResource extends JerseyTest {
 
       ProductionPipelineManagerTask pipelineManager = Mockito.mock(ProductionPipelineManagerTask.class);
       try {
-        Mockito.when(pipelineManager.startPipeline("xyz", "2.0")).thenReturn(new PipelineState(
-            "xyz", "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis()));
+        Mockito.when(pipelineManager.startPipeline(PIPELINE_NAME, "2.0")).thenReturn(new PipelineState(
+            PIPELINE_NAME, "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis()));
       } catch (PipelineStateException e) {
         e.printStackTrace();
       } catch (StageException e) {
@@ -168,12 +170,12 @@ public class TestPipelineManagerResource extends JerseyTest {
 
       try {
         Mockito.when(pipelineManager.stopPipeline()).thenReturn(
-            new PipelineState("xyz", "2.0", State.NOT_RUNNING, "The pipeline is not running", System.currentTimeMillis()));
+            new PipelineState(PIPELINE_NAME, "2.0", State.STOPPED, "The pipeline is not running", System.currentTimeMillis()));
       } catch (PipelineStateException e) {
         e.printStackTrace();
       }
 
-      Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState("xyz", "2.0", State.NOT_RUNNING
+      Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState(PIPELINE_NAME, "2.0", State.STOPPED
           , "Pipeline is not running", System.currentTimeMillis()));
       try {
         Mockito.when(pipelineManager.setOffset(anyString())).thenReturn("fileX:line10");
@@ -181,7 +183,7 @@ public class TestPipelineManagerResource extends JerseyTest {
         e.printStackTrace();
       }
 
-      Mockito.when(pipelineManager.getSnapshot())
+      Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME))
           .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
           .thenReturn(null);
 

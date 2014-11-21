@@ -17,12 +17,10 @@
  */
 package com.streamsets.pipeline.runner.production;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
+import com.streamsets.pipeline.util.JsonFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,24 +31,22 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionSourceOffsetTracker.class);
 
-  static final String DEFAULT_PIPELINE_NAME = "xyz";
+  private static final String TEMP_OFFSET_FILE = "offset.json.tmp";
   private static final String OFFSET_FILE = "offset.json";
   private static final String OFFSET_DIR = "runInfo";
   private static final String DEFAULT_OFFSET = null;
 
-  private File offsetDir;
-  private File offsetFile;
-  private ObjectMapper json;
+  private File offsetBaseDir;
+  private JsonFileUtil<SourceOffset> json;
   private String currentOffset;
   private String newOffset;
   private boolean finished;
+  private final String pipelineName;
 
-  public ProductionSourceOffsetTracker(RuntimeInfo runtimeInfo) {
-    this.offsetDir = new File(runtimeInfo.getDataDir(),
-        OFFSET_DIR + File.separator + DEFAULT_PIPELINE_NAME);
-    this.offsetFile = new File(offsetDir, OFFSET_FILE);
-    json = new ObjectMapper();
-    json.enable(SerializationFeature.INDENT_OUTPUT);
+  public ProductionSourceOffsetTracker(String pipelineName, RuntimeInfo runtimeInfo) {
+    this.offsetBaseDir = new File(runtimeInfo.getDataDir(), OFFSET_DIR);
+    json = new JsonFileUtil<>();
+    this.pipelineName = pipelineName;
   }
 
   @Override
@@ -60,71 +56,70 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   @Override
   public String getOffset() {
-    currentOffset = DEFAULT_OFFSET;
-    //offset directory already exists?
-    if(offsetDir.exists()) {
-      //offset file also exists?
-      if(offsetFile.exists()) {
-        //offset file already exists. read the previous offset from file.
-        try {
-          SourceOffset sourceOffset = json.readValue(offsetFile, SourceOffset.class);
-          if(sourceOffset != null) {
-            currentOffset = sourceOffset.getOffset();
-          }
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-      } else {
-        //Offset file does not exist.
-        //persist default state
-        saveOffset(DEFAULT_OFFSET);
-      }
-    } else {
-      //runInfo dir and offset file do not exist
-      //create dir, offset file and then persist default state which is NOT_RUNNING
-      if(!offsetDir.mkdirs()) {
-        throw new RuntimeException(Utils.format("Could not create directory '{}'", offsetDir.getAbsolutePath()));
-      }
-      saveOffset(DEFAULT_OFFSET);
-    }
-
-    return currentOffset;
+    return getSourceOffset(pipelineName).getOffset();
   }
 
   @Override
-  public void setOffset(String newOffset) {
-    this.newOffset = newOffset;
+  public void setOffset(String offset) {
+    this.newOffset = offset;
   }
 
   @Override
   public void commitOffset() {
+    commitOffset(pipelineName);
+  }
+
+  public void commitOffset(String pipelineName) {
     currentOffset = newOffset;
     finished = (currentOffset == null);
     newOffset = null;
-
-    //persist current offset
-    if (!offsetDir.exists()) {
-      if (!offsetDir.mkdirs()) {
-        throw new RuntimeException(Utils.format("Could not create directory '{}'", offsetDir.getAbsolutePath()));
-      }
-    }
-    //persist default state
-    saveOffset(currentOffset);
+    saveOffset(pipelineName, new SourceOffset(currentOffset));
   }
 
-  private void saveOffset(String offset) {
-    SourceOffset s = new SourceOffset(offset);
+
+  public SourceOffset getSourceOffset(String pipelineName) {
+    File pipelineOffsetFile = getPipelineOffsetFile(pipelineName);
+    SourceOffset sourceOffset;
+    if(pipelineOffsetFile.exists()) {
+      //offset file exists, read from it
+      try {
+        sourceOffset = json.readObjectFromFile(pipelineOffsetFile, SourceOffset.class);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    } else {
+      sourceOffset = new SourceOffset(DEFAULT_OFFSET);
+      saveOffset(pipelineName, sourceOffset);
+    }
+    return sourceOffset;
+  }
+
+  private void saveOffset(String pipelineName, SourceOffset s) {
+    LOG.debug("Saving offset {} for pipeline {}", s.getOffset(), pipelineName);
     try {
-      json.writeValue(offsetFile, s);
+      json.writeObjectToFile(getPipelineOffsetTempFile(pipelineName), getPipelineOffsetFile(pipelineName), s);
     } catch (IOException e) {
       LOG.error(Utils.format("Failed to save offset value {}. Reason {}", s.getOffset(), e.getMessage()));
       throw new RuntimeException(e);
     }
   }
 
-  @VisibleForTesting
-  public File getOffsetFile() {
-    return offsetFile;
+  private File getPipelineOffsetFile(String name) {
+    return new File(getPipelineDir(name), OFFSET_FILE);
+  }
+
+  private File getPipelineOffsetTempFile(String name) {
+    return new File(getPipelineDir(name), TEMP_OFFSET_FILE);
+  }
+
+  private File getPipelineDir(String name) {
+    File pipelineDir = new File(offsetBaseDir, name);
+    if(!pipelineDir.exists()) {
+      if(!pipelineDir.mkdirs()) {
+        throw new RuntimeException(Utils.format("Could not create directory '{}'", pipelineDir.getAbsolutePath()));
+      }
+    }
+    return pipelineDir;
   }
 
 }

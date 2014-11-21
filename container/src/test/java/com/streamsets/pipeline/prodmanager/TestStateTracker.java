@@ -17,13 +17,11 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.TestUtil;
 import org.apache.commons.io.FileUtils;
 import org.junit.*;
 import org.mockito.Mockito;
-import org.omg.SendingContext.RunTime;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +68,7 @@ public class TestStateTracker {
     Assert.assertNotNull(state);
     Assert.assertEquals("1.0", state.getRev());
     Assert.assertEquals(null, state.getMessage());
-    Assert.assertEquals(State.NOT_RUNNING, state.getState());
+    Assert.assertEquals(State.STOPPED, state.getState());
 
   }
 
@@ -103,7 +101,7 @@ public class TestStateTracker {
     Assert.assertNotNull(state);
     Assert.assertEquals("1.0", state.getRev());
     Assert.assertEquals(null, state.getMessage());
-    Assert.assertEquals(State.NOT_RUNNING, state.getState());
+    Assert.assertEquals(State.STOPPED, state.getState());
 
     stateTracker.init();
 
@@ -112,7 +110,7 @@ public class TestStateTracker {
     Assert.assertNotNull(state);
     Assert.assertEquals("1.0", state.getRev());
     Assert.assertEquals(null, state.getMessage());
-    Assert.assertEquals(State.NOT_RUNNING, state.getState());
+    Assert.assertEquals(State.STOPPED, state.getState());
   }
 
   @Test(expected = RuntimeException.class)

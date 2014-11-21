@@ -67,7 +67,6 @@ public class TestPipelineStoreResource extends JerseyTest {
         request().get();
     PipelineConfiguration pipelineConfig = response.readEntity(PipelineConfiguration.class);
     Assert.assertNotNull(pipelineConfig);
-
   }
 
   @Test

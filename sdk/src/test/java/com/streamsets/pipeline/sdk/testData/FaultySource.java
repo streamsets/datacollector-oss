@@ -139,15 +139,4 @@ public class FaultySource {
     type = ConfigDef.Type.MODEL)
   public List<String> ste;
 
-  //11. The ValuesProvider implementation used here does not implement the interface
-  @FieldModifier(type = FieldModifier.Type.PROVIDED, valuesProvider = DatatypeProvider.class)
-  @ConfigDef(
-    name = "areaCode",
-    defaultValue = "650",
-    label = "area_code",
-    required = true,
-    description = "The area code",
-    type = ConfigDef.Type.MODEL)
-  public Map<String, String> areaCode;
-
 }

@@ -17,32 +17,21 @@
  */
 package com.streamsets.pipeline.snapshotstore.impl;
 
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.record.RecordImplDeserializer;
-import com.streamsets.pipeline.runner.ErrorRecords;
 import com.streamsets.pipeline.runner.StageOutput;
+import com.streamsets.pipeline.snapshotstore.Snapshot;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
-import com.streamsets.pipeline.util.NullDeserializer;
+import com.streamsets.pipeline.util.JsonFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileInputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,81 +39,58 @@ public class FileSnapshotStore implements SnapshotStore {
 
   private static final Logger LOG = LoggerFactory.getLogger(FileSnapshotStore.class);
 
-  static final String DEFAULT_PIPELINE_NAME = "xyz";
+  private static final String TEMP_SNAPSHOT_FILE = "snapshot.json.tmp";
   private static final String SNAPSHOT_FILE = "snapshot.json";
   private static final String SNAPSHOT_DIR = "runInfo";
-  private static final String STAGE_FILE_SUFFIX = ".tmp";
 
-  private File snapshotDir;
-  private File snapshotFile;
-  private File snapshotStageFile;
-  private ObjectMapper json;
+  private File snapshotBaseDir;
+  private JsonFileUtil<Snapshot> snapShotPersister = new JsonFileUtil<>();
 
   public FileSnapshotStore(RuntimeInfo runtimeInfo) {
-    this.snapshotDir = new File(runtimeInfo.getDataDir(),
-        SNAPSHOT_DIR + File.separator + DEFAULT_PIPELINE_NAME);
-    this.snapshotFile = new File(snapshotDir, SNAPSHOT_FILE);
-    this.snapshotStageFile = new File(snapshotFile.getAbsolutePath() + STAGE_FILE_SUFFIX);
-    initializeObjectMapper();
+    this.snapshotBaseDir = new File(runtimeInfo.getDataDir(), SNAPSHOT_DIR);
+    snapShotPersister = new JsonFileUtil<>();
   }
 
-  private void initializeObjectMapper() {
-    json = new ObjectMapper();
-    json.enable(SerializationFeature.INDENT_OUTPUT);
-    final SimpleModule module = new SimpleModule("", Version.unknownVersion());
-    module.addDeserializer(Record.class, new RecordImplDeserializer());
-    module.addDeserializer(ErrorRecords.class, new NullDeserializer());
-    json.registerModule(module);
-  }
-
-  public void storeSnapshot(List<StageOutput> snapshot) {
-    if(!snapshotDir.exists()) {
-      if(!snapshotDir.mkdirs()) {
-        throw new RuntimeException(Utils.format("Could not create directory '{}'", snapshotDir.getAbsolutePath()));
-      }
-    }
+  public void storeSnapshot(String pipelineName, List<StageOutput> snapshot) {
     try {
-      json.writeValue(snapshotStageFile, snapshot);
-      Files.move(snapshotStageFile.toPath(), snapshotFile.toPath(), StandardCopyOption.ATOMIC_MOVE
-          , StandardCopyOption.REPLACE_EXISTING);
+      snapShotPersister.writeObjectToFile(getPipelineSnapshotTempFile(pipelineName),
+          getPipelineSnapshotFile(pipelineName), new Snapshot(snapshot));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
 
   }
 
-  public List<StageOutput> retrieveSnapshot() {
-    if(!snapshotDir.exists() || !snapshotFile.exists()) {
+  public List<StageOutput> retrieveSnapshot(String pipelineName) {
+    if(!getPipelineDir(pipelineName).exists() || !getPipelineSnapshotFile(pipelineName).exists()) {
       return Collections.EMPTY_LIST;
     }
     try {
-      return json.readValue(snapshotFile, json.getTypeFactory().constructCollectionType(
-          ArrayList.class, StageOutput.class));
+      return snapShotPersister.readObjectFromFile(getPipelineSnapshotFile(pipelineName), Snapshot.class).getSnapshot();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
   @Override
-  public SnapshotStatus getSnapshotStatus() {
-    boolean snapshotFileExists = getSnapshotFile().exists();
-    boolean snapshotStageFileExists = getSnapshotStageFile().exists();
-
+  public SnapshotStatus getSnapshotStatus(String pipelineName) {
+    boolean snapshotFileExists = getPipelineSnapshotFile(pipelineName).exists();
+    boolean snapshotStageFileExists = getPipelineSnapshotTempFile(pipelineName).exists();
     return new SnapshotStatus(snapshotFileExists, snapshotStageFileExists);
   }
 
   @Override
-  public void deleteSnapshot() {
-    if(getSnapshotFile().exists()) {
-      getSnapshotFile().delete();
+  public void deleteSnapshot(String pipelineName) {
+    if(getPipelineSnapshotFile(pipelineName).exists()) {
+      getPipelineSnapshotFile(pipelineName).delete();
     }
   }
 
   @Override
-  public InputStream getSnapshot() {
-    if(getSnapshotFile().exists()) {
+  public InputStream getSnapshot(String pipelineName) {
+    if(getPipelineSnapshotFile(pipelineName).exists()) {
       try {
-        return new FileInputStream(getSnapshotFile());
+        return new FileInputStream(getPipelineSnapshotFile(pipelineName));
       } catch (FileNotFoundException e) {
         LOG.warn(e.getMessage());
         return null;
@@ -133,13 +99,22 @@ public class FileSnapshotStore implements SnapshotStore {
     return null;
   }
 
-  @VisibleForTesting
-  File getSnapshotFile() {
-    return snapshotFile;
+  private File getPipelineSnapshotFile(String name) {
+    return new File(getPipelineDir(name), SNAPSHOT_FILE);
   }
 
-  private File getSnapshotStageFile() {
-    return snapshotStageFile;
+  private File getPipelineSnapshotTempFile(String name) {
+    return new File(getPipelineDir(name), TEMP_SNAPSHOT_FILE);
+  }
+
+  private File getPipelineDir(String name) {
+    File pipelineDir = new File(snapshotBaseDir, name);
+    if(!pipelineDir.exists()) {
+      if(!pipelineDir.mkdirs()) {
+        throw new RuntimeException(Utils.format("Could not create directory '{}'", pipelineDir.getAbsolutePath()));
+      }
+    }
+    return pipelineDir;
   }
 
 }

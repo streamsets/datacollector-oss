@@ -32,6 +32,8 @@ import java.util.List;
 
 public class TestProductionPipeline {
 
+  private static final String PIPELINE_NAME = "myPipeline";
+
   @BeforeClass
   public static void beforeClass() {
     TestUtil.captureMockStages();
@@ -98,9 +100,9 @@ public class TestProductionPipeline {
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
-    Mockito.when(snapshotStore.getSnapshotStatus()).thenReturn(new SnapshotStatus(false, false));
+    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME)).thenReturn(new SnapshotStatus(false, false));
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, tracker, 5
-        , deliveryGuarantee);
+        , deliveryGuarantee, PIPELINE_NAME);
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
         MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
 

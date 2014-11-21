@@ -22,9 +22,16 @@ import java.util.Map;
 
 public interface RawSourcePreviewer {
 
+  //TODO replace with config def properties
   Map<String, String> getParameters();
 
+  //Review looks up config values from
   Reader preview(Map<String, String> previewParams, int maxLength);
 
   String getMime();
+
+  //TODO IMplementation of this interface will have properties with COnfigDef annotation specified on them
+  //Generated stage def json will capture it
+  //At run time there will ConfigConfiguration objects [name, value ] and that must be set on the instance of
+  //the implementation, also take care of localization.
 }

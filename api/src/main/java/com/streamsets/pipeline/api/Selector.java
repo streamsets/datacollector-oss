@@ -15,13 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.prodmanager;
+package com.streamsets.pipeline.api;
 
-public enum State {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-  STOPPED,
-  RUNNING,
-  STOPPING,
-  ERROR,
-  FINISHED
+@Retention(RetentionPolicy.RUNTIME)
+@java.lang.annotation.Target(ElementType.FIELD)
+public @interface Selector {
+  public enum Type {
+    PROVIDED, SUGGESTED
+  }
+
+  Type type();
+
+  Class<? extends ValuesProvider> valuesProvider();
+
 }

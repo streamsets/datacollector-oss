@@ -238,7 +238,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //Process all fields with ConfigDef annotation
     List< ConfigDefinition> configDefinitions = new ArrayList<ConfigDefinition>();
     //TODO: Get properties from the entire class hierarchy using getAllFields once it is fixed
-    List<VariableElement> variableElements = getDeclaredFields(typeElement);
+    List<VariableElement> variableElements = getAllFields(typeElement);
     for (VariableElement variableElement : variableElements) {
       ConfigDef configDefAnnot = variableElement.getAnnotation(ConfigDef.class);
       if(configDefAnnot != null) {
@@ -311,10 +311,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * @return
    */
   private List<VariableElement> getAllFields(TypeElement typeElement) {
-    List<Element> enclosedElements = new ArrayList<Element>();
+    List<Element> enclosedElements = new ArrayList<>();
     enclosedElements.addAll(typeElement.getEnclosedElements());
     for(TypeMirror typeMirror : getAllSuperTypes(typeElement)) {
-      enclosedElements.addAll(getTypeElementFromMirror(typeMirror).getEnclosedElements());
+      //All super types are TypeElements, getAllSuperTypes method already does this check
+      TypeElement t = (TypeElement)processingEnv.getTypeUtils().asElement(typeMirror);
+      if(t.getEnclosedElements() != null) {
+        enclosedElements.addAll(t.getEnclosedElements());
+      }
     }
     List<VariableElement> variableElements = ElementFilter.fieldsIn(enclosedElements);
     return variableElements;
