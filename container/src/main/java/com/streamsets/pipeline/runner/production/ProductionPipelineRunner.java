@@ -20,6 +20,7 @@ package com.streamsets.pipeline.runner.production;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.StageType;
@@ -78,11 +79,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   @Override
-  public List<StageOutput> getBatchesOutput() {
+  public List<List<StageOutput>> getBatchesOutput() {
+    List<List<StageOutput>> batchOutput = new ArrayList<>();
     if(snapshotStore.getSnapshotStatus().isExists()) {
-      return snapshotStore.retrieveSnapshot();
+      batchOutput.add(snapshotStore.retrieveSnapshot());
     }
-    return Collections.EMPTY_LIST;
+    return batchOutput;
   }
 
   public String getSourceOffset() {

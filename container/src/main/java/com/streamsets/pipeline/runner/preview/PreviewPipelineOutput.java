@@ -27,7 +27,7 @@ import java.util.List;
 public class PreviewPipelineOutput {
   private final Issues issues;
   private final MetricRegistry metrics;
-  private final List<StageOutput> batchesOutput;
+  private final List<List<StageOutput>> batchesOutput;
   private String sourceOffset;
   private String newSourceOffset;
 
@@ -47,7 +47,7 @@ public class PreviewPipelineOutput {
     return metrics;
   }
 
-  public List<StageOutput> getBatchesOutput() {
+  public List<List<StageOutput>> getBatchesOutput() {
     return batchesOutput;
   }
 

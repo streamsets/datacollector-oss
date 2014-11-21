@@ -35,13 +35,13 @@ public class PreviewStageRunner implements PipelineRunner {
   private final String instanceName;
   private List<Record> inputRecords;
   private final MetricRegistry metrics;
-  private final List<StageOutput> batchesOutput;
+  private final List<List<StageOutput>> batchesOutput;
 
   public PreviewStageRunner(String instanceName, List<Record> inputRecords) {
     this.instanceName = instanceName;
     this.inputRecords = inputRecords;
     this.metrics = new MetricRegistry();
-    this.batchesOutput = new ArrayList<StageOutput>();
+    this.batchesOutput = new ArrayList<>();
   }
 
   @Override
@@ -64,7 +64,7 @@ public class PreviewStageRunner implements PipelineRunner {
       }
       PipeBatch pipeBatch = new StagePreviewPipeBatch(instanceName, inputRecords);
       stagePipe.process(pipeBatch);
-      batchesOutput.addAll(pipeBatch.getSnapshotsOfAllStagesOutput());
+      batchesOutput.add(pipeBatch.getSnapshotsOfAllStagesOutput());
 
     } else {
       throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.INVALID_INSTANCE_STAGE, instanceName);
@@ -82,7 +82,7 @@ public class PreviewStageRunner implements PipelineRunner {
   }
 
   @Override
-  public List<StageOutput> getBatchesOutput() {
+  public List<List<StageOutput>> getBatchesOutput() {
     return batchesOutput;
   }
 

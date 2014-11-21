@@ -28,7 +28,7 @@ public interface PipelineRunner {
 
   public void run(Pipe[] pipes)  throws StageException, PipelineRuntimeException;
 
-  public List<StageOutput> getBatchesOutput();
+  public List<List<StageOutput>> getBatchesOutput();
 
   public String getSourceOffset();
 
