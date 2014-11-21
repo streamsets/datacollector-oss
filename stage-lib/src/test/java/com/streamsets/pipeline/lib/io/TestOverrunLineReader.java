@@ -30,44 +30,8 @@ public class TestOverrunLineReader {
   }
 
   @Test
-  public void testReadLineUnderMax() throws Exception {
-    OverrunLineReader lr = new OverrunLineReader(getReaderStream(), 1024, 1024);
-    Assert.assertEquals("1234567890", lr.readLine());
-    Assert.assertEquals("", lr.readLine());
-    Assert.assertEquals("", lr.readLine());
-    Assert.assertEquals("123", lr.readLine());
-    Assert.assertEquals("", lr.readLine());
-    Assert.assertEquals("1", lr.readLine());
-    Assert.assertNull(lr.readLine());
-  }
-
-  @Test
-  public void testReadLineAtMax() throws Exception {
-    OverrunLineReader lr = new OverrunLineReader(getReaderStream(), 1024, 10);
-    Assert.assertEquals("1234567890", lr.readLine());
-    Assert.assertEquals("", lr.readLine());
-    Assert.assertEquals("", lr.readLine());
-    Assert.assertEquals("123", lr.readLine());
-    Assert.assertEquals("", lr.readLine());
-    Assert.assertEquals("1", lr.readLine());
-    Assert.assertNull(lr.readLine());
-  }
-
-  @Test
-  public void testReadLineOverMax() throws Exception {
-    OverrunLineReader lr = new OverrunLineReader(getReaderStream(), 1024, 8);
-    Assert.assertEquals("12345678", lr.readLine());
-    Assert.assertEquals("", lr.readLine());
-    Assert.assertEquals("", lr.readLine());
-    Assert.assertEquals("123", lr.readLine());
-    Assert.assertEquals("", lr.readLine());
-    Assert.assertEquals("1", lr.readLine());
-    Assert.assertNull(lr.readLine());
-  }
-
-  @Test
   public void testReadLineSBUnderMax() throws Exception {
-    OverrunLineReader lr = new OverrunLineReader(getReaderStream(), 1024, 1024);
+    OverrunLineReader lr = new OverrunLineReader(getReaderStream(), 1024);
     StringBuilder sb = new StringBuilder();
     Assert.assertEquals(10, lr.readLine(sb));
     Assert.assertEquals("1234567890", sb.toString());
@@ -87,7 +51,7 @@ public class TestOverrunLineReader {
 
   @Test
   public void testReadLineSBAtMax() throws Exception {
-    OverrunLineReader lr = new OverrunLineReader(getReaderStream(), 1024, 10);
+    OverrunLineReader lr = new OverrunLineReader(getReaderStream(), 10);
     StringBuilder sb = new StringBuilder();
     Assert.assertEquals(10, lr.readLine(sb));
     Assert.assertEquals("1234567890", sb.toString());
@@ -107,7 +71,7 @@ public class TestOverrunLineReader {
 
   @Test
   public void testReadLineSBOverMax() throws Exception {
-    OverrunLineReader lr = new OverrunLineReader(getReaderStream(), 1024, 8);
+    OverrunLineReader lr = new OverrunLineReader(getReaderStream(), 8);
     StringBuilder sb = new StringBuilder();
     Assert.assertEquals(10, lr.readLine(sb));
     Assert.assertEquals("12345678", sb.toString());

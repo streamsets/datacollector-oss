@@ -17,20 +17,20 @@
  */
 package com.streamsets.pipeline.lib.io;
 
-import java.io.BufferedReader;
+import org.apache.commons.io.input.ProxyReader;
+
 import java.io.IOException;
 import java.io.Reader;
 
 /**
- * BufferedReader that reads a line up to a maximum length and then discards the rest of line
+ * Reader that reads a line up to a maximum length and then discards the rest of line
  */
-public class OverrunLineReader extends BufferedReader {
+public class OverrunLineReader extends ProxyReader {
   private final CountingReader countingReader;
   private final int maxLine;
-  private StringBuilder readLineSb;
 
-  public OverrunLineReader(Reader reader, int bufferSize, int maxLine) {
-    super(reader, bufferSize);
+  public OverrunLineReader(Reader reader, int maxLine) {
+    super(reader);
     countingReader = (reader instanceof CountingReader) ? (CountingReader) reader : null;
     this.maxLine = maxLine;
   }
@@ -49,16 +49,6 @@ public class OverrunLineReader extends BufferedReader {
     } else {
       throw new UnsupportedOperationException("Underlying reader does not implement Countable");
     }
-  }
-
-  @Override
-  public String readLine() throws IOException {
-    if (readLineSb == null) {
-      readLineSb = new StringBuilder(maxLine);
-    }
-    readLineSb.setLength(0);
-    int charsRead = readLine(readLineSb);
-    return (charsRead == -1) ? null : readLineSb.toString();
   }
 
   // returns the stream line length, the StringBuilder has up to maxLine chars

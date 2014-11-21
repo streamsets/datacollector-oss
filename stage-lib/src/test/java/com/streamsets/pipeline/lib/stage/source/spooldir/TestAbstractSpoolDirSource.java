@@ -17,13 +17,13 @@
  */
 package com.streamsets.pipeline.lib.stage.source.spooldir;
 
+import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
-import com.streamsets.pipeline.runner.StageContext;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -41,9 +41,8 @@ public class TestAbstractSpoolDirSource {
   }
 
   private Source.Context getMockContext() {
-    Source.Context context = Mockito.mock(StageContext.class);
-    Mockito.when(context.getMetrics()).thenReturn(new MetricRegistry());
-    Mockito.when(context.createMeter(Mockito.anyString())).thenCallRealMethod();
+    Source.Context context = Mockito.mock(Source.Context.class);
+    Mockito.when(context.createMeter(Mockito.anyString())).thenReturn(new Meter());
     return context;
   }
 
@@ -80,10 +79,10 @@ public class TestAbstractSpoolDirSource {
 
   @Test
   public void testInitDestroy() throws Exception {
-    Stage.Info info = Mockito.mock(Stage.Info.class);
     Source.Context context = getMockContext();
     AbstractSpoolDirSource source = createSource("file-0.log");
-    source.init(info, context);
+    source.init(null, context);
+    Mockito.verify(context, Mockito.times(1)).createMeter(Mockito.anyString());
     Assert.assertTrue(source.getSpooler().isRunning());
     Assert.assertEquals(context, source.getSpooler().getContext());
     Assert.assertEquals(source.postProcessing, source.getSpooler().getPostProcessing().toString());

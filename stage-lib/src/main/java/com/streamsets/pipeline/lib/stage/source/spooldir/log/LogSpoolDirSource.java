@@ -63,7 +63,7 @@ public class LogSpoolDirSource extends AbstractSpoolDirSource {
     String sourceFile = file.getName();
     try (CountingReader reader = new CountingReader(new FileReader(file))) {
       IOUtils.skipFully(reader, offset);
-      OverrunLineReader lineReader = new OverrunLineReader(reader, 8192, maxLogLineLength);
+      OverrunLineReader lineReader = new OverrunLineReader(reader, maxLogLineLength);
       return produce(sourceFile, offset, lineReader, maxBatchSize, batchMaker);
     } catch (IOException ex) {
       throw new StageException(null, ex.getMessage(), ex);
