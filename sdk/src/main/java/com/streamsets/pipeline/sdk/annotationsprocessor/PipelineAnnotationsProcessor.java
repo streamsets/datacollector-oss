@@ -237,8 +237,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
                                             TypeElement typeElement) {
     //Process all fields with ConfigDef annotation
     List< ConfigDefinition> configDefinitions = new ArrayList<ConfigDefinition>();
-    List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
-    List<VariableElement> variableElements = ElementFilter.fieldsIn(enclosedElements);
+    //TODO: Get properties from the entire class hierarchy using getAllFields once it is fixed
+    List<VariableElement> variableElements = getDeclaredFields(typeElement);
     for (VariableElement variableElement : variableElements) {
       ConfigDef configDefAnnot = variableElement.getAnnotation(ConfigDef.class);
       if(configDefAnnot != null) {
@@ -281,21 +281,48 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
     StageDefinition stageDefinition = null;
     if(validateStageDef(typeElement, stageDefAnnotation)) {
+      RawSource rawSourceAnnot = typeElement.getAnnotation(RawSource.class);
+      RawSourceDefinition rawSourceDefinition = null;
+      if(rawSourceAnnot != null) {
+        rawSourceDefinition = new RawSourceDefinition(getRawSourcePreviewer(rawSourceAnnot), null, null);
+      }
+
       stageDefinition = new StageDefinition(
         typeElement.getQualifiedName().toString(),
         stageDefAnnotation.name(),
         stageDefAnnotation.version(),
         stageDefAnnotation.label(),
         stageDefAnnotation.description(),
-        StageType.valueOf(getTypeFromElement(typeElement)),
+        StageType.valueOf(getStageTypeFromElement(typeElement)),
         configDefinitions,
         stageDefAnnotation.onError(),
+        rawSourceDefinition,
         stageDefAnnotation.icon());
     } else {
       stageDefValidationError = true;
     }
 
     return stageDefinition;
+  }
+
+  /**
+   * Returns all fields present in the class hierarchy of the type element
+   * @param typeElement
+   * @return
+   */
+  private List<VariableElement> getAllFields(TypeElement typeElement) {
+    List<Element> enclosedElements = new ArrayList<Element>();
+    enclosedElements.addAll(typeElement.getEnclosedElements());
+    for(TypeMirror typeMirror : getAllSuperTypes(typeElement)) {
+      enclosedElements.addAll(getTypeElementFromMirror(typeMirror).getEnclosedElements());
+    }
+    List<VariableElement> variableElements = ElementFilter.fieldsIn(enclosedElements);
+    return variableElements;
+  }
+
+  private List<VariableElement> getDeclaredFields(TypeElement typeElement) {
+    List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
+    return ElementFilter.fieldsIn(enclosedElements);
   }
 
   private FieldModifierType getFieldModifierType(FieldModifier.Type type) {
@@ -315,7 +342,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * @param typeElement the element from which the type must be extracted
    * @return the type
    */
-  private String getTypeFromElement(TypeElement typeElement) {
+  private String getStageTypeFromElement(TypeElement typeElement) {
 
     //Check if the stage extends one of the abstract classes
     for(TypeMirror typeMirror : getAllSuperTypes(typeElement)) {
@@ -385,11 +412,29 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
 
     if(valueProviderTypeMirror !=null) {
-      TypeElement typeElement = processingEnv.getElementUtils().getTypeElement(
-        valueProviderTypeMirror.toString());
-      return typeElement.getQualifiedName().toString();
+      return getTypeElementFromMirror(valueProviderTypeMirror).getQualifiedName().toString();
     }
     return null;
+  }
+
+  private String getRawSourcePreviewer(RawSource rawSource) {
+    //Not the best way of getting the TypeMirror of the ValuesProvider implementation
+    //Find a better solution
+    TypeMirror rspTypeMirror = null;
+    try {
+      rawSource.rawSourcePreviewer();
+    } catch (MirroredTypeException e) {
+      rspTypeMirror = e.getTypeMirror();
+    }
+
+    if(rspTypeMirror !=null) {
+      return getTypeElementFromMirror(rspTypeMirror).getQualifiedName().toString();
+    }
+    return null;
+  }
+
+  private TypeElement getTypeElementFromMirror(TypeMirror typeMirror) {
+    return processingEnv.getElementUtils().getTypeElement(typeMirror.toString());
   }
 
   /**************************************************************************/
@@ -411,7 +456,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         "Stage {} is an inner class. Inner class Stage implementations are not supported",
         typeElement.getSimpleName().toString());
     }
-    if(getTypeFromElement(typeElement).isEmpty()) {
+    if(getStageTypeFromElement(typeElement).isEmpty()) {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.
       printError("stagedef.validation.does.not.implement.interface",
@@ -604,8 +649,49 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     boolean validStage = validateAndCacheStageDef(stageDefAnnotation);
     boolean validConstructor = validateStageForConstructor(typeElement);
     boolean validateIcon = validateIconExists(typeElement, stageDefAnnotation);
+    boolean validateRawSource = validateRawSource(typeElement);
 
-    return validInterface && validStage && validConstructor && validateIcon;
+    return validInterface && validStage && validConstructor && validateIcon && validateRawSource;
+  }
+
+  private boolean validateRawSource(TypeElement typeElement) {
+    boolean valid = true;
+    //check if RawSource annotation is present on stage
+    RawSource rawSourceAnnot = typeElement.getAnnotation(RawSource.class);
+    if(rawSourceAnnot != null) {
+      //make sure that the current stage is a Source
+      String stageTypeFromElement = getStageTypeFromElement(typeElement);
+      if(stageTypeFromElement == null || !SOURCE.equals(stageTypeFromElement)) {
+        printError("rawSource.validation.not.applied.on.source",
+            "Annotation RawSource is applied on stage {} which is not a \"Source\".",
+            typeElement.getQualifiedName());
+        valid = false;
+      }
+      //Not the best way of getting the TypeMirror of the ValuesProvider implementation
+      //Find a better solution
+      TypeMirror rspTypeMirror = null;
+      try {
+        rawSourceAnnot.rawSourcePreviewer();
+      } catch (MirroredTypeException e) {
+        rspTypeMirror = e.getTypeMirror();
+      }
+
+      //Since the rawSourcePreviewer is mandatory property, it cannot be null
+      //and the generics enforce that it has to implement the required interface.
+      assert(rspTypeMirror != null);
+
+      //Make sure raw source previewer implementation is top level
+      Element e = processingEnv.getTypeUtils().asElement(rspTypeMirror);
+      Element enclosingElement = e.getEnclosingElement();
+      if(!enclosingElement.getKind().equals(ElementKind.PACKAGE)) {
+        printError("rawSource.validation.rawSourcePreviewer.not.outer.class",
+            "RawSourcePreviewer {} is an inner class. Inner class RawSourcePreviewer implementations are not supported",
+            rspTypeMirror.toString());
+        valid = false;
+      }
+    }
+
+    return valid;
   }
 
   /**
@@ -723,7 +809,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       stageErrorDefValidationFailure = true;
     }
     //must implement com.streamsets.pipeline.api.ErrorId
-    String type = getTypeFromElement(typeElement);
+    String type = getStageTypeFromElement(typeElement);
     if(type.isEmpty() || !type.equals("ERROR")) {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.

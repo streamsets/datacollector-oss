@@ -105,4 +105,5 @@ public class PipelineManagerResource {
 
   //TODO metrics
 
+  //TODO history - /history/<name>
 }

@@ -20,6 +20,7 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.container.Utils;
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ public class StageDefinition {
   private final String description;
   private final StageType type;
   private final StageDef.OnError onError;
+  private final RawSourceDefinition rawSourceDefinition;
   private List<ConfigDefinition> configDefinitions;
   private Map<String, ConfigDefinition> configDefinitionsMap;
   private final String icon;
@@ -64,6 +66,7 @@ public class StageDefinition {
     @JsonProperty("type") StageType type,
     @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions,
     @JsonProperty("onError") StageDef.OnError onError,
+    @JsonProperty("rawSourceDefinition") RawSourceDefinition rawSourceDefinition,
     @JsonProperty("icon") String icon) {
     this.className = className;
     this.name = name;
@@ -72,6 +75,7 @@ public class StageDefinition {
     this.description = description;
     this.type = type;
     this.configDefinitions = configDefinitions;
+    this.rawSourceDefinition = rawSourceDefinition;
     configDefinitionsMap = new HashMap<String, ConfigDefinition>();
     for (ConfigDefinition conf : configDefinitions) {
       configDefinitionsMap.put(conf.getName(), conf);
@@ -89,6 +93,7 @@ public class StageDefinition {
       throw new RuntimeException(ex);
     }
     updateValuesAndLabelsFromValuesProvider();
+    updateRawSourceDefinitionFromPreviewer();
   }
 
   public String getLibrary() {
@@ -124,6 +129,10 @@ public class StageDefinition {
 
   public String getLabel() {
     return label;
+  }
+
+  public RawSourceDefinition getRawSourceDefinition() {
+    return rawSourceDefinition;
   }
 
   public String getDescription() {
@@ -188,7 +197,7 @@ public class StageDefinition {
     String description = (rb.containsKey(STAGE_DESCRIPTION)) ? rb.getString(STAGE_DESCRIPTION) : getDescription();
     StageDefinition def = new StageDefinition(
       getClassName(), getName(), getVersion(), label, description,
-      getType(), configDefs, getOnError(), getIcon());
+      getType(), configDefs, getOnError(), getRawSourceDefinition(), getIcon());
     def.setLibrary(getLibrary(), getStageClassLoader());
 
     for(ConfigDefinition configDef : def.getConfigDefinitions()) {
@@ -256,6 +265,26 @@ public class StageDefinition {
         } catch (IllegalAccessException e) {
           throw new RuntimeException(e);
         }
+      }
+    }
+  }
+
+  private void updateRawSourceDefinitionFromPreviewer() {
+    RawSourceDefinition rawSourceDefinition = getRawSourceDefinition();
+    if(rawSourceDefinition != null) {
+      try {
+        Class rawSourcePreviewerClass = classLoader.loadClass(rawSourceDefinition.getRawSourcePreviewerClass());
+        RawSourcePreviewer rawSourcePreviewerInstance = (RawSourcePreviewer) rawSourcePreviewerClass.newInstance();
+        String mime = rawSourcePreviewerInstance.getMime();
+        Map<String, String> previewParams = rawSourcePreviewerInstance.getParameters();
+        rawSourceDefinition.setMime(mime);
+        rawSourceDefinition.setPreviewParams(previewParams);
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      } catch (InstantiationException e) {
+        throw new RuntimeException(e);
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException(e);
       }
     }
   }

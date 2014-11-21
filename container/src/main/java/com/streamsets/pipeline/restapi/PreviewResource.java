@@ -18,9 +18,12 @@
 package com.streamsets.pipeline.restapi;
 
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.record.RecordImpl;
@@ -34,6 +37,8 @@ import com.streamsets.pipeline.runner.preview.PreviewSourceOffsetTracker;
 import com.streamsets.pipeline.runner.preview.PreviewStageRunner;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import org.apache.commons.io.input.BoundedInputStream;
+import org.apache.commons.io.input.ReaderInputStream;
 
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
@@ -43,10 +48,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
+import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Path("/v1/pipeline-library")
 public class PreviewResource {
@@ -54,6 +62,8 @@ public class PreviewResource {
   private static final int MAX_BATCH_SIZE_DEFAULT = 10;
   private static final String MAX_BATCHES_KEY = "preview.maxBatches";
   private static final int MAX_BATCHES_DEFAULT = 10;
+  private static final String MAX_SOURCE_PREVIEW_SIZE_KEY = "preview.maxSourcePreviewSize";
+  private static final int MAX_SOURCE_PREVIEW_SIZE_DEFAULT = 4*1024;
 
   //preview.maxBatchSize
   private final Configuration configuration;
@@ -109,6 +119,83 @@ public class PreviewResource {
     PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewOutput).build();
+  }
+
+  @Path("/{name}/rawSourcePreview")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response rawSourcePreview(
+      @PathParam("name") String name,
+      @QueryParam("rev") String rev,
+      @Context UriInfo uriInfo) throws PipelineStoreException,
+      PipelineRuntimeException {
+
+    MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
+
+    PipelineConfiguration pipelineConf = store.load(name, rev);
+    //Source stage is always the first one in the entire pipeline
+    StageConfiguration stageConf = pipelineConf.getStages().get(0);
+
+    assert(stageConf != null);
+    StageDefinition stageDefinition = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
+        stageConf.getStageVersion());
+
+    Map<String, String> stageDefParams = stageDefinition.getRawSourceDefinition().getPreviewParams();
+    for(String key : stageDefParams.keySet()) {
+       if(previewParams.containsKey(key) && previewParams.get(key) != null) {
+         stageDefParams.put(key, previewParams.getFirst(key));
+       }
+    }
+    //make sure there are no null values in stageDefParams
+    //All required params must be satisfied by the argument param for this call
+    List<String> paramsInError = new ArrayList<String>(stageDefParams.size());
+    for(Map.Entry<String, String> entry : stageDefParams.entrySet()) {
+      if(entry.getValue() == null) {
+        //TODO: empty string value is OK?
+        paramsInError.add(entry.getKey());
+      }
+    }
+    StringBuilder sb = new StringBuilder();
+    if(!paramsInError.isEmpty()) {
+      sb.append(paramsInError.get(0));
+      for(int i = 1; i < paramsInError.size(); i++) {
+        sb.append(", ").append(paramsInError.get(i));
+      }
+      throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_RAW_SOURCE_PREVIEW, sb.toString());
+    }
+
+    //Attempt to load the previewer class from stage class loader
+    Class previewerClass = null;
+    try {
+      previewerClass = stageDefinition.getStageClassLoader().loadClass(stageDefinition.getRawSourceDefinition()
+          .getRawSourcePreviewerClass());
+    } catch (ClassNotFoundException e) {
+      //Try loading from this class loader
+      try {
+        previewerClass = getClass().getClassLoader().loadClass(stageDefinition.getRawSourceDefinition()
+            .getRawSourcePreviewerClass());
+      } catch (ClassNotFoundException e1) {
+        throw new RuntimeException(e1);
+      }
+    }
+
+    int bytesToRead = configuration.get(MAX_SOURCE_PREVIEW_SIZE_KEY, MAX_SOURCE_PREVIEW_SIZE_DEFAULT);
+    bytesToRead = Math.min(bytesToRead, MAX_SOURCE_PREVIEW_SIZE_DEFAULT);
+
+    Reader reader;
+    RawSourcePreviewer rawSourcePreviewer;
+    try {
+      rawSourcePreviewer = (RawSourcePreviewer) previewerClass.newInstance();
+      reader = rawSourcePreviewer.preview(stageDefParams,bytesToRead);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
+    } catch (InstantiationException e) {
+      throw new RuntimeException(e);
+    }
+
+    BoundedInputStream bIn = new BoundedInputStream(new ReaderInputStream(reader), bytesToRead);
+
+    return Response.ok().type(rawSourcePreviewer.getMime()).entity(bIn).build();
   }
 
 }

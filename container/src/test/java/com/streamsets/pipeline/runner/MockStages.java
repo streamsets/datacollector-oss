@@ -159,15 +159,18 @@ public class MockStages {
       stages = new ArrayList<StageDefinition>();
       StageDefinition sDef = new StageDefinition(
         MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
-        "sourceDesc", StageType.SOURCE, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD, "");
+        "sourceDesc", StageType.SOURCE, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD,
+          null/*raw source definition*/,"");
       sDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
-      StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel", "sourceDescription",
-        StageType.PROCESSOR, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD, "");
+      StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel",
+          "sourceDescription", StageType.PROCESSOR, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD,
+          null/*raw source definition*/, "");
 
       pDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
       StageDefinition tDef = new StageDefinition(
         MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
-        "targetDesc", StageType.TARGET, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD, "");
+        "targetDesc", StageType.TARGET, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD,
+          null/*raw source definition*/, "");
       tDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
       stages = ImmutableList.of(sDef, pDef, tDef);
     }

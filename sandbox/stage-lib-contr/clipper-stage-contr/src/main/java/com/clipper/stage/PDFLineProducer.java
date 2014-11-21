@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+@RawSource(rawSourcePreviewer = ClipperSourcePreviewer.class)
 @StageDef(name = "PdfLineProducer", version = "1.0", label = "Clipper Travel Log Producer", description = "Produces lines from a PDF file")
 public class PDFLineProducer extends BaseSource {
 
