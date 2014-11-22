@@ -115,30 +115,6 @@ angular
       },
 
       /**
-       * Checks if configuration has any issue.
-       *
-       * @param {Object} configObject - The Pipeline Configuration/Stage Configuration Object.
-       * @returns {Boolean} - Returns true if configuration has any issue otherwise false.
-       */
-      hasConfigurationIssues: function(configObject) {
-        var config = $scope.pipelineConfig,
-          issues;
-
-        if(config && config.issues) {
-          if(configObject.instanceName && config.issues.stageIssues &&
-            config.issues.stageIssues && config.issues.stageIssues[configObject.instanceName]) {
-            issues = config.issues.stageIssues[configObject.instanceName];
-          } else if(config.issues.pipelineIssues){
-            issues = config.issues.pipelineIssues;
-          }
-        }
-
-        return _.find(issues, function(issue) {
-          return issue.level === 'STAGE_CONFIG';
-        });
-      },
-
-      /**
        * On clicking issue in Issues dropdown selects the stage and if issue level is STAGE_CONFIG
        * Configuration is
        * @param issue

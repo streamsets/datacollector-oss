@@ -60,8 +60,12 @@
       "targets": "Targets"
     },
     "detailPane": {
+      "alerts": "Alerts",
+      "badRecords": "Bad Records",
+      "configuration": "Configuration",
       "general": "General",
-      "configuration": "Configuration"
+      "rules": "Rules",
+      "summary": "Summary"
     },
     "previewPane": {
       "previewRecords": "Preview Records",

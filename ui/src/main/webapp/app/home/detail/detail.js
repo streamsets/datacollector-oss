@@ -5,19 +5,47 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('DetailController', function ($scope, _, api) {
+  .controller('DetailController', function ($scope, _) {
+    var detailTabsInEditMode = [{
+        name:'configuration',
+        template:'app/home/detail/configuration/configuration.tpl.html'
+      }
+      ],
+      detailTabsInRunningMode = [
+        {
+          name:'summary',
+          template:'app/home/detail/summary/summary.tpl.html'
+        },
+        {
+          name:'configuration',
+          template:'app/home/detail/configuration/configuration.tpl.html'
+        },
+        {
+          name:'badRecords',
+          template:'app/home/detail/badRecords/badRecords.tpl.html'
+        },
+        {
+          name:'alerts',
+          template:'app/home/detail/alerts/alerts.tpl.html'
+        },
+        {
+          name:'rules',
+          template:'app/home/detail/rules/rules.tpl.html'
+        }
+      ];
 
     angular.extend($scope, {
+      detailPaneTabs: detailTabsInEditMode,
+
       /**
-       * Returns message for the give Configuration Object and Definition.
+       * Checks if configuration has any issue.
        *
-       * @param configObject
-       * @param configDefinition
+       * @param {Object} configObject - The Pipeline Configuration/Stage Configuration Object.
+       * @returns {Boolean} - Returns true if configuration has any issue otherwise false.
        */
-      getConfigurationIssueMessage: function(configObject, configDefinition) {
+      hasConfigurationIssues: function(configObject) {
         var config = $scope.pipelineConfig,
-          issues,
-          issue;
+          issues;
 
         if(config && config.issues) {
           if(configObject.instanceName && config.issues.stageIssues &&
@@ -28,55 +56,26 @@ angular
           }
         }
 
-        issue = _.find(issues, function(issue) {
-          return (issue.level === 'STAGE_CONFIG' && issue.configName === configDefinition.name);
+        return _.find(issues, function(issue) {
+          return issue.level === 'STAGE_CONFIG';
         });
-
-        return issue ? issue.message : '';
       },
 
-      /**
-       * Toggles selection of value in given Array.
-       *
-       * @param arr
-       * @param value
-       */
-      toggleSelector: function(arr, value) {
-        var index = _.indexOf(arr, value);
-        if(index !== -1) {
-          arr.splice(index, 1);
-        } else {
-          arr.push(value);
+      showWarning: function(tab) {
+        if(tab.name === 'configuration') {
+          debugger;
+          return $scope.hasConfigurationIssues($scope.detailPaneConfig);
         }
-      },
-
-      /**
-       * Remove the field from uiInfo.inputFields and passed array.
-       * @param fieldArr
-       * @param index
-       * @param configValueArr
-       */
-      removeFieldSelector: function(fieldArr, index, configValueArr) {
-        var field = fieldArr[index];
-        fieldArr.splice(index, 1);
-
-        index = _.indexOf(configValueArr, field.name);
-        if(index !== -1) {
-          configValueArr.splice(index, 1);
-        }
-      },
-
-      /**
-       * Adds new field to the array uiInfo.inputFields
-       * @param fieldArr
-       */
-      addNewField: function(fieldArr) {
-        if(this.newFieldName) {
-          fieldArr.push({
-            name: this.newFieldName
-          });
-          this.newFieldName = '';
-        }
+        return false;
       }
     });
+
+    $scope.$watch('isPipelineRunning', function(newValue) {
+      if(newValue) {
+        $scope.detailPaneTabs = detailTabsInRunningMode;
+      } else {
+        $scope.detailPaneTabs = detailTabsInEditMode;
+      }
+    });
+
   });

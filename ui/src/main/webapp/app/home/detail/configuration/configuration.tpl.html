@@ -1,0 +1,139 @@
+<div ng-controller="ConfigurationController">
+  <form class="form-horizontal" role="form" name="{{detailPaneConfig.instanceName || 'pipeline'}}">
+
+
+    <!-- General Configuration for Pipeline-->
+    <div class="form-group" ng-if="detailPaneConfig.stages !== undefined">
+      <label class="col-sm-2 control-label" translate="global.form.name">Name</label>
+      <div class="col-sm-6">
+        <p class="form-control-static" ng-bind="pipelineConfig.info.name"> </p>
+      </div>
+    </div>
+
+    <div class="form-group" ng-if="detailPaneConfig.stages !== undefined">
+      <label class="col-sm-2 control-label" translate="global.form.description">Description</label>
+      <div class="col-sm-6">
+        <textarea class="form-control" name="description"
+                  ng-model="pipelineConfig.description"></textarea>
+      </div>
+    </div>
+    <!--- /General Configuration-->
+
+
+    <!-- General Configuration for Stages-->
+    <div class="form-group" ng-if="detailPaneConfig.stages === undefined">
+      <label class="col-sm-2 control-label" translate="global.form.label">Label</label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control" name="name"
+               ng-model="detailPaneConfig.uiInfo.label">
+      </div>
+    </div>
+
+
+    <div class="form-group" ng-if="detailPaneConfig.stages === undefined">
+      <label class="col-sm-2 control-label" translate="global.form.description">Description</label>
+      <div class="col-sm-6">
+        <textarea class="form-control" name="description"
+                  ng-model="detailPaneConfig.uiInfo.description"></textarea>
+      </div>
+    </div>
+
+    <!--- /General Configuration-->
+
+
+    <div class="form-group"
+         ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions" show-errors>
+      <label class="col-sm-2 control-label">{{configDefinition.label}}</label>
+
+      <div class="col-sm-6" ng-if="configDefinition.type === 'BOOLEAN'">
+        <input type="checkbox" name="{{configDefinition.name}}"
+               ng-model="detailPaneConfig.configuration[$index].value">
+
+        <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+      </div>
+
+      <div class="col-sm-6" ng-if="configDefinition.type === 'INTEGER'">
+        <input type="number" class="form-control" name="{{configDefinition.name}}"
+               ng-model="detailPaneConfig.configuration[$index].value"
+               ng-required="configDefinition.required">
+
+        <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+      </div>
+
+      <div class="col-sm-6" ng-if="!configDefinition.listValues && configDefinition.type === 'STRING'">
+        <input type="text" class="form-control" name="{{configDefinition.name}}"
+               ng-model="detailPaneConfig.configuration[$index].value"
+               ng-required="configDefinition.required">
+
+        <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+
+      </div>
+
+      <div class="col-sm-6"
+           ng-if="configDefinition.type === 'MODEL'">
+
+
+        <!-- Model Type === DROPDOWN -->
+        <select class="form-control" name="{{configDefinition.name}}"
+                ng-if="configDefinition.model.modelType === 'DROPDOWN'"
+                ng-model="detailPaneConfig.configuration[$index].value">
+          <option ng-repeat="listValue in configDefinition.model.values"
+                  value="{{listValue}}"
+                  ng-selected="listValue === detailPaneConfig.configuration[$parent.$index].value">
+            {{configDefinition.model.labels[$index]}}
+          </option>
+        </select>
+
+
+        <!-- Model Type === Field Selector -->
+
+        <table class="table table-bordered"
+               ng-if="configDefinition.model.modelType === 'FIELD_SELECTOR'">
+          <thead>
+          <tr>
+            <th class="col-md-1"></th>
+            <th class="col-md-5" translate="global.form.fieldName">Field Name</th>
+            <th class="col-md-2" translate="global.form.type">Type</th>
+            <th class="col-md-4" translate="global.form.sampleValue">Sample Value</th>
+            <th class="text-center col-md-2" translate="global.form.required">Required</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="field in detailPaneConfig.uiInfo.inputFields">
+            <td>
+                            <span class="glyphicon glyphicon-minus-sign icon-danger pointer"
+                                  ng-click="removeFieldSelector(detailPaneConfig.uiInfo.inputFields, $index, detailPaneConfig.configuration[$parent.$index].value)">
+                            </span>
+            </td>
+            <td>{{field.name}}</td>
+            <td>{{field.type}}</td>
+            <td>{{field.sampleValue}}</td>
+            <td class="text-center">
+              <input type="checkbox"
+                     ng-checked="detailPaneConfig.configuration[$parent.$index].value.indexOf(field.name) > -1"
+                     ng-click="toggleSelector(detailPaneConfig.configuration[$parent.$index].value, field.name)">
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <div class="row"
+             ng-if="configDefinition.model.modelType === 'FIELD_SELECTOR'">
+          <div class="col-md-5">
+            <input class="form-control input-sm" type="text"
+                   ng-enter="addNewField(detailPaneConfig.uiInfo.inputFields)"
+                   ng-model="newFieldName"
+                   placeholder="{{'global.form.fieldName.placeholder' | translate}}">
+          </div>
+          <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-sm"
+                    ng-click="addNewField(detailPaneConfig.uiInfo.inputFields)">
+              <span class="glyphicon glyphicon-plus"></span> Add
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</div>
