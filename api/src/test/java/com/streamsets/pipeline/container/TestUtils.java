@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import java.text.ParseException;
 
-public class TestApiUtils {
+public class TestUtils {
 
   @Test
   public void testConstructor() {
