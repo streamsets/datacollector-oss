@@ -17,6 +17,7 @@ angular
       timeout,
       dirty = false,
       ignoreUpdate = false,
+      pipelineStatusTimer,
       edges = [],
       SOURCE_STAGE_TYPE = 'SOURCE',
       PROCESSOR_STAGE_TYPE = 'PROCESSOR',
@@ -134,6 +135,8 @@ angular
         } else {
           $scope.activeConfigInfo = undefined;
         }
+
+        fetchPipelineStatusEvery10Seconds();
 
         if($scope.activeConfigInfo) {
           return api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name);
@@ -313,6 +316,37 @@ angular
           };
         }
       }
+    };
+
+
+    /**
+     * Fetch the Pipeline Status every 10 Seconds.
+     *
+     */
+    var fetchPipelineStatusEvery10Seconds = function() {
+
+      pipelineStatusTimer = $timeout(
+        function() {
+          console.log( "Timeout executed", Date.now() );
+        },
+        10000
+      );
+
+      pipelineStatusTimer.then(
+        function() {
+          api.pipelineAgent.getPipelineStatus()
+            .success(function(data) {
+              $rootScope.common.pipelineStatus = data;
+              fetchPipelineStatusEvery10Seconds();
+            })
+            .error(function(data, status, headers, config) {
+              $rootScope.common.errors = [data];
+            });
+        },
+        function() {
+          console.log( "Timer rejected!" );
+        }
+      );
     };
 
 

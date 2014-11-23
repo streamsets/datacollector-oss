@@ -10,6 +10,7 @@
     "form": {
       "add": "Add",
       "cancel": "Cancel",
+      "delete": "Delete",
       "description": "Description",
       "duplicate": "Duplicate",
       "errorRecord": "Error Record",
