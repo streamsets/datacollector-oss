@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('PreviewController', function ($scope, _, api) {
+  .controller('PreviewController', function ($scope, $rootScope, _, api) {
     var SOURCE_STAGE_TYPE = 'SOURCE',
       PROCESSOR_STAGE_TYPE = 'PROCESSOR',
       TARGET_STAGE_TYPE = 'TARGET';
@@ -122,7 +122,7 @@ angular
             $scope.stepExecuted = true;
           }).
           error(function(data) {
-            $scope.httpErrors = [data];
+            $rootScope.common.errors = [data];
           });
       }
     });
@@ -217,7 +217,7 @@ angular
                   stageInstance.uiInfo.inputFields = getFields(stagePreviewData.input);
                 }).
                 error(function(data) {
-                  $scope.httpErrors = [data];
+                  $rootScope.common.errors = [data];
                 });
             }
           }
@@ -244,7 +244,7 @@ angular
           $scope.changeStageSelection(firstStageInstance);
         }).
         error(function(data) {
-          $scope.httpErrors = [data];
+          $rootScope.common.errors = [data];
         });
     });
 

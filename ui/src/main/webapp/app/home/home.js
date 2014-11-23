@@ -140,7 +140,7 @@ angular
         }
 
       },function(data, status, headers, config) {
-          $scope.httpErrors = [data];
+          $rootScope.common.errors = [data];
       })
       .then(function(res) {
         //Pipeline Configuration
@@ -148,7 +148,7 @@ angular
           updateGraph(res.data);
         }
       },function(data, status, headers, config) {
-        $scope.httpErrors = [data];
+        $rootScope.common.errors = [data];
       });
 
     /**
@@ -158,10 +158,11 @@ angular
     var loadPipelineConfig = function(configName) {
       api.pipelineAgent.getPipelineConfig(configName).
         success(function(res) {
+          $rootScope.common.errors = [];
           updateGraph(res);
         }).
         error(function(data, status, headers, config) {
-          $scope.httpErrors = [data];
+          $rootScope.common.errors = [data];
         });
     };
 
@@ -198,7 +199,7 @@ angular
           updateGraph(res);
         }).
         error(function(data, status, headers, config) {
-          $scope.httpErrors = [data];
+          $rootScope.common.errors = [data];
         });
     };
 

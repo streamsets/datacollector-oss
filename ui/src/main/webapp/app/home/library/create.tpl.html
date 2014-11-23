@@ -21,6 +21,8 @@
     <div class="form-group">
       <label class="control-label" translate="global.form.name">Name</label>
       <input type="text" class="form-control" required
+             pattern="{{common.namePattern}}"
+             title="{{'admin.library.nameValidation' | translate}}"
              placeholder="{{'admin.library.namePlaceholder' | translate}}"
              ng-model="newConfig.name">
     </div>

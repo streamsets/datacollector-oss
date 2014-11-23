@@ -128,28 +128,29 @@ angular.module('pipelineAgentApp.common')
       },
 
 
-      duplicatePipelineConfig: function(name, description, originalConfig) {
-        var deferred = $q.defer();
-        var url = apiBase + '/pipeline-library/' + name + '?description=' + description;
+      duplicatePipelineConfig: function(name, description, pipelineInfo) {
+        var deferred = $q.defer(),
+          pipelineObject,
+          duplicatePipelineObject;
 
-        //First create new config object and then copy the configuration from original configuration.
-        $http({
-          method: 'PUT',
-          url: url
-        }).then(function(res) {
-          var newConfigObect = res.data;
-          newConfigObect.configuration = originalConfig.configuration;
-          newConfigObect.uiInfo = originalConfig.uiInfo;
-          newConfigObect.stages = originalConfig.stages;
-
-          return $http({
-            method: 'POST',
-            url: url,
-            data: newConfigObect
+        // Fetch the pipelineInfo full object
+        // then Create new config object
+        // then copy the configuration from pipelineInfo to new Object.
+        api.pipelineAgent.getPipelineConfig(pipelineInfo.name)
+          .then(function(res) {
+            pipelineObject = res.data;
+            return api.pipelineAgent.createNewPipelineConfig(name, description);
+          })
+          .then(function(res) {
+            duplicatePipelineObject = res.data;
+            duplicatePipelineObject.configuration = pipelineObject.configuration;
+            duplicatePipelineObject.uiInfo = pipelineObject.uiInfo;
+            duplicatePipelineObject.stages = pipelineObject.stages;
+            return api.pipelineAgent.savePipelineConfig(name, duplicatePipelineObject);
+          })
+          .then(function(res) {
+            deferred.resolve(res.data);
           });
-        }).then(function(res) {
-          deferred.resolve(res.data);
-        });
 
         return deferred.promise;
       },

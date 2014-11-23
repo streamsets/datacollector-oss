@@ -37,6 +37,8 @@ angular.module('pipelineAgentApp', [
       },
       saveOperationInProgress: false,
       pipelineStatus: {},
+      namePattern: '^[a-zA-Z0-9_]*$',
+      errors: [],
 
       /**
        * Import link command handler

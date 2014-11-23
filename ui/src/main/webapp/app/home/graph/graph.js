@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('GraphController', function ($scope, $rootScope, _, api, $timeout) {
+  .controller('GraphController', function ($scope, $rootScope, _, api, $translate) {
     var stageCounter = 0,
       SOURCE_STAGE_TYPE = 'SOURCE',
       PROCESSOR_STAGE_TYPE = 'PROCESSOR',
@@ -143,13 +143,21 @@ angular
        *
        */
       startPipeline: function() {
-        api.pipelineAgent.startPipeline($scope.activeConfigInfo.name).
-          success(function(res) {
-            $rootScope.common.pipelineStatus = res;
-          }).
-          error(function() {
-
+        if($rootScope.common.pipelineStatus.state !== 'RUNNING') {
+          api.pipelineAgent.startPipeline($scope.activeConfigInfo.name).
+            success(function(res) {
+              $rootScope.common.pipelineStatus = res;
+            }).
+            error(function(data) {
+              $rootScope.common.errors = [data];
+            });
+        } else {
+          $translate('admin.graphPane.startErrorMessage', {
+            name: $rootScope.common.pipelineStatus.name
+          }).then(function(translation) {
+            $rootScope.common.errors = [translation];
           });
+        }
       },
 
       /**
@@ -161,8 +169,8 @@ angular
           success(function(res) {
             $rootScope.common.pipelineStatus = res;
           }).
-          error(function() {
-
+          error(function(data) {
+            $rootScope.common.errors = [data];
           });
       },
 

@@ -33,8 +33,35 @@
         border-left: none;
         border-radius: 0;
 
+        .action-menu {
+          &:hover,
+          &:focus {
+            color: @brand-primary;
+            visibility: visible;
+          }
+
+          visibility: hidden;
+          padding: @defaultPadding 0 0 0;
+          color: #8A8787;
+          span {
+            padding: @defaultPadding;
+          }
+        }
+
         &:first-child {
           border-top: none;
+        }
+
+        // Hover state
+        &:hover,
+        &:focus {
+          text-decoration: none;
+          color: #555;
+          background-color: #f5f5f5;
+
+          .action-menu {
+            visibility: visible;
+          }
         }
 
 
@@ -52,7 +79,16 @@
             border-color: #e7e7e7;
           }
 
+          .action-menu {
+            visibility: visible;
+          }
         }
+
+        .running {
+          padding-top: @smallPadding*1.5;
+          color: @brand-success;
+        }
+
       }
 
 

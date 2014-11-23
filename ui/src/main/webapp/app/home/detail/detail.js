@@ -63,7 +63,6 @@ angular
 
       showWarning: function(tab) {
         if(tab.name === 'configuration') {
-          debugger;
           return $scope.hasConfigurationIssues($scope.detailPaneConfig);
         }
         return false;

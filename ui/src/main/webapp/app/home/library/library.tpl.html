@@ -2,47 +2,53 @@
   <div class="panel-heading clearfix">
     <h3 class="panel-title pull-left" translate="global.form.library">Library</h3>
 
-    <!--button type="button" class="btn btn-primary btn-sm pull-right"
+    <button type="button" class="btn btn-primary btn-sm pull-right"
             ng-click="addPipelineConfig()">
       <span class="glyphicon glyphicon-plus"></span>
-    </button-->
-
-    <div class="dropdown pull-right">
-      <button class="btn btn-primary btn-sm" type="button" data-toggle="dropdown" aria-expanded="true">
-        <span class="glyphicon glyphicon-cog"></span>
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-        <li role="presentation">
-          <a role="menuitem" tabindex="-1" href="#" ng-click="addPipelineConfig()">
-            Add
-          </a>
-        </li>
-        <li role="presentation">
-          <a role="menuitem" tabindex="-1" href="#" ng-click="deletePipelineConfig()">
-            Delete
-          </a>
-        </li>
-        <li role="presentation">
-          <a role="menuitem" tabindex="-1" href="#" ng-click="duplicatePipelineConfig()">
-            Duplicate
-          </a>
-        </li>
-      </ul>
-    </div>
-
+    </button>
   </div>
 
   <div class="panel-body">
-    <div class="list-group">
-      <a href="#" class="list-group-item"
+    <ul class="list-group">
+      <li class="list-group-item pointer clearfix"
          ng-class="{'active' : pipeline.name === activeConfigInfo.name}"
-         ng-click="onSelect(pipeline)"
-         ng-repeat="pipeline in pipelines">
+         ng-repeat="pipeline in pipelines"
+         ng-click="onSelect(pipeline)">
+
+        <div class="pull-left">
           <h5 class="list-group-item-heading">{{pipeline.name}}</h5>
           <p class="list-group-item-text">{{pipeline.description}}</p>
-      </a>
-    </div>
+        </div>
+
+        <div class="action-menu pull-right" dropdown>
+          <span class="dropdown-toggle" dropdown-toggle aria-expanded="true" ng-click="$event.stopPropagation();">
+            <i class="fa fa-ellipsis-v"></i>
+          </span>
+          <ul class="dropdown-menu" role="menu">
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1" href="#"
+                 translate="global.form.delete"
+                 ng-click="deletePipelineConfig(pipeline)">
+                Delete
+              </a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1" href="#"
+                 translate="global.form.duplicate"
+                 ng-click="duplicatePipelineConfig(pipeline)">
+                Duplicate
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="pull-right running"
+             ng-if="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
+          <i class="fa fa-spinner fa-spin fa-2x"></i>
+        </div>
+
+      </li>
+    </ul>
   </div>
 
  </div>

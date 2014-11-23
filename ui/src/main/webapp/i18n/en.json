@@ -59,6 +59,9 @@
       "stop": "Stop",
       "targets": "Targets"
     },
+    "graphPane": {
+      "startErrorMessage": "Pipeline definition '{{name}}' is running. Pipeline Agent supports running only one Pipeline Definition."
+    },
     "detailPane": {
       "alerts": "Alerts",
       "badRecords": "Bad Records",
@@ -79,7 +82,8 @@
       "descriptionPlaceholder": "Pipeline Definition Description",
       "deleteConfirmationTitle": "Delete Confirmation",
       "deleteConfirmationMessage": "Are you sure you want to delete Pipeline Configuration '{{name}}'?",
-      "duplicatePipelineDefinition": "Duplicate Pipeline Definition"
+      "duplicatePipelineDefinition": "Duplicate Pipeline Definition",
+      "nameValidation": "Please enter only upper and lowercase letters, numbers and underscores."
     },
     "import": {
       "headerLabel" : "Import Pipeline Definition",

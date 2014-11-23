@@ -45,15 +45,15 @@ angular
       /**
        * Delete Pipeline Configuration
        */
-      deletePipelineConfig: function() {
+      deletePipelineConfig: function(pipelineInfo) {
         var modalInstance = $modal.open({
           templateUrl: 'app/home/library/delete.tpl.html',
           controller: 'DeleteModalInstanceController',
           size: '',
           backdrop: true,
           resolve: {
-            activeConfigInfo: function () {
-              return $scope.activeConfigInfo;
+            pipelineInfo: function () {
+              return pipelineInfo;
             }
           }
         });
@@ -65,12 +65,14 @@ angular
 
           $scope.pipelines.splice(index, 1);
 
-          if($scope.pipelines.length) {
-            $scope.$emit('onPipelineConfigSelect', $scope.pipelines[0]);
-          } else {
-            $scope.$emit('onPipelineConfigSelect');
-          }
 
+          if(pipelineInfo.name === $scope.activeConfigInfo.name) {
+            if($scope.pipelines.length) {
+              $scope.$emit('onPipelineConfigSelect', $scope.pipelines[0]);
+            } else {
+              $scope.$emit('onPipelineConfigSelect');
+            }
+          }
 
         }, function () {
 
@@ -80,15 +82,15 @@ angular
       /**
        * Duplicate Pipeline Configuration
        */
-      duplicatePipelineConfig: function() {
+      duplicatePipelineConfig: function(pipelineInfo) {
         var modalInstance = $modal.open({
           templateUrl: 'app/home/library/duplicate.tpl.html',
           controller: 'DuplicateModalInstanceController',
           size: '',
           backdrop: true,
           resolve: {
-            originalPipelineConfig: function () {
-              return $scope.pipelineConfig;
+            pipelineInfo: function () {
+              return pipelineInfo;
             }
           }
         });
@@ -133,15 +135,15 @@ angular
     });
   })
 
-  .controller('DeleteModalInstanceController', function ($scope, $modalInstance, activeConfigInfo, api) {
+  .controller('DeleteModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api) {
     angular.extend($scope, {
       issues: [],
-      activeConfigInfo: activeConfigInfo,
+      pipelineInfo: pipelineInfo,
 
       yes: function() {
-        api.pipelineAgent.deletePipelineConfig(activeConfigInfo.name).
+        api.pipelineAgent.deletePipelineConfig(pipelineInfo.name).
           success(function() {
-            $modalInstance.close(activeConfigInfo);
+            $modalInstance.close(pipelineInfo);
           }).
           error(function(data) {
             $scope.issues = [data];
@@ -153,16 +155,16 @@ angular
     });
   })
 
-  .controller('DuplicateModalInstanceController', function ($scope, $modalInstance, originalPipelineConfig, api, $q) {
+  .controller('DuplicateModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api, $q) {
     angular.extend($scope, {
       issues: [],
       newConfig : {
-        name: originalPipelineConfig.info.name + 'copy',
-        description: originalPipelineConfig.description
+        name: pipelineInfo.name + 'copy',
+        description: pipelineInfo.description
       },
       save : function () {
         $q.when(api.pipelineAgent.duplicatePipelineConfig($scope.newConfig.name, $scope.newConfig.description,
-          originalPipelineConfig)).
+          pipelineInfo)).
           then(function(configObject) {
             $modalInstance.close(configObject);
           },function(data) {
