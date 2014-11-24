@@ -30,10 +30,11 @@ public class PipelineStateException extends PipelineException {
 
     COULD_NOT_SET_STATE("Could not set state, {}"),
     COULD_NOT_GET_STATE("Could not get state, {}"),
-    INVALID_STATE_TRANSITION("Cannot change state from {} to {}"),
-    CANNOT_SET_OFFSET_RUNNING_STATE("Cannot set the source offset during a run"),
-    CANNOT_CAPTURE_SNAPSHOT_WHEN_PIPELINE_NOT_RUNNING("Cannot capture snapshot when pipeline is not running"),
-    INVALID_BATCH_SIZE("Invalid batch size supplied {}");
+    INVALID_STATE_TRANSITION("Could not change state from {} to {}"),
+    COULD_NOT_SET_OFFSET_RUNNING_STATE("Could not set the source offset during a run"),
+    COULD_NOT_CAPTURE_SNAPSHOT_WHEN_PIPELINE_NOT_RUNNING("Could not capture snapshot when pipeline is not running"),
+    INVALID_BATCH_SIZE("Invalid batch size supplied {}"),
+    COULD_NOT_START_PIPELINE_MANAGER_REASON("Could not start pipeline manager. Reason : {}");
 
     private final String msgTemplate;
 

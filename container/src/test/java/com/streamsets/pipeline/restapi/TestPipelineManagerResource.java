@@ -81,8 +81,7 @@ public class TestPipelineManagerResource extends JerseyTest {
 
   @Test
   public void testSetOffsetAPI() {
-    Response r = target("/v1/pipeline/offset").queryParam("name", PIPELINE_NAME).queryParam("rev", "1.0")
-        .queryParam("offset", "myOffset").request().post(null);
+    Response r = target("/v1/pipeline/offset").queryParam("offset", "myOffset").request().post(null);
 
     Assert.assertNotNull(r);
     SourceOffset so = r.readEntity(SourceOffset.class);

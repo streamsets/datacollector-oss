@@ -42,7 +42,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.io.File;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -116,6 +118,14 @@ public class ProductionPipelineManagerTask extends AbstractTask {
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
+    } else {
+      //create the pipeline instance. This was the pipeline in the context before the manager shutdown previously
+      try {
+        prodPipeline = createProductionPipeline(ps.getName(), ps.getRev(), configuration, pipelineStore, stageLibrary);
+      } catch (Exception e) {
+        //log error and shutdown again
+        LOG.error(PipelineStateException.ERROR.COULD_NOT_START_PIPELINE_MANAGER_REASON.getMessageTemplate(), e.getMessage());
+      }
     }
     LOG.debug("Initialized Production Pipeline Manager");
   }
@@ -147,7 +157,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public String setOffset(String offset) throws PipelineStateException {
     LOG.debug("Setting offset {}", offset);
     checkState(!getPipelineState().getState().equals(State.RUNNING),
-          PipelineStateException.ERROR.CANNOT_SET_OFFSET_RUNNING_STATE);
+          PipelineStateException.ERROR.COULD_NOT_SET_OFFSET_RUNNING_STATE);
 
     prodPipeline.setOffset(offset);
     return prodPipeline.getCommittedOffset();
@@ -156,7 +166,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public void captureSnapshot(int batchSize) throws PipelineStateException {
     LOG.debug("Capturing snapshot with batch size {}", batchSize);
     checkState(getPipelineState().getState().equals(State.RUNNING),
-        PipelineStateException.ERROR.CANNOT_CAPTURE_SNAPSHOT_WHEN_PIPELINE_NOT_RUNNING);
+        PipelineStateException.ERROR.COULD_NOT_CAPTURE_SNAPSHOT_WHEN_PIPELINE_NOT_RUNNING);
     if(batchSize <= 0) {
       throw new PipelineStateException(PipelineStateException.ERROR.INVALID_BATCH_SIZE, batchSize);
     }
@@ -170,6 +180,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
   public InputStream getSnapshot(String pipelineName) {
     return snapshotStore.getSnapshot(pipelineName);
+  }
+
+  public List<PipelineState> getHistory(String pipelineName) {
+    return stateTracker.getHistory(pipelineName);
   }
 
   public void deleteSnapshot(String pipelineName) {
@@ -199,6 +213,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public MetricRegistry getMetrics() {
     return prodPipeline.getPipeline().getRunner().getMetrics();
   }
+
+
 
   private PipelineState handleStartRequest(String name, String rev) throws PipelineStateException, StageException
       , PipelineRuntimeException, PipelineStoreException {

@@ -17,16 +17,21 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.util.JsonFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.GenericArrayType;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StateTracker {
 
@@ -124,7 +129,7 @@ public class StateTracker {
     }
   }
 
-  private File getPipelineStateFile(String name) {
+  public File getPipelineStateFile(String name) {
     return new File(getPipelineDir(name), STATE_FILE);
   }
 
@@ -141,6 +146,20 @@ public class StateTracker {
       }
     }
     return pipelineDir;
+  }
+
+  public List<PipelineState> getHistory(String pipelineName) {
+    PipelineState[] pipelineStates = null;
+    try {
+      pipelineStates = new ObjectMapper().readValue(getPipelineStateFile(pipelineName), PipelineState[].class);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    List<PipelineState> pipelineStateList = new ArrayList<>(pipelineStates.length);
+    for(int i = pipelineStates.length - 1; i >= 0; i--) {
+      pipelineStateList.add(pipelineStates[i]);
+    }
+    return pipelineStateList;
   }
 
 }

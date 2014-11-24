@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.List;
 
 public class TestProductionRun {
 
@@ -125,6 +126,28 @@ public class TestProductionRun {
     Assert.assertEquals(false, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
 
+  }
+
+  //@Test()
+  public void testGetHistory() throws PipelineStoreException, PipelineStateException, PipelineRuntimeException, StageException, InterruptedException {
+    manager.startPipeline(MY_PIPELINE, "0");
+    manager.stopPipeline();
+    while(!manager.getPipelineState().getState().equals(State.STOPPED)) {
+      Thread.sleep(5);
+    }
+    manager.startPipeline(MY_PIPELINE, "0");
+    manager.stopPipeline();
+    while(!manager.getPipelineState().getState().equals(State.STOPPED)) {
+      Thread.sleep(5);
+    }
+    manager.startPipeline(MY_PIPELINE, "0");
+    manager.stopPipeline();
+    while(!manager.getPipelineState().getState().equals(State.STOPPED)) {
+      Thread.sleep(5);
+    }
+
+    List<PipelineState> pipelineStates = manager.getHistory(MY_PIPELINE);
+    Assert.assertEquals(6, pipelineStates.size());
   }
 
   //TODO:

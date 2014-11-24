@@ -72,8 +72,6 @@ public class PipelineManagerResource {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response setOffset(
-      @QueryParam("name") String name,
-      @QueryParam("rev") String rev,
       @QueryParam("offset") String offset) throws PipelineStateException {
     SourceOffset so = new SourceOffset(pipelineManager.setOffset(offset));
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(so).build();
@@ -124,12 +122,11 @@ public class PipelineManagerResource {
     return response;
   }
 
-  //TODO: working on it
-  /*@Path("/history/{name}")
+  @Path("/history/{name}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getHistory(
       @PathParam("name") String name) {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity().build();
-  }*/
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getHistory(name)).build();
+  }
 }
