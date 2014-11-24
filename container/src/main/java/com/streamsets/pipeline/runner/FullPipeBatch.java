@@ -40,6 +40,8 @@ public class FullPipeBatch implements PipeBatch {
   private final List<StageOutput> stageOutputSnapshot;
   private final ErrorRecordSink errorRecordSink;
   private String newOffset;
+  private int inputRecords;
+  private int outputRecords;
 
   public FullPipeBatch(SourceOffsetTracker offsetTracker, int batchSize, boolean snapshotStagesOutput) {
     this.offsetTracker = offsetTracker;
@@ -77,6 +79,9 @@ public class FullPipeBatch implements PipeBatch {
     for (String inputLane : pipe.getInputLanes()) {
       records.addAll(fullPayload.remove(inputLane));
     }
+    if (pipe.getStage().getDefinition().getType() == StageType.TARGET) {
+      outputRecords += records.size();
+    }
     return new BatchImpl(pipe.getStage().getInfo().getInstanceName(), offsetTracker.getOffset(), records);
   }
 
@@ -97,6 +102,9 @@ public class FullPipeBatch implements PipeBatch {
   @Override
   public void completeStage(BatchMakerImpl batchMaker) {
     StagePipe pipe = batchMaker.getStagePipe();
+    if (pipe.getStage().getDefinition().getType() == StageType.SOURCE) {
+      inputRecords += batchMaker.getSize();
+    }
     Map<String, List<Record>> stageOutput = batchMaker.getStageOutput();
     // convert lane names from stage naming to pipe naming when adding to the payload
     // leveraging the fact that the stage output lanes and the pipe output lanes are in the same order
@@ -185,6 +193,21 @@ public class FullPipeBatch implements PipeBatch {
           "Lane '{}' does not exist", lane));
       fullPayload.get(to).addAll(records);
     }
+  }
+
+  @Override
+  public int getInputRecords() {
+    return inputRecords;
+  }
+
+  @Override
+  public int getOutputRecords() {
+    return outputRecords;
+  }
+
+  @Override
+  public int getErrorRecords() {
+    return errorRecordSink.size();
   }
 
   @Override

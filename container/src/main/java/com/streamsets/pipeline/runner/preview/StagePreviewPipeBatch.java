@@ -114,4 +114,18 @@ public class StagePreviewPipeBatch implements PipeBatch {
     throw new UnsupportedOperationException("combineLanes()");
   }
 
+  @Override
+  public int getInputRecords() {
+    return 0;
+  }
+
+  @Override
+  public int getOutputRecords() {
+    return 0;
+  }
+
+  @Override
+  public int getErrorRecords() {
+    return 0;
+  }
 }

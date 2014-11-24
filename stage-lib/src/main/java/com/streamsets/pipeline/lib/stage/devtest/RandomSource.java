@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.lib.stage.devtest;
 
+import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
@@ -37,12 +38,14 @@ public class RandomSource extends BaseSource {
   private String[] fieldArr;
   private Random random;
   private String[] lanes;
+  private Meter randomMeter;
 
   @Override
   protected void init() throws StageException {
     fieldArr = fields.split(",");
     random = new Random();
     lanes = getContext().getOutputLanes().toArray(new String[getContext().getOutputLanes().size()]);
+    randomMeter = getContext().createMeter("randomizer");
   }
 
   @Override
@@ -57,7 +60,9 @@ public class RandomSource extends BaseSource {
   private Record createRecord(String lastSourceOffset, int batchOffset) {
     Record record = getContext().createRecord("random:" + batchOffset);
     for (String field : fieldArr) {
-      record.setField(field, Field.create(random.nextLong()));
+      long randomValue = random.nextLong();
+      record.setField(field, Field.create(randomValue));
+      randomMeter.mark(randomValue);
     }
     return record;
   }

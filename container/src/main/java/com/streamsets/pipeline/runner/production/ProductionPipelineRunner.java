@@ -17,10 +17,11 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.StageType;
@@ -32,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -44,11 +44,20 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private final SourceOffsetTracker offsetTracker;
   private final SnapshotStore snapshotStore;
   private int batchSize;
-  private Timer processingTimer;
   private String sourceOffset;
   private String newSourceOffset;
   private DeliveryGuarantee deliveryGuarantee;
   private final String pipelineName;
+
+  private final Timer batchProcessingTimer;
+  private final Counter batchCountCounter;
+  private final Counter batchInputRecordsCounter;
+  private final Counter batchOutputRecordsCounter;
+  private final Counter batchErrorRecordsCounter;
+  private final Meter batchCountMeter;
+  private final Meter batchInputRecordsMeter;
+  private final Meter batchOutputRecordsMeter;
+  private final Meter batchErrorRecordsMeter;
 
   /*indicates if the execution must be stopped after the current batch*/
   private volatile boolean stop = false;
@@ -62,7 +71,17 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.metrics = new MetricRegistry();
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
-    processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
+
+    batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
+    batchCountCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchCount");
+    batchInputRecordsCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchInputRecords");
+    batchOutputRecordsCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchOutputRecords");
+    batchErrorRecordsCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchErrorRecords");
+    batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount");
+    batchInputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchInputRecords");
+    batchOutputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchOutputRecords");
+    batchErrorRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorRecords");
+
     this.deliveryGuarantee = deliveryGuarantee;
     this.snapshotStore = snapshotStore;
     this.pipelineName = pipelineName;
@@ -146,7 +165,17 @@ public class ProductionPipelineRunner implements PipelineRunner {
     if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
       offsetTracker.commitOffset();
     }
-    processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+
+    batchProcessingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+    batchCountCounter.inc();
+    batchInputRecordsCounter.inc(pipeBatch.getInputRecords());
+    batchOutputRecordsCounter.inc(pipeBatch.getOutputRecords());
+    batchErrorRecordsCounter.inc(pipeBatch.getErrorRecords());
+    batchCountMeter.mark();
+    batchInputRecordsMeter.mark(pipeBatch.getInputRecords());
+    batchOutputRecordsMeter.mark(pipeBatch.getOutputRecords());
+    batchErrorRecordsMeter.mark(pipeBatch.getErrorRecords());
+
     newSourceOffset = offsetTracker.getOffset();
 
     if(batchCaptured) {

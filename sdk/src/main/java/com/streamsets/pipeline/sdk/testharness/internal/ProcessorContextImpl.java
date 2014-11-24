@@ -37,10 +37,12 @@ public class ProcessorContextImpl implements Processor.Context {
 
   private final String instanceName;
   private final Set<String> outputLanes;
+  private final MetricRegistry metrics;
 
   public ProcessorContextImpl(String instanceName, Set<String> outputLanes) {
     this.instanceName = instanceName;
     this.outputLanes = outputLanes;
+    this.metrics = new MetricRegistry();
   }
 
   @Override
@@ -72,7 +74,7 @@ public class ProcessorContextImpl implements Processor.Context {
 
   @Override
   public MetricRegistry getMetrics() {
-    return null;
+    return metrics;
   }
 
   @Override

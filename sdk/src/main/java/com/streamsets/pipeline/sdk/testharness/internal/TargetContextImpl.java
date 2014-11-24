@@ -32,9 +32,11 @@ import java.util.List;
 
 public class TargetContextImpl implements Target.Context {
   private String instanceName;
+  private final MetricRegistry metrics;
 
   public TargetContextImpl(String instanceName) {
     this.instanceName = instanceName;
+    this.metrics = new MetricRegistry();
   }
 
   @Override
@@ -44,7 +46,7 @@ public class TargetContextImpl implements Target.Context {
 
   @Override
   public MetricRegistry getMetrics() {
-    return null;
+    return metrics;
   }
 
   @Override

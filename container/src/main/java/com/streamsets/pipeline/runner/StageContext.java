@@ -41,6 +41,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private static final String STAGE_CAUGHT_ERROR_KEY = "stage.caught.record.error";
   private static final String STAGE_CAUGHT_ERROR_DEFAULT = "Stage caught record error: {}";
 
+  private static final String CUSTOM_METRICS_PREFIX = "custom.";
+
   private final ClassLoader classLoader;
   private final String bundleName;
   private final List<Stage.Info> pipelineInfo;
@@ -71,17 +73,17 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public Timer createTimer(String name) {
-    return MetricsConfigurator.createTimer(getMetrics(), instanceName + "." + name);
+    return MetricsConfigurator.createTimer(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
   }
 
   @Override
   public Meter createMeter(String name) {
-    return MetricsConfigurator.createMeter(getMetrics(), instanceName + "." + name);
+    return MetricsConfigurator.createMeter(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
   }
 
   @Override
   public Counter createCounter(String name) {
-    return MetricsConfigurator.createCounter(getMetrics(), instanceName + "." + name);
+    return MetricsConfigurator.createCounter(getMetrics(), CUSTOM_METRICS_PREFIX +instanceName + "." + name);
   }
 
   public void setErrorRecordSink(ErrorRecordSink errorRecordSink) {

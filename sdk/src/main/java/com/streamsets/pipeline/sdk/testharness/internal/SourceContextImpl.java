@@ -36,11 +36,13 @@ public class SourceContextImpl implements Source.Context {
 
   private final String instanceName;
   private final Set<String> outputLanes;
+  private final MetricRegistry metrics;
 
   public SourceContextImpl(String instanceName,
                            Set<String> outputLanes) {
     this.instanceName = instanceName;
     this.outputLanes = outputLanes;
+    this.metrics = new MetricRegistry();
   }
 
   @Override
@@ -65,7 +67,7 @@ public class SourceContextImpl implements Source.Context {
 
   @Override
   public MetricRegistry getMetrics() {
-    return null;
+    return metrics;
   }
 
   private String getMetricsName(String name) {

@@ -48,4 +48,11 @@ public interface PipeBatch {
   void moveLaneCopying(String inputLane, List<String> outputLanes);
 
   void combineLanes(List<String> lanes, String to);
+
+  int getInputRecords();
+
+  int getOutputRecords();
+
+  int getErrorRecords();
+
 }
