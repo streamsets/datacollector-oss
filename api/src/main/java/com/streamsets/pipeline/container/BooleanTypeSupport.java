@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.container;
 
+import com.streamsets.pipeline.api.Field;
+
 import java.math.BigDecimal;
 
 public class BooleanTypeSupport extends TypeSupport<Boolean> {

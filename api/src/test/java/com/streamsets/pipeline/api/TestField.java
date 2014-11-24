@@ -17,6 +17,8 @@
  */
 package com.streamsets.pipeline.api;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field.Type;
 import com.streamsets.pipeline.container.BooleanTypeSupport;
 import com.streamsets.pipeline.container.ByteArrayTypeSupport;
@@ -30,11 +32,16 @@ import com.streamsets.pipeline.container.IntegerTypeSupport;
 import com.streamsets.pipeline.container.LongTypeSupport;
 import com.streamsets.pipeline.container.ShortTypeSupport;
 import com.streamsets.pipeline.container.StringTypeSupport;
+import com.streamsets.pipeline.container.Utils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TestField {
 
@@ -67,14 +74,14 @@ public class TestField {
     Assert.assertEquals('c', f.getValue());
     Assert.assertNotNull(f.toString());
 
-    f = Field.create((byte)1);
+    f = Field.create((byte) 1);
     Assert.assertEquals(Type.BYTE, f.getType());
-    Assert.assertEquals((byte)1, f.getValue());
+    Assert.assertEquals((byte) 1, f.getValue());
     Assert.assertNotNull(f.toString());
 
-    f = Field.create((short)2);
+    f = Field.create((short) 2);
     Assert.assertEquals(Type.SHORT, f.getType());
-    Assert.assertEquals((short)2, f.getValue());
+    Assert.assertEquals((short) 2, f.getValue());
     Assert.assertNotNull(f.toString());
 
     f = Field.create(3);
@@ -82,19 +89,19 @@ public class TestField {
     Assert.assertEquals(3, f.getValue());
     Assert.assertNotNull(f.toString());
 
-    f = Field.create((long)4);
+    f = Field.create((long) 4);
     Assert.assertEquals(Type.LONG, f.getType());
-    Assert.assertEquals((long)4, f.getValue());
+    Assert.assertEquals((long) 4, f.getValue());
     Assert.assertNotNull(f.toString());
 
-    f = Field.create((float)5);
+    f = Field.create((float) 5);
     Assert.assertEquals(Type.FLOAT, f.getType());
-    Assert.assertEquals((float)5, f.getValue());
+    Assert.assertEquals((float) 5, f.getValue());
     Assert.assertNotNull(f.toString());
 
-    f = Field.create((double)6);
+    f = Field.create((double) 6);
     Assert.assertEquals(Type.DOUBLE, f.getType());
-    Assert.assertEquals((double)6, f.getValue());
+    Assert.assertEquals((double) 6, f.getValue());
     Assert.assertNotNull(f.toString());
 
     f = Field.create(new BigDecimal(1));
@@ -134,7 +141,7 @@ public class TestField {
 
   @Test(expected = NullPointerException.class)
   public void testCreateWithNullType() {
-    Field.create((Type)null, null);
+    Field.create((Type) null, null);
   }
 
   @Test
@@ -181,6 +188,361 @@ public class TestField {
     Assert.assertTrue(f2.equals(f1));
     Assert.assertFalse(f1.equals(f3));
     Assert.assertFalse(f3.equals(f1));
+  }
+
+  private static final Date DATE_VALUE = new Date(System.currentTimeMillis() + 100);
+  private static final Date DATETIME_VALUE = new Date(System.currentTimeMillis() - 100);
+
+  private static final List<Field> FIELDS = ImmutableList.of(
+      Field.create(true),
+      Field.create('c'),
+      Field.create((byte) 1),
+      Field.create((short) 2),
+      Field.create((int) 3),
+      Field.create((long) 4),
+      Field.create((float) 5.1),
+      Field.create((double) 6.2),
+      Field.createDate(DATE_VALUE),
+      Field.createDatetime(DATETIME_VALUE),
+      Field.create(new BigDecimal(7.3)),
+      Field.create("s"),
+      Field.create(new byte[]{1, 2}),
+      Field.create(new LinkedHashMap<String, Field>()),
+      Field.create(new ArrayList<Field>())
+  );
+
+  @SuppressWarnings("unchecked")
+  private static final Map<Type, List<Type>> VALID_VALUE_AS = new ImmutableMap.Builder()
+      .put(Type.BOOLEAN, ImmutableList.of(Type.BOOLEAN, Type.STRING))
+      .put(Type.CHAR, ImmutableList.of(Type.CHAR, Type.STRING))
+      .put(Type.BYTE, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
+                                       Type.FLOAT, Type.DOUBLE, Type.DECIMAL))
+      .put(Type.SHORT, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
+                                        Type.FLOAT, Type.DOUBLE, Type.DECIMAL))
+      .put(Type.INTEGER, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
+                                          Type.FLOAT, Type.DOUBLE, Type.DECIMAL))
+      .put(Type.LONG, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
+                                       Type.FLOAT, Type.DOUBLE, Type.DECIMAL))
+      .put(Type.FLOAT, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
+                                        Type.FLOAT, Type.DOUBLE, Type.DECIMAL))
+      .put(Type.DOUBLE, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
+                                         Type.FLOAT, Type.DOUBLE, Type.DECIMAL))
+      .put(Type.DECIMAL, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
+                                          Type.FLOAT, Type.DOUBLE, Type.DECIMAL))
+      .put(Type.STRING, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
+                                         Type.FLOAT, Type.DOUBLE, Type.DECIMAL, Type.DATE, Type.DATETIME, Type.CHAR))
+      .put(Type.BYTE_ARRAY, ImmutableList.of(Type.BYTE_ARRAY))
+      .put(Type.MAP, ImmutableList.of(Type.MAP))
+      .put(Type.LIST, ImmutableList.of(Type.LIST))
+      .put(Type.DATE, ImmutableList.of(Type.DATE, Type.DATETIME, Type.STRING))
+      .put(Type.DATETIME, ImmutableList.of(Type.DATE, Type.DATETIME, Type.STRING))
+      .build();
+
+  @Test
+  public void testGetValueAs() {
+    for (Field f : FIELDS) {
+      for (Type t : Field.Type.values()) {
+        if (VALID_VALUE_AS.get(f.getType()).contains(t)) {
+          switch (t) {
+            case BOOLEAN:
+              if (f.getType() != Type.STRING) {
+                Assert.assertEquals(true, f.getValueAsBoolean());
+              } else {
+                  Assert.assertEquals(Boolean.valueOf("s"), f.getValueAsBoolean());
+              }
+              break;
+            case CHAR:
+              if (f.getType() != Type.STRING) {
+                Assert.assertEquals('c', f.getValueAsChar());
+              } else {
+                Assert.assertEquals("s".charAt(0), f.getValueAsChar());
+              }
+              break;
+            case BYTE:
+              switch (f.getType()) {
+                case BOOLEAN:
+                  Assert.assertEquals((byte) 1, f.getValueAsByte());
+                  break;
+                case BYTE:
+                  Assert.assertEquals((byte) 1, f.getValueAsByte());
+                  break;
+                case SHORT:
+                  Assert.assertEquals((byte) 2, f.getValueAsByte());
+                  break;
+                case INTEGER:
+                  Assert.assertEquals((byte) 3, f.getValueAsByte());
+                  break;
+                case LONG:
+                  Assert.assertEquals((byte) 4, f.getValueAsByte());
+                  break;
+                case FLOAT:
+                  Assert.assertEquals((byte) 5, f.getValueAsByte());
+                  break;
+                case DOUBLE:
+                  Assert.assertEquals((byte) 6, f.getValueAsByte());
+                  break;
+                case DECIMAL:
+                  Assert.assertEquals((byte) 7, f.getValueAsByte());
+                  break;
+              }
+              break;
+            case SHORT:
+              switch (f.getType()) {
+                case BOOLEAN:
+                  Assert.assertEquals((short) 1, f.getValueAsShort());
+                  break;
+                case BYTE:
+                  Assert.assertEquals((short) 1, f.getValueAsShort());
+                  break;
+                case SHORT:
+                  Assert.assertEquals((short) 2, f.getValueAsShort());
+                  break;
+                case INTEGER:
+                  Assert.assertEquals((short) 3, f.getValueAsShort());
+                  break;
+                case LONG:
+                  Assert.assertEquals((short) 4, f.getValueAsShort());
+                  break;
+                case FLOAT:
+                  Assert.assertEquals((short) 5, f.getValueAsShort());
+                  break;
+                case DOUBLE:
+                  Assert.assertEquals((short) 6, f.getValueAsShort());
+                  break;
+                case DECIMAL:
+                  Assert.assertEquals((short) 7, f.getValueAsShort());
+                  break;
+              }
+              break;
+            case INTEGER:
+              switch (f.getType()) {
+                case BOOLEAN:
+                  Assert.assertEquals((int) 1, f.getValueAsInteger());
+                  break;
+                case BYTE:
+                  Assert.assertEquals((int) 1, f.getValueAsInteger());
+                  break;
+                case SHORT:
+                  Assert.assertEquals((int) 2, f.getValueAsInteger());
+                  break;
+                case INTEGER:
+                  Assert.assertEquals((int) 3, f.getValueAsInteger());
+                  break;
+                case LONG:
+                  Assert.assertEquals((int) 4, f.getValueAsInteger());
+                  break;
+                case FLOAT:
+                  Assert.assertEquals((int) 5, f.getValueAsInteger());
+                  break;
+                case DOUBLE:
+                  Assert.assertEquals((int) 6, f.getValueAsInteger());
+                  break;
+                case DECIMAL:
+                  Assert.assertEquals((int) 7, f.getValueAsInteger());
+                  break;
+              }
+              break;
+            case LONG:
+              switch (f.getType()) {
+                case BOOLEAN:
+                  Assert.assertEquals((long) 1, f.getValueAsLong());
+                  break;
+                case BYTE:
+                  Assert.assertEquals((long) 1, f.getValueAsLong());
+                  break;
+                case SHORT:
+                  Assert.assertEquals((long) 2, f.getValueAsLong());
+                  break;
+                case INTEGER:
+                  Assert.assertEquals((long) 3, f.getValueAsLong());
+                  break;
+                case LONG:
+                  Assert.assertEquals((long) 4, f.getValueAsLong());
+                  break;
+                case FLOAT:
+                  Assert.assertEquals((long) 5, f.getValueAsLong());
+                  break;
+                case DOUBLE:
+                  Assert.assertEquals((long) 6, f.getValueAsLong());
+                  break;
+                case DECIMAL:
+                  Assert.assertEquals((long) 7, f.getValueAsLong());
+                  break;
+              }
+              break;
+            case FLOAT:
+              switch (f.getType()) {
+                case BOOLEAN:
+                  Assert.assertEquals((float) 1, f.getValueAsFloat(), 0.1);
+                  break;
+                case BYTE:
+                  Assert.assertEquals((float) 1, f.getValueAsFloat(), 0.1);
+                  break;
+                case SHORT:
+                  Assert.assertEquals((float) 2, f.getValueAsFloat(), 0.1);
+                  break;
+                case INTEGER:
+                  Assert.assertEquals((float) 3, f.getValueAsFloat(), 0.1);
+                  break;
+                case LONG:
+                  Assert.assertEquals((float) 4, f.getValueAsFloat(), 0.1);
+                  break;
+                case FLOAT:
+                  Assert.assertEquals((float) 5.1, f.getValueAsFloat(), 0.1);
+                  break;
+                case DOUBLE:
+                  Assert.assertEquals((float) 6.2, f.getValueAsFloat(), 0.1);
+                  break;
+                case DECIMAL:
+                  Assert.assertEquals((float) 7.3, f.getValueAsFloat(), 0.1);
+                  break;
+              }
+              break;
+            case DOUBLE:
+              switch (f.getType()) {
+                case BOOLEAN:
+                  Assert.assertEquals((double) 1, f.getValueAsDouble(), 0.1);
+                  break;
+                case BYTE:
+                  Assert.assertEquals((double) 1, f.getValueAsDouble(), 0.1);
+                  break;
+                case SHORT:
+                  Assert.assertEquals((double) 2, f.getValueAsDouble(), 0.1);
+                  break;
+                case INTEGER:
+                  Assert.assertEquals((double) 3, f.getValueAsDouble(), 0.1);
+                  break;
+                case LONG:
+                  Assert.assertEquals((double) 4, f.getValueAsDouble(), 0.1);
+                  break;
+                case FLOAT:
+                  Assert.assertEquals((double) 5.1, f.getValueAsDouble(), 0.1);
+                  break;
+                case DOUBLE:
+                  Assert.assertEquals((double) 6.2, f.getValueAsDouble(), 0.1);
+                  break;
+                case DECIMAL:
+                  Assert.assertEquals((double) 7.3, f.getValueAsDouble(), 0.1);
+                  break;
+              }
+              break;
+            case DATE:
+              switch (f.getType()) {
+                case DATE:
+                  Assert.assertEquals(DATE_VALUE, f.getValueAsDate());
+                  break;
+                case DATETIME:
+                  Assert.assertEquals(DATETIME_VALUE, f.getValueAsDate());
+                  break;
+              }
+              break;
+            case DATETIME:
+              switch (f.getType()) {
+                case DATE:
+                  Assert.assertEquals(DATE_VALUE, f.getValueAsDatetime());
+                  break;
+                case DATETIME:
+                  Assert.assertEquals(DATETIME_VALUE, f.getValueAsDatetime());
+                  break;
+              }
+              break;
+            case DECIMAL:
+              switch (f.getType()) {
+                case BOOLEAN:
+                  Assert.assertEquals(new BigDecimal(1), f.getValueAsDecimal());
+                  break;
+                case BYTE:
+                  Assert.assertEquals(new BigDecimal(1), f.getValueAsDecimal());
+                  break;
+                case SHORT:
+                  Assert.assertEquals(new BigDecimal(2), f.getValueAsDecimal());
+                  break;
+                case INTEGER:
+                  Assert.assertEquals(new BigDecimal(3), f.getValueAsDecimal());
+                  break;
+                case LONG:
+                  Assert.assertEquals(new BigDecimal(4), f.getValueAsDecimal());
+                  break;
+                case FLOAT:
+                  Assert.assertEquals(new BigDecimal(5.1).floatValue(), f.getValueAsDecimal().floatValue(), 0.1);
+                  break;
+                case DOUBLE:
+                  Assert.assertEquals(new BigDecimal(6.2).doubleValue(), f.getValueAsDecimal().doubleValue(), 0.1);
+                  break;
+                case DECIMAL:
+                  Assert.assertEquals(new BigDecimal(7.3), f.getValueAsDecimal());
+                  break;
+              }
+              break;
+            case STRING:
+              Assert.assertEquals(f.getValue().toString(), f.getValueAsString());
+              break;
+            case BYTE_ARRAY:
+              Assert.assertArrayEquals(new byte[]{1, 2}, f.getValueAsByteArray());
+              break;
+            case MAP:
+              Assert.assertEquals(new LinkedHashMap<String, Field>(), f.getValueAsMap());
+              break;
+            case LIST:
+              Assert.assertEquals(new ArrayList<Field>(), f.getValueAsList());
+              break;
+          }
+        } else {
+          try {
+            switch (t) {
+              case BOOLEAN:
+                f.getValueAsBoolean();
+                break;
+              case CHAR:
+                f.getValueAsChar();
+                break;
+              case BYTE:
+                f.getValueAsByte();
+                break;
+              case SHORT:
+                f.getValueAsShort();
+                break;
+              case INTEGER:
+                f.getValueAsInteger();
+                break;
+              case LONG:
+                f.getValueAsLong();
+                break;
+              case FLOAT:
+                f.getValueAsFloat();
+                break;
+              case DOUBLE:
+                f.getValueAsDouble();
+                break;
+              case DATE:
+                f.getValueAsDate();
+                break;
+              case DATETIME:
+                f.getValueAsDatetime();
+                break;
+              case DECIMAL:
+                f.getValueAsDecimal();
+                break;
+              case STRING:
+                f.getValueAsString();
+                break;
+              case BYTE_ARRAY:
+                f.getValueAsByteArray();
+                break;
+              case MAP:
+                f.getValueAsMap();
+                break;
+              case LIST:
+                f.getValueAsList();
+                break;
+            }
+            Assert.fail(Utils.format("Failed asserting that type '{}' cannot be get as a '{}'", f.getType(), t));
+          } catch (IllegalArgumentException ex) {
+            // expected
+          }
+        }
+      }
+    }
   }
 
 }

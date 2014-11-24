@@ -17,29 +17,49 @@
  */
 package com.streamsets.pipeline.container;
 
-public class ByteArrayTypeSupport extends TypeSupport<byte[]> {
+import com.streamsets.pipeline.api.Field;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ListTypeSupport extends TypeSupport<List> {
 
   @Override
-  public byte[] convert(Object value) {
-    if (value instanceof byte[]) {
-      return (byte[])value;
+  public List convert(Object value) {
+    if (value instanceof List) {
+      return (List) value;
     }
-    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a byte[]",
+    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a List",
                                                     value.getClass().getSimpleName(), value));
   }
 
   @Override
   public Object convert(Object value, TypeSupport targetTypeSupport) {
-    if (targetTypeSupport instanceof ByteArrayTypeSupport) {
+    if (targetTypeSupport instanceof ListTypeSupport) {
       return value;
     } else {
-      throw new IllegalArgumentException(Utils.format("Cannot convert byte[] to other type, {}", targetTypeSupport));
+      throw new IllegalArgumentException(Utils.format("Cannot convert List to other type, {}", targetTypeSupport));
     }
   }
 
+
   @Override
+  @SuppressWarnings("unchecked")
   public Object snapshot(Object value) {
-    return ((byte[])value).clone();
+    List List = null;
+    if (value != null) {
+      List = deepCopy((List<Field>)value);
+    }
+    return List;
+  }
+
+  private List<Field> deepCopy(List<Field> list) {
+    List<Field> copy = new ArrayList<>(list.size());
+    for (Field field : list) {
+      Utils.checkNotNull(field, "List cannot have null elements");
+      copy.add(field.clone());
+    }
+    return copy;
   }
 
 }

@@ -21,6 +21,10 @@ public abstract class TypeSupport<T> {
 
   public abstract T convert(Object value);
 
+  public Object convert(Object value, TypeSupport targetTypeSupport) {
+    return targetTypeSupport.convert(value);
+  }
+
   public Object snapshot(Object value) {
     return value;
   }
