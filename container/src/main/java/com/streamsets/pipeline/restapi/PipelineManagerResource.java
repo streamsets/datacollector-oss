@@ -114,7 +114,7 @@ public class PipelineManagerResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getMetrics() {
     Response response;
-    if (pipelineManager.getStatus() == Task.Status.RUNNING) {
+    if (pipelineManager.getPipelineState().getState() == State.RUNNING) {
       response = Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getMetrics()).build();
     } else {
       response = Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
