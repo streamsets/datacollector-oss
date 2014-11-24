@@ -22,7 +22,6 @@ import com.streamsets.pipeline.prodmanager.*;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.SourceOffset;
 import com.streamsets.pipeline.store.PipelineStoreException;
-import com.streamsets.pipeline.task.Task;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -43,7 +42,7 @@ public class PipelineManagerResource {
   @Path("/status")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getStatus() throws PipelineStateException {
+  public Response getStatus() throws PipelineManagerException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getPipelineState()).build();
   }
 
@@ -53,7 +52,7 @@ public class PipelineManagerResource {
   public Response startPipeline(
       @QueryParam("name") String name,
       @QueryParam("rev") @DefaultValue("0") String rev)
-      throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineStateException {
+      throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineManagerException {
 
     PipelineState ps = pipelineManager.startPipeline(name, rev);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(ps).build();
@@ -62,7 +61,7 @@ public class PipelineManagerResource {
   @Path("/stop")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response stopPipeline() throws PipelineStateException {
+  public Response stopPipeline() throws PipelineManagerException {
 
     PipelineState ps = pipelineManager.stopPipeline();
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(ps).build();
@@ -72,7 +71,7 @@ public class PipelineManagerResource {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response setOffset(
-      @QueryParam("offset") String offset) throws PipelineStateException {
+      @QueryParam("offset") String offset) throws PipelineManagerException {
     SourceOffset so = new SourceOffset(pipelineManager.setOffset(offset));
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(so).build();
   }
@@ -80,7 +79,7 @@ public class PipelineManagerResource {
   @Path("/snapshot")
   @PUT
   public Response captureSnapshot(
-      @QueryParam("batchSize") int batchSize) throws PipelineStateException {
+      @QueryParam("batchSize") int batchSize) throws PipelineManagerException {
     pipelineManager.captureSnapshot(batchSize);
     return Response.ok().build();
   }
@@ -96,7 +95,7 @@ public class PipelineManagerResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getSnapshot(
-      @PathParam("name") String name) {
+      @PathParam("name") String name) throws PipelineManagerException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshot(name)).build();
   }
 
@@ -126,7 +125,7 @@ public class PipelineManagerResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getHistory(
-      @PathParam("name") String name) {
+      @PathParam("name") String name) throws PipelineManagerException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getHistory(name)).build();
   }
 }

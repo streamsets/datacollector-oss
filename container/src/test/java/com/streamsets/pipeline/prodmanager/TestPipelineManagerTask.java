@@ -75,7 +75,7 @@ public class TestPipelineManagerTask {
   }
 
   @Test
-  public void testGetAndSetPipelineState() throws PipelineStateException {
+  public void testGetAndSetPipelineState() throws PipelineManagerException {
     Assert.assertEquals(State.STOPPED, manager.getPipelineState().getState());
     manager.setState("xyz", "1.0", State.RUNNING, "Started Running");
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
@@ -86,16 +86,8 @@ public class TestPipelineManagerTask {
     Assert.assertEquals("Error", manager.getPipelineState().getMessage());
   }
 
-  /*@Test
-  public void testSetOffset() throws PipelineStateException {
-    Assert.assertNull(manager.getOffsetTracker().getOffset());
-    manager.setOffset("abc");
-    Assert.assertNotNull(manager.getOffsetTracker().getOffset());
-    Assert.assertEquals("abc", manager.getOffsetTracker().getOffset());
-  }*/
-
-  @Test(expected = PipelineStateException.class)
-  public void testSetOffsetWhenRunning() throws PipelineStateException, StageException, PipelineRuntimeException, PipelineStoreException {
+  @Test(expected = PipelineManagerException.class)
+  public void testSetOffsetWhenRunning() throws PipelineManagerException, StageException, PipelineRuntimeException, PipelineStoreException {
     manager.setState("xyz", "1.0", State.RUNNING, "Started Running");
     manager.setOffset("abc");
   }
@@ -108,8 +100,8 @@ public class TestPipelineManagerTask {
 
   }
 
-  @Test(expected = PipelineStateException.class)
-  public void testStartPipelineWhenRunning() throws PipelineStateException, StageException, PipelineRuntimeException, PipelineStoreException {
+  @Test(expected = PipelineManagerException.class)
+  public void testStartPipelineWhenRunning() throws PipelineManagerException, StageException, PipelineRuntimeException, PipelineStoreException {
 
     Assert.assertEquals(State.STOPPED, manager.getPipelineState().getState());
     manager.setState("xyz", "1.0", State.RUNNING, "Started Running");
@@ -118,21 +110,21 @@ public class TestPipelineManagerTask {
     manager.startPipeline("xyz", "1.0");
   }
 
-  @Test(expected = PipelineStateException.class)
-  public void testCaptureSnapshot() throws PipelineStateException {
+  @Test(expected = PipelineManagerException.class)
+  public void testCaptureSnapshot() throws PipelineManagerException {
     //cannot capture snapshot when pipeline is not running
     manager.captureSnapshot(10);
   }
 
-  @Test(expected = PipelineStateException.class)
-  public void testCaptureSnapshotInvalidBatch() throws PipelineStateException {
+  @Test(expected = PipelineManagerException.class)
+  public void testCaptureSnapshotInvalidBatch() throws PipelineManagerException {
     //cannot capture snapshot with wrong batch size
     manager.setState("xyz", "1.0", State.RUNNING, "Started Running");
     manager.captureSnapshot(0);
   }
 
-  @Test(expected = PipelineStateException.class)
-  public void testStopPipelineWhenNotRunning() throws PipelineStateException, StageException, PipelineRuntimeException, PipelineStoreException {
+  @Test(expected = PipelineManagerException.class)
+  public void testStopPipelineWhenNotRunning() throws PipelineManagerException, StageException, PipelineRuntimeException, PipelineStoreException {
     Assert.assertEquals(State.STOPPED, manager.getPipelineState().getState());
     manager.stopPipeline();
   }

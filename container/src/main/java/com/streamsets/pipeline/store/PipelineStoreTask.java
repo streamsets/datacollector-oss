@@ -21,7 +21,6 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.task.Task;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface PipelineStoreTask extends Task {
 
@@ -40,5 +39,6 @@ public interface PipelineStoreTask extends Task {
 
   public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException;
 
+  public boolean hasPipeline(String name);
 
 }

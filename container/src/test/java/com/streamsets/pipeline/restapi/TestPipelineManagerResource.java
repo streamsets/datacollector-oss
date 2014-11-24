@@ -20,7 +20,7 @@ package com.streamsets.pipeline.restapi;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.PipelineState;
-import com.streamsets.pipeline.prodmanager.PipelineStateException;
+import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.SourceOffset;
@@ -157,7 +157,7 @@ public class TestPipelineManagerResource extends JerseyTest {
       try {
         Mockito.when(pipelineManager.startPipeline(PIPELINE_NAME, "2.0")).thenReturn(new PipelineState(
             PIPELINE_NAME, "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis()));
-      } catch (PipelineStateException e) {
+      } catch (PipelineManagerException e) {
         e.printStackTrace();
       } catch (StageException e) {
         e.printStackTrace();
@@ -170,7 +170,7 @@ public class TestPipelineManagerResource extends JerseyTest {
       try {
         Mockito.when(pipelineManager.stopPipeline()).thenReturn(
             new PipelineState(PIPELINE_NAME, "2.0", State.STOPPED, "The pipeline is not running", System.currentTimeMillis()));
-      } catch (PipelineStateException e) {
+      } catch (PipelineManagerException e) {
         e.printStackTrace();
       }
 
@@ -178,13 +178,17 @@ public class TestPipelineManagerResource extends JerseyTest {
           , "Pipeline is not running", System.currentTimeMillis()));
       try {
         Mockito.when(pipelineManager.setOffset(anyString())).thenReturn("fileX:line10");
-      } catch (PipelineStateException e) {
+      } catch (PipelineManagerException e) {
         e.printStackTrace();
       }
 
-      Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME))
-          .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
-          .thenReturn(null);
+      try {
+        Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME))
+            .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
+            .thenReturn(null);
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
 
       Mockito.when(pipelineManager.getSnapshotStatus()).thenReturn(new SnapshotStatus(false, true));
 

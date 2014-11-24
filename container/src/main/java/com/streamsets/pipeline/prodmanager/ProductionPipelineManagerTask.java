@@ -42,7 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +99,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return stateTracker.getState();
   }
 
-  public void setState(String name, String rev, State state, String message) throws PipelineStateException {
+  public void setState(String name, String rev, State state, String message) throws PipelineManagerException {
     stateTracker.setState(name, rev, state, message);
   }
 
@@ -124,7 +123,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
         prodPipeline = createProductionPipeline(ps.getName(), ps.getRev(), configuration, pipelineStore, stageLibrary);
       } catch (Exception e) {
         //log error and shutdown again
-        LOG.error(PipelineStateException.ERROR.COULD_NOT_START_PIPELINE_MANAGER_REASON.getMessageTemplate(), e.getMessage());
+        LOG.error(PipelineManagerException.ERROR.COULD_NOT_START_PIPELINE_MANAGER_REASON.getMessageTemplate(), e.getMessage());
       }
     }
     LOG.debug("Initialized Production Pipeline Manager");
@@ -138,7 +137,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
       LOG.debug("Stopping pipeline {} {}", ps.getName(), ps.getRev());
       try {
         stopPipeline();
-      } catch (PipelineStateException e) {
+      } catch (PipelineManagerException e) {
         throw new RuntimeException(e);
       }
     }
@@ -154,21 +153,21 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     LOG.debug("Stopped Production Pipeline Manager");
   }
 
-  public String setOffset(String offset) throws PipelineStateException {
+  public String setOffset(String offset) throws PipelineManagerException {
     LOG.debug("Setting offset {}", offset);
     checkState(!getPipelineState().getState().equals(State.RUNNING),
-          PipelineStateException.ERROR.COULD_NOT_SET_OFFSET_RUNNING_STATE);
+          PipelineManagerException.ERROR.COULD_NOT_SET_OFFSET_RUNNING_STATE);
 
     prodPipeline.setOffset(offset);
     return prodPipeline.getCommittedOffset();
   }
 
-  public void captureSnapshot(int batchSize) throws PipelineStateException {
+  public void captureSnapshot(int batchSize) throws PipelineManagerException {
     LOG.debug("Capturing snapshot with batch size {}", batchSize);
     checkState(getPipelineState().getState().equals(State.RUNNING),
-        PipelineStateException.ERROR.COULD_NOT_CAPTURE_SNAPSHOT_WHEN_PIPELINE_NOT_RUNNING);
+        PipelineManagerException.ERROR.COULD_NOT_CAPTURE_SNAPSHOT_BECAUSE_PIPELINE_NOT_RUNNING);
     if(batchSize <= 0) {
-      throw new PipelineStateException(PipelineStateException.ERROR.INVALID_BATCH_SIZE, batchSize);
+      throw new PipelineManagerException(PipelineManagerException.ERROR.INVALID_BATCH_SIZE, batchSize);
     }
     prodPipeline.captureSnapshot(batchSize);
     LOG.debug("Captured snapshot with batch size {}", batchSize);
@@ -178,11 +177,13 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return snapshotStore.getSnapshotStatus(stateTracker.getState().getName());
   }
 
-  public InputStream getSnapshot(String pipelineName) {
+  public InputStream getSnapshot(String pipelineName) throws PipelineManagerException {
+    validatePipelineExistence(pipelineName);
     return snapshotStore.getSnapshot(pipelineName);
   }
 
-  public List<PipelineState> getHistory(String pipelineName) {
+  public List<PipelineState> getHistory(String pipelineName) throws PipelineManagerException {
+    validatePipelineExistence(pipelineName);
     return stateTracker.getHistory(pipelineName);
   }
 
@@ -193,7 +194,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   }
 
   public PipelineState startPipeline(String name, String rev) throws PipelineStoreException
-      , PipelineStateException, PipelineRuntimeException, StageException {
+      , PipelineManagerException, PipelineRuntimeException, StageException {
     synchronized (pipelineMutex) {
       LOG.info("Starting pipeline {} {}", name, rev);
       validateStateTransition(State.RUNNING);
@@ -201,7 +202,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     }
   }
 
-  public PipelineState stopPipeline() throws PipelineStateException {
+  public PipelineState stopPipeline() throws PipelineManagerException {
     synchronized (pipelineMutex) {
       validateStateTransition(State.STOPPING);
       setState(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING, Constants.STOP_PIPELINE_MESSAGE);
@@ -216,7 +217,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
 
 
-  private PipelineState handleStartRequest(String name, String rev) throws PipelineStateException, StageException
+  private PipelineState handleStartRequest(String name, String rev) throws PipelineManagerException, StageException
       , PipelineRuntimeException, PipelineStoreException {
 
     prodPipeline = createProductionPipeline(name, rev, configuration, pipelineStore, stageLibrary);
@@ -263,16 +264,22 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return stateTracker;
   }
 
-  public void validateStateTransition(State toState) throws PipelineStateException {
+  public void validateStateTransition(State toState) throws PipelineManagerException {
     State currentState = getPipelineState().getState();
     checkState(VALID_TRANSITIONS.get(currentState).contains(toState)
-        , PipelineStateException.ERROR.INVALID_STATE_TRANSITION, currentState, toState);
+        , PipelineManagerException.ERROR.INVALID_STATE_TRANSITION, currentState, toState);
   }
 
-  private void checkState(boolean expr, PipelineStateException.ERROR error, Object... args)
-      throws PipelineStateException {
+  private void checkState(boolean expr, PipelineManagerException.ERROR error, Object... args)
+      throws PipelineManagerException {
     if(!expr) {
-      throw new PipelineStateException(error, args);
+      throw new PipelineManagerException(error, args);
+    }
+  }
+
+  private void validatePipelineExistence(String pipelineName) throws PipelineManagerException {
+    if(!pipelineStore.hasPipeline(pipelineName)) {
+      throw new PipelineManagerException(PipelineManagerException.ERROR.PIPELINE_DOES_NOT_EXIST, pipelineName);
     }
   }
 

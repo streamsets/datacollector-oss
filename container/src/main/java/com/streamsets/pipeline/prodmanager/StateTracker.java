@@ -17,20 +17,20 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.util.JsonFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.GenericArrayType;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.Collections;
 import java.util.List;
 
 public class StateTracker {
@@ -65,7 +65,7 @@ public class StateTracker {
     return new File(stateDir, TEMP_STATE_FILE);
   }
 
-  public void setState(String name, String rev, State state, String message) throws PipelineStateException {
+  public void setState(String name, String rev, State state, String message) throws PipelineManagerException {
     //persist default pipelineState
     pipelineState = new PipelineState(name, rev, state, message, System.currentTimeMillis());
     if(state != State.STOPPING) {
@@ -85,7 +85,7 @@ public class StateTracker {
       if(getStateFile().exists()) {
         try {
           this.pipelineState = getStateFromDir();
-        } catch (PipelineStateException e) {
+        } catch (PipelineManagerException e) {
           throw new RuntimeException(e);
         }
       } else {
@@ -98,21 +98,21 @@ public class StateTracker {
     //persist default pipelineState
     try {
       setState(Constants.DEFAULT_PIPELINE_NAME, Constants.DEFAULT_PIPELINE_REVISION, State.STOPPED, null);
-    } catch (PipelineStateException e) {
+    } catch (PipelineManagerException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private PipelineState getStateFromDir() throws PipelineStateException {
+  private PipelineState getStateFromDir() throws PipelineManagerException {
     try {
       return json.readObjectFromFile(getStateFile(), PipelineState.class);
     } catch (IOException e) {
-      LOG.error(PipelineStateException.ERROR.COULD_NOT_GET_STATE.getMessageTemplate(), e.getMessage());
-      throw new PipelineStateException(PipelineStateException.ERROR.COULD_NOT_GET_STATE, e.getMessage(), e);
+      LOG.error(PipelineManagerException.ERROR.COULD_NOT_GET_STATE.getMessageTemplate(), e.getMessage());
+      throw new PipelineManagerException(PipelineManagerException.ERROR.COULD_NOT_GET_STATE, e.getMessage(), e);
     }
   }
 
-  private void persistPipelineState() throws PipelineStateException {
+  private void persistPipelineState() throws PipelineManagerException {
     //write to runInfo/pipelineState.json as well as /runInfo/<pipelineName>/pipelineState.json
     try {
       json.writeObjectToFile(getTempStateFile(), getStateFile(), pipelineState);
@@ -124,8 +124,8 @@ public class StateTracker {
       json.appendObjectToFile(pipelineStateTempFile, pipelineStateFile, pipelineState);
 
     } catch (IOException e) {
-      LOG.error(PipelineStateException.ERROR.COULD_NOT_SET_STATE.getMessageTemplate(), e.getMessage());
-      throw new PipelineStateException(PipelineStateException.ERROR.COULD_NOT_SET_STATE, e.getMessage(), e);
+      LOG.error(PipelineManagerException.ERROR.COULD_NOT_SET_STATE.getMessageTemplate(), e.getMessage());
+      throw new PipelineManagerException(PipelineManagerException.ERROR.COULD_NOT_SET_STATE, e.getMessage(), e);
     }
   }
 
@@ -149,17 +149,29 @@ public class StateTracker {
   }
 
   public List<PipelineState> getHistory(String pipelineName) {
-    PipelineState[] pipelineStates = null;
+    if(!doesPipelineDirExist(pipelineName)) {
+      return Collections.EMPTY_LIST;
+    }
     try {
-      pipelineStates = new ObjectMapper().readValue(getPipelineStateFile(pipelineName), PipelineState[].class);
+      Reader reader = new FileReader(getPipelineStateFile(pipelineName));
+      ObjectMapper objectMapper = new ObjectMapper();
+      JsonParser jsonParser = objectMapper.getFactory().createParser(reader);
+      MappingIterator<PipelineState> pipelineStateMappingIterator = objectMapper.readValues(jsonParser, PipelineState.class);
+      List<PipelineState> pipelineStates =  pipelineStateMappingIterator.readAll();
+      Collections.reverse(pipelineStates);
+      return pipelineStates;
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    } catch (JsonParseException e) {
+      throw new RuntimeException(e);
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
-    List<PipelineState> pipelineStateList = new ArrayList<>(pipelineStates.length);
-    for(int i = pipelineStates.length - 1; i >= 0; i--) {
-      pipelineStateList.add(pipelineStates[i]);
-    }
-    return pipelineStateList;
+  }
+
+  private boolean doesPipelineDirExist(String pipelineName) {
+    File pipelineDir = new File(stateDir, pipelineName);
+    return pipelineDir.exists();
   }
 
 }

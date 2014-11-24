@@ -20,9 +20,9 @@ package com.streamsets.pipeline.prodmanager;
 import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.container.PipelineException;
 
-public class PipelineStateException extends PipelineException {
+public class PipelineManagerException extends PipelineException {
 
-  public PipelineStateException(ErrorId id, Object... params) {
+  public PipelineManagerException(ErrorId id, Object... params) {
     super(id, params);
   }
 
@@ -32,9 +32,10 @@ public class PipelineStateException extends PipelineException {
     COULD_NOT_GET_STATE("Could not get state, {}"),
     INVALID_STATE_TRANSITION("Could not change state from {} to {}"),
     COULD_NOT_SET_OFFSET_RUNNING_STATE("Could not set the source offset during a run"),
-    COULD_NOT_CAPTURE_SNAPSHOT_WHEN_PIPELINE_NOT_RUNNING("Could not capture snapshot when pipeline is not running"),
+    COULD_NOT_CAPTURE_SNAPSHOT_BECAUSE_PIPELINE_NOT_RUNNING("Could not capture snapshot because pipeline is not running"),
     INVALID_BATCH_SIZE("Invalid batch size supplied {}"),
-    COULD_NOT_START_PIPELINE_MANAGER_REASON("Could not start pipeline manager. Reason : {}");
+    COULD_NOT_START_PIPELINE_MANAGER_REASON("Could not start pipeline manager. Reason : {}"),
+    PIPELINE_DOES_NOT_EXIST("Pipeline {} does not exist");
 
     private final String msgTemplate;
 

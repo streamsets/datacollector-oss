@@ -34,11 +34,10 @@ import dagger.ObjectGraph;
 import dagger.Provides;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,13 +76,19 @@ public class TestProductionRun {
   }
 
   @Test(expected = PipelineRuntimeException.class)
-  public void testStartInvalidPipeline() throws PipelineStoreException, PipelineStateException, PipelineRuntimeException, StageException {
+  public void testStartInvalidPipeline() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException {
     //cannot run pipeline "xyz", the default created by FilePipelineStore.init() as it is not valid
     manager.startPipeline("xyz", "0");
   }
 
+  @Test(expected = PipelineStoreException.class)
+  public void testStartNonExistingPipeline() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException {
+    //pipeline "abc" does not exist
+    manager.startPipeline("abc", "0");
+  }
+
   @Test()
-  public void testStartStopPipeline() throws PipelineStoreException, PipelineStateException, PipelineRuntimeException, StageException {
+  public void testStartStopPipeline() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException {
     manager.startPipeline(MY_PIPELINE, "0");
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
 
@@ -92,7 +97,7 @@ public class TestProductionRun {
   }
 
   @Test
-  public void testStopManager() throws PipelineStateException, StageException, PipelineRuntimeException, PipelineStoreException {
+  public void testStopManager() throws PipelineManagerException, StageException, PipelineRuntimeException, PipelineStoreException {
     //Set state to running
     manager.startPipeline(MY_PIPELINE, "0");
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
@@ -105,7 +110,7 @@ public class TestProductionRun {
   }
 
   @Test
-  public void testCaptureSnapshot() throws PipelineStoreException, PipelineStateException, PipelineRuntimeException, StageException, InterruptedException {
+  public void testCaptureSnapshot() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException, InterruptedException {
     manager.startPipeline(MY_PIPELINE, "0");
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
 
@@ -119,7 +124,7 @@ public class TestProductionRun {
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
 
     InputStream snapshot = manager.getSnapshot(MY_PIPELINE);
-    //read the input snapshot into String format and Use de-serializer when ready
+    //TODO: read the input snapshot into String format and Use de-serializer when ready
 
     manager.deleteSnapshot(MY_PIPELINE);
     snapshotStatus = manager.getSnapshotStatus();
@@ -128,8 +133,8 @@ public class TestProductionRun {
 
   }
 
-  //@Test()
-  public void testGetHistory() throws PipelineStoreException, PipelineStateException, PipelineRuntimeException, StageException, InterruptedException {
+  @Test()
+  public void testGetHistory() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException, InterruptedException {
     manager.startPipeline(MY_PIPELINE, "0");
     manager.stopPipeline();
     while(!manager.getPipelineState().getState().equals(State.STOPPED)) {
@@ -148,11 +153,56 @@ public class TestProductionRun {
 
     List<PipelineState> pipelineStates = manager.getHistory(MY_PIPELINE);
     Assert.assertEquals(6, pipelineStates.size());
+
+    //make sure that the history is returned in the LIFO order
+    Assert.assertEquals(State.STOPPED, pipelineStates.get(0).getState());
+    Assert.assertEquals(State.RUNNING, pipelineStates.get(1).getState());
+    Assert.assertEquals(State.STOPPED, pipelineStates.get(2).getState());
+    Assert.assertEquals(State.RUNNING, pipelineStates.get(3).getState());
+    Assert.assertEquals(State.STOPPED, pipelineStates.get(4).getState());
+    Assert.assertEquals(State.RUNNING, pipelineStates.get(5).getState());
+
+  }
+
+  @Test(expected = PipelineManagerException.class)
+  public void testGetHistoryNonExistingPipeline() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException, InterruptedException {
+    manager.startPipeline(MY_PIPELINE, "0");
+    manager.stopPipeline();
+    while(!manager.getPipelineState().getState().equals(State.STOPPED)) {
+      Thread.sleep(5);
+    }
+    manager.getHistory("nonExistingPipeline");
+  }
+
+  @Test
+  public void testGetHistoryPipelineNeverRun() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException, InterruptedException {
+    List<PipelineState> pipelineStates = manager.getHistory(MY_PIPELINE);
+    Assert.assertEquals(0, pipelineStates.size());
+
+  }
+
+  @Test
+  public void testStartManagerAfterKill() throws IOException {
+    manager.stop();
+    //copy pre-created pipelineState.json into the state directory and start manager
+    InputStream in = getClass().getClassLoader().getResourceAsStream("testStartManagerAfterKill.json");
+    File f = new File(new File(System.getProperty("pipeline.data.dir"), "runInfo") , "pipelineState.json");
+    OutputStream out = new FileOutputStream(f);
+    IOUtils.copy(in, out);
+    in.close();
+    out.flush();
+    out.close();
+
+    //The pre-created json has "myPipeline" RUNNING
+    manager.init();
+    PipelineState pipelineState = manager.getPipelineState();
+    Assert.assertEquals(MY_PIPELINE, pipelineState.getName());
+    Assert.assertEquals(State.RUNNING, pipelineState.getState());
   }
 
   //TODO:
-  //Add test to create multiple pipelines and run one of them
-  //Add test to create multiple pipelines and run one of them and see snapshot of other pipelines etc
+  //Add tests which create multiple pipelines and runs one of them. Query snapshot, status, history etc on
+  //the running as well as other pipelines
 
   /*********************************************/
   /*********************************************/

@@ -85,7 +85,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       }
     }
     if (conf.get(CREATE_DEFAULT_PIPELINE_KEY, CREATE_DEFAULT_PIPELINE_DEFAULT)) {
-      if (!doesPipelineExist(DEFAULT_PIPELINE_NAME)) {
+      if (!hasPipeline(DEFAULT_PIPELINE_NAME)) {
         try {
           create(DEFAULT_PIPELINE_NAME, DEFAULT_PIPELINE_DESCRIPTION, SYSTEM_USER);
         } catch (PipelineStoreException ex) {
@@ -112,13 +112,14 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     return new File(getPipelineDir(name), PIPELINE_FILE);
   }
 
-  private boolean doesPipelineExist(String name) {
+  @Override
+  public boolean hasPipeline(String name) {
     return getPipelineDir(name).exists();
   }
 
   @Override
   public PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException {
-    if (doesPipelineExist(name)) {
+    if (hasPipeline(name)) {
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_ALREADY_EXISTS, name);
     }
     if (!getPipelineDir(name).mkdir()) {
@@ -166,7 +167,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Override
   public void delete(String name) throws PipelineStoreException {
-    if (!doesPipelineExist(name)) {
+    if (!hasPipeline(name)) {
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_DOES_NOT_EXIST, name);
     }
     if (!cleanUp(name)) {
@@ -176,7 +177,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   private PipelineInfo getInfo(String name, boolean checkExistence) throws PipelineStoreException {
-    if (checkExistence && !doesPipelineExist(name)) {
+    if (checkExistence && !hasPipeline(name)) {
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_DOES_NOT_EXIST, name);
     }
     try {
@@ -203,7 +204,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   @Override
   public PipelineConfiguration save(String name, String user, String tag, String tagDescription,
       PipelineConfiguration pipeline) throws PipelineStoreException {
-    if (!doesPipelineExist(name)) {
+    if (!hasPipeline(name)) {
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_DOES_NOT_EXIST, name);
     }
     PipelineInfo savedInfo = getInfo(name, false);
@@ -232,7 +233,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Override
   public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException {
-    if (!doesPipelineExist(name)) {
+    if (!hasPipeline(name)) {
       throw new PipelineStoreException(PipelineStoreErrors.PIPELINE_DOES_NOT_EXIST, name);
     }
     try {

@@ -73,7 +73,7 @@ public class TestStateTracker {
   }
 
   @Test
-  public void testSetState() throws PipelineStateException {
+  public void testSetState() throws PipelineManagerException {
     stateTracker.init();
     stateTracker.setState("xyz", "2.0", State.RUNNING, "Started pipeline");
 
@@ -86,7 +86,7 @@ public class TestStateTracker {
   }
 
   @Test
-  public void testGetStateFile() throws PipelineStateException {
+  public void testGetStateFile() throws PipelineManagerException {
     stateTracker.init();
     Assert.assertTrue(stateTracker.getStateFile().exists());
   }
