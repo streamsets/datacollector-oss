@@ -18,9 +18,9 @@
 package com.streamsets.pipeline.store.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
@@ -67,8 +67,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     super("filePipelineStore");
     this.runtimeInfo = runtimeInfo;
     this.conf = conf;
-    json = new ObjectMapper();
-    json.enable(SerializationFeature.INDENT_OUTPUT);
+    json = ObjectMapperFactory.get();
   }
 
   @VisibleForTesting

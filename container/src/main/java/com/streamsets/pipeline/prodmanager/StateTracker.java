@@ -24,13 +24,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.JsonFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.Collections;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class StateTracker {
@@ -46,7 +51,7 @@ public class StateTracker {
   private final JsonFileUtil<PipelineState> json;
 
   public StateTracker(RuntimeInfo runtimeInfo) {
-    Preconditions.checkArgument(runtimeInfo != null);
+    Preconditions.checkNotNull(runtimeInfo, "runtime info cannot be null");
     stateDir = new File(runtimeInfo.getDataDir(), STATE_DIR);
     json = new JsonFileUtil<>();
   }
@@ -148,22 +153,20 @@ public class StateTracker {
     return pipelineDir;
   }
 
+  @SuppressWarnings("unchecked")
   public List<PipelineState> getHistory(String pipelineName) {
     if(!doesPipelineDirExist(pipelineName)) {
       return Collections.EMPTY_LIST;
     }
     try {
       Reader reader = new FileReader(getPipelineStateFile(pipelineName));
-      ObjectMapper objectMapper = new ObjectMapper();
+      ObjectMapper objectMapper = ObjectMapperFactory.get();
       JsonParser jsonParser = objectMapper.getFactory().createParser(reader);
-      MappingIterator<PipelineState> pipelineStateMappingIterator = objectMapper.readValues(jsonParser, PipelineState.class);
+      MappingIterator<PipelineState> pipelineStateMappingIterator = objectMapper.readValues(jsonParser,
+                                                                                            PipelineState.class);
       List<PipelineState> pipelineStates =  pipelineStateMappingIterator.readAll();
       Collections.reverse(pipelineStates);
       return pipelineStates;
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (JsonParseException e) {
-      throw new RuntimeException(e);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

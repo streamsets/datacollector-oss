@@ -51,7 +51,7 @@ public class TestProductionRun {
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    System.setProperty("pipeline.data.dir", "./target/var");
+    System.setProperty("pipeline.data.dir", "target/var");
     File f = new File(System.getProperty("pipeline.data.dir"));
     FileUtils.deleteDirectory(f);
     TestUtil.captureStagesForProductionRun();

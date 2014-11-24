@@ -15,27 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.restapi.configuration;
+package com.streamsets.pipeline.json;
 
+import com.codahale.metrics.MetricFilter;
+import com.codahale.metrics.json.MetricsModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.record.FieldSerializer;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Provider;
+import java.util.concurrent.TimeUnit;
 
-@Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class JsonConfigurator implements ContextResolver<ObjectMapper> {
-  private ObjectMapper objectMapper;
+public class ObjectMapperFactory {
 
-  public JsonConfigurator() throws Exception {
-    objectMapper = ObjectMapperFactory.get();
-  }
-
-  @Override
-  public ObjectMapper getContext(Class<?> objectType) {
+  public static ObjectMapper get() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new MetricsModule(TimeUnit.SECONDS, TimeUnit.SECONDS, false, MetricFilter.ALL));
+    SimpleModule module = new SimpleModule();
+    module.addSerializer(Field.class, new FieldSerializer());
+    objectMapper.registerModule(module);
+    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
     return objectMapper;
   }
 

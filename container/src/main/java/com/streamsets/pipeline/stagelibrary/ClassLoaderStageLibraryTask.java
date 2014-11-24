@@ -18,13 +18,13 @@
 package com.streamsets.pipeline.stagelibrary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.config.ConfigDefinition;
@@ -72,8 +72,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @Override
   protected void initTask() {
     stageClassLoaders = runtimeInfo.getStageLibraryClassLoaders();
-    json = new ObjectMapper();
-    json.enable(SerializationFeature.INDENT_OUTPUT);
+    json = ObjectMapperFactory.get();
     stageList = new ArrayList<StageDefinition>();
     stageMap = new HashMap<String, StageDefinition>();
     loadStages();

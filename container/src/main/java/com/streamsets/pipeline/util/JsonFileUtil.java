@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,8 +35,7 @@ public class JsonFileUtil<T> {
   private ObjectMapper json;
 
   public JsonFileUtil() {
-    json = new ObjectMapper();
-    json.enable(SerializationFeature.INDENT_OUTPUT);
+    json = ObjectMapperFactory.get();
   }
 
   public void writeObjectToFile(File tempFile, File originalFile, T obj) throws IOException {

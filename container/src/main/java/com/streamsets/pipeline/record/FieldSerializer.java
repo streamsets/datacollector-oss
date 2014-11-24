@@ -15,28 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.restapi.configuration;
+package com.streamsets.pipeline.record;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.streamsets.pipeline.api.Field;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Provider;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-@Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class JsonConfigurator implements ContextResolver<ObjectMapper> {
-  private ObjectMapper objectMapper;
-
-  public JsonConfigurator() throws Exception {
-    objectMapper = ObjectMapperFactory.get();
-  }
+public class FieldSerializer extends JsonSerializer<Field> {
 
   @Override
-  public ObjectMapper getContext(Class<?> objectType) {
-    return objectMapper;
+  public void serialize(Field value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+    Map<String, Object> map = new LinkedHashMap<>();
+    map.put("type", value.getType());
+    map.put("value", value.getValue());
+    jgen.writeObject(map);
   }
 
 }

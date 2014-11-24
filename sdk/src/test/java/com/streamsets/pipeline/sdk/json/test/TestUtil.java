@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
 import org.junit.Assert;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class TestUtil {
   }
 
   public static List<StageDefinition> getStageCollection(InputStream inputStream) {
-    ObjectMapper json = new ObjectMapper();
+    ObjectMapper json = ObjectMapperFactory.get();
     List<StageDefinition> stageDefinitions = new ArrayList<StageDefinition>();
     try {
       StageDefinition[] stageDefArray = json.readValue(inputStream, StageDefinition[].class);
