@@ -22,6 +22,7 @@ import com.streamsets.pipeline.prodmanager.*;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.SourceOffset;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.task.Task;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -114,7 +115,13 @@ public class PipelineManagerResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getMetrics() {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getMetrics()).build();
+    Response response;
+    if (pipelineManager.getStatus() == Task.Status.RUNNING) {
+      response = Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getMetrics()).build();
+    } else {
+      response = Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
+    }
+    return response;
   }
 
   //TODO: working on it
