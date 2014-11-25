@@ -224,4 +224,22 @@ public class RecordImpl implements Record {
     return Utils.format("Record[headers='{}' fields='{}']", headerData, fieldData);
   }
 
+  @Override
+  public int hashCode() {
+    return getFieldNames().hashCode();
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public boolean equals(Object obj) {
+    boolean eq = (this == obj);
+    if (!eq && obj != null && obj instanceof RecordImpl) {
+      SimpleMap<String, Field> thisData = fieldData;
+      SimpleMap<String, Object> thisHeader = headerData;
+      SimpleMap<String, Field> otherData = ((RecordImpl)obj).fieldData;
+      SimpleMap<String, Object> otherHeader = ((RecordImpl)obj).headerData;
+      eq = thisHeader.equals(otherHeader) && thisData.equals(otherData);
+    }
+    return eq;
+  }
 }

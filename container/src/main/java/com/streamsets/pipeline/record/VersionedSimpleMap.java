@@ -130,4 +130,20 @@ public class VersionedSimpleMap<K, V>implements SimpleMap<K,V> {
     return flatMap.toString();
   }
 
+  @Override
+  public int hashCode() {
+    return getKeys().hashCode();
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public boolean equals(Object obj) {
+    boolean eq = (this == obj);
+    if (!eq && obj != null && obj.getClass() == obj.getClass()) {
+      Map<K, V> thisMap = getValues();
+      Map<K, V> otherMap = ((VersionedSimpleMap<K,V>) obj).getValues();
+      eq = thisMap.equals(otherMap);
+    }
+    return eq;
+  }
 }

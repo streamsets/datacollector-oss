@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.record;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
@@ -25,7 +26,12 @@ import org.junit.Assert;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -267,4 +273,35 @@ public class TestRecordImpl {
     Assert.assertEquals("BB", copy.getHeader().getAttribute("b"));
   }
 
+  @Test
+  public void testMapListFields() {
+    RecordImpl record = new RecordImpl("stage", "source", null, null);
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("a", Field.create(true));
+    map.put("b", Field.create("B"));
+    Map<String, Field> subMap = new LinkedHashMap<>();
+    subMap.put("x", Field.create(false));
+    subMap.put("y", Field.create("Y"));
+    map.put("sm", Field.create(subMap));
+    record.setField("p", Field.create("hello"));
+    record.setField("m", Field.create(map));
+    Assert.assertEquals(map, record.getField("m").getValueAsMap());
+    Assert.assertNotSame(map, record.getField("m").getValueAsMap());
+
+    List<Field> list = new ArrayList<>(Arrays.asList(Field.create(true)));
+    record.setField("l", Field.create(list));
+    map.remove("a");
+    subMap.remove("x");
+    list.remove(0);
+
+    Assert.assertNotEquals(map, record.getField("m").getValueAsMap());
+    Assert.assertTrue(record.getField("m").getValueAsMap().containsKey("a"));
+    Assert.assertTrue(record.getField("m").getValueAsMap().get("sm").getValueAsMap().containsKey("x"));
+    Assert.assertTrue(record.getField("l").getValueAsList().get(0).getValueAsBoolean());
+
+    RecordImpl copy = record.createCopy();
+    Assert.assertEquals(record, copy);
+    record.deleteField("p");
+    Assert.assertNotEquals(record, copy);
+  }
 }
