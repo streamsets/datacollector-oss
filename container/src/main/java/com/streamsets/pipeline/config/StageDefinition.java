@@ -20,7 +20,6 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.container.Utils;
 import org.slf4j.Logger;
@@ -93,7 +92,6 @@ public class StageDefinition {
       throw new RuntimeException(ex);
     }
     updateValuesAndLabelsFromValuesProvider();
-    updateRawSourceDefinitionFromPreviewer();
   }
 
   public String getLibrary() {
@@ -193,11 +191,21 @@ public class StageDefinition {
     for (ConfigDefinition configDef : getConfigDefinitions()) {
       configDefs.add(configDef.localize(rb));
     }
+
+    //Localize RawSourceDefinition instance which contains ConfigDefinitions
+    List<ConfigDefinition> rawSourcePreviewConfigDefs = new ArrayList<>();
+    RawSourceDefinition rawSourceDef = getRawSourceDefinition();
+    for (ConfigDefinition configDef : rawSourceDef.getConfigDefinitions()) {
+      rawSourcePreviewConfigDefs.add(configDef.localize(rb));
+    }
+    RawSourceDefinition rsd = new RawSourceDefinition(rawSourceDef.getRawSourcePreviewerClass(),
+        rawSourcePreviewConfigDefs);
+
     String label = (rb.containsKey(STAGE_LABEL)) ? rb.getString(STAGE_LABEL) : getLabel();
     String description = (rb.containsKey(STAGE_DESCRIPTION)) ? rb.getString(STAGE_DESCRIPTION) : getDescription();
     StageDefinition def = new StageDefinition(
       getClassName(), getName(), getVersion(), label, description,
-      getType(), configDefs, getOnError(), getRawSourceDefinition(), getIcon());
+      getType(), configDefs, getOnError(), rsd, getIcon());
     def.setLibrary(getLibrary(), getStageClassLoader());
 
     for(ConfigDefinition configDef : def.getConfigDefinitions()) {
@@ -265,26 +273,6 @@ public class StageDefinition {
         } catch (IllegalAccessException e) {
           throw new RuntimeException(e);
         }
-      }
-    }
-  }
-
-  private void updateRawSourceDefinitionFromPreviewer() {
-    RawSourceDefinition rawSourceDefinition = getRawSourceDefinition();
-    if(rawSourceDefinition != null) {
-      try {
-        Class rawSourcePreviewerClass = classLoader.loadClass(rawSourceDefinition.getRawSourcePreviewerClass());
-        RawSourcePreviewer rawSourcePreviewerInstance = (RawSourcePreviewer) rawSourcePreviewerClass.newInstance();
-        String mime = rawSourcePreviewerInstance.getMime();
-        Map<String, String> previewParams = rawSourcePreviewerInstance.getParameters();
-        rawSourceDefinition.setMime(mime);
-        rawSourceDefinition.setPreviewParams(previewParams);
-      } catch (ClassNotFoundException e) {
-        throw new RuntimeException(e);
-      } catch (InstantiationException e) {
-        throw new RuntimeException(e);
-      } catch (IllegalAccessException e) {
-        throw new RuntimeException(e);
       }
     }
   }

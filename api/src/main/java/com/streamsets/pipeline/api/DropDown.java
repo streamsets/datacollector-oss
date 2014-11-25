@@ -15,10 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline.api;
 
-public enum FieldModifierType {
+import com.streamsets.pipeline.api.base.FieldSelectionType;
 
-  SUGGESTED,
-  PROVIDED
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.RUNTIME)
+@java.lang.annotation.Target(ElementType.FIELD)
+public @interface DropDown {
+
+  FieldSelectionType type();
+
+  Class<? extends ValuesProvider> valuesProvider();
+
 }

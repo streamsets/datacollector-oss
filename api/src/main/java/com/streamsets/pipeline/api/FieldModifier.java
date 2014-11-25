@@ -17,19 +17,17 @@
  */
 package com.streamsets.pipeline.api;
 
+import com.streamsets.pipeline.api.base.FieldSelectionType;
+
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target(ElementType.FIELD)
 public @interface FieldModifier {
-  public enum Type {
-    PROVIDED, SUGGESTED
-  }
 
-  Type type();
+  FieldSelectionType type();
 
   //TODO: Fix annotation processor validation to check that the implementation implements this interface
-  //TODO: Also verify that @ConfigDef can be present in parent classes using Tucu's DirectorySpooler stage
   Class<? extends ValuesProvider> valuesProvider();
 
 }

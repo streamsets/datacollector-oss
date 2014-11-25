@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldModifier;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.base.FieldSelectionType;
 
 import java.util.List;
 import java.util.Map;
@@ -117,7 +118,7 @@ public class FaultySource {
 
 
   //9. Field modifier should be modeled as Map<String, String>
-  @FieldModifier(type = FieldModifier.Type.PROVIDED, valuesProvider = TypesProvider.class)
+  @FieldModifier(type = FieldSelectionType.PROVIDED, valuesProvider = TypesProvider.class)
   @ConfigDef(
     name = "streetAddress",
     defaultValue = "180 Sansome",
@@ -129,7 +130,7 @@ public class FaultySource {
 
   //10. Both FieldSelector and FieldModifier present
   @FieldSelector
-  @FieldModifier(type = FieldModifier.Type.PROVIDED, valuesProvider = TypesProvider.class)
+  @FieldModifier(type = FieldSelectionType.PROVIDED, valuesProvider = TypesProvider.class)
   @ConfigDef(
     name = "ste",
     defaultValue = "400",

@@ -15,15 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.config;
 
-import java.io.Reader;
-import java.util.Map;
+public enum FieldSelection {
 
-public interface RawSourcePreviewer {
-
-  Reader preview(int maxLength);
-
-  String getMime();
-
+  SUGGESTED,
+  PROVIDED
 }

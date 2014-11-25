@@ -17,16 +17,14 @@
  */
 package com.clipper.stage;
 
-import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.*;
 
 import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.List;
 
 @StageDef(description = "Prints the travel log, fare and the cumulative sum on the Console",
   label = "Console Target",

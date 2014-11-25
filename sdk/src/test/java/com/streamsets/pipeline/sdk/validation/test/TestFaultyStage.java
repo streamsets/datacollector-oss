@@ -60,7 +60,7 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The field FaultySource.username has \"ConfigDef\" annotation and is declared final. Configuration fields must not be declared final.");
     expectedSet.add("The field FaultySource.password has \"ConfigDef\" annotation and is declared static. Configuration fields must not be declared final.");
     expectedSet.add("The field FaultySource.streetAddress2 has \"ConfigDef\" annotation but is not declared public. Configuration fields must be declared public.");
-    expectedSet.add("The type of field FaultySource.company is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' annotation is expected.");
+    expectedSet.add("The type of field FaultySource.company is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' or 'DropDown' annotation is expected.");
     expectedSet.add("The type of the field FaultySource.zip is expected to be String.");
     expectedSet.add("The type of the field FaultySource.state is expected to be List<String>.");
     expectedSet.add("The type of the field FaultySource.streetAddress is expected to be Map<String, String>.");

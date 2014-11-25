@@ -21,9 +21,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.StageConfiguration;
-import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.*;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.record.RecordImpl;
@@ -50,6 +48,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.*;
 import java.io.Reader;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -135,31 +134,25 @@ public class PreviewResource {
     PipelineConfiguration pipelineConf = store.load(name, rev);
     //Source stage is always the first one in the entire pipeline
     StageConfiguration stageConf = pipelineConf.getStages().get(0);
-
-    assert(stageConf != null);
     StageDefinition stageDefinition = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
         stageConf.getStageVersion());
 
-    Map<String, String> stageDefParams = stageDefinition.getRawSourceDefinition().getPreviewParams();
-    for(String key : stageDefParams.keySet()) {
-       if(previewParams.containsKey(key) && previewParams.get(key) != null) {
-         stageDefParams.put(key, previewParams.getFirst(key));
-       }
-    }
-    //make sure there are no null values in stageDefParams
-    //All required params must be satisfied by the argument param for this call
-    List<String> paramsInError = new ArrayList<String>(stageDefParams.size());
-    for(Map.Entry<String, String> entry : stageDefParams.entrySet()) {
-      if(entry.getValue() == null) {
-        //TODO: empty string value is OK?
-        paramsInError.add(entry.getKey());
+    RawSourceDefinition rawSourceDefinition = stageDefinition.getRawSourceDefinition();
+    List<ConfigDefinition> configDefinitions = rawSourceDefinition.getConfigDefinitions();
+
+    //validate that all configuration required by config definitions are supplied through the URL
+    List<String> requiredPropertiesNotSet = new ArrayList<>();
+    for(ConfigDefinition confDef: configDefinitions) {
+      if(confDef.isRequired() && !previewParams.containsKey(confDef.getName())) {
+        requiredPropertiesNotSet.add(confDef.getName());
       }
     }
-    StringBuilder sb = new StringBuilder();
-    if(!paramsInError.isEmpty()) {
-      sb.append(paramsInError.get(0));
-      for(int i = 1; i < paramsInError.size(); i++) {
-        sb.append(", ").append(paramsInError.get(i));
+
+    if(!requiredPropertiesNotSet.isEmpty()) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(requiredPropertiesNotSet.get(0));
+      for(int i = 1; i < requiredPropertiesNotSet.size(); i++) {
+        sb.append(", ").append(requiredPropertiesNotSet.get(i));
       }
       throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_RAW_SOURCE_PREVIEW, sb.toString());
     }
@@ -186,15 +179,21 @@ public class PreviewResource {
     RawSourcePreviewer rawSourcePreviewer;
     try {
       rawSourcePreviewer = (RawSourcePreviewer) previewerClass.newInstance();
-      reader = rawSourcePreviewer.preview(stageDefParams,bytesToRead);
+      //inject values from url to fields in the rawSourcePreviewer
+      for(ConfigDefinition confDef : configDefinitions) {
+        Field f = previewerClass.getField(confDef.getFieldName());
+        f.set(rawSourcePreviewer, previewParams.get(confDef.getName()));
+      }
+      reader = rawSourcePreviewer.preview(bytesToRead);
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InstantiationException e) {
       throw new RuntimeException(e);
+    } catch (NoSuchFieldException e) {
+      throw new RuntimeException(e);
     }
 
     BoundedInputStream bIn = new BoundedInputStream(new ReaderInputStream(reader), bytesToRead);
-
     return Response.ok().type(rawSourcePreviewer.getMime()).entity(bIn).build();
   }
 

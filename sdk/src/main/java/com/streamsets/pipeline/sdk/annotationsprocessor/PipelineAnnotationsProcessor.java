@@ -20,6 +20,7 @@ package com.streamsets.pipeline.sdk.annotationsprocessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.base.FieldSelectionType;
 import com.streamsets.pipeline.config.*;
 import com.streamsets.pipeline.container.Utils;
 
@@ -236,55 +237,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private StageDefinition createStageConfig(StageDef stageDefAnnotation,
                                             TypeElement typeElement) {
     //Process all fields with ConfigDef annotation
-    List< ConfigDefinition> configDefinitions = new ArrayList<ConfigDefinition>();
-    //TODO: Get properties from the entire class hierarchy using getAllFields once it is fixed
-    List<VariableElement> variableElements = getAllFields(typeElement);
-    for (VariableElement variableElement : variableElements) {
-      ConfigDef configDefAnnot = variableElement.getAnnotation(ConfigDef.class);
-      if(configDefAnnot != null) {
-
-        //validate field with ConfigDef annotation
-        if(!validateConfigDefAnnotation(typeElement, variableElement, configDefAnnot)) {
-          continue;
-        }
-
-        ModelDefinition model = null;
-
-        if(configDefAnnot.type().equals(ConfigDef.Type.MODEL)) {
-          FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
-          if(fieldSelector != null) {
-            model = new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null, null);
-          }
-          FieldModifier fieldModifier = variableElement.getAnnotation(FieldModifier.class);
-          //processingEnv.
-          if (fieldModifier != null) {
-            model = new ModelDefinition(ModelType.FIELD_MODIFIER,
-              getFieldModifierType(fieldModifier.type()),
-              getValuesProvider(fieldModifier)
-              , null, null);
-          }
-        }
-
-        ConfigDefinition configDefinition = new ConfigDefinition(
-          configDefAnnot.name(),
-          configDefAnnot.type(),
-          configDefAnnot.label(),
-          configDefAnnot.description(),
-          configDefAnnot.defaultValue(),
-          configDefAnnot.required(),
-          ""/*group name - need to remove it*/,
-          variableElement.getSimpleName().toString(),
-          model);
-        configDefinitions.add(configDefinition);
-      }
-    }
+    List< ConfigDefinition> configDefinitions = getConfigDefsFromTypeElement(typeElement);
 
     StageDefinition stageDefinition = null;
     if(validateStageDef(typeElement, stageDefAnnotation)) {
       RawSource rawSourceAnnot = typeElement.getAnnotation(RawSource.class);
       RawSourceDefinition rawSourceDefinition = null;
       if(rawSourceAnnot != null) {
-        rawSourceDefinition = new RawSourceDefinition(getRawSourcePreviewer(rawSourceAnnot), null, null);
+        rawSourceDefinition = getRawSourceDefinition(rawSourceAnnot);
       }
 
       stageDefinition = new StageDefinition(
@@ -303,6 +263,65 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
 
     return stageDefinition;
+  }
+
+  private List<ConfigDefinition> getConfigDefsFromTypeElement(TypeElement typeElement) {
+    List<ConfigDefinition> configDefinitions = new ArrayList<>();
+    List<VariableElement> variableElements = getAllFields(typeElement);
+    for (VariableElement variableElement : variableElements) {
+      ConfigDef configDefAnnot = variableElement.getAnnotation(ConfigDef.class);
+      if(configDefAnnot != null) {
+        //validate field with ConfigDef annotation
+        if(!validateConfigDefAnnotation(typeElement, variableElement, configDefAnnot)) {
+          continue;
+        }
+
+        ModelDefinition model = null;
+
+        if(configDefAnnot.type().equals(ConfigDef.Type.MODEL)) {
+          FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
+          if(fieldSelector != null) {
+            model = new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null, null);
+          }
+          FieldModifier fieldModifier = variableElement.getAnnotation(FieldModifier.class);
+          //processingEnv.
+          if (fieldModifier != null) {
+            model = new ModelDefinition(ModelType.FIELD_MODIFIER,
+                getFieldSelectionType(fieldModifier.type()),
+                getValuesProvider(fieldModifier)
+                , null, null);
+          }
+          DropDown dropDown = variableElement.getAnnotation(DropDown.class);
+          if(dropDown != null) {
+            model = new ModelDefinition(ModelType.DROPDOWN,
+                getFieldSelectionType(dropDown.type()),
+                getValuesProvider(dropDown)
+                , null, null);
+          }
+        }
+
+        ConfigDefinition configDefinition = new ConfigDefinition(
+            configDefAnnot.name(),
+            configDefAnnot.type(),
+            configDefAnnot.label(),
+            configDefAnnot.description(),
+            configDefAnnot.defaultValue(),
+            configDefAnnot.required(),
+            ""/*group name - need to remove it*/,
+            variableElement.getSimpleName().toString(),
+            model);
+        configDefinitions.add(configDefinition);
+      }
+    }
+    return configDefinitions;
+  }
+
+  private RawSourceDefinition getRawSourceDefinition(RawSource rawSourceAnnot) {
+    //process all fields annotated with ConfigDef annotation in raw source provider
+    String rawSourcePreviewerClass = getRawSourcePreviewer(rawSourceAnnot);
+    TypeElement typeElement = getTypeElementFromName(rawSourcePreviewerClass);
+    List<ConfigDefinition> configDefs = getConfigDefsFromTypeElement(typeElement);
+    return new RawSourceDefinition(rawSourcePreviewerClass, configDefs);
   }
 
   /**
@@ -324,19 +343,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return variableElements;
   }
 
-  private List<VariableElement> getDeclaredFields(TypeElement typeElement) {
-    List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
-    return ElementFilter.fieldsIn(enclosedElements);
-  }
-
-  private FieldModifierType getFieldModifierType(FieldModifier.Type type) {
-    if(type.equals(FieldModifier.Type.PROVIDED)) {
-      return FieldModifierType.PROVIDED;
-    } else if (type.equals(FieldModifier.Type.SUGGESTED)) {
-      return FieldModifierType.SUGGESTED;
+  private FieldSelection getFieldSelectionType(FieldSelectionType type) {
+    if(type.equals(FieldSelectionType.PROVIDED)) {
+      return FieldSelection.PROVIDED;
+    } else if (type.equals(FieldSelectionType.SUGGESTED)) {
+      return FieldSelection.SUGGESTED;
     }
     //default
-    return FieldModifierType.SUGGESTED;
+    return FieldSelection.SUGGESTED;
   }
 
   /**
@@ -421,6 +435,22 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return null;
   }
 
+  private String getValuesProvider(DropDown dropDown) {
+    //Not the best way of getting the TypeMirror of the ValuesProvider implementation
+    //Find a better solution
+    TypeMirror valueProviderTypeMirror = null;
+    try {
+      dropDown.valuesProvider();
+    } catch (MirroredTypeException e) {
+      valueProviderTypeMirror = e.getTypeMirror();
+    }
+
+    if(valueProviderTypeMirror !=null) {
+      return getTypeElementFromMirror(valueProviderTypeMirror).getQualifiedName().toString();
+    }
+    return null;
+  }
+
   private String getRawSourcePreviewer(RawSource rawSource) {
     //Not the best way of getting the TypeMirror of the ValuesProvider implementation
     //Find a better solution
@@ -438,7 +468,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   }
 
   private TypeElement getTypeElementFromMirror(TypeMirror typeMirror) {
-    return processingEnv.getElementUtils().getTypeElement(typeMirror.toString());
+    return getTypeElementFromName(typeMirror.toString());
+  }
+
+  private TypeElement getTypeElementFromName(String qualifiedName) {
+    return processingEnv.getElementUtils().getTypeElement(qualifiedName);
   }
 
   /**************************************************************************/
@@ -478,7 +512,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * <ul>
    *   <li>The field must be declared as public</li>
    *   <li>The type of the field must match the type specified in the ConfigDef annotation</li>
-   *   <li>If the type is "MODEL" then exactly one of "FieldSelector" or "FieldModifier" annotation must be present</li>
+   *   <li>If the type is "MODEL" then exactly one of "FieldSelector" or "FieldModifier" or "DropDown" annotation must
+   *   be present</li>
    * </ul>
    *
    * @param variableElement
@@ -517,16 +552,19 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       //Carry out model related validations
       FieldModifier fieldModifier = variableElement.getAnnotation(FieldModifier.class);
       FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
+      DropDown dropDown = variableElement.getAnnotation(DropDown.class);
 
-      if(fieldModifier == null && fieldSelector == null ) {
+      if(fieldModifier == null && fieldSelector == null && dropDown == null) {
         printError("field.validation.no.model.annotation",
-          "The type of field {} is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' annotation is expected.",
+          "The type of field {} is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' or " +
+              "'DropDown' annotation is expected.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
-      } else if (fieldModifier !=null && fieldSelector != null) {
+      } else if (checkMultipleModelAnnot(fieldModifier, fieldSelector, dropDown)) {
         //both cannot be present
         printError("field.validation.multiple.model.annotations",
-          "The field {} is annotated with both 'FieldSelector' and 'FieldModifier' annotations. Only one of those annotation is expected.",
+          "The field {} is annotated with both 'FieldSelector' and 'FieldModifier' annotations. Only one of those " +
+              "annotation is expected.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       } else {
@@ -538,7 +576,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             valid = false;
           }
 
-          if(fieldModifier.type().equals(FieldModifier.Type.PROVIDED)) {
+          if(fieldModifier.type().equals(FieldSelectionType.PROVIDED)) {
             //A valuesProvider is expected.
             //check if the valuesProvider is specified and that implements the correct base class
             //Not the best way of getting the TypeMirror of the ValuesProvider implementation
@@ -550,32 +588,31 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
               valueProviderTypeMirror = e.getTypeMirror();
             }
 
-            if (valueProviderTypeMirror == null) {
-              printError("field.validation.valuesProvider.not.supplied",
-                "The field {} marked with FieldModifier annotation and the type is \"PROVIDED\" but no ValuesProvider implementation is supplied",
+            validateValueProvider(typeElement, variableElement, valueProviderTypeMirror);
+          }
+        }
+
+        if (dropDown != null) {
+          if (!fieldType.toString().equals("java.util.List<java.lang.String>")) {
+            printError("field.validation.type.is.not.list",
+                "The type of the field {} is expected to be List<String>.",
                 typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
-            } else {
-              //Make sure values provider implementation is top level
-              Element e = processingEnv.getTypeUtils().asElement(valueProviderTypeMirror);
-              Element enclosingElement = e.getEnclosingElement();
-              if(!enclosingElement.getKind().equals(ElementKind.PACKAGE)) {
-                printError("field.validation.valuesProvider.not.outer.class",
-                  "ValuesProvider {} is an inner class. Inner class ValuesProvider implementations are not supported",
-                  valueProviderTypeMirror.toString());
-              }
-              //make sure ValuesProvider implements the required interface
-              boolean implementsValuesProvider = false;
-              for(TypeMirror t : getAllSuperTypes((TypeElement)e)) {
-                if(t.toString().equals("com.streamsets.pipeline.api.ValuesProvider")) {
-                  implementsValuesProvider= true;
-                }
-              }
-              if(!implementsValuesProvider) {
-                printError("field.validation.valuesProvider.does.not.implement.interface",
-                  "Class {} does not implement 'com.streamsets.pipeline.api.ValuesProvider' interface.",
-                  valueProviderTypeMirror.toString());
-              }
+            valid = false;
+          }
+
+          if(dropDown.type().equals(FieldSelectionType.PROVIDED)) {
+            //A valuesProvider is expected.
+            //check if the valuesProvider is specified and that implements the correct base class
+            //Not the best way of getting the TypeMirror of the ValuesProvider implementation
+            //Find a better solution
+            TypeMirror valueProviderTypeMirror = null;
+            try {
+              dropDown.valuesProvider();
+            } catch (MirroredTypeException e) {
+              valueProviderTypeMirror = e.getTypeMirror();
             }
+
+            validateValueProvider(typeElement, variableElement, valueProviderTypeMirror);
           }
         }
 
@@ -612,6 +649,34 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
     }
     return valid;
+  }
+
+  private void validateValueProvider(Element typeElement, VariableElement variableElement,
+                                     TypeMirror valueProviderTypeMirror) {
+    if (valueProviderTypeMirror == null) {
+      printError("field.validation.valuesProvider.not.supplied",
+          "The field {} marked with Dropdown annotation and the type is \"PROVIDED\" but no ValuesProvider implementation is supplied",
+          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+    } else {
+      //Make sure values provider implementation is top level
+      Element e = processingEnv.getTypeUtils().asElement(valueProviderTypeMirror);
+      Element enclosingElement = e.getEnclosingElement();
+      if(!enclosingElement.getKind().equals(ElementKind.PACKAGE)) {
+        printError("field.validation.valuesProvider.not.outer.class",
+            "ValuesProvider {} is an inner class. Inner class ValuesProvider implementations are not supported",
+            valueProviderTypeMirror.toString());
+      }
+    }
+  }
+
+  private boolean checkMultipleModelAnnot(FieldModifier fieldModifier, FieldSelector fieldSelector, DropDown dropDown) {
+    if(fieldModifier != null && (fieldSelector != null || dropDown!= null)) {
+      return true;
+    }
+    if(fieldSelector != null && dropDown!= null) {
+      return true;
+    }
+    return false;
   }
 
   /**

@@ -17,35 +17,19 @@
  */
 package com.clipper.stage;
 
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.RawSourcePreviewer;
+import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.ValuesProvider;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-public class ClipperSourcePreviewer implements RawSourcePreviewer {
-
-  @ConfigDef(defaultValue = "", description = "The name of the file to preview", label = "File Name", name = "fileName",
-    required = true, type = ConfigDef.Type.STRING)
-  public String fileName;
-
+public class ExtensionsProvider implements ValuesProvider {
   @Override
-  public Reader preview(int maxLength) {
-    Reader reader = null;
-    try {
-      //TODO: make sure this field in injected at runtime
-      reader = new FileReader(fileName);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    return reader;
+  public List<String> getValues() {
+    return ImmutableList.of(".txt");
   }
 
   @Override
-  public String getMime() {
-    return "text/plain";
+  public List<String> getLabels() {
+    return ImmutableList.of(".txt");
   }
 }
