@@ -17,7 +17,6 @@
  */
 package com.streamsets.pipeline.runner.production;
 
-import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
@@ -50,10 +49,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private final String pipelineName;
 
   private final Timer batchProcessingTimer;
-  private final Counter batchCountCounter;
-  private final Counter batchInputRecordsCounter;
-  private final Counter batchOutputRecordsCounter;
-  private final Counter batchErrorRecordsCounter;
   private final Meter batchCountMeter;
   private final Meter batchInputRecordsMeter;
   private final Meter batchOutputRecordsMeter;
@@ -73,10 +68,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.batchSize = batchSize;
 
     batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
-    batchCountCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchCount");
-    batchInputRecordsCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchInputRecords");
-    batchOutputRecordsCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchOutputRecords");
-    batchErrorRecordsCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchErrorRecords");
     batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount");
     batchInputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchInputRecords");
     batchOutputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchOutputRecords");
@@ -167,10 +158,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
     }
 
     batchProcessingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
-    batchCountCounter.inc();
-    batchInputRecordsCounter.inc(pipeBatch.getInputRecords());
-    batchOutputRecordsCounter.inc(pipeBatch.getOutputRecords());
-    batchErrorRecordsCounter.inc(pipeBatch.getErrorRecords());
     batchCountMeter.mark();
     batchInputRecordsMeter.mark(pipeBatch.getInputRecords());
     batchOutputRecordsMeter.mark(pipeBatch.getOutputRecords());
