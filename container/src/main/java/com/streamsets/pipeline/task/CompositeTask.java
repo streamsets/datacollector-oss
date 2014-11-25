@@ -65,6 +65,7 @@ public class CompositeTask extends AbstractTask {
                 if (getStatus() == Status.RUNNING) {
                   LOG.warn("'{}' status monitor thread detected that subTask '{}' is not running anymore, stopping",
                            getName(), subTask.getName());
+                  CompositeTask.this.stopTask();
                   CompositeTask.this.stop();
                 }
               }
