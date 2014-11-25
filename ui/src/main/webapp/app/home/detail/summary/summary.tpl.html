@@ -1,43 +1,6 @@
 <div class="container-fluid" ng-controller="SummaryController">
   <div class="row">
 
-
-    <!--div class="col-sm-6">
-      <div class="chart-wrapper">
-        <div class="chart-title">
-          Summary
-        </div>
-        <div class="chart-stage">
-
-          <div class="row form-group">
-            <label class="col-sm-8 control-label">Number of Batches Processed</label>
-            <div class="col-sm-2">
-              <p class="form-control-static" ng-bind="summaryTimer.count"> </p>
-            </div>
-          </div>
-
-          <div class="row form-group">
-            <label class="col-sm-8 control-label">Number of Records Processed</label>
-            <div class="col-sm-2">
-              <p class="form-control-static" ng-bind="summaryTimer.count * 1000"> </p>
-            </div>
-          </div>
-
-          <div class="row form-group">
-            <label class="col-sm-8 control-label">Number of Bad Records</label>
-            <div class="col-sm-2">
-              <p class="form-control-static" ng-bind="summaryCounters.errorRecords.count"> </p>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="chart-notes">
-          This is a sample text region to describe this chart.
-        </div>
-      </div>
-    </div-->
-
     <div class="col-sm-4" ng-controller="RecordProcessedPieChart">
       <div class="chart-wrapper">
         <div class="chart-title">
@@ -56,7 +19,7 @@
               showLabels="true"
               showLegend="true"
               tooltips="true"
-              labelType="value"
+              labelType="percent"
               donut="true"
               donutRatio=".25"
               donutLabelsOutside="true">
@@ -64,11 +27,31 @@
             </nvd3-pie-chart>
 
         </div>
-        <!--div class="chart-notes">
-          Notes go down here
-        </div -->
       </div>
     </div>
+
+    <div class="col-sm-8" ng-controller="RecordProcessedBarChart">
+      <div class="chart-wrapper">
+        <div class="chart-title">
+          Records Processed
+        </div>
+        <div class="chart-stage">
+
+          <nvd3-discrete-bar-chart
+            data="barChartData"
+            id="RecordProcessedBarChartID"
+            height="300"
+            color="getColor()"
+            showXAxis="true"
+            showYAxis="true"
+            showValues="true"
+            showLegend="true"
+            >
+          </nvd3-discrete-bar-chart>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 

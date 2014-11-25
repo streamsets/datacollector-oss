@@ -282,6 +282,61 @@ angular.module('pipelineAgentApp.common')
           method: 'GET',
           url: url
         });
+      },
+
+
+      /**
+       * Capture Snapshot of running pipeline.
+       *
+       * @returns {*}
+       */
+      captureSnapshot: function() {
+        var url = apiBase + '/pipeline/snapshot' ;
+        return $http({
+          method: 'PUT',
+          url: url
+        });
+      },
+
+      /**
+       * Get Status of Snapshot.
+       *
+       * @returns {*}
+       */
+      getSnapshotStatus: function() {
+        var url = apiBase + '/pipeline/snapshot' ;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Get captured snapshot for given pipeline name.
+       *
+       * @param name
+       * @returns {*}
+       */
+      getSnapshot: function(name) {
+        var url = apiBase + '/pipeline/snapshot/' + name ;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Delete captured snapshot for given pipeline name.
+       *
+       * @param name
+       * @returns {*}
+       */
+      deleteSnapshot: function(name) {
+        var url = apiBase + '/pipeline/snapshot/' + name ;
+        return $http({
+          method: 'DELETE',
+          url: url
+        });
       }
     };
 

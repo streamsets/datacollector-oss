@@ -192,7 +192,10 @@ angular
        *
        */
       captureSnapshot: function() {
-
+        api.pipelineAgent.captureSnapshot().
+          then(function() {
+            checkForCaptureSnapshotStatus();
+          });
       }
     });
 
@@ -215,4 +218,14 @@ angular
 
       return configDefinition ? configDefinition.label : configName;
     };
+
+
+    /**
+     * Check for Snapshot Status for every 1 secon
+     *
+     */
+    var checkForCaptureSnapshotStatus = function() {
+
+    };
+
   });
