@@ -130,20 +130,34 @@ public class PipelineManagerResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getHistory(name)).build();
   }
 
-  @Path("/errorRecords/{name}")
+  @Path("/errorRecords/{pipelineName}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getErrorRecords(
-      @PathParam("name") String name) throws PipelineManagerException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getErrorRecords(name)).build();
+      @PathParam("pipelineName") String pipelineName,
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      @QueryParam ("stageInstanceName") String stageInstanceName) throws PipelineManagerException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getErrorRecords(pipelineName, rev,
+        stageInstanceName)).build();
   }
 
-  @Path("/errorRecords/{name}")
+  @Path("/errorRecords")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getErrorRecords(
+      @QueryParam ("stageInstanceName") String stageInstanceName) throws PipelineManagerException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
+        pipelineManager.getErrorRecords(stageInstanceName)).build();
+  }
+
+  @Path("/errorRecords/{pipelineName}")
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteErrorRecords(
-      @PathParam("name") String name) {
-    pipelineManager.deleteErrorRecords(name);
+      @PathParam("pipelineName") String pipelineName,
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      @QueryParam ("stageInstanceName") String stageInstanceName) throws PipelineStoreException {
+    pipelineManager.deleteErrorRecords(pipelineName, rev, stageInstanceName);
     return Response.ok().build();
   }
 

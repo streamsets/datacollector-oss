@@ -27,7 +27,6 @@ public @interface FieldModifier {
 
   FieldSelectionType type();
 
-  //TODO: Fix annotation processor validation to check that the implementation implements this interface
   Class<? extends ValuesProvider> valuesProvider();
 
 }

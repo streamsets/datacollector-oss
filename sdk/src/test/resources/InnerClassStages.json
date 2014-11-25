@@ -17,7 +17,7 @@
     "fieldName" : "regEx",
     "model" : {
       "modelType" : "FIELD_MODIFIER",
-      "fieldModifierType" : "PROVIDED",
+      "fieldSelectionType" : "PROVIDED",
       "values" : null,
       "labels" : null
     }
@@ -42,7 +42,7 @@
     "fieldName" : "username",
     "model" : {
       "modelType" : "FIELD_SELECTOR",
-      "fieldModifierType" : null,
+      "fieldSelectionType" : null,
       "values" : null,
       "labels" : null
     }

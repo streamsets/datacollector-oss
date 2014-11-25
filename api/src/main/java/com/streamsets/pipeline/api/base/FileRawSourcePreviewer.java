@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.clipper.stage;
+package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
@@ -23,22 +23,19 @@ import com.streamsets.pipeline.api.RawSourcePreviewer;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
 
-public class ClipperSourcePreviewer implements RawSourcePreviewer {
+public class FileRawSourcePreviewer implements RawSourcePreviewer {
 
   private String mimeType;
 
   @ConfigDef(defaultValue = "", description = "The name of the file to preview", label = "File Name", name = "fileName",
-    required = true, type = ConfigDef.Type.STRING)
+      required = true, type = ConfigDef.Type.STRING)
   public String fileName;
 
   @Override
   public Reader preview(int maxLength) {
-    Reader reader = null;
+    Reader reader;
     try {
-      //TODO: make sure this field in injected at runtime
       reader = new FileReader(fileName);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
@@ -55,4 +52,5 @@ public class ClipperSourcePreviewer implements RawSourcePreviewer {
   public void setMimeType(String mimeType) {
     this.mimeType = mimeType;
   }
+
 }

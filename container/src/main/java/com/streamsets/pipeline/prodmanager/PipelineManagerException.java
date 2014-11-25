@@ -33,6 +33,7 @@ public class PipelineManagerException extends PipelineException {
     INVALID_STATE_TRANSITION("Could not change state from {} to {}"),
     COULD_NOT_SET_OFFSET_RUNNING_STATE("Could not set the source offset during a run"),
     COULD_NOT_CAPTURE_SNAPSHOT_BECAUSE_PIPELINE_NOT_RUNNING("Could not capture snapshot because pipeline is not running"),
+    COULD_NOT_GET_ERROR_RECORDS_BECAUSE_PIPELINE_NOT_RUNNING("Could not get error records because pipeline is not running"),
     INVALID_BATCH_SIZE("Invalid batch size supplied {}"),
     COULD_NOT_START_PIPELINE_MANAGER_REASON("Could not start pipeline manager. Reason : {}"),
     PIPELINE_DOES_NOT_EXIST("Pipeline {} does not exist");

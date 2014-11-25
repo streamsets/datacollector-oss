@@ -24,6 +24,8 @@ public interface RawSourcePreviewer {
 
   Reader preview(int maxLength);
 
-  String getMime();
+  String getMimeType();
+
+  void setMimeType(String mimeType);
 
 }

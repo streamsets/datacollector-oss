@@ -321,7 +321,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     String rawSourcePreviewerClass = getRawSourcePreviewer(rawSourceAnnot);
     TypeElement typeElement = getTypeElementFromName(rawSourcePreviewerClass);
     List<ConfigDefinition> configDefs = getConfigDefsFromTypeElement(typeElement);
-    return new RawSourceDefinition(rawSourcePreviewerClass, configDefs);
+    return new RawSourceDefinition(rawSourcePreviewerClass, rawSourceAnnot.mimeType(), configDefs);
   }
 
   /**
@@ -593,9 +593,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         }
 
         if (dropDown != null) {
-          if (!fieldType.toString().equals("java.util.List<java.lang.String>")) {
-            printError("field.validation.type.is.not.list",
-                "The type of the field {} is expected to be List<String>.",
+          if (!fieldType.toString().equals("java.lang.String")) {
+            printError("field.validation.type.is.not.String",
+                "The type of the field {} is expected to be String.",
                 typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
             valid = false;
           }

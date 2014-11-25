@@ -22,8 +22,6 @@ import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import org.junit.Assert;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -111,7 +109,7 @@ public class TestUtil {
 
         if(e.getModel() != null) {
           Assert.assertNotNull(a.getModel());
-          Assert.assertEquals(e.getModel().getFieldModifierType(), a.getModel().getFieldModifierType());
+          Assert.assertEquals(e.getModel().getFieldSelectionType(), a.getModel().getFieldSelectionType());
           Assert.assertEquals(e.getModel().getLabels(), a.getModel().getLabels());
           Assert.assertEquals(e.getModel().getModelType(), a.getModel().getModelType());
           Assert.assertEquals(e.getModel().getValues(), a.getModel().getValues());

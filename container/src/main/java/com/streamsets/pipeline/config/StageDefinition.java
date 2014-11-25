@@ -195,11 +195,14 @@ public class StageDefinition {
     //Localize RawSourceDefinition instance which contains ConfigDefinitions
     List<ConfigDefinition> rawSourcePreviewConfigDefs = new ArrayList<>();
     RawSourceDefinition rawSourceDef = getRawSourceDefinition();
-    for (ConfigDefinition configDef : rawSourceDef.getConfigDefinitions()) {
-      rawSourcePreviewConfigDefs.add(configDef.localize(rb));
+    RawSourceDefinition rsd = null;
+    if(rawSourceDef != null) {
+      for (ConfigDefinition configDef : rawSourceDef.getConfigDefinitions()) {
+        rawSourcePreviewConfigDefs.add(configDef.localize(rb));
+      }
+      rsd = new RawSourceDefinition(rawSourceDef.getRawSourcePreviewerClass(), rawSourceDef.getMimeType(),
+          rawSourcePreviewConfigDefs);
     }
-    RawSourceDefinition rsd = new RawSourceDefinition(rawSourceDef.getRawSourcePreviewerClass(),
-        rawSourcePreviewConfigDefs);
 
     String label = (rb.containsKey(STAGE_LABEL)) ? rb.getString(STAGE_LABEL) : getLabel();
     String description = (rb.containsKey(STAGE_DESCRIPTION)) ? rb.getString(STAGE_DESCRIPTION) : getDescription();

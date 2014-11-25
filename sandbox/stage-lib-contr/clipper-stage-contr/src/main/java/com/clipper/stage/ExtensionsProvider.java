@@ -17,19 +17,23 @@
  */
 package com.clipper.stage;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ValuesProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExtensionsProvider implements ValuesProvider {
   @Override
   public List<String> getValues() {
-    return ImmutableList.of(".txt");
+    List<String> values = new ArrayList<>();
+    values.add(".txt");
+    return values;
   }
 
   @Override
   public List<String> getLabels() {
-    return ImmutableList.of(".txt");
+    List<String> labels = new ArrayList<>();
+    labels.add(".txt");
+    return labels;
   }
 }

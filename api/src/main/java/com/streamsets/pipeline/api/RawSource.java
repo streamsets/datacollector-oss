@@ -27,4 +27,6 @@ public @interface RawSource {
 
   Class<? extends RawSourcePreviewer> rawSourcePreviewer();
 
+  String mimeType() default "*/*";
+
 }

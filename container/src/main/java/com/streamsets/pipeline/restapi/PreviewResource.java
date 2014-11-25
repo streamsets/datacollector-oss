@@ -49,11 +49,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.*;
 import java.io.Reader;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Path("/v1/pipeline-library")
 public class PreviewResource {
@@ -170,8 +168,9 @@ public class PreviewResource {
       //inject values from url to fields in the rawSourcePreviewer
       for(ConfigDefinition confDef : configDefinitions) {
         Field f = previewerClass.getField(confDef.getFieldName());
-        f.set(rawSourcePreviewer, previewParams.get(confDef.getName()));
+        f.set(rawSourcePreviewer, previewParams.get(confDef.getName()).get(0));
       }
+      rawSourcePreviewer.setMimeType(rawSourceDefinition.getMimeType());
       reader = rawSourcePreviewer.preview(bytesToRead);
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
@@ -182,7 +181,7 @@ public class PreviewResource {
     }
 
     BoundedInputStream bIn = new BoundedInputStream(new ReaderInputStream(reader), bytesToRead);
-    return Response.ok().type(rawSourcePreviewer.getMime()).entity(bIn).build();
+    return Response.ok().type(rawSourcePreviewer.getMimeType()).entity(bIn).build();
   }
 
   private void validateParameters(MultivaluedMap<String, String> previewParams,

@@ -24,9 +24,9 @@ import java.util.Map;
 
 public interface ErrorRecordStore {
 
-  void storeErrorRecords(String pipelineName, Map<String, ErrorRecords> errorRecords);
+  void storeErrorRecords(String pipelineName, String rev, Map<String, ErrorRecords> errorRecords);
 
-  void deleteErrorRecords(String pipelineName);
+  void deleteErrorRecords(String pipelineName, String rev, String stageInstanceName);
 
-  InputStream getErrorRecords(String pipelineName);
+  InputStream getErrorRecords(String pipelineName, String rev, String stageInstanceName);
 }

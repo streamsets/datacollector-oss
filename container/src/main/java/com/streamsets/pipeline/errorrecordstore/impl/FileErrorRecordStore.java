@@ -47,31 +47,37 @@ public class FileErrorRecordStore implements ErrorRecordStore {
   }
 
   @Override
-  public void storeErrorRecords(String pipelineName, Map<String, ErrorRecords> errorRecords) {
-    File errorRecordFile = getErrorRecordFile(pipelineName);
-    if(errorRecordFile.exists() && errorRecordFile.length() > MAX_FILE_SIZE) {
-      LOG.warn("Exceeded the error record file size limit. Records in error are not being written to file.");
-      return;
-    }
-    try {
-      json.writeValue(new FileOutputStream(errorRecordFile, true /*append*/), errorRecords);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @Override
-  public void deleteErrorRecords(String pipelineName) {
-    if(getErrorRecordFile(pipelineName).exists()) {
-      getErrorRecordFile(pipelineName).delete();
-    }
-  }
-
-  @Override
-  public InputStream getErrorRecords(String pipelineName) {
-    if(getErrorRecordFile(pipelineName).exists()) {
+  public void storeErrorRecords(String pipelineName, String rev, Map<String, ErrorRecords> errorRecords) {
+    for(Map.Entry<String, ErrorRecords> entry : errorRecords.entrySet()) {
+      File errorRecordFile = getErrorRecordFile(pipelineName, rev, entry.getKey());
+      if (errorRecordFile.exists() && errorRecordFile.length() > MAX_FILE_SIZE) {
+        LOG.warn("Exceeded the error record file size limit. Records in error are not being written to file.");
+        return;
+      }
       try {
-        return new FileInputStream(getErrorRecordFile(pipelineName));
+        json.writeValue(new FileOutputStream(errorRecordFile, true /*append*/), entry.getValue());
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
+  @Override
+  public void deleteErrorRecords(String pipelineName, String rev, String stageInstanceName) {
+    File errorRecordFile = getErrorRecordFile(pipelineName, rev, stageInstanceName);
+    if(!errorRecordFile.exists()) {
+      LOG.warn("No error records found for stage instance {} in pipeline {}", stageInstanceName, pipelineName);
+    }
+    LOG.info("Deleting error records for stage instance {} in pipeline {}", stageInstanceName, pipelineName);
+    errorRecordFile.delete();
+    LOG.info("Deleted error records for stage instance {} in pipeline {}", stageInstanceName, pipelineName);
+  }
+
+  @Override
+  public InputStream getErrorRecords(String pipelineName, String rev, String stageInstanceName) {
+    if(getErrorRecordFile(pipelineName, rev, stageInstanceName).exists()) {
+      try {
+        return new FileInputStream(getErrorRecordFile(pipelineName, rev, stageInstanceName));
       } catch (FileNotFoundException e) {
         LOG.warn(e.getMessage());
         return null;
@@ -80,8 +86,8 @@ public class FileErrorRecordStore implements ErrorRecordStore {
     return null;
   }
 
-  private File getErrorRecordFile(String name) {
-    return new File(getPipelineDir(name), ERROR_RECORDS_FILE);
+  private File getErrorRecordFile(String pipelineName, String rev, String stageInstanceName) {
+    return new File(getPipelineDir(pipelineName), stageInstanceName + "-" + ERROR_RECORDS_FILE);
   }
 
   private File getPipelineDir(String name) {

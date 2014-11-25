@@ -34,6 +34,7 @@ import java.util.List;
 public class TestProductionPipeline {
 
   private static final String PIPELINE_NAME = "myPipeline";
+  private static final String REVISION = "0";
 
   @BeforeClass
   public static void beforeClass() {
@@ -104,7 +105,7 @@ public class TestProductionPipeline {
 
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME)).thenReturn(new SnapshotStatus(false, false));
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, fileErrorRecordStore, tracker, 5
-        , deliveryGuarantee, PIPELINE_NAME);
+        , deliveryGuarantee, PIPELINE_NAME, REVISION);
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
         MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
 

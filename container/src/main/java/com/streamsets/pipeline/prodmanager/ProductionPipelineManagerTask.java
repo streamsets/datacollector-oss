@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.runner.ErrorRecord;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
@@ -45,6 +47,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -185,9 +188,15 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return snapshotStore.getSnapshot(pipelineName);
   }
 
-  public InputStream getErrorRecords(String pipelineName) throws PipelineManagerException {
+  public InputStream getErrorRecords(String pipelineName, String rev, String stageInstanceName) throws PipelineManagerException {
     validatePipelineExistence(pipelineName);
-    return errorRecordStore.getErrorRecords(pipelineName);
+    return errorRecordStore.getErrorRecords(pipelineName, rev, stageInstanceName);
+  }
+
+  public Collection<ErrorRecord> getErrorRecords(String instanceName) throws PipelineManagerException {
+    checkState(getPipelineState().getState().equals(State.RUNNING),
+        PipelineManagerException.ERROR.COULD_NOT_GET_ERROR_RECORDS_BECAUSE_PIPELINE_NOT_RUNNING);
+    return prodPipeline.getErrorRecords(instanceName);
   }
 
   public List<PipelineState> getHistory(String pipelineName) throws PipelineManagerException {
@@ -201,10 +210,21 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     LOG.debug("Deleted snapshot");
   }
 
-  public void deleteErrorRecords(String pipelineName) {
-    LOG.debug("Deleting error records");
-    errorRecordStore.deleteErrorRecords(pipelineName);
-    LOG.debug("Deleted error records");
+  public void deleteErrorRecords(String pipelineName, String rev, String stageInstanceName)
+      throws PipelineStoreException {
+    if(stageInstanceName == null || stageInstanceName.isEmpty()) {
+      //delete error records for all stages in this pipeline
+      LOG.debug("Deleting error records for pipeline {}", pipelineName);
+      PipelineConfiguration pipelineConfiguration = pipelineStore.load(pipelineName, rev);
+      for(StageConfiguration stageConf : pipelineConfiguration.getStages()) {
+        errorRecordStore.deleteErrorRecords(pipelineName, rev, stageConf.getInstanceName());
+      }
+      LOG.debug("Deleted error records for pipeline {}", pipelineName);
+    } else {
+      LOG.debug("Deleting error records for stage {}", stageInstanceName);
+      errorRecordStore.deleteErrorRecords(pipelineName, rev, stageInstanceName);
+      LOG.debug("Deleted error records for stage {}", stageInstanceName);
+    }
   }
 
   public PipelineState startPipeline(String name, String rev) throws PipelineStoreException
@@ -267,7 +287,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     }
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, runtimeInfo);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, errorRecordStore, offsetTracker,
-        maxBatchSize, deliveryGuarantee, name);
+        maxBatchSize, deliveryGuarantee, name, rev);
     ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, pipelineConfiguration);
 
     return builder.build(runner);

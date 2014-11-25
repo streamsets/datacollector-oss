@@ -26,14 +26,17 @@ import java.util.Map;
 public class RawSourceDefinition {
 
   private final String rawSourcePreviewerClass;
+  private final String mimeType;
   List<ConfigDefinition> configDefinitions;
 
   @JsonCreator
   public RawSourceDefinition(
       @JsonProperty("rawSourcePreviewerClass") String rawSourcePreviewerClass,
+      @JsonProperty("mimeType") String mimeType,
       @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions) {
     this.rawSourcePreviewerClass = rawSourcePreviewerClass;
     this.configDefinitions = configDefinitions;
+    this.mimeType = mimeType;
   }
 
   public String getRawSourcePreviewerClass() {
@@ -42,5 +45,9 @@ public class RawSourceDefinition {
 
   public List<ConfigDefinition> getConfigDefinitions() {
     return configDefinitions;
+  }
+
+  public String getMimeType() {
+    return mimeType;
   }
 }

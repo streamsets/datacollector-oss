@@ -21,9 +21,8 @@ import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.FieldSelectionType;
 
-import java.util.List;
 
-@RawSource(rawSourcePreviewer = ClipperSourcePreviewer.class)
+@RawSource(rawSourcePreviewer = ClipperSourcePreviewer.class, mimeType = "text/plain")
 @StageDef(name = "TextFileReader", version = "1.0", label = "Text file reader", description = "Produces lines from a text file")
 public class TextFileReader extends BaseSource {
 
@@ -34,7 +33,7 @@ public class TextFileReader extends BaseSource {
   @DropDown(type = FieldSelectionType.PROVIDED, valuesProvider = ExtensionsProvider.class)
   @ConfigDef(defaultValue = "", label = "File Extenson", description = "Absolute file name of the file",
       name = "fileExtension", required = true, type = ConfigDef.Type.MODEL)
-  public List<String> fileExtension;
+  public String fileExtension;
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {

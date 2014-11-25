@@ -20,12 +20,7 @@ package com.streamsets.pipeline.validation;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
-import com.streamsets.pipeline.config.ConfigConfiguration;
-import com.streamsets.pipeline.config.ConfigDefinition;
-import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.StageConfiguration;
-import com.streamsets.pipeline.config.StageDefinition;
-import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.config.*;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -344,8 +339,15 @@ public class PipelineConfigurationValidator {
                 //NOP
                 break;
               case MODEL:
-                //TODO introduce schema for models so we can validate
-                if (!(conf.getValue() instanceof Map || conf.getValue() instanceof List)) {
+                if(confDef.getModel().getModelType() == ModelType.DROPDOWN) {
+                  if(!(conf.getValue() instanceof String)) {
+                    // stage configuration must be a model
+                    issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
+                        STAGE_CONFIGURATION_INVALID_TYPE_KEY,
+                        STAGE_CONFIGURATION_INVALID_TYPE_DEFAULT, "String"));
+                  }
+                } else if (!(conf.getValue() instanceof Map || conf.getValue() instanceof List)) {
+                  //TODO introduce schema for models so we can validate
                   // stage configuration must be a model
                   issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                             STAGE_CONFIGURATION_INVALID_TYPE_KEY,
