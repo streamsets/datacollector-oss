@@ -98,12 +98,14 @@ angular
      */
     $q.all([api.pipelineAgent.getDefinitions(),
       api.pipelineAgent.getPipelines(),
-      api.pipelineAgent.getPipelineStatus()
+      api.pipelineAgent.getPipelineStatus(),
+      api.pipelineAgent.getPipelineMetrics()
     ])
       .then(function (results) {
         var definitions = results[0].data,
           pipelines = results[1].data,
-          pipelineStatus = results[2].data;
+          pipelineStatus = results[2].data,
+          pipelineMetrics= results[3].data;
 
         //Definitions
         $scope.pipelineConfigDefinition = definitions.pipeline[0];
@@ -136,7 +138,10 @@ angular
           $scope.activeConfigInfo = undefined;
         }
 
-        fetchPipelineStatusEvery10Seconds();
+        $rootScope.common.pipelineMetrics = pipelineMetrics;
+
+        fetchPipelineStatusEvery2Seconds();
+        fetchPipelineMetricsEvery2Seconds();
 
         if($scope.activeConfigInfo) {
           return api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name);
@@ -295,41 +300,31 @@ angular
     var updateDetailPane = function(stageInstance) {
       if(stageInstance) {
         //Stage Instance Configuration
-        //Stage Instance Configuration
         $scope.detailPaneConfig = stageInstance;
         $scope.detailPaneConfigDefn = _.find($scope.stageLibraries, function (stageLibrary) {
           return stageLibrary.name === stageInstance.stageName &&
             stageLibrary.version === stageInstance.stageVersion;
         });
-
-        $scope.$broadcast('onStageSelection', stageInstance);
-
       } else {
         //Pipeline Configuration
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
         $scope.detailPaneConfig = $scope.pipelineConfig;
-
-        if ($scope.previewMode) {
-          $scope.stagePreviewData = {
-            input: {},
-            output: {}
-          };
-        }
       }
+      $scope.$broadcast('onStageSelection', stageInstance);
     };
 
 
     /**
-     * Fetch the Pipeline Status every 10 Seconds.
+     * Fetch the Pipeline Status every 2 Seconds.
      *
      */
-    var fetchPipelineStatusEvery10Seconds = function() {
+    var fetchPipelineStatusEvery2Seconds = function() {
 
       pipelineStatusTimer = $timeout(
         function() {
-          console.log( "Timeout executed", Date.now() );
+          console.log( "Pipeline Status Timeout executed", Date.now() );
         },
-        10000
+        2000
       );
 
       pipelineStatusTimer.then(
@@ -337,7 +332,38 @@ angular
           api.pipelineAgent.getPipelineStatus()
             .success(function(data) {
               $rootScope.common.pipelineStatus = data;
-              fetchPipelineStatusEvery10Seconds();
+              fetchPipelineStatusEvery2Seconds();
+            })
+            .error(function(data, status, headers, config) {
+              $rootScope.common.errors = [data];
+            });
+        },
+        function() {
+          console.log( "Timer rejected!" );
+        }
+      );
+    };
+
+
+    /**
+     * Fetch the Pipeline Status every 2 Seconds.
+     *
+     */
+    var fetchPipelineMetricsEvery2Seconds = function() {
+
+      pipelineStatusTimer = $timeout(
+        function() {
+          console.log( "Pipeline Metrics Timeout executed", Date.now() );
+        },
+        2000
+      );
+
+      pipelineStatusTimer.then(
+        function() {
+          api.pipelineAgent.getPipelineMetrics()
+            .success(function(data) {
+              $rootScope.common.pipelineMetrics = data;
+              fetchPipelineMetricsEvery2Seconds();
             })
             .error(function(data, status, headers, config) {
               $rootScope.common.errors = [data];

@@ -144,13 +144,26 @@ angular
        */
       startPipeline: function() {
         if($rootScope.common.pipelineStatus.state !== 'RUNNING') {
+          var startResponse;
           api.pipelineAgent.startPipeline($scope.activeConfigInfo.name).
-            success(function(res) {
-              $rootScope.common.pipelineStatus = res;
-            }).
-            error(function(data) {
-              $rootScope.common.errors = [data];
-            });
+            then(
+              function (res) {
+                startResponse = res.data;
+                return api.pipelineAgent.getPipelineMetrics();
+              },
+              function (data) {
+                $rootScope.common.errors = [data];
+              }
+            ).
+            then(
+              function (res) {
+                $rootScope.common.pipelineMetrics = res.data;
+                $rootScope.common.pipelineStatus = startResponse;
+              },
+              function (data) {
+                $rootScope.common.errors = [data];
+              }
+            );
         } else {
           $translate('admin.graphPane.startErrorMessage', {
             name: $rootScope.common.pipelineStatus.name

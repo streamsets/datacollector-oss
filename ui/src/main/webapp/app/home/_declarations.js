@@ -16,7 +16,8 @@ angular
     'underscore',
     'ui.bootstrap',
     'filereadDirectives',
-    'angularMoment'
+    'angularMoment',
+    'nvd3ChartDirectives'
   ])
   .constant('amTimeAgoConfig', {
     withoutSuffix: true

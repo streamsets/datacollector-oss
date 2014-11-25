@@ -83,12 +83,15 @@ module.exports = function(grunt) {
         'bower_components/angular-bootstrap/ui-bootstrap.js',
         'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
         'bower_components/moment/moment.js',
-        'bower_components/angular-moment/angular-moment.js'
+        'bower_components/angular-moment/angular-moment.js',
+        'bower_components/nvd3/nv.d3.js',
+        'bower_components/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js'
       ],
       css: [
         'bower_components/bootstrap/dist/css/bootstrap.min.css',
         'bower_components/json-formatter/dist/json-formatter.min.css.css',
-        'bower_components/fontawesome/css/font-awesome.css'
+        'bower_components/fontawesome/css/font-awesome.css',
+        'bower_components/nvd3/nv.d3.css'
       ],
       assets: [
       ],
@@ -104,7 +107,8 @@ module.exports = function(grunt) {
         'bower_components/fontawesome/fonts/fontawesome-webfont.woff'
       ],
       i18n: [
-        'bower_components/angular-i18n/angular-locale_en-us.js'
+        'bower_components/angular-i18n/angular-locale_en-us.js',
+        'bower_components/angular-i18n/angular-locale_en.js'
       ]
     }
   };

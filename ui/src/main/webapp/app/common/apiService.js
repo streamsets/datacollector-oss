@@ -269,8 +269,20 @@ angular.module('pipelineAgentApp.common')
           method: 'POST',
           url: url
         });
-      }
+      },
 
+      /**
+       * Fetch the Pipeline Metrics
+       *
+       * @returns {*}
+       */
+      getPipelineMetrics: function() {
+        var url = apiBase + '/pipeline/metrics';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      }
     };
 
     return api;

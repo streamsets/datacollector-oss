@@ -295,6 +295,8 @@ describe('Controller: modules/home/HomeCtrl', function () {
       lastStatusChange: 1416546973284
     });
 
+    $httpBackend.expectGET('rest/v1/pipeline/metrics').respond({});
+
     $httpBackend.expectGET('rest/v1/pipeline-library/xyz').respond({
       uuid: "cdf08ac9-2a97-4167-8a2c-ed48cfcf600e",
       info: {

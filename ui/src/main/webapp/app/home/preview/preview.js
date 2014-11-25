@@ -188,7 +188,7 @@ angular
       if($scope.previewMode) {
         var stageInstances = $scope.pipelineConfig.stages;
 
-        $scope.stagePreviewData = getPreviewDataForStage($scope.previewData, $scope.detailPaneConfig);
+        $scope.stagePreviewData = getPreviewDataForStage($scope.previewData, stageInstance);
 
         if(stageInstance.inputLanes && stageInstance.inputLanes.length) {
           $scope.previousStageInstances = _.filter(stageInstances, function(instance) {
@@ -249,7 +249,14 @@ angular
     });
 
     $scope.$on('onStageSelection', function(event, stageInstance) {
-      updatePreviewDataForStage(stageInstance);
+      if (stageInstance) {
+        updatePreviewDataForStage(stageInstance);
+      } else {
+        $scope.stagePreviewData = {
+          input: {},
+          output: {}
+        };
+      }
     });
 
   });

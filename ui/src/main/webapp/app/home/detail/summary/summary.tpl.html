@@ -1,5 +1,76 @@
-<div ng-controller="SummaryController">
+<div class="container-fluid" ng-controller="SummaryController">
+  <div class="row">
 
-  <h4> Summary Tab </h4>
+
+    <!--div class="col-sm-6">
+      <div class="chart-wrapper">
+        <div class="chart-title">
+          Summary
+        </div>
+        <div class="chart-stage">
+
+          <div class="row form-group">
+            <label class="col-sm-8 control-label">Number of Batches Processed</label>
+            <div class="col-sm-2">
+              <p class="form-control-static" ng-bind="summaryTimer.count"> </p>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <label class="col-sm-8 control-label">Number of Records Processed</label>
+            <div class="col-sm-2">
+              <p class="form-control-static" ng-bind="summaryTimer.count * 1000"> </p>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <label class="col-sm-8 control-label">Number of Bad Records</label>
+            <div class="col-sm-2">
+              <p class="form-control-static" ng-bind="summaryCounters.errorRecords.count"> </p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="chart-notes">
+          This is a sample text region to describe this chart.
+        </div>
+      </div>
+    </div-->
+
+    <div class="col-sm-4" ng-controller="RecordProcessedPieChart">
+      <div class="chart-wrapper">
+        <div class="chart-title">
+          Records Processed
+        </div>
+        <div class="chart-stage">
+
+            <nvd3-pie-chart
+              data="pieChartData"
+              id="RecordProcessedPieChartID"
+              height="300"
+              x="getLabel()"
+              y="getValue()"
+              color="getColor()"
+              legendColor="getColor()"
+              showLabels="true"
+              showLegend="true"
+              tooltips="true"
+              labelType="value"
+              donut="true"
+              donutRatio=".25"
+              donutLabelsOutside="true">
+              <svg></svg>
+            </nvd3-pie-chart>
+
+        </div>
+        <!--div class="chart-notes">
+          Notes go down here
+        </div -->
+      </div>
+    </div>
+  </div>
+
+
 
 </div>

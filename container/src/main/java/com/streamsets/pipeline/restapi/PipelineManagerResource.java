@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 
 @Path("/v1/pipeline")
 public class PipelineManagerResource {
@@ -116,7 +117,7 @@ public class PipelineManagerResource {
     if (pipelineManager.getPipelineState().getState() == State.RUNNING) {
       response = Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getMetrics()).build();
     } else {
-      response = Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
+      response = Response.ok().type(MediaType.APPLICATION_JSON).entity(Collections.EMPTY_MAP).build();
     }
     return response;
   }

@@ -55,8 +55,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       var margin = {top: -5, right: -5, bottom: -5, left: -5},
         svgWidth = svg.style('width').replace('px', ''),
         svgHeight = svg.style('height').replace('px', ''),
-        width = 2000 - margin.left - margin.right,
-        height = 2000 - margin.top - margin.bottom;
+        width = 2500 - margin.left - margin.right,
+        height = 2500 - margin.top - margin.bottom;
 
       var container = svg.append("g");
       container.append("g")
