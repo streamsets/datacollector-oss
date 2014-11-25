@@ -30,6 +30,7 @@ angular
       stageLibraries: [],
       pipelineGraphData: {},
       previewMode: false,
+      snapshotMode: false,
       hideLibraryPanel: true,
       activeConfigInfo: {
         name: 'xyz'
@@ -53,6 +54,24 @@ angular
        */
       closePreview: function () {
         $scope.previewMode = false;
+      },
+
+
+      /**
+       * Capture the snapshot of running pipeline.
+       *
+       */
+      captureSnapshot: function() {
+        $scope.snapshotMode = true;
+        $scope.$broadcast('snapshotPipeline');
+      },
+
+
+      /**
+       * Sets previewMode flag to false.
+       */
+      closeSnapshot: function () {
+        $scope.snapshotMode = false;
       },
 
       /**
@@ -322,7 +341,7 @@ angular
 
       pipelineStatusTimer = $timeout(
         function() {
-          console.log( "Pipeline Status Timeout executed", Date.now() );
+          //console.log( "Pipeline Status Timeout executed", Date.now() );
         },
         2000
       );
@@ -353,7 +372,7 @@ angular
 
       pipelineStatusTimer = $timeout(
         function() {
-          console.log( "Pipeline Metrics Timeout executed", Date.now() );
+          //console.log( "Pipeline Metrics Timeout executed", Date.now() );
         },
         2000
       );

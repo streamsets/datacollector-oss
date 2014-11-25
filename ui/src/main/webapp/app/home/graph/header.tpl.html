@@ -65,10 +65,17 @@
 
 
     <button type="button" class="btn btn-primary btn-sm"
-            ng-show="isPipelineRunning"
+            ng-show="isPipelineRunning && !snapshotMode"
             ng-click="captureSnapshot()">
       <span class="glyphicon glyphicon-camera"></span>
       <span translate="admin.header.snapshot">Snapshot</span>
+    </button>
+
+    <button type="button" class="btn btn-danger btn-sm"
+            ng-show="snapshotMode"
+            ng-click="closeSnapshot()">
+      <span class="glyphicon glyphicon-camera"></span>
+      <span translate="admin.header.closeSnapshot">Close Snapshot</span>
     </button>
 
 
@@ -97,7 +104,7 @@
 
     <button type="button" class="btn btn-danger btn-sm"
             ng-click="stopPipeline()"
-            ng-show="isPipelineRunning">
+            ng-show="isPipelineRunning && !snapshotMode">
       <span class="glyphicon glyphicon-stop"></span>
       <span translate="admin.header.stop">Stop</span>
     </button>

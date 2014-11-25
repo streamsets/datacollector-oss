@@ -481,6 +481,12 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             });
           } else if (selectedEdge) {
             $scope.$apply(function() {
+
+              //Update pipeline target input lanes.
+              selectedEdge.target.inputLanes = _.filter(selectedEdge.target.inputLanes, function(inputLane) {
+                return !_.contains(selectedEdge.source.outputLanes, inputLane);
+              });
+
               thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1);
               state.selectedEdge = null;
               thisGraph.updateGraph();

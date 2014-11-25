@@ -5,10 +5,12 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('PreviewController', function ($scope, $rootScope, _, api) {
+  .controller('SnapshotController', function ($scope, $rootScope, _, api, $timeout) {
     var SOURCE_STAGE_TYPE = 'SOURCE',
       PROCESSOR_STAGE_TYPE = 'PROCESSOR',
-      TARGET_STAGE_TYPE = 'TARGET';
+      TARGET_STAGE_TYPE = 'TARGET',
+      snapshotBatchSize = 10,
+      captureSnapshotStatusTimer;
 
     angular.extend($scope, {
       previewSourceOffset: 0,
@@ -86,45 +88,8 @@ angular
         } else {
           $scope.changeStageSelection(stageInstance);
         }
-      },
-
-      /**
-       * Run Preview with user updated records.
-       *
-       * @param stageInstance
-       * @param inputRecords
-       */
-      stepPreview: function(stageInstance, inputRecords) {
-        var instanceName = stageInstance.instanceName,
-          records = _.map(inputRecords, _.clone);
-
-        _.each(records, function(record) {
-          delete record.dirty;
-
-          _.each(record.values, function(key, value) {
-            delete value.dirty;
-          });
-
-        });
-
-        api.pipelineAgent.previewPipelineRunStage($scope.activeConfigInfo.name, instanceName, records).
-          success(function (previewData) {
-            var targetInstanceData = previewData.batchesOutput[0][0];
-
-            _.each($scope.previewData.batchesOutput[0], function(instanceRecords) {
-              if(instanceRecords.instanceName === targetInstanceData.instanceName) {
-                instanceRecords.output = targetInstanceData.output;
-                instanceRecords.errorRecords = targetInstanceData.errorRecords;
-              }
-            });
-
-            $scope.changeStageSelection(stageInstance);
-            $scope.stepExecuted = true;
-          }).
-          error(function(data) {
-            $rootScope.common.errors = [data];
-          });
       }
+
     });
 
     /**
@@ -144,7 +109,7 @@ angular
           output: [],
           errorRecords: []
         },
-        batchData = previewData.batchesOutput[0];
+        batchData = previewData.snapshot;
 
       angular.forEach(batchData, function (stageOutput) {
         if (inputLane && stageOutput.output[inputLane] && stageOutput.output) {
@@ -184,8 +149,8 @@ angular
      *
      * @param stageInstance
      */
-    var updatePreviewDataForStage = function(stageInstance) {
-      if($scope.previewMode) {
+    var updateSnapshotDataForStage = function(stageInstance) {
+      if($scope.snapshotMode) {
         var stageInstances = $scope.pipelineConfig.stages;
 
         $scope.stagePreviewData = getPreviewDataForStage($scope.previewData, stageInstance);
@@ -225,33 +190,64 @@ angular
       }
     };
 
-    $scope.$on('previewPipeline', function(event, nextBatch) {
-      $scope.stepExecuted = false;
+    /**
+     * Check for Snapshot Status for every 1 seconds, once done open the snapshot view.
+     *
+     */
+    var checkForCaptureSnapshotStatus = function() {
+      captureSnapshotStatusTimer = $timeout(
+        function() {
+          //console.log( "Pipeline Metrics Timeout executed", Date.now() );
+        },
+        1000
+      );
 
-      if (nextBatch) {
-        $scope.previewSourceOffset += $scope.previewBatchSize;
-      } else {
-        $scope.previewSourceOffset = 0;
-      }
+      captureSnapshotStatusTimer.then(
+        function() {
+          api.pipelineAgent.getSnapshotStatus()
+            .success(function(data) {
+              if(data && data.snapshotInProgress === false) {
+                console.log('Capturing Snapshot is completed.');
 
-      api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
-        success(function (previewData) {
 
-          $scope.previewData = previewData;
-          $scope.previewDataUpdated = false;
+                api.pipelineAgent.getSnapshot($scope.activeConfigInfo.name).
+                  success(function(res) {
+                    $scope.previewData = res;
 
-          var firstStageInstance = $scope.pipelineConfig.stages[0];
-          $scope.changeStageSelection(firstStageInstance);
-        }).
-        error(function(data) {
-          $rootScope.common.errors = [data];
+                    var firstStageInstance = $scope.pipelineConfig.stages[0];
+                    $scope.changeStageSelection(firstStageInstance);
+                  }).
+                  error(function(data) {
+                    $rootScope.common.errors = [data];
+                  });
+
+
+
+              } else {
+                checkForCaptureSnapshotStatus();
+              }
+            })
+            .error(function(data, status, headers, config) {
+              $rootScope.common.errors = [data];
+            });
+        },
+        function() {
+          console.log( "Timer rejected!" );
+        }
+      );
+    };
+
+    $scope.$on('snapshotPipeline', function(event, nextBatch) {
+      api.pipelineAgent.captureSnapshot(snapshotBatchSize).
+        then(function() {
+          checkForCaptureSnapshotStatus();
         });
     });
 
     $scope.$on('onStageSelection', function(event, stageInstance) {
-      if($scope.previewMode) {
+      if($scope.snapshotMode) {
         if (stageInstance) {
-          updatePreviewDataForStage(stageInstance);
+          updateSnapshotDataForStage(stageInstance);
         } else {
           $scope.stagePreviewData = {
             input: {},

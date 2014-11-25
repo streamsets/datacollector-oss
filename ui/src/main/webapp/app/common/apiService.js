@@ -288,10 +288,11 @@ angular.module('pipelineAgentApp.common')
       /**
        * Capture Snapshot of running pipeline.
        *
+       * @param batchSize
        * @returns {*}
        */
-      captureSnapshot: function() {
-        var url = apiBase + '/pipeline/snapshot' ;
+      captureSnapshot: function(batchSize) {
+        var url = apiBase + '/pipeline/snapshot?batchSize=' + batchSize ;
         return $http({
           method: 'PUT',
           url: url

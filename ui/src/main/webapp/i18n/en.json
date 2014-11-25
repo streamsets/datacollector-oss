@@ -50,6 +50,7 @@
       "addStage": "Add Stage",
       "definePipeline": "Define Pipeline",
       "closePreview": "Close Preview",
+      "closeSnapshot": "Close Snapshot",
       "nextBatch": "Preview Next Batch",
       "pipelineIssues": "Pipeline Issues",
       "preview": "Preview",

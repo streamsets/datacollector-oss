@@ -21,7 +21,6 @@ angular
         isStageSelected = (currentSelection && currentSelection.stages === undefined);
 
       //meters
-      debugger;
       if(isStageSelected) {
         $scope.summaryMeters = {
           batchCount:
