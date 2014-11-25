@@ -132,30 +132,18 @@ public class PreviewResource {
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
 
     PipelineConfiguration pipelineConf = store.load(name, rev);
+    if(pipelineConf.getStages().isEmpty()) {
+      throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_RAW_SOURCE_PREVIEW_EMPTY_PIPELINE, name);
+    }
+
     //Source stage is always the first one in the entire pipeline
     StageConfiguration stageConf = pipelineConf.getStages().get(0);
     StageDefinition stageDefinition = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
         stageConf.getStageVersion());
-
     RawSourceDefinition rawSourceDefinition = stageDefinition.getRawSourceDefinition();
     List<ConfigDefinition> configDefinitions = rawSourceDefinition.getConfigDefinitions();
 
-    //validate that all configuration required by config definitions are supplied through the URL
-    List<String> requiredPropertiesNotSet = new ArrayList<>();
-    for(ConfigDefinition confDef: configDefinitions) {
-      if(confDef.isRequired() && !previewParams.containsKey(confDef.getName())) {
-        requiredPropertiesNotSet.add(confDef.getName());
-      }
-    }
-
-    if(!requiredPropertiesNotSet.isEmpty()) {
-      StringBuilder sb = new StringBuilder();
-      sb.append(requiredPropertiesNotSet.get(0));
-      for(int i = 1; i < requiredPropertiesNotSet.size(); i++) {
-        sb.append(", ").append(requiredPropertiesNotSet.get(i));
-      }
-      throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_RAW_SOURCE_PREVIEW, sb.toString());
-    }
+    validateParameters(previewParams, configDefinitions);
 
     //Attempt to load the previewer class from stage class loader
     Class previewerClass = null;
@@ -195,6 +183,26 @@ public class PreviewResource {
 
     BoundedInputStream bIn = new BoundedInputStream(new ReaderInputStream(reader), bytesToRead);
     return Response.ok().type(rawSourcePreviewer.getMime()).entity(bIn).build();
+  }
+
+  private void validateParameters(MultivaluedMap<String, String> previewParams,
+                                  List<ConfigDefinition> configDefinitions) throws PipelineRuntimeException {
+    //validate that all configuration required by config definitions are supplied through the URL
+    List<String> requiredPropertiesNotSet = new ArrayList<>();
+    for(ConfigDefinition confDef: configDefinitions) {
+      if(confDef.isRequired() && !previewParams.containsKey(confDef.getName())) {
+        requiredPropertiesNotSet.add(confDef.getName());
+      }
+    }
+
+    if(!requiredPropertiesNotSet.isEmpty()) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(requiredPropertiesNotSet.get(0));
+      for(int i = 1; i < requiredPropertiesNotSet.size(); i++) {
+        sb.append(", ").append(requiredPropertiesNotSet.get(i));
+      }
+      throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_RAW_SOURCE_PREVIEW, sb.toString());
+    }
   }
 
 }

@@ -21,9 +21,11 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.EvictingQueue;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.*;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
@@ -32,16 +34,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class ProductionPipelineRunner implements PipelineRunner {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunner.class);
+  private static final int CACHE_MAX_NUMBER_OF_ERROR_RECORDS_PER_STAGE = 100;
 
   private final MetricRegistry metrics;
   private final SourceOffsetTracker offsetTracker;
   private final SnapshotStore snapshotStore;
+  private final ErrorRecordStore errorRecordStore;
+
   private int batchSize;
   private String sourceOffset;
   private String newSourceOffset;
@@ -60,9 +67,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private volatile boolean captureNextBatch = false;
   /*indicates the batch size to be captured*/
   private volatile int snapshotBatchSize;
+  /*Cache last N error records per stage in memory*/
+  private Map<String, EvictingQueue<ErrorRecord>> stageToErrorRecordsMap;
 
-  public ProductionPipelineRunner(SnapshotStore snapshotStore, SourceOffsetTracker offsetTracker
-    , int batchSize, DeliveryGuarantee deliveryGuarantee, String pipelineName) {
+  public ProductionPipelineRunner(SnapshotStore snapshotStore, ErrorRecordStore errorRecordStore,
+                                  SourceOffsetTracker offsetTracker, int batchSize,
+                                  DeliveryGuarantee deliveryGuarantee, String pipelineName) {
     this.metrics = new MetricRegistry();
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
@@ -76,6 +86,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.deliveryGuarantee = deliveryGuarantee;
     this.snapshotStore = snapshotStore;
     this.pipelineName = pipelineName;
+    this.errorRecordStore = errorRecordStore;
+    this.stageToErrorRecordsMap = new HashMap<>();
   }
 
   @Override
@@ -175,10 +187,27 @@ public class ProductionPipelineRunner implements PipelineRunner {
       captureNextBatch = false;
       snapshotBatchSize = 0;
     }
+
+    //dump all error records to store
+    Map<String, ErrorRecords> errorRecords = pipeBatch.getErrorRecordSink().getErrorRecords();
+    errorRecordStore.storeErrorRecords(pipelineName, errorRecords);
+    //Retain X number of error records per stage
+    retainErrorRecordsInMemory(errorRecords);
   }
 
   public SourceOffsetTracker getOffSetTracker() {
     return this.offsetTracker;
   }
 
+  private void retainErrorRecordsInMemory(Map<String, ErrorRecords> errorRecords) {
+    for(Map.Entry<String, ErrorRecords> e : errorRecords.entrySet()) {
+      EvictingQueue<ErrorRecord> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
+      if(errorRecordList == null) {
+        //replace with a data structure with an upper cap
+        errorRecordList = EvictingQueue.create(CACHE_MAX_NUMBER_OF_ERROR_RECORDS_PER_STAGE);
+        stageToErrorRecordsMap.put(e.getKey(), errorRecordList);
+      }
+      errorRecordList.addAll(errorRecords.get(e.getKey()).getErrorRecords());
+    }
+  }
 }

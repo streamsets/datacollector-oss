@@ -36,6 +36,7 @@ public class PipelineRuntimeException extends PipelineException {
     INVALID_INSTANCE_STAGE("Invalid instance '{}'"),
     CANNOT_PREVIEW_STAGE_ON_SOURCE("Cannot do a preview stage run on a source, instance '{}'"),
     CANNOT_RUN("Cannot run, {}"),
+    CANNOT_RAW_SOURCE_PREVIEW_EMPTY_PIPELINE("Cannot do a raw source preview as the pipeline '{}' is empty"),
     CANNOT_RAW_SOURCE_PREVIEW("Cannot do a raw source preview on source as the following required parameters are not supplied : {}");
 
     private String msg;

@@ -129,4 +129,22 @@ public class PipelineManagerResource {
       @PathParam("name") String name) throws PipelineManagerException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getHistory(name)).build();
   }
+
+  @Path("/errorRecords/{name}")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getErrorRecords(
+      @PathParam("name") String name) throws PipelineManagerException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getErrorRecords(name)).build();
+  }
+
+  @Path("/errorRecords/{name}")
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response deleteErrorRecords(
+      @PathParam("name") String name) {
+    pipelineManager.deleteErrorRecords(name);
+    return Response.ok().build();
+  }
+
 }

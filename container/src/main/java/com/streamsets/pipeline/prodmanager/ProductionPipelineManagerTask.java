@@ -24,6 +24,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
+import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
@@ -70,6 +72,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private final PipelineStoreTask pipelineStore;
   private final StageLibraryTask stageLibrary;
   private final SnapshotStore snapshotStore;
+  private final ErrorRecordStore errorRecordStore;
 
   /*References the thread that is executing the pipeline currently */
   private ProductionPipelineRunnable pipelineRunnable;
@@ -91,7 +94,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     this.pipelineStore = pipelineStore;
     this.stageLibrary = stageLibrary;
     snapshotStore = new FileSnapshotStore(runtimeInfo);
-
+    errorRecordStore = new FileErrorRecordStore(runtimeInfo);
   }
 
 
@@ -182,6 +185,11 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return snapshotStore.getSnapshot(pipelineName);
   }
 
+  public InputStream getErrorRecords(String pipelineName) throws PipelineManagerException {
+    validatePipelineExistence(pipelineName);
+    return errorRecordStore.getErrorRecords(pipelineName);
+  }
+
   public List<PipelineState> getHistory(String pipelineName) throws PipelineManagerException {
     validatePipelineExistence(pipelineName);
     return stateTracker.getHistory(pipelineName);
@@ -191,6 +199,12 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     LOG.debug("Deleting snapshot");
     snapshotStore.deleteSnapshot(pipelineName);
     LOG.debug("Deleted snapshot");
+  }
+
+  public void deleteErrorRecords(String pipelineName) {
+    LOG.debug("Deleting error records");
+    errorRecordStore.deleteErrorRecords(pipelineName);
+    LOG.debug("Deleted error records");
   }
 
   public PipelineState startPipeline(String name, String rev) throws PipelineStoreException
@@ -252,8 +266,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
       }
     }
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, runtimeInfo);
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, offsetTracker, maxBatchSize
-        , deliveryGuarantee, name);
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, errorRecordStore, offsetTracker,
+        maxBatchSize, deliveryGuarantee, name);
     ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, pipelineConfiguration);
 
     return builder.build(runner);
