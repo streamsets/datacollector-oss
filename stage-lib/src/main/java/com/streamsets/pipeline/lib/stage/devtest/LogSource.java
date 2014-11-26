@@ -23,13 +23,13 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 
-@StageDef(name = "logSource", version="1.0.1", label="Log files Source")
+@StageDef(version="1.0.1", label="Log files Source")
 public class LogSource extends BaseSource {
 
-  @ConfigDef(name="logsDir", required = true, type = ConfigDef.Type.STRING, label = "Logs directory", defaultValue = "")
+  @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "Logs directory", defaultValue = "")
   public String logsDir;
 
-  @ConfigDef(name="rotationFreq", required = true, type = ConfigDef.Type.INTEGER, label = "Rotation frequency (in hr)",
+  @ConfigDef(required = true, type = ConfigDef.Type.INTEGER, label = "Rotation frequency (in hr)",
              defaultValue = "")
   public int rotationFrequency;
 

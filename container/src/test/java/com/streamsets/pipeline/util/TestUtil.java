@@ -20,10 +20,12 @@ package com.streamsets.pipeline.util;
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 
+import java.util.Iterator;
 import java.util.Random;
 import java.util.UUID;
 
@@ -113,13 +115,26 @@ public class TestUtil {
         return record;
       }
     });
-    MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
+    MockStages.setProcessorCapture(new SingleLaneProcessor() {
+      private Random random;
+
       @Override
-      protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-        record.setField("uuid", Field.create(UUID.randomUUID().toString()));
-        batchMaker.addRecord(record);
+      protected void init() throws StageException {
+        super.init();
+        random = new Random();
+      }
+
+      @Override
+      public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws
+          StageException {
+        Iterator<Record> it = batch.getRecords();
+        while (it.hasNext()) {
+          float action = random.nextFloat();
+          getContext().toError(it.next(), "Random error");
+        }
       }
     });
+
     MockStages.setTargetCapture(new BaseTarget() {
       @Override
       public void write(Batch batch) throws StageException {

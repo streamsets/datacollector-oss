@@ -23,13 +23,12 @@ import com.streamsets.pipeline.api.base.FieldSelectionType;
 
 import java.util.Map;
 
-@StageDef(name = "TwitterProcessor", description = "processes twitter feeds", label = "twitter_processor"
+@StageDef(description = "processes twitter feeds", label = "twitter_processor"
 , version = "1.0")
 public class TwitterProcessor extends BaseProcessor{
 
   @FieldModifier(type = FieldSelectionType.PROVIDED, valuesProvider = TypesProvider.class)
   @ConfigDef(
-    name = "regEx",
     defaultValue = "[a-z][A-Z][0-9]",
     label = "regEx",
     required = true,

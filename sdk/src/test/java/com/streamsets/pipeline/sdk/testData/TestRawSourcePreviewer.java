@@ -15,28 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.sdk.testData;
 
-package com.streamsets.pipeline.api;
+import com.streamsets.pipeline.api.RawSourcePreviewer;
 
+import java.io.Reader;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class TestRawSourcePreviewer {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface ConfigDef {
+  class FaultyRawSourcePreviewer implements RawSourcePreviewer {
+    @Override
+    public Reader preview(int maxLength) {
+      return null;
+    }
 
-  public enum Type { BOOLEAN, INTEGER, STRING, MODEL}
+    @Override
+    public String getMimeType() {
+      return null;
+    }
 
-  Type type();
+    @Override
+    public void setMimeType(String mimeType) {
 
-  String defaultValue() default "";
-
-  boolean required();
-
-  String label();
-
-  String description() default "";
+    }
+  }
 }

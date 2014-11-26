@@ -22,12 +22,12 @@ import com.streamsets.pipeline.api.base.BaseProcessor;
 
 import java.util.List;
 
-@StageDef(name="MaskingProcessor", version="1.0", label="masking_processor"
+@StageDef(version="1.0", label="masking_processor"
 , description = "This processor masks the fields selected by the user")
 public class MaskingProcessor extends BaseProcessor {
 
   @FieldSelector
-  @ConfigDef(name="filedsToMask", type= ConfigDef.Type.MODEL, defaultValue = "",
+  @ConfigDef(type= ConfigDef.Type.MODEL, defaultValue = "",
     required = true, label = "fields_to_mask", description = "Indicates the fields to be masked")
   public List<String> fieldsToMask;
 

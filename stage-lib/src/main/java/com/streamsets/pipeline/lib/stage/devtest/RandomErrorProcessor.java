@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import java.util.Iterator;
 import java.util.Random;
 
-@StageDef(name = "randomErrorProcessor", version = "1.0.0", label = "Random Error",
+@StageDef(version = "1.0.0", label = "Random Error",
           description = "Randomly do something with the record 60% to output, 20% to error, 20% eats up the record")
 public class RandomErrorProcessor extends SingleLaneProcessor {
   private Random random;

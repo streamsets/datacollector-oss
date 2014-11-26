@@ -24,18 +24,18 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 
 
-@StageDef(name = "hbaseTarget", version="1.0.0", label="Hbase Target", icon = "HbaseTarget.svg")
+@StageDef(version="1.0.0", label="Hbase Target", icon = "HbaseTarget.svg")
 public class HbaseTarget extends BaseTarget {
 
-  @ConfigDef(name="uri", required = true, type = ConfigDef.Type.STRING, label = "Hbase URI", defaultValue = "",
+  @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "Hbase URI", defaultValue = "",
             description = "Hbase server URI")
   public String uri;
 
-  @ConfigDef(name="security", required = true, type = ConfigDef.Type.BOOLEAN, label = "Security enabled",
+  @ConfigDef(required = true, type = ConfigDef.Type.BOOLEAN, label = "Security enabled",
              defaultValue = "false", description = "Kerberos enabled for Hbase")
   public boolean security;
 
-  @ConfigDef(name="table", required = true, type = ConfigDef.Type.STRING, label = "Table", defaultValue = "",
+  @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "Table", defaultValue = "",
              description = "Hbase table name")
   public String table;
 

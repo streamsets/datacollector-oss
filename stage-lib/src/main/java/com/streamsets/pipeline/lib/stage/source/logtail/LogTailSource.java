@@ -32,8 +32,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-@StageDef(name = "tailLog",
-          version="1.0.1",
+@StageDef(version="1.0.1",
           label="Tail log files")
 public class LogTailSource extends BaseSource {
 
@@ -41,42 +40,36 @@ public class LogTailSource extends BaseSource {
 
   private static final String OFFSET = "tailing";
 
-  @ConfigDef(name="logFile",
-             required = true,
+  @ConfigDef(required = true,
              type = ConfigDef.Type.STRING,
              label = "Log file")
   public String logFileName;
 
-  @ConfigDef(name="tailFromEnd",
-             required = false,
+  @ConfigDef(required = false,
              type = ConfigDef.Type.BOOLEAN,
              label = "Tail from end of log file",
              defaultValue = "true")
   public boolean tailFromEnd;
 
-  @ConfigDef(name="maxLinesPrefetch",
-             required = false,
+  @ConfigDef(required = false,
              type = ConfigDef.Type.INTEGER,
              label = "Maximum lines prefetch",
              defaultValue = "100")
   public int maxLinesPrefetch;
 
-  @ConfigDef(name="batchSize",
-             required = false,
+  @ConfigDef(required = false,
              type = ConfigDef.Type.INTEGER,
              label = "Batch size",
              defaultValue = "10")
   public int batchSize;
 
-  @ConfigDef(name="maxWaitTime",
-             required = false,
+  @ConfigDef(required = false,
              type = ConfigDef.Type.INTEGER,
              label = "Maximum wait time to fill up a batch",
              defaultValue = "5000")
   public int maxWaitTime;
 
-  @ConfigDef(name="logLineRecordFieldName",
-             required = false,
+  @ConfigDef(required = false,
              type = ConfigDef.Type.STRING,
              label = "Name of the field with the log line in the record",
              defaultValue = "logLine")

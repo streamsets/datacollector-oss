@@ -23,16 +23,16 @@ import com.streamsets.pipeline.api.base.FieldSelectionType;
 
 
 @RawSource(rawSourcePreviewer = ClipperSourcePreviewer.class, mimeType = "text/plain")
-@StageDef(name = "TextFileReader", version = "1.0", label = "Text file reader", description = "Produces lines from a text file")
+@StageDef(version = "1.0", label = "Text file reader", description = "Produces lines from a text file")
 public class TextFileReader extends BaseSource {
 
   @ConfigDef(defaultValue = "", label = "File Location", description = "Absolute file name of the file",
-      name = "fileName", required = true, type = ConfigDef.Type.STRING)
+      required = true, type = ConfigDef.Type.STRING)
   public String fileName;
 
   @DropDown(type = FieldSelectionType.PROVIDED, valuesProvider = ExtensionsProvider.class)
   @ConfigDef(defaultValue = "", label = "File Extenson", description = "Absolute file name of the file",
-      name = "fileExtension", required = true, type = ConfigDef.Type.MODEL)
+     required = true, type = ConfigDef.Type.MODEL)
   public String fileExtension;
 
   @Override

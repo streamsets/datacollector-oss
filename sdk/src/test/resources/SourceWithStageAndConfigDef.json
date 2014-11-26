@@ -2,7 +2,7 @@
   {
     "library" : null,
     "className" : "com.streamsets.pipeline.sdk.testData.SourceWithStageAndConfigDef",
-    "name" : "TwitterSource",
+    "name" : "com_streamsets_pipeline_sdk_testData_SourceWithStageAndConfigDef",
     "version" : "1.0",
     "label" : "twitter_source",
     "description" : "Produces twitter feeds",

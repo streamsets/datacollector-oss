@@ -24,6 +24,7 @@ import com.streamsets.pipeline.sdk.testharness.internal.BatchBuilder;
 import com.streamsets.pipeline.sdk.testharness.internal.BatchMakerImpl;
 import com.streamsets.pipeline.sdk.testharness.internal.ProcessorContextImpl;
 import com.streamsets.pipeline.sdk.testharness.internal.StageBuilder;
+import com.streamsets.pipeline.sdk.util.StageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,20 +48,32 @@ public class ProcessorRunner<T extends Processor> {
   /*******************************************************/
 
   public Map<String, List<Record>> run() throws StageException {
+    init();
+    process();
+    destroy();
+    return ((BatchMakerImpl)batchMaker).getLaneToRecordsMap();
+  }
+
+  public void init() throws StageException {
     try {
       processor.init(info, (Processor.Context)context);
     } catch (StageException e) {
       LOG.error("Failed to init Processor. Message : " + e.getMessage());
       throw e;
     }
+  }
+
+  public void process() throws StageException {
     try {
       processor.process(batchBuilder.build(), batchMaker);
     } catch (StageException e) {
       LOG.error("Failed to process. Message : " + e.getMessage());
       throw e;
     }
+  }
+
+  public void destroy() {
     processor.destroy();
-    return ((BatchMakerImpl)batchMaker).getLaneToRecordsMap();
   }
 
   /*******************************************************/
@@ -127,7 +140,8 @@ public class ProcessorRunner<T extends Processor> {
 
       //extract name and version of the stage from the stage def annotation
       StageDef stageDefAnnot = stage.getClass().getAnnotation(StageDef.class);
-      info = new StageInfo(stageDefAnnot.name(), stageDefAnnot.version(), instanceName);
+      info = new StageInfo(StageHelper.getStageNameFromClassName(stage.getClass().getName()), stageDefAnnot.version(),
+          instanceName);
       //mockInfoAndContextForStage and stub Source.Context
       context = new ProcessorContextImpl(instanceName, outputLanes);
 

@@ -24,10 +24,10 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 import java.util.Map;
 
-@StageDef(name = "fieldTypeConverter", version="1.0.0", label="Field Type Converter")
+@StageDef(version="1.0.0", label="Field Type Converter")
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
-  @ConfigDef(name = "fieldsToConvert", label = "Fields to convert", required = false,type = Type.MODEL, defaultValue="")
+  @ConfigDef(label = "Fields to convert", required = false,type = Type.MODEL, defaultValue="")
   @FieldModifier(type= FieldSelectionType.PROVIDED, valuesProvider = ConverterValuesProvider.class)
   public Map<String, String> fields;
 

@@ -30,13 +30,12 @@ import java.util.Map;
  */
 public class TwitterStages {
 
-  @StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
+  @StageDef(description = "Produces twitter feeds", label = "twitter_source"
     , version = "1.0")
   public class TwitterSource extends BaseSource{
 
     @FieldSelector
     @ConfigDef(
-      name = "username",
       defaultValue = "admin",
       label = "username",
       required = true,
@@ -46,7 +45,6 @@ public class TwitterStages {
     public List<String> username;
 
     @ConfigDef(
-      name = "password",
       defaultValue = "admin",
       label = "password",
       required = true,
@@ -72,13 +70,12 @@ public class TwitterStages {
     }
   }
 
-  @StageDef(name = "TwitterProcessor", description = "processes twitter feeds", label = "twitter_processor"
+  @StageDef(description = "processes twitter feeds", label = "twitter_processor"
     , version = "1.0")
   public class TwitterProcessor extends BaseProcessor {
 
     @FieldModifier(type = FieldSelectionType.PROVIDED, valuesProvider = TypesProvider.class)
     @ConfigDef(
-      name = "regEx",
       defaultValue = "[a-z][A-Z][0-9]",
       label = "regEx",
       required = true,
@@ -109,12 +106,11 @@ public class TwitterStages {
   }
 
 
-  @StageDef(name = "TwitterTarget", description = "Consumes twitter feeds", label = "twitter_target"
+  @StageDef(description = "Consumes twitter feeds", label = "twitter_target"
     , version = "1.3")
   public class TwitterTarget implements Target {
 
     @ConfigDef(
-      name = "username",
       defaultValue = "admin",
       label = "username",
       required = true,
@@ -124,7 +120,6 @@ public class TwitterStages {
     public String username;
 
     @ConfigDef(
-      name = "password",
       defaultValue = "admin",
       label = "password",
       required = true,

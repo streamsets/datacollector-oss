@@ -1,91 +1,129 @@
 [ {
-  "library" : null,
-  "className" : "com.streamsets.pipeline.sdk.testData.TwitterProcessor",
-  "name" : "TwitterProcessor",
-  "version" : "1.0",
-  "label" : "twitter_processor",
-  "description" : "processes twitter feeds",
-  "type" : "PROCESSOR",
-  "configDefinitions" : [ {
-    "name" : "regEx",
-    "type" : "MODEL",
-    "label" : "regEx",
-    "description" : "The regular expression used to parse the tweet",
-    "defaultValue" : "[a-z][A-Z][0-9]",
-    "required" : true,
-    "group" : "",
-    "fieldName" : "regEx",
-    "model" : {
-      "modelType" : "FIELD_MODIFIER",
-      "fieldSelectionType" : "PROVIDED",
-      "values" : null,
-      "labels" : null
-    }
-  } ],
-  "stageClass" : null
-}, {
-  "library" : null,
-  "className" : "com.streamsets.pipeline.sdk.testData.TwitterSource",
-  "name" : "TwitterSource",
-  "version" : "1.0",
-  "label" : "twitter_source",
-  "description" : "Produces twitter feeds",
-  "type" : "SOURCE",
-  "configDefinitions" : [ {
-    "name" : "username",
-    "type" : "MODEL",
-    "label" : "username",
-    "description" : "The user name of the twitter user",
-    "defaultValue" : "admin",
-    "required" : true,
-    "group" : "",
-    "fieldName" : "username",
-    "model" : {
-      "modelType" : "FIELD_SELECTOR",
-      "fieldSelectionType" : null,
-      "values" : null,
-      "labels" : null
-    }
+    "className" : "com.streamsets.pipeline.sdk.testData.TwitterSource",
+    "name" : "com_streamsets_pipeline_sdk_testData_TwitterSource",
+    "version" : "1.0",
+    "label" : "twitter_source",
+    "description" : "Produces twitter feeds",
+    "type" : "SOURCE",
+    "configDefinitions" : [ {
+                              "name" : "username",
+                              "type" : "MODEL",
+                              "label" : "username",
+                              "description" : "The user name of the twitter user",
+                              "required" : true,
+                              "group" : "",
+                              "fieldName" : "username",
+                              "model" : {
+                                "modelType" : "FIELD_SELECTOR",
+                                "fieldSelectionType" : null,
+                                "valuesProviderClass" : null,
+                                "values" : null,
+                                "labels" : null
+                              },
+                              "defaultValue" : "admin"
+                            }, {
+                              "name" : "password",
+                              "type" : "STRING",
+                              "label" : "password",
+                              "description" : "The password the twitter user",
+                              "required" : true,
+                              "group" : "",
+                              "fieldName" : "password",
+                              "model" : null,
+                              "defaultValue" : "admin"
+                            } ],
+    "onError" : "DROP_RECORD",
+    "rawSourceDefinition" : {
+      "rawSourcePreviewerClass" : "com.streamsets.pipeline.sdk.testData.TwitterRawSourcePreviewer",
+      "mimeType" : "*/*",
+      "configDefinitions" : [ {
+                                "name" : "username",
+                                "type" : "MODEL",
+                                "label" : "username",
+                                "description" : "The user name of the twitter user",
+                                "required" : true,
+                                "group" : "",
+                                "fieldName" : "username",
+                                "model" : {
+                                  "modelType" : "FIELD_SELECTOR",
+                                  "fieldSelectionType" : null,
+                                  "valuesProviderClass" : null,
+                                  "values" : null,
+                                  "labels" : null
+                                },
+                                "defaultValue" : "admin"
+                              }, {
+                                "name" : "password",
+                                "type" : "STRING",
+                                "label" : "password",
+                                "description" : "The password the twitter user",
+                                "required" : true,
+                                "group" : "",
+                                "fieldName" : "password",
+                                "model" : null,
+                                "defaultValue" : "admin"
+                              } ]
+    },
+    "icon" : "",
+    "library" : null
   }, {
-    "name" : "password",
-    "type" : "STRING",
-    "label" : "password",
-    "description" : "The password the twitter user",
-    "defaultValue" : "admin",
-    "required" : true,
-    "group" : "",
-    "fieldName" : "password",
-    "model" : null
-  } ],
-  "stageClass" : null
-}, {
-  "library" : null,
-  "className" : "com.streamsets.pipeline.sdk.testData.TwitterTarget",
-  "name" : "TwitterTarget",
-  "version" : "1.3",
-  "label" : "twitter_target",
-  "description" : "Consumes twitter feeds",
-  "type" : "TARGET",
-  "configDefinitions" : [ {
-    "name" : "username",
-    "type" : "STRING",
-    "label" : "username",
-    "description" : "The user name of the twitter user",
-    "defaultValue" : "admin",
-    "required" : true,
-    "group" : "",
-    "fieldName" : "username",
-    "model" : null
+    "className" : "com.streamsets.pipeline.sdk.testData.TwitterProcessor",
+    "name" : "com_streamsets_pipeline_sdk_testData_TwitterProcessor",
+    "version" : "1.0",
+    "label" : "twitter_processor",
+    "description" : "processes twitter feeds",
+    "type" : "PROCESSOR",
+    "configDefinitions" : [ {
+                              "name" : "regEx",
+                              "type" : "MODEL",
+                              "label" : "regEx",
+                              "description" : "The regular expression used to parse the tweet",
+                              "required" : true,
+                              "group" : "",
+                              "fieldName" : "regEx",
+                              "model" : {
+                                "modelType" : "FIELD_MODIFIER",
+                                "fieldSelectionType" : "PROVIDED",
+                                "valuesProviderClass" : "com.streamsets.pipeline.sdk.testData.TypesProvider",
+                                "values" : null,
+                                "labels" : null
+                              },
+                              "defaultValue" : "[a-z][A-Z][0-9]"
+                            } ],
+    "onError" : "DROP_RECORD",
+    "rawSourceDefinition" : null,
+    "icon" : "",
+    "library" : null
   }, {
-    "name" : "password",
-    "type" : "STRING",
-    "label" : "password",
-    "description" : "The password the twitter user",
-    "defaultValue" : "admin",
-    "required" : true,
-    "group" : "",
-    "fieldName" : "password",
-    "model" : null
-  } ],
-  "stageClass" : null
-} ]
+    "className" : "com.streamsets.pipeline.sdk.testData.TwitterTarget",
+    "name" : "com_streamsets_pipeline_sdk_testData_TwitterTarget",
+    "version" : "1.3",
+    "label" : "twitter_target",
+    "description" : "Consumes twitter feeds",
+    "type" : "TARGET",
+    "configDefinitions" : [ {
+                              "name" : "username",
+                              "type" : "STRING",
+                              "label" : "username",
+                              "description" : "The user name of the twitter user",
+                              "required" : true,
+                              "group" : "",
+                              "fieldName" : "username",
+                              "model" : null,
+                              "defaultValue" : "admin"
+                            }, {
+                              "name" : "password",
+                              "type" : "STRING",
+                              "label" : "password",
+                              "description" : "The password the twitter user",
+                              "required" : true,
+                              "group" : "",
+                              "fieldName" : "password",
+                              "model" : null,
+                              "defaultValue" : "admin"
+                            } ],
+    "onError" : "DROP_RECORD",
+    "rawSourceDefinition" : null,
+    "icon" : "",
+    "library" : null
+  } ]

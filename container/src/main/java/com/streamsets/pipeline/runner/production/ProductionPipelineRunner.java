@@ -22,7 +22,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.EvictingQueue;
-import com.google.common.collect.ImmutableCollection;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.StageType;
@@ -41,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class ProductionPipelineRunner implements PipelineRunner {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunner.class);
-  private static final int CACHE_MAX_NUMBER_OF_ERROR_RECORDS_PER_STAGE = 100;
+  private static final int MAX_ERROR_RECORDS_PER_STAGE = 100;
 
   private final MetricRegistry metrics;
   private final SourceOffsetTracker offsetTracker;
@@ -205,7 +204,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
       EvictingQueue<ErrorRecord> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
       if(errorRecordList == null) {
         //replace with a data structure with an upper cap
-        errorRecordList = EvictingQueue.create(CACHE_MAX_NUMBER_OF_ERROR_RECORDS_PER_STAGE);
+        errorRecordList = EvictingQueue.create(MAX_ERROR_RECORDS_PER_STAGE);
         stageToErrorRecordsMap.put(e.getKey(), errorRecordList);
       }
       errorRecordList.addAll(errorRecords.get(e.getKey()).getErrorRecords());
@@ -213,6 +212,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   public Collection<ErrorRecord> getErrorRecords(String instanceName) {
+    if(stageToErrorRecordsMap == null || stageToErrorRecordsMap.isEmpty()) {
+      return Collections.EMPTY_SET;
+    }
     return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName));
   }
 }

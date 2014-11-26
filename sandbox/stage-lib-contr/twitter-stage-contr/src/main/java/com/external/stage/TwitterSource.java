@@ -21,13 +21,12 @@ import com.streamsets.pipeline.api.base.BaseSource;
 
 import java.util.List;
 
-@StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
+@StageDef(description = "Produces twitter feeds", label = "twitter_source"
 , version = "1.0")
 public class TwitterSource extends BaseSource{
 
   @FieldSelector
   @ConfigDef(
-    name = "username",
     defaultValue = "admin",
     label = "username",
     required = true,
@@ -37,7 +36,6 @@ public class TwitterSource extends BaseSource{
   public List<String> username;
 
   @ConfigDef(
-    name = "password",
     defaultValue = "admin",
     label = "password",
     required = true,

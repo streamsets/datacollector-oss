@@ -23,6 +23,7 @@ import com.streamsets.pipeline.sdk.testharness.internal.StageInfo;
 import com.streamsets.pipeline.sdk.testharness.internal.BatchMakerImpl;
 import com.streamsets.pipeline.sdk.testharness.internal.SourceContextImpl;
 import com.streamsets.pipeline.sdk.testharness.internal.StageBuilder;
+import com.streamsets.pipeline.sdk.util.StageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,22 +48,32 @@ public class SourceRunner <T extends Source> {
   /*******************************************************/
 
   public Map<String, List<Record>> run() throws StageException {
+    init();
+    produce();
+    destroy();
+    return ((BatchMakerImpl)batchMaker).getLaneToRecordsMap();
+  }
+
+  public void init() throws StageException {
     try {
       source.init(info, (Source.Context)context);
     } catch (StageException e) {
       LOG.error("Failed to init Source. Message : " + e.getMessage());
       throw e;
     }
+  }
 
+  public void produce() throws StageException {
     try {
       source.produce(sourceOffset, maxBatchSize, batchMaker);
     } catch (StageException e) {
       LOG.error("Failed to produce. Message : " + e.getMessage());
       throw e;
     }
+  }
 
+  public void destroy() {
     source.destroy();
-    return ((BatchMakerImpl)batchMaker).getLaneToRecordsMap();
   }
 
   /*******************************************************/
@@ -129,7 +140,7 @@ public class SourceRunner <T extends Source> {
       //extract name and version of the stage from the stage def annotation
       StageDef stageDefAnnot = stage.getClass().getAnnotation(StageDef.class);
       info = new StageInfo(
-        stageDefAnnot.name(), stageDefAnnot.version(), instanceName);
+          StageHelper.getStageNameFromClassName(stage.getClass().getName()), stageDefAnnot.version(), instanceName);
       //mockInfoAndContextForStage and stub Source.Context
       context = new SourceContextImpl(instanceName, outputLanes);
 

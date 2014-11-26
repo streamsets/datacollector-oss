@@ -17,14 +17,17 @@
  */
 package com.streamsets.pipeline.restapi;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.State;
+import com.streamsets.pipeline.runner.ErrorRecord;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.SourceOffset;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
+import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.hk2.api.Factory;
@@ -38,10 +41,12 @@ import org.mockito.Mockito;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.io.*;
+import java.util.*;
 
 import static org.mockito.Matchers.anyString;
 
@@ -110,7 +115,7 @@ public class TestPipelineManagerResource extends JerseyTest {
 
   @Test
   public void testDeleteSnapshotAPI() throws IOException {
-    Response r = target("/v1/pipeline/snapshot").request().delete();
+    Response r = target("/v1/pipeline/snapshot/myPipeline").request().delete();
     Assert.assertNotNull(r);
 
   }
@@ -124,6 +129,31 @@ public class TestPipelineManagerResource extends JerseyTest {
 
     Assert.assertEquals(false, s.isExists());
     Assert.assertEquals(true, s.isSnapshotInProgress());
+  }
+
+  @Test
+  public void testGetMerticsAPI() {
+    Response r = target("/v1/pipeline/metrics").queryParam("get","status").request().get();
+    Assert.assertNotNull(r);
+
+    MetricRegistry m = r.readEntity(MetricRegistry.class);
+    Assert.assertNotNull(m);
+  }
+
+  //List<PipelineState> pipelineStates
+  @Test
+  public void testGetHistoryAPI() {
+    Response r = target("/v1/pipeline/history/myPipeline").request().get();
+    Assert.assertNotNull(r);
+    List<PipelineState> pipelineStates = r.readEntity(new GenericType<List<PipelineState>>() {});
+    Assert.assertEquals(3, pipelineStates.size());
+  }
+
+  @Test
+  public void testDeleteErrorRecordsAPI() throws IOException {
+    Response r = target("/v1/pipeline/errorRecords/myPipeline").request().delete();
+    Assert.assertNotNull(r);
+
   }
 
   @Override
@@ -191,6 +221,26 @@ public class TestPipelineManagerResource extends JerseyTest {
       }
 
       Mockito.when(pipelineManager.getSnapshotStatus()).thenReturn(new SnapshotStatus(false, true));
+
+      Mockito.when(pipelineManager.getMetrics()).thenReturn(new MetricRegistry());
+
+      List<PipelineState> states = new ArrayList<>();
+      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis()));
+      states.add(new PipelineState(PIPELINE_NAME, "1", State.RUNNING, "", System.currentTimeMillis()));
+      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis()));
+      try {
+        Mockito.when(pipelineManager.getHistory(PIPELINE_NAME)).thenReturn(states);
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      Mockito.doNothing().when(pipelineManager).deleteSnapshot(PIPELINE_NAME);
+      try {
+        Mockito.doNothing().when(pipelineManager).deleteErrorRecords(PIPELINE_NAME, "1", null);
+      } catch (PipelineStoreException e) {
+        e.printStackTrace();
+      }
+
 
       return pipelineManager;
     }

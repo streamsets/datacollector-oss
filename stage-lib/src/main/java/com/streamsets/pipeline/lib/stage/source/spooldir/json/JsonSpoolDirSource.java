@@ -37,15 +37,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@StageDef(name = "jsonSpoolDirectory",
-    version = "1.0.0",
+@StageDef(version = "1.0.0",
     label = "JSON files spool directory",
     description = "Consumes JSON files from a spool directory")
 public class JsonSpoolDirSource extends AbstractSpoolDirSource {
   private final static Logger LOG = LoggerFactory.getLogger(JsonSpoolDirSource.class);
 
-  @ConfigDef(name="jsonContent",
-      required = true,
+  @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       label = "JSON Content",
       description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects, " +
@@ -53,16 +51,14 @@ public class JsonSpoolDirSource extends AbstractSpoolDirSource {
       defaultValue = "ARRAY_OBJECTS")
   public String jsonContent;
 
-  @ConfigDef(name="jsonObjectType",
-      required = true,
+  @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       label = "JSON Object Type",
       description = "Indicates the type of the JSON objects, MAP or ARRAY",
       defaultValue = "MAP")
   public String jsonObjectType;
 
-  @ConfigDef(name="maxJsonObjectLen",
-      required = true,
+  @ConfigDef(required = true,
       type = ConfigDef.Type.INTEGER,
       label = "Maximum JSON Object Length",
       description = "The maximum length for a JSON Object being converted to a record, if greater the full JSON " +

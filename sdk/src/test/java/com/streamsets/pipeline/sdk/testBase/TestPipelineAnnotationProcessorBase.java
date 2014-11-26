@@ -104,7 +104,7 @@ public abstract class TestPipelineAnnotationProcessorBase {
    * @param diagnostics the diagnostics coolected by the compiler after compiling the classes supplied by the
    *                    {@link #getClassesToProcess()} method
    * @param stdoutS additional output by the compiler
-   * @param result the result of annotatio processing on classes provided by {@link #getClassesToProcess()} method
+   * @param result the result of annotation processing on classes provided by {@link #getClassesToProcess()} method
    */
   protected abstract void test(List<Diagnostic<? extends JavaFileObject>> diagnostics
     , String stdoutS, Boolean result);

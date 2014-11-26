@@ -24,10 +24,10 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 import java.util.List;
 
-@StageDef(name = "fieldRemover", version="1.0.0", label="Field Remover")
+@StageDef( version="1.0.0", label="Field Remover")
 public class FieldRemoverProcessor extends SingleLaneRecordProcessor {
 
-  @ConfigDef(name = "fieldsToRemove", label = "Fields to remove", required = true,type = Type.MODEL, defaultValue="")
+  @ConfigDef(label = "Fields to remove", required = true,type = Type.MODEL, defaultValue="")
   @FieldSelector
   public List<String> fields;
 

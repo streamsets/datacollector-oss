@@ -25,6 +25,7 @@ import com.streamsets.pipeline.sdk.testharness.internal.StageInfo;
 import com.streamsets.pipeline.sdk.testharness.internal.BatchBuilder;
 import com.streamsets.pipeline.sdk.testharness.internal.StageBuilder;
 import com.streamsets.pipeline.sdk.testharness.internal.TargetContextImpl;
+import com.streamsets.pipeline.sdk.util.StageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,18 +43,30 @@ public class TargetRunner <T extends Target> {
   /*******************************************************/
 
   public void run() throws StageException {
+    init();
+    write();
+    destroy();
+  }
+
+  public void init() throws StageException {
     try {
       target.init(info, (Target.Context) context);
     } catch (StageException e) {
       LOG.error("Failed to init Processor. Message : " + e.getMessage());
       throw e;
     }
+  }
+
+  public void write() throws StageException {
     try {
       target.write(batchBuilder.build());
     } catch (StageException e) {
       LOG.error("Failed to process. Message : " + e.getMessage());
       throw e;
     }
+  }
+
+  public void destroy() {
     target.destroy();
   }
 
@@ -113,8 +126,8 @@ public class TargetRunner <T extends Target> {
 
       //extract name and version of the stage from the stage def annotation
       StageDef stageDefAnnot = stage.getClass().getAnnotation(StageDef.class);
-      info = new StageInfo(
-        stageDefAnnot.name(), stageDefAnnot.version(), instanceName);
+      info = new StageInfo(StageHelper.getStageNameFromClassName(stage.getClass().getName()), stageDefAnnot.version(),
+          instanceName);
       //mockInfoAndContextForStage and stub Source.Context
       context = new TargetContextImpl(instanceName);
 

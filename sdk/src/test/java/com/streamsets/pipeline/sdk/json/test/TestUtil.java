@@ -19,6 +19,7 @@ package com.streamsets.pipeline.sdk.json.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import org.junit.Assert;
 
@@ -94,27 +95,48 @@ public class TestUtil {
       Assert.assertEquals(expected.getConfigDefinitions().size(),
         actual.getConfigDefinitions().size());
       //compare the config definitions
-      for(int j = 0; i < expected.getConfigDefinitions().size(); i++) {
-        ConfigDefinition e = expected.getConfigDefinitions().get(j);
-        ConfigDefinition a = actual.getConfigDefinitions().get(j);
+      deepCompareConfigDefinitions(expected.getConfigDefinitions(), actual.getConfigDefinitions());
 
-        Assert.assertEquals(e.getName(), a.getName());
-        Assert.assertEquals(e.getDefaultValue(), a.getDefaultValue());
-        Assert.assertEquals(e.getDescription(), a.getDescription());
-        Assert.assertEquals(e.getLabel(), a.getLabel());
-        Assert.assertEquals(e.getType(), a.getType());
-        Assert.assertEquals(e.getFieldName(), a.getFieldName());
-        Assert.assertEquals(e.isRequired(), a.isRequired());
-        Assert.assertEquals(e.getGroup(), a.getGroup());
+      //if the stage is Twitter source, then compare the raw source definition
+      if(expected.getRawSourceDefinition() != null) {
+        if(actual.getRawSourceDefinition() == null) {
+          Assert.fail("A Raw source definition is expected for stage " + expected.getName() + ", but not found.");
+        } else {
+          //found raw source definition, compare
+          RawSourceDefinition expectedRSD = expected.getRawSourceDefinition();
+          RawSourceDefinition actualRSD = actual.getRawSourceDefinition();
 
-        if(e.getModel() != null) {
-          Assert.assertNotNull(a.getModel());
-          Assert.assertEquals(e.getModel().getFieldSelectionType(), a.getModel().getFieldSelectionType());
-          Assert.assertEquals(e.getModel().getLabels(), a.getModel().getLabels());
-          Assert.assertEquals(e.getModel().getModelType(), a.getModel().getModelType());
-          Assert.assertEquals(e.getModel().getValues(), a.getModel().getValues());
+          Assert.assertEquals(expectedRSD.getMimeType(), actualRSD.getMimeType());
+          Assert.assertEquals(expectedRSD.getRawSourcePreviewerClass(), actualRSD.getRawSourcePreviewerClass());
+          Assert.assertEquals(expectedRSD.getConfigDefinitions().size(), actualRSD.getConfigDefinitions().size());
+          deepCompareConfigDefinitions(expectedRSD.getConfigDefinitions(), actualRSD.getConfigDefinitions());
         }
+      }
 
+    }
+  }
+
+  private static void deepCompareConfigDefinitions(List<ConfigDefinition> expectedCD,
+                                                   List<ConfigDefinition> actualCD) {
+    for(int j = 0; j < expectedCD.size(); j++) {
+      ConfigDefinition e = expectedCD.get(j);
+      ConfigDefinition a = actualCD.get(j);
+
+      Assert.assertEquals(e.getName(), a.getName());
+      Assert.assertEquals(e.getDefaultValue(), a.getDefaultValue());
+      Assert.assertEquals(e.getDescription(), a.getDescription());
+      Assert.assertEquals(e.getLabel(), a.getLabel());
+      Assert.assertEquals(e.getType(), a.getType());
+      Assert.assertEquals(e.getFieldName(), a.getFieldName());
+      Assert.assertEquals(e.isRequired(), a.isRequired());
+      Assert.assertEquals(e.getGroup(), a.getGroup());
+
+      if(e.getModel() != null) {
+        Assert.assertNotNull(a.getModel());
+        Assert.assertEquals(e.getModel().getFieldSelectionType(), a.getModel().getFieldSelectionType());
+        Assert.assertEquals(e.getModel().getLabels(), a.getModel().getLabels());
+        Assert.assertEquals(e.getModel().getModelType(), a.getModel().getModelType());
+        Assert.assertEquals(e.getModel().getValues(), a.getModel().getValues());
       }
 
     }

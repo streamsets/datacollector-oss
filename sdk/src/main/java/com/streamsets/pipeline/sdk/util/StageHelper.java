@@ -15,28 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.sdk.util;
 
-package com.streamsets.pipeline.api;
+public class StageHelper {
 
+  public static String getStageNameFromClassName(String qualifiedClassName) {
+    return qualifiedClassName.replace(".", "_");
+  }
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface ConfigDef {
-
-  public enum Type { BOOLEAN, INTEGER, STRING, MODEL}
-
-  Type type();
-
-  String defaultValue() default "";
-
-  boolean required();
-
-  String label();
-
-  String description() default "";
 }

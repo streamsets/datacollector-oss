@@ -22,7 +22,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 
-@StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
+@StageDef(description = "Produces twitter feeds", label = "twitter_source"
 , version = "1.0")
 public class SourceWithOnlyStageDef extends BaseSource{
 

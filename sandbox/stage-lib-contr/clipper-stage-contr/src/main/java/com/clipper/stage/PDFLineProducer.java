@@ -29,13 +29,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @RawSource(rawSourcePreviewer = ClipperSourcePreviewer.class)
-@StageDef(name = "PdfLineProducer", version = "1.0", label = "Clipper Travel Log Producer", description = "Produces lines from a PDF file")
+@StageDef(version = "1.0", label = "Clipper Travel Log Producer", description = "Produces lines from a PDF file")
 public class PDFLineProducer extends BaseSource {
 
   private static final String MODULE = "PdfLineProducer";
 
   @ConfigDef(defaultValue = "", label = "PDF Location", description = "Absolute file name of the PDF",
-    name = "pdfLocation", required = true, type = ConfigDef.Type.STRING)
+    required = true, type = ConfigDef.Type.STRING)
   public String pdfLocation;
 
   private String[] lanes;

@@ -15,44 +15,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.clipper.stage;
+package com.streamsets.pipeline.sdk.testData;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-public class ClipperSourcePreviewer implements RawSourcePreviewer {
+public class TwitterRawSourcePreviewer implements RawSourcePreviewer{
 
-  private String mimeType;
+  @FieldSelector
+  @ConfigDef(
+      defaultValue = "admin",
+      label = "username",
+      required = true,
+      description = "The user name of the twitter user",
+      type = ConfigDef.Type.MODEL
+  )
+  public List<String> username;
 
-  @ConfigDef(defaultValue = "", description = "The name of the file to preview", label = "File Name",
-    required = true, type = ConfigDef.Type.STRING)
-  public String fileName;
+  @ConfigDef(
+      defaultValue = "admin",
+      label = "password",
+      required = true,
+      description = "The password the twitter user",
+      type = ConfigDef.Type.STRING
+  )
+  public String password;
 
   @Override
   public Reader preview(int maxLength) {
-    Reader reader = null;
-    try {
-      //TODO: make sure this field in injected at runtime
-      reader = new FileReader(fileName);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    return reader;
+    return null;
   }
 
   @Override
   public String getMimeType() {
-    return mimeType;
+    return null;
   }
 
   @Override
   public void setMimeType(String mimeType) {
-    this.mimeType = mimeType;
+
   }
 }

@@ -56,7 +56,7 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     Assert.assertTrue(compilerOutput.isEmpty());
 
     //The following error messages are expected
-    Set<String> expectedSet = new HashSet<String>();
+    Set<String> expectedSet = new HashSet<>();
     expectedSet.add("The field FaultySource.username has \"ConfigDef\" annotation and is declared final. Configuration fields must not be declared final.");
     expectedSet.add("The field FaultySource.password has \"ConfigDef\" annotation and is declared static. Configuration fields must not be declared final.");
     expectedSet.add("The field FaultySource.streetAddress2 has \"ConfigDef\" annotation but is not declared public. Configuration fields must be declared public.");
@@ -64,14 +64,19 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The type of the field FaultySource.zip is expected to be String.");
     expectedSet.add("The type of the field FaultySource.state is expected to be List<String>.");
     expectedSet.add("The type of the field FaultySource.streetAddress is expected to be Map<String, String>.");
-    expectedSet.add("The field FaultySource.ste is annotated with both 'FieldSelector' and 'FieldModifier' annotations. Only one of those annotation is expected.");
+    expectedSet.add("The type of field FaultySource.ste is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' or 'DropDown' annotation is expected.");
     expectedSet.add("Stage com.streamsets.pipeline.sdk.testData.FaultySource neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, Processor, Target interface.");
     expectedSet.add("The Stage FaultySource has constructor with arguments but no default constructor.");
+    expectedSet.add("Annotation RawSource is applied on stage com.streamsets.pipeline.sdk.testData.FaultySource which is not a \"Source\".");
+    expectedSet.add("RawSourcePreviewer com.streamsets.pipeline.sdk.testData.TestRawSourcePreviewer.FaultyRawSourcePreviewer is an inner class. Inner class RawSourcePreviewer implementations are not supported.");
+    expectedSet.add("The type of the field FaultySource.floor is expected to be String.");
+    expectedSet.add("The type of field FaultySource.floor is not declared as \"MODEL\". 'FieldSelector' or 'FieldModifier' or 'DropDown' annotation is not expected, but is present.");
+    expectedSet.add("The type of the field FaultySource.ste is expected to be Map<String, String>.");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());
     }
-    Assert.assertEquals(10, diagnostics.size());
+    Assert.assertEquals(expectedSet.size(), diagnostics.size());
     for(Diagnostic d : diagnostics) {
       Assert.assertTrue(expectedSet.contains(d.getMessage(Locale.ENGLISH)));
     }

@@ -36,23 +36,20 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-@StageDef(name = "logSpoolDirectory",
-    version = "1.0.0",
+@StageDef(version = "1.0.0",
     label = "Log spool directory",
     description = "Consumes log files from a spool directory")
 public class LogSpoolDirSource extends AbstractSpoolDirSource {
   private final static Logger LOG = LoggerFactory.getLogger(LogSpoolDirSource.class);
 
-  @ConfigDef(name="logLineFieldName",
-      required = true,
+  @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       label = "Log Line Field Name",
       description = "The name of the record field to hold the log line",
       defaultValue = "line")
   public String logLineFieldName;
 
-  @ConfigDef(name="maxLogLineLength",
-      required = true,
+  @ConfigDef(required = true,
       type = ConfigDef.Type.INTEGER,
       label = "Maximum Log Line Length",
       description = "The maximum length for log lines, if a line exceeds that length, it will be trimmed",

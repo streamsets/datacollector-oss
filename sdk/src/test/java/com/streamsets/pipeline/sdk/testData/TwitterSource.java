@@ -14,20 +14,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package com.streamsets.pipeline.sdk.testData;
+ */
+package com.streamsets.pipeline.sdk.testData;
 
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
 
 import java.util.List;
 
-@StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
+@RawSource(rawSourcePreviewer = TwitterRawSourcePreviewer.class)
+@StageDef(description = "Produces twitter feeds", label = "twitter_source"
 , version = "1.0")
 public class TwitterSource extends BaseSource{
 
   @FieldSelector
   @ConfigDef(
-    name = "username",
     defaultValue = "admin",
     label = "username",
     required = true,
@@ -37,7 +38,6 @@ public class TwitterSource extends BaseSource{
   public List<String> username;
 
   @ConfigDef(
-    name = "password",
     defaultValue = "admin",
     label = "password",
     required = true,

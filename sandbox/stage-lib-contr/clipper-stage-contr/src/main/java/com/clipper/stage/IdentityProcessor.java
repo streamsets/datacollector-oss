@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 
 import java.util.Iterator;
 
-@StageDef(name = "identityProcessor", version = "1.0.0", label = "Identity",
+@StageDef(version = "1.0.0", label = "Identity",
           description = "It echoes every record it receives preserving the lanes")
 public class IdentityProcessor extends SingleLaneProcessor {
 

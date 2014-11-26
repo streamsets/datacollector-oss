@@ -26,7 +26,6 @@ import java.util.Set;
 
 @StageDef(description = "FareCalculatorProcessor inspects the transaction log, extracts the fares and adds new fields to the record - one for the fare and cone for cumulative sum",
   label = "Clipper Fare Calculator",
-  name = "FareCalculatorProcessor",
   version = "1.0")
 public class FareCalculatorProcessor extends BaseProcessor{
 

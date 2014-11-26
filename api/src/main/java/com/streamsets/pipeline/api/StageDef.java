@@ -30,8 +30,6 @@ public @interface StageDef {
 
   public enum OnError {DROP_RECORD, DROP_BATCH}
 
-  String name();
-
   String version();
 
   String label();

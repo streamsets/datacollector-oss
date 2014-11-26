@@ -23,12 +23,11 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 
-@StageDef(name = "FacebookSource", description = "Produces facebook feeds", label = "facebook_source"
+@StageDef(description = "Produces facebook feeds", label = "facebook_source"
 , version = "1.0")
 public class FacebookSource extends BaseSource{
 
   @ConfigDef(
-    name = "username",
     defaultValue = "admin",
     label = "username",
     required = true,
@@ -38,7 +37,6 @@ public class FacebookSource extends BaseSource{
   public String username;
 
   @ConfigDef(
-    name = "password",
     defaultValue = "admin",
     label = "password",
     required = true,

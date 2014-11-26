@@ -19,12 +19,11 @@ package com.external.stage;
 
 import com.streamsets.pipeline.api.*;
 
-@StageDef(name = "HdfsTarget", description = "Consumes hdfs feeds", label = "hdfs_target"
+@StageDef(description = "Consumes hdfs feeds", label = "hdfs_target"
 , version = "1.3")
 public class HdfsTarget implements Target {
 
   @ConfigDef(
-    name = "username",
     defaultValue = "admin",
     label = "username",
     required = true,
@@ -34,7 +33,6 @@ public class HdfsTarget implements Target {
   public String username;
 
   @ConfigDef(
-    name = "password",
     defaultValue = "admin",
     label = "password",
     required = true,

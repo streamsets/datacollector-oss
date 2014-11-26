@@ -23,12 +23,12 @@ import com.streamsets.pipeline.api.base.FieldSelectionType;
 
 import java.util.Map;
 
-@StageDef(name="TypeConversionProcessor", version="1.0", label="tc_processor"
+@StageDef(version="1.0", label="tc_processor"
   , description = "This processor lets the user select the types for the fields")
 public class TypeConversionProcessor extends BaseProcessor {
 
   @FieldModifier(type = FieldSelectionType.PROVIDED, valuesProvider =TypesProvider.class)
-  @ConfigDef(name="fieldToTypeMap", type= ConfigDef.Type.MODEL, defaultValue = "",
+  @ConfigDef(type= ConfigDef.Type.MODEL, defaultValue = "",
     required = true, label = "field_to_type_map", description = "Contains the field and its target type as chosen by the user")
   public Map<String, String> fieldToTypeMap;
 

@@ -33,52 +33,45 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
 
   private static final String OFFSET_SEPARATOR = "::";
 
-  @ConfigDef(name="spoolDir",
-      required = true,
+  @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       label = "Spool Directory")
   public String spoolDir;
 
-  @ConfigDef(name="filePattern",
-      required = true,
+  @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       label = "File Pattern",
       description = "File pattern to look for, files must be lexicographically monotonic increasing")
   public String filePattern;
 
-  @ConfigDef(name="maxSpoolFiles",
-      required = true,
+  @ConfigDef(required = true,
       type = ConfigDef.Type.INTEGER,
       label = "Max Files in Spool Directory",
       description =
           "Maximum number of files in spool directory waiting to be processed, if exceeded teh source goes into error")
   public int maxSpoolFiles;
 
-  @ConfigDef(name="initialFile",
-      required = false,
+  @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
       label = "First File to Process",
       description = "If set, all files lexicographically older than this will be ignored")
   public String initialFileToProcess;
 
-  @ConfigDef(name="postProcessing",
-      required = true,
+  @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       label = "File Post Processing Handling",
       description = "Action to take after the file has been processed: NONE (default), DELETE, ARCHIVE",
       defaultValue = "NONE")
   public String postProcessing;
 
-  @ConfigDef(name="archiveDir",
-      required = false,
+  @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
       label = "Archive Directory",
       description = "Directory to archive processed files after processing. " +
                     "Only used if post processing is set to ARCHIVE")
   public String archiveDir;
 
-  @ConfigDef(name="archiveRetention",
-      required = false,
+  @ConfigDef(required = false,
       type = ConfigDef.Type.INTEGER,
       label = "Archive Retention Time (minutes)",
       description = "How long archived files should be kept before deleting, a value of zero means forever. " +
@@ -86,8 +79,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
       defaultValue = "0")
   public long retentionTimeMins;
 
-  @ConfigDef(name="poolingTimeOut",
-      required = false,
+  @ConfigDef(required = false,
       type = ConfigDef.Type.INTEGER,
       label = "File Pooling Timeout (secs)",
       description = "Timeout when waiting for a new file, when a timeout happens, an empty batch will be run",

@@ -28,10 +28,10 @@ import com.streamsets.pipeline.api.base.BaseSource;
 
 import java.util.Random;
 
-@StageDef(name = "randomSource", version="1.0.0", label="Random Record Source")
+@StageDef(version="1.0.0", label="Random Record Source")
 public class RandomSource extends BaseSource {
 
-  @ConfigDef(name="recordFields", required = true, type = ConfigDef.Type.STRING,
+  @ConfigDef(required = true, type = ConfigDef.Type.STRING,
              label = "Record fields to generate, comma separated")
   public String fields;
 

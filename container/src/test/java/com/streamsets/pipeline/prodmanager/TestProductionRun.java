@@ -17,9 +17,11 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.runner.ErrorRecord;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
@@ -39,6 +41,7 @@ import org.junit.*;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class TestProductionRun {
@@ -165,7 +168,8 @@ public class TestProductionRun {
   }
 
   @Test(expected = PipelineManagerException.class)
-  public void testGetHistoryNonExistingPipeline() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException, InterruptedException {
+  public void testGetHistoryNonExistingPipeline() throws PipelineStoreException, PipelineManagerException,
+      PipelineRuntimeException, StageException, InterruptedException {
     manager.startPipeline(MY_PIPELINE, "0");
     manager.stopPipeline();
     while(!manager.getPipelineState().getState().equals(State.STOPPED)) {
@@ -175,7 +179,8 @@ public class TestProductionRun {
   }
 
   @Test
-  public void testGetHistoryPipelineNeverRun() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException, InterruptedException {
+  public void testGetHistoryPipelineNeverRun() throws PipelineStoreException, PipelineManagerException,
+      PipelineRuntimeException, StageException, InterruptedException {
     List<PipelineState> pipelineStates = manager.getHistory(MY_PIPELINE);
     Assert.assertEquals(0, pipelineStates.size());
 
@@ -199,6 +204,37 @@ public class TestProductionRun {
     Assert.assertEquals(MY_PIPELINE, pipelineState.getName());
     Assert.assertEquals(State.RUNNING, pipelineState.getState());
   }
+
+  @Test
+  public void testGetErrorRecords() throws PipelineStoreException, StageException, PipelineManagerException,
+      PipelineRuntimeException, InterruptedException {
+    manager.startPipeline(MY_PIPELINE, "0");
+    Thread.sleep(100);
+    Collection<ErrorRecord> errorRecords = manager.getErrorRecords("p");
+    Assert.assertNotNull(errorRecords);
+    Assert.assertEquals(false, errorRecords.isEmpty());
+
+    manager.stopPipeline();
+
+    InputStream erStream = manager.getErrorRecords(MY_PIPELINE, "0", "p");
+    //TODO: read the input error records into String format and Use Record de-serializer when ready
+    Assert.assertNotNull(erStream);
+    //delete the error record file
+    manager.deleteErrorRecords(MY_PIPELINE, "0", "p");
+
+    erStream = manager.getErrorRecords(MY_PIPELINE, "0", "p");
+    Assert.assertNull(erStream);
+  }
+
+  @Test
+  public void testGetMetrics() throws PipelineStoreException, StageException, PipelineManagerException, PipelineRuntimeException, InterruptedException {
+    manager.startPipeline(MY_PIPELINE, "0");
+    Thread.sleep(50);
+    MetricRegistry metrics = manager.getMetrics();
+    Assert.assertNotNull(metrics);
+
+  }
+
 
   //TODO:
   //Add tests which create multiple pipelines and runs one of them. Query snapshot, status, history etc on

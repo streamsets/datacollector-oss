@@ -19,12 +19,11 @@ package com.external.stage;
 
 import com.streamsets.pipeline.api.*;
 
-@StageDef(name = "TwitterTarget", description = "Consumes twitter feeds", label = "twitter_target"
+@StageDef(description = "Consumes twitter feeds", label = "twitter_target"
 , version = "1.3")
 public class TwitterTarget implements Target {
 
   @ConfigDef(
-    name = "username",
     defaultValue = "admin",
     label = "username",
     required = true,
@@ -34,7 +33,6 @@ public class TwitterTarget implements Target {
   public String username;
 
   @ConfigDef(
-    name = "password",
     defaultValue = "admin",
     label = "password",
     required = true,

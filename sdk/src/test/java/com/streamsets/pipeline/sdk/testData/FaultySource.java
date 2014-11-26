@@ -17,12 +17,10 @@
  */
 package com.streamsets.pipeline.sdk.testData;
 
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldModifier;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.FieldSelectionType;
 
+import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
@@ -39,13 +37,15 @@ import java.util.Map;
  * 9. Configuration field marked with FieldModifier annotation must be of type Map<String, String>
  * 10. Both FieldSelector and FieldModifier annotations are present
  */
-@StageDef(name = "TwitterSource", description = "Produces twitter feeds", label = "twitter_source"
+//13. Implementation of RawSourcePreviewer must be a top level class
+//14. Annotation RawSource is FaultySource which is not a Source
+@RawSource(rawSourcePreviewer = TestRawSourcePreviewer.FaultyRawSourcePreviewer.class)
+@StageDef(description = "Produces twitter feeds", label = "twitter_source"
   , version = "1.0")
 public class FaultySource {
 
   //1.Faulty config should not be final
   @ConfigDef(
-    name = "username",
     defaultValue = "admin",
     label = "username",
     required = true,
@@ -56,7 +56,6 @@ public class FaultySource {
 
   //2.faulty string, should not be static
   @ConfigDef(
-    name = "password",
     defaultValue = "admin",
     label = "password",
     required = true,
@@ -67,7 +66,6 @@ public class FaultySource {
 
   //3.Faulty field, should be public
   @ConfigDef(
-    name = "streetAddress2",
     defaultValue = "",
     label = "streetAddress2",
     required = true,
@@ -78,7 +76,6 @@ public class FaultySource {
 
   //4. Expected either FieldSelector or FieldModifier annotation
   @ConfigDef(
-    name = "company",
     defaultValue = "ss",
     label = "company",
     required = true,
@@ -97,7 +94,6 @@ public class FaultySource {
 
   //7. The type is expected to be string but is int
   @ConfigDef(
-    name = "zip",
     defaultValue = "94040",
     label = "zip",
     required = true,
@@ -108,7 +104,6 @@ public class FaultySource {
   //8. Field selector should be modeled as List<String>
   @FieldSelector
   @ConfigDef(
-    name = "state",
     defaultValue = "CA",
     label = "state",
     required = true,
@@ -120,7 +115,6 @@ public class FaultySource {
   //9. Field modifier should be modeled as Map<String, String>
   @FieldModifier(type = FieldSelectionType.PROVIDED, valuesProvider = TypesProvider.class)
   @ConfigDef(
-    name = "streetAddress",
     defaultValue = "180 Sansome",
     label = "street_address",
     required = true,
@@ -132,12 +126,22 @@ public class FaultySource {
   @FieldSelector
   @FieldModifier(type = FieldSelectionType.PROVIDED, valuesProvider = TypesProvider.class)
   @ConfigDef(
-    name = "ste",
     defaultValue = "400",
     label = "ste",
     required = true,
     description = "The domain of the twitter user",
     type = ConfigDef.Type.MODEL)
   public List<String> ste;
+
+  //11. Drop down should be modeled as 'java.lang.String'
+  //12. The ConfigDef.Type for dropdown should be 'MODEL'
+  @DropDown(type = FieldSelectionType.PROVIDED, valuesProvider = TypesProvider.class)
+  @ConfigDef(
+      defaultValue = "4",
+      label = "floor",
+      required = true,
+      description = "The domain of the twitter user",
+      type = ConfigDef.Type.STRING)
+  public List<String> floor;
 
 }
