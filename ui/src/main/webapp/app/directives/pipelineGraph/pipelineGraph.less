@@ -10,9 +10,11 @@ pipeline-graph {
     pointer-events: none;
   }
 
-  .node-warning.glyphicon {
+  .node-warning {
     position: static;
     padding: @defaultPadding/5;
+    font-size: 22px;
+    color: @brand-danger;
   }
 
   marker{
@@ -50,6 +52,10 @@ pipeline-graph {
         image {
           fill: #ffffff;
         }
+
+        .node-warning {
+          color: #ffffff;
+        }
       }
     }
 
@@ -71,40 +77,14 @@ pipeline-graph {
         fill: #ffffff;
       }
 
+      .node-warning {
+        color: #ffffff;
+      }
+
       &:hover {
         rect {
           fill: @default-pipeline-graph-selection-color;
           stroke: @default-pipeline-graph-selection-color;
-        }
-      }
-    }
-
-    &.error {
-      rect {
-        fill: @default-pipeline-graph-error-color;
-        stroke: @default-pipeline-graph-error-color;
-      }
-
-      circle {
-        stroke: @default-pipeline-graph-error-color;
-      }
-
-      text {
-        fill: #ffffff;
-      }
-
-      image {
-        fill: #ffffff;
-      }
-
-      &:hover, &.selected {
-        rect {
-          fill: @brand-danger;
-          stroke: @brand-danger;
-        }
-
-        circle {
-          stroke: @brand-danger;
         }
       }
     }

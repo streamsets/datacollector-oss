@@ -1,0 +1,153 @@
+<div class="pipeline-preview">
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th class="col-md-6">
+        <span class="glyphicon glyphicon-expand pointer"
+              ng-if="!expandAllInputData"
+              ng-click="onExpandAllInputData(stagePreviewData)"></span>
+        <span class="glyphicon glyphicon-collapse-down pointer"
+              ng-if="expandAllInputData"
+              ng-click="onCollapseAllInputData(stagePreviewData)"></span>
+        <span translate="admin.previewPane.inputData">Input Data</span>
+      </th>
+
+      <th class="col-md-6">
+        <span class="glyphicon glyphicon-expand pointer"
+              ng-if="!expandAllOutputData"
+              ng-click="onExpandAllOutputData(stagePreviewData)"></span>
+        <span class="glyphicon glyphicon-collapse-down pointer"
+              ng-if="expandAllOutputData"
+              ng-click="onCollapseAllOutputData(stagePreviewData)"></span>
+        <span translate="admin.previewPane.outputData">Output Data</span>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr ng-if="detailPaneConfig.uiInfo.stageType === 'SOURCE'"
+        ng-repeat="outputRecord in stagePreviewData.output">
+      <td>
+
+      </td>
+      <td>
+        <label class="pointer" ng-click="outputRecord.expand = !outputRecord.expand">
+              <span class="glyphicon glyphicon-expand"
+                    ng-if="outputRecord.expand !== true && expandAllOutputData !== true"></span>
+              <span class="glyphicon glyphicon-collapse-down"
+                    ng-if="outputRecord.expand === true || expandAllOutputData === true"></span>
+
+          {{'global.form.record' | translate}}{{$index+1}}
+        </label>
+        <ul class="preview-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
+          <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.values">
+            <span class="field-name"> {{fieldName}} : </span>
+            <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
+          </li>
+        </ul>
+      </td>
+    </tr>
+
+    <tr ng-if="detailPaneConfig.uiInfo.stageType === 'PROCESSOR'"
+        ng-repeat="inputRecord in stagePreviewData.input">
+      <td>
+        <label class="pointer" ng-click="inputRecord.expand = !inputRecord.expand">
+              <span class="glyphicon glyphicon-expand"
+                    ng-if="inputRecord.expand !== true && expandAllInputData !== true"></span>
+              <span class="glyphicon glyphicon-collapse-down"
+                    ng-if="inputRecord.expand === true || expandAllInputData === true"></span>
+          {{'global.form.record' | translate}}{{$index+1}}
+          <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="inputRecord.dirty"></span>
+        </label>
+        <ul class="preview-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
+          <li class="preview-list-item"
+              ng-repeat="(fieldName, recordValue) in inputRecord.values"
+              ng-class="{'dirty' : recordValue.dirty}">
+            <span class="field-name"> {{fieldName}} : </span>
+
+                <span class="field-value"
+                      ng-if="previewMode"
+                      ng-class="recordValue.dirty ? 'dirty' : recordValue.type"
+                      contenteditable="true"
+                      ng-change="recordValueUpdated(inputRecord, fieldName, detailPaneConfig)"
+                      ng-model="recordValue.value">
+                </span>
+
+                <span class="field-value"
+                      ng-if="snapshotMode"
+                      contenteditable="false"
+                      ng-class="recordValue.type"
+                      ng-model="recordValue.value">
+                </span>
+
+          </li>
+        </ul>
+      </td>
+      <td>
+        <div ng-repeat="outputRecord in outputRecords = getOutputRecords(stagePreviewData.output, inputRecord)">
+          <label class="pointer" ng-click="outputRecord.expand = !outputRecord.expand">
+                <span class="glyphicon glyphicon-expand"
+                      ng-if="outputRecord.expand !== true && expandAllOutputData !== true"></span>
+                <span class="glyphicon glyphicon-collapse-down"
+                      ng-if="outputRecord.expand === true || expandAllOutputData === true"></span>
+            {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.outputRecord' | translate}} {{$index + 1}}
+          </label>
+          <ul class="preview-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
+            <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.values">
+              <span class="field-name"> {{fieldName}} : </span>
+              <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
+            </li>
+          </ul>
+        </div>
+
+        <div ng-repeat="errorRecord in errorsRecords = getErrorRecords(stagePreviewData.errorRecords, inputRecord)">
+          <label class="pointer label label-danger" ng-click="errorRecord.expand = !errorRecord.expand">
+                <span class="glyphicon glyphicon-expand"
+                      ng-if="errorRecord.expand !== true"></span>
+                <span class="glyphicon glyphicon-collapse-down"
+                      ng-if="errorRecord.expand === true"></span>
+            {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.message}}
+          </label>
+          <ul class="preview-list" ng-if="errorRecord.expand === true">
+            <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in errorRecord.record.values">
+              <span class="field-name"> {{fieldName}} : </span>
+              <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
+            </li>
+          </ul>
+        </div>
+
+        <div ng-if="outputRecords.length === 0 && errorsRecords.length === 0">
+          <label class="label label-warning">{{'admin.previewPane.noOutputWarning' | translate}}</label>
+        </div>
+
+      </td>
+    </tr>
+
+    <tr ng-if="detailPaneConfig.uiInfo.stageType === 'TARGET'"
+        ng-repeat="inputRecord in stagePreviewData.input">
+      <td>
+        <label class="pointer" ng-click="inputRecord.expand = !inputRecord.expand">
+              <span class="glyphicon glyphicon-expand"
+                    ng-if="inputRecord.expand !== true && expandAllInputData !== true"></span>
+              <span class="glyphicon glyphicon-collapse-down"
+                    ng-if="inputRecord.expand === true || expandAllInputData === true"></span>
+          {{'global.form.record' | translate}}{{$index+1}}
+        </label>
+        <ul class="preview-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
+          <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in inputRecord.values">
+            <span class="field-name"> {{fieldName}} : </span>
+            <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
+          </li>
+        </ul>
+      </td>
+      <td>
+
+      </td>
+    </tr>
+
+    </tbody>
+
+  </table>
+
+</div>

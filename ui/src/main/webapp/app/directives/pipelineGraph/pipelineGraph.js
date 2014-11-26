@@ -1,5 +1,5 @@
 /**
- * Module definition for Pipeline Graph.
+ * Module definition for Pipeline Graph Directive.
  */
 
 angular.module('pipelineGraphDirectives', ['underscore'])
@@ -160,7 +160,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       connectClass: "connect-node",
       circleGClass: "conceptG",
       graphClass: "graph",
-      errorClass: "error",
       activeEditId: "active-editing",
       BACKSPACE_KEY: 8,
       DELETE_KEY: 46,
@@ -610,24 +609,17 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         });
 
       //Add Error icons
-      newGs.each(function(d) {
-        if(thisGraph.issues && thisGraph.issues.stageIssues &&
-          thisGraph.issues.stageIssues[d.instanceName]) {
-          d3.select(this).classed(consts.errorClass, true);
-        }
-      });
-
       newGs.append("svg:foreignObject")
         .filter(function(d) {
           return thisGraph.issues && thisGraph.issues.stageIssues &&
             thisGraph.issues.stageIssues[d.instanceName];
         })
-        .attr("width", 20)
-        .attr("height", 20)
-        .attr("x", consts.rectWidth - 30)
-        .attr("y", consts.rectHeight - 30)
+        .attr("width", 30)
+        .attr("height", 30)
+        .attr("x", consts.rectWidth - 35)
+        .attr("y", consts.rectHeight - 35)
         .append("xhtml:span")
-        .attr("class", "node-warning glyphicon glyphicon-warning-sign icon-danger");
+        .attr("class", "node-warning fa fa-exclamation-triangle");
 
 
       // remove old nodes
@@ -682,7 +674,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     var svg, graph;
 
     $scope.$on('updateGraph', function(event, nodes, edges, issues, selectNode) {
-
       if(graph !== undefined) {
         graph.deleteGraph();
       } else {
@@ -700,13 +691,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       graph.updateGraph();
 
       if(selectNode) {
-        var selectNodeDom = graph.rects.filter(function(cd){
-          return cd.instanceName === selectNode.instanceName;
-        });
-
-        if(selectNodeDom) {
-          graph.replaceSelectNode(selectNodeDom, selectNode);
-        }
+        graph.selectNode(selectNode);
       }
     });
 

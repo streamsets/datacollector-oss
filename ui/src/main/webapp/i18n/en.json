@@ -48,7 +48,7 @@
   "admin": {
     "header" : {
       "addStage": "Add Stage",
-      "definePipeline": "Define Pipeline",
+      "definePipeline": "Define Pipeline:",
       "closePreview": "Close Preview",
       "closeSnapshot": "Close Snapshot",
       "nextBatch": "Preview Next Batch",

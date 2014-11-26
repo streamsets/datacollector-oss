@@ -69,10 +69,8 @@ angular
             break;
         }
 
+        $scope.updateDetailPaneObject(stageInstance, stage);
         $scope.$broadcast('addNode', stageInstance);
-
-        $scope.detailPaneConfig = stageInstance;
-        $scope.detailPaneConfigDefn = stage;
       },
 
       /**

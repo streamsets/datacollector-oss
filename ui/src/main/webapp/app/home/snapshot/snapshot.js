@@ -22,6 +22,8 @@ angular
       },
       previewDataUpdated: false,
       stepExecuted: false,
+      expandAllInputData: false,
+      expandAllOutputData: false,
 
       /**
        * Returns output records produced by input record.
@@ -88,6 +90,22 @@ angular
         } else {
           $scope.changeStageSelection(stageInstance);
         }
+      },
+
+      onExpandAllInputData: function() {
+        $scope.expandAllInputData = true;
+      },
+
+      onCollapseAllInputData: function() {
+        $scope.expandAllInputData = false;
+      },
+
+      onExpandAllOutputData: function() {
+        $scope.expandAllOutputData = true;
+      },
+
+      onCollapseAllOutputData: function() {
+        $scope.expandAllOutputData = false;
       }
 
     });

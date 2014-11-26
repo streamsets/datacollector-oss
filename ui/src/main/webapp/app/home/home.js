@@ -56,7 +56,6 @@ angular
         $scope.previewMode = false;
       },
 
-
       /**
        * Capture the snapshot of running pipeline.
        *
@@ -107,6 +106,17 @@ angular
       onMaximizeDetailPane: function() {
         $scope.minimizeDetailPane = false;
         $scope.maximizeDetailPane = !$scope.maximizeDetailPane;
+      },
+
+      /**
+       * Update detailPaneConfig & detailPaneConfigDefn from child scope.
+       *
+       * @param stageInstance
+       * @param stage
+       */
+      updateDetailPaneObject: function(stageInstance, stage) {
+        $scope.detailPaneConfig = stageInstance;
+        $scope.detailPaneConfigDefn = stage;
       }
 
     });
@@ -393,7 +403,6 @@ angular
         }
       );
     };
-
 
     //Event Handling
 

@@ -20,6 +20,8 @@ angular
       },
       previewDataUpdated: false,
       stepExecuted: false,
+      expandAllInputData: false,
+      expandAllOutputData: false,
 
       /**
        * Returns output records produced by input record.
@@ -48,7 +50,13 @@ angular
        */
       getErrorRecords: function(errorRecords, inputRecord) {
         return _.filter(errorRecords, function(outputRecord) {
-          return outputRecord.record.header.trackingId === inputRecord.header.trackingId;
+
+          if(outputRecord.record.header.trackingId === inputRecord.header.trackingId) {
+            if(inputRecord.expand) {
+              outputRecord.expand = true;
+            }
+            return true;
+          }
         });
       },
 
@@ -124,6 +132,22 @@ angular
           error(function(data) {
             $rootScope.common.errors = [data];
           });
+      },
+
+      onExpandAllInputData: function() {
+        $scope.expandAllInputData = true;
+      },
+
+      onCollapseAllInputData: function() {
+        $scope.expandAllInputData = false;
+      },
+
+      onExpandAllOutputData: function() {
+        $scope.expandAllOutputData = true;
+      },
+
+      onCollapseAllOutputData: function() {
+        $scope.expandAllOutputData = false;
       }
     });
 

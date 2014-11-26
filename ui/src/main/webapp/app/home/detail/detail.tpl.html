@@ -21,7 +21,7 @@
     <tabset class="tabbable tabs-left ">
       <tab ng-repeat="tab in detailPaneTabs" active="tab.active" disabled="tab.disabled">
         <tab-heading>
-          <i class="glyphicon glyphicon-warning-sign icon-danger"
+          <i class="fa fa-exclamation-triangle icon-danger"
              ng-show="showWarning(tab)"></i> {{ 'admin.detailPane.' + tab.name | translate }}
         </tab-heading>
         <div ng-include="tab.template"></div>
