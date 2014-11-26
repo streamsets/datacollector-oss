@@ -108,7 +108,7 @@ angular
       $scope.pieChartData = [
         {
           key: "goodRecords",
-          value: $scope.summaryMeters.outputRecords.count
+          value: $scope.summaryMeters.outputRecords.count || 1
         },
         {
           key: "badRecords",

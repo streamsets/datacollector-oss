@@ -249,7 +249,7 @@ angular
     });
 
     $scope.$on('onStageSelection', function(event, stageInstance) {
-      if($scope.previewMode) {
+      //if($scope.previewMode) {
         if (stageInstance) {
           updatePreviewDataForStage(stageInstance);
         } else {
@@ -258,7 +258,7 @@ angular
             output: {}
           };
         }
-      }
+      //}
     });
 
   });

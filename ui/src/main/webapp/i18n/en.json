@@ -73,6 +73,7 @@
       "summary": "Summary"
     },
     "previewPane": {
+      "previewingStage": "Previewing Stage: ",
       "previewRecords": "Preview Records",
       "inputData": "Input Data",
       "outputData": "Output Data",

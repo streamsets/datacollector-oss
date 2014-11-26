@@ -160,6 +160,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       connectClass: "connect-node",
       circleGClass: "conceptG",
       graphClass: "graph",
+      errorClass: "error",
       activeEditId: "active-editing",
       BACKSPACE_KEY: 8,
       DELETE_KEY: 46,
@@ -609,6 +610,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         });
 
       //Add Error icons
+      newGs.each(function(d) {
+        if(thisGraph.issues && thisGraph.issues.stageIssues &&
+          thisGraph.issues.stageIssues[d.instanceName]) {
+          d3.select(this).classed(consts.errorClass, true);
+        }
+      });
+
       newGs.append("svg:foreignObject")
         .filter(function(d) {
           return thisGraph.issues && thisGraph.issues.stageIssues &&
