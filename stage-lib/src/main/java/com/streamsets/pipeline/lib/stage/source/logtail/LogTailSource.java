@@ -69,12 +69,6 @@ public class LogTailSource extends BaseSource {
              defaultValue = "5000")
   public int maxWaitTime;
 
-  @ConfigDef(required = false,
-             type = ConfigDef.Type.STRING,
-             label = "Name of the field with the log line in the record",
-             defaultValue = "logLine")
-  public String logLineRecordFieldName;
-
   public enum ERROR implements ErrorId {
     NO_PERMISSION_TO_READ_LOG_FILE("Insufficient permissions to read the log file '{}'"),
     ;
@@ -128,7 +122,7 @@ public class LogTailSource extends BaseSource {
     logLinesQueue.drainTo(lines, fetch);
     for (int i = 0; i < lines.size(); i++) {
       Record record = getContext().createRecord(logFileName + now + i);
-      record.setField(logLineRecordFieldName, Field.create(lines.get(i)));
+      record.set(Field.create(lines.get(i)));
       batchMaker.addRecord(record);
     }
     return OFFSET;

@@ -44,7 +44,7 @@ public class TestFailedProdRun {
       @Override
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
         Record record = getContext().createRecord("x");
-        record.setField("f", Field.create(1));
+        record.set(Field.create(1));
         batchMaker.addRecord(record);
         return "1";
       }
@@ -52,7 +52,7 @@ public class TestFailedProdRun {
     MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
       @Override
       protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-        record.setField("f", Field.create(2));
+        record.set(Field.create(2));
         batchMaker.addRecord(record);
       }
     });

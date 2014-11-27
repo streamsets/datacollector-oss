@@ -46,7 +46,7 @@ public class TestIntegerTypeSupport {
   public void testSnapshot() {
     IntegerTypeSupport ts = new IntegerTypeSupport();
     Integer d = 1;
-    Assert.assertSame(d, ts.snapshot(d));
+    Assert.assertSame(d, ts.getReference(d));
   }
 
 }

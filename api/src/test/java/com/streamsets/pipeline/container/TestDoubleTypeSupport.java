@@ -46,7 +46,7 @@ public class TestDoubleTypeSupport {
   public void testSnapshot() {
     DoubleTypeSupport ts = new DoubleTypeSupport();
     Double d = (double)1;
-    Assert.assertSame(d, ts.snapshot(d));
+    Assert.assertSame(d, ts.getReference(d));
   }
 
 }

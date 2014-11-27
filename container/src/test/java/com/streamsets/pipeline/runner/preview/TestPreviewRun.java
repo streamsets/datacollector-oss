@@ -46,7 +46,7 @@ public class TestPreviewRun {
       @Override
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
         Record record = getContext().createRecord("x");
-        record.setField("f", Field.create(1));
+        record.set(Field.create(1));
         batchMaker.addRecord(record);
         return "1";
       }
@@ -54,7 +54,7 @@ public class TestPreviewRun {
     MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
       @Override
       protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-        record.setField("f", Field.create(2));
+        record.set(Field.create(2));
         batchMaker.addRecord(record);
       }
     });
@@ -71,8 +71,8 @@ public class TestPreviewRun {
     pipeline.run();
     pipeline.destroy();
     List<StageOutput> output = runner.getBatchesOutput().get(0);
-    Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).getField("f").getValue());
-    Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).getField("f").getValue());
+    Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
+    Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).get().getValue());
   }
 
   @Test
@@ -81,7 +81,7 @@ public class TestPreviewRun {
       @Override
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
         Record record = getContext().createRecord("x");
-        record.setField("f", Field.create(1));
+        record.set(Field.create(1));
         batchMaker.addRecord(record);
         return "1";
       }
@@ -89,7 +89,7 @@ public class TestPreviewRun {
     MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
       @Override
       protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-        record.setField("f", Field.create(2));
+        record.set(Field.create(2));
         batchMaker.addRecord(record);
       }
     });
@@ -101,8 +101,8 @@ public class TestPreviewRun {
     PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name", pipelineConfiguration).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     List<StageOutput> output = previewOutput.getBatchesOutput().get(0);
-    Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).getField("f").getValue());
-    Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).getField("f").getValue());
+    Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
+    Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).get().getValue());
   }
 
 }

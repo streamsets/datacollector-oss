@@ -74,8 +74,13 @@ public class Field implements Cloneable {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T snapshot(T value) {
-      return (value != null) ? (T) supporter.snapshot(value) : null;
+    private <T> T constructorCopy(T value) {
+      return (value != null) ? (T) supporter.constructorCopy(value) : null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T getReference(T value) {
+      return (value != null) ? (T) supporter.getReference(value) : null;
     }
 
     private String toString(Object value) {
@@ -128,26 +133,32 @@ public class Field implements Cloneable {
     return new Field(Type.BYTE_ARRAY, v);
   }
 
+  // copy
   public static Field createDate(Date v) {
     return new Field(Type.DATE, v);
   }
 
+  // copy
   public static Field createDatetime(Date v) {
     return new Field(Type.DATETIME, v);
   }
 
+  // deep copy
   public static Field create(Map<String, Field> v) {
     return new Field(Type.MAP, v);
   }
 
+  // deep copy
   public static Field create(List<Field> v) {
     return new Field(Type.LIST, v);
   }
 
+  // deep copy
   public static <T> Field create(Type type, T value) {
     return new Field(Utils.checkNotNull(type, "type"), type.convert(value));
   }
 
+  // deep copy
   public static <T> Field create(Field field, T value) {
     return create(Utils.checkNotNull(field, "field").getType(), value);
   }
@@ -158,77 +169,83 @@ public class Field implements Cloneable {
 
   private Field(Type type, Object value) {
     this.type = type;
-    this.value = type.snapshot(value);
+    this.value = type.constructorCopy(value);
   }
 
   public Type getType() {
     return type;
   }
 
+  // by ref
   public Object getValue() {
-    return type.snapshot(value);
+    return type.getReference(value);
   }
 
   public boolean getValueAsBoolean() {
-    return (boolean) type.convert(value, Type.BOOLEAN);
+    return (boolean) type.convert(getValue(), Type.BOOLEAN);
   }
 
   public char getValueAsChar() {
-    return (char) type.convert(value, Type.CHAR);
+    return (char) type.convert(getValue(), Type.CHAR);
   }
 
   public byte getValueAsByte() {
-    return (byte) type.convert(value, Type.BYTE);
+    return (byte) type.convert(getValue(), Type.BYTE);
   }
 
   public short getValueAsShort() {
-    return (short) type.convert(value, Type.SHORT);
+    return (short) type.convert(getValue(), Type.SHORT);
   }
 
   public int getValueAsInteger() {
-    return (int) type.convert(value, Type.INTEGER);
+    return (int) type.convert(getValue(), Type.INTEGER);
   }
 
   public long getValueAsLong() {
-    return (long) type.convert(value, Type.LONG);
+    return (long) type.convert(getValue(), Type.LONG);
   }
 
   public float getValueAsFloat() {
-    return (float) type.convert(value, Type.FLOAT);
+    return (float) type.convert(getValue(), Type.FLOAT);
   }
 
   public double getValueAsDouble() {
-    return (double) type.convert(value, Type.DOUBLE);
+    return (double) type.convert(getValue(), Type.DOUBLE);
   }
 
+  // copy, date is handled as immutable
   public Date getValueAsDate() {
-    return (Date) type.convert(value, Type.DATE);
+    return (Date) type.convert(getValue(), Type.DATE);
   }
 
+  // copy, date is handled as immutable
   public Date getValueAsDatetime() {
-    return (Date) type.convert(value, Type.DATE);
+    return (Date) type.convert(getValue(), Type.DATE);
   }
 
   public BigDecimal getValueAsDecimal() {
-    return (BigDecimal) type.convert(value, Type.DECIMAL);
+    return (BigDecimal) type.convert(getValue(), Type.DECIMAL);
   }
 
   public String getValueAsString() {
-    return (String) type.convert(value, Type.STRING);
+    return (String) type.convert(getValue(), Type.STRING);
   }
 
+  // copy, byte[] is handled as immutable
   public byte[] getValueAsByteArray() {
-    return (byte[]) type.convert(value, Type.BYTE_ARRAY);
+    return (byte[]) type.convert(getValue(), Type.BYTE_ARRAY);
   }
 
+  // by ref
   @SuppressWarnings("unchecked")
   public Map<String, Field> getValueAsMap() {
-    return (Map<String, Field>) type.convert(value, Type.MAP);
+    return (Map<String, Field>) type.convert(getValue(), Type.MAP);
   }
 
+  // by ref
   @SuppressWarnings("unchecked")
   public List<Field> getValueAsList() {
-    return (List<Field>) type.convert(value, Type.LIST);
+    return (List<Field>) type.convert(getValue(), Type.LIST);
   }
 
   @Override
@@ -263,7 +280,7 @@ public class Field implements Cloneable {
         try {
           Field clone = (Field) super.clone();
           clone.type = type;
-          clone.value = type.snapshot(value);
+          clone.value = type.constructorCopy(value);
           return clone;
         } catch (CloneNotSupportedException ex) {
          //

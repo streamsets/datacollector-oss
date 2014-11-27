@@ -46,7 +46,7 @@ public class TestDecimalTypeSupport {
   public void testSnapshot() {
     DecimalTypeSupport ts = new DecimalTypeSupport();
     BigDecimal b = new BigDecimal(1);
-    Assert.assertSame(b, ts.snapshot(b));
+    Assert.assertSame(b, ts.getReference(b));
   }
 
 

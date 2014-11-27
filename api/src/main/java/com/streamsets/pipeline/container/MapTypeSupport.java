@@ -47,7 +47,7 @@ public class MapTypeSupport extends TypeSupport<Map> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public Object snapshot(Object value) {
+  public Object constructorCopy(Object value) {
     Map map = null;
     if (value != null) {
       map = deepCopy((Map<String, Field>)value);
@@ -58,8 +58,11 @@ public class MapTypeSupport extends TypeSupport<Map> {
   private Map<String, Field> deepCopy(Map<String, Field> map) {
     Map<String, Field> copy = new LinkedHashMap<>();
     for (Map.Entry<String, Field> entry : map.entrySet()) {
-      Utils.checkNotNull(entry.getKey(), "Map cannot have null keys");
-      Utils.checkNotNull(entry.getValue(), Utils.format("Map cannot have null values, key '{}'", entry.getKey()));
+      String name = entry.getKey();
+      Utils.checkNotNull(name, "Map cannot have null keys");
+      Utils.checkNotNull(entry.getValue(), Utils.format("Map cannot have null values, key '{}'", name));
+      Utils.checkArgument(name.indexOf('/') == -1 && name.indexOf('[') == -1,
+                          Utils.format("key name '{}' cannot have '/' or '['", name));
       copy.put(entry.getKey(), entry.getValue().clone());
     }
     return copy;

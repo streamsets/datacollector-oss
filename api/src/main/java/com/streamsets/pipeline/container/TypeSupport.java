@@ -25,7 +25,11 @@ public abstract class TypeSupport<T> {
     return targetTypeSupport.convert(value);
   }
 
-  public Object snapshot(Object value) {
+  public Object constructorCopy(Object value) {
+    return value;
+  }
+
+  public Object getReference(Object value) {
     return value;
   }
 

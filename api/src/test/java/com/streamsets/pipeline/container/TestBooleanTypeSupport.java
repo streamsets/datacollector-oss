@@ -57,7 +57,7 @@ public class TestBooleanTypeSupport {
   public void testSnapshot() {
     BooleanTypeSupport ts = new BooleanTypeSupport();
     Boolean b = true;
-    Assert.assertSame(b, ts.snapshot(b));
+    Assert.assertSame(b, ts.getReference(b));
   }
 
 }

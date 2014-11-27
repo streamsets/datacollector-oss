@@ -45,7 +45,7 @@ public class ListTypeSupport extends TypeSupport<List> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public Object snapshot(Object value) {
+  public Object constructorCopy(Object value) {
     List List = null;
     if (value != null) {
       List = deepCopy((List<Field>)value);

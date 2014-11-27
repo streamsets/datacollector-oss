@@ -34,8 +34,8 @@ public class RecordImplDeserializer extends JsonDeserializer<RecordImpl> {
   public RecordImpl deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
     Map map = jp.readValueAs(Map.class);
     SimpleMap<String, Object> header = convertToHeaderSimpleMap((Map<String, Object>) map.get("header"));
-    SimpleMap<String, Field> fields = convertToFieldSimpleMap((Map<String, Object>) map.get("values"));
-    return new RecordImpl(header, fields);
+    Field field = convertToField((Map<String, Object>) map.get("values"));
+    return new RecordImpl(header, field);
   }
 
   @SuppressWarnings("unchecked")
@@ -65,12 +65,8 @@ public class RecordImplDeserializer extends JsonDeserializer<RecordImpl> {
   }
 
   @SuppressWarnings("unchecked")
-  private static SimpleMap<String, Field> convertToFieldSimpleMap(Map<String, ?> map) {
-    SimpleMap<String, Field> fields = new VersionedSimpleMap<String, Field>();
-    for (Map.Entry entry : map.entrySet()) {
-      fields.put((String) entry.getKey(), parse((Map) entry.getValue()));
-    }
-    return fields;
+  private static Field convertToField(Map<String, ?> map) {
+    return null;
   }
 
 }

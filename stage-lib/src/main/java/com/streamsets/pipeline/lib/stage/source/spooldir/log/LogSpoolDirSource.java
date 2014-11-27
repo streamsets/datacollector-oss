@@ -43,13 +43,6 @@ public class LogSpoolDirSource extends AbstractSpoolDirSource {
   private final static Logger LOG = LoggerFactory.getLogger(LogSpoolDirSource.class);
 
   @ConfigDef(required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Log Line Field Name",
-      description = "The name of the record field to hold the log line",
-      defaultValue = "line")
-  public String logLineFieldName;
-
-  @ConfigDef(required = true,
       type = ConfigDef.Type.INTEGER,
       label = "Maximum Log Line Length",
       description = "The maximum length for log lines, if a line exceeds that length, it will be trimmed",
@@ -90,7 +83,7 @@ public class LogSpoolDirSource extends AbstractSpoolDirSource {
       }
       if (len > -1) {
         Record record = getContext().createRecord(Utils.format("file={} offset={}", sourceFile, offset));
-        record.setField(logLineFieldName, Field.create(line.toString()));
+        record.set(Field.create(line.toString()));
         batchMaker.addRecord(record);
         offset = lineReader.getCount();
       } else {

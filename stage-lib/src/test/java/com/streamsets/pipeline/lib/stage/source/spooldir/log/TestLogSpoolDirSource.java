@@ -80,7 +80,6 @@ public class TestLogSpoolDirSource {
     source.retentionTimeMins = 10;
     source.initialFileToProcess = null;
     source.poolingTimeoutSecs = 0;
-    source.logLineFieldName = "line";
     source.maxLogLineLength = 10;
     source.init();
     try {
@@ -93,10 +92,10 @@ public class TestLogSpoolDirSource {
       Mockito.verify(batchMaker, Mockito.times(2)).addRecord(records.capture());
       List<Record> list = records.getAllValues();
       ArgumentCaptor<Field> field = ArgumentCaptor.forClass(Field.class);
-      Mockito.verify(list.get(0)).setField(Mockito.eq("line"), field.capture());
+      Mockito.verify(list.get(0)).set(field.capture());
       Assert.assertEquals(LINE1, field.getValue().getValue());
       field = ArgumentCaptor.forClass(Field.class);
-      Mockito.verify(list.get(1)).setField(Mockito.eq("line"), field.capture());
+      Mockito.verify(list.get(1)).set(field.capture());
       Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValue());
     } finally {
       source.destroy();
@@ -119,7 +118,6 @@ public class TestLogSpoolDirSource {
     source.retentionTimeMins = 10;
     source.initialFileToProcess = null;
     source.poolingTimeoutSecs = 0;
-    source.logLineFieldName = "line";
     source.maxLogLineLength = 10;
     source.init();
     try {
@@ -133,7 +131,7 @@ public class TestLogSpoolDirSource {
       Mockito.verify(batchMaker, Mockito.times(1)).addRecord(records.capture());
       List<Record> list = records.getAllValues();
       ArgumentCaptor<Field> field = ArgumentCaptor.forClass(Field.class);
-      Mockito.verify(list.get(0)).setField(Mockito.eq("line"), field.capture());
+      Mockito.verify(list.get(0)).set(field.capture());
       Assert.assertEquals(LINE1, field.getValue().getValue());
 
 
@@ -146,7 +144,7 @@ public class TestLogSpoolDirSource {
       Mockito.verify(batchMaker, Mockito.times(1)).addRecord(records.capture());
       list = records.getAllValues();
       field = ArgumentCaptor.forClass(Field.class);
-      Mockito.verify(list.get(0)).setField(Mockito.eq("line"), field.capture());
+      Mockito.verify(list.get(0)).set(field.capture());
       Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValue());
 
       //reads EOF

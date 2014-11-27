@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.api;
 
-import java.util.Iterator;
+import java.util.Set;
 
 public interface Record {
 
@@ -37,7 +37,7 @@ public interface Record {
 
     public String getRawMimeType();
 
-    public Iterator<String> getAttributeNames();
+    public Set<String> getAttributeNames();
 
     public String getAttribute(String name);
 
@@ -47,16 +47,30 @@ public interface Record {
 
   }
 
-  Header getHeader();
+  public Header getHeader();
 
-  public Iterator<String> getFieldNames();
+  public Field get();
 
-  public boolean hasField(String name);
+  public Field set(Field field);
 
-  public Field getField(String name);
+  /*
+    Field path syntax
 
-  public void setField(String name, Field field);
+     "" : ROOT element
+     /a : map element
+     [1] : array element
+     /a[2] : map array element
+     [1]/a : array map element
+     [1][2] : array array element
+     /a/b : map map element
+   */
 
-  public void deleteField(String name);
+  public Field get(String fieldPath);
+
+  public Field delete(String fieldPath);
+
+  public boolean has(String fieldPath);
+
+  public Set<String> getFieldPaths();
 
 }

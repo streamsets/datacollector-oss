@@ -38,7 +38,7 @@ public class ByteArrayTypeSupport extends TypeSupport<byte[]> {
   }
 
   @Override
-  public Object snapshot(Object value) {
+  public Object getReference(Object value) {
     return ((byte[])value).clone();
   }
 

@@ -17,9 +17,7 @@
  */
 package com.streamsets.pipeline.record;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import org.junit.Assert;
@@ -27,12 +25,9 @@ import org.junit.ComparisonFailure;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public class TestRecordImpl {
@@ -53,33 +48,6 @@ public class TestRecordImpl {
   }
 
   @Test
-  public void testFieldMethods() {
-    RecordImpl record = new RecordImpl("stage", "source", null, null);
-    Assert.assertFalse(record.getFieldNames().hasNext());
-    try {
-      record.setField("a", null);
-      Assert.fail();
-    } catch (NullPointerException ex) {
-      //expected
-    }
-    Assert.assertFalse(record.getFieldNames().hasNext());
-    Assert.assertTrue(record.getValues().isEmpty());
-    Field f =  Field.create(true);
-    record.setField("a", f);
-    Assert.assertTrue(record.getFieldNames().hasNext());
-    Iterator<String> it = record.getFieldNames();
-    Assert.assertEquals("a", it.next());
-    Assert.assertFalse(it.hasNext());
-    Assert.assertEquals(f, record.getField("a"));
-    Assert.assertEquals(1, record.getValues().size());
-    Assert.assertEquals(f, record.getValues().get("a"));
-    record.deleteField("a");
-    Assert.assertNull(record.getField("a"));
-    Assert.assertFalse(record.getFieldNames().hasNext());
-    Assert.assertTrue(record.getValues().isEmpty());
-  }
-
-  @Test
   public void testHeaderMethods() {
     RecordImpl record = new RecordImpl("stage", "source", null, null);
     Record.Header header = record.getHeader();
@@ -95,27 +63,24 @@ public class TestRecordImpl {
     Assert.assertEquals("source", header.getSourceId());
     Assert.assertEquals("stage", header.getStagesPath());
 
-    Assert.assertFalse(header.getAttributeNames().hasNext());
+    Assert.assertTrue(header.getAttributeNames().isEmpty());
     try {
       header.setAttribute("a", null);
       Assert.fail();
     } catch (NullPointerException ex) {
       //expected
     }
-    Assert.assertFalse(header.getAttributeNames().hasNext());
-    RecordImpl.HeaderImpl headerImpl = ((RecordImpl.HeaderImpl)header);
+    Assert.assertTrue(header.getAttributeNames().isEmpty());
+    HeaderImpl headerImpl = ((HeaderImpl)header);
     Assert.assertTrue(headerImpl.getValues().isEmpty());
     header.setAttribute("a", "A");
-    Assert.assertTrue(header.getAttributeNames().hasNext());
-    Iterator<String> it = header.getAttributeNames();
-    Assert.assertEquals("a", it.next());
-    Assert.assertFalse(it.hasNext());
+    Assert.assertEquals(ImmutableSet.of("a"), header.getAttributeNames());
     Assert.assertEquals("A", header.getAttribute("a"));
     Assert.assertEquals(1, headerImpl.getValues().size());
     Assert.assertEquals("A", headerImpl.getValues().get("a"));
     header.deleteAttribute("a");
     Assert.assertNull(header.getAttribute("a"));
-    Assert.assertFalse(header.getAttributeNames().hasNext());
+    Assert.assertTrue(header.getAttributeNames().isEmpty());
     Assert.assertTrue(headerImpl.getValues().isEmpty());
 
     record.toString();
@@ -140,16 +105,13 @@ public class TestRecordImpl {
   }
 
   public static void assertIsSnapshot(Record original, Record snapshot) {
-    Set<String> sFields = Sets.newHashSet(Iterators.filter(snapshot.getFieldNames(), String.class));
-    Set<String> oFields = Sets.newHashSet(Iterators.filter(original.getFieldNames(), String.class));
-    Assert.assertEquals(sFields, oFields);
-    for (String name : sFields) {
-      Assert.assertEquals(snapshot.getField(name), original.getField(name));
+    Assert.assertEquals(original.getFieldPaths(), snapshot.getFieldPaths());
+    Assert.assertEquals(original.get(), snapshot.get());
+    Assert.assertEquals(original.getHeader().getAttributeNames(), snapshot.getHeader().getAttributeNames());
+    for (String name : original.getHeader().getAttributeNames()) {
+      Assert.assertEquals(snapshot.getHeader().getAttribute(name), original.getHeader().getAttribute(name));
     }
-    Set<String> sAttrs = Sets.newHashSet(Iterators.filter(snapshot.getHeader().getAttributeNames(), String.class));
-    Set<String> oAttrs = Sets.newHashSet(Iterators.filter(original.getHeader().getAttributeNames(), String.class));
-    Assert.assertEquals(sAttrs, oAttrs);
-    for (String name : sAttrs) {
+    for (String name : snapshot.getHeader().getAttributeNames()) {
       Assert.assertEquals(snapshot.getHeader().getAttribute(name), original.getHeader().getAttribute(name));
     }
     String randomKey = UUID.randomUUID().toString();
@@ -166,16 +128,13 @@ public class TestRecordImpl {
   }
 
   public static void assertIsCopy(Record original, Record copy, boolean compareStagesPath) {
-    Set<String> sFields = Sets.newHashSet(Iterators.filter(copy.getFieldNames(), String.class));
-    Set<String> oFields = Sets.newHashSet(Iterators.filter(original.getFieldNames(), String.class));
-    Assert.assertEquals(sFields, oFields);
-    for (String name : sFields) {
-      Assert.assertEquals(copy.getField(name), original.getField(name));
+    Assert.assertEquals(original.getFieldPaths(), copy.getFieldPaths());
+    Assert.assertEquals(original.get(), copy.get());
+    Assert.assertEquals(original.getHeader().getAttributeNames(), copy.getHeader().getAttributeNames());
+    for (String name : original.getHeader().getAttributeNames()) {
+      Assert.assertEquals(copy.getHeader().getAttribute(name), original.getHeader().getAttribute(name));
     }
-    Set<String> sAttrs = Sets.newHashSet(Iterators.filter(copy.getHeader().getAttributeNames(), String.class));
-    Set<String> oAttrs = Sets.newHashSet(Iterators.filter(original.getHeader().getAttributeNames(), String.class));
-    Assert.assertEquals(sAttrs, oAttrs);
-    for (String name : sAttrs) {
+    for (String name : copy.getHeader().getAttributeNames()) {
       Assert.assertEquals(copy.getHeader().getAttribute(name), original.getHeader().getAttribute(name));
     }
     String randomKey = UUID.randomUUID().toString();
@@ -193,7 +152,7 @@ public class TestRecordImpl {
   @Test
   public void testAssertIsSnapshot() {
     RecordImpl record = new RecordImpl("stage", "source", null, null);
-    record.setField("a", Field.create(true));
+    record.set(Field.create(true));
     record.getHeader().setAttribute("a", "A");
     RecordImpl snapshot = record.createSnapshot();
     assertIsSnapshot(record, snapshot);
@@ -202,7 +161,7 @@ public class TestRecordImpl {
   @Test
   public void testAssertIsCopy() {
     RecordImpl record = new RecordImpl("stage", "source", null, null);
-    record.setField("a", Field.create(true));
+    record.set(Field.create(true));
     record.getHeader().setAttribute("a", "A");
     RecordImpl copy = record.createCopy();
     assertIsCopy(record, copy, true);
@@ -211,7 +170,7 @@ public class TestRecordImpl {
   @Test
   public void testAssertIsCopyDontCompareStages() {
     RecordImpl record = new RecordImpl("stage", "source", null, null);
-    record.setField("a", Field.create(true));
+    record.set(Field.create(true));
     record.getHeader().setAttribute("a", "A");
     RecordImpl copy = record.createCopy();
     copy.setStage("foo");
@@ -274,34 +233,196 @@ public class TestRecordImpl {
   }
 
   @Test
-  public void testMapListFields() {
-    RecordImpl record = new RecordImpl("stage", "source", null, null);
-    Map<String, Field> map = new LinkedHashMap<>();
-    map.put("a", Field.create(true));
-    map.put("b", Field.create("B"));
-    Map<String, Field> subMap = new LinkedHashMap<>();
-    subMap.put("x", Field.create(false));
-    subMap.put("y", Field.create("Y"));
-    map.put("sm", Field.create(subMap));
-    record.setField("p", Field.create("hello"));
-    record.setField("m", Field.create(map));
-    Assert.assertEquals(map, record.getField("m").getValueAsMap());
-    Assert.assertNotSame(map, record.getField("m").getValueAsMap());
+  public void testRootBasicField() {
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
 
-    List<Field> list = new ArrayList<>(Arrays.asList(Field.create(true)));
-    record.setField("l", Field.create(list));
-    map.remove("a");
-    subMap.remove("x");
-    list.remove(0);
+    // no root field
+    Assert.assertNull(r.get());
+    Assert.assertNull(r.get(""));
+    Assert.assertNull(r.get("/a"));
+    Assert.assertNull(r.get("[1]"));
+    Assert.assertTrue(r.getFieldPaths().isEmpty());
+    Assert.assertNull(r.delete(""));
+    Assert.assertNull(r.delete("/a"));
+    Assert.assertNull(r.delete("[1]"));
+    Assert.assertFalse(r.has(""));
+    Assert.assertFalse(r.has("/a"));
+    Assert.assertFalse(r.has("[1]"));
 
-    Assert.assertNotEquals(map, record.getField("m").getValueAsMap());
-    Assert.assertTrue(record.getField("m").getValueAsMap().containsKey("a"));
-    Assert.assertTrue(record.getField("m").getValueAsMap().get("sm").getValueAsMap().containsKey("x"));
-    Assert.assertTrue(record.getField("l").getValueAsList().get(0).getValueAsBoolean());
-
-    RecordImpl copy = record.createCopy();
-    Assert.assertEquals(record, copy);
-    record.deleteField("p");
-    Assert.assertNotEquals(record, copy);
+    Field f = Field.create(true);
+    r.set(f);
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertNull(r.get("/a"));
+    Assert.assertNull(r.get("[1]"));
+    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertTrue(r.has(""));
+    Assert.assertFalse(r.has("/a"));
+    Assert.assertFalse(r.has("[1]"));
+    Assert.assertEquals(f, r.delete(""));
+    Assert.assertFalse(r.has(""));
+    Assert.assertNull(r.delete("/a"));
+    Assert.assertNull(r.delete("[1]"));
   }
+
+  @Test
+  public void testRootMapField() {
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+
+    Field f = Field.create(Field.Type.MAP, null);
+    r.set(f);
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertNull(r.get("/a"));
+    Assert.assertNull(r.get("[1]"));
+    Assert.assertTrue(r.has(""));
+    Assert.assertFalse(r.has("/a"));
+    Assert.assertFalse(r.has("[1]"));
+    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(f, r.delete(""));
+    Assert.assertNull(r.get());
+
+    f = Field.create(new HashMap<String, Field>());
+    r.set(f);
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertNull(r.get("/a"));
+    Assert.assertNull(r.get("[1]"));
+    Assert.assertTrue(r.has(""));
+    Assert.assertFalse(r.has("/a"));
+    Assert.assertFalse(r.has("[1]"));
+    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(f, r.delete(""));
+    Assert.assertNull(r.get());
+
+    Map<String, Field> map = new HashMap<>();
+    map.put("a", Field.create(true));
+    f = Field.create(Field.Type.MAP, map);
+    r.set(f);
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertEquals(Field.create(true), r.get("/a"));
+    Assert.assertNull(r.get("[1]"));
+    Assert.assertTrue(r.has(""));
+    Assert.assertTrue(r.has("/a"));
+    Assert.assertFalse(r.has("[1]"));
+    Assert.assertEquals(ImmutableSet.of("", "/a"), r.getFieldPaths());
+    Assert.assertEquals(Field.create(true), r.delete("/a"));
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertNull(r.get("/a"));
+    Assert.assertTrue(r.has(""));
+    Assert.assertFalse(r.has("/a"));
+    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(f, r.delete(""));
+    Assert.assertNull(r.get());
+  }
+
+  @Test
+  public void testRootListField() {
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+
+    Field f = Field.create(Field.Type.LIST, null);
+    r.set(f);
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertNull(r.get("/a"));
+    Assert.assertNull(r.get("[1]"));
+    Assert.assertTrue(r.has(""));
+    Assert.assertFalse(r.has("/a"));
+    Assert.assertFalse(r.has("[1]"));
+    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(f, r.delete(""));
+    Assert.assertNull(r.get());
+
+    f = Field.create(new ArrayList<Field>());
+    r.set(f);
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertNull(r.get("/a"));
+    Assert.assertNull(r.get("/b"));
+    Assert.assertNull(r.get("[1]"));
+    Assert.assertTrue(r.has(""));
+    Assert.assertFalse(r.has("/a"));
+    Assert.assertFalse(r.has("/b"));
+    Assert.assertFalse(r.has("[0]"));
+    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(f, r.delete(""));
+    Assert.assertNull(r.get());
+
+    List<Field> list = new ArrayList<>();
+    list.add(Field.create(true));
+    f = Field.create(list);
+    r.set(f);
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertEquals(Field.create(true), r.get("[0]"));
+    Assert.assertNull(r.get("[1]"));
+    Assert.assertTrue(r.has(""));
+    Assert.assertTrue(r.has("[0]"));
+    Assert.assertFalse(r.has("/a"));
+    Assert.assertFalse(r.has("[1]"));
+    Assert.assertEquals(ImmutableSet.of("", "[0]"), r.getFieldPaths());
+    Assert.assertEquals(Field.create(true), r.delete("[0]"));
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertFalse(r.has("[0]"));
+    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(f, r.delete(""));
+    Assert.assertNull(r.get());
+  }
+
+  @Test
+  public void testMapListField() {
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    List<Field> list = new ArrayList<>();
+    list.add(Field.create(true));
+    Field listField = Field.create(list);
+    Map<String, Field> map = new HashMap<>();
+    map.put("a", listField);
+    Field mapField = Field.create(map);
+    r.set(mapField);
+
+    Assert.assertEquals(mapField, r.get());
+    Assert.assertEquals(mapField, r.get(""));
+    Assert.assertEquals(listField, r.get("/a"));
+    Assert.assertEquals(Field.create(true), r.get("/a[0]"));
+    Assert.assertNull(r.get("/a[1]"));
+    Assert.assertTrue(r.has(""));
+    Assert.assertTrue(r.has("/a"));
+    Assert.assertFalse(r.has("/b"));
+    Assert.assertTrue(r.has("/a[0]"));
+    Assert.assertFalse(r.has("/a[1]"));
+    Assert.assertEquals(ImmutableSet.of("", "/a", "/a[0]"), r.getFieldPaths());
+    Assert.assertEquals(Field.create(true), r.delete("/a[0]"));
+    Assert.assertEquals(ImmutableSet.of("", "/a"), r.getFieldPaths());
+    Assert.assertEquals(Field.create(new ArrayList<Field>()), r.delete("/a"));
+  }
+
+  @Test
+  public void testListMapField() {
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    Map<String, Field> map = new HashMap<>();
+    map.put("a", Field.create(true));
+    Field mapField = Field.create(map);
+    List<Field> list = new ArrayList<>();
+    list.add(mapField);
+    Field listField = Field.create(list);
+    r.set(listField);
+
+    Assert.assertEquals(listField, r.get());
+    Assert.assertEquals(listField, r.get(""));
+    Assert.assertEquals(mapField, r.get("[0]"));
+    Assert.assertEquals(Field.create(true), r.get("[0]/a"));
+    Assert.assertTrue(r.has(""));
+    Assert.assertTrue(r.has("[0]"));
+    Assert.assertFalse(r.has("[1]"));
+    Assert.assertTrue(r.has("[0]/a"));
+    Assert.assertFalse(r.has("[1]/a"));
+    Assert.assertEquals(ImmutableSet.of("", "[0]", "[0]/a"), r.getFieldPaths());
+    Assert.assertEquals(Field.create(true), r.delete("[0]/a"));
+    Assert.assertEquals(ImmutableSet.of("", "[0]"), r.getFieldPaths());
+    Assert.assertEquals(Field.create(new HashMap<String, Field>()), r.delete("[0]"));
+  }
+
 }

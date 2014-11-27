@@ -23,6 +23,7 @@ import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -63,9 +64,11 @@ public class RecordProducer {
   public Record produce() {
     Record r = new RecordImpl("recordProducer",
       "RecordProducer", null, null);
+    Map<String, Field> map = new LinkedHashMap<>();
     for(Map.Entry<String, Type> e : fieldMap.entrySet()) {
-      r.setField(e.getKey(), createField(e.getValue()));
+      map.put(e.getKey(), createField(e.getValue()));
     }
+    r.set(Field.create(map));
     return r;
   }
 

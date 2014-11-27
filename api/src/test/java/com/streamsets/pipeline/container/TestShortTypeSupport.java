@@ -46,7 +46,7 @@ public class TestShortTypeSupport {
   public void testSnapshot() {
     ShortTypeSupport ts = new ShortTypeSupport();
     Short d = (short)1;
-    Assert.assertSame(d, ts.snapshot(d));
+    Assert.assertSame(d, ts.getReference(d));
   }
 
 }

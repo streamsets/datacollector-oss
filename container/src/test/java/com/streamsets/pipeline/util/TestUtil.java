@@ -25,7 +25,9 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -72,7 +74,7 @@ public class TestUtil {
       @Override
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
         Record record = getContext().createRecord("x");
-        record.setField("f", Field.create(1));
+        record.set(Field.create(1));
         batchMaker.addRecord(record);
         recordsProducedCounter++;
         if (recordsProducedCounter == 1) {
@@ -85,7 +87,7 @@ public class TestUtil {
     MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
       @Override
       protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-        record.setField("f", Field.create(2));
+        record.set(Field.create(2));
         batchMaker.addRecord(record);
       }
     });
@@ -110,8 +112,10 @@ public class TestUtil {
 
       private Record createRecord(String lastSourceOffset, int batchOffset) {
         Record record = getContext().createRecord("random:" + batchOffset);
-        record.setField("name", Field.create(UUID.randomUUID().toString()));
-        record.setField("time", Field.create(System.currentTimeMillis()));
+        Map<String, Field> map = new HashMap<>();
+        map.put("name", Field.create(UUID.randomUUID().toString()));
+        map.put("time", Field.create(System.currentTimeMillis()));
+        record.set(Field.create(map));
         return record;
       }
     });

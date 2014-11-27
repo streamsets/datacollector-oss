@@ -46,7 +46,7 @@ public class TestByteTypeSupport {
   public void testSnapshot() {
     ByteTypeSupport ts = new ByteTypeSupport();
     Byte b = 1;
-    Assert.assertSame(b, ts.snapshot(b));
+    Assert.assertSame(b, ts.getReference(b));
   }
 
 }

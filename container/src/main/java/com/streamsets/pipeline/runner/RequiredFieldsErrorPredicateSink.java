@@ -21,7 +21,6 @@ import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.util.Message;
-import com.streamsets.pipeline.validation.Issue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +73,7 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
     if (requiredFields != null) {
       missingFields.clear();
       for (String field : requiredFields) {
-        if (!record.hasField(field)) {
+        if (!record.has(field)) {
           missingFields.add(field);
         }
       }

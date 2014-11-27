@@ -26,6 +26,8 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 
 @StageDef(version="1.0.0", label="Random Record Source")
@@ -59,11 +61,13 @@ public class RandomSource extends BaseSource {
 
   private Record createRecord(String lastSourceOffset, int batchOffset) {
     Record record = getContext().createRecord("random:" + batchOffset);
+    Map<String, Field> map = new LinkedHashMap<>();
     for (String field : fieldArr) {
       long randomValue = random.nextLong();
-      record.setField(field, Field.create(randomValue));
+      map.put(field, Field.create(randomValue));
       randomMeter.mark(randomValue);
     }
+    record.set(Field.create(map));
     return record;
   }
 }

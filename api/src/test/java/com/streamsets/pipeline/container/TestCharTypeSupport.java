@@ -44,7 +44,7 @@ public class TestCharTypeSupport {
   public void testSnapshot() {
     CharTypeSupport ts = new CharTypeSupport();
     Character c = 'c';
-    Assert.assertSame(c, ts.snapshot(c));
+    Assert.assertSame(c, ts.getReference(c));
   }
 
 }

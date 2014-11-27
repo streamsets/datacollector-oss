@@ -47,8 +47,8 @@ public class TestDateTypeSupport {
   public void testSnapshot() {
     DateTypeSupport ts = new DateTypeSupport();
     Date d = new Date();
-    Assert.assertEquals(d, ts.snapshot(d));
-    Assert.assertNotSame(d, ts.snapshot(d));
+    Assert.assertEquals(d, ts.getReference(d));
+    Assert.assertNotSame(d, ts.getReference(d));
   }
 
 }

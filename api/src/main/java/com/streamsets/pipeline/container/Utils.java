@@ -39,6 +39,12 @@ public final class Utils {
     return value;
   }
 
+  public static void checkArgument(boolean expression, String msg) {
+    if (!expression) {
+      throw new IllegalArgumentException(msg);
+    }
+  }
+
   public static String format(String template, Object... args) {
     return MessageFormatter.arrayFormat(template, args).getMessage();
   }

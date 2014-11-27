@@ -46,7 +46,7 @@ public class TestFloatTypeSupport {
   public void testSnapshot() {
     FloatTypeSupport ts = new FloatTypeSupport();
     Float d = (float)1;
-    Assert.assertSame(d, ts.snapshot(d));
+    Assert.assertSame(d, ts.getReference(d));
   }
 
 }

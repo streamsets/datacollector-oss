@@ -15,31 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.container;
+package com.streamsets.pipeline.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import java.util.regex.Pattern;
 
-public class TestByteArrayTypeSupport {
+public class TextUtils {
 
-  @Test
-  public void testConvertValid() throws Exception {
-    ByteArrayTypeSupport support = new ByteArrayTypeSupport();
-    byte[] array = new byte[0];
-    Assert.assertArrayEquals(array, support.convert(array));
-  }
+  public static final String VALID_NAME= "[0-9A-Za-z_]+";
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testConvertInValid() {
-    new ByteArrayTypeSupport().convert(new Exception());
-  }
+  private static final Pattern VALID_NAME_PATTERN = Pattern.compile(VALID_NAME);
 
-  @Test
-  public void testSnapshot() {
-    ByteArrayTypeSupport ts = new ByteArrayTypeSupport();
-    byte[] array = new byte[0];
-    Assert.assertArrayEquals(array, (byte[])ts.getReference(array));
-    Assert.assertNotSame(array, ts.getReference(array));
+  public static boolean isValidName(String name) {
+    return (name != null) && VALID_NAME_PATTERN.matcher(name).matches();
   }
 
 }

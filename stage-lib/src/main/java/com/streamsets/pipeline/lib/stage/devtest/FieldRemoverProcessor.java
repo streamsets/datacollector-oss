@@ -35,6 +35,10 @@ public class FieldRemoverProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-
+    for (String nameToRemove : fields) {
+      record.delete(nameToRemove);
+    }
+    batchMaker.addRecord(record);
   }
+
 }

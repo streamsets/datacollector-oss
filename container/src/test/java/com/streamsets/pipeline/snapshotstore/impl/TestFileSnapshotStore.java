@@ -143,13 +143,13 @@ public class TestFileSnapshotStore {
     List<Record> records1 = new ArrayList<Record>(2);
 
     Record r1 = new RecordImpl("s", "s:1", TEST_STRING.getBytes(), MIME);
-    r1.setField("f", Field.create(1));
+    r1.set(Field.create(1));
 
     ((RecordImpl)r1).setTrackingId();
     ((RecordImpl)r1).setTrackingId();
 
     Record r2 = new RecordImpl("s", "s:2", TEST_STRING.getBytes(), MIME);
-    r2.setField("f", Field.create(2));
+    r2.set(Field.create(2));
 
     ((RecordImpl)r2).setTrackingId();
     ((RecordImpl)r2).setTrackingId();
@@ -165,13 +165,13 @@ public class TestFileSnapshotStore {
 
     List<Record> records2 = new ArrayList<Record>(1);
     Record r3 = new RecordImpl("s", "s:3", TEST_STRING.getBytes(), MIME);
-    r3.setField("f", Field.create(1));
+    r3.set(Field.create(1));
 
     ((RecordImpl)r3).setTrackingId();
     ((RecordImpl)r3).setTrackingId();
 
     Record r4 = new RecordImpl("s", "s:2", TEST_STRING.getBytes(), MIME);
-    r4.setField("f", Field.create(2));
+    r4.set(Field.create(2));
 
     ((RecordImpl)r4).setTrackingId();
     ((RecordImpl)r4).setTrackingId();

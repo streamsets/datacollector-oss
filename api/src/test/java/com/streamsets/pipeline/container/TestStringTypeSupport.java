@@ -32,7 +32,7 @@ public class TestStringTypeSupport {
   public void testSnapshot() {
     StringTypeSupport ts = new StringTypeSupport();
     String s = "s";
-    Assert.assertSame(s, ts.snapshot(s));
+    Assert.assertSame(s, ts.getReference(s));
   }
 
 }

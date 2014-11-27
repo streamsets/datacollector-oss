@@ -86,7 +86,7 @@ public class TestTailLogSource {
       .run();
 
     Assert.assertFalse(result.get("lane").isEmpty());
-    Assert.assertEquals("FIRST", result.get("lane").get(0).getField("logLine").getValue());
+    Assert.assertEquals("FIRST", result.get("lane").get(0).get().getValue());
   }
 
 }

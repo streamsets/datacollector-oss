@@ -47,7 +47,7 @@ public class TestLongTypeSupport {
   public void testSnapshot() {
     LongTypeSupport ts = new LongTypeSupport();
     Long d = (long)1;
-    Assert.assertSame(d, ts.snapshot(d));
+    Assert.assertSame(d, ts.getReference(d));
   }
 
 }

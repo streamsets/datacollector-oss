@@ -40,8 +40,13 @@ public class DateTypeSupport extends TypeSupport<Date> {
   }
 
   @Override
-  public Object snapshot(Object value) {
+  public Object constructorCopy(Object value) {
     return ((Date) value).clone();
+  }
+
+  @Override
+  public Object getReference(Object value) {
+    return constructorCopy(value);
   }
 
 }

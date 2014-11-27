@@ -43,8 +43,8 @@ public class TestMapTypeSupport {
   public void testSnapshot1() {
     MapTypeSupport support = new MapTypeSupport();
     Map m = new HashMap<>();
-    Assert.assertEquals(m, support.snapshot(m));
-    Assert.assertNotSame(m, support.snapshot(m));
+    Assert.assertEquals(m, support.getReference(m));
+    Assert.assertNotSame(m, support.getReference(m));
   }
 
   @Test
@@ -55,10 +55,10 @@ public class TestMapTypeSupport {
     Field f2 = Field.createDate(new Date());
     m.put("a", f1);
     m.put("b", f2);
-    Assert.assertEquals(m, support.snapshot(m));
-    Assert.assertNotSame(m, support.snapshot(m));
-    Assert.assertEquals(f1, ((Map) support.snapshot(m)).get("a"));
-    Assert.assertEquals(f2, ((Map)support.snapshot(m)).get("b"));
+    Assert.assertEquals(m, support.getReference(m));
+    Assert.assertNotSame(m, support.getReference(m));
+    Assert.assertEquals(f1, ((Map) support.getReference(m)).get("a"));
+    Assert.assertEquals(f2, ((Map)support.getReference(m)).get("b"));
   }
 
   @Test
@@ -72,14 +72,14 @@ public class TestMapTypeSupport {
     m.put("b", f2);
     Map<String, Field> m2 = new HashMap<>();
     m2.put("x", Field.create(m));
-    Assert.assertEquals(m2, support.snapshot(m2));
-    Assert.assertNotSame(m2, support.snapshot(m2));
-    Assert.assertEquals(f1, ((Map<String, Field>) ((Map<String, Field>) support.snapshot(m2)).get("x").getValue()).get("a"));
+    Assert.assertEquals(m2, support.getReference(m2));
+    Assert.assertNotSame(m2, support.getReference(m2));
+    Assert.assertEquals(f1, ((Map<String, Field>) ((Map<String, Field>) support.getReference(m2)).get("x").getValue()).get("a"));
     Assert.assertEquals(f2,
-                        ((Map<String, Field>) ((Map<String, Field>) support.snapshot(m2)).get("x").getValue()).get("b"));
+                        ((Map<String, Field>) ((Map<String, Field>) support.getReference(m2)).get("x").getValue()).get("b"));
 
-    Assert.assertEquals(m, ((Map<String, Field>) support.snapshot(m2)).get("x").getValue());
-    Assert.assertNotSame(m, ((Map<String, Field>) support.snapshot(m2)).get("x").getValue());
+    Assert.assertEquals(m, ((Map<String, Field>) support.getReference(m2)).get("x").getValue());
+    Assert.assertNotSame(m, ((Map<String, Field>) support.getReference(m2)).get("x").getValue());
   }
 
 }
