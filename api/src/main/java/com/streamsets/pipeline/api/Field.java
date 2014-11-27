@@ -39,7 +39,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-// A field is immutable
+/**
+ * A <code>Field</code> is a type/value pair, where the type o the value matches the <code>Field</code> type.
+ * <code>Field</code> values can be automatically converted to compatible Java primitive types and classes.
+ * <code>Field</code> values can be <code>null</code>.
+ * <p/>
+ * The {@link Type} enumeration defines the supported types for <code>Field</code> values.
+ * <p/>
+ * On <code>Field</code> creation, the value is copied, if the value is a Collection based type ({@link Type#MAP} or
+ * {@link Type#LIST}) a deep copy is performed.
+ * <p/>
+ * Except for the Collection based types, <code>Field</code> values are immutable. Collection <code>Field</code> values
+ * can be modified using the corresponding Collection manipulation methods.
+ * <p/>
+ * <b>NOTE:</b> Java <code>Date</code> and <code>byte[]</code> are not immutable. <code>Field</code> makes immutable
+ * by performing a copy on <code>get()</code>. This means that if a <code>Date</code> or <code>byte[]</code> instance
+ * obtained from a <code>Field</code> is modified, the actual value stored in the <code>Field</code> is not modified.
+ * <p/>
+ * The {@link Field#hashCode}, {@link Field#equals} and {@link Field#clone} methods work in deep operation mode on the
+ * on the values.
+ */
 public class Field implements Cloneable {
 
   public enum Type {
@@ -153,16 +172,15 @@ public class Field implements Cloneable {
     return new Field(Type.LIST, v);
   }
 
-  // deep copy
+  // deep copy for MAP and LIST type
   public static <T> Field create(Type type, T value) {
     return new Field(Utils.checkNotNull(type, "type"), type.convert(value));
   }
 
-  // deep copy
+  // deep copy for MAP and LIST type
   public static <T> Field create(Field field, T value) {
     return create(Utils.checkNotNull(field, "field").getType(), value);
   }
-
 
   private Type type;
   private Object value;
@@ -236,12 +254,13 @@ public class Field implements Cloneable {
     return (byte[]) type.convert(getValue(), Type.BYTE_ARRAY);
   }
 
-  // by ref
+  // by ref, changes to the returned Map will change the Map stored in the <code>Field</code
   @SuppressWarnings("unchecked")
   public Map<String, Field> getValueAsMap() {
     return (Map<String, Field>) type.convert(getValue(), Type.MAP);
   }
 
+  // by ref, changes to the returned List will change the Map stored in the <code>Field</code
   // by ref
   @SuppressWarnings("unchecked")
   public List<Field> getValueAsList() {
@@ -253,11 +272,13 @@ public class Field implements Cloneable {
     return type.toString(value);
   }
 
+  // deep hashcode(), value based
   @Override
   public int hashCode() {
     return (value != null) ? value.hashCode() : 0;
   }
 
+  // deep equals(), value based
   @Override
   public boolean equals(Object obj) {
     boolean eq = false;
@@ -272,6 +293,7 @@ public class Field implements Cloneable {
     return eq;
   }
 
+  // deep clone()
   @Override
   public Field clone() {
     switch (type) {
