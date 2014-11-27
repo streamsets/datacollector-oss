@@ -216,12 +216,35 @@ public class TestProductionRun {
     manager.stopPipeline();
 
     InputStream erStream = manager.getErrorRecords(MY_PIPELINE, "0", "p");
-    //TODO: read the input error records into String format and Use Record de-serializer when ready
     Assert.assertNotNull(erStream);
+    //TODO: read the input error records into String format and Use Record de-serializer when ready
+
     //delete the error record file
     manager.deleteErrorRecords(MY_PIPELINE, "0", "p");
 
     erStream = manager.getErrorRecords(MY_PIPELINE, "0", "p");
+    Assert.assertNull(erStream);
+  }
+
+  @Test
+  public void testDeleteErrorRecords() throws PipelineStoreException, StageException, PipelineManagerException,
+      PipelineRuntimeException, InterruptedException {
+    manager.startPipeline(MY_PIPELINE, "0");
+    Thread.sleep(100);
+    Collection<ErrorRecord> errorRecords = manager.getErrorRecords("p");
+    Assert.assertNotNull(errorRecords);
+    Assert.assertEquals(false, errorRecords.isEmpty());
+
+    manager.stopPipeline();
+
+    //check there are error records
+    InputStream erStream = manager.getErrorRecords(MY_PIPELINE, "0", "p");
+    Assert.assertNotNull(erStream);
+
+    manager.deleteErrorRecords(MY_PIPELINE, "0", null /*all records for all stages of this pipeline*/);
+
+    erStream = manager.getErrorRecords(MY_PIPELINE, "0", "p");
+    //verify there are no records
     Assert.assertNull(erStream);
   }
 
