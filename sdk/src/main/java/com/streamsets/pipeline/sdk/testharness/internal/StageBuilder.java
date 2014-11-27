@@ -172,38 +172,40 @@ public abstract class StageBuilder {
                                Object value) {
     switch(configDef.type()) {
       case INTEGER:
-        if(!(value instanceof Integer)) {
+        if (!(value instanceof Integer)) {
           LOG.error("The configuration value for field '{}' does not match the expected type '{}'",
-            f.getName(), configDef.type().name());
+                    f.getName(), configDef.type().name());
+          return false;
         }
-        return false;
+        break;
       case BOOLEAN:
-        if(!(value instanceof Boolean)) {
+        if (!(value instanceof Boolean)) {
           LOG.error("The configuration value for field '{}' does not match the expected type '{}'",
-            f.getName(), configDef.type().name());
+                    f.getName(), configDef.type().name());
+          return false;
         }
-        return false;
+        break;
       case MODEL:
-        if(fieldSelector != null && !(value instanceof Boolean)) {
+        if (fieldSelector != null && !(value instanceof Boolean)) {
           LOG.error("The field '{}' is marked as FieldSelector. A boolean value is expected.",
-            f.getName());
+                    f.getName());
           return false;
         }
-        if(fieldModifier != null && !(value instanceof String)) {
+        if (fieldModifier != null && !(value instanceof String)) {
           LOG.error("The field '{}' is marked as FieldSelector. A String value is expected.",
-            f.getName());
+                    f.getName());
           return false;
         }
+        break;
       case STRING:
-        if(!(value instanceof String)) {
+        if (!(value instanceof String)) {
           LOG.error("The configuration value for field '{}' does not match the expected type '{}'",
-            f.getName(), configDef.type().name());
+                    f.getName(), configDef.type().name());
           return false;
         }
-
-      default:
-        return true;
+        break;
     }
+    return true;
   }
 
 }

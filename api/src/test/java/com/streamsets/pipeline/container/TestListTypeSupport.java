@@ -40,15 +40,28 @@ public class TestListTypeSupport {
   }
 
   @Test
-  public void testSnapshot1() {
+  public void testConstructorCopy() {
     ListTypeSupport support = new ListTypeSupport();
-    List<Field> m = new ArrayList<>();
-    Assert.assertEquals(m, support.getReference(m));
-    Assert.assertNotSame(m, support.getReference(m));
+    List<Field> l = new ArrayList<>();
+    Field f1 = Field.create(true);
+    Field f2 = Field.createDate(new Date());
+    l.add(f1);
+    l.add(f2);
+    List<Field> l2 = new ArrayList<>();
+    l2.add(Field.create(true));
+    Field f3 = Field.create(l2);
+    l.add(f3);
+    Object copy = support.constructorCopy(l);
+    Assert.assertEquals(l, copy);
+    Assert.assertNotSame(l, copy);
+    Assert.assertEquals(f1, ((List) copy).get(0));
+    Assert.assertEquals(f2, ((List) copy).get(1));
+    Assert.assertEquals(f3, ((List) copy).get(2));
+    Assert.assertNotSame(f3, ((List) copy).get(2));
   }
 
   @Test
-  public void testSnapshot2() {
+  public void testGetReference() {
     ListTypeSupport support = new ListTypeSupport();
     List<Field> m = new ArrayList<>();
     Field f1 = Field.create(true);
@@ -56,30 +69,9 @@ public class TestListTypeSupport {
     m.add(f1);
     m.add(f2);
     Assert.assertEquals(m, support.getReference(m));
-    Assert.assertNotSame(m, support.getReference(m));
+    Assert.assertSame(m, support.getReference(m));
     Assert.assertEquals(f1, ((List) support.getReference(m)).get(0));
     Assert.assertEquals(f2, ((List)support.getReference(m)).get(1));
-  }
-
-  @Test
-  @SuppressWarnings("unchecked")
-  public void testSnapshot3() {
-    ListTypeSupport support = new ListTypeSupport();
-    List<Field> m = new ArrayList<>();
-    Field f1 = Field.create(true);
-    Field f2 = Field.createDate(new Date());
-    m.add(f1);
-    m.add(f2);
-    List<Field> m2 = new ArrayList<>();
-    m2.add(Field.create(m));
-    Assert.assertEquals(m2, support.getReference(m2));
-    Assert.assertNotSame(m2, support.getReference(m2));
-    Assert.assertEquals(f1, ((List<Field>) ((List<Field>) support.getReference(m2)).get(0).getValue()).get(0));
-    Assert.assertEquals(f2,
-                        ((List<Field>) ((List<Field>) support.getReference(m2)).get(0).getValue()).get(1));
-
-    Assert.assertEquals(m, ((List<Field>) support.getReference(m2)).get(0).getValue());
-    Assert.assertNotSame(m, ((List<Field>) support.getReference(m2)).get(0).getValue());
   }
 
 }
