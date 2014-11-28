@@ -60,7 +60,6 @@ public class RecordImpl implements Record {
     }
     header.setStageCreator(stageCreator);
     header.setSourceId(recordSourceId);
-    header.setStagesPath(stageCreator);
   }
 
   public RecordImpl(String stageCreator, Record originatorRecord, byte[] raw, String rawMime) {
@@ -81,7 +80,8 @@ public class RecordImpl implements Record {
 
   public void addStageToStagePath(String stage) {
     Preconditions.checkNotNull(stage, "stage cannot be null");
-    header.setStagesPath(header.getStagesPath() + ":" + stage);
+    String currentPath = (header.getStagesPath() == null) ? "" : header.getStagesPath() + ":";
+    header.setStagesPath(currentPath + stage);
   }
 
   public void createTrackingId() {
