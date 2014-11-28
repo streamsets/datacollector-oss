@@ -25,6 +25,27 @@ import java.math.BigDecimal;
 public class TestShortTypeSupport {
 
   @Test
+  public void testCreate() {
+    ShortTypeSupport ts = new ShortTypeSupport();
+    short o = 1;
+    Assert.assertSame(o, ts.create(o));
+  }
+
+  @Test
+  public void testGet() {
+    ShortTypeSupport ts = new ShortTypeSupport();
+    short o = 1;
+    Assert.assertSame(o, ts.get(o));
+  }
+
+  @Test
+  public void testClone() {
+    ShortTypeSupport ts = new ShortTypeSupport();
+    short o = 1;
+    Assert.assertSame(o, ts.clone(o));
+  }
+
+  @Test
   public void testConvertValid() {
     ShortTypeSupport support = new ShortTypeSupport();
     Assert.assertEquals(new Short((short)1), support.convert("1"));
@@ -34,19 +55,12 @@ public class TestShortTypeSupport {
     Assert.assertEquals(new Short((short)1), support.convert((long)1));
     Assert.assertEquals(new Short((short)1), support.convert((float)1));
     Assert.assertEquals(new Short((short)1), support.convert((double)1));
-    Assert.assertEquals(new Short((short)1), support.convert(new BigDecimal(1)));
+    Assert.assertEquals(new Short((short) 1), support.convert(new BigDecimal(1)));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
     new ShortTypeSupport().convert(new Exception());
-  }
-
-  @Test
-  public void testSnapshot() {
-    ShortTypeSupport ts = new ShortTypeSupport();
-    Short d = (short)1;
-    Assert.assertSame(d, ts.getReference(d));
   }
 
 }

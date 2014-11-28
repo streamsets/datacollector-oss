@@ -61,6 +61,8 @@ import java.util.Set;
  * Using field-path expressions is possible to check for existence, access, modify and delete a <code>Field</code> data
  * structure. The {@link #get(String)}, {@link #has(String)}, {@link #delete(String)} and {@link #getFieldPaths()}
  * methods work using field- path expressions.
+ * <p/>
+ * The {@link #hashCode}, {@link #equals} and {@link #clone} methods work in deep operation mode on <code>Record</code>.
  */
 public interface Record {
 

@@ -25,6 +25,27 @@ import java.math.BigDecimal;
 public class TestIntegerTypeSupport {
 
   @Test
+  public void testCreate() {
+    IntegerTypeSupport ts = new IntegerTypeSupport();
+    int o = 1;
+    Assert.assertSame(o, ts.create(o));
+  }
+
+  @Test
+  public void testGet() {
+    IntegerTypeSupport ts = new IntegerTypeSupport();
+    int o = 1;
+    Assert.assertSame(o, ts.get(o));
+  }
+
+  @Test
+  public void testClone() {
+    IntegerTypeSupport ts = new IntegerTypeSupport();
+    int o = 1;
+    Assert.assertSame(o, ts.clone(o));
+  }
+
+  @Test
   public void testConvertValid() {
     IntegerTypeSupport support = new IntegerTypeSupport();
     Assert.assertEquals(new Integer(1), support.convert("1"));
@@ -40,13 +61,6 @@ public class TestIntegerTypeSupport {
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
     new IntegerTypeSupport().convert(new Exception());
-  }
-
-  @Test
-  public void testSnapshot() {
-    IntegerTypeSupport ts = new IntegerTypeSupport();
-    Integer d = 1;
-    Assert.assertSame(d, ts.getReference(d));
   }
 
 }

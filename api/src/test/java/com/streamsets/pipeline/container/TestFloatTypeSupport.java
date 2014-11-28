@@ -25,6 +25,27 @@ import java.math.BigDecimal;
 public class TestFloatTypeSupport {
 
   @Test
+  public void testCreate() {
+    FloatTypeSupport ts = new FloatTypeSupport();
+    Float o = new Float(1.2);
+    Assert.assertSame(o, ts.create(o));
+  }
+
+  @Test
+  public void testGet() {
+    FloatTypeSupport ts = new FloatTypeSupport();
+    Float o = new Float(1.2);
+    Assert.assertSame(o, ts.get(o));
+  }
+
+  @Test
+  public void testClone() {
+    FloatTypeSupport ts = new FloatTypeSupport();
+    Float o = new Float(1.2);
+    Assert.assertSame(o, ts.clone(o));
+  }
+
+  @Test
   public void testConvertValid() {
     FloatTypeSupport support = new FloatTypeSupport();
     Assert.assertEquals(new Float(1), support.convert("1"));
@@ -40,13 +61,6 @@ public class TestFloatTypeSupport {
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
     new FloatTypeSupport().convert(new Exception());
-  }
-
-  @Test
-  public void testSnapshot() {
-    FloatTypeSupport ts = new FloatTypeSupport();
-    Float d = (float)1;
-    Assert.assertSame(d, ts.getReference(d));
   }
 
 }

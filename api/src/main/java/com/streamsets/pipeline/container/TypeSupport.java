@@ -25,11 +25,16 @@ public abstract class TypeSupport<T> {
     return targetTypeSupport.convert(value);
   }
 
-  public Object constructorCopy(Object value) {
+  public Object create(Object value) {
     return value;
   }
 
-  public Object getReference(Object value) {
+  public Object get(Object value) {
+    return value;
+  }
+
+  // default implementation assumes value is immutable, no need to clone
+  public Object clone(Object value) {
     return value;
   }
 

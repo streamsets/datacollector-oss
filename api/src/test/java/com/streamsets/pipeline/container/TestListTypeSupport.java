@@ -23,9 +23,36 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestListTypeSupport {
+
+  @Test
+  public void testCreate() {
+    ListTypeSupport ts = new ListTypeSupport();
+    List map = new ArrayList();
+    Assert.assertEquals(map, ts.create(map));
+    Assert.assertSame(map, ts.create(map));
+  }
+
+  @Test
+  public void testGet() {
+    ListTypeSupport ts = new ListTypeSupport();
+    List map = new ArrayList();
+    Assert.assertEquals(map, ts.get(map));
+    Assert.assertSame(map, ts.get(map));
+  }
+
+  @Test
+  public void testClone() {
+    ListTypeSupport ts = new ListTypeSupport();
+    List map = new ArrayList();
+    Assert.assertEquals(map, ts.clone(map));
+    Assert.assertNotSame(map, ts.clone(map));
+  }
+
 
   @Test
   public void testConvertValid() throws Exception {
@@ -37,41 +64,6 @@ public class TestListTypeSupport {
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
     new ListTypeSupport().convert(new Exception());
-  }
-
-  @Test
-  public void testConstructorCopy() {
-    ListTypeSupport support = new ListTypeSupport();
-    List<Field> l = new ArrayList<>();
-    Field f1 = Field.create(true);
-    Field f2 = Field.createDate(new Date());
-    l.add(f1);
-    l.add(f2);
-    List<Field> l2 = new ArrayList<>();
-    l2.add(Field.create(true));
-    Field f3 = Field.create(l2);
-    l.add(f3);
-    Object copy = support.constructorCopy(l);
-    Assert.assertEquals(l, copy);
-    Assert.assertNotSame(l, copy);
-    Assert.assertEquals(f1, ((List) copy).get(0));
-    Assert.assertEquals(f2, ((List) copy).get(1));
-    Assert.assertEquals(f3, ((List) copy).get(2));
-    Assert.assertNotSame(f3, ((List) copy).get(2));
-  }
-
-  @Test
-  public void testGetReference() {
-    ListTypeSupport support = new ListTypeSupport();
-    List<Field> m = new ArrayList<>();
-    Field f1 = Field.create(true);
-    Field f2 = Field.createDate(new Date());
-    m.add(f1);
-    m.add(f2);
-    Assert.assertEquals(m, support.getReference(m));
-    Assert.assertSame(m, support.getReference(m));
-    Assert.assertEquals(f1, ((List) support.getReference(m)).get(0));
-    Assert.assertEquals(f2, ((List)support.getReference(m)).get(1));
   }
 
 }

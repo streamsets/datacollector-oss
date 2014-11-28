@@ -42,10 +42,9 @@ public class ListTypeSupport extends TypeSupport<List> {
     }
   }
 
-
   @Override
   @SuppressWarnings("unchecked")
-  public Object constructorCopy(Object value) {
+  public Object clone(Object value) {
     List List = null;
     if (value != null) {
       List = deepCopy((List<Field>)value);

@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.container;
 
+// we are making a Field for byte[]'s to have 'immutable' values by cloning on create/get/clone
 public class ByteArrayTypeSupport extends TypeSupport<byte[]> {
 
   @Override
@@ -38,7 +39,17 @@ public class ByteArrayTypeSupport extends TypeSupport<byte[]> {
   }
 
   @Override
-  public Object getReference(Object value) {
+  public Object create(Object value) {
+    return clone(value);
+  }
+
+  @Override
+  public Object get(Object value) {
+    return clone(value);
+  }
+
+  @Override
+  public Object clone(Object value) {
     return ((byte[])value).clone();
   }
 

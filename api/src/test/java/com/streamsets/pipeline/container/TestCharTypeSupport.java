@@ -23,6 +23,27 @@ import org.junit.Test;
 public class TestCharTypeSupport {
 
   @Test
+  public void testCreate() {
+    CharTypeSupport ts = new CharTypeSupport();
+    char o = 'c';
+    Assert.assertSame(o, ts.create(o));
+  }
+
+  @Test
+  public void testGet() {
+    CharTypeSupport ts = new CharTypeSupport();
+    char o = 'c';
+    Assert.assertSame(o, ts.get(o));
+  }
+
+  @Test
+  public void testClone() {
+    CharTypeSupport ts = new CharTypeSupport();
+    char o = 'c';
+    Assert.assertSame(o, ts.clone(o));
+  }
+
+  @Test
   public void testConvertValid() {
     CharTypeSupport support = new CharTypeSupport();
     Assert.assertEquals(new Character('c'), support.convert('c'));
@@ -38,13 +59,6 @@ public class TestCharTypeSupport {
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid2() {
     new CharTypeSupport().convert("");
-  }
-
-  @Test
-  public void testSnapshot() {
-    CharTypeSupport ts = new CharTypeSupport();
-    Character c = 'c';
-    Assert.assertSame(c, ts.getReference(c));
   }
 
 }

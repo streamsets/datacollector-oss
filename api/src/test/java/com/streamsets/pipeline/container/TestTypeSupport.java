@@ -20,42 +20,34 @@ package com.streamsets.pipeline.container;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestByteArrayTypeSupport {
+public class TestTypeSupport {
+
+  public static class TTypeSupport extends TypeSupport<Object> {
+    @Override
+    public Object convert(Object value) {
+      return value;
+    }
+  }
 
   @Test
   public void testCreate() {
-    ByteArrayTypeSupport ts = new ByteArrayTypeSupport();
-    byte[] array = new byte[0];
-    Assert.assertArrayEquals(array, (byte[])ts.create(array));
-    Assert.assertNotSame(array, ts.create(array));
+    TypeSupport tt = new TTypeSupport();
+    Object o = new Object();
+    Assert.assertSame(o, tt.create(o));
   }
 
   @Test
   public void testGet() {
-    ByteArrayTypeSupport ts = new ByteArrayTypeSupport();
-    byte[] array = new byte[0];
-    Assert.assertArrayEquals(array, (byte[])ts.get(array));
-    Assert.assertNotSame(array, ts.get(array));
+    TypeSupport tt = new TTypeSupport();
+    Object o = new Object();
+    Assert.assertSame(o, tt.get(o));
   }
 
   @Test
   public void testClone() {
-    ByteArrayTypeSupport ts = new ByteArrayTypeSupport();
-    byte[] array = new byte[0];
-    Assert.assertArrayEquals(array, (byte[])ts.clone(array));
-    Assert.assertNotSame(array, ts.clone(array));
-  }
-
-  @Test
-  public void testConvertValid() throws Exception {
-    ByteArrayTypeSupport support = new ByteArrayTypeSupport();
-    byte[] array = new byte[0];
-    Assert.assertArrayEquals(array, support.convert(array));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testConvertInValid() {
-    new ByteArrayTypeSupport().convert(new Exception());
+    TypeSupport tt = new TTypeSupport();
+    Object o = new Object();
+    Assert.assertSame(o, tt.clone(o));
   }
 
 }

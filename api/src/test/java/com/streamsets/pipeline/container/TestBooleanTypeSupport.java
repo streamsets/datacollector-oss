@@ -25,6 +25,27 @@ import java.math.BigDecimal;
 public class TestBooleanTypeSupport {
 
   @Test
+  public void testCreate() {
+    BooleanTypeSupport ts = new BooleanTypeSupport();
+    Boolean o = true;
+    Assert.assertSame(o, ts.create(o));
+  }
+
+  @Test
+  public void testGet() {
+    BooleanTypeSupport ts = new BooleanTypeSupport();
+    Boolean o = true;
+    Assert.assertSame(o, ts.get(o));
+  }
+
+  @Test
+  public void testClone() {
+    BooleanTypeSupport ts = new BooleanTypeSupport();
+    Boolean o = true;
+    Assert.assertSame(o, ts.clone(o));
+  }
+
+  @Test
   public void testConvertValid() {
     BooleanTypeSupport support = new BooleanTypeSupport();
     Assert.assertEquals(true, support.convert(true));
@@ -51,13 +72,6 @@ public class TestBooleanTypeSupport {
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
     new BooleanTypeSupport().convert(new Exception());
-  }
-
-  @Test
-  public void testSnapshot() {
-    BooleanTypeSupport ts = new BooleanTypeSupport();
-    Boolean b = true;
-    Assert.assertSame(b, ts.getReference(b));
   }
 
 }

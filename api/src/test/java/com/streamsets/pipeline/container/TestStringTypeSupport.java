@@ -23,16 +23,30 @@ import org.junit.Test;
 public class TestStringTypeSupport {
 
   @Test
-  public void testConvertValid() {
-    StringTypeSupport support = new StringTypeSupport();
-    Assert.assertEquals("s", support.convert("s"));
+  public void testCreate() {
+    StringTypeSupport ts = new StringTypeSupport();
+    String o = "s";
+    Assert.assertSame(o, ts.create(o));
   }
 
   @Test
-  public void testSnapshot() {
+  public void testGet() {
     StringTypeSupport ts = new StringTypeSupport();
-    String s = "s";
-    Assert.assertSame(s, ts.getReference(s));
+    String o = "s";
+    Assert.assertSame(o, ts.get(o));
+  }
+
+  @Test
+  public void testClone() {
+    StringTypeSupport ts = new StringTypeSupport();
+    String o = "s";
+    Assert.assertSame(o, ts.clone(o));
+  }
+
+  @Test
+  public void testConvertValid() {
+    StringTypeSupport support = new StringTypeSupport();
+    Assert.assertEquals("s", support.convert("s"));
   }
 
 }

@@ -47,7 +47,7 @@ public class MapTypeSupport extends TypeSupport<Map> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public Object constructorCopy(Object value) {
+  public Object clone(Object value) {
     Map map = null;
     if (value != null) {
       map = deepCopy((Map<String, Field>)value);

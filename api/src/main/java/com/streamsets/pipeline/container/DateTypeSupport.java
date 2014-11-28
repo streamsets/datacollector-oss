@@ -20,6 +20,7 @@ package com.streamsets.pipeline.container;
 import java.text.ParseException;
 import java.util.Date;
 
+// we are making a Field for Date's to have 'immutable' values by cloning on create/get/clone
 public class DateTypeSupport extends TypeSupport<Date> {
 
   @Override
@@ -40,13 +41,18 @@ public class DateTypeSupport extends TypeSupport<Date> {
   }
 
   @Override
-  public Object constructorCopy(Object value) {
-    return ((Date) value).clone();
+  public Object create(Object value) {
+    return clone(value);
   }
 
   @Override
-  public Object getReference(Object value) {
-    return constructorCopy(value);
+  public Object get(Object value) {
+    return clone(value);
+  }
+
+  @Override
+  public Object clone(Object value) {
+    return ((Date) value).clone();
   }
 
 }

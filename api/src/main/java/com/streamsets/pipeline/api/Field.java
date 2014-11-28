@@ -46,18 +46,16 @@ import java.util.Map;
  * <p/>
  * The {@link Type} enumeration defines the supported types for <code>Field</code> values.
  * <p/>
- * On <code>Field</code> creation, the value is copied, if the value is a Collection based type ({@link Type#MAP} or
- * {@link Type#LIST}) a deep copy is performed.
- * <p/>
  * Except for the Collection based types, <code>Field</code> values are immutable. Collection <code>Field</code> values
  * can be modified using the corresponding Collection manipulation methods.
  * <p/>
  * <b>NOTE:</b> Java <code>Date</code> and <code>byte[]</code> are not immutable. <code>Field</code> makes immutable
- * by performing a copy on <code>get()</code>. This means that if a <code>Date</code> or <code>byte[]</code> instance
- * obtained from a <code>Field</code> is modified, the actual value stored in the <code>Field</code> is not modified.
+ * by performing a copy on <code>create()</code> and on <code>get()</code>. This means that if a <code>Date</code> or
+ * <code>byte[]</code> instance obtained from a <code>Field</code> is modified, the actual value stored in the
+ * <code>Field</code> is not modified.
  * <p/>
- * The {@link Field#hashCode}, {@link Field#equals} and {@link Field#clone} methods work in deep operation mode on the
- * on the values.
+ * The {@link #hashCode}, {@link #equals} and {@link #clone} methods work in deep operation mode on the
+ * <code>Field</code>.
  */
 public class Field implements Cloneable {
 
@@ -94,12 +92,12 @@ public class Field implements Cloneable {
 
     @SuppressWarnings("unchecked")
     private <T> T constructorCopy(T value) {
-      return (value != null) ? (T) supporter.constructorCopy(value) : null;
+      return (value != null) ? (T) supporter.create(value) : null;
     }
 
     @SuppressWarnings("unchecked")
     private <T> T getReference(T value) {
-      return (value != null) ? (T) supporter.getReference(value) : null;
+      return (value != null) ? (T) supporter.get(value) : null;
     }
 
     private String toString(Object value) {
@@ -293,23 +291,20 @@ public class Field implements Cloneable {
     return eq;
   }
 
-  // deep clone()
+  /**
+   * Clones the <code>Field</code>.
+   * <p/>
+   * For <code>Field</code> instances  of non-Collection based types it returns the same instance as the are immutable
+   * (this deviates from the expected behavior documented in the  <code>Object.clone()</code>.
+   * <p/>
+   * * For <code>Field</code> instances  of Collection based types it returns the deep copy of the <code>Field</code>
+   * instance.
+   *
+   * @return a clone the <code>Filed</code> instance.
+   */
   @Override
   public Field clone() {
-    switch (type) {
-      case MAP:
-      case LIST:
-        try {
-          Field clone = (Field) super.clone();
-          clone.type = type;
-          clone.value = type.constructorCopy(value);
-          return clone;
-        } catch (CloneNotSupportedException ex) {
-         //
-        }
-      default:
-        return this;
-    }
+    return (type != Type.MAP && type != Type.LIST) ? this : new Field(type, value);
   }
 
 }

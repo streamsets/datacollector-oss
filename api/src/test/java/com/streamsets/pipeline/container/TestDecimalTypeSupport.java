@@ -25,6 +25,27 @@ import java.math.BigDecimal;
 public class TestDecimalTypeSupport {
 
   @Test
+  public void testCreate() {
+    DecimalTypeSupport ts = new DecimalTypeSupport();
+    BigDecimal o = new BigDecimal(1);
+    Assert.assertSame(o, ts.create(o));
+  }
+
+  @Test
+  public void testGet() {
+    DecimalTypeSupport ts = new DecimalTypeSupport();
+    BigDecimal o = new BigDecimal(1);
+    Assert.assertSame(o, ts.get(o));
+  }
+
+  @Test
+  public void testClone() {
+    DecimalTypeSupport ts = new DecimalTypeSupport();
+    BigDecimal o = new BigDecimal(1);
+    Assert.assertSame(o, ts.clone(o));
+  }
+
+  @Test
   public void testConvertValid() {
     DecimalTypeSupport support = new DecimalTypeSupport();
     Assert.assertEquals(new BigDecimal(1), support.convert("1"));
@@ -41,13 +62,5 @@ public class TestDecimalTypeSupport {
   public void testConvertInValid() {
     new DecimalTypeSupport().convert(new Exception());
   }
-
-  @Test
-  public void testSnapshot() {
-    DecimalTypeSupport ts = new DecimalTypeSupport();
-    BigDecimal b = new BigDecimal(1);
-    Assert.assertSame(b, ts.getReference(b));
-  }
-
 
 }

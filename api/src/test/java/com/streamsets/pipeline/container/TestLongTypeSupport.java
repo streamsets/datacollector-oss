@@ -25,6 +25,27 @@ import java.math.BigDecimal;
 public class TestLongTypeSupport {
 
   @Test
+  public void testCreate() {
+    LongTypeSupport ts = new LongTypeSupport();
+    long o = 1;
+    Assert.assertSame(o, ts.create(o));
+  }
+
+  @Test
+  public void testGet() {
+    LongTypeSupport ts = new LongTypeSupport();
+    long o = 1;
+    Assert.assertSame(o, ts.get(o));
+  }
+
+  @Test
+  public void testClone() {
+    LongTypeSupport ts = new LongTypeSupport();
+    long o = 1;
+    Assert.assertSame(o, ts.clone(o));
+  }
+
+  @Test
   public void testConvertValid() {
     LongTypeSupport support = new LongTypeSupport();
     Assert.assertEquals(new Long(1), support.convert("1"));
@@ -41,13 +62,6 @@ public class TestLongTypeSupport {
   public void testConvertInValid() {
     LongTypeSupport support = new LongTypeSupport();
     new LongTypeSupport().convert(new Exception());
-  }
-
-  @Test
-  public void testSnapshot() {
-    LongTypeSupport ts = new LongTypeSupport();
-    Long d = (long)1;
-    Assert.assertSame(d, ts.getReference(d));
   }
 
 }

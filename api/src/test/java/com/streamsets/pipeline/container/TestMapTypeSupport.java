@@ -28,6 +28,30 @@ import java.util.Map;
 public class TestMapTypeSupport {
 
   @Test
+  public void testCreate() {
+    MapTypeSupport ts = new MapTypeSupport();
+    Map map = new HashMap();
+    Assert.assertEquals(map, ts.create(map));
+    Assert.assertSame(map, ts.create(map));
+  }
+
+  @Test
+  public void testGet() {
+    MapTypeSupport ts = new MapTypeSupport();
+    Map map = new HashMap();
+    Assert.assertEquals(map, ts.get(map));
+    Assert.assertSame(map, ts.get(map));
+  }
+
+  @Test
+  public void testClone() {
+    MapTypeSupport ts = new MapTypeSupport();
+    Map map = new HashMap();
+    Assert.assertEquals(map, ts.clone(map));
+    Assert.assertNotSame(map, ts.clone(map));
+  }
+
+  @Test
   public void testConvertValid() throws Exception {
     MapTypeSupport support = new MapTypeSupport();
     Map m = new HashMap<>();
@@ -37,34 +61,6 @@ public class TestMapTypeSupport {
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
     new MapTypeSupport().convert(new Exception());
-  }
-
-  @Test
-  @SuppressWarnings("unchecked")
-  public void testConstructorCopy() {
-    MapTypeSupport support = new MapTypeSupport();
-    Map m = new HashMap<>();
-    Field f1 = Field.create(true);
-    Field f2 = Field.createDate(new Date());
-    m.put("a", f1);
-    m.put("b", f2);
-    Map<String, Field> m2 = new HashMap<>();
-    m2.put("c", Field.create(false));
-    m.put("x", Field.create(m2));
-    Object copy = support.constructorCopy(m);
-    Assert.assertEquals(m, copy);
-    Assert.assertNotSame(m, copy);
-    Assert.assertEquals(f1, ((Map) copy).get("a"));
-    Assert.assertEquals(f2, ((Map) copy).get("b"));
-    Assert.assertEquals(m2, ((Map<String, Field>) copy).get("x").getValue());
-  }
-
-  @Test
-  public void testGetReference() {
-    MapTypeSupport support = new MapTypeSupport();
-    Map m = new HashMap<>();
-    Assert.assertEquals(m, support.getReference(m));
-    Assert.assertSame(m, support.getReference(m));
   }
 
 }

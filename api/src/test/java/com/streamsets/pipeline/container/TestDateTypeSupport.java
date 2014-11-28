@@ -25,6 +25,30 @@ import java.util.Date;
 public class TestDateTypeSupport {
 
   @Test
+  public void testCreate() {
+    DateTypeSupport ts = new DateTypeSupport();
+    Date o = new Date();
+    Assert.assertEquals(o, ts.create(o));
+    Assert.assertNotSame(o, ts.create(o));
+  }
+
+  @Test
+  public void testGet() {
+    DateTypeSupport ts = new DateTypeSupport();
+    Date o = new Date();
+    Assert.assertEquals(o, ts.get(o));
+    Assert.assertNotSame(o, ts.get(o));
+  }
+
+  @Test
+  public void testClone() {
+    DateTypeSupport ts = new DateTypeSupport();
+    Date o = new Date();
+    Assert.assertEquals(o, ts.clone(o));
+    Assert.assertNotSame(o, ts.clone(o));
+  }
+
+  @Test
   public void testConvertValid() throws Exception {
     DateTypeSupport support = new DateTypeSupport();
     Date d = new Date();
@@ -41,14 +65,6 @@ public class TestDateTypeSupport {
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid2() {
     new DateTypeSupport().convert("2014");
-  }
-
-  @Test
-  public void testSnapshot() {
-    DateTypeSupport ts = new DateTypeSupport();
-    Date d = new Date();
-    Assert.assertEquals(d, ts.getReference(d));
-    Assert.assertNotSame(d, ts.getReference(d));
   }
 
 }

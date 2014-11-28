@@ -25,6 +25,27 @@ import java.math.BigDecimal;
 public class TestByteTypeSupport {
 
   @Test
+  public void testCreate() {
+    ByteTypeSupport ts = new ByteTypeSupport();
+    Byte o = 1;
+    Assert.assertSame(o, ts.create(o));
+  }
+
+  @Test
+  public void testGet() {
+    ByteTypeSupport ts = new ByteTypeSupport();
+    Byte o = 1;
+    Assert.assertSame(o, ts.get(o));
+  }
+
+  @Test
+  public void testClone() {
+    ByteTypeSupport ts = new ByteTypeSupport();
+    Byte o = 1;
+    Assert.assertSame(o, ts.clone(o));
+  }
+
+  @Test
   public void testConvertValid() {
     ByteTypeSupport support = new ByteTypeSupport();
     Assert.assertEquals(new Byte((byte) 1), support.convert("1"));
@@ -40,13 +61,6 @@ public class TestByteTypeSupport {
   @Test(expected = IllegalArgumentException.class)
   public void testConvertInValid() {
     new ByteTypeSupport().convert(new Exception());
-  }
-
-  @Test
-  public void testSnapshot() {
-    ByteTypeSupport ts = new ByteTypeSupport();
-    Byte b = 1;
-    Assert.assertSame(b, ts.getReference(b));
   }
 
 }
