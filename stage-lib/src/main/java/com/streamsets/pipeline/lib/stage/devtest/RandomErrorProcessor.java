@@ -27,7 +27,8 @@ import java.util.Iterator;
 import java.util.Random;
 
 @StageDef(version = "1.0.0", label = "Random Error",
-          description = "Randomly do something with the record 60% to output, 20% to error, 20% eats up the record")
+          description = "Randomly do something with the record, output, error, vanish, the threshold for what to do " +
+                        "is randomly selected per batch")
 public class RandomErrorProcessor extends SingleLaneProcessor {
   private Random random;
 
@@ -40,12 +41,14 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
   @Override
   public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws
       StageException {
+    double batchThreshold1 = random.nextDouble();
+    double batchThreshold2 = batchThreshold1 * 1.3;
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
-      float action = random.nextFloat();
-      if (action < 0.6) {
+      double action = random.nextDouble();
+      if (action < batchThreshold1) {
         batchMaker.addRecord(it.next());
-      } else if (action < 0.8) {
+      } else if (action < batchThreshold2) {
         getContext().toError(it.next(), "Random error");
       } else {
         // we eat the record
