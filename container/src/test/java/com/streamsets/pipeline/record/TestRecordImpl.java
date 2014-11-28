@@ -21,14 +21,12 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import org.junit.Assert;
-import org.junit.ComparisonFailure;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class TestRecordImpl {
 
@@ -104,133 +102,17 @@ public class TestRecordImpl {
     new RecordImpl("stage", "source", null, "M");
   }
 
-  public static void assertIsSnapshot(Record original, Record snapshot) {
-    Assert.assertEquals(original.getFieldPaths(), snapshot.getFieldPaths());
-    Assert.assertEquals(original.get(), snapshot.get());
-    Assert.assertEquals(original.getHeader().getAttributeNames(), snapshot.getHeader().getAttributeNames());
-    for (String name : original.getHeader().getAttributeNames()) {
-      Assert.assertEquals(snapshot.getHeader().getAttribute(name), original.getHeader().getAttribute(name));
-    }
-    for (String name : snapshot.getHeader().getAttributeNames()) {
-      Assert.assertEquals(snapshot.getHeader().getAttribute(name), original.getHeader().getAttribute(name));
-    }
-    String randomKey = UUID.randomUUID().toString();
-    try {
-      snapshot.getHeader().setAttribute(randomKey, "X");
-      Assert.assertEquals("X", original.getHeader().getAttribute(randomKey));
-      Assert.assertEquals(snapshot.getHeader().getStageCreator(), original.getHeader().getStageCreator());
-      Assert.assertEquals(snapshot.getHeader().getRaw(), original.getHeader().getRaw());
-      Assert.assertEquals(snapshot.getHeader().getRawMimeType(), original.getHeader().getRawMimeType());
-      Assert.assertEquals(snapshot.getHeader().getSourceId(), original.getHeader().getSourceId());
-    } finally {
-      snapshot.getHeader().deleteAttribute(randomKey);
-    }
-  }
-
-  public static void assertIsCopy(Record original, Record copy, boolean compareStagesPath) {
-    Assert.assertEquals(original.getFieldPaths(), copy.getFieldPaths());
-    Assert.assertEquals(original.get(), copy.get());
-    Assert.assertEquals(original.getHeader().getAttributeNames(), copy.getHeader().getAttributeNames());
-    for (String name : original.getHeader().getAttributeNames()) {
-      Assert.assertEquals(copy.getHeader().getAttribute(name), original.getHeader().getAttribute(name));
-    }
-    for (String name : copy.getHeader().getAttributeNames()) {
-      Assert.assertEquals(copy.getHeader().getAttribute(name), original.getHeader().getAttribute(name));
-    }
-    String randomKey = UUID.randomUUID().toString();
-    try {
-      copy.getHeader().setAttribute(randomKey, "X");
-      Assert.assertNull(original.getHeader().getAttribute(randomKey));
-      if (compareStagesPath) {
-        Assert.assertEquals(copy.getHeader().getStagesPath(), original.getHeader().getStagesPath());
-      }
-    } finally {
-      copy.getHeader().deleteAttribute(randomKey);
-    }
-  }
-
   @Test
-  public void testAssertIsSnapshot() {
+  public void testClone() {
     RecordImpl record = new RecordImpl("stage", "source", null, null);
-    record.set(Field.create(true));
+    record.set(Field.create(new HashMap<String, Field>()));
     record.getHeader().setAttribute("a", "A");
-    RecordImpl snapshot = record.createSnapshot();
-    assertIsSnapshot(record, snapshot);
+    RecordImpl clone = record.clone();
+    Assert.assertEquals(clone, record);
+    Assert.assertNotSame(clone, record);
   }
 
-  @Test
-  public void testAssertIsCopy() {
-    RecordImpl record = new RecordImpl("stage", "source", null, null);
-    record.set(Field.create(true));
-    record.getHeader().setAttribute("a", "A");
-    RecordImpl copy = record.createCopy();
-    assertIsCopy(record, copy, true);
-  }
-
-  @Test
-  public void testAssertIsCopyDontCompareStages() {
-    RecordImpl record = new RecordImpl("stage", "source", null, null);
-    record.set(Field.create(true));
-    record.getHeader().setAttribute("a", "A");
-    RecordImpl copy = record.createCopy();
-    copy.setStage("foo");
-    assertIsCopy(record, copy, false);
-  }
-
-  @Test(expected = ComparisonFailure.class)
-  public void testAssertIsCopyDiffStagesCompareStages() {
-    RecordImpl record = new RecordImpl("stage", "source", null, null);
-    RecordImpl copy = record.createCopy();
-    copy.setStage("foo");
-    assertIsCopy(record, copy, true);
-  }
-
-  @Test
-  public void testSnapshot() {
-    RecordImpl record = new RecordImpl("stage", "source", null, null);
-    record.getHeader().setAttribute("a", "A");
-    record.getHeader().setAttribute("b", "B");
-    Assert.assertEquals("A", record.getHeader().getAttribute("a"));
-    Assert.assertEquals("B", record.getHeader().getAttribute("b"));
-    RecordImpl snapshot = record.createSnapshot();
-    Assert.assertEquals("A", snapshot.getHeader().getAttribute("a"));
-    Assert.assertEquals("B", snapshot.getHeader().getAttribute("b"));
-    record.getHeader().setAttribute("a", "AA");
-    Assert.assertEquals("AA", record.getHeader().getAttribute("a"));
-    Assert.assertEquals("B", record.getHeader().getAttribute("b"));
-    Assert.assertEquals("A", snapshot.getHeader().getAttribute("a"));
-    Assert.assertEquals("B", snapshot.getHeader().getAttribute("b"));
-    snapshot.getHeader().setAttribute("a", "AAA");
-    Assert.assertEquals("AA", record.getHeader().getAttribute("a"));
-    Assert.assertEquals("AAA", snapshot.getHeader().getAttribute("a"));
-    snapshot.getHeader().setAttribute("b", "BB");
-    Assert.assertEquals("BB", record.getHeader().getAttribute("b"));
-    Assert.assertEquals("BB", snapshot.getHeader().getAttribute("b"));
-  }
-
-  @Test
-  public void testCopy() {
-    RecordImpl record = new RecordImpl("stage", "source", null, null);
-    record.getHeader().setAttribute("a", "A");
-    record.getHeader().setAttribute("b", "B");
-    Assert.assertEquals("A", record.getHeader().getAttribute("a"));
-    Assert.assertEquals("B", record.getHeader().getAttribute("b"));
-    RecordImpl copy = record.createCopy();
-    Assert.assertEquals("A", copy.getHeader().getAttribute("a"));
-    Assert.assertEquals("B", copy.getHeader().getAttribute("b"));
-    record.getHeader().setAttribute("a", "AA");
-    Assert.assertEquals("AA", record.getHeader().getAttribute("a"));
-    Assert.assertEquals("B", record.getHeader().getAttribute("b"));
-    Assert.assertEquals("A", copy.getHeader().getAttribute("a"));
-    Assert.assertEquals("B", copy.getHeader().getAttribute("b"));
-    copy.getHeader().setAttribute("a", "AAA");
-    copy.getHeader().setAttribute("b", "BB");
-    Assert.assertEquals("AA", record.getHeader().getAttribute("a"));
-    Assert.assertEquals("AAA", copy.getHeader().getAttribute("a"));
-    copy.getHeader().setAttribute("b", "BB");
-    Assert.assertEquals("B", record.getHeader().getAttribute("b"));
-    Assert.assertEquals("BB", copy.getHeader().getAttribute("b"));
-  }
+  // tests for field-path expressions
 
   @Test
   public void testRootBasicField() {

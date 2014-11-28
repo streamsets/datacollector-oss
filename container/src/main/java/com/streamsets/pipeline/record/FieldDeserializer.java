@@ -17,21 +17,23 @@
  */
 package com.streamsets.pipeline.record;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.streamsets.pipeline.api.Field;
+
+import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 
-public interface SimpleMap<K, V> {
+public class FieldDeserializer extends JsonDeserializer<Field> {
 
-  public Set<K> getKeys();
-
-  public boolean hasKey(K key);
-
-  public V get(K key);
-
-  public V put(K key, V value);
-
-  public V remove(K key);
-
-  public Map<K, V> getValues();
+  @Override
+  public Field deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    Map map = jp.readValueAs(Map.class);
+    Field.Type type = Field.Type.valueOf((String) map.get("type"));
+    Object value = map.get("value");
+    return Field.create(type, value);
+  }
 
 }

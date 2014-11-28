@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.ErrorRecords;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public class FileErrorRecordStore implements ErrorRecordStore {
 
   public FileErrorRecordStore(RuntimeInfo runtimeInfo) {
     this.errorRecordsBaseDir = new File(runtimeInfo.getDataDir(), ERROR_RECORDS_DIR);
-    json = new ObjectMapper();
+    json = ObjectMapperFactory.get();
     json.enable(SerializationFeature.INDENT_OUTPUT);
   }
 

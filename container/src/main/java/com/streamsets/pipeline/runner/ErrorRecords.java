@@ -20,7 +20,6 @@ package com.streamsets.pipeline.runner;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.record.RecordImplDeserializer;
 import com.streamsets.pipeline.util.NullDeserializer;
 
 import java.util.ArrayList;

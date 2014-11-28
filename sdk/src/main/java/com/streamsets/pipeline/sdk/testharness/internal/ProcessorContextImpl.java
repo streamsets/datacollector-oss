@@ -64,7 +64,7 @@ public class ProcessorContextImpl implements Processor.Context {
 
   @Override
   public Record cloneRecord(Record record) {
-    return ((RecordImpl)record).createCopy();
+    return ((RecordImpl)record).clone();
   }
 
   @Override

@@ -17,77 +17,211 @@
  */
 package com.streamsets.pipeline.record;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.Utils;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-class HeaderImpl implements Record.Header {
-  private final SimpleMap<String, Object> rawHeaders;
-  private final ReservedPrefixSimpleMap<Object> headers;
+class HeaderImpl implements Record.Header, Predicate<String> {
+  private static final String RESERVED_PREFIX = "_.";
+  private static final String STAGE_CREATOR_INSTANCE_ATTR = RESERVED_PREFIX + "stageCreator";
+  private  static final String RECORD_SOURCE_ID_ATTR = RESERVED_PREFIX + "recordSourceId";
+  private  static final String STAGES_PATH_ATTR = RESERVED_PREFIX + "stagePath";
+  private  static final String RAW_DATA_ATTR = RESERVED_PREFIX + "rawData";
+  private  static final String RAW_MIME_TYPE_ATTR = RESERVED_PREFIX + "rawMimeType";
+  private  static final String TRACKING_ID_ATTR = RESERVED_PREFIX + "trackingId";
+  private  static final String PREVIOUS_STAGE_TRACKING_ID_ATTR = RESERVED_PREFIX + "previousStageTrackingId";
 
-  public HeaderImpl(SimpleMap<String, Object> headers) {
-    this.rawHeaders = headers;
-    this.headers = new ReservedPrefixSimpleMap<Object>(RecordImpl.RESERVED_PREFIX, headers);
+  private final Map<String, Object> map;
+
+  public HeaderImpl() {
+    this.map = new HashMap<>();
+  }
+
+  // for clone() purposes
+  private HeaderImpl(HeaderImpl header) {
+    this.map = new HashMap<>(header.map);
+  }
+
+  // Predicate interface
+
+  @Override
+  public boolean apply(String input) {
+    return !input.startsWith(RESERVED_PREFIX);
+  }
+
+  // Record.Header interface
+  
+  @Override
+  public String getStageCreator() {
+    return (String) map.get(STAGE_CREATOR_INSTANCE_ATTR);
+  }
+
+  @Override
+  public String getSourceId() {
+    return (String) map.get(RECORD_SOURCE_ID_ATTR);
+  }
+
+  @Override
+  public String getStagesPath() {
+    return (String) map.get(STAGES_PATH_ATTR);
   }
 
   @Override
   public String getTrackingId() {
-    return (String) rawHeaders.get(RecordImpl.TRACKING_ID_ATTR);
+    return (String) map.get(TRACKING_ID_ATTR);
   }
 
   @Override
   public String getPreviousStageTrackingId() {
-    return (String) rawHeaders.get(RecordImpl.PREVIOUS_STAGE_TRACKING_ID_ATTR);
+    return (String) map.get(PREVIOUS_STAGE_TRACKING_ID_ATTR);
   }
 
   @Override
   public byte[] getRaw() {
-    byte[] raw = (byte[]) rawHeaders.get(RecordImpl.RAW_DATA_ATTR);
+    byte[] raw = (byte[]) map.get(RAW_DATA_ATTR);
     return (raw != null) ? raw.clone() : null;
   }
 
   @Override
   public String getRawMimeType() {
-    return (String) rawHeaders.get(RecordImpl.RAW_MIME_TYPE_ATTR);
+    return (String) map.get(RAW_MIME_TYPE_ATTR);
   }
 
   @Override
   @JsonIgnore
   public Set<String> getAttributeNames() {
-    return headers.getKeys();
+    return ImmutableSet.copyOf(Sets.filter(map.keySet(), this));
   }
+
+  private static final String RESERVED_PREFIX_EXCEPTION_MSG = "Header attributes cannot start with '" +
+                                                              RESERVED_PREFIX + "'";
 
   @Override
   public String getAttribute(String name) {
-    return (String) headers.get(name);
+    Preconditions.checkNotNull(name, "name cannot be null");
+    Preconditions.checkArgument(!name.startsWith(RESERVED_PREFIX), RESERVED_PREFIX_EXCEPTION_MSG);
+    return (String) map.get(name);
   }
 
   @Override
   public void setAttribute(String name, String value) {
-    headers.put(name, value);
+    Preconditions.checkNotNull(name, "name cannot be null");
+    Preconditions.checkArgument(!name.startsWith(RESERVED_PREFIX), RESERVED_PREFIX_EXCEPTION_MSG);
+    Preconditions.checkNotNull(value, "value cannot be null");
+    map.put(name, value);
   }
 
   @Override
   public void deleteAttribute(String name) {
-    headers.remove(name);
+    Preconditions.checkNotNull(name, "name cannot be null");
+    Preconditions.checkArgument(!name.startsWith(RESERVED_PREFIX), RESERVED_PREFIX_EXCEPTION_MSG);
+    map.remove(name);
   }
 
-  public String getStageCreator() {
-    return (String) rawHeaders.get(RecordImpl.STAGE_CREATOR_INSTANCE_ATTR);
+  // For Json serialization
+  
+  @SuppressWarnings("unchecked")
+  public Map<String, String> getValues() {
+    return (Map) Maps.filterKeys(map, this);
   }
 
-  public String getSourceId() {
-    return (String) rawHeaders.get(RecordImpl.RECORD_SOURCE_ID_ATTR);
+  // For Json deserialization
+
+  @JsonCreator
+  public HeaderImpl(  @JsonProperty("stageCreator") String stageCreator,
+      @JsonProperty("sourceId") String sourceId,
+      @JsonProperty("stagesPath") String stagesPath,
+      @JsonProperty("trackingId") String trackingId,
+      @JsonProperty("previousTrackingId") String previousTrackingId,
+      @JsonProperty("raw") byte[] raw,
+      @JsonProperty("rawMimeType") String rawMimeType,
+      @JsonProperty("values") Map<String, Object> map) {
+    this.map = map;
+    setStageCreator(stageCreator);
+    setSourceId(sourceId);
+    setStagesPath(stagesPath);
+    setTrackingId(trackingId);
+    if (previousTrackingId != null) {
+      setPreviousStageTrackingId(previousTrackingId);
+    }
+    if (raw != null) {
+      setRaw(raw);
+      setRawMimeType(rawMimeType);
+    }
   }
 
-  public String getStagesPath() {
-    return (String) rawHeaders.get(RecordImpl.STAGES_PATH_ATTR);
+  // HeaderImpl setter methods
+
+  public void setStageCreator(String stateCreator) {
+    Preconditions.checkNotNull(stateCreator, "stateCreator cannot be null");
+    map.put(STAGE_CREATOR_INSTANCE_ATTR, stateCreator);
   }
 
-  public Map<String, Object> getValues() {
-    return headers.getValues();
+  public void setSourceId(String sourceId) {
+    Preconditions.checkNotNull(sourceId, "sourceId cannot be null");
+    map.put(RECORD_SOURCE_ID_ATTR, sourceId);
+  }
+
+  public void setStagesPath(String stagePath) {
+    Preconditions.checkNotNull(stagePath, "stagePath cannot be null");
+    map.put(STAGES_PATH_ATTR, stagePath);
+  }
+
+  public void setTrackingId(String trackingId) {
+    Preconditions.checkNotNull(trackingId, "trackingId cannot be null");
+    map.put(TRACKING_ID_ATTR, trackingId);
+  }
+
+  public void setPreviousStageTrackingId(String previousTrackingId) {
+    Preconditions.checkNotNull(previousTrackingId, "previousTrackingId cannot be null");
+    map.put(PREVIOUS_STAGE_TRACKING_ID_ATTR, previousTrackingId);
+  }
+
+  public void setRaw(byte[] raw) {
+    Preconditions.checkNotNull(raw, "raw cannot be null");
+    map.put(RAW_DATA_ATTR, raw.clone());
+  }
+
+  public void setRawMimeType(String rawMime) {
+    Preconditions.checkNotNull(rawMime, "rawMime cannot be null");
+    map.put(RAW_MIME_TYPE_ATTR, rawMime);
+  }
+
+  // Object methods
+
+  @Override
+  public int hashCode() {
+    return map.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean eq = this == obj;
+    if (!eq && obj != null && obj instanceof HeaderImpl) {
+      eq = map.equals(((HeaderImpl) obj).map);
+    }
+    return eq;
+  }
+
+  @Override
+  public HeaderImpl clone() {
+    return new HeaderImpl(this);
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format("HeaderImpl[{}]", map);
   }
 
 }

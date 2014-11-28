@@ -26,7 +26,6 @@ import com.streamsets.pipeline.runner.ErrorRecord;
 import com.streamsets.pipeline.runner.ErrorRecords;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
-import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import org.apache.commons.io.FileUtils;
 import org.junit.*;
 import org.mockito.Mockito;
@@ -145,14 +144,14 @@ public class TestFileSnapshotStore {
     Record r1 = new RecordImpl("s", "s:1", TEST_STRING.getBytes(), MIME);
     r1.set(Field.create(1));
 
-    ((RecordImpl)r1).setTrackingId();
-    ((RecordImpl)r1).setTrackingId();
+    ((RecordImpl)r1).createTrackingId();
+    ((RecordImpl)r1).createTrackingId();
 
     Record r2 = new RecordImpl("s", "s:2", TEST_STRING.getBytes(), MIME);
     r2.set(Field.create(2));
 
-    ((RecordImpl)r2).setTrackingId();
-    ((RecordImpl)r2).setTrackingId();
+    ((RecordImpl)r2).createTrackingId();
+    ((RecordImpl)r2).createTrackingId();
 
     records1.add(r1);
     records1.add(r2);
@@ -167,14 +166,14 @@ public class TestFileSnapshotStore {
     Record r3 = new RecordImpl("s", "s:3", TEST_STRING.getBytes(), MIME);
     r3.set(Field.create(1));
 
-    ((RecordImpl)r3).setTrackingId();
-    ((RecordImpl)r3).setTrackingId();
+    ((RecordImpl)r3).createTrackingId();
+    ((RecordImpl)r3).createTrackingId();
 
     Record r4 = new RecordImpl("s", "s:2", TEST_STRING.getBytes(), MIME);
     r4.set(Field.create(2));
 
-    ((RecordImpl)r4).setTrackingId();
-    ((RecordImpl)r4).setTrackingId();
+    ((RecordImpl)r4).createTrackingId();
+    ((RecordImpl)r4).createTrackingId();
 
     ErrorRecord e = new ErrorRecord(r4, null, null);
     ErrorRecords ers = new ErrorRecords();

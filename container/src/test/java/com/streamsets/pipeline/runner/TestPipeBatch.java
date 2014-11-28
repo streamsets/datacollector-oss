@@ -99,7 +99,13 @@ public class TestPipeBatch {
     Iterator<Record> records = batch.getRecords();
     Record recordFromBatch = records.next();
 
-    TestRecordImpl.assertIsCopy(origRecord, recordFromBatch, false);
+    Assert.assertNotSame(origRecord, recordFromBatch);
+    Assert.assertEquals(origRecord.getHeader().getAttributeNames(), recordFromBatch.getHeader().getAttributeNames());
+    Assert.assertEquals(origRecord.getHeader().getStageCreator(), recordFromBatch.getHeader().getStageCreator());
+    Assert.assertEquals(origRecord.getHeader().getSourceId(), recordFromBatch.getHeader().getSourceId());
+    Assert.assertTrue(recordFromBatch.getHeader().getStagesPath().startsWith(origRecord.getHeader().getStagesPath()));
+    Assert.assertNotEquals(origRecord.getHeader().getStagesPath(), recordFromBatch.getHeader().getStagesPath());
+    Assert.assertNotEquals(origRecord.getHeader().getTrackingId(), recordFromBatch.getHeader().getTrackingId());
 
     Assert.assertFalse(records.hasNext());
     Assert.assertNull(pipeBatch.getSnapshotsOfAllStagesOutput());
@@ -149,7 +155,19 @@ public class TestPipeBatch {
     Iterator<Record> records = batch.getRecords();
     Record recordFromBatch = records.next();
 
-    TestRecordImpl.assertIsCopy(origRecord, recordFromBatch, false);
+    Assert.assertNotSame(origRecord, recordFromBatch);
+    Assert.assertEquals(origRecord.getHeader().getAttributeNames(), recordFromBatch.getHeader().getAttributeNames());
+    Assert.assertEquals(origRecord.getHeader().getStageCreator(), recordFromBatch.getHeader().getStageCreator());
+    Assert.assertEquals(origRecord.getHeader().getSourceId(), recordFromBatch.getHeader().getSourceId());
+    Assert.assertTrue(recordFromBatch.getHeader().getStagesPath().startsWith(origRecord.getHeader().getStagesPath()));
+    Assert.assertNotEquals(origRecord.getHeader().getStagesPath(), recordFromBatch.getHeader().getStagesPath());
+    Assert.assertNotEquals(origRecord.getHeader().getTrackingId(), recordFromBatch.getHeader().getTrackingId());
+
+    Assert.assertEquals(origRecord.get(), recordFromBatch.get());
+    Assert.assertEquals(origRecord.get(), recordFromBatch.get());
+    Assert.assertEquals(origRecord.get(), recordFromBatch.get());
+    Assert.assertEquals(origRecord.get(), recordFromBatch.get());
+
     Assert.assertTrue(recordFromBatch.getHeader().getStagesPath().
         endsWith(sourcePipe.getStage().getInfo().getInstanceName()));
 
@@ -162,8 +180,25 @@ public class TestPipeBatch {
     Assert.assertEquals(1, stageOutputs.get(0).getOutput().size());
     Record recordFromSnapshot = stageOutputs.get(0).getOutput().get(stageOutputLanes.get(0)).get(0);
 
-    TestRecordImpl.assertIsSnapshot(recordFromBatch, recordFromSnapshot);
-    TestRecordImpl.assertIsCopy(origRecord, recordFromSnapshot, false);
+    Assert.assertNotSame(origRecord, recordFromBatch);
+    Assert.assertNotSame(origRecord, recordFromBatch);
+    Assert.assertEquals(origRecord.getHeader().getAttributeNames(), recordFromBatch.getHeader().getAttributeNames());
+    Assert.assertEquals(origRecord.getHeader().getStageCreator(), recordFromBatch.getHeader().getStageCreator());
+    Assert.assertEquals(origRecord.getHeader().getSourceId(), recordFromBatch.getHeader().getSourceId());
+    Assert.assertTrue(recordFromBatch.getHeader().getStagesPath().startsWith(origRecord.getHeader().getStagesPath()));
+    Assert.assertNotEquals(origRecord.getHeader().getStagesPath(), recordFromBatch.getHeader().getStagesPath());
+    Assert.assertNotEquals(origRecord.getHeader().getTrackingId(), recordFromBatch.getHeader().getTrackingId());
+
+    Assert.assertNotSame(origRecord, recordFromSnapshot);
+    Assert.assertEquals(origRecord.getHeader().getAttributeNames(), recordFromSnapshot.getHeader().getAttributeNames());
+    Assert.assertEquals(origRecord.getHeader().getStageCreator(), recordFromSnapshot.getHeader().getStageCreator());
+    Assert.assertEquals(origRecord.getHeader().getSourceId(), recordFromSnapshot.getHeader().getSourceId());
+    Assert.assertTrue(recordFromSnapshot.getHeader().getStagesPath().startsWith(origRecord.getHeader().getStagesPath()));
+    Assert.assertNotEquals(origRecord.getHeader().getStagesPath(), recordFromSnapshot.getHeader().getStagesPath());
+    Assert.assertNotEquals(origRecord.getHeader().getTrackingId(), recordFromSnapshot.getHeader().getTrackingId());
+
+    Assert.assertEquals(recordFromBatch, recordFromSnapshot);
+    Assert.assertNotSame(recordFromBatch, recordFromSnapshot);
 
     Assert.assertEquals("t", stageOutputs.get(1).getInstanceName());
     Assert.assertEquals(0, stageOutputs.get(1).getOutput().size());
@@ -233,8 +268,12 @@ public class TestPipeBatch {
     pipeBatch.moveLaneCopying(pipe.getOutputLanes().get(0), list);
     Record copiedRecordX = pipeBatch.getFullPayload().get("x").get(0);
     Record copiedRecordY = pipeBatch.getFullPayload().get("y").get(0);
-    TestRecordImpl.assertIsCopy(origRecord, copiedRecordX, true);
-    TestRecordImpl.assertIsCopy(origRecord, copiedRecordY, true);
+
+    Assert.assertEquals(origRecord, copiedRecordX);
+    Assert.assertNotSame(origRecord, copiedRecordX);
+
+    Assert.assertEquals(origRecord, copiedRecordY);
+    Assert.assertNotSame(origRecord, copiedRecordY);
 
 
     Map<String, List<Record>> snapshot = pipeBatch.getPipeLanesSnapshot(list);

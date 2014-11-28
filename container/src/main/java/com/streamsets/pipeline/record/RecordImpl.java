@@ -17,7 +17,9 @@
  */
 package com.streamsets.pipeline.record;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
@@ -34,89 +36,61 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
-@JsonDeserialize(using = RecordImplDeserializer.class)
 public class RecordImpl implements Record {
-  private SimpleMap<String, Object> headerData;
-  private Header header;
-  private Field data;
+  private final HeaderImpl header;
+  private Field value;
 
-  static final String RESERVED_PREFIX = "_.";
-  static final String STAGE_CREATOR_INSTANCE_ATTR = RESERVED_PREFIX + "stageCreator";
-  static final String RECORD_SOURCE_ID_ATTR = RESERVED_PREFIX + "recordSourceId";
-  static final String STAGES_PATH_ATTR = RESERVED_PREFIX + "stagePath";
-  static final String RAW_DATA_ATTR = RESERVED_PREFIX + "rawData";
-  static final String RAW_MIME_TYPE_ATTR = RESERVED_PREFIX + "rawMimeType";
-  static final String TRACKING_ID_ATTR = RESERVED_PREFIX + "trackingId";
-  static final String PREVIOUS_STAGE_TRACKING_ID_ATTR = RESERVED_PREFIX + "previousStageTrackingId";
+  // Json deserialization
+
+  @JsonCreator
+  public RecordImpl(@JsonProperty("header") HeaderImpl header, @JsonProperty("value") Field value) {
+    this.header = header;
+    this.value = value;
+  }
 
   public RecordImpl(String stageCreator, String recordSourceId, byte[] raw, String rawMime) {
     Preconditions.checkNotNull(stageCreator, "stage cannot be null");
     Preconditions.checkNotNull(recordSourceId, "source cannot be null");
     Preconditions.checkArgument((raw != null && rawMime != null) || (raw == null && rawMime == null),
                                 "raw and rawMime have both to be null or not null");
-    headerData = new VersionedSimpleMap<String, Object>();
+    header = new HeaderImpl();
     if (raw != null) {
-      headerData.put(RAW_DATA_ATTR, raw.clone());
-      headerData.put(RAW_MIME_TYPE_ATTR, rawMime);
+      header.setRaw(raw);
+      header.setRawMimeType(rawMime);
     }
-    headerData.put(STAGE_CREATOR_INSTANCE_ATTR, stageCreator);
-    headerData.put(RECORD_SOURCE_ID_ATTR, recordSourceId);
-    headerData.put(STAGES_PATH_ATTR, stageCreator);
-    header = new HeaderImpl(headerData);
+    header.setStageCreator(stageCreator);
+    header.setSourceId(recordSourceId);
+    header.setStagesPath(stageCreator);
   }
 
   public RecordImpl(String stageCreator, Record originatorRecord, byte[] raw, String rawMime) {
     this(stageCreator, originatorRecord.getHeader().getSourceId(), raw, rawMime);
     String trackingId = originatorRecord.getHeader().getTrackingId();
     if (trackingId != null) {
-      headerData.put(TRACKING_ID_ATTR, trackingId);
+      header.setTrackingId(trackingId);
     }
   }
 
-  RecordImpl(SimpleMap<String, Object> headerData, Field data) {
-    this.headerData = headerData;
-    this.data = data;
-    header = new HeaderImpl(this.headerData);
-  }
+  // for clone() purposes
 
   private RecordImpl(RecordImpl record) {
     Preconditions.checkNotNull(record, "record cannot be null");
-    RecordImpl snapshot = record.createSnapshot();
-    headerData = new VersionedSimpleMap<>(snapshot.headerData);
-    data = snapshot.data;
-    header = new HeaderImpl(headerData);
-    String trackingId = record.getHeader().getTrackingId();
-    if (trackingId != null) {
-      headerData.put(TRACKING_ID_ATTR, trackingId);
-    }
+    header = record.header.clone();
+    value = (record.value != null) ? record.value.clone() : null;
   }
 
-
-  //TODO comment on implementation difference between snapshot and copy
-
-  public RecordImpl createCopy() {
-    return new RecordImpl(this);
-  }
-
-  public RecordImpl createSnapshot() {
-    RecordImpl snapshot = new RecordImpl(headerData, data);
-    headerData = new VersionedSimpleMap<>(headerData);
-    header = new HeaderImpl(headerData);
-    return snapshot;
-  }
-
-  public void setStage(String stage) {
+  public void addStageToStagePath(String stage) {
     Preconditions.checkNotNull(stage, "stage cannot be null");
-    headerData.put(STAGES_PATH_ATTR, headerData.get(STAGES_PATH_ATTR) + ":" + stage);
+    header.setStagesPath(header.getStagesPath() + ":" + stage);
   }
 
-  public void setTrackingId() {
+  public void createTrackingId() {
+    String currentTrackingId = header.getTrackingId();
     String newTrackingId = UUID.randomUUID().toString();
-    String currentTrackingId = (String) headerData.get(TRACKING_ID_ATTR);
     if (currentTrackingId != null) {
-      headerData.put(PREVIOUS_STAGE_TRACKING_ID_ATTR, currentTrackingId);
+      header.setPreviousStageTrackingId(currentTrackingId);
     }
-    headerData.put(TRACKING_ID_ATTR, newTrackingId);
+    header.setTrackingId(newTrackingId);
   }
 
   @Override
@@ -125,15 +99,15 @@ public class RecordImpl implements Record {
   }
 
   @Override
-  @JsonIgnore
+  @JsonProperty("value")
   public Field get() {
-    return data;
+    return value;
   }
 
   @Override
   public Field set(Field field) {
-    Field oldData = data;
-    data = field;
+    Field oldData = value;
+    value = field;
     return oldData;
   }
 
@@ -244,8 +218,8 @@ public class RecordImpl implements Record {
 
   private List<Field> get(List<PathElement> elements) {
     List<Field> fields = new ArrayList<>(elements.size());
-    if (data != null) {
-      Field current = data;
+    if (value != null) {
+      Field current = value;
       for (int i = 0; current != null &&  i < elements.size(); i++) {
         Field next = null;
         PathElement element = elements.get(i);
@@ -303,8 +277,8 @@ public class RecordImpl implements Record {
     if (elements.size() == fieldPos) {
       fieldPos--;
       if (fieldPos == 0) {
-        deleted = data;
-        data = null;
+        deleted = value;
+        value = null;
       } else {
         switch (elements.get(fieldPos).getType()) {
           case MAP:
@@ -327,16 +301,17 @@ public class RecordImpl implements Record {
   }
 
   @Override
+  @JsonIgnore
   public Set<String> getFieldPaths() {
     Set<String> paths = new LinkedHashSet<>();
-    if (data != null) {
+    if (value != null) {
       paths.add("");
-      switch (data.getType()) {
+      switch (value.getType()) {
         case MAP:
-          gatherPaths("", data.getValueAsMap(), paths);
+          gatherPaths("", value.getValueAsMap(), paths);
           break;
         case LIST:
-          gatherPaths("", data.getValueAsList(), paths);
+          gatherPaths("", value.getValueAsList(), paths);
           break;
       }
     }
@@ -379,7 +354,7 @@ public class RecordImpl implements Record {
 
   @Override
   public String toString() {
-    return Utils.format("Record[headers='{}' data='{}']", headerData, data);
+    return Utils.format("Record[headers='{}' data='{}']", header, value);
   }
 
   @Override
@@ -393,11 +368,18 @@ public class RecordImpl implements Record {
     boolean eq = (this == obj);
     if (!eq && obj != null && obj instanceof RecordImpl) {
       RecordImpl other = (RecordImpl) obj;
-      SimpleMap<String, Object> thisHeader = headerData;
-      SimpleMap<String, Object> otherHeader = other.headerData;
-      eq = thisHeader.equals(otherHeader) && data.equals(other.data);
+      eq = header.equals(other.header);
+      eq = eq && ((value != null && other.value != null) || (value == null && other.value == null));
+      if (eq && value != null) {
+        eq = value.equals(other.value);
+      }
     }
     return eq;
+  }
+
+  @Override
+  public RecordImpl clone() {
+    return new RecordImpl(this);
   }
 
 }

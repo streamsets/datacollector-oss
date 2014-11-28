@@ -75,9 +75,9 @@ public class BatchMakerImpl implements BatchMaker {
       throw new IllegalStateException("The maximum number of records has been reached");
     }
     Preconditions.checkNotNull(record, "record cannot be null");
-    record = ((RecordImpl)record).createCopy();
-    ((RecordImpl)record).setStage(instanceName);
-    ((RecordImpl)record).setTrackingId();
+    record = ((RecordImpl)record).clone();
+    ((RecordImpl)record).addStageToStagePath(instanceName);
+    ((RecordImpl)record).createTrackingId();
 
     if (lanes.length == 0) {
       Preconditions.checkArgument(outputLanes.size() == 1, Utils.format(
@@ -96,7 +96,7 @@ public class BatchMakerImpl implements BatchMaker {
       }
     }
     if (stageOutputSnapshot != null) {
-      record = ((RecordImpl)record).createSnapshot();
+      record = ((RecordImpl)record).clone();
       if (lanes.length == 0) {
         stageOutputSnapshot.get(singleOutputLane).add(record);
       } else {

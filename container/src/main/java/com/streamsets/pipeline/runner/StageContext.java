@@ -149,7 +149,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   //Processor.Context
   @Override
   public Record cloneRecord(Record record) {
-    return ((RecordImpl) record).createCopy();
+    return ((RecordImpl) record).clone();
   }
 
   @Override

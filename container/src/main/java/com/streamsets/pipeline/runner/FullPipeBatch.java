@@ -135,10 +135,11 @@ public class FullPipeBatch implements PipeBatch {
     return snapshot;
   }
 
+  //TODO rename method
   private List<Record> createSnapshot(List<Record> records) {
     List<Record> list = new ArrayList<Record>(records.size());
     for (Record record : records) {
-      list.add(((RecordImpl) record).createSnapshot());
+      list.add(((RecordImpl) record).clone());
     }
     return list;
   }
@@ -172,7 +173,7 @@ public class FullPipeBatch implements PipeBatch {
   private List<Record> createCopy(List<Record> records) {
     List<Record> list = new ArrayList<Record>(records.size());
     for (Record record : records) {
-      list.add(((RecordImpl) record).createCopy());
+      list.add(((RecordImpl) record).clone());
     }
     return list;
   }
