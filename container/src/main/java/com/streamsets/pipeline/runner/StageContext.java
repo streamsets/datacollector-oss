@@ -32,7 +32,6 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
-import com.streamsets.pipeline.util.Message;
 
 import java.util.List;
 import java.util.Set;
@@ -43,8 +42,6 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   private static final String CUSTOM_METRICS_PREFIX = "custom.";
 
-  private final ClassLoader classLoader;
-  private final String bundleName;
   private final List<Stage.Info> pipelineInfo;
   private final MetricRegistry metrics;
   private final String instanceName;
@@ -54,8 +51,6 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public StageContext(List<Stage.Info> pipelineInfo, MetricRegistry metrics, StageRuntime stageRuntime) {
     this.pipelineInfo = pipelineInfo;
     this.metrics = metrics;
-    classLoader = stageRuntime.getDefinition().getStageClassLoader();
-    bundleName = stageRuntime.getDefinition().getBundle();
     this.instanceName = stageRuntime.getConfiguration().getInstanceName();
     this.outputLanes = ImmutableSet.copyOf(stageRuntime.getConfiguration().getOutputLanes());
 
@@ -95,25 +90,27 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, Exception exception) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(exception, "exception cannot be null");
-    errorRecordSink.addRecord(instanceName, new ErrorRecord(record, null, new Message(
-        STAGE_CAUGHT_ERROR_KEY, STAGE_CAUGHT_ERROR_DEFAULT, exception.getMessage())));
+    ((RecordImpl)record).getHeader().setErrorId(STAGE_CAUGHT_ERROR_KEY);
+    ((RecordImpl)record).getHeader().setErrorMessage(Utils.format(STAGE_CAUGHT_ERROR_DEFAULT, exception.getMessage()));
+    errorRecordSink.addRecord(instanceName, record);
   }
 
   @Override
   public void toError(Record record, String errorMessage) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    errorRecordSink.addRecord(instanceName, new ErrorRecord(record, null, new Message(
-        STAGE_CAUGHT_ERROR_KEY, STAGE_CAUGHT_ERROR_DEFAULT, errorMessage)));
+    ((RecordImpl)record).getHeader().setErrorId(STAGE_CAUGHT_ERROR_KEY);
+    ((RecordImpl)record).getHeader().setErrorMessage(errorMessage);
+    errorRecordSink.addRecord(instanceName, record);
   }
 
   @Override
   public void toError(Record record, StageException.ID errorId, String... args) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorId, "errorId cannot be null");
-    String bundleKey = errorId.getClass().getName() + "." + errorId.toString();
-    errorRecordSink.addRecord(instanceName, new ErrorRecord(record, errorId, new Message(
-        classLoader, bundleName, bundleKey, errorId.getMessageTemplate(), args)));
+    ((RecordImpl) record).getHeader().setErrorId(STAGE_CAUGHT_ERROR_KEY);
+    ((RecordImpl) record).getHeader().setErrorMessage(errorId.getMessage(args));
+    errorRecordSink.addRecord(instanceName, record);
   }
 
   @Override

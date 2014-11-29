@@ -17,14 +17,15 @@
  */
 package com.streamsets.pipeline.errorrecordstore;
 
-import com.streamsets.pipeline.runner.ErrorRecords;
+import com.streamsets.pipeline.api.Record;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 public interface ErrorRecordStore {
 
-  void storeErrorRecords(String pipelineName, String rev, Map<String, ErrorRecords> errorRecords);
+  void storeErrorRecords(String pipelineName, String rev, Map<String, List<Record>> errorRecords);
 
   void deleteErrorRecords(String pipelineName, String rev, String stageInstanceName);
 

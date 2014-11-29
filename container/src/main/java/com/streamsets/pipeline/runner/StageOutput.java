@@ -28,21 +28,16 @@ import java.util.Map;
 public class StageOutput {
   private final String instanceName;
   private final Map<String, List<Record>> output;
-  private final ErrorRecords errorRecords;
-
-  public StageOutput(String instanceName, Map<String, List<Record>> output, ErrorRecords errorRecords) {
-    this.instanceName = instanceName;
-    this.output = output;
-    this.errorRecords = errorRecords;
-  }
+  private final List<Record> errorRecords;
 
   @JsonCreator
   public StageOutput(
       @JsonProperty("instanceName") String instanceName,
-      @JsonProperty("output") Map<String, List<Record>> output) {
+      @JsonProperty("output") Map<String, List<Record>> output,
+      @JsonProperty("errorRecords") List<Record> errorRecords) {
     this.instanceName = instanceName;
     this.output = output;
-    this.errorRecords = null;
+    this.errorRecords = errorRecords;
   }
 
   public String getInstanceName() {
@@ -53,10 +48,7 @@ public class StageOutput {
     return output;
   }
 
-  public void setErrorRecords(ErrorRecords errorRecords) {
-    //NOP, to trick jackson
-  }
-  public ErrorRecords getErrorRecords() {
+  public List<Record> getErrorRecords() {
     return errorRecords;
   }
 

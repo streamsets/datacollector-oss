@@ -103,7 +103,7 @@ public class TestPipeBatch {
     Assert.assertEquals(origRecord.getHeader().getAttributeNames(), recordFromBatch.getHeader().getAttributeNames());
     Assert.assertEquals(origRecord.getHeader().getStageCreator(), recordFromBatch.getHeader().getStageCreator());
     Assert.assertEquals(origRecord.getHeader().getSourceId(), recordFromBatch.getHeader().getSourceId());
-    Assert.assertTrue(recordFromBatch.getHeader().getStagesPath().startsWith(origRecord.getHeader().getStagesPath()));
+    Assert.assertEquals("s", recordFromBatch.getHeader().getStagesPath());
     Assert.assertNotEquals(origRecord.getHeader().getStagesPath(), recordFromBatch.getHeader().getStagesPath());
     Assert.assertNotEquals(origRecord.getHeader().getTrackingId(), recordFromBatch.getHeader().getTrackingId());
 
@@ -159,7 +159,7 @@ public class TestPipeBatch {
     Assert.assertEquals(origRecord.getHeader().getAttributeNames(), recordFromBatch.getHeader().getAttributeNames());
     Assert.assertEquals(origRecord.getHeader().getStageCreator(), recordFromBatch.getHeader().getStageCreator());
     Assert.assertEquals(origRecord.getHeader().getSourceId(), recordFromBatch.getHeader().getSourceId());
-    Assert.assertTrue(recordFromBatch.getHeader().getStagesPath().startsWith(origRecord.getHeader().getStagesPath()));
+    Assert.assertEquals("s", recordFromBatch.getHeader().getStagesPath());
     Assert.assertNotEquals(origRecord.getHeader().getStagesPath(), recordFromBatch.getHeader().getStagesPath());
     Assert.assertNotEquals(origRecord.getHeader().getTrackingId(), recordFromBatch.getHeader().getTrackingId());
 
@@ -185,7 +185,7 @@ public class TestPipeBatch {
     Assert.assertEquals(origRecord.getHeader().getAttributeNames(), recordFromBatch.getHeader().getAttributeNames());
     Assert.assertEquals(origRecord.getHeader().getStageCreator(), recordFromBatch.getHeader().getStageCreator());
     Assert.assertEquals(origRecord.getHeader().getSourceId(), recordFromBatch.getHeader().getSourceId());
-    Assert.assertTrue(recordFromBatch.getHeader().getStagesPath().startsWith(origRecord.getHeader().getStagesPath()));
+    Assert.assertEquals("s", recordFromBatch.getHeader().getStagesPath());
     Assert.assertNotEquals(origRecord.getHeader().getStagesPath(), recordFromBatch.getHeader().getStagesPath());
     Assert.assertNotEquals(origRecord.getHeader().getTrackingId(), recordFromBatch.getHeader().getTrackingId());
 
@@ -193,7 +193,7 @@ public class TestPipeBatch {
     Assert.assertEquals(origRecord.getHeader().getAttributeNames(), recordFromSnapshot.getHeader().getAttributeNames());
     Assert.assertEquals(origRecord.getHeader().getStageCreator(), recordFromSnapshot.getHeader().getStageCreator());
     Assert.assertEquals(origRecord.getHeader().getSourceId(), recordFromSnapshot.getHeader().getSourceId());
-    Assert.assertTrue(recordFromSnapshot.getHeader().getStagesPath().startsWith(origRecord.getHeader().getStagesPath()));
+    Assert.assertEquals("s", recordFromSnapshot.getHeader().getStagesPath());
     Assert.assertNotEquals(origRecord.getHeader().getStagesPath(), recordFromSnapshot.getHeader().getStagesPath());
     Assert.assertNotEquals(origRecord.getHeader().getTrackingId(), recordFromSnapshot.getHeader().getTrackingId());
 

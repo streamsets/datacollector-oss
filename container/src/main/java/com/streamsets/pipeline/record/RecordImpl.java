@@ -94,7 +94,7 @@ public class RecordImpl implements Record {
   }
 
   @Override
-  public Header getHeader() {
+  public HeaderImpl getHeader() {
     return header;
   }
 

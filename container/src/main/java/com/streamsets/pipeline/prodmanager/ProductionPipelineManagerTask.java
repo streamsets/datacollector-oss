@@ -22,6 +22,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.container.Utils;
@@ -31,7 +32,6 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.runner.ErrorRecord;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -193,7 +192,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return errorRecordStore.getErrorRecords(pipelineName, rev, stageInstanceName);
   }
 
-  public Collection<ErrorRecord> getErrorRecords(String instanceName) throws PipelineManagerException {
+  public List<Record> getErrorRecords(String instanceName) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING),
         PipelineManagerException.COULD_NOT_GET_ERROR_RECORDS_BECAUSE_PIPELINE_NOT_RUNNING);
     return prodPipeline.getErrorRecords(instanceName);

@@ -22,8 +22,6 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.record.RecordImpl;
-import com.streamsets.pipeline.runner.ErrorRecord;
-import com.streamsets.pipeline.runner.ErrorRecords;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import org.apache.commons.io.FileUtils;
@@ -175,15 +173,11 @@ public class TestFileSnapshotStore {
     ((RecordImpl)r4).createTrackingId();
     ((RecordImpl)r4).createTrackingId();
 
-    ErrorRecord e = new ErrorRecord(r4, null, null);
-    ErrorRecords ers = new ErrorRecords();
-    ers.addErrorRecord(e);
-
     records2.add(r3);
 
     Map<String, List<Record>> so2 = new HashMap<String, List<Record>>(1);
     so2.put("lane", records2);
-    StageOutput s2 = new StageOutput("processor", so2, ers);
+    StageOutput s2 = new StageOutput("processor", so2, new ArrayList<Record>());
     snapshot.add(s2);
 
     return snapshot;

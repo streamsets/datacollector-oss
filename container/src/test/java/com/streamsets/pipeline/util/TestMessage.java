@@ -85,13 +85,6 @@ public class TestMessage {
     Assert.assertTrue(msg.toString().endsWith("default"));
   }
 
-  @Test
-  public void testNoLocale() {
-    LocaleInContext.set(null);
-    Message msg = new Message(getClass().getClassLoader(), "test-message-bundle", "key", "default '{}'", "foo");
-    Assert.assertEquals("default 'foo'", msg.getMessage());
-    Assert.assertTrue(msg.toString().endsWith("default 'foo'"));
-  }
 
   @Test
   public void testLocale() {

@@ -19,15 +19,16 @@ package com.streamsets.pipeline.errorrecordstore.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.runner.ErrorRecords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.List;
 import java.util.Map;
 
 public class FileErrorRecordStore implements ErrorRecordStore {
@@ -48,8 +49,8 @@ public class FileErrorRecordStore implements ErrorRecordStore {
   }
 
   @Override
-  public void storeErrorRecords(String pipelineName, String rev, Map<String, ErrorRecords> errorRecords) {
-    for(Map.Entry<String, ErrorRecords> entry : errorRecords.entrySet()) {
+  public void storeErrorRecords(String pipelineName, String rev, Map<String, List<Record>> errorRecords) {
+    for(Map.Entry<String, List<Record>> entry : errorRecords.entrySet()) {
       File errorRecordFile = getErrorRecordFile(pipelineName, rev, entry.getKey());
       if (errorRecordFile.exists() && errorRecordFile.length() > MAX_FILE_SIZE) {
         LOG.warn("Exceeded the error record file size limit. Records in error are not being written to file.");

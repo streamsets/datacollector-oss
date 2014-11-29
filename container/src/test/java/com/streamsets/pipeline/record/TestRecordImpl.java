@@ -32,7 +32,7 @@ public class TestRecordImpl {
 
   @Test(expected = NullPointerException.class)
   public void testConstructorInvalid1() {
-    new RecordImpl((String)null, (String) null, null, null);
+    new RecordImpl(null, (String) null, null, null);
   }
 
   @Test(expected = NullPointerException.class)
@@ -59,7 +59,13 @@ public class TestRecordImpl {
 
     Assert.assertEquals("stage", header.getStageCreator());
     Assert.assertEquals("source", header.getSourceId());
-    Assert.assertEquals("stage", header.getStagesPath());
+    Assert.assertNull(header.getStagesPath());
+
+    record.addStageToStagePath("x");
+    Assert.assertEquals("x", header.getStagesPath());
+
+    record.addStageToStagePath("y");
+    Assert.assertEquals("x:y", header.getStagesPath());
 
     Assert.assertTrue(header.getAttributeNames().isEmpty());
     try {

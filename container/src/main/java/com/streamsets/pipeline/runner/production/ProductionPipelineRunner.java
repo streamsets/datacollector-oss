@@ -22,6 +22,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.EvictingQueue;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.StageType;
@@ -67,7 +68,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   /*indicates the batch size to be captured*/
   private volatile int snapshotBatchSize;
   /*Cache last N error records per stage in memory*/
-  private Map<String, EvictingQueue<ErrorRecord>> stageToErrorRecordsMap;
+  private Map<String, EvictingQueue<Record>> stageToErrorRecordsMap;
 
   public ProductionPipelineRunner(SnapshotStore snapshotStore, ErrorRecordStore errorRecordStore,
                                   SourceOffsetTracker offsetTracker, int batchSize,
@@ -189,7 +190,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     }
 
     //dump all error records to store
-    Map<String, ErrorRecords> errorRecords = pipeBatch.getErrorRecordSink().getErrorRecords();
+    Map<String, List<Record>> errorRecords = pipeBatch.getErrorRecordSink().getErrorRecords();
     errorRecordStore.storeErrorRecords(pipelineName, revision, errorRecords);
     //Retain X number of error records per stage
     retainErrorRecordsInMemory(errorRecords);
@@ -199,21 +200,22 @@ public class ProductionPipelineRunner implements PipelineRunner {
     return this.offsetTracker;
   }
 
-  private void retainErrorRecordsInMemory(Map<String, ErrorRecords> errorRecords) {
-    for(Map.Entry<String, ErrorRecords> e : errorRecords.entrySet()) {
-      EvictingQueue<ErrorRecord> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
+  private void retainErrorRecordsInMemory(Map<String, List<Record>> errorRecords) {
+    for(Map.Entry<String, List<Record>> e : errorRecords.entrySet()) {
+      EvictingQueue<Record> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
       if(errorRecordList == null) {
         //replace with a data structure with an upper cap
         errorRecordList = EvictingQueue.create(MAX_ERROR_RECORDS_PER_STAGE);
         stageToErrorRecordsMap.put(e.getKey(), errorRecordList);
       }
-      errorRecordList.addAll(errorRecords.get(e.getKey()).getErrorRecords());
+      errorRecordList.addAll(errorRecords.get(e.getKey()));
     }
   }
 
-  public Collection<ErrorRecord> getErrorRecords(String instanceName) {
+  @SuppressWarnings("unchecked")
+  public List<Record> getErrorRecords(String instanceName) {
     if(stageToErrorRecordsMap == null || stageToErrorRecordsMap.isEmpty()) {
-      return Collections.EMPTY_SET;
+      return Collections.EMPTY_LIST;
     }
     return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName));
   }

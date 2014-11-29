@@ -18,10 +18,10 @@
 package com.streamsets.pipeline.prodmanager;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.runner.ErrorRecord;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
@@ -41,7 +41,6 @@ import org.junit.*;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class TestProductionRun {
@@ -210,7 +209,7 @@ public class TestProductionRun {
       PipelineRuntimeException, InterruptedException {
     manager.startPipeline(MY_PIPELINE, "0");
     Thread.sleep(100);
-    Collection<ErrorRecord> errorRecords = manager.getErrorRecords("p");
+    List<Record> errorRecords = manager.getErrorRecords("p");
     Assert.assertNotNull(errorRecords);
     Assert.assertEquals(false, errorRecords.isEmpty());
 

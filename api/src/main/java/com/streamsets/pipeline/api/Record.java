@@ -90,6 +90,10 @@ public interface Record {
 
     public void deleteAttribute(String name);
 
+    public String getErrorId();
+
+    public LocalizedString getErrorMessage();
+
   }
 
   public Header getHeader();

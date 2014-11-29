@@ -25,6 +25,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.streamsets.pipeline.api.LocalizedString;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
 
@@ -32,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-class HeaderImpl implements Record.Header, Predicate<String> {
+public class HeaderImpl implements Record.Header, Predicate<String> {
   private static final String RESERVED_PREFIX = "_.";
   private static final String STAGE_CREATOR_INSTANCE_ATTR = RESERVED_PREFIX + "stageCreator";
   private  static final String RECORD_SOURCE_ID_ATTR = RESERVED_PREFIX + "recordSourceId";
@@ -41,6 +42,8 @@ class HeaderImpl implements Record.Header, Predicate<String> {
   private  static final String RAW_MIME_TYPE_ATTR = RESERVED_PREFIX + "rawMimeType";
   private  static final String TRACKING_ID_ATTR = RESERVED_PREFIX + "trackingId";
   private  static final String PREVIOUS_STAGE_TRACKING_ID_ATTR = RESERVED_PREFIX + "previousStageTrackingId";
+  private  static final String ERROR_ID_ATTR = RESERVED_PREFIX + "errorId";
+  private  static final String ERROR_MSG_ATTR = RESERVED_PREFIX + "errorId";
 
   private final Map<String, Object> map;
 
@@ -99,6 +102,35 @@ class HeaderImpl implements Record.Header, Predicate<String> {
   }
 
   @Override
+  public String getErrorId() {
+    return (String) map.get(ERROR_ID_ATTR);
+  }
+
+  @Override
+  public LocalizedString getErrorMessage() {
+    final Object msg = map.get(ERROR_MSG_ATTR);
+    LocalizedString localizedString = null;
+    if (msg != null) {
+      if (msg instanceof LocalizedString) {
+        localizedString = (LocalizedString) msg;
+      } else {
+        localizedString = new LocalizedString() {
+          @Override
+          public String getNonLocalized() {
+            return msg.toString();
+          }
+
+          @Override
+          public String getLocalized() {
+            return msg.toString();
+          }
+        };
+      }
+    }
+    return localizedString;
+  }
+
+  @Override
   @JsonIgnore
   public Set<String> getAttributeNames() {
     return ImmutableSet.copyOf(Sets.filter(map.keySet(), this));
@@ -146,12 +178,18 @@ class HeaderImpl implements Record.Header, Predicate<String> {
       @JsonProperty("previousTrackingId") String previousTrackingId,
       @JsonProperty("raw") byte[] raw,
       @JsonProperty("rawMimeType") String rawMimeType,
+      @JsonProperty("errorId") String errorId,
+      @JsonProperty("errorMessage") String errorMsg,
       @JsonProperty("values") Map<String, Object> map) {
     this.map = map;
     setStageCreator(stageCreator);
     setSourceId(sourceId);
     setStagesPath(stagesPath);
     setTrackingId(trackingId);
+    if (errorId != null) {
+      setErrorId(errorId);
+      setErrorMessage(errorMsg);
+    }
     if (previousTrackingId != null) {
       setPreviousStageTrackingId(previousTrackingId);
     }
@@ -196,6 +234,21 @@ class HeaderImpl implements Record.Header, Predicate<String> {
   public void setRawMimeType(String rawMime) {
     Preconditions.checkNotNull(rawMime, "rawMime cannot be null");
     map.put(RAW_MIME_TYPE_ATTR, rawMime);
+  }
+
+  public void setErrorId(String errorId) {
+    Preconditions.checkNotNull(errorId, "errorId cannot be null");
+    map.put(ERROR_ID_ATTR, errorId);
+  }
+
+  public void setErrorMessage(LocalizedString errorMsg) {
+    Preconditions.checkNotNull(errorMsg, "errorMsg cannot be null");
+    map.put(ERROR_ID_ATTR, errorMsg);
+  }
+
+  public void setErrorMessage(String errorMsg) {
+    Preconditions.checkNotNull(errorMsg, "errorMsg cannot be null");
+    map.put(ERROR_ID_ATTR, errorMsg);
   }
 
   // Object methods

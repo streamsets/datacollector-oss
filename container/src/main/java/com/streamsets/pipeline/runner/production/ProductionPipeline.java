@@ -17,12 +17,12 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.runner.ErrorRecord;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 
-import java.util.Collection;
+import java.util.List;
 
 public class ProductionPipeline {
   private final Pipeline pipeline;
@@ -68,7 +68,7 @@ public class ProductionPipeline {
     offsetTracker.commitOffset();
   }
 
-  public Collection<ErrorRecord> getErrorRecords(String instanceName) {
+  public List<Record> getErrorRecords(String instanceName) {
     return pipelineRunner.getErrorRecords(instanceName);
   }
 }

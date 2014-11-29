@@ -17,38 +17,42 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ErrorRecordSink {
-  private final static ErrorRecords EMPTY = new ErrorRecords();
-  private final Map<String, ErrorRecords> errorRecords;
+  private final Map<String, List<Record>> errorRecords;
   private int size;
 
   public ErrorRecordSink() {
-    errorRecords = new HashMap<String, ErrorRecords>();
+    errorRecords = new HashMap<>();
     size = 0;
   }
 
-  public void addRecord(String stageInstance, ErrorRecord errorRecord) {
-    ErrorRecords stageErrors = errorRecords.get(stageInstance);
+  public void addRecord(String stageInstance, Record errorRecord) {
+    List<Record> stageErrors = errorRecords.get(stageInstance);
     if (stageErrors == null) {
-      stageErrors = new ErrorRecords();
+      stageErrors = new ArrayList<>();
       errorRecords.put(stageInstance, stageErrors);
     }
-    stageErrors.addErrorRecord(errorRecord);
+    stageErrors.add(errorRecord);
     size++;
   }
 
-  public Map<String, ErrorRecords> getErrorRecords() {
+  public Map<String, List<Record>> getErrorRecords() {
     return errorRecords;
   }
 
-  public ErrorRecords getErrorRecords(String stageInstance) {
-    ErrorRecords errors = errorRecords.get(stageInstance);
-    return (errors != null) ? errors : EMPTY;
+  @SuppressWarnings("unchecked")
+  public List<Record> getErrorRecords(String stageInstance) {
+    List<Record> errors = errorRecords.get(stageInstance);
+    return (errors != null) ? errors : Collections.EMPTY_LIST;
   }
 
   public int size() {

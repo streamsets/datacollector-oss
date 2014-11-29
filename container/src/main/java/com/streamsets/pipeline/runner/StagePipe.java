@@ -92,8 +92,7 @@ public class StagePipe extends Pipe {
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     outputRecordsCounter.inc(batchMaker.getSize());
     outputRecordsMeter.mark(batchMaker.getSize());
-    int stageErrorSinkCount = errorRecordSink.getErrorRecords(getStage().getInfo().getInstanceName()).getErrorRecords().
-        size();
+    int stageErrorSinkCount = errorRecordSink.getErrorRecords(getStage().getInfo().getInstanceName()).size();
     errorRecordsCounter.inc(predicateSink.size() + stageErrorSinkCount);
     errorRecordsMeter.mark(predicateSink.size() + stageErrorSinkCount);
     if (getStage().getConfiguration().getOutputLanes().size() > 1) {
