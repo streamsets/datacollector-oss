@@ -52,7 +52,7 @@ public interface Stage<C extends Stage.Context> {
 
     public void toError(Record record, String errorMessage);
 
-    public void toError(Record record, ErrorId errorId, String... args);
+    public void toError(Record record, StageException.ID errorId, String... args);
 
   }
 

@@ -59,7 +59,7 @@ public class PreviewPipelineBuilder {
         pipelineConf.getStages().add(createPlugStage(openLanes));
       }
     } else {
-      throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_PREVIEW, validator.getIssues());
+      throw new PipelineRuntimeException(PipelineRuntimeException.CANNOT_PREVIEW, validator.getIssues());
     }
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + ":preview", pipelineConf).build(runner);
     return new PreviewPipeline(pipeline, validator.getIssues());

@@ -171,7 +171,7 @@ public class TestPipelineStoreResource extends JerseyTest {
         Mockito.when(pipelineStore.create("myPipeline", "my description", "nobody")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.doNothing().when(pipelineStore).delete("myPipeline");
-        Mockito.doThrow(new PipelineStoreException(PipelineStoreErrors.PIPELINE_DOES_NOT_EXIST, "xyz"))
+        Mockito.doThrow(new PipelineStoreException(PipelineStoreException.PIPELINE_DOES_NOT_EXIST, "xyz"))
             .when(pipelineStore).delete("xyz");
         Mockito.when(pipelineStore.save(
             anyString(), anyString(), anyString(), anyString(), (PipelineConfiguration)any())).thenReturn(

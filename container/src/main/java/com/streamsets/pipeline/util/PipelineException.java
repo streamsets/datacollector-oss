@@ -15,46 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.util;
 
-package com.streamsets.pipeline.api;
-
-import com.streamsets.pipeline.container.LocalizableMessage;
+import com.streamsets.pipeline.api.LocalizedString;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.container.Utils;
 
-public class StageException extends Exception {
+public class PipelineException extends Exception {
+  private static final String PIPELINE_CONTAINER_BUNDLE = "pipeline-container-bundle";
 
-  public static class ID {
-    private final ClassLoader classLoader;
-    private final String bundle;
-    private final String id;
-    private final String msgTemplate;
-
+  public static class ID extends StageException.ID {
 
     public ID(String id, String msgTemplate) {
-      this((String) null, id, msgTemplate);
-    }
-
-    public ID(String bundle, String id, String msgTemplate) {
-      classLoader = Thread.currentThread().getContextClassLoader();
-      this.bundle = bundle;
-      this.id = Utils.checkNotNull(id, "id");
-      this.msgTemplate = Utils.checkNotNull(msgTemplate, "msgTemplate");
-    }
-
-    public ID(Class classForBundleName, String id, String msgTemplate) {
-      this(Utils.checkNotNull(classForBundleName, "classForBundleName").getName(), id, msgTemplate);
-    }
-
-    public String getId() {
-      return id;
-    }
-
-    public String getMessageTemplate() {
-      return msgTemplate;
-    }
-
-    public LocalizedString getMessage(Object... args) {
-      return new LocalizableMessage(classLoader, bundle, getId(), getMessageTemplate(), args);
+      super(PIPELINE_CONTAINER_BUNDLE, id, msgTemplate);
     }
 
   }
@@ -71,7 +44,7 @@ public class StageException extends Exception {
   private final LocalizedString localizedString;
 
   // last parameter can be a cause exception
-  public StageException(ID errorId, Object... params) {
+  public PipelineException(StageException.ID errorId, Object... params) {
     super(getCause(params));
     this.id = Utils.checkNotNull(errorId, "errorId").getId();
     this.localizedString = errorId.getMessage(params);
@@ -92,3 +65,4 @@ public class StageException extends Exception {
   }
 
 }
+

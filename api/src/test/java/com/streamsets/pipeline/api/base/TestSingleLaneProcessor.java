@@ -35,11 +35,6 @@ import java.util.Iterator;
 
 public class TestSingleLaneProcessor {
 
-  @Test
-  public void testError() {
-    Assert.assertNotNull(SingleLaneProcessor.ERROR.OUTPUT_LANE_ERROR.getMessageTemplate());
-  }
-
   @Test(expected = StageException.class)
   @SuppressWarnings("unchecked")
   public void testInvalidConfig1() throws Exception {

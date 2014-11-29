@@ -112,8 +112,8 @@ public class StateTracker {
     try {
       return json.readObjectFromFile(getStateFile(), PipelineState.class);
     } catch (IOException e) {
-      LOG.error(PipelineManagerException.ERROR.COULD_NOT_GET_STATE.getMessageTemplate(), e.getMessage());
-      throw new PipelineManagerException(PipelineManagerException.ERROR.COULD_NOT_GET_STATE, e.getMessage(), e);
+      LOG.error(PipelineManagerException.COULD_NOT_GET_STATE.getMessageTemplate(), e.getMessage());
+      throw new PipelineManagerException(PipelineManagerException.COULD_NOT_GET_STATE, e.getMessage(), e);
     }
   }
 
@@ -129,8 +129,8 @@ public class StateTracker {
       json.appendObjectToFile(pipelineStateTempFile, pipelineStateFile, pipelineState);
 
     } catch (IOException e) {
-      LOG.error(PipelineManagerException.ERROR.COULD_NOT_SET_STATE.getMessageTemplate(), e.getMessage());
-      throw new PipelineManagerException(PipelineManagerException.ERROR.COULD_NOT_SET_STATE, e.getMessage(), e);
+      LOG.error(PipelineManagerException.COULD_NOT_SET_STATE.getMessageTemplate(), e.getMessage());
+      throw new PipelineManagerException(PipelineManagerException.COULD_NOT_SET_STATE, e.getMessage(), e);
     }
   }
 

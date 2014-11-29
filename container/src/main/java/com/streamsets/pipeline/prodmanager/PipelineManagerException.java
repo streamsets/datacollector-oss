@@ -17,37 +17,23 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
-import com.streamsets.pipeline.api.ErrorId;
-import com.streamsets.pipeline.container.PipelineException;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.util.PipelineException;
 
 public class PipelineManagerException extends PipelineException {
 
-  public PipelineManagerException(ErrorId id, Object... params) {
+  public static final ID COULD_NOT_SET_STATE = new ID("COULD_NOT_SET_STATE", "Could not set state, {}");
+  public static final ID COULD_NOT_GET_STATE = new ID("COULD_NOT_GET_STATE", "Could not get state, {}");
+  public static final ID INVALID_STATE_TRANSITION = new ID("INVALID_STATE_TRANSITION", "Could not change state from {} to {}");
+  public static final ID COULD_NOT_SET_OFFSET_RUNNING_STATE = new ID("COULD_NOT_SET_OFFSET_RUNNING_STATE", "Could not set the source offset during a run");
+  public static final ID COULD_NOT_CAPTURE_SNAPSHOT_BECAUSE_PIPELINE_NOT_RUNNING = new ID("COULD_NOT_CAPTURE_SNAPSHOT_BECAUSE_PIPELINE_NOT_RUNNING", "Could not capture snapshot because pipeline is not running");
+  public static final ID COULD_NOT_GET_ERROR_RECORDS_BECAUSE_PIPELINE_NOT_RUNNING = new ID("COULD_NOT_GET_ERROR_RECORDS_BECAUSE_PIPELINE_NOT_RUNNING", "Could not get error records because pipeline is not running");
+  public static final ID INVALID_BATCH_SIZE = new ID("INVALID_BATCH_SIZE", "Invalid batch size supplied {}");
+  public static final ID COULD_NOT_START_PIPELINE_MANAGER_REASON = new ID("COULD_NOT_START_PIPELINE_MANAGER_REASON", "Could not start pipeline manager. Reason : {}");
+  public static final ID PIPELINE_DOES_NOT_EXIST = new ID("PIPELINE_DOES_NOT_EXIST", "Pipeline {} does not exist");
+
+  public PipelineManagerException(StageException.ID id, Object... params) {
     super(id, params);
   }
 
-  public enum ERROR implements ErrorId {
-
-    COULD_NOT_SET_STATE("Could not set state, {}"),
-    COULD_NOT_GET_STATE("Could not get state, {}"),
-    INVALID_STATE_TRANSITION("Could not change state from {} to {}"),
-    COULD_NOT_SET_OFFSET_RUNNING_STATE("Could not set the source offset during a run"),
-    COULD_NOT_CAPTURE_SNAPSHOT_BECAUSE_PIPELINE_NOT_RUNNING("Could not capture snapshot because pipeline is not running"),
-    COULD_NOT_GET_ERROR_RECORDS_BECAUSE_PIPELINE_NOT_RUNNING("Could not get error records because pipeline is not running"),
-    INVALID_BATCH_SIZE("Invalid batch size supplied {}"),
-    COULD_NOT_START_PIPELINE_MANAGER_REASON("Could not start pipeline manager. Reason : {}"),
-    PIPELINE_DOES_NOT_EXIST("Pipeline {} does not exist");
-
-    private final String msgTemplate;
-
-    ERROR(String msgTemplate) {
-      this.msgTemplate = msgTemplate;
-    }
-
-    @Override
-    public String getMessageTemplate() {
-      return msgTemplate;
-    }
-
-  }
 }

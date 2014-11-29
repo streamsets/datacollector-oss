@@ -19,7 +19,6 @@ package com.streamsets.pipeline.lib.stage.source.logtail;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
@@ -69,21 +68,8 @@ public class LogTailSource extends BaseSource {
              defaultValue = "5000")
   public int maxWaitTime;
 
-  public enum ERROR implements ErrorId {
-    NO_PERMISSION_TO_READ_LOG_FILE("Insufficient permissions to read the log file '{}'"),
-    ;
-
-    private final String template;
-
-    ERROR(String template) {
-      this.template = template;
-    }
-
-    @Override
-    public String getMessageTemplate() {
-      return template;
-    }
-  }
+  private static final StageException.ID NO_PERMISSION_TO_READ_LOG_FILE = new StageException.ID(
+      "NO_PERMISSION_TO_READ_LOG_FILE", "Insufficient permissions to read the log file '{}'");
 
   private BlockingQueue<String> logLinesQueue;
   private LogTail logTail;
@@ -93,7 +79,7 @@ public class LogTailSource extends BaseSource {
     super.init();
     File logFile = new File(logFileName);
     if (logFile.exists() && !logFile.canRead()) {
-      throw new StageException(ERROR.NO_PERMISSION_TO_READ_LOG_FILE, logFile);
+      throw new StageException(NO_PERMISSION_TO_READ_LOG_FILE, logFile);
     }
     logLinesQueue = new ArrayBlockingQueue<String>(maxLinesPrefetch);
     logTail = new LogTail(logFile, tailFromEnd, getInfo(), logLinesQueue);

@@ -17,25 +17,38 @@
  */
 package com.streamsets.pipeline.container;
 
-import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Locale;
 
 public class TestLocaleInContext {
 
-  @After
+  @Before
   public void cleanUp() {
     LocaleInContext.set(null);
   }
 
   @Test
-  public void testLocaleInContext() {
-    LocaleInContext.set(Locale.US);
-    Assert.assertEquals(Locale.US, LocaleInContext.get());
+  public void testFirstUseInThread() throws Exception {
+    Thread t = new Thread() {
+      @Override
+      public void run() {
+        Assert.assertEquals(Locale.getDefault(), LocaleInContext.get());
+      }
+    };
+    t.start();
+    t.join();
+  }
+
+  @Test
+  public void testSet() {
+    Locale locale = Locale.forLanguageTag("xyz");
+    LocaleInContext.set(locale);
+    Assert.assertEquals(locale, LocaleInContext.get());
     LocaleInContext.set(null);
-    Assert.assertNull(LocaleInContext.get());
+    Assert.assertEquals(Locale.getDefault(), LocaleInContext.get());
   }
 
 }

@@ -15,10 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
-
-public interface ErrorId {
-
-  public String getMessageTemplate();
-
-}
+/**
+ * All classes in this package are utilities for the public API but they are not part of the public API.
+ */
+package com.streamsets.pipeline.container;

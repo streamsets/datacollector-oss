@@ -60,14 +60,14 @@ public class PreviewStageRunner implements PipelineRunner {
     }
     if (stagePipe != null) {
       if (stagePipe.getStage().getDefinition().getType() == StageType.SOURCE) {
-        throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_PREVIEW_STAGE_ON_SOURCE, instanceName);
+        throw new PipelineRuntimeException(PipelineRuntimeException.CANNOT_PREVIEW_STAGE_ON_SOURCE, instanceName);
       }
       PipeBatch pipeBatch = new StagePreviewPipeBatch(instanceName, inputRecords);
       stagePipe.process(pipeBatch);
       batchesOutput.add(pipeBatch.getSnapshotsOfAllStagesOutput());
 
     } else {
-      throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.INVALID_INSTANCE_STAGE, instanceName);
+      throw new PipelineRuntimeException(PipelineRuntimeException.INVALID_INSTANCE_STAGE, instanceName);
     }
   }
 

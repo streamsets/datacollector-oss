@@ -17,7 +17,6 @@
  */
 package com.streamsets.pipeline.container;
 
-import com.streamsets.pipeline.api.Stage;
 import org.slf4j.helpers.MessageFormatter;
 
 import java.text.DateFormat;
@@ -26,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-// private class with utilities for the public API classes, not exposed as public API
 public final class Utils {
 
   Utils() {
@@ -60,19 +58,8 @@ public final class Utils {
     return dateFormat;
   }
 
-  //TODO make format masks configurable and support scanning
   public static Date parse(String str) throws ParseException {
     return getISO8601DateFormat().parse(str);
   }
 
-  public static void setStageExceptionContext(Stage.Info info, ClassLoader stageClassLoader) {
-    checkNotNull(info, "info");
-    checkNotNull(stageClassLoader, "stageClassLoader");
-    String bundleName = (info.getName() + "-" + info.getVersion()).replace('.', '_');
-    PipelineException.setContext(bundleName, stageClassLoader);
-  }
-
-  public static void resetStageExceptionContext() {
-    PipelineException.resetContext();
-  }
 }

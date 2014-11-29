@@ -131,7 +131,7 @@ public class PreviewResource {
 
     PipelineConfiguration pipelineConf = store.load(name, rev);
     if(pipelineConf.getStages().isEmpty()) {
-      throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_RAW_SOURCE_PREVIEW_EMPTY_PIPELINE, name);
+      throw new PipelineRuntimeException(PipelineRuntimeException.CANNOT_RAW_SOURCE_PREVIEW_EMPTY_PIPELINE, name);
     }
 
     //Source stage is always the first one in the entire pipeline
@@ -200,7 +200,7 @@ public class PreviewResource {
       for(int i = 1; i < requiredPropertiesNotSet.size(); i++) {
         sb.append(", ").append(requiredPropertiesNotSet.get(i));
       }
-      throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_RAW_SOURCE_PREVIEW, sb.toString());
+      throw new PipelineRuntimeException(PipelineRuntimeException.CANNOT_RAW_SOURCE_PREVIEW, sb.toString());
     }
   }
 

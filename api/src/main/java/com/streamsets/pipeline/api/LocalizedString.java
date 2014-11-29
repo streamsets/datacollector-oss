@@ -15,25 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.sdk.testData;
+package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.ErrorId;
-import com.streamsets.pipeline.api.StageErrorDef;
+public interface LocalizedString {
 
-@StageErrorDef
-public enum TwitterError implements ErrorId {
-  // We have an trailing whitespace for testing purposes
-  INPUT_LANE_ERROR("There should be 1 input lane but there are '{}' "),
-  OUTPUT_LANE_ERROR("There should be 1 output lane but there are '{}' ");
+  public String getNonLocalized();
 
-  private String msg;
+  public String getLocalized();
 
-  TwitterError(String msg) {
-    this.msg = msg;
-  }
-
-  @Override
-  public String getMessageTemplate() {
-    return msg;
-  }
 }

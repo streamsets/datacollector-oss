@@ -30,7 +30,7 @@ public class TestPipelineRuntimeException {
   @SuppressWarnings("unchecked")
   public void testConstructor1() {
     List<Issue> issues = ImmutableList.of();
-    PipelineRuntimeException ex = new PipelineRuntimeException(PipelineRuntimeException.ERROR.PIPELINE_CONFIGURATION,
+    PipelineRuntimeException ex = new PipelineRuntimeException(PipelineRuntimeException.PIPELINE_CONFIGURATION,
                                                                issues);
     Assert.assertSame(issues, ex.getIssues());
   }
@@ -38,14 +38,14 @@ public class TestPipelineRuntimeException {
   @Test
   @SuppressWarnings("unchecked")
   public void testConstructor2() {
-    PipelineRuntimeException ex = new PipelineRuntimeException(PipelineRuntimeException.ERROR.PIPELINE_BUILD,
+    PipelineRuntimeException ex = new PipelineRuntimeException(PipelineRuntimeException.PIPELINE_BUILD,
                                                                "foo");
     Assert.assertTrue(ex.getIssues().isEmpty());
   }
 
   @Test
   public void testErrorMessage() {
-    Assert.assertNotNull(PipelineRuntimeException.ERROR.PIPELINE_BUILD.getMessageTemplate());
+    Assert.assertNotNull(PipelineRuntimeException.PIPELINE_BUILD.getMessageTemplate());
   }
 
 }

@@ -17,30 +17,17 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.util.Message;
+import com.streamsets.pipeline.util.PipelineException;
 
 import java.util.ArrayList;
 import java.util.List;
 
+//FIXME
 public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predicate, FilterRecordBatch.Sink {
-
-  public enum ERROR implements ErrorId {
-    MISSING_FIELDS("The record misses the following required fields {}");
-
-    private final String template;
-
-    ERROR(String template) {
-      this.template = template;
-    }
-
-    @Override
-    public String getMessageTemplate() {
-      return template;
-    }
-  }
 
   private static final String MISSING_REQUIRED_FIELDS_KEY = "missing.required.fields";
 
@@ -59,7 +46,7 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
 
   @Override
   public void add(Record record, Message msg) {
-    errorSink.addRecord(instanceName, new ErrorRecord(record, ERROR.MISSING_FIELDS, msg));
+//    errorSink.addRecord(instanceName, new ErrorRecord(record, ERROR.MISSING_FIELDS, msg));
     counter++;
   }
 
@@ -83,14 +70,15 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
   }
 
   @Override
-  public ErrorId getRejectedReason() {
-    return ERROR.MISSING_FIELDS;
+  public StageException.ID getRejectedReason() {
+    return null; //MISSING_FIELDS;
   }
 
   @Override
   public Message getRejectedMessage() {
-    return (missingFields.isEmpty()) ? null : new Message(
-        MISSING_REQUIRED_FIELDS_KEY, ERROR.MISSING_FIELDS.getMessageTemplate(), missingFields);
+    return null;
+//    return (missingFields.isEmpty()) ? null : new Message(
+//        MISSING_REQUIRED_FIELDS_KEY .MISSING_FIELDS.getMessageTemplate(), missingFields);
   }
 
   @Override

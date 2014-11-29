@@ -174,7 +174,7 @@ public class StageRuntime {
     public StageRuntime[] build() throws PipelineRuntimeException {
       PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
       if (!validator.validate()) {
-        throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.PIPELINE_CONFIGURATION, validator.getIssues());
+        throw new PipelineRuntimeException(PipelineRuntimeException.PIPELINE_CONFIGURATION, validator.getIssues());
       }
       try {
         StageRuntime[] runtimes = new StageRuntime[pipelineConf.getStages().size()];
@@ -190,7 +190,7 @@ public class StageRuntime {
       } catch (PipelineRuntimeException ex) {
         throw ex;
         } catch (Exception ex) {
-        throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.PIPELINE_BUILD, ex.getMessage(), ex);
+        throw new PipelineRuntimeException(PipelineRuntimeException.PIPELINE_BUILD, ex.getMessage(), ex);
       }
     }
 
@@ -200,7 +200,7 @@ public class StageRuntime {
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
         ConfigConfiguration confConf = stageConf.getConfig(confDef.getName());
         if (confConf == null) {
-          throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.STAGE_MISSING_CONFIG,
+          throw new PipelineRuntimeException(PipelineRuntimeException.STAGE_MISSING_CONFIG,
                                              stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
         }
         Object value = confConf.getValue();
@@ -214,7 +214,7 @@ public class StageRuntime {
             Field var = klass.getField(instanceVar);
             var.set(stage, value);
           } catch (Exception ex) {
-            throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.STAGE_CONFIG_INJECTION,
+            throw new PipelineRuntimeException(PipelineRuntimeException.STAGE_CONFIG_INJECTION,
                                                stageDef.getClassName(), stageConf.getInstanceName(), instanceVar, value,
                                                ex.getMessage(), ex);
           }

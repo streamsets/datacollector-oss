@@ -20,10 +20,15 @@ package com.streamsets.pipeline.container;
 import java.util.Locale;
 
 public abstract class LocaleInContext {
-  private static final ThreadLocal<Locale> LOCALE_TL = new ThreadLocal<Locale>();
+  private static final ThreadLocal<Locale> LOCALE_TL = new ThreadLocal<Locale>() {
+    @Override
+    protected Locale initialValue() {
+      return Locale.getDefault();
+    }
+  };
 
   public static void set(Locale locale) {
-    LOCALE_TL.set(locale);
+    LOCALE_TL.set((locale != null) ? locale : Locale.getDefault());
   }
 
   public static Locale get() {

@@ -20,7 +20,6 @@ package com.streamsets.pipeline.runner;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
@@ -266,12 +265,7 @@ public class TestPipeline {
 
     Source source = Mockito.mock(Source.class);
     Processor processor = Mockito.mock(Processor.class);
-    ErrorId id = new ErrorId() {
-      @Override
-      public String getMessageTemplate() {
-        return null;
-      }
-    };
+    StageException.ID id = new StageException.ID("id", "MSG");
 
     // test checked exception on init
 

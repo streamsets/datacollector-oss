@@ -17,17 +17,17 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.util.Message;
 
 public class ErrorRecord {
   private final Record record;
-  private final ErrorId errorId;
+  private final StageException.ID errorId;
   private final Message issue;
 
-  public ErrorRecord(Record record, ErrorId errorId, Message issue) {
+  public ErrorRecord(Record record, StageException.ID errorId, Message issue) {
     this.record = record;
     this.errorId = errorId;
     this.issue = issue;
@@ -37,7 +37,7 @@ public class ErrorRecord {
     return record;
   }
 
-  public ErrorId getErrorId() {
+  public StageException.ID getErrorId() {
     return errorId;
   }
 

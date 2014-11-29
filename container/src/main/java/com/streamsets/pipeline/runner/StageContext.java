@@ -23,11 +23,11 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
@@ -108,7 +108,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   }
 
   @Override
-  public void toError(Record record, ErrorId errorId, String... args) {
+  public void toError(Record record, StageException.ID errorId, String... args) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorId, "errorId cannot be null");
     String bundleKey = errorId.getClass().getName() + "." + errorId.toString();

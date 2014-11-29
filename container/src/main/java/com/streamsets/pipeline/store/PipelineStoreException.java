@@ -17,12 +17,20 @@
  */
 package com.streamsets.pipeline.store;
 
-import com.streamsets.pipeline.api.ErrorId;
-import com.streamsets.pipeline.container.PipelineException;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.util.PipelineException;
 
 public class PipelineStoreException extends PipelineException {
 
-  public PipelineStoreException(ErrorId id, Object... params) {
+  public static final ID PIPELINE_DOES_NOT_EXIST = new ID("PIPELINE_DOES_NOT_EXIST", "Pipeline '{}' does not exist");
+  public static final ID PIPELINE_ALREADY_EXISTS = new ID("PIPELINE_ALREADY_EXISTS", "Pipeline '{}' already exists");
+  public static final ID COULD_NOT_CREATE_PIPELINE = new ID("COULD_NOT_CREATE_PIPELINE", "Could not create pipeline '{}', {}");
+  public static final ID COULD_NOT_DELETE_PIPELINE = new ID("COULD_NOT_DELETE_PIPELINE", "Could not delete pipeline '{}', {}");
+  public static final ID COULD_NOT_SAVE_PIPELINE = new ID("COULD_NOT_SAVE_PIPELINE", "Could not save pipeline '{}', {}");
+  public static final ID INVALID_UUID_FOR_PIPELINE = new ID("INVALID_UUID_FOR_PIPELINE", "The provided UUID does not match the stored one, please reload the pipeline '{}'");
+  public static final ID COULD_NOT_LOAD_PIPELINE_INFO = new ID("COULD_NOT_LOAD_PIPELINE_INFO", "Could not load pipeline '{}' info, {}");
+
+  public PipelineStoreException(StageException.ID id, Object... params) {
     super(id, params);
   }
 
