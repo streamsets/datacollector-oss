@@ -20,8 +20,7 @@ package com.streamsets.pipeline.container;
 import com.streamsets.pipeline.api.ErrorId;
 
 public class LocalizableErrorId extends LocalizableMessage {
-
-  private final String id;
+  private final ErrorId errorId;
 
   public LocalizableErrorId(ErrorId errorId, Object... params) {
     this(errorId.getClass().getName(), errorId, params);
@@ -32,17 +31,21 @@ public class LocalizableErrorId extends LocalizableMessage {
           params);
     Utils.checkArgument(errorId instanceof Enum, Utils.format("ErrorId class '{}' must be an enum to be Localizable",
                                                               errorId.getClass()));
-    id = errorId.toString();
+    this.errorId = errorId;
+  }
+
+  public ErrorId getId() {
+    return errorId;
   }
 
   @Override
   public String getNonLocalized() {
-    return Utils.format("[{}] - {}", id, super.getNonLocalized());
+    return Utils.format("[{}] - {}", errorId.toString(), super.getNonLocalized());
   }
 
   @Override
   public String getLocalized() {
-    return Utils.format("[{}] - {}", id, super.getLocalized());
+    return Utils.format("[{}] - {}", errorId.toString(), super.getLocalized());
   }
 
   @Override

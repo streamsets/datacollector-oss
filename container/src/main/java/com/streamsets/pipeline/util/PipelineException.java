@@ -23,7 +23,7 @@ import com.streamsets.pipeline.container.LocalizableString;
 import com.streamsets.pipeline.container.Utils;
 
 public class PipelineException extends Exception {
-  private static final String PIPELINE_CONTAINER_BUNDLE = "pipeline-container-bundle";
+  public static final String PIPELINE_CONTAINER_BUNDLE = "pipeline-container-bundle";
 
   private static Throwable getCause(Object... params) {
     Throwable throwable = null;

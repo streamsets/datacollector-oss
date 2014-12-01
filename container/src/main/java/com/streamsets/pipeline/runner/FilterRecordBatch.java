@@ -19,10 +19,9 @@ package com.streamsets.pipeline.runner;
 
 import com.google.common.collect.AbstractIterator;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.LocalizableErrorId;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.util.Message;
 
 import java.util.Iterator;
 
@@ -35,15 +34,13 @@ public class FilterRecordBatch implements Batch {
 
     public boolean evaluate(Record record);
 
-    public ErrorId getRejectedReason();
-
-    public Message getRejectedMessage();
+    public LocalizableErrorId getRejectedMessage();
 
   }
 
   public interface Sink {
 
-    public void add(Record record, Message message);
+    public void add(Record record, LocalizableErrorId message);
 
   }
 

@@ -17,26 +17,24 @@
  */
 package com.streamsets.pipeline.validation;
 
+import com.streamsets.pipeline.container.LocalizableMessage;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.util.Message;
+import com.streamsets.pipeline.util.PipelineException;
 
 public class Issue {
-  private final Message message;
-
-  public Issue(ClassLoader classLoader, String bundleName, String bundleKey, String defaultTemplate, Object... args) {
-    message = new Message(classLoader, bundleName, bundleKey, defaultTemplate, args);
-  }
+  private final LocalizableMessage message;
 
   public Issue(String bundleKey, String defaultTemplate, Object... args) {
-    message = new Message(bundleKey, defaultTemplate, args);
+    message = new LocalizableMessage(Thread.currentThread().getContextClassLoader(),
+                                     PipelineException.PIPELINE_CONTAINER_BUNDLE, bundleKey, defaultTemplate, args);
   }
 
   public String getMessage() {
-    return message.getMessage();
+    return message.getLocalized();
   }
 
   public String toString() {
-    return Utils.format("Issue[message='{}']", message.getDefaultMessage());
+    return Utils.format("Issue[message='{}']", message.getNonLocalized());
   }
 
 }

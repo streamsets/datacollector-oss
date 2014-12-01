@@ -17,10 +17,13 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.LocalizableErrorId;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.util.Message;
+import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.util.PipelineException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +46,6 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
     }
   }
 
-  private static final String MISSING_REQUIRED_FIELDS_KEY = "missing.required.fields";
-
   private final List<String> requiredFields;
   private final String instanceName;
   private final ErrorRecordSink errorSink;
@@ -55,12 +56,15 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
     this.requiredFields = requiredFields;
     this.instanceName = instanceName;
     this.errorSink = errorSink;
-    missingFields = new ArrayList<String>();
+    missingFields = new ArrayList<>();
   }
 
   @Override
-  public void add(Record record, Message msg) {
-//    errorSink.addRecord(instanceName, new ErrorRecord(record, ERROR.MISSING_FIELDS, msg));
+  public void add(Record record, LocalizableErrorId reason) {
+    RecordImpl recordImpl = (RecordImpl) record;
+    recordImpl.getHeader().setErrorId(reason.getId().toString());
+    recordImpl.getHeader().setErrorMessage(reason);
+    errorSink.addRecord(instanceName, recordImpl);
     counter++;
   }
 
@@ -84,15 +88,10 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
   }
 
   @Override
-  public ErrorId getRejectedReason() {
-    return ERROR.MISSING_FIELDS;
-  }
-
-  @Override
-  public Message getRejectedMessage() {
-    return null;
-//    return (missingFields.isEmpty()) ? null : new Message(
-//        MISSING_REQUIRED_FIELDS_KEY .MISSING_FIELDS.getMessageTemplate(), missingFields);
+  public LocalizableErrorId getRejectedMessage() {
+    Preconditions.checkState(!missingFields.isEmpty(), "Called for record that passed the predicate check");
+    return new LocalizableErrorId(PipelineException.PIPELINE_CONTAINER_BUNDLE, ERROR.MISSING_FIELDS, instanceName,
+                                  missingFields);
   }
 
   @Override
