@@ -51,8 +51,13 @@ angular
        * @returns {*}
        */
       getErrorRecords: function(errorRecords, inputRecord) {
-        return _.filter(errorRecords, function(outputRecord) {
-          return outputRecord.record.header.trackingId === inputRecord.header.trackingId;
+        return _.filter(errorRecords, function(errorRecord) {
+          if(errorRecord.header.trackingId === inputRecord.header.trackingId) {
+            if(inputRecord.expand) {
+              errorRecord.expand = true;
+            }
+            return true;
+          }
         });
       },
 

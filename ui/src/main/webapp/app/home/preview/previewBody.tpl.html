@@ -107,10 +107,10 @@
                       ng-if="errorRecord.expand !== true"></span>
                 <span class="glyphicon glyphicon-collapse-down"
                       ng-if="errorRecord.expand === true"></span>
-            {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.message}}
+            {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.header.errorMessage.localized}}
           </label>
           <ul class="preview-list" ng-if="errorRecord.expand === true">
-            <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in errorRecord.record.values">
+            <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in errorRecord.value.value">
               <span class="field-name"> {{fieldName}} : </span>
               <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
             </li>

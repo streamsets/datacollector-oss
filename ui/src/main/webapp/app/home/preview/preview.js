@@ -51,7 +51,7 @@ angular
       getErrorRecords: function(errorRecords, inputRecord) {
         return _.filter(errorRecords, function(outputRecord) {
 
-          if(outputRecord.record.header.trackingId === inputRecord.header.trackingId) {
+          if(outputRecord.header.trackingId === inputRecord.header.trackingId) {
             if(inputRecord.expand) {
               outputRecord.expand = true;
             }
@@ -70,7 +70,7 @@ angular
       recordValueUpdated: function(recordUpdated, fieldName, stageInstance) {
         $scope.previewDataUpdated = true;
         recordUpdated.dirty = true;
-        recordUpdated.values[fieldName].dirty = true;
+        recordUpdated.value.value[fieldName].dirty = true;
       },
 
 
