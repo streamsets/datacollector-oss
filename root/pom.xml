@@ -62,6 +62,8 @@
     <commons-codec.version>1.9</commons-codec.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-cli.version>1.2</commons-cli.version>
+    <jps-api.version>2.0</jps-api.version>
+    <commons-el.version>1.0</commons-el.version>
 
     <!-- Platform encoding override -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -259,6 +261,18 @@
         <artifactId>jersey-test-framework-provider-inmemory</artifactId>
         <version>${jersey.version}</version>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet.jsp</groupId>
+        <artifactId>jsp-api</artifactId>
+        <version>${jps-api.version}</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>commons-el</groupId>
+        <artifactId>commons-el</artifactId>
+        <version>${commons-el.version}</version>
+        <scope>compile</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
