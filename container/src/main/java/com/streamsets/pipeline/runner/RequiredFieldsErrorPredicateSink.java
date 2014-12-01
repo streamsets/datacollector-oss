@@ -17,17 +17,31 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.util.Message;
-import com.streamsets.pipeline.util.PipelineException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 //FIXME
 public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predicate, FilterRecordBatch.Sink {
+
+  private enum ERROR implements ErrorId {
+    MISSING_FIELDS("The stage '{}' requires records to have the following fields [{}]");
+
+    private String msg;
+
+    ERROR(String msg) {
+      this.msg = msg;
+    }
+
+    @Override
+    public String getMessage() {
+      return msg;
+    }
+  }
 
   private static final String MISSING_REQUIRED_FIELDS_KEY = "missing.required.fields";
 
@@ -70,8 +84,8 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
   }
 
   @Override
-  public StageException.ID getRejectedReason() {
-    return null; //MISSING_FIELDS;
+  public ErrorId getRejectedReason() {
+    return ERROR.MISSING_FIELDS;
   }
 
   @Override

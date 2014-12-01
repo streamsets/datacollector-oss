@@ -92,7 +92,7 @@ public interface Record {
 
     public String getErrorId();
 
-    public LocalizedString getErrorMessage();
+    public String getErrorMessage();
 
   }
 

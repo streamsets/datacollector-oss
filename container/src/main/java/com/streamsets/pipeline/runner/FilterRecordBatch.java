@@ -19,8 +19,8 @@ package com.streamsets.pipeline.runner;
 
 import com.google.common.collect.AbstractIterator;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.util.Message;
 
@@ -35,7 +35,7 @@ public class FilterRecordBatch implements Batch {
 
     public boolean evaluate(Record record);
 
-    public StageException.ID getRejectedReason();
+    public ErrorId getRejectedReason();
 
     public Message getRejectedMessage();
 

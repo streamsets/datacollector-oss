@@ -128,7 +128,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
         prodPipeline = createProductionPipeline(ps.getName(), ps.getRev(), configuration, pipelineStore, stageLibrary);
       } catch (Exception e) {
         //log error and shutdown again
-        LOG.error(PipelineManagerException.COULD_NOT_START_PIPELINE_MANAGER_REASON.getMessageTemplate(), e.getMessage());
+        LOG.error(PipelineManagerException.ERROR.COULD_NOT_START_PIPELINE_MANAGER_REASON.getMessage(), e.getMessage());
       }
     }
     LOG.debug("Initialized Production Pipeline Manager");
@@ -161,7 +161,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public String setOffset(String offset) throws PipelineManagerException {
     LOG.debug("Setting offset {}", offset);
     checkState(!getPipelineState().getState().equals(State.RUNNING),
-          PipelineManagerException.COULD_NOT_SET_OFFSET_RUNNING_STATE);
+          PipelineManagerException.ERROR.COULD_NOT_SET_OFFSET_RUNNING_STATE);
 
     prodPipeline.setOffset(offset);
     return prodPipeline.getCommittedOffset();
@@ -170,9 +170,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public void captureSnapshot(int batchSize) throws PipelineManagerException {
     LOG.debug("Capturing snapshot with batch size {}", batchSize);
     checkState(getPipelineState().getState().equals(State.RUNNING),
-        PipelineManagerException.COULD_NOT_CAPTURE_SNAPSHOT_BECAUSE_PIPELINE_NOT_RUNNING);
+        PipelineManagerException.ERROR.COULD_NOT_CAPTURE_SNAPSHOT_BECAUSE_PIPELINE_NOT_RUNNING);
     if(batchSize <= 0) {
-      throw new PipelineManagerException(PipelineManagerException.INVALID_BATCH_SIZE, batchSize);
+      throw new PipelineManagerException(PipelineManagerException.ERROR.INVALID_BATCH_SIZE, batchSize);
     }
     prodPipeline.captureSnapshot(batchSize);
     LOG.debug("Captured snapshot with batch size {}", batchSize);
@@ -194,7 +194,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
   public List<Record> getErrorRecords(String instanceName) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING),
-        PipelineManagerException.COULD_NOT_GET_ERROR_RECORDS_BECAUSE_PIPELINE_NOT_RUNNING);
+        PipelineManagerException.ERROR.COULD_NOT_GET_ERROR_RECORDS_BECAUSE_PIPELINE_NOT_RUNNING);
     return prodPipeline.getErrorRecords(instanceName);
   }
 
@@ -300,10 +300,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public void validateStateTransition(State toState) throws PipelineManagerException {
     State currentState = getPipelineState().getState();
     checkState(VALID_TRANSITIONS.get(currentState).contains(toState)
-        , PipelineManagerException.INVALID_STATE_TRANSITION, currentState, toState);
+        , PipelineManagerException.ERROR.INVALID_STATE_TRANSITION, currentState, toState);
   }
 
-  private void checkState(boolean expr, PipelineManagerException.ID error, Object... args)
+  private void checkState(boolean expr, PipelineManagerException.ERROR error, Object... args)
       throws PipelineManagerException {
     if(!expr) {
       throw new PipelineManagerException(error, args);
@@ -312,7 +312,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
   private void validatePipelineExistence(String pipelineName) throws PipelineManagerException {
     if(!pipelineStore.hasPipeline(pipelineName)) {
-      throw new PipelineManagerException(PipelineManagerException.PIPELINE_DOES_NOT_EXIST, pipelineName);
+      throw new PipelineManagerException(PipelineManagerException.ERROR.PIPELINE_DOES_NOT_EXIST, pipelineName);
     }
   }
 

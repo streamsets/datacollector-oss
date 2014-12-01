@@ -17,20 +17,13 @@
  */
 package com.streamsets.pipeline.util;
 
-import com.streamsets.pipeline.api.LocalizedString;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.container.LocalizableErrorId;
+import com.streamsets.pipeline.container.LocalizableString;
 import com.streamsets.pipeline.container.Utils;
 
 public class PipelineException extends Exception {
   private static final String PIPELINE_CONTAINER_BUNDLE = "pipeline-container-bundle";
-
-  public static class ID extends StageException.ID {
-
-    public ID(String id, String msgTemplate) {
-      super(PIPELINE_CONTAINER_BUNDLE, id, msgTemplate);
-    }
-
-  }
 
   private static Throwable getCause(Object... params) {
     Throwable throwable = null;
@@ -40,28 +33,28 @@ public class PipelineException extends Exception {
     return throwable;
   }
 
-  private final String id;
-  private final LocalizedString localizedString;
+  private final ErrorId errorId;
+  private final LocalizableString localizedErrorId;
 
-  // last parameter can be a cause exception
-  public PipelineException(StageException.ID errorId, Object... params) {
+  // last parameter can be an exception cause
+  public PipelineException(ErrorId errorId, Object... params) {
     super(getCause(params));
-    this.id = Utils.checkNotNull(errorId, "errorId").getId();
-    this.localizedString = errorId.getMessage(params);
+    this.errorId = Utils.checkNotNull(errorId, "errorId");
+    this.localizedErrorId = new LocalizableErrorId(PIPELINE_CONTAINER_BUNDLE, errorId, params);
   }
 
-  public String getId() {
-    return id;
+  public ErrorId getId() {
+    return errorId;
   }
 
   @Override
   public String getMessage() {
-    return localizedString.getNonLocalized();
+    return localizedErrorId.getNonLocalized();
   }
 
   @Override
   public String getLocalizedMessage() {
-    return localizedString.getLocalized();
+    return localizedErrorId.getLocalized();
   }
 
 }

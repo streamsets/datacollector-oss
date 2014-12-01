@@ -22,29 +22,50 @@ import org.junit.Test;
 
 public class TestStageException {
 
+  enum TError implements ErrorId {
+    ID;
+
+    @Override
+    public String getMessage() {
+      return "Hello {}";
+    }
+  }
+
+  public static class NonEnumError implements ErrorId {
+    public static final ErrorId ID = new NonEnumError();
+
+    @Override
+    public String getMessage() {
+      return "Hello {}";
+    }
+  }
+
   @Test
   public void testException() {
-    StageException ex = new StageException(new StageException.ID("ID", "Hello"));
-    Assert.assertEquals("ID", ex.getId());
-    Assert.assertEquals("Hello", ex.getMessage());
-    Assert.assertEquals("Hello", ex.getLocalizedMessage());
+    StageException ex = new StageException(TError.ID);
+    Assert.assertEquals(TError.ID, ex.getId());
+    Assert.assertEquals("[ID] - Hello {}", ex.getMessage());
+    Assert.assertEquals("[ID] - Hello {}", ex.getLocalizedMessage());
     Assert.assertNull(ex.getCause());
 
     Exception cause = new Exception();
-    ex = new StageException(new StageException.ID("ID", "Hello"), cause);
+    ex = new StageException(TError.ID, cause);
     Assert.assertEquals(cause, ex.getCause());
 
-    ex = new StageException(new StageException.ID("ID", "Hello"), "a");
+    ex = new StageException(TError.ID, "a");
+    Assert.assertEquals("[ID] - Hello a", ex.getMessage());
+    Assert.assertEquals("[ID] - Hello a", ex.getLocalizedMessage());
     Assert.assertNull(ex.getCause());
 
-    ex = new StageException(new StageException.ID("ID", "Hello '{}'"), "a");
-    Assert.assertEquals("Hello 'a'", ex.getMessage());
-    Assert.assertEquals("Hello 'a'", ex.getLocalizedMessage());
-    Assert.assertNull(ex.getCause());
+    ex = new StageException(TError.ID, "a", cause);
+    Assert.assertEquals("[ID] - Hello a", ex.getMessage());
+    Assert.assertEquals("[ID] - Hello a", ex.getLocalizedMessage());
+    Assert.assertEquals(cause, ex.getCause());
 
-    ex = new StageException(new StageException.ID("ID", "Hello '{}'"), "a", cause);
-    Assert.assertEquals("Hello 'a'", ex.getMessage());
-    Assert.assertEquals("Hello 'a'", ex.getLocalizedMessage());
+    ex = new StageException(NonEnumError.ID, "a", cause);
+    Assert.assertEquals(NonEnumError.ID, ex.getId());
+    Assert.assertEquals("Hello a", ex.getMessage());
+    Assert.assertEquals("Hello a", ex.getLocalizedMessage());
     Assert.assertEquals(cause, ex.getCause());
   }
 

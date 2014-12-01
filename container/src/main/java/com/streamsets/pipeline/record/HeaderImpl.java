@@ -25,7 +25,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.streamsets.pipeline.api.LocalizedString;
+import com.streamsets.pipeline.container.LocalizableString;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
 
@@ -107,27 +107,11 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   }
 
   @Override
-  public LocalizedString getErrorMessage() {
-    final Object msg = map.get(ERROR_MSG_ATTR);
-    LocalizedString localizedString = null;
-    if (msg != null) {
-      if (msg instanceof LocalizedString) {
-        localizedString = (LocalizedString) msg;
-      } else {
-        localizedString = new LocalizedString() {
-          @Override
-          public String getNonLocalized() {
-            return msg.toString();
-          }
-
-          @Override
-          public String getLocalized() {
-            return msg.toString();
-          }
-        };
-      }
-    }
-    return localizedString;
+  public String getErrorMessage() {
+    final Object error = map.get(ERROR_MSG_ATTR);
+    return (error == null)
+           ? null
+           : (error instanceof LocalizableString) ? ((LocalizableString) error).getLocalized() : (String) error;
   }
 
   @Override
@@ -241,7 +225,7 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
     map.put(ERROR_ID_ATTR, errorId);
   }
 
-  public void setErrorMessage(LocalizedString errorMsg) {
+  public void setErrorMessage(LocalizableString errorMsg) {
     Preconditions.checkNotNull(errorMsg, "errorMsg cannot be null");
     map.put(ERROR_ID_ATTR, errorMsg);
   }

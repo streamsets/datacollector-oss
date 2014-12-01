@@ -22,6 +22,7 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -99,7 +100,7 @@ public class SourceContextImpl implements Source.Context {
   }
 
   @Override
-  public void toError(Record record, StageException.ID errorId, String... args) {
+  public void toError(Record record, ErrorId errorId, String... args) {
 
   }
 

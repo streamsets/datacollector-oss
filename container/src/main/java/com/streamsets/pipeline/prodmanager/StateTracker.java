@@ -17,7 +17,6 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +29,6 @@ import com.streamsets.pipeline.util.JsonFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.Collections;
@@ -112,8 +110,8 @@ public class StateTracker {
     try {
       return json.readObjectFromFile(getStateFile(), PipelineState.class);
     } catch (IOException e) {
-      LOG.error(PipelineManagerException.COULD_NOT_GET_STATE.getMessageTemplate(), e.getMessage());
-      throw new PipelineManagerException(PipelineManagerException.COULD_NOT_GET_STATE, e.getMessage(), e);
+      LOG.error(PipelineManagerException.ERROR.COULD_NOT_GET_STATE.getMessage(), e.getMessage());
+      throw new PipelineManagerException(PipelineManagerException.ERROR.COULD_NOT_GET_STATE, e.getMessage(), e);
     }
   }
 
@@ -129,8 +127,8 @@ public class StateTracker {
       json.appendObjectToFile(pipelineStateTempFile, pipelineStateFile, pipelineState);
 
     } catch (IOException e) {
-      LOG.error(PipelineManagerException.COULD_NOT_SET_STATE.getMessageTemplate(), e.getMessage());
-      throw new PipelineManagerException(PipelineManagerException.COULD_NOT_SET_STATE, e.getMessage(), e);
+      LOG.error(PipelineManagerException.ERROR.COULD_NOT_SET_STATE.getMessage(), e.getMessage());
+      throw new PipelineManagerException(PipelineManagerException.ERROR.COULD_NOT_SET_STATE, e.getMessage(), e);
     }
   }
 

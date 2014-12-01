@@ -109,12 +109,12 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
     }
 
-    Set<? extends Element> stageDefErrorElements = roundEnv.getElementsAnnotatedWith(StageErrorDef.class);
+    Set<? extends Element> stageDefErrorElements = roundEnv.getElementsAnnotatedWith(GenerateResourceBundle.class);
     //process enums with @StageErrorDef annotation
     if(stageDefErrorElements.size() > 1) {
       printError("stagedeferror.validation.multiple.enums",
         "Expected one Stage Error Definition enum but found {}",
-        roundEnv.getElementsAnnotatedWith(StageErrorDef.class).size());
+        roundEnv.getElementsAnnotatedWith(GenerateResourceBundle.class).size());
     } else {
       if(stageDefErrorElements.iterator().hasNext()) {
         Element e = stageDefErrorElements.iterator().next();

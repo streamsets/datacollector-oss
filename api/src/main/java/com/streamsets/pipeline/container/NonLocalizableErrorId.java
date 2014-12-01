@@ -15,14 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.container;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.streamsets.pipeline.api.ErrorId;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface StageErrorDef {
+public class NonLocalizableErrorId implements LocalizableString {
+  private static final Object[] NULL_ONE_ARG = {null};
+
+  private final ErrorId errorId;
+  private final Object[] params;
+
+  public NonLocalizableErrorId(ErrorId errorId, Object... params) {
+    this.errorId = errorId;
+    this.params = (params != null) ? params : NULL_ONE_ARG;
+  }
+
+  @Override
+  public String getNonLocalized() {
+    return Utils.format(errorId.getMessage(), params);
+  }
+
+  @Override
+  public String getLocalized() {
+    return getNonLocalized();
+  }
 }

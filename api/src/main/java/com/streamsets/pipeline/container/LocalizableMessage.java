@@ -17,7 +17,6 @@
  */
 package com.streamsets.pipeline.container;
 
-import com.streamsets.pipeline.api.LocalizedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +24,9 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class LocalizableMessage implements LocalizedString {
+public class LocalizableMessage implements LocalizableString {
   private static final Logger LOG = LoggerFactory.getLogger(LocalizableMessage.class);
-  private static final Object[] NULL_ONE_ARG = { null};
+  private static final Object[] NULL_ONE_ARG = {null};
 
   private final ClassLoader classLoader;
   private final String bundle;

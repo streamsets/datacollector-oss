@@ -119,10 +119,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   @Override
   public PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException {
     if (hasPipeline(name)) {
-      throw new PipelineStoreException(PipelineStoreException.PIPELINE_ALREADY_EXISTS, name);
+      throw new PipelineStoreException(PipelineStoreException.ERROR.PIPELINE_ALREADY_EXISTS, name);
     }
     if (!getPipelineDir(name).mkdir()) {
-      throw new PipelineStoreException(PipelineStoreException.COULD_NOT_CREATE_PIPELINE, name,
+      throw new PipelineStoreException(PipelineStoreException.ERROR.COULD_NOT_CREATE_PIPELINE, name,
                                        Utils.format("'{}' mkdir failed", getPipelineDir(name)));
     }
     Date date = new Date();
@@ -139,7 +139,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       json.writeValue(getInfoFile(name), info);
       json.writeValue(getPipelineFile(name), pipeline);
     } catch (Exception ex) {
-      throw new PipelineStoreException(PipelineStoreException.COULD_NOT_CREATE_PIPELINE, name, ex.getMessage(),
+      throw new PipelineStoreException(PipelineStoreException.ERROR.COULD_NOT_CREATE_PIPELINE, name, ex.getMessage(),
                                        ex);
     }
     pipeline.setPipelineInfo(info);
@@ -167,22 +167,22 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   @Override
   public void delete(String name) throws PipelineStoreException {
     if (!hasPipeline(name)) {
-      throw new PipelineStoreException(PipelineStoreException.PIPELINE_DOES_NOT_EXIST, name);
+      throw new PipelineStoreException(PipelineStoreException.ERROR.PIPELINE_DOES_NOT_EXIST, name);
     }
     if (!cleanUp(name)) {
-      throw new PipelineStoreException(PipelineStoreException.COULD_NOT_DELETE_PIPELINE, name);
+      throw new PipelineStoreException(PipelineStoreException.ERROR.COULD_NOT_DELETE_PIPELINE, name);
     }
     cleanUp(name);
   }
 
   private PipelineInfo getInfo(String name, boolean checkExistence) throws PipelineStoreException {
     if (checkExistence && !hasPipeline(name)) {
-      throw new PipelineStoreException(PipelineStoreException.PIPELINE_DOES_NOT_EXIST, name);
+      throw new PipelineStoreException(PipelineStoreException.ERROR.PIPELINE_DOES_NOT_EXIST, name);
     }
     try {
       return json.readValue(getInfoFile(name), PipelineInfo.class);
     } catch (Exception ex) {
-      throw new PipelineStoreException(PipelineStoreException.COULD_NOT_LOAD_PIPELINE_INFO, name);
+      throw new PipelineStoreException(PipelineStoreException.ERROR.COULD_NOT_LOAD_PIPELINE_INFO, name);
     }
   }
 
@@ -204,11 +204,11 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   public PipelineConfiguration save(String name, String user, String tag, String tagDescription,
       PipelineConfiguration pipeline) throws PipelineStoreException {
     if (!hasPipeline(name)) {
-      throw new PipelineStoreException(PipelineStoreException.PIPELINE_DOES_NOT_EXIST, name);
+      throw new PipelineStoreException(PipelineStoreException.ERROR.PIPELINE_DOES_NOT_EXIST, name);
     }
     PipelineInfo savedInfo = getInfo(name, false);
     if (!savedInfo.getUuid().equals(pipeline.getUuid())) {
-      throw new PipelineStoreException(PipelineStoreException.INVALID_UUID_FOR_PIPELINE, name);
+      throw new PipelineStoreException(PipelineStoreException.ERROR.INVALID_UUID_FOR_PIPELINE, name);
     }
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(getInfo(name, false), pipeline.getDescription(), new Date(), user, REV, uuid,
@@ -218,7 +218,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       json.writeValue(getInfoFile(name), info);
       json.writeValue(getPipelineFile(name), pipeline);
     } catch (Exception ex) {
-      throw new PipelineStoreException(PipelineStoreException.COULD_NOT_SAVE_PIPELINE, name, ex.getMessage(), ex);
+      throw new PipelineStoreException(PipelineStoreException.ERROR.COULD_NOT_SAVE_PIPELINE, name, ex.getMessage(), ex);
     }
     pipeline.setPipelineInfo(info);
     return pipeline;
@@ -233,7 +233,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   @Override
   public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException {
     if (!hasPipeline(name)) {
-      throw new PipelineStoreException(PipelineStoreException.PIPELINE_DOES_NOT_EXIST, name);
+      throw new PipelineStoreException(PipelineStoreException.ERROR.PIPELINE_DOES_NOT_EXIST, name);
     }
     try {
       PipelineInfo info = getInfo(name);
@@ -241,7 +241,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       pipeline.setPipelineInfo(info);
       return pipeline;
     } catch (Exception ex) {
-      throw new PipelineStoreException(PipelineStoreException.COULD_NOT_LOAD_PIPELINE_INFO, name, ex.getMessage(), ex);
+      throw new PipelineStoreException(PipelineStoreException.ERROR.COULD_NOT_LOAD_PIPELINE_INFO, name, ex.getMessage(),
+                                       ex);
     }
   }
 
