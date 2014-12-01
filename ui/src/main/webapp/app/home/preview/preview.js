@@ -189,7 +189,7 @@ angular
      * @returns {Array}
      */
     var getFields = function(lanePreviewData) {
-      var recordValues = _.isArray(lanePreviewData) && lanePreviewData.length ? lanePreviewData[0].values : [],
+      var recordValues = _.isArray(lanePreviewData) && lanePreviewData.length ? lanePreviewData[0].value.value : [],
         fields = [];
 
       angular.forEach(recordValues, function(typeObject, fieldName) {

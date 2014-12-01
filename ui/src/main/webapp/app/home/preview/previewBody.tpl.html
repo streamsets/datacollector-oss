@@ -41,7 +41,7 @@
           {{'global.form.record' | translate}}{{$index+1}}
         </label>
         <ul class="preview-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
-          <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.values">
+          <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.value.value">
             <span class="field-name"> {{fieldName}} : </span>
             <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
           </li>
@@ -62,7 +62,7 @@
         </label>
         <ul class="preview-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
           <li class="preview-list-item"
-              ng-repeat="(fieldName, recordValue) in inputRecord.values"
+              ng-repeat="(fieldName, recordValue) in inputRecord.value.value"
               ng-class="{'dirty' : recordValue.dirty}">
             <span class="field-name"> {{fieldName}} : </span>
 
@@ -94,7 +94,7 @@
             {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.outputRecord' | translate}} {{$index + 1}}
           </label>
           <ul class="preview-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
-            <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.values">
+            <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.value.value">
               <span class="field-name"> {{fieldName}} : </span>
               <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
             </li>
@@ -135,7 +135,7 @@
           {{'global.form.record' | translate}}{{$index+1}}
         </label>
         <ul class="preview-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
-          <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in inputRecord.values">
+          <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in inputRecord.value.value">
             <span class="field-name"> {{fieldName}} : </span>
             <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
           </li>
