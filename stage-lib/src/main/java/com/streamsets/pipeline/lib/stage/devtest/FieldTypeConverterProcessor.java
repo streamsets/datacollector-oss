@@ -19,7 +19,7 @@ package com.streamsets.pipeline.lib.stage.devtest;
 
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.ConfigDef.Type;
-import com.streamsets.pipeline.api.base.FieldSelectionType;
+import com.streamsets.pipeline.api.FieldSelectionType;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 import java.util.Map;

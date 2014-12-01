@@ -20,7 +20,7 @@ package com.streamsets.pipeline.sdk.annotationsprocessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.base.FieldSelectionType;
+import com.streamsets.pipeline.api.FieldSelectionType;
 import com.streamsets.pipeline.config.*;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.sdk.util.StageHelper;

@@ -18,11 +18,9 @@
 package com.streamsets.pipeline.sdk.testData;
 
 import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.base.FieldSelectionType;
+import com.streamsets.pipeline.api.FieldSelectionType;
 
-import java.io.Reader;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class has the following issues:

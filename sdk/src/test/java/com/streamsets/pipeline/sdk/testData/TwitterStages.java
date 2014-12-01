@@ -20,7 +20,7 @@ package com.streamsets.pipeline.sdk.testData;
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.base.FieldSelectionType;
+import com.streamsets.pipeline.api.FieldSelectionType;
 
 import java.util.List;
 import java.util.Map;

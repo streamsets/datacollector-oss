@@ -239,8 +239,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     synchronized (pipelineMutex) {
       validateStateTransition(State.STOPPING);
       setState(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING, Constants.STOP_PIPELINE_MESSAGE);
-      LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
-      return handleStopRequest();
+      PipelineState pipelineState = getPipelineState();
+      handleStopRequest();
+      return pipelineState;
     }
   }
 
@@ -261,13 +262,13 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return getPipelineState();
   }
 
-  private PipelineState handleStopRequest() {
+  private void handleStopRequest() {
+    LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
     if(pipelineRunnable != null) {
       pipelineRunnable.stop();
       pipelineRunnable = null;
     }
     LOG.debug("Stopped pipeline");
-    return getPipelineState();
   }
 
   private ProductionPipeline createProductionPipeline(String name, String rev, Configuration configuration

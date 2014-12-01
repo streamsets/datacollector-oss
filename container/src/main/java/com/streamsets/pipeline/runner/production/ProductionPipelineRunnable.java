@@ -45,17 +45,6 @@ public class ProductionPipelineRunnable implements Runnable {
   public void run() {
     try {
       pipeline.run();
-      //finished running pipeline without errors.
-      //before switching state make sure the transition is valid
-      if(pipeline.wasStopped()) {
-        pipelineManager.validateStateTransition(State.STOPPED);
-        pipelineManager.setState(name, rev, State.STOPPED,
-            Utils.format("The pipeline was stopped. The last committed source offset is {}."
-                , pipeline.getCommittedOffset()));
-      } else {
-        pipelineManager.validateStateTransition(State.FINISHED);
-        pipelineManager.setState(name, rev, State.FINISHED, "Completed successfully.");
-      }
     } catch (Exception e) {
       LOG.error(Utils.format("An exception occurred while running the pipeline, {}", e.getMessage()));
       try {
@@ -66,6 +55,26 @@ public class ProductionPipelineRunnable implements Runnable {
     } catch (Error e) {
       LOG.error(Utils.format("A JVM error occurred while running the pipeline, {}", e.getMessage()));
       throw e;
+    }
+
+    if(pipeline.wasStopped()) {
+      //pipeline was stopped while it was running
+      try {
+        pipelineManager.validateStateTransition(State.STOPPED);
+        pipelineManager.setState(name, rev, State.STOPPED,
+          Utils.format("The pipeline was stopped. The last committed source offset is {}."
+              , pipeline.getCommittedOffset()));
+      } catch (PipelineManagerException e) {
+        LOG.error(Utils.format("An exception occurred while stopping the pipeline, {}", e.getMessage()));
+      }
+    } else {
+      //pipeline execution finished normally
+      try {
+        pipelineManager.validateStateTransition(State.FINISHED);
+        pipelineManager.setState(name, rev, State.FINISHED, "Completed successfully.");
+      } catch (PipelineManagerException e) {
+        LOG.error(Utils.format("An exception occurred while finishing the pipeline, {}", e.getMessage()));
+      }
     }
   }
 

@@ -17,8 +17,6 @@
  */
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.base.FieldSelectionType;
-
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)

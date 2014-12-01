@@ -19,7 +19,7 @@ package com.clipper.stage;
 
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.base.FieldSelectionType;
+import com.streamsets.pipeline.api.FieldSelectionType;
 
 
 @RawSource(rawSourcePreviewer = ClipperSourcePreviewer.class, mimeType = "text/plain")

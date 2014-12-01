@@ -46,6 +46,7 @@ import java.util.List;
 public class TestProductionRun {
 
   private static final String MY_PIPELINE = "myPipeline";
+  private static final String MY_PROCESSOR = "p";
   private ProductionPipelineManagerTask manager;
 
   @BeforeClass
@@ -73,38 +74,52 @@ public class TestProductionRun {
   }
 
   @After
-  public void tearDown() {
+  public void tearDown() throws InterruptedException, PipelineManagerException {
+    stopPipelineIfNeeded();
     manager.stop();
   }
 
   @Test(expected = PipelineRuntimeException.class)
-  public void testStartInvalidPipeline() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException {
+  public void testStartInvalidPipeline() throws PipelineStoreException, PipelineManagerException,
+      PipelineRuntimeException, StageException {
     //cannot run pipeline "xyz", the default created by FilePipelineStore.init() as it is not valid
     manager.startPipeline("xyz", "0");
   }
 
   @Test(expected = PipelineStoreException.class)
-  public void testStartNonExistingPipeline() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException {
+  public void testStartNonExistingPipeline() throws PipelineStoreException, PipelineManagerException,
+      PipelineRuntimeException, StageException {
     //pipeline "abc" does not exist
     manager.startPipeline("abc", "0");
   }
 
   @Test()
-  public void testStartStopPipeline() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException {
-    manager.startPipeline(MY_PIPELINE, "0");
+  public void testStartStopPipeline() throws PipelineStoreException, PipelineManagerException,
+      PipelineRuntimeException, StageException {
+    PipelineState pipelineState = manager.startPipeline(MY_PIPELINE, "0");
+    Assert.assertEquals(State.RUNNING, pipelineState.getState());
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
 
-    PipelineState pipelineState = manager.stopPipeline();
+    pipelineState = manager.stopPipeline();
     Assert.assertEquals(State.STOPPING, pipelineState.getState());
+    //The pipeline could be stopping or has already been stopped by now
+    Assert.assertTrue(manager.getPipelineState().getState() == State.STOPPING ||
+        manager.getPipelineState().getState() == State.STOPPED);
   }
 
   @Test
-  public void testStopManager() throws PipelineManagerException, StageException, PipelineRuntimeException, PipelineStoreException {
+  public void testStopManager() throws PipelineManagerException, StageException, PipelineRuntimeException,
+      PipelineStoreException, InterruptedException {
     //Set state to running
     manager.startPipeline(MY_PIPELINE, "0");
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
 
     manager.stop();
+    Assert.assertTrue(manager.getPipelineState().getState() == State.STOPPING ||
+        manager.getPipelineState().getState() == State.STOPPED);
+
+    waitForPipelineToStop();
+
     manager.init();
     //Stopping the pipeline also stops the pipeline
     Assert.assertEquals(State.STOPPED, manager.getPipelineState().getState());
@@ -112,15 +127,15 @@ public class TestProductionRun {
   }
 
   @Test
-  public void testCaptureSnapshot() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException, InterruptedException {
+  public void testCaptureSnapshot() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException,
+      StageException, InterruptedException {
     manager.startPipeline(MY_PIPELINE, "0");
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
 
     manager.captureSnapshot(10);
 
-    while(!manager.getSnapshotStatus().isExists()) {
-      Thread.sleep(5);
-    }
+    waitForSnapshot();
+
     SnapshotStatus snapshotStatus = manager.getSnapshotStatus();
     Assert.assertEquals(true, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
@@ -139,24 +154,24 @@ public class TestProductionRun {
   public void testGetHistory() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException, InterruptedException {
     manager.startPipeline(MY_PIPELINE, "0");
     manager.stopPipeline();
-    while(!manager.getPipelineState().getState().equals(State.STOPPED)) {
-      Thread.sleep(5);
-    }
+
+    waitForPipelineToStop();
+
     manager.startPipeline(MY_PIPELINE, "0");
     manager.stopPipeline();
-    while(!manager.getPipelineState().getState().equals(State.STOPPED)) {
-      Thread.sleep(5);
-    }
+
+    waitForPipelineToStop();
+
     manager.startPipeline(MY_PIPELINE, "0");
     manager.stopPipeline();
-    while(!manager.getPipelineState().getState().equals(State.STOPPED)) {
-      Thread.sleep(5);
-    }
+
+    waitForPipelineToStop();
 
     List<PipelineState> pipelineStates = manager.getHistory(MY_PIPELINE);
     Assert.assertEquals(6, pipelineStates.size());
 
     //make sure that the history is returned in the LIFO order
+    //Also note that State.STOPPING is not a persisted state
     Assert.assertEquals(State.STOPPED, pipelineStates.get(0).getState());
     Assert.assertEquals(State.RUNNING, pipelineStates.get(1).getState());
     Assert.assertEquals(State.STOPPED, pipelineStates.get(2).getState());
@@ -171,9 +186,9 @@ public class TestProductionRun {
       PipelineRuntimeException, StageException, InterruptedException {
     manager.startPipeline(MY_PIPELINE, "0");
     manager.stopPipeline();
-    while(!manager.getPipelineState().getState().equals(State.STOPPED)) {
-      Thread.sleep(5);
-    }
+
+    waitForPipelineToStop();
+
     manager.getHistory("nonExistingPipeline");
   }
 
@@ -182,7 +197,6 @@ public class TestProductionRun {
       PipelineRuntimeException, StageException, InterruptedException {
     List<PipelineState> pipelineStates = manager.getHistory(MY_PIPELINE);
     Assert.assertEquals(0, pipelineStates.size());
-
   }
 
   @Test
@@ -207,22 +221,25 @@ public class TestProductionRun {
   @Test
   public void testGetErrorRecords() throws PipelineStoreException, StageException, PipelineManagerException,
       PipelineRuntimeException, InterruptedException {
+
     manager.startPipeline(MY_PIPELINE, "0");
-    Thread.sleep(100);
-    List<Record> errorRecords = manager.getErrorRecords("p");
+    waitForErrorRecords(MY_PROCESSOR);
+
+    List<Record> errorRecords = manager.getErrorRecords(MY_PROCESSOR);
     Assert.assertNotNull(errorRecords);
     Assert.assertEquals(false, errorRecords.isEmpty());
 
     manager.stopPipeline();
+    waitForPipelineToStop();
 
-    InputStream erStream = manager.getErrorRecords(MY_PIPELINE, "0", "p");
+    InputStream erStream = manager.getErrorRecords(MY_PIPELINE, "0", MY_PROCESSOR);
     Assert.assertNotNull(erStream);
     //TODO: read the input error records into String format and Use Record de-serializer when ready
 
     //delete the error record file
-    manager.deleteErrorRecords(MY_PIPELINE, "0", "p");
+    manager.deleteErrorRecords(MY_PIPELINE, "0", MY_PROCESSOR);
 
-    erStream = manager.getErrorRecords(MY_PIPELINE, "0", "p");
+    erStream = manager.getErrorRecords(MY_PIPELINE, "0", MY_PROCESSOR);
     Assert.assertNull(erStream);
   }
 
@@ -230,20 +247,24 @@ public class TestProductionRun {
   public void testDeleteErrorRecords() throws PipelineStoreException, StageException, PipelineManagerException,
       PipelineRuntimeException, InterruptedException {
     manager.startPipeline(MY_PIPELINE, "0");
-    Thread.sleep(100);
-    Collection<ErrorRecord> errorRecords = manager.getErrorRecords("p");
+    Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
+
+    waitForErrorRecords(MY_PROCESSOR);
+
+    List<Record> errorRecords = manager.getErrorRecords(MY_PROCESSOR);
     Assert.assertNotNull(errorRecords);
     Assert.assertEquals(false, errorRecords.isEmpty());
 
     manager.stopPipeline();
+    waitForPipelineToStop();
 
     //check there are error records
-    InputStream erStream = manager.getErrorRecords(MY_PIPELINE, "0", "p");
+    InputStream erStream = manager.getErrorRecords(MY_PIPELINE, "0", MY_PROCESSOR);
     Assert.assertNotNull(erStream);
 
-    manager.deleteErrorRecords(MY_PIPELINE, "0", null /*all records for all stages of this pipeline*/);
+    manager.deleteErrorRecords(MY_PIPELINE, "0", null);
 
-    erStream = manager.getErrorRecords(MY_PIPELINE, "0", "p");
+    erStream = manager.getErrorRecords(MY_PIPELINE, "0", MY_PROCESSOR);
     //verify there are no records
     Assert.assertNull(erStream);
   }
@@ -343,5 +364,34 @@ public class TestProductionRun {
     }
   }
 
+  private void stopPipelineIfNeeded() throws InterruptedException, PipelineManagerException {
+    if(manager.getPipelineState().getState() == State.RUNNING) {
+      manager.stopPipeline();
+    }
+
+    while(manager.getPipelineState().getState() != State.FINISHED &&
+        manager.getPipelineState().getState() != State.STOPPED &&
+        manager.getPipelineState().getState() != State.ERROR) {
+      Thread.sleep(5);
+    }
+  }
+
+  private void waitForPipelineToStop() throws InterruptedException {
+    while(manager.getPipelineState().getState() != State.STOPPED) {
+      Thread.sleep(5);
+    }
+  }
+
+  private void waitForSnapshot() throws InterruptedException {
+    while(!manager.getSnapshotStatus().isExists()) {
+      Thread.sleep(5);
+    }
+  }
+
+  private void waitForErrorRecords(String instanceName) throws InterruptedException, PipelineManagerException {
+    while(manager.getErrorRecords(instanceName).isEmpty()) {
+      Thread.sleep(5);
+    }
+  }
 
 }

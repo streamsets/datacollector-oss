@@ -23,8 +23,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.record.RecordImpl;
-import com.streamsets.pipeline.runner.ErrorRecord;
-import com.streamsets.pipeline.runner.ErrorRecords;
 import org.apache.commons.io.FileUtils;
 import org.junit.*;
 import org.mockito.Mockito;
@@ -99,41 +97,38 @@ public class TestFileErrorRecordStore {
     Assert.assertNull(errorStore.getErrorRecords("someArbitraryPipeline", REV, SOURCE_NAME));
   }
 
-  private Map<String, ErrorRecords> createErrorRecordData() {
+  private Map<String, List<Record>> createErrorRecordData() {
 
-    Map<String, ErrorRecords> errorRecords = new HashMap<>();
+    Map<String, List<Record>> errorRecords = new HashMap<>();
 
     Record r1 = new RecordImpl("s", "s:1", TEST_STRING.getBytes(), MIME);
-    r1.setField("f", Field.create(1));
 
-    ((RecordImpl)r1).setTrackingId();
-    ((RecordImpl)r1).setTrackingId();
+    r1.set(Field.create(1));
+
+    ((RecordImpl)r1).getHeader().setTrackingId("t1");
 
     Record r2 = new RecordImpl("s", "s:2", TEST_STRING.getBytes(), MIME);
-    r2.setField("f", Field.create(2));
+    r2.set(Field.create(2));
 
-    ((RecordImpl)r2).setTrackingId();
-    ((RecordImpl)r2).setTrackingId();
+    ((RecordImpl)r2).getHeader().setTrackingId("t2");
 
     Record r3 = new RecordImpl("s", "s:3", TEST_STRING.getBytes(), MIME);
-    r3.setField("f", Field.create(1));
+    r3.set(Field.create(1));
 
-    ((RecordImpl)r3).setTrackingId();
-    ((RecordImpl)r3).setTrackingId();
+    ((RecordImpl)r3).getHeader().setTrackingId("t3");
 
     Record r4 = new RecordImpl("s", "s:2", TEST_STRING.getBytes(), MIME);
-    r4.setField("f", Field.create(2));
+    r4.set(Field.create(2));
 
-    ((RecordImpl)r4).setTrackingId();
-    ((RecordImpl)r4).setTrackingId();
+    ((RecordImpl)r4).getHeader().setTrackingId("t4");
 
-    ErrorRecords sourceErrorRecords = new ErrorRecords();
-    sourceErrorRecords.addErrorRecord(new ErrorRecord(r1, null, null));
-    sourceErrorRecords.addErrorRecord(new ErrorRecord(r2, null, null));
+    List<Record> sourceErrorRecords = new ArrayList<>();
+    sourceErrorRecords.add(r1);
+    sourceErrorRecords.add(r2);
 
-    ErrorRecords procErrorRecords = new ErrorRecords();
-    procErrorRecords.addErrorRecord(new ErrorRecord(r3, null, null));
-    procErrorRecords.addErrorRecord(new ErrorRecord(r4, null, null));
+    List<Record> procErrorRecords = new ArrayList<>();
+    sourceErrorRecords.add(r3);
+    sourceErrorRecords.add(r4);
 
     errorRecords.put(SOURCE_NAME, sourceErrorRecords);
     errorRecords.put(PROCESSOR_NAME, procErrorRecords);
