@@ -74,7 +74,7 @@ public interface Record {
 
     public String getTrackingId();
 
-    public String getPreviousStageTrackingId();
+    public String getPreviousTrackingId();
 
     public String getStagesPath();
 

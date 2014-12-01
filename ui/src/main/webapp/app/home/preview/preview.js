@@ -108,8 +108,9 @@ angular
 
         _.each(records, function(record) {
           delete record.dirty;
+          delete record.expand;
 
-          _.each(record.values, function(key, value) {
+          _.each(record.value.value, function(key, value) {
             delete value.dirty;
           });
 

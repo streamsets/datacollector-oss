@@ -41,7 +41,7 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   private  static final String RAW_DATA_ATTR = RESERVED_PREFIX + "rawData";
   private  static final String RAW_MIME_TYPE_ATTR = RESERVED_PREFIX + "rawMimeType";
   private  static final String TRACKING_ID_ATTR = RESERVED_PREFIX + "trackingId";
-  private  static final String PREVIOUS_STAGE_TRACKING_ID_ATTR = RESERVED_PREFIX + "previousStageTrackingId";
+  private  static final String PREVIOUS_TRACKING_ID_ATTR = RESERVED_PREFIX + "previousTrackingId";
   private  static final String ERROR_ID_ATTR = RESERVED_PREFIX + "errorId";
   private  static final String ERROR_MSG_ATTR = RESERVED_PREFIX + "errorId";
 
@@ -86,8 +86,8 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   }
 
   @Override
-  public String getPreviousStageTrackingId() {
-    return (String) map.get(PREVIOUS_STAGE_TRACKING_ID_ATTR);
+  public String getPreviousTrackingId() {
+    return (String) map.get(PREVIOUS_TRACKING_ID_ATTR);
   }
 
   @Override
@@ -191,7 +191,7 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
       setErrorMessage(errorMsg);
     }
     if (previousTrackingId != null) {
-      setPreviousStageTrackingId(previousTrackingId);
+      setPreviousTrackingId(previousTrackingId);
     }
     if (raw != null) {
       setRaw(raw);
@@ -221,9 +221,9 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
     map.put(TRACKING_ID_ATTR, trackingId);
   }
 
-  public void setPreviousStageTrackingId(String previousTrackingId) {
+  public void setPreviousTrackingId(String previousTrackingId) {
     Preconditions.checkNotNull(previousTrackingId, "previousTrackingId cannot be null");
-    map.put(PREVIOUS_STAGE_TRACKING_ID_ATTR, previousTrackingId);
+    map.put(PREVIOUS_TRACKING_ID_ATTR, previousTrackingId);
   }
 
   public void setRaw(byte[] raw) {
@@ -246,6 +246,7 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
     map.put(ERROR_ID_ATTR, errorMsg);
   }
 
+  @JsonProperty("errorMessage")
   public void setErrorMessage(String errorMsg) {
     Preconditions.checkNotNull(errorMsg, "errorMsg cannot be null");
     map.put(ERROR_ID_ATTR, errorMsg);

@@ -20,7 +20,6 @@ package com.streamsets.pipeline.record;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
@@ -88,7 +87,7 @@ public class RecordImpl implements Record {
     String currentTrackingId = header.getTrackingId();
     String newTrackingId = UUID.randomUUID().toString();
     if (currentTrackingId != null) {
-      header.setPreviousStageTrackingId(currentTrackingId);
+      header.setPreviousTrackingId(currentTrackingId);
     }
     header.setTrackingId(newTrackingId);
   }
