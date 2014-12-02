@@ -172,7 +172,7 @@ public class StageDefinition {
   }
 
   public StageDefinition localize(Locale locale) {
-    String rbName = getClassName() + "-bundle";
+    String rbName = getClassName();
     try {
       ResourceBundle rb = ResourceBundle.getBundle(rbName, locale, getStageClassLoader());
       return localize(rb);
