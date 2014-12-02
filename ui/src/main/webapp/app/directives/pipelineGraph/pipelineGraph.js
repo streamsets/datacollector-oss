@@ -10,7 +10,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       controller: 'PipelineGraphController'
     };
   })
-  .controller('PipelineGraphController', function($scope, $element, _){
+  .controller('PipelineGraphController', function($scope, $element, _, $filter){
 
     var consts = {
       defaultTitle: "random variable"
@@ -622,6 +622,27 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr("class", "node-warning fa fa-exclamation-triangle");
 
 
+
+      //Add bad records count
+      newGs.append("svg:foreignObject")
+        .filter(function(d) {
+          return true;
+        })
+        .attr("width", 100)
+        .attr("height", 30)
+        .attr("x", consts.rectWidth - 45)
+        .attr("y", 10)
+        .append("xhtml:span")
+        .attr("title", "this is error records")
+        .attr("class", "badge alert-danger pointer")
+        .style('visibility', 'hidden')
+        .on("mousedown", function() {
+          $scope.$apply(function(){
+            $scope.$emit('showBadRecordsSelected');
+          });
+        });
+
+
       // remove old nodes
       thisGraph.rects.exit().remove();
 
@@ -695,12 +716,27 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       }
     });
 
-    $scope.$on('addNode', function(event, stageInstance){
+    $scope.$on('addNode', function(event, stageInstance) {
       graph.addNode(stageInstance);
     });
 
-    $scope.$on('selectNode', function(event, stageInstance){
+    $scope.$on('selectNode', function(event, stageInstance) {
       graph.selectNode(stageInstance);
+    });
+
+    $scope.$on('updateErrorCount', function(event, stageInstanceErrorCounts) {
+      graph.rects.selectAll('span.badge')
+        .style('visibility', function(d) {
+          if(stageInstanceErrorCounts[d.instanceName].count &&
+            parseInt(stageInstanceErrorCounts[d.instanceName].count) > 0) {
+            return 'visible';
+          } else {
+            return 'hidden';
+          }
+        })
+        .html(function(d) {
+          return $filter('abbreviateNumber')(stageInstanceErrorCounts[d.instanceName].count);
+        });
     });
 
   });

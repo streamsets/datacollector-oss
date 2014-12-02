@@ -92,6 +92,10 @@
       "headerLabel" : "Import Pipeline Definition",
       "fileUploadPlaceholder": "No file chosen",
       "browse": "Browse"
+    },
+    "badRecords": {
+      "mostRecentBadRecords": "Most Recent Bad Records",
+      "totalNumberOfBadRecords": "Total Number of Bad Records"
     }
   },
   "flow": {

@@ -1,5 +1,40 @@
 <div ng-controller="BadRecordsController">
 
-  <h4> Bad Records Tab </h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="col-md-6">
+          <span class="glyphicon glyphicon-expand pointer"
+                ng-if="!expandAllErrorData"
+                ng-click="onExpandAllErrorData()"></span>
+          <span class="glyphicon glyphicon-collapse-down pointer"
+                ng-if="expandAllErrorData"
+                ng-click="onCollapseAllErrorData()"></span>
+          <span translate="admin.badRecords.mostRecentBadRecords">Most Recent Bad Records</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="errorRecord in stageBadRecords">
+        <td>
+          <label class="pointer" ng-click="errorRecord.expand = !errorRecord.expand">
+              <span class="glyphicon glyphicon-expand"
+                    ng-if="errorRecord.expand !== true && expandAllErrorData !== true"></span>
+              <span class="glyphicon glyphicon-collapse-down"
+                    ng-if="errorRecord.expand === true || expandAllErrorData === true"></span>
+            {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.header.errorMessage}}
+          </label>
+          <ul class="preview-list" ng-if="errorRecord.expand === true || expandAllErrorData === true">
+            <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in errorRecord.value.value">
+              <span class="field-name"> {{fieldName}} : </span>
+              <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </tbody>
+
+  </table>
 
 </div>

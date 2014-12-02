@@ -17,7 +17,8 @@ angular
     'ui.bootstrap',
     'filereadDirectives',
     'angularMoment',
-    'nvd3ChartDirectives'
+    'nvd3ChartDirectives',
+    'abbreviateNumberFilter'
   ])
   .constant('amTimeAgoConfig', {
     withoutSuffix: true

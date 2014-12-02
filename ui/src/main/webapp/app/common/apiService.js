@@ -338,6 +338,22 @@ angular.module('pipelineAgentApp.common')
           method: 'DELETE',
           url: url
         });
+      },
+
+
+      /**
+       * Get error records for the given stage instance name of running pipeline.
+       *
+       * @param stageInstanceName
+       * @returns {*}
+       */
+      getErrorRecords: function(stageInstanceName) {
+        var url = apiBase + '/pipeline/errorRecords?stageInstanceName=' + stageInstanceName;
+
+        return $http({
+          method: 'GET',
+          url: url
+        });
       }
     };
 

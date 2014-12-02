@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('DetailController', function ($scope, _) {
+  .controller('DetailController', function ($scope, $rootScope, _) {
     var detailTabsInEditMode = [{
         name:'configuration',
         template:'app/home/detail/configuration/configuration.tpl.html'
@@ -75,6 +75,14 @@ angular
       } else {
         $scope.detailPaneTabs = detailTabsInEditMode;
       }
+    });
+
+    $rootScope.$watch('common.activeDetailTab', function(newValue) {
+      angular.forEach($scope.detailPaneTabs, function(tab) {
+        if(tab.name === newValue) {
+          tab.active = true;
+        }
+      });
     });
 
   });
