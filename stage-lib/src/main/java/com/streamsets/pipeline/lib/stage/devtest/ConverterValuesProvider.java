@@ -1,12 +1,12 @@
 package com.streamsets.pipeline.lib.stage.devtest;
 
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.ValuesProvider;
+import com.streamsets.pipeline.api.ChooserValues;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConverterValuesProvider implements ValuesProvider {
+public class ConverterValuesProvider implements ChooserValues {
     @Override
     public List<String> getValues() {
       List<String> values = new ArrayList<String>();

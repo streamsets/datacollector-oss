@@ -110,10 +110,10 @@ public abstract class StageBuilder {
     //for each entry in the map check if the key is a valid config option
     ConfigDef configDef = null;
     FieldSelector fieldSelector = null;
-    FieldModifier fieldModifier = null;
+    FieldValueChooser fieldModifier = null;
     for(Field f : stage.getClass().getDeclaredFields()) {
       configDef = f.getAnnotation(ConfigDef.class);
-      fieldModifier = f.getAnnotation(FieldModifier.class);
+      fieldModifier = f.getAnnotation(FieldValueChooser.class);
       fieldSelector = f.getAnnotation(FieldSelector.class);
       if(configDef != null) {
         if(!configMap.containsKey(f.getName())) {
@@ -166,7 +166,7 @@ public abstract class StageBuilder {
    * @return
    */
   private boolean validateType(ConfigDef configDef,
-                               FieldModifier fieldModifier,
+                               FieldValueChooser fieldModifier,
                                FieldSelector fieldSelector,
                                Field f,
                                Object value) {

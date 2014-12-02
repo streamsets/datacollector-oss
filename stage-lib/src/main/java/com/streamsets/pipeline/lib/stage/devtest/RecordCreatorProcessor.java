@@ -17,15 +17,12 @@
  */
 package com.streamsets.pipeline.lib.stage.devtest;
 
-import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 
 import java.util.Iterator;
 
+@GenerateResourceBundle
 @StageDef(version = "1.0.0", label = "Record Creator",
           description = "It creates 2 records from each original record")
 public class RecordCreatorProcessor extends SingleLaneProcessor {

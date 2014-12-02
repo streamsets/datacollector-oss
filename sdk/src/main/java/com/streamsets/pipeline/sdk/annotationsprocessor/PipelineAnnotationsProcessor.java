@@ -20,7 +20,7 @@ package com.streamsets.pipeline.sdk.annotationsprocessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.FieldSelectionType;
+import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.config.*;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.sdk.util.StageHelper;
@@ -43,7 +43,7 @@ import java.io.PrintWriter;
 import java.util.*;
 
 @SupportedAnnotationTypes({"com.streamsets.pipeline.api.StageDef",
-  "com.streamsets.pipeline.api.StageErrorDef"})
+  "com.streamsets.pipeline.api.GenerateResourceBundle"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
@@ -53,15 +53,15 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private static final String PROCESSOR = "PROCESSOR";
   private static final String TARGET = "TARGET";
   private static final String ERROR = "ERROR";
-  private static final String BUNDLE_SUFFIX = "-bundle.properties";
-  private static final String STAGE_LABEL = "stage.label";
-  private static final String STAGE_DESCRIPTION = "stage.description";
-  private static final String CONFIG = "config";
+  private static final String BUNDLE_SUFFIX = ".properties";
+  private static final String STAGE_LABEL = "label";
+  private static final String STAGE_DESCRIPTION = "description";
   private static final String SEPARATOR = ".";
   private static final String LABEL = "label";
   private static final String DESCRIPTION = "description";
   private static final String EQUALS = "=";
   private static final String DOT = ".";
+  private static final String UNDER_SCORE = "_";
   private static final String DEFAULT_CONSTRUCTOR = "<init>";
   private static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
 
@@ -75,13 +75,15 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   /*Indicates if there is an error while processing stages*/
   private boolean stageDefValidationError = false;
   /*Indicates if there is an error while processing stage error definition enum*/
-  private boolean stageErrorDefValidationFailure = false;
-  /*name of the enum that defines the error strings*/
-  private String stageErrorDefEnumName = null;
+  private boolean errorEnumValidationFailure = false;
+  /*Enums that defines the error strings*/
+  private Set<String> enumsNeedingResourceBundles;
   /*literal vs value maps for the stage error def enum*/
-  private Map<String, String> stageErrorDefLiteralMap;
+  private Map<String, Map<String, String>> errorEnumToLiteralsMap;
   /*Json object mapper to generate json file for the stages*/
   private final ObjectMapper json;
+  /*Set of stage names for which resource bundles must be generated*/
+  private final Set<String> stagesNeedingResourceBundles;
 
 
   /***********************************************/
@@ -90,17 +92,20 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   public PipelineAnnotationsProcessor() {
     super();
-    stageDefinitions = new ArrayList<StageDefinition>();
-    stageNameToVersionMap = new HashMap<String, String>();
-    stageErrorDefLiteralMap = new HashMap<String, String>();
+    stageDefinitions = new ArrayList<>();
+    stageNameToVersionMap = new HashMap<>();
+    errorEnumToLiteralsMap = new HashMap<>();
     json = new ObjectMapper();
     json.enable(SerializationFeature.INDENT_OUTPUT);
+    stagesNeedingResourceBundles = new HashSet<>();
+    enumsNeedingResourceBundles = new HashSet<>();
   }
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
     //process classes annotated with StageDef annotation
+    //Also note down stages which need resource bundle generation
     for(Element e : roundEnv.getElementsAnnotatedWith(StageDef.class)) {
       ElementKind eKind = e.getKind();
       //It will most likely be a class. being extra safe
@@ -109,23 +114,27 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
     }
 
-    Set<? extends Element> stageDefErrorElements = roundEnv.getElementsAnnotatedWith(GenerateResourceBundle.class);
-    //process enums with @StageErrorDef annotation
-    if(stageDefErrorElements.size() > 1) {
-      printError("stagedeferror.validation.multiple.enums",
-        "Expected one Stage Error Definition enum but found {}",
-        roundEnv.getElementsAnnotatedWith(GenerateResourceBundle.class).size());
-    } else {
-      if(stageDefErrorElements.iterator().hasNext()) {
-        Element e = stageDefErrorElements.iterator().next();
-        ElementKind eKind = e.getKind();
-        //It will most likely be a class. being extra safe
-        if (eKind.isClass()) {
-          TypeElement typeElement = (TypeElement) e;
-          validateErrorDefinition(typeElement);
-          if(!stageErrorDefValidationFailure) {
-            createStageErrorDef(typeElement);
-          }
+    //Find all elements that need resource bundle generation and separate out the enums implementing ErrorId interface
+    //validate such enums and mark them for resource bundle generation
+    for(Element e : roundEnv.getElementsAnnotatedWith(GenerateResourceBundle.class)) {
+      ElementKind eKind = e.getKind();
+      if(eKind.isClass()) {
+        TypeElement typeElement = (TypeElement) e;
+        String elementName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
+        if(stageNameToVersionMap.containsKey(elementName)) {
+          //these are stages needing resource bundles.
+          stagesNeedingResourceBundles.add(elementName);
+        } else if(validateErrorDefinition(typeElement)) {
+          //As of now these have to be enums that implement ErrorId. Validate and note down enums needing resource
+          //bundle generation
+          createErrorEnum(typeElement);
+          enumsNeedingResourceBundles.add(elementName);
+        } else {
+          //error scenario - neither a stage nor enum but has GenerateResourceBundle annotation on it
+          printError("validation.not.a.stage.or.enum",
+              "Class {} is neither a stage implementation nor an ErrorId implementation but is annotated with " +
+                  "'GenerateResourceBundle' annotation. This annotation is supported only on stage or ErrorId " +
+                  "implementations", typeElement.getQualifiedName());
         }
       }
     }
@@ -142,8 +151,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         generateStageBundles();
       }
       //generate a error bundle
-      if(!stageErrorDefValidationFailure &&
-        stageErrorDefEnumName != null) {
+      if(!errorEnumValidationFailure &&
+          !errorEnumToLiteralsMap.isEmpty()) {
         generateErrorBundle();
       }
     }
@@ -156,26 +165,28 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
 
   /**
-   * Generates <stageName>-bundle.properties file for each stage definition.
+   * Generates <className>.properties file for each stage definition.
    */
   private void generateStageBundles() {
     //get source location
     for(StageDefinition s : stageDefinitions) {
-      try {
-        FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT,
-          s.getClassName().substring(0, s.getClassName().lastIndexOf(DOT)),
-          s.getClassName().substring(s.getClassName().lastIndexOf(DOT) + 1) + BUNDLE_SUFFIX, (Element[]) null);
-        PrintWriter pw = new PrintWriter(resource.openWriter());
-        pw.println(STAGE_LABEL + EQUALS + s.getLabel());
-        pw.println(STAGE_DESCRIPTION + EQUALS + s.getDescription());
-        for(ConfigDefinition c : s.getConfigDefinitions()) {
-          pw.println(CONFIG + SEPARATOR + c.getName() + SEPARATOR + LABEL + EQUALS + c.getLabel());
-          pw.println(CONFIG + SEPARATOR + c.getName() + SEPARATOR + DESCRIPTION + EQUALS + c.getDescription());
+      if(stagesNeedingResourceBundles.contains(s.getName())) {
+        try {
+          FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT,
+              s.getClassName().substring(0, s.getClassName().lastIndexOf(DOT)),
+              s.getClassName().substring(s.getClassName().lastIndexOf(DOT) + 1) + BUNDLE_SUFFIX, (Element[]) null);
+          PrintWriter pw = new PrintWriter(resource.openWriter());
+          pw.println(STAGE_LABEL + EQUALS + s.getLabel());
+          pw.println(STAGE_DESCRIPTION + EQUALS + s.getDescription());
+          for (ConfigDefinition c : s.getConfigDefinitions()) {
+            pw.println(c.getName() + SEPARATOR + LABEL + EQUALS + c.getLabel());
+            pw.println(c.getName() + SEPARATOR + DESCRIPTION + EQUALS + c.getDescription());
+          }
+          pw.flush();
+          pw.close();
+        } catch (IOException e) {
+          processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
         }
-        pw.flush();
-        pw.close();
-      } catch (IOException e) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
       }
     }
   }
@@ -194,23 +205,25 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   }
 
   /**
-   * Generates <stageErrorDef>-bundle.properties file.
+   * Generates <enumName>.properties file.
    */
   private void generateErrorBundle() {
-    try {
-      FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT,
-        stageErrorDefEnumName.substring(0, stageErrorDefEnumName.lastIndexOf(DOT)),
-      stageErrorDefEnumName.substring(stageErrorDefEnumName.lastIndexOf(DOT) + 1,
-        stageErrorDefEnumName.length())
-        + BUNDLE_SUFFIX, (Element[])null);
-      PrintWriter pw = new PrintWriter(resource.openWriter());
-      for(Map.Entry<String, String> e : stageErrorDefLiteralMap.entrySet()) {
-        pw.println(e.getKey() + EQUALS + e.getValue());
+    for(String errorEnum : enumsNeedingResourceBundles) {
+      try {
+        FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT,
+            errorEnum.substring(0, errorEnum.lastIndexOf(UNDER_SCORE)).replace(UNDER_SCORE, DOT),
+            errorEnum.substring(errorEnum.lastIndexOf(UNDER_SCORE) + 1,
+                errorEnum.length())
+                + BUNDLE_SUFFIX, (Element[]) null);
+        PrintWriter pw = new PrintWriter(resource.openWriter());
+        for (Map.Entry<String, String> entry : errorEnumToLiteralsMap.get(errorEnum).entrySet()) {
+          pw.println(entry.getKey() + EQUALS + entry.getValue());
+        }
+        pw.flush();
+        pw.close();
+      } catch (IOException ex) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, ex.getMessage());
       }
-      pw.flush();
-      pw.close();
-    } catch (IOException e) {
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
     }
   }
 
@@ -232,9 +245,10 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         rawSourceDefinition = getRawSourceDefinition(rawSourceAnnot);
       }
 
+      String stageName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
       stageDefinition = new StageDefinition(
           typeElement.getQualifiedName().toString(),
-          StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString()),
+          stageName,
           stageDefAnnotation.version(),
           stageDefAnnotation.label(),
           stageDefAnnotation.description(),
@@ -246,20 +260,21 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     } else {
       stageDefValidationError = true;
     }
-
     return stageDefinition;
   }
 
-  private void createStageErrorDef(TypeElement typeElement) {
-    stageErrorDefEnumName = typeElement.getQualifiedName().toString();
+  private void createErrorEnum(TypeElement typeElement) {
+    String enumName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
     List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
     List<VariableElement> variableElements = ElementFilter.fieldsIn(enclosedElements);
+    Map<String, String> literalToValueMap = new HashMap<>();
     for (VariableElement variableElement : variableElements) {
       if(variableElement.getKind() == ElementKind.ENUM_CONSTANT) {
-        stageErrorDefLiteralMap.put(variableElement.getSimpleName().toString(),
+        literalToValueMap.put(variableElement.getSimpleName().toString(),
             (String) variableElement.getConstantValue());
       }
     }
+    errorEnumToLiteralsMap.put(enumName, literalToValueMap);
   }
 
   private List<ConfigDefinition> getConfigDefsFromTypeElement(TypeElement typeElement) {
@@ -280,7 +295,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           if(fieldSelector != null) {
             model = new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null, null);
           }
-          FieldModifier fieldModifier = variableElement.getAnnotation(FieldModifier.class);
+          FieldValueChooser fieldModifier = variableElement.getAnnotation(FieldValueChooser.class);
           //processingEnv.
           if (fieldModifier != null) {
             model = new ModelDefinition(ModelType.FIELD_MODIFIER,
@@ -288,7 +303,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
                 getValuesProvider(fieldModifier)
                 , null, null);
           }
-          DropDown dropDown = variableElement.getAnnotation(DropDown.class);
+          ValueChooser dropDown = variableElement.getAnnotation(ValueChooser.class);
           if(dropDown != null) {
             model = new ModelDefinition(ModelType.DROPDOWN,
                 getFieldSelectionType(dropDown.type()),
@@ -340,10 +355,10 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return variableElements;
   }
 
-  private FieldSelection getFieldSelectionType(FieldSelectionType type) {
-    if(type.equals(FieldSelectionType.PROVIDED)) {
+  private FieldSelection getFieldSelectionType(ChooserMode type) {
+    if(type.equals(ChooserMode.PROVIDED)) {
       return FieldSelection.PROVIDED;
-    } else if (type.equals(FieldSelectionType.SUGGESTED)) {
+    } else if (type.equals(ChooserMode.SUGGESTED)) {
       return FieldSelection.SUGGESTED;
     }
     //default
@@ -416,7 +431,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       Utils.format(template, args));
   }
 
-  private String getValuesProvider(FieldModifier fieldModifier) {
+  private String getValuesProvider(FieldValueChooser fieldModifier) {
     //Not the best way of getting the TypeMirror of the ValuesProvider implementation
     //Find a better solution
     TypeMirror valueProviderTypeMirror = null;
@@ -432,7 +447,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return null;
   }
 
-  private String getValuesProvider(DropDown dropDown) {
+  private String getValuesProvider(ValueChooser dropDown) {
     //Not the best way of getting the TypeMirror of the ValuesProvider implementation
     //Find a better solution
     TypeMirror valueProviderTypeMirror = null;
@@ -553,9 +568,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   }
 
   private boolean validateModelAnnotationsAreNotPresent(Element typeElement, VariableElement variableElement) {
-    FieldModifier fieldModifier = variableElement.getAnnotation(FieldModifier.class);
+    FieldValueChooser fieldModifier = variableElement.getAnnotation(FieldValueChooser.class);
     FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
-    DropDown dropDown = variableElement.getAnnotation(DropDown.class);
+    ValueChooser dropDown = variableElement.getAnnotation(ValueChooser.class);
 
     if(fieldModifier != null || fieldSelector != null || dropDown != null) {
       printError("field.validation.model.annotations.present",
@@ -605,9 +620,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    */
   private boolean validateModelConfig(Element typeElement, VariableElement variableElement) {
     boolean valid = true;
-    FieldModifier fieldModifier = variableElement.getAnnotation(FieldModifier.class);
+    FieldValueChooser fieldModifier = variableElement.getAnnotation(FieldValueChooser.class);
     FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
-    DropDown dropDown = variableElement.getAnnotation(DropDown.class);
+    ValueChooser dropDown = variableElement.getAnnotation(ValueChooser.class);
 
     //Field is marked as model.
     //Carry out model related validations
@@ -654,7 +669,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return valid;
   }
 
-  private boolean validateDropDown(Element typeElement, VariableElement variableElement, DropDown dropDown) {
+  private boolean validateDropDown(Element typeElement, VariableElement variableElement, ValueChooser dropDown) {
     boolean valid = true;
 
     if (!variableElement.asType().toString().equals("java.lang.String")) {
@@ -664,7 +679,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       valid = false;
     }
 
-    if(dropDown.type().equals(FieldSelectionType.PROVIDED)) {
+    if(dropDown.type().equals(ChooserMode.PROVIDED)) {
       //A valuesProvider is expected.
       //check if the valuesProvider is specified and that implements the correct base class
       //Not the best way of getting the TypeMirror of the ValuesProvider implementation
@@ -683,7 +698,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   }
 
   private boolean validateFieldModifier(Element typeElement, VariableElement variableElement,
-                                        FieldModifier fieldModifier) {
+                                        FieldValueChooser fieldModifier) {
     boolean valid = true;
     TypeMirror fieldType = variableElement.asType();
     if (!fieldType.toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
@@ -693,7 +708,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       valid = false;
     }
 
-    if(fieldModifier.type().equals(FieldSelectionType.PROVIDED)) {
+    if(fieldModifier.type().equals(ChooserMode.PROVIDED)) {
       //A valuesProvider is expected.
       //check if the valuesProvider is specified and that implements the correct base class
       //Not the best way of getting the TypeMirror of the ValuesProvider implementation
@@ -732,7 +747,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return valid;
   }
 
-  private boolean checkMultipleModelAnnot(FieldModifier fieldModifier, FieldSelector fieldSelector, DropDown dropDown) {
+  private boolean checkMultipleModelAnnot(FieldValueChooser fieldModifier, FieldSelector fieldSelector, ValueChooser dropDown) {
     if(fieldModifier != null && (fieldSelector != null || dropDown!= null)) {
       return true;
     }
@@ -931,14 +946,15 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    *
    * @param typeElement
    */
-  private void validateErrorDefinition(TypeElement typeElement) {
+  private boolean validateErrorDefinition(TypeElement typeElement) {
+    boolean valid = true;
     //must be enum
     if(typeElement.getKind() != ElementKind.ENUM) {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.
       printError("stagedeferror.validation.not.an.enum",
         "Stage Error Definition {} must be an enum", typeElement.getQualifiedName());
-      stageErrorDefValidationFailure = true;
+      valid = false;
     }
     //must implement com.streamsets.pipeline.api.ErrorId
     String type = getStageTypeFromElement(typeElement);
@@ -948,8 +964,10 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       printError("stagedeferror.validation.enum.does.not.implement.interface",
         "Stage Error Definition {} does not implement interface 'com.streamsets.pipeline.api.ErrorId'.",
         typeElement.getQualifiedName());
-      stageErrorDefValidationFailure = true;
+      valid = false;
     }
+    errorEnumValidationFailure &= !valid;
+    return valid;
   }
 
 }

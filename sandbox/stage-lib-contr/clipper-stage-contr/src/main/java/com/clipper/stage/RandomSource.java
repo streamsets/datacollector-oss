@@ -50,7 +50,7 @@ public class RandomSource extends BaseSource {
   private Record createRecord(String lastSourceOffset, int batchOffset) {
     Record record = getContext().createRecord("random:" + batchOffset);
     for (String field : fieldArr) {
-      record.setField(field, Field.create(random.nextLong()));
+      record.set(Field.create(random.nextLong()));
     }
     return record;
   }

@@ -17,15 +17,13 @@
  */
 package com.streamsets.pipeline.lib.stage.devtest;
 
-import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 
 import java.util.Iterator;
 import java.util.Random;
 
+@GenerateResourceBundle
 @StageDef(version = "1.0.0", label = "Random Error",
           description = "Randomly do something with the record, output, error, vanish, the threshold for what to do " +
                         "is randomly selected per batch")

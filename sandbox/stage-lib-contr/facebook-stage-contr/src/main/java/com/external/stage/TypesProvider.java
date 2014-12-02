@@ -17,12 +17,12 @@
  */
 package com.external.stage;
 
-import com.streamsets.pipeline.api.ValuesProvider;
+import com.streamsets.pipeline.api.ChooserValues;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TypesProvider implements ValuesProvider {
+public class TypesProvider implements ChooserValues {
 
   @Override
   public List<String> getValues() {

@@ -19,16 +19,17 @@ package com.streamsets.pipeline.lib.stage.devtest;
 
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.ConfigDef.Type;
-import com.streamsets.pipeline.api.FieldSelectionType;
+import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 import java.util.Map;
 
+@GenerateResourceBundle
 @StageDef(version="1.0.0", label="Field Type Converter")
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
   @ConfigDef(label = "Fields to convert", required = false,type = Type.MODEL, defaultValue="")
-  @FieldModifier(type= FieldSelectionType.PROVIDED, valuesProvider = ConverterValuesProvider.class)
+  @FieldValueChooser(type= ChooserMode.PROVIDED, valuesProvider = ConverterValuesProvider.class)
   public Map<String, String> fields;
 
   // the annotations processor will fail if variable is not Map

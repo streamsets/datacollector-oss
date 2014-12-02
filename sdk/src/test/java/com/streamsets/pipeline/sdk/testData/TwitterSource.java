@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
 
 import java.util.List;
-
+@GenerateResourceBundle
 @RawSource(rawSourcePreviewer = TwitterRawSourcePreviewer.class)
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
 , version = "1.0")

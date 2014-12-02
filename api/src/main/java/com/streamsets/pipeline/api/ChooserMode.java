@@ -17,12 +17,7 @@
  */
 package com.streamsets.pipeline.api;
 
-import java.util.List;
-
-public interface ValuesProvider {
-
-  public List<String> getValues();
-
-  public List<String> getLabels();
-
+public enum ChooserMode {
+  PROVIDED,
+  SUGGESTED
 }

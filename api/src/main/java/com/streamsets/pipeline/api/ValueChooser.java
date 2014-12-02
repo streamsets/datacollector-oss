@@ -15,27 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.stage.processor.nop;
+package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.base.BaseProcessor;
-import com.streamsets.pipeline.api.base.SingleLaneProcessor;
-import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import java.util.Iterator;
+@Retention(RetentionPolicy.RUNTIME)
+@java.lang.annotation.Target(ElementType.FIELD)
+public @interface ValueChooser {
 
-@GenerateResourceBundle
-@StageDef(version = "1.0.0", label = "Identity",
-          description = "It echoes every record it receives preserving the lanes")
-public class IdentityProcessor extends SingleLaneProcessor {
+  ChooserMode type();
 
-  @Override
-  public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws
-      StageException {
-    Iterator<Record> it = batch.getRecords();
-    while (it.hasNext()) {
-      batchMaker.addRecord(it.next());
-    }
-  }
+  Class<? extends ChooserValues> valuesProvider();
 
 }

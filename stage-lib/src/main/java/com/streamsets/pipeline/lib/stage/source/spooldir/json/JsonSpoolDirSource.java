@@ -18,11 +18,7 @@
 package com.streamsets.pipeline.lib.stage.source.spooldir.json;
 
 import com.codahale.metrics.Counter;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
@@ -37,6 +33,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+@GenerateResourceBundle
 @StageDef(version = "1.0.0",
     label = "JSON files spool directory",
     description = "Consumes JSON files from a spool directory")

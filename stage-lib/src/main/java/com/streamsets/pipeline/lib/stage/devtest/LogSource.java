@@ -17,12 +17,10 @@
  */
 package com.streamsets.pipeline.lib.stage.devtest;
 
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
 
+@GenerateResourceBundle
 @StageDef(version="1.0.1", label="Log files Source")
 public class LogSource extends BaseSource {
 

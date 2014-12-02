@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.sdk.testData;
 
 import com.streamsets.pipeline.api.*;
-
+@GenerateResourceBundle
 @StageDef(description = "Consumes twitter feeds", label = "twitter_target"
 , version = "1.3")
 public class TwitterTarget implements Target {

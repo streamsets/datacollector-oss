@@ -46,7 +46,7 @@ public class TestErrorBundle extends TestPipelineAnnotationProcessorBase {
     Assert.assertTrue(compilerOutput.isEmpty());
     //No diagnostics
     Assert.assertTrue(diagnostics.isEmpty());
-    //A bundle file "TwitterError-bundle.properties" is generated which contains 2 lines
+    //A bundle file "TwitterError.properties" is generated which contains 2 lines
     //INPUT_LANE_ERROR=null
     //OUTPUT_LANE_ERROR=null
     List<String> expectedStrings = new ArrayList<String>(2);
@@ -54,7 +54,7 @@ public class TestErrorBundle extends TestPipelineAnnotationProcessorBase {
     expectedStrings.add("OUTPUT_LANE_ERROR=null");
 
     InputStream inputStream = Thread.currentThread().getContextClassLoader().
-      getResourceAsStream("TwitterError-bundle.properties");
+        getResourceAsStream("TwitterError.properties");
     BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
     List<String> actualStrings = new ArrayList<String>();
     String line;

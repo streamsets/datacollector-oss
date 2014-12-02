@@ -36,7 +36,6 @@ public class StageDefinition {
   private static final Logger LOG = LoggerFactory.getLogger(StageDefinition.class);
 
   private static final String SEPARATOR = ".";
-  private static final String CONFIG = "config";
   private static final String FIELD_MODIFIER = "FieldModifier";
 
   private String library;
@@ -109,7 +108,7 @@ public class StageDefinition {
 
   @JsonIgnore
   public String getBundle() {
-    return className + "-bundle";
+    return className;
   }
 
   @JsonIgnore
@@ -183,8 +182,8 @@ public class StageDefinition {
     }
   }
 
-  private final static String STAGE_LABEL = "stage.label";
-  private final static String STAGE_DESCRIPTION = "stage.description";
+  private final static String STAGE_LABEL = "label";
+  private final static String STAGE_DESCRIPTION = "description";
 
   public StageDefinition localize(ResourceBundle rb) {
     List<ConfigDefinition> configDefs = new ArrayList<ConfigDefinition>();
@@ -231,19 +230,19 @@ public class StageDefinition {
 
         List<String> values = configDef.getModel().getValues();
         List<String> labels = configDef.getModel().getLabels();
+        List<String> localizedLabels = new ArrayList<>(values.size());
         for(int i = 0; i < values.size(); i++) {
           StringBuilder sb = new StringBuilder();
-          sb.append(CONFIG)
-            .append(SEPARATOR)
-            .append(configDef.getName())
+          sb.append(configDef.getName())
             .append(SEPARATOR)
             .append(FIELD_MODIFIER)
             .append(SEPARATOR)
             .append(values.get(i));
           String key = sb.toString();
           String l = rb.containsKey(key) ? rb.getString(key) : labels.get(i);
-          labels.set(i, l);
+          localizedLabels.set(i, l);
         }
+        configDef.getModel().setLabels(localizedLabels);
       }
     }
     return def;

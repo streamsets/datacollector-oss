@@ -17,16 +17,14 @@
  */
 package com.streamsets.pipeline.api;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target(ElementType.FIELD)
-public @interface DropDown {
+public @interface FieldValueChooser {
 
-  FieldSelectionType type();
+  ChooserMode type();
 
-  Class<? extends ValuesProvider> valuesProvider();
+  Class<? extends ChooserValues> valuesProvider();
 
 }

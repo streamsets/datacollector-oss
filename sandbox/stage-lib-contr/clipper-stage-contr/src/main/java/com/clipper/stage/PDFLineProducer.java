@@ -75,7 +75,7 @@ public class PDFLineProducer extends BaseSource {
 
     for(int i = 0; i < batchSize; i++) {
       Record r = getContext().createRecord("LineNumber[" + i + "]");
-      r.setField("transactionLog", Field.create(Field.Type.STRING, transactions[i + index]));
+      r.set(Field.create(Field.Type.STRING, transactions[i + index]));
       batchMaker.addRecord(r, lanes[0]);
     }
     //update the line number after reading

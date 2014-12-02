@@ -19,7 +19,7 @@ package com.external.stage;
 
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseProcessor;
-import com.streamsets.pipeline.api.FieldSelectionType;
+import com.streamsets.pipeline.api.ChooserMode;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ import java.util.Map;
 , version = "1.0")
 public class TwitterProcessor extends BaseProcessor{
 
-  @FieldModifier(type = FieldSelectionType.PROVIDED, valuesProvider = TypesProvider.class)
+  @FieldValueChooser(type = ChooserMode.PROVIDED, valuesProvider = TypesProvider.class)
   @ConfigDef(
     defaultValue = "[a-z][A-Z][0-9]",
     label = "regEx",

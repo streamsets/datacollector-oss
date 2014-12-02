@@ -19,7 +19,7 @@ package com.clipper.stage;
 
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.FieldSelectionType;
+import com.streamsets.pipeline.api.ChooserMode;
 
 
 @RawSource(rawSourcePreviewer = ClipperSourcePreviewer.class, mimeType = "text/plain")
@@ -30,7 +30,7 @@ public class TextFileReader extends BaseSource {
       required = true, type = ConfigDef.Type.STRING)
   public String fileName;
 
-  @DropDown(type = FieldSelectionType.PROVIDED, valuesProvider = ExtensionsProvider.class)
+  @ValueChooser(type = ChooserMode.PROVIDED, valuesProvider = ExtensionsProvider.class)
   @ConfigDef(defaultValue = "", label = "File Extenson", description = "Absolute file name of the file",
      required = true, type = ConfigDef.Type.MODEL)
   public String fileExtension;

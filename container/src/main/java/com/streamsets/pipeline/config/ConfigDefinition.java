@@ -102,8 +102,8 @@ public class ConfigDefinition {
     return fieldName;
   }
 
-  private final static String CONFIG_LABEL = "config.{}.label";
-  private final static String CONFIG_DESCRIPTION = "config.{}.description";
+  private final static String CONFIG_LABEL = "{}.label";
+  private final static String CONFIG_DESCRIPTION = "{}.description";
 
   public ConfigDefinition localize(ResourceBundle rb) {
     String labelKey = Utils.format(CONFIG_LABEL, getName());

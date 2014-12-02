@@ -17,13 +17,7 @@
  */
 package com.streamsets.pipeline.lib.stage.source.logtail;
 
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ErrorId;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
 
 import java.io.File;
@@ -32,6 +26,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+@GenerateResourceBundle
 @StageDef(version="1.0.1",
           label="Tail log files")
 public class LogTailSource extends BaseSource {
@@ -69,6 +64,7 @@ public class LogTailSource extends BaseSource {
              defaultValue = "5000")
   public int maxWaitTime;
 
+  @GenerateResourceBundle
   public enum ERROR implements ErrorId {
     NO_PERMISSION_TO_READ_LOG_FILE("Insufficient permissions to read the log file '{}'");
 

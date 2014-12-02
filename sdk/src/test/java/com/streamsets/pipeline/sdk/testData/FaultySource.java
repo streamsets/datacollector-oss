@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.sdk.testData;
 
 import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.FieldSelectionType;
+import com.streamsets.pipeline.api.ChooserMode;
 
 import java.util.List;
 
@@ -37,6 +37,7 @@ import java.util.List;
  */
 //13. Implementation of RawSourcePreviewer must be a top level class
 //14. Annotation RawSource is FaultySource which is not a Source
+@GenerateResourceBundle
 @RawSource(rawSourcePreviewer = TestRawSourcePreviewer.FaultyRawSourcePreviewer.class)
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
   , version = "1.0")
@@ -111,7 +112,7 @@ public class FaultySource {
 
 
   //9. Field modifier should be modeled as Map<String, String>
-  @FieldModifier(type = FieldSelectionType.PROVIDED, valuesProvider = TypesProvider.class)
+  @FieldValueChooser(type = ChooserMode.PROVIDED, valuesProvider = TypesProvider.class)
   @ConfigDef(
     defaultValue = "180 Sansome",
     label = "street_address",
@@ -122,7 +123,7 @@ public class FaultySource {
 
   //10. Both FieldSelector and FieldModifier present
   @FieldSelector
-  @FieldModifier(type = FieldSelectionType.PROVIDED, valuesProvider = TypesProvider.class)
+  @FieldValueChooser(type = ChooserMode.PROVIDED, valuesProvider = TypesProvider.class)
   @ConfigDef(
     defaultValue = "400",
     label = "ste",
@@ -133,7 +134,7 @@ public class FaultySource {
 
   //11. Drop down should be modeled as 'java.lang.String'
   //12. The ConfigDef.Type for dropdown should be 'MODEL'
-  @DropDown(type = FieldSelectionType.PROVIDED, valuesProvider = TypesProvider.class)
+  @ValueChooser(type = ChooserMode.PROVIDED, valuesProvider = TypesProvider.class)
   @ConfigDef(
       defaultValue = "4",
       label = "floor",

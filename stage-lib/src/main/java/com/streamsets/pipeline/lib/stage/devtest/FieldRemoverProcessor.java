@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 import java.util.List;
 
+@GenerateResourceBundle
 @StageDef( version="1.0.0", label="Field Remover")
 public class FieldRemoverProcessor extends SingleLaneRecordProcessor {
 

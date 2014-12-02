@@ -17,7 +17,12 @@
  */
 package com.streamsets.pipeline.api;
 
-public enum FieldSelectionType {
-  PROVIDED,
-  SUGGESTED
+import java.util.List;
+
+public interface ChooserValues {
+
+  public List<String> getValues();
+
+  public List<String> getLabels();
+
 }

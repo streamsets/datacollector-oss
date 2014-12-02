@@ -15,16 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.sdk.testData;
 
-import java.lang.annotation.*;
+import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
-@Retention(RetentionPolicy.RUNTIME)
-@java.lang.annotation.Target(ElementType.FIELD)
-public @interface FieldModifier {
+@GenerateResourceBundle
+public enum TwitterError implements ErrorId {
+  INPUT_LANE_ERROR("There should be 1 input lane but there are '{}'"),
+  OUTPUT_LANE_ERROR("There should be 1 output lane but there are '{}'");
 
-  FieldSelectionType type();
+  private final String msg;
 
-  Class<? extends ValuesProvider> valuesProvider();
+  TwitterError(String msg) {
+    this.msg = msg;
+  }
+
+  @Override
+  public String getMessage() {
+    return msg;
+  }
 
 }

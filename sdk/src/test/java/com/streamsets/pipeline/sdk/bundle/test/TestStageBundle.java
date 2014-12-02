@@ -52,26 +52,26 @@ public class TestStageBundle extends TestPipelineAnnotationProcessorBase {
     Assert.assertTrue(compilerOutput.isEmpty());
     //No diagnostics
     Assert.assertTrue(diagnostics.isEmpty());
-    //A bundle file "TwitterSource-bundle.properties" is generated which contains 2 lines
+    //A bundle file "TwitterSource.properties" is generated which contains 2 lines
     /*
-    stage.label=twitter_source
-    stage.description=Produces twitter feeds
-    config.username.label=username
-    config.username.description=The user name of the twitter user
-    config.password.label=password
-    config.password.description=The password the twitter use
+    label=twitter_source
+    description=Produces twitter feeds
+    username.label=username
+    username.description=The user name of the twitter user
+    password.label=password
+    password.description=The password the twitter use
      */
     List<String> expectedStrings = new ArrayList<String>(6);
-    expectedStrings.add("stage.label=twitter_source");
-    expectedStrings.add("stage.description=Produces twitter feeds");
-    expectedStrings.add("config.username.label=username");
-    expectedStrings.add("config.username.description=The user name of the twitter user");
-    expectedStrings.add("config.password.label=password");
-    expectedStrings.add("config.password.description=The password the twitter user");
+    expectedStrings.add("label=twitter_source");
+    expectedStrings.add("description=Produces twitter feeds");
+    expectedStrings.add("username.label=username");
+    expectedStrings.add("username.description=The user name of the twitter user");
+    expectedStrings.add("password.label=password");
+    expectedStrings.add("password.description=The password the twitter user");
 
 
     InputStream inputStream = Thread.currentThread().getContextClassLoader().
-      getResourceAsStream("TwitterSource-bundle.properties");
+      getResourceAsStream("TwitterSource.properties");
     BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
     List<String> actualStrings = new ArrayList<String>();
     String line;
