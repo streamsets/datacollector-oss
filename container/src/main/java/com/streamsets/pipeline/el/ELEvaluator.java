@@ -19,7 +19,7 @@ package com.streamsets.pipeline.el;
 
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.util.TextUtils;
+import com.streamsets.pipeline.container.TextUtils;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
 
 import javax.servlet.jsp.el.ELException;

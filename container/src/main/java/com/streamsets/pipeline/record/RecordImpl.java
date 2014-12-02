@@ -25,7 +25,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.util.TextUtils;
+import com.streamsets.pipeline.container.TextUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
