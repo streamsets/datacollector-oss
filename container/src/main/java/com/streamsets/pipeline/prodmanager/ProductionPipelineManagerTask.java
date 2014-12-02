@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineManagerTask.class);
   private static final String PRODUCTION_PIPELINE_MANAGER = "productionPipelineManager";
   private static final String PRODUCTION_PIPELINE_RUNNER = "ProductionPipelineRunner";
+  private static final String RUN_INFO_DIR = "runInfo";
 
   private static final Map<State, Set<State>> VALID_TRANSITIONS = ImmutableMap.of(
       State.STOPPED, (Set<State>) ImmutableSet.of(State.RUNNING),
@@ -285,6 +287,11 @@ public class ProductionPipelineManagerTask extends AbstractTask {
         deliveryGuarantee = DeliveryGuarantee.valueOf((String)config.getValue());
       }
     }
+    //create the pipeline directory eagerly.
+    //This helps avoid race conditions when different stores attempt to create directories
+    //Creating directory eagerly also avoids the need of synchronization
+    createPipelineDirectory(name);
+
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, runtimeInfo);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, errorRecordStore, offsetTracker,
         maxBatchSize, deliveryGuarantee, name, rev);
@@ -317,4 +324,12 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     }
   }
 
+  private void createPipelineDirectory(String name) {
+    File pipelineDir = new File(new File(runtimeInfo.getDataDir(), RUN_INFO_DIR), name);
+    if(!pipelineDir.exists()) {
+      if(!pipelineDir.mkdirs()) {
+        throw new RuntimeException(Utils.format("Could not create directory '{}'", pipelineDir.getAbsolutePath()));
+      }
+    }
+  }
 }

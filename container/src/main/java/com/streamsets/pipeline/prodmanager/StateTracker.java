@@ -28,7 +28,6 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.JsonFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.Collections;
