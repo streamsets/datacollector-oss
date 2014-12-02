@@ -18,8 +18,10 @@
 package com.streamsets.pipeline.lib.stage.source.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import org.slf4j.Logger;
@@ -57,11 +59,13 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
       description = "If set, all files lexicographically older than this will be ignored")
   public String initialFileToProcess;
 
+
   @ConfigDef(required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.MODEL,
       label = "File Post Processing Handling",
       description = "Action to take after the file has been processed: NONE (default), DELETE, ARCHIVE",
       defaultValue = "NONE")
+  @ValueChooser(type = ChooserMode.PROVIDED, valuesProvider = PostProcessingOptionsChooserValues.class)
   public String postProcessing;
 
   @ConfigDef(required = false,

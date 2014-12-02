@@ -18,10 +18,10 @@
 package com.streamsets.pipeline.lib.dirspooler;
 
 import com.codahale.metrics.Meter;
+import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.container.Utils;
-import jersey.repackaged.com.google.common.base.Preconditions;
-import jersey.repackaged.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

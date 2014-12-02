@@ -110,7 +110,21 @@ public class StreamingJsonParser {
     JsonToken token = jsonParser.nextToken();
     if (token != null) {
       if (token != JsonToken.END_ARRAY) {
-        value = jsonParser.readValueAs(klass);
+        Class classToUse = klass;
+        if (klass == Object.class) {
+          switch (token) {
+            case START_ARRAY:
+              classToUse = List.class;
+              break;
+            case START_OBJECT:
+              classToUse = Map.class;
+              break;
+            default:
+              throw new JsonParseException(Utils.format("JSON array elements must be ARRAY or MAP, found '{}'",
+                                                        token), jsonParser.getTokenLocation());
+          }
+        }
+        value = (T) jsonParser.readValueAs(classToUse);
       }
     }
     return value;
@@ -119,7 +133,22 @@ public class StreamingJsonParser {
   @SuppressWarnings("unchecked")
   protected <T> T readObjectFromStream(Class<T> klass) throws IOException {
     if (multipleObjectsIterator == null) {
-      multipleObjectsIterator = jsonParser.readValuesAs(klass);
+      Class classToUse = klass;
+      if (klass == Object.class) {
+        JsonToken token = (jsonParser.hasCurrentToken()) ? jsonParser.getCurrentToken() : jsonParser.nextToken();
+        switch (token) {
+          case START_ARRAY:
+            classToUse = List.class;
+            break;
+          case START_OBJECT:
+            classToUse = Map.class;
+            break;
+          default:
+            throw new JsonParseException(Utils.format("JSON elements must be ARRAY or MAP, found '{}'",
+                                                      token), jsonParser.getTokenLocation());
+        }
+      }
+      multipleObjectsIterator = jsonParser.readValuesAs(classToUse);
     }
     return (T) ((multipleObjectsIterator.hasNext()) ? multipleObjectsIterator.next() : null);
   }
@@ -148,6 +177,10 @@ public class StreamingJsonParser {
     } catch (RuntimeJsonMappingException ex) {
       throw new JsonParseException(ex.getMessage(), jsonParser.getTokenLocation(), ex);
     }
+  }
+
+  public Object read() throws IOException {
+    return read(Object.class);
   }
 
   public Map readMap() throws IOException {
