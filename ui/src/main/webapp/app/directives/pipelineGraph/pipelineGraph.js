@@ -10,7 +10,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       controller: 'PipelineGraphController'
     };
   })
-  .controller('PipelineGraphController', function($scope, $element, _, $filter){
+  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter){
 
     var consts = {
       defaultTitle: "random variable"
@@ -630,15 +630,15 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         })
         .attr("width", 100)
         .attr("height", 30)
-        .attr("x", consts.rectWidth - 45)
+        .attr("x", consts.rectWidth - 55)
         .attr("y", 10)
         .append("xhtml:span")
         .attr("title", "this is error records")
         .attr("class", "badge alert-danger pointer")
         .style('visibility', 'hidden')
         .on("mousedown", function() {
-          $scope.$apply(function(){
-            $scope.$emit('showBadRecordsSelected');
+          $rootScope.$apply(function(){
+            $rootScope.$broadcast('showBadRecordsSelected');
           });
         });
 

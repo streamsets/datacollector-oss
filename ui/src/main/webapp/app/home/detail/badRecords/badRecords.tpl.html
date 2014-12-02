@@ -1,6 +1,16 @@
-<div ng-controller="BadRecordsController">
+<div ng-controller="BadRecordsController"  class="bad-records-tab">
 
-  <table class="table">
+  <form class="form-horizontal" role="form">
+    <div class="form-group">
+      <label class="col-sm-3 bad-record-count-label">Total Number of Bad Records</label>
+      <div class="col-sm-3">
+        <input type="text" class="form-control input-sm"
+               ng-model="errorCount.count" readonly>
+      </div>
+    </div>
+  </form>
+
+  <table class="table" ng-if="stageBadRecords && stageBadRecords.length > 0">
     <thead>
       <tr>
         <th class="col-md-6">
@@ -17,12 +27,12 @@
     <tbody>
       <tr ng-repeat="errorRecord in stageBadRecords">
         <td>
-          <label class="pointer" ng-click="errorRecord.expand = !errorRecord.expand">
+          <label class="label label-danger pointer" ng-click="errorRecord.expand = !errorRecord.expand">
               <span class="glyphicon glyphicon-expand"
                     ng-if="errorRecord.expand !== true && expandAllErrorData !== true"></span>
               <span class="glyphicon glyphicon-collapse-down"
                     ng-if="errorRecord.expand === true || expandAllErrorData === true"></span>
-            {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.header.errorMessage}}
+            {{'global.form.record' | translate}}{{$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.header.errorMessage}}
           </label>
           <ul class="preview-list" ng-if="errorRecord.expand === true || expandAllErrorData === true">
             <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in errorRecord.value.value">

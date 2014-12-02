@@ -219,9 +219,4 @@ angular
         $scope.$broadcast('updateErrorCount', stageInstanceErrorCounts);
       }
     });
-
-
-    $scope.$on('showBadRecordsSelected', function() {
-      $rootScope.common.activeDetailTab = 'badRecords';
-    });
   });

@@ -77,12 +77,13 @@ angular
       }
     });
 
-    $rootScope.$watch('common.activeDetailTab', function(newValue) {
+    $scope.$on('showBadRecordsSelected', function() {
       angular.forEach($scope.detailPaneTabs, function(tab) {
-        if(tab.name === newValue) {
+        if(tab.name === 'badRecords') {
           tab.active = true;
         }
       });
     });
+
 
   });

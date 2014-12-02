@@ -8,6 +8,7 @@ angular
   .controller('BadRecordsController', function ($scope, $rootScope, _, api) {
 
     angular.extend($scope, {
+      errorCount: 0,
       expandAllErrorData: false,
       stageBadRecords:[],
 
@@ -35,11 +36,22 @@ angular
       var pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig;
       if($scope.isPipelineRunning && pipelineMetrics && currentSelection.instanceName) {
-        var errorCount = pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter'];
+        var errorCount = $scope.errorCount = pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter'];
         $scope.stageBadRecords = [];
         if(errorCount && parseInt(errorCount.count) > 0) {
           updateBadRecordsData(currentSelection);
         }
       }
     });
+
+
+    $rootScope.$watch('common.pipelineMetrics', function() {
+      var pipelineMetrics = $rootScope.common.pipelineMetrics,
+        currentSelection = $scope.detailPaneConfig;
+
+      if($scope.isPipelineRunning && pipelineMetrics && currentSelection.instanceName) {
+        $scope.errorCount = pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter'];
+      }
+    });
+
   });
