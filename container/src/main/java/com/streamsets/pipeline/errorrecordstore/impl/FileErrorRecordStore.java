@@ -28,8 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class FileErrorRecordStore implements ErrorRecordStore {
 
@@ -41,11 +43,15 @@ public class FileErrorRecordStore implements ErrorRecordStore {
 
   private File errorRecordsBaseDir;
   private final ObjectMapper json;
+  /*Remember pipelines which have exceeded error record limit. This helps log warning only the first time. Otherwise
+  * the log size can grow very large*/
+  private final Set<String> pipelinesExceedingErrorRecordLimit;
 
   public FileErrorRecordStore(RuntimeInfo runtimeInfo) {
     this.errorRecordsBaseDir = new File(runtimeInfo.getDataDir(), ERROR_RECORDS_DIR);
     json = ObjectMapperFactory.get();
     json.enable(SerializationFeature.INDENT_OUTPUT);
+    pipelinesExceedingErrorRecordLimit = new HashSet<>();
   }
 
   @Override
@@ -53,7 +59,12 @@ public class FileErrorRecordStore implements ErrorRecordStore {
     for(Map.Entry<String, List<Record>> entry : errorRecords.entrySet()) {
       File errorRecordFile = getErrorRecordFile(pipelineName, rev, entry.getKey());
       if (errorRecordFile.exists() && errorRecordFile.length() > MAX_FILE_SIZE) {
-        LOG.warn("Exceeded the error record file size limit. Records in error are not being written to file.");
+        if(!pipelinesExceedingErrorRecordLimit.contains(pipelineName)) {
+          //Log the warning only for the very first time.
+          LOG.warn("Exceeded the error record file size limit. " +
+              "Records in error will not be written to file from this point onwards.");
+          pipelinesExceedingErrorRecordLimit.add(pipelineName);
+        }
         return;
       }
       try {
@@ -72,6 +83,7 @@ public class FileErrorRecordStore implements ErrorRecordStore {
     }
     LOG.info("Deleting error records for stage instance {} in pipeline {}", stageInstanceName, pipelineName);
     errorRecordFile.delete();
+    pipelinesExceedingErrorRecordLimit.remove(pipelineName);
     LOG.info("Deleted error records for stage instance {} in pipeline {}", stageInstanceName, pipelineName);
   }
 
