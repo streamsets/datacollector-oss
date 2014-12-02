@@ -33,22 +33,47 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-pipeline-api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-pipeline-container</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -126,9 +151,9 @@
               <resources>
                 <resource>
                   <directory>${basedir}/src/main/services</directory>
-		          <includes>
-                      <include>javax.annotation.processing.Processor</include>
-		          </includes>
+                  <includes>
+                    <include>javax.annotation.processing.Processor</include>
+                  </includes>
                   <filtering>true</filtering>
                 </resource>
               </resources>

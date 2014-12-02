@@ -17,8 +17,8 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.validation.Issue;
-import jersey.repackaged.com.google.common.collect.ImmutableList;
 import org.junit.Assert;
 import org.junit.Test;
 

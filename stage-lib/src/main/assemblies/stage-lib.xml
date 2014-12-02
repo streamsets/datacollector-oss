@@ -33,11 +33,7 @@
       <useTransitiveFiltering>true</useTransitiveFiltering>
       <outputDirectory>/streamsets-basic/lib</outputDirectory>
       <unpack>false</unpack>
-      <scope>compile</scope>
-      <excludes>
-        <exclude>com.streamsets:streamsets-pipeline-api</exclude>
-        <exclude>com.streamsets:streamsets-pipeline-sdk</exclude>
-      </excludes>
+      <scope>runtime</scope>
     </dependencySet>
 
   </dependencySets>

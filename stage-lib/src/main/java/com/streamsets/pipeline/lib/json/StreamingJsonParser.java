@@ -96,6 +96,7 @@ public class StreamingJsonParser {
     return rootContext;
   }
 
+  @SuppressWarnings("unchecked")
   protected <T> T readObjectFromArray(Class<T> klass) throws IOException {
     T value = null;
     if (starting) {

@@ -20,7 +20,6 @@ package com.streamsets.pipeline.lib.stage.processor.nop;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.lib.stage.processor.nop.IdentityProcessor;
 import com.streamsets.pipeline.sdk.testharness.internal.Constants;
 import com.streamsets.pipeline.sdk.testharness.ProcessorRunner;
 import com.streamsets.pipeline.sdk.testharness.RecordProducer;
@@ -56,6 +55,7 @@ public class TestIdentityProcessor {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testIdentityProcDefaultConfig() throws StageException {
     //Build record producer
     RecordProducer rp = new RecordProducer();
@@ -74,6 +74,7 @@ public class TestIdentityProcessor {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testIdentityProc() throws StageException {
     //Build record producer
     RecordProducer rp = new RecordProducer();
