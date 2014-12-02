@@ -97,6 +97,12 @@
       <outputDirectory>/docs/api</outputDirectory>
     </fileSet>
 
+    <!-- stage-lib -->
+    <fileSet>
+      <directory>${basedir}/../stage-lib/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
+
   </fileSets>
 
   <dependencySets>
@@ -137,18 +143,6 @@
       <excludes>
         <exclude>com.streamsets:streamsets-pipeline-api</exclude>
       </excludes>
-    </dependencySet>
-
-    <dependencySet>
-      <useProjectArtifact>false</useProjectArtifact>
-      <useTransitiveDependencies>true</useTransitiveDependencies>
-      <useTransitiveFiltering>true</useTransitiveFiltering>
-      <outputDirectory>/stage-libs/streamsets-basic/lib</outputDirectory>
-      <unpack>false</unpack>
-      <scope>compile</scope>
-      <includes>
-        <include>com.streamsets:streamsets-pipeline-stage-lib</include>
-      </includes>
     </dependencySet>
 
   </dependencySets>
