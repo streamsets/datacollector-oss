@@ -240,7 +240,7 @@ public class StageDefinition {
             .append(values.get(i));
           String key = sb.toString();
           String l = rb.containsKey(key) ? rb.getString(key) : labels.get(i);
-          localizedLabels.set(i, l);
+          localizedLabels.add(l);
         }
         configDef.getModel().setLabels(localizedLabels);
       }
