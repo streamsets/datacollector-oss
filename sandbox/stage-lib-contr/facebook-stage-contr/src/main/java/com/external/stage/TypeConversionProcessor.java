@@ -17,7 +17,12 @@
  */
 package com.external.stage;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.FieldValueChooser;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.ChooserMode;
 

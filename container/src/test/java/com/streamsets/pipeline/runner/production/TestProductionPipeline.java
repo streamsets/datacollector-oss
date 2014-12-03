@@ -19,7 +19,9 @@ package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
-import com.streamsets.pipeline.runner.*;
+import com.streamsets.pipeline.runner.MockStages;
+import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.util.TestUtil;
@@ -27,9 +29,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import java.util.List;
-
 
 public class TestProductionPipeline {
 

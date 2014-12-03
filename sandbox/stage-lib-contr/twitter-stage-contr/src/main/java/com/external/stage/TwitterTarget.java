@@ -17,7 +17,11 @@
  */
 package com.external.stage;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 
 @StageDef(description = "Consumes twitter feeds", label = "twitter_target"
 , version = "1.3")

@@ -18,8 +18,15 @@
 package com.streamsets.pipeline.sdk.testData;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.ChooserMode;
+import com.streamsets.pipeline.api.ChooserValues;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldValueChooser;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.RawSource;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooser;
 
 import java.util.List;
 

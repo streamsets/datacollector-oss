@@ -17,8 +17,16 @@
  */
 package com.clipper.stage;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ChooserValues;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.api.FieldValueChooser;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.ChooserMode;
 
 import java.util.ArrayList;
 import java.util.List;

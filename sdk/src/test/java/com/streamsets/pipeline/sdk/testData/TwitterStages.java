@@ -17,7 +17,15 @@
  */
 package com.streamsets.pipeline.sdk.testData;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldValueChooser;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.ChooserMode;

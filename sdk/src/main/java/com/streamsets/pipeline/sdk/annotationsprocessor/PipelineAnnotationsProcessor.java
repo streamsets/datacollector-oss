@@ -19,9 +19,20 @@ package com.streamsets.pipeline.sdk.annotationsprocessor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.config.*;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldValueChooser;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.RawSource;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.config.ChooserMode;
+import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.ModelDefinition;
+import com.streamsets.pipeline.config.ModelType;
+import com.streamsets.pipeline.config.RawSourceDefinition;
+import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.sdk.util.StageHelper;
 
@@ -30,7 +41,13 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -40,7 +57,15 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
 
 @SupportedAnnotationTypes({"com.streamsets.pipeline.api.StageDef",
   "com.streamsets.pipeline.api.GenerateResourceBundle"})

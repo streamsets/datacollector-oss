@@ -22,7 +22,10 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.store.*;
+import com.streamsets.pipeline.store.PipelineInfo;
+import com.streamsets.pipeline.store.PipelineRevInfo;
+import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -42,9 +45,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-
+import org.mockito.Matchers;
 
 public class TestPipelineStoreResource extends JerseyTest {
 
@@ -174,7 +175,8 @@ public class TestPipelineStoreResource extends JerseyTest {
         Mockito.doThrow(new PipelineStoreException(PipelineStoreException.ERROR.PIPELINE_DOES_NOT_EXIST, "xyz"))
             .when(pipelineStore).delete("xyz");
         Mockito.when(pipelineStore.save(
-            anyString(), anyString(), anyString(), anyString(), (PipelineConfiguration)any())).thenReturn(
+            Matchers.anyString(), Matchers.anyString(), Matchers.anyString(), Matchers.anyString(),
+            (PipelineConfiguration)Matchers.any())).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
 
       } catch (PipelineStoreException e) {

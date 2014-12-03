@@ -17,7 +17,11 @@
  */
 package com.streamsets.pipeline.sdk.testharness.internal;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldValueChooser;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

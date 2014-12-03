@@ -25,13 +25,22 @@ import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TestFileSnapshotStore {
 
@@ -175,7 +184,7 @@ public class TestFileSnapshotStore {
 
     records2.add(r3);
 
-    Map<String, List<Record>> so2 = new HashMap<String, List<Record>>(1);
+    Map<String, List<Record>> so2 = new HashMap<>(1);
     so2.put("lane", records2);
     StageOutput s2 = new StageOutput("processor", so2, new ArrayList<Record>());
     snapshot.add(s2);

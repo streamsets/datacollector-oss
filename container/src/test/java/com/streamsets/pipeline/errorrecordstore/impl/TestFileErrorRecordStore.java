@@ -24,13 +24,21 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.record.RecordImpl;
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TestFileErrorRecordStore {
 

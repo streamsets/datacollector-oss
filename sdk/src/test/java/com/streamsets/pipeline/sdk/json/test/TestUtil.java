@@ -29,13 +29,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.streamsets.pipeline.sdk.annotationsprocessor.Constants.PIPELINE_STAGES_JSON;
+import com.streamsets.pipeline.sdk.annotationsprocessor.Constants;
 
 public class TestUtil {
 
   public static List<StageDefinition> getGeneratedStageCollection() {
     InputStream inputStream = Thread.currentThread().getContextClassLoader().
-      getResourceAsStream(PIPELINE_STAGES_JSON);
+      getResourceAsStream(Constants.PIPELINE_STAGES_JSON);
     return getStageCollection(inputStream);
   }
 

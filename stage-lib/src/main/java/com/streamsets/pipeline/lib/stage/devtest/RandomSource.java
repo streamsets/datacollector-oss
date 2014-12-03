@@ -18,7 +18,13 @@
 package com.streamsets.pipeline.lib.stage.devtest;
 
 import com.codahale.metrics.Meter;
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 
 import java.util.LinkedHashMap;

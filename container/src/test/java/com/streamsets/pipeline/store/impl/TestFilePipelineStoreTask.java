@@ -34,7 +34,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class TestFilePipelineStoreTask {
 

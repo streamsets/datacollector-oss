@@ -27,7 +27,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.tools.*;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStreamWriter;
@@ -54,7 +59,7 @@ public abstract class TestPipelineAnnotationProcessorBase {
   @Before
   public void initTest() throws Exception {
     //configure the diagnostics collector.
-    collector = new DiagnosticCollector<JavaFileObject>();
+    collector = new DiagnosticCollector<>();
     fileManager = COMPILER.getStandardFileManager(collector, Locale.US, Charset.forName("UTF-8"));
 
     //remove previously generated PipelineStages.json

@@ -17,10 +17,12 @@
  */
 package com.streamsets.pipeline.lib.stage.processor.nop;
 
-import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.base.BaseProcessor;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
-import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 import java.util.Iterator;
 

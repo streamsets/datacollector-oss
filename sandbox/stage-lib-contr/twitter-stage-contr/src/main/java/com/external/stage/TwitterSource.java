@@ -16,7 +16,11 @@
  * limitations under the License.
  */package com.external.stage;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 
 import java.util.List;

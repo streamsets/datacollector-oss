@@ -17,7 +17,11 @@
  */
 package com.streamsets.pipeline.util;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;

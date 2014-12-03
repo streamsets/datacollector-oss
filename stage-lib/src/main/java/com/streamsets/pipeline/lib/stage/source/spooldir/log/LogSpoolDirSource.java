@@ -18,7 +18,13 @@
 package com.streamsets.pipeline.lib.stage.source.spooldir.log;
 
 import com.codahale.metrics.Counter;
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunLineReader;

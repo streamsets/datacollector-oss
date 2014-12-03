@@ -43,10 +43,13 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.mockito.Matchers.anyString;
+import org.mockito.Matchers;
 
 public class TestPipelineManagerResource extends JerseyTest {
   
@@ -205,7 +208,7 @@ public class TestPipelineManagerResource extends JerseyTest {
       Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState(PIPELINE_NAME, "2.0", State.STOPPED
           , "Pipeline is not running", System.currentTimeMillis()));
       try {
-        Mockito.when(pipelineManager.setOffset(anyString())).thenReturn("fileX:line10");
+        Mockito.when(pipelineManager.setOffset(Matchers.anyString())).thenReturn("fileX:line10");
       } catch (PipelineManagerException e) {
         e.printStackTrace();
       }

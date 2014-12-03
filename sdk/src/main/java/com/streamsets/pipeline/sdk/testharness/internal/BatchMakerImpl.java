@@ -3,7 +3,11 @@ package com.streamsets.pipeline.sdk.testharness.internal;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of BatchMaker interface for the test harness

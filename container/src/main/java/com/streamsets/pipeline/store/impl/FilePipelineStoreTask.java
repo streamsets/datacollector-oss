@@ -25,10 +25,13 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.store.PipelineInfo;
+import com.streamsets.pipeline.store.PipelineRevInfo;
+import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.store.*;
 
 import javax.inject.Inject;
 import java.io.File;

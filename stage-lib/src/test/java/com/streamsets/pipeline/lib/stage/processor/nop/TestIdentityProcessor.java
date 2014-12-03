@@ -19,7 +19,11 @@ package com.streamsets.pipeline.lib.stage.processor.nop;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.testharness.internal.Constants;
 import com.streamsets.pipeline.sdk.testharness.ProcessorRunner;
 import com.streamsets.pipeline.sdk.testharness.RecordProducer;

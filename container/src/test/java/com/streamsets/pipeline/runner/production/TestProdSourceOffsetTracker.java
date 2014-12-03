@@ -18,8 +18,11 @@
 package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import org.junit.*;
 import java.util.Arrays;
 
 public class TestProdSourceOffsetTracker {

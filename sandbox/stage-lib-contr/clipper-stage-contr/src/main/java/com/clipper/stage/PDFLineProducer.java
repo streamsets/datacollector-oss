@@ -17,7 +17,13 @@
  */
 package com.clipper.stage;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.RawSource;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.pdfparser.PDFParser;

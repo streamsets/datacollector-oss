@@ -17,8 +17,13 @@
  */
 package com.streamsets.pipeline.sdk.testData;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+
 @GenerateResourceBundle
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
 , version = "1.0")

@@ -24,7 +24,11 @@ import org.junit.Assert;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
 

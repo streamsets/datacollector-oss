@@ -17,15 +17,24 @@
  */
 package com.clipper.stage;
 
-import com.streamsets.pipeline.api.*;
+
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 @StageDef(description = "FareCalculatorProcessor inspects the transaction log, extracts the fares and adds new fields to the record - one for the fare and cone for cumulative sum",
   label = "Clipper Fare Calculator",
   version = "1.0")
-public class FareCalculatorProcessor extends BaseProcessor{
+public class FareCalculatorProcessor extends BaseProcessor {
 
   private double caltrainClaim = 0.0;
   private double bartClaim = 0.0;

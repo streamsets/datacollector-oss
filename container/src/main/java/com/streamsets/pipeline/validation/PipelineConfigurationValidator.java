@@ -20,7 +20,13 @@ package com.streamsets.pipeline.validation;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
-import com.streamsets.pipeline.config.*;
+import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.ModelType;
+import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,14 +103,14 @@ public class PipelineConfigurationValidator {
     this.name = name;
     this.pipelineConfiguration = pipelineConfiguration;
     issues = new Issues();
-    openLanes = new ArrayList<String>();
+    openLanes = new ArrayList<>();
   }
 
   boolean sortStages() {
     boolean ok = true;
-    List<StageConfiguration> original = new ArrayList<StageConfiguration>(pipelineConfiguration.getStages());
-    List<StageConfiguration> sorted = new ArrayList<StageConfiguration>();
-    Set<String> producedOutputs = new HashSet<String>();
+    List<StageConfiguration> original = new ArrayList<>(pipelineConfiguration.getStages());
+    List<StageConfiguration> sorted = new ArrayList<>();
+    Set<String> producedOutputs = new HashSet<>();
     while (ok && !original.isEmpty()) {
       int prior = sorted.size();
       Iterator<StageConfiguration> it = original.iterator();

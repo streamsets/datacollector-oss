@@ -27,7 +27,8 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 public class TestStageLibraryResource extends JerseyTest {
 

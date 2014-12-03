@@ -17,9 +17,13 @@
  */
 package com.streamsets.pipeline.lib.stage.devtest;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 import java.util.List;

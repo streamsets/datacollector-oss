@@ -18,10 +18,20 @@
 package com.streamsets.pipeline.runner;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.config.*;
+import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import org.junit.Assert;
 import org.junit.Test;

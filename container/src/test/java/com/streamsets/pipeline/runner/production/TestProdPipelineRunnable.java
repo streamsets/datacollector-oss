@@ -17,15 +17,15 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
-import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
@@ -34,12 +34,16 @@ import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.TestUtil;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 public class TestProdPipelineRunnable {
 
