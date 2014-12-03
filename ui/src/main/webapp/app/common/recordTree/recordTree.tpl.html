@@ -11,7 +11,7 @@
     <div ng-switch on="recordValue.type">
 
       <div ng-switch-when="MAP">
-        <span class="field-type"> MAP  </span>
+        <span class="field-type"> Map  </span>
         <ul class="clearfix" ng-show="isOpen">
           <li class="record-list-item clearfix"
               ng-repeat="(fieldName, recordValue) in recordValue.value"
@@ -22,8 +22,7 @@
       </div>
 
       <div ng-switch-when="LIST">
-        <span class="field-type">LIST</span>
-        <span class="array-length">[ {{recordValue.value.length}} ]</span>
+        <span class="field-type"> List [ {{recordValue.value.length}} ]</span>
         <ul class="clearfix" ng-show="isOpen">
           <li class="record-list-item clearfix"
               ng-repeat="(fieldName, recordValue) in recordValue.value"

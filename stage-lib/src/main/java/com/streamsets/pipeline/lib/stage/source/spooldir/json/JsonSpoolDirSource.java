@@ -21,13 +21,14 @@ import com.codahale.metrics.Counter;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunException;
@@ -49,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 @GenerateResourceBundle
+@RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class, mimeType = "application/json")
 @StageDef(version = "1.0.0",
     label = "JSON files spool directory",
     description = "Consumes JSON files from a spool directory")
