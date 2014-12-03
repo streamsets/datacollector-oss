@@ -1,35 +1,3 @@
-<script type="text/ng-template" id="recordTree">
-  <span class="field-name"> {{fieldName}}: </span>
-
-  <span ng-if="recordValue.type !== 'MAP' && editable !== true"
-        class="field-value"
-        ng-class="recordValue.type"
-        ng-bind="recordValue.value">
-  </span>
-
-  <span class="field-value"
-        ng-if="recordValue.type !== 'MAP' && editable === true"
-        ng-class="recordValue.dirty ? recordValue.type + ' dirty' : recordValue.type"
-        contenteditable="true"
-        ng-change="recordValueUpdated(inputRecord, recordValue)"
-        ng-model="recordValue.value">
-  </span>
-
-  <span ng-if="recordValue.type === 'MAP'" > { </span>
-  <ul ng-if="recordValue.type === 'MAP'">
-    <li class="record-list-item"
-        ng-repeat="(fieldName, recordValue) in recordValue.value"
-        ng-class="{'dirty' : recordValue.dirty}"
-        ng-include="'recordTree'">
-    </li>
-  </ul>
-  <span ng-if="recordValue.type === 'MAP'" > } </span>
-
-  <span ng-if="$last === false">,</span>
-
-</script>
-
-
 <div class="pipeline-preview">
 
   <table class="table">
@@ -73,7 +41,7 @@
           {{'global.form.record' | translate}}{{$index+1}}
         </label>
         <ul class="record-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
-          <li class="record-list-item"
+          <li class="record-list-item clearfix"
               ng-repeat="(fieldName, recordValue) in outputRecord.value.value"
               ng-include="'recordTree'">
           </li>

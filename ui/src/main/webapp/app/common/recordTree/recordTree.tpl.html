@@ -1,0 +1,55 @@
+<script type="text/ng-template" id="recordTree">
+
+  <div class="pull-left" ng-if="!listType">
+    <span class="field-name"> {{fieldName}}: </span>
+  </div>
+
+  <div ng-switch on="recordValue.type">
+
+    <div ng-switch-when="MAP">
+      <span ng-class="{'open-bracket': !listType}"> { </span>
+      <ul class="clearfix">
+        <li class="record-list-item clearfix"
+            ng-repeat="(fieldName, recordValue) in recordValue.value"
+            ng-class="{'dirty' : recordValue.dirty}"
+            ng-include="'recordTree'"
+            onload="listType=false">
+        </li>
+      </ul>
+      <span> } </span>
+      <span ng-if="$last === false">,</span>
+    </div>
+
+    <div ng-switch-when="LIST">
+      <span class="open-bracket"> [ </span>
+      <ul class="clearfix">
+        <li class="record-list-item clearfix"
+            ng-repeat="recordValue in recordValue.value"
+            ng-class="{'dirty' : recordValue.dirty}"
+            ng-include="'recordTree'"
+            onload="listType=true">
+        </li>
+      </ul>
+      <span> ] </span>
+      <span ng-if="$last === false">,</span>
+    </div>
+
+    <div ng-switch-default>
+      <span ng-if="editable !== true"
+            class="field-value"
+            ng-class="recordValue.type"
+            ng-bind="recordValue.value">
+      </span>
+      <span class="field-value"
+            ng-if="editable === true"
+            ng-class="recordValue.dirty ? recordValue.type + ' dirty' : recordValue.type"
+            contenteditable="true"
+            ng-change="recordValueUpdated(inputRecord, recordValue)"
+            ng-model="recordValue.value">
+      </span>
+      <span ng-if="$last === false">,</span>
+    </div>
+
+  </div>
+
+</script>
