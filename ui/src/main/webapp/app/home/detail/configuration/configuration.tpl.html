@@ -50,6 +50,7 @@
                ng-model="detailPaneConfig.configuration[$index].value"
                popover-placement="right"
                popover-append-to-body="true"
+               popover-title="{{configDefinition.label}}"
                popover="{{configDefinition.description}}"
                popover-trigger="focus">
 
@@ -62,6 +63,7 @@
                ng-required="configDefinition.required"
                popover-placement="right"
                popover-append-to-body="true"
+               popover-title="{{configDefinition.label}}"
                popover="{{configDefinition.description}}"
                popover-trigger="focus">
 
@@ -74,6 +76,7 @@
                ng-required="configDefinition.required"
                popover-placement="right"
                popover-append-to-body="true"
+               popover-title="{{configDefinition.label}}"
                popover="{{configDefinition.description}}"
                popover-trigger="focus">
 
@@ -91,6 +94,7 @@
                 ng-model="detailPaneConfig.configuration[$index].value"
                 popover-placement="right"
                 popover-append-to-body="true"
+                popover-title="{{configDefinition.label}}"
                 popover="{{configDefinition.description}}"
                 popover-trigger="focus">
           <option ng-repeat="listValue in configDefinition.model.values"

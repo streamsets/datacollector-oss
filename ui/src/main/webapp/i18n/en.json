@@ -55,6 +55,7 @@
       "pipelineIssues": "Pipeline Issues",
       "preview": "Preview",
       "processors": "Processors",
+      "refreshPreview": "Refresh Preview",
       "snapshot": "Snapshot",
       "sources": "Sources",
       "start": "Start",
