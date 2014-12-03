@@ -34,7 +34,7 @@ angular
        */
       getOutputRecords: function(outputRecords, inputRecord) {
         return _.filter(outputRecords, function(outputRecord) {
-          if(outputRecord.header.previousStageTrackingId === inputRecord.header.trackingId) {
+          if(outputRecord.header.previousTrackingId === inputRecord.header.trackingId) {
             if(inputRecord.expand) {
               outputRecord.expand = true;
             }

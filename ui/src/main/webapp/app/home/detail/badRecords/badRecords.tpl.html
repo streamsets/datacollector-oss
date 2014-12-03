@@ -34,10 +34,10 @@
                     ng-if="errorRecord.expand === true || expandAllErrorData === true"></span>
             {{'global.form.record' | translate}}{{$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.header.errorMessage}}
           </label>
-          <ul class="preview-list" ng-if="errorRecord.expand === true || expandAllErrorData === true">
-            <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in errorRecord.value.value">
-              <span class="field-name"> {{fieldName}} : </span>
-              <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
+          <ul class="record-list" ng-if="errorRecord.expand === true || expandAllErrorData === true">
+            <li class="record-list-item"
+                ng-repeat="(fieldName, recordValue) in errorRecord.value.value"
+                ng-include="'recordTree'">
             </li>
           </ul>
         </td>

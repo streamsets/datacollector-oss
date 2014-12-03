@@ -44,34 +44,6 @@
         margin-right: 0px;
       }
 
-      .preview-list {
-
-        padding-left: @smallPadding * 3;
-
-        .preview-list-item {
-          list-style: none;
-          padding: @smallPadding/2;
-
-          .field-name {
-            display: inline-block;
-            min-width: 100px;
-          }
-
-          .field-value {
-            padding-left: @defaultPadding;
-
-
-            &.LONG, &.INTEGER {
-              color: blue;
-            }
-
-            &.STRING {
-              color: #008000;
-            }
-          }
-        }
-      }
-
       th, td {
         padding-left: @smallPadding*3;
 
@@ -86,10 +58,6 @@
           position: relative;
           top: -5px;
           color: gray;
-        }
-
-        .dirty {
-          color: @brand-danger !important;
         }
 
       }

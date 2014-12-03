@@ -32,7 +32,7 @@ angular
        */
       getOutputRecords: function(outputRecords, inputRecord) {
         return _.filter(outputRecords, function(outputRecord) {
-          if(outputRecord.header.previousStageTrackingId === inputRecord.header.trackingId) {
+          if(outputRecord.header.previousTrackingId === inputRecord.header.trackingId) {
             if(inputRecord.expand) {
               outputRecord.expand = true;
             }
@@ -67,10 +67,10 @@ angular
        * @param fieldName
        * @param stageInstance
        */
-      recordValueUpdated: function(recordUpdated, fieldName, stageInstance) {
+      recordValueUpdated: function(recordUpdated, recordValue, stageInstance) {
         $scope.previewDataUpdated = true;
         recordUpdated.dirty = true;
-        recordUpdated.value.value[fieldName].dirty = true;
+        recordValue.dirty = true;
       },
 
 

@@ -1,3 +1,35 @@
+<script type="text/ng-template" id="recordTree">
+  <span class="field-name"> {{fieldName}}: </span>
+
+  <span ng-if="recordValue.type !== 'MAP' && editable !== true"
+        class="field-value"
+        ng-class="recordValue.type"
+        ng-bind="recordValue.value">
+  </span>
+
+  <span class="field-value"
+        ng-if="recordValue.type !== 'MAP' && editable === true"
+        ng-class="recordValue.dirty ? recordValue.type + ' dirty' : recordValue.type"
+        contenteditable="true"
+        ng-change="recordValueUpdated(inputRecord, recordValue)"
+        ng-model="recordValue.value">
+  </span>
+
+  <span ng-if="recordValue.type === 'MAP'" > { </span>
+  <ul ng-if="recordValue.type === 'MAP'">
+    <li class="record-list-item"
+        ng-repeat="(fieldName, recordValue) in recordValue.value"
+        ng-class="{'dirty' : recordValue.dirty}"
+        ng-include="'recordTree'">
+    </li>
+  </ul>
+  <span ng-if="recordValue.type === 'MAP'" > } </span>
+
+  <span ng-if="$last === false">,</span>
+
+</script>
+
+
 <div class="pipeline-preview">
 
   <table class="table">
@@ -40,10 +72,10 @@
 
           {{'global.form.record' | translate}}{{$index+1}}
         </label>
-        <ul class="preview-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
-          <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.value.value">
-            <span class="field-name"> {{fieldName}} : </span>
-            <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
+        <ul class="record-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
+          <li class="record-list-item"
+              ng-repeat="(fieldName, recordValue) in outputRecord.value.value"
+              ng-include="'recordTree'">
           </li>
         </ul>
       </td>
@@ -60,28 +92,15 @@
           {{'global.form.record' | translate}}{{$index+1}}
           <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="inputRecord.dirty"></span>
         </label>
-        <ul class="preview-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
-          <li class="preview-list-item"
+        <ul class="record-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
+
+          <li class="record-list-item"
               ng-repeat="(fieldName, recordValue) in inputRecord.value.value"
-              ng-class="{'dirty' : recordValue.dirty}">
-            <span class="field-name"> {{fieldName}} : </span>
-
-                <span class="field-value"
-                      ng-if="previewMode"
-                      ng-class="recordValue.dirty ? 'dirty' : recordValue.type"
-                      contenteditable="true"
-                      ng-change="recordValueUpdated(inputRecord, fieldName, detailPaneConfig)"
-                      ng-model="recordValue.value">
-                </span>
-
-                <span class="field-value"
-                      ng-if="snapshotMode"
-                      contenteditable="false"
-                      ng-class="recordValue.type"
-                      ng-model="recordValue.value">
-                </span>
-
+              ng-class="{'dirty' : recordValue.dirty}"
+              ng-include="'recordTree'"
+              onload="editable=previewMode">
           </li>
+
         </ul>
       </td>
       <td>
@@ -93,11 +112,13 @@
                       ng-if="outputRecord.expand === true || expandAllOutputData === true"></span>
             {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.outputRecord' | translate}} {{$index + 1}}
           </label>
-          <ul class="preview-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
-            <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in outputRecord.value.value">
-              <span class="field-name"> {{fieldName}} : </span>
-              <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
+          <ul class="record-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
+
+            <li class="record-list-item"
+                ng-repeat="(fieldName, recordValue) in outputRecord.value.value"
+                ng-include="'recordTree'">
             </li>
+
           </ul>
         </div>
 
@@ -109,11 +130,13 @@
                       ng-if="errorRecord.expand === true"></span>
             {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.header.errorMessage}}
           </label>
-          <ul class="preview-list" ng-if="errorRecord.expand === true">
-            <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in errorRecord.value.value">
-              <span class="field-name"> {{fieldName}} : </span>
-              <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
+          <ul class="record-list" ng-if="errorRecord.expand === true">
+
+            <li class="record-list-item"
+                ng-repeat="(fieldName, recordValue) in errorRecord.value.value"
+                ng-include="'recordTree'">
             </li>
+
           </ul>
         </div>
 
@@ -134,11 +157,13 @@
                     ng-if="inputRecord.expand === true || expandAllInputData === true"></span>
           {{'global.form.record' | translate}}{{$index+1}}
         </label>
-        <ul class="preview-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
-          <li class="preview-list-item" ng-repeat="(fieldName, recordValue) in inputRecord.value.value">
-            <span class="field-name"> {{fieldName}} : </span>
-            <span class="field-value" ng-class="recordValue.type"> {{recordValue.value}} </span>
+        <ul class="record-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
+
+          <li class="record-list-item"
+              ng-repeat="(fieldName, recordValue) in inputRecord.value.value"
+              ng-include="'recordTree'">
           </li>
+
         </ul>
       </td>
       <td>
