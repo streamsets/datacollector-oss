@@ -113,7 +113,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
       builder.setArchiveDir(archiveDir);
       builder.setArchiveRetention(retentionTimeMins);
     }
-    if (errorArchiveDir != null) {
+    if (errorArchiveDir != null && !errorArchiveDir.isEmpty()) {
       builder.setErrorArchiveDir(errorArchiveDir);
     }
     builder.setContext(getContext());
