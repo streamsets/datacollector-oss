@@ -75,7 +75,7 @@
 
         <!-- Model Type === DROPDOWN -->
         <select class="form-control" name="{{configDefinition.name}}"
-                ng-if="configDefinition.model.modelType === 'DROPDOWN'"
+                ng-if="configDefinition.model.modelType === 'VALUE_CHOOSER'"
                 ng-model="detailPaneConfig.configuration[$index].value">
           <option ng-repeat="listValue in configDefinition.model.values"
                   value="{{listValue}}"

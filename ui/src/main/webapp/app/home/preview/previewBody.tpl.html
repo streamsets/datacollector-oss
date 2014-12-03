@@ -41,7 +41,7 @@
           {{'global.form.record' | translate}}{{$index+1}}
         </label>
         <ul class="record-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
-          <li class="record-list-item clearfix"
+          <li class="record-list-item"
               ng-repeat="(fieldName, recordValue) in outputRecord.value.value"
               ng-include="'recordTree'">
           </li>
