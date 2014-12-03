@@ -20,7 +20,7 @@ package com.streamsets.pipeline.runner.preview;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.runner.BatchImpl;
 import com.streamsets.pipeline.runner.BatchMakerImpl;
-import com.streamsets.pipeline.runner.ErrorRecordSink;
+import com.streamsets.pipeline.runner.ErrorSink;
 import com.streamsets.pipeline.runner.Pipe;
 import com.streamsets.pipeline.runner.PipeBatch;
 import com.streamsets.pipeline.runner.StageOutput;
@@ -34,13 +34,13 @@ public class StagePreviewPipeBatch implements PipeBatch {
   private final String instanceName;
   private final List<Record> inputRecords;
   private final List<StageOutput> stageOutputSnapshot;
-  private final ErrorRecordSink errorRecordSink;
+  private final ErrorSink errorSink;
 
   public StagePreviewPipeBatch(String instanceName, List<Record> inputRecords) {
     this.instanceName = instanceName;
     this.inputRecords = inputRecords;
     stageOutputSnapshot = new ArrayList<StageOutput>();
-    this.errorRecordSink = new ErrorRecordSink();
+    this.errorSink = new ErrorSink();
   }
 
   @Override
@@ -76,7 +76,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
     // leveraging the fact that the stage output lanes and the pipe output lanes are in the same order
     List<String> stageLaneNames = pipe.getStage().getConfiguration().getOutputLanes();
     stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(),
-                                            errorRecordSink.getErrorRecords(instanceName)));
+                                            errorSink.getErrorRecords(instanceName)));
   }
 
   @Override
@@ -95,8 +95,8 @@ public class StagePreviewPipeBatch implements PipeBatch {
   }
 
   @Override
-  public ErrorRecordSink getErrorRecordSink() {
-    return errorRecordSink;
+  public ErrorSink getErrorSink() {
+    return errorSink;
   }
 
   @Override

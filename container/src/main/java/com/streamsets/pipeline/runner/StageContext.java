@@ -29,8 +29,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.container.LocalizableErrorId;
-import com.streamsets.pipeline.container.NonLocalizableErrorId;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
@@ -48,7 +47,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final MetricRegistry metrics;
   private final String instanceName;
   private final Set<String> outputLanes;
-  private ErrorRecordSink errorRecordSink;
+  private ErrorSink errorSink;
 
   public StageContext(List<Stage.Info> pipelineInfo, MetricRegistry metrics, StageRuntime stageRuntime) {
     this.pipelineInfo = pipelineInfo;
@@ -83,8 +82,40 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     return MetricsConfigurator.createCounter(getMetrics(), CUSTOM_METRICS_PREFIX +instanceName + "." + name);
   }
 
-  public void setErrorRecordSink(ErrorRecordSink errorRecordSink) {
-    this.errorRecordSink = errorRecordSink;
+  public void setErrorSink(ErrorSink errorSink) {
+    this.errorSink = errorSink;
+  }
+
+  private static final ErrorId EXCEPTION = new ErrorId() {
+    @Override
+    public String getMessage() {
+      return "Exception: {}";
+    }
+  };
+
+  @Override
+  public void reportError(Exception exception) {
+    Preconditions.checkNotNull(exception, "exception cannot be null");
+    errorSink.addError(new ErrorMessage(EXCEPTION, exception.getMessage()));
+  }
+
+  private static final ErrorId ERROR_MESSAGE = new ErrorId() {
+    @Override
+    public String getMessage() {
+      return "Error message: {}";
+    }
+  };
+
+  @Override
+  public void reportError(String errorMessage) {
+    Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
+    errorSink.addError(new ErrorMessage(ERROR_MESSAGE, errorMessage));
+  }
+
+  @Override
+  public void reportError(ErrorId errorId, String... args) {
+    Preconditions.checkNotNull(errorId, "errorId cannot be null");
+    errorSink.addError(new ErrorMessage(errorId, args));
   }
 
   @Override
@@ -94,7 +125,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     Preconditions.checkNotNull(exception, "exception cannot be null");
     ((RecordImpl)record).getHeader().setErrorId(STAGE_CAUGHT_ERROR_KEY);
     ((RecordImpl)record).getHeader().setErrorMessage(Utils.format(STAGE_CAUGHT_ERROR_DEFAULT, exception.getMessage()));
-    errorRecordSink.addRecord(instanceName, record);
+    errorSink.addRecord(instanceName, record);
   }
 
   @Override
@@ -103,21 +134,16 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
     ((RecordImpl)record).getHeader().setErrorId(STAGE_CAUGHT_ERROR_KEY);
     ((RecordImpl)record).getHeader().setErrorMessage(errorMessage);
-    errorRecordSink.addRecord(instanceName, record);
+    errorSink.addRecord(instanceName, record);
   }
 
   @Override
   public void toError(Record record, ErrorId errorId, String... args) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorId, "errorId cannot be null");
-    if (errorId instanceof Enum) {
-      ((RecordImpl) record).getHeader().setErrorId(errorId.toString());
-      ((RecordImpl) record).getHeader().setErrorMessage(new LocalizableErrorId(errorId, args));
-    } else {
-      ((RecordImpl) record).getHeader().setErrorId(STAGE_CAUGHT_ERROR_KEY);
-      ((RecordImpl) record).getHeader().setErrorMessage(new NonLocalizableErrorId(errorId, args));
-    }
-    errorRecordSink.addRecord(instanceName, record);
+    ((RecordImpl) record).getHeader().setErrorId(errorId.toString());
+    ((RecordImpl) record).getHeader().setErrorMessage(new ErrorMessage(errorId, args));
+    errorSink.addRecord(instanceName, record);
   }
 
   @Override

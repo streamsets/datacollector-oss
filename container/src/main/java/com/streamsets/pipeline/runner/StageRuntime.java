@@ -94,8 +94,8 @@ public class StageRuntime {
     this.context = context;
   }
 
-  public void setErrorRecordSink(ErrorRecordSink errorRecordSink) {
-    context.setErrorRecordSink(errorRecordSink);
+  public void setErrorSink(ErrorSink errorSink) {
+    context.setErrorSink(errorSink);
   }
 
   @SuppressWarnings("unchecked")
@@ -116,12 +116,12 @@ public class StageRuntime {
   }
 
   public String execute(String previousOffset, int batchSize, Batch batch, BatchMaker batchMaker,
-      ErrorRecordSink errorRecordSink)
+      ErrorSink errorSink)
       throws StageException {
     String newOffset = null;
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
-      setErrorRecordSink(errorRecordSink);
+      setErrorSink(errorSink);
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
       switch (getDefinition().getType()) {
         case SOURCE: {
@@ -139,7 +139,7 @@ public class StageRuntime {
         }
       }
     } finally {
-      setErrorRecordSink(null);
+      setErrorSink(null);
       Thread.currentThread().setContextClassLoader(cl);
     }
     return newOffset;

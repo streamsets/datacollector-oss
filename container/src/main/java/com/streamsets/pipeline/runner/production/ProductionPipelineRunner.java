@@ -200,7 +200,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     }
 
     //dump all error records to store
-    Map<String, List<Record>> errorRecords = pipeBatch.getErrorRecordSink().getErrorRecords();
+    Map<String, List<Record>> errorRecords = pipeBatch.getErrorSink().getErrorRecords();
     errorRecordStore.storeErrorRecords(pipelineName, revision, errorRecords);
     //Retain X number of error records per stage
     retainErrorRecordsInMemory(errorRecords);

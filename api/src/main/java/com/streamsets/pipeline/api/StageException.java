@@ -18,10 +18,7 @@
 
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.container.LocalizableErrorId;
-import com.streamsets.pipeline.container.NonLocalizableErrorId;
-import com.streamsets.pipeline.container.LocalizableString;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.container.ErrorMessage;
 
 public class StageException extends Exception {
 
@@ -33,29 +30,26 @@ public class StageException extends Exception {
     return throwable;
   }
 
-  private final ErrorId errorId;
-  private final LocalizableString localizedErrorId;
+  private final ErrorMessage errorMessage;
 
   // last parameter can be an exception cause
   public StageException(ErrorId errorId, Object... params) {
     super(getCause(params));
-    this.errorId = Utils.checkNotNull(errorId, "errorId");
-    this.localizedErrorId = (errorId instanceof Enum) ? new LocalizableErrorId(errorId, params)
-                                                      : new NonLocalizableErrorId(errorId, params);
+    errorMessage = new ErrorMessage(errorId, params);
   }
 
   public ErrorId getId() {
-    return errorId;
+    return errorMessage.getId();
   }
 
   @Override
   public String getMessage() {
-    return localizedErrorId.getNonLocalized();
+    return errorMessage.getNonLocalized();
   }
 
   @Override
   public String getLocalizedMessage() {
-    return localizedErrorId.getLocalized();
+    return errorMessage.getLocalized();
   }
 
 }

@@ -48,6 +48,12 @@ public interface Stage<C extends Stage.Context> {
 
     public Counter createCounter(String name);
 
+    public void reportError(Exception exception);
+
+    public void reportError(String errorMessage);
+
+    public void reportError(ErrorId errorId, String... args);
+
     public void toError(Record record, Exception exception);
 
     public void toError(Record record, String errorMessage);

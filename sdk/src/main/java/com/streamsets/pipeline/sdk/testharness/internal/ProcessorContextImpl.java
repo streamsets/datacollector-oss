@@ -94,6 +94,21 @@ public class ProcessorContextImpl implements Processor.Context {
   }
 
   @Override
+  public void reportError(Exception exception) {
+
+  }
+
+  @Override
+  public void reportError(String errorMessage) {
+
+  }
+
+  @Override
+  public void reportError(ErrorId errorId, String... args) {
+
+  }
+
+  @Override
   public void toError(Record record, Exception exception) {
 
   }

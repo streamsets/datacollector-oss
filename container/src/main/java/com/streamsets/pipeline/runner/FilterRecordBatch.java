@@ -20,7 +20,7 @@ package com.streamsets.pipeline.runner;
 import com.google.common.collect.AbstractIterator;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.container.LocalizableErrorId;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.Utils;
 
 import java.util.Iterator;
@@ -34,13 +34,13 @@ public class FilterRecordBatch implements Batch {
 
     public boolean evaluate(Record record);
 
-    public LocalizableErrorId getRejectedMessage();
+    public ErrorMessage getRejectedMessage();
 
   }
 
   public interface Sink {
 
-    public void add(Record record, LocalizableErrorId message);
+    public void add(Record record, ErrorMessage message);
 
   }
 

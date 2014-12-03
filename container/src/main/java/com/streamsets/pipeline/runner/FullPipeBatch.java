@@ -38,7 +38,7 @@ public class FullPipeBatch implements PipeBatch {
   private final Map<String, List<Record>> fullPayload;
   private final Set<String> processedStages;
   private final List<StageOutput> stageOutputSnapshot;
-  private final ErrorRecordSink errorRecordSink;
+  private final ErrorSink errorSink;
   private String newOffset;
   private int inputRecords;
   private int outputRecords;
@@ -49,7 +49,7 @@ public class FullPipeBatch implements PipeBatch {
     fullPayload = new HashMap<String, List<Record>>();
     processedStages = new HashSet<String>();
     stageOutputSnapshot = (snapshotStagesOutput) ? new ArrayList<StageOutput>() : null;
-    errorRecordSink = new ErrorRecordSink();
+    errorSink = new ErrorSink();
   }
 
   @VisibleForTesting
@@ -117,7 +117,7 @@ public class FullPipeBatch implements PipeBatch {
     if (stageOutputSnapshot != null) {
       String instanceName = pipe.getStage().getInfo().getInstanceName();
       stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(),
-                                              errorRecordSink.getErrorRecords(instanceName)));
+                                              errorSink.getErrorRecords(instanceName)));
     }
   }
 
@@ -150,8 +150,8 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
-  public ErrorRecordSink getErrorRecordSink() {
-    return errorRecordSink;
+  public ErrorSink getErrorSink() {
+    return errorSink;
   }
 
   @Override
@@ -208,14 +208,14 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   public int getErrorRecords() {
-    return errorRecordSink.size();
+    return errorSink.size();
   }
 
   @Override
   public String toString() {
     return Utils.format(
         "PipeBatch[previousOffset='{}' currentOffset='{}' batchSize='{}' keepSnapshot='{}' errorRecords='{}]'",
-        offsetTracker.getOffset(), newOffset, batchSize, stageOutputSnapshot != null, errorRecordSink.size());
+        offsetTracker.getOffset(), newOffset, batchSize, stageOutputSnapshot != null, errorSink.size());
   }
 
 }

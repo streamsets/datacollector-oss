@@ -18,6 +18,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.Utils;
 
 import java.util.ArrayList;
@@ -26,13 +27,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ErrorRecordSink {
+public class ErrorSink {
+
+  private final List<ErrorMessage> errors;
   private final Map<String, List<Record>> errorRecords;
   private int size;
 
-  public ErrorRecordSink() {
+  public ErrorSink() {
+    errors = new ArrayList<>();
     errorRecords = new HashMap<>();
     size = 0;
+  }
+
+  public void addError(ErrorMessage errorMessage) {
+    errors.add(errorMessage);
   }
 
   public void addRecord(String stageInstance, Record errorRecord) {
@@ -43,6 +51,10 @@ public class ErrorRecordSink {
     }
     stageErrors.add(errorRecord);
     size++;
+  }
+
+  public List<ErrorMessage> getErrors() {
+    return errors;
   }
 
   public Map<String, List<Record>> getErrorRecords() {
@@ -61,7 +73,7 @@ public class ErrorRecordSink {
 
   @Override
   public String toString() {
-    return Utils.format("ErrorRecordSink[reportingInstances='{}' size='{}']", errorRecords.keySet(), size());
+    return Utils.format("ErrorSink[reportingInstances='{}' size='{}']", errorRecords.keySet(), size());
   }
 
 }

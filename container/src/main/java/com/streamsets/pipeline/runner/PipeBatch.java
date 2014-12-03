@@ -41,7 +41,7 @@ public interface PipeBatch {
 
   List<StageOutput> getSnapshotsOfAllStagesOutput();
 
-  ErrorRecordSink getErrorRecordSink();
+  ErrorSink getErrorSink();
 
   void moveLane(String inputLane, String outputLane);
 

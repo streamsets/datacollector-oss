@@ -20,7 +20,7 @@ package com.streamsets.pipeline.runner;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.container.LocalizableErrorId;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.util.PipelineException;
@@ -48,11 +48,11 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
 
   private final List<String> requiredFields;
   private final String instanceName;
-  private final ErrorRecordSink errorSink;
+  private final ErrorSink errorSink;
   private final List<String> missingFields;
   private int counter;
 
-  public RequiredFieldsErrorPredicateSink(String instanceName, List<String> requiredFields, ErrorRecordSink errorSink) {
+  public RequiredFieldsErrorPredicateSink(String instanceName, List<String> requiredFields, ErrorSink errorSink) {
     this.requiredFields = requiredFields;
     this.instanceName = instanceName;
     this.errorSink = errorSink;
@@ -60,7 +60,7 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
   }
 
   @Override
-  public void add(Record record, LocalizableErrorId reason) {
+  public void add(Record record, ErrorMessage reason) {
     RecordImpl recordImpl = (RecordImpl) record;
     recordImpl.getHeader().setErrorId(reason.getId().toString());
     recordImpl.getHeader().setErrorMessage(reason);
@@ -88,9 +88,9 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
   }
 
   @Override
-  public LocalizableErrorId getRejectedMessage() {
+  public ErrorMessage getRejectedMessage() {
     Preconditions.checkState(!missingFields.isEmpty(), "Called for record that passed the predicate check");
-    return new LocalizableErrorId(PipelineException.PIPELINE_CONTAINER_BUNDLE, ERROR.MISSING_FIELDS, instanceName,
+    return new ErrorMessage(PipelineException.PIPELINE_CONTAINER_BUNDLE, ERROR.MISSING_FIELDS, instanceName,
                                   missingFields);
   }
 

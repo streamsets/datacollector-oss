@@ -75,24 +75,24 @@ public class StagePipe extends Pipe {
   public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     BatchImpl batchImpl = pipeBatch.getBatch(this);
-    ErrorRecordSink errorRecordSink = pipeBatch.getErrorRecordSink();
+    ErrorSink errorSink = pipeBatch.getErrorSink();
     inputRecordsCounter.inc(batchImpl.getSize());
     inputRecordsMeter.mark(batchImpl.getSize());
 
     RequiredFieldsErrorPredicateSink predicateSink = new RequiredFieldsErrorPredicateSink(
-        getStage().getInfo().getInstanceName(), getStage().getRequiredFields(), errorRecordSink);
+        getStage().getInfo().getInstanceName(), getStage().getRequiredFields(), errorSink);
     Batch batch = new FilterRecordBatch(batchImpl, predicateSink, predicateSink);
 
     long start = System.currentTimeMillis();
     String newOffset = getStage().execute(pipeBatch.getPreviousOffset(), pipeBatch.getBatchSize(), batch, batchMaker,
-                                          errorRecordSink);
+                                          errorSink);
     if (getStage().getDefinition().getType() == StageType.SOURCE) {
       pipeBatch.setNewOffset(newOffset);
     }
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     outputRecordsCounter.inc(batchMaker.getSize());
     outputRecordsMeter.mark(batchMaker.getSize());
-    int stageErrorSinkCount = errorRecordSink.getErrorRecords(getStage().getInfo().getInstanceName()).size();
+    int stageErrorSinkCount = errorSink.getErrorRecords(getStage().getInfo().getInstanceName()).size();
     errorRecordsCounter.inc(predicateSink.size() + stageErrorSinkCount);
     errorRecordsMeter.mark(predicateSink.size() + stageErrorSinkCount);
     if (getStage().getConfiguration().getOutputLanes().size() > 1) {
