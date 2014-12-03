@@ -23,17 +23,15 @@ import com.fasterxml.jackson.core.JsonStreamContext;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
+import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
- * Parses objects from a stream in streaming mode. Limited to primitive types and collections.
+ * Parses JSON objects from a stream in streaming mode.
  */
 public class StreamingJsonParser {
 
@@ -44,7 +42,6 @@ public class StreamingJsonParser {
   private final Mode mode;
   private boolean starting;
   private JsonStreamContext rootContext;
-  private Iterator<?> multipleObjectsIterator;
   private long posCorrection;
 
   protected ObjectMapper getObjectMapper() {
@@ -97,8 +94,8 @@ public class StreamingJsonParser {
   }
 
   @SuppressWarnings("unchecked")
-  protected <T> T readObjectFromArray(Class<T> klass) throws IOException {
-    T value = null;
+  protected Object readObjectFromArray() throws IOException {
+    Object value = null;
     if (starting) {
       starting = false;
       JsonToken token = jsonParser.nextToken();
@@ -111,85 +108,65 @@ public class StreamingJsonParser {
     JsonToken token = jsonParser.nextToken();
     if (token != null) {
       if (token != JsonToken.END_ARRAY) {
-        Class classToUse = klass;
-        if (klass == Object.class) {
-          switch (token) {
-            case START_ARRAY:
-              classToUse = List.class;
-              break;
-            case START_OBJECT:
-              classToUse = Map.class;
-              break;
-            default:
-              throw new JsonParseException(Utils.format("JSON array elements must be ARRAY or MAP, found '{}'",
-                                                        token), jsonParser.getTokenLocation());
-          }
-        }
-        value = (T) jsonParser.readValueAs(classToUse);
+        value = jsonParser.readValueAs(Object.class);
       }
     }
     return value;
   }
 
+  private JsonToken nextToken;
+
   @SuppressWarnings("unchecked")
-  protected <T> T readObjectFromStream(Class<T> klass) throws IOException {
-    if (multipleObjectsIterator == null) {
-      Class classToUse = klass;
-      if (klass == Object.class) {
-        JsonToken token = (jsonParser.hasCurrentToken()) ? jsonParser.getCurrentToken() : jsonParser.nextToken();
-        switch (token) {
-          case START_ARRAY:
-            classToUse = List.class;
-            break;
-          case START_OBJECT:
-            classToUse = Map.class;
-            break;
-          default:
-            throw new JsonParseException(Utils.format("JSON elements must be ARRAY or MAP, found '{}'",
-                                                      token), jsonParser.getTokenLocation());
-        }
-      }
-      multipleObjectsIterator = jsonParser.readValuesAs(classToUse);
+  protected Object readObjectFromStream() throws IOException {
+    Object value = null;
+    if (starting) {
+      starting = false;
+      nextToken = jsonParser.nextToken();
     }
-    return (T) ((multipleObjectsIterator.hasNext()) ? multipleObjectsIterator.next() : null);
+    if (nextToken != null) {
+      value = jsonParser.readValueAs(Object.class);
+      nextToken = jsonParser.nextToken();
+      if (nextToken == null) {
+        // if we reached the EOF Jackson JSON parser keeps the as getTokenLocation() the location of the last token,
+        // we need to adjust by 1 to make sure we are after it if getReaderPosition() is called
+        posCorrection++;
+      }
+    }
+    return value;
   }
 
-  protected void resetMultipleObjectIterator() {
-    multipleObjectsIterator = null;
+  protected void fastForwardToNextRootObject() throws IOException {
+    Preconditions.checkState(mode == Mode.MULTIPLE_OBJECTS, "Parser must be in MULTIPLE_OBJECT mode");
+    JsonToken token = jsonParser.getCurrentToken();
+    if (token == null) {
+      token = jsonParser.nextToken();
+    }
+    while (token != null && !jsonParser.getParsingContext().inRoot()) {
+      token = jsonParser.nextToken();
+    }
+    nextToken = jsonParser.nextToken();
   }
 
   public long getReaderPosition() {
     return (mode == Mode.ARRAY_OBJECTS) ? jsonParser.getTokenLocation().getCharOffset()
-                                        : jsonParser.getCurrentLocation().getCharOffset() + posCorrection;
+                                        : jsonParser.getTokenLocation().getCharOffset() + posCorrection;
   }
 
-  public <T> T read(Class<T> klass) throws IOException {
+  public Object read() throws IOException {
     try {
-      T value = null;
+      Object value = null;
       switch (mode) {
         case ARRAY_OBJECTS:
-          value = readObjectFromArray(klass);
+          value = readObjectFromArray();
           break;
         case MULTIPLE_OBJECTS:
-          value = readObjectFromStream(klass);
+          value = readObjectFromStream();
           break;
       }
       return value;
     } catch (RuntimeJsonMappingException ex) {
       throw new JsonParseException(ex.getMessage(), jsonParser.getTokenLocation(), ex);
     }
-  }
-
-  public Object read() throws IOException {
-    return read(Object.class);
-  }
-
-  public Map readMap() throws IOException {
-    return read(Map.class);
-  }
-
-  public List readList() throws IOException {
-    return read(List.class);
   }
 
 }

@@ -168,13 +168,13 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
   }
 
   @Override
-  protected <T> T readObjectFromArray(Class<T> klass) throws IOException {
-    Preconditions.checkState(!overrun, "The underlying input stream had and overrun, the parser is not usable anymore");
+  protected Object readObjectFromArray() throws IOException {
+    Preconditions.checkState(!overrun, "The underlying input stream had an overrun, the parser is not usable anymore");
     countingReader.resetCount();
     limit = getJsonParser().getCurrentLocation().getCharOffset() + maxObjectLen;
     try {
       TL.set(this);
-      return super.readObjectFromArray(klass);
+      return super.readObjectFromArray();
     } catch (Exception ex) {
       JsonObjectLengthException olex = ExceptionUtils.findSpecificCause(ex, JsonObjectLengthException.class);
       if (olex != null) {
@@ -201,26 +201,17 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
   }
 
   @Override
-  protected <T> T readObjectFromStream(Class<T> klass) throws IOException {
-    Preconditions.checkState(!overrun, "The underlying input stream had and overrun, the parser is not usable anymore");
+  protected Object readObjectFromStream() throws IOException {
+    Preconditions.checkState(!overrun, "The underlying input stream had an overrun, the parser is not usable anymore");
     countingReader.resetCount();
     limit = getJsonParser().getCurrentLocation().getCharOffset() + maxObjectLen;
     try {
       TL.set(this);
-      return super.readObjectFromStream(klass);
+      return super.readObjectFromStream();
     } catch (Exception ex) {
       JsonObjectLengthException olex = ExceptionUtils.findSpecificCause(ex, JsonObjectLengthException.class);
       if (olex != null) {
-        JsonParser parser = getJsonParser();
-        JsonToken token = parser.getCurrentToken();
-        if (token == null) {
-          token = parser.nextToken();
-        }
-        while (token != null && !parser.getParsingContext().inRoot()) {
-          token = parser.nextToken();
-        }
-        parser.nextToken();
-        resetMultipleObjectIterator();
+        fastForwardToNextRootObject();
         throw olex;
       } else {
         OverrunException oex = ExceptionUtils.findSpecificCause(ex, OverrunException.class);
