@@ -73,8 +73,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   protected void initTask() {
     stageClassLoaders = runtimeInfo.getStageLibraryClassLoaders();
     json = ObjectMapperFactory.get();
-    stageList = new ArrayList<StageDefinition>();
-    stageMap = new HashMap<String, StageDefinition>();
+    stageList = new ArrayList<>();
+    stageMap = new HashMap<>();
     loadStages();
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
@@ -82,9 +82,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
       @Override
       public List<StageDefinition> load(Locale key) throws Exception {
-        List<StageDefinition> list = new ArrayList<StageDefinition>();
+        List<StageDefinition> list = new ArrayList<>();
         for (StageDefinition stage : stageList) {
-          list.add(stage.localize(key));
+          list.add(stage.localize());
         }
         return list;
       }

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.container.LocalizableMessage;
 import com.streamsets.pipeline.container.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +82,7 @@ public class StageDefinition {
     this.type = type;
     this.configDefinitions = configDefinitions;
     this.rawSourceDefinition = rawSourceDefinition;
-    configDefinitionsMap = new HashMap<String, ConfigDefinition>();
+    configDefinitionsMap = new HashMap<>();
     for (ConfigDefinition conf : configDefinitions) {
       configDefinitionsMap.put(conf.getName(), conf);
     }
@@ -178,24 +179,14 @@ public class StageDefinition {
     return icon;
   }
 
-  public StageDefinition localize(Locale locale) {
-    String rbName = getClassName();
-    try {
-      ResourceBundle rb = ResourceBundle.getBundle(rbName, locale, getStageClassLoader());
-      return localize(rb);
-    } catch (MissingResourceException ex) {
-      LOG.warn("Could not find resource bundle '{}' in library '{}'", rbName, getLibrary());
-      return this;
-    }
-  }
-
   private final static String STAGE_LABEL = "label";
   private final static String STAGE_DESCRIPTION = "description";
 
-  public StageDefinition localize(ResourceBundle rb) {
-    List<ConfigDefinition> configDefs = new ArrayList<ConfigDefinition>();
+  public StageDefinition localize() {
+    String rbName = getClassName();
+    List<ConfigDefinition> configDefs = new ArrayList<>();
     for (ConfigDefinition configDef : getConfigDefinitions()) {
-      configDefs.add(configDef.localize(rb));
+      configDefs.add(configDef.localize(classLoader, rbName));
     }
 
     //Localize RawSourceDefinition instance which contains ConfigDefinitions
@@ -204,14 +195,15 @@ public class StageDefinition {
     RawSourceDefinition rsd = null;
     if(rawSourceDef != null) {
       for (ConfigDefinition configDef : rawSourceDef.getConfigDefinitions()) {
-        rawSourcePreviewConfigDefs.add(configDef.localize(rb));
+        rawSourcePreviewConfigDefs.add(configDef.localize(classLoader, rbName));
       }
       rsd = new RawSourceDefinition(rawSourceDef.getRawSourcePreviewerClass(), rawSourceDef.getMimeType(),
           rawSourcePreviewConfigDefs);
     }
 
-    String label = (rb.containsKey(STAGE_LABEL)) ? rb.getString(STAGE_LABEL) : getLabel();
-    String description = (rb.containsKey(STAGE_DESCRIPTION)) ? rb.getString(STAGE_DESCRIPTION) : getDescription();
+    String label = new LocalizableMessage(classLoader, rbName, STAGE_LABEL, getLabel(), null).getLocalized();
+    String description = new LocalizableMessage(classLoader, rbName, STAGE_DESCRIPTION, getDescription(), null).
+        getLocalized();
     StageDefinition def = new StageDefinition(
       getClassName(), getName(), getVersion(), label, description,
       getType(), configDefs, getOnError(), rsd, getIcon());
@@ -242,7 +234,7 @@ public class StageDefinition {
         List<String> localizedLabels = new ArrayList<>(values.size());
         for(int i = 0; i < values.size(); i++) {
           String key = configDef.getName() + SEPARATOR + FIELD_VALUE_CHOOSER + SEPARATOR + values.get(i);
-          String l = rb.containsKey(key) ? rb.getString(key) : labels.get(i);
+          String l = new LocalizableMessage(classLoader, rbName, key, labels.get(i), null).getLocalized();
           localizedLabels.add(l);
         }
         configDef.getModel().setLabels(localizedLabels);

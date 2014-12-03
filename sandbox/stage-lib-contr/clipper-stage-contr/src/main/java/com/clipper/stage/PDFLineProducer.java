@@ -20,6 +20,7 @@ package com.clipper.stage;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+@GenerateResourceBundle
 @RawSource(rawSourcePreviewer = ClipperSourcePreviewer.class)
 @StageDef(version = "1.0", label = "Clipper Travel Log Producer", description = "Produces lines from a PDF file")
 public class PDFLineProducer extends BaseSource {

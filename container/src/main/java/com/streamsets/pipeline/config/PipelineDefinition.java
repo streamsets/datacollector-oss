@@ -18,15 +18,13 @@
 package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.container.LocalizableMessage;
 import com.streamsets.pipeline.container.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 
 public class PipelineDefinition {
@@ -34,21 +32,26 @@ public class PipelineDefinition {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineDefinition.class);
 
   private static final String PIPELINE_RESOURCE_BUNDLE = "PipelineDefinition-bundle";
-  private final static String CONFIG_DELIVERY_GUARANTEE_LABEL = "config.deliveryGuarantee.label";
-  private final static String CONFIG_DELIVERY_GUARANTEE_DESCRIPTION = "config.deliveryGuarantee.description";
-  private final static String CONFIG_STOP_ON_ERROR_LABEL = "config.stopOnError.label";
-  private final static String CONFIG_STOP_ON_ERROR_DESCRIPTION = "config.stopOnError.description";
-  private final static String DELIVERY_GUARANTEE_AT_LEAST_ONCE = "config.deliveryGuarantee.AT_LEAST_ONCE";
-  private final static String DELIVERY_GUARANTEE_AT_MOST_ONCE = "config.deliveryGuarantee.AT_MOST_ONCE";
+  private final static String CONFIG_DELIVERY_GUARANTEE_LABEL_KEY = "config.deliveryGuarantee.label";
+  private final static String CONFIG_DELIVERY_GUARANTEE_DESCRIPTION_KEY = "config.deliveryGuarantee.description";
+  private final static String CONFIG_STOP_ON_ERROR_LABEL_KEY = "config.stopOnError.label";
+  private final static String CONFIG_STOP_ON_ERROR_DESCRIPTION_KEY = "config.stopOnError.description";
+  private final static String DELIVERY_GUARANTEE_AT_LEAST_ONCE_KEY = "config.deliveryGuarantee.AT_LEAST_ONCE";
+  private final static String DELIVERY_GUARANTEE_AT_LEAST_ONCE_VALUE = "At Least Once";
+  private final static String DELIVERY_GUARANTEE_AT_MOST_ONCE_KEY = "config.deliveryGuarantee.AT_MOST_ONCE";
+  private final static String DELIVERY_GUARANTEE_AT_MOST_ONCE_VALUE = "At Most Once";
+  private final static String DELIVERY_GUARANTEE_LABEL_VALUE = "Delivery Guarantee";
+  private final static String DELIVERY_GUARANTEE_DESCRIPTION_VALUE = "This is the option for the delivery guarantee";
+  private static final String CONFIG_STOP_ON_ERROR_LABEL_VALUE = "Stop On Error";
+  private static final String CONFIG_STOP_ON_ERROR_DESCRIPTION_VALUE = "This is the option for Stop on Error";
 
   /*The config definitions of the pipeline*/
   private List<ConfigDefinition> configDefinitions;
 
-  public PipelineDefinition(Locale locale) {
-    ResourceBundle rb = getResourceBundle(locale);
-    configDefinitions = new ArrayList<ConfigDefinition>(2);
-    configDefinitions.add(createDeliveryGuaranteeOption(rb, locale));
-    configDefinitions.add(createStopOnErrorOption(rb, locale));
+  public PipelineDefinition() {
+    configDefinitions = new ArrayList<>(2);
+    configDefinitions.add(createDeliveryGuaranteeOption());
+    configDefinitions.add(createStopOnErrorOption());
   }
 
   /*Need this API for Jackson to serialize*/
@@ -65,25 +68,11 @@ public class PipelineDefinition {
   /********************** Private methods ***********************/
   /**************************************************************/
 
-  private ResourceBundle getResourceBundle(Locale locale) {
-    ResourceBundle rb = null;
-    if (locale != null) {
-      try {
-        rb = ResourceBundle.getBundle(PIPELINE_RESOURCE_BUNDLE, locale, getClass().getClassLoader());
-      } catch (MissingResourceException ex) {
-        LOG.warn("Could not find resource bundle '{}'.", PIPELINE_RESOURCE_BUNDLE);
-      }
-    }
-    return rb;
-  }
-
-  private ConfigDefinition createStopOnErrorOption(ResourceBundle rb, Locale locale) {
-    String seLabel = rb != null ? (rb.containsKey(CONFIG_STOP_ON_ERROR_LABEL) ?
-      rb.getString(CONFIG_STOP_ON_ERROR_LABEL) : "Stop On Error")
-      : "Stop On Error";
-    String seDescription = rb != null ? (rb.containsKey(CONFIG_STOP_ON_ERROR_DESCRIPTION) ?
-      rb.getString(CONFIG_STOP_ON_ERROR_DESCRIPTION) : "This is the option for Stop on Error")
-      : "This is the option for Stop on Error";
+  private ConfigDefinition createStopOnErrorOption() {
+    String seLabel = new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
+        CONFIG_STOP_ON_ERROR_LABEL_KEY, CONFIG_STOP_ON_ERROR_LABEL_VALUE, null).getLocalized();
+    String seDescription = new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
+        CONFIG_STOP_ON_ERROR_DESCRIPTION_KEY, CONFIG_STOP_ON_ERROR_DESCRIPTION_VALUE, null).getLocalized();
 
     //create configuration for guaranteed delivery option
     ConfigDefinition seConfigDef = new ConfigDefinition(
@@ -100,22 +89,13 @@ public class PipelineDefinition {
     return seConfigDef;
   }
 
-  private ConfigDefinition createDeliveryGuaranteeOption(ResourceBundle rb, Locale locale) {
+  private ConfigDefinition createDeliveryGuaranteeOption() {
 
     List<String> gdLabels = new ArrayList<String>(2);
-    gdLabels.add(
-      rb != null ?
-        (rb.containsKey(DELIVERY_GUARANTEE_AT_LEAST_ONCE) ?
-          rb.getString(DELIVERY_GUARANTEE_AT_LEAST_ONCE) :
-          "At Least Once")
-        : "At Least Once");
-
-    gdLabels.add(
-      rb != null ?
-        (rb.containsKey(DELIVERY_GUARANTEE_AT_MOST_ONCE) ?
-          rb.getString(DELIVERY_GUARANTEE_AT_MOST_ONCE) :
-          "At Most Once")
-        : "At Most Once");
+    gdLabels.add(new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
+        DELIVERY_GUARANTEE_AT_LEAST_ONCE_KEY, DELIVERY_GUARANTEE_AT_LEAST_ONCE_VALUE, null).getLocalized());
+    gdLabels.add(new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
+        DELIVERY_GUARANTEE_AT_MOST_ONCE_KEY, DELIVERY_GUARANTEE_AT_MOST_ONCE_VALUE, null).getLocalized());
 
     List<String> gdValues = new ArrayList<String>(2);
     gdValues.add(DeliveryGuarantee.AT_LEAST_ONCE.name());
@@ -125,12 +105,10 @@ public class PipelineDefinition {
       ChooserMode.PROVIDED, "",  gdValues, gdLabels);
 
     //Localize label and description for "delivery guarantee" config option
-    String dgLabel = rb != null ? (rb.containsKey(CONFIG_DELIVERY_GUARANTEE_LABEL) ?
-      rb.getString(CONFIG_DELIVERY_GUARANTEE_LABEL) : "Delivery Guarantee")
-      : "Delivery Guarantee";
-    String dgDescription = rb != null ? (rb.containsKey(CONFIG_DELIVERY_GUARANTEE_DESCRIPTION) ?
-      rb.getString(CONFIG_DELIVERY_GUARANTEE_DESCRIPTION) : "This is the option for the delivery guarantee")
-      : "This is the option for the delivery guarantee";
+    String dgLabel = new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
+        CONFIG_DELIVERY_GUARANTEE_LABEL_KEY, DELIVERY_GUARANTEE_LABEL_VALUE, null).getLocalized();
+    String dgDescription = new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
+        CONFIG_DELIVERY_GUARANTEE_DESCRIPTION_KEY, DELIVERY_GUARANTEE_DESCRIPTION_VALUE, null).getLocalized();
 
     ConfigDefinition dgConfigDef = new ConfigDefinition(
       "deliveryGuarantee",

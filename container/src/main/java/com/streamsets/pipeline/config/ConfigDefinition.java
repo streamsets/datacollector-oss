@@ -20,6 +20,7 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.container.LocalizableMessage;
 import com.streamsets.pipeline.container.Utils;
 
 import java.util.Arrays;
@@ -105,11 +106,15 @@ public class ConfigDefinition {
   private final static String CONFIG_LABEL = "{}.label";
   private final static String CONFIG_DESCRIPTION = "{}.description";
 
-  public ConfigDefinition localize(ResourceBundle rb) {
+  public ConfigDefinition localize(ClassLoader classLoader, String bundle) {
     String labelKey = Utils.format(CONFIG_LABEL, getName());
     String descriptionKey = Utils.format(CONFIG_DESCRIPTION, getName());
-    String label = (rb.containsKey(Utils.format(labelKey))) ? rb.getString(labelKey) : getLabel();
-    String description = (rb.containsKey(descriptionKey)) ? rb.getString(descriptionKey) : getDescription();
+
+    String label = new LocalizableMessage(classLoader, bundle, labelKey, getLabel(), null).
+        getLocalized();
+    String description = new LocalizableMessage(classLoader, bundle, descriptionKey, getDescription(), null)
+        .getLocalized();
+
     return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(),
       isRequired(), getGroup(), getFieldName(), getModel());
   }
