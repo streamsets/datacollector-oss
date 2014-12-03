@@ -39,7 +39,7 @@ public class OverrunReader extends CountingReader {
     super.afterRead(n);
     if (getCount() > maxUnsupervisedReadSize) {
       ExceptionUtils.throwUndeclared(new OverrunException(Utils.format(
-          "Reader exceeded the maximum unsupervised read size '{}'", maxUnsupervisedReadSize)));
+          "Reader exceeded the maximum unsupervised read size '{}'", maxUnsupervisedReadSize), getPos()));
     }
   }
 

@@ -42,7 +42,7 @@ public class OverrunInputStream extends CountingInputStream {
     super.afterRead(n);
     if (getCount() > maxUnsupervisedReadSize) {
       ExceptionUtils.throwUndeclared(new OverrunException(Utils.format(
-          "Stream exceeded the maximum unsupervised read size '{}'", maxUnsupervisedReadSize)));
+          "Stream exceeded the maximum unsupervised read size '{}'", maxUnsupervisedReadSize), 0));
     }
   }
 

@@ -59,6 +59,7 @@ public class DirectorySpooler {
     private FilePostProcessing postProcessing;
     private String archiveDir;
     private long archiveRetentionMillis;
+    private String errorArchiveDir;
 
     private Builder() {
       postProcessing = FilePostProcessing.NONE;
@@ -109,6 +110,12 @@ public class DirectorySpooler {
       return this;
     }
 
+    public Builder setErrorArchiveDir(String dir) {
+      this.errorArchiveDir = Preconditions.checkNotNull(dir, "edir cannot be null");
+      Preconditions.checkArgument(new File(dir).isAbsolute(), Utils.format("dir '{}' must be an absolute path", dir));
+      return this;
+    }
+
     public DirectorySpooler build() {
       Preconditions.checkArgument(context != null, "context not specified");
       Preconditions.checkArgument(spoolDir != null, "spool dir not specified");
@@ -118,7 +125,7 @@ public class DirectorySpooler {
         Preconditions.checkArgument(archiveDir != null, "archive dir not specified");
       }
       return new DirectorySpooler(context, spoolDir, maxSpoolFiles, pattern, postProcessing, archiveDir,
-                                  archiveRetentionMillis);
+                                  archiveRetentionMillis, errorArchiveDir);
     }
   }
 
@@ -129,9 +136,11 @@ public class DirectorySpooler {
   private final FilePostProcessing postProcessing;
   private final String archiveDir;
   private final long archiveRetentionMillis;
+  private final String errorArchiveDir;
 
   public DirectorySpooler(Source.Context context, String spoolDir, int maxSpoolFiles, String pattern,
-      FilePostProcessing postProcessing, String archiveDir, long archiveRetentionMillis) {
+      FilePostProcessing postProcessing, String archiveDir, long archiveRetentionMillis,
+      String errorArchiveDir) {
     this.context = context;
     this.spoolDir = spoolDir;
     this.maxSpoolFiles = maxSpoolFiles;
@@ -139,11 +148,13 @@ public class DirectorySpooler {
     this.postProcessing = postProcessing;
     this.archiveDir = archiveDir;
     this.archiveRetentionMillis = archiveRetentionMillis;
+    this.errorArchiveDir = errorArchiveDir;
   }
 
   private volatile String currentFile;
   private Path spoolDirPath;
   private Path archiveDirPath;
+  private Path errorArchiveDirPath;
   private PathMatcher fileMatcher;
   private WatchService watchService;
   private PriorityBlockingQueue<Path> filesQueue;
@@ -171,6 +182,10 @@ public class DirectorySpooler {
         archiveDirPath = fs.getPath(archiveDir).toAbsolutePath();
         checkBaseDir(archiveDirPath);
       }
+      if (errorArchiveDir != null) {
+        errorArchiveDirPath = fs.getPath(errorArchiveDir).toAbsolutePath();
+        checkBaseDir(errorArchiveDirPath);
+      }
 
       LOG.debug("Spool directory '{}', file pattern '{}', current file '{}'", spoolDirPath, pattern, currentFile);
       String extraInfo = "";
@@ -196,7 +211,7 @@ public class DirectorySpooler {
           .setNameFormat("directory-spool-archive-retention").setDaemon(true).build());
       watcher = new Watcher();
       scheduledExecutor.execute(watcher);
-      if (archiveRetentionMillis > 0) {
+      if (postProcessing == FilePostProcessing.ARCHIVE && archiveRetentionMillis > 0) {
         purger = new FilePurger();
         scheduledExecutor.scheduleAtFixedRate(purger, 1, 1, TimeUnit.MINUTES);
       }
@@ -310,8 +325,10 @@ public class DirectorySpooler {
             break;
           case ARCHIVE:
             try {
-              LOG.debug("Archiving previous file '{}'", previousFile);
-              Files.move(previousFile, archiveDirPath.resolve(previousFile.getFileName()));
+              if (Files.exists(previousFile)) {
+                LOG.debug("Archiving previous file '{}'", previousFile);
+                Files.move(previousFile, archiveDirPath.resolve(previousFile.getFileName()));
+              }
             } catch (IOException ex) {
               throw new RuntimeException(Utils.format("Could not move file '{}' to archive dir {}, {}", previousFile,
                                                       archiveDirPath, ex.getMessage(), ex));
@@ -319,13 +336,11 @@ public class DirectorySpooler {
             break;
         }
         previousFile = null;
-      } else {
-        LOG.debug("There was no previous file to handle");
       }
     }
     Path next = null;
     try {
-      LOG.debug("Polling for file, waiting '{}' ms", timeUnit.convert(wait, TimeUnit.MILLISECONDS));
+      LOG.debug("Polling for file, waiting '{}' ms", TimeUnit.MILLISECONDS.convert(wait, timeUnit));
       next = filesQueue.poll(wait, timeUnit);
     } catch (InterruptedException ex) {
       next = null;
@@ -337,6 +352,13 @@ public class DirectorySpooler {
       }
     }
     return (next != null) ? next.toFile() : null;
+  }
+
+  public void handleFileInError(File file) throws IOException {
+    if (errorArchiveDirPath != null) {
+      LOG.error("Error archiving file '{}'", previousFile);
+      Files.move(file.toPath(), errorArchiveDirPath.resolve(file.toPath().getFileName()));
+    }
   }
 
   void queueExistingFiles() throws IOException {

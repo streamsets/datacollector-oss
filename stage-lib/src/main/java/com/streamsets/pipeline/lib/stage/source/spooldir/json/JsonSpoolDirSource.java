@@ -30,9 +30,11 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
+import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.lib.stage.source.spooldir.AbstractSpoolDirSource;
+import com.streamsets.pipeline.lib.stage.source.spooldir.BadSpoolFileException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,29 +81,19 @@ public class JsonSpoolDirSource extends AbstractSpoolDirSource {
     jsonObjectsOverMaxLen = getContext().createCounter("jsonObjectsOverMaxLen");
   }
 
-  private enum ERROR implements ErrorId {
-    JSON_PARSING_ERROR("Error while parsing file '{}' at offset '{}', {}");
-
-    private final String msg;
-    ERROR(String msg) {
-      this.msg = msg;
-    }
-
-    @Override
-    public String getMessage() {
-      return msg;
-    }
-  }
   @Override
-  protected long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+  protected long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker)
+      throws StageException, BadSpoolFileException {
     String sourceFile = file.getName();
     OverrunStreamingJsonParser parser = null;
     try (CountingReader reader = new CountingReader(new FileReader(file))) {
       parser = new OverrunStreamingJsonParser(reader, offset, parserMode, maxJsonObjectLen);
       return produce(sourceFile, offset, parser, maxBatchSize, batchMaker);
+    } catch (OverrunException ex) {
+      throw new BadSpoolFileException(file.getAbsolutePath(), ex.getStreamOffset(), ex);
     } catch (IOException ex) {
       long exOffset = (parser != null) ? parser.getReaderPosition() : -1;
-      throw new StageException(ERROR.JSON_PARSING_ERROR, file, exOffset, ex.getMessage(), ex);
+      throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
     }
   }
 

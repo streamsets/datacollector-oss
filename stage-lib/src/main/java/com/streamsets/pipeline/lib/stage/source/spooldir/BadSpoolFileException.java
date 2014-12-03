@@ -15,20 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.io;
+package com.streamsets.pipeline.lib.stage.source.spooldir;
 
-import java.io.IOException;
+public class BadSpoolFileException extends Exception {
+  private final String file;
+  private final long pos;
 
-public class OverrunException extends IOException {
-  private long offset;
-
-  public OverrunException(String message, long offset) {
-    super(message);
-    this.offset = offset;
+  public BadSpoolFileException(String file, long pos, Exception ex) {
+    super(ex);
+    this.file = file;
+    this.pos = pos;
   }
 
-  public long getStreamOffset() {
-    return offset;
+  public String getFile() {
+    return file;
   }
 
+  public long getPos() {
+    return pos;
+  }
 }

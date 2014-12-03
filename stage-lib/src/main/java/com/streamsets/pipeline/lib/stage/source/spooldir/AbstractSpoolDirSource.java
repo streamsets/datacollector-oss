@@ -20,14 +20,17 @@ package com.streamsets.pipeline.lib.stage.source.spooldir;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
+import com.streamsets.pipeline.lib.io.OverrunException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractSpoolDirSource extends BaseSource {
@@ -56,7 +59,8 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
       label = "First File to Process",
-      description = "If set, all files lexicographically older than this will be ignored")
+      description = "If set, all files lexicographically older than this will be ignored",
+      defaultValue = "")
   public String initialFileToProcess;
 
 
@@ -90,6 +94,12 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
       defaultValue = "DAYS")
   public long poolingTimeoutSecs;
 
+  @ConfigDef(required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Error Archive Directory",
+      description = "Directory to archive files that could not be fully processed due to unrecoverable data errors")
+  public String errorArchiveDir;
+
   private DirectorySpooler spooler;
   private File currentFile;
 
@@ -102,6 +112,9 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
     if (postProc == DirectorySpooler.FilePostProcessing.ARCHIVE) {
       builder.setArchiveDir(archiveDir);
       builder.setArchiveRetention(retentionTimeMins);
+    }
+    if (errorArchiveDir != null) {
+      builder.setErrorArchiveDir(errorArchiveDir);
     }
     builder.setContext(getContext());
     spooler = builder.build();
@@ -150,6 +163,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
     String file = getFileFromSourceOffset(lastSourceOffset);
     long offset = getOffsetFromSourceOffset(lastSourceOffset);
     if (currentFile == null || file == null || currentFile.getName().compareTo(file) < 0 || offset == -1) {
+      currentFile = null;
       try {
         File nextAvailFile = null;
         do {
@@ -160,8 +174,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
           nextAvailFile = getSpooler().poolForFile(poolingTimeoutSecs, TimeUnit.SECONDS);
         } while (nextAvailFile != null && (file != null && nextAvailFile.getName().compareTo(file) < 0));
         if (nextAvailFile == null) {
-          LOG.debug("No new file available in spool directory after '{}' secs, dispatching an empty batch",
-                    poolingTimeoutSecs);
+          LOG.debug("No new file available in spool directory after '{}' secs", poolingTimeoutSecs);
         } else {
           currentFile = nextAvailFile;
           if (file == null || nextAvailFile.getName().compareTo(file) > 0) {
@@ -174,13 +187,40 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
       }
     }
     if (currentFile != null) {
-      offset = produce(currentFile, offset, maxBatchSize, batchMaker);
+      try {
+        offset = produce(currentFile, offset, maxBatchSize, batchMaker);
+      } catch (BadSpoolFileException ex) {
+        long filePos = (ex.getCause() != null && ex.getCause() instanceof OverrunException)
+                       ? ((OverrunException)ex.getCause()).getStreamOffset() : -1;
+        LOG.error("Spool file '{}' at position '{}', {}", currentFile, filePos, ex.getMessage(), ex);
+        try {
+          spooler.handleFileInError(currentFile);
+        } catch (IOException ex1) {
+          throw new StageException(ERROR.COULD_NOT_ARCHIVE_FILE_IN_ERROR, currentFile, ex1.getMessage(), ex1);
+        }
+        offset = -1;
+      }
     }
     return createSourceOffset(file, offset);
   }
 
   //return -1 if file was fully read
   protected abstract long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker)
-      throws StageException;
+      throws StageException, BadSpoolFileException;
+
+  public enum ERROR implements ErrorId {
+    COULD_NOT_ARCHIVE_FILE_IN_ERROR("Could not archive file '{}' in error, {}");
+
+    private final String msg;
+
+    ERROR(String msg) {
+      this.msg = msg;
+    }
+
+    @Override
+    public String getMessage() {
+      return msg;
+    }
+  }
 
 }
