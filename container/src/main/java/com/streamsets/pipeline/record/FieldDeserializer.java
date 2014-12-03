@@ -18,7 +18,6 @@
 package com.streamsets.pipeline.record;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.streamsets.pipeline.api.Field;
@@ -29,7 +28,7 @@ import java.util.Map;
 public class FieldDeserializer extends JsonDeserializer<Field> {
 
   @Override
-  public Field deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+  public Field deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
     Map map = jp.readValueAs(Map.class);
     Field.Type type = Field.Type.valueOf((String) map.get("type"));
     Object value = map.get("value");

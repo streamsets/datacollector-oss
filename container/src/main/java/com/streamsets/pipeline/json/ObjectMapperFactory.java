@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.record.FieldDeserializer;
-import com.streamsets.pipeline.record.FieldSerializer;
 
 import java.util.concurrent.TimeUnit;
 
@@ -36,7 +35,6 @@ public class ObjectMapperFactory {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new MetricsModule(TimeUnit.SECONDS, TimeUnit.SECONDS, false, MetricFilter.ALL));
     SimpleModule module = new SimpleModule();
-    module.addSerializer(Field.class, new FieldSerializer());
     module.addDeserializer(Field.class, new FieldDeserializer());
     objectMapper.registerModule(module);
     objectMapper.enable(SerializationFeature.INDENT_OUTPUT);

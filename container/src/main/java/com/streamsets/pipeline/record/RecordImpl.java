@@ -28,6 +28,7 @@ import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.container.TextUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,6 @@ public class RecordImpl implements Record {
   }
 
   @Override
-  @JsonProperty("value")
   public Field get() {
     return value;
   }
@@ -108,6 +108,75 @@ public class RecordImpl implements Record {
     Field oldData = value;
     value = field;
     return oldData;
+  }
+
+  private static class FieldWithPath {
+    private final String path;
+    private final Field.Type type;
+    private final Object value;
+
+    public FieldWithPath(String path, Field.Type type, Object value) {
+      this.path = path;
+      this.type = type;
+      this.value = value;
+    }
+
+    public String getPath() {
+      return path;
+    }
+
+    public String getType() {
+      return type.toString();
+    }
+
+    public Object getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return Utils.format("FieldWithPath[path='{}', type='{}', value='{}']", getPath(), getType(), getValue());
+    }
+
+  }
+
+  @SuppressWarnings("unchecked")
+  private FieldWithPath createFieldWithPath(String path, Field field) {
+    FieldWithPath fieldWithPath = null;
+    if (field != null) {
+      if (field.getValue() == null) {
+        fieldWithPath = new FieldWithPath("", field.getType(), null);
+      } else {
+        switch (field.getType()) {
+          case LIST:
+            List<FieldWithPath> list = new ArrayList<>();
+            List<Field> fList = (List<Field>) field.getValue();
+            for (int i = 0; i < fList.size(); i++) {
+              String ePath = path + "[" + i + "]";
+              list.add(createFieldWithPath(ePath, fList.get(i)));
+            }
+            fieldWithPath = new FieldWithPath(path, Field.Type.LIST, list);
+            break;
+          case MAP:
+            Map<String, FieldWithPath> map = new LinkedHashMap<>();
+            for (Map.Entry<String, Field> entry : ((Map<String, Field>) field.getValue()).entrySet()) {
+              String ePath = path + "/" + entry.getKey();
+              Field eField = entry.getValue();
+              map.put(entry.getKey(), createFieldWithPath(ePath, eField));
+            }
+            fieldWithPath = new FieldWithPath(path, Field.Type.MAP, map);
+            break;
+          default:
+            fieldWithPath = new FieldWithPath(path, field.getType(), field.getValue());
+            break;
+        }
+      }
+    }
+    return fieldWithPath;
+  }
+
+  public FieldWithPath getValue() {
+    return createFieldWithPath("", get());
   }
 
   private static class PathElement {
