@@ -47,7 +47,11 @@
 
       <div class="col-sm-6" ng-if="configDefinition.type === 'BOOLEAN'">
         <input type="checkbox" name="{{configDefinition.name}}"
-               ng-model="detailPaneConfig.configuration[$index].value">
+               ng-model="detailPaneConfig.configuration[$index].value"
+               popover-placement="right"
+               popover-append-to-body="true"
+               popover="{{configDefinition.description}}"
+               popover-trigger="focus">
 
         <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
       </div>
@@ -55,7 +59,11 @@
       <div class="col-sm-6" ng-if="configDefinition.type === 'INTEGER'">
         <input type="number" class="form-control" name="{{configDefinition.name}}"
                ng-model="detailPaneConfig.configuration[$index].value"
-               ng-required="configDefinition.required">
+               ng-required="configDefinition.required"
+               popover-placement="right"
+               popover-append-to-body="true"
+               popover="{{configDefinition.description}}"
+               popover-trigger="focus">
 
         <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
       </div>
@@ -63,7 +71,11 @@
       <div class="col-sm-6" ng-if="!configDefinition.listValues && configDefinition.type === 'STRING'">
         <input type="text" class="form-control" name="{{configDefinition.name}}"
                ng-model="detailPaneConfig.configuration[$index].value"
-               ng-required="configDefinition.required">
+               ng-required="configDefinition.required"
+               popover-placement="right"
+               popover-append-to-body="true"
+               popover="{{configDefinition.description}}"
+               popover-trigger="focus">
 
         <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
 
@@ -76,7 +88,11 @@
         <!-- Model Type === DROPDOWN -->
         <select class="form-control" name="{{configDefinition.name}}"
                 ng-if="configDefinition.model.modelType === 'VALUE_CHOOSER'"
-                ng-model="detailPaneConfig.configuration[$index].value">
+                ng-model="detailPaneConfig.configuration[$index].value"
+                popover-placement="right"
+                popover-append-to-body="true"
+                popover="{{configDefinition.description}}"
+                popover-trigger="focus">
           <option ng-repeat="listValue in configDefinition.model.values"
                   value="{{listValue}}"
                   ng-selected="listValue === detailPaneConfig.configuration[$parent.$index].value">
