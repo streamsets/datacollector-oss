@@ -4,14 +4,14 @@
 
     <!-- General Configuration for Pipeline-->
     <div class="form-group" ng-if="detailPaneConfig.stages !== undefined">
-      <label class="col-sm-2 control-label" translate="global.form.name">Name</label>
+      <label class="col-sm-3 control-label" translate="global.form.name">Name</label>
       <div class="col-sm-6">
         <p class="form-control-static" ng-bind="pipelineConfig.info.name"> </p>
       </div>
     </div>
 
     <div class="form-group" ng-if="detailPaneConfig.stages !== undefined">
-      <label class="col-sm-2 control-label" translate="global.form.description">Description</label>
+      <label class="col-sm-3 control-label" translate="global.form.description">Description</label>
       <div class="col-sm-6">
         <textarea class="form-control" name="description"
                   ng-model="pipelineConfig.description"></textarea>
@@ -22,7 +22,7 @@
 
     <!-- General Configuration for Stages-->
     <div class="form-group" ng-if="detailPaneConfig.stages === undefined">
-      <label class="col-sm-2 control-label" translate="global.form.label">Label</label>
+      <label class="col-sm-3 control-label" translate="global.form.label">Label</label>
       <div class="col-sm-6">
         <input type="text" class="form-control" name="name"
                ng-model="detailPaneConfig.uiInfo.label">
@@ -31,7 +31,7 @@
 
 
     <div class="form-group" ng-if="detailPaneConfig.stages === undefined">
-      <label class="col-sm-2 control-label" translate="global.form.description">Description</label>
+      <label class="col-sm-3 control-label" translate="global.form.description">Description</label>
       <div class="col-sm-6">
         <textarea class="form-control" name="description"
                   ng-model="detailPaneConfig.uiInfo.description"></textarea>
@@ -43,7 +43,7 @@
 
     <div class="form-group"
          ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions" show-errors>
-      <label class="col-sm-2 control-label">{{configDefinition.label}}</label>
+      <label class="col-sm-3 control-label">{{configDefinition.label}}</label>
 
       <div class="col-sm-6" ng-if="configDefinition.type === 'BOOLEAN'">
         <input type="checkbox" name="{{configDefinition.name}}"

@@ -47,11 +47,18 @@ angular
 
         angular.forEach(stage.configDefinitions, function (configDefinition) {
           var config = {
-            name: configDefinition.name
+            name: configDefinition.name,
+            value: configDefinition.defaultValue
           };
 
           if(configDefinition.type === 'MODEL' && configDefinition.model.modelType === 'FIELD_SELECTOR') {
             config.value = [];
+          } else if(configDefinition.type === 'INTEGER') {
+            if(config.value) {
+              config.value = parseInt(config.value);
+            } else {
+              config.value = 0;
+            }
           }
 
           stageInstance.configuration.push(config);
