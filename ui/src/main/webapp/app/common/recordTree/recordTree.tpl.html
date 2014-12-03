@@ -1,55 +1,53 @@
 <script type="text/ng-template" id="recordTree">
+  <div ng-init="isOpen = false">
 
-  <div class="pull-left" ng-if="!listType">
-    <span class="field-name"> {{fieldName}}: </span>
+    <div class="pull-left pointer" ng-click="isOpen = !isOpen">
+      <span class="toggler {{isOpen ? 'open' : ''}}"
+          ng-if="recordValue.type === 'MAP' || recordValue.type === 'LIST'"></span>
+
+      <span class="field-name"> {{fieldName}}: </span>
+    </div>
+
+    <div ng-switch on="recordValue.type">
+
+      <div ng-switch-when="MAP">
+        <span class="field-type"> MAP  </span>
+        <ul class="clearfix" ng-show="isOpen">
+          <li class="record-list-item clearfix"
+              ng-repeat="(fieldName, recordValue) in recordValue.value"
+              ng-class="{'dirty' : recordValue.dirty}"
+              ng-include="'recordTree'">
+          </li>
+        </ul>
+      </div>
+
+      <div ng-switch-when="LIST">
+        <span class="field-type">LIST</span>
+        <span class="array-length">[ {{recordValue.value.length}} ]</span>
+        <ul class="clearfix" ng-show="isOpen">
+          <li class="record-list-item clearfix"
+              ng-repeat="(fieldName, recordValue) in recordValue.value"
+              ng-class="{'dirty' : recordValue.dirty}"
+              ng-include="'recordTree'">
+          </li>
+        </ul>
+      </div>
+
+      <div ng-switch-default>
+        <span ng-if="editable !== true"
+              class="field-value"
+              ng-class="recordValue.type"
+              ng-bind="recordValue.value">
+        </span>
+        <span class="field-value"
+              ng-if="editable === true"
+              ng-class="recordValue.dirty ? recordValue.type + ' dirty' : recordValue.type"
+              contenteditable="true"
+              ng-change="recordValueUpdated(inputRecord, recordValue)"
+              ng-model="recordValue.value">
+        </span>
+      </div>
+
+    </div>
   </div>
-
-  <div ng-switch on="recordValue.type">
-
-    <div ng-switch-when="MAP">
-      <span ng-class="{'open-bracket': !listType}"> { </span>
-      <ul class="clearfix">
-        <li class="record-list-item clearfix"
-            ng-repeat="(fieldName, recordValue) in recordValue.value"
-            ng-class="{'dirty' : recordValue.dirty}"
-            ng-include="'recordTree'"
-            onload="listType=false">
-        </li>
-      </ul>
-      <span> } </span>
-      <span ng-if="$last === false">,</span>
-    </div>
-
-    <div ng-switch-when="LIST">
-      <span class="open-bracket"> [ </span>
-      <ul class="clearfix">
-        <li class="record-list-item clearfix"
-            ng-repeat="recordValue in recordValue.value"
-            ng-class="{'dirty' : recordValue.dirty}"
-            ng-include="'recordTree'"
-            onload="listType=true">
-        </li>
-      </ul>
-      <span> ] </span>
-      <span ng-if="$last === false">,</span>
-    </div>
-
-    <div ng-switch-default>
-      <span ng-if="editable !== true"
-            class="field-value"
-            ng-class="recordValue.type"
-            ng-bind="recordValue.value">
-      </span>
-      <span class="field-value"
-            ng-if="editable === true"
-            ng-class="recordValue.dirty ? recordValue.type + ' dirty' : recordValue.type"
-            contenteditable="true"
-            ng-change="recordValueUpdated(inputRecord, recordValue)"
-            ng-model="recordValue.value">
-      </span>
-      <span ng-if="$last === false">,</span>
-    </div>
-
-  </div>
-
 </script>

@@ -1,3 +1,5 @@
+@rotate-time: 10ms;
+
 .record-list {
   padding-left: @smallPadding * 4;
 
@@ -8,11 +10,6 @@
   .record-list-item {
     list-style: none;
     padding: @smallPadding/2;
-
-
-    .open-bracket {
-      padding-left: @defaultPadding;
-    }
 
     .field-name {
       display: inline-block;
@@ -41,9 +38,37 @@
       }
     }
 
+    .field-type {
+      padding-left: @defaultPadding;
+      opacity: 0.6;
+    }
+
     &.dirty {
       color: @brand-danger !important;
     }
+
+    .toggler {
+      font-size: 1em;
+      line-height: 1em;
+      vertical-align: middle;
+      opacity: 0.6;
+      cursor: pointer;
+
+      &:after {
+        display: inline-block;
+        transition: transform @rotate-time ease-in;
+        content: "►";
+      }
+
+      &.open:after{
+        transform: rotate(90deg);
+      }
+    }
+
+    .array-length {
+      color: blue;
+    }
+
 
   }
 }
