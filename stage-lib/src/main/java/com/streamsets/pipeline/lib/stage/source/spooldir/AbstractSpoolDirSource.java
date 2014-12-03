@@ -65,7 +65,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
       label = "File Post Processing Handling",
       description = "Action to take after the file has been processed: NONE (default), DELETE, ARCHIVE",
       defaultValue = "NONE")
-  @ValueChooser(type = ChooserMode.PROVIDED, valuesProvider = PostProcessingOptionsChooserValues.class)
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PostProcessingOptionsChooserValues.class)
   public String postProcessing;
 
   @ConfigDef(required = false,

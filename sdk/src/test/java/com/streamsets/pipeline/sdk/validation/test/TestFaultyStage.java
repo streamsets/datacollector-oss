@@ -29,20 +29,8 @@ import java.util.*;
 public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
 
   @Override
-  /**
-   * This class has the following issues:
-   * 1. Configuration field is final
-   * 2. Configuration field is static
-   * 3. Configuration field is not public
-   * 4. Configuration field is marked as "MODEL" but not annotated with either FieldSelector or FieldModifier annotation
-   * 5. No default constructor
-   * 6. Does not implement interface or extend base stage
-   * 7. Data type of field does not match type indicated in the config def annotation
-   * 8. Configuration field marked with FieldSelector annotation must be of type List<String>
-   * 9. Configuration field marked with FieldModifier annotation must be of type Map<String, String>
-   * 10. Both FieldSelector and FieldModifier annotations are present
-   */
   public List<String> getClassesToProcess() {
+    //FaultySource stage is modeled with all kinds of validation errors
     return Arrays.asList("com.streamsets.pipeline.sdk.testData.FaultySource");
   }
 
@@ -60,18 +48,18 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The field FaultySource.username has \"ConfigDef\" annotation and is declared final. Configuration fields must not be declared final.");
     expectedSet.add("The field FaultySource.password has \"ConfigDef\" annotation and is declared static. Configuration fields must not be declared final.");
     expectedSet.add("The field FaultySource.streetAddress2 has \"ConfigDef\" annotation but is not declared public. Configuration fields must be declared public.");
-    expectedSet.add("The type of field FaultySource.company is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' or 'DropDown' annotation is expected.");
+    expectedSet.add("The type of field FaultySource.company is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldValueChooser' or 'ValueChooser' annotation is expected.");
     expectedSet.add("The type of the field FaultySource.zip is expected to be String.");
     expectedSet.add("The type of the field FaultySource.state is expected to be List<String>.");
     expectedSet.add("The type of the field FaultySource.streetAddress is expected to be Map<String, String>.");
-    expectedSet.add("The type of field FaultySource.ste is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldModifier' or 'DropDown' annotation is expected.");
+    expectedSet.add("The type of field FaultySource.ste is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldValueChooser' or 'ValueChooser' annotation is expected.");
     expectedSet.add("Stage com.streamsets.pipeline.sdk.testData.FaultySource neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, Processor, Target interface.");
     expectedSet.add("The Stage FaultySource has constructor with arguments but no default constructor.");
     expectedSet.add("Annotation RawSource is applied on stage com.streamsets.pipeline.sdk.testData.FaultySource which is not a \"Source\".");
     expectedSet.add("RawSourcePreviewer com.streamsets.pipeline.sdk.testData.TestRawSourcePreviewer.FaultyRawSourcePreviewer is an inner class. Inner class RawSourcePreviewer implementations are not supported.");
     expectedSet.add("The type of the field FaultySource.floor is expected to be String.");
-    expectedSet.add("The type of field FaultySource.floor is not declared as \"MODEL\". 'FieldSelector' or 'FieldModifier' or 'DropDown' annotation is not expected, but is present.");
-    expectedSet.add("The type of the field FaultySource.ste is expected to be Map<String, String>.");
+    expectedSet.add("The type of field FaultySource.floor is not declared as \"MODEL\". 'FieldSelector' or 'FieldValueChooser' or 'ValueChooser' annotation is not expected, but is present.");
+    expectedSet.add("ChooserValues implementation 'com.streamsets.pipeline.sdk.testData.FaultySource$MyChooserValues' is an inner class but is not declared as static. Inner class ChooserValues implementations must be declared static.");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());

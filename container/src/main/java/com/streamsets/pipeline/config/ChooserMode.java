@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.config;
 
-public enum FieldSelection {
+public enum ChooserMode {
 
   SUGGESTED,
   PROVIDED

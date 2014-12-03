@@ -40,7 +40,7 @@ public class ConfigDefinition {
   private final ConfigDef.Type type;
   private final String label;
   private final String description;
-  private final String defaultValue;
+  private final Object defaultValue;
   private final boolean required;
   private final String group;
   private final String fieldName;
@@ -52,7 +52,7 @@ public class ConfigDefinition {
       @JsonProperty("type") ConfigDef.Type type,
       @JsonProperty("label") String label,
       @JsonProperty("description") String description,
-      @JsonProperty("default") String defaultValue,
+      @JsonProperty("default") Object defaultValue,
       @JsonProperty("required") boolean required,
       @JsonProperty("group") String group,
       @JsonProperty("fieldName") String fieldName,
@@ -84,7 +84,7 @@ public class ConfigDefinition {
     return description;
   }
 
-  public String getDefaultValue() {
+  public Object getDefaultValue() {
     return defaultValue;
   }
 

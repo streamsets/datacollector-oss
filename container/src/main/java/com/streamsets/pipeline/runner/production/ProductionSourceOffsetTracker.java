@@ -94,6 +94,10 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     return sourceOffset;
   }
 
+  public void resetOffset(String pipelineName) {
+    saveOffset(pipelineName, new SourceOffset(DEFAULT_OFFSET));
+  }
+
   private void saveOffset(String pipelineName, SourceOffset s) {
     LOG.debug("Saving offset {} for pipeline {}", s.getOffset(), pipelineName);
     try {

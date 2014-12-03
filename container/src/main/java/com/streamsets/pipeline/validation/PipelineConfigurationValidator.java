@@ -339,7 +339,7 @@ public class PipelineConfigurationValidator {
                 //NOP
                 break;
               case MODEL:
-                if(confDef.getModel().getModelType() == ModelType.DROPDOWN) {
+                if(confDef.getModel().getModelType() == ModelType.VALUE_CHOOSER) {
                   if(!(conf.getValue() instanceof String)) {
                     // stage configuration must be a model
                     issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),

@@ -30,6 +30,6 @@ public @interface Selector {
 
   Type type();
 
-  Class<? extends ChooserValues> valuesProvider();
+  Class<? extends ChooserValues> chooserValues();
 
 }

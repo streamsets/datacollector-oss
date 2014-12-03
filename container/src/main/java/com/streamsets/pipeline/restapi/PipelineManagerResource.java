@@ -77,6 +77,15 @@ public class PipelineManagerResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(so).build();
   }
 
+  @Path("/resetOffset/{name}")
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response resetOffset(
+      @PathParam("name") String name) throws PipelineManagerException {
+    pipelineManager.resetOffset(name);
+    return Response.ok().build();
+  }
+
   @Path("/snapshot")
   @PUT
   public Response captureSnapshot(

@@ -29,7 +29,7 @@ import java.util.Map;
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
   @ConfigDef(label = "Fields to convert", required = false,type = Type.MODEL, defaultValue="")
-  @FieldValueChooser(type= ChooserMode.PROVIDED, valuesProvider = ConverterValuesProvider.class)
+  @FieldValueChooser(type= ChooserMode.PROVIDED, chooserValues = ConverterValuesProvider.class)
   public Map<String, String> fields;
 
   // the annotations processor will fail if variable is not Map

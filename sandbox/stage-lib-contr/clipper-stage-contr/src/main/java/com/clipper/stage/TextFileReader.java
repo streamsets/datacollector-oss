@@ -30,7 +30,7 @@ public class TextFileReader extends BaseSource {
       required = true, type = ConfigDef.Type.STRING)
   public String fileName;
 
-  @ValueChooser(type = ChooserMode.PROVIDED, valuesProvider = ExtensionsProvider.class)
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ExtensionsProvider.class)
   @ConfigDef(defaultValue = "", label = "File Extenson", description = "Absolute file name of the file",
      required = true, type = ConfigDef.Type.MODEL)
   public String fileExtension;

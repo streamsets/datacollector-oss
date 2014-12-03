@@ -26,7 +26,7 @@ import java.util.List;
 public class ModelDefinition {
 
   private final ModelType modelType;
-  private final FieldSelection fieldSelectionType;
+  private final ChooserMode chooserMode;
   private final String valuesProviderClass;
   private List<String> values;
   private List<String> labels;
@@ -34,12 +34,12 @@ public class ModelDefinition {
   @JsonCreator
   public ModelDefinition(
     @JsonProperty("modelType") ModelType modelType,
-    @JsonProperty("fieldSelectionType") FieldSelection fieldSelectionType,
+    @JsonProperty("chooserMode") ChooserMode chooserMode,
     @JsonProperty("valuesProviderClass")String valuesProviderClass,
     @JsonProperty("values") List<String> values,
     @JsonProperty("labels") List<String> labels) {
     this.modelType = modelType;
-    this.fieldSelectionType = fieldSelectionType;
+    this.chooserMode = chooserMode;
     this.valuesProviderClass = valuesProviderClass;
     this.values = values;
     this.labels = labels;
@@ -49,8 +49,8 @@ public class ModelDefinition {
     return modelType;
   }
 
-  public FieldSelection getFieldSelectionType() {
-    return fieldSelectionType;
+  public ChooserMode getChooserMode() {
+    return chooserMode;
   }
 
   public List<String> getValues() {

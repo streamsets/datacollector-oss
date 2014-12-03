@@ -27,7 +27,7 @@ import java.util.Map;
   , description = "This processor lets the user select the types for the fields")
 public class TypeConversionProcessor extends BaseProcessor {
 
-  @FieldValueChooser(type = ChooserMode.PROVIDED, valuesProvider =TypesProvider.class)
+  @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues =TypesProvider.class)
   @ConfigDef(type= ConfigDef.Type.MODEL, defaultValue = "",
     required = true, label = "field_to_type_map", description = "Contains the field and its target type as chosen by the user")
   public Map<String, String> fieldToTypeMap;

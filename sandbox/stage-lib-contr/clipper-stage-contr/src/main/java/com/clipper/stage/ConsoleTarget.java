@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @StageDef(description = "Prints the travel log, fare and the cumulative sum on the Console",
   label = "Console Target",
@@ -53,13 +54,15 @@ public class ConsoleTarget implements Target {
 
     while (it.hasNext()) {
       Record record = it.next();
-      Iterator<String> filedNames = record.getFieldNames();
+      Field field = record.get();
+      Map<String, Field> valueAsMap = field.getValueAsMap();
+
       pw.write("------------------------------------------------------------------------------------");
-      while(filedNames.hasNext()) {
-        String fieldName = filedNames.next();
+      for(Map.Entry<String, Field> e : valueAsMap.entrySet()) {
+        String fieldName = e.getKey();
         pw.write(fieldName);
         pw.write(" : ");
-        pw.write(record.getField(fieldName).getValue().toString());
+        pw.write(e.getValue().toString());
         pw.println();
       }
       pw.write("------------------------------------------------------------------------------------");

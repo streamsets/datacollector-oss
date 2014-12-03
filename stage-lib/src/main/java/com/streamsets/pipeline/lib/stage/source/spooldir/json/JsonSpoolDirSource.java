@@ -58,7 +58,7 @@ public class JsonSpoolDirSource extends AbstractSpoolDirSource {
       label = "JSON Content",
       description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects",
       defaultValue = "ARRAY_OBJECTS")
-  @ValueChooser(type = ChooserMode.PROVIDED, valuesProvider = JsonFileModeChooserValues.class)
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
   public String jsonContent;
 
   @ConfigDef(required = true,

@@ -74,7 +74,7 @@ public class TwitterStages {
     , version = "1.0")
   public class TwitterProcessor extends BaseProcessor {
 
-    @FieldValueChooser(type = ChooserMode.PROVIDED, valuesProvider = TypesProvider.class)
+    @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues = TypesProvider.class)
     @ConfigDef(
       defaultValue = "[a-z][A-Z][0-9]",
       label = "regEx",

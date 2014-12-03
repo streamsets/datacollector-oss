@@ -15,7 +15,7 @@
                               "fieldName" : "username",
                               "model" : {
                                 "modelType" : "FIELD_SELECTOR",
-                                "fieldSelectionType" : null,
+                                "chooserMode" : null,
                                 "valuesProviderClass" : null,
                                 "values" : null,
                                 "labels" : null
@@ -46,7 +46,7 @@
                                 "fieldName" : "username",
                                 "model" : {
                                   "modelType" : "FIELD_SELECTOR",
-                                  "fieldSelectionType" : null,
+                                  "chooserMode" : null,
                                   "valuesProviderClass" : null,
                                   "values" : null,
                                   "labels" : null
@@ -82,8 +82,8 @@
                               "group" : "",
                               "fieldName" : "regEx",
                               "model" : {
-                                "modelType" : "FIELD_MODIFIER",
-                                "fieldSelectionType" : "PROVIDED",
+                                "modelType" : "FIELD_VALUE_CHOOSER",
+                                "chooserMode" : "PROVIDED",
                                 "valuesProviderClass" : "com.streamsets.pipeline.sdk.testData.TypesProvider",
                                 "values" : null,
                                 "labels" : null

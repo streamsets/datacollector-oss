@@ -169,6 +169,18 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return prodPipeline.getCommittedOffset();
   }
 
+  public void resetOffset(String pipelineName) throws PipelineManagerException {
+    LOG.debug("Resetting offset for pipeline {}", pipelineName);
+    PipelineState pState = getPipelineState();
+    if(pState.getName().equals(pipelineName) && pState.getState() == State.RUNNING) {
+      throw new PipelineManagerException(PipelineManagerException.ERROR.COULD_NOT_RESET_OFFSET_RUNNING_STATE,
+          pipelineName);
+    }
+    createPipelineDirIfNotExist(pipelineName);
+    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(pipelineName, runtimeInfo);
+    offsetTracker.resetOffset(pipelineName);
+  }
+
   public void captureSnapshot(int batchSize) throws PipelineManagerException {
     LOG.debug("Capturing snapshot with batch size {}", batchSize);
     checkState(getPipelineState().getState().equals(State.RUNNING),
@@ -290,7 +302,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     //create the pipeline directory eagerly.
     //This helps avoid race conditions when different stores attempt to create directories
     //Creating directory eagerly also avoids the need of synchronization
-    createPipelineDirectory(name);
+    createPipelineDirIfNotExist(name);
 
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, runtimeInfo);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, errorRecordStore, offsetTracker,
@@ -324,7 +336,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     }
   }
 
-  private void createPipelineDirectory(String name) {
+  private void createPipelineDirIfNotExist(String name) {
     File pipelineDir = new File(new File(runtimeInfo.getDataDir(), RUN_INFO_DIR), name);
     if(!pipelineDir.exists()) {
       if(!pipelineDir.mkdirs()) {

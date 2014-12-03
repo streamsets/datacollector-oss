@@ -17,24 +17,12 @@
  */
 package com.streamsets.pipeline.sdk.testData;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.ChooserMode;
 
 import java.util.List;
 
-/**
- * This class has the following issues:
- * 1. Configuration field is final
- * 2. Configuration field is static
- * 3. Configuration field is not public
- * 4. Configuration field is marked as "MODEL" but not annotated with either FieldSelector or FieldModifier annotation
- * 5. No default constructor
- * 6. Does not implement interface or extend base stage
- * 7. Data type of field does not match type indicated in the config def annotation
- * 8. Configuration field marked with FieldSelector annotation must be of type List<String>
- * 9. Configuration field marked with FieldModifier annotation must be of type Map<String, String>
- * 10. Both FieldSelector and FieldModifier annotations are present
- */
 //13. Implementation of RawSourcePreviewer must be a top level class
 //14. Annotation RawSource is FaultySource which is not a Source
 @GenerateResourceBundle
@@ -73,7 +61,7 @@ public class FaultySource {
   )
   private String streetAddress2;
 
-  //4. Expected either FieldSelector or FieldModifier annotation
+  //4. Expected either FieldSelector or FieldValueChooser annotation
   @ConfigDef(
     defaultValue = "ss",
     label = "company",
@@ -112,7 +100,7 @@ public class FaultySource {
 
 
   //9. Field modifier should be modeled as Map<String, String>
-  @FieldValueChooser(type = ChooserMode.PROVIDED, valuesProvider = TypesProvider.class)
+  @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues = MyChooserValues.class)
   @ConfigDef(
     defaultValue = "180 Sansome",
     label = "street_address",
@@ -121,9 +109,9 @@ public class FaultySource {
     type = ConfigDef.Type.MODEL)
   public String streetAddress;
 
-  //10. Both FieldSelector and FieldModifier present
+  //10. Both FieldSelector and FieldValueChooser present
   @FieldSelector
-  @FieldValueChooser(type = ChooserMode.PROVIDED, valuesProvider = TypesProvider.class)
+  @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues = TypesProvider.class)
   @ConfigDef(
     defaultValue = "400",
     label = "ste",
@@ -133,8 +121,8 @@ public class FaultySource {
   public List<String> ste;
 
   //11. Drop down should be modeled as 'java.lang.String'
-  //12. The ConfigDef.Type for dropdown should be 'MODEL'
-  @ValueChooser(type = ChooserMode.PROVIDED, valuesProvider = TypesProvider.class)
+  //12. The ConfigDef.Type for ValueChooser should be 'MODEL'
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = TypesProvider.class)
   @ConfigDef(
       defaultValue = "4",
       label = "floor",
@@ -142,5 +130,19 @@ public class FaultySource {
       description = "The domain of the twitter user",
       type = ConfigDef.Type.STRING)
   public List<String> floor;
+
+  //15. Inner class ChooserValues must be static
+  public class MyChooserValues implements ChooserValues {
+
+    @Override
+    public List<String> getValues() {
+      return ImmutableList.of("a", "b");
+    }
+
+    @Override
+    public List<String> getLabels() {
+      return ImmutableList.of("a", "b");
+    }
+  }
 
 }

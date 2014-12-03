@@ -110,10 +110,10 @@ public abstract class StageBuilder {
     //for each entry in the map check if the key is a valid config option
     ConfigDef configDef = null;
     FieldSelector fieldSelector = null;
-    FieldValueChooser fieldModifier = null;
+    FieldValueChooser fieldValueChooser = null;
     for(Field f : stage.getClass().getDeclaredFields()) {
       configDef = f.getAnnotation(ConfigDef.class);
-      fieldModifier = f.getAnnotation(FieldValueChooser.class);
+      fieldValueChooser = f.getAnnotation(FieldValueChooser.class);
       fieldSelector = f.getAnnotation(FieldSelector.class);
       if(configDef != null) {
         if(!configMap.containsKey(f.getName())) {
@@ -131,7 +131,7 @@ public abstract class StageBuilder {
             }
           }
         } else {
-          valid = validateType(configDef, fieldModifier, fieldSelector, f, configMap.get(f.getName()));
+          valid = validateType(configDef, fieldValueChooser, fieldSelector, f, configMap.get(f.getName()));
         }
       }
     }
@@ -159,14 +159,14 @@ public abstract class StageBuilder {
    * matches the type defined in the configuration.
    *
    * @param configDef
-   * @param fieldModifier
+   * @param fieldValueChooser
    * @param fieldSelector
    * @param f
    * @param value
    * @return
    */
   private boolean validateType(ConfigDef configDef,
-                               FieldValueChooser fieldModifier,
+                               FieldValueChooser fieldValueChooser,
                                FieldSelector fieldSelector,
                                Field f,
                                Object value) {
@@ -191,7 +191,7 @@ public abstract class StageBuilder {
                     f.getName());
           return false;
         }
-        if (fieldModifier != null && !(value instanceof String)) {
+        if (fieldValueChooser != null && !(value instanceof String)) {
           LOG.error("The field '{}' is marked as FieldSelector. A String value is expected.",
                     f.getName());
           return false;

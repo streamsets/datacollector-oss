@@ -27,6 +27,6 @@ public @interface ValueChooser {
 
   ChooserMode type();
 
-  Class<? extends ChooserValues> valuesProvider();
+  Class<? extends ChooserValues> chooserValues();
 
 }
