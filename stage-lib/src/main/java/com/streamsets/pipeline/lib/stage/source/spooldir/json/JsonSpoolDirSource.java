@@ -21,6 +21,7 @@ import com.codahale.metrics.Counter;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
@@ -78,14 +79,29 @@ public class JsonSpoolDirSource extends AbstractSpoolDirSource {
     jsonObjectsOverMaxLen = getContext().createCounter("jsonObjectsOverMaxLen");
   }
 
+  private enum ERROR implements ErrorId {
+    JSON_PARSING_ERROR("Error while parsing file '{}' at offset '{}', {}");
+
+    private final String msg;
+    ERROR(String msg) {
+      this.msg = msg;
+    }
+
+    @Override
+    public String getMessage() {
+      return msg;
+    }
+  }
   @Override
   protected long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     String sourceFile = file.getName();
+    OverrunStreamingJsonParser parser = null;
     try (CountingReader reader = new CountingReader(new FileReader(file))) {
-      OverrunStreamingJsonParser parser = new OverrunStreamingJsonParser(reader, offset, parserMode, maxJsonObjectLen);
+      parser = new OverrunStreamingJsonParser(reader, offset, parserMode, maxJsonObjectLen);
       return produce(sourceFile, offset, parser, maxBatchSize, batchMaker);
     } catch (IOException ex) {
-      throw new StageException(null, ex.getMessage(), ex);
+      long exOffset = (parser != null) ? parser.getReaderPosition() : -1;
+      throw new StageException(ERROR.JSON_PARSING_ERROR, file, exOffset, ex.getMessage(), ex);
     }
   }
 
