@@ -23,10 +23,10 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.sdk.testharness.internal.Constants;
 import com.streamsets.pipeline.sdk.testharness.internal.StageInfo;
 import com.streamsets.pipeline.sdk.testharness.internal.BatchMakerImpl;
-import com.streamsets.pipeline.sdk.testharness.internal.SourceContextImpl;
 import com.streamsets.pipeline.sdk.testharness.internal.StageBuilder;
 import com.streamsets.pipeline.sdk.util.StageHelper;
 import org.slf4j.Logger;
@@ -146,8 +146,8 @@ public class SourceRunner <T extends Source> {
       StageDef stageDefAnnot = stage.getClass().getAnnotation(StageDef.class);
       info = new StageInfo(
           StageHelper.getStageNameFromClassName(stage.getClass().getName()), stageDefAnnot.version(), instanceName);
-      //mockInfoAndContextForStage and stub Source.Context
-      context = new SourceContextImpl(instanceName, outputLanes);
+
+      context = new StageContext(instanceName, outputLanes);
 
       return new SourceRunner<T>(
         (T)stage, maxBatchSize, sourceOffset, outputLanes, info, context);

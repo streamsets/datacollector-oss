@@ -23,11 +23,11 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.sdk.testharness.internal.Constants;
 import com.streamsets.pipeline.sdk.testharness.internal.StageInfo;
 import com.streamsets.pipeline.sdk.testharness.internal.BatchBuilder;
 import com.streamsets.pipeline.sdk.testharness.internal.BatchMakerImpl;
-import com.streamsets.pipeline.sdk.testharness.internal.ProcessorContextImpl;
 import com.streamsets.pipeline.sdk.testharness.internal.StageBuilder;
 import com.streamsets.pipeline.sdk.util.StageHelper;
 import org.slf4j.Logger;
@@ -148,7 +148,7 @@ public class ProcessorRunner<T extends Processor> {
       info = new StageInfo(StageHelper.getStageNameFromClassName(stage.getClass().getName()), stageDefAnnot.version(),
           instanceName);
       //mockInfoAndContextForStage and stub Source.Context
-      context = new ProcessorContextImpl(instanceName, outputLanes);
+      context = new StageContext(instanceName, outputLanes);
 
       //update batchbuilder
       batchBuilder.setSourceOffset(sourceOffset);

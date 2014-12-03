@@ -17,17 +17,20 @@
  */
 package com.streamsets.pipeline.sdk.testharness;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.sdk.testharness.internal.StageInfo;
 import com.streamsets.pipeline.sdk.testharness.internal.BatchBuilder;
 import com.streamsets.pipeline.sdk.testharness.internal.StageBuilder;
-import com.streamsets.pipeline.sdk.testharness.internal.TargetContextImpl;
 import com.streamsets.pipeline.sdk.util.StageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 public class TargetRunner <T extends Target> {
 
@@ -129,7 +132,7 @@ public class TargetRunner <T extends Target> {
       info = new StageInfo(StageHelper.getStageNameFromClassName(stage.getClass().getName()), stageDefAnnot.version(),
           instanceName);
       //mockInfoAndContextForStage and stub Source.Context
-      context = new TargetContextImpl(instanceName);
+      context = new StageContext(instanceName, (Set) ImmutableSet.of());
 
       //update batchbuilder
       batchBuilder.setSourceOffset(sourceOffset);
