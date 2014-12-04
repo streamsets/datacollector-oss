@@ -106,7 +106,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, Exception ex) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(ex, "exception cannot be null");
-    ((RecordImpl)record).getHeader().setErrorId(ContainerError.CONTAINER_0001.getCode());
+    ((RecordImpl)record).getHeader().setErrorCode(ContainerError.CONTAINER_0001.getCode());
     ((RecordImpl)record).getHeader().setErrorMessage(new ErrorMessage(ContainerError.CONTAINER_0001, ex.getMessage()));
     errorSink.addRecord(instanceName, record);
   }
@@ -115,7 +115,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, String errorMessage) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    ((RecordImpl)record).getHeader().setErrorId(ContainerError.CONTAINER_0002.getCode());
+    ((RecordImpl)record).getHeader().setErrorCode(ContainerError.CONTAINER_0002.getCode());
     ((RecordImpl)record).getHeader().setErrorMessage(new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
     errorSink.addRecord(instanceName, record);
   }
@@ -124,7 +124,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, ErrorCode errorCode, String... args) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorCode, "errorId cannot be null");
-    ((RecordImpl) record).getHeader().setErrorId(errorCode.toString());
+    ((RecordImpl) record).getHeader().setErrorCode(errorCode.toString());
     ((RecordImpl) record).getHeader().setErrorMessage(new ErrorMessage(errorCode, args));
     errorSink.addRecord(instanceName, record);
   }

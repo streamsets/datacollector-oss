@@ -150,7 +150,7 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
       @JsonProperty("previousTrackingId") String previousTrackingId,
       @JsonProperty("raw") byte[] raw,
       @JsonProperty("rawMimeType") String rawMimeType,
-      @JsonProperty("errorId") String errorId,
+      @JsonProperty("errorCode") String errorId,
       @JsonProperty("errorMessage") String errorMsg,
       @JsonProperty("values") Map<String, Object> map) {
     this.map = map;
@@ -159,7 +159,7 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
     setStagesPath(stagesPath);
     setTrackingId(trackingId);
     if (errorId != null) {
-      setErrorId(errorId);
+      setErrorCode(errorId);
       setErrorMessage(errorMsg);
     }
     if (previousTrackingId != null) {
@@ -208,9 +208,9 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
     map.put(RAW_MIME_TYPE_ATTR, rawMime);
   }
 
-  public void setErrorId(String errorId) {
-    Preconditions.checkNotNull(errorId, "errorId cannot be null");
-    map.put(ERROR_CODE_ATTR, errorId);
+  public void setErrorCode(String errorCode) {
+    Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
+    map.put(ERROR_CODE_ATTR, errorCode);
   }
 
   public void setErrorMessage(LocalizableString errorMsg) {

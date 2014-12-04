@@ -33,7 +33,7 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
   @Override
   public void add(Record record, ErrorMessage reason) {
     RecordImpl recordImpl = (RecordImpl) record;
-    recordImpl.getHeader().setErrorId(reason.getId().toString());
+    recordImpl.getHeader().setErrorCode(reason.getId().toString());
     recordImpl.getHeader().setErrorMessage(reason);
     errorSink.addRecord(instanceName, recordImpl);
     counter++;
