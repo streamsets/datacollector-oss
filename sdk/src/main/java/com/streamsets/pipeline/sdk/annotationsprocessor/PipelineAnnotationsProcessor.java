@@ -675,12 +675,42 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }
+      if (fieldType.getKind().equals(TypeKind.BOOLEAN)) {
+        String value = configDefAnnot.defaultValue();
+        if(!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
+          printError("field.validation.default.value.not.boolean",
+              "The type of the field {} is Boolean but the default value supplied is not true or false.",
+              typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+          valid = false;
+        }
+      }
     } else if (configDefAnnot.type().equals(ConfigDef.Type.INTEGER)) {
       if(!(fieldType.getKind().equals(TypeKind.INT) || fieldType.getKind().equals(TypeKind.LONG))) {
         printError("field.validation.type.is.not.int.or.long",
             "The type of the field {} is expected to be either an int or a long.",
             typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
+      }
+      //validate the default values
+      if (fieldType.getKind().equals(TypeKind.INT)) {
+        try {
+          Integer.parseInt(configDefAnnot.defaultValue());
+        } catch (NumberFormatException e) {
+          printError("field.validation.default.value.not.int",
+              "The type of the field {} is Integer but the default value supplied is not Integer.",
+              typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+          valid = false;
+        }
+      }
+      if (fieldType.getKind().equals(TypeKind.LONG)) {
+        try {
+          Integer.parseInt(configDefAnnot.defaultValue());
+        } catch (NumberFormatException e) {
+          printError("field.validation.default.value.not.long",
+              "The type of the field {} is Long but the default value supplied is not Long.",
+              typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+          valid = false;
+        }
       }
     } else if (configDefAnnot.type().equals(ConfigDef.Type.STRING)) {
       if(!fieldType.toString().equals("java.lang.String")) {

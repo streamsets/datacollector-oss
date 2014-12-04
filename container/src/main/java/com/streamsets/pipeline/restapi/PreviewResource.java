@@ -40,6 +40,7 @@ import com.streamsets.pipeline.runner.preview.PreviewStageRunner;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.ContainerErrors;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.commons.io.input.ReaderInputStream;
 
@@ -57,11 +58,14 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Path("/v1/pipeline-library")
 public class PreviewResource {
@@ -71,6 +75,8 @@ public class PreviewResource {
   private static final int MAX_BATCHES_DEFAULT = 10;
   private static final String MAX_SOURCE_PREVIEW_SIZE_KEY = "preview.maxSourcePreviewSize";
   private static final int MAX_SOURCE_PREVIEW_SIZE_DEFAULT = 4*1024;
+  private static final String MIME_TYPE = "mimeType";
+  private static final String PREVIEW_STRING = "previewString";
 
   //preview.maxBatchSize
   private final Configuration configuration;
@@ -135,7 +141,7 @@ public class PreviewResource {
       @PathParam("name") String name,
       @QueryParam("rev") String rev,
       @Context UriInfo uriInfo) throws PipelineStoreException,
-      PipelineRuntimeException {
+      PipelineRuntimeException, IOException {
 
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
 
@@ -191,7 +197,12 @@ public class PreviewResource {
     }
 
     BoundedInputStream bIn = new BoundedInputStream(new ReaderInputStream(reader), bytesToRead);
-    return Response.ok().type(rawSourcePreviewer.getMimeType()).entity(bIn).build();
+    String previewString = IOUtils.toString(bIn);
+
+    Map<String, String> previewMap = new HashMap<>();
+    previewMap.put(MIME_TYPE, rawSourcePreviewer.getMimeType());
+    previewMap.put(PREVIEW_STRING, previewString);
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewMap).build();
   }
 
   private void validateParameters(MultivaluedMap<String, String> previewParams,

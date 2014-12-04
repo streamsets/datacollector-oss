@@ -64,6 +64,9 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The type of the field FaultySource.floor is expected to be String.");
     expectedSet.add("The type of field FaultySource.floor is not declared as \"MODEL\". 'FieldSelector' or 'FieldValueChooser' or 'ValueChooser' annotation is not expected, but is present.");
     expectedSet.add("ChooserValues implementation 'com.streamsets.pipeline.sdk.testData.FaultySource$MyChooserValues' is an inner class but is not declared as static. Inner class ChooserValues implementations must be declared static.");
+    expectedSet.add("The type of the field FaultySource.extension is Integer but the default value supplied is not Integer.");
+    expectedSet.add("The type of the field FaultySource.phone is Long but the default value supplied is not Long.");
+    expectedSet.add("The type of the field FaultySource.callMe is Boolean but the default value supplied is not true or false.");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());

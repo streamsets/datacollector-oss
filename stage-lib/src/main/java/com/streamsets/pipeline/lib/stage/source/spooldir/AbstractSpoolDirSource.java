@@ -52,6 +52,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
   @ConfigDef(required = true,
       type = ConfigDef.Type.INTEGER,
       label = "Max Files in Spool Directory",
+      defaultValue = "10",
       description =
           "Maximum number of files in spool directory waiting to be processed, if exceeded teh source goes into error")
   public int maxSpoolFiles;
@@ -91,7 +92,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
       type = ConfigDef.Type.INTEGER,
       label = "File Pooling Timeout (secs)",
       description = "Timeout when waiting for a new file, when a timeout happens, an empty batch will be run",
-      defaultValue = "DAYS")
+      defaultValue = "60")
   public long poolingTimeoutSecs;
 
   @ConfigDef(required = false,

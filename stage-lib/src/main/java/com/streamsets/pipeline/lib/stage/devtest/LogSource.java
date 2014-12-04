@@ -32,7 +32,7 @@ public class LogSource extends BaseSource {
   public String logsDir;
 
   @ConfigDef(required = true, type = ConfigDef.Type.INTEGER, label = "Rotation frequency (in hr)",
-             defaultValue = "")
+             defaultValue = "24")
   public int rotationFrequency;
 
   @Override

@@ -138,6 +138,33 @@ public class FaultySource {
       type = ConfigDef.Type.STRING)
   public List<String> floor;
 
+  //16. The type is long but the default value is string
+  @ConfigDef(
+      defaultValue = "Hello",
+      label = "floor",
+      required = true,
+      description = "The domain of the twitter user",
+      type = ConfigDef.Type.INTEGER)
+  public long phone;
+
+  //17. The type is int but the default value is string
+  @ConfigDef(
+      defaultValue = "Hello",
+      label = "floor",
+      required = true,
+      description = "The domain of the twitter user",
+      type = ConfigDef.Type.INTEGER)
+  public int extension;
+
+  //18. The type is boolean but default value is not true or false
+  @ConfigDef(
+      defaultValue = "Hello",
+      label = "floor",
+      required = true,
+      description = "The domain of the twitter user",
+      type = ConfigDef.Type.BOOLEAN)
+  public boolean callMe;
+
   //15. Inner class ChooserValues must be static
   public class MyChooserValues implements ChooserValues {
 
