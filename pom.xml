@@ -67,8 +67,6 @@
             <exclude>**/.empty</exclude>
             <exclude>sdk/src/main/services/**</exclude>
 
-            <exclude>sandbox/**</exclude>
-
             <!--TODO check with Madhu on all this stuff -->
             <exclude>ui/**</exclude>
           </excludes>
@@ -94,16 +92,6 @@
       </activation>
       <modules>
         <module>dist</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>sandbox</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <modules>
-        <module>root</module>
-        <module>sandbox</module>
       </modules>
     </profile>
   </profiles>

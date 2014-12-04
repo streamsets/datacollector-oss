@@ -22,8 +22,6 @@ Maven Profiles (use -P<profile-name>):
               (if the 'ui' profile is active it will bundle UI in the distribution)
 * docs      : used in conjunction with the 'dist' profile to generate documentation
               as part of the build
-* sandbox   : builds the sandbox modules
-              (use -Dsandbox.module=<module-name> to build only one module)
 
 -------
 
