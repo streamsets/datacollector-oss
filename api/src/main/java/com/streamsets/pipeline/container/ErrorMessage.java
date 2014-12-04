@@ -24,18 +24,18 @@ public class ErrorMessage implements LocalizableString {
                                                 errorCode.getCode(), errorCode.getMessage(), params);
   }
 
-  public ErrorCode getId() {
+  public ErrorCode getErrorCode() {
     return errorCode;
   }
 
   @Override
   public String getNonLocalized() {
-    return Utils.format("{} - {}", getId().getCode(), localizableMessage.getNonLocalized());
+    return Utils.format("{} - {}", getErrorCode().getCode(), localizableMessage.getNonLocalized());
   }
 
   @Override
   public String getLocalized() {
-    return Utils.format("{} - {}", getId().getCode(), localizableMessage.getLocalized());
+    return Utils.format("{} - {}", getErrorCode().getCode(), localizableMessage.getLocalized());
   }
 
 }

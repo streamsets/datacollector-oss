@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.api;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -81,6 +82,10 @@ public interface Record {
     public String getErrorCode();
 
     public String getErrorMessage();
+
+    public String getErrorStage();
+
+    public long getErrorTimestamp();
 
   }
 

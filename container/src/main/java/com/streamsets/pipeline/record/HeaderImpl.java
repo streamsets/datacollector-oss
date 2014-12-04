@@ -13,6 +13,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.LocalizableString;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.Utils;
@@ -24,14 +25,16 @@ import java.util.Set;
 public class HeaderImpl implements Record.Header, Predicate<String> {
   private static final String RESERVED_PREFIX = "_.";
   private static final String STAGE_CREATOR_INSTANCE_ATTR = RESERVED_PREFIX + "stageCreator";
-  private  static final String RECORD_SOURCE_ID_ATTR = RESERVED_PREFIX + "recordSourceId";
-  private  static final String STAGES_PATH_ATTR = RESERVED_PREFIX + "stagePath";
-  private  static final String RAW_DATA_ATTR = RESERVED_PREFIX + "rawData";
-  private  static final String RAW_MIME_TYPE_ATTR = RESERVED_PREFIX + "rawMimeType";
-  private  static final String TRACKING_ID_ATTR = RESERVED_PREFIX + "trackingId";
-  private  static final String PREVIOUS_TRACKING_ID_ATTR = RESERVED_PREFIX + "previousTrackingId";
-  private  static final String ERROR_CODE_ATTR = RESERVED_PREFIX + "errorCode";
-  private  static final String ERROR_MESSAGE_ATTR = RESERVED_PREFIX + "errorMessage";
+  private static final String RECORD_SOURCE_ID_ATTR = RESERVED_PREFIX + "recordSourceId";
+  private static final String STAGES_PATH_ATTR = RESERVED_PREFIX + "stagePath";
+  private static final String RAW_DATA_ATTR = RESERVED_PREFIX + "rawData";
+  private static final String RAW_MIME_TYPE_ATTR = RESERVED_PREFIX + "rawMimeType";
+  private static final String TRACKING_ID_ATTR = RESERVED_PREFIX + "trackingId";
+  private static final String PREVIOUS_TRACKING_ID_ATTR = RESERVED_PREFIX + "previousTrackingId";
+  private static final String ERROR_CODE_ATTR = RESERVED_PREFIX + "errorCode";
+  private static final String ERROR_MESSAGE_ATTR = RESERVED_PREFIX + "errorMessage";
+  private static final String ERROR_STAGE_ATTR = RESERVED_PREFIX + "errorStage";
+  private static final String ERROR_TIMESTAMP_ATTR = RESERVED_PREFIX + "errorTimestamp";
 
   private final Map<String, Object> map;
 
@@ -103,6 +106,17 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   }
 
   @Override
+  public String getErrorStage() {
+    return (String) map.get(ERROR_STAGE_ATTR);
+  }
+
+  @Override
+  public long getErrorTimestamp() {
+    final Object time = map.get(ERROR_TIMESTAMP_ATTR);
+    return (time != null) ? (long) time : 0;
+  }
+
+  @Override
   @JsonIgnore
   public Set<String> getAttributeNames() {
     return ImmutableSet.copyOf(Sets.filter(map.keySet(), this));
@@ -150,17 +164,18 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
       @JsonProperty("previousTrackingId") String previousTrackingId,
       @JsonProperty("raw") byte[] raw,
       @JsonProperty("rawMimeType") String rawMimeType,
-      @JsonProperty("errorCode") String errorId,
-      @JsonProperty("errorMessage") String errorMsg,
+      @JsonProperty("errorStage") String errorStageInstance,
+      @JsonProperty("errorCode") String errorCode,
+      @JsonProperty("errorMessage") String errorMessage,
+      @JsonProperty("errorTimestamp") long errorTimestamp,
       @JsonProperty("values") Map<String, Object> map) {
     this.map = map;
     setStageCreator(stageCreator);
     setSourceId(sourceId);
     setStagesPath(stagesPath);
     setTrackingId(trackingId);
-    if (errorId != null) {
-      setErrorCode(errorId);
-      setErrorMessage(errorMsg);
+    if (errorCode != null) {
+      setError(errorStageInstance, errorCode, errorMessage, errorTimestamp);
     }
     if (previousTrackingId != null) {
       setPreviousTrackingId(previousTrackingId);
@@ -208,20 +223,19 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
     map.put(RAW_MIME_TYPE_ATTR, rawMime);
   }
 
-  public void setErrorCode(String errorCode) {
-    Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
+  public void setError(String errorStage, ErrorMessage errorMessage) {
+    Preconditions.checkNotNull(errorMessage, "errorCode cannot be null");
+    map.put(ERROR_STAGE_ATTR, errorStage);
+    map.put(ERROR_CODE_ATTR, errorMessage.getErrorCode().getCode());
+    map.put(ERROR_MESSAGE_ATTR, errorMessage);
+    map.put(ERROR_TIMESTAMP_ATTR, System.currentTimeMillis());
+  }
+
+  private void setError(String errorStage, String errorCode, String errorMessage, long errorTimestamp) {
+    map.put(ERROR_STAGE_ATTR, errorStage);
     map.put(ERROR_CODE_ATTR, errorCode);
-  }
-
-  public void setErrorMessage(LocalizableString errorMsg) {
-    Preconditions.checkNotNull(errorMsg, "errorMsg cannot be null");
-    map.put(ERROR_MESSAGE_ATTR, errorMsg);
-  }
-
-  @JsonProperty("errorMessage")
-  public void setErrorMessage(String errorMsg) {
-    Preconditions.checkNotNull(errorMsg, "errorMsg cannot be null");
-    map.put(ERROR_MESSAGE_ATTR, errorMsg);
+    map.put(ERROR_MESSAGE_ATTR, errorMessage);
+    map.put(ERROR_TIMESTAMP_ATTR, errorTimestamp);
   }
 
   // Object methods

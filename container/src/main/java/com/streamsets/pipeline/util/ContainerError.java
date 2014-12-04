@@ -16,7 +16,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0002("Error message: {}"),
 
   // RequiredFieldsErrorPredicateSink
-  CONTAINER_0050("The stage '{}' requires records to have the following fields '{}'"),
+  CONTAINER_0050("The stage requires records to have the following fields '{}'"),
 
   // PipelineManager
   CONTAINER_0100("Could not set state, {}"),

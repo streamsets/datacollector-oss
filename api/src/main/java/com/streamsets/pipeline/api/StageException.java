@@ -27,7 +27,7 @@ public class StageException extends Exception {
   }
 
   public ErrorCode getErrorCode() {
-    return errorMessage.getId();
+    return errorMessage.getErrorCode();
   }
 
   @Override

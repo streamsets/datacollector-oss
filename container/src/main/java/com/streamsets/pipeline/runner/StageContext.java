@@ -86,17 +86,17 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public void reportError(Exception exception) {
     Preconditions.checkNotNull(exception, "exception cannot be null");
-    errorSink.addError(new ErrorMessage(ContainerError.CONTAINER_0001, instanceName, exception.getMessage()));
+    errorSink.addError(new ErrorMessage(ContainerError.CONTAINER_0001, exception.getMessage()));
   }
 
   @Override
   public void reportError(String errorMessage) {
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    errorSink.addError(new ErrorMessage(ContainerError.CONTAINER_0002, instanceName, errorMessage));
+    errorSink.addError(new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
   }
 
   @Override
-  public void reportError(ErrorCode errorCode, String... args) {
+  public void reportError(ErrorCode errorCode, Object... args) {
     Preconditions.checkNotNull(errorCode, "errorId cannot be null");
     errorSink.addError(new ErrorMessage(errorCode, args));
   }
@@ -106,27 +106,28 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, Exception ex) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(ex, "exception cannot be null");
-    ((RecordImpl)record).getHeader().setErrorCode(ContainerError.CONTAINER_0001.getCode());
-    ((RecordImpl)record).getHeader().setErrorMessage(new ErrorMessage(ContainerError.CONTAINER_0001, ex.getMessage()));
-    errorSink.addRecord(instanceName, record);
+    RecordImpl recordImpl = ((RecordImpl) record).clone();
+    recordImpl.getHeader().setError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0001, instanceName,
+                                                                   ex.getMessage()));
+    errorSink.addRecord(instanceName, recordImpl);
   }
 
   @Override
   public void toError(Record record, String errorMessage) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    ((RecordImpl)record).getHeader().setErrorCode(ContainerError.CONTAINER_0002.getCode());
-    ((RecordImpl)record).getHeader().setErrorMessage(new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
-    errorSink.addRecord(instanceName, record);
+    RecordImpl recordImpl = ((RecordImpl) record).clone();
+    recordImpl.getHeader().setError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
+    errorSink.addRecord(instanceName, recordImpl);
   }
 
   @Override
-  public void toError(Record record, ErrorCode errorCode, String... args) {
+  public void toError(Record record, ErrorCode errorCode, Object... args) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorCode, "errorId cannot be null");
-    ((RecordImpl) record).getHeader().setErrorCode(errorCode.toString());
-    ((RecordImpl) record).getHeader().setErrorMessage(new ErrorMessage(errorCode, args));
-    errorSink.addRecord(instanceName, record);
+    RecordImpl recordImpl = ((RecordImpl) record).clone();
+    recordImpl.getHeader().setError(instanceName, new ErrorMessage(errorCode, args));
+    errorSink.addRecord(instanceName, recordImpl);
   }
 
   @Override

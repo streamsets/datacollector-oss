@@ -40,13 +40,13 @@ public interface Stage<C extends Stage.Context> {
 
     public void reportError(String errorMessage);
 
-    public void reportError(ErrorCode errorCode, String... args);
+    public void reportError(ErrorCode errorCode, Object... args);
 
     public void toError(Record record, Exception exception);
 
     public void toError(Record record, String errorMessage);
 
-    public void toError(Record record, ErrorCode errorCode, String... args);
+    public void toError(Record record, ErrorCode errorCode, Object... args);
 
   }
 

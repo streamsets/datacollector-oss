@@ -33,8 +33,7 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
   @Override
   public void add(Record record, ErrorMessage reason) {
     RecordImpl recordImpl = (RecordImpl) record;
-    recordImpl.getHeader().setErrorCode(reason.getId().toString());
-    recordImpl.getHeader().setErrorMessage(reason);
+    recordImpl.getHeader().setError(instanceName, reason);
     errorSink.addRecord(instanceName, recordImpl);
     counter++;
   }
@@ -61,7 +60,7 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
   @Override
   public ErrorMessage getRejectedMessage() {
     Preconditions.checkState(!missingFields.isEmpty(), "Called for record that passed the predicate check");
-    return new ErrorMessage(ContainerError.CONTAINER_0050, instanceName, missingFields);
+    return new ErrorMessage(ContainerError.CONTAINER_0050, missingFields);
   }
 
   @Override
