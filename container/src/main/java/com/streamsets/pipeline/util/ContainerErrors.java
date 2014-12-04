@@ -20,6 +20,9 @@ package com.streamsets.pipeline.util;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum ContainerErrors implements ErrorCode {
+  // Unchecked exception
+  CONTAINER_0000("Runtime exception: {}"),
+
   // StageContext
   CONTAINER_0001("Exception: {}"),
   CONTAINER_0002("Error message: {}"),

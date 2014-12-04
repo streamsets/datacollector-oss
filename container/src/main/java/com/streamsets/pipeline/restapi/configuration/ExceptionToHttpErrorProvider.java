@@ -17,6 +17,9 @@
  */
 package com.streamsets.pipeline.restapi.configuration;
 
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.util.ContainerErrors;
+import com.streamsets.pipeline.util.PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +29,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -37,18 +42,32 @@ public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> 
   private static Logger LOG = LoggerFactory.getLogger(ExceptionToHttpErrorProvider.class);
 
   private static final String ERROR_JSON = "RemoteException";
+  private static final String ERROR_CODE_JSON = "errorCode";
   private static final String ERROR_EXCEPTION_JSON = "exception";
   private static final String ERROR_CLASSNAME_JSON = "javaClassName";
   private static final String ERROR_MESSAGE_JSON = "message";
   private static final String ERROR_LOCALIZED_MESSAGE_JSON = "localizedMessage";
+  private static final String ERROR_STACK_TRACE = "stackTrace";
   private static final String ENTER = System.getProperty("line.separator");
 
   protected Response createResponse(Response.Status status, Throwable ex) {
     Map<String, Object> json = new LinkedHashMap<String, Object>();
     json.put(ERROR_MESSAGE_JSON, getOneLineMessage(ex, false));
+    if (ex instanceof StageException) {
+      json.put(ERROR_CODE_JSON, ((StageException)ex).getId().getCode());
+    } else if (ex instanceof PipelineException) {
+      json.put(ERROR_CODE_JSON, ((PipelineException)ex).getId().getCode());
+    } else if (ex instanceof RuntimeException) {
+      json.put(ERROR_CODE_JSON, ContainerErrors.CONTAINER_0000.getCode());
+    }
     json.put(ERROR_LOCALIZED_MESSAGE_JSON, getOneLineMessage(ex, true));
     json.put(ERROR_EXCEPTION_JSON, ex.getClass().getSimpleName());
     json.put(ERROR_CLASSNAME_JSON, ex.getClass().getName());
+    StringWriter writer = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(writer);
+    ex.printStackTrace(printWriter);
+    printWriter.close();
+    json.put(ERROR_STACK_TRACE, writer.toString());
     Map<String, Object> response = new LinkedHashMap<String, Object>();
     response.put(ERROR_JSON, json);
     return Response.status(status).type(MediaType.APPLICATION_JSON).
