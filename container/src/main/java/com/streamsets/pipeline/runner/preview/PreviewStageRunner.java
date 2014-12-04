@@ -27,6 +27,7 @@ import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.runner.StagePipe;
+import com.streamsets.pipeline.util.ContainerErrors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,14 +61,14 @@ public class PreviewStageRunner implements PipelineRunner {
     }
     if (stagePipe != null) {
       if (stagePipe.getStage().getDefinition().getType() == StageType.SOURCE) {
-        throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.CANNOT_PREVIEW_STAGE_ON_SOURCE, instanceName);
+        throw new PipelineRuntimeException(ContainerErrors.CONTAINER_0157, instanceName);
       }
       PipeBatch pipeBatch = new StagePreviewPipeBatch(instanceName, inputRecords);
       stagePipe.process(pipeBatch);
       batchesOutput.add(pipeBatch.getSnapshotsOfAllStagesOutput());
 
     } else {
-      throw new PipelineRuntimeException(PipelineRuntimeException.ERROR.INVALID_INSTANCE_STAGE, instanceName);
+      throw new PipelineRuntimeException(ContainerErrors.CONTAINER_0156, instanceName);
     }
   }
 

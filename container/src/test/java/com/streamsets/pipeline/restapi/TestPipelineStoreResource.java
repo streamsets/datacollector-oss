@@ -26,6 +26,7 @@ import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.util.ContainerErrors;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -172,7 +173,7 @@ public class TestPipelineStoreResource extends JerseyTest {
         Mockito.when(pipelineStore.create("myPipeline", "my description", "nobody")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.doNothing().when(pipelineStore).delete("myPipeline");
-        Mockito.doThrow(new PipelineStoreException(PipelineStoreException.ERROR.PIPELINE_DOES_NOT_EXIST, "xyz"))
+        Mockito.doThrow(new PipelineStoreException(ContainerErrors.CONTAINER_0200, "xyz"))
             .when(pipelineStore).delete("xyz");
         Mockito.when(pipelineStore.save(
             Matchers.anyString(), Matchers.anyString(), Matchers.anyString(), Matchers.anyString(),

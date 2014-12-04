@@ -15,31 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.runner;
+package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.util.PipelineException;
-import com.streamsets.pipeline.validation.Issue;
 
-import java.util.Collections;
-import java.util.List;
+public enum BaseErrors implements ErrorCode {
+  BASE_0001("Stage '{}', there should be 1 output lane but there are '{}'");
 
-public class PipelineRuntimeException extends PipelineException {
-  private final List<Issue> issues;
+  private final String msg;
 
-  public PipelineRuntimeException(ErrorCode errorCode, List<Issue> issues) {
-    super(errorCode, issues);
-    this.issues = issues;
+  BaseErrors(String msg) {
+    this.msg = msg;
   }
 
-  @SuppressWarnings("unchecked")
-  public PipelineRuntimeException(ErrorCode errorCode, Object... params) {
-    super(errorCode, params);
-    issues = Collections.EMPTY_LIST;
+
+  @Override
+  public String getCode() {
+    return name();
   }
 
-  public List<Issue> getIssues() {
-    return issues;
+  @Override
+  public String getMessage() {
+    return msg;
   }
 
 }

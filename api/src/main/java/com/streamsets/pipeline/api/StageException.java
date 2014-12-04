@@ -33,12 +33,12 @@ public class StageException extends Exception {
   private final ErrorMessage errorMessage;
 
   // last parameter can be an exception cause
-  public StageException(ErrorId errorId, Object... params) {
+  public StageException(ErrorCode errorCode, Object... params) {
     super(getCause(params));
-    errorMessage = new ErrorMessage(errorId, params);
+    errorMessage = new ErrorMessage(errorCode, params);
   }
 
-  public ErrorId getId() {
+  public ErrorCode getId() {
     return errorMessage.getId();
   }
 

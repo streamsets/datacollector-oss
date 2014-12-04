@@ -19,26 +19,10 @@ package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Record;
 
 public abstract class SingleLaneProcessor extends BaseProcessor {
-
-  private enum ERROR implements ErrorId {
-    OUTPUT_LANE_ERROR("There should be 1 output lane but there are '{}'");
-
-    private String msg;
-
-    ERROR(String msg) {
-      this.msg = msg;
-    }
-
-    @Override
-    public String getMessage() {
-      return msg;
-    }
-  }
 
   public interface SingleLaneBatchMaker {
     public void addRecord(Record record);
@@ -53,7 +37,7 @@ public abstract class SingleLaneProcessor extends BaseProcessor {
   @Override
   protected void init() throws StageException {
     if (getContext().getOutputLanes().size() != 1) {
-      throw new StageException(ERROR.OUTPUT_LANE_ERROR, getContext().getOutputLanes().size());
+      throw new StageException(BaseErrors.BASE_0001, getInfo().getInstanceName(), getContext().getOutputLanes().size());
     }
     outputLane = getContext().getOutputLanes().iterator().next();
     setSuperInitCalled();

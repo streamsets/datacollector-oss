@@ -24,18 +24,18 @@ import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.util.ContainerErrors;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -97,36 +97,22 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.errorSink = errorSink;
   }
 
-  private static final ErrorId EXCEPTION = new ErrorId() {
-    @Override
-    public String getMessage() {
-      return "Exception: {}";
-    }
-  };
-
   @Override
   public void reportError(Exception exception) {
     Preconditions.checkNotNull(exception, "exception cannot be null");
-    errorSink.addError(new ErrorMessage(EXCEPTION, exception.getMessage()));
+    errorSink.addError(new ErrorMessage(ContainerErrors.CONTAINER_0001, instanceName, exception.getMessage()));
   }
-
-  private static final ErrorId ERROR_MESSAGE = new ErrorId() {
-    @Override
-    public String getMessage() {
-      return "Error message: {}";
-    }
-  };
 
   @Override
   public void reportError(String errorMessage) {
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    errorSink.addError(new ErrorMessage(ERROR_MESSAGE, errorMessage));
+    errorSink.addError(new ErrorMessage(ContainerErrors.CONTAINER_0002, instanceName, errorMessage));
   }
 
   @Override
-  public void reportError(ErrorId errorId, String... args) {
-    Preconditions.checkNotNull(errorId, "errorId cannot be null");
-    errorSink.addError(new ErrorMessage(errorId, args));
+  public void reportError(ErrorCode errorCode, String... args) {
+    Preconditions.checkNotNull(errorCode, "errorId cannot be null");
+    errorSink.addError(new ErrorMessage(errorCode, args));
   }
 
   @Override
@@ -149,11 +135,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   }
 
   @Override
-  public void toError(Record record, ErrorId errorId, String... args) {
+  public void toError(Record record, ErrorCode errorCode, String... args) {
     Preconditions.checkNotNull(record, "record cannot be null");
-    Preconditions.checkNotNull(errorId, "errorId cannot be null");
-    ((RecordImpl) record).getHeader().setErrorId(errorId.toString());
-    ((RecordImpl) record).getHeader().setErrorMessage(new ErrorMessage(errorId, args));
+    Preconditions.checkNotNull(errorCode, "errorId cannot be null");
+    ((RecordImpl) record).getHeader().setErrorId(errorCode.toString());
+    ((RecordImpl) record).getHeader().setErrorMessage(new ErrorMessage(errorCode, args));
     errorSink.addRecord(instanceName, record);
   }
 

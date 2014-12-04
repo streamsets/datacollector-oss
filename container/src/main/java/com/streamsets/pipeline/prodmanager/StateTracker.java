@@ -25,6 +25,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.util.ContainerErrors;
 import com.streamsets.pipeline.util.JsonFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,8 +110,8 @@ public class StateTracker {
     try {
       return json.readObjectFromFile(getStateFile(), PipelineState.class);
     } catch (IOException e) {
-      LOG.error(PipelineManagerException.ERROR.COULD_NOT_GET_STATE.getMessage(), e.getMessage());
-      throw new PipelineManagerException(PipelineManagerException.ERROR.COULD_NOT_GET_STATE, e.getMessage(), e);
+      LOG.error(ContainerErrors.CONTAINER_0101.getMessage(), e.getMessage());
+      throw new PipelineManagerException(ContainerErrors.CONTAINER_0101, e.getMessage(), e);
     }
   }
 
@@ -126,8 +127,8 @@ public class StateTracker {
       json.appendObjectToFile(pipelineStateTempFile, pipelineStateFile, pipelineState);
 
     } catch (IOException e) {
-      LOG.error(PipelineManagerException.ERROR.COULD_NOT_SET_STATE.getMessage(), e.getMessage());
-      throw new PipelineManagerException(PipelineManagerException.ERROR.COULD_NOT_SET_STATE, e.getMessage(), e);
+      LOG.error(ContainerErrors.CONTAINER_0100.getMessage(), e.getMessage());
+      throw new PipelineManagerException(ContainerErrors.CONTAINER_0100, e.getMessage(), e);
     }
   }
 

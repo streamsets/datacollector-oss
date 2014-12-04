@@ -20,7 +20,9 @@ package com.streamsets.pipeline.api;
 /**
  * Implementations must be enums for Localization to kick in.
  */
-public interface ErrorId {
+public interface ErrorCode {
+
+  public String getCode();
 
   public String getMessage();
 

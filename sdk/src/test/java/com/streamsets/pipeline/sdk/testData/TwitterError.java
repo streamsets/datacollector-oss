@@ -17,11 +17,11 @@
  */
 package com.streamsets.pipeline.sdk.testData;
 
-import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
-public enum TwitterError implements ErrorId {
+public enum TwitterError implements ErrorCode {
   INPUT_LANE_ERROR("There should be 1 input lane but there are '{}'"),
   OUTPUT_LANE_ERROR("There should be 1 output lane but there are '{}'");
 
@@ -29,6 +29,12 @@ public enum TwitterError implements ErrorId {
 
   TwitterError(String msg) {
     this.msg = msg;
+  }
+
+
+  @Override
+  public String getCode() {
+    return name();
   }
 
   @Override

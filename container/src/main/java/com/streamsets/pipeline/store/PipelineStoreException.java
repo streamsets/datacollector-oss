@@ -17,36 +17,14 @@
  */
 package com.streamsets.pipeline.store;
 
-import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.util.PipelineException;
 
 public class PipelineStoreException extends PipelineException {
 
 
- public enum ERROR implements ErrorId {
-   PIPELINE_DOES_NOT_EXIST("Pipeline '{}' does not exist"),
-   PIPELINE_ALREADY_EXISTS("Pipeline '{}' already exists"),
-   COULD_NOT_CREATE_PIPELINE("Could not create pipeline '{}', {}"),
-   COULD_NOT_DELETE_PIPELINE("Could not delete pipeline '{}', {}"),
-   COULD_NOT_SAVE_PIPELINE("Could not save pipeline '{}', {}"),
-   INVALID_UUID_FOR_PIPELINE("The provided UUID does not match the stored one, please reload the pipeline '{}'"),
-   COULD_NOT_LOAD_PIPELINE_INFO("Could not load pipeline '{}' info, {}");
-
-   private final String msgTemplate;
-
-   ERROR(String msgTemplate) {
-     this.msgTemplate = msgTemplate;
-   }
-
-   @Override
-   public String getMessage() {
-     return msgTemplate;
-   }
-
- }
-
-  public PipelineStoreException(ERROR id, Object... params) {
-    super(id, params);
+  public PipelineStoreException(ErrorCode errorCode, Object... params) {
+    super(errorCode, params);
   }
 
 }

@@ -20,12 +20,12 @@ package com.streamsets.pipeline.lib.stage.source.spooldir;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.OverrunException;
+import com.streamsets.pipeline.lib.util.StageLibErrors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -196,7 +196,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
         try {
           spooler.handleFileInError(currentFile);
         } catch (IOException ex1) {
-          throw new StageException(ERROR.COULD_NOT_ARCHIVE_FILE_IN_ERROR, currentFile, ex1.getMessage(), ex1);
+          throw new StageException(StageLibErrors.LIB_0001, currentFile, ex1.getMessage(), ex1);
         }
         offset = -1;
       }
@@ -207,20 +207,5 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
   //return -1 if file was fully read
   protected abstract long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker)
       throws StageException, BadSpoolFileException;
-
-  public enum ERROR implements ErrorId {
-    COULD_NOT_ARCHIVE_FILE_IN_ERROR("Could not archive file '{}' in error, {}");
-
-    private final String msg;
-
-    ERROR(String msg) {
-      this.msg = msg;
-    }
-
-    @Override
-    public String getMessage() {
-      return msg;
-    }
-  }
 
 }

@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
@@ -75,14 +75,20 @@ public class TwitterValuesProviderAndEnum extends BaseSource {
 
     //Enums
     @GenerateResourceBundle
-    public enum ERROR implements ErrorId {
+    public enum ERROR implements ErrorCode {
       INPUT_LANE_ERROR("There should be 1 input lane but there are '{}'"),
       OUTPUT_LANE_ERROR("There should be 1 output lane but there are '{}'");
 
       private final String msg;
 
+
       ERROR(String msg) {
         this.msg = msg;
+      }
+
+      @Override
+      public String getCode() {
+        return name();
       }
 
       @Override

@@ -17,47 +17,37 @@
  */
 package com.streamsets.pipeline.container;
 
-import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.api.ErrorCode;
 
 public class ErrorMessage implements LocalizableString {
   private static final Object[] NULL_ONE_ARG = {null};
 
-  private final ErrorId errorId;
+  private final ErrorCode errorCode;
   private final LocalizableString localizableMessage;
-  private final Object[] params;
 
-  public ErrorMessage(ErrorId errorId, Object... params) {
-    this(Utils.checkNotNull(errorId, "errorId").getClass().getName(), errorId, params);
+  public ErrorMessage(ErrorCode errorCode, Object... params) {
+    this(Utils.checkNotNull(errorCode, "errorCode").getClass().getName(), errorCode, params);
   }
 
-  public ErrorMessage(String resourceBundle, ErrorId errorId, Object... params) {
-    this.errorId = Utils.checkNotNull(errorId, "errorId");
+  public ErrorMessage(String resourceBundle, ErrorCode errorCode, Object... params) {
+    this.errorCode = Utils.checkNotNull(errorCode, "errorCode");
     params = (params != null) ? params : NULL_ONE_ARG;
-    if (errorId instanceof Enum) {
-      localizableMessage = new LocalizableMessage(errorId.getClass().getClassLoader(), resourceBundle,
-                                                  errorId.toString(),
-                                                  "[" + errorId.toString() + "] - " + errorId.getMessage(), params);
-      this.params = null;
-    } else {
-      localizableMessage = null;
-      this.params = params;
-    }
+    localizableMessage = new LocalizableMessage(errorCode.getClass().getClassLoader(), resourceBundle,
+                                                errorCode.getCode(), errorCode.getMessage(), params);
   }
 
-  public ErrorId getId() {
-    return errorId;
+  public ErrorCode getId() {
+    return errorCode;
   }
 
   @Override
   public String getNonLocalized() {
-    return (localizableMessage != null) ? localizableMessage.getNonLocalized()
-                                        : Utils.format(errorId.getMessage(), params);
+    return Utils.format("[{}] - {}", getId().getCode(), localizableMessage.getNonLocalized());
   }
 
   @Override
   public String getLocalized() {
-    return (localizableMessage != null) ? localizableMessage.getLocalized()
-                                        : Utils.format(errorId.getMessage(), params);
+    return Utils.format("[{}] - {}", getId().getCode(), localizableMessage.getLocalized());
   }
 
 }

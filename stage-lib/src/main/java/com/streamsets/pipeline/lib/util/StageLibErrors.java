@@ -15,31 +15,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.runner;
+package com.streamsets.pipeline.lib.util;
 
 import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.util.PipelineException;
-import com.streamsets.pipeline.validation.Issue;
 
-import java.util.Collections;
-import java.util.List;
+public enum StageLibErrors implements ErrorCode {
 
-public class PipelineRuntimeException extends PipelineException {
-  private final List<Issue> issues;
+  // AbstractSpoolDirSource
+  LIB_0001("Could not archive file '{}' in error, {}"),
 
-  public PipelineRuntimeException(ErrorCode errorCode, List<Issue> issues) {
-    super(errorCode, issues);
-    this.issues = issues;
+  // LogTailSource
+  LIB_0002("Insufficient permissions to read the log file '{}'")
+
+  ;
+
+  private final String msg;
+
+  StageLibErrors(String msg) {
+    this.msg = msg;
   }
 
-  @SuppressWarnings("unchecked")
-  public PipelineRuntimeException(ErrorCode errorCode, Object... params) {
-    super(errorCode, params);
-    issues = Collections.EMPTY_LIST;
+  @Override
+  public String getCode() {
+    return name();
   }
 
-  public List<Issue> getIssues() {
-    return issues;
+  @Override
+  public String getMessage() {
+    return msg;
   }
-
 }

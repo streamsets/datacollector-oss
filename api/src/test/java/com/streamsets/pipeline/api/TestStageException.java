@@ -17,56 +17,52 @@
  */
 package com.streamsets.pipeline.api;
 
+import com.streamsets.pipeline.api.base.BaseErrors;
+import com.streamsets.pipeline.container.LocaleInContext;
+import com.streamsets.pipeline.container.Utils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Locale;
+
 public class TestStageException {
 
-  enum TError implements ErrorId {
-    ID;
-
-    @Override
-    public String getMessage() {
-      return "Hello {}";
-    }
-  }
-
-  public static class NonEnumError implements ErrorId {
-    public static final ErrorId ID = new NonEnumError();
-
-    @Override
-    public String getMessage() {
-      return "Hello {}";
-    }
+  @After
+  public void cleanUp() {
+    LocaleInContext.set(null);
   }
 
   @Test
   public void testException() {
-    StageException ex = new StageException(TError.ID);
-    Assert.assertEquals(TError.ID, ex.getId());
-    Assert.assertEquals("[ID] - Hello {}", ex.getMessage());
-    Assert.assertEquals("[ID] - Hello {}", ex.getLocalizedMessage());
+    StageException ex = new StageException(BaseErrors.BASE_0001);
+    Assert.assertEquals(BaseErrors.BASE_0001, ex.getId());
+    Assert.assertEquals("[BASE_0001] - " + BaseErrors.BASE_0001.getMessage(), ex.getMessage());
+    LocaleInContext.set(Locale.forLanguageTag("abc"));
+    Assert.assertEquals("[BASE_0001] - " + BaseErrors.BASE_0001.getMessage(), ex.getMessage());
+    LocaleInContext.set(Locale.forLanguageTag("xyz"));
+    Assert.assertEquals("[BASE_0001] - Hello XYZ '{}'", ex.getLocalizedMessage());
+    LocaleInContext.set(null);
     Assert.assertNull(ex.getCause());
 
     Exception cause = new Exception();
-    ex = new StageException(TError.ID, cause);
+    ex = new StageException(BaseErrors.BASE_0001, cause);
     Assert.assertEquals(cause, ex.getCause());
 
-    ex = new StageException(TError.ID, "a");
-    Assert.assertEquals("[ID] - Hello a", ex.getMessage());
-    Assert.assertEquals("[ID] - Hello a", ex.getLocalizedMessage());
+    ex = new StageException(BaseErrors.BASE_0001, "a");
+    Assert.assertEquals("[BASE_0001] - " + Utils.format(BaseErrors.BASE_0001.getMessage(), "a"), ex.getMessage());
+    LocaleInContext.set(Locale.forLanguageTag("xyz"));
+    Assert.assertEquals("[BASE_0001] - Hello XYZ 'a'", ex.getLocalizedMessage());
+    LocaleInContext.set(null);
     Assert.assertNull(ex.getCause());
 
-    ex = new StageException(TError.ID, "a", cause);
-    Assert.assertEquals("[ID] - Hello a", ex.getMessage());
-    Assert.assertEquals("[ID] - Hello a", ex.getLocalizedMessage());
+    ex = new StageException(BaseErrors.BASE_0001, "a", 1, cause);
+    Assert.assertEquals("[BASE_0001] - " + Utils.format(BaseErrors.BASE_0001.getMessage(), "a", 1), ex.getMessage());
+    LocaleInContext.set(Locale.forLanguageTag("xyz"));
+    Assert.assertEquals("[BASE_0001] - Hello XYZ 'a'", ex.getLocalizedMessage());
+    LocaleInContext.set(null);
     Assert.assertEquals(cause, ex.getCause());
 
-    ex = new StageException(NonEnumError.ID, "a", cause);
-    Assert.assertEquals(NonEnumError.ID, ex.getId());
-    Assert.assertEquals("Hello a", ex.getMessage());
-    Assert.assertEquals("Hello a", ex.getLocalizedMessage());
-    Assert.assertEquals(cause, ex.getCause());
   }
 
 }

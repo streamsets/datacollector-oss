@@ -17,7 +17,7 @@
  */
 package com.streamsets.pipeline.util;
 
-import com.streamsets.pipeline.api.ErrorId;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.LocalizableString;
 import com.streamsets.pipeline.container.Utils;
@@ -33,18 +33,18 @@ public class PipelineException extends Exception {
     return throwable;
   }
 
-  private final ErrorId errorId;
+  private final ErrorCode errorCode;
   private final LocalizableString localizedErrorId;
 
   // last parameter can be an exception cause
-  public PipelineException(ErrorId errorId, Object... params) {
+  public PipelineException(ErrorCode errorCode, Object... params) {
     super(getCause(params));
-    this.errorId = Utils.checkNotNull(errorId, "errorId");
-    this.localizedErrorId = new ErrorMessage(PIPELINE_CONTAINER_BUNDLE, errorId, params);
+    this.errorCode = Utils.checkNotNull(errorCode, "errorId");
+    this.localizedErrorId = new ErrorMessage(PIPELINE_CONTAINER_BUNDLE, errorCode, params);
   }
 
-  public ErrorId getId() {
-    return errorId;
+  public ErrorCode getId() {
+    return errorCode;
   }
 
   @Override

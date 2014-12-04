@@ -18,33 +18,17 @@
 package com.streamsets.pipeline.runner;
 
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.ErrorId;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.util.ContainerErrors;
 import com.streamsets.pipeline.util.PipelineException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//FIXME
 public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predicate, FilterRecordBatch.Sink {
-
-  private enum ERROR implements ErrorId {
-    MISSING_FIELDS("The stage '{}' requires records to have the following fields [{}]");
-
-    private String msg;
-
-    ERROR(String msg) {
-      this.msg = msg;
-    }
-
-    @Override
-    public String getMessage() {
-      return msg;
-    }
-  }
 
   private final List<String> requiredFields;
   private final String instanceName;
@@ -90,7 +74,7 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
   @Override
   public ErrorMessage getRejectedMessage() {
     Preconditions.checkState(!missingFields.isEmpty(), "Called for record that passed the predicate check");
-    return new ErrorMessage(PipelineException.PIPELINE_CONTAINER_BUNDLE, ERROR.MISSING_FIELDS, instanceName,
+    return new ErrorMessage(PipelineException.PIPELINE_CONTAINER_BUNDLE, ContainerErrors.CONTAINER_0050, instanceName,
                                   missingFields);
   }
 
