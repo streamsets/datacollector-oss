@@ -54,9 +54,9 @@ public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> 
     Map<String, Object> json = new LinkedHashMap<String, Object>();
     json.put(ERROR_MESSAGE_JSON, getOneLineMessage(ex, false));
     if (ex instanceof StageException) {
-      json.put(ERROR_CODE_JSON, ((StageException)ex).getId().getCode());
+      json.put(ERROR_CODE_JSON, ((StageException)ex).getErrorCode().getCode());
     } else if (ex instanceof PipelineException) {
-      json.put(ERROR_CODE_JSON, ((PipelineException)ex).getId().getCode());
+      json.put(ERROR_CODE_JSON, ((PipelineException)ex).getErrorCode().getCode());
     } else if (ex instanceof RuntimeException) {
       json.put(ERROR_CODE_JSON, ContainerErrors.CONTAINER_0000.getCode());
     }

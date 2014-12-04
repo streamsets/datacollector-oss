@@ -38,7 +38,7 @@ public class StageException extends Exception {
     errorMessage = new ErrorMessage(errorCode, params);
   }
 
-  public ErrorCode getId() {
+  public ErrorCode getErrorCode() {
     return errorMessage.getId();
   }
 

@@ -43,7 +43,7 @@ public class PipelineException extends Exception {
     this.localizedErrorId = new ErrorMessage(PIPELINE_CONTAINER_BUNDLE, errorCode, params);
   }
 
-  public ErrorCode getId() {
+  public ErrorCode getErrorCode() {
     return errorCode;
   }
 

@@ -36,7 +36,7 @@ public class TestStageException {
   @Test
   public void testException() {
     StageException ex = new StageException(BaseErrors.BASE_0001);
-    Assert.assertEquals(BaseErrors.BASE_0001, ex.getId());
+    Assert.assertEquals(BaseErrors.BASE_0001, ex.getErrorCode());
     Assert.assertEquals("[BASE_0001] - " + BaseErrors.BASE_0001.getMessage(), ex.getMessage());
     LocaleInContext.set(Locale.forLanguageTag("abc"));
     Assert.assertEquals("[BASE_0001] - " + BaseErrors.BASE_0001.getMessage(), ex.getMessage());
