@@ -64,6 +64,33 @@ angular
           stageInstance.configuration.push(config);
         });
 
+
+        if(stage.rawSourceDefinition && stage.rawSourceDefinition.configDefinitions) {
+
+          stageInstance.uiInfo.rawSource = {
+            configuration: []
+          };
+
+          angular.forEach(stage.rawSourceDefinition.configDefinitions, function (configDefinition) {
+            var config = {
+              name: configDefinition.name,
+              value: configDefinition.defaultValue
+            };
+
+            if(configDefinition.type === 'MODEL' && configDefinition.model.modelType === 'FIELD_SELECTOR') {
+              config.value = [];
+            } else if(configDefinition.type === 'INTEGER') {
+              if(config.value) {
+                config.value = parseInt(config.value);
+              } else {
+                config.value = 0;
+              }
+            }
+
+            stageInstance.uiInfo.rawSource.configuration.push(config);
+          });
+        }
+
         switch(stage.type) {
           case SOURCE_STAGE_TYPE:
             stageInstance.uiInfo.icon = 'assets/stage/ic_insert_drive_file_48px.svg';

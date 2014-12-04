@@ -1,4 +1,9 @@
 .configuration-tab {
+
+  .panel-body {
+    padding: @smallPadding * 3;
+  }
+
   input[type=checkbox] {
     margin-top: 11px;
   }
@@ -12,12 +17,24 @@
   }
 
   .form-group.has-error .help-block {
-    display: block;
+    display: inherit;
   }
 
   .table {
     input[type=checkbox] {
       margin-top: 0;
+    }
+  }
+
+  .popover {
+    width : 800px;
+    z-index   : 1060;
+  }
+
+
+  .source-preview {
+    pre {
+      height: 400px;
     }
   }
 }

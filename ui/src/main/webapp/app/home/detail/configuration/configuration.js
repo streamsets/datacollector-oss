@@ -5,8 +5,9 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('ConfigurationController', function ($scope, _, api) {
+  .controller('ConfigurationController', function ($scope, $rootScope, _, api) {
     angular.extend($scope, {
+
       /**
        * Returns message for the give Configuration Object and Definition.
        *
@@ -76,6 +77,16 @@ angular
           });
           this.newFieldName = '';
         }
+      },
+
+      rawSourcePreview: function() {
+        api.pipelineAgent.previewRawSource($scope.activeConfigInfo.name, 0, $scope.detailPaneConfig.uiInfo.rawSource.configuration)
+          .success(function(data) {
+            $scope.rawSourcePreviewData = data ? data.previewString : '';
+          })
+          .error(function(data, status, headers, config) {
+            $rootScope.common.errors = [data];
+          });
       }
     });
   });

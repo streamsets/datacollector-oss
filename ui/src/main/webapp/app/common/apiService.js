@@ -354,6 +354,30 @@ angular.module('pipelineAgentApp.common')
           method: 'GET',
           url: url
         });
+      },
+
+
+      /**
+       * Preview Raw Source
+       *
+       * @param name
+       * @param rev
+       * @param configurations
+       * @returns {*}
+       */
+      previewRawSource: function(name, rev, configurations) {
+        var url = apiBase + '/pipeline-library/' + name + '/rawSourcePreview?rev=' + rev;
+
+        angular.forEach(configurations, function(config) {
+          if(config.name && config.value) {
+            url+= '&' + config.name + '=' + config.value;
+          }
+        });
+
+        return $http({
+          method: 'GET',
+          url: url
+        });
       }
     };
 
