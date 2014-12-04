@@ -21,7 +21,7 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.util.ContainerErrors;
+import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.validation.StageIssue;
@@ -46,7 +46,7 @@ public class ProductionPipelineBuilder {
   public ProductionPipeline build(ProductionPipelineRunner runner) throws PipelineRuntimeException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     if (!validator.validate()) {
-      throw new PipelineRuntimeException(ContainerErrors.CONTAINER_0158, getFirstIssueAsString(
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, getFirstIssueAsString(
           validator.getIssues()));
     }
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, pipelineConf).build(runner);

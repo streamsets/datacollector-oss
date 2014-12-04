@@ -90,7 +90,7 @@ public interface Record {
 
     public void deleteAttribute(String name);
 
-    public String getErrorId();
+    public String getErrorCode();
 
     public String getErrorMessage();
 

@@ -19,7 +19,7 @@ package com.streamsets.pipeline.validation;
 
 import com.streamsets.pipeline.api.ErrorCode;
 
-public enum ValidationErrors implements ErrorCode {
+public enum ValidationError implements ErrorCode {
 
   VALIDATION_0001("The pipeline is empty"),
   VALIDATION_0002("Stages are not fully wired, cannot reach the following stages '{}'"),
@@ -44,7 +44,7 @@ public enum ValidationErrors implements ErrorCode {
 
   private final String msg;
 
-  ValidationErrors(String msg) {
+  ValidationError(String msg) {
     this.msg = msg;
   }
 

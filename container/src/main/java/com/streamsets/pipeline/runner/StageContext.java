@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.util.ContainerErrors;
+import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.Utils;
@@ -98,13 +98,13 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public void reportError(Exception exception) {
     Preconditions.checkNotNull(exception, "exception cannot be null");
-    errorSink.addError(new ErrorMessage(ContainerErrors.CONTAINER_0001, instanceName, exception.getMessage()));
+    errorSink.addError(new ErrorMessage(ContainerError.CONTAINER_0001, instanceName, exception.getMessage()));
   }
 
   @Override
   public void reportError(String errorMessage) {
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    errorSink.addError(new ErrorMessage(ContainerErrors.CONTAINER_0002, instanceName, errorMessage));
+    errorSink.addError(new ErrorMessage(ContainerError.CONTAINER_0002, instanceName, errorMessage));
   }
 
   @Override
@@ -118,8 +118,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, Exception ex) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(ex, "exception cannot be null");
-    ((RecordImpl)record).getHeader().setErrorId(ContainerErrors.CONTAINER_0001.getCode());
-    ((RecordImpl)record).getHeader().setErrorMessage(new ErrorMessage(ContainerErrors.CONTAINER_0001, ex.getMessage()));
+    ((RecordImpl)record).getHeader().setErrorId(ContainerError.CONTAINER_0001.getCode());
+    ((RecordImpl)record).getHeader().setErrorMessage(new ErrorMessage(ContainerError.CONTAINER_0001, ex.getMessage()));
     errorSink.addRecord(instanceName, record);
   }
 
@@ -127,8 +127,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, String errorMessage) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    ((RecordImpl)record).getHeader().setErrorId(ContainerErrors.CONTAINER_0002.getCode());
-    ((RecordImpl)record).getHeader().setErrorMessage(new ErrorMessage(ContainerErrors.CONTAINER_0002, errorMessage));
+    ((RecordImpl)record).getHeader().setErrorId(ContainerError.CONTAINER_0002.getCode());
+    ((RecordImpl)record).getHeader().setErrorMessage(new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
     errorSink.addRecord(instanceName, record);
   }
 

@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.OverrunException;
-import com.streamsets.pipeline.lib.util.StageLibErrors;
+import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,7 +197,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
         try {
           spooler.handleFileInError(currentFile);
         } catch (IOException ex1) {
-          throw new StageException(StageLibErrors.LIB_0001, currentFile, ex1.getMessage(), ex1);
+          throw new StageException(StageLibError.LIB_0001, currentFile, ex1.getMessage(), ex1);
         }
         offset = -1;
       }

@@ -37,7 +37,7 @@ public abstract class SingleLaneProcessor extends BaseProcessor {
   @Override
   protected void init() throws StageException {
     if (getContext().getOutputLanes().size() != 1) {
-      throw new StageException(BaseErrors.BASE_0001, getInfo().getInstanceName(), getContext().getOutputLanes().size());
+      throw new StageException(BaseError.BASE_0001, getInfo().getInstanceName(), getContext().getOutputLanes().size());
     }
     outputLane = getContext().getOutputLanes().iterator().next();
     setSuperInitCalled();

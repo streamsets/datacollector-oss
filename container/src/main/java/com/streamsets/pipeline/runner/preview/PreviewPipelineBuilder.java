@@ -20,7 +20,7 @@ package com.streamsets.pipeline.runner.preview;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.util.ContainerErrors;
+import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.runner.Pipeline;
@@ -60,7 +60,7 @@ public class PreviewPipelineBuilder {
         pipelineConf.getStages().add(createPlugStage(openLanes));
       }
     } else {
-      throw new PipelineRuntimeException(ContainerErrors.CONTAINER_0154, validator.getIssues());
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0154, validator.getIssues());
     }
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + ":preview", pipelineConf).build(runner);
     return new PreviewPipeline(pipeline, validator.getIssues());

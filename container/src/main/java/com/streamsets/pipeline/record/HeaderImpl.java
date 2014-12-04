@@ -102,7 +102,7 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   }
 
   @Override
-  public String getErrorId() {
+  public String getErrorCode() {
     return (String) map.get(ERROR_CODE_ATTR);
   }
 

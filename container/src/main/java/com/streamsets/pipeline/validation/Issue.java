@@ -24,7 +24,7 @@ import com.streamsets.pipeline.container.Utils;
 public class Issue {
   private final LocalizableString message;
 
-  public Issue(ValidationErrors error, Object... args) {
+  public Issue(ValidationError error, Object... args) {
     message = new ErrorMessage(error, args);
   }
 

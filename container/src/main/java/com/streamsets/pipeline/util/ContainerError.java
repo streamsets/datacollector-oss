@@ -19,7 +19,7 @@ package com.streamsets.pipeline.util;
 
 import com.streamsets.pipeline.api.ErrorCode;
 
-public enum ContainerErrors implements ErrorCode {
+public enum ContainerError implements ErrorCode {
   // Unchecked exception
   CONTAINER_0000("Runtime exception: {}"),
 
@@ -70,7 +70,7 @@ public enum ContainerErrors implements ErrorCode {
 
   private final String msg;
 
-  ContainerErrors(String msg) {
+  ContainerError(String msg) {
     this.msg = msg;
   }
 

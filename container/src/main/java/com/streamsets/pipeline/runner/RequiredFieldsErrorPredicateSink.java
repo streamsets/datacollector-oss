@@ -22,7 +22,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.record.RecordImpl;
-import com.streamsets.pipeline.util.ContainerErrors;
+import com.streamsets.pipeline.util.ContainerError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +73,7 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
   @Override
   public ErrorMessage getRejectedMessage() {
     Preconditions.checkState(!missingFields.isEmpty(), "Called for record that passed the predicate check");
-    return new ErrorMessage(ContainerErrors.CONTAINER_0050, instanceName, missingFields);
+    return new ErrorMessage(ContainerError.CONTAINER_0050, instanceName, missingFields);
   }
 
   @Override

@@ -15,19 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.api.base;
+package com.streamsets.pipeline.lib.util;
 
 import com.streamsets.pipeline.api.ErrorCode;
 
-public enum BaseErrors implements ErrorCode {
-  BASE_0001("Stage '{}', there should be 1 output lane but there are '{}'");
+public enum StageLibError implements ErrorCode {
+
+  // AbstractSpoolDirSource
+  LIB_0001("Could not archive file '{}' in error, {}"),
+
+  // LogTailSource
+  LIB_0002("Insufficient permissions to read the log file '{}'")
+
+  ;
 
   private final String msg;
 
-  BaseErrors(String msg) {
+  StageLibError(String msg) {
     this.msg = msg;
   }
-
 
   @Override
   public String getCode() {
@@ -38,5 +44,4 @@ public enum BaseErrors implements ErrorCode {
   public String getMessage() {
     return msg;
   }
-
 }

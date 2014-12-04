@@ -39,8 +39,8 @@ import com.streamsets.pipeline.runner.preview.PreviewSourceOffsetTracker;
 import com.streamsets.pipeline.runner.preview.PreviewStageRunner;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
-import com.streamsets.pipeline.util.ContainerErrors;
 import org.apache.commons.io.IOUtils;
+import com.streamsets.pipeline.util.ContainerError;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.commons.io.input.ReaderInputStream;
 
@@ -147,7 +147,7 @@ public class PreviewResource {
 
     PipelineConfiguration pipelineConf = store.load(name, rev);
     if(pipelineConf.getStages().isEmpty()) {
-      throw new PipelineRuntimeException(ContainerErrors.CONTAINER_0159, name);
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0159, name);
     }
 
     //Source stage is always the first one in the entire pipeline
@@ -221,7 +221,7 @@ public class PreviewResource {
       for(int i = 1; i < requiredPropertiesNotSet.size(); i++) {
         sb.append(", ").append(requiredPropertiesNotSet.get(i));
       }
-      throw new PipelineRuntimeException(ContainerErrors.CONTAINER_0160, sb.toString());
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0160, sb.toString());
     }
   }
 

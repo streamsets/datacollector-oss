@@ -23,16 +23,16 @@ public class StageIssue extends Issue {
   private final String instanceName;
   private final String configName;
 
-  public static StageIssue createStageIssue(String instanceName, ValidationErrors error, Object... args) {
+  public static StageIssue createStageIssue(String instanceName, ValidationError error, Object... args) {
     return new StageIssue(instanceName, null, error, args);
   }
 
-  public static StageIssue createConfigIssue(String instanceName, String configName, ValidationErrors error,
+  public static StageIssue createConfigIssue(String instanceName, String configName, ValidationError error,
       Object... args) {
     return new StageIssue(instanceName, configName, error, args);
   }
 
-  private StageIssue(String instanceName, String configName, ValidationErrors error, Object... args) {
+  private StageIssue(String instanceName, String configName, ValidationError error, Object... args) {
     super(error, args);
     this.instanceName = instanceName;
     this.configName = configName;

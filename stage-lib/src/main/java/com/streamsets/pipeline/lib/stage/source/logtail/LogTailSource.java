@@ -19,14 +19,13 @@ package com.streamsets.pipeline.lib.stage.source.logtail;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.lib.util.StageLibErrors;
+import com.streamsets.pipeline.lib.util.StageLibError;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -80,7 +79,7 @@ public class LogTailSource extends BaseSource {
     super.init();
     File logFile = new File(logFileName);
     if (logFile.exists() && !logFile.canRead()) {
-      throw new StageException(StageLibErrors.LIB_0002, logFile);
+      throw new StageException(StageLibError.LIB_0002, logFile);
     }
     logLinesQueue = new ArrayBlockingQueue<String>(maxLinesPrefetch);
     logTail = new LogTail(logFile, tailFromEnd, getInfo(), logLinesQueue);

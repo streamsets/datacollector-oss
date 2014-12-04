@@ -18,7 +18,7 @@
 package com.streamsets.pipeline.restapi.configuration;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.util.ContainerErrors;
+import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +58,7 @@ public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> 
     } else if (ex instanceof PipelineException) {
       json.put(ERROR_CODE_JSON, ((PipelineException)ex).getErrorCode().getCode());
     } else if (ex instanceof RuntimeException) {
-      json.put(ERROR_CODE_JSON, ContainerErrors.CONTAINER_0000.getCode());
+      json.put(ERROR_CODE_JSON, ContainerError.CONTAINER_0000.getCode());
     }
     json.put(ERROR_LOCALIZED_MESSAGE_JSON, getOneLineMessage(ex, true));
     json.put(ERROR_EXCEPTION_JSON, ex.getClass().getSimpleName());
