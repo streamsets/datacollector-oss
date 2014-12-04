@@ -12,6 +12,7 @@ public class ErrorMessage implements LocalizableString {
 
   private final ErrorCode errorCode;
   private final LocalizableString localizableMessage;
+  private final long timestamp;
 
   public ErrorMessage(ErrorCode errorCode, Object... params) {
     this(Utils.checkNotNull(errorCode, "errorCode").getClass().getName(), errorCode, params);
@@ -22,10 +23,15 @@ public class ErrorMessage implements LocalizableString {
     params = (params != null) ? params : NULL_ONE_ARG;
     localizableMessage = new LocalizableMessage(errorCode.getClass().getClassLoader(), resourceBundle,
                                                 errorCode.getCode(), errorCode.getMessage(), params);
+    timestamp = System.currentTimeMillis();
   }
 
   public ErrorCode getErrorCode() {
     return errorCode;
+  }
+
+  public long getTimestamp() {
+    return timestamp;
   }
 
   @Override
