@@ -1,2 +1,3 @@
 This product includes software developed by StreamSets (http://www.streamsets.com)
 
+This product includes software and snippets of code under Apace License
