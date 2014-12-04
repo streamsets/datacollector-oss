@@ -26,18 +26,6 @@ import org.junit.Test;
 public class TestPipelineConfigurationValidator {
 
   @Test
-  public void testValidNames() {
-    Assert.assertFalse(PipelineConfigurationValidator.isValidName(null));
-    Assert.assertFalse(PipelineConfigurationValidator.isValidName(""));
-    Assert.assertFalse(PipelineConfigurationValidator.isValidName(" "));
-    Assert.assertFalse(PipelineConfigurationValidator.isValidName("$"));
-    Assert.assertFalse(PipelineConfigurationValidator.isValidName(" a"));
-    Assert.assertFalse(PipelineConfigurationValidator.isValidName("a "));
-    Assert.assertTrue(PipelineConfigurationValidator.isValidName("a"));
-    Assert.assertTrue(PipelineConfigurationValidator.isValidName("_azAZ09"));
-  }
-
-  @Test
   public void testValidConfiguration() {
     StageLibraryTask lib = MockStages.createStageLibrary();
     PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceProcessorTarget();

@@ -42,8 +42,8 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   private  static final String RAW_MIME_TYPE_ATTR = RESERVED_PREFIX + "rawMimeType";
   private  static final String TRACKING_ID_ATTR = RESERVED_PREFIX + "trackingId";
   private  static final String PREVIOUS_TRACKING_ID_ATTR = RESERVED_PREFIX + "previousTrackingId";
-  private  static final String ERROR_ID_ATTR = RESERVED_PREFIX + "errorId";
-  private  static final String ERROR_MSG_ATTR = RESERVED_PREFIX + "errorId";
+  private  static final String ERROR_CODE_ATTR = RESERVED_PREFIX + "errorCode";
+  private  static final String ERROR_MESSAGE_ATTR = RESERVED_PREFIX + "errorMessage";
 
   private final Map<String, Object> map;
 
@@ -103,12 +103,12 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
 
   @Override
   public String getErrorId() {
-    return (String) map.get(ERROR_ID_ATTR);
+    return (String) map.get(ERROR_CODE_ATTR);
   }
 
   @Override
   public String getErrorMessage() {
-    final Object error = map.get(ERROR_MSG_ATTR);
+    final Object error = map.get(ERROR_MESSAGE_ATTR);
     return (error == null)
            ? null
            : (error instanceof LocalizableString) ? ((LocalizableString) error).getLocalized() : (String) error;
@@ -222,18 +222,18 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
 
   public void setErrorId(String errorId) {
     Preconditions.checkNotNull(errorId, "errorId cannot be null");
-    map.put(ERROR_ID_ATTR, errorId);
+    map.put(ERROR_CODE_ATTR, errorId);
   }
 
   public void setErrorMessage(LocalizableString errorMsg) {
     Preconditions.checkNotNull(errorMsg, "errorMsg cannot be null");
-    map.put(ERROR_ID_ATTR, errorMsg);
+    map.put(ERROR_MESSAGE_ATTR, errorMsg);
   }
 
   @JsonProperty("errorMessage")
   public void setErrorMessage(String errorMsg) {
     Preconditions.checkNotNull(errorMsg, "errorMsg cannot be null");
-    map.put(ERROR_ID_ATTR, errorMsg);
+    map.put(ERROR_MESSAGE_ATTR, errorMsg);
   }
 
   // Object methods

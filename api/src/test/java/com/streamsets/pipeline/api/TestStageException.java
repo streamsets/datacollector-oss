@@ -37,11 +37,11 @@ public class TestStageException {
   public void testException() {
     StageException ex = new StageException(BaseErrors.BASE_0001);
     Assert.assertEquals(BaseErrors.BASE_0001, ex.getErrorCode());
-    Assert.assertEquals("[BASE_0001] - " + BaseErrors.BASE_0001.getMessage(), ex.getMessage());
+    Assert.assertEquals("BASE_0001 - " + BaseErrors.BASE_0001.getMessage(), ex.getMessage());
     LocaleInContext.set(Locale.forLanguageTag("abc"));
-    Assert.assertEquals("[BASE_0001] - " + BaseErrors.BASE_0001.getMessage(), ex.getMessage());
+    Assert.assertEquals("BASE_0001 - " + BaseErrors.BASE_0001.getMessage(), ex.getMessage());
     LocaleInContext.set(Locale.forLanguageTag("xyz"));
-    Assert.assertEquals("[BASE_0001] - Hello XYZ '{}'", ex.getLocalizedMessage());
+    Assert.assertEquals("BASE_0001 - Hello XYZ '{}'", ex.getLocalizedMessage());
     LocaleInContext.set(null);
     Assert.assertNull(ex.getCause());
 
@@ -50,16 +50,16 @@ public class TestStageException {
     Assert.assertEquals(cause, ex.getCause());
 
     ex = new StageException(BaseErrors.BASE_0001, "a");
-    Assert.assertEquals("[BASE_0001] - " + Utils.format(BaseErrors.BASE_0001.getMessage(), "a"), ex.getMessage());
+    Assert.assertEquals("BASE_0001 - " + Utils.format(BaseErrors.BASE_0001.getMessage(), "a"), ex.getMessage());
     LocaleInContext.set(Locale.forLanguageTag("xyz"));
-    Assert.assertEquals("[BASE_0001] - Hello XYZ 'a'", ex.getLocalizedMessage());
+    Assert.assertEquals("BASE_0001 - Hello XYZ 'a'", ex.getLocalizedMessage());
     LocaleInContext.set(null);
     Assert.assertNull(ex.getCause());
 
     ex = new StageException(BaseErrors.BASE_0001, "a", 1, cause);
-    Assert.assertEquals("[BASE_0001] - " + Utils.format(BaseErrors.BASE_0001.getMessage(), "a", 1), ex.getMessage());
+    Assert.assertEquals("BASE_0001 - " + Utils.format(BaseErrors.BASE_0001.getMessage(), "a", 1), ex.getMessage());
     LocaleInContext.set(Locale.forLanguageTag("xyz"));
-    Assert.assertEquals("[BASE_0001] - Hello XYZ 'a'", ex.getLocalizedMessage());
+    Assert.assertEquals("BASE_0001 - Hello XYZ 'a'", ex.getLocalizedMessage());
     LocaleInContext.set(null);
     Assert.assertEquals(cause, ex.getCause());
 

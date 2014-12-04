@@ -42,12 +42,12 @@ public class ErrorMessage implements LocalizableString {
 
   @Override
   public String getNonLocalized() {
-    return Utils.format("[{}] - {}", getId().getCode(), localizableMessage.getNonLocalized());
+    return Utils.format("{} - {}", getId().getCode(), localizableMessage.getNonLocalized());
   }
 
   @Override
   public String getLocalized() {
-    return Utils.format("[{}] - {}", getId().getCode(), localizableMessage.getLocalized());
+    return Utils.format("{} - {}", getId().getCode(), localizableMessage.getLocalized());
   }
 
 }

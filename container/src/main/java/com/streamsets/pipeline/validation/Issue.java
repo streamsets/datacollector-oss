@@ -17,16 +17,15 @@
  */
 package com.streamsets.pipeline.validation;
 
-import com.streamsets.pipeline.container.LocalizableMessage;
+import com.streamsets.pipeline.container.ErrorMessage;
+import com.streamsets.pipeline.container.LocalizableString;
 import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.util.PipelineException;
 
 public class Issue {
-  private final LocalizableMessage message;
+  private final LocalizableString message;
 
-  public Issue(String bundleKey, String defaultTemplate, Object... args) {
-    message = new LocalizableMessage(Thread.currentThread().getContextClassLoader(),
-                                     PipelineException.PIPELINE_CONTAINER_BUNDLE, bundleKey, defaultTemplate, args);
+  public Issue(ValidationErrors error, Object... args) {
+    message = new ErrorMessage(error, args);
   }
 
   public String getMessage() {

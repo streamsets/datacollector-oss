@@ -40,8 +40,6 @@ import java.util.List;
 import java.util.Set;
 
 public class StageContext implements Source.Context, Target.Context, Processor.Context {
-  private static final String STAGE_CAUGHT_ERROR_KEY = "stage.caught.record.error";
-  private static final String STAGE_CAUGHT_ERROR_DEFAULT = "Stage caught record error: {}";
 
   private static final String CUSTOM_METRICS_PREFIX = "custom.";
 
@@ -117,11 +115,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-  public void toError(Record record, Exception exception) {
+  public void toError(Record record, Exception ex) {
     Preconditions.checkNotNull(record, "record cannot be null");
-    Preconditions.checkNotNull(exception, "exception cannot be null");
-    ((RecordImpl)record).getHeader().setErrorId(STAGE_CAUGHT_ERROR_KEY);
-    ((RecordImpl)record).getHeader().setErrorMessage(Utils.format(STAGE_CAUGHT_ERROR_DEFAULT, exception.getMessage()));
+    Preconditions.checkNotNull(ex, "exception cannot be null");
+    ((RecordImpl)record).getHeader().setErrorId(ContainerErrors.CONTAINER_0001.getCode());
+    ((RecordImpl)record).getHeader().setErrorMessage(new ErrorMessage(ContainerErrors.CONTAINER_0001, ex.getMessage()));
     errorSink.addRecord(instanceName, record);
   }
 
@@ -129,8 +127,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, String errorMessage) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    ((RecordImpl)record).getHeader().setErrorId(STAGE_CAUGHT_ERROR_KEY);
-    ((RecordImpl)record).getHeader().setErrorMessage(errorMessage);
+    ((RecordImpl)record).getHeader().setErrorId(ContainerErrors.CONTAINER_0002.getCode());
+    ((RecordImpl)record).getHeader().setErrorMessage(new ErrorMessage(ContainerErrors.CONTAINER_0002, errorMessage));
     errorSink.addRecord(instanceName, record);
   }
 
