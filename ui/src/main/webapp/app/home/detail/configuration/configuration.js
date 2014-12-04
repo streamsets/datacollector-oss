@@ -80,7 +80,7 @@ angular
       },
 
       rawSourcePreview: function() {
-        api.pipelineAgent.previewRawSource($scope.activeConfigInfo.name, 0, $scope.detailPaneConfig.uiInfo.rawSource.configuration)
+        api.pipelineAgent.rawSourcePreview($scope.activeConfigInfo.name, 0, $scope.detailPaneConfig.uiInfo.rawSource.configuration)
           .success(function(data) {
             $scope.rawSourcePreviewData = data ? data.previewString : '';
           })

@@ -51,21 +51,18 @@
 
           <div class="form-group"
                ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions" show-errors>
-            <label class="control-label">{{configDefinition.label}}</label>
 
-            <div ng-if="configDefinition.type === 'BOOLEAN'">
-              <input type="checkbox" name="{{configDefinition.name}}"
-                     ng-model="detailPaneConfig.configuration[$index].value"
-                     popover-placement="right"
-                     popover-append-to-body="false"
-                     popover-title="{{configDefinition.label}}"
-                     popover="{{configDefinition.description}}"
-                     popover-trigger="focus">
+            <div class="checkbox" ng-if="configDefinition.type === 'BOOLEAN'">
+              <label>
+                <input type="checkbox" name="{{configDefinition.name}}"
+                     ng-model="detailPaneConfig.configuration[$index].value">  {{configDefinition.label}}
+              </label>
 
               <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
             </div>
 
             <div ng-if="configDefinition.type === 'INTEGER'">
+              <label class="control-label">{{configDefinition.label}}</label>
               <input type="number" class="form-control" name="{{configDefinition.name}}"
                      ng-model="detailPaneConfig.configuration[$index].value"
                      ng-required="configDefinition.required"
@@ -78,7 +75,8 @@
               <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
             </div>
 
-            <div ng-if="!configDefinition.listValues && configDefinition.type === 'STRING'">
+            <div ng-if="configDefinition.type === 'STRING'">
+              <label class="control-label">{{configDefinition.label}}</label>
               <input type="text" class="form-control" name="{{configDefinition.name}}"
                      ng-model="detailPaneConfig.configuration[$index].value"
                      ng-required="configDefinition.required"
@@ -92,9 +90,9 @@
 
             </div>
 
-            <div
-                 ng-if="configDefinition.type === 'MODEL'">
+            <div ng-if="configDefinition.type === 'MODEL'">
 
+              <label class="control-label">{{configDefinition.label}}</label>
 
               <!-- Model Type === DROPDOWN -->
               <select class="form-control" name="{{configDefinition.name}}"
@@ -189,8 +187,6 @@
                      popover-title="{{configDefinition.label}}"
                      popover="{{configDefinition.description}}"
                      popover-trigger="focus">
-
-              <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
             </div>
           </div>
 
@@ -200,11 +196,8 @@
             </button>
           </div>
 
-
           <div class="form-group" ng-if="rawSourcePreviewData">
-            <pre>
-              {{rawSourcePreviewData}}
-            </pre>
+            <pre ng-bind="rawSourcePreviewData"></pre>
           </div>
 
         </form>

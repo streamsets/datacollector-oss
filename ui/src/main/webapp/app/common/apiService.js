@@ -358,14 +358,14 @@ angular.module('pipelineAgentApp.common')
 
 
       /**
-       * Preview Raw Source
+       * Raw Source Preview
        *
        * @param name
        * @param rev
        * @param configurations
        * @returns {*}
        */
-      previewRawSource: function(name, rev, configurations) {
+      rawSourcePreview: function(name, rev, configurations) {
         var url = apiBase + '/pipeline-library/' + name + '/rawSourcePreview?rev=' + rev;
 
         angular.forEach(configurations, function(config) {
