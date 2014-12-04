@@ -443,7 +443,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseTarget")
         || typeMirror.toString().equals("com.streamsets.pipeline.api.Target")) {
         return TARGET;
-      } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.ErrorId")) {
+      } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.ErrorCode")) {
         return ERROR;
       }
     }
@@ -1029,7 +1029,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   /**
    * Validates the Stage Error Definition
-   * Requires that it be enum which implements interface com.streamsets.pipeline.api.ErrorId
+   * Requires that it be enum which implements interface com.streamsets.pipeline.api.ErrorCode
    *
    * @param typeElement
    */
@@ -1043,13 +1043,13 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         "Stage Error Definition {} must be an enum", typeElement.getQualifiedName());
       valid = false;
     }
-    //must implement com.streamsets.pipeline.api.ErrorId
+    //must implement com.streamsets.pipeline.api.ErrorCode
     String type = getStageTypeFromElement(typeElement);
     if(type.isEmpty() || !type.equals("ERROR")) {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.
       printError("stagedeferror.validation.enum.does.not.implement.interface",
-        "Stage Error Definition {} does not implement interface 'com.streamsets.pipeline.api.ErrorId'.",
+        "Stage Error Definition {} does not implement interface 'com.streamsets.pipeline.api.ErrorCode'.",
         typeElement.getQualifiedName());
       valid = false;
     }
