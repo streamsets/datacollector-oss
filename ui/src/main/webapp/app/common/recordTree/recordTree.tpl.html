@@ -40,7 +40,7 @@
         </span>
         <span class="field-value"
               ng-if="editable === true"
-              ng-class="recordValue.dirty ? recordValue.type + ' dirty' : recordValue.type"
+              ng-class="recordValue.dirty ? 'dirty ' + recordValue.type : recordValue.type"
               contenteditable="true"
               ng-change="recordValueUpdated(inputRecord, recordValue)"
               ng-model="recordValue.value">

@@ -8,7 +8,8 @@ angular
   .controller('PreviewController', function ($scope, $rootScope, _, api) {
     var SOURCE_STAGE_TYPE = 'SOURCE',
       PROCESSOR_STAGE_TYPE = 'PROCESSOR',
-      TARGET_STAGE_TYPE = 'TARGET';
+      TARGET_STAGE_TYPE = 'TARGET',
+      previewDataBackup;
 
     angular.extend($scope, {
       previewSourceOffset: 0,
@@ -133,6 +134,18 @@ angular
           error(function(data) {
             $rootScope.common.errors = [data];
           });
+      },
+
+      /**
+       * Revert changes done in Preview Data.
+       *
+       */
+      revertChanges: function() {
+        $scope.previewData = angular.copy(previewDataBackup);
+        $scope.previewDataUpdated = false;
+
+        var firstStageInstance = $scope.pipelineConfig.stages[0];
+        $scope.changeStageSelection(firstStageInstance);
       },
 
       onExpandAllInputData: function() {
@@ -261,6 +274,7 @@ angular
 
       api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
         success(function (previewData) {
+          previewDataBackup = angular.copy(previewData);
 
           $scope.previewData = previewData;
           $scope.previewDataUpdated = false;

@@ -1,7 +1,7 @@
 <div ng-controller="ConfigurationController" class="configuration-tab">
 
 
-  <div ng-class="detailPaneConfigDefn.rawSourceDefinition ? 'col-sm-7' : 'col-sm-10'">
+  <div ng-class="detailPaneConfigDefn.rawSourceDefinition ? 'col-sm-7' : 'col-sm-9'">
     <div class="panel panel-default">
       <div class="panel-heading">Configuration</div>
       <div class="panel-body">
@@ -47,7 +47,6 @@
           </div>
 
           <!--- /General Configuration-->
-
 
           <div class="form-group"
                ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions" show-errors>
@@ -170,7 +169,7 @@
 
   <div class="col-md-5 source-preview" ng-if="detailPaneConfigDefn.rawSourceDefinition">
     <div class="panel panel-default">
-      <div class="panel-heading">Source Preview</div>
+      <div class="panel-heading" translate="admin.detailPane.configurationTab.rawSourcePreview">Raw Source Preview</div>
       <div class="panel-body">
         <form class="form" ng-submit="rawSourcePreview()">
 
@@ -191,7 +190,7 @@
           </div>
 
           <div class="form-group clearfix">
-            <button type="submit" class="btn btn-primary pull-right">
+            <button type="submit" class="btn btn-primary btn-sm pull-right" translate="admin.header.preview">
               Preview
             </button>
           </div>

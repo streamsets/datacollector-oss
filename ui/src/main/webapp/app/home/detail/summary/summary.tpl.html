@@ -2,41 +2,34 @@
   <div class="row">
 
     <div class="col-sm-4" ng-controller="RecordProcessedPieChart">
-      <div class="chart-wrapper">
-        <div class="chart-title">
-          Records Processed
-        </div>
-        <div class="chart-stage">
-
-            <nvd3-pie-chart
-              data="pieChartData"
-              id="RecordProcessedPieChartID"
-              height="300"
-              x="getLabel()"
-              y="getValue()"
-              color="getColor()"
-              legendColor="getColor()"
-              showLabels="true"
-              showLegend="true"
-              tooltips="true"
-              labelType="percent"
-              donut="true"
-              donutRatio=".25"
-              donutLabelsOutside="true">
-              <svg></svg>
-            </nvd3-pie-chart>
-
+      <div class="panel panel-default">
+        <div class="panel-heading" translate="admin.detailPane.summaryTab.recordsProcessed">Records Processed</div>
+        <div class="panel-body">
+          <nvd3-pie-chart
+            data="pieChartData"
+            id="RecordProcessedPieChartID"
+            height="300"
+            x="getLabel()"
+            y="getValue()"
+            color="getColor()"
+            legendColor="getColor()"
+            showLabels="true"
+            showLegend="true"
+            tooltips="true"
+            labelType="percent"
+            donut="true"
+            donutRatio=".25"
+            donutLabelsOutside="true">
+            <svg></svg>
+          </nvd3-pie-chart>
         </div>
       </div>
     </div>
 
     <div class="col-sm-8" ng-controller="RecordProcessedBarChart">
-      <div class="chart-wrapper">
-        <div class="chart-title">
-          Records Processed
-        </div>
-        <div class="chart-stage">
-
+      <div class="panel panel-default">
+        <div class="panel-heading" translate="admin.detailPane.summaryTab.recordsProcessed">Records Processed</div>
+        <div class="panel-body">
           <nvd3-discrete-bar-chart
             data="barChartData"
             id="RecordProcessedBarChartID"
@@ -45,15 +38,12 @@
             showXAxis="true"
             showYAxis="true"
             showValues="true"
-            showLegend="true"
-            >
+            showLegend="true">
           </nvd3-discrete-bar-chart>
         </div>
       </div>
     </div>
 
   </div>
-
-
 
 </div>

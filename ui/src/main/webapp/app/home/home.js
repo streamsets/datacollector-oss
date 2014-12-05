@@ -462,7 +462,6 @@ angular
       }
     });
 
-
     //Preview Panel Events
     $scope.$on('changeStateInstance', function (event, stageInstance) {
       updateDetailPane(stageInstance);

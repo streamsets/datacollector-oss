@@ -42,9 +42,19 @@
         </button>
       </div>
 
+
+      <div class="pull-left">
+        <button type="button" class="btn btn-primary btn-sm"
+                ng-click="revertChanges()"
+                ng-show="previewDataUpdated">
+          <span class="fa fa-undo"></span>
+          <span translate="global.form.revertChanges">Revert Changes</span>
+        </button>
+      </div>
+
       <div class="pull-left">
         <button type="button" class="btn btn-primary btn-sm center-block"
-                ng-disabled="!previewDataUpdated"
+                ng-disabled="detailPaneConfig.uiInfo.stageType !== 'PROCESSOR'"
                 ng-click="stepPreview(detailPaneConfig, stagePreviewData.input)">
           <span class="glyphicon glyphicon-refresh"></span>
           <span translate="global.form.step">Step</span>
@@ -66,7 +76,7 @@
         </ul>
       </div>
 
-      <div ng-if="nextStageInstances.length <= 1" class="pull-right">
+      <div ng-if="nextStageInstances.length <= 1" class="pull-left">
         <button type="button" class="btn btn-primary btn-sm"
                 ng-disabled="nextStageInstances.length === 0"
                 ng-click="nextStagePreview(nextStageInstances[0], stagePreviewData.output)">
