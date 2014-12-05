@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @GenerateResourceBundle
 @StageDef(version = "1.0.0",
@@ -32,10 +34,13 @@ import java.io.IOException;
 public class LogSpoolDirSource extends AbstractSpoolDirSource {
   private final static Logger LOG = LoggerFactory.getLogger(LogSpoolDirSource.class);
 
+  public static final String LINE = "line";
+  public static final String TRUNCATED = "truncated";
+
   @ConfigDef(required = true,
       type = ConfigDef.Type.INTEGER,
       label = "Maximum Log Line Length",
-      description = "The maximum length for log lines, if a line exceeds that length, it will be trimmed",
+      description = "The maximum length for log lines, if a line exceeds that length, it will be truncated",
       defaultValue = "1024")
   public int maxLogLineLength;
 
@@ -73,7 +78,10 @@ public class LogSpoolDirSource extends AbstractSpoolDirSource {
       }
       if (len > -1) {
         Record record = getContext().createRecord(Utils.format("file={} offset={}", sourceFile, offset));
-        record.set(Field.create(line.toString()));
+        Map<String, Field> map = new LinkedHashMap<>();
+        map.put(LINE, Field.create(line.toString()));
+        map.put(TRUNCATED, Field.create(len > maxLogLineLength));
+        record.set(Field.create(map));
         batchMaker.addRecord(record);
         offset = lineReader.getCount();
       } else {

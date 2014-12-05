@@ -81,10 +81,12 @@ public class TestLogSpoolDirSource {
       List<Record> list = records.getAllValues();
       ArgumentCaptor<Field> field = ArgumentCaptor.forClass(Field.class);
       Mockito.verify(list.get(0)).set(field.capture());
-      Assert.assertEquals(LINE1, field.getValue().getValue());
+      Assert.assertEquals(LINE1, field.getValue().getValueAsMap().get("line").getValueAsString());
+      Assert.assertFalse(field.getValue().getValueAsMap().get("truncated").getValueAsBoolean());
       field = ArgumentCaptor.forClass(Field.class);
       Mockito.verify(list.get(1)).set(field.capture());
-      Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValue());
+      Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValueAsMap().get("line").getValueAsString());
+      Assert.assertTrue(field.getValue().getValueAsMap().get("truncated").getValueAsBoolean());
     } finally {
       source.destroy();
     }
@@ -120,7 +122,7 @@ public class TestLogSpoolDirSource {
       List<Record> list = records.getAllValues();
       ArgumentCaptor<Field> field = ArgumentCaptor.forClass(Field.class);
       Mockito.verify(list.get(0)).set(field.capture());
-      Assert.assertEquals(LINE1, field.getValue().getValue());
+      Assert.assertEquals(LINE1, field.getValue().getValueAsMap().get("line").getValueAsString());
 
 
       //reads second line
@@ -133,7 +135,7 @@ public class TestLogSpoolDirSource {
       list = records.getAllValues();
       field = ArgumentCaptor.forClass(Field.class);
       Mockito.verify(list.get(0)).set(field.capture());
-      Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValue());
+      Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValueAsMap().get("line").getValueAsString());
 
       //reads EOF
       Mockito.reset(batchMaker);
