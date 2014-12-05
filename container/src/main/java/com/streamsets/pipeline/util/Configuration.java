@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.util;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
 
@@ -33,6 +34,12 @@ public class Configuration {
       }
     }
     return conf;
+  }
+
+
+  @JsonValue
+  public Map<String, String> getValues() {
+    return map;
   }
 
   public Set<String> getNames() {
