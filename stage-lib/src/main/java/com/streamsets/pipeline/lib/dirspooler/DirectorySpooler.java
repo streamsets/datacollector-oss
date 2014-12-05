@@ -146,11 +146,12 @@ public class DirectorySpooler {
   private PathMatcher fileMatcher;
   private WatchService watchService;
   private PriorityBlockingQueue<Path> filesQueue;
-  private Watcher watcher;
   private Path previousFile;
   private ScheduledExecutorService scheduledExecutor;
 
   private Meter spoolQueueMeter;
+
+  private volatile boolean running;
 
   volatile FilePurger purger;
 
@@ -188,17 +189,18 @@ public class DirectorySpooler {
       watchService = fs.newWatchService();
       spoolDirPath.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
 
-      filesQueue = new PriorityBlockingQueue<Path>();
+      filesQueue = new PriorityBlockingQueue<>();
 
       spoolQueueMeter = context.createMeter("spoolQueue");
+
+      running = true;
 
       handleOlderFiles();
       queueExistingFiles();
 
       scheduledExecutor = Executors.newScheduledThreadPool(2, new ThreadFactoryBuilder()
           .setNameFormat("directory-spool-archive-retention").setDaemon(true).build());
-      watcher = new Watcher();
-      scheduledExecutor.execute(watcher);
+      scheduledExecutor.execute(new Watcher());
       if (postProcessing == FilePostProcessing.ARCHIVE && archiveRetentionMillis > 0) {
         purger = new FilePurger();
         scheduledExecutor.scheduleAtFixedRate(purger, 1, 1, TimeUnit.MINUTES);
@@ -212,14 +214,7 @@ public class DirectorySpooler {
   }
 
   public void destroy() {
-    try {
-      if (watcher != null) {
-        watcher.shutdown();
-        watcher = null;
-      }
-    } catch (RuntimeException ex) {
-      LOG.warn("Error during watcher.shutdown, {}", ex.getMessage(), ex);
-    }
+    running = false;
     try {
       if (scheduledExecutor != null) {
         scheduledExecutor.shutdownNow();
@@ -233,9 +228,7 @@ public class DirectorySpooler {
         watchService.close();
         watchService = null;
       }
-    } catch (IOException ex) {
-      LOG.warn("Error during watchService.close(), {}", ex.getMessage(), ex);
-    } catch (RuntimeException ex) {
+    } catch (IOException|RuntimeException ex) {
       LOG.warn("Error during watchService.close(), {}", ex.getMessage(), ex);
     }
   }
@@ -295,7 +288,7 @@ public class DirectorySpooler {
   public File poolForFile(long wait, TimeUnit timeUnit) throws InterruptedException {
     Preconditions.checkArgument(wait >= 0, "wait must be zero or greater");
     Preconditions.checkNotNull(timeUnit, "timeUnit cannot be null");
-    Preconditions.checkState(watcher.isRunning(), "Spool directory watcher not running");
+    Preconditions.checkState(running, "Spool directory watcher not running");
     synchronized (this) {
       if (previousFile != null) {
         switch (postProcessing) {
@@ -388,7 +381,6 @@ public class DirectorySpooler {
   }
 
   class Watcher implements Runnable {
-    private boolean running = true;
 
     @SuppressWarnings("unchecked")
     public void run() {
@@ -415,16 +407,8 @@ public class DirectorySpooler {
           }
         }
       } catch (InterruptedException ex) {
-        running = false;
+        LOG.debug("File watcher interrupted, shutting down");
       }
-    }
-
-    public boolean isRunning() {
-      return running;
-    }
-
-    public void shutdown() {
-      running = false;
     }
 
   }
@@ -433,23 +417,36 @@ public class DirectorySpooler {
 
     @SuppressWarnings("unchecked")
     public void run() {
+      LOG.debug("Starting archived files purging");
       final long timeThreshold = System.currentTimeMillis() - archiveRetentionMillis;
-      try {
-        DirectoryStream<Path> filesToDelete =
-            Files.newDirectoryStream(archiveDirPath, new DirectoryStream.Filter<Path>() {
-              @Override
-              public boolean accept(Path entry) throws IOException {
-                return fileMatcher.matches(entry.getFileName()) &&
-                       (timeThreshold - Files.getLastModifiedTime(entry).toMillis() > 0);
-              }
-            });
+      DirectoryStream.Filter filter = new DirectoryStream.Filter<Path>() {
+        @Override
+        public boolean accept(Path entry) throws IOException {
+          return fileMatcher.matches(entry.getFileName()) &&
+                 (timeThreshold - Files.getLastModifiedTime(entry).toMillis() > 0);
+        }
+      };
+      int purged = 0;
+      try (DirectoryStream<Path> filesToDelete = Files.newDirectoryStream(archiveDirPath, filter)) {
         for (Path file : filesToDelete) {
-          LOG.debug("Purging archived file '{}', exceeded retention time", file);
-          Files.delete(file);
+          if (running) {
+            LOG.debug("Deleting archived file '{}', exceeded retention time", file);
+            try {
+              Files.delete(file);
+              purged++;
+            } catch (IOException ex) {
+              LOG.warn("Error while deleting file '{}': {}", file, ex.getMessage(), ex);
+            }
+          } else {
+            LOG.debug("Spooler has been destroyed, stopping archived files purging half way");
+            break;
+          }
         }
       } catch (IOException ex) {
-        LOG.warn("Error while purging files, {}", ex.getMessage(), ex);
+        LOG.warn("Error while scanning directory '{}' for archived files purging: {}", archiveDirPath, ex.getMessage(),
+                 ex);
       }
+      LOG.debug("Finished archived files purging, deleted '{}' files", purged);
     }
 
   }
