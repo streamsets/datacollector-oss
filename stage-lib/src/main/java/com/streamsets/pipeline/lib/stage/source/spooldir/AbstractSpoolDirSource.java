@@ -147,11 +147,35 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
     return (file != null) ? file + OFFSET_SEPARATOR + Long.toString(fileOffset) : null;
   }
 
+  private boolean hasToFetchNextFileFromSpooler(String file, long offset) {
+    return
+        // we don't have a current file half way processed in the current agent execution
+        currentFile == null ||
+        // we don't have a file half way processed from a previous agent execution via offset tracking
+        file == null ||
+        // the current file is lexicographically lesser than the one reported via offset tracking
+        // this can happen if somebody drop
+        currentFile.getName().compareTo(file) < 0 ||
+        // the current file has been fully processed
+        offset == -1;
+  }
+
+  private boolean isFileFromSpoolerEligible(File spoolerFile, String offsetFile) {
+    return
+        // there is no new file from spooler, we return yes to break the loop
+        spoolerFile == null ||
+        // file reported by offset tracking is NULL, means we are starting from zero
+        // or the file from spooler is lexicographically equal or greater than the one reported via offset tracking
+        (offsetFile == null || spoolerFile.getName().compareTo(offsetFile) >= 0);
+  }
+
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    // if lastSourceOffset is NULL (beginning of source) it returns NULL
     String file = getFileFromSourceOffset(lastSourceOffset);
+    // if lastSourceOffset is NULL (beginning of source) it returns 0
     long offset = getOffsetFromSourceOffset(lastSourceOffset);
-    if (currentFile == null || file == null || currentFile.getName().compareTo(file) < 0 || offset == -1) {
+    if (hasToFetchNextFileFromSpooler(file, offset)) {
       currentFile = null;
       try {
         File nextAvailFile = null;
@@ -161,39 +185,59 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
                      nextAvailFile.getName(), file);
           }
           nextAvailFile = getSpooler().poolForFile(poolingTimeoutSecs, TimeUnit.SECONDS);
-        } while (nextAvailFile != null && (file != null && nextAvailFile.getName().compareTo(file) < 0));
+        } while (!isFileFromSpoolerEligible(nextAvailFile, file));
+
         if (nextAvailFile == null) {
+          // no file to process
           LOG.debug("No new file available in spool directory after '{}' secs", poolingTimeoutSecs);
         } else {
+          // file to process
           currentFile = nextAvailFile;
+
+          // if the current offset file is null or the file returned by the spooler is greater than the current offset
+          // file we take the file returned by the spooler as the new file and set the offset to zero
+          // if not, it means the spooler returned us the current file, we just keep processing it from the last
+          // offset we processed (known via offset tracking)
           if (file == null || nextAvailFile.getName().compareTo(file) > 0) {
             file = currentFile.getName();
             offset = 0;
           }
         }
       } catch (InterruptedException ex) {
+        // the spooler was interrupted while waiting for a file, we log and return, the pipeline agent will invoke us
+        // again to wait for a file again
         LOG.warn("Spool pooling interrupted '{}'", ex.getMessage(), ex);
       }
     }
+
     if (currentFile != null) {
+      // we have a file to process (from before or new from spooler)
       try {
+        // we ask for a batch from the currentFile starting at offset
         offset = produce(currentFile, offset, maxBatchSize, batchMaker);
       } catch (BadSpoolFileException ex) {
+        // the processing fo the current file had an unrecoverable error we log the reason, file and offset if avail
         long filePos = (ex.getCause() != null && ex.getCause() instanceof OverrunException)
                        ? ((OverrunException)ex.getCause()).getStreamOffset() : -1;
         LOG.error("Spool file '{}' at position '{}', {}", currentFile, filePos, ex.getMessage(), ex);
         try {
+          // then we ask the spooler to error handle the failed file
           spooler.handleFileInError(currentFile);
         } catch (IOException ex1) {
           throw new StageException(StageLibError.LIB_0001, currentFile, ex1.getMessage(), ex1);
         }
+        // we set the offset to -1 to indicate we are done with the file and we should fetch a new one from the spooler
         offset = -1;
       }
     }
+    // create a new offset using the current file and offset
     return createSourceOffset(file, offset);
   }
 
-  //return -1 if file was fully read
+  /**
+   * Processes a batch from the specified file and offset up to a maximum batch size. If the file is fully process
+   * it must return -1, otherwise it must return the offset to continue from next invocation.
+   */
   protected abstract long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker)
       throws StageException, BadSpoolFileException;
 
