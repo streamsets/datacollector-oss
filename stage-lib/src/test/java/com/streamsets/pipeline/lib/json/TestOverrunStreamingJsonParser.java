@@ -9,6 +9,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunException;
+import com.streamsets.pipeline.lib.io.OverrunReader;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +24,7 @@ public class TestOverrunStreamingJsonParser {
 
   @Before
   public void setUp() {
-    System.getProperties().remove(OverrunStreamingJsonParser.OVERRUN_LIMIT_SYS_PROP);
+    System.getProperties().remove(OverrunReader.READ_LIMIT_SYS_PROP);
   }
 
   @After
@@ -83,7 +84,7 @@ public class TestOverrunStreamingJsonParser {
   // Stream level overrun, Array
 
   public void testStreamLevelOverrunArray(boolean attemptNextRead) throws Exception {
-    System.setProperty(OverrunStreamingJsonParser.OVERRUN_LIMIT_SYS_PROP, "10000");
+    System.setProperty(OverrunReader.READ_LIMIT_SYS_PROP, "10000");
     String json = "[[\"a\"],[\"" + Strings.repeat("a", 20000) + "\"],[\"b\"]]";
     StreamingJsonParser parser = new OverrunStreamingJsonParser(new CountingReader(new StringReader(json)),
                                                                 StreamingJsonParser.Mode.ARRAY_OBJECTS, 50);
@@ -116,7 +117,7 @@ public class TestOverrunStreamingJsonParser {
   // Stream level overrun, Object
 
   public void testStreamLevelOverrunMultipleObjects(boolean attemptNextRead) throws Exception {
-    System.setProperty(OverrunStreamingJsonParser.OVERRUN_LIMIT_SYS_PROP, "10000");
+    System.setProperty(OverrunReader.READ_LIMIT_SYS_PROP, "10000");
     String json = "[\"a\"][\"" + Strings.repeat("a", 20000) + "\"][\"b\"]";
     StreamingJsonParser parser = new OverrunStreamingJsonParser(new CountingReader(new StringReader(json)),
                                                                 StreamingJsonParser.Mode.MULTIPLE_OBJECTS, 50);

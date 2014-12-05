@@ -34,8 +34,8 @@ import java.util.Set;
  * <p/>
  * The underlying InputStream is wrapped with an OverrunInputStream to prevent an overrun due to an extremely large
  * field name or string value. The default limit is 100K and it is configurable via a JVM property,
- * {@link #OVERRUN_LIMIT_SYS_PROP}, as it is not expected user will need to change this. If an OverrunException is
- * thrown the parser is not usable anymore.
+ * {@link com.streamsets.pipeline.lib.io.OverrunReader#READ_LIMIT_SYS_PROP}, as it is not expected user will need
+ * to change this. If an OverrunException is thrown the parser is not usable anymore.
  */
 public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
@@ -117,11 +117,6 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   }
 
-  public static final String OVERRUN_LIMIT_SYS_PROP = "overrun.streaming.json.parser.max.stream.read";
-
-  private static final int MAX_STREAM_READ = Integer.parseInt(System.getProperty(
-      OVERRUN_LIMIT_SYS_PROP, "102400"));
-
   private static final ThreadLocal<OverrunStreamingJsonParser> TL = new ThreadLocal<>();
 
   private final CountingReader countingReader;
@@ -135,7 +130,7 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   public OverrunStreamingJsonParser(CountingReader reader, long initialPosition, Mode mode, int maxObjectLen)
       throws IOException {
-    super(new OverrunReader(reader, MAX_STREAM_READ), initialPosition, mode);
+    super(new OverrunReader(reader, OverrunReader.getDefaultReadLimit()), initialPosition, mode);
     countingReader = (CountingReader) getReader();
     this.maxObjectLen = maxObjectLen;
   }

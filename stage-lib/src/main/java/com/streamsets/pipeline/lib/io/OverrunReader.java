@@ -15,19 +15,26 @@ import java.io.Reader;
  * stream buffers by JDK and libraries.
  */
 public class OverrunReader extends CountingReader {
-  private final int maxUnsupervisedReadSize;
 
-  public OverrunReader(Reader in, int maxUnsupervisedReadSize) {
+  public static final String READ_LIMIT_SYS_PROP = "overrun.reader.read.limit";
+
+  public static int getDefaultReadLimit() {
+    return Integer.parseInt(System.getProperty(READ_LIMIT_SYS_PROP, "102400"));
+  }
+
+  private final int readLimit;
+
+  public OverrunReader(Reader in, int readLimit) {
     super(in);
-    this.maxUnsupervisedReadSize = maxUnsupervisedReadSize;
+    this.readLimit = readLimit;
   }
 
   @Override
   protected synchronized void afterRead(int n) {
     super.afterRead(n);
-    if (getCount() > maxUnsupervisedReadSize) {
+    if (getCount() > readLimit) {
       ExceptionUtils.throwUndeclared(new OverrunException(Utils.format(
-          "Reader exceeded the maximum unsupervised read size '{}'", maxUnsupervisedReadSize), getPos()));
+          "Reader exceeded the read limit '{}'", readLimit), getPos()));
     }
   }
 

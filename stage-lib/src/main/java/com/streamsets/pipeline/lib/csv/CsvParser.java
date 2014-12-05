@@ -36,9 +36,10 @@ public class CsvParser implements Closeable, AutoCloseable {
   private final long initialPosition;
   private long currentPos;
   private final CSVParser parser;
-  private final Iterator<CSVRecord> iterator;
+  private final Reader reader;
+  private Iterator<CSVRecord> iterator;
   private CSVRecord nextRecord;
-  private final String[] headers;
+  private String[] headers;
 
   public CsvParser(Reader reader, CSVFormat format) throws IOException {
     this(reader, format, 0);
@@ -55,13 +56,25 @@ public class CsvParser implements Closeable, AutoCloseable {
       format = format.withHeader((String)null);
       IOUtils.skipFully(reader, initialPosition);
     }
+    this.reader = reader;
     parser = new CSVParser(reader, format);
-    iterator = parser.iterator();
-    nextRecord = (iterator.hasNext()) ? iterator.next() : null;
-    headers = (initialPosition == 0) ? getHeaders(parser) : null;
   }
 
-  private String[] getHeaders(CSVParser parser) {
+  private void init() throws IOException {
+    headers = (initialPosition == 0) ? readHeader() : null;
+    iterator = parser.iterator();
+    nextRecord = nextRecord();
+  }
+
+  protected Reader getReader() {
+    return reader;
+  }
+
+  protected CSVRecord nextRecord() throws IOException {
+    return (iterator.hasNext()) ? iterator.next() : null;
+  }
+
+  protected String[] readHeader() throws IOException {
     List<String> headers = new ArrayList<>();
     Map<String, Integer> headerMap = parser.getHeaderMap();
     if (headerMap != null && !headerMap.isEmpty()) {
@@ -77,7 +90,10 @@ public class CsvParser implements Closeable, AutoCloseable {
 
   // returns null if the parser initial position is not zero, to get headers when working at an offset, 2
   // reader creations need to be done, one at zero to get the headers, another one at the desired offset.
-  public String[] getHeaders() {
+  public String[] getHeaders() throws IOException {
+    if (iterator == null) {
+      init();
+    }
     return headers;
   }
 
@@ -87,10 +103,13 @@ public class CsvParser implements Closeable, AutoCloseable {
   }
 
   //we don't expose the CSVRecord because we cannot make consistent when working at an offset greater than zero
-  public String[] read() {
+  public String[] read() throws IOException {
+    if (iterator == null) {
+      init();
+    }
     CSVRecord record = nextRecord;
     if (nextRecord != null) {
-      nextRecord = (iterator.hasNext()) ? iterator.next() : null;
+      nextRecord = nextRecord();
     }
     currentPos = (nextRecord != null) ? initialPosition + nextRecord.getCharacterPosition() : -1;
     return toArray(record);
