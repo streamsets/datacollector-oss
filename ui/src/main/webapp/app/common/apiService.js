@@ -10,6 +10,19 @@ angular.module('pipelineAgentApp.common')
     api.pipelineAgent = {
 
       /**
+       * Fetches UI Configuration from dist/src/main/etc/pipeline.properties
+       *
+       * @returns {*}
+       */
+      getConfiguration: function() {
+        var url = apiBase + '/configuration/ui';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Fetches all configuration definitions of Pipeline and Stage Configuration.
        *
        * @returns {*}

@@ -295,7 +295,12 @@ describe('Controller: modules/home/HomeCtrl', function () {
       lastStatusChange: 1416546973284
     });
 
-    $httpBackend.expectGET('rest/v1/pipeline/metrics').respond({});
+    $httpBackend.expectGET('rest/v1/pipeline/metrics').respond({
+      'ui.help.base.url': "/help",
+      'ui.refresh.interval.ms': "2000"
+    });
+
+    $httpBackend.expectGET('rest/v1/configuration/ui').respond({});
 
     $httpBackend.expectGET('rest/v1/pipeline-library/xyz').respond({
       uuid: "cdf08ac9-2a97-4167-8a2c-ed48cfcf600e",

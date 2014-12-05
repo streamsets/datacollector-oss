@@ -12,7 +12,7 @@ angular
       }
     );
   }])
-  .controller('HomeController', function ($scope, $rootScope, $timeout, api, _, $q, $modal) {
+  .controller('HomeController', function ($scope, $rootScope, $timeout, api, configuration, _, $q, $modal) {
     var stageCounter = 0,
       timeout,
       dirty = false,
@@ -128,10 +128,12 @@ angular
     /**
      * Fetch definitions for Pipeline and Stages, Pipeline Configuration and Pipeline Information.
      */
-    $q.all([api.pipelineAgent.getDefinitions(),
+    $q.all([
+      api.pipelineAgent.getDefinitions(),
       api.pipelineAgent.getPipelines(),
       api.pipelineAgent.getPipelineStatus(),
-      api.pipelineAgent.getPipelineMetrics()
+      api.pipelineAgent.getPipelineMetrics(),
+      configuration.init()
     ])
       .then(function (results) {
         var definitions = results[0].data,
@@ -172,8 +174,8 @@ angular
 
         $rootScope.common.pipelineMetrics = pipelineMetrics;
 
-        fetchPipelineStatusEvery2Seconds();
-        fetchPipelineMetricsEvery2Seconds();
+        refreshPipelineStatus();
+        refreshPipelineMetrics();
 
         if($scope.activeConfigInfo) {
           return api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name);
@@ -350,13 +352,13 @@ angular
      * Fetch the Pipeline Status every 2 Seconds.
      *
      */
-    var fetchPipelineStatusEvery2Seconds = function() {
+    var refreshPipelineStatus = function() {
 
       pipelineStatusTimer = $timeout(
         function() {
           //console.log( "Pipeline Status Timeout executed", Date.now() );
         },
-        2000
+        configuration.getRefreshInterval()
       );
 
       pipelineStatusTimer.then(
@@ -364,7 +366,7 @@ angular
           api.pipelineAgent.getPipelineStatus()
             .success(function(data) {
               $rootScope.common.pipelineStatus = data;
-              fetchPipelineStatusEvery2Seconds();
+              refreshPipelineStatus();
             })
             .error(function(data, status, headers, config) {
               $rootScope.common.errors = [data];
@@ -381,13 +383,13 @@ angular
      * Fetch the Pipeline Status every 2 Seconds.
      *
      */
-    var fetchPipelineMetricsEvery2Seconds = function() {
+    var refreshPipelineMetrics = function() {
 
       pipelineStatusTimer = $timeout(
         function() {
           //console.log( "Pipeline Metrics Timeout executed", Date.now() );
         },
-        2000
+        configuration.getRefreshInterval()
       );
 
       pipelineStatusTimer.then(
@@ -395,7 +397,7 @@ angular
           api.pipelineAgent.getPipelineMetrics()
             .success(function(data) {
               $rootScope.common.pipelineMetrics = data;
-              fetchPipelineMetricsEvery2Seconds();
+              refreshPipelineMetrics();
             })
             .error(function(data, status, headers, config) {
               $rootScope.common.errors = [data];
