@@ -67,7 +67,7 @@ public class LogTailSource extends BaseSource {
     super.init();
     File logFile = new File(logFileName);
     if (logFile.exists() && !logFile.canRead()) {
-      throw new StageException(StageLibError.LIB_0002, logFile);
+      throw new StageException(StageLibError.LIB_0001, logFile);
     }
     logLinesQueue = new ArrayBlockingQueue<String>(maxLinesPrefetch);
     logTail = new LogTail(logFile, tailFromEnd, getInfo(), logLinesQueue);

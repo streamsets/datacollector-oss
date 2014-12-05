@@ -9,11 +9,15 @@ import com.streamsets.pipeline.api.ErrorCode;
 
 public enum StageLibError implements ErrorCode {
 
-  // AbstractSpoolDirSource
-  LIB_0001("Could not archive file '{}' in error, {}"),
-
   // LogTailSource
-  LIB_0002("Insufficient permissions to read the log file '{}'")
+  LIB_0001("Insufficient permissions to read the log file '{}'"),
+
+  // AbstractSpoolDirSource
+  LIB_0100("Could not archive file '{}' in error, {}"),
+  LIB_0101("Error while processing file '{}' at position '{}', {}"),
+
+  // JsonSpoolDirSource
+  LIB_0200("Discarding Json Object '{}', it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
 
   ;
 

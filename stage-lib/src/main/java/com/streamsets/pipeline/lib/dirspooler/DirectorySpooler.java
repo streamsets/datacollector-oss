@@ -337,8 +337,10 @@ public class DirectorySpooler {
 
   public void handleFileInError(File file) throws IOException {
     if (errorArchiveDirPath != null) {
-      LOG.error("Error archiving file '{}'", previousFile);
+      LOG.error("Archiving file in error '{}' in error archive directory '{}'", file, errorArchiveDirPath);
       Files.move(file.toPath(), errorArchiveDirPath.resolve(file.toPath().getFileName()));
+    } else {
+      LOG.error("Leaving file in error '{}' in spool directory", file);
     }
   }
 

@@ -189,7 +189,8 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
 
         if (nextAvailFile == null) {
           // no file to process
-          LOG.debug("No new file available in spool directory after '{}' secs", poolingTimeoutSecs);
+          LOG.debug("No new file available in spool directory after '{}' secs, produccing empty batch",
+                    poolingTimeoutSecs);
         } else {
           // file to process
           currentFile = nextAvailFile;
@@ -206,7 +207,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
       } catch (InterruptedException ex) {
         // the spooler was interrupted while waiting for a file, we log and return, the pipeline agent will invoke us
         // again to wait for a file again
-        LOG.warn("Spool pooling interrupted '{}'", ex.getMessage(), ex);
+        LOG.warn("Pooling interrupted");
       }
     }
 
@@ -219,12 +220,13 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
         // the processing fo the current file had an unrecoverable error we log the reason, file and offset if avail
         long filePos = (ex.getCause() != null && ex.getCause() instanceof OverrunException)
                        ? ((OverrunException)ex.getCause()).getStreamOffset() : -1;
-        LOG.error("Spool file '{}' at position '{}', {}", currentFile, filePos, ex.getMessage(), ex);
+        LOG.error(StageLibError.LIB_0101.getMessage(), currentFile, filePos, ex.getMessage(), ex);
+        getContext().reportError(StageLibError.LIB_0101, currentFile, filePos, ex.getMessage());
         try {
           // then we ask the spooler to error handle the failed file
           spooler.handleFileInError(currentFile);
         } catch (IOException ex1) {
-          throw new StageException(StageLibError.LIB_0001, currentFile, ex1.getMessage(), ex1);
+          throw new StageException(StageLibError.LIB_0100, currentFile, ex1.getMessage(), ex1);
         }
         // we set the offset to -1 to indicate we are done with the file and we should fetch a new one from the spooler
         offset = -1;

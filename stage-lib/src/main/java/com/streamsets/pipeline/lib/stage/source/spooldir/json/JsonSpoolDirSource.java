@@ -24,6 +24,7 @@ import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.lib.stage.source.spooldir.AbstractSpoolDirSource;
 import com.streamsets.pipeline.lib.stage.source.spooldir.BadSpoolFileException;
+import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,8 +103,8 @@ public class JsonSpoolDirSource extends AbstractSpoolDirSource {
         }
       } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
         jsonObjectsOverMaxLen.inc();
-        LOG.warn("Discarding Json Object '{}', it exceeds maximum length '{}', file '{}', object starts at offset '{}'",
-                 ex.getJsonSnippet(), maxJsonObjectLen, sourceFile, offset);
+        getContext().reportError(StageLibError.LIB_0200, ex.getJsonSnippet(), maxJsonObjectLen, sourceFile, offset);
+        LOG.warn(StageLibError.LIB_0200.getMessage(), ex.getJsonSnippet(), maxJsonObjectLen, sourceFile, offset);
       }
     }
     return offset;
