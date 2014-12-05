@@ -43,7 +43,7 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The type of field FaultySource.company is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldValueChooser' or 'ValueChooser' annotation is expected.");
     expectedSet.add("The type of the field FaultySource.zip is expected to be String.");
     expectedSet.add("The type of the field FaultySource.state is expected to be List<String>.");
-    expectedSet.add("The type of the field FaultySource.streetAddress is expected to be Map<String, String>.");
+    expectedSet.add("The type of the field FaultySource.streetAddress is expected to be Map<String, String> or Map<String, Enum>.");
     expectedSet.add("The type of field FaultySource.ste is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldValueChooser' or 'ValueChooser' annotation is expected.");
     expectedSet.add("Stage com.streamsets.pipeline.sdk.testData.FaultySource neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, Processor, Target interface.");
     expectedSet.add("The Stage FaultySource has constructor with arguments but no default constructor.");

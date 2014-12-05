@@ -268,7 +268,7 @@ public class PipelineConfigurationValidator {
                 break;
               case MODEL:
                 if(confDef.getModel().getModelType() == ModelType.VALUE_CHOOSER) {
-                  if(!(conf.getValue() instanceof String)) {
+                  if(!(conf.getValue() instanceof String || conf.getValue().getClass().isEnum()) ) {
                     // stage configuration must be a model
                     issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                                             ValidationError.VALIDATION_0009, "String"));

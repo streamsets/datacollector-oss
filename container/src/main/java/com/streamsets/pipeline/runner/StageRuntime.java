@@ -201,7 +201,12 @@ public class StageRuntime {
         } else {
           try {
             Field var = klass.getField(instanceVar);
-            var.set(stage, value);
+            //check if the field is an enum and convert the value to enum if so
+            if(var.getType().isEnum()) {
+              var.set(stage, Enum.valueOf((Class<Enum>) var.getType(), (String) value));
+            } else {
+              var.set(stage, value);
+            }
           } catch (Exception ex) {
             throw new PipelineRuntimeException(ContainerError.CONTAINER_0152,
                                                stageDef.getClassName(), stageConf.getInstanceName(), instanceVar, value,

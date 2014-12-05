@@ -1,6 +1,5 @@
 package com.streamsets.pipeline.lib.stage.devtest;
 
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.ChooserValues;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ public class ConverterValuesProvider implements ChooserValues {
     @Override
     public List<String> getValues() {
       List<String> values = new ArrayList<String>();
-      for (Field.Type type : Field.Type.values()) {
+      for (FieldType type : FieldType.values()) {
         values.add(type.toString());
       }
       return values;
@@ -19,7 +18,7 @@ public class ConverterValuesProvider implements ChooserValues {
     @Override
     public List<String> getLabels() {
       List<String> labels = new ArrayList<String>();
-      for (Field.Type type : Field.Type.values()) {
+      for (FieldType type : FieldType.values()) {
         labels.add(type.name());
       }
       return labels;

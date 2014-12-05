@@ -57,11 +57,13 @@ public class StateTracker {
   }
 
   public void setState(String name, String rev, State state, String message) throws PipelineManagerException {
-    //persist default pipelineState
-    pipelineState = new PipelineState(name, rev, state, message, System.currentTimeMillis());
+    //Need to persist the state first and then update the pipeline state field.
+    //Otherwise looking up the history after stopping the pipeline may or may not show the last STOPPED state
+    PipelineState tempPipelineState = new PipelineState(name, rev, state, message, System.currentTimeMillis());
     if(state != State.STOPPING) {
-      persistPipelineState();
+      persistPipelineState(tempPipelineState);
     }
+    pipelineState = tempPipelineState;
   }
 
   public void init() {
@@ -103,7 +105,7 @@ public class StateTracker {
     }
   }
 
-  private void persistPipelineState() throws PipelineManagerException {
+  private void persistPipelineState(PipelineState pipelineState) throws PipelineManagerException {
     //write to runInfo/pipelineState.json as well as /runInfo/<pipelineName>/pipelineState.json
     try {
       json.writeObjectToFile(getTempStateFile(), getStateFile(), pipelineState);

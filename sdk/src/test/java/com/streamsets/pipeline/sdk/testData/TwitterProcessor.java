@@ -12,6 +12,7 @@ import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.ChooserMode;
 
@@ -31,13 +32,31 @@ public class TwitterProcessor extends BaseProcessor{
   )
   public Map<String, String> regEx;
 
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = TweetTypeProvider.class)
+  @ConfigDef(
+      defaultValue = "[a-z][A-Z][0-9]",
+      label = "tweetType1",
+      required = true,
+      description = "The regular expression used to parse the tweet",
+      type = ConfigDef.Type.MODEL
+  )
+  public TweetType tweetType1;
+
+  @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues = TweetTypeProvider.class)
+  @ConfigDef(
+      defaultValue = "[a-z][A-Z][0-9]",
+      label = "tweetType2",
+      required = true,
+      description = "The regular expression used to parse the tweet",
+      type = ConfigDef.Type.MODEL
+  )
+  public Map<String, TweetType> tweetType2;
 
   public TwitterProcessor() {
   }
 
   public TwitterProcessor(Map<String, String> regEx) {
     this.regEx = regEx;
-
   }
 
   public Map<String, String> getRegEx() {

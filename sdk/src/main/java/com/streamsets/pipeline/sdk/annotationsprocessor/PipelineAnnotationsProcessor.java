@@ -74,9 +74,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private static final String DESCRIPTION = "description";
   private static final String EQUALS = "=";
   private static final String DOT = ".";
-  private static final String UNDER_SCORE = "_";
   private static final String DEFAULT_CONSTRUCTOR = "<init>";
   private static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
+  private static final String MAP_TYPE_WITH_KEY = "java.util.Map<java.lang.String,";
 
   /**************** private variables ************/
 
@@ -772,14 +772,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private boolean validateDropDown(Element typeElement, VariableElement variableElement, ValueChooser valueChooser) {
     boolean valid = true;
 
-    if (!variableElement.asType().toString().equals("java.lang.String")) {
-      printError("field.validation.type.is.not.String",
-          "The type of the field {} is expected to be String.",
-          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
-      valid = false;
-    }
-
     if(valueChooser.type().equals(com.streamsets.pipeline.api.ChooserMode.PROVIDED)) {
+      //The type of could be string or an enum
+      valid &= checkIfTypeIsEnumOrString(typeElement, variableElement, variableElement.asType().toString());
       //A chooserValues is expected.
       //check if the chooserValues is specified and that implements the correct base class
       //Not the best way of getting the TypeMirror of the ChooserValues implementation
@@ -790,10 +785,10 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       } catch (MirroredTypeException e) {
         valueProviderTypeMirror = e.getTypeMirror();
       }
-
       valid &= validateValueProvider(typeElement, variableElement, valueProviderTypeMirror);
+    } else {
+      valid &= checkIfTypeIsString(typeElement, variableElement);
     }
-
     return valid;
   }
 
@@ -801,14 +796,31 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
                                         FieldValueChooser fieldValueChooser) {
     boolean valid = true;
     TypeMirror fieldType = variableElement.asType();
-    if (!fieldType.toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
-      printError("field.validation.type.is.not.map",
-          "The type of the field {} is expected to be Map<String, String>.",
-          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
-      valid = false;
-    }
-
+    String type = fieldType.toString();
     if(fieldValueChooser.type().equals(com.streamsets.pipeline.api.ChooserMode.PROVIDED)) {
+      //FIXME<Hari>: Investigate and find a better way to do this
+      //check if type is Map<String, String> or Map<String, Enum>
+      if(type.contains(MAP_TYPE_WITH_KEY)) {
+        //get the second type in the map
+        String valueType = type.substring(MAP_TYPE_WITH_KEY.length(), type.length() -1);
+        //valueType must be string or enum
+        if (!valueType.equals("java.lang.String")) {
+          //check if it is an enum
+          Element e = getTypeElementFromName(valueType);
+          if(!e.getKind().equals(ElementKind.ENUM)) {
+            printError("field.validation.type.is.not.map",
+                "The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
+                typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+            valid = false;
+          }
+        }
+      } else {
+        printError("field.validation.type.is.not.map",
+            "The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
+            typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+        valid = false;
+      }
+
       //A chooserValues is expected.
       //check if the chooserValues is specified and that implements the correct base class
       //Not the best way of getting the TypeMirror of the ChooserValues implementation
@@ -821,6 +833,13 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
 
       valid &= validateValueProvider(typeElement, variableElement, valueProviderTypeMirror);
+    } else {
+      if (!type.equals("java.util.Map<java.lang.String,java.lang.String>")) {
+        printError("field.validation.type.is.not.map",
+            "The type of the field {} is expected to be Map<String, String>.",
+            typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+        valid = false;
+      }
     }
     return valid;
   }
@@ -1073,6 +1092,30 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
     errorEnumValidationFailure &= !valid;
     return valid;
+  }
+
+  private boolean checkIfTypeIsString(Element typeElement, VariableElement variableElement) {
+    if (!variableElement.asType().toString().equals("java.lang.String")) {
+      printError("field.validation.type.is.not.String",
+          "The type of the field {} is expected to be String.",
+          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+      return false;
+    }
+    return true;
+  }
+
+  private boolean checkIfTypeIsEnumOrString(Element typeElement, VariableElement variableElement, String typeName) {
+    if (!typeName.equals("java.lang.String")) {
+      //check if it is an enum
+      Element e = getTypeElementFromName(typeName);
+      if(!e.getKind().equals(ElementKind.ENUM)) {
+        printError("field.validation.type.is.not.String.or.Enum",
+            "The type of the field {} is expected to be String or Enum.",
+            typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+        return false;
+      }
+    }
+    return true;
   }
 
 }

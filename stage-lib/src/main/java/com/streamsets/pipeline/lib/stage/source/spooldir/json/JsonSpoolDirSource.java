@@ -52,7 +52,7 @@ public class JsonSpoolDirSource extends AbstractSpoolDirSource {
       description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects",
       defaultValue = "ARRAY_OBJECTS")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
-  public String jsonContent;
+  public StreamingJsonParser.Mode jsonContent;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.INTEGER,
@@ -62,13 +62,11 @@ public class JsonSpoolDirSource extends AbstractSpoolDirSource {
       defaultValue = "4096")
   public int maxJsonObjectLen;
 
-  private StreamingJsonParser.Mode parserMode;
   private Counter jsonObjectsOverMaxLen;
 
   @Override
   protected void init() throws StageException {
     super.init();
-    parserMode = StreamingJsonParser.Mode.valueOf(jsonContent);
     jsonObjectsOverMaxLen = getContext().createCounter("jsonObjectsOverMaxLen");
   }
 
@@ -78,7 +76,7 @@ public class JsonSpoolDirSource extends AbstractSpoolDirSource {
     String sourceFile = file.getName();
     OverrunStreamingJsonParser parser = null;
     try (CountingReader reader = new CountingReader(new FileReader(file))) {
-      parser = new OverrunStreamingJsonParser(reader, offset, parserMode, maxJsonObjectLen);
+      parser = new OverrunStreamingJsonParser(reader, offset, jsonContent, maxJsonObjectLen);
       return produce(sourceFile, offset, parser, maxBatchSize, batchMaker);
     } catch (OverrunException ex) {
       throw new BadSpoolFileException(file.getAbsolutePath(), ex.getStreamOffset(), ex);
