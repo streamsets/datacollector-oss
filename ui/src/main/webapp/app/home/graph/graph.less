@@ -36,7 +36,6 @@
       }
     }
 
-
     .panel-title {
 
       h3 {
@@ -49,7 +48,15 @@
       i {
         padding-top: @smallPadding*.5;
         margin-left: @defaultPadding;
-        color: @brand-success;
+
+        &.green-color {
+          color: @brand-success;
+        }
+
+        &.red-color {
+          color: @brand-danger;
+        }
+
       }
     }
 

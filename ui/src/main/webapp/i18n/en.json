@@ -61,7 +61,9 @@
       "sources": "Sources",
       "start": "Start",
       "stop": "Stop",
-      "targets": "Targets"
+      "stoppingPipeline": "Stopping Pipeline...",
+      "targets": "Targets",
+      "uptime": "Uptime"
     },
     "graphPane": {
       "startErrorMessage": "Pipeline definition '{{name}}' is running. Pipeline Agent supports running only one Pipeline Definition."

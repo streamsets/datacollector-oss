@@ -1,26 +1,35 @@
 
-  <div class="pull-left">
-      <button type="button" class="navbar-toggle collapsed"
-              ng-class="{'selected' : !hideLibraryPanel}"
-              ng-click="toggleLibraryPanel()">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+  <div class="pull-left" ng-switch="activeConfigStatus.state">
+    <button type="button" class="navbar-toggle collapsed"
+            ng-class="{'selected' : !hideLibraryPanel}"
+            ng-click="toggleLibraryPanel()">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+
 
     <div class="panel-title pull-left"
-         ng-hide="isPipelineRunning">
+         ng-switch-when="RUNNING">
+      <h3 class="pull-left" translate="admin.header.uptime">Uptime</h3>
+      <h3 class="pull-left" am-time-ago="common.pipelineStatus.lastStatusChange"></h3>
+
+      <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
+    </div>
+
+
+    <div class="panel-title pull-left"
+         ng-switch-when="STOPPING">
+      <h3 class="pull-left" translate="admin.header.stoppingPipeline">Stopping Pipeline</h3>
+      <i class="fa fa-spinner fa-spin fa-2x red-color"></i>
+    </div>
+
+    <div class="panel-title pull-left"
+         ng-switch-default>
       <h3 class="pull-left" translate="admin.header.definePipeline">Define Pipeline:</h3>
       <h3 class="pull-left">{{pipelineConfig.info.name}}</h3>
     </div>
 
-    <div class="panel-title pull-left"
-         ng-show="isPipelineRunning">
-      <h3 class="pull-left" translate="Uptime">Uptime</h3>
-      <h3 class="pull-left" am-time-ago="common.pipelineStatus.lastStatusChange"></h3>
-
-      <i class="fa fa-spinner fa-spin fa-2x"></i>
-    </div>
 
   </div>
 
@@ -56,7 +65,7 @@
     </ul>
   </div>
 
-  <div class="pull-right">
+  <div class="pull-right" ng-if="activeConfigStatus.state !== 'STOPPING'">
     <button type="button" class="btn btn-primary btn-sm"
             ng-show="previewMode"
             ng-click="previewPipeline(true)">
@@ -111,7 +120,7 @@
     </button>
   </div>
 
-  <div class="btn-group pull-right stage-dropdown" ng-hide="isPipelineRunning || previewMode">
+  <div class="btn-group pull-right stage-dropdown" ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
     <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
       <span class="glyphicon glyphicon-plus"></span>
       <span translate="admin.header.addStage">Add Stage</span>

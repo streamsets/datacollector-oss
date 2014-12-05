@@ -35,7 +35,7 @@ angular
     $scope.$on('onStageSelection', function() {
       var pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig;
-      if($scope.isPipelineRunning && pipelineMetrics && currentSelection.instanceName) {
+      if($scope.isPipelineRunning && pipelineMetrics && pipelineMetrics.meters && currentSelection.instanceName) {
         var errorCount = $scope.errorCount = pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter'];
         $scope.stageBadRecords = [];
         if(errorCount && parseInt(errorCount.count) > 0) {
@@ -49,7 +49,7 @@ angular
       var pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig;
 
-      if($scope.isPipelineRunning && pipelineMetrics && currentSelection.instanceName) {
+      if($scope.isPipelineRunning && pipelineMetrics && pipelineMetrics.meters && currentSelection.instanceName) {
         $scope.errorCount = pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter'];
       }
     });

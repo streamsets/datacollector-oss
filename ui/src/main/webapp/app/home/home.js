@@ -35,6 +35,9 @@ angular
       activeConfigInfo: {
         name: 'xyz'
       },
+      activeConfigStatus:{
+        state: 'STOPPED'
+      },
       minimizeDetailPane: false,
       maximizeDetailPane: false,
 
@@ -157,7 +160,7 @@ angular
 
         $rootScope.common.pipelineStatus = pipelineStatus;
 
-        if(pipelineStatus.state === 'RUNNING') {
+        if(pipelineStatus && pipelineStatus.name) {
           $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
             return pipelineDefn.name === pipelineStatus.name;
           });
@@ -471,15 +474,30 @@ angular
       var pipelineStatus = $rootScope.common.pipelineStatus,
         config = $scope.pipelineConfig;
       return (pipelineStatus && config && pipelineStatus.name === config.info.name &&
-        pipelineStatus.state === 'RUNNING');
+          pipelineStatus.state === 'RUNNING');
+    };
+
+    var derivePipelineStatus = function() {
+      var pipelineStatus = $rootScope.common.pipelineStatus,
+        config = $scope.pipelineConfig;
+
+      if(pipelineStatus && config && pipelineStatus.name === config.info.name) {
+        return pipelineStatus;
+      } else {
+        return {
+          state: 'STOPPED'
+        };
+      }
     };
 
     $scope.$watch('pipelineConfig.info.name', function() {
       $scope.isPipelineRunning = derivePipelineRunning();
+      $scope.activeConfigStatus = derivePipelineStatus();
     });
 
     $rootScope.$watch('common.pipelineStatus', function() {
       $scope.isPipelineRunning = derivePipelineRunning();
+      $scope.activeConfigStatus = derivePipelineStatus();
     });
 
   });
