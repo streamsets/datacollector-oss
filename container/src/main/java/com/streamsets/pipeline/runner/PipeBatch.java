@@ -43,4 +43,6 @@ public interface PipeBatch {
 
   int getErrorRecords();
 
+  int getErrorMessages();
+
 }

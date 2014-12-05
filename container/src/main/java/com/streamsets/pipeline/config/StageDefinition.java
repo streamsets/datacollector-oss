@@ -18,10 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 
 /**
@@ -205,8 +202,6 @@ public class StageDefinition {
         if(!(configDef.getModel().getLabels() != null &&
         !configDef.getModel().getLabels().isEmpty() &&
           configDef.getModel().getLabels().size() == configDef.getModel().getValues().size())) {
-          //TODO: throw the correct exception
-          //As of now we cannot validate the implementation of values provider during the compile time
           LOG.error(
             "The ChooserValues implementation for configuration '{}' in stage '{}' does not have the same number of " +
                 "values and labels.",

@@ -200,6 +200,11 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
+  public int getErrorMessages() {
+    return errorSink.getErrors().size();
+  }
+
+  @Override
   public String toString() {
     return Utils.format(
         "PipeBatch[previousOffset='{}' currentOffset='{}' batchSize='{}' keepSnapshot='{}' errorRecords='{}]'",

@@ -7,6 +7,7 @@ package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 
@@ -58,5 +59,9 @@ public class ProductionPipeline {
 
   public List<Record> getErrorRecords(String instanceName) {
     return pipelineRunner.getErrorRecords(instanceName);
+  }
+
+  public List<ErrorMessage> getErrorMessages() {
+    return pipelineRunner.getErrorMessages();
   }
 }

@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.ConfigConfiguration;
-import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
@@ -91,7 +91,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     this.pipelineStore = pipelineStore;
     this.stageLibrary = stageLibrary;
     snapshotStore = new FileSnapshotStore(runtimeInfo);
-    errorRecordStore = new FileErrorRecordStore(runtimeInfo);
+    errorRecordStore = new FileErrorRecordStore(runtimeInfo, configuration);
   }
 
 
@@ -194,15 +194,22 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return snapshotStore.getSnapshot(pipelineName);
   }
 
-  public InputStream getErrorRecords(String pipelineName, String rev, String stageInstanceName) throws PipelineManagerException {
+  public InputStream getErrors(String pipelineName, String rev)
+      throws PipelineManagerException {
     validatePipelineExistence(pipelineName);
-    return errorRecordStore.getErrorRecords(pipelineName, rev, stageInstanceName);
+    return errorRecordStore.getErrors(pipelineName, rev);
   }
 
   public List<Record> getErrorRecords(String instanceName) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING),
         ContainerError.CONTAINER_0106);
     return prodPipeline.getErrorRecords(instanceName);
+  }
+
+  public List<ErrorMessage> getErrorMessages() throws PipelineManagerException {
+    checkState(getPipelineState().getState().equals(State.RUNNING),
+        ContainerError.CONTAINER_0106);
+    return prodPipeline.getErrorMessages();
   }
 
   public List<PipelineState> getHistory(String pipelineName) throws PipelineManagerException {
@@ -216,22 +223,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     LOG.debug("Deleted snapshot");
   }
 
-  public void deleteErrorRecords(String pipelineName, String rev, String stageInstanceName)
-      throws PipelineStoreException {
-    if(stageInstanceName == null || stageInstanceName.isEmpty()) {
-      //delete error records for all stages in this pipeline
-      LOG.debug("Deleting error records for pipeline {}", pipelineName);
-      PipelineConfiguration pipelineConfiguration = pipelineStore.load(pipelineName, rev);
-      for(StageConfiguration stageConf : pipelineConfiguration.getStages()) {
-        errorRecordStore.deleteErrorRecords(pipelineName, rev, stageConf.getInstanceName());
-      }
-      LOG.debug("Deleted error records for pipeline {}", pipelineName);
-    } else {
-      LOG.debug("Deleting error records for stage {}", stageInstanceName);
-      errorRecordStore.deleteErrorRecords(pipelineName, rev, stageInstanceName);
-      LOG.debug("Deleted error records for stage {}", stageInstanceName);
-    }
-  }
 
   public PipelineState startPipeline(String name, String rev) throws PipelineStoreException
       , PipelineManagerException, PipelineRuntimeException, StageException {
@@ -284,6 +275,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
     //retrieve pipeline properties from the pipeline configuration
     int maxBatchSize = configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT);
+    int maxErrorRecordsPerStage = configuration.get(Constants.MAX_ERROR_RECORDS_PER_STAGE, Constants.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT);
+    int maxPipelineErrors = configuration.get(Constants.MAX_PIPELINE_ERRORS, Constants.MAX_PIPELINE_ERRORS_DEFAULT);
+
     //load pipeline configuration from store
     PipelineConfiguration pipelineConfiguration = pipelineStore.load(name, rev);
     DeliveryGuarantee deliveryGuarantee = DeliveryGuarantee.AT_LEAST_ONCE;
@@ -296,10 +290,12 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     //This helps avoid race conditions when different stores attempt to create directories
     //Creating directory eagerly also avoids the need of synchronization
     createPipelineDirIfNotExist(name);
+    //register the pipeline with the error record store
+    errorRecordStore.register(name);
 
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, runtimeInfo);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, errorRecordStore, offsetTracker,
-        maxBatchSize, deliveryGuarantee, name, rev);
+        maxBatchSize, maxErrorRecordsPerStage, maxPipelineErrors, deliveryGuarantee, name, rev);
     ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, pipelineConfiguration);
 
     return builder.build(runner);
@@ -336,5 +332,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
         throw new RuntimeException(Utils.format("Could not create directory '{}'", pipelineDir.getAbsolutePath()));
       }
     }
+  }
+
+  public void deleteErrors(String pipelineName, String rev) {
+    errorRecordStore.deleteErrors(pipelineName, rev);
   }
 }

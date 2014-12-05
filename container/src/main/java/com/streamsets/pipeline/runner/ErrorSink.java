@@ -17,18 +17,18 @@ import java.util.Map;
 
 public class ErrorSink {
 
-  private final List<ErrorMessage> errors;
+  private final Map<String, ErrorMessage> errors;
   private final Map<String, List<Record>> errorRecords;
   private int size;
 
   public ErrorSink() {
-    errors = new ArrayList<>();
+    errors = new HashMap<>();
     errorRecords = new HashMap<>();
     size = 0;
   }
 
-  public void addError(ErrorMessage errorMessage) {
-    errors.add(errorMessage);
+  public void addError(String stage, ErrorMessage errorMessage) {
+    errors.put(stage, errorMessage);
   }
 
   public void addRecord(String stageInstance, Record errorRecord) {
@@ -41,7 +41,7 @@ public class ErrorSink {
     size++;
   }
 
-  public List<ErrorMessage> getErrors() {
+  public Map<String, ErrorMessage> getErrors() {
     return errors;
   }
 

@@ -116,4 +116,9 @@ public class StagePreviewPipeBatch implements PipeBatch {
   public int getErrorRecords() {
     return 0;
   }
+
+  @Override
+  public int getErrorMessages() {
+    return 0;
+  }
 }

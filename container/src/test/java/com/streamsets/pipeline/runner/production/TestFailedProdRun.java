@@ -46,7 +46,7 @@ public class TestFailedProdRun {
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(FileSnapshotStore.class),
-        Mockito.mock(FileErrorRecordStore.class), tracker, 5, DeliveryGuarantee.AT_MOST_ONCE, PIPELINE_NAME, REVISION);
+        Mockito.mock(FileErrorRecordStore.class), tracker, 5, 10, 10, DeliveryGuarantee.AT_MOST_ONCE, PIPELINE_NAME, REVISION);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
 

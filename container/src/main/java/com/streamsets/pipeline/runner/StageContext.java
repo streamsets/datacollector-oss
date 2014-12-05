@@ -86,19 +86,19 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public void reportError(Exception exception) {
     Preconditions.checkNotNull(exception, "exception cannot be null");
-    errorSink.addError(new ErrorMessage(ContainerError.CONTAINER_0001, exception.getMessage()));
+    errorSink.addError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0001, exception.getMessage()));
   }
 
   @Override
   public void reportError(String errorMessage) {
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    errorSink.addError(new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
+    errorSink.addError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
   }
 
   @Override
   public void reportError(ErrorCode errorCode, Object... args) {
     Preconditions.checkNotNull(errorCode, "errorId cannot be null");
-    errorSink.addError(new ErrorMessage(errorCode, args));
+    errorSink.addError(instanceName, new ErrorMessage(errorCode, args));
   }
 
   @Override

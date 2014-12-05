@@ -5,96 +5,129 @@
  */
 package com.streamsets.pipeline.errorrecordstore.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.streamsets.pipeline.prodmanager.Constants;
+import com.streamsets.pipeline.util.Configuration;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.RollingFileAppender;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class FileErrorRecordStore implements ErrorRecordStore {
 
-  private static final Logger LOG = LoggerFactory.getLogger(FileErrorRecordStore.class);
-  private static final int MAX_FILE_SIZE = 1073741824;
-
-  private static final String ERROR_RECORDS_FILE = "errorRecords.json";
+  private static final String ERRORS_FILE = "errors.json";
   private static final String ERROR_RECORDS_DIR = "runInfo";
+  private static final String PIPELINE = "pipeline";
+  private static final String DOT = ".";
+  private static final String ERROR = "error";
+  private static final String RECORD = "record";
+  private static final String STAGE = "stage";
+  private static final String TYPE = "type";
+  private static final String LAYOUT_PATTERN = "%m%n";
 
   private File errorRecordsBaseDir;
   private final ObjectMapper json;
-  /*Remember pipelines which have exceeded error record limit. This helps log warning only the first time. Otherwise
-  * the log size can grow very large*/
-  private final Set<String> pipelinesExceedingErrorRecordLimit;
+  private final Configuration configuration;
 
-  public FileErrorRecordStore(RuntimeInfo runtimeInfo) {
+  public FileErrorRecordStore(RuntimeInfo runtimeInfo, Configuration configuration) {
+    this.configuration = configuration;
     this.errorRecordsBaseDir = new File(runtimeInfo.getDataDir(), ERROR_RECORDS_DIR);
     json = ObjectMapperFactory.get();
     json.enable(SerializationFeature.INDENT_OUTPUT);
-    pipelinesExceedingErrorRecordLimit = new HashSet<>();
   }
 
   @Override
   public void storeErrorRecords(String pipelineName, String rev, Map<String, List<Record>> errorRecords) {
-    for(Map.Entry<String, List<Record>> entry : errorRecords.entrySet()) {
-      File errorRecordFile = getErrorRecordFile(pipelineName, rev, entry.getKey());
-      if (errorRecordFile.exists() && errorRecordFile.length() > MAX_FILE_SIZE) {
-        if(!pipelinesExceedingErrorRecordLimit.contains(pipelineName)) {
-          //Log the warning only for the very first time.
-          LOG.warn("Exceeded the error record file size limit. " +
-              "Records in error will not be written to file from this point onwards.");
-          pipelinesExceedingErrorRecordLimit.add(pipelineName);
+    for(Map.Entry<String, List<Record>> e : errorRecords.entrySet()) {
+      for(Record r : e.getValue()) {
+        try {
+          writeError(pipelineName, e.getKey(), r, RECORD);
+        } catch (JsonProcessingException ex) {
+          throw new RuntimeException(ex);
         }
-        return;
-      }
-      try {
-        json.writeValue(new FileOutputStream(errorRecordFile, true /*append*/), entry.getValue());
-      } catch (IOException e) {
-        throw new RuntimeException(e);
       }
     }
   }
 
   @Override
-  public void deleteErrorRecords(String pipelineName, String rev, String stageInstanceName) {
-    File errorRecordFile = getErrorRecordFile(pipelineName, rev, stageInstanceName);
-    if(!errorRecordFile.exists()) {
-      LOG.warn("No error records found for stage instance {} in pipeline {}", stageInstanceName, pipelineName);
+  public void storeErrorMessages(String pipelineName, String rev, Map<String, ErrorMessage> errorMessages) {
+    for(Map.Entry<String, ErrorMessage> e : errorMessages.entrySet()) {
+      try {
+        writeError(pipelineName, e.getKey(), e.getValue(), PIPELINE);
+      } catch (JsonProcessingException ex) {
+        throw new RuntimeException(ex);
+      }
     }
-    LOG.info("Deleting error records for stage instance {} in pipeline {}", stageInstanceName, pipelineName);
-    errorRecordFile.delete();
-    pipelinesExceedingErrorRecordLimit.remove(pipelineName);
-    LOG.info("Deleted error records for stage instance {} in pipeline {}", stageInstanceName, pipelineName);
   }
 
   @Override
-  public InputStream getErrorRecords(String pipelineName, String rev, String stageInstanceName) {
-    if(getErrorRecordFile(pipelineName, rev, stageInstanceName).exists()) {
+  public void deleteErrors(String pipelineName, String rev) {
+    if(getErrorsFile(pipelineName).exists()) {
+      getErrorsFile(pipelineName).delete();
+    }
+  }
+
+  @Override
+  public InputStream getErrors(String pipelineName, String rev) {
+    if(getErrorsFile(pipelineName).exists()) {
       try {
-        return new FileInputStream(getErrorRecordFile(pipelineName, rev, stageInstanceName));
+        return new FileInputStream(getErrorsFile(pipelineName));
       } catch (FileNotFoundException e) {
-        LOG.warn(e.getMessage());
         return null;
       }
     }
     return null;
   }
 
-  private File getErrorRecordFile(String pipelineName, String rev, String stageInstanceName) {
-    return new File(getPipelineDir(pipelineName), stageInstanceName + "-" + ERROR_RECORDS_FILE);
+  public void register(String pipelineName) {
+    String loggerName = PIPELINE + DOT + pipelineName + DOT + ERROR;
+    PatternLayout layout = new PatternLayout(LAYOUT_PATTERN);
+    RollingFileAppender appender;
+    try {
+      appender = new RollingFileAppender(layout, getErrorFileName(pipelineName), true);
+      //Note that the rolling appender creates the log file in the specified location eagerly
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    int maxBackupIndex = configuration.get(Constants.MAX_BACKUP_INDEX, Constants.MAX_BACKUP_INDEX_DEFAULT);
+    appender.setMaxBackupIndex(maxBackupIndex);
+    String maxFileSize = configuration.get(Constants.MAX_ERROR_FILE_SIZE, Constants.MAX_ERROR_FILE_SIZE_DEFAULT);
+    appender.setMaxFileSize(maxFileSize);
+
+    Logger logger = Logger.getLogger(loggerName);
+    logger.addAppender(appender);
+    //prevent other loggers from logging errors
+    logger.setAdditivity(false);
+  }
+
+  private Logger getLogger(String pipelineName) {
+    String loggerName = PIPELINE + DOT + pipelineName + DOT + ERROR;
+    return Logger.getLogger(loggerName);
+  }
+
+  private String getErrorFileName(String pipelineName) {
+    return getErrorsFile(pipelineName).getAbsolutePath();
+  }
+
+  private File getErrorsFile(String pipelineName) {
+    return new File(getPipelineDir(pipelineName), ERRORS_FILE);
   }
 
   private File getPipelineDir(String name) {
@@ -106,4 +139,13 @@ public class FileErrorRecordStore implements ErrorRecordStore {
     }
     return pipelineDir;
   }
+
+  private void writeError(String pipelineName, String stageName, Object error, String type) throws JsonProcessingException {
+    Map<String, Object> toWrite = new HashMap<>();
+    toWrite.put(STAGE, stageName);
+    toWrite.put(TYPE, type);
+    toWrite.put(ERROR, error);
+    getLogger(pipelineName).error(json.writeValueAsString(toWrite));
+  }
+
 }

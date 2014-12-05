@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.util.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -54,7 +55,9 @@ public class TestFileErrorRecordStore {
     File f = new File(System.getProperty("pipeline.data.dir"));
     FileUtils.deleteDirectory(f);
     RuntimeInfo info = new RuntimeInfo(ImmutableList.of(getClass().getClassLoader()));
-    errorStore = new FileErrorRecordStore(info);
+    Configuration configuration = new Configuration();
+    errorStore = new FileErrorRecordStore(info, configuration);
+
   }
 
   @After
@@ -64,14 +67,15 @@ public class TestFileErrorRecordStore {
 
   @Test
   public void testStoreErrorRecord() {
-    Assert.assertTrue(errorStore.getErrorRecords(PIPELINE_NAME, REV, SOURCE_NAME) == null);
-    Assert.assertTrue(errorStore.getErrorRecords(PIPELINE_NAME, REV, PROCESSOR_NAME) == null);
+    //The rolling file appender opens the file on initialization.
+    Assert.assertTrue(errorStore.getErrors(PIPELINE_NAME, REV) == null);
 
+    errorStore.register(PIPELINE_NAME);
     errorStore.storeErrorRecords(PIPELINE_NAME, REV, createErrorRecordData());
 
-    InputStream in = errorStore.getErrorRecords(PIPELINE_NAME, REV, SOURCE_NAME);
+    InputStream in = errorStore.getErrors(PIPELINE_NAME, REV);
     Assert.assertNotNull(in);
-    in = errorStore.getErrorRecords(PIPELINE_NAME, REV, PROCESSOR_NAME);
+    in = errorStore.getErrors(PIPELINE_NAME, REV);
     Assert.assertNotNull(in);
 
     //TODO: Retrieve error records and compare contents once de-serializer is ready
@@ -82,15 +86,16 @@ public class TestFileErrorRecordStore {
   public void testStoreInvalidDir() {
     RuntimeInfo info = Mockito.mock(RuntimeInfo.class);
     Mockito.when(info.getDataDir()).thenReturn("\0");
-    errorStore = new FileErrorRecordStore(info);
+    errorStore = new FileErrorRecordStore(info, new Configuration());
 
     //Runtime exception expected
+    errorStore.register(PIPELINE_NAME);
     errorStore.storeErrorRecords(PIPELINE_NAME, REV, createErrorRecordData());
   }
 
   @Test
   public void testGetErrorRecordsWhenItDoesNotExist() {
-    Assert.assertNull(errorStore.getErrorRecords("someArbitraryPipeline", REV, SOURCE_NAME));
+    Assert.assertNull(errorStore.getErrors("someArbitraryPipeline", REV));
   }
 
   private Map<String, List<Record>> createErrorRecordData() {

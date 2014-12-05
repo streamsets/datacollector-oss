@@ -45,6 +45,11 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
         it.next();
       }
     }
+
+    //generate error message 50% of the time
+    if(random.nextFloat() < 0.5) {
+      getContext().reportError("Error reported by the RandomErrorProcessor");
+    }
   }
 
 }

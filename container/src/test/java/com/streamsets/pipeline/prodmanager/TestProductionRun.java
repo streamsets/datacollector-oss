@@ -229,14 +229,14 @@ public class TestProductionRun {
     manager.stopPipeline();
     waitForPipelineToStop();
 
-    InputStream erStream = manager.getErrorRecords(MY_PIPELINE, "0", MY_PROCESSOR);
+    InputStream erStream = manager.getErrors(MY_PIPELINE, "0");
     Assert.assertNotNull(erStream);
     //TODO: read the input error records into String format and Use Record de-serializer when ready
 
     //delete the error record file
-    manager.deleteErrorRecords(MY_PIPELINE, "0", MY_PROCESSOR);
+    manager.deleteErrors(MY_PIPELINE, "0");
 
-    erStream = manager.getErrorRecords(MY_PIPELINE, "0", MY_PROCESSOR);
+    erStream = manager.getErrors(MY_PIPELINE, "0");
     Assert.assertNull(erStream);
   }
 
@@ -256,12 +256,12 @@ public class TestProductionRun {
     waitForPipelineToStop();
 
     //check there are error records
-    InputStream erStream = manager.getErrorRecords(MY_PIPELINE, "0", MY_PROCESSOR);
+    InputStream erStream = manager.getErrors(MY_PIPELINE, "0");
     Assert.assertNotNull(erStream);
 
-    manager.deleteErrorRecords(MY_PIPELINE, "0", null);
+    manager.deleteErrors(MY_PIPELINE, "0");
 
-    erStream = manager.getErrorRecords(MY_PIPELINE, "0", MY_PROCESSOR);
+    erStream = manager.getErrors(MY_PIPELINE, "0");
     //verify there are no records
     Assert.assertNull(erStream);
   }

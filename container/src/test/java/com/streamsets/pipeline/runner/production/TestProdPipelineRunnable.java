@@ -130,7 +130,7 @@ public class TestProdPipelineRunnable {
 
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME)).thenReturn(new SnapshotStatus(false, false));
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, fileErrorRecordStore, tracker, 5
-        , deliveryGuarantee, PIPELINE_NAME, REVISION);
+        , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION);
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
         MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
 

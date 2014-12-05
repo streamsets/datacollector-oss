@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.errorrecordstore;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.ErrorMessage;
 
 import java.io.InputStream;
 import java.util.List;
@@ -15,7 +16,11 @@ public interface ErrorRecordStore {
 
   void storeErrorRecords(String pipelineName, String rev, Map<String, List<Record>> errorRecords);
 
-  void deleteErrorRecords(String pipelineName, String rev, String stageInstanceName);
+  void storeErrorMessages(String pipelineName, String rev, Map<String, ErrorMessage> errorMessages);
 
-  InputStream getErrorRecords(String pipelineName, String rev, String stageInstanceName);
+  void deleteErrors(String pipelineName, String rev);
+
+  InputStream getErrors(String pipelineName, String rev);
+
+  void register(String pipelineName);
 }

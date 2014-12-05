@@ -138,15 +138,23 @@ public class PipelineManagerResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getHistory(name)).build();
   }
 
-  @Path("/errorRecords/{pipelineName}")
+  @Path("/errors/{pipelineName}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getErrorRecords(
+  public Response getErrors(
       @PathParam("pipelineName") String pipelineName,
-      @QueryParam("rev") @DefaultValue("0") String rev,
-      @QueryParam ("stageInstanceName") String stageInstanceName) throws PipelineManagerException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getErrorRecords(pipelineName, rev,
-        stageInstanceName)).build();
+      @QueryParam("rev") @DefaultValue("0") String revs) throws PipelineManagerException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getErrors(pipelineName, revs)).build();
+  }
+
+  @Path("/errors/{pipelineName}")
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response deleteErrorRecords(
+      @PathParam("pipelineName") String pipelineName,
+      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
+    pipelineManager.deleteErrors(pipelineName, rev);
+    return Response.ok().build();
   }
 
   @Path("/errorRecords")
@@ -158,15 +166,12 @@ public class PipelineManagerResource {
         pipelineManager.getErrorRecords(stageInstanceName)).build();
   }
 
-  @Path("/errorRecords/{pipelineName}")
-  @DELETE
+  @Path("/errorMessages")
+  @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response deleteErrorRecords(
-      @PathParam("pipelineName") String pipelineName,
-      @QueryParam("rev") @DefaultValue("0") String rev,
-      @QueryParam ("stageInstanceName") String stageInstanceName) throws PipelineStoreException {
-    pipelineManager.deleteErrorRecords(pipelineName, rev, stageInstanceName);
-    return Response.ok().build();
+  public Response getErrorMessages() throws PipelineManagerException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
+        pipelineManager.getErrorMessages()).build();
   }
 
 }

@@ -224,12 +224,7 @@ public class TestPipelineManagerResource extends JerseyTest {
       }
 
       Mockito.doNothing().when(pipelineManager).deleteSnapshot(PIPELINE_NAME);
-      try {
-        Mockito.doNothing().when(pipelineManager).deleteErrorRecords(PIPELINE_NAME, "1", null);
-      } catch (PipelineStoreException e) {
-        e.printStackTrace();
-      }
-
+      Mockito.doNothing().when(pipelineManager).deleteErrors(PIPELINE_NAME, "1");
 
       return pipelineManager;
     }

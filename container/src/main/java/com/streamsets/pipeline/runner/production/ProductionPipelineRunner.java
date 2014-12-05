@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.FullPipeBatch;
@@ -39,12 +40,13 @@ import java.util.concurrent.TimeUnit;
 public class ProductionPipelineRunner implements PipelineRunner {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunner.class);
-  private static final int MAX_ERROR_RECORDS_PER_STAGE = 100;
 
   private final MetricRegistry metrics;
   private final SourceOffsetTracker offsetTracker;
   private final SnapshotStore snapshotStore;
   private final ErrorRecordStore errorRecordStore;
+  private final int maxErrorRecordsPerStage;
+  private final int maxPipelineErrors;
 
   private int batchSize;
   private String sourceOffset;
@@ -58,6 +60,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private final Meter batchInputRecordsMeter;
   private final Meter batchOutputRecordsMeter;
   private final Meter batchErrorRecordsMeter;
+  private final Meter batchErrorMessagesMeter;
 
   /*indicates if the execution must be stopped after the current batch*/
   private volatile boolean stop = false;
@@ -67,19 +70,24 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private volatile int snapshotBatchSize;
   /*Cache last N error records per stage in memory*/
   private Map<String, EvictingQueue<Record>> stageToErrorRecordsMap;
+  /*Cache last N error messages in memory*/
+  private EvictingQueue<ErrorMessage> errorMessages;
 
   public ProductionPipelineRunner(SnapshotStore snapshotStore, ErrorRecordStore errorRecordStore,
                                   SourceOffsetTracker offsetTracker, int batchSize,
-                                  DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision) {
+                                  int maxErrorRecordsPerStage, int maxPipelineErrors, DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision) {
     this.metrics = new MetricRegistry();
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
+    this.maxErrorRecordsPerStage = maxErrorRecordsPerStage;
+    this.maxPipelineErrors = maxPipelineErrors;
 
     batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
     batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount");
     batchInputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchInputRecords");
     batchOutputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchOutputRecords");
     batchErrorRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorRecords");
+    batchErrorMessagesMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorMessages");
 
     this.deliveryGuarantee = deliveryGuarantee;
     this.snapshotStore = snapshotStore;
@@ -87,6 +95,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.revision = revision;
     this.errorRecordStore = errorRecordStore;
     this.stageToErrorRecordsMap = new HashMap<>();
+    this.errorMessages = EvictingQueue.create(maxPipelineErrors);
   }
 
   @Override
@@ -173,6 +182,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     batchInputRecordsMeter.mark(pipeBatch.getInputRecords());
     batchOutputRecordsMeter.mark(pipeBatch.getOutputRecords());
     batchErrorRecordsMeter.mark(pipeBatch.getErrorRecords());
+    batchErrorMessagesMeter.mark(pipeBatch.getErrorMessages());
 
     newSourceOffset = offsetTracker.getOffset();
 
@@ -189,25 +199,28 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     //dump all error records to store
     Map<String, List<Record>> errorRecords = pipeBatch.getErrorSink().getErrorRecords();
+    Map<String, ErrorMessage> errorMessages = pipeBatch.getErrorSink().getErrors();
     errorRecordStore.storeErrorRecords(pipelineName, revision, errorRecords);
+    errorRecordStore.storeErrorMessages(pipelineName, revision, errorMessages);
     //Retain X number of error records per stage
-    retainErrorRecordsInMemory(errorRecords);
+    retainErrorsInMemory(errorRecords, errorMessages);
   }
 
   public SourceOffsetTracker getOffSetTracker() {
     return this.offsetTracker;
   }
 
-  private void retainErrorRecordsInMemory(Map<String, List<Record>> errorRecords) {
+  private void retainErrorsInMemory(Map<String, List<Record>> errorRecords, Map<String, ErrorMessage> errorMessages) {
     for(Map.Entry<String, List<Record>> e : errorRecords.entrySet()) {
       EvictingQueue<Record> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
       if(errorRecordList == null) {
         //replace with a data structure with an upper cap
-        errorRecordList = EvictingQueue.create(MAX_ERROR_RECORDS_PER_STAGE);
+        errorRecordList = EvictingQueue.create(maxErrorRecordsPerStage);
         stageToErrorRecordsMap.put(e.getKey(), errorRecordList);
       }
       errorRecordList.addAll(errorRecords.get(e.getKey()));
     }
+    this.errorMessages.addAll(errorMessages.values());
   }
 
   @SuppressWarnings("unchecked")
@@ -216,5 +229,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
       return Collections.EMPTY_LIST;
     }
     return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName));
+  }
+
+  public List<ErrorMessage> getErrorMessages() {
+    if(errorMessages.isEmpty()) {
+      return Collections.EMPTY_LIST;
+    }
+    return new CopyOnWriteArrayList<>(errorMessages);
   }
 }
