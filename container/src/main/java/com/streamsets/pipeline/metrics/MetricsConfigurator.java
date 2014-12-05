@@ -10,6 +10,7 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SlidingTimeWindowReservoir;
 import com.codahale.metrics.Timer;
+import com.streamsets.pipeline.json.ExtendedMeter;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +21,7 @@ public class MetricsConfigurator {
   }
 
   public static Meter createMeter(MetricRegistry metrics, String name) {
-    return metrics.register(name + ".meter", new Meter());
+    return metrics.register(name + ".meter", new ExtendedMeter());
   }
 
   public static Counter createCounter(MetricRegistry metrics, String name) {

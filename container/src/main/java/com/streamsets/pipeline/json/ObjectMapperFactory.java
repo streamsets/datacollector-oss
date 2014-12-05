@@ -24,6 +24,7 @@ public class ObjectMapperFactory {
     objectMapper.registerModule(new MetricsModule(TimeUnit.SECONDS, TimeUnit.SECONDS, false, MetricFilter.ALL));
     SimpleModule module = new SimpleModule();
     module.addDeserializer(Field.class, new FieldDeserializer());
+    module.addSerializer(ExtendedMeter.class, new ExtendedMeterSerializer(TimeUnit.SECONDS));
     objectMapper.registerModule(module);
     objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
     return objectMapper;
