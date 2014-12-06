@@ -56,6 +56,7 @@ public class ExtendedMeter extends Meter {
   }
 
   public void mark(long n) {
+    super.mark(n);
     tickIfNecessary();
     m30Rate.update(n);
     h1Rate.update(n);
