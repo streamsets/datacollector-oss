@@ -355,20 +355,34 @@ angular.module('pipelineAgentApp.common')
 
 
       /**
-       * Get error records for the given stage instance name of running pipeline.
+       * Get error records for the given stage instance name of running pipeline if it is provided otherwise
+       * return error records for the pipeline.
        *
        * @param stageInstanceName
        * @returns {*}
        */
       getErrorRecords: function(stageInstanceName) {
         var url = apiBase + '/pipeline/errorRecords?stageInstanceName=' + stageInstanceName;
-
         return $http({
           method: 'GET',
           url: url
         });
       },
 
+      /**
+       * Get error messages for the given stage instance name of running pipeline if is provided otherwise
+       * return error messages for the pipeline.
+       *
+       * @param stageInstanceName
+       * @returns {*}
+       */
+      getErrorMessages: function(stageInstanceName) {
+        var url = apiBase + '/pipeline/errorMessages?stageInstanceName=' + stageInstanceName;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
 
       /**
        * Raw Source Preview

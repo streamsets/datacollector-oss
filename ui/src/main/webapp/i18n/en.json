@@ -13,7 +13,10 @@
       "delete": "Delete",
       "description": "Description",
       "duplicate": "Duplicate",
+      "errorCode": "Error Code",
+      "errorMessage": "Error Message",
       "errorRecord": "Error",
+      "errors": "Errors",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
       "label": "Label",
@@ -29,6 +32,7 @@
       "sampleValue": "Sample Value",
       "save": "Save",
       "step": "Step",
+      "timestamp": "Timestamp",
       "type": "Type",
       "username": "Login",
       "username.placeholder": "Your login",
@@ -105,6 +109,7 @@
     },
     "badRecords": {
       "mostRecentBadRecords": "Most Recent Bad Records",
+      "mostRecentErrorMessages": "Most Recent Error Messages",
       "totalNumberOfBadRecords": "Total Number of Bad Records"
     }
   },

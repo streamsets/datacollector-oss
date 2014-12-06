@@ -17,6 +17,7 @@ angular
      */
     var updateSummaryData = function() {
       var timerProperty,
+        pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig,
         isStageSelected = (currentSelection && currentSelection.stages === undefined);
 
@@ -24,28 +25,28 @@ angular
       if(isStageSelected) {
         $scope.summaryMeters = {
           batchCount:
-            $rootScope.common.pipelineMetrics.meters['pipeline.batchCount.meter'],
+            pipelineMetrics.meters['pipeline.batchCount.meter'],
           inputRecords:
-            $rootScope.common.pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.inputRecords.meter'],
+            pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.inputRecords.meter'],
 
           outputRecords:
-            $rootScope.common.pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.outputRecords.meter'],
+            pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.outputRecords.meter'],
 
           errorRecords:
-            $rootScope.common.pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter']
+            pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter']
         };
       } else {
         $scope.summaryMeters = {
           batchCount:
-            $rootScope.common.pipelineMetrics.meters['pipeline.batchCount.meter'],
+            pipelineMetrics.meters['pipeline.batchCount.meter'],
           inputRecords:
-            $rootScope.common.pipelineMetrics.meters['pipeline.batchInputRecords.meter'],
+            pipelineMetrics.meters['pipeline.batchInputRecords.meter'],
 
           outputRecords:
-            $rootScope.common.pipelineMetrics.meters['pipeline.batchOutputRecords.meter'],
+            pipelineMetrics.meters['pipeline.batchOutputRecords.meter'],
 
           errorRecords:
-            $rootScope.common.pipelineMetrics.meters['pipeline.batchErrorRecords.meter']
+            pipelineMetrics.meters['pipeline.batchErrorRecords.meter']
         };
       }
 
@@ -55,7 +56,7 @@ angular
         timerProperty = 'stage.' + currentSelection.instanceName + '.batchProcessing.timer';
       }
 
-      $scope.summaryTimer = $rootScope.common.pipelineMetrics.timers[timerProperty];
+      $scope.summaryTimer = pipelineMetrics.timers[timerProperty];
 
       $scope.$broadcast('summaryDataUpdated');
     };
