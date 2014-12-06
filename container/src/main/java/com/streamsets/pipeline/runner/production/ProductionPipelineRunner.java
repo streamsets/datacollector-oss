@@ -30,8 +30,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -71,7 +75,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   /*Cache last N error records per stage in memory*/
   private Map<String, EvictingQueue<Record>> stageToErrorRecordsMap;
   /*Cache last N error messages in memory*/
-  private EvictingQueue<ErrorMessage> errorMessages;
+  private Map<String, EvictingQueue<ErrorMessage>> stageToErrorMessagessMap;
 
   public ProductionPipelineRunner(SnapshotStore snapshotStore, ErrorRecordStore errorRecordStore,
                                   SourceOffsetTracker offsetTracker, int batchSize,
@@ -95,7 +99,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.revision = revision;
     this.errorRecordStore = errorRecordStore;
     this.stageToErrorRecordsMap = new HashMap<>();
-    this.errorMessages = EvictingQueue.create(maxPipelineErrors);
+    this.stageToErrorMessagessMap = new HashMap<>();
   }
 
   @Override
@@ -199,7 +203,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     //dump all error records to store
     Map<String, List<Record>> errorRecords = pipeBatch.getErrorSink().getErrorRecords();
-    Map<String, ErrorMessage> errorMessages = pipeBatch.getErrorSink().getErrors();
+    Map<String, List<ErrorMessage>> errorMessages = pipeBatch.getErrorSink().getStageErrors();
     errorRecordStore.storeErrorRecords(pipelineName, revision, errorRecords);
     errorRecordStore.storeErrorMessages(pipelineName, revision, errorMessages);
     //Retain X number of error records per stage
@@ -210,7 +214,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     return this.offsetTracker;
   }
 
-  private void retainErrorsInMemory(Map<String, List<Record>> errorRecords, Map<String, ErrorMessage> errorMessages) {
+  private void retainErrorsInMemory(Map<String, List<Record>> errorRecords, Map<String, List<ErrorMessage>> errorMessages) {
     for(Map.Entry<String, List<Record>> e : errorRecords.entrySet()) {
       EvictingQueue<Record> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
       if(errorRecordList == null) {
@@ -220,21 +224,32 @@ public class ProductionPipelineRunner implements PipelineRunner {
       }
       errorRecordList.addAll(errorRecords.get(e.getKey()));
     }
-    this.errorMessages.addAll(errorMessages.values());
+    for(Map.Entry<String, List<ErrorMessage>> e : errorMessages.entrySet()) {
+      EvictingQueue<ErrorMessage> errorMessageList = stageToErrorMessagessMap.get(e.getKey());
+      if(errorMessageList == null) {
+        //replace with a data structure with an upper cap
+        errorMessageList = EvictingQueue.create(maxErrorRecordsPerStage);
+        stageToErrorMessagessMap.put(e.getKey(), errorMessageList);
+      }
+      errorMessageList.addAll(errorMessages.get(e.getKey()));
+    }
   }
 
   @SuppressWarnings("unchecked")
   public List<Record> getErrorRecords(String instanceName) {
-    if(stageToErrorRecordsMap == null || stageToErrorRecordsMap.isEmpty()) {
+    if(stageToErrorRecordsMap == null || stageToErrorRecordsMap.isEmpty()
+        || stageToErrorRecordsMap.get(instanceName) == null || stageToErrorRecordsMap.get(instanceName).isEmpty()) {
       return Collections.EMPTY_LIST;
     }
     return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName));
   }
 
-  public List<ErrorMessage> getErrorMessages() {
-    if(errorMessages.isEmpty()) {
+  public List<ErrorMessage> getErrorMessages(String instanceName) {
+    if(stageToErrorMessagessMap == null || stageToErrorMessagessMap.isEmpty()
+        || stageToErrorMessagessMap.get(instanceName) == null
+        || stageToErrorMessagessMap.get(instanceName).isEmpty()) {
       return Collections.EMPTY_LIST;
     }
-    return new CopyOnWriteArrayList<>(errorMessages);
+    return new CopyOnWriteArrayList<>(stageToErrorMessagessMap.get(instanceName));
   }
 }

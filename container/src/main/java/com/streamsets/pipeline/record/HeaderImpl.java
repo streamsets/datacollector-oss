@@ -226,7 +226,7 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   public void setError(String errorStage, ErrorMessage errorMessage) {
     Preconditions.checkNotNull(errorMessage, "errorCode cannot be null");
     map.put(ERROR_STAGE_ATTR, errorStage);
-    map.put(ERROR_CODE_ATTR, errorMessage.getErrorCode().getCode());
+    map.put(ERROR_CODE_ATTR, errorMessage.getErrorCode());
     map.put(ERROR_MESSAGE_ATTR, errorMessage);
     map.put(ERROR_TIMESTAMP_ATTR, System.currentTimeMillis());
   }

@@ -12,47 +12,61 @@ import com.streamsets.pipeline.container.Utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ErrorSink {
 
-  private final Map<String, ErrorMessage> errors;
+  private final Map<String, List<ErrorMessage>> stageErrors;
   private final Map<String, List<Record>> errorRecords;
   private int size;
 
   public ErrorSink() {
-    errors = new HashMap<>();
+    stageErrors = new HashMap<>();
     errorRecords = new HashMap<>();
     size = 0;
   }
 
   public void addError(String stage, ErrorMessage errorMessage) {
-    errors.put(stage, errorMessage);
+    addError(stageErrors, stage, errorMessage);
   }
 
-  public void addRecord(String stageInstance, Record errorRecord) {
-    List<Record> stageErrors = errorRecords.get(stageInstance);
-    if (stageErrors == null) {
-      stageErrors = new ArrayList<>();
-      errorRecords.put(stageInstance, stageErrors);
-    }
-    stageErrors.add(errorRecord);
-    size++;
+  public void addRecord(String stage, Record errorRecord) {
+    addError(errorRecords, stage, errorRecord);
   }
 
-  public Map<String, ErrorMessage> getErrors() {
-    return errors;
+  public Map<String, List<ErrorMessage>> getStageErrors() {
+    return stageErrors;
   }
 
   public Map<String, List<Record>> getErrorRecords() {
     return errorRecords;
   }
 
+  private <T> void addError(Map<String, List<T>> map, String stage, T error) {
+    List<T> errors = map.get(stage);
+    if (errors == null) {
+      errors = new ArrayList<>();
+      map.put(stage, errors);
+    }
+    errors.add(error);
+    size++;
+  }
+
   @SuppressWarnings("unchecked")
-  public List<Record> getErrorRecords(String stageInstance) {
-    List<Record> errors = errorRecords.get(stageInstance);
+  private <T> List<T> getErrors(Map<String, List<T>> map, String stage) {
+    List<T> errors = map.get(stage);
     return (errors != null) ? errors : Collections.EMPTY_LIST;
+  }
+
+  public List<Record> getErrorRecords(String stage) {
+    return getErrors(errorRecords, stage);
+  }
+
+  public List<ErrorMessage> getStageErrors(String stage) {
+    return getErrors(stageErrors, stage);
   }
 
   public int size() {
@@ -61,7 +75,9 @@ public class ErrorSink {
 
   @Override
   public String toString() {
-    return Utils.format("ErrorSink[reportingInstances='{}' size='{}']", errorRecords.keySet(), size());
+    Set<String> stages = new HashSet<>(errorRecords.keySet());
+    stages.addAll(stageErrors.keySet());
+    return Utils.format("ErrorSink[reportingInstances='{}' size='{}']", stages, size());
   }
 
 }

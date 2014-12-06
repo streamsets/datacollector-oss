@@ -161,7 +161,7 @@ public class PipelineManagerResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getErrorRecords(
-      @QueryParam ("stageInstanceName") String stageInstanceName) throws PipelineManagerException {
+      @QueryParam ("stageInstanceName") @DefaultValue("") String stageInstanceName) throws PipelineManagerException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
         pipelineManager.getErrorRecords(stageInstanceName)).build();
   }
@@ -169,9 +169,11 @@ public class PipelineManagerResource {
   @Path("/errorMessages")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getErrorMessages() throws PipelineManagerException {
+  public Response getErrorMessages(
+      @QueryParam ("stageInstanceName") @DefaultValue("") String stageInstanceName
+  ) throws PipelineManagerException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-        pipelineManager.getErrorMessages()).build();
+        pipelineManager.getErrorMessages(stageInstanceName)).build();
   }
 
 }

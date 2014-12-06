@@ -61,7 +61,7 @@ public class ProductionPipeline {
     return pipelineRunner.getErrorRecords(instanceName);
   }
 
-  public List<ErrorMessage> getErrorMessages() {
-    return pipelineRunner.getErrorMessages();
+  public List<ErrorMessage> getErrorMessages(String instanceName) {
+    return pipelineRunner.getErrorMessages(instanceName);
   }
 }

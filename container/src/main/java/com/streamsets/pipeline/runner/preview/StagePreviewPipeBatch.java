@@ -63,8 +63,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
     // convert lane names from stage naming to pipe naming when adding to the payload
     // leveraging the fact that the stage output lanes and the pipe output lanes are in the same order
     List<String> stageLaneNames = pipe.getStage().getConfiguration().getOutputLanes();
-    stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(),
-                                            errorSink.getErrorRecords(instanceName)));
+    stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink));
   }
 
   @Override

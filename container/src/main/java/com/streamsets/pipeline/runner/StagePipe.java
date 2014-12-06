@@ -24,9 +24,11 @@ public class StagePipe extends Pipe {
   private Counter inputRecordsCounter;
   private Counter outputRecordsCounter;
   private Counter errorRecordsCounter;
+  private Counter stageErrorCounter;
   private Meter inputRecordsMeter;
   private Meter outputRecordsMeter;
   private Meter errorRecordsMeter;
+  private Meter stageErrorMeter;
   private Map<String, Counter> outputRecordsPerLaneCounter;
   private Map<String, Meter> outputRecordsPerLaneMeter;
 
@@ -43,12 +45,14 @@ public class StagePipe extends Pipe {
     inputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".inputRecords");
     outputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".outputRecords");
     errorRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".errorRecords");
+    stageErrorCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".stageErrors");
     inputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".inputRecords");
     outputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".outputRecords");
     errorRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".errorRecords");
+    stageErrorMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".stageErrors");
     if (getStage().getConfiguration().getOutputLanes().size() > 1) {
-      outputRecordsPerLaneCounter = new HashMap<String, Counter>();
-      outputRecordsPerLaneMeter = new HashMap<String, Meter>();
+      outputRecordsPerLaneCounter = new HashMap<>();
+      outputRecordsPerLaneMeter = new HashMap<>();
       for (String lane : getStage().getConfiguration().getOutputLanes()) {
         outputRecordsPerLaneCounter.put(lane, MetricsConfigurator.createCounter(
             metrics, metricsKey + ":" + lane + ".outputRecords"));
@@ -80,9 +84,12 @@ public class StagePipe extends Pipe {
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     outputRecordsCounter.inc(batchMaker.getSize());
     outputRecordsMeter.mark(batchMaker.getSize());
-    int stageErrorSinkCount = errorSink.getErrorRecords(getStage().getInfo().getInstanceName()).size();
-    errorRecordsCounter.inc(predicateSink.size() + stageErrorSinkCount);
-    errorRecordsMeter.mark(predicateSink.size() + stageErrorSinkCount);
+    int stageErrorRecordCount = errorSink.getErrorRecords(getStage().getInfo().getInstanceName()).size();
+    errorRecordsCounter.inc(predicateSink.size() + stageErrorRecordCount);
+    errorRecordsMeter.mark(predicateSink.size() + stageErrorRecordCount);
+    int stageErrorsCount = errorSink.getStageErrors(getStage().getInfo().getInstanceName()).size();
+    stageErrorCounter.inc(stageErrorsCount);
+    stageErrorMeter.mark(stageErrorsCount);
     if (getStage().getConfiguration().getOutputLanes().size() > 1) {
       for (String lane : getStage().getConfiguration().getOutputLanes()) {
         outputRecordsPerLaneCounter.get(lane).inc(batchMaker.getSize(lane));

@@ -18,16 +18,18 @@ public class PipelineException extends Exception {
     return throwable;
   }
 
+  private final ErrorCode errorCode;
   private final ErrorMessage errorMessage;
 
   // last parameter can be an exception cause
   public PipelineException(ErrorCode errorCode, Object... params) {
     super(getCause(params));
+    this.errorCode = errorCode;
     errorMessage = new ErrorMessage(errorCode, params);
   }
 
   public ErrorCode getErrorCode() {
-    return errorMessage.getErrorCode();
+    return errorCode;
   }
 
   @Override

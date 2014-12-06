@@ -206,10 +206,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return prodPipeline.getErrorRecords(instanceName);
   }
 
-  public List<ErrorMessage> getErrorMessages() throws PipelineManagerException {
+  public List<ErrorMessage> getErrorMessages(String instanceName) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING),
         ContainerError.CONTAINER_0106);
-    return prodPipeline.getErrorMessages();
+    return prodPipeline.getErrorMessages(instanceName);
   }
 
   public List<PipelineState> getHistory(String pipelineName) throws PipelineManagerException {

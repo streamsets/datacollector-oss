@@ -16,7 +16,7 @@ public interface ErrorRecordStore {
 
   void storeErrorRecords(String pipelineName, String rev, Map<String, List<Record>> errorRecords);
 
-  void storeErrorMessages(String pipelineName, String rev, Map<String, ErrorMessage> errorMessages);
+  void storeErrorMessages(String pipelineName, String rev, Map<String, List<ErrorMessage>> errorMessages);
 
   void deleteErrors(String pipelineName, String rev);
 

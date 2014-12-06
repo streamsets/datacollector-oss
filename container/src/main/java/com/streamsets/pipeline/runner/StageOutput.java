@@ -8,6 +8,7 @@ package com.streamsets.pipeline.runner;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.container.Utils;
 
 import java.util.List;
@@ -17,15 +18,22 @@ public class StageOutput {
   private final String instanceName;
   private final Map<String, List<Record>> output;
   private final List<Record> errorRecords;
+  private final List<ErrorMessage> stageErrors;
 
-  @JsonCreator
+  public StageOutput(String instanceName, Map<String, List<Record>> output, ErrorSink errorSink) {
+    this(instanceName, output, errorSink.getErrorRecords(instanceName), errorSink.getStageErrors().get(instanceName));
+  }
+
+    @JsonCreator
   public StageOutput(
       @JsonProperty("instanceName") String instanceName,
       @JsonProperty("output") Map<String, List<Record>> output,
-      @JsonProperty("errorRecords") List<Record> errorRecords) {
+      @JsonProperty("errorRecords") List<Record> errorRecords,
+        @JsonProperty("stageErrors") List<ErrorMessage> stageErrors) {
     this.instanceName = instanceName;
     this.output = output;
     this.errorRecords = errorRecords;
+    this.stageErrors = stageErrors;
   }
 
   public String getInstanceName() {
@@ -38,6 +46,10 @@ public class StageOutput {
 
   public List<Record> getErrorRecords() {
     return errorRecords;
+  }
+
+  public List<ErrorMessage> getStageErrors() {
+    return stageErrors;
   }
 
   @Override

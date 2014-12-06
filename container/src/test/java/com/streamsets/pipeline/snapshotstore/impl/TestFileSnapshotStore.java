@@ -10,6 +10,7 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.runner.ErrorSink;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import org.apache.commons.io.FileUtils;
@@ -132,6 +133,7 @@ public class TestFileSnapshotStore {
   }
 
   private List<StageOutput> createSnapshotData() {
+
     List<StageOutput> snapshot = new ArrayList<StageOutput>(2);
 
     List<Record> records1 = new ArrayList<Record>(2);
@@ -154,7 +156,7 @@ public class TestFileSnapshotStore {
     Map<String, List<Record>> so1 = new HashMap<String, List<Record>>(1);
     so1.put("lane", records1);
 
-    StageOutput s1 = new StageOutput("source", so1, null);
+    StageOutput s1 = new StageOutput("source", so1, new ErrorSink());
     snapshot.add(s1);
 
     List<Record> records2 = new ArrayList<Record>(1);
@@ -174,7 +176,7 @@ public class TestFileSnapshotStore {
 
     Map<String, List<Record>> so2 = new HashMap<>(1);
     so2.put("lane", records2);
-    StageOutput s2 = new StageOutput("processor", so2, new ArrayList<Record>());
+    StageOutput s2 = new StageOutput("processor", so2, new ErrorSink());
     snapshot.add(s2);
 
     return snapshot;

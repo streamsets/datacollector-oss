@@ -66,8 +66,8 @@ public class FileErrorRecordStore implements ErrorRecordStore {
   }
 
   @Override
-  public void storeErrorMessages(String pipelineName, String rev, Map<String, ErrorMessage> errorMessages) {
-    for(Map.Entry<String, ErrorMessage> e : errorMessages.entrySet()) {
+  public void storeErrorMessages(String pipelineName, String rev, Map<String, List<ErrorMessage>> errorMessages) {
+    for(Map.Entry<String, List<ErrorMessage>> e : errorMessages.entrySet()) {
       try {
         writeError(pipelineName, e.getKey(), e.getValue(), PIPELINE);
       } catch (JsonProcessingException ex) {
