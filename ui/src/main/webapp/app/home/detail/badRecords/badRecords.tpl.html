@@ -4,7 +4,7 @@
 
     <tab>
       <tab-heading>
-        Bad Records <span class="badge">{{ errorRecordsCount.count | abbreviateNumber}}</span>
+        Bad Records <span class="badge alert-danger">{{ errorRecordsCount.count | abbreviateNumber}}</span>
       </tab-heading>
       <div class="pills-content">
         <form class="form-horizontal" role="form">
@@ -59,7 +59,7 @@
 
     <tab>
       <tab-heading>
-        {{'global.form.errors' | translate}} <span class="badge">{{errorMessagesCount.count | abbreviateNumber}}</span>
+        {{'global.form.errors' | translate}} <span class="badge alert-danger">{{errorMessagesCount.count | abbreviateNumber}}</span>
       </tab-heading>
 
       <div class="pills-content">

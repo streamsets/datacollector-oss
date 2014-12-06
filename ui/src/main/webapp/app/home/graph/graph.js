@@ -241,16 +241,4 @@ angular
       return configDefinition ? configDefinition.label : configName;
     };
 
-    $rootScope.$watch('common.pipelineMetrics', function() {
-      if($scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
-        var stageInstanceErrorCounts = {};
-
-        angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
-          stageInstanceErrorCounts[stageInstance.instanceName] =
-            $rootScope.common.pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'];
-        });
-
-        $scope.$broadcast('updateErrorCount', stageInstanceErrorCounts);
-      }
-    });
   });

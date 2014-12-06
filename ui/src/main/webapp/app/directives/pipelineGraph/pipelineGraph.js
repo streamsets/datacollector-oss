@@ -522,7 +522,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
       var thisGraph = this,
         consts = thisGraph.consts,
-        state = thisGraph.state;
+        state = thisGraph.state,
+        stageErrorCounts = thisGraph.stageErrorCounts;
 
       thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d){
         return String(d.source.instanceName) + "+" + String(d.target.instanceName);
@@ -635,7 +636,20 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .append("xhtml:span")
         .attr("title", "this is error records")
         .attr("class", "badge alert-danger pointer")
-        .style('visibility', 'hidden')
+        .style('visibility', function(d) {
+          if(stageErrorCounts && stageErrorCounts[d.instanceName].count &&
+            parseInt(stageErrorCounts[d.instanceName].count) > 0) {
+            return 'visible';
+          } else {
+            return 'hidden';
+          }
+        })
+        .html(function(d) {
+          if(stageErrorCounts) {
+            return $filter('abbreviateNumber')(stageErrorCounts[d.instanceName].count);
+          }
+          return '';
+        })
         .on("mousedown", function() {
           $rootScope.$apply(function(){
             $rootScope.$broadcast('showBadRecordsSelected');
@@ -694,7 +708,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     /** MAIN SVG **/
     var svg, graph;
 
-    $scope.$on('updateGraph', function(event, nodes, edges, issues, selectNode) {
+    $scope.$on('updateGraph', function(event, options) {
+      var nodes = options.nodes,
+        edges = options.edges,
+        issues = options.issues,
+        selectNode = options.selectNode,
+        stageErrorCounts = options.stageErrorCounts;
+
       if(graph !== undefined) {
         graph.deleteGraph();
       } else {
@@ -709,6 +729,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       graph.nodes = nodes;
       graph.edges = edges;
       graph.issues = issues;
+      graph.stageErrorCounts = stageErrorCounts;
       graph.updateGraph();
 
       if(selectNode) {

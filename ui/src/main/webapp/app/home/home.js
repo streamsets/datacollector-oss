@@ -251,7 +251,9 @@ angular
      * @param pipelineConfig
      */
     var updateGraph = function (pipelineConfig) {
-      var selectedStageInstance;
+      var selectedStageInstance,
+        stageErrorCounts,
+        pipelineMetrics = $rootScope.common.pipelineMetrics;
 
       ignoreUpdate = true;
 
@@ -294,9 +296,17 @@ angular
         }
       });
 
-      $scope.$broadcast('updateGraph', $scope.pipelineConfig.stages, edges,
-        $scope.pipelineConfig.issues,
-        ($scope.detailPaneConfig && !$scope.detailPaneConfig.stages) ? $scope.detailPaneConfig : undefined);
+      if(pipelineMetrics && pipelineMetrics.meters) {
+        stageErrorCounts = getStageErrorCounts();
+      }
+
+      $scope.$broadcast('updateGraph', {
+        nodes: $scope.pipelineConfig.stages,
+        edges: edges,
+        issues: $scope.pipelineConfig.issues,
+        selectNode: ($scope.detailPaneConfig && !$scope.detailPaneConfig.stages) ? $scope.detailPaneConfig : undefined,
+        stageErrorCounts: stageErrorCounts
+      });
 
       if ($scope.detailPaneConfig === undefined) {
         //First time
@@ -409,6 +419,18 @@ angular
       );
     };
 
+
+    var getStageErrorCounts = function() {
+      var stageInstanceErrorCounts = {};
+
+      angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
+        stageInstanceErrorCounts[stageInstance.instanceName] =
+          $rootScope.common.pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'];
+      });
+
+      return stageInstanceErrorCounts;
+    };
+
     //Event Handling
 
     $scope.$watch('pipelineConfig', function (newValue, oldValue) {
@@ -500,6 +522,12 @@ angular
     $rootScope.$watch('common.pipelineStatus', function() {
       $scope.isPipelineRunning = derivePipelineRunning();
       $scope.activeConfigStatus = derivePipelineStatus();
+    });
+
+    $rootScope.$watch('common.pipelineMetrics', function() {
+      if($scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
+        $scope.$broadcast('updateErrorCount', getStageErrorCounts());
+      }
     });
 
   });
