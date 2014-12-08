@@ -202,13 +202,13 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
   public List<Record> getErrorRecords(String instanceName) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING),
-        ContainerError.CONTAINER_0106);
+      ContainerError.CONTAINER_0106);
     return prodPipeline.getErrorRecords(instanceName);
   }
 
   public List<ErrorMessage> getErrorMessages(String instanceName) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING),
-        ContainerError.CONTAINER_0106);
+      ContainerError.CONTAINER_0106);
     return prodPipeline.getErrorMessages(instanceName);
   }
 
@@ -337,5 +337,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
   public void deleteErrors(String pipelineName, String rev) {
     errorRecordStore.deleteErrors(pipelineName, rev);
+  }
+
+  @VisibleForTesting
+  String getOffset() {
+    return prodPipeline.getCommittedOffset();
   }
 }

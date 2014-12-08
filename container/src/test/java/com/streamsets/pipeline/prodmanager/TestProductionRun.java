@@ -9,8 +9,10 @@ import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.MockStages;
+import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -267,7 +269,8 @@ public class TestProductionRun {
   }
 
   @Test
-  public void testGetMetrics() throws PipelineStoreException, StageException, PipelineManagerException, PipelineRuntimeException, InterruptedException {
+  public void testGetMetrics() throws PipelineStoreException, StageException, PipelineManagerException,
+      PipelineRuntimeException, InterruptedException {
     manager.startPipeline(MY_PIPELINE, "0");
     Thread.sleep(50);
     MetricRegistry metrics = manager.getMetrics();
@@ -275,6 +278,70 @@ public class TestProductionRun {
 
   }
 
+  @Test
+  public void testSetOffset() throws PipelineStoreException, InterruptedException, PipelineManagerException,
+    StageException, PipelineRuntimeException {
+    manager.startPipeline(MY_PIPELINE, "0");
+    Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
+    waitForErrorRecords(MY_PROCESSOR);
+    manager.stopPipeline();
+    waitForPipelineToStop();
+
+    Assert.assertNotNull(manager.getOffset());
+
+    manager.setOffset("myOffset");
+    Assert.assertEquals("myOffset", manager.getOffset());
+  }
+
+  @Test
+  public void testResetOffset() throws PipelineStoreException, InterruptedException, PipelineManagerException,
+      StageException, PipelineRuntimeException {
+    manager.startPipeline(MY_PIPELINE, "0");
+    Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
+    waitForErrorRecords(MY_PROCESSOR);
+    manager.stopPipeline();
+    waitForPipelineToStop();
+
+    Assert.assertNotNull(manager.getOffset());
+
+    manager.resetOffset(MY_PIPELINE);
+    Assert.assertNull(manager.getOffset());
+  }
+
+  @Test(expected = PipelineManagerException.class)
+  public void testResetOffsetWhileRunning() throws PipelineStoreException, InterruptedException, PipelineManagerException,
+    StageException, PipelineRuntimeException {
+    manager.startPipeline(MY_PIPELINE, "0");
+    Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
+
+    manager.resetOffset(MY_PIPELINE);
+
+  }
+
+  @Test
+  public void testGetErrorMessages() throws PipelineStoreException, StageException, PipelineManagerException,
+    PipelineRuntimeException, InterruptedException {
+
+    manager.startPipeline(MY_PIPELINE, "0");
+    waitForErrorMessages(MY_PROCESSOR);
+
+    List<ErrorMessage> errorMessages = manager.getErrorMessages(MY_PROCESSOR);
+    Assert.assertNotNull(errorMessages);
+    Assert.assertEquals(false, errorMessages.isEmpty());
+
+    manager.stopPipeline();
+    waitForPipelineToStop();
+
+    InputStream erStream = manager.getErrors(MY_PIPELINE, "0");
+    Assert.assertNotNull(erStream);
+    //TODO: read the input error records into String format and Use Record de-serializer when ready
+
+    //delete the error record file
+    manager.deleteErrors(MY_PIPELINE, "0");
+
+    erStream = manager.getErrors(MY_PIPELINE, "0");
+    Assert.assertNull(erStream);
+  }
 
   //TODO:
   //Add tests which create multiple pipelines and runs one of them. Query snapshot, status, history etc on
@@ -387,6 +454,12 @@ public class TestProductionRun {
 
   private void waitForErrorRecords(String instanceName) throws InterruptedException, PipelineManagerException {
     while(manager.getErrorRecords(instanceName).isEmpty()) {
+      Thread.sleep(5);
+    }
+  }
+
+  private void waitForErrorMessages(String instanceName) throws InterruptedException, PipelineManagerException {
+    while(manager.getErrorMessages(instanceName).isEmpty()) {
       Thread.sleep(5);
     }
   }

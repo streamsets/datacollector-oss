@@ -6,11 +6,15 @@
 package com.streamsets.pipeline.restapi;
 
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.State;
+import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.SourceOffset;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
@@ -31,6 +35,8 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -121,8 +127,8 @@ public class TestPipelineManagerResource extends JerseyTest {
   }
 
   @Test
-  public void testGetMerticsAPI() {
-    Response r = target("/v1/pipeline/metrics").queryParam("get","status").request().get();
+  public void testGetMetricsAPI() {
+    Response r = target("/v1/pipeline/metrics").request().get();
     Assert.assertNotNull(r);
 
     MetricRegistry m = r.readEntity(MetricRegistry.class);
@@ -140,10 +146,41 @@ public class TestPipelineManagerResource extends JerseyTest {
 
   @Test
   public void testDeleteErrorRecordsAPI() throws IOException {
-    Response r = target("/v1/pipeline/errorRecords/myPipeline").request().delete();
+    Response r = target("/v1/pipeline/errors/myPipeline").request().delete();
     Assert.assertNotNull(r);
 
   }
+
+  @Test
+  public void testGetErrorsAPI() throws IOException {
+    Response r = target("/v1/pipeline/errors/myPipeline").request().get();
+    Assert.assertNotNull(r);
+
+  }
+
+  @Test
+  public void testGetErrorRecordsAPI() throws IOException {
+    Response r = target("/v1/pipeline/errorRecords").queryParam("stageInstanceName", "myProcessorStage").request().get();
+    Assert.assertNotNull(r);
+
+  }
+
+  @Test
+   public void testGetErrorMessagesAPI() throws IOException {
+    Response r = target("/v1/pipeline/errorMessages").queryParam("stageInstanceName", "myProcessorStage").request().get();
+    Assert.assertNotNull(r);
+
+  }
+
+  @Test
+  public void testResetOffset() throws IOException {
+    Response r = target("/v1/pipeline/resetOffset/myPipeline").request().post(null);
+    Assert.assertNotNull(r);
+
+  }
+
+  /*********************************************/
+  /*********************************************/
 
   @Override
   protected Application configure() {
@@ -176,13 +213,7 @@ public class TestPipelineManagerResource extends JerseyTest {
       try {
         Mockito.when(pipelineManager.startPipeline(PIPELINE_NAME, "2.0")).thenReturn(new PipelineState(
             PIPELINE_NAME, "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis()));
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      } catch (StageException e) {
-        e.printStackTrace();
-      } catch (PipelineRuntimeException e) {
-        e.printStackTrace();
-      } catch (PipelineStoreException e) {
+      } catch (PipelineManagerException | StageException | PipelineRuntimeException | PipelineStoreException e) {
         e.printStackTrace();
       }
 
@@ -225,6 +256,36 @@ public class TestPipelineManagerResource extends JerseyTest {
 
       Mockito.doNothing().when(pipelineManager).deleteSnapshot(PIPELINE_NAME);
       Mockito.doNothing().when(pipelineManager).deleteErrors(PIPELINE_NAME, "1");
+
+      try {
+        Mockito.when(pipelineManager.getErrors(PIPELINE_NAME, "0"))
+          .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
+          .thenReturn(null);
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      Record r = new RecordImpl("a", "b", "c".getBytes(), "d");
+      try {
+        Mockito.when(pipelineManager.getErrorRecords("myProcessorStage")).thenReturn(
+          ImmutableList.of(r));
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      ErrorMessage em = new ErrorMessage("a", "b", 2L);
+      try {
+        Mockito.when(pipelineManager.getErrorMessages("myProcessorStage")).thenReturn(
+          ImmutableList.of(em));
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      try {
+        Mockito.doNothing().when(pipelineManager).resetOffset(PIPELINE_NAME);
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
 
       return pipelineManager;
     }

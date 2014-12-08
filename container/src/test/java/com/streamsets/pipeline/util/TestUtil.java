@@ -128,6 +128,7 @@ public class TestUtil {
           float action = random.nextFloat();
           getContext().toError(it.next(), "Random error");
         }
+        getContext().reportError("Random pipeline error");
       }
     });
 

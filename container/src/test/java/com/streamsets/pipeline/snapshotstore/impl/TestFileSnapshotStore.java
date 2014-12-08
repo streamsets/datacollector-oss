@@ -63,7 +63,7 @@ public class TestFileSnapshotStore {
   }
 
   @Test
-  public void testStoreSnapshot() {
+  public void testStoreAndRetrieveSnapshot() {
     Assert.assertTrue(snapshotStore.retrieveSnapshot(PIPELINE_NAME).isEmpty());
     List<StageOutput> snapshot = createSnapshotData();
     snapshotStore.storeSnapshot(PIPELINE_NAME, snapshot);
@@ -72,7 +72,7 @@ public class TestFileSnapshotStore {
     Assert.assertNotNull(in);
 
     //TODO: Retrieve snapshot and compare contents once de-serializer is ready
-    //Assert.assertEquals(2, snapshotStore.retrieveSnapshot().size());
+    //Assert.assertEquals(2, snapshotStore.retrieveSnapshot(PIPELINE_NAME).size());
     //StageOutput actualS1 = snapshotStore.retrieveSnapshot().get(0);
     //Assert.assertEquals(2);
   }
@@ -134,9 +134,9 @@ public class TestFileSnapshotStore {
 
   private List<StageOutput> createSnapshotData() {
 
-    List<StageOutput> snapshot = new ArrayList<StageOutput>(2);
+    List<StageOutput> snapshot = new ArrayList<>(2);
 
-    List<Record> records1 = new ArrayList<Record>(2);
+    List<Record> records1 = new ArrayList<>(2);
 
     Record r1 = new RecordImpl("s", "s:1", TEST_STRING.getBytes(), MIME);
     r1.set(Field.create(1));
@@ -153,13 +153,13 @@ public class TestFileSnapshotStore {
     records1.add(r1);
     records1.add(r2);
 
-    Map<String, List<Record>> so1 = new HashMap<String, List<Record>>(1);
+    Map<String, List<Record>> so1 = new HashMap<>(1);
     so1.put("lane", records1);
 
     StageOutput s1 = new StageOutput("source", so1, new ErrorSink());
     snapshot.add(s1);
 
-    List<Record> records2 = new ArrayList<Record>(1);
+    List<Record> records2 = new ArrayList<>(1);
     Record r3 = new RecordImpl("s", "s:3", TEST_STRING.getBytes(), MIME);
     r3.set(Field.create(1));
 

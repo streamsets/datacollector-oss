@@ -6,9 +6,12 @@
 
 package com.streamsets.pipeline.errorrecordstore.impl;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.ErrorMessage;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.util.Configuration;
@@ -80,6 +83,39 @@ public class TestFileErrorRecordStore {
 
     //TODO: Retrieve error records and compare contents once de-serializer is ready
 
+  }
+
+  @Test
+  public void testStoreErrorMessages() throws IOException {
+    //The rolling file appender opens the file on initialization.
+    Assert.assertTrue(errorStore.getErrors(PIPELINE_NAME, REV) == null);
+
+    errorStore.register(PIPELINE_NAME);
+    errorStore.storeErrorMessages(PIPELINE_NAME, REV, createErrorMessages());
+
+    InputStream in = errorStore.getErrors(PIPELINE_NAME, REV);
+    Assert.assertNotNull(in);
+    in = errorStore.getErrors(PIPELINE_NAME, REV);
+    Assert.assertNotNull(in);
+
+    Map map = ObjectMapperFactory.get().readValue(in, Map.class);
+    Assert.assertTrue(map != null && !map.isEmpty());
+    Assert.assertTrue(map.containsKey("stage"));
+    Assert.assertEquals(PROCESSOR_NAME, map.get("stage"));
+    Assert.assertTrue(map.containsKey("type"));
+    Assert.assertEquals("pipeline", map.get("type"));
+    Assert.assertTrue(map.containsKey("error"));
+
+  }
+
+  private Map<String, List<ErrorMessage>> createErrorMessages() {
+    Map<String, List<ErrorMessage>> errorMessages = new HashMap<>();
+
+    List<ErrorMessage> errorMessageList = new ArrayList<>();
+    errorMessageList.add(new ErrorMessage("a", "b", 2L));
+
+    errorMessages.put(PROCESSOR_NAME, errorMessageList);
+    return errorMessages;
   }
 
   @Test(expected = RuntimeException.class)
