@@ -23,6 +23,7 @@ import org.apache.log4j.RollingFileAppender;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -78,8 +79,8 @@ public class FileErrorRecordStore implements ErrorRecordStore {
 
   @Override
   public void deleteErrors(String pipelineName, String rev) {
-    if(getErrorsFile(pipelineName).exists()) {
-      getErrorsFile(pipelineName).delete();
+    for(File f : getErrorFiles(pipelineName)) {
+      f.delete();
     }
   }
 
@@ -128,6 +129,23 @@ public class FileErrorRecordStore implements ErrorRecordStore {
 
   private File getErrorsFile(String pipelineName) {
     return new File(getPipelineDir(pipelineName), ERRORS_FILE);
+  }
+
+  private File[] getErrorFiles(String pipelineName) {
+    //RollingFileAppender creates backup files when the error files reach the size limit.
+    //The backup files are of the form errors.json.1, errors.json.2 etc
+    //Need to delete all the backup files
+    File pipelineDir = getPipelineDir(pipelineName);
+    File[] errorFiles = pipelineDir.listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        if(name.contains(ERRORS_FILE)) {
+          return true;
+        }
+        return false;
+      }
+    });
+    return errorFiles;
   }
 
   private File getPipelineDir(String name) {
