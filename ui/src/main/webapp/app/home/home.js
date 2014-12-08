@@ -41,6 +41,12 @@ angular
       minimizeDetailPane: false,
       maximizeDetailPane: false,
 
+      valueFormatFunction: function() {
+        return function(d){
+          return d3.format(',d')(d);
+        };
+      },
+
       /**
        * Fetches preview data for the pipeline and sets previewMode flag to true.
        *

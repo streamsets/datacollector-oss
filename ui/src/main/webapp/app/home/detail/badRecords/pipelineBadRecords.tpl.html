@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-sm-6">
+    <div class="panel panel-default">
+      <div class="panel-heading" translate="admin.detailPane.badRecords">Bad Records</div>
+      <div class="panel-body">
+
+        <!--  margin="{left:100,top:20,bottom:20,right:20}"-->
+        <nvd3-discrete-bar-chart
+          data="badRecordsChartData"
+          id="BadRecordsBarChartID"
+          height="300"
+          showXAxis="true"
+          showYAxis="true"
+          showValues="true"
+          showLegend="true"
+          staggerLabels="true"
+          yAxisTickFormat="valueFormatFunction()"
+          valueformat="valueFormatFunction()"
+          margin="{left:100,top:20,bottom:50,right:20}">
+        </nvd3-discrete-bar-chart>
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6">
+    <div class="panel panel-default">
+      <div class="panel-heading" translate="global.form.errors">Errors</div>
+      <div class="panel-body">
+        <nvd3-discrete-bar-chart
+          data="errorMessagesChartData"
+          id="ErrorMessagesBarChartID"
+          height="300"
+          showXAxis="true"
+          showYAxis="true"
+          showValues="true"
+          showLegend="true"
+          staggerLabels="true"
+          yAxisTickFormat="valueFormatFunction()"
+          valueformat="valueFormatFunction()"
+          margin="{left:100,top:20,bottom:50,right:20}">
+        </nvd3-discrete-bar-chart>
+      </div>
+    </div>
+  </div>
+</div>
