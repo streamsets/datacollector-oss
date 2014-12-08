@@ -1,146 +1,192 @@
 <div class="pipeline-preview">
+  <tabset class="tabbable tabs-left">
 
-  <table class="table">
-    <thead>
-    <tr>
-      <th class="col-md-6">
+
+    <tab active="true">
+      <tab-heading>
+        {{ 'global.form.records' | translate }}
+      </tab-heading>
+      <div>
+        <table class="table">
+          <thead>
+          <tr>
+            <th class="col-md-6">
         <span class="glyphicon glyphicon-expand pointer"
               ng-if="!expandAllInputData"
               ng-click="onExpandAllInputData(stagePreviewData)"></span>
         <span class="glyphicon glyphicon-collapse-down pointer"
               ng-if="expandAllInputData"
               ng-click="onCollapseAllInputData(stagePreviewData)"></span>
-        <span translate="admin.previewPane.inputData">Input Data</span>
-      </th>
+              <span translate="admin.previewPane.inputData">Input Data</span>
+            </th>
 
-      <th class="col-md-6">
+            <th class="col-md-6">
         <span class="glyphicon glyphicon-expand pointer"
               ng-if="!expandAllOutputData"
               ng-click="onExpandAllOutputData(stagePreviewData)"></span>
         <span class="glyphicon glyphicon-collapse-down pointer"
               ng-if="expandAllOutputData"
               ng-click="onCollapseAllOutputData(stagePreviewData)"></span>
-        <span translate="admin.previewPane.outputData">Output Data</span>
-      </th>
-    </tr>
-    </thead>
-    <tbody>
+              <span translate="admin.previewPane.outputData">Output Data</span>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
 
-    <tr ng-if="detailPaneConfig.uiInfo.stageType === 'SOURCE'"
-        ng-repeat="outputRecord in stagePreviewData.output">
-      <td>
+          <tr ng-if="detailPaneConfig.uiInfo.stageType === 'SOURCE'"
+              ng-repeat="outputRecord in stagePreviewData.output">
+            <td>
 
-      </td>
-      <td>
-        <label class="pointer" ng-click="outputRecord.expand = !outputRecord.expand">
+            </td>
+            <td>
+              <label class="pointer" ng-click="outputRecord.expand = !outputRecord.expand">
               <span class="glyphicon glyphicon-expand"
                     ng-if="outputRecord.expand !== true && expandAllOutputData !== true"></span>
               <span class="glyphicon glyphicon-collapse-down"
                     ng-if="outputRecord.expand === true || expandAllOutputData === true"></span>
 
-          {{'global.form.record' | translate}}{{$index+1}}
-        </label>
-        <ul class="record-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
-          <li class="record-list-item"
-              ng-repeat="(fieldName, recordValue) in outputRecord.value.value"
-              ng-include="'recordTree'">
-          </li>
-        </ul>
-      </td>
-    </tr>
+                {{'global.form.record' | translate}}{{$index+1}}
+              </label>
+              <ul class="record-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
+                <li class="record-list-item"
+                    ng-repeat="(fieldName, recordValue) in outputRecord.value.value"
+                    ng-include="'recordTree'">
+                </li>
+              </ul>
+            </td>
+          </tr>
 
-    <tr ng-if="detailPaneConfig.uiInfo.stageType === 'PROCESSOR'"
-        ng-repeat="inputRecord in stagePreviewData.input">
-      <td>
-        <label class="pointer" ng-click="inputRecord.expand = !inputRecord.expand">
+          <tr ng-if="detailPaneConfig.uiInfo.stageType === 'PROCESSOR'"
+              ng-repeat="inputRecord in stagePreviewData.input">
+            <td>
+              <label class="pointer" ng-click="inputRecord.expand = !inputRecord.expand">
               <span class="glyphicon glyphicon-expand"
                     ng-if="inputRecord.expand !== true && expandAllInputData !== true"></span>
               <span class="glyphicon glyphicon-collapse-down"
                     ng-if="inputRecord.expand === true || expandAllInputData === true"></span>
-          {{'global.form.record' | translate}}{{$index+1}}
-          <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="inputRecord.dirty"></span>
-        </label>
-        <ul class="record-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
+                {{'global.form.record' | translate}}{{$index+1}}
+                <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="inputRecord.dirty"></span>
+              </label>
+              <ul class="record-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
 
-          <li class="record-list-item"
-              ng-repeat="(fieldName, recordValue) in inputRecord.value.value"
-              ng-class="{'dirty' : recordValue.dirty}"
-              ng-include="'recordTree'"
-              onload="editable=previewMode">
-          </li>
+                <li class="record-list-item"
+                    ng-repeat="(fieldName, recordValue) in inputRecord.value.value"
+                    ng-class="{'dirty' : recordValue.dirty}"
+                    ng-include="'recordTree'"
+                    onload="editable=previewMode">
+                </li>
 
-        </ul>
-      </td>
-      <td>
-        <div ng-repeat="outputRecord in outputRecords = getOutputRecords(stagePreviewData.output, inputRecord)">
-          <label class="pointer" ng-click="outputRecord.expand = !outputRecord.expand">
+              </ul>
+            </td>
+            <td>
+              <div ng-repeat="outputRecord in outputRecords = getOutputRecords(stagePreviewData.output, inputRecord)">
+                <label class="pointer" ng-click="outputRecord.expand = !outputRecord.expand">
                 <span class="glyphicon glyphicon-expand"
                       ng-if="outputRecord.expand !== true && expandAllOutputData !== true"></span>
                 <span class="glyphicon glyphicon-collapse-down"
                       ng-if="outputRecord.expand === true || expandAllOutputData === true"></span>
-            {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.outputRecord' | translate}} {{$index + 1}}
-          </label>
-          <ul class="record-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
+                  {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.outputRecord' | translate}} {{$index + 1}}
+                </label>
+                <ul class="record-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
 
-            <li class="record-list-item"
-                ng-repeat="(fieldName, recordValue) in outputRecord.value.value"
-                ng-include="'recordTree'">
-            </li>
+                  <li class="record-list-item"
+                      ng-repeat="(fieldName, recordValue) in outputRecord.value.value"
+                      ng-include="'recordTree'">
+                  </li>
 
-          </ul>
-        </div>
+                </ul>
+              </div>
 
-        <div ng-repeat="errorRecord in errorsRecords = getErrorRecords(stagePreviewData.errorRecords, inputRecord)">
-          <label class="pointer label label-danger" ng-click="errorRecord.expand = !errorRecord.expand">
+              <div ng-repeat="errorRecord in errorsRecords = getErrorRecords(stagePreviewData.errorRecords, inputRecord)">
+                <label class="pointer label label-danger" ng-click="errorRecord.expand = !errorRecord.expand">
                 <span class="glyphicon glyphicon-expand"
                       ng-if="errorRecord.expand !== true"></span>
                 <span class="glyphicon glyphicon-collapse-down"
                       ng-if="errorRecord.expand === true"></span>
-            {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.header.errorMessage}}
-          </label>
-          <ul class="record-list" ng-if="errorRecord.expand === true">
+                  {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.header.errorMessage}}
+                </label>
+                <ul class="record-list" ng-if="errorRecord.expand === true">
 
-            <li class="record-list-item"
-                ng-repeat="(fieldName, recordValue) in errorRecord.value.value"
-                ng-include="'recordTree'">
-            </li>
+                  <li class="record-list-item"
+                      ng-repeat="(fieldName, recordValue) in errorRecord.value.value"
+                      ng-include="'recordTree'">
+                  </li>
 
-          </ul>
-        </div>
+                </ul>
+              </div>
 
-        <div ng-if="outputRecords.length === 0 && errorsRecords.length === 0">
-          <label class="label label-warning">{{'admin.previewPane.noOutputWarning' | translate}}</label>
-        </div>
+              <div ng-if="outputRecords.length === 0 && errorsRecords.length === 0">
+                <label class="label label-warning">{{'admin.previewPane.noOutputWarning' | translate}}</label>
+              </div>
 
-      </td>
-    </tr>
+            </td>
+          </tr>
 
-    <tr ng-if="detailPaneConfig.uiInfo.stageType === 'TARGET'"
-        ng-repeat="inputRecord in stagePreviewData.input">
-      <td>
-        <label class="pointer" ng-click="inputRecord.expand = !inputRecord.expand">
+          <tr ng-if="detailPaneConfig.uiInfo.stageType === 'TARGET'"
+              ng-repeat="inputRecord in stagePreviewData.input">
+            <td>
+              <label class="pointer" ng-click="inputRecord.expand = !inputRecord.expand">
               <span class="glyphicon glyphicon-expand"
                     ng-if="inputRecord.expand !== true && expandAllInputData !== true"></span>
               <span class="glyphicon glyphicon-collapse-down"
                     ng-if="inputRecord.expand === true || expandAllInputData === true"></span>
-          {{'global.form.record' | translate}}{{$index+1}}
-        </label>
-        <ul class="record-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
+                {{'global.form.record' | translate}}{{$index+1}}
+              </label>
+              <ul class="record-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
 
-          <li class="record-list-item"
-              ng-repeat="(fieldName, recordValue) in inputRecord.value.value"
-              ng-include="'recordTree'">
-          </li>
+                <li class="record-list-item"
+                    ng-repeat="(fieldName, recordValue) in inputRecord.value.value"
+                    ng-include="'recordTree'">
+                </li>
 
-        </ul>
-      </td>
-      <td>
+              </ul>
+            </td>
+            <td>
 
-      </td>
-    </tr>
+            </td>
+          </tr>
 
-    </tbody>
+          </tbody>
 
-  </table>
+        </table>
+      </div>
+    </tab>
+
+    <tab>
+      <tab-heading>
+         {{ 'global.form.metrics' | translate }}
+      </tab-heading>
+      <div>
+      </div>
+    </tab>
+
+    <tab ng-if="stagePreviewData.stageErrors && stagePreviewData.stageErrors.length">
+      <tab-heading>
+        <i class="fa fa-exclamation-triangle icon-danger"></i> {{ 'global.form.errors' | translate }}
+      </tab-heading>
+      <div>
+        <table class="table table-hover">
+          <caption>
+            <label translate="global.form.errorMessages">Error Messages</label>
+          </caption>
+          <thead>
+          <tr>
+            <th class="col-md-3" translate="global.form.timestamp">Timestamp</th>
+            <th class="col-md-2" translate="global.form.errorCode">Error Code</th>
+            <th class="col-md-7" translate="global.form.errorMessage"> Error Message</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="errorMessage in stagePreviewData.stageErrors">
+            <td>{{errorMessage.timestamp | date:'medium'}}</td>
+            <td ng-bind="errorMessage.errorCode"> </td>
+            <td ng-bind="errorMessage.localized"> </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </tab>
+
+  </tabset>
 
 </div>

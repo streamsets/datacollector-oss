@@ -3,10 +3,6 @@
   margin-bottom: 0;
   border-bottom: none;
 
-  border: 0;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-
 
   .preview-page-detail {
     padding-right: @defaultPadding;
@@ -41,6 +37,20 @@
     padding: 0;
     height: calc(~"100% - 40px");
     overflow: auto;
+
+    .tabbable {
+      height: 100%;
+      padding: 0 @smallPadding * 3;
+
+      >.nav-tabs {
+        height: 250px;
+        padding-top: @smallPadding * 3;
+      }
+
+      >.tab-content {
+        padding-top: @smallPadding * 3;
+      }
+    }
 
     .pipeline-preview {
       .preview-heading {
