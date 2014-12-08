@@ -30,12 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -75,7 +71,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   /*Cache last N error records per stage in memory*/
   private Map<String, EvictingQueue<Record>> stageToErrorRecordsMap;
   /*Cache last N error messages in memory*/
-  private Map<String, EvictingQueue<ErrorMessage>> stageToErrorMessagessMap;
+  private Map<String, EvictingQueue<ErrorMessage>> stageToErrorMessagesMap;
 
   public ProductionPipelineRunner(SnapshotStore snapshotStore, ErrorRecordStore errorRecordStore,
                                   SourceOffsetTracker offsetTracker, int batchSize,
@@ -99,7 +95,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.revision = revision;
     this.errorRecordStore = errorRecordStore;
     this.stageToErrorRecordsMap = new HashMap<>();
-    this.stageToErrorMessagessMap = new HashMap<>();
+    this.stageToErrorMessagesMap = new HashMap<>();
   }
 
   @Override
@@ -225,11 +221,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
       errorRecordList.addAll(errorRecords.get(e.getKey()));
     }
     for(Map.Entry<String, List<ErrorMessage>> e : errorMessages.entrySet()) {
-      EvictingQueue<ErrorMessage> errorMessageList = stageToErrorMessagessMap.get(e.getKey());
+      EvictingQueue<ErrorMessage> errorMessageList = stageToErrorMessagesMap.get(e.getKey());
       if(errorMessageList == null) {
         //replace with a data structure with an upper cap
-        errorMessageList = EvictingQueue.create(maxErrorRecordsPerStage);
-        stageToErrorMessagessMap.put(e.getKey(), errorMessageList);
+        errorMessageList = EvictingQueue.create(maxPipelineErrors);
+        stageToErrorMessagesMap.put(e.getKey(), errorMessageList);
       }
       errorMessageList.addAll(errorMessages.get(e.getKey()));
     }
@@ -245,11 +241,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   public List<ErrorMessage> getErrorMessages(String instanceName) {
-    if(stageToErrorMessagessMap == null || stageToErrorMessagessMap.isEmpty()
-        || stageToErrorMessagessMap.get(instanceName) == null
-        || stageToErrorMessagessMap.get(instanceName).isEmpty()) {
+    if(stageToErrorMessagesMap == null || stageToErrorMessagesMap.isEmpty()
+        || stageToErrorMessagesMap.get(instanceName) == null
+        || stageToErrorMessagesMap.get(instanceName).isEmpty()) {
       return Collections.EMPTY_LIST;
     }
-    return new CopyOnWriteArrayList<>(stageToErrorMessagessMap.get(instanceName));
+    return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName));
   }
 }
