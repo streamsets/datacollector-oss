@@ -27,6 +27,7 @@
       "outputRecord": "Output Record",
       "previousStage": "Previous Stage",
       "record": "Record",
+      "refresh": "Refresh",
       "required": "Required",
       "revertChanges": "Revert Changes",
       "sampleValue": "Sample Value",
@@ -75,6 +76,12 @@
     "detailPane": {
       "alerts": "Alerts",
       "badRecords": "Bad Records",
+      "badRecordsTab": {
+        "mostRecentBadRecords": "Most Recent Bad Records",
+        "mostRecentErrorMessages": "Most Recent Error Messages",
+        "totalNumberOfBadRecords": "Total Number of Bad Records",
+        "totalNumberOfErrors": "Total Number of Errors"
+      },
       "configuration": "Configuration",
       "configurationTab": {
         "rawSourcePreview": "Raw Source Preview"
@@ -106,11 +113,6 @@
       "headerLabel" : "Import Pipeline Definition",
       "fileUploadPlaceholder": "No file chosen",
       "browse": "Browse"
-    },
-    "badRecords": {
-      "mostRecentBadRecords": "Most Recent Bad Records",
-      "mostRecentErrorMessages": "Most Recent Error Messages",
-      "totalNumberOfBadRecords": "Total Number of Bad Records"
     }
   },
   "flow": {

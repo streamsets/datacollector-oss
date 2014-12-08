@@ -22,6 +22,17 @@ angular
 
       onCollapseAllErrorData: function() {
         $scope.expandAllErrorData = false;
+      },
+
+      refreshBadRecordsData: function() {
+        var currentSelection = $scope.detailPaneConfig;
+        updateBadRecordsData(currentSelection);
+      },
+
+      refreshErrorMessagesData: function() {
+        var currentSelection = $scope.detailPaneConfig;
+        updateErrorMessagesData(currentSelection);
+
       }
     });
 
