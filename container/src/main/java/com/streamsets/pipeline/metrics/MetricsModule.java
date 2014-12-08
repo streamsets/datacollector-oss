@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.metrics;
 
-import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import dagger.Module;
 import dagger.Provides;

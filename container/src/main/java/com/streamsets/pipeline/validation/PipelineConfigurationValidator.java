@@ -67,7 +67,7 @@ public class PipelineConfigurationValidator {
       }
       if (prior == sorted.size()) {
         // pipeline has not stages at all
-        List<String> names = new ArrayList<String>(original.size());
+        List<String> names = new ArrayList<>(original.size());
         for (StageConfiguration stage : original) {
           names.add(stage.getInstanceName());
         }
@@ -131,7 +131,7 @@ public class PipelineConfigurationValidator {
   @VisibleForTesting
   boolean validatePipelineConfiguration() {
     boolean preview = true;
-    Set<String> stageNames = new HashSet<String>();
+    Set<String> stageNames = new HashSet<>();
     boolean shouldBeSource = true;
     for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
       if (stageNames.contains(stageConf.getInstanceName())) {
@@ -296,11 +296,11 @@ public class PipelineConfigurationValidator {
     List<StageConfiguration> stagesConf = pipelineConfiguration.getStages();
     for (int i = 0; i < stagesConf.size(); i++) {
       StageConfiguration stageConf = stagesConf.get(i);
-      Set<String> openOutputs = new HashSet<String>(stageConf.getOutputLanes());
+      Set<String> openOutputs = new HashSet<>(stageConf.getOutputLanes());
       for (int j = i + 1; j < stagesConf.size(); j++) {
         StageConfiguration downStreamStageConf = stagesConf.get(j);
-        Set<String> duplicateOutputs = Sets.intersection(new HashSet<String>(stageConf.getOutputLanes()),
-                                                         new HashSet<String>(downStreamStageConf.getOutputLanes()));
+        Set<String> duplicateOutputs = Sets.intersection(new HashSet<>(stageConf.getOutputLanes()),
+                                                         new HashSet<>(downStreamStageConf.getOutputLanes()));
         if (!duplicateOutputs.isEmpty()) {
           // there is more than one stage defining the same output lane
           issues.add(StageIssue.createStageIssue(downStreamStageConf.getInstanceName(),

@@ -22,7 +22,6 @@ public abstract class AbstractTask implements Task {
       Status.CREATED, (Set<Status>)ImmutableSet.of(Status.INITIALIZED),
       Status.INITIALIZED, ImmutableSet.of(Status.RUNNING, Status.STOPPED),
       Status.RUNNING, ImmutableSet.of(Status.STOPPED),
-      //TODO review with Tucu
       Status.STOPPED, ImmutableSet.of(Status.STOPPED, Status.INITIALIZED),
       Status.ERROR, ImmutableSet.<Status>of()
   );

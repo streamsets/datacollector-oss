@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.api;
 
 import java.util.Iterator;
-import java.util.Set;
 
 public interface Batch {
 

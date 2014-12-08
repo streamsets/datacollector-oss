@@ -140,7 +140,8 @@ public class FileErrorRecordStore implements ErrorRecordStore {
     return pipelineDir;
   }
 
-  private void writeError(String pipelineName, String stageName, Object error, String type) throws JsonProcessingException {
+  private void writeError(String pipelineName, String stageName, Object error, String type)
+      throws JsonProcessingException {
     Map<String, Object> toWrite = new HashMap<>();
     toWrite.put(STAGE, stageName);
     toWrite.put(TYPE, type);

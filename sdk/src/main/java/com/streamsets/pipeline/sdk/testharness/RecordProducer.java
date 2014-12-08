@@ -41,7 +41,7 @@ public class RecordProducer {
 
   public RecordProducer() {
     random = new Random();
-    this.fieldMap = new HashMap<String, Type>();
+    this.fieldMap = new HashMap<>();
   }
 
   public RecordProducer addFiled(String name, Type type) {

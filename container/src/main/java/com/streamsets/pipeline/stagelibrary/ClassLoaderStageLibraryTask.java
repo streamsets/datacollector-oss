@@ -93,7 +93,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       try {
         Enumeration<URL> resources = cl.getResources(PIPELINE_STAGES_JSON);
         while (resources.hasMoreElements()) {
-          Map<String, String> stagesInLibrary = new HashMap<String, String>();
+          Map<String, String> stagesInLibrary = new HashMap<>();
 
           URL url = resources.nextElement();
           InputStream is = url.openStream();

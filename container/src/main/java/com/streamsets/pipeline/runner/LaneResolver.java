@@ -20,7 +20,7 @@ public class LaneResolver {
   private static final String ROUTING_SEPARATOR = "--";
 
   static List<String> getPostFixed(List<String> lanes, String postfix) {
-    List<String> postFixed = new ArrayList<String>(lanes.size());
+    List<String> postFixed = new ArrayList<>(lanes.size());
     for (String lane : lanes) {
       postFixed.add(lane + postfix);
     }
@@ -58,7 +58,7 @@ public class LaneResolver {
   }
 
   public List<String> getMultiplexerOutputLanes(int idx) {
-    List<String> list = new ArrayList<String>();
+    List<String> list = new ArrayList<>();
     for (String output : stages[idx].getConfiguration().getOutputLanes()) {
       for (int i = idx + 1; i < stages.length; i++) {
         for (String input : stages[i].getConfiguration().getInputLanes()) {
@@ -72,7 +72,7 @@ public class LaneResolver {
   }
 
   public List<String> getCombinerInputLanes(int idx) {
-    List<String> list = new ArrayList<String>();
+    List<String> list = new ArrayList<>();
     for (String input : stages[idx].getConfiguration().getInputLanes()) {
       for (int i = 0; i < idx; i++) {
         for (String output : stages[i].getConfiguration().getOutputLanes()) {
@@ -95,7 +95,7 @@ public class LaneResolver {
 
   public static List<String> getMatchingOutputLanes(String source, List<String> output) {
     String prefix = source + ROUTING_SEPARATOR;
-    List<String> list = new ArrayList<String>();
+    List<String> list = new ArrayList<>();
     for (String lane : output) {
       if (lane.startsWith(prefix)) {
         list.add(lane);
@@ -106,7 +106,7 @@ public class LaneResolver {
 
   @Override
   public String toString() {
-    List<String> names = new ArrayList<String>(stages.length);
+    List<String> names = new ArrayList<>(stages.length);
     for (StageRuntime stage : stages) {
       names.add(stage.getInfo().getInstanceName());
     }

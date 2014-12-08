@@ -32,7 +32,7 @@ public abstract class StageBuilder {
   protected int maxBatchSize = Constants.DEFAULT_MAX_BATCH_SIZE;
 
   public StageBuilder() {
-    configMap = new HashMap<String, Object>();
+    configMap = new HashMap<>();
   }
 
   /**
@@ -48,9 +48,7 @@ public abstract class StageBuilder {
       try {
         field = this.stage.getClass().getField(e.getKey());
         field.set(this.stage, e.getValue());
-      } catch (NoSuchFieldException e1) {
-        e1.printStackTrace();
-      } catch (IllegalAccessException e1) {
+      } catch (NoSuchFieldException | IllegalAccessException e1) {
         e1.printStackTrace();
       }
     }
@@ -100,9 +98,9 @@ public abstract class StageBuilder {
     Map<String, Object> configMap, Stage stage) {
     boolean valid = true;
     //for each entry in the map check if the key is a valid config option
-    ConfigDef configDef = null;
-    FieldSelector fieldSelector = null;
-    FieldValueChooser fieldValueChooser = null;
+    ConfigDef configDef;
+    FieldSelector fieldSelector;
+    FieldValueChooser fieldValueChooser;
     for(Field f : stage.getClass().getDeclaredFields()) {
       configDef = f.getAnnotation(ConfigDef.class);
       fieldValueChooser = f.getAnnotation(FieldValueChooser.class);

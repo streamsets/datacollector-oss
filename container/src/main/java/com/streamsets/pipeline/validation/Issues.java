@@ -20,8 +20,8 @@ public class Issues {
   private final Map<String, List<StageIssue>> stages;
 
   public Issues() {
-    pipeline = new ArrayList<Issue>();
-    stages = new HashMap<String, List<StageIssue>>();
+    pipeline = new ArrayList<>();
+    stages = new HashMap<>();
   }
 
   public void addP(Issue issue) {
@@ -31,7 +31,7 @@ public class Issues {
   public void add(StageIssue issue) {
     List<StageIssue> stageIssues = stages.get(issue.getInstanceName());
     if (stageIssues == null) {
-      stageIssues = new ArrayList<StageIssue>();
+      stageIssues = new ArrayList<>();
       stages.put(issue.getInstanceName(), stageIssues);
     }
     stageIssues.add(issue);

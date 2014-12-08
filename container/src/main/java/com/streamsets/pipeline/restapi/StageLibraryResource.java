@@ -8,7 +8,6 @@ package com.streamsets.pipeline.restapi;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.container.LocaleInContext;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -37,16 +36,16 @@ public class StageLibraryResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getDefinitions() {
     //The definitions to be returned
-    Map<String, List<Object>> definitions = new HashMap<String, List<Object>>();
+    Map<String, List<Object>> definitions = new HashMap<>();
 
     //Populate the definitions with all the stage definitions
     List<StageDefinition> stageDefinitions = stageLibrary.getStages();
-    List<Object> stages = new ArrayList<Object>(stageDefinitions.size());
+    List<Object> stages = new ArrayList<>(stageDefinitions.size());
     stages.addAll(stageDefinitions);
     definitions.put("stages", stages);
 
     //Populate the definitions with the PipelineDefinition
-    List<Object> pipeline = new ArrayList<Object>(1);
+    List<Object> pipeline = new ArrayList<>(1);
     pipeline.add(new PipelineDefinition());
     definitions.put("pipeline", pipeline);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();

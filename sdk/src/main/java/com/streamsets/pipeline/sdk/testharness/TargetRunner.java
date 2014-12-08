@@ -91,9 +91,7 @@ public class TargetRunner <T extends Target> {
     public Builder<T> addTarget(Class<T> klass) {
       try {
         this.stage = klass.newInstance();
-      } catch (InstantiationException e) {
-        e.printStackTrace();
-      } catch (IllegalAccessException e) {
+      } catch (InstantiationException | IllegalAccessException e) {
         e.printStackTrace();
       }
       return this;

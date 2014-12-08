@@ -87,7 +87,7 @@ public class CompositeTask extends AbstractTask {
 
   @Override
   public String toString() {
-    List<String> names = new ArrayList<String>(subTasks.size());
+    List<String> names = new ArrayList<>(subTasks.size());
     for (Task subTask : subTasks) {
       names.add(subTask.getName());
     }

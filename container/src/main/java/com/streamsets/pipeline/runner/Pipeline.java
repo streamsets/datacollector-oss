@@ -104,7 +104,7 @@ public class Pipeline {
     }
 
     private void setStagesContext(StageRuntime[] stages, PipelineRunner runner) {
-      List<Stage.Info> infos = new ArrayList<Stage.Info>(stages.length);
+      List<Stage.Info> infos = new ArrayList<>(stages.length);
       List<Stage.Info> infosUnmodifiable = Collections.unmodifiableList(infos);
       for (StageRuntime stage : stages) {
         infos.add(stage.getInfo());
@@ -114,7 +114,7 @@ public class Pipeline {
 
     private Pipe[] createPipes(StageRuntime[] stages) throws PipelineRuntimeException {
       LaneResolver laneResolver = new LaneResolver(stages);
-      List<Pipe> pipes = new ArrayList<Pipe>(stages.length * 3);
+      List<Pipe> pipes = new ArrayList<>(stages.length * 3);
       for (int idx = 0; idx < stages.length; idx++) {
         Pipe pipe;
         StageRuntime stage = stages[idx];
@@ -159,7 +159,7 @@ public class Pipeline {
 
   @Override
   public String toString() {
-    Set<String> instances = new LinkedHashSet<String>();
+    Set<String> instances = new LinkedHashSet<>();
     for (Pipe pipe : pipes) {
       instances.add(pipe.getStage().getInfo().getInstanceName());
     }

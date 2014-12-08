@@ -39,7 +39,7 @@ public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> 
   private static final String ENTER = System.getProperty("line.separator");
 
   protected Response createResponse(Response.Status status, Throwable ex) {
-    Map<String, Object> json = new LinkedHashMap<String, Object>();
+    Map<String, Object> json = new LinkedHashMap<>();
     json.put(ERROR_MESSAGE_JSON, getOneLineMessage(ex, false));
     if (ex instanceof StageException) {
       json.put(ERROR_CODE_JSON, ((StageException)ex).getErrorCode().getCode());
@@ -56,7 +56,7 @@ public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> 
     ex.printStackTrace(printWriter);
     printWriter.close();
     json.put(ERROR_STACK_TRACE, writer.toString());
-    Map<String, Object> response = new LinkedHashMap<String, Object>();
+    Map<String, Object> response = new LinkedHashMap<>();
     response.put(ERROR_JSON, json);
     return Response.status(status).type(MediaType.APPLICATION_JSON).
         entity(response).build();

@@ -152,7 +152,7 @@ public class ProcessorRunner<T extends Processor> {
       if (outputLanes == null || outputLanes.isEmpty()) {
         LOG.info("The 'outputLanes' is not set. Generating a single lane 'lane'.");
         if (outputLanes == null) {
-          outputLanes = new HashSet<String>();
+          outputLanes = new HashSet<>();
         }
         outputLanes.add(Constants.DEFAULT_LANE);
       }

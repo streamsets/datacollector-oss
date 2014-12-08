@@ -25,7 +25,7 @@ public class BatchMakerImpl implements BatchMaker {
     } else {
       singleLaneOutput = null;
     }
-    laneToRecordsMap = new HashMap<String, List<Record>>();
+    laneToRecordsMap = new HashMap<>();
   }
 
   @Override
@@ -38,7 +38,7 @@ public class BatchMakerImpl implements BatchMaker {
     if(lanes == null || lanes.length == 0) {
       List<Record> records = laneToRecordsMap.get(singleLaneOutput);
       if(records == null) {
-        records = new ArrayList<Record>();
+        records = new ArrayList<>();
         laneToRecordsMap.put(singleLaneOutput, records);
       }
       records.add(record);
@@ -47,7 +47,7 @@ public class BatchMakerImpl implements BatchMaker {
     for(String lane : lanes) {
       List<Record> records = laneToRecordsMap.get(lane);
       if(records == null) {
-        records = new ArrayList<Record>();
+        records = new ArrayList<>();
         laneToRecordsMap.put(lane, records);
       }
       records.add(record);

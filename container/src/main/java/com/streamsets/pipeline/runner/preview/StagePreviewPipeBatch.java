@@ -27,7 +27,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
   public StagePreviewPipeBatch(String instanceName, List<Record> inputRecords) {
     this.instanceName = instanceName;
     this.inputRecords = inputRecords;
-    stageOutputSnapshot = new ArrayList<StageOutput>();
+    stageOutputSnapshot = new ArrayList<>();
     this.errorSink = new ErrorSink();
   }
 

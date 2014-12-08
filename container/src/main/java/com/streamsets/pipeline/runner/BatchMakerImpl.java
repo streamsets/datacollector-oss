@@ -37,7 +37,7 @@ public class BatchMakerImpl implements BatchMaker {
     this.instanceName= stagePipe.getStage().getInfo().getInstanceName();
     outputLanes = ImmutableSet.copyOf(stagePipe.getStage().getConfiguration().getOutputLanes());
     singleOutputLane = (outputLanes.size() == 1) ? outputLanes.iterator().next() : null;
-    stageOutput = new HashMap<String, List<Record>>();
+    stageOutput = new HashMap<>();
     stageOutputSnapshot = (keepSnapshot) ? new HashMap<String, List<Record>>() : null;
     for (String outputLane : outputLanes) {
       stageOutput.put(outputLane, new ArrayList<Record>());

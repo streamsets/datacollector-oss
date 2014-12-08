@@ -242,15 +242,8 @@ public class StageDefinition {
           configDef.getModel().setValues(values);
           configDef.getModel().setLabels(labels);
 
-        } catch (ClassNotFoundException e) {
-          throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-          throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-          throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-          throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (ClassNotFoundException  | InvocationTargetException | NoSuchMethodException | InstantiationException |
+            IllegalAccessException e) {
           throw new RuntimeException(e);
         }
       }

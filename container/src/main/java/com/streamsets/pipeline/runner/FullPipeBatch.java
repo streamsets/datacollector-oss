@@ -34,8 +34,8 @@ public class FullPipeBatch implements PipeBatch {
   public FullPipeBatch(SourceOffsetTracker offsetTracker, int batchSize, boolean snapshotStagesOutput) {
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
-    fullPayload = new HashMap<String, List<Record>>();
-    processedStages = new HashSet<String>();
+    fullPayload = new HashMap<>();
+    processedStages = new HashSet<>();
     stageOutputSnapshot = (snapshotStagesOutput) ? new ArrayList<StageOutput>() : null;
     errorSink = new ErrorSink();
   }
@@ -63,7 +63,7 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   public BatchImpl getBatch(final Pipe pipe) {
-    List<Record> records = new ArrayList<Record>();
+    List<Record> records = new ArrayList<>();
     for (String inputLane : pipe.getInputLanes()) {
       records.addAll(fullPayload.remove(inputLane));
     }
@@ -115,7 +115,7 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   public Map<String, List<Record>> getPipeLanesSnapshot(List<String> pipeLanes) {
-    Map<String, List<Record>> snapshot = new HashMap<String, List<Record>>();
+    Map<String, List<Record>> snapshot = new HashMap<>();
     for (String pipeLane : pipeLanes) {
       snapshot.put(pipeLane, createSnapshot(fullPayload.get(pipeLane)));
     }
@@ -124,7 +124,7 @@ public class FullPipeBatch implements PipeBatch {
 
   //TODO rename method
   private List<Record> createSnapshot(List<Record> records) {
-    List<Record> list = new ArrayList<Record>(records.size());
+    List<Record> list = new ArrayList<>(records.size());
     for (Record record : records) {
       list.add(((RecordImpl) record).clone());
     }
@@ -158,7 +158,7 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   private List<Record> createCopy(List<Record> records) {
-    List<Record> list = new ArrayList<Record>(records.size());
+    List<Record> list = new ArrayList<>(records.size());
     for (Record record : records) {
       list.add(((RecordImpl) record).clone());
     }
@@ -166,7 +166,7 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   private List<String> remove(List<String> from, Collection<String> values) {
-    List<String> list = new ArrayList<String>(from);
+    List<String> list = new ArrayList<>(from);
     list.removeAll(values);
     return list;
   }

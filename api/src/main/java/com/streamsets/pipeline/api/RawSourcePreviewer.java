@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.api;
 
 import java.io.Reader;
-import java.util.Map;
 
 public interface RawSourcePreviewer {
 

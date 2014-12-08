@@ -70,13 +70,10 @@ public class PreviewResource {
   private final Configuration configuration;
   private final PipelineStoreTask store;
   private final StageLibraryTask stageLibrary;
-  private final String user;
-
 
   @Inject
   public PreviewResource(Configuration configuration, Principal user, StageLibraryTask stageLibrary, PipelineStoreTask store) {
     this.configuration = configuration;
-    this.user = user.getName();
     this.stageLibrary = stageLibrary;
     this.store = store;
   }
@@ -176,11 +173,7 @@ public class PreviewResource {
       }
       rawSourcePreviewer.setMimeType(rawSourceDefinition.getMimeType());
       reader = rawSourcePreviewer.preview(bytesToRead);
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    } catch (InstantiationException e) {
-      throw new RuntimeException(e);
-    } catch (NoSuchFieldException e) {
+    } catch (IllegalAccessException | InstantiationException | NoSuchFieldException e) {
       throw new RuntimeException(e);
     }
 

@@ -444,8 +444,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * @return the list of super types in no particular order
    */
   private List<TypeMirror> getAllSuperTypes(TypeElement element){
-    List<TypeMirror> allSuperTypes=new ArrayList<TypeMirror>();
-    Queue<TypeMirror> runningList=new LinkedList<TypeMirror>();
+    List<TypeMirror> allSuperTypes=new ArrayList<>();
+    Queue<TypeMirror> runningList=new LinkedList<>();
     runningList.add(element.asType());
     while (runningList.size() != 0) {
       TypeMirror currentType=runningList.poll();

@@ -275,7 +275,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
     //retrieve pipeline properties from the pipeline configuration
     int maxBatchSize = configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT);
-    int maxErrorRecordsPerStage = configuration.get(Constants.MAX_ERROR_RECORDS_PER_STAGE, Constants.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT);
+    int maxErrorRecordsPerStage = configuration.get(Constants.MAX_ERROR_RECORDS_PER_STAGE,
+        Constants.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT);
     int maxPipelineErrors = configuration.get(Constants.MAX_PIPELINE_ERRORS, Constants.MAX_PIPELINE_ERRORS_DEFAULT);
 
     //load pipeline configuration from store

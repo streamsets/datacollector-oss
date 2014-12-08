@@ -49,7 +49,7 @@ public class StageConfiguration {
     this.uiInfo = uiInfo;
     this.inputLanes = inputLanes;
     this.outputLanes = outputLanes;
-    configurationMap = new HashMap<String, ConfigConfiguration>();
+    configurationMap = new HashMap<>();
     for (ConfigConfiguration conf : configuration) {
       configurationMap.put(conf.getName(), conf);
     }

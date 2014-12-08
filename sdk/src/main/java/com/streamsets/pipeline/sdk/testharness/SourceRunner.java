@@ -106,9 +106,7 @@ public class SourceRunner <T extends Source> {
     public Builder<T> addSource(Class<T> klass) {
       try {
         this.stage = klass.newInstance();
-      } catch (InstantiationException e) {
-        e.printStackTrace();
-      } catch (IllegalAccessException e) {
+      } catch (InstantiationException | IllegalAccessException e) {
         e.printStackTrace();
       }
       return this;
@@ -137,7 +135,7 @@ public class SourceRunner <T extends Source> {
 
       context = new StageContext(instanceName, outputLanes);
 
-      return new SourceRunner<T>(
+      return new SourceRunner<>(
         (T)stage, maxBatchSize, sourceOffset, outputLanes, info, context);
     }
 
@@ -148,7 +146,7 @@ public class SourceRunner <T extends Source> {
       if(outputLanes == null || outputLanes.isEmpty()) {
         LOG.info("The 'outputLanes' is not set. Generating a single lane 'lane'.");
         if(outputLanes == null) {
-          outputLanes = new HashSet<String>();
+          outputLanes = new HashSet<>();
         }
         outputLanes.add(Constants.DEFAULT_LANE);
       }

@@ -79,13 +79,13 @@ public class PipelineDefinition {
 
   private ConfigDefinition createDeliveryGuaranteeOption() {
 
-    List<String> gdLabels = new ArrayList<String>(2);
+    List<String> gdLabels = new ArrayList<>(2);
     gdLabels.add(new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
         DELIVERY_GUARANTEE_AT_LEAST_ONCE_KEY, DELIVERY_GUARANTEE_AT_LEAST_ONCE_VALUE, null).getLocalized());
     gdLabels.add(new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
         DELIVERY_GUARANTEE_AT_MOST_ONCE_KEY, DELIVERY_GUARANTEE_AT_MOST_ONCE_VALUE, null).getLocalized());
 
-    List<String> gdValues = new ArrayList<String>(2);
+    List<String> gdValues = new ArrayList<>(2);
     gdValues.add(DeliveryGuarantee.AT_LEAST_ONCE.name());
     gdValues.add(DeliveryGuarantee.AT_MOST_ONCE.name());
 

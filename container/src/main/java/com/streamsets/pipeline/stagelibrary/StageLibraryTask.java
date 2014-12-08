@@ -9,7 +9,6 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.task.Task;
 
 import java.util.List;
-import java.util.Locale;
 
 public interface StageLibraryTask extends Task {
 

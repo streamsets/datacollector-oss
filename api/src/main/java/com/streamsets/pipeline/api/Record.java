@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.api;
 
-import java.util.Date;
 import java.util.Set;
 
 /**

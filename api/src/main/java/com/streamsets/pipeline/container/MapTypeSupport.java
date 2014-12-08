@@ -7,8 +7,6 @@ package com.streamsets.pipeline.container;
 
 import com.streamsets.pipeline.api.Field;
 
-import java.text.ParseException;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

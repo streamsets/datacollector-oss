@@ -22,7 +22,7 @@ public class Configuration {
   private Map<String, String> map;
 
   public Configuration() {
-    map = new LinkedHashMap<String, String>();
+    map = new LinkedHashMap<>();
   }
 
   public Configuration getSubSetConfiguration(String namePrefix) {
@@ -43,7 +43,7 @@ public class Configuration {
   }
 
   public Set<String> getNames() {
-    return new HashSet<String>(map.keySet());
+    return new HashSet<>(map.keySet());
   }
 
   public boolean hasName(String name) {

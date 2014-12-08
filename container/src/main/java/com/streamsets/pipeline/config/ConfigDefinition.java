@@ -13,7 +13,6 @@ import com.streamsets.pipeline.container.Utils;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 /**
@@ -24,7 +23,7 @@ public class ConfigDefinition {
   public static final String REQUIRED_FIELDS = "stageRequiredFields";
 
   // we are not using Guava ImmutableSet.of() because this breaks the annotation processor
-  public static final Set<String> SYSTEM_CONFIGS = new HashSet<String>(Arrays.asList(REQUIRED_FIELDS));
+  public static final Set<String> SYSTEM_CONFIGS = new HashSet<>(Arrays.asList(REQUIRED_FIELDS));
   private final String name;
   private final ConfigDef.Type type;
   private final String label;
