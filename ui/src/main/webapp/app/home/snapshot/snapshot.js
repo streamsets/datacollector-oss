@@ -140,6 +140,7 @@ angular
         } else if (outputLane && stageOutput.output[outputLane] && stageOutput.output) {
           stagePreviewData.output = stageOutput.output[outputLane];
           stagePreviewData.errorRecords = stageOutput.errorRecords;
+          stagePreviewData.stageErrors = stageOutput.stageErrors;
         }
       });
 
