@@ -33,7 +33,7 @@ public class TestRandomSource {
 
       Assert.assertNotNull(run);
       Assert.assertNotNull(run.get("lane"));
-      Assert.assertTrue(run.get("lane").size() == 25);
+      Assert.assertTrue(run.get("lane").size() <= 25);
     } catch (StageException e) {
       e.printStackTrace();
     }
@@ -48,7 +48,7 @@ public class TestRandomSource {
         .build().run();
       Assert.assertNotNull(run);
       Assert.assertNotNull(run.get(Constants.DEFAULT_LANE));
-      Assert.assertTrue(run.get(Constants.DEFAULT_LANE).size() == 10);
+      Assert.assertTrue(run.get(Constants.DEFAULT_LANE).size() <= 10);
     } catch (StageException e) {
       e.printStackTrace();
     }
