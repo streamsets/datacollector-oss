@@ -20,6 +20,7 @@ public class ProductionPipelineRunnable implements Runnable {
   private final ProductionPipeline pipeline;
   private final String name;
   private final String rev;
+  private volatile Thread runningThread;
 
   public ProductionPipelineRunnable(ProductionPipelineManagerTask pipelineManager, ProductionPipeline pipeline,
                                     String name, String rev) {
@@ -32,6 +33,7 @@ public class ProductionPipelineRunnable implements Runnable {
   @Override
   public void run() {
     try {
+      runningThread = Thread.currentThread();
       pipeline.run();
     } catch (Exception e) {
       LOG.error(Utils.format("An exception occurred while running the pipeline, {}", e.getMessage()));
@@ -43,6 +45,8 @@ public class ProductionPipelineRunnable implements Runnable {
     } catch (Error e) {
       LOG.error(Utils.format("A JVM error occurred while running the pipeline, {}", e.getMessage()));
       throw e;
+    } finally {
+      runningThread = null;
     }
 
     if(pipeline.wasStopped()) {
@@ -68,6 +72,11 @@ public class ProductionPipelineRunnable implements Runnable {
 
   public void stop() {
     pipeline.stop();
+    Thread thread = runningThread;
+    if (thread != null) {
+      thread.interrupt();
+      LOG.debug("Pipeline stopped, interrupting the thread running the pipeline");
+    }
   }
 
   public String getRev() {

@@ -32,6 +32,7 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
 
 public class TestProdPipelineRunnable {
 
@@ -51,6 +52,7 @@ public class TestProdPipelineRunnable {
 
   @Before()
   public void setUp() {
+    MockStages.resetStageCaptures();
     RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
     manager = new ProductionPipelineManagerTask(info, Mockito.mock(Configuration.class)
         , Mockito.mock(FilePipelineStoreTask.class), Mockito.mock(StageLibraryTask.class));
@@ -96,6 +98,37 @@ public class TestProdPipelineRunnable {
     Assert.assertEquals("1", pipeline.getCommittedOffset());
     //no output as capture was not set to true
     Assert.assertTrue(pipeline.getPipeline().getRunner().getBatchesOutput().isEmpty());
+  }
+
+  private volatile CountDownLatch latch;
+  private volatile boolean stopInterrupted;
+
+  @Test
+  public void testStopInterrupt() throws Exception {
+    latch = new CountDownLatch(1);
+    stopInterrupted = false;
+    MockStages.setSourceCapture(new BaseSource() {
+      @Override
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+        try {
+          latch.countDown();
+          Thread.currentThread().sleep(1000000);
+        } catch (InterruptedException ex) {
+          stopInterrupted = true;
+        }
+        return null;
+      }
+    });
+
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "xyz", "1.0");
+
+    Thread t = new Thread(runnable);
+    t.start();
+    latch.await();
+    runnable.stop();
+    t.join();
+    Assert.assertTrue(stopInterrupted);
   }
 
   @Test

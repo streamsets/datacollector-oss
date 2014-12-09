@@ -20,6 +20,7 @@ import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -27,6 +28,11 @@ import java.util.List;
 
 
 public class TestPreviewRun {
+
+  @Before
+  public void setUp() {
+    MockStages.resetStageCaptures();
+  }
 
   @Test
   public void testPreviewRun() throws Exception {

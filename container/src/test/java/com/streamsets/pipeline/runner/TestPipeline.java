@@ -22,6 +22,7 @@ import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -30,6 +31,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class TestPipeline {
+
+  @Before
+  public void setUp() {
+    MockStages.resetStageCaptures();
+  }
 
   @Test
   public void testBuilder() throws Exception {

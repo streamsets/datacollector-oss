@@ -18,10 +18,16 @@ import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 public class TestFailedProdRun {
+
+  @Before
+  public void setUp() {
+    MockStages.resetStageCaptures();
+  }
 
   private static final String PIPELINE_NAME = "xyz";
   private static final String REVISION = "0";

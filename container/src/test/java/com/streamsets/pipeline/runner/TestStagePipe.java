@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -21,6 +22,11 @@ public class TestStagePipe {
   private boolean produce;
   private boolean process;
   private boolean write;
+
+  @Before
+  public void setUp() {
+    MockStages.resetStageCaptures();
+  }
 
   @Test
   @SuppressWarnings("unchecked")

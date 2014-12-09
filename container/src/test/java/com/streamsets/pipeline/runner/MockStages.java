@@ -51,20 +51,23 @@ public class MockStages {
       Collections.EMPTY_LIST, null, inputs, Collections.EMPTY_LIST);
   }
 
-  private static Source source;
-  private static Processor processor;
-  private static Target target;
+  private static Source sourceCapture;
+  private static Processor processorCapture;
+  private static Target targetCapture;
 
+  // it must be called after the pipeline is built
   public static void setSourceCapture(Source s) {
-    source = s;
+    sourceCapture = s;
   }
 
+  // it must be called after the pipeline is built
   public static void setProcessorCapture(Processor p) {
-    processor = p;
+    processorCapture = p;
   }
 
+  // it must be called after the pipeline is built
   public static void setTargetCapture(Target t) {
-    target = t;
+    targetCapture = t;
   }
 
   private static class MockStageLibraryTask implements StageLibraryTask {
@@ -72,22 +75,22 @@ public class MockStages {
     public static class MSource implements Source {
       @Override
       public void init(Info info, Context context) throws StageException {
-        if (source != null) {
-          source.init(info, context);
+        if (sourceCapture != null) {
+          sourceCapture.init(info, context);
         }
       }
 
       @Override
       public void destroy() {
-        if (source != null) {
-          source.destroy();
+        if (sourceCapture != null) {
+          sourceCapture.destroy();
         }
       }
 
       @Override
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-        if (source != null) {
-          return source.produce(lastSourceOffset, -1, batchMaker);
+        if (sourceCapture != null) {
+          return sourceCapture.produce(lastSourceOffset, -1, batchMaker);
         }
         return null;
       }
@@ -97,22 +100,22 @@ public class MockStages {
 
       @Override
       public void init(Info info, Context context) throws StageException {
-        if (processor != null) {
-          processor.init(info, context);
+        if (processorCapture != null) {
+          processorCapture.init(info, context);
         }
       }
 
       @Override
       public void destroy() {
-        if (processor != null) {
-          processor.destroy();
+        if (processorCapture != null) {
+          processorCapture.destroy();
         }
       }
 
       @Override
       public void process(Batch batch, BatchMaker batchMaker) throws StageException {
-        if (processor != null) {
-          processor.process(batch, batchMaker);
+        if (processorCapture != null) {
+          processorCapture.process(batch, batchMaker);
         }
       }
     }
@@ -120,22 +123,22 @@ public class MockStages {
     public static class MTarget implements Target {
       @Override
       public void init(Info info, Context context) throws StageException {
-        if (target != null) {
-          target.init(info, context);
+        if (targetCapture != null) {
+          targetCapture.init(info, context);
         }
       }
 
       @Override
       public void destroy() {
-        if (target != null) {
-          target.destroy();
+        if (targetCapture != null) {
+          targetCapture.destroy();
         }
       }
 
       @Override
       public void write(Batch batch) throws StageException {
-        if (target != null) {
-          target.write(batch);
+        if (targetCapture != null) {
+          targetCapture.write(batch);
         }
       }
     }
@@ -208,6 +211,12 @@ public class MockStages {
       return null;
     }
 
+  }
+
+  public static void resetStageCaptures() {
+    sourceCapture = null;
+    processorCapture = null;
+    targetCapture = null;
   }
 
   @SuppressWarnings("unchecked")
