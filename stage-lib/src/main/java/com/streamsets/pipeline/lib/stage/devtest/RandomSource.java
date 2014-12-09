@@ -27,6 +27,8 @@ public class RandomSource extends BaseSource {
              label = "Record fields to generate, comma separated")
   public String fields;
 
+  private int batchCount;
+  private int batchSize;
   private String[] fieldArr;
   private Random random;
   private String[] lanes;
@@ -42,8 +44,10 @@ public class RandomSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    maxBatchSize = (maxBatchSize > -1) ? maxBatchSize : 10;
-    for (int i = 0; i < maxBatchSize; i++ ) {
+    if (batchCount++ % 100 == 0) {
+      batchSize = random.nextInt(maxBatchSize + 1);
+    }
+    for (int i = 0; i < batchSize; i++ ) {
       batchMaker.addRecord(createRecord(lastSourceOffset, i), lanes[i % lanes.length]);
     }
     return "random";
