@@ -1,0 +1,18 @@
+<script type="text/ng-template" id="errorModalContent.html">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="admin.graphPane.errorStackTrace">Error Stack Trace</h3>
+  </div>
+  <div class="modal-body error-modal-body">
+    <h4 ng-bind="errorObject.RemoteException.localizedMessage"></h4>
+    <pre class="alert-danger" ng-bind="errorObject.RemoteException.stackTrace"></pre>
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="close()" translate="global.form.close">
+      Close
+    </button>
+  </div>
+</script>

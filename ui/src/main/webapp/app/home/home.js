@@ -41,10 +41,34 @@ angular
       minimizeDetailPane: false,
       maximizeDetailPane: false,
 
+      /**
+       * Value format function for D3 NVD3 charts.
+       *
+       * @returns {Function}
+       */
       valueFormatFunction: function() {
         return function(d){
           return d3.format(',d')(d);
         };
+      },
+
+      /**
+       * Display stack trace in modal dialog.
+       *
+       * @param errorObj
+       */
+      showStackTrace: function(errorObj) {
+        $modal.open({
+          templateUrl: 'errorModalContent.html',
+          controller: 'ErrorModalInstanceController',
+          size: 'lg',
+          backdrop: true,
+          resolve: {
+            errorObj: function () {
+              return errorObj;
+            }
+          }
+        });
       },
 
       /**

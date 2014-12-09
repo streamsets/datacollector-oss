@@ -10,9 +10,11 @@
     "form": {
       "add": "Add",
       "cancel": "Cancel",
+      "close": "Close",
       "delete": "Delete",
       "description": "Description",
       "duplicate": "Duplicate",
+      "error": "Error",
       "errorCode": "Error Code",
       "errorMessage": "Error Message",
       "errorMessages": "Error Messages",
@@ -74,7 +76,9 @@
       "uptime": "Uptime"
     },
     "graphPane": {
-      "startErrorMessage": "Pipeline definition '{{name}}' is running. Pipeline Agent supports running only one Pipeline Definition."
+      "startErrorMessage": "Pipeline definition '{{name}}' is running. Pipeline Agent supports running only one Pipeline Definition.",
+      "viewStackTrace": "View Stack Trace",
+      "errorStackTrace": "Error Stack Trace"
     },
     "detailPane": {
       "alerts": "Alerts",

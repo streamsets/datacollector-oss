@@ -275,6 +275,9 @@ angular
 
       api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
         success(function (previewData) {
+          //Clear Previous errors
+          $rootScope.common.errors = [];
+
           previewDataBackup = angular.copy(previewData);
 
           $scope.previewData = previewData;
@@ -285,6 +288,7 @@ angular
         }).
         error(function(data) {
           $rootScope.common.errors = [data];
+          $scope.closePreview();
         });
     });
 
