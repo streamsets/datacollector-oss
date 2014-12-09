@@ -196,10 +196,10 @@ angular
           $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
             return pipelineDefn.name === pipelineStatus.name;
           });
-        } else if($scope.pipelines && $scope.pipelines.length) {
+        }
+
+        if(!$scope.activeConfigInfo && $scope.pipelines && $scope.pipelines.length) {
           $scope.activeConfigInfo =   $scope.pipelines[0];
-        } else {
-          $scope.activeConfigInfo = undefined;
         }
 
         $rootScope.common.pipelineMetrics = pipelineMetrics;

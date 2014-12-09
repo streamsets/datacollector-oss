@@ -48,7 +48,7 @@ angular
         angular.forEach(stage.configDefinitions, function (configDefinition) {
           var config = {
             name: configDefinition.name,
-            value: configDefinition.defaultValue
+            value: configDefinition.defaultValue || undefined
           };
 
           if(configDefinition.type === 'MODEL' && configDefinition.model.modelType === 'FIELD_SELECTOR') {
