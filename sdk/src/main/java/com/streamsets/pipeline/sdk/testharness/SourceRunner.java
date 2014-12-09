@@ -44,7 +44,7 @@ public class SourceRunner <T extends Source> {
     init();
     produce();
     destroy();
-    return ((BatchMakerImpl)batchMaker).getLaneToRecordsMap();
+    return getOutput();
   }
 
   public void init() throws StageException {
@@ -67,6 +67,10 @@ public class SourceRunner <T extends Source> {
 
   public void destroy() {
     source.destroy();
+  }
+
+  public Map<String, List<Record>> getOutput() {
+    return ((BatchMakerImpl)batchMaker).getLaneToRecordsMap();
   }
 
   /*******************************************************/

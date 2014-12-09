@@ -26,6 +26,11 @@ public class BatchMakerImpl implements BatchMaker {
       singleLaneOutput = null;
     }
     laneToRecordsMap = new HashMap<>();
+    //The output map should always have a key for all the defined output lanes, if the stage did not produce any record
+    // for a lane, the value in the map should be an empty record list.
+    for(String lane : outputlanes) {
+      laneToRecordsMap.put(lane, new ArrayList<Record>());
+    }
   }
 
   @Override

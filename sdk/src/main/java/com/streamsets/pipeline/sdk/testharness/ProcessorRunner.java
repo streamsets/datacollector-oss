@@ -44,7 +44,7 @@ public class ProcessorRunner<T extends Processor> {
     init();
     process();
     destroy();
-    return ((BatchMakerImpl)batchMaker).getLaneToRecordsMap();
+    return getOutput();
   }
 
   public void init() throws StageException {
@@ -69,6 +69,10 @@ public class ProcessorRunner<T extends Processor> {
     processor.destroy();
   }
 
+  public Map<String, List<Record>> getOutput() {
+    return ((BatchMakerImpl)batchMaker).getLaneToRecordsMap();
+  }
+
   /*******************************************************/
   /***************** Builder Class ***********************/
   /*******************************************************/
@@ -85,9 +89,7 @@ public class ProcessorRunner<T extends Processor> {
     public Builder<T> addProcessor(Class<T> klass) {
       try {
         this.stage = klass.newInstance();
-      } catch (InstantiationException e) {
-        e.printStackTrace();
-      } catch (IllegalAccessException e) {
+      } catch (InstantiationException | IllegalAccessException e) {
         e.printStackTrace();
       }
       return this;
