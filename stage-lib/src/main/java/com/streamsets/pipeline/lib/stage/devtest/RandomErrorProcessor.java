@@ -21,6 +21,9 @@ import java.util.Random;
                         "is randomly selected per batch")
 public class RandomErrorProcessor extends SingleLaneProcessor {
   private Random random;
+  private int batchCount;
+  private double batchThreshold1;
+  private double batchThreshold2;
 
   @Override
   protected void init() throws StageException {
@@ -31,8 +34,10 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
   @Override
   public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws
       StageException {
-    double batchThreshold1 = random.nextDouble();
-    double batchThreshold2 = batchThreshold1 * 1.3;
+    if (batchCount++ % 500 == 0) {
+      batchThreshold1 = random.nextDouble();
+      batchThreshold2 = batchThreshold1 * (1 + random.nextDouble());
+    }
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       double action = random.nextDouble();
