@@ -156,7 +156,7 @@ angular
 
 
     /**
-     * Fetch definitions for Pipeline and Stages, Pipeline Configuration and Pipeline Information.
+     * Fetch definitions for Pipeline and Stages, fetch all pipeline configuration info, status and metric.
      */
     $q.all([
       api.pipelineAgent.getDefinitions(),
@@ -372,6 +372,7 @@ angular
      * @param stageInstance
      */
     var updateDetailPane = function(stageInstance) {
+
       if(stageInstance) {
         //Stage Instance Configuration
         $scope.detailPaneConfig = stageInstance;
@@ -385,6 +386,10 @@ angular
         $scope.detailPaneConfig = $scope.pipelineConfig;
       }
       $scope.$broadcast('onStageSelection', stageInstance);
+
+      $timeout(function () {
+        $scope.$broadcast('show-errors-check-validity');
+      }, 100);
     };
 
 
@@ -455,7 +460,8 @@ angular
 
       angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
         stageInstanceErrorCounts[stageInstance.instanceName] =
-          $rootScope.common.pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'];
+          $rootScope.common.pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'].count +
+          $rootScope.common.pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.stageErrors.meter'].count;
       });
 
       return stageInstanceErrorCounts;
@@ -557,6 +563,8 @@ angular
     $rootScope.$watch('common.pipelineMetrics', function() {
       if($scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
         $scope.$broadcast('updateErrorCount', getStageErrorCounts());
+      } else {
+        $scope.$broadcast('updateErrorCount', {});
       }
     });
 

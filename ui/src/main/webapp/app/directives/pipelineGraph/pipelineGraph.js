@@ -637,8 +637,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr("title", "this is error records")
         .attr("class", "badge alert-danger pointer")
         .style('visibility', function(d) {
-          if(stageErrorCounts && stageErrorCounts[d.instanceName].count &&
-            parseInt(stageErrorCounts[d.instanceName].count) > 0) {
+          if(stageErrorCounts && stageErrorCounts[d.instanceName] &&
+            parseInt(stageErrorCounts[d.instanceName]) > 0) {
             return 'visible';
           } else {
             return 'hidden';
@@ -646,7 +646,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         })
         .html(function(d) {
           if(stageErrorCounts) {
-            return $filter('abbreviateNumber')(stageErrorCounts[d.instanceName].count);
+            return $filter('abbreviateNumber')(stageErrorCounts[d.instanceName]);
           }
           return '';
         })
@@ -746,18 +746,20 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     });
 
     $scope.$on('updateErrorCount', function(event, stageInstanceErrorCounts) {
-      graph.rects.selectAll('span.badge')
-        .style('visibility', function(d) {
-          if(stageInstanceErrorCounts[d.instanceName].count &&
-            parseInt(stageInstanceErrorCounts[d.instanceName].count) > 0) {
-            return 'visible';
-          } else {
-            return 'hidden';
-          }
-        })
-        .html(function(d) {
-          return $filter('abbreviateNumber')(stageInstanceErrorCounts[d.instanceName].count);
-        });
+      if(graph) {
+        graph.rects.selectAll('span.badge')
+          .style('visibility', function(d) {
+            if(stageInstanceErrorCounts[d.instanceName] &&
+              parseInt(stageInstanceErrorCounts[d.instanceName]) > 0) {
+              return 'visible';
+            } else {
+              return 'hidden';
+            }
+          })
+          .html(function(d) {
+            return $filter('abbreviateNumber')(stageInstanceErrorCounts[d.instanceName]);
+          });
+      }
     });
 
   });
