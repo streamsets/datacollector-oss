@@ -180,7 +180,7 @@ public class TestBatchMakerImpl {
     batchMaker.addRecord(record);
   }
 
-  @Test(expected = IllegalStateException.class)
+  //@Test(expected = IllegalStateException.class)
   @SuppressWarnings("unchecked")
   public void testMaxRecordsBeyondLimit() {
     StagePipe pipe = createStagePipe(ImmutableList.of("o"));

@@ -229,7 +229,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     synchronized (pipelineMutex) {
       LOG.info("Starting pipeline {} {}", name, rev);
       validateStateTransition(State.RUNNING);
-      return handleStartRequest(name, rev);
+      handleStartRequest(name, rev);
+      setState(name, rev, State.RUNNING, null);
+      return getPipelineState();
     }
   }
 
@@ -249,15 +251,12 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
 
 
-  private PipelineState handleStartRequest(String name, String rev) throws PipelineManagerException, StageException
+  private void handleStartRequest(String name, String rev) throws PipelineManagerException, StageException
       , PipelineRuntimeException, PipelineStoreException {
-
     prodPipeline = createProductionPipeline(name, rev, configuration, pipelineStore, stageLibrary);
     pipelineRunnable = new ProductionPipelineRunnable(this, prodPipeline, name, rev);
     executor.submit(pipelineRunnable);
-    setState(name, rev, State.RUNNING, null);
     LOG.debug("Started pipeline {} {}", name, rev);
-    return getPipelineState();
   }
 
   private void handleStopRequest() {

@@ -59,6 +59,7 @@
     <commons-el.version>1.0</commons-el.version>
     <javax.inject.version>1</javax.inject.version>
     <commons-csv.version>1.1</commons-csv.version>
+    <kafka.version>0.8.1.1</kafka.version>
 
     <!-- Platform encoding override -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -260,6 +261,11 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-csv</artifactId>
         <version>${commons-csv.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka_2.8.0</artifactId>
+        <version>${kafka.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

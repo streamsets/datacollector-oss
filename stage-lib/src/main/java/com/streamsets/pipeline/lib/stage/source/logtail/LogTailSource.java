@@ -69,7 +69,7 @@ public class LogTailSource extends BaseSource {
     if (logFile.exists() && !logFile.canRead()) {
       throw new StageException(StageLibError.LIB_0001, logFile);
     }
-    logLinesQueue = new ArrayBlockingQueue<String>(maxLinesPrefetch);
+    logLinesQueue = new ArrayBlockingQueue<>(maxLinesPrefetch);
     logTail = new LogTail(logFile, tailFromEnd, getInfo(), logLinesQueue);
     logTail.start();
   }
@@ -85,7 +85,7 @@ public class LogTailSource extends BaseSource {
     long start = System.currentTimeMillis();
     int fetch = Math.min(batchSize, maxBatchSize);
     String now = "." + Long.toString(System.currentTimeMillis()) + ".";
-    List<String> lines = new ArrayList<String>(fetch);
+    List<String> lines = new ArrayList<>(fetch);
     while (((System.currentTimeMillis() - start) < maxWaitTime) && (logLinesQueue.size() < fetch)) {
       try {
         Thread.sleep(SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS);

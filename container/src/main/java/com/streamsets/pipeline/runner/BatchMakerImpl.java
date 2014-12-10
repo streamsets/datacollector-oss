@@ -59,9 +59,6 @@ public class BatchMakerImpl implements BatchMaker {
 
   @Override
   public void addRecord(Record record, String... lanes) {
-    if (recordAllowance-- == 0) {
-      throw new IllegalStateException("The maximum number of records has been reached");
-    }
     Preconditions.checkNotNull(record, "record cannot be null");
     record = ((RecordImpl)record).clone();
     ((RecordImpl)record).addStageToStagePath(instanceName);

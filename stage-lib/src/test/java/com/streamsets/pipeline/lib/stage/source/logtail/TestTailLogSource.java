@@ -7,7 +7,6 @@ package com.streamsets.pipeline.lib.stage.source.logtail;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.lib.stage.source.logtail.LogTailSource;
 import com.streamsets.pipeline.sdk.testharness.SourceRunner;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
@@ -54,7 +53,10 @@ public class TestTailLogSource {
       .run();
     long end = System.currentTimeMillis();
     Assert.assertTrue(end - start > 100);
-    Assert.assertTrue(result.isEmpty());
+    Assert.assertFalse(result.isEmpty());
+    //Even though there are no records the output contains the lane with emply list of records
+    Assert.assertTrue(result.containsKey("lane"));
+    Assert.assertTrue(result.get("lane").isEmpty());
   }
 
   @Test
