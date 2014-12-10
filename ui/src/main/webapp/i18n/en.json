@@ -91,7 +91,9 @@
       },
       "configuration": "Configuration",
       "configurationTab": {
-        "rawSourcePreview": "Raw Source Preview"
+        "rawSourcePreview": "Raw Source Preview",
+        "requiredFieldsSelectionButton": "Select Field Using Preview Data",
+        "selectFields": "Select Fields..."
       },
       "general": "General",
       "rules": "Rules",
@@ -105,7 +107,8 @@
       "previewRecords": "Preview Records",
       "inputData": "Input Data",
       "outputData": "Output Data",
-      "noOutputWarning": "No output records produced."
+      "noOutputWarning": "No output records produced.",
+      "noRecords": "No Records"
     },
     "library": {
       "newPipelineDefinition": "New Pipeline Definition",

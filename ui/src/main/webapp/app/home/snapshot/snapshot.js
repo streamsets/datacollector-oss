@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('SnapshotController', function ($scope, $rootScope, _, api, $timeout) {
+  .controller('SnapshotController', function ($scope, $rootScope, _, api, $timeout, previewService) {
     var SOURCE_STAGE_TYPE = 'SOURCE',
       PROCESSOR_STAGE_TYPE = 'PROCESSOR',
       TARGET_STAGE_TYPE = 'TARGET',
@@ -115,58 +115,6 @@ angular
 
     });
 
-    /**
-     * Returns Preview input lane & output lane data for the given Stage Instance.
-     *
-     * @param previewData
-     * @param stageInstance
-     * @returns {{input: Array, output: Array}}
-     */
-    var getPreviewDataForStage = function (previewData, stageInstance) {
-      var inputLane = (stageInstance.inputLanes && stageInstance.inputLanes.length) ?
-          stageInstance.inputLanes[0] : undefined,
-        outputLane = (stageInstance.outputLanes && stageInstance.outputLanes.length) ?
-          stageInstance.outputLanes[0] : undefined,
-        stagePreviewData = {
-          input: [],
-          output: [],
-          errorRecords: []
-        },
-        batchData = previewData.snapshot;
-
-      angular.forEach(batchData, function (stageOutput) {
-        if (inputLane && stageOutput.output[inputLane] && stageOutput.output) {
-          stagePreviewData.input = stageOutput.output[inputLane];
-        } else if (outputLane && stageOutput.output[outputLane] && stageOutput.output) {
-          stagePreviewData.output = stageOutput.output[outputLane];
-          stagePreviewData.errorRecords = stageOutput.errorRecords;
-          stagePreviewData.stageErrors = stageOutput.stageErrors;
-        }
-      });
-
-      return stagePreviewData;
-    };
-
-    /**
-     * Fetch fields information from Preview Data.
-     *
-     * @param lanePreviewData
-     * @returns {Array}
-     */
-    var getFields = function(lanePreviewData) {
-      var recordValues = _.isArray(lanePreviewData) && lanePreviewData.length ? lanePreviewData[0].values : [],
-        fields = [];
-
-      angular.forEach(recordValues, function(typeObject, fieldName) {
-        fields.push({
-          name : fieldName,
-          type: typeObject.type,
-          sampleValue: typeObject.value
-        });
-      });
-
-      return fields;
-    };
 
     /**
      * Update Stage Preview Data when stage selection changed.
@@ -175,9 +123,10 @@ angular
      */
     var updateSnapshotDataForStage = function(stageInstance) {
       if($scope.snapshotMode) {
-        var stageInstances = $scope.pipelineConfig.stages;
+        var stageInstances = $scope.pipelineConfig.stages,
+          batchData = $scope.previewData.snapshot;
 
-        $scope.stagePreviewData = getPreviewDataForStage($scope.previewData, stageInstance);
+        $scope.stagePreviewData = previewService.getPreviewDataForStage(batchData, stageInstance);
 
         if(stageInstance.inputLanes && stageInstance.inputLanes.length) {
           $scope.previousStageInstances = _.filter(stageInstances, function(instance) {
@@ -193,23 +142,6 @@ angular
           });
         } else {
           $scope.nextStageInstances = [];
-        }
-      } else {
-        //In case of processors and targets run the preview to get input fields
-        // if current state of config is previewable.
-        if(stageInstance.uiInfo.stageType !== SOURCE_STAGE_TYPE) {
-          if(!stageInstance.uiInfo.inputFields || stageInstance.uiInfo.inputFields.length === 0) {
-            if($scope.pipelineConfig.previewable) {
-              api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
-                success(function (previewData) {
-                  var stagePreviewData = getPreviewDataForStage(previewData, stageInstance);
-                  stageInstance.uiInfo.inputFields = getFields(stagePreviewData.input);
-                }).
-                error(function(data) {
-                  $rootScope.common.errors = [data];
-                });
-            }
-          }
         }
       }
     };

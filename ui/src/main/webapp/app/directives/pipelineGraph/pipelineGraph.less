@@ -39,6 +39,7 @@ pipeline-graph {
         rect {
           fill: @default-pipeline-graph-selection-color;
           stroke: @default-pipeline-graph-selection-color;
+          opacity: 0.75;
         }
 
         circle {
@@ -85,13 +86,16 @@ pipeline-graph {
         rect {
           fill: @default-pipeline-graph-selection-color;
           stroke: @default-pipeline-graph-selection-color;
+          opacity: 1;
         }
       }
     }
 
     &.connect-node {
       rect{
-        fill: #BEFFFF;
+        fill: @default-pipeline-graph-selection-color;
+        stroke: @default-pipeline-graph-selection-color;
+        opacity: 0.75;
       }
     }
   }

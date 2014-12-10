@@ -5,8 +5,12 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('ConfigurationController', function ($scope, $rootScope, _, api) {
+  .controller('ConfigurationController', function ($scope, $rootScope, $q, $modal, _,
+                                                   api, previewService, pipelineConstant) {
+    var fieldsPathList;
+
     angular.extend($scope, {
+      fieldPaths: [],
 
       /**
        * Returns message for the give Configuration Object and Definition.
@@ -79,6 +83,9 @@ angular
         }
       },
 
+      /**
+       * Raw Source Preview
+       */
       rawSourcePreview: function() {
         api.pipelineAgent.rawSourcePreview($scope.activeConfigInfo.name, 0, $scope.detailPaneConfig.uiInfo.rawSource.configuration)
           .success(function(data) {
@@ -88,6 +95,163 @@ angular
           .error(function(data, status, headers, config) {
             $rootScope.common.errors = [data];
           });
+      },
+
+      /**
+       * Field Selector autocomplete callback functiton.
+       *
+       * @param query
+       * @returns {*}
+       */
+      loadFields: function(query) {
+        var deferred = $q.defer();
+
+        if(!fieldsPathList) {
+          console.log('loading first time');
+          previewService.getInputRecordsFromPreview($scope.activeConfigInfo.name, $scope.detailPaneConfig, 10).
+            then(
+              function (inputRecords) {
+                var fieldPaths = [];
+
+                if(_.isArray(inputRecords) && inputRecords.length) {
+                  getFieldPaths(inputRecords[0].value, fieldPaths);
+                  fieldsPathList = fieldPaths;
+                }
+
+                deferred.resolve(fieldPaths);
+              },
+              function(res) {
+                $rootScope.common.errors = [res.data];
+              }
+            );
+        } else {
+          console.log('Using already loaded one');
+          var filteredList =  _.filter(fieldsPathList, function(fieldPath) {
+            return fieldPath.text.indexOf(query) !== -1;
+          });
+
+          deferred.resolve(filteredList);
+        }
+
+        return deferred.promise;
+      },
+
+      showFieldSelectorModal: function(config) {
+        var modalInstance = $modal.open({
+          templateUrl: 'fieldSelectorModalContent.html',
+          controller: 'FieldSelectorModalInstanceController',
+          size: '',
+          backdrop: true,
+          resolve: {
+            currentSelectedPaths: function() {
+              return config.value;
+            },
+            activeConfigInfo: function () {
+              return $scope.activeConfigInfo;
+            },
+            detailPaneConfig: function() {
+              return $scope.detailPaneConfig;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (selectedFieldPaths) {
+          config.value = selectedFieldPaths;
+        });
       }
     });
+
+
+    var getFieldPaths = function(record, fieldPaths) {
+      angular.forEach(record.value, function(value, key) {
+        if(value.path) {
+          fieldPaths.push(value.path);
+        }
+        if(value.type === 'MAP' || value.type === 'LIST') {
+          getFieldPaths(value, fieldPaths);
+        }
+      });
+    };
+
+    /**
+     * Update Stage Preview Data when stage selection changed.
+     *
+     * @param stageInstance
+     */
+    var updateFieldDataForStage = function(stageInstance) {
+      //In case of processors and targets run the preview to get input fields & if current state of config is previewable.
+      if(stageInstance.uiInfo.stageType !== pipelineConstant.SOURCE_STAGE_TYPE && $scope.pipelineConfig.previewable) {
+
+        previewService.getInputRecordsFromPreview($scope.activeConfigInfo.name, stageInstance, 10).
+          then(function (inputRecords) {
+            if(_.isArray(inputRecords) && inputRecords.length) {
+              var fieldPaths = [];
+              getFieldPaths(inputRecords[0].value, fieldPaths);
+              $scope.fieldPaths = fieldPaths;
+            }
+          },
+          function(res) {
+            $rootScope.common.errors = [res.data];
+          });
+      }
+    };
+
+    $scope.$on('onStageSelection', function(event, stageInstance) {
+      if (stageInstance) {
+        fieldsPathList = undefined;
+
+        $scope.fieldPaths = [];
+        updateFieldDataForStage(stageInstance);
+      }
+    });
+
+
+  }).
+
+  controller('FieldSelectorModalInstanceController', function ($scope, $timeout, $modalInstance, previewService,
+                                                               currentSelectedPaths, activeConfigInfo, detailPaneConfig) {
+    angular.extend($scope, {
+      common: {
+        errors: []
+      },
+      showLoading: true,
+      recordObject: {},
+      selectedPath:_.reduce(currentSelectedPaths, function(obj, path){
+        obj[path] = true;
+        return obj;
+      }, {}),
+
+      save: function() {
+        console.log($scope.selectedPath);
+
+        var selectedFieldPaths = [];
+        angular.forEach($scope.selectedPath, function(value, key) {
+          if(value === true) {
+            selectedFieldPaths.push(key);
+          }
+        });
+
+        $modalInstance.close(selectedFieldPaths);
+      },
+
+      close: function() {
+        $modalInstance.dismiss('cancel');
+      }
+    });
+
+    $timeout(function() {
+      previewService.getInputRecordsFromPreview(activeConfigInfo.name, detailPaneConfig, 10).
+        then(
+          function (inputRecords) {
+            $scope.showLoading = false;
+            if(_.isArray(inputRecords) && inputRecords.length) {
+              $scope.recordObject = inputRecords[0];
+            }
+          },
+          function(res) {
+            $scope.showLoading = false;
+            $scope.common.errors = [res.data];
+          }
+        );
+    }, 300);
   });

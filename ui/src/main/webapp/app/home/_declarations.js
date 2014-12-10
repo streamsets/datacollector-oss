@@ -5,7 +5,6 @@
 angular
   .module('pipelineAgentApp.home', [
     'ngRoute',
-    'ngTagsInput',
     'jsonFormatter',
     'splitterDirectives',
     'tabDirectives',
@@ -18,7 +17,9 @@ angular
     'filereadDirectives',
     'angularMoment',
     'nvd3ChartDirectives',
-    'abbreviateNumberFilter'
+    'abbreviateNumberFilter',
+    'ngSanitize',
+    'ui.select'
   ])
   .constant('amTimeAgoConfig', {
     withoutSuffix: true

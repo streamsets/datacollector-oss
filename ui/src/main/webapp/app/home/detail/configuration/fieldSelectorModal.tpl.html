@@ -1,0 +1,34 @@
+<script type="text/ng-template" id="fieldSelectorModalContent.html">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title">Field Selector</h3>
+  </div>
+  <div class="modal-body field-selector-modal-body">
+    <ng-include src="'errorAlertContent.html'"></ng-include>
+
+    <div class="loading-div" ng-show="showLoading">
+      <i class="fa fa-spinner fa-spin fa-2x"></i>
+    </div>
+
+    <div ng-hide="showLoading">
+      <ul class="record-list">
+        <li class="record-list-item"
+            ng-repeat="(fieldName, recordValue) in recordObject.value.value"
+            ng-include="'recordTree'"
+            onload="selectable=true;selectedPath=selectedPath">
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" ng-click="save()" translate="global.form.save">
+      Save
+    </button>
+    <button type="reset" class="btn btn-default" ng-click="close()" translate="global.form.close">
+      Close
+    </button>
+  </div>
+</script>

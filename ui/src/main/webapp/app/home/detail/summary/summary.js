@@ -75,7 +75,7 @@ angular
 
   })
 
-  .controller('RecordProcessedPieChart', function($scope) {
+  .controller('RecordProcessedPieChartController', function($scope) {
     var colorArray = ['#5cb85c', '#FF3333'];
 
     angular.extend($scope, {
@@ -120,7 +120,7 @@ angular
 
   })
 
-  .controller('RecordProcessedBarChart', function($scope) {
+  .controller('RecordProcessedBarChartController', function($scope) {
     var colorArray = ['#1f77b4', '#5cb85c', '#FF3333'];
 
     angular.extend($scope, {

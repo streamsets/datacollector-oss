@@ -6,10 +6,12 @@ angular
   .module('pipelineAgentApp.home')
   .controller('ErrorModalInstanceController', function ($scope, $modalInstance, errorObj) {
 
-    $scope.errorObject = errorObj;
+    angular.extend($scope, {
+      errorObject: errorObj,
 
-    $scope.close = function () {
-      $modalInstance.dismiss('cancel');
-    };
+      close: function () {
+        $modalInstance.dismiss('cancel');
+      }
+    });
 
   });

@@ -112,54 +112,30 @@
               </div>
 
 
-
               <div ng-switch-when="FIELD_SELECTOR">
                 <label class="control-label">{{configDefinition.label}}</label>
-                <table class="table table-bordered"
-                       ng-if="configDefinition.model.modelType === 'FIELD_SELECTOR'">
-                  <thead>
-                  <tr>
-                    <th class="text-center col-md-2">{{configDefinition.label}}</th>
-                    <th class="col-md-5" translate="global.form.fieldName">Field Name</th>
-                    <th class="col-md-2" translate="global.form.type">Type</th>
-                    <th class="col-md-4" translate="global.form.sampleValue">Sample Value</th>
-                    <th class="col-md-1"></th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr ng-repeat="field in detailPaneConfig.uiInfo.inputFields">
-                    <td class="text-center">
-                      <input type="checkbox"
-                             ng-checked="detailPaneConfig.configuration[$parent.$index].value.indexOf(field.name) > -1"
-                             ng-click="toggleSelector(detailPaneConfig.configuration[$parent.$index].value, field.name)">
-                    </td>
-                    <td>{{field.name}}</td>
-                    <td>{{field.type}}</td>
-                    <td>{{field.sampleValue}}</td>
-                    <td>
-                      <span class="glyphicon glyphicon-minus-sign icon-danger pointer"
-                            ng-click="removeFieldSelector(detailPaneConfig.uiInfo.inputFields, $index, detailPaneConfig.configuration[$parent.$index].value)">
-                      </span>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
 
-                <div class="row">
-                  <div class="col-md-5">
-                    <input class="form-control input-sm" type="text"
-                           ng-enter="addNewField(detailPaneConfig.uiInfo.inputFields)"
-                           ng-model="newFieldName"
-                           placeholder="{{'global.form.fieldName.placeholder' | translate}}">
-                  </div>
-                  <div class="col-md-1">
-                    <button type="button" class="btn btn-primary btn-sm"
-                            ng-click="addNewField(detailPaneConfig.uiInfo.inputFields)">
-                      <span class="glyphicon glyphicon-plus"></span> {{'global.form.add' | translate}}
-                    </button>
-                  </div>
+                <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+                           ng-model="detailPaneConfig.configuration[$index].value">
+                  <ui-select-match
+                    placeholder="{{'admin.detailPane.configurationTab.selectFields' | translate}}">
+                    {{$item}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="fieldPath in fieldPaths.concat(detailPaneConfig.configuration[$index].value) | filter:$select.search">
+                    {{fieldPath}}
+                  </ui-select-choices>
+                </ui-select>
+
+                <div class="pull-right field-selector-btn">
+                  <button class="btn btn-primary btn-sm"
+                          translate="admin.detailPane.configurationTab.requiredFieldsSelectionButton"
+                          ng-click="showFieldSelectorModal(detailPaneConfig.configuration[$index])">
+                    Select Field Using Preview Data
+                  </button>
                 </div>
+
               </div>
+
 
             </div>
           </div>
@@ -208,3 +184,6 @@
   </div>
 
 </div>
+
+
+<ng-include src="'app/home/detail/configuration/fieldSelectorModal.tpl.html'"></ng-include>

@@ -8,7 +8,7 @@ angular.module('pipelineAgentApp', [
   'pipelineAgentApp.common',
   'pipelineAgentApp.home'
 ])
-  .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider){
+  .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, uiSelectConfig){
     $locationProvider.html5Mode(true);
     $routeProvider.otherwise({
       redirect: '/'
@@ -26,6 +26,8 @@ angular.module('pipelineAgentApp', [
 
     tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-i18n/angular-locale_{{locale}}.js');
     tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');
+
+    uiSelectConfig.theme = 'bootstrap';
 
   })
   .run(function ($location, $rootScope) {

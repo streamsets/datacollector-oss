@@ -5,6 +5,8 @@
       <span class="toggler {{isOpen ? 'open' : ''}}"
           ng-if="recordValue.type === 'MAP' || recordValue.type === 'LIST'"></span>
 
+      <input ng-if="selectable === true" type="checkbox" ng-model="selectedPath[recordValue.path]">
+
       <span class="field-name"> {{fieldName}}: </span>
     </div>
 

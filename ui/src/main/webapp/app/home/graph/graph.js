@@ -213,6 +213,7 @@ angular
         api.pipelineAgent.stopPipeline().
           success(function(res) {
             $rootScope.common.pipelineStatus = res;
+            $scope.$broadcast('updateErrorCount', {});
           }).
           error(function(data) {
             $rootScope.common.errors = [data];

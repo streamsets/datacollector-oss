@@ -12,16 +12,13 @@ angular
       }
     );
   }])
-  .controller('HomeController', function ($scope, $rootScope, $timeout, api, configuration, _, $q, $modal) {
+  .controller('HomeController', function ($scope, $rootScope, $timeout, api, configuration, _, $q, $modal, pipelineConstant) {
     var stageCounter = 0,
       timeout,
       dirty = false,
       ignoreUpdate = false,
       pipelineStatusTimer,
-      edges = [],
-      SOURCE_STAGE_TYPE = 'SOURCE',
-      PROCESSOR_STAGE_TYPE = 'PROCESSOR',
-      TARGET_STAGE_TYPE = 'TARGET';
+      edges = [];
 
     angular.extend($scope, {
       isPipelineRunning: false,
@@ -50,25 +47,6 @@ angular
         return function(d){
           return d3.format(',d')(d);
         };
-      },
-
-      /**
-       * Display stack trace in modal dialog.
-       *
-       * @param errorObj
-       */
-      showStackTrace: function(errorObj) {
-        $modal.open({
-          templateUrl: 'errorModalContent.html',
-          controller: 'ErrorModalInstanceController',
-          size: 'lg',
-          backdrop: true,
-          resolve: {
-            errorObj: function () {
-              return errorObj;
-            }
-          }
-        });
       },
 
       /**
@@ -176,15 +154,15 @@ angular
         $scope.stageLibraries = definitions.stages;
 
         $scope.sources = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return stageLibrary.type === SOURCE_STAGE_TYPE;
+          return stageLibrary.type === pipelineConstant.SOURCE_STAGE_TYPE;
         });
 
         $scope.processors = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return (stageLibrary.type === PROCESSOR_STAGE_TYPE);
+          return (stageLibrary.type === pipelineConstant.PROCESSOR_STAGE_TYPE);
         });
 
         $scope.targets = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return (stageLibrary.type === TARGET_STAGE_TYPE);
+          return (stageLibrary.type === pipelineConstant.TARGET_STAGE_TYPE);
         });
 
         //Pipelines
@@ -307,7 +285,7 @@ angular
       edges = [];
       $scope.sourceExists = false;
       angular.forEach($scope.pipelineConfig.stages, function (sourceStageInstance) {
-        if(sourceStageInstance.uiInfo.stageType === SOURCE_STAGE_TYPE) {
+        if(sourceStageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
           $scope.sourceExists = true;
         }
 
@@ -517,6 +495,7 @@ angular
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
       if(configInfo) {
         $scope.activeConfigInfo = configInfo;
+        $scope.closePreview();
         loadPipelineConfig($scope.activeConfigInfo.name);
       } else {
         //No Pipieline config exists
@@ -563,8 +542,6 @@ angular
     $rootScope.$watch('common.pipelineMetrics', function() {
       if($scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
         $scope.$broadcast('updateErrorCount', getStageErrorCounts());
-      } else {
-        $scope.$broadcast('updateErrorCount', {});
       }
     });
 
