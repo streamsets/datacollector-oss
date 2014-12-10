@@ -160,13 +160,25 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
         offset == -1;
   }
 
-  private boolean isFileFromSpoolerEligible(File spoolerFile, String offsetFile) {
-    return
-        // there is no new file from spooler, we return yes to break the loop
-        spoolerFile == null ||
-        // file reported by offset tracking is NULL, means we are starting from zero
-        // or the file from spooler is lexicographically equal or greater than the one reported via offset tracking
-        (offsetFile == null || spoolerFile.getName().compareTo(offsetFile) >= 0);
+  private boolean isFileFromSpoolerEligible(File spoolerFile, String offsetFile, long offsetInFile) {
+    if (spoolerFile == null) {
+      // there is no new file from spooler, we return yes to break the loop
+      return true;
+    }
+    if (offsetFile == null) {
+      // file reported by offset tracking is NULL, means we are starting from zero
+      return true;
+    }
+    if (spoolerFile.getName().compareTo(offsetFile) == 0 && offsetInFile != -1) {
+      // file reported by spooler is equal than current offset file
+      // and we didn't fully process (not -1) the current file
+      return true;
+    }
+    if (spoolerFile.getName().compareTo(offsetFile) > 0) {
+      // file reported by spooler is newer than current offset file
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -185,7 +197,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
                      nextAvailFile.getName(), file);
           }
           nextAvailFile = getSpooler().poolForFile(poolingTimeoutSecs, TimeUnit.SECONDS);
-        } while (!isFileFromSpoolerEligible(nextAvailFile, file));
+        } while (!isFileFromSpoolerEligible(nextAvailFile, file, offset));
 
         if (nextAvailFile == null) {
           // no file to process

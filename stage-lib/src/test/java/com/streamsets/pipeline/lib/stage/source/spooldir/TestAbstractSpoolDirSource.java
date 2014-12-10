@@ -209,13 +209,15 @@ public class TestAbstractSpoolDirSource {
       Assert.assertEquals(source.createSourceOffset("file-0.log", -1), offset);
       Assert.assertTrue(source.produceCalled);
 
-      source.produceCalled = false;
       source.file = file2;
+      offset = source.produce(source.createSourceOffset("file-0.log", -1), 10, Mockito.mock(BatchMaker.class));
+      source.produceCalled = false;
       source.offset = 0;
       source.offsetIncrement = 0;
       offset = source.produce(offset, 10, Mockito.mock(BatchMaker.class));
-      Assert.assertEquals(source.createSourceOffset("file-1.log", 0), offset);
-      Assert.assertTrue(source.produceCalled);
+      Assert.assertEquals(source.createSourceOffset("file-1.log", -1), offset);
+      Assert.assertFalse(source.produceCalled);
+
 
     } finally {
       source.destroy();
