@@ -84,10 +84,15 @@ public class CsvSpoolDirSource extends AbstractSpoolDirSource {
     OverrunCsvParser parser = null;
     if (hasHeaderLine) {
       if (previousFile == null || !previousFile.equals(file)) {
+        // first file to process or new file, if first to process we don't have the headers, if file is different
+        // from the previous produce() call we need to re-read the headers in case they are different.
         try (Reader reader = new FileReader(file)) {
           parser = new OverrunCsvParser(reader, csvFormat);
           headers = parser.getHeaders();
-          if (headers != null) {
+          if (!convertToMap && headers != null) {
+            // CSV is not been converted to a map (values keyed with the column name) but instead we keep the
+            // values as an array and we set the headers as another array. We pre-compute the headers List<Field>
+            // on per file basis, not to do it on every batch.
             headerFields = new ArrayList<>(headers.length);
             for (String header : headers) {
               headerFields.add(Field.create(header));
@@ -111,7 +116,7 @@ public class CsvSpoolDirSource extends AbstractSpoolDirSource {
 
   protected long produce(String sourceFile, long offset, OverrunCsvParser parser, int maxBatchSize,
       BatchMaker batchMaker) throws IOException, BadSpoolFileException {
-    for (int i = 0; i < maxBatchSize; i++) {
+      for (int i = 0; i < maxBatchSize; i++) {
       try {
         String[] columns = parser.read();
         if (columns != null) {
