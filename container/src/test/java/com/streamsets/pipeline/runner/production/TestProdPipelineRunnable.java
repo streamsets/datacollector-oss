@@ -88,7 +88,7 @@ public class TestProdPipelineRunnable {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
     ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "xyz", "1.0");
 
-    runnable.stop();
+    runnable.stop(false);
     Assert.assertTrue(pipeline.wasStopped());
 
     //Stops after the first batch
@@ -126,7 +126,7 @@ public class TestProdPipelineRunnable {
     Thread t = new Thread(runnable);
     t.start();
     latch.await();
-    runnable.stop();
+    runnable.stop(false);
     t.join();
     Assert.assertTrue(stopInterrupted);
   }

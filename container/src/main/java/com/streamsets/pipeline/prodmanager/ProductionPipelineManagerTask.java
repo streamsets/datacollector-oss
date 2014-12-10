@@ -55,13 +55,15 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private static final String PRODUCTION_PIPELINE_RUNNER = "ProductionPipelineRunner";
   private static final String RUN_INFO_DIR = "runInfo";
 
-  private static final Map<State, Set<State>> VALID_TRANSITIONS = ImmutableMap.of(
-      State.STOPPED, (Set<State>) ImmutableSet.of(State.RUNNING),
-      State.FINISHED, (Set<State>) ImmutableSet.of(State.RUNNING),
-      State.RUNNING, (Set<State>) ImmutableSet.of(State.STOPPING, State.FINISHED),
-      State.STOPPING, (Set<State>) ImmutableSet.of(State.STOPPING /*Try stopping many times, this should be no-op*/
-          , State.STOPPED),
-      State.ERROR, (Set<State>) ImmutableSet.of(State.RUNNING, State.STOPPED));
+  private static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
+    .put(State.STOPPED, ImmutableSet.of(State.RUNNING))
+    .put(State.FINISHED, ImmutableSet.of(State.RUNNING))
+    .put(State.RUNNING, ImmutableSet.of(State.STOPPING, State.FINISHED))
+    .put(State.STOPPING, ImmutableSet.of(State.STOPPING /*Try stopping many times, this should be no-op*/
+        , State.STOPPED, State.NODE_PROCESS_SHUTDOWN))
+    .put(State.ERROR, ImmutableSet.of(State.RUNNING, State.STOPPED))
+    .put(State.NODE_PROCESS_SHUTDOWN, ImmutableSet.of(State.RUNNING))
+    .build();
 
   private final RuntimeInfo runtimeInfo;
   private final StateTracker stateTracker;
@@ -110,14 +112,26 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(PRODUCTION_PIPELINE_RUNNER)
         .setDaemon(true).build());
     PipelineState ps = getPipelineState();
-    if(State.RUNNING.equals(ps.getState())) {
+    if(State.RUNNING.equals(ps.getState())){
+      //Restart after a non orderly shutdown [like kill -9]
       try {
         LOG.debug("Starting pipeline {} {}", ps.getName(), ps.getRev());
         handleStartRequest(ps.getName(), ps.getRev());
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
+    } else if (State.NODE_PROCESS_SHUTDOWN.equals(ps.getState())) {
+      //Restart after an orderly shutdown [like Ctrl - C]
+      try {
+        LOG.debug("Starting pipeline {} {}", ps.getName(), ps.getRev());
+        //Start pipeline changes state from NODE_PROCESS_SHUTDOWN to RUNNING where as handleStartRequest foes not.
+        //We need to change state here
+        startPipeline(ps.getName(), ps.getRev());
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
     } else {
+      //Normal start/restart
       //create the pipeline instance. This was the pipeline in the context before the manager shutdown previously
       try {
         prodPipeline = createProductionPipeline(ps.getName(), ps.getRev(), configuration, pipelineStore, stageLibrary);
@@ -136,7 +150,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     if(State.RUNNING.equals(ps.getState())) {
       LOG.debug("Stopping pipeline {} {}", ps.getName(), ps.getRev());
       try {
-        stopPipeline();
+        stopPipeline(true /*shutting down node process*/);
       } catch (PipelineManagerException e) {
         throw new RuntimeException(e);
       }
@@ -235,12 +249,12 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     }
   }
 
-  public PipelineState stopPipeline() throws PipelineManagerException {
+  public PipelineState stopPipeline(boolean nodeProcessShutdown) throws PipelineManagerException {
     synchronized (pipelineMutex) {
       validateStateTransition(State.STOPPING);
       setState(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING, Constants.STOP_PIPELINE_MESSAGE);
       PipelineState pipelineState = getPipelineState();
-      handleStopRequest();
+      handleStopRequest(nodeProcessShutdown);
       return pipelineState;
     }
   }
@@ -259,10 +273,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     LOG.debug("Started pipeline {} {}", name, rev);
   }
 
-  private void handleStopRequest() {
+  private void handleStopRequest(boolean nodeProcessShutdown) {
     LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
     if(pipelineRunnable != null) {
-      pipelineRunnable.stop();
+      pipelineRunnable.stop(nodeProcessShutdown);
       pipelineRunnable = null;
     }
     LOG.debug("Stopped pipeline");

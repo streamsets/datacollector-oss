@@ -218,7 +218,7 @@ public class TestPipelineManagerResource extends JerseyTest {
       }
 
       try {
-        Mockito.when(pipelineManager.stopPipeline()).thenReturn(
+        Mockito.when(pipelineManager.stopPipeline(false)).thenReturn(
             new PipelineState(PIPELINE_NAME, "2.0", State.STOPPED, "The pipeline is not running", System.currentTimeMillis()));
       } catch (PipelineManagerException e) {
         e.printStackTrace();

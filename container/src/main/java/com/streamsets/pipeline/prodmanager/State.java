@@ -11,5 +11,6 @@ public enum State {
   RUNNING,
   STOPPING,
   ERROR,
-  FINISHED
+  FINISHED,
+  NODE_PROCESS_SHUTDOWN
 }

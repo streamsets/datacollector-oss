@@ -12,7 +12,6 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.container.ErrorMessage;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.MockStages;
-import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -99,7 +98,7 @@ public class TestProductionRun {
     Assert.assertEquals(State.RUNNING, pipelineState.getState());
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
 
-    pipelineState = manager.stopPipeline();
+    pipelineState = manager.stopPipeline(false);
     Assert.assertEquals(State.STOPPING, pipelineState.getState());
     //The pipeline could be stopping or has already been stopped by now
     Assert.assertTrue(manager.getPipelineState().getState() == State.STOPPING ||
@@ -115,13 +114,13 @@ public class TestProductionRun {
 
     manager.stop();
     Assert.assertTrue(manager.getPipelineState().getState() == State.STOPPING ||
-        manager.getPipelineState().getState() == State.STOPPED);
+        manager.getPipelineState().getState() == State.NODE_PROCESS_SHUTDOWN);
 
-    waitForPipelineToStop();
+    waitForNodeProcessShutdown();
 
     manager.init();
     //Stopping the pipeline also stops the pipeline
-    Assert.assertEquals(State.STOPPED, manager.getPipelineState().getState());
+    Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
 
   }
 
@@ -152,17 +151,17 @@ public class TestProductionRun {
   @Test()
   public void testGetHistory() throws PipelineStoreException, PipelineManagerException, PipelineRuntimeException, StageException, InterruptedException {
     manager.startPipeline(MY_PIPELINE, "0");
-    manager.stopPipeline();
+    manager.stopPipeline(false);
 
     waitForPipelineToStop();
 
     manager.startPipeline(MY_PIPELINE, "0");
-    manager.stopPipeline();
+    manager.stopPipeline(false);
 
     waitForPipelineToStop();
 
     manager.startPipeline(MY_PIPELINE, "0");
-    manager.stopPipeline();
+    manager.stopPipeline(false);
 
     waitForPipelineToStop();
 
@@ -184,7 +183,7 @@ public class TestProductionRun {
   public void testGetHistoryNonExistingPipeline() throws PipelineStoreException, PipelineManagerException,
       PipelineRuntimeException, StageException, InterruptedException {
     manager.startPipeline(MY_PIPELINE, "0");
-    manager.stopPipeline();
+    manager.stopPipeline(false);
 
     waitForPipelineToStop();
 
@@ -228,7 +227,7 @@ public class TestProductionRun {
     Assert.assertNotNull(errorRecords);
     Assert.assertEquals(false, errorRecords.isEmpty());
 
-    manager.stopPipeline();
+    manager.stopPipeline(false);
     waitForPipelineToStop();
 
     InputStream erStream = manager.getErrors(MY_PIPELINE, "0");
@@ -254,7 +253,7 @@ public class TestProductionRun {
     Assert.assertNotNull(errorRecords);
     Assert.assertEquals(false, errorRecords.isEmpty());
 
-    manager.stopPipeline();
+    manager.stopPipeline(false);
     waitForPipelineToStop();
 
     //check there are error records
@@ -284,7 +283,7 @@ public class TestProductionRun {
     manager.startPipeline(MY_PIPELINE, "0");
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
     waitForErrorRecords(MY_PROCESSOR);
-    manager.stopPipeline();
+    manager.stopPipeline(false);
     waitForPipelineToStop();
 
     Assert.assertNotNull(manager.getOffset());
@@ -299,7 +298,7 @@ public class TestProductionRun {
     manager.startPipeline(MY_PIPELINE, "0");
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
     waitForErrorRecords(MY_PROCESSOR);
-    manager.stopPipeline();
+    manager.stopPipeline(false);
     waitForPipelineToStop();
 
     Assert.assertNotNull(manager.getOffset());
@@ -329,7 +328,7 @@ public class TestProductionRun {
     Assert.assertNotNull(errorMessages);
     Assert.assertEquals(false, errorMessages.isEmpty());
 
-    manager.stopPipeline();
+    manager.stopPipeline(false);
     waitForPipelineToStop();
 
     InputStream erStream = manager.getErrors(MY_PIPELINE, "0");
@@ -430,7 +429,7 @@ public class TestProductionRun {
 
   private void stopPipelineIfNeeded() throws InterruptedException, PipelineManagerException {
     if(manager.getPipelineState().getState() == State.RUNNING) {
-      manager.stopPipeline();
+      manager.stopPipeline(false);
     }
 
     while(manager.getPipelineState().getState() != State.FINISHED &&
@@ -442,6 +441,12 @@ public class TestProductionRun {
 
   private void waitForPipelineToStop() throws InterruptedException {
     while(manager.getPipelineState().getState() != State.STOPPED) {
+      Thread.sleep(5);
+    }
+  }
+
+  private void waitForNodeProcessShutdown() throws InterruptedException {
+    while(manager.getPipelineState().getState() != State.NODE_PROCESS_SHUTDOWN) {
       Thread.sleep(5);
     }
   }

@@ -63,7 +63,7 @@ public class PipelineManagerResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response stopPipeline() throws PipelineManagerException {
 
-    PipelineState ps = pipelineManager.stopPipeline();
+    PipelineState ps = pipelineManager.stopPipeline(false);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(ps).build();
   }
 

@@ -21,6 +21,7 @@ public class ProductionPipelineRunnable implements Runnable {
   private final String name;
   private final String rev;
   private volatile Thread runningThread;
+  private volatile boolean nodeProcessShutdown;
 
   public ProductionPipelineRunnable(ProductionPipelineManagerTask pipelineManager, ProductionPipeline pipeline,
                                     String name, String rev) {
@@ -50,12 +51,19 @@ public class ProductionPipelineRunnable implements Runnable {
     }
 
     if(pipeline.wasStopped()) {
-      //pipeline was stopped while it was running
+      //pipeline was stopped while it was running, could be pipeline stop or node process shutdown [Ctrl-C]
       try {
-        pipelineManager.validateStateTransition(State.STOPPED);
-        pipelineManager.setState(name, rev, State.STOPPED,
-          Utils.format("The pipeline was stopped. The last committed source offset is {}."
+        if(this.nodeProcessShutdown) {
+          pipelineManager.validateStateTransition(State.NODE_PROCESS_SHUTDOWN);
+          pipelineManager.setState(name, rev, State.NODE_PROCESS_SHUTDOWN,
+            Utils.format("The pipeline was stopped because the node process was shutdown. " +
+              "The last committed source offset is {}." , pipeline.getCommittedOffset()));
+        } else {
+          pipelineManager.validateStateTransition(State.STOPPED);
+          pipelineManager.setState(name, rev, State.STOPPED,
+            Utils.format("The pipeline was stopped. The last committed source offset is {}."
               , pipeline.getCommittedOffset()));
+        }
       } catch (PipelineManagerException e) {
         LOG.error(Utils.format("An exception occurred while stopping the pipeline, {}", e.getMessage()));
       }
@@ -70,7 +78,8 @@ public class ProductionPipelineRunnable implements Runnable {
     }
   }
 
-  public void stop() {
+  public void stop(boolean nodeProcessShutdown) {
+    this.nodeProcessShutdown = nodeProcessShutdown;
     pipeline.stop();
     Thread thread = runningThread;
     if (thread != null) {

@@ -119,7 +119,7 @@ public class TestPipelineManagerTask {
   @Test(expected = PipelineManagerException.class)
   public void testStopPipelineWhenNotRunning() throws PipelineManagerException, StageException, PipelineRuntimeException, PipelineStoreException {
     Assert.assertEquals(State.STOPPED, manager.getPipelineState().getState());
-    manager.stopPipeline();
+    manager.stopPipeline(false);
   }
 
 }
