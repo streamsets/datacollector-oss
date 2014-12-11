@@ -386,14 +386,18 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    */
   private List<VariableElement> getAllFields(TypeElement typeElement) {
     List<Element> enclosedElements = new ArrayList<>();
-    enclosedElements.addAll(typeElement.getEnclosedElements());
-    for(TypeMirror typeMirror : getAllSuperTypes(typeElement)) {
+    List<TypeMirror> allSuperTypes = getAllSuperTypes(typeElement);
+    //We like the fields to be returned in the order of their declaration in the class.
+    //Also the properties declared in the base class should precede the properties declared in the derived class.
+    for(int i = allSuperTypes.size() -1; i>=0; i--) {
+      TypeMirror typeMirror = allSuperTypes.get(i);
       //All super types are TypeElements, getAllSuperTypes method already does this check
       TypeElement t = (TypeElement)processingEnv.getTypeUtils().asElement(typeMirror);
       if(t.getEnclosedElements() != null) {
         enclosedElements.addAll(t.getEnclosedElements());
       }
     }
+    enclosedElements.addAll(typeElement.getEnclosedElements());
     List<VariableElement> variableElements = ElementFilter.fieldsIn(enclosedElements);
     return variableElements;
   }
