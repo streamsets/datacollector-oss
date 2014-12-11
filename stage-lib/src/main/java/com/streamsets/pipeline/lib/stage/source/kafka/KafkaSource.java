@@ -131,8 +131,15 @@ public class KafkaSource extends BaseSource {
       //create record by parsing the message payload based on the pay load type configuration
       //As of now handle just String
       byte[] payload = partitionToPayloadMap.getPayload();
+      recordCounter++;
+      if(recordCounter == maxBatchSize) {
+        //even though kafka has many messages, we need to cap the number of records to a value indicated by maxBatchSize.
+        //return the offset of the previous record so that the next time we get start from this message which did not
+        //make it to this batch.
+        break;
+      }
       Record record = getContext().createRecord(topic + "." + partition + "." + System.currentTimeMillis() + "."
-        + recordCounter++);
+        + recordCounter);
       if (payloadType == PayloadType.STRING) {
         //TODO: Is the last message complete?
         record.set(Field.create(new String(payload)));

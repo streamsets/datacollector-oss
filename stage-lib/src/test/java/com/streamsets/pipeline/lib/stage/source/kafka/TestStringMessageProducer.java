@@ -36,7 +36,7 @@ public class TestStringMessageProducer {
       long runtime = new Date().getTime();
       String ip = "192.168.2.0" + rnd.nextInt(255);
       String msg = runtime + ",www.example.com," + ip;
-      KeyedMessage<String, String> data = new KeyedMessage<>("ssTopic3", ip, msg);
+      KeyedMessage<String, String> data = new KeyedMessage<>("mytopic", ip, msg);
       producer.send(data);
       System.out.println("Record counter: " + counter++);
     }
