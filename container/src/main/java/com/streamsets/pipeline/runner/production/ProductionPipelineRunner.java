@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
@@ -57,6 +58,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   private final Timer batchProcessingTimer;
   private final Meter batchCountMeter;
+  private final Histogram batchInputRecordsHistogram;
+  private final Histogram batchOutputRecordsHistogram;
+  private final Histogram batchErrorRecordsHistogram;
+  private final Histogram batchErrorsHistogram;
   private final Meter batchInputRecordsMeter;
   private final Meter batchOutputRecordsMeter;
   private final Meter batchErrorRecordsMeter;
@@ -84,6 +89,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
     batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount");
+    batchInputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.inputRecordsPerBatch");
+    batchOutputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.outputRecordsPerBatch");
+    batchErrorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorRecordsPerBatch");
+    batchErrorsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorsPerBatch");
     batchInputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchInputRecords");
     batchOutputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchOutputRecords");
     batchErrorRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorRecords");
@@ -179,6 +188,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     batchProcessingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     batchCountMeter.mark();
+    batchInputRecordsHistogram.update(pipeBatch.getInputRecords());
+    batchOutputRecordsHistogram.update(pipeBatch.getOutputRecords());
+    batchErrorRecordsHistogram.update(pipeBatch.getErrorRecords());
+    batchErrorsHistogram.update(pipeBatch.getErrorMessages());
     batchInputRecordsMeter.mark(pipeBatch.getInputRecords());
     batchOutputRecordsMeter.mark(pipeBatch.getOutputRecords());
     batchErrorRecordsMeter.mark(pipeBatch.getErrorRecords());
