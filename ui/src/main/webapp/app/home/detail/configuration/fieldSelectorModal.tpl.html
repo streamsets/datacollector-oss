@@ -9,9 +9,7 @@
   <div class="modal-body field-selector-modal-body">
     <ng-include src="'errorAlertContent.html'"></ng-include>
 
-    <div class="loading-div" ng-show="showLoading">
-      <i class="fa fa-spinner fa-spin fa-2x"></i>
-    </div>
+    <div show-loading="showLoading"></div>
 
     <div ng-hide="showLoading">
       <ul class="record-list">
@@ -22,9 +20,14 @@
         </li>
       </ul>
     </div>
+
+    <label class="label-warning"
+           ng-show="noPreviewRecord"
+           translate="admin.detailPane.configurationTab.noRecord">No Preview Record</label>
+
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-primary" ng-click="save()" translate="global.form.save">
+    <button type="submit" class="btn btn-primary" ng-hide="showLoading || noPreviewRecord" ng-click="save()" translate="global.form.save">
       Save
     </button>
     <button type="reset" class="btn btn-default" ng-click="close()" translate="global.form.close">

@@ -93,7 +93,8 @@
       "configurationTab": {
         "rawSourcePreview": "Raw Source Preview",
         "requiredFieldsSelectionButton": "Select Field Using Preview Data",
-        "selectFields": "Select Fields..."
+        "selectFields": "Select Fields...",
+        "noRecord": "No Preview Record."
       },
       "general": "General",
       "rules": "Rules",

@@ -149,6 +149,7 @@ angular
       revertChanges: function() {
         $scope.previewData = angular.copy(previewDataBackup);
         $scope.previewDataUpdated = false;
+        $scope.stepExecuted = false;
 
         var firstStageInstance = $scope.pipelineConfig.stages[0];
         $scope.changeStageSelection(firstStageInstance);

@@ -215,6 +215,7 @@ angular
         errors: []
       },
       showLoading: true,
+      noPreviewRecord: false,
       recordObject: {},
       selectedPath:_.reduce(currentSelectedPaths, function(obj, path){
         obj[path] = true;
@@ -246,6 +247,8 @@ angular
             $scope.showLoading = false;
             if(_.isArray(inputRecords) && inputRecords.length) {
               $scope.recordObject = inputRecords[0];
+            } else {
+              $scope.noPreviewRecord = true;
             }
           },
           function(res) {
