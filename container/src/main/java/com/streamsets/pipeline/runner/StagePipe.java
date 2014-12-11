@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.codahale.metrics.Counter;
+import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
@@ -29,6 +30,10 @@ public class StagePipe extends Pipe {
   private Meter outputRecordsMeter;
   private Meter errorRecordsMeter;
   private Meter stageErrorMeter;
+  private Histogram inputRecordsHistogram;
+  private Histogram outputRecordsHistogram;
+  private Histogram errorRecordsHistogram;
+  private Histogram stageErrorsHistogram;
   private Map<String, Counter> outputRecordsPerLaneCounter;
   private Map<String, Meter> outputRecordsPerLaneMeter;
 
@@ -50,6 +55,10 @@ public class StagePipe extends Pipe {
     outputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".outputRecords");
     errorRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".errorRecords");
     stageErrorMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".stageErrors");
+    inputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".inputRecords");
+    outputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".outputRecords");
+    errorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".errorRecords");
+    stageErrorsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".stageErrors");
     if (getStage().getConfiguration().getOutputLanes().size() > 1) {
       outputRecordsPerLaneCounter = new HashMap<>();
       outputRecordsPerLaneMeter = new HashMap<>();
@@ -68,8 +77,6 @@ public class StagePipe extends Pipe {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     BatchImpl batchImpl = pipeBatch.getBatch(this);
     ErrorSink errorSink = pipeBatch.getErrorSink();
-    inputRecordsCounter.inc(batchImpl.getSize());
-    inputRecordsMeter.mark(batchImpl.getSize());
 
     RequiredFieldsErrorPredicateSink predicateSink = new RequiredFieldsErrorPredicateSink(
         getStage().getInfo().getInstanceName(), getStage().getRequiredFields(), errorSink);
@@ -82,14 +89,26 @@ public class StagePipe extends Pipe {
       pipeBatch.setNewOffset(newOffset);
     }
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+
+    inputRecordsCounter.inc(batchImpl.getSize());
+    inputRecordsMeter.mark(batchImpl.getSize());
+    inputRecordsHistogram.update(batchImpl.getSize());
+
     outputRecordsCounter.inc(batchMaker.getSize());
     outputRecordsMeter.mark(batchMaker.getSize());
-    int stageErrorRecordCount = errorSink.getErrorRecords(getStage().getInfo().getInstanceName()).size();
-    errorRecordsCounter.inc(predicateSink.size() + stageErrorRecordCount);
-    errorRecordsMeter.mark(predicateSink.size() + stageErrorRecordCount);
+    outputRecordsHistogram.update(batchMaker.getSize());
+
+    int stageErrorRecordCount = errorSink.getErrorRecords(getStage().getInfo().getInstanceName()).size() +
+                                predicateSink.size();
+    errorRecordsCounter.inc(stageErrorRecordCount);
+    errorRecordsMeter.mark(stageErrorRecordCount);
+    errorRecordsHistogram.update(stageErrorRecordCount);
+
     int stageErrorsCount = errorSink.getStageErrors(getStage().getInfo().getInstanceName()).size();
     stageErrorCounter.inc(stageErrorsCount);
     stageErrorMeter.mark(stageErrorsCount);
+    stageErrorsHistogram.update(stageErrorsCount);
+
     if (getStage().getConfiguration().getOutputLanes().size() > 1) {
       for (String lane : getStage().getConfiguration().getOutputLanes()) {
         outputRecordsPerLaneCounter.get(lane).inc(batchMaker.getSize(lane));
