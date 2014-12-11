@@ -6,13 +6,20 @@
 package com.streamsets.pipeline.util;
 
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.util.Configuration;
+import org.apache.commons.io.IOUtils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.Writer;
+import java.util.UUID;
 
 public class TestConfiguration {
 
@@ -129,6 +136,51 @@ public class TestConfiguration {
     Assert.assertEquals("S", conf.get("a.s", "D"));
     Assert.assertEquals("XX", conf.get("a.ss", "D"));
 
+  }
+
+  @After
+  public void cleanUp() {
+    Configuration.setFileRefsBaseDir(null);
+  }
+
+  @Test
+  public void testFileRefs() throws IOException {
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    Configuration.setFileRefsBaseDir(dir);
+
+    Writer writer = new FileWriter(new File(dir, "hello.txt"));
+    IOUtils.write("secret", writer);
+    writer.close();
+    Configuration conf = new Configuration();
+
+    conf.set("a", "@hello.txt@");
+    Assert.assertEquals("secret", conf.get("a", null));
+
+    writer = new FileWriter(new File(dir, "config.properties"));
+    conf.save(writer);
+    writer.close();
+
+    conf = new Configuration();
+    Reader reader = new FileReader(new File(dir, "config.properties"));
+    conf.load(reader);
+    reader.close();
+
+    Assert.assertEquals("secret", conf.get("a", null));
+
+    reader = new FileReader(new File(dir, "config.properties"));
+    StringWriter stringWriter = new StringWriter();
+    IOUtils.copy(reader, stringWriter);
+    reader.close();
+    Assert.assertTrue(stringWriter.toString().contains("@hello.txt@"));
+    Assert.assertFalse(stringWriter.toString().contains("secret"));
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testFileRefsNotConfigured() throws IOException {
+    Configuration.setFileRefsBaseDir(null);
+    Configuration conf = new Configuration();
+    conf.set("a", "@hello.txt@");
   }
 
 }

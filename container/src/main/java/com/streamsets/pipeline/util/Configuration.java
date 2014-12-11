@@ -9,9 +9,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,27 +23,91 @@ import java.util.Properties;
 import java.util.Set;
 
 public class Configuration {
-  private Map<String, String> map;
+  private static File fileRefsBaseDir;
+
+  public static void setFileRefsBaseDir(File dir) {
+    fileRefsBaseDir = dir;
+  }
+
+  private interface Ref {
+    public String getValue();
+  }
+
+  private static class StringRef implements Ref {
+    private String value;
+
+    public StringRef(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return value;
+    }
+  }
+
+  private static class FileRef implements Ref {
+    private String file;
+
+    public FileRef(String file) {
+      Preconditions.checkState(fileRefsBaseDir != null, "fileRefsBaseDir has not been set");
+      this.file = file;
+    }
+
+    public String getFile() {
+      return file;
+    }
+
+    @Override
+    public String getValue() {
+      try (BufferedReader br = new BufferedReader(new FileReader(new File(fileRefsBaseDir, file)))) {
+        return br.readLine();
+      } catch (IOException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+
+    @Override
+    public String toString() {
+      return Utils.format("FileRef '{}'", file);
+    }
+
+  }
+
+  private Map<String, Ref> map;
 
   public Configuration() {
-    map = new LinkedHashMap<>();
+    this(new LinkedHashMap<String, Ref>());
+  }
+
+  private Configuration(Map<String, Ref> map) {
+    this.map = map;
   }
 
   public Configuration getSubSetConfiguration(String namePrefix) {
     Preconditions.checkNotNull(namePrefix, "namePrefix cannot be null");
-    Configuration conf = new Configuration();
-    for (Map.Entry<String, String> entry : map.entrySet()) {
+    Map<String, Ref> subSetMap = new LinkedHashMap<>();
+    for (Map.Entry<String, Ref> entry : map.entrySet()) {
       if (entry.getKey().startsWith(namePrefix)) {
-        conf.set(entry.getKey(), entry.getValue());
+        subSetMap.put(entry.getKey(), entry.getValue());
       }
     }
-    return conf;
+    return new Configuration(subSetMap);
   }
 
 
   @JsonValue
   public Map<String, String> getValues() {
-    return map;
+    Map<String, String> values = new LinkedHashMap<>();
+    for (Map.Entry<String, Ref> entry : map.entrySet()) {
+      values.put(entry.getKey(), entry.getValue().getValue());
+    }
+    return values;
   }
 
   public Set<String> getNames() {
@@ -54,7 +122,7 @@ public class Configuration {
   public void set(String name, String value) {
     Preconditions.checkNotNull(name, "name cannot be null");
     Preconditions.checkNotNull(value, "value cannot be null, use unset");
-    map.put(name, value);
+    map.put(name, createRef(value));
   }
 
   public void unset(String name) {
@@ -76,7 +144,7 @@ public class Configuration {
 
   private String get(String name) {
     Preconditions.checkNotNull(name, "name cannot be null");
-    return map.get(name);
+    return (map.containsKey(name)) ? map.get(name).getValue() : null;
   }
 
   public String get(String name, String defaultValue) {
@@ -104,15 +172,32 @@ public class Configuration {
     Properties props = new Properties();
     props.load(reader);
     for (Map.Entry entry : props.entrySet()) {
-      set((String) entry.getKey(), (String) entry.getValue());
+      map.put((String) entry.getKey(), createRef((String) entry.getValue()));
     }
     reader.close();
+  }
+
+  private Ref createRef(String value) {
+    Ref ref;
+    if (value.startsWith("@") && value.endsWith("@")) {
+      ref = new FileRef(value.substring(1, value.length() -1));
+    } else {
+      ref = new StringRef(value);
+    }
+    return ref;
   }
 
   public void save(Writer writer) throws IOException {
     Preconditions.checkNotNull(writer, "writer cannot be null");
     Properties props = new Properties();
-    props.putAll(map);
+    for (Map.Entry<String, Ref> entry : map.entrySet()) {
+      if (entry.getValue() instanceof StringRef) {
+        props.setProperty(entry.getKey(), entry.getValue().getValue());
+      } else if (entry.getValue() instanceof FileRef) {
+        FileRef fileRef = (FileRef) entry.getValue();
+        props.setProperty(entry.getKey(), "@" + fileRef.getFile() + "@");
+      }
+    }
     props.store(writer, "");
     writer.close();
   }

@@ -60,6 +60,18 @@
     <fileSet>
       <directory>${basedir}/src/main/etc</directory>
       <outputDirectory>/etc</outputDirectory>
+      <excludes>
+        <exclude>*-password.txt</exclude>
+      </excludes>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/src/main/etc</directory>
+      <outputDirectory>/etc</outputDirectory>
+      <includes>
+        <include>*-password.txt</include>
+      </includes>
+      <fileMode>0600</fileMode>
     </fileSet>
 
     <!-- log dir -->

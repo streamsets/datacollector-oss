@@ -36,6 +36,7 @@ public class RuntimeModule {
 
   @Provides @Singleton
   public Configuration provideConfiguration(RuntimeInfo runtimeInfo) {
+    Configuration.setFileRefsBaseDir(new File(runtimeInfo.getConfigDir()));
     Configuration conf = new Configuration();
     File configFile = new File(runtimeInfo.getConfigDir(), "pipeline.properties");
     if (configFile.exists()) {
