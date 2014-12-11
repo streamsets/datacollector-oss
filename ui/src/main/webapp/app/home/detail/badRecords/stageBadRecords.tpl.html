@@ -39,7 +39,7 @@
           <th class="col-md-5" translate="global.form.errorMessage"> Error Message</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody ng-hide="showBadRecordsLoading">
         <tr ng-repeat="errorRecord in stageBadRecords">
           <td>
             <label class="label label-danger pointer" ng-click="errorRecord.expand = !errorRecord.expand">
@@ -63,6 +63,7 @@
         </tbody>
 
       </table>
+      <div show-loading="showBadRecordsLoading"></div>
     </div>
   </tab>
 
@@ -98,7 +99,7 @@
             <th class="col-md-7" translate="global.form.errorMessage"> Error Message</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody ng-hide="showErrorMessagesLoading">
           <tr ng-repeat="errorMessage in errorMessages">
             <td>{{errorMessage.timestamp | date:'medium'}}</td>
             <td ng-bind="errorMessage.errorCode"> </td>
@@ -106,6 +107,8 @@
           </tr>
         </tbody>
       </table>
+
+      <div show-loading="showErrorMessagesLoading"></div>
 
     </div>
   </tab>

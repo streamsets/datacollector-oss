@@ -13,6 +13,7 @@ angular
       captureSnapshotStatusTimer;
 
     angular.extend($scope, {
+      showLoading: false,
       previewSourceOffset: 0,
       previewBatchSize: 10,
       previewData: {},
@@ -172,9 +173,12 @@ angular
 
                     var firstStageInstance = $scope.pipelineConfig.stages[0];
                     $scope.changeStageSelection(firstStageInstance);
+
+                    $scope.showLoading = false;
                   }).
                   error(function(data) {
                     $rootScope.common.errors = [data];
+                    $scope.showLoading = false;
                   });
 
 
@@ -194,6 +198,7 @@ angular
     };
 
     $scope.$on('snapshotPipeline', function(event, nextBatch) {
+      $scope.showLoading = true;
       api.pipelineAgent.captureSnapshot(snapshotBatchSize).
         then(function() {
           checkForCaptureSnapshotStatus();

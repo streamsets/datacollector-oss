@@ -12,6 +12,7 @@ angular
       previewDataBackup;
 
     angular.extend($scope, {
+      showLoading: false,
       previewSourceOffset: 0,
       previewBatchSize: 10,
       previewData: {},
@@ -117,6 +118,8 @@ angular
 
         });
 
+        $scope.showLoading = true;
+
         api.pipelineAgent.previewPipelineRunStage($scope.activeConfigInfo.name, instanceName, records).
           success(function (previewData) {
             var targetInstanceData = previewData.batchesOutput[0][0];
@@ -130,9 +133,12 @@ angular
 
             $scope.changeStageSelection(stageInstance);
             $scope.stepExecuted = true;
+            $scope.showLoading = false;
+            $rootScope.common.errors = [];
           }).
           error(function(data) {
             $rootScope.common.errors = [data];
+            $scope.showLoading = false;
           });
       },
 
@@ -195,6 +201,7 @@ angular
 
     $scope.$on('previewPipeline', function(event, nextBatch) {
       $scope.stepExecuted = false;
+      $scope.showLoading = true;
 
       if (nextBatch) {
         $scope.previewSourceOffset += $scope.previewBatchSize;
@@ -214,10 +221,13 @@ angular
 
           var firstStageInstance = $scope.pipelineConfig.stages[0];
           $scope.changeStageSelection(firstStageInstance);
+
+          $scope.showLoading = false;
         }).
         error(function(data) {
           $rootScope.common.errors = [data];
           $scope.closePreview();
+          $scope.showLoading = false;
         });
     });
 

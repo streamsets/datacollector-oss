@@ -8,6 +8,8 @@ angular
   .controller('BadRecordsController', function ($scope, $rootScope, _, api) {
 
     angular.extend($scope, {
+      showBadRecordsLoading: false,
+      showErrorMessagesLoading: false,
       badRecordsChartData: [],
       errorMessagesChartData: [],
       errorMessagesCount: 0,
@@ -37,22 +39,27 @@ angular
     });
 
     var updateBadRecordsData = function(currentSelection) {
+      $scope.showBadRecordsLoading = true;
       api.pipelineAgent.getErrorRecords(currentSelection.instanceName)
         .success(function(res) {
+          $scope.showBadRecordsLoading = false;
           if(res && res.length) {
             $scope.stageBadRecords = res.reverse();
           } else {
-            $scope.stageBadRecords = [];
+            $scope.showBadRecordsLoading = [];
           }
         })
         .error(function(data) {
+          $scope.showBadRecordsLoading = false;
           $rootScope.common.errors = [data];
         });
     };
 
     var updateErrorMessagesData = function(currentSelection) {
+      $scope.showErrorMessagesLoading = true;
       api.pipelineAgent.getErrorMessages(currentSelection.instanceName)
         .success(function(res) {
+          $scope.showErrorMessagesLoading = false;
           if(res && res.length) {
             $scope.errorMessages = res.reverse();
           } else {
@@ -60,6 +67,7 @@ angular
           }
         })
         .error(function(data) {
+          $scope.showErrorMessagesLoading = false;
           $rootScope.common.errors = [data];
         });
     };

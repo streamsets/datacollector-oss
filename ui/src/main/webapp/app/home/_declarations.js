@@ -19,7 +19,8 @@ angular
     'nvd3ChartDirectives',
     'abbreviateNumberFilter',
     'ngSanitize',
-    'ui.select'
+    'ui.select',
+    'showLoadingDirectives'
   ])
   .constant('amTimeAgoConfig', {
     withoutSuffix: true

@@ -1,13 +1,15 @@
 <div class="pipeline-preview">
   <tabset class="detail-tabs-left tabs-left">
 
-
     <tab active="true">
       <tab-heading>
         {{ 'global.form.records' | translate }}
       </tab-heading>
       <div>
-        <table class="table">
+
+        <div show-loading="showLoading"></div>
+
+        <table class="table" ng-hide="showLoading">
           <thead>
             <tr>
               <th class="col-md-6">
