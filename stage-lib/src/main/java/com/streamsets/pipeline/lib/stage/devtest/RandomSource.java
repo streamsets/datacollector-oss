@@ -44,8 +44,7 @@ public class RandomSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    batchSize = maxBatchSize;
-    if (batchCount++ % maxBatchSize == 0) {
+    if (batchCount++ % (random.nextInt(maxBatchSize) + 1) == 0) {
       batchSize = random.nextInt(maxBatchSize + 1);
     }
     for (int i = 0; i < batchSize; i++ ) {
