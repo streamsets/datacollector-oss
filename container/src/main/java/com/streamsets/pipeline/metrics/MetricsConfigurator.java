@@ -6,6 +6,8 @@
 package com.streamsets.pipeline.metrics;
 
 import com.codahale.metrics.Counter;
+import com.codahale.metrics.ExponentiallyDecayingReservoir;
+import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SlidingTimeWindowReservoir;
@@ -26,6 +28,10 @@ public class MetricsConfigurator {
 
   public static Counter createCounter(MetricRegistry metrics, String name) {
     return metrics.register(name + ".counter", new Counter());
+  }
+
+  public static Histogram createHistogram5Min(MetricRegistry metrics, String name) {
+    return metrics.register(name + ".histogramM5", new Histogram(new ExponentiallyDecayingReservoir()));
   }
 
 }
