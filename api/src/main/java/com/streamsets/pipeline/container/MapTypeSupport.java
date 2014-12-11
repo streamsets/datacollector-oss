@@ -47,8 +47,6 @@ public class MapTypeSupport extends TypeSupport<Map> {
       String name = entry.getKey();
       Utils.checkNotNull(name, "Map cannot have null keys");
       Utils.checkNotNull(entry.getValue(), Utils.format("Map cannot have null values, key '{}'", name));
-      Utils.checkArgument(TextUtils.isValidName(name), Utils.format("Invalid key name '{}', must be '{}''", name,
-                                                                    TextUtils.VALID_NAME));
       copy.put(entry.getKey(), entry.getValue().clone());
     }
     return copy;

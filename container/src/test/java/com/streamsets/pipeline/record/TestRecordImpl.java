@@ -301,4 +301,46 @@ public class TestRecordImpl {
     Assert.assertEquals(Field.create(new HashMap<String, Field>()), r.delete("[0]"));
   }
 
+  public void testEscaping(char specialChar) {
+    String escaped = "" + specialChar + specialChar;
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    List<Field> list = new ArrayList<>();
+    list.add(Field.create(true));
+    Field listField = Field.create(list);
+    Map<String, Field> map = new HashMap<>();
+    map.put("a" + specialChar, listField);
+    Field mapField = Field.create(map);
+    r.set(mapField);
+
+    Assert.assertEquals(mapField, r.get());
+    Assert.assertEquals(mapField, r.get(""));
+    Assert.assertEquals(listField, r.get("/a" + escaped));
+    Assert.assertEquals(Field.create(true), r.get("/a" + escaped + "[0]"));
+    Assert.assertNull(r.get("/a" + escaped + "[1]"));
+    Assert.assertTrue(r.has(""));
+    Assert.assertTrue(r.has("/a" + escaped));
+    Assert.assertFalse(r.has("/b"));
+    Assert.assertTrue(r.has("/a" + escaped + "[0]"));
+    Assert.assertFalse(r.has("/a" + escaped + "[1]"));
+    Assert.assertEquals(ImmutableSet.of("", "/a" + escaped, "/a" + escaped + "[0]"), r.getFieldPaths());
+    Assert.assertEquals(Field.create(true), r.delete("/a" + escaped + "[0]"));
+    Assert.assertEquals(ImmutableSet.of("", "/a" + escaped), r.getFieldPaths());
+    Assert.assertEquals(Field.create(new ArrayList<Field>()), r.delete("/a" + escaped));
+  }
+
+  @Test
+  public void testEscapingSlash() {
+    testEscaping('/');
+  }
+
+  @Test
+  public void testEscapingOpenBracket() {
+    testEscaping('[');
+  }
+
+  @Test
+  public void testEscapingCloseBracket() {
+    testEscaping(']');
+  }
+
 }

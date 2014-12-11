@@ -220,53 +220,95 @@ public class RecordImpl implements Record {
 
   private static final String INVALID_FIELD_PATH = "Invalid fieldPath '{}' at char '{}'";
 
-  @VisibleForTesting
   List<PathElement> parse(String fieldPath) {
     Preconditions.checkNotNull(fieldPath, "fieldPath cannot be null");
     List<PathElement> elements = new ArrayList<>();
     elements.add(PathElement.ROOT);
     if (!fieldPath.isEmpty()) {
-      if (fieldPath.charAt(0) != '/' && fieldPath.charAt(0) != '[') {
-        throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, 0));
-      }
-      StringTokenizer st = new StringTokenizer(fieldPath, "/[", true);
-      int pathPos = 0;
-      while (st.hasMoreTokens()) {
-        String tokenType = st.nextToken();
-        pathPos++;
-        if (tokenType.equals("/") || tokenType.equals("[")) {
-          if (!st.hasMoreElements()) {
-            throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pathPos));
-          } else {
-            String tokenValue = st.nextToken();
-            pathPos += tokenValue.length();
-            if (tokenType.equals("/")) { // MAP
-              if (TextUtils.isValidName(tokenValue)) {
-                elements.add(PathElement.createMapElement(tokenValue));
-              } else {
-                throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pathPos));
-              }
-            } else { // LIST
-              if (tokenValue.endsWith("]")) {
-                tokenValue = tokenValue.substring(0, tokenValue.length() - 1);
-                try {
-                  int index = Integer.parseInt(tokenValue);
-                  if (index >= 0) {
-                    elements.add(PathElement.createArrayElement(index));
-                  } else {
-                    throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pathPos));
-                  }
-                } catch (NumberFormatException ex) {
-                  throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pathPos));
-                }
-              } else {
-                throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pathPos));
-              }
-            }
+      char chars[] = fieldPath.toCharArray();
+      boolean requiresStart = true;
+      boolean requiresName = false;
+      boolean requiresIndex = false;
+      StringBuilder collector = new StringBuilder();
+      int pos = 0;
+      for (; pos < chars.length; pos++) {
+        if (requiresStart) {
+          requiresStart = false;
+          requiresName = false;
+          requiresIndex = false;
+          switch (chars[pos]) {
+            case '/':
+              requiresName = true;
+              break;
+            case '[':
+              requiresIndex = true;
+              break;
+            default:
+              throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, 0));
           }
         } else {
-          throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pathPos));
+          if (requiresName) {
+            switch (chars[pos]) {
+              case '/' :
+              case '[' :
+              case ']' :
+                if (chars.length <= pos + 1) {
+                  throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
+                }
+                if (chars[pos] == chars[pos + 1]) {
+                  collector.append(chars[pos]);
+                  pos++;
+                } else {
+                  elements.add(PathElement.createMapElement(collector.toString()));
+                  requiresStart = true;
+                  collector.setLength(0);
+                  //not very kosher, we need to replay the current char as start of path element
+                  pos--;
+                }
+                break;
+              default:
+                collector.append(chars[pos]);
+            }
+          } else if (requiresIndex) {
+            switch (chars[pos]) {
+              case '0':
+              case '1':
+              case '2':
+              case '3':
+              case '4':
+              case '5':
+              case '6':
+              case '7':
+              case '8':
+              case '9':
+                collector.append(chars[pos]);
+                break;
+              case ']':
+                try {
+                  int index = Integer.parseInt(collector.toString());
+                  if (index >= 0) {
+                    elements.add(PathElement.createArrayElement(index));
+                    requiresStart = true;
+                    collector.setLength(0);
+                  } else {
+                    throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
+                  }
+                } catch (NumberFormatException ex) {
+                  throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos) + ", " +
+                                                     ex.getMessage(), ex);
+                }
+                break;
+              default:
+                throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
+            }
+          }
         }
+      }
+      if (pos < chars.length) {
+        throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
+      } else if (collector.length() > 0) {
+        // the last path element was a map entry, we need to create it.
+        elements.add(PathElement.createMapElement(collector.toString()));
       }
     }
     return elements;
@@ -378,17 +420,21 @@ public class RecordImpl implements Record {
     base += "/";
     if (map != null) {
       for (Map.Entry<String, Field> entry : map.entrySet()) {
-        paths.add(base + entry.getKey());
+        paths.add(base + escapeName(entry.getKey()));
         switch (entry.getValue().getType()) {
           case MAP:
-            gatherPaths(base + entry.getKey(), entry.getValue().getValueAsMap(), paths);
+            gatherPaths(base + escapeName(entry.getKey()), entry.getValue().getValueAsMap(), paths);
             break;
           case LIST:
-            gatherPaths(base + entry.getKey(), entry.getValue().getValueAsList(), paths);
+            gatherPaths(base + escapeName(entry.getKey()), entry.getValue().getValueAsList(), paths);
             break;
         }
       }
     }
+  }
+
+  private String escapeName(String name) {
+    return name.replace("/", "//").replace("[", "[[").replace("]", "]]");
   }
 
   private void gatherPaths(String base, List<Field> list, Set<String> paths) {
