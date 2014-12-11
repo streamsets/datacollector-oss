@@ -15,6 +15,7 @@ import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
 import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;
 import com.streamsets.pipeline.restapi.configuration.ProductionPipelineManagerInjector;
 import com.streamsets.pipeline.restapi.configuration.RestAPIResourceConfig;
+import com.streamsets.pipeline.restapi.configuration.RuntimeInfoInjector;
 import com.streamsets.pipeline.restapi.configuration.StageLibraryInjector;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
@@ -141,6 +142,16 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(ProductionPipelineManagerInjector.PIPELINE_STATE_MGR, pipelineStateManager);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideRuntimeInfo(final RuntimeInfo runtimeInfo) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(RuntimeInfoInjector.RUNTIME_INFO, runtimeInfo);
       }
     };
   }

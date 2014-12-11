@@ -12,6 +12,7 @@ import java.util.List;
 
 public class RuntimeInfo {
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
+  private Runnable shutdownRunnable;
 
   public RuntimeInfo(List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
@@ -50,4 +51,13 @@ public class RuntimeInfo {
     log.info("  Log dir      : {}", getLogDir());
   }
 
+  public void setShutdownHandler(Runnable runnable) {
+    shutdownRunnable = runnable;
+  }
+
+  public void shutdown() {
+    if (shutdownRunnable != null) {
+      shutdownRunnable.run();
+    }
+  }
 }

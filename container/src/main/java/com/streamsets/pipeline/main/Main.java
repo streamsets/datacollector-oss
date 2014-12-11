@@ -57,6 +57,13 @@ public class Main {
         }
       };
       getRuntime().addShutdownHook(shutdownHookThread);
+      dagger.get(RuntimeInfo.class).setShutdownHandler(new Runnable() {
+        @Override
+        public void run() {
+          finalLog.debug("Stopping, reason: requested");
+          task.stop();
+        }
+      });
       task.run();
       task.waitWhileRunning();
       getRuntime().removeShutdownHook(shutdownHookThread);
