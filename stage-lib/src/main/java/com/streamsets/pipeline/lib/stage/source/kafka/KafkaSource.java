@@ -144,7 +144,7 @@ public class KafkaSource extends BaseSource {
         //TODO: Is the last message complete?
         record.set(Field.create(new String(payload)));
         offsetToReturn = String.valueOf(partitionToPayloadMap.getOffset());
-      } else if (payloadType == PayloadType.AVRO) {
+      } else if (payloadType == PayloadType.XML) {
 
       } else if(payloadType == PayloadType.JSON) {
 

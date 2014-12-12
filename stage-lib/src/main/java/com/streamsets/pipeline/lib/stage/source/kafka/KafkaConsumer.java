@@ -80,6 +80,8 @@ public class KafkaConsumer {
       return;
     }
     leader = new KafkaBroker(metadata.leader().host(), metadata.leader().port());
+    //recreate consumer instance with the leader information for that topic
+    consumer = new SimpleConsumer(leader.getHost(), leader.getPort(), TIME_OUT, BUFFER_SIZE, clientName);
   }
 
   public void destroy() {
@@ -117,6 +119,7 @@ public class KafkaConsumer {
     }
 
     List<MessageAndOffset> partitionToPayloadMapArrayList = new ArrayList<>();
+    int numberOfMessagesRead = 0;
     for (kafka.message.MessageAndOffset messageAndOffset : fetchResponse.messageSet(topic, partition)) {
       long currentOffset = messageAndOffset.offset();
       if (currentOffset < offset) {
@@ -128,8 +131,16 @@ public class KafkaConsumer {
       payload.get(bytes);
       MessageAndOffset partitionToPayloadMap = new MessageAndOffset(bytes, messageAndOffset.nextOffset());
       partitionToPayloadMapArrayList.add(partitionToPayloadMap);
+      numberOfMessagesRead++;
     }
 
+    if(numberOfMessagesRead == 0) {
+      //If no message is available, give kafka sometime.
+      try {
+        Thread.sleep(ONE_SECOND);
+      } catch (InterruptedException e) {
+      }
+    }
     return partitionToPayloadMapArrayList;
   }
 

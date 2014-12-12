@@ -5,8 +5,8 @@
  */
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
-public enum PayloadType {
-  STRING,
-  JSON,
-  XML
+public enum PartitionStrategy {
+  RANDOM,
+  ROUND_ROBIN,
+  FIXED
 }
