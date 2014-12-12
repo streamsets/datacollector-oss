@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.el;
 
-import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.container.Utils;
 
 import java.lang.reflect.Method;
 
@@ -45,7 +45,7 @@ public class ELBasicSupport {
   }
 
   public static void registerBasicFunctions(ELEvaluator elEvaluator) {
-    Preconditions.checkNotNull(elEvaluator, "elEvaluator cannot be null");
+    Utils.checkNotNull(elEvaluator, "elEvaluator");
     elEvaluator.registerFunction("", "isIn", IS_IN);
     elEvaluator.registerFunction("", "notIn", NOT_IN);
   }

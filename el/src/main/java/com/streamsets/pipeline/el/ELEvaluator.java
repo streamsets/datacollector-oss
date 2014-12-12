@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.el;
 
-import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.container.Utils;
 import com.streamsets.pipeline.container.TextUtils;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
@@ -42,8 +41,8 @@ public class ELEvaluator {
     }
 
     private static final void checkVariableName(String name) {
-      Preconditions.checkNotNull(name);
-      Preconditions.checkArgument(TextUtils.isValidName(name), Utils.format("Invalid variable name '{}', must be '{}'",
+      Utils.checkNotNull(name, "name");
+      Utils.checkArgument(TextUtils.isValidName(name), Utils.format("Invalid variable name '{}', must be '{}'",
                                                                             name, TextUtils.VALID_NAME));
     }
 
@@ -115,9 +114,9 @@ public class ELEvaluator {
   }
 
   public void registerFunction(String functionNamespace, String functionName, Method method) {
-    Preconditions.checkNotNull(functionNamespace, "functionNamespace");
-    Preconditions.checkNotNull(functionName, "functionName");
-    Preconditions.checkArgument(!functionName.isEmpty(), "functionName cannot be empty");
+    Utils.checkNotNull(functionNamespace, "functionNamespace");
+    Utils.checkNotNull(functionName, "functionName");
+    Utils.checkArgument(!functionName.isEmpty(), "functionName cannot be empty");
     if ((method.getModifiers() & (Modifier.PUBLIC | Modifier.STATIC)) != (Modifier.PUBLIC | Modifier.STATIC)) {
       throw new IllegalArgumentException(Utils.format("Method '{}' must be public and static", method));
     }
@@ -125,9 +124,9 @@ public class ELEvaluator {
   }
 
   public void registerConstant(String constantName, Object value) {
-    Preconditions.checkNotNull(constantName, "constantName cannot be null");
-    Preconditions.checkNotNull(value, "value cannot be null");
-    Preconditions.checkArgument(!constantName.isEmpty(), "constantName cannot be empty");
+    Utils.checkNotNull(constantName, "constantName cannot be null");
+    Utils.checkNotNull(value, "value cannot be null");
+    Utils.checkArgument(!constantName.isEmpty(), "constantName cannot be empty");
     constants.put(constantName, value);
   }
 
@@ -143,9 +142,9 @@ public class ELEvaluator {
   // getVariablesInContext() method for functions.
   @SuppressWarnings("unchecked")
   public <T> T eval(final Variables variables, String expression, Class<T> expected) throws ELException {
-    Preconditions.checkNotNull(variables, "variables");
-    Preconditions.checkNotNull(expression, "expression");
-    Preconditions.checkNotNull(expected, "expected");
+    Utils.checkNotNull(variables, "variables");
+    Utils.checkNotNull(expression, "expression");
+    Utils.checkNotNull(expected, "expected");
     try {
       VARIABLES_IN_SCOPE_TL.set(variables);
       VariableResolver variableResolver = new VariableResolver() {

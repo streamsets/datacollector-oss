@@ -34,6 +34,7 @@
   <modules>
     <module>root</module>
     <module>api</module>
+    <module>el</module>
     <module>container</module>
     <module>bootstrap</module>
     <module>stage-lib</module>

@@ -5,9 +5,9 @@
  */
 package com.streamsets.pipeline.el;
 
-import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.container.Utils;
 
 import java.lang.reflect.Method;
 
@@ -52,7 +52,7 @@ public class ELRecordSupport {
   }
 
   public static void registerRecordFunctions(ELEvaluator elEvaluator) {
-    Preconditions.checkNotNull(elEvaluator, "elEvaluator cannot be null");
+    Utils.checkNotNull(elEvaluator, "elEvaluator");
     elEvaluator.registerFunction("record", "type", RECORD_TYPE);
     elEvaluator.registerFunction("record", "value", RECORD_VALUE);
     for (Field.Type type : Field.Type.values()) {
@@ -61,8 +61,8 @@ public class ELRecordSupport {
   }
 
   public static void setRecordInContext(ELEvaluator.Variables variables, Record record) {
-    Preconditions.checkNotNull(variables, "variables cannot be null");
-    Preconditions.checkNotNull(record, "record cannot be null");
+    Utils.checkNotNull(variables, "variables");
+    Utils.checkNotNull(record, "record");
     variables.addContextVariable(RECORD_CONTEXT_VAR, record);
   }
 
