@@ -100,9 +100,9 @@
       "rules": "Rules",
       "summary": "Summary",
       "summaryTab": {
-        "batchThroughput": "Batch Throughput",
-        "recordsProcessed": "Records Processed",
-        "recordThroughput": "Record Throughput"
+        "batchThroughput": "Batch Throughput (batches/sec)",
+        "recordsProcessed": "Records Processed (since last startup)",
+        "recordThroughput": "Record Throughput (records/sec)"
       }
     },
     "previewPane": {

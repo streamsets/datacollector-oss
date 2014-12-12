@@ -11,7 +11,7 @@
           <nvd3-pie-chart
             data="pieChartData"
             id="RecordProcessedPieChartID"
-            height="300"
+            height="250"
             x="getLabel()"
             y="getValue()"
             color="getColor()"
@@ -22,7 +22,8 @@
             labelType="percent"
             donut="true"
             donutRatio=".25"
-            donutLabelsOutside="true">
+            donutLabelsOutside="true"
+            margin="{left:20,top:20,bottom:20,right:20}">
             <svg></svg>
           </nvd3-pie-chart>
         </div>
@@ -36,15 +37,15 @@
           <nvd3-discrete-bar-chart
             data="barChartData"
             id="RecordProcessedBarChartID"
-            height="300"
+            height="250"
             color="getColor()"
             showXAxis="true"
             showYAxis="true"
             showValues="true"
             showLegend="true"
-            yAxisTickFormat="valueFormatFunction()"
+            yAxisTickFormat="getYAxisLabel()"
             valueformat="valueFormatFunction()"
-            margin="{left:100,top:20,bottom:20,right:20}">
+            margin="{left:20,top:20,bottom:20,right:20}">
           </nvd3-discrete-bar-chart>
         </div>
       </div>
@@ -58,7 +59,7 @@
           <nvd3-multi-bar-chart
             data="chartData"
             id="MeterBarChartId"
-            height="300"
+            height="250"
             color="getColor()"
             legendColor="getColor()"
             yAxisTickFormat="valueFormatFunction()"
@@ -83,12 +84,12 @@
           <nvd3-discrete-bar-chart
             data="chartData"
             id="BatchCountBarChartID"
-            height="300"
+            height="250"
             showXAxis="true"
             showYAxis="true"
             showValues="true"
             showLegend="true"
-            margin="{left:35,top:20,bottom:20,right:20}">
+            margin="{left:40,top:20,bottom:20,right:20}">
           </nvd3-discrete-bar-chart>
         </div>
       </div>

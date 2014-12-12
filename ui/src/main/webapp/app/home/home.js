@@ -352,6 +352,7 @@ angular
     var updateDetailPane = function(stageInstance) {
 
       if(stageInstance) {
+        $scope.stageSelected = true;
         //Stage Instance Configuration
         $scope.detailPaneConfig = stageInstance;
         $scope.detailPaneConfigDefn = _.find($scope.stageLibraries, function (stageLibrary) {
@@ -360,6 +361,7 @@ angular
         });
       } else {
         //Pipeline Configuration
+        $scope.stageSelected = false;
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
         $scope.detailPaneConfig = $scope.pipelineConfig;
       }

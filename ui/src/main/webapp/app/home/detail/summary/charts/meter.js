@@ -4,24 +4,27 @@
 
 angular
   .module('pipelineAgentApp.home')
-  .controller('MeterBarChartController', function($scope) {
-    var colorArray = ['#1f77b4', '#5cb85c', '#FF3333'];
+  .controller('MeterBarChartController', function($scope, pipelineConstant) {
+    var color = {
+      'Input' :'#1f77b4',
+      'Output': '#5cb85c',
+      'Bad':'#FF3333'
+    };
 
     angular.extend($scope, {
       chartData: [],
 
       getColor: function() {
-        return function(d, i) {
-          return colorArray[i];
+        return function(d) {
+          return color[d.key];
         };
       }
     });
 
     $scope.$on('summaryDataUpdated', function() {
-      $scope.units = $scope.summaryMeters.inputRecords.units;
-      $scope.chartData = [
-        {
-          key: "Input Records",
+      var stageInstance = $scope.detailPaneConfig,
+        input = {
+          key: "Input",
           values: [
             ["M1" , $scope.summaryMeters.inputRecords.m1_rate ],
             ["M5" , $scope.summaryMeters.inputRecords.m5_rate ],
@@ -34,8 +37,8 @@ angular
             ["Mean" , $scope.summaryMeters.inputRecords.mean_rate ]
           ]
         },
-        {
-          key: "Output Records",
+        output = {
+          key: "Output",
           values: [
             ["M1" , $scope.summaryMeters.outputRecords.m1_rate ],
             ["M5" , $scope.summaryMeters.outputRecords.m5_rate ],
@@ -48,8 +51,8 @@ angular
             ["Mean" , $scope.summaryMeters.outputRecords.mean_rate ]
           ]
         },
-        {
-          key: "Error Records",
+        bad = {
+          key: "Bad",
           values: [
             ["M1" , $scope.summaryMeters.errorRecords.m1_rate ],
             ["M5" , $scope.summaryMeters.errorRecords.m5_rate ],
@@ -61,8 +64,24 @@ angular
             ["H24" , $scope.summaryMeters.errorRecords.h24_rate ],
             ["Mean" , $scope.summaryMeters.errorRecords.mean_rate ]
           ]
+        };
+
+      if($scope.stageSelected) {
+        switch(stageInstance.uiInfo.stageType) {
+          case pipelineConstant.SOURCE_STAGE_TYPE:
+            $scope.chartData = [ output, bad];
+            break;
+          case pipelineConstant.PROCESSOR_STAGE_TYPE:
+            $scope.chartData = [ input, output, bad];
+            break;
+          case pipelineConstant.TARGET_STAGE_TYPE:
+            $scope.chartData = [ input, bad];
+            break;
         }
-      ];
+      } else {
+        $scope.chartData = [ input, output, bad];
+      }
+
     });
 
   });
