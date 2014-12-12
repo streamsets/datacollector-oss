@@ -42,6 +42,9 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0158("Cannot run, {}"),
   CONTAINER_0159("Cannot do a raw source preview as the pipeline '{}' is empty"),
   CONTAINER_0160("Cannot do a raw source preview on source as the following required parameters are not supplied '{}'"),
+  CONTAINER_0161("Stage '{}', instance '{}', variable  '{}', configuration injection error, value List has non-String elements"),
+  CONTAINER_0162("Stage '{}', instance '{}', variable  '{}', configuration injection error, value Map has non-String keys"),
+  CONTAINER_0163("Stage '{}', instance '{}', variable  '{}', configuration injection error, value Map has non-String values"),
 
   //PipelineStore
   CONTAINER_0200("Pipeline '{}' does not exist"),
@@ -51,8 +54,6 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0204("Could not save pipeline '{}', {}"),
   CONTAINER_0205("The provided UUID does not match the stored one, please reload the pipeline '{}'"),
   CONTAINER_0206("Could not load pipeline '{}' info, {}"),
-
-
 
   ;
 

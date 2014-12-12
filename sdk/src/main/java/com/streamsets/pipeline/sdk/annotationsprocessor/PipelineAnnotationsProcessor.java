@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.LanePredicateMapping;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -45,9 +46,11 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -323,6 +326,10 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
                 getFieldSelectionType(valueChooser.type()),
                 getValuesProvider(valueChooser)
                 , null, null);
+          }
+          LanePredicateMapping lanePredicateMapping = variableElement.getAnnotation(LanePredicateMapping.class);
+          if (lanePredicateMapping != null) {
+            model = new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null);
           }
         }
 
@@ -711,8 +718,38 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }
+    } else if (configDefAnnot.type().equals(ConfigDef.Type.MAP)) {
+      if(!fieldType.toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
+        printError("field.validation.type.is.not.map",
+                   "A The type of the field {} is expected to be Map<String, String>.",
+                   typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+        valid = false;
+      }
     }
     return valid;
+  }
+
+  private static final Set<Class<? extends Annotation>> MODEL_ANNOTATIONS = new LinkedHashSet<>();
+  private static final Set<String> MODEL_ANNOTATIONS_NAMES = new LinkedHashSet<>();
+
+  static {
+    MODEL_ANNOTATIONS.add(FieldValueChooser.class);
+    MODEL_ANNOTATIONS.add(FieldSelector.class);
+    MODEL_ANNOTATIONS.add(ValueChooser.class);
+    MODEL_ANNOTATIONS.add(LanePredicateMapping.class);
+    for (Class klass : MODEL_ANNOTATIONS) {
+      MODEL_ANNOTATIONS_NAMES.add(klass.getSimpleName());
+    }
+  }
+
+  private boolean hasModelAnnotation(VariableElement variableElement) {
+    int models = 0;
+    for (Class<? extends Annotation> annotationClass : MODEL_ANNOTATIONS) {
+      if (variableElement.getAnnotation(annotationClass) != null) {
+        models++;
+      }
+    }
+    return models == 1;
   }
 
   /**
@@ -724,40 +761,37 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    */
   private boolean validateModelConfig(Element typeElement, VariableElement variableElement) {
     boolean valid = true;
-    FieldValueChooser fieldValueChooser = variableElement.getAnnotation(FieldValueChooser.class);
-    FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
-    ValueChooser valueChooser = variableElement.getAnnotation(ValueChooser.class);
 
     //Field is marked as model.
     //Carry out model related validations
-    if(fieldValueChooser == null && fieldSelector == null && valueChooser == null) {
+    if(!hasModelAnnotation(variableElement)) {
       printError("field.validation.no.model.annotation",
-          "The type of field {} is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldValueChooser' or " +
-              "'ValueChooser' annotation is expected.",
-          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+          "The type of field {} is declared as \"MODEL\". Exactly one of '{}' annotations is expected.",
+          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString(),
+          MODEL_ANNOTATIONS_NAMES);
       valid = false;
     }
 
-    if (checkMultipleModelAnnot(fieldValueChooser, fieldSelector, valueChooser)) {
-      printError("field.validation.multiple.model.annotations",
-          "The type of field {} is declared as \"MODEL\". Exactly one of 'FieldSelector' or 'FieldValueChooser' or " +
-              "'ValueChooser' annotation is expected.",
-          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
-      valid = false;
-    } else {
-      //Validate model annotations only if one of them is present
-      //Otherwise it leads to confusing error messages
-      if (fieldValueChooser != null) {
-        valid &= validateFieldModifier(typeElement, variableElement, fieldValueChooser);
-      }
+    //Validate model annotations
 
-      if (valueChooser != null) {
-        valid &= validateDropDown(typeElement, variableElement, valueChooser);
-      }
+    FieldValueChooser fieldValueChooser = variableElement.getAnnotation(FieldValueChooser.class);
+    if (fieldValueChooser != null) {
+      valid &= validateFieldModifier(typeElement, variableElement, fieldValueChooser);
+    }
 
-      if (fieldSelector != null) {
-        valid &= validateFieldSelector(typeElement, variableElement, fieldSelector);
-      }
+    ValueChooser valueChooser = variableElement.getAnnotation(ValueChooser.class);
+    if (valueChooser != null) {
+      valid &= validateDropDown(typeElement, variableElement, valueChooser);
+    }
+
+    FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
+    if (fieldSelector != null) {
+      valid &= validateFieldSelector(typeElement, variableElement, fieldSelector);
+    }
+
+    LanePredicateMapping lanePredicateMapping = variableElement.getAnnotation(LanePredicateMapping.class);
+    if (lanePredicateMapping != null) {
+      valid &= validateLanePredicateMapping(typeElement, variableElement);
     }
     return valid;
   }
@@ -768,6 +802,17 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       printError("field.validation.type.is.not.list",
           "The type of the field {} is expected to be List<String>.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+      valid = false;
+    }
+    return valid;
+  }
+
+  private boolean validateLanePredicateMapping(Element typeElement, VariableElement variableElement) {
+    boolean valid = true;
+    if (!variableElement.asType().toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
+      printError("field.validation.type.is.not.map",
+                 "B The type of the field {} is expected to be Map<String, String>.",
+                 typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
       valid = false;
     }
     return valid;
@@ -813,14 +858,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           Element e = getTypeElementFromName(valueType);
           if(!e.getKind().equals(ElementKind.ENUM)) {
             printError("field.validation.type.is.not.map",
-                "The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
+                "C The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
                 typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
             valid = false;
           }
         }
       } else {
         printError("field.validation.type.is.not.map",
-            "The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
+            "D The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
             typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }
@@ -840,7 +885,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     } else {
       if (!type.equals("java.util.Map<java.lang.String,java.lang.String>")) {
         printError("field.validation.type.is.not.map",
-            "The type of the field {} is expected to be Map<String, String>.",
+            "E The type of the field {} is expected to be Map<String, String>.",
             typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }

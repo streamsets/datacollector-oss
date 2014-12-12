@@ -25,6 +25,7 @@ import com.streamsets.pipeline.config.StageDefinition;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 public class StageRuntime {
   private final StageDefinition def;
@@ -205,8 +206,17 @@ public class StageRuntime {
             if(var.getType().isEnum()) {
               var.set(stage, Enum.valueOf((Class<Enum>) var.getType(), (String) value));
             } else {
+              if (value != null) {
+                if (value instanceof List) {
+                  validateList((List) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
+                } else if (value instanceof Map) {
+                  validateMap((Map) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
+                }
+              }
               var.set(stage, value);
             }
+          } catch (PipelineRuntimeException ex) {
+            throw ex;
           } catch (Exception ex) {
             throw new PipelineRuntimeException(ContainerError.CONTAINER_0152,
                                                stageDef.getClassName(), stageConf.getInstanceName(), instanceVar, value,
@@ -216,6 +226,27 @@ public class StageRuntime {
       }
     }
 
+  }
+
+  private static void validateList(List list, String stageName, String instanceName, String configName)
+      throws PipelineRuntimeException {
+    for (Object e : list) {
+      if (e != null && !(e instanceof String)) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0161, stageName, instanceName, configName);
+      }
+    }
+  }
+
+  private static void validateMap(Map map, String stageName, String instanceName, String configName)
+      throws PipelineRuntimeException {
+    for (Map.Entry e : ((Map<?, ?>) map).entrySet()) {
+      if (!(e.getKey() instanceof String)) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0162, stageName, instanceName, configName);
+      }
+      if (e.getValue() != null &&  !(e.getValue() instanceof String)) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0163, stageName, instanceName, configName);
+      }
+    }
   }
 
   @Override

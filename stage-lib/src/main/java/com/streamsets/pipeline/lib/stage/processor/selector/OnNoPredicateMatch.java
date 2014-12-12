@@ -3,11 +3,6 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline.lib.stage.processor.selector;
 
-public enum ModelType {
-  FIELD_SELECTOR,
-  FIELD_VALUE_CHOOSER,
-  VALUE_CHOOSER,
-  LANE_PREDICATE_MAPPING
-}
+public enum OnNoPredicateMatch {DROP_RECORD, RECORD_TO_ERROR, FAIL_PIPELINE}
