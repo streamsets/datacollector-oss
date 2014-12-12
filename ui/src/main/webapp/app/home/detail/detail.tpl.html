@@ -2,7 +2,37 @@
 
   <div class="panel-heading clearfix">
     <h3 class="panel-title pull-left" ng-if="isPipelineRunning">Monitoring:</h3>
-    <h3 class="panel-title pull-left">{{detailPaneConfig.uiInfo.label || pipelineConfig.info.name}}</h3>
+
+
+    <!--h3 class="panel-title pull-left">{{detailPaneConfig.uiInfo.label || pipelineConfig.info.name}}</h3-->
+
+
+    <div class="btn-group pull-left detail-name-dropdown">
+      <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
+        <span translate="admin.header.addStage">{{detailPaneConfig.uiInfo.label || pipelineConfig.info.name}}</span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+        <li role="presentation" class="dropdown-header"
+            translate="global.form.pipeline">Pipeline</li>
+
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="changeStageSelection()">{{pipelineConfig.info.name}}</a>
+        </li>
+
+        <li role="presentation" class="dropdown-header"
+            translate="global.form.stage">Stage</li>
+
+        <li role="presentation"
+            ng-repeat="stageInstance in pipelineConfig.stages">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="changeStageSelection(stageInstance)">{{stageInstance.uiInfo.label}}</a>
+        </li>
+      </ul>
+    </div>
+
 
     <div class="pull-right size-toolbar">
       <span class="glyphicon pointer"

@@ -742,7 +742,11 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     });
 
     $scope.$on('selectNode', function(event, stageInstance) {
-      graph.selectNode(stageInstance);
+      if(stageInstance) {
+        graph.selectNode(stageInstance);
+      } else if (graph.state.selectedNode){
+        graph.removeSelectFromNode();
+      }
     });
 
     $scope.$on('updateErrorCount', function(event, stageInstanceErrorCounts) {

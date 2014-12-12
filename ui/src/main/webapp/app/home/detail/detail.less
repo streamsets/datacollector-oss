@@ -9,12 +9,22 @@
   box-shadow: none;
 
   .panel-heading {
+    padding: @smallPadding @smallPadding*3;
     .panel-title {
+      padding-top: @smallPadding;
       padding-right: @smallPadding;
+    }
+
+    .detail-name-dropdown {
+      .btn {
+        padding-top: @smallPadding * .5;
+        padding-bottom: 0;
+      }
     }
 
     .size-toolbar {
       span {
+        padding-top: @smallPadding * 1.3;
         padding-left: @defaultPadding;
 
         &:hover {

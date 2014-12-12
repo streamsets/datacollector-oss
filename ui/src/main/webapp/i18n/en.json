@@ -29,6 +29,7 @@
       "nextStage": "Next Stage",
       "no": "No",
       "outputRecord": "Output Record",
+      "pipeline": "Pipeline",
       "previousStage": "Previous Stage",
       "record": "Record",
       "records": "Records",
@@ -37,6 +38,7 @@
       "revertChanges": "Revert Changes",
       "sampleValue": "Sample Value",
       "save": "Save",
+      "stage": "Stage",
       "step": "Step",
       "timestamp": "Timestamp",
       "type": "Type",
@@ -103,7 +105,10 @@
         "batchThroughput": "Batch Throughput (batches/sec)",
         "recordsProcessed": "Records Processed (since last startup)",
         "recordThroughput": "Record Throughput (records/sec)",
-        "batchProcessingTimer": "Batch Processing Timer"
+        "batchProcessingTimer": "Batch Processing Timer",
+        "frequency": "Frequency (batches/sec)",
+        "duration": "Duration (Seconds)",
+        "timer": "Timer (Percentiles)"
       }
     },
     "previewPane": {

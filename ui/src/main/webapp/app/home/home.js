@@ -90,10 +90,8 @@ angular
        * @param stageInstance
        */
       changeStageSelection: function(stageInstance) {
-        if(stageInstance) {
-          $scope.$broadcast('selectNode', stageInstance);
-          updateDetailPane(stageInstance);
-        }
+        $scope.$broadcast('selectNode', stageInstance);
+        updateDetailPane(stageInstance);
       },
 
       /**
