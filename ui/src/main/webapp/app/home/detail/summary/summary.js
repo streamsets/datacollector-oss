@@ -5,11 +5,13 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('SummaryController', function ($scope, $rootScope) {
+  .controller('SummaryController', function ($scope, $rootScope, pipelineConstant) {
     angular.extend($scope, {
       summaryCounters: {},
+      summaryHistograms: {},
       summaryMeters: {},
-      summaryTimer: {}
+      summaryTimer: {},
+      histogramList:[]
     });
 
     /**
@@ -19,7 +21,64 @@ angular
       var timerProperty,
         pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig,
-        isStageSelected = (currentSelection && currentSelection.stages === undefined);
+        isStageSelected = $scope.stageSelected;
+
+      //histogram
+      if(isStageSelected) {
+        var inputRecordsHistogram =
+            pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.inputRecords.histogramM5'],
+          outputRecordsHistogram=
+            pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.outputRecords.histogramM5'],
+          errorRecordsHistogram=
+            pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.errorRecords.histogramM5'],
+          errorsHistogram =
+            pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.stageErrors.histogramM5'];
+
+        switch(currentSelection.uiInfo.stageType) {
+          case pipelineConstant.SOURCE_STAGE_TYPE:
+            $scope.histogramList = ['outputRecords', 'errorRecords', 'errors'];
+            $scope.summaryHistograms = {
+              outputRecords: outputRecordsHistogram,
+              errorRecords: errorRecordsHistogram,
+              errors: errorsHistogram
+            };
+            break;
+          case pipelineConstant.PROCESSOR_STAGE_TYPE:
+            $scope.histogramList = ['inputRecords', 'outputRecords', 'errorRecords', 'errors'];
+            $scope.summaryHistograms = {
+              inputRecords: inputRecordsHistogram,
+              outputRecords: outputRecordsHistogram,
+              errorRecords: errorRecordsHistogram,
+              errors: errorsHistogram
+            };
+
+            break;
+          case pipelineConstant.TARGET_STAGE_TYPE:
+            $scope.histogramList = ['inputRecords', 'errorRecords', 'errors'];
+            $scope.summaryHistograms = {
+              inputRecords: inputRecordsHistogram,
+              errorRecords: errorRecordsHistogram,
+              errors: errorsHistogram
+            };
+            break;
+        }
+      } else {
+        $scope.histogramList = ['inputRecords', 'outputRecords', 'errorRecords', 'errors'];
+        $scope.summaryHistograms = {
+          inputRecords:
+            pipelineMetrics.histograms['pipeline.inputRecordsPerBatch.histogramM5'],
+
+          outputRecords:
+            pipelineMetrics.histograms['pipeline.outputRecordsPerBatch.histogramM5'],
+
+          errorRecords:
+            pipelineMetrics.histograms['pipeline.errorRecordsPerBatch.histogramM5'],
+
+          errors:
+            pipelineMetrics.histograms['pipeline.errorsPerBatch.histogramM5']
+        };
+
+      }
 
       //meters
       if(isStageSelected) {

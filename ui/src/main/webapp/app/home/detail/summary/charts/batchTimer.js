@@ -12,15 +12,15 @@ angular
       };
 
     $translate('admin.detailPane.summaryTab.frequency').then(function(translation) {
-      label.frequency = [translation];
+      label.frequency = translation;
     });
 
     $translate('admin.detailPane.summaryTab.duration').then(function(translation) {
-      label.duration = [translation];
+      label.duration = translation;
     });
 
     $translate('admin.detailPane.summaryTab.timer').then(function(translation) {
-      label.timer = [translation];
+      label.timer = translation;
     });
 
     angular.extend($scope, {

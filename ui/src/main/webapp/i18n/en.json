@@ -22,6 +22,7 @@
       "errors": "Errors",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
+      "histogram": "Histogram",
       "label": "Label",
       "library": "Library",
       "metrics": "Metrics",
@@ -108,7 +109,13 @@
         "batchProcessingTimer": "Batch Processing Timer",
         "frequency": "Frequency (batches/sec)",
         "duration": "Duration (Seconds)",
-        "timer": "Timer (Percentiles)"
+        "timer": "Timer (Percentiles)",
+        "histogram" : {
+          "inputRecords": "Input Records Per Batch",
+          "outputRecords": "Output Records Per Batch",
+          "errorRecords": "Error Records Per Batch",
+          "errors": "Errors Per Batch"
+        }
       }
     },
     "previewPane": {
