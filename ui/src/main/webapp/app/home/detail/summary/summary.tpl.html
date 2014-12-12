@@ -95,7 +95,64 @@
       </div>
     </div>
 
+  </div>
 
+
+  <div class="row">
+    <div class="col-sm-12"
+         ng-controller="BatchTimerChartController">
+      <div class="panel panel-default">
+        <div class="panel-heading" translate="admin.detailPane.summaryTab.batchProcessingTimer">Batch Processing Timer</div>
+        <div class="panel-body">
+
+          <div class="col-sm-4">
+            <nvd3-multi-bar-horizontal-chart
+              data="frequencyData"
+              id="frequencyDataBatchTimerChartID"
+              height="250"
+              color="getColor()"
+              legendColor="getColor()"
+              showLegend="true"
+              showXAxis="true"
+              showValues="true"
+              margin="{left:50,top:70,bottom:20,right:20}">
+              <svg></svg>
+            </nvd3-multi-bar-horizontal-chart>
+          </div>
+
+          <div class="col-sm-4">
+            <nvd3-multi-bar-horizontal-chart
+              data="durationData"
+              id="durationDataBatchTimerChartID"
+              height="250"
+              color="getColor()"
+              legendColor="getColor()"
+              showLegend="true"
+              showXAxis="true"
+              showValues="true"
+              margin="{left:50,top:70,bottom:20,right:20}">
+              <svg></svg>
+            </nvd3-multi-bar-horizontal-chart>
+          </div>
+
+          <div class="col-sm-4">
+            <nvd3-multi-bar-horizontal-chart
+              data="timerData"
+              id="timerDataBatchTimerChartID"
+              height="250"
+              color="getColor()"
+              legendColor="getColor()"
+              showLegend="true"
+              showXAxis="true"
+              showValues="true"
+              margin="{left:50,top:70,bottom:20,right:20}">
+              <svg></svg>
+            </nvd3-multi-bar-horizontal-chart>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
