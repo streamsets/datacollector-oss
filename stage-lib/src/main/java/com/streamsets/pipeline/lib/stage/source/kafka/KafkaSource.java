@@ -15,10 +15,19 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.io.CountingReader;
+import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
+import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.pipeline.lib.stage.source.spooldir.json.JsonFileModeChooserValues;
+import com.streamsets.pipeline.lib.stage.source.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +37,8 @@ import java.util.List;
 public class KafkaSource extends BaseSource {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaSource.class);
+
+  /****************** Start config options *******************/
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.STRING,
@@ -92,6 +103,27 @@ public class KafkaSource extends BaseSource {
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PayloadTypeChooserValues.class)
   public PayloadType payloadType;
 
+  /********  For Json Content  ***********/
+
+  @ConfigDef(required = true,
+    type = ConfigDef.Type.MODEL,
+    label = "JSON Content",
+    description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects",
+    defaultValue = "ARRAY_OBJECTS")
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
+  public StreamingJsonParser.Mode jsonContent;
+
+  @ConfigDef(required = true,
+    type = ConfigDef.Type.INTEGER,
+    label = "Maximum JSON Object Length",
+    description = "The maximum length for a JSON Object being converted to a record, if greater the full JSON " +
+      "object is discarded and processing continues with the next JSON object",
+    defaultValue = "4096")
+  public int maxJsonObjectLen;
+
+
+  /****************** End config options *******************/
+
   private KafkaConsumer kafkaConsumer;
 
   @Override
@@ -121,8 +153,7 @@ public class KafkaSource extends BaseSource {
     } catch (StageException e) {
       throw e;
     } catch (Exception e) {
-      //FIXME: throw stage exception with apt error
-      throw new StageException(null, null);
+      throw new StageException(null, e.getMessage(), e);
     }
 
     String offsetToReturn = null;
@@ -130,24 +161,34 @@ public class KafkaSource extends BaseSource {
     for(MessageAndOffset partitionToPayloadMap : partitionToPayloadMaps) {
       //create record by parsing the message payload based on the pay load type configuration
       //As of now handle just String
-      byte[] payload = partitionToPayloadMap.getPayload();
-      recordCounter++;
       if(recordCounter == maxBatchSize) {
         //even though kafka has many messages, we need to cap the number of records to a value indicated by maxBatchSize.
         //return the offset of the previous record so that the next time we get start from this message which did not
         //make it to this batch.
         break;
       }
+      recordCounter++;
       Record record = getContext().createRecord(topic + "." + partition + "." + System.currentTimeMillis() + "."
         + recordCounter);
+      ByteBuffer payload  = partitionToPayloadMap.getPayload();
+      byte[] bytes = new byte[payload.limit()];
+      payload.get(bytes);
+
       if (payloadType == PayloadType.STRING) {
         //TODO: Is the last message complete?
-        record.set(Field.create(new String(payload)));
+        record.set(Field.create(new String(bytes)));
         offsetToReturn = String.valueOf(partitionToPayloadMap.getOffset());
-      } else if (payloadType == PayloadType.XML) {
+      } else if (payloadType == PayloadType.CSV) {
+
 
       } else if(payloadType == PayloadType.JSON) {
-
+        try (CountingReader reader =
+               new CountingReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes))))) {
+          OverrunStreamingJsonParser parser = new OverrunStreamingJsonParser(reader, jsonContent, maxJsonObjectLen);
+          record.set(JsonUtil.jsonToField(parser.read()));
+        } catch (Exception e) {
+          throw new StageException(null, e.getMessage(), e);
+        }
       } else {
         //This can happen only due to coding error
         throw new IllegalStateException("Unexpected state");
@@ -161,4 +202,5 @@ public class KafkaSource extends BaseSource {
   public void destroy() {
     kafkaConsumer.destroy();
   }
+
 }

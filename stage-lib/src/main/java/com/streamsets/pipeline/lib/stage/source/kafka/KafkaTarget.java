@@ -5,11 +5,19 @@
  */
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ChooserMode;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Iterator;
 
 @GenerateResourceBundle
@@ -77,7 +85,11 @@ public class KafkaTarget extends BaseTarget {
     Iterator<Record> records = batch.getRecords();
     while(records.hasNext()) {
       Record r = records.next();
-      kafkaProducer.enqueueRecord(r);
+      try {
+        kafkaProducer.enqueueRecord(r);
+      } catch (IOException e) {
+        throw new StageException(null, e.getMessage(), e);
+      }
       recordCounter++;
     }
     kafkaProducer.write();

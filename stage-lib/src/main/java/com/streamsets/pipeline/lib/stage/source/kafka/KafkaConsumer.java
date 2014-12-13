@@ -19,7 +19,6 @@ import kafka.javaapi.consumer.SimpleConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -126,10 +125,7 @@ public class KafkaConsumer {
         LOG.warn("Found old offset '{}'. Expected offset '{}'. Discarding message", currentOffset, offset);
         continue;
       }
-      ByteBuffer payload = messageAndOffset.message().payload();
-      byte[] bytes = new byte[payload.limit()];
-      payload.get(bytes);
-      MessageAndOffset partitionToPayloadMap = new MessageAndOffset(bytes, messageAndOffset.nextOffset());
+      MessageAndOffset partitionToPayloadMap = new MessageAndOffset(messageAndOffset.message().payload(), messageAndOffset.nextOffset());
       partitionToPayloadMapArrayList.add(partitionToPayloadMap);
       numberOfMessagesRead++;
     }

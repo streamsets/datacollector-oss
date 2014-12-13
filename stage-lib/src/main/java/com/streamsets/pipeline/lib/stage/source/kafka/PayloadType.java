@@ -8,5 +8,6 @@ package com.streamsets.pipeline.lib.stage.source.kafka;
 public enum PayloadType {
   STRING,
   JSON,
-  XML
+  XML,
+  CSV
 }

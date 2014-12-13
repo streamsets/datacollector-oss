@@ -5,18 +5,22 @@
  */
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 public class TestKafkaConsumer {
 
   public static void main(String[] args) throws Exception {
-    KafkaConsumer kafkaConsumer = new KafkaConsumer("AA", 1, new KafkaBroker("localhost", 9001), 4000,
-      64000, 1000);
+    KafkaConsumer kafkaConsumer = new KafkaConsumer("GG1", 0, new KafkaBroker("localhost", 9001), 4000,
+      640000, 1000);
     kafkaConsumer.init();
 
     List<MessageAndOffset> read = kafkaConsumer.read(0);
     for(MessageAndOffset m : read) {
-      System.out.println(new String(m.getPayload()));
+      ByteBuffer payload  = m.getPayload();
+      byte[] bytes = new byte[payload.limit()];
+      payload.get(bytes);
+      System.out.println(new String(bytes));
     }
   }
 }

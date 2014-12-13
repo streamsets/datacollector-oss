@@ -5,13 +5,17 @@
  */
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.stage.source.util.JsonUtil;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -66,7 +70,7 @@ public class KafkaProducer {
     producer = new Producer<>(config);
   }
 
-  public void enqueueRecord(Record record) {
+  public void enqueueRecord(Record record) throws IOException {
     messageList.add(new KeyedMessage<>(topic, partitionKey, serializeRecord(record)));
   }
 
@@ -90,9 +94,13 @@ public class KafkaProducer {
     }
   }
 
-  private byte[] serializeRecord(Record r) {
+  private byte[] serializeRecord(Record r) throws IOException {
     if(payloadType == PayloadType.STRING) {
       return r.get().getValue().toString().getBytes();
+    } if (payloadType == PayloadType.JSON) {
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+      return objectMapper.writeValueAsBytes(JsonUtil.fieldToJsonObject(r.get()));
     }
     return null;
   }
