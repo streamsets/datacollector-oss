@@ -107,13 +107,19 @@ angular
         currentSelection = $scope.detailPaneConfig,
         stages = $scope.pipelineConfig.stages,
         badRecordsArr = [],
-        errorMessagesArr = [];
+        errorMessagesArr = [],
+        errorRecordsHistogram,
+        errorsHistogram;
 
       if($scope.isPipelineRunning && pipelineMetrics && pipelineMetrics.meters) {
         if(currentSelection.instanceName) {
-          $scope.errorRecordsCount = pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter'];
-          $scope.errorMessagesCount = pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.stageErrors.meter'];
+          errorRecordsHistogram = pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.errorRecords.histogramM5'];
+          errorsHistogram = pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.stageErrors.histogramM5'];
+
+          $scope.errorRecordsCount = errorRecordsHistogram.mean; //pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter'];
+          $scope.errorMessagesCount = errorsHistogram.mean; //pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.stageErrors.meter'];
         } else {
+
           angular.forEach(stages, function(stage) {
             badRecordsArr.push([stage.uiInfo.label,
               pipelineMetrics.meters['stage.' + stage.instanceName + '.errorRecords.meter'].count
@@ -133,7 +139,67 @@ angular
             key: "Error Messages",
             values: errorMessagesArr
           }];
+
+          errorRecordsHistogram = pipelineMetrics.histograms['pipeline.errorRecordsPerBatch.histogramM5'];
+          errorsHistogram = pipelineMetrics.histograms['pipeline.errorsPerBatch.histogramM5'];
         }
+
+        $scope.errorRecordsDurationData = [
+          {
+            key: 'Counts',
+            values: [
+              ["Min" , errorRecordsHistogram.min ],
+              ["Mean" , errorRecordsHistogram.mean ],
+              ["Max" , errorRecordsHistogram.max ],
+              ["Std Dev" , errorRecordsHistogram.stddev ]
+            ],
+            color: '#AEC7E8'
+          }
+        ];
+
+        $scope.errorRecordsPercentilesData = [
+          {
+            key: 'Percentiles',
+            values: [
+              ["99.9%" , errorRecordsHistogram.p999 ],
+              ["99%" , errorRecordsHistogram.p99 ],
+              ["98%" , errorRecordsHistogram.p98 ],
+              ["95%" , errorRecordsHistogram.p95 ],
+              ["75%" , errorRecordsHistogram.p75 ],
+              ["50%" , errorRecordsHistogram.p50 ]
+            ],
+            color: '#FF7F0E'
+          }
+        ];
+
+        $scope.errorsDurationData = [
+          {
+            key: 'Counts',
+            values: [
+              ["Min" , errorsHistogram.min ],
+              ["Mean" , errorsHistogram.mean ],
+              ["Max" , errorsHistogram.max ],
+              ["Std Dev" , errorsHistogram.stddev ]
+            ],
+            color: '#AEC7E8'
+          }
+        ];
+
+        $scope.errorsPercentilesData = [
+          {
+            key: 'Percentiles',
+            values: [
+              ["99.9%" , errorsHistogram.p999 ],
+              ["99%" , errorsHistogram.p99 ],
+              ["98%" , errorsHistogram.p98 ],
+              ["95%" , errorsHistogram.p95 ],
+              ["75%" , errorsHistogram.p75 ],
+              ["50%" , errorsHistogram.p50 ]
+            ],
+            color: '#FF7F0E'
+          }
+        ];
+
       }
     });
 

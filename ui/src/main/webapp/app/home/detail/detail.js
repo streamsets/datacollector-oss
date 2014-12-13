@@ -21,7 +21,7 @@ angular
           template:'app/home/detail/configuration/configuration.tpl.html'
         },
         {
-          name:'badRecords',
+          name:'errors',
           template:'app/home/detail/badRecords/badRecords.tpl.html'
         },
         {
@@ -79,7 +79,7 @@ angular
 
     $scope.$on('showBadRecordsSelected', function() {
       angular.forEach($scope.detailPaneTabs, function(tab) {
-        if(tab.name === 'badRecords') {
+        if(tab.name === 'errors') {
           tab.active = true;
         }
       });

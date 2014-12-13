@@ -437,9 +437,10 @@ angular
       var stageInstanceErrorCounts = {};
 
       angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
-        stageInstanceErrorCounts[stageInstance.instanceName] =
-          $rootScope.common.pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'].count +
-          $rootScope.common.pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.stageErrors.meter'].count;
+        stageInstanceErrorCounts[stageInstance.instanceName] = Math.round(
+          $rootScope.common.pipelineMetrics.histograms['stage.' + stageInstance.instanceName + '.errorRecords.histogramM5'].mean +
+          $rootScope.common.pipelineMetrics.histograms['stage.' + stageInstance.instanceName + '.stageErrors.histogramM5'].mean
+        );
       });
 
       return stageInstanceErrorCounts;

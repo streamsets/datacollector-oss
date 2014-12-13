@@ -16,6 +16,46 @@
         </div>
       </form>
 
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading" translate="admin.detailPane.badRecordsTab.badRecordsHistogram">Bad Records Histogram</div>
+          <div class="panel-body">
+
+            <div class="col-sm-6">
+              <nvd3-multi-bar-horizontal-chart
+                data="errorRecordsDurationData"
+                id="stageErrorRecordsDurationDataID"
+                height="250"
+                color="getColor()"
+                legendColor="getColor()"
+                showLegend="true"
+                showXAxis="true"
+                showValues="true"
+                margin="{left:50,top:70,bottom:20,right:20}">
+                <svg></svg>
+              </nvd3-multi-bar-horizontal-chart>
+            </div>
+
+            <div class="col-sm-6">
+              <nvd3-multi-bar-horizontal-chart
+                data="errorRecordsPercentilesData"
+                id="stageErrorRecordsPercentilesDataID"
+                height="250"
+                color="getColor()"
+                legendColor="getColor()"
+                showLegend="true"
+                showXAxis="true"
+                showValues="true"
+                margin="{left:50,top:70,bottom:20,right:20}">
+                <svg></svg>
+              </nvd3-multi-bar-horizontal-chart>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
       <table class="table" ng-if="stageBadRecords && stageBadRecords.length > 0">
         <caption>
           <label translate="admin.detailPane.badRecordsTab.mostRecentBadRecords">Most Recent Bad Records</label>
@@ -83,6 +123,46 @@
           </div>
         </div>
       </form>
+
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading" translate="admin.detailPane.badRecordsTab.errorsHistogram">Errors Histogram</div>
+          <div class="panel-body">
+
+
+            <div class="col-sm-6">
+              <nvd3-multi-bar-horizontal-chart
+                data="errorsDurationData"
+                id="stageErrorsDurationDataID"
+                height="250"
+                color="getColor()"
+                legendColor="getColor()"
+                showLegend="true"
+                showXAxis="true"
+                showValues="true"
+                margin="{left:50,top:70,bottom:20,right:20}">
+                <svg></svg>
+              </nvd3-multi-bar-horizontal-chart>
+            </div>
+
+            <div class="col-sm-6">
+              <nvd3-multi-bar-horizontal-chart
+                data="errorsPercentilesData"
+                id="stageErrorsPercentilesDataID"
+                height="250"
+                color="getColor()"
+                legendColor="getColor()"
+                showLegend="true"
+                showXAxis="true"
+                showValues="true"
+                margin="{left:50,top:70,bottom:20,right:20}">
+                <svg></svg>
+              </nvd3-multi-bar-horizontal-chart>
+            </div>
+
+          </div>
+        </div>
+      </div>
 
       <table class="table table-hover" ng-if="errorMessages && errorMessages.length > 0">
         <caption>

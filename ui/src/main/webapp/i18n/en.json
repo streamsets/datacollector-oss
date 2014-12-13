@@ -85,12 +85,17 @@
     },
     "detailPane": {
       "alerts": "Alerts",
+      "errors": "Errors",
       "badRecords": "Bad Records",
       "badRecordsTab": {
         "mostRecentBadRecords": "Most Recent Bad Records",
         "mostRecentErrorMessages": "Most Recent Error Messages",
         "totalNumberOfBadRecords": "Total Number of Bad Records",
-        "totalNumberOfErrors": "Total Number of Errors"
+        "totalNumberOfErrors": "Total Number of Errors",
+        "badRecordsCounts": "Bad Records Count",
+        "badRecordsHistogram": "Bad Records Histogram",
+        "errorsCount": "Errors Count",
+        "errorsHistogram": "Errors Histogram"
       },
       "configuration": "Configuration",
       "configurationTab": {
