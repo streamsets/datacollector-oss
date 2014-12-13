@@ -5,6 +5,7 @@
       "import": "Import",
       "export": "Export",
       "logout": "Logout",
+      "shutdown": "Shutdown",
       "toggleNavigation": "Toggle navigation"
     },
     "form": {
@@ -144,6 +145,11 @@
       "headerLabel" : "Import Pipeline Definition",
       "fileUploadPlaceholder": "No file chosen",
       "browse": "Browse"
+    },
+    "shutdown": {
+      "headerLabel": "Shutdown Collector",
+      "secretPlaceholder": "Enter Secret...",
+      "successMessage": "Collector is stopped."
     }
   },
   "flow": {

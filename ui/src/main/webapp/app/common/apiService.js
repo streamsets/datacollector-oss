@@ -405,6 +405,14 @@ angular.module('pipelineAgentApp.common')
           method: 'GET',
           url: url
         });
+      },
+
+      shutdownCollector: function(secret) {
+        var url = apiBase + '/admin/shutdown?secret=' + secret;
+        return $http({
+          method: 'POST',
+          url: url
+        });
       }
     };
 

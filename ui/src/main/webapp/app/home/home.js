@@ -493,6 +493,16 @@ angular
       });
     });
 
+
+    $scope.$on('shutdownCollector', function() {
+      $modal.open({
+        templateUrl: 'shutdownModalContent.html',
+        controller: 'ShutdownModalInstanceController',
+        size: '',
+        backdrop: true
+      });
+    });
+
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
       if(configInfo) {
         $scope.activeConfigInfo = configInfo;

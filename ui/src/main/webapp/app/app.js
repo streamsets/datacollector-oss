@@ -57,6 +57,10 @@ angular.module('pipelineAgentApp', [
         $rootScope.$broadcast('exportPipelineConfig');
       },
 
+      shutdownCollector: function() {
+        $rootScope.$broadcast('shutdownCollector');
+      },
+
       /**
        * Logout header link command handler
        */
