@@ -50,6 +50,11 @@ import java.util.Set;
  * structure. The {@link #get(String)}, {@link #has(String)}, {@link #delete(String)} and {@link #getFieldPaths()}
  * methods work using field- path expressions.
  * <p/>
+ * <b>IMPORTANT:</b> Field-path expressions require escaping if a Map key name has any of the following 3 special
+ * characters '<code>/</code>', '<code>[</code>' or '<code>]</code>'. The escaping is using a a double occurrence of the
+ * special character wanting to escape. For example a name '<code>hello[5]<code>', escaped, is '<code>hello[[5]]<code>',
+ * or the name '<code>foo/bar</code>' is '<code>foo//bar</code>'.
+ * <p/>
  * The {@link #hashCode}, {@link #equals} and {@link #clone} methods work in deep operation mode on <code>Record</code>.
  */
 public interface Record {
