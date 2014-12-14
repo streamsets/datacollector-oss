@@ -100,6 +100,11 @@ public class ProcessorRunner<T extends Processor> {
       return this;
     }
 
+    public Builder<T> configure(String key, Object value) {
+      configMap.put(key, value);
+      return this;
+    }
+
     public Builder<T> sourceOffset(String sourceOffset) {
       this.sourceOffset = sourceOffset;
       return this;
