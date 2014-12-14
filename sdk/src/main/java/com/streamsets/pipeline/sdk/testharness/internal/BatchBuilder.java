@@ -57,7 +57,7 @@ public class BatchBuilder {
   public Batch build() {
     List<Record> records = new ArrayList<Record>();
     for(int i = 0; i < maxBatchSize; i++) {
-      records.add(recordProducer.produce());
+      records.add(recordProducer.create());
     }
     return new BatchImpl("instance", null, records);
   }

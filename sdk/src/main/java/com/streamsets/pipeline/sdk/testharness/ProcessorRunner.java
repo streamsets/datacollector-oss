@@ -11,6 +11,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.container.ErrorMessage;
+import com.streamsets.pipeline.runner.ErrorSink;
 import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.sdk.testharness.internal.Constants;
 import com.streamsets.pipeline.sdk.testharness.internal.StageInfo;
@@ -21,6 +23,7 @@ import com.streamsets.pipeline.sdk.util.StageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +37,8 @@ public class ProcessorRunner<T extends Processor> {
   private final BatchBuilder batchBuilder;
   private final BatchMaker batchMaker;
   private final Stage.Info info;
-  private final Stage.Context context;
+  private final ErrorSink errorSink;
+  private final StageContext context;
 
   /*******************************************************/
   /***************** public methods **********************/
@@ -49,7 +53,7 @@ public class ProcessorRunner<T extends Processor> {
 
   public void init() throws StageException {
     try {
-      processor.init(info, (Processor.Context)context);
+      processor.init(info, context);
     } catch (StageException e) {
       LOG.error("Failed to init Processor. Message : " + e.getMessage());
       throw e;
@@ -71,6 +75,19 @@ public class ProcessorRunner<T extends Processor> {
 
   public Map<String, List<Record>> getOutput() {
     return ((BatchMakerImpl)batchMaker).getLaneToRecordsMap();
+  }
+
+  public List<Record> getErrorRecords() {
+    return errorSink.getErrorRecords(info.getInstanceName());
+  }
+
+  public List<String> getErrors() {
+    List<ErrorMessage> errors = errorSink.getStageErrors(info.getInstanceName());
+    List<String> list = new ArrayList<>();
+    for (ErrorMessage error : errors) {
+      list.add(error.getNonLocalized());
+    }
+    return list;
   }
 
   /*******************************************************/
@@ -144,7 +161,6 @@ public class ProcessorRunner<T extends Processor> {
           instanceName);
       //mockInfoAndContextForStage and stub Source.Context
       context = new StageContext(instanceName, outputLanes);
-
       //update batchbuilder
       batchBuilder.setSourceOffset(sourceOffset);
       batchBuilder.setMaxBatchSize(maxBatchSize);
@@ -172,12 +188,14 @@ public class ProcessorRunner<T extends Processor> {
   /*******************************************************/
 
   private ProcessorRunner(T processor, BatchBuilder batchBuilder,
-                          Set<String> outputlanes, Stage.Info info, Stage.Context context) {
+                          Set<String> outputlanes, Stage.Info info, StageContext context) {
     this.processor = processor;
     this.batchBuilder = batchBuilder;
     this.batchMaker = new BatchMakerImpl(outputlanes);
     this.info = info;
     this.context = context;
+    errorSink = new ErrorSink();
+    context.setErrorSink(errorSink);
   }
 
 }

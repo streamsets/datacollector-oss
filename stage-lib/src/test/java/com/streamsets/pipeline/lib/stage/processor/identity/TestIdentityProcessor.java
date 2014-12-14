@@ -12,7 +12,6 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.stage.processor.identity.IdentityProcessor;
 import com.streamsets.pipeline.sdk.testharness.internal.Constants;
 import com.streamsets.pipeline.sdk.testharness.ProcessorRunner;
 import com.streamsets.pipeline.sdk.testharness.RecordProducer;
@@ -52,9 +51,9 @@ public class TestIdentityProcessor {
   public void testIdentityProcDefaultConfig() throws StageException {
     //Build record producer
     RecordProducer rp = new RecordProducer();
-    rp.addFiled("transactionLog", RecordProducer.Type.STRING);
-    rp.addFiled("transactionFare", RecordProducer.Type.DOUBLE);
-    rp.addFiled("transactionDay", RecordProducer.Type.INTEGER);
+//    rp.set("transactionLog", RecordProducer.Type.STRING);
+//    rp.set("transactionFare", RecordProducer.Type.DOUBLE);
+//    rp.set("transactionDay", RecordProducer.Type.INTEGER);
 
     Map<String, List<Record>> result = new ProcessorRunner.Builder<IdentityProcessor>(rp)
       .addProcessor(IdentityProcessor.class)
@@ -71,9 +70,9 @@ public class TestIdentityProcessor {
   public void testIdentityProc() throws StageException {
     //Build record producer
     RecordProducer rp = new RecordProducer();
-    rp.addFiled("transactionLog", RecordProducer.Type.STRING);
-    rp.addFiled("transactionFare", RecordProducer.Type.DOUBLE);
-    rp.addFiled("transactionDay", RecordProducer.Type.INTEGER);
+//    rp.set("transactionLog", RecordProducer.Type.STRING);
+//    rp.set("transactionFare", RecordProducer.Type.DOUBLE);
+//    rp.set("transactionDay", RecordProducer.Type.INTEGER);
 
     Map<String, List<Record>> result = new ProcessorRunner.Builder<IdentityProcessor>(rp)
       .addProcessor(IdentityProcessor.class)

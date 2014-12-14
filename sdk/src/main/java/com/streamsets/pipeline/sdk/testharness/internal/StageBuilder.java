@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.runner.StageContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ public abstract class StageBuilder {
 
   protected Map<String, Object> configMap = null;
   protected Stage.Info info = null;
-  protected Stage.Context context = null;
+  protected StageContext context = null;
   protected String instanceName;
   protected Stage stage;
   /*Source offset*/
