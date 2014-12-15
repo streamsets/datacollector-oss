@@ -17,8 +17,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-pipeline-sdk-test</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Pipeline Stage SDK Test</description>
-  <name>StreamSets Pipeline Stage SDK Test</name>
+  <description>StreamSets Pipeline SDK Test</description>
+  <name>StreamSets Pipeline SDK Test</name>
   <packaging>jar</packaging>
 
   <dependencies>

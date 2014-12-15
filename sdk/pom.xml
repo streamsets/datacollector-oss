@@ -17,8 +17,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-pipeline-sdk</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Pipeline Stage SDK</description>
-  <name>StreamSets Pipeline Stage SDK</name>
+  <description>StreamSets Pipeline SDK</description>
+  <name>StreamSets Pipeline SDK</name>
   <packaging>jar</packaging>
 
   <dependencies>
