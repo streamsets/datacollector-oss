@@ -14,7 +14,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.testharness.internal.Constants;
 import com.streamsets.pipeline.sdk.testharness.ProcessorRunner;
-import com.streamsets.pipeline.sdk.testharness.RecordProducer;
+import com.streamsets.pipeline.sdk.testharness.RecordCreator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -50,7 +50,7 @@ public class TestIdentityProcessor {
   @SuppressWarnings("unchecked")
   public void testIdentityProcDefaultConfig() throws StageException {
     //Build record producer
-    RecordProducer rp = new RecordProducer();
+    RecordCreator rp = new RecordCreator();
 //    rp.set("transactionLog", RecordProducer.Type.STRING);
 //    rp.set("transactionFare", RecordProducer.Type.DOUBLE);
 //    rp.set("transactionDay", RecordProducer.Type.INTEGER);
@@ -69,7 +69,7 @@ public class TestIdentityProcessor {
   @SuppressWarnings("unchecked")
   public void testIdentityProc() throws StageException {
     //Build record producer
-    RecordProducer rp = new RecordProducer();
+    RecordCreator rp = new RecordCreator();
 //    rp.set("transactionLog", RecordProducer.Type.STRING);
 //    rp.set("transactionFare", RecordProducer.Type.DOUBLE);
 //    rp.set("transactionDay", RecordProducer.Type.INTEGER);

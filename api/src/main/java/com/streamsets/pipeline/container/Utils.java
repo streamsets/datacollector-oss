@@ -31,6 +31,12 @@ public final class Utils {
     }
   }
 
+  public static void checkState(boolean expression, String msg) {
+    if (!expression) {
+      throw new IllegalStateException(msg);
+    }
+  }
+
   public static String format(String template, Object... args) {
     return MessageFormatter.arrayFormat(template, args).getMessage();
   }

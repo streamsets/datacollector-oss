@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.stage.processor.selector.OnNoPredicateMatch;
 import com.streamsets.pipeline.lib.stage.processor.selector.SelectorProcessor;
 import com.streamsets.pipeline.sdk.testharness.ProcessorRunner;
-import com.streamsets.pipeline.sdk.testharness.RecordProducer;
+import com.streamsets.pipeline.sdk.testharness.RecordCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -95,7 +95,7 @@ public class TestSelectorProcessor {
 
   @Test
   public void testSelectWithDefault() throws Exception {
-    RecordProducer records = new RecordProducer() {
+    RecordCreator records = new RecordCreator() {
       private int counter;
       @Override
       public Record create() {
@@ -130,7 +130,7 @@ public class TestSelectorProcessor {
 
   @Test
   public void testSelectWithoutDefaultDropping() throws Exception {
-    RecordProducer records = new RecordProducer() {
+    RecordCreator records = new RecordCreator() {
       private int counter;
       @Override
       public Record create() {
@@ -163,7 +163,7 @@ public class TestSelectorProcessor {
 
   @Test
   public void testSelectWithoutDefaultToError() throws Exception {
-    RecordProducer records = new RecordProducer() {
+    RecordCreator records = new RecordCreator() {
       private int counter;
       @Override
       public Record create() {
@@ -198,7 +198,7 @@ public class TestSelectorProcessor {
 
   @Test(expected = StageException.class)
   public void testSelectWithoutDefaultFailPipeline() throws Exception {
-    RecordProducer records = new RecordProducer() {
+    RecordCreator records = new RecordCreator() {
       private int counter = 1;
       @Override
       public Record create() {

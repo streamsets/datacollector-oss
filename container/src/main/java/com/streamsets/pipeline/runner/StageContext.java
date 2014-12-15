@@ -79,6 +79,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     return MetricsConfigurator.createCounter(getMetrics(), CUSTOM_METRICS_PREFIX +instanceName + "." + name);
   }
 
+  // for SDK
+  public ErrorSink getErrorSink() {
+    return errorSink;
+  }
+
   public void setErrorSink(ErrorSink errorSink) {
     this.errorSink = errorSink;
   }

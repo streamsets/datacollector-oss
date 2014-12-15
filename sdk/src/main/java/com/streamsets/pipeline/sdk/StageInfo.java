@@ -3,12 +3,11 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.sdk.testharness.internal;
+package com.streamsets.pipeline.sdk;
 
 import com.streamsets.pipeline.api.Stage;
 
-public class StageInfo implements Stage.Info {
-
+class StageInfo implements Stage.Info {
   private final String name;
   private final String version;
   private final String instanceName;
@@ -33,4 +32,5 @@ public class StageInfo implements Stage.Info {
   public String getInstanceName() {
     return instanceName;
   }
+
 }

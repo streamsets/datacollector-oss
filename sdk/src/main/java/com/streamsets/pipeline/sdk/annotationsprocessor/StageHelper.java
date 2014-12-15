@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.sdk.util;
+package com.streamsets.pipeline.sdk.annotationsprocessor;
 
 public class StageHelper {
 

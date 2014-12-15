@@ -29,6 +29,12 @@ public class ErrorSink {
     size = 0;
   }
 
+  // for SDK
+  public void clear() {
+    stageErrors.clear();
+    errorRecords.clear();
+  }
+
   public void addError(String stage, ErrorMessage errorMessage) {
     addError(stageErrors, stage, errorMessage);
   }

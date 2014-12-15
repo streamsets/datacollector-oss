@@ -1,4 +1,4 @@
-package com.streamsets.pipeline.sdk.testharness.internal;
+package com.streamsets.pipeline.sdk;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
@@ -10,25 +10,25 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Implementation of BatchMaker interface for the test harness
+ * Implementation of BatchMaker interface for SDK
  */
-public class BatchMakerImpl implements BatchMaker {
+class BatchMakerImpl implements BatchMaker {
 
   private final Set<String> outputLanes;
   private final Map<String, List<Record>> laneToRecordsMap;
   private final String singleLaneOutput;
 
-  public BatchMakerImpl(Set<String> outputlanes) {
-    outputLanes = outputlanes;
-    if(outputlanes.size() == 1) {
-      singleLaneOutput = outputlanes.iterator().next();
+  public BatchMakerImpl(Set<String> outputLanes) {
+    this.outputLanes = outputLanes;
+    if(outputLanes.size() == 1) {
+      singleLaneOutput = outputLanes.iterator().next();
     } else {
       singleLaneOutput = null;
     }
     laneToRecordsMap = new HashMap<>();
     //The output map should always have a key for all the defined output lanes, if the stage did not produce any record
     // for a lane, the value in the map should be an empty record list.
-    for(String lane : outputlanes) {
+    for(String lane : outputLanes) {
       laneToRecordsMap.put(lane, new ArrayList<Record>());
     }
   }
@@ -59,12 +59,7 @@ public class BatchMakerImpl implements BatchMaker {
     }
   }
 
-  /**
-   * Returns the contents of records present in this batch maker as
-   * a Map of lane names and the corresponding records
-   * @return
-   */
-  public Map<String, List<Record>> getLaneToRecordsMap() {
+  public Map<String, List<Record>> getOutput() {
     return laneToRecordsMap;
   }
 }
