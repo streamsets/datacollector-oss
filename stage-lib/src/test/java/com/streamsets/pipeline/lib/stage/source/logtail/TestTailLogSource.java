@@ -61,7 +61,7 @@ public class TestTailLogSource {
   public void testTailFromBeginning() throws Exception {
     SourceRunner runner = new SourceRunner.Builder(LogTailSource.class)
         .addConfiguration("logFileName", logFile)
-        .addConfiguration("tailFromEnd", true)
+        .addConfiguration("tailFromEnd", false)
         .addConfiguration("maxLinesPrefetch", 50)
         .addConfiguration("batchSize", 25)
         .addConfiguration("maxWaitTime", 100)

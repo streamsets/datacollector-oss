@@ -720,7 +720,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     } else if (configDefAnnot.type().equals(ConfigDef.Type.MAP)) {
       if(!fieldType.toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
         printError("field.validation.type.is.not.map",
-                   "A The type of the field {} is expected to be Map<String, String>.",
+                   "The type of the field {} is expected to be Map<String, String>.",
                    typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }
@@ -810,7 +810,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     boolean valid = true;
     if (!variableElement.asType().toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
       printError("field.validation.type.is.not.map",
-                 "B The type of the field {} is expected to be Map<String, String>.",
+                 "The type of the field {} is expected to be Map<String, String>.",
                  typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
       valid = false;
     }
@@ -857,14 +857,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           Element e = getTypeElementFromName(valueType);
           if(!e.getKind().equals(ElementKind.ENUM)) {
             printError("field.validation.type.is.not.map",
-                "C The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
+                "The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
                 typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
             valid = false;
           }
         }
       } else {
         printError("field.validation.type.is.not.map",
-            "D The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
+            "The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
             typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }
@@ -884,7 +884,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     } else {
       if (!type.equals("java.util.Map<java.lang.String,java.lang.String>")) {
         printError("field.validation.type.is.not.map",
-            "E The type of the field {} is expected to be Map<String, String>.",
+            "The type of the field {} is expected to be Map<String, String>.",
             typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }
