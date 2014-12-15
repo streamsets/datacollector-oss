@@ -472,37 +472,6 @@ angular
       updateDetailPane();
     });
 
-    $scope.$on('exportPipelineConfig', function () {
-      api.pipelineAgent.exportPipelineConfig($scope.activeConfigInfo.name);
-    });
-
-    $scope.$on('importPipelineConfig', function () {
-      var modalInstance = $modal.open({
-        templateUrl: 'importModalContent.html',
-        controller: 'ImportModalInstanceController',
-        size: '',
-        backdrop: true
-      });
-
-      modalInstance.result.then(function (jsonConfigObj) {
-        //Update uuid of imported file and save the configuration.
-        jsonConfigObj.uuid = $scope.pipelineConfig.uuid;
-        saveUpdates(jsonConfigObj);
-      }, function () {
-
-      });
-    });
-
-
-    $scope.$on('shutdownCollector', function() {
-      $modal.open({
-        templateUrl: 'shutdownModalContent.html',
-        controller: 'ShutdownModalInstanceController',
-        size: '',
-        backdrop: true
-      });
-    });
-
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
       if(configInfo) {
         $scope.activeConfigInfo = configInfo;

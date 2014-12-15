@@ -26,53 +26,77 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="logo" href="/">
+      <a class="logo" href="#/">
         <img src="/assets/logo.png" />
       </a>
     </div>
     <div class="collapse navbar-collapse">
 
       <ul class="nav navbar-nav navbar-right" ng-cloak>
-        <li class="pipelineAgent-status" ng-hide="common.saveOperationInProgress">
-          <span class="glyphicon glyphicon-ok-circle"></span>
-          <span translate="global.messages.info.saveOperationInProgress"></span>
-        </li>
-
-        <li class="pipelineAgent-status" ng-show="common.saveOperationInProgress"
-            translate="global.messages.info.savingConfiguration">
-        </li>
-
         <li>
-          <a href="#" ng-click="common.importPipelineConfig()">
-            <span translate="global.menu.import">Import</span>
+          <a href="/">
+            <i class="fa fa-home fa-lg"></i>
+            <span translate="global.menu.home">Home</span>
           </a>
         </li>
 
-        <li>
-          <a href="#" ng-click="common.exportPipelineConfig()">
-            <span translate="global.menu.export">Export</span>
+        <li class="dropdown pointer">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+            <span>
+                <i class="fa fa-cogs fa-lg"></i>
+                <span class="hidden-tablet" translate="global.menu.admin.main">
+                    Administration
+                </span>
+                <b class="caret"></b>
+            </span>
           </a>
+          <ul class="dropdown-menu">
+            <li><a href="/jvmMetrics">
+              <i class="fa fa-dashboard"></i>
+              <span translate="global.menu.admin.jvmMetrics">JVM Metrics</span></a></li>
+            <li>
+              <a href="/logs">
+                <i class="fa fa-tasks"></i>
+                <span translate="global.menu.admin.logs">Logs</span>
+              </a>
+            </li>
+            <li>
+              <a href="/" ng-click="common.shutdownCollector()">
+                <i class="fa fa-stop"></i>
+                <span translate="global.menu.admin.shutdown">Shutdown</span>
+              </a>
+            </li>
+          </ul>
         </li>
 
-        <li>
-          <a href="#" ng-click="common.shutdownCollector()">
-            <span translate="global.menu.shutdown">Shutdown</span>
+        <li class="dropdown pointer">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+            <span>
+                <i class="fa fa-user fa-lg"></i>
+                <span class="hidden-tablet" translate="global.menu.account.main">
+                    Account
+                </span>
+                <b class="caret"></b>
+            </span>
           </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="#/" ng-click="common.logout()">
+                <span class="glyphicon glyphicon-log-out"></span>
+                <span translate="global.menu.account.logout">Logout</span>
+              </a>
+            </li>
+          </ul>
         </li>
 
-        <li>
-          <a href="#" ng-click="common.logout()">
-            <span translate="global.menu.logout">Logout</span>
-          </a>
-        </li>
       </ul>
     </div>
   </div>
 </div>
 
-<div class="container123">
-  <div ng-view>
-  </div>
+<ng-include src="'app/shutdown/shutdownModal.tpl.html'"></ng-include>
+
+<div ng-view>
 </div>
 
 </body>

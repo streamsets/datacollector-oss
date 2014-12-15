@@ -6,7 +6,7 @@
          ng-if="detailPaneConfig.instanceName"
          ng-controller="RecordPercentagePieChartController">
       <div class="panel panel-default">
-        <div class="panel-heading" translate="admin.detailPane.summaryTab.recordsProcessed">Records Processed</div>
+        <div class="panel-heading" translate="home.detailPane.summaryTab.recordsProcessed">Records Processed</div>
         <div class="panel-body">
           <nvd3-pie-chart
             data="pieChartData"
@@ -32,7 +32,7 @@
 
     <div class="col-sm-4" ng-controller="RecordProcessedBarChartController">
       <div class="panel panel-default">
-        <div class="panel-heading" translate="admin.detailPane.summaryTab.recordsProcessed">Records Processed</div>
+        <div class="panel-heading" translate="home.detailPane.summaryTab.recordsProcessed">Records Processed</div>
         <div class="panel-body">
           <nvd3-discrete-bar-chart
             data="barChartData"
@@ -54,7 +54,7 @@
 
     <div class="col-sm-4" ng-controller="MeterBarChartController">
       <div class="panel panel-default">
-        <div class="panel-heading" translate="admin.detailPane.summaryTab.recordThroughput">Record Throughput</div>
+        <div class="panel-heading" translate="home.detailPane.summaryTab.recordThroughput">Record Throughput</div>
         <div class="panel-body">
           <nvd3-multi-bar-chart
             data="chartData"
@@ -81,7 +81,7 @@
          ng-if="!detailPaneConfig.instanceName"
          ng-controller="BatchCountBarChartController">
       <div class="panel panel-default">
-        <div class="panel-heading" translate="admin.detailPane.summaryTab.batchThroughput">Batch Throughput</div>
+        <div class="panel-heading" translate="home.detailPane.summaryTab.batchThroughput">Batch Throughput</div>
         <div class="panel-body">
           <nvd3-discrete-bar-chart
             data="chartData"
@@ -137,7 +137,7 @@
     <div class="col-sm-12"
          ng-controller="BatchTimerChartController">
       <div class="panel panel-default">
-        <div class="panel-heading" translate="admin.detailPane.summaryTab.batchProcessingTimer">Batch Processing Timer</div>
+        <div class="panel-heading" translate="home.detailPane.summaryTab.batchProcessingTimer">Batch Processing Timer</div>
         <div class="panel-body">
 
           <div class="col-sm-4">

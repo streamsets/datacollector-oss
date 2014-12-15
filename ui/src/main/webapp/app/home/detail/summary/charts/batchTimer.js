@@ -11,15 +11,15 @@ angular
         timer: 'Timer (Percentiles)'
       };
 
-    $translate('admin.detailPane.summaryTab.frequency').then(function(translation) {
+    $translate('home.detailPane.summaryTab.frequency').then(function(translation) {
       label.frequency = translation;
     });
 
-    $translate('admin.detailPane.summaryTab.duration').then(function(translation) {
+    $translate('home.detailPane.summaryTab.duration').then(function(translation) {
       label.duration = translation;
     });
 
-    $translate('admin.detailPane.summaryTab.timer').then(function(translation) {
+    $translate('home.detailPane.summaryTab.timer').then(function(translation) {
       label.timer = translation;
     });
 

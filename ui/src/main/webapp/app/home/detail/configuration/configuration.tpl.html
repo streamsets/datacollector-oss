@@ -118,7 +118,7 @@
                 <ui-select multiple tagging tagging-label="false" reset-search-input="true"
                            ng-model="detailPaneConfig.configuration[$index].value">
                   <ui-select-match
-                    placeholder="{{'admin.detailPane.configurationTab.selectFields' | translate}}">
+                    placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
                     {{$item}}
                   </ui-select-match>
                   <ui-select-choices repeat="fieldPath in fieldPaths.concat(detailPaneConfig.configuration[$index].value) | filter:$select.search">
@@ -128,7 +128,7 @@
 
                 <div class="pull-right field-selector-btn">
                   <button class="btn btn-link"
-                          translate="admin.detailPane.configurationTab.requiredFieldsSelectionButton"
+                          translate="home.detailPane.configurationTab.requiredFieldsSelectionButton"
                           ng-click="showFieldSelectorModal(detailPaneConfig.configuration[$index])">
                     Select Field Using Preview Data
                   </button>
@@ -148,7 +148,7 @@
 
   <div class="col-md-5 source-preview" ng-if="detailPaneConfigDefn.rawSourceDefinition">
     <div class="panel panel-default">
-      <div class="panel-heading" translate="admin.detailPane.configurationTab.rawSourcePreview">Raw Source Preview</div>
+      <div class="panel-heading" translate="home.detailPane.configurationTab.rawSourcePreview">Raw Source Preview</div>
       <div class="panel-body">
         <form class="form" ng-submit="rawSourcePreview()">
 
@@ -169,7 +169,7 @@
           </div>
 
           <div class="form-group clearfix">
-            <button type="submit" class="btn btn-primary btn-sm pull-right" translate="admin.header.preview">
+            <button type="submit" class="btn btn-primary btn-sm pull-right" translate="home.header.preview">
               Preview
             </button>
           </div>

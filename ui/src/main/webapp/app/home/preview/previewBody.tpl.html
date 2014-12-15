@@ -19,7 +19,7 @@
                 <span class="glyphicon glyphicon-collapse-down pointer"
                       ng-if="expandAllInputData"
                       ng-click="onCollapseAllInputData(stagePreviewData)"></span>
-                <span translate="admin.previewPane.inputData">Input Data</span>
+                <span translate="home.previewPane.inputData">Input Data</span>
               </th>
 
               <th class="col-md-6">
@@ -29,7 +29,7 @@
                 <span class="glyphicon glyphicon-collapse-down pointer"
                       ng-if="expandAllOutputData"
                       ng-click="onCollapseAllOutputData(stagePreviewData)"></span>
-                <span translate="admin.previewPane.outputData">Output Data</span>
+                <span translate="home.previewPane.outputData">Output Data</span>
               </th>
             </tr>
           </thead>
@@ -118,7 +118,7 @@
                 </div>
 
                 <div ng-if="outputRecords.length === 0 && errorsRecords.length === 0">
-                  <label class="label label-warning">{{'admin.previewPane.noOutputWarning' | translate}}</label>
+                  <label class="label label-warning">{{'home.previewPane.noOutputWarning' | translate}}</label>
                 </div>
 
               </td>
@@ -152,7 +152,7 @@
             <tr ng-if="stagePreviewData.input.length === 0 &&
                         stagePreviewData.output.length === 0 &&
                         stagePreviewData.errorRecords.length === 0">
-              <td colspan="2" class="text-center" translate="admin.previewPane.noRecords">No Records.</td>
+              <td colspan="2" class="text-center" translate="home.previewPane.noRecords">No Records.</td>
             </tr>
           </tbody>
 

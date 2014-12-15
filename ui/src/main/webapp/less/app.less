@@ -33,8 +33,12 @@ body {
   .navbar-fixed-top {
     height: 60px;
 
-    .logo {
+    a.logo {
       padding: 0 20px;
+      display: inline-block;
+      width: 260px;
+      height: 60px;
+      overflow: hidden;
 
       img {
         width: 240px;
@@ -44,13 +48,13 @@ body {
 
     .navbar-nav {
       padding-right: 2 * @defaultPadding;
-      li {
-        a {
+      >li {
+        >a {
           padding-top: 20px;
           padding-bottom: 20px;
         }
 
-        &:not(:first-child):after {
+        /*&:not(:first-child):after {
           position: absolute;
           left: -3px;
           top: 22px;
@@ -59,13 +63,7 @@ body {
           height: 16px;
           content: '';
           border-right: solid 1px #d6d7d3;
-        }
-      }
-
-      .pipelineAgent-status {
-        padding: @defaultPadding * 2.2 @defaultPadding * 2  @defaultPadding*2 ;
-        color: #ACACAC;
-        font-size: 12px;
+        }*/
       }
     }
   }
@@ -121,6 +119,8 @@ body {
  */
 
 @import '../app/home/home.less';
+@import '../app/jvmMetrics/jvmMetrics.less';
+@import '../app/logs/logs.less';
 @import '../app/common/recordTree/recordTree.less';
 @import '../app/directives/splitter/splitter.less';
 @import '../app/directives/tabs/tabs.less';

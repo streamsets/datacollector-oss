@@ -5,7 +5,7 @@
         <span aria-hidden="true">&times;</span>
         <span class="sr-only">Close</span>
       </button>
-      <h3 class="modal-title" translate="admin.shutdown.headerLabel">Shutdown Collector</h3>
+      <h3 class="modal-title" translate="home.shutdown.headerLabel">Shutdown Collector</h3>
     </div>
     <div class="modal-body">
       <div ng-hide="isShutdownSucceed">
@@ -21,13 +21,13 @@
 
         <div class="form-group">
           <input type="text" class="form-control" required
-                 placeholder="{{'admin.shutdown.secretPlaceholder' | translate}}" ng-model="secret">
+                 placeholder="{{'home.shutdown.secretPlaceholder' | translate}}" ng-model="secret">
         </div>
       </div>
 
       <div class="alert alert-danger alert-dismissible" role="alert"
            ng-show="isShutdownSucceed"
-           translate="admin.shutdown.successMessage">
+           translate="home.shutdown.successMessage">
       </div>
 
     </div>
@@ -35,7 +35,7 @@
       <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.cancel">
         Cancel
       </button>
-      <button type="submit" class="btn btn-primary" translate="global.menu.shutdown">
+      <button type="submit" class="btn btn-primary" translate="global.menu.admin.shutdown">
         Shutdown
       </button>
     </div>

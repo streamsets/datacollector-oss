@@ -1,3 +1,4 @@
+<ng-include src="'app/home/library/import/importModal.tpl.html'"></ng-include>
 <div class="panel panel-default library-pane" ng-controller="LibraryController">
   <div class="panel-heading clearfix">
     <h3 class="panel-title pull-left" translate="global.form.library">Library</h3>
@@ -28,14 +29,28 @@
             <li role="presentation">
               <a role="menuitem" tabindex="-1" href="#"
                  translate="global.form.delete"
-                 ng-click="deletePipelineConfig(pipeline)">
+                 ng-click="deletePipelineConfig(pipeline, $event)">
                 Delete
               </a>
             </li>
             <li role="presentation">
               <a role="menuitem" tabindex="-1" href="#"
                  translate="global.form.duplicate"
-                 ng-click="duplicatePipelineConfig(pipeline)">
+                 ng-click="duplicatePipelineConfig(pipeline, $event)">
+                Duplicate
+              </a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1" href="#"
+                 translate="global.form.import"
+                 ng-click="importPipelineConfig(pipeline, $event)">
+                Duplicate
+              </a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1" href="#"
+                 translate="global.form.export"
+                 ng-click="exportPipelineConfig(pipeline, $event)">
                 Duplicate
               </a>
             </li>

@@ -2,10 +2,17 @@
   "global": {
     "title": "Pipeline Agent",
     "menu": {
-      "import": "Import",
-      "export": "Export",
-      "logout": "Logout",
-      "shutdown": "Shutdown",
+      "account": {
+        "main": "Account",
+        "logout": "Logout"
+      },
+      "admin": {
+        "jvmMetrics": "JVM Metrics",
+        "logs": "Logs",
+        "main": "Administration",
+        "shutdown": "Shutdown"
+      },
+      "home": "Home",
       "toggleNavigation": "Toggle navigation"
     },
     "form": {
@@ -21,9 +28,11 @@
       "errorMessages": "Error Messages",
       "errorRecord": "Error",
       "errors": "Errors",
+      "export": "Export",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
       "histogram": "Histogram",
+      "import": "Import",
       "label": "Label",
       "library": "Library",
       "metrics": "Metrics",
@@ -60,7 +69,7 @@
       }
     }
   },
-  "admin": {
+  "home": {
     "header" : {
       "addStage": "Add Stage",
       "definePipeline": "Define Pipeline:",
@@ -152,11 +161,11 @@
       "successMessage": "Collector is stopped."
     }
   },
-  "flow": {
-
+  "jvmMetrics": {
+    "title": "JVM Metrics"
   },
-  "data": {
-
+  "logs": {
+    "title": "Logs"
   },
   "errors": {
     "title": "Error page!",

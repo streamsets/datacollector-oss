@@ -22,7 +22,7 @@ angular
 
 
     angular.forEach(label, function(value, key) {
-      $translate('admin.detailPane.summaryTab.histogram.' + key).then(function(translation) {
+      $translate('home.detailPane.summaryTab.histogram.' + key).then(function(translation) {
         label[key] = [translation];
       });
     });

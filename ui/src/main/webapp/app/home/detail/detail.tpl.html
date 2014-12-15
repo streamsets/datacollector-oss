@@ -9,7 +9,7 @@
 
     <div class="btn-group pull-left detail-name-dropdown">
       <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
-        <span translate="admin.header.addStage">{{detailPaneConfig.uiInfo.label || pipelineConfig.info.name}}</span>
+        <span translate="home.header.addStage">{{detailPaneConfig.uiInfo.label || pipelineConfig.info.name}}</span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -52,7 +52,7 @@
       <tab ng-repeat="tab in detailPaneTabs" active="tab.active" disabled="tab.disabled">
         <tab-heading>
           <i class="fa fa-exclamation-triangle icon-danger"
-             ng-show="showWarning(tab)"></i> {{ 'admin.detailPane.' + tab.name | translate }}
+             ng-show="showWarning(tab)"></i> {{ 'home.detailPane.' + tab.name | translate }}
         </tab-heading>
         <div ng-include="tab.template"></div>
       </tab>

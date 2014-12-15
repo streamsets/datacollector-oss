@@ -45,7 +45,7 @@ angular
       /**
        * Delete Pipeline Configuration
        */
-      deletePipelineConfig: function(pipelineInfo) {
+      deletePipelineConfig: function(pipelineInfo, $event) {
         var modalInstance = $modal.open({
           templateUrl: 'app/home/library/delete.tpl.html',
           controller: 'DeleteModalInstanceController',
@@ -58,6 +58,7 @@ angular
           }
         });
 
+        $event.stopPropagation();
         modalInstance.result.then(function (configInfo) {
           var index = _.indexOf($scope.pipelines, _.find($scope.pipelines, function(pipeline){
             return pipeline.name === configInfo.name;
@@ -82,7 +83,7 @@ angular
       /**
        * Duplicate Pipeline Configuration
        */
-      duplicatePipelineConfig: function(pipelineInfo) {
+      duplicatePipelineConfig: function(pipelineInfo, $event) {
         var modalInstance = $modal.open({
           templateUrl: 'app/home/library/duplicate.tpl.html',
           controller: 'DuplicateModalInstanceController',
@@ -94,6 +95,8 @@ angular
             }
           }
         });
+
+        $event.stopPropagation();
 
         modalInstance.result.then(function (configObject) {
           var index = _.sortedIndex($scope.pipelines, configObject.info, function(obj) {
@@ -107,6 +110,39 @@ angular
 
         });
 
+      },
+
+      /**
+       * Import link command handler
+       */
+      importPipelineConfig: function(pipelineInfo, $event) {
+        var modalInstance = $modal.open({
+          templateUrl: 'importModalContent.html',
+          controller: 'ImportModalInstanceController',
+          size: '',
+          backdrop: true,
+          resolve: {
+            pipelineInfo: function () {
+              return pipelineInfo;
+            }
+          }
+        });
+
+        $event.stopPropagation();
+
+        modalInstance.result.then(function () {
+          $scope.$emit('onPipelineConfigSelect', pipelineInfo);
+        }, function () {
+
+        });
+      },
+
+      /**
+       * Export link command handler
+       */
+      exportPipelineConfig: function(pipelineInfo, $event) {
+        $event.stopPropagation();
+        api.pipelineAgent.exportPipelineConfig(pipelineInfo.name);
       }
 
     });

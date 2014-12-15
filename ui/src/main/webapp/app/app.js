@@ -6,7 +6,9 @@ angular.module('pipelineAgentApp', [
   'templates-app',
   'templates-common',
   'pipelineAgentApp.common',
-  'pipelineAgentApp.home'
+  'pipelineAgentApp.home',
+  'pipelineAgentApp.jvmMetrics',
+  'pipelineAgentApp.logs'
 ])
   .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, uiSelectConfig){
     $locationProvider.html5Mode(true);
@@ -30,7 +32,7 @@ angular.module('pipelineAgentApp', [
     uiSelectConfig.theme = 'bootstrap';
 
   })
-  .run(function ($location, $rootScope) {
+  .run(function ($location, $rootScope, $modal) {
     var defaultTitle = 'StreamSets | Data In Motion';
     $rootScope.common = $rootScope.common || {
       title : defaultTitle,
@@ -43,22 +45,13 @@ angular.module('pipelineAgentApp', [
       errors: [],
       activeDetailTab: undefined,
 
-      /**
-       * Import link command handler
-       */
-      importPipelineConfig: function() {
-        $rootScope.$broadcast('importPipelineConfig');
-      },
-
-      /**
-       * Export link command handler
-       */
-      exportPipelineConfig: function() {
-        $rootScope.$broadcast('exportPipelineConfig');
-      },
-
       shutdownCollector: function() {
-        $rootScope.$broadcast('shutdownCollector');
+        $modal.open({
+          templateUrl: 'shutdownModalContent.html',
+          controller: 'ShutdownModalInstanceController',
+          size: '',
+          backdrop: true
+        });
       },
 
       /**

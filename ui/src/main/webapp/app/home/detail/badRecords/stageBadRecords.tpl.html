@@ -2,13 +2,13 @@
 
   <tab>
     <tab-heading>
-      {{'admin.detailPane.badRecords' | translate}} <span class="badge alert-danger">{{ errorRecordsCount.count | abbreviateNumber}}</span>
+      {{'home.detailPane.badRecords' | translate}} <span class="badge alert-danger">{{ errorRecordsCount.count | abbreviateNumber}}</span>
     </tab-heading>
     <div class="pills-content">
       <form class="form-horizontal" role="form">
         <div class="form-group">
           <label class="col-sm-3 bad-record-count-label"
-                 translate="admin.detailPane.badRecordsTab.totalNumberOfBadRecords">Total Number of Bad Records</label>
+                 translate="home.detailPane.badRecordsTab.totalNumberOfBadRecords">Total Number of Bad Records</label>
           <div class="col-sm-3">
             <input type="text" class="form-control input-sm"
                    ng-model="errorRecordsCount.count" readonly>
@@ -18,7 +18,7 @@
 
       <div class="col-sm-6">
         <div class="panel panel-default">
-          <div class="panel-heading" translate="admin.detailPane.badRecordsTab.badRecordsHistogram">Bad Records Histogram</div>
+          <div class="panel-heading" translate="home.detailPane.badRecordsTab.badRecordsHistogram">Bad Records Histogram</div>
           <div class="panel-body">
 
             <div class="col-sm-6">
@@ -58,7 +58,7 @@
 
       <table class="table" ng-if="stageBadRecords && stageBadRecords.length > 0">
         <caption>
-          <label translate="admin.detailPane.badRecordsTab.mostRecentBadRecords">Most Recent Bad Records</label>
+          <label translate="home.detailPane.badRecordsTab.mostRecentBadRecords">Most Recent Bad Records</label>
           <i class="fa fa-refresh pointer icon-button"
              ng-click="refreshBadRecordsData()"
              tooltip-placement="right"
@@ -73,7 +73,7 @@
             <span class="glyphicon glyphicon-collapse-down pointer"
                   ng-if="expandAllErrorData"
                   ng-click="onCollapseAllErrorData()"></span>
-            <span translate="admin.detailPane.badRecords">Bad Records</span>
+            <span translate="home.detailPane.badRecords">Bad Records</span>
           </th>
           <th class="col-md-3" translate="global.form.timestamp">Timestamp</th>
           <th class="col-md-5" translate="global.form.errorMessage"> Error Message</th>
@@ -116,7 +116,7 @@
     <div class="pills-content">
       <form class="form-horizontal" role="form">
         <div class="form-group">
-          <label class="col-sm-3 bad-record-count-label" translate="admin.detailPane.badRecordsTab.totalNumberOfErrors">Total Number of Errors</label>
+          <label class="col-sm-3 bad-record-count-label" translate="home.detailPane.badRecordsTab.totalNumberOfErrors">Total Number of Errors</label>
           <div class="col-sm-3">
             <input type="text" class="form-control input-sm"
                    ng-model="errorMessagesCount.count" readonly>
@@ -126,7 +126,7 @@
 
       <div class="col-sm-6">
         <div class="panel panel-default">
-          <div class="panel-heading" translate="admin.detailPane.badRecordsTab.errorsHistogram">Errors Histogram</div>
+          <div class="panel-heading" translate="home.detailPane.badRecordsTab.errorsHistogram">Errors Histogram</div>
           <div class="panel-body">
 
 
@@ -166,7 +166,7 @@
 
       <table class="table table-hover" ng-if="errorMessages && errorMessages.length > 0">
         <caption>
-          <label translate="admin.detailPane.badRecordsTab.mostRecentErrorMessages">Most Recent Error Messages</label>
+          <label translate="home.detailPane.badRecordsTab.mostRecentErrorMessages">Most Recent Error Messages</label>
           <i class="fa fa-refresh pointer icon-button"
              ng-click="refreshErrorMessagesData()"
              tooltip-placement="right"

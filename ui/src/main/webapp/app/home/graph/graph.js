@@ -197,7 +197,7 @@ angular
               }
             );
         } else {
-          $translate('admin.graphPane.startErrorMessage', {
+          $translate('home.graphPane.startErrorMessage', {
             name: $rootScope.common.pipelineStatus.name
           }).then(function(translation) {
             $rootScope.common.errors = [translation];
