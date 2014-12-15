@@ -5,52 +5,37 @@
  */
 package com.streamsets.pipeline.lib.stage.devtest;
 
-import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.stage.devtest.RandomSource;
-import com.streamsets.pipeline.sdk.testharness.internal.Constants;
-import com.streamsets.pipeline.sdk.testharness.SourceRunner;
+import com.streamsets.pipeline.sdk.SourceRunner;
+import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Map;
 
 public class TestRandomSource {
 
   @Test
-  public void testRandomSource() {
+  public void testRandomSource() throws Exception{
+    SourceRunner runner = new SourceRunner.Builder(RandomSource.class)
+        .addConfiguration("fields", "a,b")
+        .addOutputLane("a")
+        .build();
+    runner.runInit();
     try {
-
-      Map<String, List<Record>> run = new SourceRunner.Builder<RandomSource>()
-        .addSource(RandomSource.class)
-        .sourceOffset(null)
-        .maxBatchSize(25)
-        .configure("fields", "name,age,employer,city,state,country")
-        .outputLanes(ImmutableSet.of("lane"))
-        .build().run();
-
-      Assert.assertNotNull(run);
-      Assert.assertNotNull(run.get("lane"));
-      Assert.assertTrue(run.get("lane").size() <= 25);
-    } catch (StageException e) {
-      e.printStackTrace();
+      StageRunner.Output output = runner.runProduce(null, 25);
+      List<Record> records = output.getRecords().get("a");
+      Assert.assertTrue(records.size() < 25);
+      if (!records.isEmpty()) {
+        Assert.assertNotNull(records.get(0).get("/a"));
+        Assert.assertNotNull(records.get(0).get("/b"));
+        Assert.assertEquals(Field.Type.LONG, records.get(0).get("/a").getType());
+        Assert.assertEquals(Field.Type.LONG, records.get(0).get("/b").getType());
+      }
+    } finally {
+      runner.runDestroy();
     }
   }
 
-  @Test
-  public void testRandomSourceWithDefaultConfig() {
-    try {
-      Map<String, List<Record>> run = new SourceRunner.Builder<RandomSource>()
-        .addSource(RandomSource.class)
-        .configure("fields", "name,age,employer,city,state,country")
-        .build().run();
-      Assert.assertNotNull(run);
-      Assert.assertNotNull(run.get(Constants.DEFAULT_LANE));
-      Assert.assertTrue(run.get(Constants.DEFAULT_LANE).size() <= 10);
-    } catch (StageException e) {
-      e.printStackTrace();
-    }
-  }
 }

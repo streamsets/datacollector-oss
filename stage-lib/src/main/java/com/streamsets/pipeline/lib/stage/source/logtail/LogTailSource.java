@@ -22,7 +22,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 @GenerateResourceBundle
-@StageDef(version="1.0.1",
+@StageDef(version="1.0.0",
           label="Tail log files")
 public class LogTailSource extends BaseSource {
 

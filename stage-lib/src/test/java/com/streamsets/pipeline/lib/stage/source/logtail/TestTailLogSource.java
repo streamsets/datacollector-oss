@@ -5,9 +5,8 @@
  */
 package com.streamsets.pipeline.lib.stage.source.logtail;
 
-import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.sdk.testharness.SourceRunner;
+import com.streamsets.pipeline.sdk.SourceRunner;
+import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,8 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class TestTailLogSource {
@@ -28,7 +25,7 @@ public class TestTailLogSource {
   @Before
   public void setUp() throws IOException {
     File testDataDir = new File("target", UUID.randomUUID().toString());
-    testDataDir.mkdirs();
+    Assert.assertTrue(testDataDir.mkdirs());
     logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("testLogFile.txt");
     OutputStream os = new FileOutputStream(logFile);
@@ -39,42 +36,46 @@ public class TestTailLogSource {
 
   @Test
   public void testTailFromEnd() throws Exception {
-    long start = System.currentTimeMillis();
-    Map<String, List<Record>> result = new SourceRunner.Builder<LogTailSource>().addSource(LogTailSource.class)
-      .configure("logFileName", logFile)
-      .configure("tailFromEnd", true)
-      .configure("maxLinesPrefetch", 50)
-      .configure("batchSize", 25)
-      .configure("maxWaitTime", 100)
-      .maxBatchSize(100)
-      .outputLanes(ImmutableSet.of("lane"))
-      .sourceOffset(null)
-      .build()
-      .run();
-    long end = System.currentTimeMillis();
-    Assert.assertTrue(end - start > 100);
-    Assert.assertFalse(result.isEmpty());
-    //Even though there are no records the output contains the lane with emply list of records
-    Assert.assertTrue(result.containsKey("lane"));
-    Assert.assertTrue(result.get("lane").isEmpty());
+    SourceRunner runner = new SourceRunner.Builder(LogTailSource.class)
+      .addConfiguration("logFileName", logFile)
+      .addConfiguration("tailFromEnd", true)
+      .addConfiguration("maxLinesPrefetch", 50)
+      .addConfiguration("batchSize", 25)
+      .addConfiguration("maxWaitTime", 100)
+      .addOutputLane("lane")
+      .build();
+    runner.runInit();
+    try {
+      long start = System.currentTimeMillis();
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      long end = System.currentTimeMillis();
+      Assert.assertTrue(end - start > 100);
+      Assert.assertNotNull(output.getNewOffset());
+      Assert.assertTrue(output.getRecords().get("lane").isEmpty());
+    } finally {
+      runner.runDestroy();
+    }
   }
 
   @Test
   public void testTailFromBeginning() throws Exception {
-    Map<String, List<Record>> result = new SourceRunner.Builder<LogTailSource>().addSource(LogTailSource.class)
-      .configure("logFileName", logFile)
-      .configure("tailFromEnd", false)
-      .configure("maxLinesPrefetch", 50)
-      .configure("batchSize", 25)
-      .configure("maxWaitTime", 100)
-      .maxBatchSize(100)
-      .outputLanes(ImmutableSet.of("lane"))
-      .sourceOffset(null)
-      .build()
-      .run();
-
-    Assert.assertFalse(result.get("lane").isEmpty());
-    Assert.assertEquals("FIRST", result.get("lane").get(0).get().getValue());
+    SourceRunner runner = new SourceRunner.Builder(LogTailSource.class)
+        .addConfiguration("logFileName", logFile)
+        .addConfiguration("tailFromEnd", true)
+        .addConfiguration("maxLinesPrefetch", 50)
+        .addConfiguration("batchSize", 25)
+        .addConfiguration("maxWaitTime", 100)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Assert.assertNotNull(output.getNewOffset());
+      Assert.assertFalse(output.getRecords().get("lane").isEmpty());
+      Assert.assertEquals("FIRST", output.getRecords().get("lane").get(0).get().getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
   }
 
 }
