@@ -1,6 +1,6 @@
 [ {
-    "className" : "com.streamsets.pipeline.sdk.testData.TwitterSource",
-    "name" : "com_streamsets_pipeline_sdk_testData_TwitterSource",
+    "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterSource",
+    "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_TwitterSource",
     "version" : "1.0",
     "label" : "twitter_source",
     "description" : "Produces twitter feeds",
@@ -34,7 +34,7 @@
                             } ],
     "onError" : "DROP_RECORD",
     "rawSourceDefinition" : {
-      "rawSourcePreviewerClass" : "com.streamsets.pipeline.sdk.testData.TwitterRawSourcePreviewer",
+      "rawSourcePreviewerClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterRawSourcePreviewer",
       "mimeType" : "*/*",
       "configDefinitions" : [ {
                                 "name" : "username",
@@ -67,8 +67,8 @@
     "icon" : "",
     "library" : null
   }, {
-  "className" : "com.streamsets.pipeline.sdk.testData.TwitterProcessor",
-  "name" : "com_streamsets_pipeline_sdk_testData_TwitterProcessor",
+  "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterProcessor",
+  "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_TwitterProcessor",
   "version" : "1.0",
   "label" : "twitter_processor",
   "description" : "processes twitter feeds",
@@ -84,7 +84,7 @@
                             "model" : {
                               "modelType" : "FIELD_VALUE_CHOOSER",
                               "chooserMode" : "PROVIDED",
-                              "valuesProviderClass" : "com.streamsets.pipeline.sdk.testData.TypesProvider",
+                              "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TypesProvider",
                               "values" : null,
                               "labels" : null
                             },
@@ -100,7 +100,7 @@
                             "model" : {
                               "modelType" : "VALUE_CHOOSER",
                               "chooserMode" : "PROVIDED",
-                              "valuesProviderClass" : "com.streamsets.pipeline.sdk.testData.TweetTypeProvider",
+                              "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TweetTypeProvider",
                               "values" : null,
                               "labels" : null
                             },
@@ -116,7 +116,7 @@
                             "model" : {
                               "modelType" : "FIELD_VALUE_CHOOSER",
                               "chooserMode" : "PROVIDED",
-                              "valuesProviderClass" : "com.streamsets.pipeline.sdk.testData.TweetTypeProvider",
+                              "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TweetTypeProvider",
                               "values" : null,
                               "labels" : null
                             },
@@ -127,8 +127,8 @@
   "icon" : "",
   "library" : null
 }, {
-    "className" : "com.streamsets.pipeline.sdk.testData.TwitterTarget",
-    "name" : "com_streamsets_pipeline_sdk_testData_TwitterTarget",
+    "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterTarget",
+    "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_TwitterTarget",
     "version" : "1.3",
     "label" : "twitter_target",
     "description" : "Consumes twitter feeds",

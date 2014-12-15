@@ -1,8 +1,8 @@
 [
   {
     "library" : null,
-    "className" : "com.streamsets.pipeline.sdk.testData.SourceWithOnlyStageDef",
-    "name" : "com_streamsets_pipeline_sdk_testData_SourceWithOnlyStageDef",
+    "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.SourceWithOnlyStageDef",
+    "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_SourceWithOnlyStageDef",
     "version" : "1.0",
     "label" : "twitter_source",
     "description" : "Produces twitter feeds",

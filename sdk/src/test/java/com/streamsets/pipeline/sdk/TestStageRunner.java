@@ -8,6 +8,7 @@ package com.streamsets.pipeline.sdk;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 

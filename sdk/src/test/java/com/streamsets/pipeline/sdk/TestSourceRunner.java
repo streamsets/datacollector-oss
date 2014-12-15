@@ -8,6 +8,7 @@ package com.streamsets.pipeline.sdk;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
