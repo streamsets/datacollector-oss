@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.stage.processor;
+package com.streamsets.pipeline.lib.stage.processor.selector;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
