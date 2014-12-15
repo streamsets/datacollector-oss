@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.sdk;
 
+import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.container.Utils;
@@ -47,6 +48,14 @@ public class SourceRunner extends StageRunner<Source> {
                               : new SourceRunner(stageClass, configs, outputLanes);
     }
 
+  }
+
+  public static BatchMaker createTestBatchMaker(String... outputLanes) {
+    return StageRunner.createTestBatchMaker(outputLanes);
+  }
+
+  public static Output getOutput(BatchMaker batchMaker) {
+    return StageRunner.getOutput(batchMaker);
   }
 
 }

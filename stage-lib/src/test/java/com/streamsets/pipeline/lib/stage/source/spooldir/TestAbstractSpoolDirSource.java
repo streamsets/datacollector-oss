@@ -5,16 +5,13 @@
  */
 package com.streamsets.pipeline.lib.stage.source.spooldir;
 
-import com.codahale.metrics.Meter;
-import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
+import com.streamsets.pipeline.sdk.SourceRunner;
+import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -26,12 +23,6 @@ public class TestAbstractSpoolDirSource {
     File f = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(f.mkdirs());
     return f.getAbsolutePath();
-  }
-
-  private Source.Context getMockContext() {
-    Source.Context context = Mockito.mock(Source.Context.class);
-    Mockito.when(context.createMeter(Mockito.anyString())).thenReturn(new Meter());
-    return context;
   }
 
   public static class TSpoolDirSource extends AbstractSpoolDirSource {
@@ -52,41 +43,37 @@ public class TestAbstractSpoolDirSource {
     }
   }
 
-  private TSpoolDirSource createSource(String initialFile) {
-    TSpoolDirSource source = new TSpoolDirSource();
-    source.postProcessing = DirectorySpooler.FilePostProcessing.ARCHIVE.toString();
-    source.filePattern = "file-[0-9].log";
-    source.maxSpoolFiles = 10;
-    source.spoolDir = createTestDir();
-    source.archiveDir = createTestDir();
-    source.retentionTimeMins = 10;
-    source.initialFileToProcess = initialFile;
-    source.poolingTimeoutSecs = 0;
-    return source;
+  private SourceRunner createSourceRunner(AbstractSpoolDirSource source, String initialFile) {
+    return new SourceRunner.Builder(source)
+        .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
+        .addConfiguration("filePattern", "file-[0-9].log")
+        .addConfiguration("maxSpoolFiles", 10)
+        .addConfiguration("spoolDir", createTestDir())
+        .addConfiguration("archiveDir", createTestDir())
+        .addConfiguration("retentionTimeMins", 10)
+        .addConfiguration("initialFileToProcess", initialFile)
+        .addConfiguration("poolingTimeoutSecs", 0)
+        .addConfiguration("errorArchiveDir", null)
+        .addOutputLane("lane")
+        .build();
   }
-
   @Test
   public void testInitDestroy() throws Exception {
-    Source.Context context = getMockContext();
-    AbstractSpoolDirSource source = createSource("file-0.log");
-    source.init(null, context);
-    Mockito.verify(context, Mockito.times(1)).createMeter(Mockito.anyString());
-    Assert.assertTrue(source.getSpooler().isRunning());
-    Assert.assertEquals(context, source.getSpooler().getContext());
-    Assert.assertEquals(source.postProcessing, source.getSpooler().getPostProcessing().toString());
-    Assert.assertEquals(source.filePattern, source.getSpooler().getFilePattern());
-    Assert.assertEquals(source.maxSpoolFiles, source.getSpooler().getMaxSpoolFiles());
-    Assert.assertEquals(source.spoolDir, source.getSpooler().getSpoolDir());
-    Assert.assertEquals(source.archiveDir, source.getSpooler().getArchiveDir());
-    Assert.assertEquals(source.retentionTimeMins * 60 * 1000, source.getSpooler().getArchiveRetentionMillis());
-    Assert.assertEquals(source.initialFileToProcess, source.getSpooler().getCurrentFile());
-    source.destroy();
-    Assert.assertFalse(source.getSpooler().isRunning());
+    TSpoolDirSource source = new TSpoolDirSource();
+    SourceRunner runner = createSourceRunner(source, "file-0.log");
+    runner.runInit();
+    try {
+      Assert.assertTrue(source.getSpooler().isRunning());
+      Assert.assertEquals(runner.getContext(), source.getSpooler().getContext());
+    } finally {
+      runner.runDestroy();
+    }
   }
 
   @Test
   public void getOffsetMethods() throws Exception {
-    AbstractSpoolDirSource source = createSource(null);
+    TSpoolDirSource source = new TSpoolDirSource();
+    createSourceRunner(source, "file-0.log");
     Assert.assertNull(source.getFileFromSourceOffset(null));
     Assert.assertEquals("x", source.getFileFromSourceOffset("x"));
     Assert.assertEquals(0, source.getOffsetFromSourceOffset(null));
@@ -97,130 +84,126 @@ public class TestAbstractSpoolDirSource {
 
   @Test
   public void testProduceNoInitialFileNoFileInSpoolDirNullOffset() throws Exception {
-    Stage.Info info = Mockito.mock(Stage.Info.class);
-    TSpoolDirSource source = createSource(null);
+    TSpoolDirSource source = new TSpoolDirSource();
+    SourceRunner runner = createSourceRunner(source, null);
+    runner.runInit();
     try {
-      source.init(info, getMockContext());
-      String offset = source.produce(null, 10, Mockito.mock(BatchMaker.class));
-      Assert.assertEquals(null, offset);
+      StageRunner.Output output = runner.runProduce(null, 10);
+      Assert.assertEquals(null, output.getNewOffset());
       Assert.assertFalse(source.produceCalled);
+
     } finally {
-      source.destroy();
+      runner.runDestroy();
     }
   }
+
 
   @Test
   public void testProduceNoInitialFileWithFileInSpoolDirNullOffset() throws Exception {
-    Stage.Info info = Mockito.mock(Stage.Info.class);
-    TSpoolDirSource source = createSource(null);
+    TSpoolDirSource source = new TSpoolDirSource();
+    SourceRunner runner = createSourceRunner(source, "file-0.log");
     File file = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file.toPath());
+    runner.runInit();
+    source.file = file;
+    source.offset = 0;
+    source.maxBatchSize = 10;
     try {
-      source.init(info, getMockContext());
-      source.file = file;
-      source.offset = 0;
-      source.maxBatchSize = 10;
-      String offset = source.produce(null, 10, Mockito.mock(BatchMaker.class));
-      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), offset);
+      StageRunner.Output output = runner.runProduce(null, 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
     } finally {
-      source.destroy();
+      runner.runDestroy();
     }
   }
+
 
   @Test
   public void testProduceNoInitialFileNoFileInSpoolDirNotNullOffset() throws Exception {
-    Stage.Info info = Mockito.mock(Stage.Info.class);
-    TSpoolDirSource source = createSource(null);
+    TSpoolDirSource source = new TSpoolDirSource();
+    SourceRunner runner = createSourceRunner(source, null);
+    runner.runInit();
     try {
-      source.init(info, getMockContext());
-      String offset = source.produce("file-0.log", 10, Mockito.mock(BatchMaker.class));
-      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), offset);
+      StageRunner.Output output = runner.runProduce("file-0.log", 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), output.getNewOffset());
       Assert.assertFalse(source.produceCalled);
     } finally {
-      source.destroy();
+      runner.runDestroy();
     }
   }
 
+
   @Test
   public void testProduceNoInitialFileWithFileInSpoolDirNotNullOffset() throws Exception {
-    Stage.Info info = Mockito.mock(Stage.Info.class);
-    TSpoolDirSource source = createSource(null);
+    TSpoolDirSource source = new TSpoolDirSource();
+    SourceRunner runner = createSourceRunner(source, "file-0.log");
     File file = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file.toPath());
+    runner.runInit();
+    source.file = file;
+    source.offset = 0;
+    source.maxBatchSize = 10;
     try {
-      source.init(info, getMockContext());
-      source.file = file;
-      source.offset = 0;
-      source.maxBatchSize = 10;
-      String offset = source.produce("file-0.log", 10, Mockito.mock(BatchMaker.class));
-      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), offset);
+      StageRunner.Output output = runner.runProduce("file-0.log", 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
     } finally {
-      source.destroy();
+      runner.runDestroy();
     }
   }
 
   @Test
   public void testProduceNoInitialFileWithFileInSpoolDirNonZeroOffset() throws Exception {
-    Stage.Info info = Mockito.mock(Stage.Info.class);
-    TSpoolDirSource source = createSource(null);
+    TSpoolDirSource source = new TSpoolDirSource();
+    SourceRunner runner = createSourceRunner(source, null);
     File file = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file.toPath());
+    runner.runInit();
+    source.file = file;
+    source.offset = 1;
+    source.maxBatchSize = 10;
     try {
-      source.init(info, getMockContext());
-      source.file = file;
-      source.offset = 1;
-      source.maxBatchSize = 10;
-      String offset = source.produce(source.createSourceOffset("file-0.log", 1), 10, Mockito.mock(BatchMaker.class));
-      Assert.assertTrue(source.produceCalled);
-      Assert.assertEquals(source.createSourceOffset("file-0.log", 1), offset);
-
-      source.produceCalled = false;
-      source.offsetIncrement = 1;
-      offset = source.produce(offset, 10, Mockito.mock(BatchMaker.class));
-      Assert.assertEquals(source.createSourceOffset("file-0.log", 2), offset);
+      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.log", 1), 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.log", 1), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
     } finally {
-      source.destroy();
+      runner.runDestroy();
     }
   }
 
   @Test
   public void testAdvanceToNextSpoolFile() throws Exception {
-    Stage.Info info = Mockito.mock(Stage.Info.class);
-    TSpoolDirSource source = createSource(null);
+    TSpoolDirSource source = new TSpoolDirSource();
+    SourceRunner runner = createSourceRunner(source, null);
     File file1 = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
-    File file2 = new File(source.spoolDir, "file-1.log").getAbsoluteFile();
     Files.createFile(file1.toPath());
+    File file2 = new File(source.spoolDir, "file-1.log").getAbsoluteFile();
     Files.createFile(file2.toPath());
+    runner.runInit();
+    source.file = file1;
+    source.offset = 0;
+    source.maxBatchSize = 10;
     try {
-      source.init(info, getMockContext());
-      source.file = file1;
-      source.offset = 0;
-      source.maxBatchSize = 10;
-      String offset = source.produce(source.createSourceOffset("file-0.log", 0), 10, Mockito.mock(BatchMaker.class));
+      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.log", 0), 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
-      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), offset);
 
       source.produceCalled = false;
       source.offsetIncrement = -1;
-      offset = source.produce(offset, 10, Mockito.mock(BatchMaker.class));
-      Assert.assertEquals(source.createSourceOffset("file-0.log", -1), offset);
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.log", -1), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
 
       source.file = file2;
-      offset = source.produce(source.createSourceOffset("file-0.log", -1), 10, Mockito.mock(BatchMaker.class));
+      output = runner.runProduce(output.getNewOffset(), 10);
       source.produceCalled = false;
       source.offset = 0;
       source.offsetIncrement = 0;
-      offset = source.produce(offset, 10, Mockito.mock(BatchMaker.class));
-      Assert.assertEquals(source.createSourceOffset("file-1.log", -1), offset);
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(source.createSourceOffset("file-1.log", -1), output.getNewOffset());
       Assert.assertFalse(source.produceCalled);
-
-
     } finally {
-      source.destroy();
+      runner.runDestroy();
     }
   }
 

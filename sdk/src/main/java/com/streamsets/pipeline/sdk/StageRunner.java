@@ -5,7 +5,9 @@
  */
 package com.streamsets.pipeline.sdk;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -118,7 +120,7 @@ public abstract class StageRunner<S extends Stage> {
     Utils.checkState(this.status == status, Utils.format("Current status '{}', expected '{}'", this.status, status));
   }
 
-  protected S getStage() {
+  public S getStage() {
     return stage;
   }
 
@@ -216,5 +218,14 @@ public abstract class StageRunner<S extends Stage> {
     public abstract R build();
 
   }
+
+  static BatchMaker createTestBatchMaker(String... outputLanes) {
+    return new BatchMakerImpl(ImmutableSet.copyOf(outputLanes));
+  }
+
+  static Output getOutput(BatchMaker batchMaker) {
+    return new Output("sdk:offset", ((BatchMakerImpl)batchMaker).getOutput());
+  }
+
 
 }

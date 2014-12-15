@@ -59,7 +59,7 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
       description = "Action to take after the file has been processed: NONE (default), DELETE, ARCHIVE",
       defaultValue = "NONE")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PostProcessingOptionsChooserValues.class)
-  public String postProcessing;
+  public DirectorySpooler.FilePostProcessing postProcessing;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
@@ -95,10 +95,9 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
   @Override
   protected void init() throws StageException {
     super.init();
-    DirectorySpooler.FilePostProcessing postProc = DirectorySpooler.FilePostProcessing.valueOf(postProcessing);
     DirectorySpooler.Builder builder = DirectorySpooler.builder().setDir(spoolDir).setFilePattern(filePattern).
-        setMaxSpoolFiles(maxSpoolFiles).setPostProcessing(postProc);
-    if (postProc == DirectorySpooler.FilePostProcessing.ARCHIVE) {
+        setMaxSpoolFiles(maxSpoolFiles).setPostProcessing(postProcessing);
+    if (postProcessing == DirectorySpooler.FilePostProcessing.ARCHIVE) {
       builder.setArchiveDir(archiveDir);
       builder.setArchiveRetention(retentionTimeMins);
     }

@@ -12,6 +12,8 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
+import com.streamsets.pipeline.sdk.SourceRunner;
+import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,107 +46,86 @@ public class TestLogSpoolDirSource {
     return f;
   }
 
-  private Source.Context getMockContext() {
-    Source.Context context = Mockito.mock(Source.Context.class);
-    Mockito.when(context.createMeter(Mockito.anyString())).thenReturn(new Meter());
-    Mockito.when(context.createCounter(Mockito.anyString())).thenReturn(new Counter());
-    Mockito.when(context.createRecord(Mockito.anyString())).thenReturn(Mockito.mock(Record.class));
-    return context;
-  }
-
   @Test
   public void testProduceFullFile() throws Exception {
-    LogSpoolDirSource source = new LogSpoolDirSource() {
-      @Override
-      protected Source.Context getContext() {
-        return getMockContext();
-      }
-    };
-    source.postProcessing = DirectorySpooler.FilePostProcessing.ARCHIVE.toString();
-    source.filePattern = "file-[0-9].log";
-    source.maxSpoolFiles = 10;
-    source.spoolDir = createTestDir();
-    source.archiveDir = createTestDir();
-    source.retentionTimeMins = 10;
-    source.initialFileToProcess = null;
-    source.poolingTimeoutSecs = 0;
-    source.maxLogLineLength = 10;
-    source.init();
+    SourceRunner runner = new SourceRunner.Builder(LogSpoolDirSource.class)
+        .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
+        .addConfiguration("filePattern", "file-[0-9].log")
+        .addConfiguration("maxSpoolFiles", 10)
+        .addConfiguration("spoolDir", createTestDir())
+        .addConfiguration("archiveDir", createTestDir())
+        .addConfiguration("retentionTimeMins", 10)
+        .addConfiguration("initialFileToProcess", null)
+        .addConfiguration("poolingTimeoutSecs", 0)
+        .addConfiguration("errorArchiveDir", null)
+        .addConfiguration("maxLogLineLength", 10)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
     try {
-      BatchMaker batchMaker = Mockito.mock(BatchMaker.class);
-
+      LogSpoolDirSource source = (LogSpoolDirSource) runner.getStage();
+      BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
       Assert.assertEquals(-1, source.produce(createLogFile(), 0, 10, batchMaker));
-
-      Mockito.verify(batchMaker, Mockito.times(2)).addRecord(Mockito.any(Record.class));
-      ArgumentCaptor<Record> records = ArgumentCaptor.forClass(Record.class);
-      Mockito.verify(batchMaker, Mockito.times(2)).addRecord(records.capture());
-      List<Record> list = records.getAllValues();
-      ArgumentCaptor<Field> field = ArgumentCaptor.forClass(Field.class);
-      Mockito.verify(list.get(0)).set(field.capture());
-      Assert.assertEquals(LINE1, field.getValue().getValueAsMap().get("line").getValueAsString());
-      Assert.assertFalse(field.getValue().getValueAsMap().get("truncated").getValueAsBoolean());
-      field = ArgumentCaptor.forClass(Field.class);
-      Mockito.verify(list.get(1)).set(field.capture());
-      Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValueAsMap().get("line").getValueAsString());
-      Assert.assertTrue(field.getValue().getValueAsMap().get("truncated").getValueAsBoolean());
+      StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(2, records.size());
+      Assert.assertEquals(LINE1, records.get(0).get().getValueAsMap().get("line").getValueAsString());
+      Assert.assertEquals(false, records.get(0).get().getValueAsMap().get("truncated").getValueAsBoolean());
+      Assert.assertEquals(LINE2.substring(0, 10), records.get(1).get().getValueAsMap().get("line").getValueAsString());
+      Assert.assertEquals(true, records.get(1).get().getValueAsMap().get("truncated").getValueAsBoolean());
     } finally {
-      source.destroy();
+      runner.runDestroy();
     }
   }
 
   @Test
   public void testProduceLessThanFile() throws Exception {
-    LogSpoolDirSource source = new LogSpoolDirSource() {
-      @Override
-      protected Source.Context getContext() {
-        return getMockContext();
-      }
-    };
-    source.postProcessing = DirectorySpooler.FilePostProcessing.ARCHIVE.toString();
-    source.filePattern = "file-[0-9].log";
-    source.maxSpoolFiles = 10;
-    source.spoolDir = createTestDir();
-    source.archiveDir = createTestDir();
-    source.retentionTimeMins = 10;
-    source.initialFileToProcess = null;
-    source.poolingTimeoutSecs = 0;
-    source.maxLogLineLength = 10;
-    source.init();
+    SourceRunner runner = new SourceRunner.Builder(LogSpoolDirSource.class)
+        .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
+        .addConfiguration("filePattern", "file-[0-9].log")
+        .addConfiguration("maxSpoolFiles", 10)
+        .addConfiguration("spoolDir", createTestDir())
+        .addConfiguration("archiveDir", createTestDir())
+        .addConfiguration("retentionTimeMins", 10)
+        .addConfiguration("initialFileToProcess", null)
+        .addConfiguration("poolingTimeoutSecs", 0)
+        .addConfiguration("errorArchiveDir", null)
+        .addConfiguration("maxLogLineLength", 10)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
     try {
-      BatchMaker batchMaker = Mockito.mock(BatchMaker.class);
-
-      //reads first line
+      LogSpoolDirSource source = (LogSpoolDirSource) runner.getStage();
+      BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
       long offset = source.produce(createLogFile(), 0, 1, batchMaker);
       Assert.assertEquals(11, offset);
+      StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(1, records.size());
+      Assert.assertEquals(LINE1, records.get(0).get().getValueAsMap().get("line").getValueAsString());
+      Assert.assertEquals(false, records.get(0).get().getValueAsMap().get("truncated").getValueAsBoolean());
 
-      ArgumentCaptor<Record> records = ArgumentCaptor.forClass(Record.class);
-      Mockito.verify(batchMaker, Mockito.times(1)).addRecord(records.capture());
-      List<Record> list = records.getAllValues();
-      ArgumentCaptor<Field> field = ArgumentCaptor.forClass(Field.class);
-      Mockito.verify(list.get(0)).set(field.capture());
-      Assert.assertEquals(LINE1, field.getValue().getValueAsMap().get("line").getValueAsString());
-
-
-      //reads second line
-      Mockito.reset(batchMaker);
+      batchMaker = SourceRunner.createTestBatchMaker("lane");
       offset = source.produce(createLogFile(), offset, 1, batchMaker);
       Assert.assertEquals(22, offset);
+      output = SourceRunner.getOutput(batchMaker);
+      records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(1, records.size());
+      Assert.assertEquals(LINE2.substring(0, 10), records.get(0).get().getValueAsMap().get("line").getValueAsString());
+      Assert.assertEquals(true, records.get(0).get().getValueAsMap().get("truncated").getValueAsBoolean());
 
-      records = ArgumentCaptor.forClass(Record.class);
-      Mockito.verify(batchMaker, Mockito.times(1)).addRecord(records.capture());
-      list = records.getAllValues();
-      field = ArgumentCaptor.forClass(Field.class);
-      Mockito.verify(list.get(0)).set(field.capture());
-      Assert.assertEquals(LINE2.substring(0, 10), field.getValue().getValueAsMap().get("line").getValueAsString());
-
-      //reads EOF
-      Mockito.reset(batchMaker);
+      batchMaker = SourceRunner.createTestBatchMaker("lane");
       offset = source.produce(createLogFile(), offset, 1, batchMaker);
       Assert.assertEquals(-1, offset);
-
-      Mockito.verify(batchMaker, Mockito.times(0)).addRecord(Mockito.any(Record.class));
+      output = SourceRunner.getOutput(batchMaker);
+      records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(0, records.size());
     } finally {
-      source.destroy();
+      runner.runDestroy();
     }
   }
 
