@@ -162,7 +162,16 @@
     }
   },
   "jvmMetrics": {
-    "title": "JVM Metrics"
+    "title": "JVM Metrics",
+    "memory": {
+      "title": "Memory"
+    },
+    "threads": {
+      "title": "Threads"
+    },
+    "garbageCollections": {
+      "title": "Garbage Collections"
+    }
   },
   "logs": {
     "title": "Logs"

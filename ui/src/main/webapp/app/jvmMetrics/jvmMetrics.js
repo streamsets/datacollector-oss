@@ -12,6 +12,20 @@ angular
       }
     );
   }])
-  .controller('JVMMetricsController', function ($scope) {
+  .controller('JVMMetricsController', function ($scope, $q) {
+    angular.extend($scope, {
+      jvmMetrics: {}
+    });
+
+
+    /**
+     * Fetch JMV Metrics JSON .
+     */
+    $q.all([
+      api.pipelineAgent.getJVMMetrics()
+    ])
+      .then(function (results) {
+        $scope.jvmMetrics = results[0].data;
+      });
 
   });

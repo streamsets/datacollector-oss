@@ -10,6 +10,18 @@ angular.module('pipelineAgentApp.common')
     api.pipelineAgent = {
 
       /**
+       * Fetches JVM Metrics
+       * @returns {*}
+       */
+      getJVMMetrics: function() {
+        var url = apiBase + '/jmx';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Fetches UI Configuration from dist/src/main/etc/pipeline.properties
        *
        * @returns {*}
