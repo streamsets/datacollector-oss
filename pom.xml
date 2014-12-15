@@ -39,6 +39,7 @@
     <module>bootstrap</module>
     <module>stage-lib</module>
     <module>sdk</module>
+    <module>sdk-test</module>
   </modules>
 
   <build>

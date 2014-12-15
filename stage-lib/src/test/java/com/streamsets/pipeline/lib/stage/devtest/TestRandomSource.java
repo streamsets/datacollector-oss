@@ -26,7 +26,7 @@ public class TestRandomSource {
     try {
       StageRunner.Output output = runner.runProduce(null, 25);
       List<Record> records = output.getRecords().get("a");
-      Assert.assertTrue(records.size() < 25);
+      Assert.assertTrue(records.size() <= 25);
       if (!records.isEmpty()) {
         Assert.assertNotNull(records.get(0).get("/a"));
         Assert.assertNotNull(records.get(0).get("/b"));
