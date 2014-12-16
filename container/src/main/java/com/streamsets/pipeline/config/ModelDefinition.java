@@ -12,7 +12,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import java.util.List;
 
 public class ModelDefinition {
-
   private final ModelType modelType;
   private final ChooserMode chooserMode;
   private final String valuesProviderClass;

@@ -8,17 +8,12 @@ package com.streamsets.pipeline.config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class PipelineDefinition {
-
-  private static final Logger LOG = LoggerFactory.getLogger(PipelineDefinition.class);
-
   private static final String PIPELINE_RESOURCE_BUNDLE = "PipelineDefinition-bundle";
   private final static String CONFIG_DELIVERY_GUARANTEE_LABEL_KEY = "config.deliveryGuarantee.label";
   private final static String CONFIG_DELIVERY_GUARANTEE_DESCRIPTION_KEY = "config.deliveryGuarantee.description";

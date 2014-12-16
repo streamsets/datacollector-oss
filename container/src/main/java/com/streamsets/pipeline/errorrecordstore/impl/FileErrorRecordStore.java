@@ -42,7 +42,7 @@ public class FileErrorRecordStore implements ErrorRecordStore {
   private static final String TYPE = "type";
   private static final String LAYOUT_PATTERN = "%m%n";
 
-  private File errorRecordsBaseDir;
+  private final File errorRecordsBaseDir;
   private final ObjectMapper json;
   private final Configuration configuration;
 
@@ -50,7 +50,6 @@ public class FileErrorRecordStore implements ErrorRecordStore {
     this.configuration = configuration;
     this.errorRecordsBaseDir = new File(runtimeInfo.getDataDir(), ERROR_RECORDS_DIR);
     json = ObjectMapperFactory.get();
-    json.enable(SerializationFeature.INDENT_OUTPUT);
   }
 
   @Override
