@@ -4,7 +4,7 @@
 
 angular
   .module('pipelineAgentApp.home')
-  .controller('RecordProcessedBarChartController', function($scope, pipelineConstant) {
+  .controller('RecordCountBarChartController', function($scope, pipelineConstant) {
     var color = {
       'Input' :'#1f77b4',
       'Output': '#5cb85c',

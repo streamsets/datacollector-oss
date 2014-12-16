@@ -158,13 +158,13 @@
   </div>
 
 
-  <ul class="nav navbar-nav pull-right" ng-cloak>
-    <li class="pipelineAgent-status" ng-hide="common.saveOperationInProgress">
+  <div class="pull-right" ng-cloak ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
+    <div class="pipelineAgent-status pull-right" ng-hide="common.saveOperationInProgress">
       <span class="glyphicon glyphicon-ok-circle"></span>
       <span translate="global.messages.info.saveOperationInProgress"></span>
-    </li>
+    </div>
 
-    <li class="pipelineAgent-status" ng-show="common.saveOperationInProgress"
+    <div class="pipelineAgent-status pull-right" ng-show="common.saveOperationInProgress"
         translate="global.messages.info.savingConfiguration">
-    </li>
-  </ul>
+    </div>
+  </div>

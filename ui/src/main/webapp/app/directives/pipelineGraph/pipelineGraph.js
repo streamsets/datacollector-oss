@@ -634,7 +634,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr("x", consts.rectWidth - 55)
         .attr("y", 10)
         .append("xhtml:span")
-        .attr("title", "this is error records")
+        .attr("title", "Mean value of Error Histogram (5 minutes decay)")
         .attr("class", "badge alert-danger pointer")
         .style('visibility', function(d) {
           if(stageErrorCounts && stageErrorCounts[d.instanceName] &&

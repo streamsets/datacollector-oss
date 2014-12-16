@@ -6,7 +6,13 @@ angular
   .module('pipelineAgentApp.home')
   .controller('BatchCountBarChartController', function($scope) {
     angular.extend($scope, {
-      chartData: []
+      chartData: [],
+
+      getTooltipContent: function() {
+        return function(key, x, y, e, graph) {
+          return '<p>Batches </p><p>' + $scope.getDurationLabel(x) + ' throughput: ' + e.value.toFixed(2) + '</p>';
+        };
+      }
     });
 
     $scope.$on('summaryDataUpdated', function() {
@@ -14,14 +20,14 @@ angular
         {
           key: "Batch Throughput",
           values: [
-            ["M1" , $scope.summaryMeters.batchCount.m1_rate ],
-            ["M5" , $scope.summaryMeters.batchCount.m5_rate ],
-            ["M15" , $scope.summaryMeters.batchCount.m15_rate ],
-            ["M30" , $scope.summaryMeters.batchCount.m30_rate ],
-            ["H1" , $scope.summaryMeters.batchCount.h1_rate ],
-            ["H6" , $scope.summaryMeters.batchCount.h6_rate ],
-            ["H12" , $scope.summaryMeters.batchCount.h12_rate ],
-            ["H24" , $scope.summaryMeters.batchCount.h24_rate ],
+            ["1m" , $scope.summaryMeters.batchCount.m1_rate ],
+            ["5m" , $scope.summaryMeters.batchCount.m5_rate ],
+            ["15m" , $scope.summaryMeters.batchCount.m15_rate ],
+            ["30m" , $scope.summaryMeters.batchCount.m30_rate ],
+            ["1h" , $scope.summaryMeters.batchCount.h1_rate ],
+            ["6h" , $scope.summaryMeters.batchCount.h6_rate ],
+            ["12h" , $scope.summaryMeters.batchCount.h12_rate ],
+            ["1d" , $scope.summaryMeters.batchCount.h24_rate ],
             ["Mean" , $scope.summaryMeters.batchCount.mean_rate ]
           ]
         }

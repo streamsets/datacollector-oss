@@ -31,7 +31,7 @@
       "export": "Export",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
-      "histogram": "Histogram - 5 Minute Decay",
+      "histogram": "Record Histogram (5 minutes decay)",
       "import": "Import",
       "label": "Label",
       "library": "Library",
@@ -103,10 +103,10 @@
         "mostRecentErrorMessages": "Most Recent Error Messages",
         "totalNumberOfBadRecords": "Total Number of Bad Records",
         "totalNumberOfErrors": "Total Number of Errors",
-        "badRecordsCounts": "Bad Records Count",
-        "badRecordsHistogram": "Bad Records Histogram - 5 Minute Decay",
-        "errorsCount": "Stage Errors Count",
-        "errorsHistogram": "Stage Errors Histogram - 5 Minute Decay"
+        "badRecordsCounts": "Records in Error (since last startup)",
+        "badRecordsHistogram": "Records in Error Histogram (5 minutes decay)",
+        "errorsCount": "Stage Errors Count (since last startup)",
+        "errorsHistogram": "Stage Errors Histogram (5 minutes decay)"
       },
       "configuration": "Configuration",
       "configurationTab": {
@@ -121,8 +121,9 @@
       "summaryTab": {
         "batchThroughput": "Batch Throughput (batches/sec)",
         "recordsProcessed": "Records Processed (since last startup)",
+        "recordCountBarChartTitle": "Record Count (since last startup)",
         "recordThroughput": "Record Throughput (records/sec)",
-        "batchProcessingTimer": "Batch Processing Timer",
+        "batchProcessingTimer": "Batch Processing Timer (in seconds)",
         "frequency": "Frequency (batches/sec)",
         "duration": "Duration (Seconds)",
         "timer": "Timer (Percentiles)",

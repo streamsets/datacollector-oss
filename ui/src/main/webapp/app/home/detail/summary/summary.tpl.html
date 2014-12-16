@@ -30,9 +30,10 @@
       </div>
     </div>
 
-    <div class="col-sm-4" ng-controller="RecordProcessedBarChartController">
+    <div class="col-sm-4" ng-controller="RecordCountBarChartController">
       <div class="panel panel-default">
-        <div class="panel-heading" translate="home.detailPane.summaryTab.recordsProcessed">Records Processed</div>
+        <div class="panel-heading"
+             translate="home.detailPane.summaryTab.recordCountBarChartTitle">Record Count (since last startup)</div>
         <div class="panel-body">
           <nvd3-discrete-bar-chart
             data="barChartData"
@@ -69,7 +70,8 @@
             showLegend="true"
             showXAxis="true"
             showYAxis="true"
-            tooltips="true">
+            tooltips="true"
+            tooltipcontent="getTooltipContent()">
             <svg></svg>
           </nvd3-multi-bar-chart>
         </div>
@@ -93,6 +95,7 @@
             showValues="false"
             showLegend="true"
             tooltips="true"
+            tooltipcontent="getTooltipContent()"
             margin="{left:40,top:20,bottom:40,right:20}">
           </nvd3-discrete-bar-chart>
         </div>
@@ -104,7 +107,7 @@
   <div class="row">
     <div class="col-sm-8">
       <div class="panel panel-default">
-        <div class="panel-heading" translate="global.form.histogram">Histogram</div>
+        <div class="panel-heading" translate="global.form.histogram">Record Histogram (5 minutes decay)</div>
         <div class="panel-body">
           <div ng-controller="HistogramChartController">
             <nvd3-multi-bar-horizontal-chart
@@ -115,6 +118,7 @@
               legendColor="getColor()"
               showLegend="true"
               showXAxis="true"
+              showYAxis="true"
               showValues="false"
               tooltips="true"
               margin="{left:50,top:70,bottom:20,right:20}">
@@ -128,7 +132,8 @@
     <div class="col-sm-4"
          ng-controller="BatchTimerChartController">
       <div class="panel panel-default">
-        <div class="panel-heading" translate="home.detailPane.summaryTab.batchProcessingTimer">Batch Processing Timer</div>
+        <div class="panel-heading"
+             translate="home.detailPane.summaryTab.batchProcessingTimer">Batch Processing Timer (in seconds)</div>
         <div class="panel-body">
           <nvd3-multi-bar-horizontal-chart
             data="timerData"

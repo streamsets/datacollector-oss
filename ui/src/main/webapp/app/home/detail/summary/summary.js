@@ -11,7 +11,29 @@ angular
       summaryHistograms: {},
       summaryMeters: {},
       summaryTimer: {},
-      histogramList:[]
+      histogramList:[],
+
+      getDurationLabel: function(key) {
+        switch(key) {
+          case '1m':
+            return '1 minute';
+          case '5m':
+            return '5 minute';
+          case '15m':
+            return '15 minute';
+          case '30m':
+            return '30 minute';
+          case '1h':
+            return '1 hour';
+          case '6h':
+            return '6 hour';
+          case '12h':
+            return '12 hour';
+          case '1d':
+            return '1 day';
+        }
+        return key;
+      }
     });
 
     /**

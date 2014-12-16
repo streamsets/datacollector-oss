@@ -17,10 +17,6 @@ angular
           template:'app/home/detail/summary/summary.tpl.html'
         },
         {
-          name:'configuration',
-          template:'app/home/detail/configuration/configuration.tpl.html'
-        },
-        {
           name:'errors',
           template:'app/home/detail/badRecords/badRecords.tpl.html'
         },
@@ -31,6 +27,10 @@ angular
         {
           name:'rules',
           template:'app/home/detail/rules/rules.tpl.html'
+        },
+        {
+          name:'configuration',
+          template:'app/home/detail/configuration/configuration.tpl.html'
         }
       ];
 
