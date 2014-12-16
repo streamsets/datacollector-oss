@@ -143,8 +143,8 @@ public class BootstrapMain {
     Class klass = containerCL.loadClass(mainClass);
     Method method = klass.getMethod(SET_CLASS_LOADERS_METHOD, ClassLoader.class, ClassLoader.class, List.class);
     method.invoke(null, apiCL, containerCL, stageLibrariesCLs);
-    method = klass.getMethod(MAIN_METHOD);
-    method.invoke(null);
+    method = klass.getMethod(MAIN_METHOD, String[].class);
+    method.invoke(null, new Object[]{new String[]{}});
   }
 
   // Visible for testing

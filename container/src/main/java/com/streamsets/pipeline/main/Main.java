@@ -84,15 +84,12 @@ public class Main {
     }
   }
 
-  public static void setClassLoaders(ClassLoader apiCL, ClassLoader containerCL, List<? extends ClassLoader> moduleCLs) {
+  public static void setClassLoaders(ClassLoader apiCL, ClassLoader containerCL,
+      List<? extends ClassLoader> moduleCLs) {
     RuntimeModule.setStageLibraryClassLoaders(moduleCLs);
   }
 
   public static void main(String[] args) throws Exception {
-    main();
-  }
-
-  public static void main() throws Exception {
     System.exit(new Main().doMain());
   }
 

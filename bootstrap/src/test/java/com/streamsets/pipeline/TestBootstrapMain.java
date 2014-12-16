@@ -184,7 +184,7 @@ public class TestBootstrapMain {
       setClassLoaders = true;
     }
 
-    public static void main()  {
+    public static void main(String[] args)  {
       main = true;
     }
   }
