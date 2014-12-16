@@ -31,7 +31,7 @@
       "export": "Export",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
-      "histogram": "Record Histogram (5 minutes decay)",
+      "histogram": "Record Count Histogram (5 minutes decay)",
       "import": "Import",
       "label": "Label",
       "library": "Library",
