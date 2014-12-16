@@ -20,7 +20,7 @@ import javax.inject.Singleton;
 public class PipelineTaskModule {
 
   @Provides @Singleton
-  public Task provideAgent(PipelineTask agent) {
+  public Task providePipelineTask(PipelineTask agent) {
     return agent;
   }
 
