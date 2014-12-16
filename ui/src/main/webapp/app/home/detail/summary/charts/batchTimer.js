@@ -66,6 +66,10 @@ angular
         {
           key: label.timer,
           values: [
+            //["Min" , $scope.summaryTimer.min ],
+            ["Mean" , $scope.summaryTimer.mean ],
+            //["Max" , $scope.summaryTimer.max ],
+            ["Std Dev" , $scope.summaryTimer.stddev ],
             ["99.9%" , $scope.summaryTimer.p999 ],
             ["99%" , $scope.summaryTimer.p99 ],
             ["98%" , $scope.summaryTimer.p98 ],

@@ -31,7 +31,7 @@
       "export": "Export",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
-      "histogram": "Histogram",
+      "histogram": "Histogram - 5 Minute Decay",
       "import": "Import",
       "label": "Label",
       "library": "Library",
@@ -50,6 +50,7 @@
       "sampleValue": "Sample Value",
       "save": "Save",
       "stage": "Stage",
+      "stageErrors": "Stage Errors",
       "step": "Step",
       "timestamp": "Timestamp",
       "type": "Type",
@@ -103,9 +104,9 @@
         "totalNumberOfBadRecords": "Total Number of Bad Records",
         "totalNumberOfErrors": "Total Number of Errors",
         "badRecordsCounts": "Bad Records Count",
-        "badRecordsHistogram": "Bad Records Histogram",
-        "errorsCount": "Errors Count",
-        "errorsHistogram": "Errors Histogram"
+        "badRecordsHistogram": "Bad Records Histogram - 5 Minute Decay",
+        "errorsCount": "Stage Errors Count",
+        "errorsHistogram": "Stage Errors Histogram - 5 Minute Decay"
       },
       "configuration": "Configuration",
       "configurationTab": {
@@ -126,10 +127,10 @@
         "duration": "Duration (Seconds)",
         "timer": "Timer (Percentiles)",
         "histogram" : {
-          "inputRecords": "Input Records Per Batch",
-          "outputRecords": "Output Records Per Batch",
-          "errorRecords": "Error Records Per Batch",
-          "errors": "Errors Per Batch"
+          "inputRecords": "Input",
+          "outputRecords": "Output",
+          "errorRecords": "Error",
+          "errors": "Stage Error"
         }
       }
     },

@@ -17,7 +17,7 @@ angular
         'inputRecords' :'#1f77b4',
         'outputRecords': '#5cb85c',
         'errorRecords' :'#FF3333',
-        'errors' :'#FF3333'
+        'errors' :'#d62728'
       };
 
 
@@ -36,31 +36,36 @@ angular
       },
 
       getColor: function() {
-        return function() {
-          return color[recordType];
+        return function(d) {
+          return d.color;
         };
       }
     });
 
 
     $scope.$on('summaryDataUpdated', function() {
-      var data = $scope.summaryHistograms[recordType];
+      var list = [];
 
-      if(data) {
-        $scope.timerData = [
-          {
-            key: label[recordType],
-            values: [
-              ["99.9%" , data.p999 ],
-              ["99%" , data.p99 ],
-              ["98%" , data.p98 ],
-              ["95%" , data.p95 ],
-              ["75%" , data.p75 ],
-              ["50%" , data.p50 ]
-            ]
-          }
-        ];
-      }
+      angular.forEach($scope.histogramList, function(recordType) {
+        var data = $scope.summaryHistograms[recordType];
+        list.push({
+          key: label[recordType],
+          values: [
+            ["Mean" , data.mean ],
+            ["Std Dev" , data.stddev ],
+            ["99.9%" , data.p999 ],
+            ["99%" , data.p99 ],
+            ["98%" , data.p98 ],
+            ["95%" , data.p95 ],
+            ["75%" , data.p75 ],
+            ["50%" , data.p50 ]
+          ],
+          color: color[recordType]
+        });
+      });
+
+      $scope.timerData = list;
+
     });
 
   });

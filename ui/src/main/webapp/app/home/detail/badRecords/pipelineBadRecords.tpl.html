@@ -3,38 +3,18 @@
     <div class="panel panel-default">
       <div class="panel-heading" translate="home.detailPane.badRecordsTab.badRecordsHistogram">Bad Records Histogram</div>
       <div class="panel-body">
-
-
-        <div class="col-sm-6">
-          <nvd3-multi-bar-horizontal-chart
-            data="errorRecordsDurationData"
-            id="errorRecordsDurationDataID"
-            height="250"
-            color="getColor()"
-            legendColor="getColor()"
-            showLegend="true"
-            showXAxis="true"
-            showValues="true"
-            margin="{left:50,top:70,bottom:20,right:20}">
-            <svg></svg>
-          </nvd3-multi-bar-horizontal-chart>
-        </div>
-
-        <div class="col-sm-6">
-          <nvd3-multi-bar-horizontal-chart
-            data="errorRecordsPercentilesData"
-            id="errorRecordsPercentilesDataID"
-            height="250"
-            color="getColor()"
-            legendColor="getColor()"
-            showLegend="true"
-            showXAxis="true"
-            showValues="true"
-            margin="{left:50,top:70,bottom:20,right:20}">
-            <svg></svg>
-          </nvd3-multi-bar-horizontal-chart>
-        </div>
-
+        <nvd3-multi-bar-horizontal-chart
+          data="errorRecordsPercentilesData"
+          id="errorRecordsPercentilesDataID"
+          height="250"
+          color="getColor()"
+          legendColor="getColor()"
+          showLegend="true"
+          showXAxis="true"
+          showValues="true"
+          margin="{left:50,top:70,bottom:20,right:20}">
+          <svg></svg>
+        </nvd3-multi-bar-horizontal-chart>
       </div>
     </div>
   </div>
@@ -55,9 +35,9 @@
           showLegend="true"
           staggerLabels="true"
           tooltips="true"
-          yAxisTickFormat="valueFormatFunction()"
+          yAxisTickFormat="getYAxisLabel()"
           valueformat="valueFormatFunction()"
-          margin="{left:100,top:20,bottom:50,right:20}">
+          margin="{left:30,top:20,bottom:50,right:20}">
         </nvd3-discrete-bar-chart>
 
       </div>
@@ -72,38 +52,18 @@
     <div class="panel panel-default">
       <div class="panel-heading" translate="home.detailPane.badRecordsTab.errorsHistogram">Errors Histogram</div>
       <div class="panel-body">
-
-
-        <div class="col-sm-6">
-          <nvd3-multi-bar-horizontal-chart
-            data="errorsDurationData"
-            id="errorsDurationDataID"
-            height="250"
-            color="getColor()"
-            legendColor="getColor()"
-            showLegend="true"
-            showXAxis="true"
-            showValues="true"
-            margin="{left:50,top:70,bottom:20,right:20}">
-            <svg></svg>
-          </nvd3-multi-bar-horizontal-chart>
-        </div>
-
-        <div class="col-sm-6">
-          <nvd3-multi-bar-horizontal-chart
-            data="errorsPercentilesData"
-            id="errorsPercentilesDataID"
-            height="250"
-            color="getColor()"
-            legendColor="getColor()"
-            showLegend="true"
-            showXAxis="true"
-            showValues="true"
-            margin="{left:50,top:70,bottom:20,right:20}">
-            <svg></svg>
-          </nvd3-multi-bar-horizontal-chart>
-        </div>
-
+        <nvd3-multi-bar-horizontal-chart
+          data="errorsPercentilesData"
+          id="errorsPercentilesDataID"
+          height="250"
+          color="getColor()"
+          legendColor="getColor()"
+          showLegend="true"
+          showXAxis="true"
+          showValues="true"
+          margin="{left:50,top:70,bottom:20,right:20}">
+          <svg></svg>
+        </nvd3-multi-bar-horizontal-chart>
       </div>
     </div>
   </div>
@@ -122,9 +82,9 @@
           showLegend="true"
           tooltips="true"
           staggerLabels="true"
-          yAxisTickFormat="valueFormatFunction()"
+          yAxisTickFormat="getYAxisLabel()"
           valueformat="valueFormatFunction()"
-          margin="{left:100,top:20,bottom:50,right:20}">
+          margin="{left:30,top:20,bottom:50,right:20}">
         </nvd3-discrete-bar-chart>
       </div>
     </div>

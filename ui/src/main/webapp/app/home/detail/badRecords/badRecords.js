@@ -35,6 +35,12 @@ angular
         var currentSelection = $scope.detailPaneConfig;
         updateErrorMessagesData(currentSelection);
 
+      },
+
+      getYAxisLabel: function() {
+        return function() {
+          return '';
+        };
       }
     });
 
@@ -91,6 +97,11 @@ angular
           if(errorMessagesCount && parseInt(errorMessagesCount.count) > 0) {
             updateErrorMessagesData(currentSelection);
           }
+
+
+          $scope.errorRecordsHistogram = pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.errorRecords.histogramM5'];
+          $scope.errorsHistogram = pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.stageErrors.histogramM5'];
+
         } else {  //Pipeline
           $scope.errorRecordsCount = pipelineMetrics.meters['pipeline.batchErrorRecords.meter'];
           $scope.stageBadRecords = [];
@@ -113,11 +124,11 @@ angular
 
       if($scope.isPipelineRunning && pipelineMetrics && pipelineMetrics.meters) {
         if(currentSelection.instanceName) {
-          errorRecordsHistogram = pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.errorRecords.histogramM5'];
-          errorsHistogram = pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.stageErrors.histogramM5'];
+          errorRecordsHistogram = $scope.errorRecordsHistogram = pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.errorRecords.histogramM5'];
+          errorsHistogram = $scope.errorsHistogram = pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.stageErrors.histogramM5'];
 
-          $scope.errorRecordsCount = errorRecordsHistogram.mean; //pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter'];
-          $scope.errorMessagesCount = errorsHistogram.mean; //pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.stageErrors.meter'];
+          $scope.errorRecordsCount = pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter'];
+          $scope.errorMessagesCount = pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.stageErrors.meter'];
         } else {
 
           angular.forEach(stages, function(stage) {
@@ -144,23 +155,12 @@ angular
           errorsHistogram = pipelineMetrics.histograms['pipeline.errorsPerBatch.histogramM5'];
         }
 
-        $scope.errorRecordsDurationData = [
-          {
-            key: 'Counts',
-            values: [
-              ["Min" , errorRecordsHistogram.min ],
-              ["Mean" , errorRecordsHistogram.mean ],
-              ["Max" , errorRecordsHistogram.max ],
-              ["Std Dev" , errorRecordsHistogram.stddev ]
-            ],
-            color: '#AEC7E8'
-          }
-        ];
-
         $scope.errorRecordsPercentilesData = [
           {
-            key: 'Percentiles',
+            key: 'Error Records',
             values: [
+              ["Mean" , errorRecordsHistogram.mean ],
+              ["Std Dev" , errorRecordsHistogram.stddev ],
               ["99.9%" , errorRecordsHistogram.p999 ],
               ["99%" , errorRecordsHistogram.p99 ],
               ["98%" , errorRecordsHistogram.p98 ],
@@ -168,27 +168,16 @@ angular
               ["75%" , errorRecordsHistogram.p75 ],
               ["50%" , errorRecordsHistogram.p50 ]
             ],
-            color: '#FF7F0E'
-          }
-        ];
-
-        $scope.errorsDurationData = [
-          {
-            key: 'Counts',
-            values: [
-              ["Min" , errorsHistogram.min ],
-              ["Mean" , errorsHistogram.mean ],
-              ["Max" , errorsHistogram.max ],
-              ["Std Dev" , errorsHistogram.stddev ]
-            ],
-            color: '#AEC7E8'
+            color: '#FF3333'
           }
         ];
 
         $scope.errorsPercentilesData = [
           {
-            key: 'Percentiles',
+            key: 'Stage Errors',
             values: [
+              ["Mean" , errorsHistogram.mean ],
+              ["Std Dev" , errorsHistogram.stddev ],
               ["99.9%" , errorsHistogram.p999 ],
               ["99%" , errorsHistogram.p99 ],
               ["98%" , errorsHistogram.p98 ],
@@ -196,7 +185,7 @@ angular
               ["75%" , errorsHistogram.p75 ],
               ["50%" , errorsHistogram.p50 ]
             ],
-            color: '#FF7F0E'
+            color: '#d62728'
           }
         ];
 
