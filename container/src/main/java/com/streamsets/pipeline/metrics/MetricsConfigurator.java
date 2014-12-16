@@ -12,7 +12,6 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SlidingTimeWindowReservoir;
 import com.codahale.metrics.Timer;
-import com.streamsets.pipeline.json.ExtendedMeter;
 
 import java.util.concurrent.TimeUnit;
 

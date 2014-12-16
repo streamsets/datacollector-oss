@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.json;
+package com.streamsets.pipeline.metrics;
 
 import com.codahale.metrics.Clock;
 import com.codahale.metrics.EWMA;

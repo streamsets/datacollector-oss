@@ -8,6 +8,7 @@ package com.streamsets.pipeline.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.streamsets.pipeline.metrics.ExtendedMeter;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -42,6 +43,6 @@ public class ExtendedMeterSerializer extends JsonSerializer<ExtendedMeter> {
     jgen.writeNumberField("mean_rate", meter.getMeanRate() * this.rateFactor);
     jgen.writeStringField("units", this.rateUnit);
     jgen.writeEndObject();
-
   }
+
 }
