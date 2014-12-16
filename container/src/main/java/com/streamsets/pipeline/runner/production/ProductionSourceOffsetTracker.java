@@ -87,7 +87,7 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   }
 
   private void saveOffset(String pipelineName, SourceOffset s) {
-    LOG.debug("Saving offset {} for pipeline {}", s.getOffset(), pipelineName);
+    LOG.trace("Saving offset {} for pipeline {}", s.getOffset(), pipelineName);
     try {
       json.writeObjectToFile(getPipelineOffsetTempFile(pipelineName), getPipelineOffsetFile(pipelineName), s);
     } catch (IOException e) {
