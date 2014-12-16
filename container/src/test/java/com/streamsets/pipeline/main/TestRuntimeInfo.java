@@ -60,4 +60,15 @@ public class TestRuntimeInfo {
     info.log(log);
   }
 
+  @Test
+  public void testAttributes() {
+    RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+    Assert.assertFalse(info.hasAttribute("a"));
+    info.setAttribute("a", 1);
+    Assert.assertTrue(info.hasAttribute("a"));
+    Assert.assertEquals(1, info.getAttribute("a"));
+    info.removeAttribute("a");
+    Assert.assertFalse(info.hasAttribute("a"));
+  }
+
 }

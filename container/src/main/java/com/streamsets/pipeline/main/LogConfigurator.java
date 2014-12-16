@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class LogConfigurator {
@@ -26,6 +27,7 @@ public class LogConfigurator {
 
   public void configure() {
     if (System.getProperty("log4j.configuration") == null) {
+      URL log4fConfigUrl = null;
       System.setProperty("log4j.defaultInitOverride", "true");
       boolean foundConfig = false;
       boolean fromClasspath = true;
@@ -34,13 +36,22 @@ public class LogConfigurator {
         PropertyConfigurator.configureAndWatch(log4jConf.getPath(), 1000);
         fromClasspath = false;
         foundConfig = true;
+        try {
+          log4fConfigUrl = log4jConf.toURI().toURL();
+        } catch (MalformedURLException ex) {
+          throw new RuntimeException(ex);
+        }
       } else {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         URL log4jUrl = cl.getResource(LOG4J_PROPERTIES);
         if (log4jUrl != null) {
           PropertyConfigurator.configure(log4jUrl);
           foundConfig = true;
+          log4fConfigUrl = log4jUrl;
         }
+      }
+      if (log4fConfigUrl != null) {
+        runtimeInfo.setAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR, log4fConfigUrl);
       }
       Logger log = LoggerFactory.getLogger(this.getClass());
       log.debug("Log starting, from configuration: {}", log4jConf.getAbsoluteFile());

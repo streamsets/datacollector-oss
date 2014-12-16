@@ -55,6 +55,9 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0205("The provided UUID does not match the stored one, please reload the pipeline '{}'"),
   CONTAINER_0206("Could not load pipeline '{}' info, {}"),
 
+  // AdminResource
+  CONTAINER_0300("Reached maximum number of concurrent clients '{}' tailing the log via the REST API"),
+
   ;
 
   private final String msg;

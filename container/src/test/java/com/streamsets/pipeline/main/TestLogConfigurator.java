@@ -48,6 +48,8 @@ public class TestLogConfigurator {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     new LogConfigurator(runtimeInfo).configure();
     Mockito.verify(runtimeInfo, Mockito.times(0)).getConfigDir();
+    Mockito.verify(runtimeInfo, Mockito.times(0)).setAttribute(Mockito.eq(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR),
+                                                               Mockito.any());
   }
 
   @Test
@@ -61,6 +63,8 @@ public class TestLogConfigurator {
     for (Thread thread : Thread.getAllStackTraces().keySet()) {
      Assert.assertFalse(thread instanceof FileWatchdog);
     }
+    Mockito.verify(runtimeInfo, Mockito.times(1)).setAttribute(Mockito.eq(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR),
+                                                               Mockito.any());
   }
 
   @Test
@@ -81,5 +85,7 @@ public class TestLogConfigurator {
       foundFileWatcher |= (thread instanceof FileWatchdog);
     }
     Assert.assertTrue(foundFileWatcher);
+    Mockito.verify(runtimeInfo, Mockito.times(1)).setAttribute(Mockito.eq(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR),
+                                                               Mockito.any());
   }
 }
