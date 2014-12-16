@@ -11,7 +11,7 @@ import java.util.List;
 public class TestKafkaConsumer {
 
   public static void main(String[] args) throws Exception {
-    KafkaConsumer kafkaConsumer = new KafkaConsumer("GG1", 0, new KafkaBroker("localhost", 9001), 4000,
+    KafkaConsumer kafkaConsumer = new KafkaConsumer("csv12", 0, new KafkaBroker("192.168.1.118", 9003), 4000,
       640000, 1000);
     kafkaConsumer.init();
 

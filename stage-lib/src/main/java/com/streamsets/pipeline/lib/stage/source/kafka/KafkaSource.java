@@ -15,9 +15,11 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.pipeline.lib.stage.source.spooldir.csv.CvsFileModeChooserValues;
 import com.streamsets.pipeline.lib.stage.source.spooldir.json.JsonFileModeChooserValues;
 import com.streamsets.pipeline.lib.stage.source.util.JsonUtil;
 import org.slf4j.Logger;
@@ -29,7 +31,9 @@ import java.io.InputStreamReader;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @GenerateResourceBundle
 @StageDef(version="0.0.1",
@@ -121,6 +125,15 @@ public class KafkaSource extends BaseSource {
     defaultValue = "4096")
   public int maxJsonObjectLen;
 
+  /********  For CSV Content  ***********/
+
+  @ConfigDef(required = true,
+    type = ConfigDef.Type.MODEL,
+    label = "CSV Format",
+    description = "The specific CSV format of the files",
+    defaultValue = "DEFAULT")
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
+  public String csvFileFormat;
 
   /****************** End config options *******************/
 
@@ -174,13 +187,26 @@ public class KafkaSource extends BaseSource {
       byte[] bytes = new byte[payload.limit()];
       payload.get(bytes);
 
+      offsetToReturn = String.valueOf(partitionToPayloadMap.getOffset());
+
       if (payloadType == PayloadType.STRING) {
         //TODO: Is the last message complete?
         record.set(Field.create(new String(bytes)));
-        offsetToReturn = String.valueOf(partitionToPayloadMap.getOffset());
       } else if (payloadType == PayloadType.CSV) {
-
-
+        try (CountingReader reader =
+               new CountingReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes))))) {
+          OverrunCsvParser parser = new OverrunCsvParser(reader, CvsFileModeChooserValues.getCSVFormat(csvFileFormat));
+          String[] columns = parser.read();
+          Map<String, Field> map = new LinkedHashMap<>();
+          List<Field> values = new ArrayList<>(columns.length);
+          for (String column : columns) {
+            values.add(Field.create(column));
+          }
+          map.put("values", Field.create(values));
+          record.set(Field.create(map));
+        }catch (Exception e) {
+          throw new StageException(null, e.getMessage(), e);
+        }
       } else if(payloadType == PayloadType.JSON) {
         try (CountingReader reader =
                new CountingReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes))))) {

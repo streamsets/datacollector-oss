@@ -70,8 +70,8 @@ public class KafkaProducer {
     producer = new Producer<>(config);
   }
 
-  public void enqueueRecord(Record record) throws IOException {
-    messageList.add(new KeyedMessage<>(topic, partitionKey, serializeRecord(record)));
+  public void enqueueMessage(byte[] message) throws IOException {
+    messageList.add(new KeyedMessage<>(topic, partitionKey, message));
   }
 
   public void write() {
@@ -85,7 +85,7 @@ public class KafkaProducer {
   }
 
   private void configurePartitionStrategy(Properties props, PartitionStrategy partitionStrategy) {
-    if(partitionStrategy == PartitionStrategy.RANDOM) {
+    if (partitionStrategy == PartitionStrategy.RANDOM) {
       props.put(PARTITIONER_CLASS_KEY, RANDOM_PARTITIONER_CLASS);
     } else if (partitionStrategy == PartitionStrategy.ROUND_ROBIN) {
       props.put(PARTITIONER_CLASS_KEY, ROUND_ROBIN_PARTITIONER_CLASS);
@@ -94,14 +94,4 @@ public class KafkaProducer {
     }
   }
 
-  private byte[] serializeRecord(Record r) throws IOException {
-    if(payloadType == PayloadType.STRING) {
-      return r.get().getValue().toString().getBytes();
-    } if (payloadType == PayloadType.JSON) {
-      ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-      return objectMapper.writeValueAsBytes(JsonUtil.fieldToJsonObject(r.get()));
-    }
-    return null;
-  }
 }
