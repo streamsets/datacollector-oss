@@ -13,8 +13,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.container.ErrorMessage;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.sdk.annotationsprocessor.StageHelper;
 

@@ -5,9 +5,9 @@
  */
 package com.streamsets.pipeline.validation;
 
-import com.streamsets.pipeline.container.ErrorMessage;
-import com.streamsets.pipeline.container.LocalizableString;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.api.impl.LocalizableString;
+import com.streamsets.pipeline.api.impl.Utils;
 
 public class Issue {
   private final LocalizableString message;

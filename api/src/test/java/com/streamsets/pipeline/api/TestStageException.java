@@ -6,8 +6,8 @@
 package com.streamsets.pipeline.api;
 
 import com.streamsets.pipeline.api.base.BaseError;
-import com.streamsets.pipeline.container.LocaleInContext;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.LocaleInContext;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;

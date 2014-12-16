@@ -13,10 +13,10 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.streamsets.pipeline.container.ErrorMessage;
-import com.streamsets.pipeline.container.LocalizableString;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.api.impl.LocalizableString;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.HashMap;
 import java.util.Map;

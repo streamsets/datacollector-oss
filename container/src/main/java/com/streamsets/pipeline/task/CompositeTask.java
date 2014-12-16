@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.task;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

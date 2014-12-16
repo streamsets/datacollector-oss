@@ -16,7 +16,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.stage.source.spooldir.AbstractSpoolDirSource;
 import com.streamsets.pipeline.lib.stage.source.spooldir.BadSpoolFileException;

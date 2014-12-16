@@ -6,7 +6,7 @@
 
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.container.ErrorMessage;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 
 public class StageException extends Exception {
 

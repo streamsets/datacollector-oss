@@ -9,8 +9,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.container.LocalizableMessage;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.LocalizableMessage;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

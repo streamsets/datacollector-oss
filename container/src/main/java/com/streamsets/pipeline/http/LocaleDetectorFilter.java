@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.http;
 
-import com.streamsets.pipeline.container.LocaleInContext;
+import com.streamsets.pipeline.api.impl.LocaleInContext;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

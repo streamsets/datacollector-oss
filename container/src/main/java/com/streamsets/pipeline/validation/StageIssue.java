@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.validation;
 
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 
 public class StageIssue extends Issue {
   private final String instanceName;

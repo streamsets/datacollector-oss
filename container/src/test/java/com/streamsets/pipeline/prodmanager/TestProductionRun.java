@@ -9,7 +9,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.container.ErrorMessage;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;

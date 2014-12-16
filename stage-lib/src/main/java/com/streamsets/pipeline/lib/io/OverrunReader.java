@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.lib.io;
 
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
 
 import java.io.Reader;

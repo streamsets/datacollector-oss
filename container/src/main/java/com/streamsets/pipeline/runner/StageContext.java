@@ -19,8 +19,8 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.container.ErrorMessage;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
 

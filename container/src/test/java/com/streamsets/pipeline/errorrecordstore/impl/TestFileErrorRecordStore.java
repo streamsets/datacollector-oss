@@ -6,11 +6,10 @@
 
 package com.streamsets.pipeline.errorrecordstore.impl;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.container.ErrorMessage;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.record.RecordImpl;

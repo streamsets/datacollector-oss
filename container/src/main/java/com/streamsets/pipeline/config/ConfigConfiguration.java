@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 
 public class ConfigConfiguration {
   private final String name;

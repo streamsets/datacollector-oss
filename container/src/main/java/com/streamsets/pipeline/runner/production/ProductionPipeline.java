@@ -7,7 +7,7 @@ package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.container.ErrorMessage;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 

@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.errorrecordstore;
 
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.container.ErrorMessage;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 
 import java.io.InputStream;
 import java.util.List;

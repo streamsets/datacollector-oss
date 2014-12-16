@@ -8,8 +8,8 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.container.LocalizableMessage;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.LocalizableMessage;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Arrays;
 import java.util.HashSet;

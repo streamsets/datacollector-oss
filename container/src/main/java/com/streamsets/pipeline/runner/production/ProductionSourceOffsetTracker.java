@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.util.JsonFileUtil;
 import org.slf4j.Logger;

@@ -5,8 +5,8 @@
  */
 package com.streamsets.pipeline.el;
 
-import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.container.TextUtils;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.impl.TextUtils;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
 
 import javax.servlet.jsp.el.ELException;

@@ -8,7 +8,7 @@ package com.streamsets.pipeline.sdk;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Map;
 import java.util.Set;

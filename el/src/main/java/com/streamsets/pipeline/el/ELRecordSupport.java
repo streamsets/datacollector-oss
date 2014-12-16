@@ -7,7 +7,7 @@ package com.streamsets.pipeline.el;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.lang.reflect.Method;
 

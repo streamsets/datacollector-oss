@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.snapshotstore.impl;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.Snapshot;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;

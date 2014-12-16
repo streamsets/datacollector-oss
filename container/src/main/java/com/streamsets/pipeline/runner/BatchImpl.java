@@ -8,7 +8,7 @@ package com.streamsets.pipeline.runner;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Iterator;
 import java.util.List;

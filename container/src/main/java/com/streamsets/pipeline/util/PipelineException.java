@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.util;
 
 import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.container.ErrorMessage;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 
 public class PipelineException extends Exception {
 

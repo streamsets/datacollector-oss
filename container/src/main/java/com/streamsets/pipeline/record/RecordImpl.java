@@ -8,12 +8,10 @@ package com.streamsets.pipeline.record;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.container.TextUtils;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -21,7 +19,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.UUID;
 
 public class RecordImpl implements Record {

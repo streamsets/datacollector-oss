@@ -15,7 +15,7 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.container.TextUtils;
+import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

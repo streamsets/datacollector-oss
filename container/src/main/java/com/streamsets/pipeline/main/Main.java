@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.main;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
 import dagger.ObjectGraph;

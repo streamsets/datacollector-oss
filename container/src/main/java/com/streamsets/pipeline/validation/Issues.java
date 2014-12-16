@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.validation;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.util.NullDeserializer;
 
 import java.util.ArrayList;

@@ -5,22 +5,22 @@
  */
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.container.ListTypeSupport;
-import com.streamsets.pipeline.container.MapTypeSupport;
-import com.streamsets.pipeline.container.Utils;
-import com.streamsets.pipeline.container.BooleanTypeSupport;
-import com.streamsets.pipeline.container.ByteArrayTypeSupport;
-import com.streamsets.pipeline.container.ByteTypeSupport;
-import com.streamsets.pipeline.container.CharTypeSupport;
-import com.streamsets.pipeline.container.DateTypeSupport;
-import com.streamsets.pipeline.container.DecimalTypeSupport;
-import com.streamsets.pipeline.container.DoubleTypeSupport;
-import com.streamsets.pipeline.container.FloatTypeSupport;
-import com.streamsets.pipeline.container.IntegerTypeSupport;
-import com.streamsets.pipeline.container.LongTypeSupport;
-import com.streamsets.pipeline.container.ShortTypeSupport;
-import com.streamsets.pipeline.container.StringTypeSupport;
-import com.streamsets.pipeline.container.TypeSupport;
+import com.streamsets.pipeline.api.impl.ListTypeSupport;
+import com.streamsets.pipeline.api.impl.MapTypeSupport;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.impl.BooleanTypeSupport;
+import com.streamsets.pipeline.api.impl.ByteArrayTypeSupport;
+import com.streamsets.pipeline.api.impl.ByteTypeSupport;
+import com.streamsets.pipeline.api.impl.CharTypeSupport;
+import com.streamsets.pipeline.api.impl.DateTypeSupport;
+import com.streamsets.pipeline.api.impl.DecimalTypeSupport;
+import com.streamsets.pipeline.api.impl.DoubleTypeSupport;
+import com.streamsets.pipeline.api.impl.FloatTypeSupport;
+import com.streamsets.pipeline.api.impl.IntegerTypeSupport;
+import com.streamsets.pipeline.api.impl.LongTypeSupport;
+import com.streamsets.pipeline.api.impl.ShortTypeSupport;
+import com.streamsets.pipeline.api.impl.StringTypeSupport;
+import com.streamsets.pipeline.api.impl.TypeSupport;
 
 import java.math.BigDecimal;
 import java.util.Date;
