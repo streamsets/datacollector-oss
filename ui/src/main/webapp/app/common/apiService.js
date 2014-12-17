@@ -14,7 +14,7 @@ angular.module('pipelineAgentApp.common')
        * @returns {*}
        */
       getJVMMetrics: function() {
-        var url = apiBase + '/jmx';
+        var url = '/jmx';
         return $http({
           method: 'GET',
           url: url

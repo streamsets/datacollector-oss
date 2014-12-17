@@ -12,9 +12,9 @@ angular
       }
     );
   }])
-  .controller('JVMMetricsController', function ($scope, $q) {
+  .controller('JVMMetricsController', function ($scope, $q, api) {
     angular.extend($scope, {
-      jvmMetrics: {}
+      memoryMetrics: {}
     });
 
 
@@ -25,7 +25,21 @@ angular
       api.pipelineAgent.getJVMMetrics()
     ])
       .then(function (results) {
-        $scope.jvmMetrics = results[0].data;
+        var jvmMetrics = results[0].data;
+        updateMetrics(jvmMetrics);
       });
 
+
+    /**
+     * Update Metrics
+     *
+     * @param jvmMetrics
+     */
+    var updateMetrics = function(jvmMetrics) {
+      angular.forEach(jvmMetrics.beans, function(metrics) {
+        if(metrics.name === 'java.lang:type=Memory') {
+          $scope.memoryMetrics = metrics;
+        }
+      });
+    };
   });
