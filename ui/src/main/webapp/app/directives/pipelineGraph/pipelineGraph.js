@@ -10,7 +10,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       controller: 'PipelineGraphController'
     };
   })
-  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter){
+  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter, pipelineConstant){
 
     var consts = {
       defaultTitle: "random variable"
@@ -573,7 +573,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       //Input Connectors
       newGs.append('circle')
         .filter(function(d) {
-          return d.uiInfo.inputConnectors && d.uiInfo.inputConnectors.length;
+          return d.uiInfo.stageType !== pipelineConstant.SOURCE_STAGE_TYPE;
         })
         .attr({
           'cx': 0,
@@ -584,7 +584,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       //Output Connectors
       newGs.append('circle')
         .filter(function(d) {
-          return d.uiInfo.outputConnectors && d.uiInfo.outputConnectors.length;
+          return d.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE;
         })
         .attr({
           'cx': consts.rectWidth,

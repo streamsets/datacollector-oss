@@ -20,8 +20,6 @@ angular
         var xPos = ($scope.pipelineConfig.stages && $scope.pipelineConfig.stages.length) ?
           $scope.pipelineConfig.stages[$scope.pipelineConfig.stages.length - 1].uiInfo.xPos + 300 : 200,
           yPos = 70,
-          inputConnectors = (stage.type !== SOURCE_STAGE_TYPE) ? ['i1'] : [],
-          outputConnectors = (stage.type !== TARGET_STAGE_TYPE) ? ['01'] : [],
           stageInstance = {
             instanceName: stage.name + (new Date()).getTime(),
             library: stage.library,
@@ -33,8 +31,6 @@ angular
               description: stage.description,
               xPos: xPos,
               yPos: yPos,
-              inputConnectors: inputConnectors,
-              outputConnectors: outputConnectors,
               stageType: stage.type
             },
             inputLanes: [],
@@ -42,7 +38,7 @@ angular
           };
 
         if (stage.type !== TARGET_STAGE_TYPE) {
-          stageInstance.outputLanes = [stageInstance.instanceName + 'OutputLane'];
+          stageInstance.outputLanes = [stageInstance.instanceName + 'OutputLane' + (new Date()).getTime()];
         }
 
         angular.forEach(stage.configDefinitions, function (configDefinition) {
@@ -51,14 +47,21 @@ angular
             value: configDefinition.defaultValue || undefined
           };
 
-          if(configDefinition.type === 'MODEL' && configDefinition.model.modelType === 'FIELD_SELECTOR') {
-            config.value = [];
+          if(configDefinition.type === 'MODEL') {
+            if(configDefinition.model.modelType === 'FIELD_SELECTOR') {
+              config.value = [];
+            } else if(configDefinition.model.modelType === 'LANE_PREDICATE_MAPPING') {
+              config.value = {};
+              config.value[stageInstance.outputLanes[0]] = '';
+            }
           } else if(configDefinition.type === 'INTEGER') {
             if(config.value) {
               config.value = parseInt(config.value);
             } else {
               config.value = 0;
             }
+          } else if(configDefinition.type === 'MAP') {
+            config.value = {};
           }
 
           stageInstance.configuration.push(config);
@@ -96,7 +99,11 @@ angular
             stageInstance.uiInfo.icon = 'assets/stage/ic_insert_drive_file_48px.svg';
             break;
           case PROCESSOR_STAGE_TYPE:
-            stageInstance.uiInfo.icon = 'assets/stage/ic_settings_48px.svg';
+            if(stage.name === 'com_streamsets_pipeline_lib_stage_processor_selector_SelectorProcessor') {
+              stageInstance.uiInfo.icon = 'assets/stage/ic_call_split_48px.svg';
+            } else {
+              stageInstance.uiInfo.icon = 'assets/stage/ic_settings_48px.svg';
+            }
             break;
           case TARGET_STAGE_TYPE:
             stageInstance.uiInfo.icon = 'assets/stage/ic_storage_48px.svg';

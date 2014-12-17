@@ -39,6 +39,16 @@ angular
       maximizeDetailPane: false,
 
       /**
+       * Utility function for checking object is empty.
+       *
+       * @param obj
+       * @returns {*|boolean}
+       */
+      isEmptyObject : function (obj) {
+        return angular.equals({},obj);
+      },
+
+      /**
        * Value format function for D3 NVD3 charts.
        *
        * @returns {Function}

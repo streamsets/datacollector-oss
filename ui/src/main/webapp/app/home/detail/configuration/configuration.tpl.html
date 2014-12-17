@@ -56,6 +56,11 @@
               <label>
                 <input type="checkbox" name="{{configDefinition.name}}"
                      ng-model="detailPaneConfig.configuration[$index].value">  {{configDefinition.label}}
+                <i class="fa fa-info-circle help-icon"
+                   popover-placement="right"
+                   popover-append-to-body="false"
+                   popover="{{configDefinition.description}}"
+                   popover-trigger="mouseenter"></i>
               </label>
 
               <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
@@ -63,30 +68,79 @@
 
             <div ng-switch-when="INTEGER">
               <label class="control-label">{{configDefinition.label}}</label>
+              <i class="fa fa-info-circle help-icon"
+                 popover-placement="right"
+                 popover-append-to-body="false"
+                 popover="{{configDefinition.description}}"
+                 popover-trigger="mouseenter"></i>
               <input type="number" class="form-control" name="{{configDefinition.name}}"
                      ng-model="detailPaneConfig.configuration[$index].value"
-                     ng-required="configDefinition.required"
-                     popover-placement="right"
-                     popover-append-to-body="false"
-                     popover-title="{{configDefinition.label}}"
-                     popover="{{configDefinition.description}}"
-                     popover-trigger="focus">
+                     ng-required="configDefinition.required">
 
               <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
             </div>
 
             <div ng-switch-when="STRING">
               <label class="control-label">{{configDefinition.label}}</label>
+              <i class="fa fa-info-circle help-icon"
+                 popover-placement="right"
+                 popover-append-to-body="false"
+                 popover="{{configDefinition.description}}"
+                 popover-trigger="mouseenter"></i>
               <input type="text" class="form-control" name="{{configDefinition.name}}"
                      ng-model="detailPaneConfig.configuration[$index].value"
-                     ng-required="configDefinition.required"
-                     popover-placement="right"
-                     popover-append-to-body="false"
-                     popover-title="{{configDefinition.label}}"
-                     popover="{{configDefinition.description}}"
-                     popover-trigger="focus">
+                     ng-required="configDefinition.required">
 
               <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+
+            </div>
+
+
+            <div ng-switch-when="MAP">
+              <label class="control-label">{{configDefinition.label}}</label>
+              <i class="fa fa-info-circle help-icon"
+                 popover-placement="right"
+                 popover-append-to-body="false"
+                 popover="{{configDefinition.description}}"
+                 popover-trigger="mouseenter"></i>
+
+              <div class="row lane-predicate" ng-repeat="(key, value) in detailPaneConfig.configuration[$index].value">
+
+                <div class="col-md-3">
+                  <input type="text" class="form-control input-sm" placeholder="Enter Key"
+                         ng-model="key"/>
+                </div>
+
+                <div class="col-md-1">:</div>
+
+                <div class="col-md-6">
+                  <input type="text" class="form-control input-sm" placeholder="Enter Value"
+                         ng-model="detailPaneConfig.configuration[$parent.$index].value[key]"/>
+                </div>
+
+                <div class="col-md-2 btn-group" role="group" aria-label="Default button group">
+                  <button type="button" class="btn btn-default btn-sm"
+                          ng-click="removeFromMap(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, key)">
+                    <i class="fa fa-minus pointer"></i>
+                  </button>
+                  <button type="button" class="btn btn-default btn-sm"
+                          ng-show="$last"
+                          ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, $index)">
+                    <i class="fa fa-plus pointer"></i>
+                  </button>
+                </div>
+
+              </div>
+
+
+              <div ng-if="isEmptyObject(detailPaneConfig.configuration[$index].value)" class="row">
+                <div class="col-md-2 btn-group" role="group">
+                  <button type="button" class="btn btn-default btn-sm"
+                          ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[$index].value, -1)">
+                    <i class="fa fa-plus pointer"></i>
+                  </button>
+                </div>
+              </div>
 
             </div>
 
@@ -95,14 +149,14 @@
 
               <div ng-switch-when="VALUE_CHOOSER">
                 <label class="control-label">{{configDefinition.label}}</label>
+                <i class="fa fa-info-circle help-icon"
+                   popover-placement="right"
+                   popover-append-to-body="false"
+                   popover="{{configDefinition.description}}"
+                   popover-trigger="mouseenter"></i>
 
                 <select class="form-control" name="{{configDefinition.name}}"
-                        ng-model="detailPaneConfig.configuration[$index].value"
-                        popover-placement="right"
-                        popover-append-to-body="false"
-                        popover-title="{{configDefinition.label}}"
-                        popover="{{configDefinition.description}}"
-                        popover-trigger="focus">
+                        ng-model="detailPaneConfig.configuration[$index].value">
                   <option ng-repeat="listValue in configDefinition.model.values"
                           value="{{listValue}}"
                           ng-selected="listValue === detailPaneConfig.configuration[$parent.$index].value">
@@ -114,6 +168,11 @@
 
               <div ng-switch-when="FIELD_SELECTOR">
                 <label class="control-label">{{configDefinition.label}}</label>
+                <i class="fa fa-info-circle help-icon"
+                   popover-placement="right"
+                   popover-append-to-body="false"
+                   popover="{{configDefinition.description}}"
+                   popover-trigger="mouseenter"></i>
 
                 <ui-select multiple tagging tagging-label="false" reset-search-input="true"
                            ng-model="detailPaneConfig.configuration[$index].value">
@@ -137,6 +196,38 @@
               </div>
 
 
+              <div ng-switch-when="LANE_PREDICATE_MAPPING">
+                <label class="control-label">{{configDefinition.label}}</label>
+                <i class="fa fa-info-circle help-icon"
+                   popover-placement="right"
+                   popover-append-to-body="false"
+                   popover="{{configDefinition.description}}"
+                   popover-trigger="mouseenter"></i>
+
+                <div class="row lane-predicate" ng-repeat="(path, condition) in detailPaneConfig.configuration[$index].value">
+
+                    <div class="col-md-7">
+                      <input type="text" class="form-control input-sm" placeholder="Enter Predicate"
+                             ng-model="detailPaneConfig.configuration[$parent.$index].value[path]"/>
+                    </div>
+
+                    <div class="col-md-2 btn-group" role="group" aria-label="Default button group">
+                      <button type="button" class="btn btn-default btn-sm"
+                              ng-hide="$first && $last"
+                              ng-click="removeLane(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, path)">
+                        <i class="fa fa-minus pointer"></i>
+                      </button>
+                      <button type="button" class="btn btn-default btn-sm"
+                              ng-show="$last"
+                              ng-click="addLane(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, path)">
+                        <i class="fa fa-plus pointer"></i>
+                      </button>
+                    </div>
+
+                </div>
+
+              </div>
+
             </div>
           </div>
         </form>
@@ -155,16 +246,16 @@
           <div class="form-group"
                ng-repeat="configDefinition in detailPaneConfigDefn.rawSourceDefinition.configDefinitions" show-errors>
             <label class="control-label">{{configDefinition.label}}</label>
+            <i class="fa fa-info-circle help-icon"
+               popover-placement="right"
+               popover-append-to-body="false"
+               popover="{{configDefinition.description}}"
+               popover-trigger="mouseenter"></i>
 
             <div ng-if="configDefinition.type === 'STRING'">
               <input type="text" class="form-control" name="{{configDefinition.name}}"
                      ng-model="detailPaneConfig.uiInfo.rawSource.configuration[$index].value"
-                     ng-required="configDefinition.required"
-                     popover-placement="left"
-                     popover-append-to-body="false"
-                     popover-title="{{configDefinition.label}}"
-                     popover="{{configDefinition.description}}"
-                     popover-trigger="focus">
+                     ng-required="configDefinition.required">
             </div>
           </div>
 

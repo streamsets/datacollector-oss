@@ -136,6 +136,11 @@ angular
         return deferred.promise;
       },
 
+      /**
+       * Display Modal dialog for field selection from Preview data.
+       *
+       * @param config
+       */
       showFieldSelectorModal: function(config) {
         var modalInstance = $modal.open({
           templateUrl: 'fieldSelectorModalContent.html',
@@ -158,7 +163,30 @@ angular
         modalInstance.result.then(function (selectedFieldPaths) {
           config.value = selectedFieldPaths;
         });
+      },
+
+
+      addLane: function(stageInstance, configValue) {
+        var outputLaneName = stageInstance.instanceName + 'OutputLane' + (new Date()).getTime();
+        stageInstance.outputLanes.push(outputLaneName);
+        configValue[outputLaneName] = '';
+      },
+
+      removeLane: function(stageInstance, configValue, path) {
+        stageInstance.outputLanes = _.filter(stageInstance.outputLanes, function(lane) {
+          return lane !== path;
+        });
+        delete configValue[path];
+      },
+
+      addToMap: function(stageInstance, configValue, $index) {
+        configValue['key' + ($index + 2)] = '';
+      },
+
+      removeFromMap: function(stageInstance, configValue, key) {
+        delete configValue[key];
       }
+
     });
 
 
