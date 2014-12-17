@@ -26,6 +26,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
@@ -34,18 +35,17 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mockito.Matchers;
-
 public class TestPipelineManagerResource extends JerseyTest {
   
   private static final String PIPELINE_NAME = "myPipeline";
+  private static final String PIPELINE_REV = "2.0";
+  private static final String DEFAULT_PIPELINE_REV = "0";
 
   @Test
   public void testGetStatusAPI() {
@@ -57,7 +57,7 @@ public class TestPipelineManagerResource extends JerseyTest {
 
   @Test
   public void testStartPipelineAPI() {
-    Response r = target("/v1/pipeline/start").queryParam("name", PIPELINE_NAME).queryParam("rev", "2.0")
+    Response r = target("/v1/pipeline/start").queryParam("name", PIPELINE_NAME).queryParam("rev", PIPELINE_REV)
         .request().post(null);
     Assert.assertNotNull(r);
     PipelineState state = r.readEntity(PipelineState.class);
@@ -68,7 +68,7 @@ public class TestPipelineManagerResource extends JerseyTest {
 
   @Test
   public void testStopPipelineAPI() {
-    Response r = target("/v1/pipeline/stop").queryParam("rev", "2.0")
+    Response r = target("/v1/pipeline/stop").queryParam("rev", PIPELINE_REV)
         .request().post(null);
     Assert.assertNotNull(r);
     PipelineState state = r.readEntity(PipelineState.class);
@@ -209,7 +209,7 @@ public class TestPipelineManagerResource extends JerseyTest {
 
       ProductionPipelineManagerTask pipelineManager = Mockito.mock(ProductionPipelineManagerTask.class);
       try {
-        Mockito.when(pipelineManager.startPipeline(PIPELINE_NAME, "2.0")).thenReturn(new PipelineState(
+        Mockito.when(pipelineManager.startPipeline(PIPELINE_NAME, PIPELINE_REV)).thenReturn(new PipelineState(
             PIPELINE_NAME, "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis()));
       } catch (PipelineManagerException | StageException | PipelineRuntimeException | PipelineStoreException e) {
         e.printStackTrace();
@@ -217,12 +217,12 @@ public class TestPipelineManagerResource extends JerseyTest {
 
       try {
         Mockito.when(pipelineManager.stopPipeline(false)).thenReturn(
-            new PipelineState(PIPELINE_NAME, "2.0", State.STOPPED, "The pipeline is not running", System.currentTimeMillis()));
+            new PipelineState(PIPELINE_NAME, PIPELINE_REV, State.STOPPED, "The pipeline is not running", System.currentTimeMillis()));
       } catch (PipelineManagerException e) {
         e.printStackTrace();
       }
 
-      Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState(PIPELINE_NAME, "2.0", State.STOPPED
+      Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState(PIPELINE_NAME, PIPELINE_REV, State.STOPPED
           , "Pipeline is not running", System.currentTimeMillis()));
       try {
         Mockito.when(pipelineManager.setOffset(Matchers.anyString())).thenReturn("fileX:line10");
@@ -231,7 +231,7 @@ public class TestPipelineManagerResource extends JerseyTest {
       }
 
       try {
-        Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME))
+        Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME, DEFAULT_PIPELINE_REV))
             .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
             .thenReturn(null);
       } catch (PipelineManagerException e) {
@@ -247,13 +247,17 @@ public class TestPipelineManagerResource extends JerseyTest {
       states.add(new PipelineState(PIPELINE_NAME, "1", State.RUNNING, "", System.currentTimeMillis()));
       states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis()));
       try {
-        Mockito.when(pipelineManager.getHistory(PIPELINE_NAME)).thenReturn(states);
+        Mockito.when(pipelineManager.getHistory(PIPELINE_NAME, DEFAULT_PIPELINE_REV)).thenReturn(states);
       } catch (PipelineManagerException e) {
         e.printStackTrace();
       }
 
-      Mockito.doNothing().when(pipelineManager).deleteSnapshot(PIPELINE_NAME);
-      Mockito.doNothing().when(pipelineManager).deleteErrors(PIPELINE_NAME, "1");
+      Mockito.doNothing().when(pipelineManager).deleteSnapshot(PIPELINE_NAME, PIPELINE_REV);
+      try {
+        Mockito.doNothing().when(pipelineManager).deleteErrors(PIPELINE_NAME, "1");
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
 
       try {
         Mockito.when(pipelineManager.getErrors(PIPELINE_NAME, "0"))
@@ -280,7 +284,7 @@ public class TestPipelineManagerResource extends JerseyTest {
       }
 
       try {
-        Mockito.doNothing().when(pipelineManager).resetOffset(PIPELINE_NAME);
+        Mockito.doNothing().when(pipelineManager).resetOffset(PIPELINE_NAME, PIPELINE_REV);
       } catch (PipelineManagerException e) {
         e.printStackTrace();
       }

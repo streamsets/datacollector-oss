@@ -16,6 +16,7 @@ import java.util.Arrays;
 public class TestProdSourceOffsetTracker {
 
   private static final String PIPELINE_NAME = "myPipeline";
+  private static final String PIPELINE_REV = "2.0";
 
   @BeforeClass
   public static void beforeClass() {
@@ -31,7 +32,7 @@ public class TestProdSourceOffsetTracker {
   public void testProductionSourceOffsetTracker() {
 
     RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
-    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(PIPELINE_NAME, info);
+    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(PIPELINE_NAME, PIPELINE_REV, info);
 
     Assert.assertEquals(false, offsetTracker.isFinished());
     Assert.assertEquals(null, offsetTracker.getOffset());

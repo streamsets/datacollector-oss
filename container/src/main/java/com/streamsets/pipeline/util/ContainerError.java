@@ -29,6 +29,8 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0107("Invalid batch size supplied {}"),
   CONTAINER_0108("Could not start pipeline manager. Reason : {}"),
   CONTAINER_0109("Pipeline {} does not exist"),
+  CONTAINER_0110("Could not create pipeline '{}', {}"),
+  CONTAINER_0111("Could not delete errors for pipeline '{}' as the pipeline is running"),
 
   // PipelineRunners
   CONTAINER_0150("Pipeline configuration error, {}"),

@@ -8,6 +8,8 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Sets;
+import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -41,7 +44,6 @@ public class StageDefinition {
   private final String label;
   private final String description;
   private final StageType type;
-  private final StageDef.OnError onError;
   private final RawSourceDefinition rawSourceDefinition;
   private List<ConfigDefinition> configDefinitions;
   private Map<String, ConfigDefinition> configDefinitionsMap;
@@ -56,7 +58,6 @@ public class StageDefinition {
     @JsonProperty("description") String description,
     @JsonProperty("type") StageType type,
     @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions,
-    @JsonProperty("onError") StageDef.OnError onError,
     @JsonProperty("rawSourceDefinition") RawSourceDefinition rawSourceDefinition,
     @JsonProperty("icon") String icon) {
     this.className = className;
@@ -71,7 +72,6 @@ public class StageDefinition {
     for (ConfigDefinition conf : configDefinitions) {
       configDefinitionsMap.put(conf.getName(), conf);
     }
-    this.onError = onError;
     this.icon = icon;
   }
 
@@ -156,10 +156,6 @@ public class StageDefinition {
                         getName(), getVersion(), getType(), getStageClass());
   }
 
-  public StageDef.OnError getOnError() {
-    return onError;
-  }
-
   public String getIcon() {
     return icon;
   }
@@ -191,27 +187,13 @@ public class StageDefinition {
         getLocalized();
     StageDefinition def = new StageDefinition(
       getClassName(), getName(), getVersion(), label, description,
-      getType(), configDefs, getOnError(), rsd, getIcon());
+      getType(), configDefs, rsd, getIcon());
     def.setLibrary(getLibrary(), getStageClassLoader());
 
     for(ConfigDefinition configDef : def.getConfigDefinitions()) {
       if(configDef.getModel() != null &&
         configDef.getModel().getValues() != null &&
         !configDef.getModel().getValues().isEmpty()) {
-
-        if(!(configDef.getModel().getLabels() != null &&
-        !configDef.getModel().getLabels().isEmpty() &&
-          configDef.getModel().getLabels().size() == configDef.getModel().getValues().size())) {
-          LOG.error(
-            "The ChooserValues implementation for configuration '{}' in stage '{}' does not have the same number of " +
-                "values and labels.",
-            configDef.getName(), def.getName());
-          throw new RuntimeException(Utils.format(
-            "The ChooserValues implementation for configuration '{}' in stage '{}' does not have the same number of " +
-                "values and labels.",
-            configDef.getName(), def.getName()));
-        }
-
         List<String> values = configDef.getModel().getValues();
         List<String> labels = configDef.getModel().getLabels();
         List<String> localizedLabels = new ArrayList<>(values.size());
@@ -233,16 +215,22 @@ public class StageDefinition {
         !configDef.getModel().getValuesProviderClass().isEmpty()) {
         try {
           Class valueProviderClass = classLoader.loadClass(configDef.getModel().getValuesProviderClass());
-          Object valueProvider = valueProviderClass.newInstance();
-          List<String> values = (List<String>)
-            valueProviderClass.getMethod("getValues").invoke(valueProvider);
-          List<String> labels = (List<String>)
-            valueProviderClass.getMethod("getLabels").invoke(valueProvider);
+          ChooserValues valueProvider = (ChooserValues) valueProviderClass.newInstance();
+          List<String> values = valueProvider.getValues();
+          List<String> labels = valueProvider.getLabels();
 
+          if(values != null && labels != null && values.size() != labels.size()) {
+            LOG.error(
+              "The ChooserValues implementation for configuration '{}' in stage '{}' does not have the same number of "
+                + "values and labels. Values '{}], labels '{}'.",
+              configDef.getFieldName(), getStageClass().getName(), values, labels);
+            throw new RuntimeException(Utils.format("The ChooserValues implementation for configuration '{}' in stage "
+                + "'{}' does not have the same number of values and labels. Values '{}], labels '{}'.",
+              configDef.getFieldName(), getStageClass().getName(), values, labels));
+          }
           configDef.getModel().setValues(values);
           configDef.getModel().setLabels(labels);
-
-        } catch (ClassNotFoundException  | InvocationTargetException | NoSuchMethodException | InstantiationException |
+        } catch (ClassNotFoundException | InstantiationException |
             IllegalAccessException e) {
           throw new RuntimeException(e);
         }

@@ -15,7 +15,7 @@ import com.streamsets.pipeline.api.LanePredicateMapping;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
-import com.streamsets.pipeline.config.ChooserMode;
+import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
@@ -270,7 +270,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           stageDefAnnotation.description(),
           StageType.valueOf(getStageTypeFromElement(typeElement)),
           configDefinitions,
-          stageDefAnnotation.onError(),
           rawSourceDefinition,
           stageDefAnnotation.icon());
     } else {

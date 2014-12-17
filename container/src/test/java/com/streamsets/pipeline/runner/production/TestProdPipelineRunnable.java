@@ -7,21 +7,23 @@ package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
-import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
+import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.prodmanager.PipelineManagerException;
+import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
-import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.TestUtil;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -30,6 +32,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
@@ -37,12 +40,14 @@ import java.util.concurrent.CountDownLatch;
 public class TestProdPipelineRunnable {
 
   private static final String PIPELINE_NAME = "xyz";
-  private static final String REVISION = "0";
+  private static final String REVISION = "1.0";
   private ProductionPipelineManagerTask manager = null;
 
   @BeforeClass
-  public static void beforeClass() {
+  public static void beforeClass() throws IOException {
     System.setProperty("pipeline.data.dir", "./target/var");
+    File f = new File(System.getProperty("pipeline.data.dir"));
+    FileUtils.deleteDirectory(f);
   }
 
   @AfterClass
@@ -66,12 +71,12 @@ public class TestProdPipelineRunnable {
   }
 
   @Test
-  public void testRun() throws PipelineRuntimeException {
+  public void testRun() throws PipelineRuntimeException, PipelineManagerException {
 
     TestUtil.captureMockStages();
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "xyz", "1.0");
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION);
     runnable.run();
 
     //The source returns null offset because all the data from source was read
@@ -81,12 +86,12 @@ public class TestProdPipelineRunnable {
   }
 
   @Test
-  public void testStop() throws PipelineRuntimeException {
+  public void testStop() throws PipelineRuntimeException, PipelineManagerException {
 
     TestUtil.captureMockStages();
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "xyz", "1.0");
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION);
 
     runnable.stop(false);
     Assert.assertTrue(pipeline.wasStopped());
@@ -121,7 +126,7 @@ public class TestProdPipelineRunnable {
     });
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, "xyz", "1.0");
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION);
 
     Thread t = new Thread(runnable);
     t.start();
@@ -132,7 +137,7 @@ public class TestProdPipelineRunnable {
   }
 
   @Test
-  public void testErrorState() throws PipelineRuntimeException {
+  public void testErrorState() throws PipelineRuntimeException, PipelineManagerException {
     System.setProperty("pipeline.data.dir", "./target/var");
 
     MockStages.setSourceCapture(new BaseSource() {
@@ -143,7 +148,7 @@ public class TestProdPipelineRunnable {
     });
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, "1.0");
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION);
 
     //Stops after the first batch
     runnable.run();
@@ -155,17 +160,20 @@ public class TestProdPipelineRunnable {
     Assert.assertTrue(pipeline.getPipeline().getRunner().getBatchesOutput().isEmpty());
   }
 
-  private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee,
-                                                                      boolean capturenextBatch) throws PipelineRuntimeException {
+  private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean capturenextBatch)
+    throws PipelineRuntimeException, PipelineManagerException {
+
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
     FileErrorRecordStore fileErrorRecordStore = Mockito.mock(FileErrorRecordStore.class);
 
-    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME)).thenReturn(new SnapshotStatus(false, false));
+    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, fileErrorRecordStore, tracker, 5
         , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION);
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
         MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
+    manager.getStateTracker().register(PIPELINE_NAME, REVISION);
+    manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPED, null);
 
     if(capturenextBatch) {
       runner.captureNextBatch(1);

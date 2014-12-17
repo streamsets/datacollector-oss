@@ -15,9 +15,12 @@ import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.JsonFileUtil;
+import com.streamsets.pipeline.util.LogUtil;
+import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.Reader;
 import java.util.Collections;
 import java.io.File;
@@ -31,15 +34,18 @@ public class StateTracker {
   public static final String STATE_FILE = "pipelineState.json";
   public static final String TEMP_STATE_FILE = "pipelineState.json.tmp";
   public static final String STATE_DIR = "runInfo";
+  public static final String STATE = "state";
 
-  private File stateDir;
+  private final File stateDir;
+  private final RuntimeInfo runtimeInfo;
   private volatile PipelineState pipelineState;
-  private final JsonFileUtil<PipelineState> json;
+  private final com.streamsets.pipeline.util.Configuration configuration;
 
-  public StateTracker(RuntimeInfo runtimeInfo) {
+  public StateTracker(RuntimeInfo runtimeInfo, com.streamsets.pipeline.util.Configuration configuration) {
     Preconditions.checkNotNull(runtimeInfo, "runtime info cannot be null");
     stateDir = new File(runtimeInfo.getDataDir(), STATE_DIR);
-    json = new JsonFileUtil<>();
+    this.configuration = configuration;
+    this.runtimeInfo = runtimeInfo;
   }
 
   public PipelineState getState() {
@@ -56,7 +62,8 @@ public class StateTracker {
     return new File(stateDir, TEMP_STATE_FILE);
   }
 
-  public void setState(String name, String rev, State state, String message) throws PipelineManagerException {
+  public synchronized void setState(String name, String rev, State state, String message)
+    throws PipelineManagerException {
     //Need to persist the state first and then update the pipeline state field.
     //Otherwise looking up the history after stopping the pipeline may or may not show the last STOPPED state
     PipelineState tempPipelineState = new PipelineState(name, rev, state, message, System.currentTimeMillis());
@@ -77,7 +84,7 @@ public class StateTracker {
       //There exists a pipelineState directory already, check for file
       if(getStateFile().exists()) {
         try {
-          this.pipelineState = getStateFromDir();
+          this.pipelineState = getPersistedState();
         } catch (PipelineManagerException e) {
           throw new RuntimeException(e);
         }
@@ -87,18 +94,23 @@ public class StateTracker {
     }
   }
 
+  public void register(String pipelineName, String rev) {
+    LogUtil.registerLogger(pipelineName, rev, STATE, getPipelineStateFile(pipelineName, rev).getAbsolutePath(),
+      configuration);
+  }
+
   private void persistDefaultState() {
     //persist default pipelineState
     try {
-      setState(Constants.DEFAULT_PIPELINE_NAME, Constants.DEFAULT_PIPELINE_REVISION, State.STOPPED, null);
+      setState(Configuration.DEFAULT_PIPELINE_NAME, Configuration.DEFAULT_PIPELINE_REVISION, State.STOPPED, null);
     } catch (PipelineManagerException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private PipelineState getStateFromDir() throws PipelineManagerException {
+  private PipelineState getPersistedState() throws PipelineManagerException {
     try {
-      return json.readObjectFromFile(getStateFile(), PipelineState.class);
+      return (PipelineState)JsonFileUtil.readObjectFromFile(getStateFile(), PipelineState.class);
     } catch (IOException e) {
       LOG.error(ContainerError.CONTAINER_0101.getMessage(), e.getMessage());
       throw new PipelineManagerException(ContainerError.CONTAINER_0101, e.getMessage(), e);
@@ -108,13 +120,12 @@ public class StateTracker {
   private void persistPipelineState(PipelineState pipelineState) throws PipelineManagerException {
     //write to runInfo/pipelineState.json as well as /runInfo/<pipelineName>/pipelineState.json
     try {
-      json.writeObjectToFile(getTempStateFile(), getStateFile(), pipelineState);
+      JsonFileUtil.writeObjectToFile(getTempStateFile(), getStateFile(), pipelineState);
 
       //In addition, append the state of the pipeline to the pipelineState.json present in the directory of that
       //pipeline
-      File pipelineStateTempFile = getPipelineStateTempFile(pipelineState.getName());
-      File pipelineStateFile = getPipelineStateFile(pipelineState.getName());
-      json.appendObjectToFile(pipelineStateTempFile, pipelineStateFile, pipelineState);
+      LogUtil.log(pipelineState.getName(), pipelineState.getRev(), STATE,
+        ObjectMapperFactory.get().writeValueAsString(pipelineState));
 
     } catch (IOException e) {
       LOG.error(ContainerError.CONTAINER_0100.getMessage(), e.getMessage());
@@ -122,32 +133,17 @@ public class StateTracker {
     }
   }
 
-  public File getPipelineStateFile(String name) {
-    return new File(getPipelineDir(name), STATE_FILE);
-  }
-
-  private File getPipelineStateTempFile(String name) {
-    return new File(getPipelineDir(name), TEMP_STATE_FILE);
-  }
-
-  private File getPipelineDir(String name) {
-    File pipelineDir = new File(stateDir, name);
-    if(!pipelineDir.exists()) {
-      if(!pipelineDir.mkdirs()) {
-        LOG.error("Could not create directory '{}'", pipelineDir.getAbsolutePath());
-        throw new RuntimeException(Utils.format("Could not create directory '{}'", pipelineDir.getAbsolutePath()));
-      }
-    }
-    return pipelineDir;
+  public File getPipelineStateFile(String name, String rev) {
+    return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, name, rev), STATE_FILE);
   }
 
   @SuppressWarnings("unchecked")
-  public List<PipelineState> getHistory(String pipelineName) {
-    if(!doesPipelineDirExist(pipelineName)) {
+  public List<PipelineState> getHistory(String pipelineName, String rev) {
+    if(!pipelineDirExists(pipelineName, rev) || !pipelineStateFileExists(pipelineName, rev)) {
       return Collections.EMPTY_LIST;
     }
     try {
-      Reader reader = new FileReader(getPipelineStateFile(pipelineName));
+      Reader reader = new FileReader(getPipelineStateFile(pipelineName, rev));
       ObjectMapper objectMapper = ObjectMapperFactory.get();
       JsonParser jsonParser = objectMapper.getFactory().createParser(reader);
       MappingIterator<PipelineState> pipelineStateMappingIterator = objectMapper.readValues(jsonParser,
@@ -160,9 +156,37 @@ public class StateTracker {
     }
   }
 
-  private boolean doesPipelineDirExist(String pipelineName) {
-    File pipelineDir = new File(stateDir, pipelineName);
-    return pipelineDir.exists();
+  private boolean pipelineStateFileExists(String pipelineName, String rev) {
+    return getPipelineStateFile(pipelineName, rev).exists();
+  }
+
+  private boolean pipelineDirExists(String pipelineName, String rev) {
+    return PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev).exists();
+  }
+
+  public void deleteHistory(String pipelineName, String rev) {
+    for(File f : getStateFiles(pipelineName, rev)) {
+      f.delete();
+    }
+    LogUtil.resetRollingFileAppender(pipelineName, rev, STATE, getPipelineStateFile(pipelineName, rev).getAbsolutePath()
+      , configuration);
+  }
+
+  private File[] getStateFiles(String pipelineName, String rev) {
+    //RollingFileAppender creates backup files when the error files reach the size limit.
+    //The backup files are of the form errors.json.1, errors.json.2 etc
+    //Need to delete all the backup files
+    File pipelineDir = PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev);
+    File[] errorFiles = pipelineDir.listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        if(name.contains(STATE_FILE)) {
+          return true;
+        }
+        return false;
+      }
+    });
+    return errorFiles;
   }
 
 }

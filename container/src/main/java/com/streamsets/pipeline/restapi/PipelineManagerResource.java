@@ -80,8 +80,9 @@ public class PipelineManagerResource {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response resetOffset(
-      @PathParam("name") String name) throws PipelineManagerException {
-    pipelineManager.resetOffset(name);
+      @PathParam("name") String name,
+      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException {
+    pipelineManager.resetOffset(name, rev);
     return Response.ok().build();
   }
 
@@ -104,16 +105,18 @@ public class PipelineManagerResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getSnapshot(
-      @PathParam("name") String name) throws PipelineManagerException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshot(name)).build();
+      @PathParam("name") String name,
+      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshot(name, rev)).build();
   }
 
   @Path("/snapshot/{name}")
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteSnapshot(
-      @PathParam("name") String name) {
-    pipelineManager.deleteSnapshot(name);
+      @PathParam("name") String name,
+      @QueryParam("rev") @DefaultValue("0") String rev) {
+    pipelineManager.deleteSnapshot(name, rev);
     return Response.ok().build();
   }
 
@@ -134,8 +137,19 @@ public class PipelineManagerResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getHistory(
-      @PathParam("name") String name) throws PipelineManagerException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getHistory(name)).build();
+      @PathParam("name") String name,
+      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getHistory(name, rev)).build();
+  }
+
+  @Path("/history/{pipelineName}")
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response deleteHistory(
+    @PathParam("pipelineName") String pipelineName,
+    @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException {
+    pipelineManager.deleteHistory(pipelineName, rev);
+    return Response.ok().build();
   }
 
   @Path("/errors/{pipelineName}")
@@ -152,7 +166,7 @@ public class PipelineManagerResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteErrorRecords(
       @PathParam("pipelineName") String pipelineName,
-      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
+      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException {
     pipelineManager.deleteErrors(pipelineName, rev);
     return Response.ok().build();
   }

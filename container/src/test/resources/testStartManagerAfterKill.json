@@ -1,6 +1,6 @@
 {
   "name" : "myPipeline",
-  "rev" : "undefined",
+  "rev" : "2.0",
   "state" : "RUNNING",
   "message" : "The pipeline is running",
   "lastStatusChange" : 1416854755559

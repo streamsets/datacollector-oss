@@ -90,7 +90,7 @@ public class TestProductionPipeline {
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
     FileErrorRecordStore fileErrorRecordStore = Mockito.mock(FileErrorRecordStore.class);
 
-    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME)).thenReturn(new SnapshotStatus(false, false));
+    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, fileErrorRecordStore, tracker, 5
         , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION);
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",

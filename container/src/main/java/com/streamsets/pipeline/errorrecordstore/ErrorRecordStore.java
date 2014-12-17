@@ -14,13 +14,13 @@ import java.util.Map;
 
 public interface ErrorRecordStore {
 
-  void storeErrorRecords(String pipelineName, String rev, Map<String, List<Record>> errorRecords);
+  public void storeErrorRecords(String pipelineName, String rev, Map<String, List<Record>> errorRecords);
 
-  void storeErrorMessages(String pipelineName, String rev, Map<String, List<ErrorMessage>> errorMessages);
+  public void storeErrorMessages(String pipelineName, String rev, Map<String, List<ErrorMessage>> errorMessages);
 
-  void deleteErrors(String pipelineName, String rev);
+  public void deleteErrors(String pipelineName, String rev);
 
-  InputStream getErrors(String pipelineName, String rev);
+  public InputStream getErrors(String pipelineName, String rev);
 
-  void register(String pipelineName);
+  public void register(String pipelineName, String rev);
 }

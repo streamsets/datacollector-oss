@@ -8,7 +8,6 @@ package com.streamsets.pipeline.restapi;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -80,7 +79,7 @@ public class TestUtil {
    */
   public static StageLibraryTask createMockStageLibrary() {
     StageLibraryTask lib = Mockito.mock(StageLibraryTask.class);
-    List<ConfigDefinition> configDefs = new ArrayList<ConfigDefinition>();
+    List<ConfigDefinition> configDefs = new ArrayList<>();
     ConfigDefinition configDef = new ConfigDefinition("string", ConfigDef.Type.STRING, "l1", "d1", "--", true, "g",
         "stringVar", null);
     configDefs.add(configDef);
@@ -92,17 +91,17 @@ public class TestUtil {
     configDefs.add(configDef);
     StageDefinition sourceDef = new StageDefinition(
         TSource.class.getName(), "source", "1.0.0", "label", "description",
-        StageType.SOURCE, configDefs, StageDef.OnError.DROP_RECORD, null/*raw source definition*/, "");
+        StageType.SOURCE, configDefs, null/*raw source definition*/, "");
     sourceDef.setLibrary("library", Thread.currentThread().getContextClassLoader());
     StageDefinition targetDef = new StageDefinition(
         TTarget.class.getName(), "target", "1.0.0", "label", "description",
-        StageType.TARGET, Collections.EMPTY_LIST, StageDef.OnError.DROP_RECORD, null/*raw source definition*/,
+        StageType.TARGET, Collections.EMPTY_LIST, null/*raw source definition*/,
         "TargetIcon.svg");
     targetDef.setLibrary("library", Thread.currentThread().getContextClassLoader());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"))).thenReturn(targetDef);
 
-    List<StageDefinition> stages = new ArrayList<StageDefinition>(2);
+    List<StageDefinition> stages = new ArrayList<>(2);
     stages.add(sourceDef);
     stages.add(targetDef);
     Mockito.when(lib.getStages()).thenReturn(stages);

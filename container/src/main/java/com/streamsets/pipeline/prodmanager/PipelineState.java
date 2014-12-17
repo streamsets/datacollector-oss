@@ -7,6 +7,7 @@ package com.streamsets.pipeline.prodmanager;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.container.Utils;
 
 public class PipelineState {
   private final String name;
@@ -47,5 +48,11 @@ public class PipelineState {
 
   public String getName() {
     return name;
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format("PipelineState[name='{}' rev='{}' state='{}' message='{}' lastStatusChange='{}']",
+      getName(), getRev(), getState().name(), getMessage(), getLastStatusChange());
   }
 }

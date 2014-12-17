@@ -122,8 +122,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
   @Override
   public List<List<StageOutput>> getBatchesOutput() {
     List<List<StageOutput>> batchOutput = new ArrayList<>();
-    if(snapshotStore.getSnapshotStatus(pipelineName).isExists()) {
-      batchOutput.add(snapshotStore.retrieveSnapshot(pipelineName));
+    if(snapshotStore.getSnapshotStatus(pipelineName, revision).isExists()) {
+      batchOutput.add(snapshotStore.retrieveSnapshot(pipelineName, revision));
     }
     return batchOutput;
   }
@@ -201,7 +201,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     if(batchCaptured) {
       List<StageOutput> snapshot = pipeBatch.getSnapshotsOfAllStagesOutput();
-      snapshotStore.storeSnapshot(pipelineName, snapshot);
+      snapshotStore.storeSnapshot(pipelineName, revision, snapshot);
       /*
        * Reset the capture snapshot variable only after capturing the snapshot
        * This guarantees that once captureSnapshot is called, the output is captured exactly once

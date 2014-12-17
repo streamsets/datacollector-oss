@@ -6,7 +6,8 @@
 package com.streamsets.pipeline.prodmanager;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.util.TestUtil;
+import com.streamsets.pipeline.util.*;
+import com.streamsets.pipeline.util.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -40,7 +41,9 @@ public class TestStateTracker {
   @Before()
   public void setUp() {
     RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
-    stateTracker = new StateTracker(info);
+    com.streamsets.pipeline.util.Configuration configuration = new com.streamsets.pipeline.util.Configuration();
+
+    stateTracker = new StateTracker(info, configuration);
   }
 
   @After
@@ -110,7 +113,7 @@ public class TestStateTracker {
   public void testInitInvalidDir() {
     RuntimeInfo info = Mockito.mock(RuntimeInfo.class);
     Mockito.when(info.getDataDir()).thenReturn("\0");
-    stateTracker = new StateTracker(info);
+    stateTracker = new StateTracker(info, new Configuration());
 
     stateTracker.init();
 

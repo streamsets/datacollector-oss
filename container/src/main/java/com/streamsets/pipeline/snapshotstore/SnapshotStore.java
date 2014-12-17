@@ -12,13 +12,13 @@ import java.util.List;
 
 public interface SnapshotStore {
 
-  void storeSnapshot(String pipelineName, List<StageOutput> snapshot);
+  void storeSnapshot(String pipelineName, String rev, List<StageOutput> snapshot);
 
-  List<StageOutput> retrieveSnapshot(String pipelineName);
+  List<StageOutput> retrieveSnapshot(String pipelineName, String rev);
 
-  SnapshotStatus getSnapshotStatus(String pipelineName);
+  SnapshotStatus getSnapshotStatus(String pipelineName, String rev);
 
-  void deleteSnapshot(String pipelineName);
+  void deleteSnapshot(String pipelineName, String rev);
 
-  InputStream getSnapshot(String pipelineName);
+  InputStream getSnapshot(String pipelineName, String rev);
 }

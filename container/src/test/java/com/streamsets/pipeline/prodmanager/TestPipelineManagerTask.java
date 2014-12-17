@@ -65,6 +65,9 @@ public class TestPipelineManagerTask {
   @After
   public void tearDown() {
     manager.stop();
+    //This may throw NullPointerException for some tests. This happens because we manually set the state as RUNNING
+    //without actually running the pipeline which results in some internal variables not initialized. And then the
+    //stop pipeline api tries to access them.
   }
 
   @Test

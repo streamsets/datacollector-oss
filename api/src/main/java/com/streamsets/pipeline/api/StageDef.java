@@ -16,15 +16,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface StageDef {
 
-  public enum OnError {DROP_RECORD, DROP_BATCH}
-
   String version();
 
   String label();
 
   String description() default "";
-
-  OnError onError() default OnError.DROP_RECORD;
 
   String icon() default "";
 

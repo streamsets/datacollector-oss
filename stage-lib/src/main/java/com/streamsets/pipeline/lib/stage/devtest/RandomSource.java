@@ -44,6 +44,10 @@ public class RandomSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    //Capture snapshot generally provides a much smaller 'maxBatchSize'.
+    //Without the below line, we may end up with a batch size value of the previous run
+    //which could be greater than the record allowance for snapshot
+    batchSize = maxBatchSize;
     if (batchCount++ % (random.nextInt(maxBatchSize) + 1) == 0) {
       batchSize = random.nextInt(maxBatchSize + 1);
     }

@@ -14,6 +14,7 @@ import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.util.Configuration;
+import com.streamsets.pipeline.util.LogUtil;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -43,7 +44,7 @@ public class TestFileErrorRecordStore {
   private FileErrorRecordStore errorStore = null;
 
   @BeforeClass
-  public static void beforeClass() {
+  public static void beforeClass() throws IOException {
     System.setProperty("pipeline.data.dir", "./target/var");
   }
 
@@ -59,29 +60,22 @@ public class TestFileErrorRecordStore {
     RuntimeInfo info = new RuntimeInfo(ImmutableList.of(getClass().getClassLoader()));
     Configuration configuration = new Configuration();
     errorStore = new FileErrorRecordStore(info, configuration);
-
   }
 
   @After
   public void tearDown() {
-
+    LogUtil.unregisterAllLoggers();
   }
 
   @Test
   public void testStoreErrorRecord() {
     //The rolling file appender opens the file on initialization.
     Assert.assertTrue(errorStore.getErrors(PIPELINE_NAME, REV) == null);
-
-    errorStore.register(PIPELINE_NAME);
+    errorStore.register(PIPELINE_NAME, REV);
     errorStore.storeErrorRecords(PIPELINE_NAME, REV, createErrorRecordData());
-
     InputStream in = errorStore.getErrors(PIPELINE_NAME, REV);
     Assert.assertNotNull(in);
-    in = errorStore.getErrors(PIPELINE_NAME, REV);
-    Assert.assertNotNull(in);
-
     //TODO: Retrieve error records and compare contents once de-serializer is ready
-
   }
 
   @Test
@@ -89,12 +83,10 @@ public class TestFileErrorRecordStore {
     //The rolling file appender opens the file on initialization.
     Assert.assertTrue(errorStore.getErrors(PIPELINE_NAME, REV) == null);
 
-    errorStore.register(PIPELINE_NAME);
+    errorStore.register(PIPELINE_NAME, REV);
     errorStore.storeErrorMessages(PIPELINE_NAME, REV, createErrorMessages());
 
     InputStream in = errorStore.getErrors(PIPELINE_NAME, REV);
-    Assert.assertNotNull(in);
-    in = errorStore.getErrors(PIPELINE_NAME, REV);
     Assert.assertNotNull(in);
 
     Map map = ObjectMapperFactory.get().readValue(in, Map.class);
@@ -107,16 +99,6 @@ public class TestFileErrorRecordStore {
 
   }
 
-  private Map<String, List<ErrorMessage>> createErrorMessages() {
-    Map<String, List<ErrorMessage>> errorMessages = new HashMap<>();
-
-    List<ErrorMessage> errorMessageList = new ArrayList<>();
-    errorMessageList.add(new ErrorMessage("a", "b", 2L));
-
-    errorMessages.put(PROCESSOR_NAME, errorMessageList);
-    return errorMessages;
-  }
-
   @Test(expected = RuntimeException.class)
   public void testStoreInvalidDir() {
     RuntimeInfo info = Mockito.mock(RuntimeInfo.class);
@@ -124,7 +106,7 @@ public class TestFileErrorRecordStore {
     errorStore = new FileErrorRecordStore(info, new Configuration());
 
     //Runtime exception expected
-    errorStore.register(PIPELINE_NAME);
+    errorStore.register(PIPELINE_NAME, REV);
     errorStore.storeErrorRecords(PIPELINE_NAME, REV, createErrorRecordData());
   }
 
@@ -170,4 +152,15 @@ public class TestFileErrorRecordStore {
     errorRecords.put(PROCESSOR_NAME, procErrorRecords);
     return errorRecords;
   }
+
+  private Map<String, List<ErrorMessage>> createErrorMessages() {
+    Map<String, List<ErrorMessage>> errorMessages = new HashMap<>();
+
+    List<ErrorMessage> errorMessageList = new ArrayList<>();
+    errorMessageList.add(new ErrorMessage("a", "b", 2L));
+
+    errorMessages.put(PROCESSOR_NAME, errorMessageList);
+    return errorMessages;
+  }
+
 }

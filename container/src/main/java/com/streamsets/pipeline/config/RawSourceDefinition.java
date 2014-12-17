@@ -7,6 +7,7 @@ package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.container.Utils;
 
 import java.util.List;
 
@@ -36,5 +37,11 @@ public class RawSourceDefinition {
 
   public String getMimeType() {
     return mimeType;
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format("RawSourceDefinition[rawSourcePreviewerClass='{}' mimeType='{}']", getRawSourcePreviewerClass(),
+      getMimeType());
   }
 }

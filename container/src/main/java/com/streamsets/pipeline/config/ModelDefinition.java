@@ -8,6 +8,7 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.ChooserMode;
 
 import java.util.List;
 
