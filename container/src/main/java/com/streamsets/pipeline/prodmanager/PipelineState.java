@@ -7,7 +7,7 @@ package com.streamsets.pipeline.prodmanager;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 
 public class PipelineState {
   private final String name;

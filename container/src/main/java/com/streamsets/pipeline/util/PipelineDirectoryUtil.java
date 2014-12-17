@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.util;
 
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.main.RuntimeInfo;
 
 import java.io.File;

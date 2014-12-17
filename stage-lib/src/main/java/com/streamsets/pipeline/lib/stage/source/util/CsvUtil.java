@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.lib.stage.source.util;
 
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.IOException;
 import java.util.ArrayList;

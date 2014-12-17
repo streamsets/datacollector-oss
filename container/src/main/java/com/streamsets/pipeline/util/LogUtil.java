@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.util;
 
-import com.streamsets.pipeline.container.Utils;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
