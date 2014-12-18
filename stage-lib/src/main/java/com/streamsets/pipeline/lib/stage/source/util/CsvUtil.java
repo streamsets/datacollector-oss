@@ -6,9 +6,13 @@
 package com.streamsets.pipeline.lib.stage.source.util;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,5 +58,14 @@ public class CsvUtil {
     } else {
       throw new IOException(Utils.format("Not recognized type '{}', value '{}'", field.getType(), field.getValue()));
     }
+  }
+
+  public static String csvRecordToString(Record r, CSVFormat csvFormat) throws IOException {
+    StringWriter stringWriter = new StringWriter();
+    CSVPrinter csvPrinter = new CSVPrinter(stringWriter, csvFormat);
+    csvPrinter.printRecord(CsvUtil.fieldToCsv(r.get()));
+    csvPrinter.flush();
+    csvPrinter.close();
+    return stringWriter.toString();
   }
 }

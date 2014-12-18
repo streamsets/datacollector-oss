@@ -5,8 +5,6 @@
  */
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ChooserMode;
@@ -20,12 +18,10 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.lib.stage.source.spooldir.csv.CvsFileModeChooserValues;
 import com.streamsets.pipeline.lib.stage.source.util.CsvUtil;
 import com.streamsets.pipeline.lib.stage.source.util.JsonUtil;
-import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Iterator;
 
 @GenerateResourceBundle
@@ -75,7 +71,7 @@ public class KafkaTarget extends BaseTarget {
 
   /********  For CSV Content  ***********/
 
-  @ConfigDef(required = true,
+  @ConfigDef(required = false,
     type = ConfigDef.Type.MODEL,
     label = "CSV Format",
     description = "The specific CSV format of the files",
@@ -122,16 +118,9 @@ public class KafkaTarget extends BaseTarget {
     if(payloadType == PayloadType.STRING) {
       return r.get().getValue().toString().getBytes();
     } if (payloadType == PayloadType.JSON) {
-      ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-      return objectMapper.writeValueAsBytes(JsonUtil.fieldToJsonObject(r.get()));
+      return JsonUtil.jsonRecordToString(r).getBytes();
     } if (payloadType == PayloadType.CSV) {
-      StringWriter stringWriter = new StringWriter();
-      CSVPrinter csvPrinter = new CSVPrinter(stringWriter, CvsFileModeChooserValues.getCSVFormat(csvFileFormat));
-      csvPrinter.printRecord(CsvUtil.fieldToCsv(r.get()));
-      csvPrinter.flush();
-      csvPrinter.close();
-      return stringWriter.toString().getBytes();
+      return CsvUtil.csvRecordToString(r, CvsFileModeChooserValues.getCSVFormat(csvFileFormat)).getBytes();
     }
     return null;
   }

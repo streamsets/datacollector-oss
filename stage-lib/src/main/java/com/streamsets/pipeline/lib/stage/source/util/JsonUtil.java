@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.stage.source.util;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -113,5 +115,9 @@ public class JsonUtil {
       throw new IOException(Utils.format("Not recognized type '{}', value '{}'", field.getType(), field.getValue()));
     }
     return obj;
+  }
+
+  public static String jsonRecordToString(Record r) throws IOException {
+    return ObjectMapperFactory.get().writeValueAsString(JsonUtil.fieldToJsonObject(r.get()));
   }
 }
