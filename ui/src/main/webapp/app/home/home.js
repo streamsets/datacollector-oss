@@ -304,7 +304,8 @@ angular
                 _.contains(targetStageInstance.inputLanes, outputLane)) {
                 edges.push({
                   source: sourceStageInstance,
-                  target: targetStageInstance
+                  target: targetStageInstance,
+                  outputLane: outputLane
                 });
               }
             });

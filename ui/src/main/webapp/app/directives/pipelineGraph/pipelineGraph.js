@@ -29,6 +29,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         selectedNode: null,
         selectedEdge: null,
         mouseDownNode: null,
+        mouseDownNodeLane: null,
         mouseDownLink: null,
         justDragged: false,
         justScaleTransGraph: false,
@@ -120,6 +121,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       });
 
       // listen for dragging
+
       var dragSvg = d3.behavior.zoom()
         .scaleExtent([0.1, 10])
         .on("zoom", function(){
@@ -175,7 +177,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     GraphCreator.prototype.dragmove = function(d) {
       var thisGraph = this;
       if (thisGraph.state.shiftNodeDrag){
-        thisGraph.dragLine.attr('d', 'M' + (d.uiInfo.xPos + thisGraph.consts.rectWidth) + ',' + (d.uiInfo.yPos + thisGraph.consts.rectHeight/2) +
+        thisGraph.dragLine.attr('d', 'M' + (d.uiInfo.xPos + thisGraph.consts.rectWidth) + ',' + (d.uiInfo.yPos + thisGraph.state.shiftNodeDragYPos) +
           'L' + d3.mouse(thisGraph.svgG.node())[0] + ',' + d3.mouse(this.svgG.node())[1]);
       } else{
         $scope.$apply(function() {
@@ -296,8 +298,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       state.mouseDownNode = d;
       if (state.shiftNodeDrag){
         // reposition dragged directed edge
-        thisGraph.dragLine.classed('hidden', false)
-          .attr('d', 'M' + d.uiInfo.xPos + ',' + d.uiInfo.yPos + 'L' + d.uiInfo.xPos + ',' + d.uiInfo.yPos);
+        thisGraph.dragLine.classed('hidden', false);
+          //.attr('d', 'M' + d.uiInfo.xPos + ',' + d.uiInfo.yPos + 'L' + d.uiInfo.xPos + ',' + d.uiInfo.yPos);
         return;
       }
     };
@@ -351,7 +353,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       state.shiftNodeDrag = false;
       d3node.classed(consts.connectClass, false);
 
-      var mouseDownNode = state.mouseDownNode;
+      var mouseDownNode = state.mouseDownNode,
+        mouseDownNodeLane = state.mouseDownNodeLane;
 
       if (!mouseDownNode) {
         return;
@@ -361,7 +364,11 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
       if (mouseDownNode !== d){
         // we're in a different node: create new edge for mousedown edge and add to graph
-        var newEdge = {source: mouseDownNode, target: d};
+        var newEdge = {
+          source: mouseDownNode,
+          target: d,
+          outputLane: mouseDownNodeLane
+        };
         var filtRes = thisGraph.paths.filter(function(d){
           if (d.source === newEdge.target && d.target === newEdge.source){
             thisGraph.edges.splice(thisGraph.edges.indexOf(d), 1);
@@ -380,7 +387,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
               }
 
               if(newEdge.source.outputLanes && newEdge.source.outputLanes.length) {
-                newEdge.target.inputLanes.push(newEdge.source.outputLanes[0]);
+                newEdge.target.inputLanes.push(mouseDownNodeLane);
               }
             }
           });
@@ -577,25 +584,51 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         })
         .attr({
           'cx': 0,
-          'cy': consts.rectWidth/2 - 20,
+          'cy': consts.rectHeight/2,
           'r': 10
         });
 
       //Output Connectors
+
+      /*
       newGs.append('circle')
         .filter(function(d) {
           return d.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE;
         })
         .attr({
           'cx': consts.rectWidth,
-          'cy': consts.rectWidth/2 - 20,
+          'cy': consts.rectHeight/2,
           'r': 10
         }).on("mousedown", function(d){
           thisGraph.state.shiftNodeDrag = true;
         });
+      */
 
       newGs.each(function(d) {
-        thisGraph.insertTitleLinebreaks(d3.select(this), d.uiInfo.label);
+        var stageNode = d3.select(this);
+
+        //Output Connectors
+
+        if(d.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE) {
+
+          var totalLanes = d.outputLanes.length;
+          angular.forEach(d.outputLanes, function(lane, index) {
+            var y = ((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (totalLanes - index - 1))/ totalLanes);
+            stageNode
+              .append('circle')
+              .attr({
+                'cx': consts.rectWidth,
+                'cy': y,
+                'r': 10
+              }).on("mousedown", function(d){
+                thisGraph.state.shiftNodeDrag = true;
+                thisGraph.state.shiftNodeDragYPos = y;
+                thisGraph.state.mouseDownNodeLane = lane;
+              });
+          });
+        }
+
+        thisGraph.insertTitleLinebreaks(stageNode, d.uiInfo.label);
       });
 
       //Add Stage icons
@@ -667,7 +700,11 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         return d === state.selectedEdge;
       })
         .attr("d", function(d){
-          return "M" + (d.source.uiInfo.xPos + consts.rectWidth) + "," + (d.source.uiInfo.yPos + consts.rectWidth/2 - 20) +
+          var totalLanes = d.source.outputLanes.length,
+            outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
+            y = ((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (totalLanes - outputLaneIndex - 1))/ totalLanes);
+
+          return "M" + (d.source.uiInfo.xPos + consts.rectWidth) + "," + (d.source.uiInfo.yPos + y) +
             "L" + d.target.uiInfo.xPos + "," + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
         });
 
@@ -676,8 +713,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .append("path")
         .style('marker-end','url(#end-arrow)')
         .classed("link", true)
-        .attr("d", function(d){
-          return "M" + (d.source.uiInfo.xPos + consts.rectWidth) + "," + (d.source.uiInfo.yPos + consts.rectWidth/2 - 20) +
+        .attr("d", function(d) {
+
+          var totalLanes = d.source.outputLanes.length,
+            outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
+            y = ((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (totalLanes - outputLaneIndex - 1))/ totalLanes);
+
+          return "M" + (d.source.uiInfo.xPos + consts.rectWidth) + "," + (d.source.uiInfo.yPos + y) +
             "L" + d.target.uiInfo.xPos + "," + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
         })
         .on("mousedown", function(d){

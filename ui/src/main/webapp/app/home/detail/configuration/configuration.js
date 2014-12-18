@@ -176,6 +176,16 @@ angular
         stageInstance.outputLanes = _.filter(stageInstance.outputLanes, function(lane) {
           return lane !== path;
         });
+
+        var stages = $scope.pipelineConfig.stages;
+        _.each(stages, function(stage) {
+          if(stage.instanceName !== stageInstance.instanceName) {
+            stage.inputLanes = _.filter(stage.inputLanes, function(inputLane) {
+              return inputLane !== path;
+            });
+          }
+        });
+
         delete configValue[path];
       },
 
