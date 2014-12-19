@@ -25,7 +25,7 @@ import java.io.IOException;
 
 @Path("/v1/admin")
 public class AdminResource implements LogStreamer.Releaser {
-  private static final String SHUTDOWN_SECRET_KEY = "shutdown.secret";
+  private static final String SHUTDOWN_SECRET_KEY = "http.shutdown.secret";
   private static final String SHUTDOWN_SECRET_DEFAULT = "secret";
 
   private static final String MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY = "max.logtail.concurrent.requests";
