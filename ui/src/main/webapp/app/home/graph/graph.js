@@ -60,6 +60,8 @@ angular
             } else {
               config.value = 0;
             }
+          } else if(configDefinition.type === 'BOOLEAN' && config.value === undefined) {
+            config.value = false;
           } else if(configDefinition.type === 'MAP') {
             config.value = {};
           }

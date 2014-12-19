@@ -4,7 +4,7 @@
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
-    <h3 class="modal-title" translate="home.library.newPipelineDefinition">New Pipeline Definition</h3>
+    <h3 class="modal-title" translate="home.library.newPipelineDefinition">New Pipeline</h3>
   </div>
   <div class="modal-body">
 
@@ -18,13 +18,23 @@
       {{issue}}
     </div>
 
-    <div class="form-group">
+    <div class="form-group" show-errors="{ trigger: 'keypress' }">
       <label class="control-label" translate="global.form.name">Name</label>
-      <input type="text" class="form-control" required
+      <i class="fa fa-info-circle help-icon"
+         popover-placement="right"
+         popover-append-to-body="false"
+         popover="{{'home.library.nameValidation' | translate}}"
+         popover-trigger="mouseenter"></i>
+      <input type="text"
+             name="name"
+             class="form-control"
+             ng-pattern="common.namePattern"
+             ng-required
              pattern="{{common.namePattern}}"
              title="{{'home.library.nameValidation' | translate}}"
              placeholder="{{'home.library.namePlaceholder' | translate}}"
              ng-model="newConfig.name">
+      <p class="help-block">{{'home.library.nameValidation' | translate}}</p>
     </div>
 
     <div class="form-group">
@@ -38,7 +48,7 @@
     <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.cancel">
       Cancel
     </button>
-    <button type="submit" class="btn btn-primary" ng-disabled="!newConfig.name" translate="global.form.save">
+    <button type="submit" class="btn btn-primary" translate="global.form.save">
       Save
     </button>
   </div>

@@ -145,13 +145,14 @@
       "noRecords": "No Records to view."
     },
     "library": {
-      "newPipelineDefinition": "New Pipeline Definition",
+      "newPipelineDefinition": "New Pipeline",
       "namePlaceholder": "Pipeline Definition Name",
+      "nameRequiredValidation": "Please enter name of the pipeline.",
+      "nameValidation": "Enter alphanumeric characters and underscores.",
       "descriptionPlaceholder": "Pipeline Definition Description",
       "deleteConfirmationTitle": "Delete Confirmation",
       "deleteConfirmationMessage": "Are you sure you want to delete Pipeline Configuration '{{name}}'?",
-      "duplicatePipelineDefinition": "Duplicate Pipeline Definition",
-      "nameValidation": "Please enter only upper and lowercase letters, numbers and underscores."
+      "duplicatePipelineDefinition": "Duplicate Pipeline Definition"
     },
     "import": {
       "headerLabel" : "Import Pipeline Definition",

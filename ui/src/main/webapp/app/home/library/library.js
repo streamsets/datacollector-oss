@@ -149,7 +149,7 @@ angular
 
   })
 
-  .controller('CreateModalInstanceController', function ($scope, $modalInstance, api) {
+  .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api) {
     angular.extend($scope, {
       issues: [],
       newConfig : {
@@ -157,13 +157,20 @@ angular
         description: ''
       },
       save : function () {
-        api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
-          success(function(configObject) {
-            $modalInstance.close(configObject);
-          }).
-          error(function(data) {
-            $scope.issues = [data];
+        if($scope.newConfig.name) {
+          api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
+            success(function(configObject) {
+              $modalInstance.close(configObject);
+            }).
+            error(function(data) {
+              $scope.issues = [data];
+            });
+        } else {
+          $translate('home.library.nameRequiredValidation').then(function(translation) {
+            $scope.issues = [translation];
           });
+
+        }
       },
       cancel : function () {
         $modalInstance.dismiss('cancel');
