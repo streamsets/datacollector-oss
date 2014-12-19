@@ -6,8 +6,6 @@
 package com.streamsets.pipeline.errorrecordstore.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
@@ -35,13 +33,10 @@ public class FileErrorRecordStore implements ErrorRecordStore {
   private static final String TYPE = "type";
 
   private final RuntimeInfo runtimeInfo;
-  private final ObjectMapper json;
   private final com.streamsets.pipeline.util.Configuration configuration;
 
   public FileErrorRecordStore(RuntimeInfo runtimeInfo, com.streamsets.pipeline.util.Configuration configuration) {
     this.configuration = configuration;
-    json = ObjectMapperFactory.get();
-    json.enable(SerializationFeature.INDENT_OUTPUT);
     this.runtimeInfo = runtimeInfo;
   }
 
@@ -125,7 +120,7 @@ public class FileErrorRecordStore implements ErrorRecordStore {
     toWrite.put(STAGE, stageName);
     toWrite.put(TYPE, type);
     toWrite.put(ERROR, error);
-    LogUtil.log(pipelineName, rev, ERROR, json.writeValueAsString(toWrite));
+    LogUtil.log(pipelineName, rev, ERROR, ObjectMapperFactory.get().writeValueAsString(toWrite));
   }
 
 }

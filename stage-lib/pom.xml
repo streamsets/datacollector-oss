@@ -82,12 +82,9 @@
       <artifactId>commons-csv</artifactId>
       <scope>compile</scope>
     </dependency>
-
-    <!-- Testing, will be changed soon -->
     <dependency>
       <groupId>com.101tec</groupId>
       <artifactId>zkclient</artifactId>
-      <version>0.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -99,16 +96,13 @@
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.8.0</artifactId>
       <classifier>test</classifier>
-      <version>0.8.1.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <version>2.8.0</version>
       <scope>test</scope>
     </dependency>
-    <!-- End testing-->
   </dependencies>
 
   <build>

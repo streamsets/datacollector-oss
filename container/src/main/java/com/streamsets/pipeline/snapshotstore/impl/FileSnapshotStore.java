@@ -6,12 +6,10 @@
 package com.streamsets.pipeline.snapshotstore.impl;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.Snapshot;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
-import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.JsonFileUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import org.slf4j.Logger;
@@ -51,7 +49,7 @@ public class FileSnapshotStore implements SnapshotStore {
   public List<StageOutput> retrieveSnapshot(String pipelineName, String rev) {
     if(!PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev).exists() ||
       !getPipelineSnapshotFile(pipelineName, rev).exists()) {
-      return Collections.EMPTY_LIST;
+      return Collections.emptyList();
     }
     try {
       return ((Snapshot)JsonFileUtil.readObjectFromFile(getPipelineSnapshotFile(pipelineName, rev), Snapshot.class))

@@ -83,8 +83,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private final Object pipelineMutex = new Object();
 
   @Inject
-  public ProductionPipelineManagerTask(RuntimeInfo runtimeInfo, com.streamsets.pipeline.util.Configuration configuration
-      , PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
+  public ProductionPipelineManagerTask(RuntimeInfo runtimeInfo,
+      com.streamsets.pipeline.util.Configuration configuration, PipelineStoreTask pipelineStore,
+      StageLibraryTask stageLibrary) {
     super(PRODUCTION_PIPELINE_MANAGER);
     this.runtimeInfo = runtimeInfo;
     stateTracker = new StateTracker(runtimeInfo, configuration);
@@ -111,32 +112,34 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(PRODUCTION_PIPELINE_RUNNER)
         .setDaemon(true).build());
     PipelineState ps = getPipelineState();
-    switch(ps.getState()) {
-      case RUNNING:
-        //Restart after a non orderly shutdown [like kill -9]
-        restartPipeline(ps);
-        break;
-      case NODE_PROCESS_SHUTDOWN:
-        //Restart after an orderly shutdown [like Ctrl - C]
-        try {
-          LOG.debug("Starting pipeline {} {}", ps.getName(), ps.getRev());
-          //Start pipeline changes state from NODE_PROCESS_SHUTDOWN to RUNNING where as handleStartRequest does not.
-          //We need to change state here
-          startPipeline(ps.getName(), ps.getRev());
-        } catch (Exception e) {
-          throw new RuntimeException(e);
-        }
-        break;
-      default:
-        //Normal start/restart
-        //create the pipeline instance. This was the pipeline in the context before the manager shutdown previously
-        try {
-          prodPipeline = createProductionPipeline(ps.getName(), ps.getRev(), configuration, pipelineStore,
-            stageLibrary);
-        } catch (Exception e) {
-          //log error and shutdown again
-          LOG.error(ContainerError.CONTAINER_0108.getMessage(), e.getMessage());
-        }
+    if(ps != null) {
+      switch (ps.getState()) {
+        case RUNNING:
+          //Restart after a non orderly shutdown [like kill -9]
+          restartPipeline(ps);
+          break;
+        case NODE_PROCESS_SHUTDOWN:
+          //Restart after an orderly shutdown [like Ctrl - C]
+          try {
+            LOG.debug("Starting pipeline {} {}", ps.getName(), ps.getRev());
+            //Start pipeline changes state from NODE_PROCESS_SHUTDOWN to RUNNING where as handleStartRequest does not.
+            //We need to change state here
+            startPipeline(ps.getName(), ps.getRev());
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
+          break;
+        default:
+          //Normal start/restart
+          //create the pipeline instance. This was the pipeline in the context before the manager shutdown previously
+          try {
+            prodPipeline = createProductionPipeline(ps.getName(), ps.getRev(), configuration, pipelineStore,
+              stageLibrary);
+          } catch (Exception e) {
+            //log error and shutdown again
+            LOG.error(ContainerError.CONTAINER_0108.getMessage(), e.getMessage());
+          }
+      }
     }
     LOG.debug("Initialized Production Pipeline Manager");
   }
@@ -155,12 +158,14 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public void stopTask() {
     LOG.debug("Stopping Production Pipeline Manager");
     PipelineState ps = getPipelineState();
-    if(State.RUNNING.equals(ps.getState())) {
-      LOG.debug("Stopping pipeline {} {}", ps.getName(), ps.getRev());
-      try {
-        stopPipeline(true /*shutting down node process*/);
-      } catch (PipelineManagerException e) {
-        throw new RuntimeException(e);
+    if(ps != null) {
+      if (State.RUNNING.equals(ps.getState())) {
+        LOG.debug("Stopping pipeline {} {}", ps.getName(), ps.getRev());
+        try {
+          stopPipeline(true /*shutting down node process*/);
+        } catch (PipelineManagerException e) {
+          throw new RuntimeException(e);
+        }
       }
     }
     if(executor != null) {
@@ -175,16 +180,12 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     LOG.debug("Stopped Production Pipeline Manager");
   }
 
-  public String setOffset(String offset) throws PipelineManagerException {
-    LOG.debug("Setting offset {}", offset);
-    checkState(!getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0103);
-    prodPipeline.setOffset(offset);
-    return prodPipeline.getCommittedOffset();
-  }
-
   public void resetOffset(String pipelineName, String rev) throws PipelineManagerException {
-    LOG.debug("Resetting offset for pipeline {}", pipelineName);
     PipelineState pState = getPipelineState();
+    if(pState == null) {
+      return;
+    }
+    LOG.debug("Resetting offset for pipeline {}", pipelineName);
     if(pState.getName().equals(pipelineName) && pState.getState() == State.RUNNING) {
       throw new PipelineManagerException(ContainerError.CONTAINER_0104, pipelineName);
     }
@@ -195,7 +196,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
   public void captureSnapshot(int batchSize) throws PipelineManagerException {
     LOG.debug("Capturing snapshot with batch size {}", batchSize);
-    checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0105);
+    checkState(getPipelineState() != null && getPipelineState().getState().equals(State.RUNNING),
+      ContainerError.CONTAINER_0105);
     if(batchSize <= 0) {
       throw new PipelineManagerException(ContainerError.CONTAINER_0107, batchSize);
     }
@@ -223,7 +225,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   }
 
   public List<ErrorMessage> getErrorMessages(String instanceName) throws PipelineManagerException {
-    checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0106);
+    checkState(getPipelineState() != null && getPipelineState().getState().equals(State.RUNNING),
+      ContainerError.CONTAINER_0106);
     return prodPipeline.getErrorMessages(instanceName);
   }
 
@@ -243,7 +246,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
       , PipelineManagerException, PipelineRuntimeException, StageException {
     synchronized (pipelineMutex) {
       LOG.info("Starting pipeline {} {}", name, rev);
-      validateStateTransition(State.RUNNING);
+      validateStateTransition(name, rev, State.RUNNING);
       handleStartRequest(name, rev);
       setState(name, rev, State.RUNNING, null);
       return getPipelineState();
@@ -252,8 +255,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
   public PipelineState stopPipeline(boolean nodeProcessShutdown) throws PipelineManagerException {
     synchronized (pipelineMutex) {
-      validateStateTransition(State.STOPPING);
-      setState(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING, Configuration.STOP_PIPELINE_MESSAGE);
+      validateStateTransition(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING);
+      setState(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING,
+        Configuration.STOP_PIPELINE_MESSAGE);
       PipelineState pipelineState = getPipelineState();
       handleStopRequest(nodeProcessShutdown);
       return pipelineState;
@@ -281,7 +285,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     LOG.debug("Stopped pipeline");
   }
 
-  private ProductionPipeline createProductionPipeline(String name, String rev
+  @VisibleForTesting
+  ProductionPipeline createProductionPipeline(String name, String rev
       , com.streamsets.pipeline.util.Configuration configuration, PipelineStoreTask pipelineStore
       , StageLibraryTask stageLibrary) throws PipelineStoreException, PipelineRuntimeException, StageException
       , PipelineManagerException {
@@ -322,10 +327,13 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return stateTracker;
   }
 
-  public void validateStateTransition(State toState) throws PipelineManagerException {
-    State currentState = getPipelineState().getState();
-    checkState(VALID_TRANSITIONS.get(currentState).contains(toState), ContainerError.CONTAINER_0102, currentState
-      , toState);
+  public void validateStateTransition(String pipelineName, String rev, State toState) throws PipelineManagerException {
+    validatePipelineExistence(pipelineName);
+    PipelineState ps = getPipelineState();
+    if(ps != null) {
+      checkState(VALID_TRANSITIONS.get(ps.getState()).contains(toState), ContainerError.CONTAINER_0102, ps.getState()
+        , toState);
+    }
   }
 
   private void checkState(boolean expr, ContainerError error, Object... args)
@@ -354,6 +362,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public void deleteErrors(String pipelineName, String rev) throws PipelineManagerException {
     LOG.debug("Deleting errors for pipeline {}", pipelineName);
     PipelineState pState = getPipelineState();
+    if(pState == null) {
+      return;
+    }
     if(pState.getName().equals(pipelineName) && pState.getState() == State.RUNNING) {
       throw new PipelineManagerException(ContainerError.CONTAINER_0111, pipelineName);
     }
@@ -363,6 +374,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public void deleteHistory(String pipelineName, String rev) throws PipelineManagerException {
     LOG.debug("Deleting history for pipeline {}", pipelineName);
     PipelineState pState = getPipelineState();
+    if(pState == null) {
+      return;
+    }
     if(pState.getName().equals(pipelineName) && pState.getState() == State.RUNNING) {
       throw new PipelineManagerException(ContainerError.CONTAINER_0111, pipelineName);
     }

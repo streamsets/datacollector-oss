@@ -112,6 +112,9 @@ public class KafkaTarget extends BaseTarget {
   @Override
   public void destroy() {
     LOG.info("Wrote {} number of records to Kafka Broker", recordCounter);
+    if(kafkaProducer != null) {
+      kafkaProducer.destroy();
+    }
   }
 
   private byte[] serializeRecord(Record r) throws IOException {

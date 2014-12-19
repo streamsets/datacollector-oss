@@ -11,7 +11,6 @@ import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.runner.production.SourceOffset;
 import com.streamsets.pipeline.store.PipelineStoreException;
 
 import javax.inject.Inject;
@@ -67,15 +66,6 @@ public class PipelineManagerResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(ps).build();
   }
 
-  @Path("/offset")
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response setOffset(
-      @QueryParam("offset") String offset) throws PipelineManagerException {
-    SourceOffset so = new SourceOffset(pipelineManager.setOffset(offset));
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(so).build();
-  }
-
   @Path("/resetOffset/{name}")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
@@ -125,7 +115,7 @@ public class PipelineManagerResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getMetrics() {
     Response response;
-    if (pipelineManager.getPipelineState().getState() == State.RUNNING) {
+    if (pipelineManager.getPipelineState() != null && pipelineManager.getPipelineState().getState() == State.RUNNING) {
       response = Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getMetrics()).build();
     } else {
       response = Response.ok().type(MediaType.APPLICATION_JSON).entity(Collections.EMPTY_MAP).build();

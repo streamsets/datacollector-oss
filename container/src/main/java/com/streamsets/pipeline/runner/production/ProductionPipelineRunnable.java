@@ -54,12 +54,12 @@ public class ProductionPipelineRunnable implements Runnable {
       //pipeline was stopped while it was running, could be pipeline stop or node process shutdown [Ctrl-C]
       try {
         if(this.nodeProcessShutdown) {
-          pipelineManager.validateStateTransition(State.NODE_PROCESS_SHUTDOWN);
+          pipelineManager.validateStateTransition(name, rev, State.NODE_PROCESS_SHUTDOWN);
           pipelineManager.setState(name, rev, State.NODE_PROCESS_SHUTDOWN,
             Utils.format("The pipeline was stopped because the node process was shutdown. " +
               "The last committed source offset is {}." , pipeline.getCommittedOffset()));
         } else {
-          pipelineManager.validateStateTransition(State.STOPPED);
+          pipelineManager.validateStateTransition(name, rev, State.STOPPED);
           pipelineManager.setState(name, rev, State.STOPPED,
             Utils.format("The pipeline was stopped. The last committed source offset is {}."
               , pipeline.getCommittedOffset()));
@@ -70,7 +70,7 @@ public class ProductionPipelineRunnable implements Runnable {
     } else {
       //pipeline execution finished normally
       try {
-        pipelineManager.validateStateTransition(State.FINISHED);
+        pipelineManager.validateStateTransition(name, rev, State.FINISHED);
         pipelineManager.setState(name, rev, State.FINISHED, "Completed successfully.");
       } catch (PipelineManagerException e) {
         LOG.error(Utils.format("An exception occurred while finishing the pipeline, {}", e.getMessage()));

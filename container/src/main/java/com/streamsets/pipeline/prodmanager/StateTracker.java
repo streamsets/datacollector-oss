@@ -77,8 +77,6 @@ public class StateTracker {
     if (!stateDir.exists()) {
       if (!stateDir.mkdirs()) {
         throw new RuntimeException(Utils.format("Could not create directory {}", stateDir.getAbsolutePath()));
-      } else {
-        persistDefaultState();
       }
     } else {
       //There exists a pipelineState directory already, check for file
@@ -88,8 +86,6 @@ public class StateTracker {
         } catch (PipelineManagerException e) {
           throw new RuntimeException(e);
         }
-      } else {
-        persistDefaultState();
       }
     }
   }
@@ -97,15 +93,6 @@ public class StateTracker {
   public void register(String pipelineName, String rev) {
     LogUtil.registerLogger(pipelineName, rev, STATE, getPipelineStateFile(pipelineName, rev).getAbsolutePath(),
       configuration);
-  }
-
-  private void persistDefaultState() {
-    //persist default pipelineState
-    try {
-      setState(Configuration.DEFAULT_PIPELINE_NAME, Configuration.DEFAULT_PIPELINE_REVISION, State.STOPPED, null);
-    } catch (PipelineManagerException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   private PipelineState getPersistedState() throws PipelineManagerException {
@@ -140,7 +127,7 @@ public class StateTracker {
   @SuppressWarnings("unchecked")
   public List<PipelineState> getHistory(String pipelineName, String rev) {
     if(!pipelineDirExists(pipelineName, rev) || !pipelineStateFileExists(pipelineName, rev)) {
-      return Collections.EMPTY_LIST;
+      return Collections.emptyList();
     }
     try {
       Reader reader = new FileReader(getPipelineStateFile(pipelineName, rev));
@@ -168,8 +155,8 @@ public class StateTracker {
     for(File f : getStateFiles(pipelineName, rev)) {
       f.delete();
     }
-    LogUtil.resetRollingFileAppender(pipelineName, rev, STATE, getPipelineStateFile(pipelineName, rev).getAbsolutePath()
-      , configuration);
+    LogUtil.resetRollingFileAppender(pipelineName, rev, STATE, getPipelineStateFile(pipelineName, rev)
+      .getAbsolutePath(), configuration);
   }
 
   private File[] getStateFiles(String pipelineName, String rev) {

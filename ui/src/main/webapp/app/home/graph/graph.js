@@ -186,7 +186,7 @@ angular
       startPipeline: function() {
         if($rootScope.common.pipelineStatus.state !== 'RUNNING') {
           var startResponse;
-          api.pipelineAgent.startPipeline($scope.activeConfigInfo.name).
+          api.pipelineAgent.startPipeline($scope.activeConfigInfo.name, 0).
             then(
               function (res) {
                 startResponse = res.data;

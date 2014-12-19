@@ -10,13 +10,12 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
-import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
+import com.streamsets.pipeline.prodmanager.PipelineState;
+import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.runner.production.SourceOffset;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import org.apache.commons.io.IOUtils;
@@ -26,7 +25,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
@@ -75,17 +73,6 @@ public class TestPipelineManagerResource extends JerseyTest {
     Assert.assertNotNull(state);
     Assert.assertEquals(State.STOPPED, state.getState());
     Assert.assertEquals("The pipeline is not running", state.getMessage());
-  }
-
-  @Test
-  public void testSetOffsetAPI() {
-    Response r = target("/v1/pipeline/offset").queryParam("offset", "myOffset").request().post(null);
-
-    Assert.assertNotNull(r);
-    SourceOffset so = r.readEntity(SourceOffset.class);
-    Assert.assertNotNull(so);
-    Assert.assertEquals("fileX:line10", so.getOffset());
-
   }
 
   @Test
@@ -224,11 +211,6 @@ public class TestPipelineManagerResource extends JerseyTest {
 
       Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState(PIPELINE_NAME, PIPELINE_REV, State.STOPPED
           , "Pipeline is not running", System.currentTimeMillis()));
-      try {
-        Mockito.when(pipelineManager.setOffset(Matchers.anyString())).thenReturn("fileX:line10");
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
 
       try {
         Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME, DEFAULT_PIPELINE_REV))

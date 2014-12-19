@@ -94,4 +94,9 @@ public class KafkaProducer {
     }
   }
 
+  public void destroy() {
+    if(producer != null) {
+      producer.close();
+    }
+  }
 }

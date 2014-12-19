@@ -68,6 +68,7 @@ public class TestProductionRun {
     ObjectGraph g = ObjectGraph.create(TestProdManagerModule.class);
     manager = g.get(ProductionPipelineManagerTask.class);
     manager.init();
+    manager.setState(MY_PIPELINE, PIPELINE_REV, State.STOPPED, "Pipeline created");
     manager.getStateTracker().register(MY_PIPELINE, PIPELINE_REV);
   }
 
@@ -85,7 +86,7 @@ public class TestProductionRun {
     manager.startPipeline("xyz", PIPELINE_REV);
   }
 
-  @Test(expected = PipelineStoreException.class)
+  @Test(expected = PipelineManagerException.class)
   public void testStartNonExistingPipeline() throws PipelineStoreException, PipelineManagerException,
       PipelineRuntimeException, StageException {
     //pipeline "abc" does not exist
@@ -276,21 +277,6 @@ public class TestProductionRun {
     MetricRegistry metrics = manager.getMetrics();
     Assert.assertNotNull(metrics);
 
-  }
-
-  @Test
-  public void testSetOffset() throws PipelineStoreException, InterruptedException, PipelineManagerException,
-    StageException, PipelineRuntimeException {
-    manager.startPipeline(MY_PIPELINE, PIPELINE_REV);
-    Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
-    waitForErrorRecords(MY_PROCESSOR);
-    manager.stopPipeline(false);
-    waitForPipelineToStop();
-
-    Assert.assertNotNull(manager.getOffset());
-
-    manager.setOffset("myOffset");
-    Assert.assertEquals("myOffset", manager.getOffset());
   }
 
   @Test

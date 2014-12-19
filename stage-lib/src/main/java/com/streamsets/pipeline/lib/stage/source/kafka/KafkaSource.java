@@ -47,7 +47,7 @@ public class KafkaSource extends BaseSource {
   @ConfigDef(required = true,
     type = ConfigDef.Type.STRING,
     label = "Topic",
-    defaultValue = "mytopic")
+    defaultValue = "myTopic")
   public String topic;
 
   //TODO: In v1 of this source [not the v1 of SDC] we expect the user to specify the partition

@@ -60,12 +60,7 @@ public class TestStateTracker {
   public void testGetDefaultState() {
     stateTracker.init();
     PipelineState state = stateTracker.getState();
-
-    Assert.assertNotNull(state);
-    Assert.assertEquals("1.0", state.getRev());
-    Assert.assertEquals(null, state.getMessage());
-    Assert.assertEquals(State.STOPPED, state.getState());
-
+    Assert.assertNull(state);
   }
 
   @Test
@@ -84,29 +79,33 @@ public class TestStateTracker {
   @Test
   public void testGetStateFile() throws PipelineManagerException {
     stateTracker.init();
-    Assert.assertTrue(stateTracker.getStateFile().exists());
+    Assert.assertFalse(stateTracker.getStateFile().exists());
   }
 
   @Test
-  public void testReinit() {
+  public void testReinit() throws PipelineManagerException {
 
     stateTracker.init();
-
     PipelineState state = stateTracker.getState();
+    Assert.assertNull(state);
 
+    stateTracker.setState("xyz", "1.0", State.RUNNING, null);
+    state = stateTracker.getState();
     Assert.assertNotNull(state);
+    Assert.assertEquals("xyz", state.getName());
     Assert.assertEquals("1.0", state.getRev());
     Assert.assertEquals(null, state.getMessage());
-    Assert.assertEquals(State.STOPPED, state.getState());
+    Assert.assertEquals(State.RUNNING, state.getState());
 
     stateTracker.init();
 
     state = stateTracker.getState();
 
     Assert.assertNotNull(state);
+    Assert.assertEquals("xyz", state.getName());
     Assert.assertEquals("1.0", state.getRev());
     Assert.assertEquals(null, state.getMessage());
-    Assert.assertEquals(State.STOPPED, state.getState());
+    Assert.assertEquals(State.RUNNING, state.getState());
   }
 
   @Test(expected = RuntimeException.class)
