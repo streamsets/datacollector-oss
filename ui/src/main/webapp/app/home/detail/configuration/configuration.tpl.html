@@ -104,28 +104,28 @@
                  popover="{{configDefinition.description}}"
                  popover-trigger="mouseenter"></i>
 
-              <div class="row lane-predicate" ng-repeat="(key, value) in detailPaneConfig.configuration[$index].value">
+              <div class="row lane-predicate" ng-repeat="mapObject in detailPaneConfig.configuration[$index].value">
 
                 <div class="col-md-3">
                   <input type="text" class="form-control input-sm" placeholder="Enter Key"
-                         ng-model="key"/>
+                         ng-model="mapObject.key"/>
                 </div>
 
                 <div class="col-md-1">:</div>
 
                 <div class="col-md-6">
                   <input type="text" class="form-control input-sm" placeholder="Enter Value"
-                         ng-model="detailPaneConfig.configuration[$parent.$index].value[key]"/>
+                         ng-model="mapObject.value"/>
                 </div>
 
                 <div class="col-md-2 btn-group" role="group" aria-label="Default button group">
                   <button type="button" class="btn btn-default btn-sm"
-                          ng-click="removeFromMap(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, key)">
+                          ng-click="removeFromMap(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, mapObject, $index)">
                     <i class="fa fa-minus pointer"></i>
                   </button>
                   <button type="button" class="btn btn-default btn-sm"
                           ng-show="$last"
-                          ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, $index)">
+                          ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value)">
                     <i class="fa fa-plus pointer"></i>
                   </button>
                 </div>
@@ -133,10 +133,10 @@
               </div>
 
 
-              <div ng-if="isEmptyObject(detailPaneConfig.configuration[$index].value)" class="row">
+              <div ng-if="detailPaneConfig.configuration[$index].value.length === 0" class="row">
                 <div class="col-md-2 btn-group" role="group">
                   <button type="button" class="btn btn-default btn-sm"
-                          ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[$index].value, -1)">
+                          ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[$index].value)">
                     <i class="fa fa-plus pointer"></i>
                   </button>
                 </div>
@@ -206,25 +206,30 @@
                    popover="{{configDefinition.description}}"
                    popover-trigger="mouseenter"></i>
 
-                <div class="row lane-predicate" ng-repeat="(path, condition) in detailPaneConfig.configuration[$index].value">
+                <div class="row lane-predicate" ng-repeat="lanePredicateMapping in detailPaneConfig.configuration[$index].value">
 
-                    <div class="col-md-7">
-                      <input type="text" class="form-control input-sm" placeholder="Enter Predicate"
-                             ng-model="detailPaneConfig.configuration[$parent.$index].value[path]"/>
-                    </div>
+                  <div class="col-md-1">
+                    <input type="text" readonly class="form-control input-sm"
+                           value="{{$index + 1}}"/>
+                  </div>
 
-                    <div class="col-md-2 btn-group" role="group" aria-label="Default button group">
-                      <button type="button" class="btn btn-default btn-sm"
-                              ng-hide="$first && $last"
-                              ng-click="removeLane(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, path)">
-                        <i class="fa fa-minus pointer"></i>
-                      </button>
-                      <button type="button" class="btn btn-default btn-sm"
-                              ng-show="$last"
-                              ng-click="addLane(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, path)">
-                        <i class="fa fa-plus pointer"></i>
-                      </button>
-                    </div>
+                  <div class="col-md-7">
+                    <input type="text" class="form-control input-sm" placeholder="Enter Predicate"
+                           ng-model="lanePredicateMapping.predicate"/>
+                  </div>
+
+                  <div class="col-md-2 btn-group" role="group" aria-label="Default button group">
+                    <button type="button" class="btn btn-default btn-sm"
+                            ng-hide="$first && $last"
+                            ng-click="removeLane(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, lanePredicateMapping, $index)">
+                      <i class="fa fa-minus pointer"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm"
+                            ng-show="$last"
+                            ng-click="addLane(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, lanePredicateMapping)">
+                      <i class="fa fa-plus pointer"></i>
+                    </button>
+                  </div>
 
                 </div>
 

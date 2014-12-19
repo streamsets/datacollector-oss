@@ -23,6 +23,10 @@ pipeline-graph {
 
   g {
     &.conceptG {
+      .lane-number {
+        fill: #000000;
+      }
+
       rect {
         fill: @default-pipeline-graph-fill-color;
         stroke: @default-pipeline-graph-stroke-color;
@@ -48,6 +52,10 @@ pipeline-graph {
 
         text {
           fill: #ffffff;
+
+          &.lane-number {
+            fill: #000000;
+          }
         }
         
         image {

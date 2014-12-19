@@ -45,7 +45,7 @@ public class SelectorProcessor extends RecordProcessor {
       type = ConfigDef.Type.MODEL,
       label = "Not Matching Predicate Action",
       description = "Action to take with records not matching any predicate",
-      defaultValue = "DROP")
+      defaultValue = "DROP_RECORD")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnNoPredicateMatchChooserValues.class)
   public OnNoPredicateMatch onNoPredicateMatch;
 

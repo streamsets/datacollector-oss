@@ -51,8 +51,10 @@ angular
             if(configDefinition.model.modelType === 'FIELD_SELECTOR') {
               config.value = [];
             } else if(configDefinition.model.modelType === 'LANE_PREDICATE_MAPPING') {
-              config.value = {};
-              config.value[stageInstance.outputLanes[0]] = '';
+              config.value = [{
+                outputLane: stageInstance.outputLanes[0],
+                predicate: ''
+              }];
             }
           } else if(configDefinition.type === 'INTEGER') {
             if(config.value) {
@@ -63,7 +65,7 @@ angular
           } else if(configDefinition.type === 'BOOLEAN' && config.value === undefined) {
             config.value = false;
           } else if(configDefinition.type === 'MAP') {
-            config.value = {};
+            config.value = [];
           }
 
           stageInstance.configuration.push(config);

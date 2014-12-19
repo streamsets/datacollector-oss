@@ -613,7 +613,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
           var totalLanes = d.outputLanes.length;
           angular.forEach(d.outputLanes, function(lane, index) {
-            var y = ((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (totalLanes - index - 1))/ totalLanes);
+            var y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) +
+              ((consts.rectHeight * (index))/totalLanes));
             stageNode
               .append('circle')
               .attr({
@@ -625,6 +626,18 @@ angular.module('pipelineGraphDirectives', ['underscore'])
                 thisGraph.state.shiftNodeDragYPos = y;
                 thisGraph.state.mouseDownNodeLane = lane;
               });
+
+            if(totalLanes > 1) {
+              stageNode
+                .append("text")
+                .attr({
+                  'x': consts.rectWidth - 3,
+                  'y': y + 5,
+                  'class': 'lane-number'
+                })
+                .text(index+1);
+            }
+
           });
         }
 
@@ -702,7 +715,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr("d", function(d){
           var totalLanes = d.source.outputLanes.length,
             outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
-            y = ((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (totalLanes - outputLaneIndex - 1))/ totalLanes);
+            y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) +
+                  ((consts.rectHeight * (outputLaneIndex))/totalLanes));
 
           return "M" + (d.source.uiInfo.xPos + consts.rectWidth) + "," + (d.source.uiInfo.yPos + y) +
             "L" + d.target.uiInfo.xPos + "," + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
@@ -717,7 +731,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
           var totalLanes = d.source.outputLanes.length,
             outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
-            y = ((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (totalLanes - outputLaneIndex - 1))/ totalLanes);
+            y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) +
+                  ((consts.rectHeight * (outputLaneIndex))/totalLanes));
 
           return "M" + (d.source.uiInfo.xPos + consts.rectWidth) + "," + (d.source.uiInfo.yPos + y) +
             "L" + d.target.uiInfo.xPos + "," + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);

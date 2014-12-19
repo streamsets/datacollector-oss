@@ -21,6 +21,7 @@ angular
       edges = [];
 
     angular.extend($scope, {
+      loaded: false,
       isPipelineRunning: false,
       pipelines: [],
       sourceExists: false,
@@ -29,14 +30,19 @@ angular
       previewMode: false,
       snapshotMode: false,
       hideLibraryPanel: true,
-      activeConfigInfo: {
-        name: 'xyz'
-      },
+      activeConfigInfo: undefined,
       activeConfigStatus:{
         state: 'STOPPED'
       },
       minimizeDetailPane: false,
       maximizeDetailPane: false,
+
+      /**
+       * Add New Pipeline Configuration
+       */
+      addPipelineConfig: function() {
+        $scope.$broadcast('addPipelineConfig');
+      },
 
       /**
        * Utility function for checking object is empty.
@@ -205,6 +211,7 @@ angular
         if(res && res.data) {
           updateGraph(res.data);
         }
+        $scope.loaded = true;
       },function(data, status, headers, config) {
         $rootScope.common.errors = [data];
       });

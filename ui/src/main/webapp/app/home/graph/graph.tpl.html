@@ -1,10 +1,11 @@
-<div class="panel panel-default graph-pane" ng-controller="GraphController">
+<div class="panel panel-default graph-pane"
+     ng-controller="GraphController">
 
   <div class="panel-heading clearfix">
     <ng-include src="'app/home/graph/header.tpl.html'"></ng-include>
   </div>
 
-  <div class="panel-body" ng-show="pipelineConfig">
+  <div class="panel-body">
     <div class="alert alert-danger alert-dismissible" role="alert"
          ng-repeat="issues in pipelineConfig.issues.pipelineIssues">
 

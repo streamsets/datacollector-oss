@@ -63,6 +63,12 @@
         </div>
 
       </li>
+
+
+      <li class="list-group-item" ng-if="!pipelines || pipelines.length === 0" translate="home.library.emptyPipelineList">
+        No Pipeline to view.
+      </li>
+
     </ul>
   </div>
 

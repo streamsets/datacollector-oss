@@ -10,19 +10,29 @@
 
     <bg-pane min-size="0">
 
-      <bg-splitter orientation="vertical" ng-class="{'minimize-pane2': minimizeDetailPane, 'maximize-pane2': maximizeDetailPane}">
+      <bg-splitter orientation="vertical"
+                   ng-show="pipelineConfig"
+                   ng-class="{'minimize-pane2': minimizeDetailPane, 'maximize-pane2': maximizeDetailPane}">
 
         <bg-pane min-size="0">
           <ng-include src="'app/home/graph/graph.tpl.html'"></ng-include>
         </bg-pane>
 
-        <bg-pane min-size="0" ng-show="pipelineConfig">
+        <bg-pane min-size="0">
           <ng-include src="'app/home/detail/detail.tpl.html'"></ng-include>
           <ng-include src="'app/home/preview/preview.tpl.html'"></ng-include>
           <ng-include src="'app/home/snapshot/snapshot.tpl.html'"></ng-include>
         </bg-pane>
 
       </bg-splitter>
+
+
+      <div class="create-pipeline-btn" ng-class="{'show': !pipelineConfig && loaded}"  ng-cloak>
+        <button class="btn btn-primary" ng-click="addPipelineConfig()">
+          <span class="glyphicon glyphicon-plus"></span>
+          <span translate="home.createPipeline">Create Pipeline</span>
+        </button>
+      </div>
 
     </bg-pane>
   </bg-splitter>

@@ -147,6 +147,11 @@ angular
 
     });
 
+
+    $scope.$on('addPipelineConfig', function() {
+      $scope.addPipelineConfig();
+    });
+
   })
 
   .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api) {

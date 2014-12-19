@@ -72,6 +72,7 @@
     }
   },
   "home": {
+    "createPipeline": "Create Pipeline",
     "header" : {
       "addStage": "Add Stage",
       "definePipeline": "Define Pipeline:",
@@ -150,6 +151,7 @@
       "nameRequiredValidation": "Please enter name of the pipeline.",
       "nameValidation": "Enter alphanumeric characters and underscores.",
       "descriptionPlaceholder": "Pipeline Definition Description",
+      "emptyPipelineList": "No Pipeline to view.",
       "deleteConfirmationTitle": "Delete Confirmation",
       "deleteConfirmationMessage": "Are you sure you want to delete Pipeline Configuration '{{name}}'?",
       "duplicatePipelineDefinition": "Duplicate Pipeline Definition"

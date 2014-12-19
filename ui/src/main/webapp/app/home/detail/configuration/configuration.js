@@ -169,32 +169,37 @@ angular
       addLane: function(stageInstance, configValue) {
         var outputLaneName = stageInstance.instanceName + 'OutputLane' + (new Date()).getTime();
         stageInstance.outputLanes.push(outputLaneName);
-        configValue[outputLaneName] = '';
+        configValue.push({
+          outputLane: outputLaneName,
+          predicate: ''
+        });
       },
 
-      removeLane: function(stageInstance, configValue, path) {
-        stageInstance.outputLanes = _.filter(stageInstance.outputLanes, function(lane) {
-          return lane !== path;
-        });
-
+      removeLane: function(stageInstance, configValue, lanePredicateMapping, $index) {
         var stages = $scope.pipelineConfig.stages;
+
+        stageInstance.outputLanes.splice($index, 1);
+        configValue.splice($index, 1);
+
+        //Remove input lanes from stage instances
         _.each(stages, function(stage) {
           if(stage.instanceName !== stageInstance.instanceName) {
             stage.inputLanes = _.filter(stage.inputLanes, function(inputLane) {
-              return inputLane !== path;
+              return inputLane !== lanePredicateMapping.outputLane;
             });
           }
         });
-
-        delete configValue[path];
       },
 
-      addToMap: function(stageInstance, configValue, $index) {
-        configValue['key' + ($index + 2)] = '';
+      addToMap: function(stageInstance, configValue) {
+        configValue.push({
+          key: '',
+          value: ''
+        });
       },
 
-      removeFromMap: function(stageInstance, configValue, key) {
-        delete configValue[key];
+      removeFromMap: function(stageInstance, configValue, mapObject, $index) {
+        configValue.splice($index, 1);
       }
 
     });
