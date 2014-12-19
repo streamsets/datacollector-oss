@@ -30,8 +30,8 @@ public class TestRandomSource {
       if (!records.isEmpty()) {
         Assert.assertNotNull(records.get(0).get("/a"));
         Assert.assertNotNull(records.get(0).get("/b"));
-        Assert.assertEquals(Field.Type.LONG, records.get(0).get("/a").getType());
-        Assert.assertEquals(Field.Type.LONG, records.get(0).get("/b").getType());
+        Assert.assertEquals(Field.Type.INTEGER, records.get(0).get("/a").getType());
+        Assert.assertEquals(Field.Type.INTEGER, records.get(0).get("/b").getType());
       }
     } finally {
       runner.runDestroy();

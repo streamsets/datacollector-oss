@@ -61,7 +61,7 @@ public class RandomSource extends BaseSource {
     Record record = getContext().createRecord("random:" + batchOffset);
     Map<String, Field> map = new LinkedHashMap<>();
     for (String field : fieldArr) {
-      long randomValue = random.nextLong();
+      int randomValue = random.nextInt();
       map.put(field, Field.create(randomValue));
       randomMeter.mark(randomValue);
     }
