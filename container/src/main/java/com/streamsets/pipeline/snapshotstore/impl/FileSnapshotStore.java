@@ -5,21 +5,22 @@
  */
 package com.streamsets.pipeline.snapshotstore.impl;
 
+import com.streamsets.pipeline.io.DataStore;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.Snapshot;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
-import com.streamsets.pipeline.util.JsonFileUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,8 +39,8 @@ public class FileSnapshotStore implements SnapshotStore {
 
   public void storeSnapshot(String pipelineName, String rev, List<StageOutput> snapshot) {
     try {
-      JsonFileUtil.writeObjectToFile(getPipelineSnapshotTempFile(pipelineName, rev),
-          getPipelineSnapshotFile(pipelineName, rev), new Snapshot(snapshot));
+      ObjectMapperFactory.get().writeValue(new DataStore(getPipelineSnapshotFile(pipelineName, rev)).getOutputStream(),
+        new Snapshot(snapshot));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -52,8 +53,8 @@ public class FileSnapshotStore implements SnapshotStore {
       return Collections.emptyList();
     }
     try {
-      return ((Snapshot)JsonFileUtil.readObjectFromFile(getPipelineSnapshotFile(pipelineName, rev), Snapshot.class))
-        .getSnapshot();
+      return ObjectMapperFactory.get().readValue(
+        new DataStore(getPipelineSnapshotFile(pipelineName, rev)).getInputStream(), Snapshot.class).getSnapshot();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

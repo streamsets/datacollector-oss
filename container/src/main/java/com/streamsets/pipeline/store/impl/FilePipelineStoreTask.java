@@ -24,6 +24,7 @@ import com.streamsets.pipeline.util.ContainerError;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -121,7 +122,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
 
-    List<ConfigConfiguration> configuration = new ArrayList<ConfigConfiguration>(2);
+    List<ConfigConfiguration> configuration = new ArrayList<>(2);
     configuration.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     configuration.add(new ConfigConfiguration("stopPipelineOnError", false));
     PipelineConfiguration pipeline = new PipelineConfiguration(uuid, configuration, null,
@@ -180,8 +181,18 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Override
   public List<PipelineInfo> getPipelines() throws PipelineStoreException {
-    List<PipelineInfo> list = new ArrayList<PipelineInfo>();
-    for (String name : storeDir.list()) {
+    List<PipelineInfo> list = new ArrayList<>();
+    for (String name : storeDir.list(new FilenameFilter() {
+          @Override
+          public boolean accept(File dir, String name) {
+            //If one browses to the pipelines directory, mac creates a ".DS_store directory and this causes us problems
+            //So filter it out
+            if(name.startsWith(".")) {
+              return false;
+            }
+            return true;
+          }
+        })) {
       list.add(getInfo(name, false));
     }
     return Collections.unmodifiableList(list);

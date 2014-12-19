@@ -5,10 +5,11 @@
  */
 package com.streamsets.pipeline.runner.production;
 
-import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.io.DataStore;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
-import com.streamsets.pipeline.util.JsonFileUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +72,8 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     if(pipelineOffsetFile.exists()) {
       //offset file exists, read from it
       try {
-        sourceOffset = (SourceOffset) JsonFileUtil.readObjectFromFile(pipelineOffsetFile, SourceOffset.class);
+        sourceOffset = ObjectMapperFactory.get().readValue(new DataStore(pipelineOffsetFile).getInputStream(),
+          SourceOffset.class);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -89,8 +91,8 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   private void saveOffset(String pipelineName, String rev, SourceOffset s) {
     LOG.debug("Saving offset {} for pipeline {}", s.getOffset(), pipelineName);
     try {
-      JsonFileUtil.writeObjectToFile(getPipelineOffsetTempFile(pipelineName, rev),
-        getPipelineOffsetFile(pipelineName, rev), s);
+      ObjectMapperFactory.get().writeValue((new DataStore(getPipelineOffsetFile(pipelineName, rev)).getOutputStream()),
+        s);
     } catch (IOException e) {
       LOG.error(Utils.format("Failed to save offset value {}. Reason {}", s.getOffset(), e.getMessage()));
       throw new RuntimeException(e);
@@ -99,10 +101,6 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   private File getPipelineOffsetFile(String pipelineName, String rev) {
     return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev), OFFSET_FILE);
-  }
-
-  private File getPipelineOffsetTempFile(String pipelineName, String rev) {
-    return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev), TEMP_OFFSET_FILE);
   }
 
 }

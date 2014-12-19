@@ -11,20 +11,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.ContainerError;
-import com.streamsets.pipeline.util.JsonFileUtil;
 import com.streamsets.pipeline.util.LogUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.Collections;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class StateTracker {
@@ -97,7 +98,7 @@ public class StateTracker {
 
   private PipelineState getPersistedState() throws PipelineManagerException {
     try {
-      return (PipelineState)JsonFileUtil.readObjectFromFile(getStateFile(), PipelineState.class);
+      return ObjectMapperFactory.get().readValue(new DataStore(getStateFile()).getInputStream(), PipelineState.class);
     } catch (IOException e) {
       LOG.error(ContainerError.CONTAINER_0101.getMessage(), e.getMessage());
       throw new PipelineManagerException(ContainerError.CONTAINER_0101, e.getMessage(), e);
@@ -107,7 +108,7 @@ public class StateTracker {
   private void persistPipelineState(PipelineState pipelineState) throws PipelineManagerException {
     //write to runInfo/pipelineState.json as well as /runInfo/<pipelineName>/pipelineState.json
     try {
-      JsonFileUtil.writeObjectToFile(getTempStateFile(), getStateFile(), pipelineState);
+      ObjectMapperFactory.get().writeValue((new DataStore(getStateFile()).getOutputStream()), pipelineState);
 
       //In addition, append the state of the pipeline to the pipelineState.json present in the directory of that
       //pipeline
