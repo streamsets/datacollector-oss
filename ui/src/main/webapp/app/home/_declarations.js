@@ -20,7 +20,8 @@ angular
     'abbreviateNumberFilter',
     'ngSanitize',
     'ui.select',
-    'showLoadingDirectives'
+    'showLoadingDirectives',
+    'recordTreeDirectives'
   ])
   .constant('amTimeAgoConfig', {
     withoutSuffix: true

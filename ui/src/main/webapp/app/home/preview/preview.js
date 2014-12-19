@@ -157,18 +157,30 @@ angular
 
       onExpandAllInputData: function() {
         $scope.expandAllInputData = true;
+        angular.forEach($scope.stagePreviewData.input, function(record) {
+          record.expand = true;
+        });
       },
 
       onCollapseAllInputData: function() {
         $scope.expandAllInputData = false;
+        angular.forEach($scope.stagePreviewData.input, function(record) {
+          record.expand = false;
+        });
       },
 
       onExpandAllOutputData: function() {
         $scope.expandAllOutputData = true;
+        angular.forEach($scope.stagePreviewData.output, function(record) {
+          record.expand = true;
+        });
       },
 
       onCollapseAllOutputData: function() {
         $scope.expandAllOutputData = false;
+        angular.forEach($scope.stagePreviewData.output, function(record) {
+          record.expand = false;
+        });
       }
     });
 
@@ -243,6 +255,11 @@ angular
           };
         }
       }
+    });
+
+
+    $scope.$on('recordUpdated', function(event, recordUpdated, recordValue) {
+      $scope.recordValueUpdated(recordUpdated, recordValue);
     });
 
   });

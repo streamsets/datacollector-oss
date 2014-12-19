@@ -35,6 +35,7 @@
       "import": "Import",
       "label": "Label",
       "library": "Library",
+      "loading": "Loading",
       "metrics": "Metrics",
       "name": "Name",
       "nextStage": "Next Stage",
@@ -141,7 +142,7 @@
       "inputData": "Input Data",
       "outputData": "Output Data",
       "noOutputWarning": "No output records produced.",
-      "noRecords": "No Records"
+      "noRecords": "No Records to view."
     },
     "library": {
       "newPipelineDefinition": "New Pipeline Definition",

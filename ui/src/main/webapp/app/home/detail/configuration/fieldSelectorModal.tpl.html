@@ -12,13 +12,25 @@
     <div show-loading="showLoading"></div>
 
     <div ng-hide="showLoading">
-      <ul class="record-list">
+
+      <!--ul class="record-list">
         <li class="record-list-item"
             ng-repeat="(fieldName, recordValue) in recordObject.value.value"
             ng-include="'recordTree'"
-            onload="selectable=true;selectedPath=selectedPath">
+            onload="selectable=true;selectedPath=selectedPath;isRoot=false">
         </li>
-      </ul>
+      </ul-->
+
+      <record-tree
+        record="recordObject"
+        record-value="recordObject.value"
+        field-name="('global.form.record' | translate)"
+        is-root="true"
+        editable="false"
+        selectable="true"
+        selected-path="selectedPath">
+      </record-tree>
+
     </div>
 
     <label class="label-warning"

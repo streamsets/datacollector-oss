@@ -269,7 +269,8 @@ angular
     var updateGraph = function (pipelineConfig) {
       var selectedStageInstance,
         stageErrorCounts,
-        pipelineMetrics = $rootScope.common.pipelineMetrics;
+        pipelineMetrics = $rootScope.common.pipelineMetrics,
+        pipelineStatus = $rootScope.common.pipelineStatus;
 
       ignoreUpdate = true;
 
@@ -313,7 +314,10 @@ angular
         }
       });
 
-      if(pipelineMetrics && pipelineMetrics.meters) {
+
+
+      if(pipelineStatus && pipelineStatus.name === pipelineConfig.info.name &&
+        pipelineMetrics && pipelineMetrics.meters) {
         stageErrorCounts = getStageErrorCounts();
       }
 
@@ -324,6 +328,8 @@ angular
         selectNode: ($scope.detailPaneConfig && !$scope.detailPaneConfig.stages) ? $scope.detailPaneConfig : undefined,
         stageErrorCounts: stageErrorCounts
       });
+
+      $scope.stageSelected = false;
 
       if ($scope.detailPaneConfig === undefined) {
         //First time
@@ -344,6 +350,7 @@ angular
 
           if (selectedStageInstance) {
             $scope.detailPaneConfig = selectedStageInstance;
+            $scope.stageSelected = true;
           } else {
             $scope.detailPaneConfig = $scope.pipelineConfig;
             $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
@@ -531,7 +538,10 @@ angular
     });
 
     $rootScope.$watch('common.pipelineMetrics', function() {
-      if($scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
+      var pipelineStatus = $rootScope.common.pipelineStatus,
+        config = $scope.pipelineConfig;
+      if(pipelineStatus && config && pipelineStatus.name === config.info.name &&
+        $scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
         $scope.$broadcast('updateErrorCount', getStageErrorCounts());
       }
     });

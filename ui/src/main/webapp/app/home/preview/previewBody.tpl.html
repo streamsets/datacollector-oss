@@ -36,85 +36,54 @@
           <tbody ng-switch="detailPaneConfig.uiInfo.stageType">
 
             <tr ng-switch-when="SOURCE"
-                ng-repeat="outputRecord in stagePreviewData.output">
+                ng-repeat="record in stagePreviewData.output">
               <td>
 
               </td>
               <td>
-                <label class="pointer" ng-click="outputRecord.expand = !outputRecord.expand">
-                <span class="glyphicon glyphicon-expand"
-                      ng-if="outputRecord.expand !== true && expandAllOutputData !== true"></span>
-                <span class="glyphicon glyphicon-collapse-down"
-                      ng-if="outputRecord.expand === true || expandAllOutputData === true"></span>
-
-                  {{'global.form.record' | translate}}{{$index+1}}
-                </label>
-                <ul class="record-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
-                  <li class="record-list-item"
-                      ng-repeat="(fieldName, recordValue) in outputRecord.value.value"
-                      ng-include="'recordTree'">
-                  </li>
-                </ul>
-              </td>
+                <record-tree
+                  record="record"
+                  record-value="record.value"
+                  field-name="('global.form.record' | translate)+($index+1)"
+                  is-root="true"
+                  editable="false">
+                </record-tree>
+             </td>
             </tr>
 
             <tr ng-switch-when="PROCESSOR"
-                ng-repeat="inputRecord in stagePreviewData.input">
+                ng-repeat="record in stagePreviewData.input">
               <td>
-                <label class="pointer" ng-click="inputRecord.expand = !inputRecord.expand">
-                <span class="glyphicon glyphicon-expand"
-                      ng-if="inputRecord.expand !== true && expandAllInputData !== true"></span>
-                <span class="glyphicon glyphicon-collapse-down"
-                      ng-if="inputRecord.expand === true || expandAllInputData === true"></span>
-                  {{'global.form.record' | translate}}{{$index+1}}
-                  <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="inputRecord.dirty"></span>
-                </label>
-                <ul class="record-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
+                <record-tree
+                  record="record"
+                  record-value="record.value"
+                  field-name="('global.form.record' | translate)+($index+1)"
+                  is-root="true"
+                  editable="previewMode">
+                </record-tree>
 
-                  <li class="record-list-item"
-                      ng-repeat="(fieldName, recordValue) in inputRecord.value.value"
-                      ng-class="{'dirty' : recordValue.dirty}"
-                      ng-include="'recordTree'"
-                      onload="editable=previewMode">
-                  </li>
-
-                </ul>
               </td>
               <td>
-                <div ng-repeat="outputRecord in outputRecords = getOutputRecords(stagePreviewData.output, inputRecord)">
-                  <label class="pointer" ng-click="outputRecord.expand = !outputRecord.expand">
-                  <span class="glyphicon glyphicon-expand"
-                        ng-if="outputRecord.expand !== true && expandAllOutputData !== true"></span>
-                  <span class="glyphicon glyphicon-collapse-down"
-                        ng-if="outputRecord.expand === true || expandAllOutputData === true"></span>
-                    {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.outputRecord' | translate}} {{$index + 1}}
-                  </label>
-                  <ul class="record-list" ng-if="outputRecord.expand === true || expandAllOutputData === true">
+                <div ng-repeat="record in outputRecords = getOutputRecords(stagePreviewData.output, record)">
+                  <record-tree
+                    record="record"
+                    record-value="record.value"
+                    field-name="('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.outputRecord' | translate) +  ($index + 1)"
+                    is-root="true"
+                    editable="false">
+                  </record-tree>
 
-                    <li class="record-list-item"
-                        ng-repeat="(fieldName, recordValue) in outputRecord.value.value"
-                        ng-include="'recordTree'">
-                    </li>
 
-                  </ul>
                 </div>
 
-                <div ng-repeat="errorRecord in errorsRecords = getErrorRecords(stagePreviewData.errorRecords, inputRecord)">
-                  <label class="pointer label label-danger" ng-click="errorRecord.expand = !errorRecord.expand">
-                  <span class="glyphicon glyphicon-expand"
-                        ng-if="errorRecord.expand !== true"></span>
-                  <span class="glyphicon glyphicon-collapse-down"
-                        ng-if="errorRecord.expand === true"></span>
-                    {{'global.form.record' | translate}}{{$parent.$index+1}} - {{'global.form.errorRecord' | translate}} - {{errorRecord.header.errorMessage}}
-                  </label>
-                  <ul class="record-list" ng-if="errorRecord.expand === true">
-
-                    <li class="record-list-item"
-                        ng-repeat="(fieldName, recordValue) in errorRecord.value.value"
-                        ng-include="'recordTree'">
-                    </li>
-
-                  </ul>
+                <div ng-repeat="record in errorsRecords = getErrorRecords(stagePreviewData.errorRecords, record)">
+                  <record-tree
+                    record="record"
+                    record-value="record.value"
+                    field-name="('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.errorRecord' | translate) + record.header.errorMessage"
+                    is-root="true"
+                    editable="false">
+                  </record-tree>
                 </div>
 
                 <div ng-if="outputRecords.length === 0 && errorsRecords.length === 0">
@@ -125,34 +94,25 @@
             </tr>
 
             <tr ng-switch-when="TARGET"
-                ng-repeat="inputRecord in stagePreviewData.input">
+                ng-repeat="record in stagePreviewData.input">
               <td>
-                <label class="pointer" ng-click="inputRecord.expand = !inputRecord.expand">
-                <span class="glyphicon glyphicon-expand"
-                      ng-if="inputRecord.expand !== true && expandAllInputData !== true"></span>
-                <span class="glyphicon glyphicon-collapse-down"
-                      ng-if="inputRecord.expand === true || expandAllInputData === true"></span>
-                  {{'global.form.record' | translate}}{{$index+1}}
-                </label>
-                <ul class="record-list" ng-if="inputRecord.expand === true || expandAllInputData === true">
-
-                  <li class="record-list-item"
-                      ng-repeat="(fieldName, recordValue) in inputRecord.value.value"
-                      ng-include="'recordTree'">
-                  </li>
-
-                </ul>
+                <record-tree
+                  record="record"
+                  record-value="record.value"
+                  field-name="('global.form.record' | translate)+($index+1)"
+                  is-root="true"
+                  editable="false">
+                </record-tree>
               </td>
               <td>
 
               </td>
             </tr>
 
-
             <tr ng-if="stagePreviewData.input.length === 0 &&
                         stagePreviewData.output.length === 0 &&
                         stagePreviewData.errorRecords.length === 0">
-              <td colspan="2" class="text-center" translate="home.previewPane.noRecords">No Records.</td>
+              <td colspan="2" class="no-records" translate="home.previewPane.noRecords">No Records.</td>
             </tr>
           </tbody>
 
