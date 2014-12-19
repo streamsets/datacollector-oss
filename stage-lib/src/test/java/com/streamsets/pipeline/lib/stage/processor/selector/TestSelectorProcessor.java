@@ -11,18 +11,32 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.stage.processor.selector.OnNoPredicateMatch;
-import com.streamsets.pipeline.lib.stage.processor.selector.SelectorProcessor;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestSelectorProcessor {
+
+  private List<Map<String, String>> createLanePredicates(String ... args) {
+    List<Map<String, String>> lanePredicates = new ArrayList<>();
+    if (args.length % 2 != 0) {
+      Assert.fail("LanPredicates must come in pairs");
+    }
+    for (int i = 0; i < args.length; i = i + 2) {
+      Map<String, String> map = new LinkedHashMap<>();
+      map.put("outputLane", args[i]);
+      map.put("predicate", args[i + 1]);
+      lanePredicates.add(map);
+    }
+    return lanePredicates;
+  }
 
   @Test(expected = IllegalStateException.class)
   public void testInitNullLanePredicates() throws Exception {
@@ -37,7 +51,7 @@ public class TestSelectorProcessor {
   @Test(expected = IllegalStateException.class)
   public void testInitZeroLanePredicates() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", new HashMap())
+        .addConfiguration("lanePredicates", createLanePredicates())
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
         .build();
@@ -47,7 +61,7 @@ public class TestSelectorProcessor {
   @Test(expected = IllegalStateException.class)
   public void testInitLanePredicatesNotMatchingLanes() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", ImmutableMap.of("a", "true"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "true"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
         .build();
@@ -57,7 +71,7 @@ public class TestSelectorProcessor {
   @Test(expected = StageException.class)
   public void testInitLanePredicatesMoreOutputLanes() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", ImmutableMap.of("a", "true"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "true"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
         .addOutputLane("a")
@@ -69,7 +83,7 @@ public class TestSelectorProcessor {
   @Test(expected = StageException.class)
   public void testInitLanePredicatesInvalidPredicate() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", ImmutableMap.of("a", "x"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "x"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
         .addOutputLane("a")
@@ -80,7 +94,7 @@ public class TestSelectorProcessor {
   @Test
   public void testInitLanePredicates() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", ImmutableMap.of("a", "x"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "x"))
         .addConfiguration("constants", ImmutableMap.of("x", "false"))
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
         .addOutputLane("a")
@@ -91,9 +105,9 @@ public class TestSelectorProcessor {
   @Test
   public void testSelectWithDefault() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", ImmutableMap.of("a", "record:value('') == 1",
-                                                            "b", "record:value('') == 2",
-                                                            "c", "default"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "record:value('') == 1",
+                                                                 "b", "record:value('') == 2",
+                                                                 "c", "default"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
         .addOutputLane("a")
@@ -130,8 +144,8 @@ public class TestSelectorProcessor {
   @Test
   public void testSelectWithoutDefaultDropping() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", ImmutableMap.of("a", "record:value('') == 1",
-                                                            "b", "record:value('') == 2"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "record:value('') == 1",
+                                                                 "b", "record:value('') == 2"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
         .addOutputLane("a")
@@ -165,8 +179,8 @@ public class TestSelectorProcessor {
   @Test
   public void testSelectWithoutDefaultToError() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", ImmutableMap.of("a", "record:value('') == 1",
-                                                            "b", "record:value('') == 2"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "record:value('') == 1",
+                                                                 "b", "record:value('') == 2"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.RECORD_TO_ERROR)
         .addOutputLane("a")
@@ -202,8 +216,8 @@ public class TestSelectorProcessor {
   @Test(expected = StageException.class)
   public void testSelectWithoutDefaultFailPipeline() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", ImmutableMap.of("a", "record:value('') == 1",
-                                                            "b", "record:value('') == 2"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "record:value('') == 1",
+                                                                 "b", "record:value('') == 2"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.FAIL_PIPELINE)
         .addOutputLane("a")

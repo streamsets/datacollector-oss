@@ -28,6 +28,12 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0017("Invalid input lane names '{}', lanes can only contain the following characters '{}'"),
   VALIDATION_0018("Invalid output lane names '{}', lanes can only contain the following characters '{}'"),
 
+  VALIDATION_0019("Lane predicate at index '{}' is not a Map"),
+  VALIDATION_0020("Lane predicate at index '{}' must have a '{}' entry"),
+  VALIDATION_0021("Lane predicate at index '{}' entry '{}' cannot be NULL"),
+  VALIDATION_0022("Lane predicate at index '{}' entry '{}' must be a String"),
+  VALIDATION_0023("Lane predicate at index '{}' entry '{}' cannot be empty"),
+
   ;
 
   private final String msg;

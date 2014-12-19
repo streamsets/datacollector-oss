@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public class SelectorProcessor extends RecordProcessor {
       label = "Lane/Record-predicate mapping",
       description = "Associates output lanes with predicates records must match in order to go to the lane")
   @LanePredicateMapping
-  public Map<String, String> lanePredicates;
+  public List<Map<String, String>> lanePredicates;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
@@ -52,11 +53,41 @@ public class SelectorProcessor extends RecordProcessor {
       type = ConfigDef.Type.MAP,
       label = "Constants for predicates",
       description = "Defines constant values available to all predicates")
-  public Map<String, String> constants;
+  public Map<String, ?> constants;
 
   private String[][] predicateLanes;
   private ELEvaluator elEvaluator;
   private ELEvaluator.Variables variables;
+
+  private String[][] parsePredicateLanes(List<Map<String, String>> predicateLanesList) throws StageException {
+    String[][] predicateLanes = new String[predicateLanesList.size()][];
+    int count = 0;
+    for (Map<String, String> predicateLaneMap : predicateLanesList) {
+      String outputLane = predicateLaneMap.get("outputLane");
+      Object predicate = predicateLaneMap.get("predicate");
+      if (!getContext().getOutputLanes().contains(outputLane)) {
+        throw new StageException(StageLibError.LIB_0012, outputLane, predicate);
+      }
+      predicateLanes[count] = new String[2];
+      predicateLanes[count][0] = "${" + predicate + "}";
+      predicateLanes[count][1] = outputLane;
+      LOG.debug("Predicate:'{}' Lane:'{}'", predicate, outputLane);
+      count++;
+    }
+    return predicateLanes;
+  }
+
+  @SuppressWarnings("unchecked")
+  private ELEvaluator.Variables parseConstants(Map<String,?> constants) throws StageException {
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    if (constants != null) {
+      for (Map.Entry<String, ?> entry : constants.entrySet()) {
+        variables.addVariable(entry.getKey(), entry.getValue());
+        LOG.debug("Variable: {}='{}'", entry.getKey(), entry.getValue());
+      }
+    }
+    return variables;
+  }
 
   @Override
   protected void init() throws StageException {
@@ -65,30 +96,13 @@ public class SelectorProcessor extends RecordProcessor {
       throw new StageException(StageLibError.LIB_0010);
     }
     if (getContext().getOutputLanes().size() != lanePredicates.size()) {
-      throw new StageException(StageLibError.LIB_0011, getContext().getOutputLanes(), lanePredicates.keySet());
+      throw new StageException(StageLibError.LIB_0011, getContext().getOutputLanes(), lanePredicates.size());
     }
-    predicateLanes = new String[lanePredicates.size()][];
-    int count = 0;
-    for (Map.Entry<String, String> entry : lanePredicates.entrySet()) {
-      if (!getContext().getOutputLanes().contains(entry.getKey())) {
-        throw new StageException(StageLibError.LIB_0012, entry.getKey(), entry.getValue());
-      }
-      predicateLanes[count] = new String[2];
-      predicateLanes[count][0] = "${" + entry.getValue() + "}";
-      predicateLanes[count][1] = entry.getKey();
-      LOG.debug("Predicate:'{}' Lane:'{}'", predicateLanes[count][0], predicateLanes[count][1]);
-      count++;
-    }
+    predicateLanes = parsePredicateLanes(lanePredicates);
+    variables = parseConstants(constants);
     elEvaluator = new ELEvaluator();
     ELBasicSupport.registerBasicFunctions(elEvaluator);
     ELRecordSupport.registerRecordFunctions(elEvaluator);
-    variables = new ELEvaluator.Variables();
-    if (constants != null) {
-      for (Map.Entry<String, String> entry : constants.entrySet()) {
-        variables.addVariable(entry.getKey(), entry.getValue());
-        LOG.debug("Variable: {}='{}'", entry.getKey(), entry.getValue());
-      }
-    }
     validateELs();
     LOG.debug("All predicates validated");
   }

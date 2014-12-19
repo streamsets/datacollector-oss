@@ -10,7 +10,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
-import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
@@ -249,7 +248,6 @@ public class PipelineConfigurationValidator {
             switch (confDef.getType()) {
               case BOOLEAN:
                 if (!(conf.getValue() instanceof Boolean)) {
-                  // stage configuration must be a boolean
                   issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                                           ValidationError.VALIDATION_0009, confDef.getType()));
                   preview = false;
@@ -257,29 +255,20 @@ public class PipelineConfigurationValidator {
                 break;
               case INTEGER:
                 if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
-                  // stage configuration must be a number
                   issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                                           ValidationError.VALIDATION_0009, confDef.getType()));
                   preview = false;
                 }
                 break;
               case STRING:
-                //NOP
-                break;
-              case MODEL:
-                if(confDef.getModel().getModelType() == ModelType.VALUE_CHOOSER) {
-                  if(!(conf.getValue() instanceof String || conf.getValue().getClass().isEnum()) ) {
-                    // stage configuration must be a model
-                    issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
-                                                            ValidationError.VALIDATION_0009, "String"));
-                  }
-                } else if (!(conf.getValue() instanceof Map || conf.getValue() instanceof List)) {
-                  //TODO introduce schema for models so we can validate
-                  // stage configuration must be a model
+                if (!(conf.getValue() instanceof String)) {
                   issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
                                                           ValidationError.VALIDATION_0009, confDef.getType()));
                   preview = false;
                 }
+                break;
+              case MODEL:
+                preview &= validateModel(stageConf.getInstanceName(), confDef, conf);
                 break;
             }
           }
@@ -289,6 +278,100 @@ public class PipelineConfigurationValidator {
     }
     return preview;
   }
+
+  private boolean validateModel(String instanceName, ConfigDefinition confDef, ConfigConfiguration conf) {
+    boolean preview = true;
+    switch (confDef.getModel().getModelType()) {
+      case VALUE_CHOOSER:
+        if(!(conf.getValue() instanceof String || conf.getValue().getClass().isEnum()) ) {
+          // stage configuration must be a model
+          issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(), ValidationError.VALIDATION_0009,
+                                                  "String"));
+          preview = false;
+        }
+        break;
+      case FIELD_SELECTOR:
+        if(!(conf.getValue() instanceof List)) {
+          // stage configuration must be a model
+          issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(), ValidationError.VALIDATION_0009,
+                                                  "List"));
+          preview = false;
+        }
+        break;
+      case FIELD_VALUE_CHOOSER:
+        if(!(conf.getValue() instanceof Map)) {
+          // stage configuration must be a model
+          issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(), ValidationError.VALIDATION_0009,
+                                                  "Map"));
+          preview = false;
+        }
+        break;
+      case LANE_PREDICATE_MAPPING:
+        if(!(conf.getValue() instanceof List)) {
+          // stage configuration must be a model
+          issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(), ValidationError.VALIDATION_0009,
+                                                  "List<Map>"));
+          preview = false;
+        } else {
+          int count = 0;
+          for (Object element : (List) conf.getValue()) {
+            if (element instanceof Map) {
+              Map map = (Map)element;
+              if (!map.containsKey("outputLane")) {
+                issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(),
+                                                        ValidationError.VALIDATION_0020, count, "outputLane"));
+                preview = false;
+              } else {
+                if (map.get("outputLane") == null) {
+                  issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(),
+                                                          ValidationError.VALIDATION_0021, count, "outputLane"));
+                  preview = false;
+                } else {
+                  if (!(map.get("outputLane") instanceof String)) {
+                    issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(),
+                                                            ValidationError.VALIDATION_0022, count, "outputLane"));
+                    preview = false;
+                  } else if (((String)map.get("outputLane")).isEmpty()) {
+                    issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(),
+                                                            ValidationError.VALIDATION_0023, count, "outputLane"));
+                    preview = false;
+                  }
+                }
+              }
+              if (!map.containsKey("predicate")) {
+                issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(),
+                                                        ValidationError.VALIDATION_0020, count, "predicate"));
+                preview = false;
+              } else {
+                if (map.get("predicate") == null) {
+                  issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(),
+                                                          ValidationError.VALIDATION_0021, count, "predicate"));
+                  preview = false;
+                } else {
+                  if (!(map.get("predicate") instanceof String)) {
+                    issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(),
+                                                            ValidationError.VALIDATION_0022, count, "predicate"));
+                    preview = false;
+                  } else if (((String)map.get("predicate")).isEmpty()) {
+                    issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(),
+                                                            ValidationError.VALIDATION_0023, count, "predicate"));
+                    preview = false;
+                  }
+                }
+              }
+            } else {
+              issues.add(StageIssue.createConfigIssue(instanceName, confDef.getName(), ValidationError.VALIDATION_0019,
+                                                      count));
+              preview = false;
+            }
+            count++;
+          }
+         }
+        break;
+    }
+    return preview;
+  }
+
 
   @VisibleForTesting
   boolean validatePipelineLanes() {

@@ -717,9 +717,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         valid = false;
       }
     } else if (configDefAnnot.type().equals(ConfigDef.Type.MAP)) {
-      if(!fieldType.toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
+      if(!fieldType.toString().startsWith("java.util.Map<java.lang.String,")) {
         printError("field.validation.type.is.not.map",
-                   "The type of the field {} is expected to be Map<String, String>.",
+                   "The type of the field {} is expected to be Map<String, ?>.",
                    typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }
@@ -807,7 +807,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   private boolean validateLanePredicateMapping(Element typeElement, VariableElement variableElement) {
     boolean valid = true;
-    if (!variableElement.asType().toString().equals("java.util.Map<java.lang.String,java.lang.String>")) {
+    if (!variableElement.asType().toString().equals("java.util.List<java.util.Map<java.lang.String,java.lang.String>>")) {
       printError("field.validation.type.is.not.map",
                  "The type of the field {} is expected to be Map<String, String>.",
                  typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
