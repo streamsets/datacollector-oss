@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.restapi.configuration;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -29,6 +30,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(ConfigurationInjector.class).to(Configuration.class);
         bindFactory(RuntimeInfoInjector.class).to(RuntimeInfo.class);
         bindFactory(ProductionPipelineManagerInjector.class).to(ProductionPipelineManagerTask.class);
+        bindFactory(JvmMetricsInjector.class).to(MetricRegistry.class);
       }
     });
   }

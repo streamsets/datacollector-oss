@@ -12,6 +12,7 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.ProdManagerModule;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
+import com.streamsets.pipeline.restapi.configuration.JvmMetricsInjector;
 import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;
 import com.streamsets.pipeline.restapi.configuration.ProductionPipelineManagerInjector;
 import com.streamsets.pipeline.restapi.configuration.RestAPIResourceConfig;
@@ -152,6 +153,16 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(RuntimeInfoInjector.RUNTIME_INFO, runtimeInfo);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideJvmMetrics(final MetricRegistry metrics) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(JvmMetricsInjector.JVM_METRICS, metrics);
       }
     };
   }
