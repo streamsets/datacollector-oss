@@ -18,7 +18,7 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import java.util.Map;
 
 @GenerateResourceBundle
-@StageDef(version="1.0.0", label="Field Type Converter")
+@StageDef(version="1.0.0", label="Dummy Field Type Converter")
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
   @ConfigDef(label = "Fields to convert", required = false,type = Type.MODEL, defaultValue="")
