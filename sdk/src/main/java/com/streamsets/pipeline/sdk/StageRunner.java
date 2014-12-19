@@ -67,6 +67,7 @@ public abstract class StageRunner<S extends Stage> {
     return names;
   }
 
+  @SuppressWarnings("unchecked")
   private void configureStage(S stage, Map<String, Object> configuration) {
     try {
       Set<String> fields = getStageConfigurationFields(stage.getClass());
@@ -82,7 +83,28 @@ public abstract class StageRunner<S extends Stage> {
       }
       for (Field field : stage.getClass().getFields()) {
         if (field.isAnnotationPresent(ConfigDef.class)) {
-          field.set(stage, configuration.get(field.getName()));
+          ConfigDef configDef = field.getAnnotation(ConfigDef.class);
+          if ( configDef.type() != ConfigDef.Type.MAP) {
+            field.set(stage, configuration.get(field.getName()));
+          } else {
+            //we need to handle special case of List of Map elements with key/value entries
+            Object value = configuration.get(field.getName());
+            if (value != null && value instanceof List) {
+              Map map = new HashMap();
+              for (Map element : (List<Map>) value) {
+                if (!element.containsKey("key") || !element.containsKey("value")) {
+                  throw new RuntimeException(Utils.format("Invalid stage configuration for '{}' Map as list must have" +
+                                                          " a List of Maps all with 'key' and 'value' entries",
+                      field.getName()));
+                }
+                String k = (String) element.get("key");
+                String v = (String) element.get("value");
+                map.put(k, v);
+              }
+              value = map;
+            }
+            field.set(stage, value);
+          }
         }
       }
     } catch (Exception ex) {

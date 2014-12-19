@@ -34,6 +34,13 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0022("Lane predicate at index '{}' entry '{}' must be a String"),
   VALIDATION_0023("Lane predicate at index '{}' entry '{}' cannot be empty"),
 
+  VALIDATION_0024("Configuration of type Map expressed as List of key/value pairs cannot have NULL elements in the " +
+                  "list, element at index '{}' is NULL"),
+  VALIDATION_0025("Configuration of type Map expressed as List of key/value pairs must have the 'key' and 'value'" +
+                  "entries in the List's Map elements, element at index '{}' is does not have those 2 entries"),
+  VALIDATION_0026("Configuration of type Map expressed as List of key/value pairs must have Map entries in the List," +
+                  "element at index '{}' has '{}'"),
+
   ;
 
   private final String msg;

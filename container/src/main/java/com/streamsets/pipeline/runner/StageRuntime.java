@@ -8,6 +8,7 @@ package com.streamsets.pipeline.runner;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -24,6 +25,7 @@ import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -208,7 +210,14 @@ public class StageRuntime {
             } else {
               if (value != null) {
                 if (value instanceof List) {
-                  validateList((List) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
+                  if (confDef.getType() == ConfigDef.Type.LIST) {
+                    validateList((List) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
+                  } else if (confDef.getType() == ConfigDef.Type.MAP) {
+                    // special type of Map config where is a List of Maps with 'key' & 'value' entries.
+                    validateMapAsList((List) value, stageDef.getClassName(), stageConf.getInstanceName(),
+                                      confDef.getName());
+                    value = convertToMap((List<Map>) value);
+                  }
                 } else if (value instanceof Map) {
                   validateMap((Map) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
                 }
@@ -226,6 +235,27 @@ public class StageRuntime {
       }
     }
 
+  }
+
+  private static void validateMapAsList(List list, String stageName, String instanceName, String configName)
+      throws PipelineRuntimeException {
+    for (Map map : (List<Map>) list) {
+      String key = (String) map.get("key");
+      String value = (String) map.get("value");
+      if (!(key instanceof String) || !(value instanceof String)) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0164, stageName, instanceName, configName);
+      }
+    }
+  }
+
+  private static Map convertToMap(List<Map> list) {
+    Map<String, String> map = new HashMap<>();
+    for (Map element : list) {
+      String key = (String) element.get("key");
+      String value = (String) element.get("value");
+      map.put(key, value);
+    }
+    return map;
   }
 
   private static void validateList(List list, String stageName, String instanceName, String configName)

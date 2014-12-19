@@ -267,6 +267,42 @@ public class PipelineConfigurationValidator {
                   preview = false;
                 }
                 break;
+              case MAP:
+                if (conf.getValue() instanceof List) {
+                  int count = 0;
+                  for (Object element : (List) conf.getValue()) {
+                    if (element == null) {
+                      issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
+                                                              ValidationError.VALIDATION_0024, count));
+                      preview = false;
+                    } else if (element instanceof Map) {
+                      Map map = (Map) element;
+                      if (!map.containsKey("key") || !map.containsKey("value")) {
+                        issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
+                                                                ValidationError.VALIDATION_0025, count));
+                        preview = false;
+                      }
+                    } else {
+                      issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
+                                                              ValidationError.VALIDATION_0026, count,
+                                                              element.getClass().getSimpleName()));
+                      preview = false;
+                    }
+                    count++;
+                  }
+                } else if (!(conf.getValue() instanceof Map)) {
+                  issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
+                                                          ValidationError.VALIDATION_0009, confDef.getType()));
+                  preview = false;
+                }
+                break;
+              case LIST:
+                if (!(conf.getValue() instanceof List)) {
+                  issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getName(),
+                                                          ValidationError.VALIDATION_0009, confDef.getType()));
+                  preview = false;
+                }
+                break;
               case MODEL:
                 preview &= validateModel(stageConf.getInstanceName(), confDef, conf);
                 break;

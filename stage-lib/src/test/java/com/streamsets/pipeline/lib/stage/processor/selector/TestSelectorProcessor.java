@@ -103,6 +103,18 @@ public class TestSelectorProcessor {
   }
 
   @Test
+  public void testInitLanePredicatesWithListMapConstants() throws Exception {
+    List<Map> constant = ImmutableList.of((Map)ImmutableMap.of("key", "x", "value", "false"));
+    ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
+        .addConfiguration("lanePredicates", createLanePredicates("a", "x"))
+        .addConfiguration("constants", constant)
+        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
+        .addOutputLane("a")
+        .build();
+    runner.runInit();
+  }
+
+  @Test
   public void testSelectWithDefault() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .addConfiguration("lanePredicates", createLanePredicates("a", "record:value('') == 1",
