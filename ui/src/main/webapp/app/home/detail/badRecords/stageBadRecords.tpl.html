@@ -33,19 +33,13 @@
             <tbody ng-hide="showBadRecordsLoading">
             <tr ng-repeat="errorRecord in stageBadRecords">
               <td>
-                <label class="label label-danger pointer" ng-click="errorRecord.expand = !errorRecord.expand">
-            <span class="glyphicon glyphicon-expand"
-                  ng-if="errorRecord.expand !== true && expandAllErrorData !== true"></span>
-            <span class="glyphicon glyphicon-collapse-down"
-                  ng-if="errorRecord.expand === true || expandAllErrorData === true"></span>
-                  {{'global.form.record' | translate}}{{$index+1}}
-                </label>
-                <ul class="record-list" ng-if="errorRecord.expand === true || expandAllErrorData === true">
-                  <li class="record-list-item"
-                      ng-repeat="(fieldName, recordValue) in errorRecord.value.value"
-                      ng-include="'recordTree'">
-                  </li>
-                </ul>
+                <record-tree
+                  record="errorRecord"
+                  record-value="errorRecord.value"
+                  field-name="('global.form.record' | translate)+($index+1)"
+                  is-root="true"
+                  editable="false">
+                </record-tree>
               </td>
               <td>{{errorRecord.header.errorTimestamp | date:'medium'}}</td>
               <td ng-bind="errorRecord.header.errorMessage"></td>
