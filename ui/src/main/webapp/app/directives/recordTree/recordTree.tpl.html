@@ -3,10 +3,10 @@
 
     <div>
 
-      <label class="pull-left pointer"
+      <label class="pull-left"
              ng-class="{'label label-danger': record.header.errorMessage && isRoot}">
 
-      <span class="toggler {{(isOpen || (isRoot && record.expand)) ? 'open' : ''}}"
+        <span class="pointer toggler {{(isOpen || (isRoot && record.expand)) ? 'open' : ''}}"
             ng-click="onClick($event)"
             ng-if="recordValue.type === 'MAP' || recordValue.type === 'LIST'"></span>
 

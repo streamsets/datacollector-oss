@@ -2,7 +2,7 @@
  * Service for providing access to the Preview/Snapshot utility functions.
  */
 angular.module('pipelineAgentApp.common')
-  .service('previewService', function(api, $q, $rootScope) {
+  .service('previewService', function(api, $q) {
 
     var self = this;
 
@@ -21,17 +21,35 @@ angular.module('pipelineAgentApp.common')
         stagePreviewData = {
           input: [],
           output: [],
-          errorRecords: []
+          errorRecords: [],
+          stageErrors: []
         };
 
       angular.forEach(batchData, function (stageOutput) {
-        if (inputLane && stageOutput.output[inputLane] && stageOutput.output) {
-          stagePreviewData.input = stageOutput.output[inputLane];
-        } else if (outputLane && stageOutput.output[outputLane] && stageOutput.output) {
-          stagePreviewData.output = stageOutput.output[outputLane];
+        if(stageOutput.instanceName === stageInstance.instanceName) {
+
+          angular.forEach(stageOutput.output, function(outputs, laneName) {
+            angular.forEach(outputs, function(output) {
+              output.laneName = laneName;
+              stagePreviewData.output.push(output);
+            });
+          });
+
           stagePreviewData.errorRecords = stageOutput.errorRecords;
           stagePreviewData.stageErrors = stageOutput.stageErrors;
         }
+
+        if(stageOutput.output && stageInstance.inputLanes && stageInstance.inputLanes.length) {
+          angular.forEach(stageInstance.inputLanes, function(inputLane) {
+            if(stageOutput.output[inputLane]) {
+              angular.forEach(stageOutput.output[inputLane], function(input) {
+                input.laneName = inputLane;
+                stagePreviewData.input.push(input);
+              });
+            }
+          });
+        }
+
       });
 
       return stagePreviewData;

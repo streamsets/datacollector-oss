@@ -5,11 +5,8 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('PreviewController', function ($scope, $rootScope, _, api, previewService) {
-    var SOURCE_STAGE_TYPE = 'SOURCE',
-      PROCESSOR_STAGE_TYPE = 'PROCESSOR',
-      TARGET_STAGE_TYPE = 'TARGET',
-      previewDataBackup;
+  .controller('PreviewController', function ($scope, $rootScope, _, api, previewService, pipelineConstant) {
+    var previewDataBackup;
 
     angular.extend($scope, {
       showLoading: false,
@@ -22,59 +19,6 @@ angular
       },
       previewDataUpdated: false,
       stepExecuted: false,
-      expandAllInputData: false,
-      expandAllOutputData: false,
-
-      /**
-       * Returns output records produced by input record.
-       *
-       * @param outputRecords
-       * @param inputRecord
-       * @returns {*}
-       */
-      getOutputRecords: function(outputRecords, inputRecord) {
-        return _.filter(outputRecords, function(outputRecord) {
-          if(outputRecord.header.previousTrackingId === inputRecord.header.trackingId) {
-            if(inputRecord.expand) {
-              outputRecord.expand = true;
-            }
-            return true;
-          }
-        });
-      },
-
-      /**
-       * Returns error records produced by input record.
-       *
-       * @param errorRecords
-       * @param inputRecord
-       * @returns {*}
-       */
-      getErrorRecords: function(errorRecords, inputRecord) {
-        return _.filter(errorRecords, function(outputRecord) {
-
-          if(outputRecord.header.trackingId === inputRecord.header.trackingId) {
-            if(inputRecord.expand) {
-              outputRecord.expand = true;
-            }
-            return true;
-          }
-        });
-      },
-
-      /**
-       * Set dirty flag to true when record is updated in Preview Mode.
-       *
-       * @param recordUpdated
-       * @param fieldName
-       * @param stageInstance
-       */
-      recordValueUpdated: function(recordUpdated, recordValue, stageInstance) {
-        $scope.previewDataUpdated = true;
-        recordUpdated.dirty = true;
-        recordValue.dirty = true;
-      },
-
 
       /**
        * Preview Data for previous stage instance.
@@ -91,11 +35,25 @@ angular
        * @param inputRecords
        */
       nextStagePreview: function(stageInstance, inputRecords) {
-        if($scope.stepExecuted && stageInstance.uiInfo.stageType === PROCESSOR_STAGE_TYPE) {
+        if($scope.stepExecuted && stageInstance.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE) {
           $scope.stepPreview(stageInstance, inputRecords);
         } else {
           $scope.changeStageSelection(stageInstance);
         }
+      },
+
+
+      /**
+       * Set dirty flag to true when record is updated in Preview Mode.
+       *
+       * @param recordUpdated
+       * @param fieldName
+       * @param stageInstance
+       */
+      recordValueUpdated: function(recordUpdated, recordValue, stageInstance) {
+        $scope.previewDataUpdated = true;
+        recordUpdated.dirty = true;
+        recordValue.dirty = true;
       },
 
       /**
@@ -111,6 +69,7 @@ angular
         _.each(records, function(record) {
           delete record.dirty;
           delete record.expand;
+          delete record.laneName;
 
           _.each(record.value.value, function(key, value) {
             delete value.dirty;
@@ -153,35 +112,9 @@ angular
 
         var firstStageInstance = $scope.pipelineConfig.stages[0];
         $scope.changeStageSelection(firstStageInstance);
-      },
-
-      onExpandAllInputData: function() {
-        $scope.expandAllInputData = true;
-        angular.forEach($scope.stagePreviewData.input, function(record) {
-          record.expand = true;
-        });
-      },
-
-      onCollapseAllInputData: function() {
-        $scope.expandAllInputData = false;
-        angular.forEach($scope.stagePreviewData.input, function(record) {
-          record.expand = false;
-        });
-      },
-
-      onExpandAllOutputData: function() {
-        $scope.expandAllOutputData = true;
-        angular.forEach($scope.stagePreviewData.output, function(record) {
-          record.expand = true;
-        });
-      },
-
-      onCollapseAllOutputData: function() {
-        $scope.expandAllOutputData = false;
-        angular.forEach($scope.stagePreviewData.output, function(record) {
-          record.expand = false;
-        });
       }
+
+
     });
 
     /**

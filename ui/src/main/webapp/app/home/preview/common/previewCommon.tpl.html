@@ -1,4 +1,4 @@
-<div class="pipeline-preview">
+<div class="pipeline-preview" ng-controller="PreviewCommonController">
   <tabset class="detail-tabs-left tabs-left">
 
     <tab active="true">
@@ -31,6 +31,8 @@
                       ng-click="onCollapseAllOutputData(stagePreviewData)"></span>
                 <span translate="home.previewPane.outputData">Output Data</span>
               </th>
+
+
             </tr>
           </thead>
           <tbody ng-switch="detailPaneConfig.uiInfo.stageType">
@@ -68,7 +70,7 @@
                   <record-tree
                     record="record"
                     record-value="record.value"
-                    field-name="('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.outputRecord' | translate) +  ($index + 1)"
+                    field-name="('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.outputRecord' | translate) +  ($index + 1) + getRecordAdditionalInfo(detailPaneConfig, record, 'output')"
                     is-root="true"
                     editable="false">
                   </record-tree>

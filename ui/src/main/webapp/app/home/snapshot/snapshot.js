@@ -5,11 +5,8 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('SnapshotController', function ($scope, $rootScope, _, api, $timeout, previewService) {
-    var SOURCE_STAGE_TYPE = 'SOURCE',
-      PROCESSOR_STAGE_TYPE = 'PROCESSOR',
-      TARGET_STAGE_TYPE = 'TARGET',
-      snapshotBatchSize = 10,
+  .controller('SnapshotController', function ($scope, $rootScope, _, api, $timeout, previewService, pipelineConstant) {
+    var snapshotBatchSize = 10,
       captureSnapshotStatusTimer;
 
     angular.extend($scope, {
@@ -21,60 +18,6 @@ angular
         input: [],
         output: []
       },
-      previewDataUpdated: false,
-      stepExecuted: false,
-      expandAllInputData: false,
-      expandAllOutputData: false,
-
-      /**
-       * Returns output records produced by input record.
-       *
-       * @param outputRecords
-       * @param inputRecord
-       * @returns {*}
-       */
-      getOutputRecords: function(outputRecords, inputRecord) {
-        return _.filter(outputRecords, function(outputRecord) {
-          if(outputRecord.header.previousTrackingId === inputRecord.header.trackingId) {
-            if(inputRecord.expand) {
-              outputRecord.expand = true;
-            }
-            return true;
-          }
-        });
-      },
-
-      /**
-       * Returns error records produced by input record.
-       *
-       * @param errorRecords
-       * @param inputRecord
-       * @returns {*}
-       */
-      getErrorRecords: function(errorRecords, inputRecord) {
-        return _.filter(errorRecords, function(errorRecord) {
-          if(errorRecord.header.trackingId === inputRecord.header.trackingId) {
-            if(inputRecord.expand) {
-              errorRecord.expand = true;
-            }
-            return true;
-          }
-        });
-      },
-
-      /**
-       * Set dirty flag to true when record is updated in Preview Mode.
-       *
-       * @param recordUpdated
-       * @param fieldName
-       * @param stageInstance
-       */
-      recordValueUpdated: function(recordUpdated, fieldName, stageInstance) {
-        $scope.previewDataUpdated = true;
-        recordUpdated.dirty = true;
-        recordUpdated.values[fieldName].dirty = true;
-      },
-
 
       /**
        * Preview Data for previous stage instance.
@@ -91,29 +34,12 @@ angular
        * @param inputRecords
        */
       nextStagePreview: function(stageInstance, inputRecords) {
-        if($scope.stepExecuted && stageInstance.uiInfo.stageType === PROCESSOR_STAGE_TYPE) {
+        if($scope.stepExecuted && stageInstance.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE) {
           $scope.stepPreview(stageInstance, inputRecords);
         } else {
           $scope.changeStageSelection(stageInstance);
         }
-      },
-
-      onExpandAllInputData: function() {
-        $scope.expandAllInputData = true;
-      },
-
-      onCollapseAllInputData: function() {
-        $scope.expandAllInputData = false;
-      },
-
-      onExpandAllOutputData: function() {
-        $scope.expandAllOutputData = true;
-      },
-
-      onCollapseAllOutputData: function() {
-        $scope.expandAllOutputData = false;
       }
-
     });
 
 
