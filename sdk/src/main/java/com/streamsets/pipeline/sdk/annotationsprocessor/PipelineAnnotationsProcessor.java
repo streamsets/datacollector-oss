@@ -1024,7 +1024,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     // errors in one go
     //1. Check if the file exists
     //2. Access it
-    //3. Check if it ends with .svg extension
+    //3. Check if it ends with .svg or .png extension
     boolean valid = true;
     if(stageDefAnnotation.icon() != null && !stageDefAnnotation.icon().isEmpty()) {
       try {
@@ -1043,7 +1043,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         valid = false;
       }
 
-      if (!stageDefAnnotation.icon().endsWith(".svg")) {
+      if (!stageDefAnnotation.icon().endsWith(".svg") && !stageDefAnnotation.icon().endsWith(".png")) {
         printError("stagedef.validation.icon.not.svg",
           "Stage Definition {} supplies an icon {} which is not in an \"svg\" file.",
           typeElement.getQualifiedName(), stageDefAnnotation.icon());

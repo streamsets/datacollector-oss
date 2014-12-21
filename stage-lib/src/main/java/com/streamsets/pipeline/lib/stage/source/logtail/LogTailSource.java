@@ -23,7 +23,8 @@ import java.util.concurrent.BlockingQueue;
 
 @GenerateResourceBundle
 @StageDef(version="1.0.0",
-          label="Tail log files")
+          label="Tail log files",
+          icon="log.svg")
 public class LogTailSource extends BaseSource {
 
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;

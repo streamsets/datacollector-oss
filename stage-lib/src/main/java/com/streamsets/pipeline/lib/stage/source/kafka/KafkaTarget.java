@@ -26,7 +26,8 @@ import java.util.Iterator;
 
 @GenerateResourceBundle
 @StageDef(version="0.0.1",
-  label="Kafka Target")
+  label="Kafka Target",
+  icon="kafka.png")
 public class KafkaTarget extends BaseTarget {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaTarget.class);

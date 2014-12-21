@@ -172,7 +172,14 @@ angular
         });
 
         $scope.processors = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return (stageLibrary.type === pipelineConstant.PROCESSOR_STAGE_TYPE);
+          return (stageLibrary.type === pipelineConstant.PROCESSOR_STAGE_TYPE &&
+            stageLibrary.name !== 'com_streamsets_pipeline_lib_stage_processor_selector_SelectorProcessor');
+        });
+
+        //TODO: Remove hard coding once backend supports modeling selector type
+        $scope.selectorProcessors = _.filter($scope.stageLibraries, function (stageLibrary) {
+          return (stageLibrary.type === pipelineConstant.PROCESSOR_STAGE_TYPE &&
+            stageLibrary.name === 'com_streamsets_pipeline_lib_stage_processor_selector_SelectorProcessor');
         });
 
         $scope.targets = _.filter($scope.stageLibraries, function (stageLibrary) {

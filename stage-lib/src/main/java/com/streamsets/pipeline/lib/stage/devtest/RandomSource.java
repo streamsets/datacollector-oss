@@ -20,7 +20,8 @@ import java.util.Map;
 import java.util.Random;
 
 @GenerateResourceBundle
-@StageDef(version="1.0.0", label="Dev Random Record Source")
+@StageDef(version="1.0.0", label="Dev Random Record Source",
+          icon="random.svg")
 public class RandomSource extends BaseSource {
 
   @ConfigDef(required = true, type = ConfigDef.Type.STRING,

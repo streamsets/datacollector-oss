@@ -107,14 +107,20 @@
               <div class="row lane-predicate" ng-repeat="mapObject in detailPaneConfig.configuration[$index].value track by $index">
 
                 <div class="col-md-3">
-                  <input type="text" class="form-control input-sm" placeholder="Enter Key"
+                  <input type="text" class="form-control input-sm"
+                         name="{{configDefinition.name + 'key' + $index}}"
+                         placeholder="{{'home.detailPane.configurationTab.enterKey' | translate}}"
+                         ng-required="true"
                          ng-model="mapObject.key"/>
                 </div>
 
                 <div class="col-md-1">:</div>
 
                 <div class="col-md-6">
-                  <input type="text" class="form-control input-sm" placeholder="Enter Value"
+                  <input type="text" class="form-control input-sm"
+                         name="{{configDefinition.name + 'value' + $index}}"
+                         placeholder="{{'home.detailPane.configurationTab.enterValue' | translate}}"
+                         ng-required="true"
                          ng-model="mapObject.value"/>
                 </div>
 
@@ -206,7 +212,8 @@
                    popover="{{configDefinition.description}}"
                    popover-trigger="mouseenter"></i>
 
-                <div class="row lane-predicate" ng-repeat="lanePredicateMapping in detailPaneConfig.configuration[$index].value track by $index">
+                <div class="row lane-predicate"
+                     ng-repeat="lanePredicateMapping in detailPaneConfig.configuration[$index].value track by $index">
 
                   <div class="col-md-1">
                     <input type="text" readonly class="form-control input-sm"
@@ -214,7 +221,9 @@
                   </div>
 
                   <div class="col-md-7">
-                    <input type="text" class="form-control input-sm" placeholder="Enter Predicate"
+                    <input type="text" class="form-control input-sm"
+                           placeholder="{{'home.detailPane.configurationTab.enterPredicate' | translate}}"
+                           ng-required="true"
                            name="{{configDefinition.name + $index}}"
                            ng-model="lanePredicateMapping.predicate"/>
                   </div>

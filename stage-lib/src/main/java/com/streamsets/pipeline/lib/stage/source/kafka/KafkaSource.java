@@ -37,7 +37,8 @@ import java.util.Map;
 
 @GenerateResourceBundle
 @StageDef(version="0.0.1",
-  label="Kafka Source")
+  label="Kafka Source",
+  icon="kafka.png")
 public class KafkaSource extends BaseSource {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaSource.class);

@@ -30,7 +30,7 @@ import java.util.Set;
 
 @GenerateResourceBundle
 @StageDef(version = "1.0.0", label = "Lane Selector",
-    description = "Lane Selector based on record predicates")
+    description = "Lane Selector based on record predicates", icon="laneSelector.png")
 public class SelectorProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SelectorProcessor.class);
 

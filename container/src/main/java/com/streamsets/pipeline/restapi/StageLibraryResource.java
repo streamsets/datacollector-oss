@@ -22,9 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @Path("/v1/definitions")
 public class StageLibraryResource {
   private static final String DEFAULT_ICON_FILE = "PipelineDefinition-bundle.properties";
+  private static final String PNG_MEDIA_TYPE = "image/png";
+  private static final String SVG_MEDIA_TYPE = "image/svg+xml";
   private final StageLibraryTask stageLibrary;
 
   @Inject
@@ -53,19 +56,25 @@ public class StageLibraryResource {
 
   @GET
   @Path("/stages/icon")
-  @Produces(MediaType.APPLICATION_SVG_XML)
+  @Produces({SVG_MEDIA_TYPE, PNG_MEDIA_TYPE})
   public Response getIcon(@QueryParam("name") String name,
                           @QueryParam("library") String library,
                           @QueryParam("version") String version) {
     StageDefinition stage = stageLibrary.getStage(library, name, version);
-    String iconFile;
+    String iconFile = DEFAULT_ICON_FILE;
+    String responseType = SVG_MEDIA_TYPE;
+
     if(stage.getIcon() != null && !stage.getIcon().isEmpty()) {
       iconFile = stage.getIcon();
-    } else {
-      iconFile = DEFAULT_ICON_FILE;
     }
-    final InputStream resourceAsStream = stage.getStageClassLoader().getResourceAsStream(
-      iconFile);
-    return Response.ok().type(MediaType.APPLICATION_SVG_XML_TYPE).entity(resourceAsStream).build();
+
+    final InputStream resourceAsStream = stage.getStageClassLoader().getResourceAsStream(iconFile);
+
+    if(iconFile.endsWith(".svg"))
+      responseType = SVG_MEDIA_TYPE;
+    else if(iconFile.endsWith(".png"))
+      responseType = PNG_MEDIA_TYPE;
+
+    return Response.ok().type(responseType).entity(resourceAsStream).build();
   }
 }

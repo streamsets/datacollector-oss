@@ -98,21 +98,28 @@ angular
           });
         }
 
-        switch(stage.type) {
-          case SOURCE_STAGE_TYPE:
-            stageInstance.uiInfo.icon = 'assets/stage/ic_insert_drive_file_48px.svg';
-            break;
-          case PROCESSOR_STAGE_TYPE:
-            if(stage.name === 'com_streamsets_pipeline_lib_stage_processor_selector_SelectorProcessor') {
-              stageInstance.uiInfo.icon = 'assets/stage/ic_call_split_48px.svg';
-            } else {
-              stageInstance.uiInfo.icon = 'assets/stage/ic_settings_48px.svg';
-            }
-            break;
-          case TARGET_STAGE_TYPE:
-            stageInstance.uiInfo.icon = 'assets/stage/ic_storage_48px.svg';
-            break;
+        if(stage.icon) {
+          stageInstance.uiInfo.icon = 'rest/v1/definitions/stages/icon?name=' + stage.name +
+            '&library=' + stage.library + '&version=' + stage.version;
+        } else {
+          switch(stage.type) {
+            case SOURCE_STAGE_TYPE:
+              stageInstance.uiInfo.icon = 'assets/stage/defaultSource.svg';
+              break;
+            case PROCESSOR_STAGE_TYPE:
+              stageInstance.uiInfo.icon = 'assets/stage/defaultProcessor.svg';
+              break;
+            case TARGET_STAGE_TYPE:
+              stageInstance.uiInfo.icon = 'assets/stage/defaultTarget.svg';
+              break;
+          }
         }
+
+
+
+
+
+
 
         $scope.updateDetailPaneObject(stageInstance, stage);
         $scope.$broadcast('addNode', stageInstance);

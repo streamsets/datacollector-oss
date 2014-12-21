@@ -37,7 +37,8 @@ import java.util.Map;
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class, mimeType = "text/csv")
 @StageDef(version = "1.0.0",
     label = "CSV files spool directory",
-    description = "Consumes CSV files from a spool directory")
+    description = "Consumes CSV files from a spool directory",
+    icon = "csv.png")
 public class CsvSpoolDirSource extends AbstractSpoolDirSource {
   private final static Logger LOG = LoggerFactory.getLogger(CsvSpoolDirSource.class);
 

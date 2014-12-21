@@ -148,6 +148,15 @@
       <li role="presentation" class="divider"></li>
 
       <li role="presentation" class="dropdown-header"
+          translate="home.header.selectorProcessors">Selector Processors</li>
+      <li role="presentation" ng-repeat="stageLibrary in selectorProcessors">
+        <a role="menuitem" tabindex="-1" href="#"
+           ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
+      </li>
+
+      <li role="presentation" class="divider"></li>
+
+      <li role="presentation" class="dropdown-header"
           translate="home.header.targets">Targets</li>
       <li role="presentation" ng-repeat="stageLibrary in targets">
         <a role="menuitem" tabindex="-1" href="#"
