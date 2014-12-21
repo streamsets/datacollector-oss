@@ -10,6 +10,9 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
+import org.eclipse.jetty.rewrite.handler.RedirectPatternRule;
+import org.eclipse.jetty.rewrite.handler.RewriteHandler;
+import org.eclipse.jetty.rewrite.handler.RewriteRegexRule;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
@@ -17,6 +20,8 @@ import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.MovedContextHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.security.Constraint;
 import org.slf4j.Logger;
@@ -77,7 +82,24 @@ public class WebServerTask extends AbstractTask {
         throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
                                                 auth, AUTHENTICATION_MODES));
     }
-    server.setHandler(handler);
+
+    RewriteHandler rewrite = new RewriteHandler();
+    context.getServer().setHandler(rewrite);
+    rewrite.setRewriteRequestURI(false);
+    rewrite.setRewritePathInfo(false);
+    rewrite.setOriginalPathAttribute("requestedPath");
+
+    RewriteRegexRule uiRewriteRule = new RewriteRegexRule();
+    uiRewriteRule.setRegex("^/collector/.*");
+    uiRewriteRule.setReplacement("/");
+    rewrite.addRule(uiRewriteRule);
+
+    rewrite.setHandler(context);
+
+    HandlerCollection handlerCollection = new HandlerCollection();
+    handlerCollection.setHandlers(new Handler[] {rewrite, context});
+
+    server.setHandler(handlerCollection);
   }
 
   private Handler configureDigest(Handler context) {

@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.logs')
   .config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.when('/logs',
+    $routeProvider.when('/collector/logs',
       {
         templateUrl: 'app/logs/logs.tpl.html',
         controller: 'LogsController'

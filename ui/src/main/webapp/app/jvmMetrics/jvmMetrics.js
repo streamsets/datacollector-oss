@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.jvmMetrics')
   .config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.when('/jvmMetrics',
+    $routeProvider.when('/collector/jvmMetrics',
       {
         templateUrl: 'app/jvmMetrics/jvmMetrics.tpl.html',
         controller: 'JVMMetricsController'
