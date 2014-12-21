@@ -611,16 +611,22 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
         if(d.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE) {
 
-          var totalLanes = d.outputLanes.length;
+          var totalLanes = d.outputLanes.length,
+            lanePredicatesConfiguration = _.find(d.configuration, function(configuration) {
+              return configuration.name === 'lanePredicates';
+            });
           angular.forEach(d.outputLanes, function(lane, index) {
             var y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) +
-              ((consts.rectHeight * (index))/totalLanes));
+              ((consts.rectHeight * (index))/totalLanes)),
+              lanePredicate = lanePredicatesConfiguration ? lanePredicatesConfiguration.value[index] : undefined;
             stageNode
               .append('circle')
               .attr({
                 'cx': consts.rectWidth,
                 'cy': y,
-                'r': 10
+                'r': 10,
+                'class': 'graph-bootstrap-tooltip',
+                'title': lanePredicate ? lanePredicate.predicate : ''
               }).on("mousedown", function(d){
                 thisGraph.state.shiftNodeDrag = true;
                 thisGraph.state.shiftNodeDragYPos = y;
@@ -681,7 +687,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr("y", 10)
         .append("xhtml:span")
         .attr("title", "Mean value of Error Histogram (5 minutes decay)")
-        .attr("class", "badge alert-danger pointer")
+        .attr("class", "badge alert-danger pointer graph-bootstrap-tooltip")
         .style('visibility', function(d) {
           if(stageErrorCounts && stageErrorCounts[d.instanceName] &&
             parseInt(stageErrorCounts[d.instanceName]) > 0) {
@@ -746,6 +752,18 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
       // remove old links
       paths.exit().remove();
+
+
+      $('.graph-bootstrap-tooltip').each(function() {
+        var $this = $(this),
+          title = $this.attr('title');
+        if(title) {
+          $this.tooltip({
+            title: title,
+            container:'body'
+          });
+        }
+      });
 
     };
 
