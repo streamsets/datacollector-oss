@@ -433,7 +433,7 @@ angular
             });
         },
         function() {
-          console.log( "Timer rejected!" );
+          //console.log( "Timer rejected!" );
         }
       );
     };
@@ -467,7 +467,7 @@ angular
             });
         },
         function() {
-          console.log( "Timer rejected!" );
+          //console.log( "Timer rejected!" );
         }
       );
     };

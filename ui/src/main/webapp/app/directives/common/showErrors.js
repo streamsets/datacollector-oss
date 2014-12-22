@@ -3,7 +3,7 @@
  *
  */
 
-angular.module('showErrorsDirectives', [])
+angular.module('pipelineAgentApp.commonDirectives')
   .provider('showErrorsConfig', function() {
     var _showSuccess, _trigger;
     _showSuccess = false;

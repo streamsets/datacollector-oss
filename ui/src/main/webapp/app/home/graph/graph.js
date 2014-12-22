@@ -28,7 +28,7 @@ angular
             configuration: [],
             uiInfo: {
               label: stage.label + (++stageCounter),
-              description: stage.description,
+              description: '',
               xPos: xPos,
               yPos: yPos,
               stageType: stage.type

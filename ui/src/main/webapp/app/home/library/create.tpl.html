@@ -26,6 +26,7 @@
          popover="{{'home.library.nameValidation' | translate}}"
          popover-trigger="mouseenter"></i>
       <input type="text"
+             autofocus
              name="name"
              class="form-control"
              ng-pattern="common.namePattern"
@@ -33,7 +34,8 @@
              pattern="{{common.namePattern}}"
              title="{{'home.library.nameValidation' | translate}}"
              placeholder="{{'home.library.namePlaceholder' | translate}}"
-             ng-model="newConfig.name">
+             ng-model="newConfig.name"
+             focus-me="true">
       <p class="help-block">{{'home.library.nameValidation' | translate}}</p>
     </div>
 

@@ -242,9 +242,9 @@ angular
     $scope.$on('onStageSelection', function(event, stageInstance) {
       if (stageInstance) {
         fieldsPathList = undefined;
-
         $scope.fieldPaths = [];
-        updateFieldDataForStage(stageInstance);
+
+        //updateFieldDataForStage(stageInstance);
       }
     });
 

@@ -84,6 +84,8 @@ angular
        * Duplicate Pipeline Configuration
        */
       duplicatePipelineConfig: function(pipelineInfo, $event) {
+        $event.stopPropagation();
+
         var modalInstance = $modal.open({
           templateUrl: 'app/home/library/duplicate.tpl.html',
           controller: 'DuplicateModalInstanceController',
@@ -95,8 +97,6 @@ angular
             }
           }
         });
-
-        $event.stopPropagation();
 
         modalInstance.result.then(function (configObject) {
           var index = _.sortedIndex($scope.pipelines, configObject.info, function(obj) {

@@ -1,7 +1,7 @@
 <div ng-controller="ConfigurationController" class="configuration-tab">
 
 
-  <div ng-class="'col-sm-7'">
+  <div ng-class="'col-md-7'">
     <div class="panel panel-default">
       <div class="panel-heading">Configuration</div>
       <div class="panel-body">
@@ -106,7 +106,7 @@
 
               <div class="row lane-predicate" ng-repeat="mapObject in detailPaneConfig.configuration[$index].value track by $index">
 
-                <div class="col-md-3">
+                <div class="col-xs-3">
                   <input type="text" class="form-control input-sm"
                          name="{{configDefinition.name + 'key' + $index}}"
                          placeholder="{{'home.detailPane.configurationTab.enterKey' | translate}}"
@@ -114,9 +114,9 @@
                          ng-model="mapObject.key"/>
                 </div>
 
-                <div class="col-md-1">:</div>
+                <div class="col-xs-1">:</div>
 
-                <div class="col-md-6">
+                <div class="col-xs-6">
                   <input type="text" class="form-control input-sm"
                          name="{{configDefinition.name + 'value' + $index}}"
                          placeholder="{{'home.detailPane.configurationTab.enterValue' | translate}}"
@@ -215,13 +215,13 @@
                 <div class="row lane-predicate"
                      ng-repeat="lanePredicateMapping in detailPaneConfig.configuration[$index].value track by $index">
 
-                  <div class="col-md-1">
+                  <div class="col-xs-1">
                     <!--input type="text" readonly class="form-control input-sm"
                            value="{{$index + 1}}"/-->
                     <label class="lane-label">{{$index + 1}}</label>
                   </div>
 
-                  <div class="col-md-7">
+                  <div class="col-xs-7">
 
                     <input type="text" class="form-control input-sm"
                            placeholder="{{'home.detailPane.configurationTab.enterPredicate' | translate}}"
@@ -230,7 +230,7 @@
                            ng-model="lanePredicateMapping.predicate"/>
                   </div>
 
-                  <div class="col-md-2 btn-group" role="group" aria-label="Default button group">
+                  <div class="col-xs-2 btn-group" role="group" aria-label="Default button group">
                     <button type="button" class="btn btn-default btn-sm"
                             ng-hide="$first && $last"
                             ng-click="removeLane(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, lanePredicateMapping, $index)">
@@ -338,7 +338,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" ng-if="detailPaneConfigDefn.description">
             <label class="col-sm-4 control-label" translate="global.form.description">Description</label>
             <div class="controls col-sm-8">
               <p class="form-control-static">{{detailPaneConfigDefn.description}}</p>
