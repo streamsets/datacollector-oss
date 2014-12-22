@@ -5,10 +5,6 @@
  */
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.lib.stage.source.util.JsonUtil;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
@@ -79,7 +75,7 @@ public class KafkaProducer {
   }
 
   private void configureSerializer(Properties props, PayloadType payloadType) {
-    if(payloadType == PayloadType.STRING) {
+    if(payloadType == PayloadType.LOG) {
       props.put(SERIALIZER_CLASS_KEY, DEFAULT_ENCODER_CLASS);
     }
   }

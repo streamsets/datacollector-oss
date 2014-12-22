@@ -87,7 +87,7 @@ public class KafkaTestUtil {
     return records;
   }
 
-  public static List<KeyedMessage<String, String>> produceStringMessages(Producer<String, String> producer, String topic, String partition) {
+  public static List<KeyedMessage<String, String>> produceStringMessages(String topic, String partition) {
     List<KeyedMessage<String, String>> messages = new ArrayList<>();
     for(int i = 0; i < 9; i++) {
       messages.add(new KeyedMessage<>(topic, partition, (TEST_STRING + i)));
@@ -95,7 +95,7 @@ public class KafkaTestUtil {
     return messages;
   }
 
-  public static List<KeyedMessage<String, String>> produceJsonMessages(Producer<String, String> producer, String topic, String partition) throws IOException {
+  public static List<KeyedMessage<String, String>> produceJsonMessages(String topic, String partition) throws IOException {
     TypeReference<List<HashMap<String,Object>>> typeRef
       = new TypeReference<List<HashMap<String,Object>>>() {};
     List<Map<String, String>> listOfJson = new ObjectMapper().readValue(KafkaTestUtil.class.getClassLoader()

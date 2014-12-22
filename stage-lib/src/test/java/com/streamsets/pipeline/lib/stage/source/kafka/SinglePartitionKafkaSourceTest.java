@@ -81,26 +81,22 @@ public class SinglePartitionKafkaSourceTest {
 
     KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceStringRecords", PARTITIONS,
       REPLICATION_FACTOR, TIME_OUT);
-    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages(producer, "testProduceStringRecords",
+    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testProduceStringRecords",
       String.valueOf(0));
     for(KeyedMessage<String, String> d : data) {
       producer.send(d);
     }
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(LogKafkaSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceStringRecords")
       .addConfiguration("partition", 0)
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
-      .addConfiguration("payloadType", PayloadType.STRING)
       .addConfiguration("fromBeginning", true)
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
-      .addConfiguration("jsonContent", StreamingJsonParser.Mode.ARRAY_OBJECTS)
-      .addConfiguration("maxJsonObjectLen", 4096)
-      .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
     sourceRunner.runInit();
@@ -136,20 +132,16 @@ public class SinglePartitionKafkaSourceTest {
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(zkClient, kafkaServer, "testProduceStringRecordsFromEnd", 0, producer, startProducing));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(LogKafkaSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceStringRecordsFromEnd")
       .addConfiguration("partition", 0)
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
-      .addConfiguration("payloadType", PayloadType.STRING)
       .addConfiguration("fromBeginning", false)
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
-      .addConfiguration("jsonContent", StreamingJsonParser.Mode.ARRAY_OBJECTS)
-      .addConfiguration("maxJsonObjectLen", 4096)
-      .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
     sourceRunner.runInit();
@@ -182,26 +174,24 @@ public class SinglePartitionKafkaSourceTest {
 
     KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceJsonRecords", PARTITIONS,
       REPLICATION_FACTOR, TIME_OUT);
-    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceJsonMessages(producer, "testProduceJsonRecords",
+    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceJsonMessages("testProduceJsonRecords",
       String.valueOf(0));
     for(KeyedMessage<String, String> d : data) {
       producer.send(d);
     }
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(JsonKafkaSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceJsonRecords")
       .addConfiguration("partition", 0)
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
-      .addConfiguration("payloadType", PayloadType.JSON)
       .addConfiguration("fromBeginning", true)
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
       .addConfiguration("jsonContent", StreamingJsonParser.Mode.MULTIPLE_OBJECTS)
       .addConfiguration("maxJsonObjectLen", 4096)
-      .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
     sourceRunner.runInit();
@@ -236,19 +226,16 @@ public class SinglePartitionKafkaSourceTest {
       producer.send(d);
     }
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(CsvKafkaSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceCsvRecords")
       .addConfiguration("partition", 0)
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
-      .addConfiguration("payloadType", PayloadType.CSV)
       .addConfiguration("fromBeginning", true)
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
-      .addConfiguration("jsonContent", StreamingJsonParser.Mode.MULTIPLE_OBJECTS)
-      .addConfiguration("maxJsonObjectLen", 4096)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 

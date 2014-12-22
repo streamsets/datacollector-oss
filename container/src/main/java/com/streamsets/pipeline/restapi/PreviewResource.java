@@ -14,6 +14,7 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.prodmanager.RawSourcePreviewHelper;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.record.RecordImpl;
@@ -49,6 +50,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,10 +63,6 @@ public class PreviewResource {
   private static final int MAX_BATCH_SIZE_DEFAULT = 10;
   private static final String MAX_BATCHES_KEY = "preview.maxBatches";
   private static final int MAX_BATCHES_DEFAULT = 10;
-  private static final String MAX_SOURCE_PREVIEW_SIZE_KEY = "preview.maxSourcePreviewSize";
-  private static final int MAX_SOURCE_PREVIEW_SIZE_DEFAULT = 4*1024;
-  private static final String MIME_TYPE = "mimeType";
-  private static final String PREVIEW_STRING = "previewString";
 
   //preview.maxBatchSize
   private final Configuration configuration;
@@ -127,83 +125,10 @@ public class PreviewResource {
       @QueryParam("rev") String rev,
       @Context UriInfo uriInfo) throws PipelineStoreException,
       PipelineRuntimeException, IOException {
-
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
-
-    PipelineConfiguration pipelineConf = store.load(name, rev);
-    if(pipelineConf.getStages().isEmpty()) {
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0159, name);
-    }
-
-    //Source stage is always the first one in the entire pipeline
-    StageConfiguration stageConf = pipelineConf.getStages().get(0);
-    StageDefinition stageDefinition = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-        stageConf.getStageVersion());
-    RawSourceDefinition rawSourceDefinition = stageDefinition.getRawSourceDefinition();
-    List<ConfigDefinition> configDefinitions = rawSourceDefinition.getConfigDefinitions();
-
-    validateParameters(previewParams, configDefinitions);
-
-    //Attempt to load the previewer class from stage class loader
-    Class previewerClass = null;
-    try {
-      previewerClass = stageDefinition.getStageClassLoader().loadClass(stageDefinition.getRawSourceDefinition()
-          .getRawSourcePreviewerClass());
-    } catch (ClassNotFoundException e) {
-      //Try loading from this class loader
-      try {
-        previewerClass = getClass().getClassLoader().loadClass(stageDefinition.getRawSourceDefinition()
-            .getRawSourcePreviewerClass());
-      } catch (ClassNotFoundException e1) {
-        throw new RuntimeException(e1);
-      }
-    }
-
-    int bytesToRead = configuration.get(MAX_SOURCE_PREVIEW_SIZE_KEY, MAX_SOURCE_PREVIEW_SIZE_DEFAULT);
-    bytesToRead = Math.min(bytesToRead, MAX_SOURCE_PREVIEW_SIZE_DEFAULT);
-
-    Reader reader;
-    RawSourcePreviewer rawSourcePreviewer;
-    try {
-      rawSourcePreviewer = (RawSourcePreviewer) previewerClass.newInstance();
-      //inject values from url to fields in the rawSourcePreviewer
-      for(ConfigDefinition confDef : configDefinitions) {
-        Field f = previewerClass.getField(confDef.getFieldName());
-        f.set(rawSourcePreviewer, previewParams.get(confDef.getName()).get(0));
-      }
-      rawSourcePreviewer.setMimeType(rawSourceDefinition.getMimeType());
-      reader = rawSourcePreviewer.preview(bytesToRead);
-    } catch (IllegalAccessException | InstantiationException | NoSuchFieldException e) {
-      throw new RuntimeException(e);
-    }
-
-    BoundedInputStream bIn = new BoundedInputStream(new ReaderInputStream(reader), bytesToRead);
-    String previewString = IOUtils.toString(bIn);
-
-    Map<String, String> previewMap = new HashMap<>();
-    previewMap.put(MIME_TYPE, rawSourcePreviewer.getMimeType());
-    previewMap.put(PREVIEW_STRING, previewString);
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewMap).build();
-  }
-
-  private void validateParameters(MultivaluedMap<String, String> previewParams,
-                                  List<ConfigDefinition> configDefinitions) throws PipelineRuntimeException {
-    //validate that all configuration required by config definitions are supplied through the URL
-    List<String> requiredPropertiesNotSet = new ArrayList<>();
-    for(ConfigDefinition confDef: configDefinitions) {
-      if(confDef.isRequired() && !previewParams.containsKey(confDef.getName())) {
-        requiredPropertiesNotSet.add(confDef.getName());
-      }
-    }
-
-    if(!requiredPropertiesNotSet.isEmpty()) {
-      StringBuilder sb = new StringBuilder();
-      sb.append(requiredPropertiesNotSet.get(0));
-      for(int i = 1; i < requiredPropertiesNotSet.size(); i++) {
-        sb.append(", ").append(requiredPropertiesNotSet.get(i));
-      }
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0160, sb.toString());
-    }
+    Map<String, String> preview = RawSourcePreviewHelper.preview(name, rev, previewParams, store, stageLibrary,
+      configuration);
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(preview).build();
   }
 
 }

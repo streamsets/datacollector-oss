@@ -8,9 +8,9 @@ package com.streamsets.pipeline.api.base;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.InputStream;
 
 public class FileRawSourcePreviewer implements RawSourcePreviewer {
 
@@ -21,14 +21,14 @@ public class FileRawSourcePreviewer implements RawSourcePreviewer {
   public String fileName;
 
   @Override
-  public Reader preview(int maxLength) {
-    Reader reader;
+  public InputStream preview(int maxLength) {
+    InputStream in;
     try {
-      reader = new FileReader(fileName);
+      in = new FileInputStream(fileName);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
-    return reader;
+    return in;
   }
 
   @Override

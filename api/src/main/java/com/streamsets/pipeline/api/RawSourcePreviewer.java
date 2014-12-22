@@ -5,11 +5,11 @@
  */
 package com.streamsets.pipeline.api;
 
-import java.io.Reader;
+import java.io.InputStream;
 
 public interface RawSourcePreviewer {
 
-  Reader preview(int maxLength);
+  InputStream preview(int maxLength);
 
   String getMimeType();
 

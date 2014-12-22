@@ -85,7 +85,7 @@ public class MultiPartitionKafkaTargetTest {
       .addConfiguration("partition", -1)
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
-      .addConfiguration("payloadType", PayloadType.STRING)
+      .addConfiguration("payloadType", PayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.ROUND_ROBIN)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
@@ -127,7 +127,7 @@ public class MultiPartitionKafkaTargetTest {
       .addConfiguration("partition", -1)
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
-      .addConfiguration("payloadType", PayloadType.STRING)
+      .addConfiguration("payloadType", PayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.RANDOM)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();

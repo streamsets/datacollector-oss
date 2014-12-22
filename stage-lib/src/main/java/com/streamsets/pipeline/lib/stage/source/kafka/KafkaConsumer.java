@@ -31,8 +31,6 @@ public class KafkaConsumer {
 
   private static final int TIME_OUT = 1000;
   private static final int BUFFER_SIZE = 64 * 1024;
-  private static final String CLIENT_PREFIX = "Client";
-  private static final String UNDER_SCORE = "_";
   private static final long ONE_SECOND = 1000;
 
   /*Topic to readData from*/
@@ -55,14 +53,15 @@ public class KafkaConsumer {
   private SimpleConsumer consumer;
   private KafkaBroker leader;
 
-  public KafkaConsumer(String topic, int partition, KafkaBroker broker, int minFetchSize, int maxFetchSize, int maxWaitTime) {
+  public KafkaConsumer(String topic, int partition, KafkaBroker broker, int minFetchSize, int maxFetchSize,
+                       int maxWaitTime, String clientName) {
     this.topic = topic;
     this.partition = partition;
     this.broker = broker;
     this.maxFetchSize = maxFetchSize;
     this.minFetchSize = minFetchSize;
     this.maxWaitTime = maxWaitTime;
-    this.clientName = CLIENT_PREFIX + UNDER_SCORE + topic + UNDER_SCORE + partition;
+    this.clientName = clientName;
     this.replicaBrokers = new ArrayList<>();
   }
 

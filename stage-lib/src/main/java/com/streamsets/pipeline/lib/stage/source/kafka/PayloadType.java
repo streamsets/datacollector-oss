@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
 public enum PayloadType {
-  STRING,
+  LOG,
   JSON,
   XML,
   CSV

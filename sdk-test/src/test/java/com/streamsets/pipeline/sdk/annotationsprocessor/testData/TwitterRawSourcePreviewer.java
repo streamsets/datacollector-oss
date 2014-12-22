@@ -9,7 +9,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 
-import java.io.Reader;
+import java.io.InputStream;
 import java.util.List;
 
 public class TwitterRawSourcePreviewer implements RawSourcePreviewer{
@@ -34,7 +34,7 @@ public class TwitterRawSourcePreviewer implements RawSourcePreviewer{
   public String password;
 
   @Override
-  public Reader preview(int maxLength) {
+  public InputStream preview(int maxLength) {
     return null;
   }
 

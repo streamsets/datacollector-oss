@@ -119,7 +119,7 @@ public class KafkaTarget extends BaseTarget {
   }
 
   private byte[] serializeRecord(Record r) throws IOException {
-    if(payloadType == PayloadType.STRING) {
+    if(payloadType == PayloadType.LOG) {
       return r.get().getValue().toString().getBytes();
     } if (payloadType == PayloadType.JSON) {
       return JsonUtil.jsonRecordToString(r).getBytes();

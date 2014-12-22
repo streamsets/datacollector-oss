@@ -101,7 +101,10 @@
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <scope>test</scope>
+      <scope>compile</scope>
+      <!-- Changed the scope from test to compile so that it gets shipped in the dist.
+      without this lib i see class not found exception at times while starting pipeline.
+      Will investigate the problem.-->
     </dependency>
   </dependencies>
 

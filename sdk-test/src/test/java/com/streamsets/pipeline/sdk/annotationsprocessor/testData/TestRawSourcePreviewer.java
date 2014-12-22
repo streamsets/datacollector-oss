@@ -7,13 +7,13 @@ package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 
-import java.io.Reader;
+import java.io.InputStream;
 
 public class TestRawSourcePreviewer {
 
   class FaultyRawSourcePreviewer implements RawSourcePreviewer {
     @Override
-    public Reader preview(int maxLength) {
+    public InputStream preview(int maxLength) {
       return null;
     }
 
