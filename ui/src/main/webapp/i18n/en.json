@@ -116,10 +116,11 @@
         "enterKey": "Enter Key",
         "enterPredicate": "Enter Predicate",
         "enterValue": "Enter Value",
+        "noRecord": "No Preview Record.",
         "rawSourcePreview": "Raw Source Preview",
         "requiredFieldsSelectionButton": "Select Field Using Preview Data",
         "selectFields": "Select Fields...",
-        "noRecord": "No Preview Record."
+        "stageInformation": "Stage Information"
       },
       "general": "General",
       "rules": "Rules",

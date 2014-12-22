@@ -22,6 +22,17 @@ angular.module('pipelineAgentApp.common')
       },
 
       /**
+       * Fetches Server Log
+       */
+      getServerLog: function() {
+        var url = apiBase + '/admin/log';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Fetches UI Configuration from dist/src/main/etc/pipeline.properties
        *
        * @returns {*}

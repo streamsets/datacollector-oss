@@ -12,6 +12,19 @@ angular
       }
     );
   }])
-  .controller('LogsController', function ($scope) {
+  .controller('LogsController', function ($scope, api) {
+    angular.extend($scope, {
+      serverLog: 'Coming Soon...'
+    });
+
+
+    /*api.pipelineAgent.getServerLog()
+      .success(function(data){
+        $scope.serverLog = data;
+      })
+      .error(function(data, status, headers, config) {
+        $rootScope.common.errors = [data];
+      });
+    */
 
   });

@@ -1,7 +1,7 @@
 <div ng-controller="ConfigurationController" class="configuration-tab">
 
 
-  <div ng-class="detailPaneConfigDefn.rawSourceDefinition ? 'col-sm-7' : 'col-sm-9'">
+  <div ng-class="'col-sm-7'">
     <div class="panel panel-default">
       <div class="panel-heading">Configuration</div>
       <div class="panel-body">
@@ -216,11 +216,13 @@
                      ng-repeat="lanePredicateMapping in detailPaneConfig.configuration[$index].value track by $index">
 
                   <div class="col-md-1">
-                    <input type="text" readonly class="form-control input-sm"
-                           value="{{$index + 1}}"/>
+                    <!--input type="text" readonly class="form-control input-sm"
+                           value="{{$index + 1}}"/-->
+                    <label class="lane-label">{{$index + 1}}</label>
                   </div>
 
                   <div class="col-md-7">
+
                     <input type="text" class="form-control input-sm"
                            placeholder="{{'home.detailPane.configurationTab.enterPredicate' | translate}}"
                            ng-required="true"
@@ -254,26 +256,59 @@
     </div>
   </div>
 
-  <div class="col-md-5 source-preview" ng-if="detailPaneConfigDefn.rawSourceDefinition">
-    <div class="panel panel-default">
+  <div class="col-md-5 source-preview">
+
+    <div class="panel panel-default" ng-if="detailPaneConfigDefn.rawSourceDefinition">
       <div class="panel-heading" translate="home.detailPane.configurationTab.rawSourcePreview">Raw Source Preview</div>
       <div class="panel-body">
         <form class="form" ng-submit="rawSourcePreview()">
 
           <div class="form-group"
+               ng-switch="configDefinition.type"
                ng-repeat="configDefinition in detailPaneConfigDefn.rawSourceDefinition.configDefinitions" show-errors>
-            <label class="control-label">{{configDefinition.label}}</label>
-            <i class="fa fa-info-circle help-icon"
-               popover-placement="right"
-               popover-append-to-body="false"
-               popover="{{configDefinition.description}}"
-               popover-trigger="mouseenter"></i>
 
-            <div ng-if="configDefinition.type === 'STRING'">
+            <div ng-switch-when="STRING">
+              <label class="control-label">{{configDefinition.label}}</label>
+              <i class="fa fa-info-circle help-icon"
+                 popover-placement="right"
+                 popover-append-to-body="false"
+                 popover="{{configDefinition.description}}"
+                 popover-trigger="mouseenter"></i>
+
               <input type="text" class="form-control" name="{{configDefinition.name}}"
                      ng-model="detailPaneConfig.uiInfo.rawSource.configuration[$index].value"
                      ng-required="configDefinition.required">
             </div>
+
+
+            <div class="checkbox" ng-switch-when="BOOLEAN">
+              <label>
+                <input type="checkbox" name="{{configDefinition.name}}"
+                       ng-model="detailPaneConfig.configuration[$index].value">  {{configDefinition.label}}
+                <i class="fa fa-info-circle help-icon"
+                   popover-placement="right"
+                   popover-append-to-body="false"
+                   popover="{{configDefinition.description}}"
+                   popover-trigger="mouseenter"></i>
+              </label>
+
+              <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+            </div>
+
+            <div ng-switch-when="INTEGER">
+              <label class="control-label">{{configDefinition.label}}</label>
+              <i class="fa fa-info-circle help-icon"
+                 popover-placement="right"
+                 popover-append-to-body="false"
+                 popover="{{configDefinition.description}}"
+                 popover-trigger="mouseenter"></i>
+              <input type="number" class="form-control" name="{{configDefinition.name}}"
+                     ng-model="detailPaneConfig.configuration[$index].value"
+                     ng-required="configDefinition.required">
+
+              <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+            </div>
+
           </div>
 
           <div class="form-group clearfix">
@@ -289,6 +324,45 @@
         </form>
       </div>
     </div>
+
+
+    <div class="panel panel-default" ng-if="stageSelected">
+      <div class="panel-heading" translate="home.detailPane.configurationTab.stageInformation">Stage</div>
+      <div class="panel-body">
+        <form class="form-horizontal" role="form" name="stageGeneralInfo">
+
+          <div class="form-group">
+            <label class="col-sm-4 control-label" translate="global.form.label">Label</label>
+            <div class="controls col-sm-8">
+              <p class="form-control-static">{{detailPaneConfigDefn.label}}</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-4 control-label" translate="global.form.description">Description</label>
+            <div class="controls col-sm-8">
+              <p class="form-control-static">{{detailPaneConfigDefn.description}}</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-4 control-label" translate="global.form.type">type</label>
+            <div class="controls col-sm-8">
+              <p class="form-control-static">{{detailPaneConfigDefn.type}}</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-4 control-label" translate="global.form.library">library</label>
+            <div class="controls col-sm-8">
+              <p class="form-control-static">{{detailPaneConfigDefn.library}}</p>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
   </div>
 
 </div>
