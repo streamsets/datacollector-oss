@@ -14,7 +14,8 @@ import com.streamsets.pipeline.api.StageDef;
 @GenerateResourceBundle
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "text/plain")
 @StageDef(version="0.0.1",
-  label="Log Kafka Source")
+  label="Log Kafka Source",
+  icon="kafka.png")
 public class LogKafkaSource extends AbstractKafkaSource {
 
   @Override

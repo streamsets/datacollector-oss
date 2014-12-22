@@ -29,7 +29,8 @@ import java.util.Map;
 @GenerateResourceBundle
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "text/csv")
 @StageDef(version="0.0.1",
-  label="CSV Kafka Source")
+  label="CSV Kafka Source",
+  icon="kafka.png")
 public class CsvKafkaSource extends AbstractKafkaSource {
 
   @ConfigDef(required = true,

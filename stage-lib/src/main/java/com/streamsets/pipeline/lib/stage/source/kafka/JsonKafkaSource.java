@@ -26,7 +26,8 @@ import java.io.InputStreamReader;
 @GenerateResourceBundle
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "application/json")
 @StageDef(version="0.0.1",
-  label="Json Kafka Source")
+  label="Json Kafka Source",
+  icon="kafka.png")
 public class JsonKafkaSource extends AbstractKafkaSource {
 
   @ConfigDef(required = true,
