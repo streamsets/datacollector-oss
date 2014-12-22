@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
-import org.eclipse.jetty.rewrite.handler.RedirectPatternRule;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.rewrite.handler.RewriteRegexRule;
 import org.eclipse.jetty.security.ConstraintMapping;
@@ -21,7 +20,6 @@ import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.handler.MovedContextHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.security.Constraint;
 import org.slf4j.Logger;
@@ -62,47 +60,57 @@ public class WebServerTask extends AbstractTask {
 
   @Override
   protected void initTask() {
-    port = conf.get(PORT_NUMBER_KEY, PORT_NUMBER_DEFAULT);
-    server = new Server(port);
+    server = createServer();
+    Handler handler = configureAppContext();
+    handler = configureRedirectionRules(handler);
+    handler = configureAuthentication(server, handler);
+    server.setHandler(handler);
+  }
+
+  private Handler configureAppContext() {
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
-    Handler handler = context;
     context.setContextPath("/");
-    server.setHandler(context);
     for (ContextConfigurator cc : contextConfigurators) {
       cc.init(context);
     }
+    return context;
+  }
+
+  private Handler configureRedirectionRules(Handler appHandler) {
+    RewriteHandler handler = new RewriteHandler();
+    handler.setRewriteRequestURI(false);
+    handler.setRewritePathInfo(false);
+    handler.setOriginalPathAttribute("requestedPath");
+
+    RewriteRegexRule uiRewriteRule = new RewriteRegexRule();
+    uiRewriteRule.setRegex("^/collector/.*");
+    uiRewriteRule.setReplacement("/");
+    handler.addRule(uiRewriteRule);
+    handler.setHandler(appHandler);
+
+    HandlerCollection handlerCollection = new HandlerCollection();
+    handlerCollection.setHandlers(new Handler[] {handler, appHandler});
+    return handlerCollection;
+  }
+
+  private Handler configureAuthentication(Server server, Handler appHandler) {
+    Handler handler;
     String auth = conf.get(AUTHENTICATION_KEY, AUTHENTICATION_DEFAULT);
     switch (auth) {
       case "none":
+        handler = appHandler;
         break;
       case "digest":
-        handler = configureDigest(handler);
+        handler = configureDigest(server, appHandler);
         break;
       default:
         throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
                                                 auth, AUTHENTICATION_MODES));
     }
-
-    RewriteHandler rewrite = new RewriteHandler();
-    context.getServer().setHandler(rewrite);
-    rewrite.setRewriteRequestURI(false);
-    rewrite.setRewritePathInfo(false);
-    rewrite.setOriginalPathAttribute("requestedPath");
-
-    RewriteRegexRule uiRewriteRule = new RewriteRegexRule();
-    uiRewriteRule.setRegex("^/collector/.*");
-    uiRewriteRule.setReplacement("/");
-    rewrite.addRule(uiRewriteRule);
-
-    rewrite.setHandler(context);
-
-    HandlerCollection handlerCollection = new HandlerCollection();
-    handlerCollection.setHandlers(new Handler[] {rewrite, context});
-
-    server.setHandler(handlerCollection);
+    return handler;
   }
 
-  private Handler configureDigest(Handler context) {
+  private Handler configureDigest(Server server, Handler appHandler) {
     String realm = conf.get(DIGEST_REALM_KEY, DIGEST_REALM_DEFAULT);
     File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
     if (!realmFile.exists()) {
@@ -110,9 +118,8 @@ public class WebServerTask extends AbstractTask {
     }
 
     LoginService loginService = new HashLoginService(realm, realmFile.getAbsolutePath());
-    context.getServer().addBean(loginService);
+    server.addBean(loginService);
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
-    context.getServer().setHandler(security);
     Constraint constraint = new Constraint();
     constraint.setName("auth");
     constraint.setAuthenticate(true);
@@ -123,8 +130,14 @@ public class WebServerTask extends AbstractTask {
     security.setConstraintMappings(Collections.singletonList(mapping));
     security.setAuthenticator(new DigestAuthenticator());
     security.setLoginService(loginService);
-    security.setHandler(context);
+    security.setHandler(appHandler);
     return security;
+  }
+
+  private Server createServer() {
+    //TODO support HTTPS configuration
+    port = conf.get(PORT_NUMBER_KEY, PORT_NUMBER_DEFAULT);
+    return new Server(port);
   }
 
   @Override
