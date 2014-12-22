@@ -12,34 +12,48 @@ angular
       }
     );
   }])
-  .controller('JVMMetricsController', function ($scope, $q, api) {
+  .controller('JVMMetricsController', function ($scope, $rootScope, $q, $timeout, api, configuration) {
+    var jvmMetricsTimer,
+      destroyed = false;
+
     angular.extend($scope, {
-      memoryMetrics: {}
+      metrics: {}
     });
 
-
     /**
-     * Fetch JMV Metrics JSON .
-     */
-    $q.all([
-      api.pipelineAgent.getJVMMetrics()
-    ])
-      .then(function (results) {
-        var jvmMetrics = results[0].data;
-        updateMetrics(jvmMetrics);
-      });
-
-
-    /**
-     * Update Metrics
+     * Fetch the JVM Metrics every Refresh Interval time.
      *
-     * @param jvmMetrics
      */
-    var updateMetrics = function(jvmMetrics) {
-      angular.forEach(jvmMetrics.beans, function(metrics) {
-        if(metrics.name === 'java.lang:type=Memory') {
-          $scope.memoryMetrics = metrics;
+    var refreshPipelineJVMMetrics = function() {
+
+      jvmMetricsTimer = $timeout(
+        function() {
+        },
+        configuration.getRefreshInterval()
+      );
+
+      jvmMetricsTimer.then(
+        function() {
+          api.pipelineAgent.getJVMMetrics()
+            .success(function(data) {
+              $scope.metrics = data;
+              refreshPipelineJVMMetrics();
+            })
+            .error(function(data, status, headers, config) {
+              $rootScope.common.errors = [data];
+            });
+        },
+        function() {
+          console.log( "Timer rejected!" );
         }
-      });
+      );
     };
+
+    refreshPipelineJVMMetrics();
+
+    $scope.$on('$destroy', function(){
+      $timeout.cancel(jvmMetricsTimer);
+      destroyed = true;
+    });
+
   });

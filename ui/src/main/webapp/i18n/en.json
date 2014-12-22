@@ -174,13 +174,24 @@
   "jvmMetrics": {
     "title": "JVM Metrics",
     "memory": {
-      "title": "Memory"
+      "title": "Memory",
+      "total": "Total Memory",
+      "heap": "Heap Memory",
+      "nonheap": "Non-Heap Memory"
     },
     "threads": {
-      "title": "Threads"
+      "title": "Threads",
+      "runnable": "Runnable",
+      "timedwaiting": "Timed Waiting",
+      "waiting": "Waiting",
+      "blocked": "Blocked"
     },
-    "garbageCollections": {
-      "title": "Garbage Collections"
+    "gc": {
+      "title": "Garbage Collections",
+      "marksweepcount": "Mark Sweep count",
+      "marksweeptime": "Mark Sweep time",
+      "scavengecount": "Scavenge count",
+      "scavengetime": "Scavenge time"
     }
   },
   "logs": {

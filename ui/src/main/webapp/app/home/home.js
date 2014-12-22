@@ -18,7 +18,9 @@ angular
       dirty = false,
       ignoreUpdate = false,
       pipelineStatusTimer,
-      edges = [];
+      pipelineMetricsTimer,
+      edges = [],
+      destroyed = false;
 
     angular.extend($scope, {
       loaded: false,
@@ -408,6 +410,9 @@ angular
      *
      */
     var refreshPipelineStatus = function() {
+      if(destroyed) {
+        return;
+      }
 
       pipelineStatusTimer = $timeout(
         function() {
@@ -439,15 +444,18 @@ angular
      *
      */
     var refreshPipelineMetrics = function() {
+      if(destroyed) {
+        return;
+      }
 
-      pipelineStatusTimer = $timeout(
+      pipelineMetricsTimer = $timeout(
         function() {
           //console.log( "Pipeline Metrics Timeout executed", Date.now() );
         },
         configuration.getRefreshInterval()
       );
 
-      pipelineStatusTimer.then(
+      pipelineMetricsTimer.then(
         function() {
           api.pipelineAgent.getPipelineMetrics()
             .success(function(data) {
@@ -558,6 +566,12 @@ angular
         $scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
         $scope.$broadcast('updateErrorCount', getStageErrorCounts());
       }
+    });
+
+    $scope.$on('$destroy', function(){
+      $timeout.cancel(pipelineStatusTimer);
+      $timeout.cancel(pipelineMetricsTimer);
+      destroyed = true;
     });
 
   });
