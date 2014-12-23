@@ -75,6 +75,7 @@ public class KafkaProducer {
 
   public void write() {
     producer.send(messageList);
+    messageList.clear();
   }
 
   private void configureSerializer(Properties props, PayloadType payloadType) {
