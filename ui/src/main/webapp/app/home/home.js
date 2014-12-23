@@ -330,20 +330,10 @@ angular
         }
       });
 
-
-
       if(pipelineStatus && pipelineStatus.name === pipelineConfig.info.name &&
         pipelineMetrics && pipelineMetrics.meters) {
         stageErrorCounts = getStageErrorCounts();
       }
-
-      $scope.$broadcast('updateGraph', {
-        nodes: $scope.pipelineConfig.stages,
-        edges: edges,
-        issues: $scope.pipelineConfig.issues,
-        selectNode: ($scope.detailPaneConfig && !$scope.detailPaneConfig.stages) ? $scope.detailPaneConfig : undefined,
-        stageErrorCounts: stageErrorCounts
-      });
 
       $scope.stageSelected = false;
 
@@ -373,7 +363,17 @@ angular
           }
 
         }
+
       }
+
+      $scope.$broadcast('updateGraph', {
+        nodes: $scope.pipelineConfig.stages,
+        edges: edges,
+        issues: $scope.pipelineConfig.issues,
+        selectNode: ($scope.detailPaneConfig && !$scope.detailPaneConfig.stages) ? $scope.detailPaneConfig : undefined,
+        stageErrorCounts: stageErrorCounts
+      });
+
     };
 
     /**

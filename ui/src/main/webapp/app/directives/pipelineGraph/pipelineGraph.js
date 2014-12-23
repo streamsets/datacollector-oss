@@ -470,33 +470,39 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           d3.event.preventDefault();
           if (selectedNode) {
             $scope.$apply(function() {
-              thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
+              var nodeIndex = thisGraph.nodes.indexOf(selectedNode);
 
-              //Remove the input lanes in all stages having output lanes of delete node.
-              _.each(thisGraph.edges, function(edge) {
-                if(edge.source === selectedNode) {
-                  edge.target.inputLanes = _.filter(edge.target.inputLanes, function(inputLane) {
-                    return !_.contains(edge.source.outputLanes, inputLane);
-                  });
-                }
-              });
+              if(nodeIndex !== -1) {
+                thisGraph.nodes.splice(nodeIndex, 1);
 
-              thisGraph.spliceLinksForNode(selectedNode);
-              state.selectedNode = null;
+                //Remove the input lanes in all stages having output lanes of delete node.
+                _.each(thisGraph.edges, function(edge) {
+                  if(edge.source === selectedNode) {
+                    edge.target.inputLanes = _.filter(edge.target.inputLanes, function(inputLane) {
+                      return !_.contains(edge.source.outputLanes, inputLane);
+                    });
+                  }
+                });
 
-              thisGraph.updateGraph();
+                thisGraph.spliceLinksForNode(selectedNode);
+                state.selectedNode = null;
+
+                thisGraph.updateGraph();
+              }
             });
           } else if (selectedEdge) {
             $scope.$apply(function() {
+              var edgeIndex = thisGraph.edges.indexOf(selectedEdge);
+              if(edgeIndex !== -1) {
+                //Update pipeline target input lanes.
+                selectedEdge.target.inputLanes = _.filter(selectedEdge.target.inputLanes, function(inputLane) {
+                  return !_.contains(selectedEdge.source.outputLanes, inputLane);
+                });
 
-              //Update pipeline target input lanes.
-              selectedEdge.target.inputLanes = _.filter(selectedEdge.target.inputLanes, function(inputLane) {
-                return !_.contains(selectedEdge.source.outputLanes, inputLane);
-              });
-
-              thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1);
-              state.selectedEdge = null;
-              thisGraph.updateGraph();
+                thisGraph.edges.splice(edgeIndex, 1);
+                state.selectedEdge = null;
+                thisGraph.updateGraph();
+              }
             });
           }
           break;

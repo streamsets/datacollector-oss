@@ -1,0 +1,36 @@
+<div class="panel panel-default" ng-if="stageSelected">
+  <div class="panel-heading" translate="home.detailPane.configurationTab.stageInformation">Stage Information</div>
+  <div class="panel-body">
+    <form class="form-horizontal information-form" role="form" name="stageGeneralInfo">
+
+      <div class="form-group">
+        <label class="col-md-4 control-label" translate="global.form.name">Name</label>
+        <div class="controls col-md-8">
+          <p class="form-control-static">{{detailPaneConfigDefn.label}}</p>
+        </div>
+      </div>
+
+      <div class="form-group" ng-if="detailPaneConfigDefn.description">
+        <label class="col-md-4 control-label" translate="global.form.description">Description</label>
+        <div class="controls col-md-8">
+          <p class="form-control-static">{{detailPaneConfigDefn.description}}</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-md-4 control-label" translate="global.form.type">type</label>
+        <div class="controls col-md-8">
+          <p class="form-control-static">{{detailPaneConfigDefn.type}}</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-md-4 control-label" translate="global.form.library">library</label>
+        <div class="controls col-md-8">
+          <p class="form-control-static">{{detailPaneConfigDefn.library}}</p>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
