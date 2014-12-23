@@ -419,7 +419,7 @@ angular.module('pipelineAgentApp.common')
         var url = apiBase + '/pipeline-library/' + name + '/rawSourcePreview?rev=' + rev;
 
         angular.forEach(configurations, function(config) {
-          if(config.name && config.value) {
+          if(config.name && config.value !== undefined) {
             url+= '&' + config.name + '=' + config.value;
           }
         });

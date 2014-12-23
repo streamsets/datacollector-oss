@@ -97,43 +97,14 @@ angular
           });
       },
 
+
       /**
-       * Field Selector autocomplete callback functiton.
-       *
-       * @param query
-       * @returns {*}
+       * On focus callback for field selector configuration.
        */
-      loadFields: function(query) {
-        var deferred = $q.defer();
-
-        if(!fieldsPathList) {
-          console.log('loading first time');
-          previewService.getInputRecordsFromPreview($scope.activeConfigInfo.name, $scope.detailPaneConfig, 10).
-            then(
-              function (inputRecords) {
-                var fieldPaths = [];
-
-                if(_.isArray(inputRecords) && inputRecords.length) {
-                  getFieldPaths(inputRecords[0].value, fieldPaths);
-                  fieldsPathList = fieldPaths;
-                }
-
-                deferred.resolve(fieldPaths);
-              },
-              function(res) {
-                $rootScope.common.errors = [res.data];
-              }
-            );
-        } else {
-          console.log('Using already loaded one');
-          var filteredList =  _.filter(fieldsPathList, function(fieldPath) {
-            return fieldPath.text.indexOf(query) !== -1;
-          });
-
-          deferred.resolve(filteredList);
+      onFieldSelectorFocus: function(stageInstance) {
+        if(!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) {
+          updateFieldDataForStage(stageInstance);
         }
-
-        return deferred.promise;
       },
 
       /**
@@ -236,6 +207,8 @@ angular
           function(res) {
             $rootScope.common.errors = [res.data];
           });
+      } else {
+
       }
     };
 
@@ -243,8 +216,6 @@ angular
       if (stageInstance) {
         fieldsPathList = undefined;
         $scope.fieldPaths = [];
-
-        //updateFieldDataForStage(stageInstance);
       }
     });
 

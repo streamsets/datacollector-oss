@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 
 @GenerateResourceBundle
-@StageDef(version="1.0.0", label="Dummy Hbase Target", icon = "hBaseTarget.svg")
+@StageDef(version="1.0.0", label="Dummy Hbase Target", icon = "HbaseTarget.svg")
 public class HbaseTarget extends BaseTarget {
 
   @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "Hbase URI", defaultValue = "",
