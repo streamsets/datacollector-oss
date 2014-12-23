@@ -14,18 +14,19 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 
 @GenerateResourceBundle
 @StageDef(version="1.0.0", label="Dummy Hbase Target", icon = "HbaseTarget.svg")
+
 public class HbaseTarget extends BaseTarget {
 
-  @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "Hbase URI", defaultValue = "",
-            description = "Hbase server URI")
+  @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "HBase URI", defaultValue = "",
+            description = "HBase server URI")
   public String uri;
 
   @ConfigDef(required = true, type = ConfigDef.Type.BOOLEAN, label = "Security enabled",
-             defaultValue = "false", description = "Kerberos enabled for Hbase")
+             defaultValue = "false", description = "Kerberos enabled for HBase")
   public boolean security;
 
   @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "Table", defaultValue = "",
-             description = "Hbase table name")
+             description = "HBase table name")
   public String table;
 
   @Override

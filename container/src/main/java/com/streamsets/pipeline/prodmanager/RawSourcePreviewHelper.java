@@ -11,6 +11,7 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
@@ -45,11 +46,16 @@ public class RawSourcePreviewHelper {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0159, name);
     }
 
-    //Source stage is always the first one in the entire pipeline
-    StageConfiguration stageConf = pipelineConf.getStages().get(0);
-    StageDefinition stageDefinition = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-      stageConf.getStageVersion());
-    RawSourceDefinition rawSourceDefinition = stageDefinition.getRawSourceDefinition();
+    //find the source stage in the pipeline configuration
+    StageDefinition sourceStageDef = null;
+    for(StageConfiguration stageConf : pipelineConf.getStages()) {
+      StageDefinition stageDefinition = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
+        stageConf.getStageVersion());
+      if(stageDefinition.getType() == StageType.SOURCE) {
+        sourceStageDef = stageDefinition;
+      }
+    }
+    RawSourceDefinition rawSourceDefinition = sourceStageDef.getRawSourceDefinition();
     List<ConfigDefinition> configDefinitions = rawSourceDefinition.getConfigDefinitions();
 
     validateParameters(previewParams, configDefinitions);
@@ -57,13 +63,13 @@ public class RawSourcePreviewHelper {
     //Attempt to load the previewer class from stage class loader
     Class previewerClass;
     try {
-      previewerClass = stageDefinition.getStageClassLoader().loadClass(stageDefinition.getRawSourceDefinition()
+      previewerClass = sourceStageDef.getStageClassLoader().loadClass(sourceStageDef.getRawSourceDefinition()
         .getRawSourcePreviewerClass());
     } catch (ClassNotFoundException e) {
       //Try loading from this class loader
       try {
         previewerClass = RawSourcePreviewHelper.class.getClassLoader().loadClass(
-          stageDefinition.getRawSourceDefinition().getRawSourcePreviewerClass());
+          sourceStageDef.getRawSourceDefinition().getRawSourcePreviewerClass());
       } catch (ClassNotFoundException e1) {
         throw new RuntimeException(e1);
       }
