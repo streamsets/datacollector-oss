@@ -22,6 +22,8 @@ public class KafkaProducer {
 
   private static final String METADATA_BROKER_LIST_KEY = "metadata.broker.list";
   private static final String KEY_SERIALIZER_CLASS_KEY = "key.serializer.class";
+  private static final String PRODUCER_TYPE_KEY = "producer.type";
+  private static final String PRODUCER_TYPE_DEFAULT = "sync";
   private static final String SERIALIZER_CLASS_KEY = "serializer.class";
   private static final String REQUEST_REQUIRED_ACKS_KEY = "request.required.acks";
   private static final String REQUEST_REQUIRED_ACKS_DEFAULT = "1";
@@ -58,6 +60,7 @@ public class KafkaProducer {
   public void init() {
     Properties props = new Properties();
     props.put(METADATA_BROKER_LIST_KEY, this.broker.getHost() + ":" + this.broker.getPort());
+    props.put(PRODUCER_TYPE_KEY, PRODUCER_TYPE_DEFAULT);
     props.put(REQUEST_REQUIRED_ACKS_KEY, REQUEST_REQUIRED_ACKS_DEFAULT);
     props.put(KEY_SERIALIZER_CLASS_KEY, STRING_ENCODER_CLASS);
     configurePartitionStrategy(props, partitionStrategy);

@@ -147,7 +147,7 @@ public class SinglePartitionKafkaSourceTest {
     sourceRunner.runInit();
     StageRunner.Output output = sourceRunner.runProduce(null, 5);
     String newOffset = output.getNewOffset();
-    Assert.assertEquals(null, newOffset);
+    Assert.assertEquals("0", newOffset);
     List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(0, records.size());
 

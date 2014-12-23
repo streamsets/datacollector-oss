@@ -6,8 +6,8 @@
 package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
+import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +45,11 @@ public class ProductionPipelineRunnable implements Runnable {
       }
     } catch (Error e) {
       LOG.error(Utils.format("A JVM error occurred while running the pipeline, {}", e.getMessage()));
+      try {
+        pipelineManager.setState(name, rev, State.ERROR, e.getMessage());
+      } catch (PipelineManagerException ex) {
+        LOG.error(Utils.format("An exception occurred while committing the state, {}", ex.getMessage()));
+      }
       throw e;
     } finally {
       runningThread = null;

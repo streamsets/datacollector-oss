@@ -28,6 +28,9 @@ public enum StageLibError implements ErrorCode {
   // JsonSpoolDirSource
   LIB_0200("Discarding Json Object '{}', it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
 
+  //Kafka source
+  LIB_0300("A message with offset '{}' which is greater than the latest offset '{}' is requested from Kafka topic '{}' partition '{}'."),
+
 
   ;
 

@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.lib.stage.source.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -118,6 +120,9 @@ public class JsonUtil {
   }
 
   public static String jsonRecordToString(Record r) throws IOException {
-    return ObjectMapperFactory.get().writeValueAsString(JsonUtil.fieldToJsonObject(r.get()));
+    //Using ObjectMapperFactory from container lib causes a NoClassDefFoundError. Need to investigate
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    return objectMapper.writeValueAsString(JsonUtil.fieldToJsonObject(r.get()));
   }
 }

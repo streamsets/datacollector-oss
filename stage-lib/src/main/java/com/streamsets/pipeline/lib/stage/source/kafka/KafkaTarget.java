@@ -34,14 +34,16 @@ public class KafkaTarget extends BaseTarget {
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.STRING,
+    description = "The Kafka topic from which the messages must be read",
     label = "Topic",
-    defaultValue = "mytopic")
+    defaultValue = "topicName")
   public String topic;
 
   @ConfigDef(required = false,
     type = ConfigDef.Type.INTEGER,
+    description = "The partition of Kafka topic from which the messages must be read",
     label = "Partition",
-    defaultValue = "-1")
+    defaultValue = "0")
   public int partition;
 
   @ConfigDef(required = true,
@@ -53,18 +55,23 @@ public class KafkaTarget extends BaseTarget {
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.INTEGER,
+    description = "Port number of the known broker host supplied above. Does not have to be the leader of the partition",
     label = "Broker Port",
     defaultValue = "9092")
   public int brokerPort;
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.MODEL,
-    label = "Payload Type")
+    description = "Type of data sent as kafka message payload",
+    label = "Payload Type",
+    defaultValue = "LOG")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PayloadTypeChooserValues.class)
   public PayloadType payloadType;
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.MODEL,
+    description = "Indicates the strategy to select a partition while writing a message." +
+      "This option is activated only if a negative integer is supplied as the value for partition.",
     label = "Partition Strategy",
     defaultValue = "FIXED")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PartitionStrategyChooserValues.class)
@@ -98,16 +105,18 @@ public class KafkaTarget extends BaseTarget {
   @Override
   public void write(Batch batch) throws StageException {
     Iterator<Record> records = batch.getRecords();
-    while(records.hasNext()) {
-      Record r = records.next();
-      try {
-        kafkaProducer.enqueueMessage(serializeRecord(r));
-      } catch (IOException e) {
-        throw new StageException(null, e.getMessage(), e);
+    if(records.hasNext()) {
+      while (records.hasNext()) {
+        Record r = records.next();
+        try {
+          kafkaProducer.enqueueMessage(serializeRecord(r));
+        } catch (IOException e) {
+          throw new StageException(null, e.getMessage(), e);
+        }
+        recordCounter++;
       }
-      recordCounter++;
+      kafkaProducer.write();
     }
-    kafkaProducer.write();
   }
 
   @Override

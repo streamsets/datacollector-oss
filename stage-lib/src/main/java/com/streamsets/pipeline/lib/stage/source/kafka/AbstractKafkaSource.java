@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.net.SocketTimeoutException;
@@ -27,12 +28,14 @@ public abstract class AbstractKafkaSource extends BaseSource {
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.STRING,
+    description = "The Kafka topic from which the messages must be read",
     label = "Topic",
-    defaultValue = "myTopic")
+    defaultValue = "topicName")
   public String topic;
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.INTEGER,
+    description = "The partition of Kafka topic from which the messages must be read",
     label = "Partition",
     defaultValue = "0")
   public int partition;
@@ -46,12 +49,14 @@ public abstract class AbstractKafkaSource extends BaseSource {
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.INTEGER,
+    description = "Port number of the known broker host supplied above. Does not have to be the leader of the partition",
     label = "Broker Port",
     defaultValue = "9092")
   public int brokerPort;
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.BOOLEAN,
+    description = "Reads messages from the beginning if set to true",
     label = "From Beginning",
     defaultValue = "false")
   public boolean fromBeginning;
@@ -95,8 +100,16 @@ public abstract class AbstractKafkaSource extends BaseSource {
       offsetToRead = kafkaConsumer.getOffsetToRead(fromBeginning);
     } else {
       offsetToRead = Long.parseLong(lastSourceOffset);
+      long latestOffsetInKafka = kafkaConsumer.getOffsetToRead(false);
+      if(offsetToRead > latestOffsetInKafka) {
+        LOG.error(StageLibError.LIB_0200.getMessage(), lastSourceOffset, latestOffsetInKafka, topic, partition);
+        throw new StageException(StageLibError.LIB_0300, lastSourceOffset, latestOffsetInKafka, topic, partition);
+      }
     }
-
+    //This is where we want to start reading from kafka topic partition.
+    //If no data is available in this batch then this is the offset we should look next time.
+    //if offsetToReturn is initialized to null, the pipeline will terminate if no data is available
+    String offsetToReturn = String.valueOf(offsetToRead);
     List<MessageAndOffset> partitionToPayloadList = new ArrayList<>();
     try {
       partitionToPayloadList.addAll(kafkaConsumer.read(offsetToRead));
@@ -111,7 +124,6 @@ public abstract class AbstractKafkaSource extends BaseSource {
       throw new StageException(null, e.getMessage(), e);
     }
 
-    String offsetToReturn = null;
     int recordCounter = 0;
     for(MessageAndOffset partitionToPayloadMap : partitionToPayloadList) {
       //create record by parsing the message payload based on the pay load type configuration
@@ -139,6 +151,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
   @Override
   public void destroy() {
     kafkaConsumer.destroy();
+    super.destroy();
   }
 
   protected abstract void populateRecordFromBytes(Record record, byte[] bytes) throws StageException;
