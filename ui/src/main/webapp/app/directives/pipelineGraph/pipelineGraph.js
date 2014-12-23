@@ -516,12 +516,19 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
 
     GraphCreator.prototype.selectNode = function(node) {
-      var thisGraph = this;
-      var addedNode = thisGraph.rects.filter(function(cd){
-        return cd.instanceName === node.instanceName;
-      });
+      var thisGraph = this,
+        nodeExists,
+        addedNode = thisGraph.rects.filter(function(cd){
+          if(cd.instanceName === node.instanceName) {
+            nodeExists = true;
+          }
+          return cd.instanceName === node.instanceName;
+        });
 
-      thisGraph.replaceSelectNode(addedNode, node);
+      if(nodeExists) {
+        thisGraph.replaceSelectNode(addedNode, node);
+      }
+
     };
 
     // call to propagate changes to graph
