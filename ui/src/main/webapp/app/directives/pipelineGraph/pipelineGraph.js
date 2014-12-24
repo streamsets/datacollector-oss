@@ -13,7 +13,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
   .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter, pipelineConstant){
 
     var consts = {
-      defaultTitle: "random variable"
+      defaultTitle: 'random variable'
     };
 
     // define graphcreator object
@@ -35,7 +35,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         justScaleTransGraph: false,
         lastKeyDown: -1,
         shiftNodeDrag: false,
-        selectedText: null
+        selectedText: null,
+        currentScale: 1
       };
 
       // define arrow markers for graph links
@@ -43,7 +44,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       defs.append('svg:marker')
         .attr('id', 'end-arrow')
         .attr('viewBox', '0 -5 10 10')
-        .attr('refX', "13")
+        .attr('refX', '13')
         .attr('markerWidth', 3.5)
         .attr('markerHeight', 3.5)
         .attr('orient', 'auto')
@@ -59,28 +60,28 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         width = 2500 - margin.left - margin.right,
         height = 2500 - margin.top - margin.bottom;
 
-      var container = svg.append("g");
-      container.append("g")
-        .attr("class", "x axis")
-        .selectAll("line")
+      var container = svg.append('g');
+      container.append('g')
+        .attr('class', 'x axis')
+        .selectAll('line')
         .data(d3.range(0, width, 10))
-        .enter().append("line")
-        .attr("x1", function(d) { return d; })
-        .attr("y1", 0)
-        .attr("x2", function(d) { return d; })
-        .attr("y2", height);
+        .enter().append('line')
+        .attr('x1', function(d) { return d; })
+        .attr('y1', 0)
+        .attr('x2', function(d) { return d; })
+        .attr('y2', height);
 
-      container.append("g")
-        .attr("class", "y axis")
-        .selectAll("line")
+      container.append('g')
+        .attr('class', 'y axis')
+        .selectAll('line')
         .data(d3.range(0, height, 10))
-        .enter().append("line")
-        .attr("x1", 0)
-        .attr("y1", function(d) { return d; })
-        .attr("x2", width)
-        .attr("y2", function(d) { return d; });
+        .enter().append('line')
+        .attr('x1', 0)
+        .attr('y1', function(d) { return d; })
+        .attr('x2', width)
+        .attr('y2', function(d) { return d; });
 
-      thisGraph.svgG = svg.append("g")
+      thisGraph.svgG = svg.append('g')
         .classed(thisGraph.consts.graphClass, true);
       var svgG = thisGraph.svgG;
 
@@ -91,40 +92,40 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .style('marker-end', 'url(#mark-end-arrow)');
 
       // svg nodes and edges
-      thisGraph.paths = svgG.append("g").selectAll("g");
-      thisGraph.rects = svgG.append("g").selectAll("g");
+      thisGraph.paths = svgG.append('g').selectAll('g');
+      thisGraph.rects = svgG.append('g').selectAll('g');
 
       thisGraph.drag = d3.behavior.drag()
         .origin(function(d){
           return {x: d.uiInfo.xPos, y: d.uiInfo.yPos};
         })
-        .on("drag", function(args){
+        .on('drag', function(args){
           thisGraph.state.justDragged = true;
           thisGraph.dragmove.call(thisGraph, args);
         })
-        .on("dragend", function() {
+        .on('dragend', function() {
           // todo check if edge-mode is selected
         });
 
       // listen for key events
-      svg.on("keydown", function() {
+      svg.on('keydown', function() {
         thisGraph.svgKeyDown.call(thisGraph);
       })
-      .on("keyup", function() {
+      .on('keyup', function() {
         thisGraph.svgKeyUp.call(thisGraph);
       })
-      .on("mousedown", function(d) {
+      .on('mousedown', function(d) {
         thisGraph.svgMouseDown.call(thisGraph, d);
       })
-      .on("mouseup", function(d) {
+      .on('mouseup', function(d) {
         thisGraph.svgMouseUp.call(thisGraph, d);
       });
 
       // listen for dragging
 
-      var dragSvg = d3.behavior.zoom()
-        .scaleExtent([0.1, 10])
-        .on("zoom", function(){
+      thisGraph.zoom = d3.behavior.zoom()
+        .scaleExtent([0.1, 2])
+        .on('zoom', function(){
           if (d3.event.sourceEvent.shiftKey){
             // TODO  the internal d3 state is still changing
             return false;
@@ -133,20 +134,31 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           }
           return true;
         })
-        .on("zoomstart", function(){
-          var ael = d3.select("#" + thisGraph.consts.activeEditId).node();
+        .on('zoomstart', function(){
+          var ael = d3.select('#' + thisGraph.consts.activeEditId).node();
           if (ael){
             ael.blur();
           }
           if (!d3.event.sourceEvent.shiftKey) {
-            d3.select('body').style("cursor", "move");
+            d3.select('body').style('cursor', 'move');
           }
         })
-        .on("zoomend", function(){
-          d3.select('body').style("cursor", "auto");
+        .on('zoomend', function(){
+          d3.select('body').style('cursor', 'auto');
         });
 
-      svg.call(dragSvg).on("dblclick.zoom", null);
+      svg.call(thisGraph.zoom)
+        .on('dblclick.zoom', null);
+
+      //svg.on('mousedown.zoom', null);
+      //svg.on('mousemove.zoom', null);
+
+      //To disable zoom on mouse scroll
+      svg.on('dblclick.zoom', null);
+      svg.on('touchstart.zoom', null);
+      svg.on('wheel.zoom', null);
+      svg.on('mousewheel.zoom', null);
+      svg.on('MozMousePixelScroll.zoom', null);
 
       // listen for resize
       window.onresize = function(){thisGraph.updateWindow(svg);};
@@ -158,11 +170,11 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
     GraphCreator.prototype.consts =  {
-      selectedClass: "selected",
-      connectClass: "connect-node",
-      circleGClass: "conceptG",
-      graphClass: "graph",
-      activeEditId: "active-editing",
+      selectedClass: 'selected',
+      connectClass: 'connect-node',
+      circleGClass: 'conceptG',
+      graphClass: 'graph',
+      activeEditId: 'active-editing',
       BACKSPACE_KEY: 8,
       DELETE_KEY: 46,
       ENTER_KEY: 13,
@@ -212,11 +224,11 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       var words = title.split(/\s+/g),
         nwords = words.length;
 
-      var el = gEl.append("text")
-        .attr("text-anchor","middle")
-        .attr("x", 80)
-        .attr("y", 90)
-        .attr("dy", "-" + (nwords-1)*7.5);
+      var el = gEl.append('text')
+        .attr('text-anchor','middle')
+        .attr('x', 80)
+        .attr('y', 90)
+        .attr('dy', '-' + (nwords-1)*7.5);
 
       for (var i = 0; i < words.length; i++) {
         var tspan = el.append('tspan').text(words[i]);
@@ -309,34 +321,34 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       var thisGraph= this,
         consts = thisGraph.consts,
         htmlEl = d3node.node();
-      d3node.selectAll("text").remove();
+      d3node.selectAll('text').remove();
       var nodeBCR = htmlEl.getBoundingClientRect(),
         curScale = nodeBCR.width/consts.nodeRadius,
         placePad  =  5*curScale,
         useHW = curScale > 1 ? nodeBCR.width*0.71 : consts.nodeRadius*1.42;
       // replace with editableconent text
-      var d3txt = thisGraph.svg.selectAll("foreignObject")
+      var d3txt = thisGraph.svg.selectAll('foreignObject')
         .data([d])
         .enter()
-        .append("foreignObject")
-        .attr("x", nodeBCR.left + placePad )
-        .attr("y", nodeBCR.top + placePad)
-        .attr("height", 2*useHW)
-        .attr("width", useHW)
-        .append("xhtml:p")
-        .attr("id", consts.activeEditId)
-        .attr("contentEditable", "true")
+        .append('foreignObject')
+        .attr('x', nodeBCR.left + placePad )
+        .attr('y', nodeBCR.top + placePad)
+        .attr('height', 2*useHW)
+        .attr('width', useHW)
+        .append('xhtml:p')
+        .attr('id', consts.activeEditId)
+        .attr('contentEditable', 'true')
         .text(d.title)
-        .on("mousedown", function(d){
+        .on('mousedown', function(d){
           d3.event.stopPropagation();
         })
-        .on("keydown", function(d){
+        .on('keydown', function(d){
           d3.event.stopPropagation();
           if (d3.event.keyCode == consts.ENTER_KEY && !d3.event.shiftKey){
             this.blur();
           }
         })
-        .on("blur", function(d){
+        .on('blur', function(d){
           d.title = this.textContent;
           thisGraph.insertTitleLinebreaks(d3node, d.title);
           d3.select(this.parentElement).remove();
@@ -360,7 +372,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         return;
       }
 
-      thisGraph.dragLine.classed("hidden", true);
+      thisGraph.dragLine.classed('hidden', true);
 
       if (mouseDownNode !== d){
         // we're in a different node: create new edge for mousedown edge and add to graph
@@ -445,7 +457,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       } else if (state.shiftNodeDrag){
         // dragged from node
         state.shiftNodeDrag = false;
-        thisGraph.dragLine.classed("hidden", true);
+        thisGraph.dragLine.classed('hidden', true);
       }
       state.graphMouseDown = false;
     };
@@ -546,38 +558,38 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         stageErrorCounts = thisGraph.stageErrorCounts;
 
       thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d){
-        return String(d.source.instanceName) + "+" + String(d.target.instanceName);
+        return String(d.source.instanceName) + '+' + String(d.target.instanceName);
       });
 
       // update existing nodes
       thisGraph.rects = thisGraph.rects.data(thisGraph.nodes, function(d) {
         return d.instanceName;
       });
-      thisGraph.rects.attr("transform", function(d) {
-        return "translate(" + (d.uiInfo.xPos) + "," + (d.uiInfo.yPos) + ")";
+      thisGraph.rects.attr('transform', function(d) {
+        return 'translate(' + (d.uiInfo.xPos) + ',' + (d.uiInfo.yPos) + ')';
       });
 
       // add new nodes
       var newGs= thisGraph.rects.enter()
-        .append("g");
+        .append('g');
 
       newGs.classed(consts.circleGClass, true)
-        .attr("transform", function(d){return "translate(" + d.uiInfo.xPos + "," + d.uiInfo.yPos + ")";})
-        .on("mouseover", function(d){
+        .attr('transform', function(d){return 'translate(' + d.uiInfo.xPos + ',' + d.uiInfo.yPos + ')';})
+        .on('mouseover', function(d){
           if (state.shiftNodeDrag){
             d3.select(this).classed(consts.connectClass, true);
           }
         })
-        .on("mouseout", function(d){
+        .on('mouseout', function(d){
           d3.select(this).classed(consts.connectClass, false);
         })
-        .on("mousedown", function(d){
+        .on('mousedown', function(d){
           thisGraph.circleMouseDown.call(thisGraph, d3.select(this), d);
           $scope.$apply(function(){
             $scope.$emit('onNodeSelection', d);
           });
         })
-        .on("mouseup", function(d){
+        .on('mouseup', function(d){
           thisGraph.circleMouseUp.call(thisGraph, d3.select(this), d);
         })
         .call(thisGraph.drag);
@@ -602,21 +614,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         });
 
       //Output Connectors
-
-      /*
-      newGs.append('circle')
-        .filter(function(d) {
-          return d.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE;
-        })
-        .attr({
-          'cx': consts.rectWidth,
-          'cy': consts.rectHeight/2,
-          'r': 10
-        }).on("mousedown", function(d){
-          thisGraph.state.shiftNodeDrag = true;
-        });
-      */
-
       newGs.each(function(d) {
         var stageNode = d3.select(this);
 
@@ -640,7 +637,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
                 'r': 10,
                 'class': 'graph-bootstrap-tooltip',
                 'title': lanePredicate ? lanePredicate.predicate : ''
-              }).on("mousedown", function(d){
+              }).on('mousedown', function(d){
                 thisGraph.state.shiftNodeDrag = true;
                 thisGraph.state.shiftNodeDragYPos = y;
                 thisGraph.state.mouseDownNodeLane = lane;
@@ -648,7 +645,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
             if(totalLanes > 1) {
               stageNode
-                .append("text")
+                .append('text')
                 .attr({
                   'x': consts.rectWidth - 3,
                   'y': y + 5,
@@ -664,43 +661,43 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       });
 
       //Add Stage icons
-      newGs.append("svg:image")
+      newGs.append('svg:image')
         .attr('class', 'node-icon')
         .attr('x',(consts.rectWidth - 48)/2)
         .attr('y',10)
         .attr('width', 48)
         .attr('height', 48)
-        .attr("xlink:href", function(d) {
+        .attr('xlink:href', function(d) {
           return d.uiInfo.icon;
         });
 
       //Add Error icons
-      newGs.append("svg:foreignObject")
+      newGs.append('svg:foreignObject')
         .filter(function(d) {
           return thisGraph.issues && thisGraph.issues.stageIssues &&
             thisGraph.issues.stageIssues[d.instanceName];
         })
-        .attr("width", 30)
-        .attr("height", 30)
-        .attr("x", consts.rectWidth - 35)
-        .attr("y", consts.rectHeight - 35)
-        .append("xhtml:span")
-        .attr("class", "node-warning fa fa-exclamation-triangle");
+        .attr('width', 30)
+        .attr('height', 30)
+        .attr('x', consts.rectWidth - 35)
+        .attr('y', consts.rectHeight - 35)
+        .append('xhtml:span')
+        .attr('class', 'node-warning fa fa-exclamation-triangle');
 
 
 
       //Add bad records count
-      newGs.append("svg:foreignObject")
+      newGs.append('svg:foreignObject')
         .filter(function(d) {
           return true;
         })
-        .attr("width", 100)
-        .attr("height", 30)
-        .attr("x", consts.rectWidth - 55)
-        .attr("y", 10)
-        .append("xhtml:span")
-        .attr("title", "Mean value of Error Histogram (5 minutes decay)")
-        .attr("class", "badge alert-danger pointer graph-bootstrap-tooltip")
+        .attr('width', 100)
+        .attr('height', 30)
+        .attr('x', consts.rectWidth - 55)
+        .attr('y', 10)
+        .append('xhtml:span')
+        .attr('title', 'Mean value of Error Histogram (5 minutes decay)')
+        .attr('class', 'badge alert-danger pointer graph-bootstrap-tooltip')
         .style('visibility', function(d) {
           if(stageErrorCounts && stageErrorCounts[d.instanceName] &&
             parseInt(stageErrorCounts[d.instanceName]) > 0) {
@@ -715,7 +712,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           }
           return '';
         })
-        .on("mousedown", function() {
+        .on('mousedown', function() {
           $rootScope.$apply(function(){
             $rootScope.$broadcast('showBadRecordsSelected');
           });
@@ -731,35 +728,35 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .classed(consts.selectedClass, function(d){
         return d === state.selectedEdge;
       })
-        .attr("d", function(d){
+        .attr('d', function(d){
           var totalLanes = d.source.outputLanes.length,
             outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
             y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) +
                   ((consts.rectHeight * (outputLaneIndex))/totalLanes));
 
-          return "M" + (d.source.uiInfo.xPos + consts.rectWidth) + "," + (d.source.uiInfo.yPos + y) +
-            "L" + d.target.uiInfo.xPos + "," + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
+          return 'M' + (d.source.uiInfo.xPos + consts.rectWidth) + ',' + (d.source.uiInfo.yPos + y) +
+            'L' + d.target.uiInfo.xPos + ',' + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
         });
 
       // add new paths
       paths.enter()
-        .append("path")
+        .append('path')
         .style('marker-end','url(#end-arrow)')
-        .classed("link", true)
-        .attr("d", function(d) {
+        .classed('link', true)
+        .attr('d', function(d) {
 
           var totalLanes = d.source.outputLanes.length,
             outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
             y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) +
                   ((consts.rectHeight * (outputLaneIndex))/totalLanes));
 
-          return "M" + (d.source.uiInfo.xPos + consts.rectWidth) + "," + (d.source.uiInfo.yPos + y) +
-            "L" + d.target.uiInfo.xPos + "," + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
+          return 'M' + (d.source.uiInfo.xPos + consts.rectWidth) + ',' + (d.source.uiInfo.yPos + y) +
+            'L' + d.target.uiInfo.xPos + ',' + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
         })
-        .on("mousedown", function(d){
+        .on('mousedown', function(d){
           thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
         })
-        .on("mouseup", function(d){
+        .on('mouseup', function(d){
           state.mouseDownLink = null;
         });
 
@@ -782,19 +779,33 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     GraphCreator.prototype.zoomed = function(){
       this.state.justScaleTransGraph = true;
-      d3.select("." + this.consts.graphClass)
-        .attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+      d3.select('.' + this.consts.graphClass)
+        .attr('transform', 'translate(' + d3.event.translate + ') scale(' + d3.event.scale + ')');
+    };
+
+    GraphCreator.prototype.zoomIn = function() {
+      if(this.state.currentScale < this.zoom.scaleExtent()[1]) {
+        this.state.currentScale = Math.round((this.state.currentScale + 0.1) * 10)/10 ;
+        this.zoom.scale(this.state.currentScale).event(this.svg);
+      }
+    };
+
+    GraphCreator.prototype.zoomOut = function() {
+      if(this.state.currentScale > this.zoom.scaleExtent()[0]) {
+        this.state.currentScale = Math.round((this.state.currentScale - 0.1) * 10)/10 ;
+        this.zoom.scale(this.state.currentScale).event(this.svg);
+      }
     };
 
     GraphCreator.prototype.updateWindow = function(svg){
       /*var svgEl = $element.parent();
       var x = svgEl.width();
       var y = svgEl.height();
-      svg.attr("width", x).attr("height", y);*/
+      svg.attr('width', x).attr('height', y);*/
     };
 
     /** MAIN SVG **/
-    var svg, graph;
+    var graphContainer, svg, graph, toolbar;
 
     $scope.$on('updateGraph', function(event, options) {
       var nodes = options.nodes,
@@ -806,12 +817,38 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       if(graph !== undefined) {
         graph.deleteGraph();
       } else {
-        svg = d3.select($element[0]).append("svg")
-          .attr("width", "100%")
-          .attr("height", "100%")
-          .attr("tabindex", 0);
+        graphContainer = d3.select($element[0]).append('div')
+          .attr('class', 'graph-container');
+        svg = graphContainer.append('svg')
+          .attr('width', '100%')
+          .attr('height', '100%')
+          .attr('tabindex', 0);
         graph = new GraphCreator(svg, nodes, edges || [], issues);
         graph.setIdCt(2);
+
+
+        //Toolbar
+
+        toolbar = graphContainer.append('div')
+          .attr('class', 'graph-toolbar');
+
+
+        toolbar.append('div')
+          .append('span')
+          .attr('class', 'pointer fa fa-plus')
+          .on('mousedown', function() {
+            graph.zoomIn();
+            d3.event.preventDefault();
+          });
+
+        toolbar.append('div')
+          .append('span')
+          .attr('class', 'pointer fa fa-minus')
+          .on('mousedown', function() {
+            graph.zoomOut();
+            d3.event.preventDefault();
+          });
+
       }
 
       graph.nodes = nodes;

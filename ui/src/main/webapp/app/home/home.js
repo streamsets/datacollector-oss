@@ -366,12 +366,14 @@ angular
 
       }
 
-      $scope.$broadcast('updateGraph', {
-        nodes: $scope.pipelineConfig.stages,
-        edges: edges,
-        issues: $scope.pipelineConfig.issues,
-        selectNode: ($scope.detailPaneConfig && !$scope.detailPaneConfig.stages) ? $scope.detailPaneConfig : undefined,
-        stageErrorCounts: stageErrorCounts
+      $timeout(function() {
+        $scope.$broadcast('updateGraph', {
+          nodes: $scope.pipelineConfig.stages,
+          edges: edges,
+          issues: $scope.pipelineConfig.issues,
+          selectNode: ($scope.detailPaneConfig && !$scope.detailPaneConfig.stages) ? $scope.detailPaneConfig : undefined,
+          stageErrorCounts: stageErrorCounts
+        });
       });
 
     };
