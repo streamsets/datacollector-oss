@@ -38,12 +38,12 @@
 
     <div class="pull-right size-toolbar">
       <span class="glyphicon pointer"
-            ng-hide="maximizeDetailPane"
-            ng-class="{'glyphicon-minus' : !minimizeDetailPane , 'glyphicon-resize-full': minimizeDetailPane}"
+            ng-hide="$storage.maximizeDetailPane"
+            ng-class="{'glyphicon-minus' : !$storage.minimizeDetailPane , 'glyphicon-resize-full': $storage.minimizeDetailPane}"
             ng-click="onMinimizeDetailPane()"></span>
       <span class="glyphicon pointer"
-            ng-hide="minimizeDetailPane"
-            ng-class="{'glyphicon-fullscreen' : !maximizeDetailPane , 'glyphicon-resize-small': maximizeDetailPane}"
+            ng-hide="$storage.minimizeDetailPane"
+            ng-class="{'glyphicon-fullscreen' : !$storage.maximizeDetailPane , 'glyphicon-resize-small': $storage.maximizeDetailPane}"
             ng-click="onMaximizeDetailPane()"></span>
     </div>
 

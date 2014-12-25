@@ -12,7 +12,7 @@
 
       <bg-splitter orientation="vertical"
                    ng-show="pipelineConfig"
-                   ng-class="{'minimize-pane2': minimizeDetailPane, 'maximize-pane2': maximizeDetailPane}">
+                   ng-class="{'minimize-pane2': $storage.minimizeDetailPane, 'maximize-pane2': $storage.maximizeDetailPane}">
 
         <bg-pane min-size="0">
           <ng-include src="'app/home/graph/graph.tpl.html'"></ng-include>

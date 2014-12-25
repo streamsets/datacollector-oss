@@ -173,7 +173,8 @@ angular
       onIssueClick: function(issue, instanceName) {
         var pipelineConfig = $scope.pipelineConfig,
           stageInstance;
-
+        $scope.$storage.maximizeDetailPane = false;
+        $scope.$storage.minimizeDetailPane = false;
         if(instanceName) {
           //Select stage instance
           stageInstance = _.find(pipelineConfig.stages, function(stage) {
@@ -195,6 +196,8 @@ angular
       startPipeline: function() {
         if($rootScope.common.pipelineStatus.state !== 'RUNNING') {
           var startResponse;
+          $scope.$storage.maximizeDetailPane = false;
+          $scope.$storage.minimizeDetailPane = false;
           api.pipelineAgent.startPipeline($scope.activeConfigInfo.name, 0).
             then(
               function (res) {

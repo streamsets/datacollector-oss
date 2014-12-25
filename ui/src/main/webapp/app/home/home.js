@@ -12,7 +12,8 @@ angular
       }
     );
   }])
-  .controller('HomeController', function ($scope, $rootScope, $timeout, api, configuration, _, $q, $modal, pipelineConstant) {
+  .controller('HomeController', function ($scope, $rootScope, $timeout, api, configuration, _, $q, $modal,
+                                          $localStorage, pipelineConstant) {
     var stageCounter = 0,
       timeout,
       dirty = false,
@@ -38,6 +39,7 @@ angular
       },
       minimizeDetailPane: false,
       maximizeDetailPane: false,
+      $storage: $localStorage,
 
       /**
        * Add New Pipeline Configuration
@@ -82,6 +84,8 @@ angular
        */
       previewPipeline: function (nextBatch) {
         $scope.previewMode = true;
+        $scope.$storage.maximizeDetailPane = false;
+        $scope.$storage.minimizeDetailPane = false;
         $scope.$broadcast('previewPipeline', nextBatch);
       },
 
@@ -98,6 +102,8 @@ angular
        */
       captureSnapshot: function() {
         $scope.snapshotMode = true;
+        $scope.$storage.maximizeDetailPane = false;
+        $scope.$storage.minimizeDetailPane = false;
         $scope.$broadcast('snapshotPipeline');
       },
 
@@ -130,16 +136,16 @@ angular
        * On Detail Pane Minimize button is clicked.
        */
       onMinimizeDetailPane: function() {
-        $scope.maximizeDetailPane = false;
-        $scope.minimizeDetailPane = !$scope.minimizeDetailPane;
+        $scope.$storage.maximizeDetailPane = false;
+        $scope.$storage.minimizeDetailPane = !$scope.$storage.minimizeDetailPane;
       },
 
       /**
        * On Detail Pane Maximize button is clicked.
        */
       onMaximizeDetailPane: function() {
-        $scope.minimizeDetailPane = false;
-        $scope.maximizeDetailPane = !$scope.maximizeDetailPane;
+        $scope.$storage.minimizeDetailPane = false;
+        $scope.$storage.maximizeDetailPane = !$scope.$storage.maximizeDetailPane;
       },
 
       /**
