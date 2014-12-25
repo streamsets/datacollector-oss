@@ -28,10 +28,17 @@
 
 
       <div class="create-pipeline-btn" ng-class="{'show': !pipelineConfig && loaded}"  ng-cloak>
-        <button class="btn btn-primary" ng-click="addPipelineConfig()">
-          <span class="glyphicon glyphicon-plus"></span>
+        <button class="btn btn-primary pull-left" ng-click="addPipelineConfig()">
+          <span class="fa fa-plus"></span>
           <span translate="home.createPipeline">Create Pipeline</span>
         </button>
+
+        <button class="btn btn-primary pull-left" ng-click="importPipelineConfig()">
+          <span class="fa fa-arrow-circle-down"></span>
+          <span translate="home.importPipeline">Import Pipeline</span>
+        </button>
+
+
       </div>
 
     </bg-pane>

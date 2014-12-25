@@ -26,7 +26,7 @@ angular
           templateUrl: 'app/home/library/create.tpl.html',
           controller: 'CreateModalInstanceController',
           size: '',
-          backdrop: true
+          backdrop: 'static'
         });
 
         modalInstance.result.then(function (configObject) {
@@ -50,7 +50,7 @@ angular
           templateUrl: 'app/home/library/delete.tpl.html',
           controller: 'DeleteModalInstanceController',
           size: '',
-          backdrop: true,
+          backdrop: 'static',
           resolve: {
             pipelineInfo: function () {
               return pipelineInfo;
@@ -90,7 +90,7 @@ angular
           templateUrl: 'app/home/library/duplicate.tpl.html',
           controller: 'DuplicateModalInstanceController',
           size: '',
-          backdrop: true,
+          backdrop: 'static',
           resolve: {
             pipelineInfo: function () {
               return pipelineInfo;
@@ -120,7 +120,7 @@ angular
           templateUrl: 'importModalContent.html',
           controller: 'ImportModalInstanceController',
           size: '',
-          backdrop: true,
+          backdrop: 'static',
           resolve: {
             pipelineInfo: function () {
               return pipelineInfo;
@@ -128,10 +128,21 @@ angular
           }
         });
 
-        $event.stopPropagation();
+        if($event) {
+          $event.stopPropagation();
+        }
 
-        modalInstance.result.then(function () {
-          $scope.$emit('onPipelineConfigSelect', pipelineInfo);
+        modalInstance.result.then(function (configObject) {
+
+          if(configObject) {
+            //In case of new object created.
+            $scope.pipelines.push(configObject.info);
+            $scope.$emit('onPipelineConfigSelect', configObject.info);
+          } else {
+            //In case of current object replaced.
+            $scope.$emit('onPipelineConfigSelect', pipelineInfo);
+          }
+
         }, function () {
 
         });
@@ -150,6 +161,10 @@ angular
 
     $scope.$on('addPipelineConfig', function() {
       $scope.addPipelineConfig();
+    });
+
+    $scope.$on('importPipelineConfig', function() {
+      $scope.importPipelineConfig();
     });
 
   })

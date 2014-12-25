@@ -47,6 +47,13 @@ angular
       },
 
       /**
+       * Add New Pipeline Configuration
+       */
+      importPipelineConfig: function() {
+        $scope.$broadcast('importPipelineConfig');
+      },
+
+      /**
        * Utility function for checking object is empty.
        *
        * @param obj

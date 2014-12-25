@@ -25,13 +25,30 @@ angular
             var jsonConfigObj = JSON.parse(loadEvent.target.result);
             if(jsonConfigObj.uuid) {
 
-              jsonConfigObj.uuid = pipelineInfo.uuid;
-              api.pipelineAgent.savePipelineConfig(pipelineInfo.name, jsonConfigObj).
-                success(function() {
-                  $modalInstance.close();
-                }).error(function(data) {
-                  $scope.common.errors = [data];
-                });
+              if(pipelineInfo) { //If pipeline config already exists
+                jsonConfigObj.uuid = pipelineInfo.uuid;
+                api.pipelineAgent.savePipelineConfig(pipelineInfo.name, jsonConfigObj).
+                  success(function(res) {
+                    $modalInstance.close();
+                  }).error(function(data) {
+                    $scope.common.errors = [data];
+                  });
+              } else { //If no pipeline exist
+
+                api.pipelineAgent.createNewPipelineConfig(jsonConfigObj.info.name, jsonConfigObj.info.description)
+                  .then(function(res) {
+                    var newPipelineObject = res.data;
+                    newPipelineObject.configuration = jsonConfigObj.configuration;
+                    newPipelineObject.uiInfo = jsonConfigObj.uiInfo;
+                    newPipelineObject.stages = jsonConfigObj.stages;
+                    return api.pipelineAgent.savePipelineConfig(jsonConfigObj.info.name, newPipelineObject);
+                  })
+                  .then(function(res) {
+                    $modalInstance.close(res.data);
+                  },function(res) {
+                    $scope.common.errors = [res.data];
+                  });
+              }
 
             } else {
               $scope.$apply(function() {
