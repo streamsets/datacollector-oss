@@ -126,7 +126,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       thisGraph.zoom = d3.behavior.zoom()
         .scaleExtent([0.1, 2])
         .on('zoom', function(){
-          if (d3.event.sourceEvent.shiftKey){
+          if (d3.event && d3.event.sourceEvent && d3.event.sourceEvent.shiftKey){
             // TODO  the internal d3 state is still changing
             return false;
           } else{
@@ -139,7 +139,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           if (ael){
             ael.blur();
           }
-          if (!d3.event.sourceEvent.shiftKey) {
+          if (d3.event && d3.event.sourceEvent && !d3.event.sourceEvent.shiftKey) {
             d3.select('body').style('cursor', 'move');
           }
         })
@@ -775,6 +775,12 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         }
       });
 
+
+      if(thisGraph.nodes && thisGraph.nodes.length) {
+        //thisGraph.moveNodeToCenter(thisGraph.nodes[0]);
+      }
+
+
     };
 
     GraphCreator.prototype.zoomed = function(){
@@ -795,6 +801,20 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         this.state.currentScale = Math.round((this.state.currentScale - 0.1) * 10)/10 ;
         this.zoom.scale(this.state.currentScale).event(this.svg);
       }
+    };
+
+    GraphCreator.prototype.moveNodeToCenter = function(stageInstance) {
+      var thisGraph = this,
+        consts = thisGraph.consts,
+        svgWidth = thisGraph.svg.style('width').replace('px', ''),
+        svgHeight = thisGraph.svg.style('height').replace('px', ''),
+        x = svgWidth / 2 - (stageInstance.uiInfo.xPos + consts.rectWidth/2),
+        y = svgHeight / 2 - (stageInstance.uiInfo.yPos + consts.rectHeight/2);
+      
+      thisGraph.svgG
+        .transition()
+        .duration(750)
+        .attr('transform', 'translate(' + x + ',' + y + ')');
     };
 
     GraphCreator.prototype.updateWindow = function(svg){
@@ -868,6 +888,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     $scope.$on('selectNode', function(event, stageInstance) {
       if(stageInstance) {
+        graph.moveNodeToCenter(stageInstance);
         graph.selectNode(stageInstance);
       } else if (graph.state.selectedNode){
         graph.removeSelectFromNode();
