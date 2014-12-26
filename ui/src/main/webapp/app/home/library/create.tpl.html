@@ -1,4 +1,4 @@
-<form class="import-modal-form" role="form" ng-submit="save()">
+<form class="create-pipeline-modal-form" role="form" ng-submit="save()">
   <div class="modal-header">
     <button type="button" class="close" ng-click="cancel()">
       <span aria-hidden="true">&times;</span>
@@ -45,6 +45,62 @@
                 placeholder="{{'home.library.descriptionPlaceholder' | translate}}"
                 ng-model="newConfig.description"></textarea>
     </div>
+
+
+    <div class="form-group source-dropdown">
+      <label class="control-label" translate="global.form.source">Source</label>
+
+      <!--ui-select ng-model="selectedSource.selected"
+                   ng-disabled="disabled"
+                   reset-search-input="false">
+        <ui-select-match
+          placeholder="{{'home.library.sourcePlaceholder' | translate}}">{{$select.selected.label}}</ui-select-match>
+        <ui-select-choices repeat="stage in sources track by $index">
+          <div ng-bind-html="stage.label | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select-->
+
+
+      <select class="form-control" name="newPipelineSource"
+              ng-model="selectedSource"
+              ng-options="stage.label for stage in sources">
+        <option value="">
+          {{'home.library.sourcePlaceholder' | translate}}
+        </option>
+      </select>
+
+    </div>
+
+
+    <div class="form-group">
+      <label class="control-label" translate="global.form.processors">Processors</label>
+
+      <ui-select multiple reset-search-input="true"
+                 ng-model="selectedProcessors.selected">
+        <ui-select-match
+          placeholder="{{'home.library.processorPlaceholder' | translate}}">{{$item.label}}</ui-select-match>
+        <ui-select-choices repeat="stage in processors |  filter: {label: $select.search}">
+          {{stage.label}}
+        </ui-select-choices>
+      </ui-select>
+    </div>
+
+
+    <div class="form-group">
+      <label class="control-label" translate="global.form.targets">Targets</label>
+
+      <ui-select multiple reset-search-input="true"
+                 ng-model="selectedTargets.selected">
+        <ui-select-match
+          placeholder="{{'home.library.targetPlaceholder' | translate}}">{{$item.label}}</ui-select-match>
+        <ui-select-choices repeat="stage in targets | filter: {label: $select.search}">
+          {{stage.label}}
+        </ui-select-choices>
+      </ui-select>
+    </div>
+
+
+
   </div>
   <div class="modal-footer">
     <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.cancel">

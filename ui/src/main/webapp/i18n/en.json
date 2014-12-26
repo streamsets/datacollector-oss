@@ -47,6 +47,7 @@
       "outputRecord": "Output Record",
       "pipeline": "Pipeline",
       "previousStage": "Previous Stage",
+      "processors": "Processors",
       "record": "Record",
       "records": "Records",
       "refresh": "Refresh",
@@ -54,9 +55,12 @@
       "revertChanges": "Revert Changes",
       "sampleValue": "Sample Value",
       "save": "Save",
+      "source": "Source",
       "stage": "Stage",
+      "stages": "Stages",
       "stageErrors": "Stage Errors",
       "step": "Step",
+      "targets": "Targets",
       "timestamp": "Timestamp",
       "type": "Type",
       "username": "Login",
@@ -78,6 +82,7 @@
   "home": {
     "createPipeline": "Create Pipeline",
     "importPipeline": "Import Pipeline",
+    "getStarted": "Get Started",
     "header" : {
       "addStage": "Add Stage",
       "definePipeline": "Define Pipeline:",
@@ -157,15 +162,18 @@
       "noRecords": "No Records to view."
     },
     "library": {
+      "descriptionPlaceholder": "Pipeline Definition Description",
+      "deleteConfirmationTitle": "Delete Confirmation",
+      "deleteConfirmationMessage": "Are you sure you want to delete Pipeline Configuration '{{name}}'?",
+      "duplicatePipelineDefinition": "Duplicate Pipeline Definition",
+      "emptyPipelineList": "No Pipeline to view.",
       "newPipelineDefinition": "New Pipeline",
       "namePlaceholder": "Pipeline Definition Name",
       "nameRequiredValidation": "Please enter name of the pipeline.",
       "nameValidation": "Enter alphanumeric characters and underscores.",
-      "descriptionPlaceholder": "Pipeline Definition Description",
-      "emptyPipelineList": "No Pipeline to view.",
-      "deleteConfirmationTitle": "Delete Confirmation",
-      "deleteConfirmationMessage": "Are you sure you want to delete Pipeline Configuration '{{name}}'?",
-      "duplicatePipelineDefinition": "Duplicate Pipeline Definition"
+      "processorPlaceholder": "Select Processor...",
+      "sourcePlaceholder":"Select Source...",
+      "targetPlaceholder": "Select Target..."
     },
     "import": {
       "headerLabel" : "Import Pipeline Definition",

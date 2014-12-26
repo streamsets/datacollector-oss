@@ -146,12 +146,30 @@
   }
 }
 
-.create-pipeline-btn {
-  margin: 200px 0 0 42%;
+.pipeline-empty-container {
+  background: #29b4e1 url('/assets/logo-watermark-big.png') no-repeat center bottom;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
   display: none;
 
-  .btn {
-    margin-right: @defaultPadding;
+  .create-pipeline-btn {
+    margin: 200px 0 0 40%;
+    color: #ffffff;
+    
+    h2 {
+      padding-left: @defaultPadding * 6;
+      padding-bottom: @defaultPadding * 2;
+      font-style: italic;
+      font-family: serif;
+    }
+    
+    .btn {
+      margin-right: @defaultPadding;
+    }
   }
 
   .show {

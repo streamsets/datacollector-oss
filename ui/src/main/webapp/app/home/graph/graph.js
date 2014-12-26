@@ -5,11 +5,7 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('GraphController', function ($scope, $rootScope, _, api, $translate) {
-    var stageCounter = 0,
-      SOURCE_STAGE_TYPE = 'SOURCE',
-      PROCESSOR_STAGE_TYPE = 'PROCESSOR',
-      TARGET_STAGE_TYPE = 'TARGET';
+  .controller('GraphController', function ($scope, $rootScope, _, api, $translate, pipelineService) {
 
     angular.extend($scope, {
       /**
@@ -17,110 +13,7 @@ angular
        * @param stage
        */
       addStageInstance: function (stage) {
-        var xPos = ($scope.pipelineConfig.stages && $scope.pipelineConfig.stages.length) ?
-          $scope.pipelineConfig.stages[$scope.pipelineConfig.stages.length - 1].uiInfo.xPos + 300 : 200,
-          yPos = 70,
-          stageInstance = {
-            instanceName: stage.name + (new Date()).getTime(),
-            library: stage.library,
-            stageName: stage.name,
-            stageVersion: stage.version,
-            configuration: [],
-            uiInfo: {
-              label: stage.label + (++stageCounter),
-              description: '',
-              xPos: xPos,
-              yPos: yPos,
-              stageType: stage.type
-            },
-            inputLanes: [],
-            outputLanes: []
-          };
-
-        if (stage.type !== TARGET_STAGE_TYPE) {
-          stageInstance.outputLanes = [stageInstance.instanceName + 'OutputLane' + (new Date()).getTime()];
-        }
-
-        angular.forEach(stage.configDefinitions, function (configDefinition) {
-          var config = {
-            name: configDefinition.name,
-            value: configDefinition.defaultValue || undefined
-          };
-
-          if(configDefinition.type === 'MODEL') {
-            if(configDefinition.model.modelType === 'FIELD_SELECTOR') {
-              config.value = [];
-            } else if(configDefinition.model.modelType === 'LANE_PREDICATE_MAPPING') {
-              config.value = [{
-                outputLane: stageInstance.outputLanes[0],
-                predicate: ''
-              }];
-            }
-          } else if(configDefinition.type === 'INTEGER') {
-            if(config.value) {
-              config.value = parseInt(config.value);
-            } else {
-              config.value = 0;
-            }
-          } else if(configDefinition.type === 'BOOLEAN' && config.value === undefined) {
-            config.value = false;
-          } else if(configDefinition.type === 'MAP') {
-            config.value = [];
-          }
-
-          stageInstance.configuration.push(config);
-        });
-
-
-        if(stage.rawSourceDefinition && stage.rawSourceDefinition.configDefinitions) {
-
-          stageInstance.uiInfo.rawSource = {
-            configuration: []
-          };
-
-          angular.forEach(stage.rawSourceDefinition.configDefinitions, function (configDefinition) {
-            var config = {
-              name: configDefinition.name,
-              value: configDefinition.defaultValue
-            };
-
-            if(configDefinition.type === 'MODEL' && configDefinition.model.modelType === 'FIELD_SELECTOR') {
-              config.value = [];
-            } else if(configDefinition.type === 'INTEGER') {
-              if(config.value) {
-                config.value = parseInt(config.value);
-              } else {
-                config.value = 0;
-              }
-            }
-
-            stageInstance.uiInfo.rawSource.configuration.push(config);
-          });
-        }
-
-        if(stage.icon) {
-          stageInstance.uiInfo.icon = 'rest/v1/definitions/stages/icon?name=' + stage.name +
-            '&library=' + stage.library + '&version=' + stage.version;
-        } else {
-          switch(stage.type) {
-            case SOURCE_STAGE_TYPE:
-              stageInstance.uiInfo.icon = 'assets/stage/defaultSource.svg';
-              break;
-            case PROCESSOR_STAGE_TYPE:
-              stageInstance.uiInfo.icon = 'assets/stage/defaultProcessor.svg';
-              break;
-            case TARGET_STAGE_TYPE:
-              stageInstance.uiInfo.icon = 'assets/stage/defaultTarget.svg';
-              break;
-          }
-        }
-
-
-
-
-
-
-
+        var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig);
         $scope.updateDetailPaneObject(stageInstance, stage);
         $scope.$broadcast('addNode', stageInstance);
       },

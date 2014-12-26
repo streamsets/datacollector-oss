@@ -26,7 +26,18 @@ angular
           templateUrl: 'app/home/library/create.tpl.html',
           controller: 'CreateModalInstanceController',
           size: '',
-          backdrop: 'static'
+          backdrop: 'static',
+          resolve: {
+            sources: function () {
+              return $scope.sources;
+            },
+            processors: function () {
+              return $scope.processors;
+            },
+            targets: function () {
+              return $scope.targets;
+            }
+          }
         });
 
         modalInstance.result.then(function (configObject) {
@@ -169,22 +180,65 @@ angular
 
   })
 
-  .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api) {
+  .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api, pipelineService,
+                                                         sources, targets, processors) {
     angular.extend($scope, {
       issues: [],
+      sources: sources,
+      targets: targets,
+      processors: processors,
+      selectedSource: '',
+      selectedProcessors: {},
+      selectedTargets: {},
       newConfig : {
         name: '',
-        description: ''
+        description: '',
+        stages: []
       },
       save : function () {
         if($scope.newConfig.name) {
           api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
-            success(function(configObject) {
-              $modalInstance.close(configObject);
-            }).
-            error(function(data) {
-              $scope.issues = [data];
-            });
+            then(
+              function(res) {
+                var newPipelineObject = res.data,
+                  selectedSource = $scope.selectedSource,
+                  selectedProcessors = $scope.selectedProcessors.selected,
+                  selectedTargets = $scope.selectedTargets.selected;
+
+                newPipelineObject.stages = [];
+
+                if(selectedSource) {
+                  newPipelineObject.stages.push(pipelineService.getNewStageInstance(selectedSource,
+                    newPipelineObject));
+                }
+
+                if(selectedProcessors && selectedProcessors.length) {
+                  angular.forEach(selectedProcessors, function(stage) {
+                    newPipelineObject.stages.push(pipelineService.getNewStageInstance(stage,
+                      newPipelineObject));
+                  });
+                }
+
+                if(selectedTargets && selectedTargets.length) {
+                  angular.forEach(selectedTargets, function(stage) {
+                    newPipelineObject.stages.push(pipelineService.getNewStageInstance(stage,
+                      newPipelineObject));
+                  });
+                }
+
+                return api.pipelineAgent.savePipelineConfig($scope.newConfig.name, newPipelineObject);
+              },
+              function(res) {
+                $scope.issues = [res.data];
+              }
+            ).then(
+              function(res) {
+                $modalInstance.close(res.data);
+              },
+              function(res) {
+                $scope.issues = [res.data];
+              }
+            );
         } else {
           $translate('home.library.nameRequiredValidation').then(function(translation) {
             $scope.issues = [translation];
