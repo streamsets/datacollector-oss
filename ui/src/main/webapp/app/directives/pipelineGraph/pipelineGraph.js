@@ -217,26 +217,49 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       sel.removeAllRanges();
       sel.addRange(range);
     };
-
-
-    /* insert svg line breaks: taken from http://stackoverflow.com/questions/13241475/how-do-i-include-newlines-in-labels-in-d3-charts */
+    /**
+     * http://bl.ocks.org/mbostock/7555321
+     *
+     * @param gEl
+     * @param title
+     */
     GraphCreator.prototype.insertTitleLinebreaks = function (gEl, title) {
-      var words = title.split(/\s+/g),
-        nwords = words.length;
-
       var el = gEl.append('text')
         .attr('text-anchor','middle')
         .attr('x', 80)
-        .attr('y', 90)
-        .attr('dy', '-' + (nwords-1)*7.5);
+        .attr('y', 90),
+        text = el,
+        words = title.split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1, // ems
+        y = text.attr('y'),
+        dy = 0,
+        tspan = text.text(null).append('tspan').attr('x', 80).attr('y', y).attr('dy', dy + 'em'),
+        totalLines = 1;
 
-      for (var i = 0; i < words.length; i++) {
-        var tspan = el.append('tspan').text(words[i]);
-        if (i > 0) {
-          tspan.attr('x', 80)
-            .attr('dy', '15');
+      if(words.length === 1) {
+        tspan.text(title.substring(0, 23));
+      } else {
+        while (word = words.pop()) {
+          line.push(word);
+          tspan.text(line.join(' '));
+          if (tspan.node().getComputedTextLength() > this.consts.rectWidth - 5) {
+            line.pop();
+            tspan.text(line.join(' ').substring(0, 23));
+
+            if(totalLines === 3) {
+              break;
+            }
+
+            line = [word];
+            tspan = text.append('tspan').attr('x', 80).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
+            totalLines++;
+          }
         }
       }
+
     };
 
     // remove edges associated with a node
@@ -775,12 +798,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         }
       });
 
-
-      if(thisGraph.nodes && thisGraph.nodes.length) {
-        //thisGraph.moveNodeToCenter(thisGraph.nodes[0]);
-      }
-
-
     };
 
     GraphCreator.prototype.zoomed = function(){
@@ -810,7 +827,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         svgHeight = thisGraph.svg.style('height').replace('px', ''),
         x = svgWidth / 2 - (stageInstance.uiInfo.xPos + consts.rectWidth/2),
         y = svgHeight / 2 - (stageInstance.uiInfo.yPos + consts.rectHeight/2);
-      
+
       thisGraph.svgG
         .transition()
         .duration(750)
