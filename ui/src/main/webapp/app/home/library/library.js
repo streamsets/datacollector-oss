@@ -29,13 +29,13 @@ angular
           backdrop: 'static',
           resolve: {
             sources: function () {
-              return $scope.sources;
+              return angular.copy($scope.sources);
             },
             processors: function () {
-              return $scope.processors;
+              return angular.copy($scope.processors);
             },
             targets: function () {
-              return $scope.targets;
+              return angular.copy($scope.targets);
             }
           }
         });
@@ -195,6 +195,31 @@ angular
         description: '',
         stages: []
       },
+
+      onProcessorSelect: function($item) {
+        var itemDuplicate = angular.copy($item);
+        $scope.processors.unshift(itemDuplicate);
+      },
+
+      onProcessorRemove: function($item) {
+        var index = _.indexOf($scope.processors, $item);
+        if(index !== -1) {
+          $scope.processors.splice(index, 1);
+        }
+      },
+
+      onTargetSelect: function($item) {
+        var itemDuplicate = angular.copy($item);
+        $scope.targets.unshift(itemDuplicate);
+      },
+
+      onTargetRemove: function($item) {
+        var index = _.indexOf($scope.targets, $item);
+        if(index !== -1) {
+          $scope.targets.splice(index, 1);
+        }
+      },
+
       save : function () {
         if($scope.newConfig.name) {
           api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
@@ -213,16 +238,16 @@ angular
                 }
 
                 if(selectedProcessors && selectedProcessors.length) {
-                  angular.forEach(selectedProcessors, function(stage) {
+                  angular.forEach(selectedProcessors, function(stage, index) {
                     newPipelineObject.stages.push(pipelineService.getNewStageInstance(stage,
-                      newPipelineObject));
+                      newPipelineObject, index));
                   });
                 }
 
                 if(selectedTargets && selectedTargets.length) {
-                  angular.forEach(selectedTargets, function(stage) {
+                  angular.forEach(selectedTargets, function(stage, index) {
                     newPipelineObject.stages.push(pipelineService.getNewStageInstance(stage,
-                      newPipelineObject));
+                      newPipelineObject, index));
                   });
                 }
 
@@ -250,6 +275,7 @@ angular
         $modalInstance.dismiss('cancel');
       }
     });
+
   })
 
   .controller('DeleteModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api) {

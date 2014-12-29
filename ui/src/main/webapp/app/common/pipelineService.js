@@ -12,13 +12,13 @@ angular.module('pipelineAgentApp.common')
      * @param pipelineConfig
      * @returns {{instanceName: *, library: (*|stageInstance.library|library|e.library), stageName: *, stageVersion: *, configuration: Array, uiInfo: {label: *, description: string, xPos: *, yPos: number, stageType: *}, inputLanes: Array, outputLanes: Array}}
      */
-    this.getNewStageInstance = function (stage, pipelineConfig) {
+    this.getNewStageInstance = function (stage, pipelineConfig, labelSuffix) {
       var xPos = (pipelineConfig.stages && pipelineConfig.stages.length) ?
                     pipelineConfig.stages[pipelineConfig.stages.length - 1].uiInfo.xPos + 300 : 200,
         yPos = 70,
         stageLabel = self.getStageLabel(stage, pipelineConfig),
         stageInstance = {
-          instanceName: stage.name + (new Date()).getTime(),
+          instanceName: stage.name + (new Date()).getTime() + (labelSuffix ? labelSuffix : ''),
           library: stage.library,
           stageName: stage.name,
           stageVersion: stage.version,

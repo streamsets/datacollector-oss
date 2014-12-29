@@ -245,7 +245,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         while (word = words.pop()) {
           line.push(word);
           tspan.text(line.join(' '));
-          if (tspan.node().getComputedTextLength() > this.consts.rectWidth - 5) {
+          if (tspan.node().getComputedTextLength() > this.consts.rectWidth - 10) {
             line.pop();
             tspan.text(line.join(' ').substring(0, 23));
 

@@ -76,10 +76,12 @@
       <label class="control-label" translate="global.form.processors">Processors</label>
 
       <ui-select multiple reset-search-input="true"
-                 ng-model="selectedProcessors.selected">
+                 ng-model="selectedProcessors.selected"
+                 on-select="onProcessorSelect($item)"
+                 on-remove="onProcessorRemove($item)">
         <ui-select-match
           placeholder="{{'home.library.processorPlaceholder' | translate}}">{{$item.label}}</ui-select-match>
-        <ui-select-choices repeat="stage in processors |  filter: {label: $select.search}">
+        <ui-select-choices repeat="stage in processors track by $index |  filter: {label: $select.search}">
           {{stage.label}}
         </ui-select-choices>
       </ui-select>
@@ -90,7 +92,9 @@
       <label class="control-label" translate="global.form.targets">Targets</label>
 
       <ui-select multiple reset-search-input="true"
-                 ng-model="selectedTargets.selected">
+                 ng-model="selectedTargets.selected"
+                 on-select="onTargetSelect($item)"
+                 on-remove="onTargetRemove($item)">
         <ui-select-match
           placeholder="{{'home.library.targetPlaceholder' | translate}}">{{$item.label}}</ui-select-match>
         <ui-select-choices repeat="stage in targets | filter: {label: $select.search}">
