@@ -16,6 +16,15 @@
 
     .panel-title {
       padding-top: @smallPadding;
+      padding-right: @smallPadding;
+    }
+
+    .detail-name-dropdown {
+      .btn {
+        padding-top: @smallPadding * 0.7;
+        padding-bottom: 0;
+        padding-left: @smallPadding * .5;
+      }
     }
 
     .preview-toolbar {
@@ -32,6 +41,17 @@
         &:hover {
           color: @brand-primary;
         }
+      }
+    }
+
+    .multistage-preview-toolbar {
+      select {
+        width: 250px;
+      }
+
+      h3 {
+        padding-left: @defaultPadding;
+        padding-right: @defaultPadding;
       }
     }
   }

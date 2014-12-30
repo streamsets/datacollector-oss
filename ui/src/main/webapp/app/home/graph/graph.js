@@ -94,6 +94,7 @@ angular
           api.pipelineAgent.startPipeline($scope.activeConfigInfo.name, 0).
             then(
               function (res) {
+                $scope.moveGraphToCenter();
                 startResponse = res.data;
                 return api.pipelineAgent.getPipelineMetrics();
               },
@@ -126,6 +127,7 @@ angular
       stopPipeline: function() {
         api.pipelineAgent.stopPipeline().
           success(function(res) {
+            $scope.moveGraphToCenter();
             $rootScope.common.pipelineStatus = res;
             $scope.$broadcast('updateErrorCount', {});
           }).

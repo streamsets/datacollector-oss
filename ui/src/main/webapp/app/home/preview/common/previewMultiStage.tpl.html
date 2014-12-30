@@ -1,0 +1,58 @@
+<div class="pipeline-preview" ng-controller="PreviewMultiStageController">
+  <div show-loading="showLoading"></div>
+
+  <table class="table" ng-hide="showLoading">
+    <thead>
+      <tr>
+        <th class="col-md-6">
+          <span>Output Data</span>
+          <select class="pull-left form-control input-sm" name="previewFromStage"
+                  ng-model="fromStage"
+                  ng-options="stageInst.uiInfo.label for stageInst in pipelineConfig.stages"
+                  ng-change="onFromStageChange()">
+          </select>
+        </th>
+
+        <th class="col-md-6">
+          <span>Input Data</span>
+          <select class="pull-left form-control input-sm" name="previewToStage"
+                  ng-model="toStage"
+                  ng-options="stageInst.uiInfo.label for stageInst in toStageList"
+                  ng-change="onToStageChange()">
+          </select>
+        </th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+    <tr ng-repeat="record in multiStagePreviewData.output">
+
+      <td>
+        <record-tree
+          record="record"
+          record-value="record.value"
+          field-name="('global.form.record' | translate)+($index+1)"
+          is-root="true"
+          editable="false">
+        </record-tree>
+      </td>
+
+      <td>
+        <div ng-repeat="record in outputRecords = getInputRecords(multiStagePreviewData.input, record)">
+          <record-tree
+            record="record"
+            record-value="record.value"
+            field-name="('global.form.record' | translate)+($parent.$index+1)"
+            is-root="true"
+            editable="false">
+          </record-tree>
+        </div>
+      </td>
+
+    </tr>
+    </tbody>
+
+  </table>
+
+</div>

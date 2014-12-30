@@ -834,6 +834,14 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr('transform', 'translate(' + x + ',' + y + ')');
     };
 
+    GraphCreator.prototype.moveGraphToCenter = function() {
+      var thisGraph = this;
+      thisGraph.svgG
+        .transition()
+        .duration(750)
+        .attr('transform', 'translate(0,0)');
+    };
+
     GraphCreator.prototype.updateWindow = function(svg){
       /*var svgEl = $element.parent();
       var x = svgEl.width();
@@ -927,6 +935,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             return $filter('abbreviateNumber')(stageInstanceErrorCounts[d.instanceName]);
           });
       }
+    });
+
+    $scope.$on('moveGraphToCenter', function() {
+      if (graph.state.selectedNode){
+        graph.removeSelectFromNode();
+      }
+      graph.moveGraphToCenter();
     });
 
   });

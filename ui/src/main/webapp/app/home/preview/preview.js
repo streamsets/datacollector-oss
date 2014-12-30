@@ -9,6 +9,7 @@ angular
     var previewDataBackup;
 
     angular.extend($scope, {
+      previewMultipleStages: false,
       showLoading: false,
       previewSourceOffset: 0,
       previewBatchSize: 10,
@@ -19,6 +20,16 @@ angular
       },
       previewDataUpdated: false,
       stepExecuted: false,
+
+      changeToPreviewMultipleStages : function() {
+        $scope.previewMultipleStages = true;
+        $scope.moveGraphToCenter();
+      },
+
+      changeToPreviewSingleStage: function() {
+        $scope.previewMultipleStages = false;
+        $scope.changeStageSelection($scope.pipelineConfig.stages[0]);
+      },
 
       /**
        * Preview Data for previous stage instance.
@@ -157,6 +168,8 @@ angular
 
       api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
         success(function (previewData) {
+          var firstStageInstance;
+
           //Clear Previous errors
           $rootScope.common.errors = [];
 
@@ -165,7 +178,10 @@ angular
           $scope.previewData = previewData;
           $scope.previewDataUpdated = false;
 
-          var firstStageInstance = $scope.pipelineConfig.stages[0];
+          if(!$scope.previewMultipleStages) {
+            firstStageInstance = $scope.pipelineConfig.stages[0];
+          }
+
           $scope.changeStageSelection(firstStageInstance);
 
           $scope.showLoading = false;
@@ -189,7 +205,6 @@ angular
         }
       }
     });
-
 
     $scope.$on('recordUpdated', function(event, recordUpdated, recordValue) {
       $scope.recordValueUpdated(recordUpdated, recordValue);

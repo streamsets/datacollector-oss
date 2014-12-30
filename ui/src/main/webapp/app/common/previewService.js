@@ -55,6 +55,60 @@ angular.module('pipelineAgentApp.common')
       return stagePreviewData;
     };
 
+    /**
+     * Returns Preview input lane & output lane data for the given from Stage Instance & to Stage instance.
+     *
+     * @param batchData
+     * @param fromStageInstance
+     * @param toStageInstance
+     * @returns {{input: Array, output: Array, errorRecords: Array, stageErrors: Array}}
+     */
+    this.getPreviewDataForMultiStage = function (batchData, fromStageInstance, toStageInstance) {
+      var stagePreviewData = {
+        input: [],
+        output: [],
+        errorRecords: [],
+        stageErrors: []
+      };
+
+      angular.forEach(batchData, function (stageOutput) {
+        if(stageOutput.instanceName === fromStageInstance.instanceName) {
+
+          angular.forEach(stageOutput.output, function(outputs, laneName) {
+            angular.forEach(outputs, function(output) {
+              output.laneName = laneName;
+              stagePreviewData.output.push(output);
+            });
+          });
+
+          stagePreviewData.errorRecords = stageOutput.errorRecords;
+          stagePreviewData.stageErrors = stageOutput.stageErrors;
+        }
+
+        if(stageOutput.output && toStageInstance.inputLanes && toStageInstance.inputLanes.length) {
+          angular.forEach(toStageInstance.inputLanes, function(inputLane) {
+            if(stageOutput.output[inputLane]) {
+              angular.forEach(stageOutput.output[inputLane], function(input) {
+                input.laneName = inputLane;
+                stagePreviewData.input.push(input);
+              });
+            }
+          });
+        }
+
+      });
+
+      return stagePreviewData;
+    };
+
+    /**
+     * Returns Input Records from Preview Data.
+     *
+     * @param pipelineName
+     * @param stageInstance
+     * @param batchSize
+     * @returns {*}
+     */
     this.getInputRecordsFromPreview = function(pipelineName, stageInstance, batchSize) {
       var deferred = $q.defer();
       api.pipelineAgent.previewPipeline(pipelineName, 0, batchSize).
@@ -70,6 +124,21 @@ angular.module('pipelineAgentApp.common')
         );
 
       return deferred.promise;
+    };
+
+
+    /**
+     * Returns Children of the stage instance in the graph.
+     *
+     * @param stageInstance
+     * @param pipelineConfig
+     * @returns {Array.<T>}
+     */
+    this.getStageChildren = function(stageInstance, pipelineConfig) {
+      var stages = pipelineConfig.stages,
+        index = _.indexOf(stages, stageInstance);
+
+      return stages.slice(index + 1, stages.length + 1);
     };
 
   });

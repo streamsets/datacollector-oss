@@ -94,6 +94,7 @@ angular
        */
       closePreview: function () {
         $scope.previewMode = false;
+        $scope.$broadcast('moveGraphToCenter');
       },
 
       /**
@@ -113,6 +114,7 @@ angular
        */
       closeSnapshot: function () {
         $scope.snapshotMode = false;
+        $scope.$broadcast('moveGraphToCenter');
       },
 
       /**
@@ -157,6 +159,14 @@ angular
       updateDetailPaneObject: function(stageInstance, stage) {
         $scope.detailPaneConfig = stageInstance;
         $scope.detailPaneConfigDefn = stage;
+      },
+
+      /**
+       * Update Pipeline Graph to move Graph to center.
+       *
+       */
+      moveGraphToCenter: function() {
+        $scope.$broadcast('moveGraphToCenter');
       }
 
     });

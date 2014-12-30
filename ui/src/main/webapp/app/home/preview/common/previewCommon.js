@@ -4,10 +4,7 @@
 
 angular
   .module('pipelineAgentApp.home')
-
-  .controller('PreviewCommonController', function ($scope, $rootScope, _, api, previewService, pipelineConstant) {
-    var previewDataBackup;
-
+  .controller('PreviewCommonController', function ($scope, $rootScope, _) {
     angular.extend($scope, {
       expandAllInputData: false,
       expandAllOutputData: false,
