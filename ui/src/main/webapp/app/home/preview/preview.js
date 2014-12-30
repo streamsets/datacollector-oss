@@ -77,6 +77,13 @@ angular
         var instanceName = stageInstance.instanceName,
           records = _.map(inputRecords, _.clone);
 
+        if(stageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
+          //In Case of Source just update flag and return.
+
+          $scope.stepExecuted = true;
+          return;
+        }
+
         _.each(records, function(record) {
           delete record.dirty;
           delete record.expand;
@@ -123,6 +130,13 @@ angular
 
         var firstStageInstance = $scope.pipelineConfig.stages[0];
         $scope.changeStageSelection(firstStageInstance);
+      },
+
+      removeRecord: function(stageInstance, recordList, record, $index) {
+        var batchData = $scope.previewData.batchesOutput[0];
+        recordList.splice($index, 1);
+        $scope.stepExecuted = true;
+        previewService.removeRecordFromSource(batchData, stageInstance, record);
       }
 
 

@@ -76,7 +76,7 @@
 
       <div class="pull-left">
         <button type="button" class="btn btn-primary btn-sm center-block"
-                ng-disabled="detailPaneConfig.uiInfo.stageType !== 'PROCESSOR'"
+                ng-disabled="detailPaneConfig.uiInfo.stageType === 'TARGET'"
                 ng-click="stepPreview(detailPaneConfig, stagePreviewData.input)">
           <span class="glyphicon glyphicon-refresh"></span>
           <span translate="global.form.step">Step</span>

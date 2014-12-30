@@ -9,16 +9,12 @@ angular.module('pipelineAgentApp.common')
     /**
      * Returns Preview input lane & output lane data for the given Stage Instance.
      *
-     * @param previewData
+     * @param batchData
      * @param stageInstance
      * @returns {{input: Array, output: Array}}
      */
     this.getPreviewDataForStage = function (batchData, stageInstance) {
-      var inputLane = (stageInstance.inputLanes && stageInstance.inputLanes.length) ?
-          stageInstance.inputLanes[0] : undefined,
-        outputLane = (stageInstance.outputLanes && stageInstance.outputLanes.length) ?
-          stageInstance.outputLanes[0] : undefined,
-        stagePreviewData = {
+      var stagePreviewData = {
           input: [],
           output: [],
           errorRecords: [],
@@ -139,6 +135,26 @@ angular.module('pipelineAgentApp.common')
         index = _.indexOf(stages, stageInstance);
 
       return stages.slice(index + 1, stages.length + 1);
+    };
+
+
+    this.removeRecordFromSource = function(batchData, stageInstance, record) {
+      var sourceOutput = batchData[0],
+        foundLaneName,
+        outputIndex;
+
+      angular.forEach(sourceOutput.output, function(outputs, laneName) {
+        angular.forEach(outputs, function(output, index) {
+          if(output.header.sourceId === record.header.sourceId) {
+            foundLaneName = laneName;
+            outputIndex = index;
+          }
+        });
+      });
+
+      if(foundLaneName && outputIndex !== undefined) {
+        sourceOutput.output[foundLaneName].splice(outputIndex, 1);
+      }
     };
 
   });

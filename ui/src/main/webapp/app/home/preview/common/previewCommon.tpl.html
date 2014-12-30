@@ -43,12 +43,18 @@
 
               </td>
               <td>
+                <div class="pull-right delete-preview-record"
+                     ng-if="previewMode"
+                     ng-click="removeRecord(detailPaneConfig, stagePreviewData.output, record, $index)">
+                  <i class="fa fa-trash"></i>
+                </div>
+
                 <record-tree
                   record="record"
                   record-value="record.value"
                   field-name="('global.form.record' | translate)+($index+1)"
                   is-root="true"
-                  editable="false">
+                  editable="previewMode">
                 </record-tree>
              </td>
             </tr>
