@@ -176,7 +176,7 @@
       "targetPlaceholder": "Select Target..."
     },
     "import": {
-      "headerLabel" : "Import Pipeline Definition",
+      "headerLabel" : "Import Pipeline",
       "fileUploadPlaceholder": "No file chosen",
       "browse": "Browse"
     },

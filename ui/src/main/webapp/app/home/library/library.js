@@ -23,7 +23,7 @@ angular
        */
       addPipelineConfig: function() {
         var modalInstance = $modal.open({
-          templateUrl: 'app/home/library/create.tpl.html',
+          templateUrl: 'app/home/library/create/create.tpl.html',
           controller: 'CreateModalInstanceController',
           size: '',
           backdrop: 'static',
@@ -32,7 +32,7 @@ angular
               return angular.copy($scope.sources);
             },
             processors: function () {
-              return angular.copy($scope.processors);
+              return angular.copy($scope.processors).concat($scope.selectorProcessors);
             },
             targets: function () {
               return angular.copy($scope.targets);
@@ -58,7 +58,7 @@ angular
        */
       deletePipelineConfig: function(pipelineInfo, $event) {
         var modalInstance = $modal.open({
-          templateUrl: 'app/home/library/delete.tpl.html',
+          templateUrl: 'app/home/library/delete/delete.tpl.html',
           controller: 'DeleteModalInstanceController',
           size: '',
           backdrop: 'static',
@@ -98,7 +98,7 @@ angular
         $event.stopPropagation();
 
         var modalInstance = $modal.open({
-          templateUrl: 'app/home/library/duplicate.tpl.html',
+          templateUrl: 'app/home/library/duplicate/duplicate.tpl.html',
           controller: 'DuplicateModalInstanceController',
           size: '',
           backdrop: 'static',
@@ -178,144 +178,4 @@ angular
       $scope.importPipelineConfig();
     });
 
-  })
-
-  .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api, pipelineService,
-                                                         sources, targets, processors) {
-    angular.extend($scope, {
-      issues: [],
-      sources: sources,
-      targets: targets,
-      processors: processors,
-      selectedSource: '',
-      selectedProcessors: {},
-      selectedTargets: {},
-      newConfig : {
-        name: '',
-        description: '',
-        stages: []
-      },
-
-      onProcessorSelect: function($item) {
-        var itemDuplicate = angular.copy($item);
-        $scope.processors.unshift(itemDuplicate);
-      },
-
-      onProcessorRemove: function($item) {
-        var index = _.indexOf($scope.processors, $item);
-        if(index !== -1) {
-          $scope.processors.splice(index, 1);
-        }
-      },
-
-      onTargetSelect: function($item) {
-        var itemDuplicate = angular.copy($item);
-        $scope.targets.unshift(itemDuplicate);
-      },
-
-      onTargetRemove: function($item) {
-        var index = _.indexOf($scope.targets, $item);
-        if(index !== -1) {
-          $scope.targets.splice(index, 1);
-        }
-      },
-
-      save : function () {
-        if($scope.newConfig.name) {
-          api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
-            then(
-              function(res) {
-                var newPipelineObject = res.data,
-                  selectedSource = $scope.selectedSource,
-                  selectedProcessors = $scope.selectedProcessors.selected,
-                  selectedTargets = $scope.selectedTargets.selected;
-
-                newPipelineObject.stages = [];
-
-                if(selectedSource) {
-                  newPipelineObject.stages.push(pipelineService.getNewStageInstance(selectedSource,
-                    newPipelineObject));
-                }
-
-                if(selectedProcessors && selectedProcessors.length) {
-                  angular.forEach(selectedProcessors, function(stage, index) {
-                    newPipelineObject.stages.push(pipelineService.getNewStageInstance(stage,
-                      newPipelineObject, index));
-                  });
-                }
-
-                if(selectedTargets && selectedTargets.length) {
-                  angular.forEach(selectedTargets, function(stage, index) {
-                    newPipelineObject.stages.push(pipelineService.getNewStageInstance(stage,
-                      newPipelineObject, index));
-                  });
-                }
-
-                return api.pipelineAgent.savePipelineConfig($scope.newConfig.name, newPipelineObject);
-              },
-              function(res) {
-                $scope.issues = [res.data];
-              }
-            ).then(
-              function(res) {
-                $modalInstance.close(res.data);
-              },
-              function(res) {
-                $scope.issues = [res.data];
-              }
-            );
-        } else {
-          $translate('home.library.nameRequiredValidation').then(function(translation) {
-            $scope.issues = [translation];
-          });
-
-        }
-      },
-      cancel : function () {
-        $modalInstance.dismiss('cancel');
-      }
-    });
-
-  })
-
-  .controller('DeleteModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api) {
-    angular.extend($scope, {
-      issues: [],
-      pipelineInfo: pipelineInfo,
-
-      yes: function() {
-        api.pipelineAgent.deletePipelineConfig(pipelineInfo.name).
-          success(function() {
-            $modalInstance.close(pipelineInfo);
-          }).
-          error(function(data) {
-            $scope.issues = [data];
-          });
-      },
-      no: function() {
-        $modalInstance.dismiss('cancel');
-      }
-    });
-  })
-
-  .controller('DuplicateModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api, $q) {
-    angular.extend($scope, {
-      issues: [],
-      newConfig : {
-        name: pipelineInfo.name + 'copy',
-        description: pipelineInfo.description
-      },
-      save : function () {
-        $q.when(api.pipelineAgent.duplicatePipelineConfig($scope.newConfig.name, $scope.newConfig.description,
-          pipelineInfo)).
-          then(function(configObject) {
-            $modalInstance.close(configObject);
-          },function(data) {
-            $scope.issues = [data];
-          });
-      },
-      cancel : function () {
-        $modalInstance.dismiss('cancel');
-      }
-    });
   });

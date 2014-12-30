@@ -938,10 +938,12 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     });
 
     $scope.$on('moveGraphToCenter', function() {
-      if (graph.state.selectedNode){
-        graph.removeSelectFromNode();
+      if(graph) {
+        if (graph.state.selectedNode){
+          graph.removeSelectFromNode();
+        }
+        graph.moveGraphToCenter();
       }
-      graph.moveGraphToCenter();
     });
 
   });

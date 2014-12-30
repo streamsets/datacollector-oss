@@ -132,10 +132,19 @@ angular
         $scope.changeStageSelection(firstStageInstance);
       },
 
+      /**
+       * Remove record from Source Output list.
+       *
+       * @param stageInstance
+       * @param recordList
+       * @param record
+       * @param $index
+       */
       removeRecord: function(stageInstance, recordList, record, $index) {
         var batchData = $scope.previewData.batchesOutput[0];
         recordList.splice($index, 1);
         $scope.stepExecuted = true;
+        $scope.previewDataUpdated = true;
         previewService.removeRecordFromSource(batchData, stageInstance, record);
       }
 

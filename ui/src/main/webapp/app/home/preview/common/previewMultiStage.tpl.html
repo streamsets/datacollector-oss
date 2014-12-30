@@ -5,7 +5,6 @@
     <thead>
       <tr>
         <th class="col-md-6">
-          <span>Output Data</span>
           <select class="pull-left form-control input-sm" name="previewFromStage"
                   ng-model="fromStage"
                   ng-options="stageInst.uiInfo.label for stageInst in pipelineConfig.stages"
@@ -14,7 +13,6 @@
         </th>
 
         <th class="col-md-6">
-          <span>Input Data</span>
           <select class="pull-left form-control input-sm" name="previewToStage"
                   ng-model="toStage"
                   ng-options="stageInst.uiInfo.label for stageInst in toStageList"
