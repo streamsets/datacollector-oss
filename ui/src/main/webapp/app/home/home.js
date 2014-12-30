@@ -94,7 +94,7 @@ angular
        */
       closePreview: function () {
         $scope.previewMode = false;
-        $scope.$broadcast('moveGraphToCenter');
+        $scope.moveGraphToCenter();
       },
 
       /**
@@ -114,7 +114,7 @@ angular
        */
       closeSnapshot: function () {
         $scope.snapshotMode = false;
-        $scope.$broadcast('moveGraphToCenter');
+        $scope.moveGraphToCenter();
       },
 
       /**
@@ -167,6 +167,7 @@ angular
        */
       moveGraphToCenter: function() {
         $scope.$broadcast('moveGraphToCenter');
+        updateDetailPane();
       }
 
     });
