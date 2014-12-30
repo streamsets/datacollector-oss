@@ -39,6 +39,12 @@ angular
         return function(d) {
           return d.color;
         };
+      },
+
+      getTooltipContent: function() {
+        return function(key, x, y, e, graph) {
+          return '<p>' + key + ' </p><p>' + x + ': ' + y +'</p>';
+        };
       }
     });
 

@@ -51,7 +51,13 @@
       <tab ng-repeat="tab in detailPaneTabs" active="tab.active" disabled="tab.disabled">
         <tab-heading>
           <i class="fa fa-exclamation-triangle icon-danger"
-             ng-show="showWarning(tab)"></i> {{ 'home.detailPane.' + tab.name | translate }}
+             ng-show="showWarning(tab)"></i>
+
+          <i class="{{tab.iconClass}}"
+             ng-hide="showWarning(tab)"></i>
+
+
+          {{ 'home.detailPane.' + tab.name | translate }}
         </tab-heading>
         <div ng-include="tab.template"></div>
       </tab>

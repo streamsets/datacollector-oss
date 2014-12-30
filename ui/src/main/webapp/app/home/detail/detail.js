@@ -8,29 +8,35 @@ angular
   .controller('DetailController', function ($scope, $rootScope, _) {
     var detailTabsInEditMode = [{
         name:'configuration',
-        template:'app/home/detail/configuration/configuration.tpl.html'
+        template:'app/home/detail/configuration/configuration.tpl.html',
+        iconClass: 'fa fa-gear'
       }
       ],
       detailTabsInRunningMode = [
         {
           name:'summary',
-          template:'app/home/detail/summary/summary.tpl.html'
+          template:'app/home/detail/summary/summary.tpl.html',
+          iconClass: 'fa fa-bar-chart'
         },
         {
           name:'errors',
-          template:'app/home/detail/badRecords/badRecords.tpl.html'
+          template:'app/home/detail/badRecords/badRecords.tpl.html',
+          iconClass: 'fa fa-exclamation-triangle'
         },
         {
           name:'alerts',
-          template:'app/home/detail/alerts/alerts.tpl.html'
+          template:'app/home/detail/alerts/alerts.tpl.html',
+          iconClass: 'glyphicon glyphicon-exclamation-sign'
         },
         {
           name:'rules',
-          template:'app/home/detail/rules/rules.tpl.html'
+          template:'app/home/detail/rules/rules.tpl.html',
+          iconClass: 'fa fa-list'
         },
         {
           name:'configuration',
-          template:'app/home/detail/configuration/configuration.tpl.html'
+          template:'app/home/detail/configuration/configuration.tpl.html',
+          iconClass: 'fa fa-gear'
         }
       ];
 
