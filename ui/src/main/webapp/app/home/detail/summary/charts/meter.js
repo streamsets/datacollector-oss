@@ -4,19 +4,19 @@
 
 angular
   .module('pipelineAgentApp.home')
-  .controller('MeterBarChartController', function($scope, pipelineConstant) {
-    var color = {
-      'Input' :'#1f77b4',
-      'Output': '#5cb85c',
-      'Bad':'#FF3333'
-    };
-
+  .controller('MeterBarChartController', function($scope, $rootScope, pipelineConstant) {
+    var color = $scope.recordsColor;
+    
     angular.extend($scope, {
       chartData: [],
 
       getColor: function() {
         return function(d) {
-          return color[d.key];
+          if(color[d.key]) {
+            return color[d.key];
+          } else {
+            return color.Output;
+          }
         };
       },
 
@@ -27,11 +27,9 @@ angular
       }
     });
 
-
-
-
     $scope.$on('summaryDataUpdated', function() {
       var stageInstance = $scope.detailPaneConfig,
+        pipelineMetrics = $rootScope.common.pipelineMetrics,
         input = {
           key: "Input",
           values: [
@@ -81,7 +79,34 @@ angular
             $scope.chartData = [ output, bad];
             break;
           case pipelineConstant.PROCESSOR_STAGE_TYPE:
-            $scope.chartData = [ input, output, bad];
+            $scope.chartData = [input];
+
+            if(stageInstance.outputLanes.length < 2) {
+              $scope.chartData.push(output);
+            } else {
+              //Lane Selector
+              angular.forEach(stageInstance.outputLanes, function(outputLane, index) {
+                var laneMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + ':' + outputLane + '.outputRecords.meter'];
+                if(laneMeter) {
+                  $scope.chartData.push({
+                    key: "Output " + (index + 1),
+                    values: [
+                      ["1m" , laneMeter.m1_rate ],
+                      ["5m" , laneMeter.m5_rate ],
+                      ["15m" , laneMeter.m15_rate ],
+                      ["30m" , laneMeter.m30_rate ],
+                      ["1h" , laneMeter.h1_rate ],
+                      ["6h" , laneMeter.h6_rate ],
+                      ["12h" , laneMeter.h12_rate ],
+                      ["1d" , laneMeter.h24_rate ],
+                      ["Mean" , laneMeter.mean_rate ]
+                    ]
+                  });
+                }
+              });
+            }
+
+            $scope.chartData.push(bad);
             break;
           case pipelineConstant.TARGET_STAGE_TYPE:
             $scope.chartData = [ input, bad];

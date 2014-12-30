@@ -6,12 +6,25 @@ angular
   .module('pipelineAgentApp.home')
 
   .controller('SummaryController', function ($scope, $rootScope, pipelineConstant) {
+
     angular.extend($scope, {
       summaryCounters: {},
       summaryHistograms: {},
       summaryMeters: {},
       summaryTimer: {},
       histogramList:[],
+      recordsColor: {
+        'Input' :'#1f77b4',
+        'Output': '#5cb85c',
+        'Bad':'#FF3333',
+        'Output 1': '#5cb85c',
+        'Output 2': '#B2EC5D',
+        'Output 3': '#77DD77',
+        'Output 4': '#85BB65',
+        'Output 5': '#03C03C',
+        'Output 6': '#138808',
+        'Output 7': '#556B2F'
+      },
 
       getDurationLabel: function(key) {
         switch(key) {

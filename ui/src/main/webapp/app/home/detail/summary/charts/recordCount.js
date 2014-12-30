@@ -4,19 +4,19 @@
 
 angular
   .module('pipelineAgentApp.home')
-  .controller('RecordCountBarChartController', function($scope, pipelineConstant) {
-    var color = {
-      'Input' :'#1f77b4',
-      'Output': '#5cb85c',
-      'Bad':'#FF3333'
-    };
+  .controller('RecordCountBarChartController', function($scope, $rootScope, pipelineConstant) {
+    var color = $scope.recordsColor;
 
     angular.extend($scope, {
       barChartData: [],
 
       getColor: function() {
         return function(d) {
-          return color[d[0]];
+          if(color[d[0]]) {
+            return color[d[0]];
+          } else {
+            return color.Output;
+          }
         };
       },
 
@@ -30,6 +30,7 @@ angular
 
     $scope.$on('summaryDataUpdated', function() {
       var stageInstance = $scope.detailPaneConfig,
+        pipelineMetrics = $rootScope.common.pipelineMetrics,
         valueList = [];
 
       if($scope.stageSelected) {
@@ -40,7 +41,19 @@ angular
             break;
           case pipelineConstant.PROCESSOR_STAGE_TYPE:
             valueList.push(["Input" , $scope.summaryMeters.inputRecords.count ]);
-            valueList.push(["Output" , $scope.summaryMeters.outputRecords.count ]);
+
+            if(stageInstance.outputLanes.length < 2) {
+              valueList.push(["Output" , $scope.summaryMeters.outputRecords.count ]);
+            } else {
+              //Lane Selector
+              angular.forEach(stageInstance.outputLanes, function(outputLane, index) {
+                var laneMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + ':' + outputLane + '.outputRecords.meter'];
+                if(laneMeter) {
+                  valueList.push(["Output " + (index + 1), laneMeter.count ]);
+                }
+              });
+            }
+
             valueList.push(["Bad" , $scope.summaryMeters.errorRecords.count ]);
             break;
           case pipelineConstant.TARGET_STAGE_TYPE:
