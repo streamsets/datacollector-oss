@@ -1,10 +1,9 @@
 <div class="pipeline-preview" ng-controller="PreviewCommonController">
-  <tabset class="detail-tabs-left tabs-left">
+  <tabset class="detail-tabs-left tabs-left icon-only">
 
     <tab active="true">
-      <tab-heading>
-        <i class="fa fa-list-ul"></i>
-        {{ 'global.form.records' | translate }}
+      <tab-heading tooltip-placement="right" tooltip="{{ 'global.form.records' | translate }}">
+        <i class="fa fa-list-ul fa-12x"></i>
       </tab-heading>
       <div>
 
@@ -138,8 +137,8 @@
     </tab-->
 
     <tab ng-if="stagePreviewData.stageErrors && stagePreviewData.stageErrors.length">
-      <tab-heading>
-        <i class="fa fa-exclamation-triangle icon-danger"></i> {{ 'global.form.errors' | translate }}
+      <tab-heading tooltip-placement="right" tooltip="{{ 'global.form.errors' | translate }}">
+        <i class="fa fa-exclamation-triangle icon-danger fa-12x"></i>
       </tab-heading>
       <div>
         <table class="table table-hover">

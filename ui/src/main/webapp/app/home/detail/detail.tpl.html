@@ -47,17 +47,14 @@
   </div>
 
   <div class="panel-body">
-    <tabset class="detail-tabs-left tabs-left">
+    <tabset class="detail-tabs-left tabs-left icon-only">
       <tab ng-repeat="tab in detailPaneTabs" active="tab.active" disabled="tab.disabled">
-        <tab-heading>
+        <tab-heading tooltip-placement="right" tooltip="{{ 'home.detailPane.' + tab.name | translate }}">
           <i class="fa fa-exclamation-triangle icon-danger"
              ng-show="showWarning(tab)"></i>
 
           <i class="{{tab.iconClass}}"
              ng-hide="showWarning(tab)"></i>
-
-
-          {{ 'home.detailPane.' + tab.name | translate }}
         </tab-heading>
         <div ng-include="tab.template"></div>
       </tab>

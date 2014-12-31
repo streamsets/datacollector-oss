@@ -9,34 +9,34 @@ angular
     var detailTabsInEditMode = [{
         name:'configuration',
         template:'app/home/detail/configuration/configuration.tpl.html',
-        iconClass: 'fa fa-gear'
+        iconClass: 'fa fa-gear fa-12x'
       }
       ],
       detailTabsInRunningMode = [
         {
           name:'summary',
           template:'app/home/detail/summary/summary.tpl.html',
-          iconClass: 'fa fa-bar-chart'
+          iconClass: 'fa fa-bar-chart fa-12x'
         },
         {
           name:'errors',
           template:'app/home/detail/badRecords/badRecords.tpl.html',
-          iconClass: 'fa fa-exclamation-triangle'
+          iconClass: 'fa fa-exclamation-triangle fa-12x'
         },
         {
           name:'alerts',
           template:'app/home/detail/alerts/alerts.tpl.html',
-          iconClass: 'glyphicon glyphicon-exclamation-sign'
+          iconClass: 'glyphicon glyphicon-exclamation-sign fa-12x'
         },
         {
           name:'rules',
           template:'app/home/detail/rules/rules.tpl.html',
-          iconClass: 'fa fa-list'
+          iconClass: 'fa fa-list fa-12x'
         },
         {
           name:'configuration',
           template:'app/home/detail/configuration/configuration.tpl.html',
-          iconClass: 'fa fa-gear'
+          iconClass: 'fa fa-gear fa-12x'
         }
       ];
 

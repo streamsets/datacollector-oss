@@ -34,6 +34,18 @@
     float: right;
     width: calc(~"100% - 150px");
   }
+
+  &.icon-only {
+    > .nav-tabs > li {
+      > a {
+        min-width: 0;
+      }
+    }
+
+    > .tab-content {
+      width: calc(~"100% - 60px");
+    }
+  }
 }
 
 .tabs-left > .nav-tabs {
