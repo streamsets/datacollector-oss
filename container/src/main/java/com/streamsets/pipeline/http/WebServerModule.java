@@ -7,11 +7,13 @@ package com.streamsets.pipeline.http;
 
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.ProdManagerModule;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
+import com.streamsets.pipeline.restapi.configuration.BuildInfoInjector;
 import com.streamsets.pipeline.restapi.configuration.JvmMetricsInjector;
 import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;
 import com.streamsets.pipeline.restapi.configuration.ProductionPipelineManagerInjector;
@@ -164,6 +166,16 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(RuntimeInfoInjector.RUNTIME_INFO, runtimeInfo);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideBuildInfo(final BuildInfo buildInfo) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(BuildInfoInjector.BUILD_INFO, buildInfo);
       }
     };
   }

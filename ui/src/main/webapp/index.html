@@ -81,9 +81,30 @@
           </a>
           <ul class="dropdown-menu">
             <li>
-              <a href="#/" ng-click="common.logout()">
+              <a href="javascript:;" ng-click="common.logout()">
                 <span class="glyphicon glyphicon-log-out"></span>
                 <span translate="global.menu.account.logout">Logout</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+
+        <li class="dropdown pointer">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+            <span>
+                <i class="fa fa-question-circle fa-lg"></i>
+                <span class="hidden-tablet" translate="global.menu.help.main">
+                    Help
+                </span>
+                <b class="caret"></b>
+            </span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="javascript:;" ng-click="common.showAbout()">
+                <span class="fa fa-info-circle"></span>
+                <span translate="global.menu.help.about">About</span>
               </a>
             </li>
           </ul>
@@ -95,6 +116,7 @@
 </div>
 
 <ng-include src="'app/shutdown/shutdownModal.tpl.html'"></ng-include>
+<ng-include src="'app/about/aboutModal.tpl.html'"></ng-include>
 
 <div ng-view>
 </div>

@@ -11,7 +11,7 @@ angular
       isShutdownSucceed: false,
 
       shutdown: function() {
-        api.pipelineAgent.shutdownCollector($scope.secret)
+        api.admin.shutdownCollector($scope.secret)
           .success(function() {
             $scope.isShutdownSucceed = true;
           })

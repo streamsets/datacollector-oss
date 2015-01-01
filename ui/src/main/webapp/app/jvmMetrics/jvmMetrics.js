@@ -34,7 +34,7 @@ angular
 
       jvmMetricsTimer.then(
         function() {
-          api.pipelineAgent.getJVMMetrics()
+          api.admin.getJVMMetrics()
             .success(function(data) {
               $scope.metrics = data;
               refreshPipelineJVMMetrics();

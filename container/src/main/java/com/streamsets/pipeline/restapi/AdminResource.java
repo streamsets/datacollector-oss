@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.restapi;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.Configuration;
@@ -31,13 +32,16 @@ public class AdminResource implements LogStreamer.Releaser {
   private static final String MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY = "max.logtail.concurrent.requests";
   private static final int MAX_LOGTAIL_CONCURRENT_REQUESTS_DEFAULT = 5;
 
+  private final BuildInfo buildInfo;
   private final Configuration config;
   private final RuntimeInfo runtimeInfo;
   private final MetricRegistry metrics;
   private static volatile int logTailClients;
 
   @Inject
-  public AdminResource(Configuration configuration, RuntimeInfo runtimeInfo, MetricRegistry metrics) {
+  public AdminResource(Configuration configuration, RuntimeInfo runtimeInfo, BuildInfo buildInfo,
+                       MetricRegistry metrics) {
+    this.buildInfo = buildInfo;
     this.config = configuration;
     this.runtimeInfo = runtimeInfo;
     this.metrics = metrics;
@@ -90,6 +94,13 @@ public class AdminResource implements LogStreamer.Releaser {
   @Produces(MediaType.APPLICATION_JSON)
   public Response get() throws PipelineException, IOException {
     return Response.status(Response.Status.OK).entity(metrics).build();
+  }
+
+  @GET
+  @Path("/build-info")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getBuild() throws PipelineException, IOException {
+    return Response.status(Response.Status.OK).entity(buildInfo).build();
   }
 
   @Override

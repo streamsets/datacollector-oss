@@ -1,11 +1,12 @@
 .library-pane {
-
-  height: 100%;
+  height: calc(~"100% - 20px");
   box-sizing: border-box;
-
+  border: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  margin-bottom: 0;
 
   .panel-heading {
-    height: 45px;
     padding: @smallPadding @smallPadding*3;
 
     .panel-title {

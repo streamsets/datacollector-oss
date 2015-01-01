@@ -12,6 +12,10 @@
         "main": "Administration",
         "shutdown": "Shutdown"
       },
+      "help": {
+        "about": "About",
+        "main": "Help"
+      },
       "home": "Home",
       "toggleNavigation": "Toggle navigation"
     },
@@ -216,5 +220,13 @@
   "errors": {
     "title": "Error page!",
     "403": "You are not authorized to access the page."
+  },
+  "about": {
+    "builtBy": "built by",
+    "copyrightText": "Copyright &copy; 2015 StreamSets, Inc. All rights reserved.",
+    "on": "on",
+    "productName": "StreamSets Data Collector",
+    "title": "About",
+    "version": "Version:"
   }
 }

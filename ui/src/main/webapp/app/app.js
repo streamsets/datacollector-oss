@@ -1,15 +1,4 @@
-angular.module('pipelineAgentApp', [
-  'ngRoute',
-  'ngCookies',
-  'tmh.dynamicLocale',
-  'pascalprecht.translate',
-  'templates-app',
-  'templates-common',
-  'pipelineAgentApp.common',
-  'pipelineAgentApp.home',
-  'pipelineAgentApp.jvmMetrics',
-  'pipelineAgentApp.logs'
-])
+angular.module('pipelineAgentApp')
   .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, uiSelectConfig){
     $locationProvider.html5Mode(true);
     $routeProvider.otherwise({
@@ -62,6 +51,18 @@ angular.module('pipelineAgentApp', [
        */
       logout: function() {
 
+      },
+
+      /**
+       * Open the About Modal Dialog
+       */
+      showAbout: function() {
+        $modal.open({
+          templateUrl: 'aboutModalContent.html',
+          controller: 'AboutModalInstanceController',
+          size: '',
+          backdrop: true
+        });
       },
 
       /**

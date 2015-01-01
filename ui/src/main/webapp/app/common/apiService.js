@@ -7,8 +7,7 @@ angular.module('pipelineAgentApp.common')
     var apiBase = 'rest/v1',
       api = {events: {}};
 
-    api.pipelineAgent = {
-
+    api.admin = {
       /**
        * Fetches JVM Metrics
        * @returns {*}
@@ -22,16 +21,32 @@ angular.module('pipelineAgentApp.common')
       },
 
       /**
-       * Fetches Server Log
+       * Fetched Build Information
        */
-      getServerLog: function() {
-        var url = apiBase + '/admin/log';
+      getBuildInfo: function() {
+        var url = apiBase + '/admin/build-info';
         return $http({
           method: 'GET',
           url: url
         });
       },
 
+      /**
+       * Shutdown the Data Collector.
+       * @param secret
+       * @returns {*}
+       */
+      shutdownCollector: function(secret) {
+      var url = apiBase + '/admin/shutdown?secret=' + secret;
+      return $http({
+        method: 'POST',
+        url: url
+      });
+    }
+
+    };
+
+    api.pipelineAgent = {
       /**
        * Fetches UI Configuration from dist/src/main/etc/pipeline.properties
        *
@@ -426,14 +441,6 @@ angular.module('pipelineAgentApp.common')
 
         return $http({
           method: 'GET',
-          url: url
-        });
-      },
-
-      shutdownCollector: function(secret) {
-        var url = apiBase + '/admin/shutdown?secret=' + secret;
-        return $http({
-          method: 'POST',
           url: url
         });
       }
