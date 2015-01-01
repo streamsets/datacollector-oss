@@ -1,5 +1,5 @@
 /**
- * Home module for displaying home page content.
+ * Main Module
  */
 
 angular.module('pipelineAgentApp', [
