@@ -45,6 +45,9 @@ angular.module('pipelineAgentApp', [
       errors: [],
       activeDetailTab: undefined,
 
+      /**
+       * Open the Shutdown Modal Dialog
+       */
       shutdownCollector: function() {
         $modal.open({
           templateUrl: 'shutdownModalContent.html',
@@ -59,8 +62,34 @@ angular.module('pipelineAgentApp', [
        */
       logout: function() {
 
+      },
+
+      /**
+       * Return logs collected from Log WebSocket
+       * @returns {string}
+       */
+      getLogMessages: function() {
+        return logMessages.join('\n');
       }
     };
+
+    var logMessages = [],
+      loc = window.location,
+      webSocketLogURL = ((loc.protocol === "https:") ? "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : "") + '/log/',
+      logWebSocket = new WebSocket(webSocketLogURL);
+
+
+    logWebSocket.onmessage = function (evt) {
+      var received_msg = evt.data;
+      if(logMessages.length > 400) {
+        logMessages.shift();
+      }
+      logMessages.push(received_msg);
+    };
+
+    $rootScope.$on('$destroy', function() {
+      logWebSocket.close();
+    });
 
     // set actions to be taken each time the user navigates
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {

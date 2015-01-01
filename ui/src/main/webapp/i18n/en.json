@@ -210,7 +210,8 @@
     }
   },
   "logs": {
-    "title": "Logs"
+    "title": "Logs",
+    "refreshLog": "Refresh Log"
   },
   "errors": {
     "title": "Error page!",

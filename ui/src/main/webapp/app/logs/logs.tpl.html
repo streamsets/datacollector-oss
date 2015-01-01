@@ -1,12 +1,21 @@
-<div class="panel panel-default page-panel logs-page" ng-controller="GraphController">
+<div class="panel panel-default page-panel logs-page">
 
   <div class="panel-heading clearfix">
-    <div class="panel-title">
+    <div class="panel-title pull-left">
       <h3 translate="logs.title">Logs</h3>
     </div>
+
+    <div class="pull-right">
+      <button type="button" class="btn btn-primary btn-sm"
+              ng-click="refreshLog()">
+        <span translate="logs.refreshLog">Refresh Log</span>
+        <span class="glyphicon glyphicon-refresh"></span>
+      </button>
+    </div>
+
   </div>
 
   <div class="panel-body">
-    <pre>{{serverLog}}</pre>
+    <pre>{{logMessages}}</pre>
   </div>
 </div>

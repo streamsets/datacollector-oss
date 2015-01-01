@@ -95,6 +95,17 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
+  ContextConfigurator provideLogServlet(final Configuration configuration, final RuntimeInfo runtimeInfo) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        ServletHolder holderEvents = new ServletHolder(new LogServlet(configuration, runtimeInfo));
+        context.addServlet(holderEvents, "/log/*");
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
   ContextConfigurator provideJersey() {
     return new ContextConfigurator() {
       @Override

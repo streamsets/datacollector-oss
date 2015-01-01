@@ -12,19 +12,24 @@ angular
       }
     );
   }])
-  .controller('LogsController', function ($scope, api) {
+  .controller('LogsController', function ($scope, $rootScope, $interval) {
     angular.extend($scope, {
-      serverLog: 'Coming Soon...'
+      logMessages: $rootScope.common.getLogMessages(),
+
+      refreshLog: function() {
+        $scope.logMessages = $rootScope.common.getLogMessages();
+      }
     });
 
 
-    /*api.pipelineAgent.getServerLog()
-      .success(function(data){
-        $scope.serverLog = data;
-      })
-      .error(function(data, status, headers, config) {
-        $rootScope.common.errors = [data];
-      });
-    */
+    var intervalPromise = $interval(function() {
+      $scope.logMessages = $rootScope.common.getLogMessages();
+    }, 3000);
+
+    $scope.$on('$destroy', function() {
+      if(angular.isDefined(intervalPromise)) {
+        $interval.cancel(intervalPromise);
+      }
+    });
 
   });
