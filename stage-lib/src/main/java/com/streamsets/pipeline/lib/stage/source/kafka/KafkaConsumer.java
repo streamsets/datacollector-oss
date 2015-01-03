@@ -79,7 +79,7 @@ public class KafkaConsumer {
     }
     leader = new KafkaBroker(metadata.leader().host(), metadata.leader().port());
     //recreate consumer instance with the leader information for that topic
-    consumer = new SimpleConsumer(leader.getHost(), leader.getPort(), TIME_OUT, BUFFER_SIZE, clientName);
+    consumer = new SimpleConsumer(leader.getHost(), leader.getPort(), maxWaitTime, BUFFER_SIZE, clientName);
   }
 
   public void destroy() {

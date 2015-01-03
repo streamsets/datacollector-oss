@@ -22,6 +22,7 @@ public class ProductionPipelineRunnable implements Runnable {
   private final String rev;
   private volatile Thread runningThread;
   private volatile boolean nodeProcessShutdown;
+  private boolean exception;
 
   public ProductionPipelineRunnable(ProductionPipelineManagerTask pipelineManager, ProductionPipeline pipeline,
                                     String name, String rev) {
@@ -43,6 +44,7 @@ public class ProductionPipelineRunnable implements Runnable {
       } catch (PipelineManagerException ex) {
         LOG.error(Utils.format("An exception occurred while committing the state, {}", ex.getMessage()));
       }
+      exception = true;
     } catch (Error e) {
       LOG.error(Utils.format("A JVM error occurred while running the pipeline, {}", e.getMessage()));
       try {
@@ -72,6 +74,9 @@ public class ProductionPipelineRunnable implements Runnable {
       } catch (PipelineManagerException e) {
         LOG.error(Utils.format("An exception occurred while stopping the pipeline, {}", e.getMessage()));
       }
+    } else if(exception) {
+      //Pipeline stopped because of exception
+      //State is already updated to ERROR, No-op
     } else {
       //pipeline execution finished normally
       try {

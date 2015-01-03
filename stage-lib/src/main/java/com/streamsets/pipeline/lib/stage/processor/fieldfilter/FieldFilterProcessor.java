@@ -21,7 +21,7 @@ import java.util.Set;
 @StageDef( version="1.0.0", label="Field Filter")
 public class FieldFilterProcessor extends SingleLaneRecordProcessor {
 
-  @ConfigDef(label = "Fields to keep", required = true,type = Type.MODEL, defaultValue="",
+  @ConfigDef(label = "Fields to keep", required = true, type = Type.MODEL, defaultValue="",
     description="The fields which must be retained in the record. All other fields will be dropped.")
 
   @FieldSelector

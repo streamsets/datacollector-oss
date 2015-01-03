@@ -28,13 +28,13 @@ import java.util.Locale;
 @StageDef( version="1.0.0", label="Field Value Replacer")
 public class FieldValueReplacer extends SingleLaneRecordProcessor {
 
-  @ConfigDef(label = "Fields to replace with null values", required = false, type = Type.MODEL, defaultValue="",
+  @ConfigDef(label = "Fields to replace with null", required = false, type = Type.MODEL, defaultValue="",
     description="The fields whose values must be replaced with nulls")
   @FieldSelector
   public List<String> fieldsToNull;
 
   @ConfigDef(label = "Fields with null values to be replaced", required = false, type = Type.MODEL, defaultValue="",
-    description="Fields whose values if null to be replaced with the specified value")
+    description="Fields whose values, if null, to be replaced with the specified value")
   @ComplexField
   public List<FieldValueReplacerConfig> fieldsToReplaceIfNull;
 
@@ -117,8 +117,8 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
     @FieldSelector
     public List<String> fields;
 
-    @ConfigDef(label = "Fields to replace with null values", required = true,type = Type.STRING, defaultValue="",
-      description="The fields whose values must be replaced with nulls")
+    @ConfigDef(label = "New value", required = true,type = Type.STRING, defaultValue="",
+      description="The new value which must be set if the current value is null")
     public String newValue;
 
   }

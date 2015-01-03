@@ -23,7 +23,7 @@ import java.util.List;
 @StageDef( version="1.0.0", label="Field Hasher")
 public class FieldHasherProcessor extends SingleLaneRecordProcessor {
 
-  @ConfigDef(label = "Fields to hash", required = true,type = Type.MODEL, defaultValue="",
+  @ConfigDef(label = "Fields to hash", required = true, type = Type.MODEL, defaultValue="",
     description="The fields whose values must be replaced by their SHA values.")
   @FieldSelector
   public List<String> fields;
