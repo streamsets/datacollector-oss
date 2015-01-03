@@ -30,12 +30,12 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    Record recordClone = getContext().cloneRecord(record);
     for (String fieldToHash : fields) {
-      Field field = recordClone.get(fieldToHash);
-      field.set(Field.Type.STRING, generateHashForField(field));
+      Field field = record.get(fieldToHash);
+      Field newField = Field.create(generateHashForField(field));
+      record.set(fieldToHash, newField);
     }
-    batchMaker.addRecord(recordClone);
+    batchMaker.addRecord(record);
   }
 
   private String generateHashForField(Field field) {

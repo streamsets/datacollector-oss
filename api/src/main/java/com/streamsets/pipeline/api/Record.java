@@ -107,4 +107,6 @@ public interface Record {
 
   public Set<String> getFieldPaths();
 
+  public Field set(String fieldPath, Field newField);
+
 }
