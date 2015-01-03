@@ -146,6 +146,37 @@ body {
     font-size: 1.2em;
   }
 
+  .login-container {
+    background: #29b4e1 url('/assets/logo-watermark-big.png') no-repeat center bottom;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: calc(~"100% - 60px");
+    overflow: hidden;
+
+    .form-login {
+      margin-top: 100px;
+      margin-left: 37%;
+      background-color: #ffffff;
+      padding: @defaultPadding @defaultPadding*2 @defaultPadding*2 @defaultPadding*2;
+      border-radius: 15px;
+      border: #d2d2d2 5px;
+      box-shadow:0 1px 0 #cfcfcf;
+
+      h4 {
+        border:0 solid #fff;
+        border-bottom-width:1px;
+        padding-bottom:10px;
+      }
+
+      input {
+        margin-bottom: @defaultPadding * 2;
+      }
+    }
+
+  }
+
 }
 
 /**

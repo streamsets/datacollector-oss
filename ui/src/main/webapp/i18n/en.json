@@ -215,7 +215,8 @@
   },
   "logs": {
     "title": "Logs",
-    "refreshLog": "Refresh Log"
+    "refreshLog": "Refresh Log",
+    "emptyMessage": "No logs."
   },
   "errors": {
     "title": "Error page!",

@@ -16,6 +16,7 @@
   </div>
 
   <div class="panel-body">
-    <pre>{{logMessages}}</pre>
+    <pre ng-if="logMessages && logMessages.length">{{logMessages}}</pre>
+    <pre ng-if="!logMessages || logMessages.length === 0">{{'logs.emptyMessage' | translate}}</pre>
   </div>
 </div>

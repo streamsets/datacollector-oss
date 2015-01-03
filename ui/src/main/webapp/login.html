@@ -11,80 +11,29 @@
   <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
   <link rel="stylesheet" type="text/css" href="/<%= file %>" /><% }); %>
 
-  <style>
-    .login-container {
-      background: #29b4e1 url('/assets/logo-watermark-big.png') no-repeat center bottom;
-      position: absolute;
-      top: 60px;
-      left: 0;
-      width: 100%;
-      height: calc(100% - 60px);
-      overflow: hidden;
-    }
-
-    .form-login {
-      margin-top: 100px;
-      background-color: #ffffff;
-      padding-top: 10px;
-      padding-bottom: 20px;
-      padding-left: 20px;
-      padding-right: 20px;
-      border-radius: 15px;
-      border-color:#d2d2d2;
-      border-width: 5px;
-      box-shadow:0 1px 0 #cfcfcf;
-    }
-
-    h4 {
-      border:0 solid #fff;
-      border-bottom-width:1px;
-      padding-bottom:10px;
-      text-align: center;
-    }
-
-    .wrapper {
-      text-align: center;
-    }
-  </style>
-
 </head>
 <body>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="header-container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only" translate="global.menu.toggleNavigation">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="logo" href="/">
-        <img src="/assets/logo.png" />
-      </a>
+  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="header-container">
+      <div class="navbar-header">
+        <a class="logo" href="/">
+          <img src="/assets/logo.png" />
+        </a>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="login-container">
-  <div class="row">
-    <div class="col-md-offset-5 col-md-3 form-login">
-      <form class="form-horizontal" action="/j_security_check" method="POST">
-        <h4>Login</h4>
-        <input type="text" name="j_username" class="form-control" placeholder="username" />
-        </br>
-        <input type="password" name="j_password" class="form-control" placeholder="password" />
-        </br>
-        <div class="wrapper">
-            <span class="group-btn">
-                <button type="submit" class="btn btn-primary btn-md">login <i class="fa fa-sign-in"></i></button>
-            </span>
-        </div>
-      </form>
+  <div class="login-container">
+    <div class="row">
+      <div class="col-md-3 form-login">
+        <form class="form-horizontal" action="/j_security_check" method="POST">
+          <h4>Login</h4>
+          <input type="text" name="j_username" class="form-control" placeholder="username" />
+          <input type="password" name="j_password" class="form-control" placeholder="password" />
+          <button type="submit" class="btn btn-primary pull-right">login <i class="fa fa-sign-in"></i></button>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-
-
 </body>
 </html>
