@@ -15,11 +15,14 @@ import com.streamsets.pipeline.util.LogStreamer;
 import com.streamsets.pipeline.util.PipelineException;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -73,6 +76,14 @@ public class AdminResource implements LogStreamer.Releaser {
     }
     return response;
   }
+
+  @POST
+  @Path("/logout")
+  public void logout(@Context HttpServletRequest request) throws PipelineStoreException {
+    HttpSession session = request.getSession();
+    session.invalidate();
+  }
+
 
   @GET
   @Path("/log")

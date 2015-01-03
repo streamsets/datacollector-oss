@@ -37,12 +37,23 @@ angular.module('pipelineAgentApp.common')
        * @returns {*}
        */
       shutdownCollector: function(secret) {
-      var url = apiBase + '/admin/shutdown?secret=' + secret;
-      return $http({
-        method: 'POST',
-        url: url
-      });
-    }
+        var url = apiBase + '/admin/shutdown?secret=' + secret;
+        return $http({
+          method: 'POST',
+          url: url
+        });
+      },
+
+      /**
+       * logout
+       */
+      logout: function() {
+        var url = apiBase + '/admin/logout';
+        return $http({
+          method: 'POST',
+          url: url
+        });
+      }
 
     };
 

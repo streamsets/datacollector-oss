@@ -17,16 +17,25 @@ import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.authentication.DigestAuthenticator;
+import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.session.SessionHandler;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
+import org.eclipse.jetty.util.security.Password;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -62,13 +71,13 @@ public class WebServerTask extends AbstractTask {
   protected void initTask() {
     server = createServer();
     Handler handler = configureAppContext();
+    handler = configureAuthentication(server, (ServletContextHandler)handler);
     handler = configureRedirectionRules(handler);
-    handler = configureAuthentication(server, handler);
     server.setHandler(handler);
   }
 
   private Handler configureAppContext() {
-    ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
+    ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
     context.setContextPath("/");
     for (ContextConfigurator cc : contextConfigurators) {
       cc.init(context);
@@ -93,7 +102,7 @@ public class WebServerTask extends AbstractTask {
     return handlerCollection;
   }
 
-  private Handler configureAuthentication(Server server, Handler appHandler) {
+  private Handler configureAuthentication(Server server, ServletContextHandler appHandler) {
     Handler handler;
     String auth = conf.get(AUTHENTICATION_KEY, AUTHENTICATION_DEFAULT);
     switch (auth) {
@@ -103,6 +112,9 @@ public class WebServerTask extends AbstractTask {
       case "digest":
         handler = configureDigest(server, appHandler);
         break;
+      case "form":
+        handler = configureForm(server, appHandler);
+        break;
       default:
         throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
                                                 auth, AUTHENTICATION_MODES));
@@ -110,7 +122,7 @@ public class WebServerTask extends AbstractTask {
     return handler;
   }
 
-  private Handler configureDigest(Server server, Handler appHandler) {
+  private Handler configureDigest(Server server, ServletContextHandler appHandler) {
     String realm = conf.get(DIGEST_REALM_KEY, DIGEST_REALM_DEFAULT);
     File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
     if (!realmFile.exists()) {
@@ -119,6 +131,7 @@ public class WebServerTask extends AbstractTask {
 
     LoginService loginService = new HashLoginService(realm, realmFile.getAbsolutePath());
     server.addBean(loginService);
+
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
     Constraint constraint = new Constraint();
     constraint.setName("auth");
@@ -130,8 +143,69 @@ public class WebServerTask extends AbstractTask {
     security.setConstraintMappings(Collections.singletonList(mapping));
     security.setAuthenticator(new DigestAuthenticator());
     security.setLoginService(loginService);
-    security.setHandler(appHandler);
-    return security;
+    appHandler.setSecurityHandler(security);
+    return appHandler;
+  }
+
+  private Handler configureForm(Server server, ServletContextHandler appHandler) {
+    String realm = conf.get(DIGEST_REALM_KEY, DIGEST_REALM_DEFAULT);
+    File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
+    if (!realmFile.exists()) {
+      throw new RuntimeException(Utils.format("Realm file '{}' does not exists", realmFile));
+    }
+
+    ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
+
+    Constraint constraint = new Constraint();
+    constraint.setName("auth");
+    constraint.setAuthenticate(true);
+    constraint.setRoles(new String[] { "user"});
+
+    ConstraintMapping constraintMapping = new ConstraintMapping();
+    constraintMapping.setPathSpec("/*");
+    constraintMapping.setConstraint(constraint);
+
+    securityHandler.addConstraintMapping(constraintMapping);
+
+    Constraint noAuthConstraint = new Constraint();
+    noAuthConstraint.setName("auth");
+    noAuthConstraint.setAuthenticate(false);
+    noAuthConstraint.setRoles(new String[] { "user"});
+
+    ConstraintMapping resourceMapping = new ConstraintMapping();
+    resourceMapping.setPathSpec("/app/*");
+    resourceMapping.setConstraint(noAuthConstraint);
+    securityHandler.addConstraintMapping(resourceMapping);
+
+    resourceMapping = new ConstraintMapping();
+    resourceMapping.setPathSpec("/assets/*");
+    resourceMapping.setConstraint(noAuthConstraint);
+    securityHandler.addConstraintMapping(resourceMapping);
+
+    resourceMapping = new ConstraintMapping();
+    resourceMapping.setPathSpec("/bower_components/*");
+    resourceMapping.setConstraint(noAuthConstraint);
+    securityHandler.addConstraintMapping(resourceMapping);
+
+    resourceMapping = new ConstraintMapping();
+    resourceMapping.setPathSpec("/fonts/*");
+    resourceMapping.setConstraint(noAuthConstraint);
+    securityHandler.addConstraintMapping(resourceMapping);
+
+    resourceMapping = new ConstraintMapping();
+    resourceMapping.setPathSpec("/i18n/*");
+    resourceMapping.setConstraint(noAuthConstraint);
+    securityHandler.addConstraintMapping(resourceMapping);
+
+    HashLoginService loginService = new HashLoginService(realm, realmFile.getAbsolutePath());
+    server.addBean(loginService);
+    securityHandler.setLoginService(loginService);
+
+    FormAuthenticator authenticator = new FormAuthenticator("/login.html", "/login.html?error=true", false);
+    securityHandler.setAuthenticator(authenticator);
+
+    appHandler.setSecurityHandler(securityHandler);
+    return appHandler;
   }
 
   private Server createServer() {

@@ -21,7 +21,7 @@ angular.module('pipelineAgentApp')
     uiSelectConfig.theme = 'bootstrap';
 
   })
-  .run(function ($location, $rootScope, $modal) {
+  .run(function ($location, $rootScope, $modal, api) {
     var defaultTitle = 'StreamSets | Data In Motion';
     $rootScope.common = $rootScope.common || {
       title : defaultTitle,
@@ -50,7 +50,13 @@ angular.module('pipelineAgentApp')
        * Logout header link command handler
        */
       logout: function() {
+        api.admin.logout()
+          .success(function() {
+            location.reload();
+          })
+          .error(function() {
 
+          });
       },
 
       /**

@@ -37,7 +37,7 @@ module.exports = function(grunt) {
       jsunit: [ 'app/**/*.spec.js' ],
       atpl: [ 'app/**/*.tpl.html' ],
       ctpl: [ 'common/**/*.tpl.html' ],
-      html: [ 'index.html' ],
+      html: [ 'login.html' ],
       less: 'less/app.less',
       i18n: ['i18n/*.json']
     },
@@ -190,6 +190,16 @@ module.exports = function(grunt) {
         files: [
           {
             src: [ '<%= app_files.js %>', '<%= app_files.i18n %>' ],
+            dest: '<%= build_dir %>/',
+            cwd: '<%= base_dir %>',
+            expand: true
+          }
+        ]
+      },
+      build_apphtml: {
+        files: [
+          {
+            src: [ '<%= app_files.html %>'],
             dest: '<%= build_dir %>/',
             cwd: '<%= base_dir %>',
             expand: true
@@ -418,6 +428,26 @@ module.exports = function(grunt) {
     },
 
     /**
+     * The `login` task compiles the `login.html` file as a Grunt template. CSS
+     * and JS files co-exist here but they get split apart later.
+     */
+    login: {
+      build: {
+        cwd: '<%= build_dir %>',
+        src: [
+          'assets/<%= pkg.name %>-<%= pkg.version %>.css'
+        ]
+      },
+
+      compile: {
+        cwd: '<%= build_dir %>',
+        src: [
+          'assets/<%= pkg.name %>-<%= pkg.version %>.css'
+        ]
+      }
+    },
+
+    /**
      * And for rapid development, we have a watch set up that checks to see if
      * any of the files listed below change, and then to execute the listed
      * tasks when they do. This just saves us from having to type "grunt" into
@@ -475,8 +505,8 @@ module.exports = function(grunt) {
        * When index.html changes, we need to compile it.
        */
       html: {
-        files: [ '<%= base_dir %>index.html' ],
-        tasks: [ 'index:build' ]
+        files: [ '<%= base_dir %>index.html', '<%= base_dir %>login.html' ],
+        tasks: [ 'index:build', 'login:build' ]
       },
 
       /**
@@ -541,7 +571,7 @@ module.exports = function(grunt) {
   grunt.registerTask( 'build', [
     'clean', 'html2js', 'jshint', 'less:build', 'concat:build_css',
     'copy:build_app_assets', 'copy:build_vendor_assets', 'copy:build_vendor_fonts',
-    'copy:build_appjs', 'copy:build_vendorjs', 'index:build', 'karmaconfig'
+    'copy:build_appjs', 'copy:build_vendorjs','index:build', 'login:build', 'karmaconfig'
     //,'karma:continuous'
   ]);
 
@@ -550,7 +580,7 @@ module.exports = function(grunt) {
    * minifying your code.
    */
   grunt.registerTask( 'compile', [
-    'less:compile', 'concat:build_css', 'ngAnnotate', 'concat:compile_js', 'uglify', 'index:compile'
+    'less:compile', 'concat:build_css', 'ngAnnotate', 'concat:compile_js', 'uglify', 'index:compile', 'login:compile'
   ]);
 
   /**
@@ -641,6 +671,37 @@ module.exports = function(grunt) {
       }
     });
   });
+
+
+  /**
+   * The login.html template includes the stylesheet and javascript sources
+   * based on dynamic names calculated in this Gruntfile. This task assembles
+   * the list into variables for the template to use and then runs the
+   * compilation.
+   */
+  grunt.registerMultiTask( 'login', 'Process login.html template', function () {
+    var dirRE = new RegExp( '^('+grunt.config('build_dir')+'|'+grunt.config('compile_dir')+')\/', 'g' );
+    console.log(this.filesSrc);
+    var jsFiles = filterForJS( this.filesSrc ).map( function ( file ) {
+      return file.replace( dirRE, '' );
+    });
+    var cssFiles = filterForCSS( this.filesSrc ).map( function ( file ) {
+      return file.replace( dirRE, '' );
+    });
+
+    grunt.file.copy(grunt.config( 'base_dir' ) +'login.html', grunt.config( 'build_dir' ) + '/login.html', {
+      process: function ( contents, path ) {
+        return grunt.template.process( contents, {
+          data: {
+            scripts: jsFiles,
+            styles: cssFiles,
+            version: grunt.config( 'pkg.version' )
+          }
+        });
+      }
+    });
+  });
+
 
   /**
    * In order to avoid having to specify manually the files needed for karma to
