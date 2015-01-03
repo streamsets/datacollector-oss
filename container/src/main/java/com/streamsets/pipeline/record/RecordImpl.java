@@ -363,6 +363,7 @@ public class RecordImpl implements Record {
     return (elements.size() == fields.size()) ? fields.get(fields.size() - 1) : null;
   }
 
+
   @Override
   public Field delete(String fieldPath) {
     List<PathElement> elements = parse(fieldPath);

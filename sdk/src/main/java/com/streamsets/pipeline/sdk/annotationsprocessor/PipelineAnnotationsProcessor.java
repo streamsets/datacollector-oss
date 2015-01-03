@@ -8,6 +8,7 @@ package com.streamsets.pipeline.sdk.annotationsprocessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -196,6 +197,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           for (ConfigDefinition c : s.getConfigDefinitions()) {
             pw.println(c.getName() + SEPARATOR + LABEL + EQUALS + c.getLabel());
             pw.println(c.getName() + SEPARATOR + DESCRIPTION + EQUALS + c.getDescription());
+            if(c.getModel() != null && c.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
+              for(ConfigDefinition configDefinition : c.getModel().getConfigDefinitions()) {
+                pw.println(c.getName() + SEPARATOR + configDefinition.getName() + SEPARATOR + LABEL + EQUALS +
+                  c.getLabel());
+                pw.println(c.getName() + SEPARATOR + configDefinition.getName() + SEPARATOR + DESCRIPTION + EQUALS +
+                  c.getDescription());
+              }
+            }
           }
           pw.flush();
           pw.close();
@@ -308,7 +317,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         if(configDefAnnot.type().equals(ConfigDef.Type.MODEL)) {
           FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
           if(fieldSelector != null) {
-            model = new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null, null);
+            model = new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null, null, null);
           }
           FieldValueChooser fieldValueChooser = variableElement.getAnnotation(FieldValueChooser.class);
           //processingEnv.
@@ -316,18 +325,24 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             model = new ModelDefinition(ModelType.FIELD_VALUE_CHOOSER,
                 getFieldSelectionType(fieldValueChooser.type()),
                 getValuesProvider(fieldValueChooser)
-                , null, null);
+                , null, null, null);
           }
           ValueChooser valueChooser = variableElement.getAnnotation(ValueChooser.class);
           if(valueChooser != null) {
             model = new ModelDefinition(ModelType.VALUE_CHOOSER,
                 getFieldSelectionType(valueChooser.type()),
                 getValuesProvider(valueChooser)
-                , null, null);
+                , null, null, null);
           }
           LanePredicateMapping lanePredicateMapping = variableElement.getAnnotation(LanePredicateMapping.class);
           if (lanePredicateMapping != null) {
-            model = new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null);
+            model = new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null, null);
+          }
+          ComplexField complexField = variableElement.getAnnotation(ComplexField.class);
+          if(complexField != null) {
+            String typeName = getTypeNameFromComplexField(variableElement);
+            model = new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null, null,
+              getConfigDefsFromTypeElement(getTypeElementFromName(typeName)));
           }
         }
 
@@ -345,6 +360,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
     }
     return configDefinitions;
+  }
+
+  private String getTypeNameFromComplexField(VariableElement variableElement) {
+    String typeName = variableElement.asType().toString();
+    if(typeName.startsWith("java.util.List")) {
+      typeName = typeName.substring(15, typeName.length() - 1);
+    }
+    return typeName;
   }
 
   /**
@@ -735,6 +758,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     MODEL_ANNOTATIONS.add(FieldSelector.class);
     MODEL_ANNOTATIONS.add(ValueChooser.class);
     MODEL_ANNOTATIONS.add(LanePredicateMapping.class);
+    MODEL_ANNOTATIONS.add(ComplexField.class);
     for (Class klass : MODEL_ANNOTATIONS) {
       MODEL_ANNOTATIONS_NAMES.add(klass.getSimpleName());
     }
@@ -791,6 +815,51 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     if (lanePredicateMapping != null) {
       valid &= validateLanePredicateMapping(typeElement, variableElement);
     }
+
+    ComplexField complexField = variableElement.getAnnotation(ComplexField.class);
+    if (complexField != null) {
+      valid &= validateComplexField(typeElement, variableElement);
+    }
+    return valid;
+  }
+
+  private boolean validateComplexField(Element typeElement, VariableElement variableElement) {
+    boolean valid = true;
+    String typeName = getTypeNameFromComplexField(variableElement);
+    TypeElement t = getTypeElementFromName(typeName);
+
+    if(t.getKind() != ElementKind.CLASS) {
+      printError("ComplexField.type.not class",
+        "Complex Field type '{}' is not declared as class. " +
+          "A Complex Field type must be a class.",
+        t.getSimpleName().toString());
+      valid = false;
+    }
+
+    Element enclosingElement = t.getEnclosingElement();
+    if(!enclosingElement.getKind().equals(ElementKind.PACKAGE)) {
+      //inner class, check for static modifier
+      if(!t.getModifiers().contains(Modifier.STATIC)) {
+        printError("ComplexField.type.inner.class.and.not.static",
+          "Complex Field type '{}' is an inner class but is not declared as static. " +
+            "Inner class Complex Field types must be declared static.",
+          getClassNameFromTypeMirror(variableElement.asType()));
+        valid = false;
+      }
+    }
+
+    List<VariableElement> variableElements = getAllFields(t);
+    for (VariableElement v : variableElements) {
+      ComplexField complexField = v.getAnnotation(ComplexField.class);
+      if(complexField != null) {
+        printError("ComplexField.type.declares.complex.fields",
+          "Complex Field type '{}' has configuration properties which are complex fields." +
+            "Complex Field types must not define fields which are complex types.",
+          t.getSimpleName().toString());
+        valid = false;
+      }
+    }
+
     return valid;
   }
 

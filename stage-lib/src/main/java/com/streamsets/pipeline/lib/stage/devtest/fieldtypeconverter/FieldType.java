@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.stage.devtest;
+package com.streamsets.pipeline.lib.stage.devtest.fieldtypeconverter;
 
 public enum FieldType {
   BOOLEAN,

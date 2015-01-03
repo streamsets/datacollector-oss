@@ -95,7 +95,7 @@ public class PipelineDefinition {
     gdValues.add(DeliveryGuarantee.AT_MOST_ONCE.name());
 
     ModelDefinition gdModelDefinition = new ModelDefinition(ModelType.VALUE_CHOOSER,
-      ChooserMode.PROVIDED, "",  gdValues, gdLabels);
+      ChooserMode.PROVIDED, "",  gdValues, gdLabels, null);
 
     //Localize label and description for "delivery guarantee" config option
     String dgLabel = new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,

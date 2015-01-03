@@ -295,4 +295,9 @@ public class Field implements Cloneable {
     return (type != Type.MAP && type != Type.LIST) ? this : new Field(type, value);
   }
 
+  public void set(Type type, Object value) {
+    this.type = type;
+    this.value = type.constructorCopy(value);
+  }
+
 }

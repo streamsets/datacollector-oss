@@ -18,7 +18,7 @@ public class TestMapTypeSupport {
     MapTypeSupport ts = new MapTypeSupport();
     Map map = new HashMap();
     Assert.assertEquals(map, ts.create(map));
-    Assert.assertSame(map, ts.create(map));
+    Assert.assertNotSame(map, ts.create(map));
   }
 
   @Test

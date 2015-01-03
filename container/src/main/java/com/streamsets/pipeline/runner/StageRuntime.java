@@ -16,6 +16,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -25,6 +26,9 @@ import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -205,25 +209,10 @@ public class StageRuntime {
           try {
             Field var = klass.getField(instanceVar);
             //check if the field is an enum and convert the value to enum if so
-            if(var.getType().isEnum()) {
-              var.set(stage, Enum.valueOf((Class<Enum>) var.getType(), (String) value));
-            } else {
-              if (value != null) {
-                if (value instanceof List) {
-                  if (confDef.getType() == ConfigDef.Type.LIST) {
-                    validateList((List) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
-                  } else if (confDef.getType() == ConfigDef.Type.MAP) {
-                    // special type of Map config where is a List of Maps with 'key' & 'value' entries.
-                    validateMapAsList((List) value, stageDef.getClassName(), stageConf.getInstanceName(),
-                                      confDef.getName());
-                    value = convertToMap((List<Map>) value);
-                  }
-                } else if (value instanceof Map) {
-                  validateMap((Map) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
-                }
-              }
-              var.set(stage, value);
+            if(confDef.getModel() != null && confDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
+              setComplexField(var, stageDef, stageConf, stage, confDef, value);
             }
+            setFiled(var, stageDef, stageConf, stage, confDef, value);
           } catch (PipelineRuntimeException ex) {
             throw ex;
           } catch (Exception ex) {
@@ -232,6 +221,60 @@ public class StageRuntime {
                                                ex.getMessage(), ex);
           }
         }
+      }
+    }
+
+    private void setComplexField(Field var, StageDefinition stageDef, StageConfiguration stageConf, Stage stage,
+                                 ConfigDefinition confDef, Object value) throws IllegalAccessException, InstantiationException, NoSuchFieldException, PipelineRuntimeException {
+      Type genericType = var.getGenericType();
+      Class klass;
+      if(genericType instanceof ParameterizedType) {
+        Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
+        klass = (Class) typeArguments[0];
+      } else {
+        klass = (Class) genericType;
+      }
+
+      //value is a list of map where each map has keys which represent the field names in custom config object and the
+      // value is the value of the field
+      if(value instanceof List) {
+        List<Object> customConfigObjects = new ArrayList<>();
+
+        for(Object object : (List) value) {
+          if(object instanceof Map) {
+            Map<String, ?> map = (Map) object;
+            Object customConfigObj = klass.newInstance();
+            customConfigObjects.add(customConfigObj);
+            for (ConfigDefinition configDefinition : confDef.getModel().getConfigDefinitions()) {
+              Field f = klass.getField(configDefinition.getFieldName());
+              setFiled(f, stageDef, stageConf, customConfigObj, configDefinition, map.get(configDefinition.getFieldName()));
+            }
+          }
+        }
+        var.set(stage, customConfigObjects);
+      }
+    }
+
+    private void setFiled(Field var, StageDefinition stageDef, StageConfiguration stageConf, Object stage,
+                          ConfigDefinition confDef, Object value) throws IllegalAccessException, PipelineRuntimeException {
+      if(var.getType().isEnum()) {
+        var.set(stage, Enum.valueOf((Class<Enum>) var.getType(), (String) value));
+      } else {
+        if (value != null) {
+          if (value instanceof List) {
+            if (confDef.getType() == ConfigDef.Type.LIST) {
+              validateList((List) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
+            } else if (confDef.getType() == ConfigDef.Type.MAP) {
+              // special type of Map config where is a List of Maps with 'key' & 'value' entries.
+              validateMapAsList((List) value, stageDef.getClassName(), stageConf.getInstanceName(),
+                confDef.getName());
+              value = convertToMap((List<Map>) value);
+            }
+          } else if (value instanceof Map) {
+            validateMap((Map) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
+          }
+        }
+        var.set(stage, value);
       }
     }
 

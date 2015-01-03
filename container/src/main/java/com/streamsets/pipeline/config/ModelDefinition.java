@@ -16,6 +16,7 @@ public class ModelDefinition {
   private final ModelType modelType;
   private final ChooserMode chooserMode;
   private final String valuesProviderClass;
+  private final List<ConfigDefinition> configDefinitions;
   private List<String> values;
   private List<String> labels;
 
@@ -25,10 +26,12 @@ public class ModelDefinition {
     @JsonProperty("chooserMode") ChooserMode chooserMode,
     @JsonProperty("valuesProviderClass")String valuesProviderClass,
     @JsonProperty("values") List<String> values,
-    @JsonProperty("labels") List<String> labels) {
+    @JsonProperty("labels") List<String> labels,
+    @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions) {
     this.modelType = modelType;
     this.chooserMode = chooserMode;
     this.valuesProviderClass = valuesProviderClass;
+    this.configDefinitions = configDefinitions;
     this.values = values;
     this.labels = labels;
   }
@@ -59,6 +62,10 @@ public class ModelDefinition {
 
   public void setLabels(List<String> labels) {
     this.labels = labels;
+  }
+
+  public List<ConfigDefinition> getConfigDefinitions() {
+    return configDefinitions;
   }
 
   @Override

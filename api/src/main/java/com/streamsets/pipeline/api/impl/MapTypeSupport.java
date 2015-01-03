@@ -52,4 +52,9 @@ public class MapTypeSupport extends TypeSupport<Map> {
     return copy;
   }
 
+  @Override
+  public Object create(Object value) {
+    return clone(value);
+  }
+
 }

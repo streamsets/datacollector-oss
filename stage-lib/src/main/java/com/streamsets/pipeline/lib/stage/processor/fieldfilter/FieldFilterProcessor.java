@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.stage.devtest;
+package com.streamsets.pipeline.lib.stage.processor.fieldfilter;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
@@ -15,23 +15,28 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 import java.util.List;
+import java.util.Set;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Dev Field Remover")
-public class FieldRemoverProcessor extends SingleLaneRecordProcessor {
+@StageDef( version="1.0.0", label="Field Filter")
+public class FieldFilterProcessor extends SingleLaneRecordProcessor {
 
-  @ConfigDef(label = "Fields to remove", required = true,type = Type.MODEL, defaultValue="")
+  @ConfigDef(label = "Fields to keep", required = true,type = Type.MODEL, defaultValue="",
+    description="The fields which must be retained in the record. All other fields will be dropped.")
+
   @FieldSelector
   public List<String> fields;
 
-  // the annotations processor will fail if variable is not List
-
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    for (String nameToRemove : fields) {
-      record.delete(nameToRemove);
+    Record recordClone = getContext().cloneRecord(record);
+    Set<String> fieldToRemove = recordClone.getFieldPaths();
+    fieldToRemove.removeAll(fields);
+    fieldToRemove.remove("");
+    for (String nameToRemove : fieldToRemove) {
+      recordClone.delete(nameToRemove);
     }
-    batchMaker.addRecord(record);
+    batchMaker.addRecord(recordClone);
   }
 
 }
