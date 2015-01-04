@@ -10,7 +10,6 @@
 
   <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
   <link rel="stylesheet" type="text/css" href="/<%= file %>" /><% }); %>
-
 </head>
 <body>
   <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -25,6 +24,12 @@
 
   <div class="login-container">
     <div class="row">
+      <div id="loginErrorMessageDivId" class="col-md-3 alert alert-danger" role="alert">
+        Login Failed.
+      </div>
+    </div>
+
+    <div class="row">
       <div class="col-md-3 form-login">
         <form class="form-horizontal" action="/j_security_check" method="POST">
           <h4>Login</h4>
@@ -35,5 +40,15 @@
       </div>
     </div>
   </div>
+
+
+  <script>
+    var queryString = window.location.search;
+    if(queryString && queryString.indexOf('error=true') !== -1) {
+      var errorDiv = document.getElementById('loginErrorMessageDivId');
+      errorDiv.style.visibility = 'visible';
+    }
+  </script>
+
 </body>
 </html>

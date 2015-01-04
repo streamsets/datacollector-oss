@@ -6,7 +6,7 @@ angular
   .module('pipelineAgentApp.home')
 
   .controller('ConfigurationController', function ($scope, $rootScope, $q, $modal, _,
-                                                   api, previewService, pipelineConstant) {
+                                                   api, previewService, pipelineConstant, pipelineService) {
     var fieldsPathList;
 
     angular.extend($scope, {
@@ -170,6 +170,19 @@ angular
       },
 
       removeFromMap: function(stageInstance, configValue, mapObject, $index) {
+        configValue.splice($index, 1);
+      },
+
+      addToCustomField: function(stageInstance, configValue, configDefinitions) {
+        var complexFieldObj = {};
+        angular.forEach(configDefinitions, function (complexFiledConfigDefinition) {
+          var complexFieldConfig = pipelineService.setDefaultValueForConfig(complexFiledConfigDefinition, stageInstance);
+          complexFieldObj[complexFieldConfig.name] = complexFieldConfig.value || '';
+        });
+        configValue.push(complexFieldObj);
+      },
+
+      removeFromCustomField: function(stageInstance, configValue, $index) {
         configValue.splice($index, 1);
       }
 

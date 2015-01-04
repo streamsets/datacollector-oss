@@ -175,7 +175,8 @@
 
 
               <div ng-switch-when="FIELD_SELECTOR"
-                   ng-click="onFieldSelectorFocus(detailPaneConfig)">
+                   ng-click="onFieldSelectorFocus(detailPaneConfig)"
+                   class="clearfix">
                 <label class="control-label">{{configDefinition.label}}</label>
                 <i class="fa fa-info-circle help-icon"
                    popover-placement="right"
@@ -245,6 +246,105 @@
                   </div>
 
                 </div>
+
+              </div>
+
+
+              <div ng-switch-when="COMPLEX_FIELD" class="clearfix">
+                <label class="control-label">{{configDefinition.label}}</label>
+                <i class="fa fa-info-circle help-icon"
+                   popover-placement="right"
+                   popover-append-to-body="false"
+                   popover="{{configDefinition.description}}"
+                   popover-trigger="mouseenter"></i>
+
+
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class="col-md-5" ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions">{{customeFieldConfigDefintion.label}}</th>
+                      <th class="col-md-1"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="customFieldValue in customeFieldValueList = detailPaneConfig.configuration[$index].value track by $index">
+
+                    <td class="col-md-5"
+                        ng-switch="customFieldConfigDefinition.type"
+                        ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions">
+
+
+                      <div ng-switch-when="INTEGER">
+                        <input type="number" class="form-control"
+                               name="{{customFieldConfigDefinition.name + $index}}"
+                               placeholder="{{customFieldConfigDefinition.label}}"
+                               ng-model="customFieldValue[customFieldConfigDefinition.name]"
+                               ng-required="customFieldConfigDefinition.required">
+                      </div>
+
+                      <div ng-switch-when="STRING">
+                        <input type="text" class="form-control"
+                               name="{{customFieldConfigDefinition.name + $index}}"
+                               placeholder="{{customFieldConfigDefinition.label}}"
+                               ng-model="customFieldValue[customFieldConfigDefinition.name]"
+                               ng-required="customFieldConfigDefinition.required">
+                      </div>
+
+
+                      <div ng-switch-when="MODEL"
+                           ng-switch="customFieldConfigDefinition.model.modelType">
+
+                        <div ng-switch-when="VALUE_CHOOSER">
+                          <select class="form-control" name="{{customFieldConfigDefinition.name + $index}}"
+                                  ng-model="customFieldValue[customFieldConfigDefinition.name]">
+                            <option ng-repeat="listValue in customFieldConfigDefinition.model.values"
+                                    value="{{listValue}}"
+                                    ng-selected="listValue === customFieldValue[customFieldConfigDefinition.name]">
+                              {{customFieldConfigDefinition.model.labels[$index]}}
+                            </option>
+                          </select>
+                        </div>
+
+
+                        <div ng-switch-when="FIELD_SELECTOR"
+                             ng-click="onFieldSelectorFocus(detailPaneConfig)"
+                             class="clearfix">
+                          <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+                                     ng-model="customFieldValue[customFieldConfigDefinition.name]">
+                            <ui-select-match
+                              placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
+                              {{$item}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="fieldPath in fieldPaths.concat(customFieldValue[customFieldConfigDefinition.name]) | filter:$select.search">
+                              {{fieldPath}}
+                            </ui-select-choices>
+                          </ui-select>
+                        </div>
+
+                      </div>
+
+                    </td>
+
+                    <td>
+                      <div class="col-xs-1 btn-group" role="group" aria-label="Default button group">
+                        <button type="button" class="btn btn-default btn-sm"
+                                ng-hide="$first && $last"
+                                ng-click="removeFromCustomField(detailPaneConfig, customeFieldValueList, $index)">
+                          <i class="fa fa-minus pointer"></i>
+                        </button>
+                      </div>
+                    </td>
+
+                  </tr>
+                  </tbody>
+                </table>
+
+
+
+                <button type="button" class="btn btn-primary btn-sm pull-right"
+                        ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[$index].value, configDefinition.model.configDefinitions)">
+                  Add <i class="fa fa-plus pointer"></i>
+                </button>
 
               </div>
 

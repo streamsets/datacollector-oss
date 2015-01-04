@@ -39,35 +39,8 @@ angular.module('pipelineAgentApp.common')
       }
 
       angular.forEach(stage.configDefinitions, function (configDefinition) {
-        var config = {
-          name: configDefinition.name,
-          value: configDefinition.defaultValue || undefined
-        };
-
-        if(configDefinition.type === 'MODEL') {
-          if(configDefinition.model.modelType === 'FIELD_SELECTOR') {
-            config.value = [];
-          } else if(configDefinition.model.modelType === 'LANE_PREDICATE_MAPPING') {
-            config.value = [{
-              outputLane: stageInstance.outputLanes[0],
-              predicate: ''
-            }];
-          }
-        } else if(configDefinition.type === 'INTEGER') {
-          if(config.value) {
-            config.value = parseInt(config.value);
-          } else {
-            config.value = 0;
-          }
-        } else if(configDefinition.type === 'BOOLEAN' && config.value === undefined) {
-          config.value = false;
-        } else if(configDefinition.type === 'MAP') {
-          config.value = [];
-        }
-
-        stageInstance.configuration.push(config);
+        stageInstance.configuration.push(self.setDefaultValueForConfig(configDefinition, stageInstance));
       });
-
 
       if(stage.rawSourceDefinition && stage.rawSourceDefinition.configDefinitions) {
 
@@ -76,22 +49,7 @@ angular.module('pipelineAgentApp.common')
         };
 
         angular.forEach(stage.rawSourceDefinition.configDefinitions, function (configDefinition) {
-          var config = {
-            name: configDefinition.name,
-            value: configDefinition.defaultValue
-          };
-
-          if(configDefinition.type === 'MODEL' && configDefinition.model.modelType === 'FIELD_SELECTOR') {
-            config.value = [];
-          } else if(configDefinition.type === 'INTEGER') {
-            if(config.value) {
-              config.value = parseInt(config.value);
-            } else {
-              config.value = 0;
-            }
-          }
-
-          stageInstance.uiInfo.rawSource.configuration.push(config);
+          stageInstance.uiInfo.rawSource.configuration.push(self.setDefaultValueForConfig(configDefinition, stageInstance));
         });
       }
 
@@ -122,6 +80,44 @@ angular.module('pipelineAgentApp.common')
         });
 
       return label + (similarStageInstances.length + 1);
+    };
+
+
+    this.setDefaultValueForConfig = function(configDefinition, stageInstance) {
+      var config = {
+          name: configDefinition.name,
+          value: configDefinition.defaultValue || undefined
+        };
+
+      if(configDefinition.type === 'MODEL') {
+        if(configDefinition.model.modelType === 'FIELD_SELECTOR') {
+          config.value = [];
+        } else if(configDefinition.model.modelType === 'LANE_PREDICATE_MAPPING') {
+          config.value = [{
+            outputLane: stageInstance.outputLanes[0],
+            predicate: ''
+          }];
+        } else if(configDefinition.model.modelType === 'COMPLEX_FIELD') {
+          var complexFieldObj = {};
+          angular.forEach(configDefinition.model.configDefinitions, function (complexFiledConfigDefinition) {
+            var complexFieldConfig = self.setDefaultValueForConfig(complexFiledConfigDefinition, stageInstance);
+            complexFieldObj[complexFieldConfig.name] = complexFieldConfig.value || '';
+          });
+          config.value = [complexFieldObj];
+        }
+      } else if(configDefinition.type === 'INTEGER') {
+        if(config.value) {
+          config.value = parseInt(config.value);
+        } else {
+          config.value = 0;
+        }
+      } else if(configDefinition.type === 'BOOLEAN' && config.value === undefined) {
+        config.value = false;
+      } else if(configDefinition.type === 'MAP') {
+        config.value = [];
+      }
+
+      return config;
     };
 
   });
