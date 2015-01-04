@@ -211,8 +211,9 @@ public class StageRuntime {
             //check if the field is an enum and convert the value to enum if so
             if(confDef.getModel() != null && confDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
               setComplexField(var, stageDef, stageConf, stage, confDef, value);
+            } else {
+              setFiled(var, stageDef, stageConf, stage, confDef, value);
             }
-            setFiled(var, stageDef, stageConf, stage, confDef, value);
           } catch (PipelineRuntimeException ex) {
             throw ex;
           } catch (Exception ex) {
