@@ -18,7 +18,6 @@ public enum FieldType {
   DATETIME,
   DECIMAL,
   STRING,
-  BYTE_ARRAY,
-  MAP,
-  LIST
+  BYTE_ARRAY
+  //MAP and LIST are not supported
 }

@@ -40,27 +40,26 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    Record recordClone = getContext().cloneRecord(record);
-
     if(fieldsToNull != null && !fieldsToNull.isEmpty()) {
       for (String fieldToNull : fieldsToNull) {
-        Field field = recordClone.get(fieldToNull);
-        field.set(field.getType(), null);
+        Field field = record.get(fieldToNull);
+        record.set(fieldToNull, Field.create(field, null));
       }
     }
 
     if(fieldsToReplaceIfNull !=null && !fieldsToReplaceIfNull.isEmpty()) {
       for (FieldValueReplacerConfig fieldValueReplacerConfig : fieldsToReplaceIfNull) {
         for (String fieldToReplace : fieldValueReplacerConfig.fields) {
-          Field field = recordClone.get(fieldToReplace);
+          Field field = record.get(fieldToReplace);
           if (field.getValue() == null) {
-            field.set(field.getType(), convertToType(fieldValueReplacerConfig.newValue, field.getType()));
+            record.set(fieldToReplace, Field.create(field, convertToType(
+              fieldValueReplacerConfig.newValue, field.getType())));
           }
         }
       }
     }
 
-    batchMaker.addRecord(recordClone);
+    batchMaker.addRecord(record);
   }
 
   private Object convertToType(String stringValue, Field.Type fieldType) {
@@ -74,7 +73,7 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
       case CHAR:
         return stringValue.charAt(0);
       case DATE:
-        DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         Date date;
         try {
           date = dateFormat.parse(stringValue);
@@ -83,7 +82,7 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
         }
         return date;
       case DATETIME:
-        DateFormat dateTimeFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
+        DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ", Locale.ENGLISH);
         Date dateTime;
         try {
           dateTime = dateTimeFormat.parse(stringValue);
