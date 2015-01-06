@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.lib.stage.devtest.fieldtypeconverter;
 
-public enum DateMask {
+public enum DateFormat {
 
   YYYY_MM_DD("yyyy-MM-dd"),
   DD_MM_YYYY("dd-MM-YYYY"),
@@ -15,7 +15,7 @@ public enum DateMask {
 
   private String format;
 
-  private DateMask(String format) {
+  private DateFormat(String format) {
     this.format = format;
   }
 

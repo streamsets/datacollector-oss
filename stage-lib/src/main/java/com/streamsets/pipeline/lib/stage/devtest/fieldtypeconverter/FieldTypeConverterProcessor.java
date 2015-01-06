@@ -17,9 +17,11 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.lib.util.StageLibError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +32,8 @@ import java.util.Locale;
 @GenerateResourceBundle
 @StageDef(version="1.0.0", label="Dummy Field Type Converter")
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
+
+  private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
 
   @ConfigDef(label = "Fields to be converted", required = false, type = Type.MODEL, defaultValue="",
     description="Fields whose values, if null, to be replaced with the specified value")
@@ -42,12 +46,19 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     for(FieldTypeConverterConfig fieldTypeConverterConfig : fieldTypeConverterConfigs) {
       for(String fieldToConvert : fieldTypeConverterConfig.fields) {
         Field field = record.get(fieldToConvert);
-        try {
-          record.set(fieldToConvert, convertToType(field.getValueAsString(), fieldTypeConverterConfig.targetType,
-            fieldTypeConverterConfig.dataLocale.getLocale(), fieldTypeConverterConfig.dateMask.getFormat()));
-        } catch (ParseException e) {
-          //FIXME<Hari>: add message
-          getContext().toError(record, e);
+        if(field.getValue() == null) {
+          LOG.warn("Encountered field {} with null value in record {}. Ignoring conversion.", fieldToConvert,
+            record.getHeader().getSourceId());
+        } else {
+          try {
+            record.set(fieldToConvert, convertToType(field, fieldTypeConverterConfig.targetType,
+              fieldTypeConverterConfig.dataLocale.getLocale(), fieldTypeConverterConfig.dateFormat.getFormat()));
+          } catch (ParseException e) {
+            LOG.warn(StageLibError.LIB_0400.getMessage(), field.getValueAsString(),
+              fieldTypeConverterConfig.targetType.name(), e.getMessage());
+            getContext().toError(record, StageLibError.LIB_0400, field.getValueAsString(),
+              fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
+          }
         }
       }
     }
@@ -55,7 +66,9 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     batchMaker.addRecord(record);
   }
 
-  public Field convertToType(String stringValue, FieldType fieldType, Locale dataLocale, String dateMask) throws ParseException {
+  public Field convertToType(Field field, FieldType fieldType, Locale dataLocale, String dateMask)
+    throws ParseException {
+    String stringValue = field.getValueAsString();
     switch(fieldType) {
       case BOOLEAN:
         return Field.create(Boolean.valueOf(stringValue));
@@ -67,14 +80,12 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
         return Field.create(stringValue.charAt(0));
       case DATE:
       case DATETIME:
-        DateFormat dateFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
-        Date date;
-        try {
-          date = dateFormat.parse(stringValue);
-        } catch (ParseException e) {
-          throw new RuntimeException(e);
+        if(field.getType() == Field.Type.LONG) {
+          return Field.createDate(new Date(field.getValueAsLong()));
+        } else {
+          java.text.DateFormat dateFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
+          return Field.createDate(dateFormat.parse(stringValue));
         }
-        return Field.createDate(date);
       case DECIMAL:
         Number decimal = NumberFormat.getInstance(dataLocale).parse(stringValue);
         return Field.create(new BigDecimal(decimal.toString()));
@@ -105,20 +116,20 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     @FieldSelector
     public List<String> fields;
 
-    @ConfigDef(label = "Target type", required = true, type = Type.MODEL, defaultValue="",
+    @ConfigDef(label = "Target type", required = true, type = Type.MODEL, defaultValue="INTEGER",
       description="The new type to which the field must be converted to.")
     @ValueChooser(chooserValues = ConverterValuesProvider.class, type = ChooserMode.PROVIDED)
     public FieldType targetType;
 
-    @ConfigDef(label = "Data Locale", required = true, type = Type.MODEL, defaultValue="",
+    @ConfigDef(label = "Data Locale", required = true, type = Type.MODEL, defaultValue="ENGLISH",
       description="The current locale of the data which must be converted.")
     @ValueChooser(chooserValues = LocaleValuesProvider.class, type = ChooserMode.PROVIDED)
     public DataLocale dataLocale;
 
-    @ConfigDef(label = "Data Locale", required = true, type = Type.MODEL, defaultValue="",
+    @ConfigDef(label = "Date Format", required = true, type = Type.MODEL, defaultValue="YYYY_MM_DD",
       description="The current locale of the data which must be converted.")
-    @ValueChooser(chooserValues = DateMaskValuesProvider.class, type = ChooserMode.PROVIDED)
-    public DateMask dateMask;
+    @ValueChooser(chooserValues = DateFormatValuesProvider.class, type = ChooserMode.PROVIDED)
+    public DateFormat dateFormat;
 
   }
 }

@@ -210,31 +210,46 @@ public class StageDefinition {
 
   private void updateValuesAndLabelsFromValuesProvider() {
     for(ConfigDefinition configDef : getConfigDefinitions()) {
-      if(configDef.getModel() != null &&
-        configDef.getModel().getValuesProviderClass() != null &&
-        !configDef.getModel().getValuesProviderClass().isEmpty()) {
-        try {
-          Class valueProviderClass = classLoader.loadClass(configDef.getModel().getValuesProviderClass());
-          ChooserValues valueProvider = (ChooserValues) valueProviderClass.newInstance();
-          List<String> values = valueProvider.getValues();
-          List<String> labels = valueProvider.getLabels();
+      updateValuesAndLabels(configDef);
+    }
+  }
 
-          if(values != null && labels != null && values.size() != labels.size()) {
-            LOG.error(
-              "The ChooserValues implementation for configuration '{}' in stage '{}' does not have the same number of "
-                + "values and labels. Values '{}], labels '{}'.",
-              configDef.getFieldName(), getStageClass().getName(), values, labels);
-            throw new RuntimeException(Utils.format("The ChooserValues implementation for configuration '{}' in stage "
-                + "'{}' does not have the same number of values and labels. Values '{}], labels '{}'.",
-              configDef.getFieldName(), getStageClass().getName(), values, labels));
-          }
-          configDef.getModel().setValues(values);
-          configDef.getModel().setLabels(labels);
-        } catch (ClassNotFoundException | InstantiationException |
-            IllegalAccessException e) {
-          throw new RuntimeException(e);
+  private void updateValuesAndLabels(ConfigDefinition configDef) {
+    if(configDef.getModel() != null) {
+      if(configDef.getModel().getValuesProviderClass() != null &&
+        !configDef.getModel().getValuesProviderClass().isEmpty()) {
+        setValuesAndLabels(configDef);
+      }
+      if (configDef.getModel().getConfigDefinitions() != null) {
+        for (ConfigDefinition complexFeldConfDef : configDef.getModel().getConfigDefinitions()) {
+          //complex fields cannot have more complex fields as of now
+          updateValuesAndLabels(complexFeldConfDef);
         }
       }
+    }
+  }
+
+  private void setValuesAndLabels(ConfigDefinition configDef) {
+    try {
+      Class valueProviderClass = classLoader.loadClass(configDef.getModel().getValuesProviderClass());
+      ChooserValues valueProvider = (ChooserValues) valueProviderClass.newInstance();
+      List<String> values = valueProvider.getValues();
+      List<String> labels = valueProvider.getLabels();
+
+      if(values != null && labels != null && values.size() != labels.size()) {
+        LOG.error(
+          "The ChooserValues implementation for configuration '{}' in stage '{}' does not have the same number of "
+            + "values and labels. Values '{}], labels '{}'.",
+          configDef.getFieldName(), getStageClass().getName(), values, labels);
+        throw new RuntimeException(Utils.format("The ChooserValues implementation for configuration '{}' in stage "
+            + "'{}' does not have the same number of values and labels. Values '{}], labels '{}'.",
+          configDef.getFieldName(), getStageClass().getName(), values, labels));
+      }
+      configDef.getModel().setValues(values);
+      configDef.getModel().setLabels(labels);
+    } catch (ClassNotFoundException | InstantiationException |
+      IllegalAccessException e) {
+      throw new RuntimeException(e);
     }
   }
 }

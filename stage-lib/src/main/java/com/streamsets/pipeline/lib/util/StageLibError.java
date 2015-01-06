@@ -32,6 +32,8 @@ public enum StageLibError implements ErrorCode {
   LIB_0300("A message with offset '{}' which is greater than the latest offset '{}' is requested from Kafka topic '{}' partition '{}'."),
 
 
+  //Field Type Converter Processor
+  LIB_0400("Failed to convert value '{}' to type '{}', {}."),
   ;
 
   private final String msg;

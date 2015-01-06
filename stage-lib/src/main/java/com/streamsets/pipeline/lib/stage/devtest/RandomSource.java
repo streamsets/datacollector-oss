@@ -32,6 +32,7 @@ public class RandomSource extends BaseSource {
   private int batchSize;
   private String[] fieldArr;
   private Random random;
+  private Random randomNulls;
   private String[] lanes;
   private Meter randomMeter;
 
@@ -39,6 +40,7 @@ public class RandomSource extends BaseSource {
   protected void init() throws StageException {
     fieldArr = fields.split(",");
     random = new Random();
+    randomNulls = new Random();
     lanes = getContext().getOutputLanes().toArray(new String[getContext().getOutputLanes().size()]);
     randomMeter = getContext().createMeter("randomizer");
   }
@@ -62,9 +64,15 @@ public class RandomSource extends BaseSource {
     Record record = getContext().createRecord("random:" + batchOffset);
     Map<String, Field> map = new LinkedHashMap<>();
     for (String field : fieldArr) {
-      int randomValue = random.nextInt();
-      map.put(field, Field.create(randomValue));
-      randomMeter.mark(randomValue);
+      float randomFloat = randomNulls.nextFloat();
+      if(randomFloat < 0.3) {
+        map.put(field, Field.create(Field.Type.INTEGER, null));
+        randomMeter.mark(0);
+      } else {
+        int randomValue = random.nextInt();
+        map.put(field, Field.create(randomValue));
+        randomMeter.mark(randomValue);
+      }
     }
     record.set(Field.create(map));
     return record;
