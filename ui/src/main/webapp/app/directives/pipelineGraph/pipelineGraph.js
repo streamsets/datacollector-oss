@@ -175,6 +175,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       circleGClass: 'conceptG',
       graphClass: 'graph',
       activeEditId: 'active-editing',
+      startNodeClass: 'startNode',
+      endNodeClass: 'endNode',
       BACKSPACE_KEY: 8,
       DELETE_KEY: 46,
       ENTER_KEY: 13,
@@ -842,6 +844,29 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr('transform', 'translate(0,0)');
     };
 
+
+    GraphCreator.prototype.clearStartAndEndNode = function(){
+      var thisGraph = this;
+      thisGraph.rects.classed(thisGraph.consts.startNodeClass, false);
+      thisGraph.rects.classed(thisGraph.consts.endNodeClass, false);
+    };
+
+    GraphCreator.prototype.updateStartAndEndNode = function(startNode, endNode){
+      var thisGraph = this;
+
+      thisGraph.clearStartAndEndNode();
+
+      thisGraph.rects.filter(function(cd){
+        return cd.instanceName === startNode.instanceName;
+      }).classed(thisGraph.consts.startNodeClass, true);
+
+      thisGraph.rects.filter(function(cd){
+        return cd.instanceName === endNode.instanceName;
+      }).classed(thisGraph.consts.endNodeClass, true);
+    };
+
+
+
     GraphCreator.prototype.updateWindow = function(svg){
       /*var svgEl = $element.parent();
       var x = svgEl.width();
@@ -942,7 +967,20 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         if (graph.state.selectedNode){
           graph.removeSelectFromNode();
         }
+        graph.clearStartAndEndNode();
         graph.moveGraphToCenter();
+      }
+    });
+
+    $scope.$on('updateStartAndEndNode', function(event, startNode, endNode) {
+      if(graph) {
+        graph.updateStartAndEndNode(startNode, endNode);
+      }
+    });
+
+    $scope.$on('clearStartAndEndNode', function() {
+      if(graph) {
+        graph.clearStartAndEndNode();
       }
     });
 

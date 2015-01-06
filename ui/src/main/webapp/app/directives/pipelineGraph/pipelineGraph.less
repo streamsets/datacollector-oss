@@ -125,6 +125,72 @@ pipeline-graph {
       }
     }
 
+
+    &.startNode {
+      rect {
+        fill: @default-pipeline-graph-start-node-color;
+        stroke: @default-pipeline-graph-start-node-color;
+      }
+
+      circle {
+        stroke: @default-pipeline-graph-start-node-color;
+      }
+
+      text {
+        fill: #ffffff;
+      }
+
+      image {
+        fill: #ffffff;
+      }
+
+      .node-warning {
+        color: #ffffff;
+      }
+
+      &:hover {
+        rect {
+          fill: @default-pipeline-graph-start-node-color;
+          stroke: @default-pipeline-graph-start-node-color;
+          opacity: 1;
+        }
+      }
+    }
+
+
+    &.endNode {
+      rect {
+        fill: @default-pipeline-graph-end-node-color;
+        stroke: @default-pipeline-graph-end-node-color;
+      }
+
+      circle {
+        stroke: @default-pipeline-graph-end-node-color;
+      }
+
+      text {
+        fill: #ffffff;
+      }
+
+      image {
+        fill: #ffffff;
+      }
+
+      .node-warning {
+        color: #ffffff;
+      }
+
+      &:hover {
+        rect {
+          fill: @default-pipeline-graph-end-node-color;
+          stroke: @default-pipeline-graph-end-node-color;
+          opacity: 1;
+        }
+      }
+    }
+
+
+
     &.connect-node {
       rect{
         fill: @default-pipeline-graph-selection-color;

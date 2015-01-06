@@ -168,8 +168,21 @@ angular
       moveGraphToCenter: function() {
         $scope.$broadcast('moveGraphToCenter');
         updateDetailPane();
-      }
+      },
 
+      /**
+       * Update Pipeline Graph by highlighting Start and End node.
+       */
+      updateStartAndEndStageInstance: function(startStage, endStage) {
+        $scope.$broadcast('updateStartAndEndNode', startStage, endStage);
+      },
+
+      /**
+       * Update Pipeline Graph by clearing highlighting of Start and End Stage Instance.
+       */
+      clearStartAndEndStageInstance: function() {
+        $scope.$broadcast('clearStartAndEndNode');
+      }
     });
 
 

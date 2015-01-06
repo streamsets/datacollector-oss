@@ -49,6 +49,7 @@ angular
     var updatePreviewData = function(fromStage, toStage) {
       var batchData = $scope.previewData.batchesOutput[0];
       $scope.multiStagePreviewData = previewService.getPreviewDataForMultiStage(batchData, fromStage, toStage);
+      $scope.updateStartAndEndStageInstance(fromStage, toStage);
     };
 
 
@@ -63,12 +64,5 @@ angular
 
       updatePreviewData($scope.fromStage, $scope.toStage);
     }
-
-
-    $scope.$on('onStageSelection', function(event, stageInstance) {
-      if($scope.previewMode) {
-        updatePreviewData($scope.fromStage, $scope.toStage);
-      }
-    });
 
   });

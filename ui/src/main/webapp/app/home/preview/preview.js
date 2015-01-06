@@ -28,6 +28,7 @@ angular
 
       changeToPreviewSingleStage: function() {
         $scope.previewMultipleStages = false;
+        $scope.clearStartAndEndStageInstance();
         $scope.changeStageSelection($scope.pipelineConfig.stages[0]);
       },
 
