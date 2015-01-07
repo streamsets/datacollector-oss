@@ -33,6 +33,7 @@ angular.module('pipelineAgentApp')
       namePattern: '^[a-zA-Z0-9_]+$',
       errors: [],
       activeDetailTab: undefined,
+      dontShowHelpAlert: false,
 
       /**
        * Open the Shutdown Modal Dialog

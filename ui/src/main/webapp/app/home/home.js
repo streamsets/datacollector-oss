@@ -40,6 +40,7 @@ angular
       minimizeDetailPane: false,
       maximizeDetailPane: false,
       $storage: $localStorage,
+      dontShowHelpAlert: false,
 
       /**
        * Add New Pipeline Configuration
@@ -182,6 +183,13 @@ angular
        */
       clearStartAndEndStageInstance: function() {
         $scope.$broadcast('clearStartAndEndNode');
+      },
+
+      /**
+       * Clear the variable firstOpenLaneStage
+       */
+      clearFirstOpenLaneStage: function() {
+        $scope.firstOpenLaneStage = undefined;
       }
     });
 
@@ -367,6 +375,8 @@ angular
         }
       });
 
+      $scope.firstOpenLane = $rootScope.common.dontShowHelpAlert ? {} : getFirstOpenLane();
+
       if(pipelineStatus && pipelineStatus.name === pipelineConfig.info.name &&
         pipelineMetrics && pipelineMetrics.meters) {
         stageErrorCounts = getStageErrorCounts();
@@ -523,6 +533,46 @@ angular
       });
 
       return stageInstanceErrorCounts;
+    };
+
+    var getFirstOpenLane = function() {
+      var pipelineConfig = $scope.pipelineConfig,
+        firstOpenLane = {},
+        issueMessage,
+        firstOpenLaneStageInstanceName;
+
+      if(pipelineConfig && pipelineConfig.issues && pipelineConfig.issues.stageIssues) {
+        angular.forEach(pipelineConfig.issues.stageIssues, function(issues, instanceName) {
+          if(!firstOpenLaneStageInstanceName) {
+            angular.forEach(issues, function(issue) {
+              if(issue.message.indexOf('VALIDATION_0011') !== -1) {
+                issueMessage = issue.message;
+                firstOpenLaneStageInstanceName = instanceName;
+              }
+            });
+          }
+        });
+
+        if(firstOpenLaneStageInstanceName) {
+          var stageInstance = _.find(pipelineConfig.stages, function(stage) {
+              return stage.instanceName === firstOpenLaneStageInstanceName;
+            }),
+            laneName = _.find(stageInstance.outputLanes, function(outputLane) {
+              return issueMessage.indexOf(outputLane) !== -1;
+            }),
+            laneIndex = _.indexOf(stageInstance.outputLanes, laneName);
+
+          firstOpenLane = {
+            stageInstance: stageInstance,
+            laneName: laneName,
+            laneIndex: laneIndex
+          };
+        }
+      }
+
+
+
+      return firstOpenLane;
     };
 
     //Event Handling

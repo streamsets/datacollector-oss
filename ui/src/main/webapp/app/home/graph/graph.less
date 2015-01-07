@@ -73,7 +73,6 @@
         }
       }
 
-
       .badge {
         color: #d9534f;
         background-color: #fff;
@@ -104,6 +103,33 @@
     .alert {
       margin-bottom: 0;
       border-radius: 0;
+
+      &.alert-select-stage {
+        position: absolute;
+        margin: 200px 0 0 35%;
+        width: 520px;
+
+        .validation-message {
+          display: block;
+          padding-bottom: @defaultPadding;
+        }
+
+        .validation-options {
+          select {
+            width: 215px;
+          }
+
+          span {
+            padding: @smallPadding @defaultPadding;
+          }
+        }
+
+        .dont-show-again {
+          margin-top: 2 * @defaultPadding;
+          margin-bottom: 0;
+        }
+
+      }
     }
 
     .draggable {

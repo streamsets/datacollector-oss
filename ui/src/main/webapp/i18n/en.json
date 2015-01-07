@@ -109,7 +109,10 @@
     "graphPane": {
       "startErrorMessage": "Pipeline definition '{{name}}' is running. Pipeline Agent supports running only one Pipeline Definition.",
       "viewStackTrace": "View Stack Trace",
-      "errorStackTrace": "Error Stack Trace"
+      "errorStackTrace": "Error Stack Trace",
+      "dontShowAgain": "Don't show again.",
+      "selectProcessor": "Select Processor to connect...",
+      "selectTarget": "Select Target to connect..."
     },
     "detailPane": {
       "alerts": "Alerts",

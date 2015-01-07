@@ -6,16 +6,35 @@ angular.module('pipelineAgentApp.common')
 
     var self = this;
 
+    var getXPos = function(pipelineConfig, firstOpenLane) {
+      var prevStage = (firstOpenLane && firstOpenLane.stageInstance) ? firstOpenLane.stageInstance :
+        ((pipelineConfig.stages && pipelineConfig.stages.length) ? pipelineConfig.stages[pipelineConfig.stages.length - 1] : undefined);
+
+      return prevStage ? prevStage.uiInfo.xPos + 300 : 200;
+    };
+
+    var getYPos = function(pipelineConfig, firstOpenLane, xPos) {
+      var maxYPos = 0;
+      angular.forEach(pipelineConfig.stages, function(stage) {
+        if(stage.uiInfo.xPos === xPos && stage.uiInfo.yPos > maxYPos) {
+          maxYPos = stage.uiInfo.yPos;
+        }
+      });
+
+      return maxYPos ? maxYPos + 130 : 70;
+    };
+
     /**
      * Construct new instance for give Stage Defintion
      * @param stage
      * @param pipelineConfig
+     * @param labelSuffix [Optional]
+     * @param firstOpenLane [Optional]
      * @returns {{instanceName: *, library: (*|stageInstance.library|library|e.library), stageName: *, stageVersion: *, configuration: Array, uiInfo: {label: *, description: string, xPos: *, yPos: number, stageType: *}, inputLanes: Array, outputLanes: Array}}
      */
-    this.getNewStageInstance = function (stage, pipelineConfig, labelSuffix) {
-      var xPos = (pipelineConfig.stages && pipelineConfig.stages.length) ?
-                    pipelineConfig.stages[pipelineConfig.stages.length - 1].uiInfo.xPos + 300 : 200,
-        yPos = 70,
+    this.getNewStageInstance = function (stage, pipelineConfig, labelSuffix, firstOpenLane) {
+      var xPos = getXPos(pipelineConfig, firstOpenLane),
+        yPos = getYPos(pipelineConfig, firstOpenLane, xPos),
         stageLabel = self.getStageLabel(stage, pipelineConfig),
         stageInstance = {
           instanceName: stage.name + (new Date()).getTime() + (labelSuffix ? labelSuffix : ''),
@@ -33,6 +52,10 @@ angular.module('pipelineAgentApp.common')
           inputLanes: [],
           outputLanes: []
         };
+
+      if(firstOpenLane && firstOpenLane.laneName) {
+        stageInstance.inputLanes.push(firstOpenLane.laneName);
+      }
 
       if (stage.type !== pipelineConstant.TARGET_STAGE_TYPE) {
         stageInstance.outputLanes = [stageInstance.instanceName + 'OutputLane' + (new Date()).getTime()];

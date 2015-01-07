@@ -6,15 +6,87 @@
   </div>
 
   <div class="panel-body">
-    <div class="alert alert-dismissible" role="alert"
-         ng-class="(issues.message.indexOf('VALIDATION_0001') !== -1 ) ? 'alert-warning' : 'alert-danger'"
-         ng-repeat="issues in pipelineConfig.issues.pipelineIssues">
+
+    <div ng-repeat="issues in pipelineConfig.issues.pipelineIssues">
+
+      <div class="alert alert-dismissible alert-danger" role="alert"
+           ng-if="issues.message.indexOf('VALIDATION_0001') === -1">
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        {{issues.message}}
+      </div>
+
+      <div class="alert alert-dismissible alert-info alert-select-stage" role="alert"
+           ng-if="issues.message.indexOf('VALIDATION_0001') !== -1 && !common.dontShowHelpAlert">
+
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+
+        <span  class="validation-message">{{issues.message}}</span>
+
+        <select class="form-control" name="newPipelineSource"
+            ng-options="stage.label for stage in sources"
+            ng-model="selectedSource.selected"
+            ng-change="onSelectSourceChange()">
+          <option value="">
+            {{'home.library.sourcePlaceholder' | translate}}
+          </option>
+        </select>
+
+        <div class="checkbox dont-show-again">
+          <label>
+            <input type="checkbox" name="dontShowHelpAgain"
+                   ng-model="common.dontShowHelpAlert">  {{'home.graphPane.dontShowAgain' | translate}}
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="alert alert-dismissible alert-info alert-select-stage" role="alert"
+         ng-if="firstOpenLane.stageInstance">
 
       <button type="button" class="close" data-dismiss="alert">
         <span aria-hidden="true">&times;</span>
         <span class="sr-only">Close</span>
       </button>
-      {{issues.message}}
+
+      <span class="validation-message">{{firstOpenLane.stageInstance.uiInfo.label}} has open lane {{(firstOpenLane.stageInstance.outputLanes.length > 1) ? ': lane ' + (firstOpenLane.laneIndex + 1) : ''}}</span>
+
+      <div class="validation-options clearfix">
+        <select class="form-control pull-left" name="newPipelineProcessor"
+                ng-options="stage.label for stage in processors.concat(selectorProcessors)"
+                ng-model="connectStage.selected"
+                ng-change="onConnectStageChange()">
+          <option value="">
+            {{'home.graphPane.selectProcessor' | translate}}
+          </option>
+        </select>
+
+        <span class="pull-left"> Or </span>
+
+        <select class="form-control pull-left" name="newPipelineTarget"
+                ng-options="stage.label for stage in targets"
+                ng-model="connectStage.selected"
+                ng-change="onConnectStageChange()">
+          <option value="">
+            {{'home.graphPane.selectTarget' | translate}}
+          </option>
+        </select>
+      </div>
+
+      <div class="checkbox dont-show-again">
+        <label>
+          <input type="checkbox" name="dontShowHelpAgain"
+                 ng-model="common.dontShowHelpAlert">  {{'home.graphPane.dontShowAgain' | translate}}
+        </label>
+      </div>
+
     </div>
 
     <ng-include src="'errorAlertContent.html'"></ng-include>

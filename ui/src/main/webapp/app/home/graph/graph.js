@@ -5,17 +5,54 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('GraphController', function ($scope, $rootScope, _, api, $translate, pipelineService) {
+  .controller('GraphController', function ($scope, $rootScope, $timeout, _, api, $translate, pipelineService) {
 
     angular.extend($scope, {
+
+      selectedSource: {},
+      connectStage: {},
+
+      /**
+       * Callback function when Selecting Source from alert div.
+       *
+       */
+      onSelectSourceChange: function() {
+        var selectedStage = $scope.selectedSource.selected;
+        $scope.pipelineConfig.issues = [];
+        $scope.selectedSource = {};
+        $scope.addStageInstance(selectedStage);
+      },
+
+      /**
+       * Callback function when selecting Processor/Target from alert div.
+       */
+      onConnectStageChange: function() {
+        var connectStage = $scope.connectStage.selected;
+        $scope.addStageInstance(connectStage, $scope.firstOpenLane);
+        $scope.connectStage = {};
+        $scope.firstOpenLane.stageInstance = undefined;
+      },
+
       /**
        * Add Stage Instance to the Pipeline Graph.
        * @param stage
+       * @param firstOpenLane [optional]
        */
-      addStageInstance: function (stage) {
-        var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig);
+      addStageInstance: function (stage, firstOpenLane) {
+        var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig, undefined, firstOpenLane),
+          edge;
+
         $scope.updateDetailPaneObject(stageInstance, stage);
-        $scope.$broadcast('addNode', stageInstance);
+
+        if(firstOpenLane && firstOpenLane.stageInstance) {
+          edge = {
+            source: firstOpenLane.stageInstance,
+            target: stageInstance,
+            outputLane: firstOpenLane.laneName
+          };
+        }
+
+        $scope.$broadcast('addNode', stageInstance, edge);
       },
 
       /**

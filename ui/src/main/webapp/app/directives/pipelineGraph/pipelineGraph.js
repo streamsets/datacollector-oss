@@ -550,9 +550,14 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       this.state.lastKeyDown = -1;
     };
 
-    GraphCreator.prototype.addNode = function(node) {
+    GraphCreator.prototype.addNode = function(node, edge) {
       var thisGraph = this;
       thisGraph.nodes.push(node);
+
+      if(edge) {
+        thisGraph.edges.push(edge);
+      }
+
       thisGraph.updateGraph();
       thisGraph.selectNode(node);
     };
@@ -932,8 +937,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       }
     });
 
-    $scope.$on('addNode', function(event, stageInstance) {
-      graph.addNode(stageInstance);
+    $scope.$on('addNode', function(event, stageInstance, edge) {
+      graph.addNode(stageInstance, edge);
     });
 
     $scope.$on('selectNode', function(event, stageInstance) {

@@ -49,7 +49,7 @@ angular
       save : function () {
         if($scope.newConfig.name) {
           api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
-            then(
+            /*then(
               function(res) {
                 var newPipelineObject = res.data,
                   selectedSource = $scope.selectedSource,
@@ -82,7 +82,8 @@ angular
               function(res) {
                 $scope.issues = [res.data];
               }
-            ).then(
+            ).*/
+            then(
               function(res) {
                 $modalInstance.close(res.data);
               },

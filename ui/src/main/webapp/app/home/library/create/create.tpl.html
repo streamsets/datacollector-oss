@@ -47,20 +47,8 @@
     </div>
 
 
-    <div class="form-group source-dropdown">
+    <!--div class="form-group source-dropdown">
       <label class="control-label" translate="global.form.source">Source</label>
-
-      <!--ui-select ng-model="selectedSource.selected"
-                   ng-disabled="disabled"
-                   reset-search-input="false">
-        <ui-select-match
-          placeholder="{{'home.library.sourcePlaceholder' | translate}}">{{$select.selected.label}}</ui-select-match>
-        <ui-select-choices repeat="stage in sources track by $index">
-          <div ng-bind-html="stage.label | highlight: $select.search"></div>
-        </ui-select-choices>
-      </ui-select-->
-
-
       <select class="form-control" name="newPipelineSource"
               ng-model="selectedSource"
               ng-options="stage.label for stage in sources">
@@ -68,7 +56,6 @@
           {{'home.library.sourcePlaceholder' | translate}}
         </option>
       </select>
-
     </div>
 
 
@@ -101,7 +88,7 @@
           {{stage.label}}
         </ui-select-choices>
       </ui-select>
-    </div>
+    </div-->
 
 
 

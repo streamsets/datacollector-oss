@@ -7,7 +7,7 @@
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
-    {{(error && error.RemoteException) ? error.RemoteException.localizedMessage : error}}
+    {{(error && error.RemoteException) ? error.RemoteException.localizedMessage : error || 'Server Error'}}
 
     <a href="#"
        ng-if="error && error.RemoteException && error.RemoteException.stackTrace"
