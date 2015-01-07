@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.stage.devtest.fieldtypeconverter;
+package com.streamsets.pipeline.lib.stage.processor.fieldtypeconverter;
 
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
@@ -25,18 +25,17 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 @GenerateResourceBundle
-@StageDef(version="1.0.0", label="Dummy Field Type Converter")
+@StageDef(version="1.0.0", label="Field Type Converter")
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
 
-  @ConfigDef(label = "Fields to be converted", required = false, type = Type.MODEL, defaultValue="",
-    description="Fields whose values, if null, to be replaced with the specified value")
+  @ConfigDef(label = "Field Type Converter Configuration", required = false, type = Type.MODEL, defaultValue="",
+    description="Fields whose type must be converted from String type to the target type.")
   @ComplexField
   public List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
 
@@ -46,14 +45,20 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     for(FieldTypeConverterConfig fieldTypeConverterConfig : fieldTypeConverterConfigs) {
       for(String fieldToConvert : fieldTypeConverterConfig.fields) {
         Field field = record.get(fieldToConvert);
-        if(field.getValue() == null) {
-          LOG.warn("Encountered field {} with null value in record {}. Ignoring conversion.", fieldToConvert,
+        if(field == null) {
+          LOG.warn("Record {} does not have field {}. Ignoring conversion.", record.getHeader().getSourceId(),
+            fieldToConvert);
+        } else if(field.getType() != Field.Type.STRING) {
+          LOG.warn("Field {} in record {} is not of type String. Ignoring conversion.", fieldToConvert,
+            record.getHeader().getSourceId());
+        } else if(field.getValue() == null) {
+          LOG.warn("Field {} in record {} has null value. Ignoring conversion.", fieldToConvert,
             record.getHeader().getSourceId());
         } else {
           try {
             record.set(fieldToConvert, convertToType(field, fieldTypeConverterConfig.targetType,
-              fieldTypeConverterConfig.dataLocale.getLocale(), fieldTypeConverterConfig.dateFormat.getFormat()));
-          } catch (ParseException e) {
+              fieldTypeConverterConfig.dataLocale.getLocale(), fieldTypeConverterConfig.dateFormat));
+          } catch (ParseException | NumberFormatException e) {
             LOG.warn(StageLibError.LIB_0400.getMessage(), field.getValueAsString(),
               fieldTypeConverterConfig.targetType.name(), e.getMessage());
             getContext().toError(record, StageLibError.LIB_0400, field.getValueAsString(),
@@ -73,39 +78,32 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       case BOOLEAN:
         return Field.create(Boolean.valueOf(stringValue));
       case BYTE:
-        return Field.create(Byte.valueOf(stringValue));
+        return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).byteValue());
       case BYTE_ARRAY:
         return Field.create(stringValue.getBytes());
       case CHAR:
         return Field.create(stringValue.charAt(0));
       case DATE:
       case DATETIME:
-        if(field.getType() == Field.Type.LONG) {
-          return Field.createDate(new Date(field.getValueAsLong()));
-        } else {
-          java.text.DateFormat dateFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
-          return Field.createDate(dateFormat.parse(stringValue));
-        }
+        java.text.DateFormat dateFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
+        return Field.createDate(dateFormat.parse(stringValue));
       case DECIMAL:
         Number decimal = NumberFormat.getInstance(dataLocale).parse(stringValue);
         return Field.create(new BigDecimal(decimal.toString()));
       case DOUBLE:
-        Number d = NumberFormat.getInstance(dataLocale).parse(stringValue);
-        return Field.create(Double.valueOf(d.toString()));
+        return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).doubleValue());
       case FLOAT:
-        Number f = NumberFormat.getInstance(dataLocale).parse(stringValue);
-        return Field.create(Float.valueOf(f.toString()));
+        return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).floatValue());
       case INTEGER:
-        Number i = NumberFormat.getInstance(dataLocale).parse(stringValue);
-        return Field.create(Integer.valueOf(i.toString()));
+        return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).intValue());
       case LONG:
-        Number l = NumberFormat.getInstance(dataLocale).parse(stringValue);
-        return Field.create(Long.valueOf(l.toString()));
+        return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).longValue());
       case SHORT:
-        Number s = NumberFormat.getInstance(dataLocale).parse(stringValue);
-        return Field.create(Short.valueOf(s.toString()));
+        return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).shortValue());
       default:
-        return Field.create(stringValue);
+        //return String field
+
+        return field;
     }
   }
 
@@ -117,19 +115,80 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     public List<String> fields;
 
     @ConfigDef(label = "Target type", required = true, type = Type.MODEL, defaultValue="INTEGER",
-      description="The new type to which the field must be converted to.")
+      description="The new type to which the string field must be converted to.")
     @ValueChooser(chooserValues = ConverterValuesProvider.class, type = ChooserMode.PROVIDED)
     public FieldType targetType;
 
     @ConfigDef(label = "Data Locale", required = true, type = Type.MODEL, defaultValue="ENGLISH",
-      description="The current locale of the data which must be converted.")
+      description="The current locale of the data which must be converted. " +
+        "This is required to convert string with ',' and '.' to number types.")
     @ValueChooser(chooserValues = LocaleValuesProvider.class, type = ChooserMode.PROVIDED)
     public DataLocale dataLocale;
 
-    @ConfigDef(label = "Date Format", required = true, type = Type.MODEL, defaultValue="YYYY_MM_DD",
-      description="The current locale of the data which must be converted.")
-    @ValueChooser(chooserValues = DateFormatValuesProvider.class, type = ChooserMode.PROVIDED)
-    public DateFormat dateFormat;
+    @ConfigDef(label = "Date Format", required = true, type = Type.MODEL, defaultValue="yyyy-MM-dd",
+      description="The format of the date into which the string field must be converted to. " +
+        "This option is used only if the target type is Date or Date time.")
+    @ValueChooser(chooserValues = DateFormatValuesProvider.class, type = ChooserMode.SUGGESTED)
+    public String dateFormat;
 
+  }
+
+  public enum FieldType {
+    BOOLEAN,
+    CHAR,
+    BYTE,
+    SHORT,
+    INTEGER,
+    LONG,
+    FLOAT,
+    DOUBLE,
+    DATE,
+    DATETIME,
+    DECIMAL,
+    STRING,
+    BYTE_ARRAY
+    //MAP and LIST are not supported
+  }
+
+  public enum DataLocale {
+
+    ENGLISH(Locale.ENGLISH),
+    FRENCH(Locale.FRENCH),
+    GERMAN(Locale.GERMAN),
+    ITALIAN(Locale.ITALIAN),
+    JAPANESE(Locale.JAPANESE),
+    KOREAN(Locale.KOREAN),
+    CHINESE(Locale.CHINESE),
+    SIMPLIFIED_CHINESE(Locale.SIMPLIFIED_CHINESE),
+    TRADITIONAL_CHINESE(Locale.TRADITIONAL_CHINESE);
+
+    private Locale locale;
+
+    private DataLocale(Locale locale) {
+      this.locale = locale;
+    }
+
+    public Locale getLocale() {
+      return this.locale;
+    }
+  }
+
+  public enum StandardDateFormats {
+
+    YYYY_MM_DD("yyyy-MM-dd"),
+    DD_MM_YYYY("dd-MMM-YYYY"),
+    YYYY_MM_DD_HH_MM_SS("yyyy-MM-dd HH:mm:ss"),
+    YYYY_MM_DD_HH_MM_SS_SSS("yyyy-MM-dd HH:mm:ss.SSS"),
+    YYYY_MM_DD_HH_MM_SS_SSS_Z("yyyy-MM-dd HH:mm:ss.SSS Z");
+
+    private String format;
+
+    private StandardDateFormats(String format) {
+      this.format = format;
+    }
+
+    public String getFormat() {
+      return format;
+    }
   }
 }

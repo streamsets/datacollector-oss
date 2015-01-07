@@ -1,4 +1,4 @@
-package com.streamsets.pipeline.lib.stage.devtest.fieldtypeconverter;
+package com.streamsets.pipeline.lib.stage.processor.fieldtypeconverter;
 
 import com.streamsets.pipeline.api.ChooserValues;
 
@@ -9,7 +9,7 @@ public class LocaleValuesProvider implements ChooserValues {
     @Override
     public List<String> getValues() {
       List<String> values = new ArrayList<>();
-      for (DataLocale locale : DataLocale.values()) {
+      for (FieldTypeConverterProcessor.DataLocale locale : FieldTypeConverterProcessor.DataLocale.values()) {
         values.add(locale.toString());
       }
       return values;
@@ -18,7 +18,7 @@ public class LocaleValuesProvider implements ChooserValues {
     @Override
     public List<String> getLabels() {
       List<String> labels = new ArrayList<>();
-      for (DataLocale locale : DataLocale.values()) {
+      for (FieldTypeConverterProcessor.DataLocale locale : FieldTypeConverterProcessor.DataLocale.values()) {
         labels.add(locale.name());
       }
       return labels;

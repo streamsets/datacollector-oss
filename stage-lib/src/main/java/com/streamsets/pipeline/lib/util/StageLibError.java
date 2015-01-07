@@ -30,11 +30,22 @@ public enum StageLibError implements ErrorCode {
 
   //Kafka source
   LIB_0300("A message with offset '{}' which is greater than the latest offset '{}' is requested from Kafka topic '{}' partition '{}'."),
+  LIB_0301("Could not find new leader after kafka broker failure."),
+  LIB_0302("Error fetching offset data from the Broker '{}' : {}"),
+  LIB_0303("Can't find metadata for Topic '{}' and Partition '{}'."),
+  LIB_0304("Can't find leader for Topic '{}' and Partition '{}'."),
+  LIB_0305("Error communicating with Broker '{}' to find leader for topic '{}' partition '{}'. Reason : {}"),
+  LIB_0306("Error fetching data from kafka. Topic '{}', Partition '{}', Offset '{}."),
+  LIB_0307("Found old offset '{}'. Expected offset '{}'. Discarding message"),
+  LIB_0308("SocketTimeoutException encountered while fetching message from Kafka."),
+  LIB_0309("Error fetching data from kafka, {}"),
+
 
 
   //Field Type Converter Processor
   LIB_0400("Failed to convert value '{}' to type '{}', {}."),
   ;
+
 
   private final String msg;
 

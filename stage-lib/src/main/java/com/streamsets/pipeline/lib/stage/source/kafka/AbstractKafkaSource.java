@@ -117,11 +117,11 @@ public abstract class AbstractKafkaSource extends BaseSource {
       //If the value of consumer.timeout.ms is set to a positive integer, a timeout exception is thrown to the
       //consumer if no message is available for consumption after the specified timeout value.
       //If this happens exit gracefully
-      LOG.warn("SocketTimeoutException encountered while fetching message from Kafka.");
+      LOG.warn(StageLibError.LIB_0308.getMessage());
     } catch (StageException e) {
       throw e;
     } catch (Exception e) {
-      throw new StageException(null, e.getMessage(), e);
+      throw new StageException(StageLibError.LIB_0309, e.getMessage(), e);
     }
 
     int recordCounter = 0;
@@ -135,7 +135,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
         break;
       }
       recordCounter++;
-      Record record = getContext().createRecord(topic + "." + partition + "." + System.currentTimeMillis() + "."
+      Record record = getContext().createRecord(topic + DOT + partition + DOT + System.currentTimeMillis() + DOT
         + recordCounter);
       ByteBuffer payload  = partitionToPayloadMap.getPayload();
       byte[] bytes = new byte[payload.limit()];

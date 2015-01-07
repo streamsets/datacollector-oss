@@ -1,4 +1,4 @@
-package com.streamsets.pipeline.lib.stage.devtest.fieldtypeconverter;
+package com.streamsets.pipeline.lib.stage.processor.fieldtypeconverter;
 
 import com.streamsets.pipeline.api.ChooserValues;
 
@@ -9,7 +9,7 @@ public class ConverterValuesProvider implements ChooserValues {
     @Override
     public List<String> getValues() {
       List<String> values = new ArrayList<>();
-      for (FieldType type : FieldType.values()) {
+      for (FieldTypeConverterProcessor.FieldType type : FieldTypeConverterProcessor.FieldType.values()) {
         values.add(type.toString());
       }
       return values;
@@ -18,7 +18,7 @@ public class ConverterValuesProvider implements ChooserValues {
     @Override
     public List<String> getLabels() {
       List<String> labels = new ArrayList<>();
-      for (FieldType type : FieldType.values()) {
+      for (FieldTypeConverterProcessor.FieldType type : FieldTypeConverterProcessor.FieldType.values()) {
         labels.add(type.name());
       }
       return labels;

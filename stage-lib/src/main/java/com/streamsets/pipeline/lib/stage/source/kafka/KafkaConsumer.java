@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.util.StageLibError;
 import kafka.api.FetchRequest;
 import kafka.api.FetchRequestBuilder;
 import kafka.api.PartitionOffsetRequestInfo;
@@ -29,9 +31,10 @@ public class KafkaConsumer {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumer.class);
 
-  private static final int TIME_OUT = 1000;
+  private static final int METADATA_READER_TIME_OUT = 10000;
   private static final int BUFFER_SIZE = 64 * 1024;
   private static final long ONE_SECOND = 1000;
+  private static final String METADATA_READER_CLIENT = "metadataReaderClient";
 
   /*Topic to readData from*/
   private final String topic;
@@ -39,7 +42,7 @@ public class KafkaConsumer {
   private final int partition;
   /*Host on which the seed broker is running*/
   private final KafkaBroker broker;
-  /*client id*/
+  /*client id or consumer group id*/
   private final String clientName;
   /*The max amount of data that needs to be fetched from kafka in a single attempt*/
   private final int minFetchSize;
@@ -70,16 +73,16 @@ public class KafkaConsumer {
     brokers.add(broker);
     PartitionMetadata metadata = getPartitionMetadata(brokers, topic, partition);
     if (metadata == null) {
-      LOG.error("Can't find metadata for Topic '{}' and Partition '{}'.", topic, partition);
+      LOG.error(StageLibError.LIB_0303.getMessage(), topic, partition);
       return;
     }
     if (metadata.leader() == null) {
-      LOG.error("Can't find leader for Topic '{}' and Partition '{}'.", topic, partition);
+      LOG.error(StageLibError.LIB_0304.getMessage(), topic, partition);
       return;
     }
     leader = new KafkaBroker(metadata.leader().host(), metadata.leader().port());
     //recreate consumer instance with the leader information for that topic
-    consumer = new SimpleConsumer(leader.getHost(), leader.getPort(), maxWaitTime, BUFFER_SIZE, clientName);
+    consumer = new SimpleConsumer(leader.getHost(), leader.getPort(), maxWaitTime, maxFetchSize, clientName);
   }
 
   public void destroy() {
@@ -94,13 +97,12 @@ public class KafkaConsumer {
     FetchResponse fetchResponse = consumer.fetch(req);
 
     if(fetchResponse.hasError()) {
-      //try handling the error
       short code = fetchResponse.errorCode(topic, partition);
       if(code == ErrorMapping.OffsetOutOfRangeCode()) {
         //invalid offset
-        //FIXME: Does this honor at most once delivery?
         offset = getLastOffset(consumer, topic, partition, kafka.api.OffsetRequest.LatestTime(), clientName);
       } else {
+        //try re-initializing connection with kafka
         consumer.close();
         consumer = null;
         leader = findNewLeader(leader, topic, partition);
@@ -111,8 +113,8 @@ public class KafkaConsumer {
       fetchResponse = consumer.fetch(req);
 
       if(fetchResponse.hasError()) {
-        LOG.error("Error fetching data from kafka. Topic '{}', Partition '{}', Offset '{}.", topic, partition, offset);
-        //
+        //could not fetch the second time, give kafka some time
+        LOG.error(StageLibError.LIB_0306.getMessage(), topic, partition, offset);
       }
     }
 
@@ -121,7 +123,7 @@ public class KafkaConsumer {
     for (kafka.message.MessageAndOffset messageAndOffset : fetchResponse.messageSet(topic, partition)) {
       long currentOffset = messageAndOffset.offset();
       if (currentOffset < offset) {
-        LOG.warn("Found old offset '{}'. Expected offset '{}'. Discarding message", currentOffset, offset);
+        LOG.warn(StageLibError.LIB_0307.getMessage(), currentOffset, offset);
         continue;
       }
       MessageAndOffset partitionToPayloadMap = new MessageAndOffset(messageAndOffset.message().payload(), messageAndOffset.nextOffset());
@@ -130,7 +132,7 @@ public class KafkaConsumer {
     }
 
     if(numberOfMessagesRead == 0) {
-      //If no message is available, give kafka sometime.
+      //If no message was available, give kafka sometime.
       try {
         Thread.sleep(ONE_SECOND);
       } catch (InterruptedException e) {
@@ -150,7 +152,7 @@ public class KafkaConsumer {
     OffsetResponse response = consumer.getOffsetsBefore(request);
 
     if (response.hasError()) {
-      LOG.error("Error fetching offset data from the Broker '{}' : {}", consumer.host(),
+      LOG.error(StageLibError.LIB_0302.getMessage(), consumer.host(),
         response.errorCode(topic, partition) );
       return 0;
     }
@@ -158,42 +160,40 @@ public class KafkaConsumer {
     return offsets[0];
   }
 
-  private KafkaBroker findNewLeader(KafkaBroker oldLeader, String topic, int partition) throws Exception {
+  private KafkaBroker findNewLeader(KafkaBroker oldLeader, String topic, int partition) throws StageException {
+    //try 3 times to find a new leader
     for (int i = 0; i < 3; i++) {
-      boolean goToSleep;
+      boolean sleep;
       PartitionMetadata metadata = getPartitionMetadata(replicaBrokers, topic, partition);
-      if (metadata == null) {
-        goToSleep = true;
-      } else if (metadata.leader() == null) {
-        goToSleep = true;
+      if (metadata == null || metadata.leader() == null) {
+        sleep = true;
       } else if (oldLeader.getHost().equalsIgnoreCase(metadata.leader().host()) && i == 0) {
-        // first time through if the leader hasn't changed give ZooKeeper a second to recover
-        // second time, assume the broker did recover before failover, or it was a non-Broker issue
-        //
-        goToSleep = true;
+        //leader has not yet changed, give zookeeper sometime
+        sleep = true;
       } else {
         return new KafkaBroker(metadata.leader().host(), metadata.leader().port());
       }
-      if (goToSleep) {
+      if (sleep) {
         try {
           Thread.sleep(ONE_SECOND);
-        } catch (InterruptedException ie) {
+        } catch (InterruptedException e) {
         }
       }
     }
-    LOG.error("Unable to find new leader after Broker failure. Exiting");
-    //TODO: Fix exception
-    throw new Exception("Unable to find new leader after Broker failure. Exiting");
+    LOG.error(StageLibError.LIB_0301.getMessage());
+    throw new StageException(StageLibError.LIB_0301);
   }
 
   private PartitionMetadata getPartitionMetadata(List<KafkaBroker> brokers, String topic, int partition) {
     PartitionMetadata returnMetaData = null;
     for(KafkaBroker broker : brokers) {
+      SimpleConsumer simpleConsumer = null;
       try {
-        consumer = new SimpleConsumer(broker.getHost(), broker.getPort(), TIME_OUT, BUFFER_SIZE, clientName);
+        simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
+          METADATA_READER_CLIENT);
         List<String> topics = Collections.singletonList(topic);
         TopicMetadataRequest req = new TopicMetadataRequest(topics);
-        kafka.javaapi.TopicMetadataResponse resp = consumer.send(req);
+        kafka.javaapi.TopicMetadataResponse resp = simpleConsumer.send(req);
 
         List<TopicMetadata> metaData = resp.topicsMetadata();
         for (TopicMetadata item : metaData) {
@@ -205,12 +205,11 @@ public class KafkaConsumer {
           }
         }
       } catch (Exception e) {
-        LOG.error("Error communicating with Broker '{}' to find leader for topic '{}' partition '{}'. Reason : {}",
-          broker.getHost() + ":" + broker.getPort(), topic, partition, e.getMessage());
-
+        LOG.error(StageLibError.LIB_0305.getMessage(), broker.getHost() + ":" + broker.getPort(), topic, partition,
+          e.getMessage());
       } finally {
-        if (consumer != null) {
-          consumer.close();
+        if (simpleConsumer != null) {
+          simpleConsumer.close();
         }
       }
     }
