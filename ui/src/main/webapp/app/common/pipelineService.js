@@ -15,6 +15,11 @@ angular.module('pipelineAgentApp.common')
 
     var getYPos = function(pipelineConfig, firstOpenLane, xPos) {
       var maxYPos = 0;
+
+      if(firstOpenLane) {
+        maxYPos = firstOpenLane.stageInstance.uiInfo.yPos - 130;
+      }
+
       angular.forEach(pipelineConfig.stages, function(stage) {
         if(stage.uiInfo.xPos === xPos && stage.uiInfo.yPos > maxYPos) {
           maxYPos = stage.uiInfo.yPos;
