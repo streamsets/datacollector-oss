@@ -4,7 +4,7 @@
 
 angular
   .module('pipelineAgentApp.home')
-  .controller('PreviewCommonController', function ($scope, $rootScope, _) {
+  .controller('PreviewCommonController', function ($scope, $rootScope, _, previewService) {
     angular.extend($scope, {
       expandAllInputData: false,
       expandAllOutputData: false,
@@ -93,23 +93,7 @@ angular
        * @param recordType
        */
       getRecordAdditionalInfo: function(stageInstance, record, recordType) {
-        if(recordType === 'output' && stageInstance.outputLanes.length > 1) {
-          var index = _.indexOf(stageInstance.outputLanes, record.laneName),
-            lanePredicatesConfiguration = _.find(stageInstance.configuration, function(configuration) {
-              return configuration.name === 'lanePredicates';
-            }),
-            info = 'lane: ' + (index + 1);
-
-
-          if(lanePredicatesConfiguration) {
-            var lanePredicate = lanePredicatesConfiguration.value[index];
-            info += ', predicate: "' + lanePredicate.predicate + '"';
-          }
-
-          return ' (' + info  + ')';
-        }
-
-        return '';
+        return previewService.getRecordAdditionalInfo(stageInstance, record, recordType);
       }
     });
 

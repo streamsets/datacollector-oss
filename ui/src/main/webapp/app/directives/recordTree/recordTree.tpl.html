@@ -12,7 +12,7 @@
 
         <input ng-if="selectable === true && !isRoot" type="checkbox" ng-model="selectedPath[recordValue.path]">
 
-        <span class="field-name" ng-class="{'dirty ': recordValue.dirty || (record.dirty && isRoot)}"> {{fieldName}}: </span>
+        <span class="field-name" ng-class="{'dirty ': recordValue.dirty || (record.dirty && isRoot)}" ng-bind-html="fieldName"></span> :
 
         <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="record.dirty && isRoot"></span>
       </label>

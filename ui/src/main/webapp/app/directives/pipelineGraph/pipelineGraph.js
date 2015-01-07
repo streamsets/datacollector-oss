@@ -957,6 +957,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         graph.selectNode(stageInstance);
       } else if (graph.state.selectedNode){
         graph.removeSelectFromNode();
+        graph.moveGraphToCenter();
       }
     });
 

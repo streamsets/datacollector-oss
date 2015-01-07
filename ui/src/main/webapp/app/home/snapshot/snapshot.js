@@ -10,6 +10,7 @@ angular
       captureSnapshotStatusTimer;
 
     angular.extend($scope, {
+      previewMultipleStages: false,
       showLoading: false,
       previewSourceOffset: 0,
       previewBatchSize: 10,
@@ -17,6 +18,23 @@ angular
       stagePreviewData: {
         input: [],
         output: []
+      },
+
+      /**
+       * Change to Preview Multiple Stages.
+       */
+      changeToPreviewMultipleStages : function() {
+        $scope.previewMultipleStages = true;
+        $scope.moveGraphToCenter();
+      },
+
+      /**
+       * Change to Preview Single Stage at a time.
+       */
+      changeToPreviewSingleStage: function() {
+        $scope.previewMultipleStages = false;
+        $scope.clearStartAndEndStageInstance();
+        $scope.changeStageSelection($scope.pipelineConfig.stages[0]);
       },
 
       /**
@@ -90,8 +108,7 @@ angular
           api.pipelineAgent.getSnapshotStatus()
             .success(function(data) {
               if(data && data.snapshotInProgress === false) {
-                console.log('Capturing Snapshot is completed.');
-
+                //console.log('Capturing Snapshot is completed.');
 
                 api.pipelineAgent.getSnapshot($scope.activeConfigInfo.name).
                   success(function(res) {

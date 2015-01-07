@@ -4,15 +4,15 @@
   <table class="table" ng-hide="showLoading">
     <thead>
       <tr>
-        <th class="col-md-6">
+        <th class="col-md-6 from-stage">
           <select class="pull-left form-control input-sm" name="previewFromStage"
                   ng-model="fromStage"
-                  ng-options="stageInst.uiInfo.label for stageInst in pipelineConfig.stages"
+                  ng-options="stageInst.uiInfo.label for stageInst in pipelineConfig.stages | filter : filterSourceAndProcessors"
                   ng-change="onFromStageChange()">
           </select>
         </th>
 
-        <th class="col-md-6">
+        <th class="col-md-6 to-stage">
           <select class="pull-left form-control input-sm" name="previewToStage"
                   ng-model="toStage"
                   ng-options="stageInst.uiInfo.label for stageInst in toStageList"
@@ -30,7 +30,7 @@
         <record-tree
           record="record"
           record-value="record.value"
-          field-name="('global.form.record' | translate)+($index+1)"
+          field-name="('global.form.record' | translate)+($index+1) + getRecordAdditionalInfo(fromStage, record, 'output')"
           is-root="true"
           editable="false">
         </record-tree>
@@ -49,8 +49,35 @@
       </td>
 
     </tr>
+
+
+    <tr ng-repeat="record in multiStagePreviewData.errorRecords">
+
+      <td>
+        <record-tree
+          record="record"
+          record-value="record.value"
+          field-name="('global.form.record' | translate)+ '-' + ('global.form.errorRecord' | translate) + ' ' + record.header.errorMessage"
+          is-root="true"
+          editable="false">
+        </record-tree>
+      </td>
+
+      <td>
+
+      </td>
+
+    </tr>
+
+    <tr ng-if="multiStagePreviewData.input.length === 0 &&
+                        multiStagePreviewData.output.length === 0 &&
+                        multiStagePreviewData.errorRecords.length === 0">
+      <td colspan="2" class="no-records" translate="home.previewPane.noRecords">No Records to view.</td>
+    </tr>
+
     </tbody>
 
   </table>
+
 
 </div>

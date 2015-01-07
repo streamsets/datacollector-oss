@@ -3,7 +3,27 @@
      ng-show="snapshotMode">
 
   <div class="panel-heading clearfix">
-    <h3 class="panel-title pull-left">{{'home.header.snapshot' | translate}}: {{detailPaneConfig.uiInfo.label}} </h3>
+
+    <div class="btn-group pull-left detail-name-dropdown">
+      <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
+        <span>{{'home.header.snapshot' | translate}}:</span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+        <li role="presentation" ng-if="!previewMultipleStages">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="changeToPreviewMultipleStages()">Between Multiple Stages</a>
+        </li>
+
+        <li role="presentation" ng-if="previewMultipleStages">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="changeToPreviewSingleStage()">Single Stage</a>
+        </li>
+      </ul>
+    </div>
+
+
+    <h3 class="panel-title pull-left" ng-if="!previewMultipleStages"> {{detailPaneConfig.uiInfo.label}} </h3>
 
     <div class="pull-right size-toolbar">
       <span class="glyphicon pointer"
@@ -71,7 +91,8 @@
 
   </div>
   <div class="panel-body">
-    <ng-include src="'app/home/preview/common/previewCommon.tpl.html'"></ng-include>
+    <ng-include ng-if="!previewMultipleStages" src="'app/home/preview/common/previewCommon.tpl.html'"></ng-include>
+    <ng-include ng-if="previewMultipleStages" src="'app/home/preview/common/previewMultiStage.tpl.html'"></ng-include>
   </div>
 
 </div>

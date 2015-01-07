@@ -138,6 +138,13 @@ angular.module('pipelineAgentApp.common')
     };
 
 
+    /**
+     * Remove the record from Source.
+     *
+     * @param batchData
+     * @param stageInstance
+     * @param record
+     */
     this.removeRecordFromSource = function(batchData, stageInstance, record) {
       var sourceOutput = batchData[0],
         foundLaneName,
@@ -155,6 +162,35 @@ angular.module('pipelineAgentApp.common')
       if(foundLaneName && outputIndex !== undefined) {
         sourceOutput.output[foundLaneName].splice(outputIndex, 1);
       }
+    };
+
+
+    /**
+     * Return Additional Information about the record.
+     * @param stageInstance
+     * @param record
+     * @param recordType
+     */
+    this.getRecordAdditionalInfo = function(stageInstance, record, recordType) {
+      if(recordType === 'output' && stageInstance && stageInstance.outputLanes.length > 1) {
+        var index = _.indexOf(stageInstance.outputLanes, record.laneName),
+          lanePredicatesConfiguration = _.find(stageInstance.configuration, function(configuration) {
+            return configuration.name === 'lanePredicates';
+          }),
+          info = '<span class="lane-label">lane: </span><span class="lane-value">' + (index + 1) + '</span>';
+
+
+        if(lanePredicatesConfiguration) {
+          var lanePredicate = lanePredicatesConfiguration.value[index];
+          if(lanePredicate) {
+            info += ', <span class="predicate-label">predicate: </span><span class="predicate-value">"' + lanePredicate.predicate + '"</span>';
+          }
+        }
+
+        return ' (' + info  + ')';
+      }
+
+      return '';
     };
 
   });

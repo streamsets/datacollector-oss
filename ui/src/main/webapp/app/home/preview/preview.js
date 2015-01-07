@@ -21,11 +21,17 @@ angular
       previewDataUpdated: false,
       stepExecuted: false,
 
+      /**
+       * Change to Preview Multiple Stages.
+       */
       changeToPreviewMultipleStages : function() {
         $scope.previewMultipleStages = true;
         $scope.moveGraphToCenter();
       },
 
+      /**
+       * Change to Preview Single Stage at a time.
+       */
       changeToPreviewSingleStage: function() {
         $scope.previewMultipleStages = false;
         $scope.clearStartAndEndStageInstance();
