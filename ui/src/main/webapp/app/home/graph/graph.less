@@ -105,23 +105,18 @@
       border-radius: 0;
 
       &.alert-select-stage {
-        position: absolute;
-        margin: 200px 0 0 35%;
-        width: 520px;
+        padding-top: @smallPadding;
+        padding-bottom: @smallPadding;
 
-        .validation-message {
-          display: block;
-          padding-bottom: @defaultPadding;
+        select {
+          display: inline-block;
+          width: 225px;
+          margin-left: @defaultPadding * 2;
+          margin-right: @defaultPadding * 1.5;
         }
 
-        .validation-options {
-          select {
-            width: 215px;
-          }
-
-          span {
-            padding: @smallPadding @defaultPadding;
-          }
+        button {
+          padding-top: @smallPadding;
         }
 
         .dont-show-again {

@@ -18,7 +18,7 @@
         {{issues.message}}
       </div>
 
-      <div class="alert alert-dismissible alert-info alert-select-stage" role="alert"
+      <div class="alert alert-dismissible alert-warning alert-select-stage" role="alert"
            ng-if="issues.message.indexOf('VALIDATION_0001') !== -1 && !common.dontShowHelpAlert">
 
         <button type="button" class="close" data-dismiss="alert">
@@ -37,18 +37,18 @@
           </option>
         </select>
 
-        <div class="checkbox dont-show-again">
+        <!--div class="checkbox dont-show-again">
           <label>
             <input type="checkbox" name="dontShowHelpAgain"
                    ng-model="common.dontShowHelpAlert">  {{'home.graphPane.dontShowAgain' | translate}}
           </label>
-        </div>
+        </div-->
       </div>
 
     </div>
 
 
-    <div class="alert alert-dismissible alert-info alert-select-stage" role="alert"
+    <div class="alert alert-dismissible alert-warning alert-select-stage" role="alert"
          ng-if="firstOpenLane.stageInstance">
 
       <button type="button" class="close" data-dismiss="alert">
@@ -58,8 +58,8 @@
 
       <span class="validation-message">{{firstOpenLane.stageInstance.uiInfo.label}} has open lane {{(firstOpenLane.stageInstance.outputLanes.length > 1) ? ': lane ' + (firstOpenLane.laneIndex + 1) : ''}}</span>
 
-      <div class="validation-options clearfix">
-        <select class="form-control pull-left" name="newPipelineProcessor"
+
+        <select class="form-control" name="newPipelineProcessor"
                 ng-options="stage.label for stage in processors.concat(selectorProcessors)"
                 ng-model="connectStage.selected"
                 ng-change="onConnectStageChange()">
@@ -68,9 +68,9 @@
           </option>
         </select>
 
-        <span class="pull-left"> Or </span>
+        <span class="pull-left123"> Or </span>
 
-        <select class="form-control pull-left" name="newPipelineTarget"
+        <select class="form-control" name="newPipelineTarget"
                 ng-options="stage.label for stage in targets"
                 ng-model="connectStage.selected"
                 ng-change="onConnectStageChange()">
@@ -78,14 +78,14 @@
             {{'home.graphPane.selectTarget' | translate}}
           </option>
         </select>
-      </div>
 
-      <div class="checkbox dont-show-again">
+
+      <!--div class="checkbox dont-show-again">
         <label>
           <input type="checkbox" name="dontShowHelpAgain"
                  ng-model="common.dontShowHelpAlert">  {{'home.graphPane.dontShowAgain' | translate}}
         </label>
-      </div>
+      </div-->
 
     </div>
 

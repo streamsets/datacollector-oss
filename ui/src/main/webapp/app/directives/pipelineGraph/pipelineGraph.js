@@ -55,8 +55,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
       //Background lines
       var margin = {top: -5, right: -5, bottom: -5, left: -5},
-        svgWidth = svg.style('width').replace('px', ''),
-        svgHeight = svg.style('height').replace('px', ''),
         width = 2500 - margin.left - margin.right,
         height = 2500 - margin.top - margin.bottom;
 
@@ -560,6 +558,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
       thisGraph.updateGraph();
       thisGraph.selectNode(node);
+
+      thisGraph.moveNodeToVisibleArea(node);
     };
 
 
@@ -839,6 +839,16 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .transition()
         .duration(750)
         .attr('transform', 'translate(' + x + ',' + y + ')');
+    };
+
+    GraphCreator.prototype.moveNodeToVisibleArea = function(stageInstance) {
+      var thisGraph = this,
+        svgWidth = thisGraph.svg.style('width').replace('px', ''),
+        svgHeight = thisGraph.svg.style('height').replace('px', '');
+
+      if(stageInstance.uiInfo.xPos > svgWidth || stageInstance.uiInfo.yPos > svgHeight) {
+        thisGraph.moveNodeToCenter(stageInstance);
+      }
     };
 
     GraphCreator.prototype.moveGraphToCenter = function() {
