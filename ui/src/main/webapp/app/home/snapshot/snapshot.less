@@ -52,6 +52,17 @@
       th, td {
         padding-left: @smallPadding*3;
 
+        &.from-stage {
+          select {
+            color: @default-pipeline-graph-start-node-color;
+          }
+        }
+
+        &.to-stage {
+          select {
+            color: @default-pipeline-graph-end-node-color;
+          }
+        }
 
         label {
           margin-bottom: 0px;

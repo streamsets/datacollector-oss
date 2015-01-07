@@ -161,14 +161,29 @@
                    popover="{{configDefinition.description}}"
                    popover-trigger="mouseenter"></i>
 
-                <select class="form-control" name="{{configDefinition.name}}"
-                        ng-model="detailPaneConfig.configuration[$index].value">
-                  <option ng-repeat="listValue in configDefinition.model.values"
-                          value="{{listValue}}"
-                          ng-selected="listValue === detailPaneConfig.configuration[$parent.$index].value">
-                    {{configDefinition.model.labels[$index]}}
-                  </option>
-                </select>
+
+                <div ng-switch="configDefinition.model.chooserMode">
+
+                  <select class="form-control"
+                          ng-switch-when="PROVIDED"
+                          name="{{configDefinition.name}}"
+                          ng-model="detailPaneConfig.configuration[$index].value">
+                    <option ng-repeat="listValue in configDefinition.model.values"
+                            value="{{listValue}}"
+                            ng-selected="listValue === detailPaneConfig.configuration[$parent.$index].value">
+                      {{configDefinition.model.labels[$index]}}
+                    </option>
+                  </select>
+
+                  <input type="text"
+                         ng-switch-when="SUGGESTED"
+                         name="{{configDefinition.name}}"
+                         ng-model="detailPaneConfig.configuration[$index].value"
+                         typeahead="listValue for listValue in configDefinition.model.values"
+                         typeahead-min-length="0"
+                         class="form-control">
+                </div>
+
 
                 <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
               </div>
@@ -262,8 +277,16 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th class="col-md-5" ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions">{{customeFieldConfigDefintion.label}}</th>
-                      <th class="col-md-1"></th>
+                      <th class="col-md-5 custom-field-property"
+                          ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions">
+                        <span>{{customeFieldConfigDefintion.label}}</span>
+                        <i class="fa fa-info-circle help-icon"
+                           popover-placement="right"
+                           popover-append-to-body="false"
+                           popover="{{customeFieldConfigDefintion.description}}"
+                           popover-trigger="mouseenter"></i>
+                      </th>
+                      <th class=""></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -294,8 +317,12 @@
                       <div ng-switch-when="MODEL"
                            ng-switch="customFieldConfigDefinition.model.modelType">
 
-                        <div ng-switch-when="VALUE_CHOOSER">
-                          <select class="form-control" name="{{customFieldConfigDefinition.name + $index}}"
+                        <div ng-switch-when="VALUE_CHOOSER"
+                             ng-switch="customFieldConfigDefinition.model.chooserMode">
+
+                          <select class="form-control"
+                                  ng-switch-when="PROVIDED"
+                                  name="{{customFieldConfigDefinition.name + $index}}"
                                   ng-model="customFieldValue[customFieldConfigDefinition.name]">
                             <option ng-repeat="listValue in customFieldConfigDefinition.model.values"
                                     value="{{listValue}}"
@@ -303,6 +330,14 @@
                               {{customFieldConfigDefinition.model.labels[$index]}}
                             </option>
                           </select>
+
+                          <input type="text"
+                                 name="{{customFieldConfigDefinition.name + $index}}"
+                                 ng-switch-when="SUGGESTED"
+                                 ng-model="customFieldValue[customFieldConfigDefinition.name]"
+                                 typeahead="listValue for listValue in customFieldConfigDefinition.model.values"
+                                 class="form-control">
+
                         </div>
 
 
