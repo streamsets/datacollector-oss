@@ -39,7 +39,7 @@ public class LogMessageWebSocket extends WebSocketAdapter {
       if (logTailClients < maxClients) {
         logTailClients++;
       } else {
-        session.close(StatusCode.NORMAL, "Connection reached");
+        session.close(StatusCode.NORMAL, "Maximum concurrent connections reached");
         return;
       }
     }
@@ -74,14 +74,18 @@ public class LogMessageWebSocket extends WebSocketAdapter {
   @Override
   public void onWebSocketClose(int statusCode, String reason) {
     super.onWebSocketClose(statusCode, reason);
-    if(tailer != null)
+    if(tailer != null) {
       tailer.stop();
+    }
     logTailClients--;
   }
 
   @Override
   public void onWebSocketError(Throwable cause) {
     super.onWebSocketError(cause);
-    cause.printStackTrace(System.err);
+    LOG.warn("WebSocket error: {}", cause.getMessage(), cause);
+    if(tailer != null) {
+      tailer.stop();
+    }
   }
 }
