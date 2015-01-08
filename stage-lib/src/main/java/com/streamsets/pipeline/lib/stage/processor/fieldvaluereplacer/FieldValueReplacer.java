@@ -15,6 +15,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -27,6 +29,8 @@ import java.util.Locale;
 @GenerateResourceBundle
 @StageDef( version="1.0.0", label="Field Value Replacer")
 public class FieldValueReplacer extends SingleLaneRecordProcessor {
+
+  private static final Logger LOG = LoggerFactory.getLogger(FieldValueReplacer.class);
 
   @ConfigDef(label = "Fields to replace with null", required = false, type = Type.MODEL, defaultValue="",
     description="The fields whose values must be replaced with nulls")
@@ -43,7 +47,12 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
     if(fieldsToNull != null && !fieldsToNull.isEmpty()) {
       for (String fieldToNull : fieldsToNull) {
         Field field = record.get(fieldToNull);
-        record.set(fieldToNull, Field.create(field, null));
+        if(field == null) {
+          LOG.warn("Record {} does not have field {}. Ignoring field replacement.", record.getHeader().getSourceId(),
+            fieldToNull);
+        } else {
+          record.set(fieldToNull, Field.create(field, null));
+        }
       }
     }
 
@@ -51,7 +60,10 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
       for (FieldValueReplacerConfig fieldValueReplacerConfig : fieldsToReplaceIfNull) {
         for (String fieldToReplace : fieldValueReplacerConfig.fields) {
           Field field = record.get(fieldToReplace);
-          if (field.getValue() == null) {
+          if(field == null) {
+            LOG.warn("Record {} does not have field {}. Ignoring field replacement.", record.getHeader().getSourceId(),
+              fieldToReplace);
+          } else if (field.getValue() == null) {
             record.set(fieldToReplace, Field.create(field, convertToType(
               fieldValueReplacerConfig.newValue, field.getType())));
           }

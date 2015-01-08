@@ -24,10 +24,109 @@ import java.util.Map;
 public class TestFieldTypeConverterProcessor {
 
   @Test
+  public void testStringToNonExistentField() throws StageException {
+    FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    fieldTypeConverterConfig.fields = ImmutableList.of("/nonExistent", "/beginner", "/expert", "/skilled");
+    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.BOOLEAN;
+    fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
+      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("beginner", Field.create("false"));
+      map.put("intermediate", Field.create("yes"));
+      map.put("advanced", Field.create("no"));
+      map.put("expert", Field.create("true"));
+      map.put("skilled", Field.create("122345566"));
+      map.put("null", Field.create(Field.Type.STRING, null));
+      Record record = new RecordImpl("s", "s:1", null, null);
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 6);
+      Assert.assertTrue(result.containsKey("beginner"));
+      Assert.assertEquals(false, result.get("beginner").getValue());
+      Assert.assertTrue(result.containsKey("intermediate"));
+      Assert.assertEquals("yes", result.get("intermediate").getValue());
+      Assert.assertTrue(result.containsKey("advanced"));
+      Assert.assertEquals("no", result.get("advanced").getValue());
+      Assert.assertTrue(result.containsKey("expert"));
+      Assert.assertEquals(true, result.get("expert").getValue());
+      Assert.assertTrue(result.containsKey("skilled"));
+      Assert.assertEquals(false, result.get("skilled").getValue());
+      Assert.assertTrue(result.containsKey("null"));
+      Assert.assertEquals(null, result.get("null").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStringToNonStringField() throws StageException {
+    FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert"
+      , "/null", "/nonString");
+    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.BOOLEAN;
+    fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
+      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("beginner", Field.create("false"));
+      map.put("intermediate", Field.create("yes"));
+      map.put("advanced", Field.create("no"));
+      map.put("expert", Field.create("true"));
+      map.put("skilled", Field.create("122345566"));
+      map.put("nonString", Field.create(123));
+      map.put("null", Field.create(Field.Type.STRING, null));
+      Record record = new RecordImpl("s", "s:1", null, null);
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 7);
+      Assert.assertTrue(result.containsKey("beginner"));
+      Assert.assertEquals(false, result.get("beginner").getValue());
+      Assert.assertTrue(result.containsKey("intermediate"));
+      Assert.assertEquals(false, result.get("intermediate").getValue());
+      Assert.assertTrue(result.containsKey("advanced"));
+      Assert.assertEquals(false, result.get("advanced").getValue());
+      Assert.assertTrue(result.containsKey("expert"));
+      Assert.assertEquals(true, result.get("expert").getValue());
+      Assert.assertTrue(result.containsKey("skilled"));
+      Assert.assertEquals(false, result.get("skilled").getValue());
+      Assert.assertTrue(result.containsKey("null"));
+      Assert.assertEquals(null, result.get("null").getValue());
+      Assert.assertTrue(result.containsKey("nonString"));
+      Assert.assertEquals(123, result.get("nonString").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testStringToBoolean() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert", "/null");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert"
+      , "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.BOOLEAN;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
@@ -74,7 +173,7 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToByte() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.BYTE;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
@@ -112,7 +211,7 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToChar() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.CHAR;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
@@ -150,7 +249,7 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToByteArray() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.BYTE_ARRAY;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
@@ -188,7 +287,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToDecimalEnglishLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert", "/skilled");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
+      "/skilled", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.DECIMAL;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
@@ -235,7 +335,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToDecimalGermanLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert", "/skilled");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
+      "/skilled", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.DECIMAL;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
@@ -283,7 +384,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToDoubleEnglishLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert", "/skilled");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
+      "/skilled", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.DOUBLE;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
@@ -330,7 +432,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToDoubleGermanLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert", "/skilled");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
+      "/skilled", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.DECIMAL;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
@@ -378,7 +481,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToIntegerEnglishLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert", "/null");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
+      "/expert", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.INTEGER;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
@@ -425,7 +529,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToIntegerGermanLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert", "/null");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
+      "/expert", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.INTEGER;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
@@ -472,7 +577,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToLongEnglishLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert", "/null");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
+      "/expert", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.LONG;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
@@ -519,7 +625,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToLongGermanLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert", "/null");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
+      "/expert", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.LONG;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
@@ -566,7 +673,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToShortEnglishLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert", "/null");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
+      "/expert", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.SHORT;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
@@ -613,7 +721,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToShortGermanLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert", "/null");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
+      "/expert", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.SHORT;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
@@ -660,7 +769,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToFloatEnglishLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert", "/null");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
+      "/expert", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.FLOAT;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
@@ -707,7 +817,8 @@ public class TestFieldTypeConverterProcessor {
   public void testStringToFloatGermanLocale() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert", "/null");
+    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
+      "/expert", "/null");
     fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.FLOAT;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
