@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class KafkaProducer {
@@ -33,6 +34,7 @@ public class KafkaProducer {
   private static final String RANDOM_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.stage.source.kafka.RandomPartitioner";
   private static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.stage.source.kafka.RoundRobinPartitioner";
   private static final String FIXED_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.stage.source.kafka.FixedPartitioner";
+  private static final String COLON = ":";
 
   /*Topic to readData from*/
   private final String topic;
@@ -41,6 +43,8 @@ public class KafkaProducer {
   /*Host on which the seed broker is running*/
   private final KafkaBroker broker;
 
+  private final Map<String, String> kafkaProducerConfigs;
+
   private final PayloadType payloadType;
   private final PartitionStrategy partitionStrategy;
 
@@ -48,25 +52,41 @@ public class KafkaProducer {
   private Producer<String, byte[]> producer;
 
   public KafkaProducer(String topic, String partitionKey, KafkaBroker broker, PayloadType payloadType,
-                       PartitionStrategy partitionStrategy) {
+                       PartitionStrategy partitionStrategy, Map<String, String> kafkaProducerConfigs) {
     this.topic = topic;
     this.partitionKey = partitionKey;
     this.broker = broker;
     this.payloadType = payloadType;
     this.partitionStrategy = partitionStrategy;
     this.messageList = new ArrayList<>();
+    this.kafkaProducerConfigs = kafkaProducerConfigs;
   }
 
   public void init() {
     Properties props = new Properties();
-    props.put(METADATA_BROKER_LIST_KEY, this.broker.getHost() + ":" + this.broker.getPort());
+    //metadata.broker.list
+    props.put(METADATA_BROKER_LIST_KEY, this.broker.getHost() + COLON + this.broker.getPort());
+    //producer.type
     props.put(PRODUCER_TYPE_KEY, PRODUCER_TYPE_DEFAULT);
-    props.put(REQUEST_REQUIRED_ACKS_KEY, REQUEST_REQUIRED_ACKS_DEFAULT);
+    //key.serializer.class
     props.put(KEY_SERIALIZER_CLASS_KEY, STRING_ENCODER_CLASS);
+    //partitioner.class
     configurePartitionStrategy(props, partitionStrategy);
+    //serializer.class
     configureSerializer(props, payloadType);
+    //request.required.acks
+    props.put(REQUEST_REQUIRED_ACKS_KEY, REQUEST_REQUIRED_ACKS_DEFAULT);
+
+    addUserConfiguredProperties(props);
+
     ProducerConfig config = new ProducerConfig(props);
     producer = new Producer<>(config);
+  }
+
+  public void destroy() {
+    if(producer != null) {
+      producer.close();
+    }
   }
 
   public void enqueueMessage(byte[] message) throws IOException {
@@ -94,9 +114,20 @@ public class KafkaProducer {
     }
   }
 
-  public void destroy() {
-    if(producer != null) {
-      producer.close();
+  private void addUserConfiguredProperties(Properties props) {
+    //The following options, if specified, are ignored : "metadata.broker.list", "producer.type",
+    // "key.serializer.class", "partitioner.class", "serializer.class".
+    if(kafkaProducerConfigs != null && !kafkaProducerConfigs.isEmpty()) {
+      kafkaProducerConfigs.remove(METADATA_BROKER_LIST_KEY);
+      kafkaProducerConfigs.remove(PRODUCER_TYPE_KEY);
+      kafkaProducerConfigs.remove(KEY_SERIALIZER_CLASS_KEY);
+      kafkaProducerConfigs.remove(PARTITIONER_CLASS_KEY);
+      kafkaProducerConfigs.remove(SERIALIZER_CLASS_KEY);
+
+      for (Map.Entry<String, String> producerConfig : kafkaProducerConfigs.entrySet()) {
+        props.put(producerConfig.getKey(), producerConfig.getValue());
+      }
     }
   }
+
 }

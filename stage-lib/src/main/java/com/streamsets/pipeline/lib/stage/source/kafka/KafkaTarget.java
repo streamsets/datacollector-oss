@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -23,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Map;
 
 @GenerateResourceBundle
 @StageDef(version="0.0.1",
@@ -77,6 +77,15 @@ public class KafkaTarget extends BaseTarget {
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PartitionStrategyChooserValues.class)
   public PartitionStrategy partitionStrategy;
 
+  @ConfigDef(required = false,
+    type = ConfigDef.Type.MAP,
+    description = "Additional configuration properties which will be used by the underlying Kafka Producer. " +
+     "The following options, if specified, are ignored : \"metadata.broker.list\", \"producer.type\", " +
+      "\"key.serializer.class\", \"partitioner.class\", \"serializer.class\".",
+    defaultValue = "",
+    label = "Kafka Producer Configuration Properties")
+  public Map<String, String> kafkaProducerConfigs;
+
   /********  For CSV Content  ***********/
 
   @ConfigDef(required = false,
@@ -98,12 +107,13 @@ public class KafkaTarget extends BaseTarget {
       partitionStrategy = PartitionStrategy.FIXED;
     }
     kafkaProducer = new KafkaProducer(topic, String.valueOf(partition), new KafkaBroker(brokerHost, brokerPort),
-      payloadType, partitionStrategy);
+      payloadType, partitionStrategy, kafkaProducerConfigs);
     kafkaProducer.init();
   }
 
   @Override
   public void write(Batch batch) throws StageException {
+    long batchRecordCounter = 0;
     Iterator<Record> records = batch.getRecords();
     if(records.hasNext()) {
       while (records.hasNext()) {
@@ -113,9 +123,10 @@ public class KafkaTarget extends BaseTarget {
         } catch (IOException e) {
           throw new StageException(null, e.getMessage(), e);
         }
-        recordCounter++;
+        batchRecordCounter++;
       }
       kafkaProducer.write();
+      recordCounter += batchRecordCounter;
     }
   }
 
@@ -136,10 +147,5 @@ public class KafkaTarget extends BaseTarget {
       return CsvUtil.csvRecordToString(r, CvsFileModeChooserValues.getCSVFormat(csvFileFormat)).getBytes();
     }
     return null;
-  }
-
-  @VisibleForTesting
-  KafkaProducer getKafkaProducer() {
-    return kafkaProducer;
   }
 }

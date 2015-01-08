@@ -33,6 +33,7 @@ public class TestFieldHasherProcessor {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("name", Field.create("a"));
       map.put("age", Field.create(21));
+      map.put("sex", Field.create(Field.Type.STRING, null));
       map.put("streetAddress", Field.create("c"));
       Record record = new RecordImpl("s", "s:1", null, null);
       record.set(Field.create(map));
@@ -42,11 +43,13 @@ public class TestFieldHasherProcessor {
       Field field = output.getRecords().get("a").get(0).get();
       Assert.assertTrue(field.getValue() instanceof Map);
       Map<String, Field> result = field.getValueAsMap();
-      Assert.assertTrue(result.size() == 3);
+      Assert.assertTrue(result.size() == 4);
       Assert.assertTrue(result.containsKey("name"));
       Assert.assertEquals(computeHash("a"), result.get("name").getValue());
       Assert.assertTrue(result.containsKey("age"));
       Assert.assertEquals(computeHash("21"), result.get("age").getValue());
+      Assert.assertTrue(result.containsKey("sex"));
+      Assert.assertEquals(null, result.get("sex").getValue());
       Assert.assertTrue(result.containsKey("streetAddress"));
       Assert.assertEquals("c", result.get("streetAddress").getValue());
     } finally {
