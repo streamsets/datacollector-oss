@@ -33,8 +33,7 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   private static final char NON_MASK_CHAR = '#';
   private static final char MASK_CHAR = 'x';
 
-  @ConfigDef(label = "Fields to Mask", required = false, type = ConfigDef.Type.MODEL, defaultValue="",
-    description="Fields whose values, if null, to be replaced with the specified value")
+  @ConfigDef(label = "Field Mask Configuration", required = false, type = ConfigDef.Type.MODEL, defaultValue="")
   @ComplexField
   public List<FieldMaskConfig> fieldMaskConfigs;
 
@@ -42,10 +41,22 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     for(FieldMaskConfig fieldMaskConfig : fieldMaskConfigs) {
       for (String toMask : fieldMaskConfig.fields) {
-        Field field = record.get(toMask);
-        if(field != null && field.getType() == Field.Type.STRING && field.getValue() != null) {
-          Field newField = Field.create(maskField(field, fieldMaskConfig));
-          record.set(toMask, newField);
+        if(record.has(toMask)) {
+          Field field = record.get(toMask);
+          if (field.getType() != Field.Type.STRING) {
+            LOG.info("The field {} in record {} is of type {}. Ignoring field.", toMask,
+              record.getHeader().getSourceId(), field.getType().name());
+          } else if (field.getValue() == null) {
+            LOG.info("The field {} in record {} has null value. Ignoring field.", toMask,
+              record.getHeader().getSourceId());
+          } else {
+            LOG.debug("Applying mask '{}' to field {} in record {}.", fieldMaskConfig.maskType, toMask,
+              record.getHeader().getSourceId());
+            Field newField = Field.create(maskField(field, fieldMaskConfig));
+            record.set(toMask, newField);
+          }
+        } else {
+          LOG.info("Could not find field {} in record {}.", toMask, record.getHeader().getSourceId());
         }
       }
     }
@@ -64,13 +75,13 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
 
   public static class FieldMaskConfig {
     @ConfigDef(label = "Fields to mask", required = true, type = ConfigDef.Type.MODEL, defaultValue="",
-      description="The fields whose value must be masked.")
+      description="The fields whose value must be masked. Non String fields will be ignored.")
     @FieldSelector
     public List<String> fields;
 
     @ConfigDef(label = "Mask Type", required = true, type = ConfigDef.Type.MODEL, defaultValue="VARIABLE_LENGTH_MASK",
       description="The mask that must be applied to the fields. User can select the predefined masks or input a " +
-        "mask string. The input mask string can be made up of 'x', '#' and other characters. " +
+        "mask string. The input mask string should be made up of 'x' and/or '#' and/or other characters. " +
         "Character x in the mask means replace the original character with character 'x' in the output string. " +
         "Character # means retain the original character at that index in the output string. " +
         "Any other character from mask is retained in that position in the output string.")

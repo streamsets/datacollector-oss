@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -109,7 +110,7 @@ public class TestFieldValueReplacer {
   }
 
   @Test
-  public void testFieldValueReplacerFieldsToNull() throws StageException {
+  public void testFieldsToNull() throws StageException {
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
       .addConfiguration("fieldsToNull", ImmutableList.of("/age"))
       .addConfiguration("fieldsToReplaceIfNull", null)
@@ -398,6 +399,38 @@ public class TestFieldValueReplacer {
   }
 
   @Test
+  public void testReplaceNullByteArrayFields() throws StageException {
+
+    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    stringFieldReplacement.fields = ImmutableList.of("/byteArrayField");
+    stringFieldReplacement.newValue = "streamsets";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+      .addConfiguration("fieldsToNull", null)
+      .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("byteArrayField", Field.create(Field.Type.BYTE_ARRAY, null));
+      Record record = new RecordImpl("s", "s:1", null, null);
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 1);
+      Assert.assertTrue(result.containsKey("byteArrayField"));
+      Assert.assertTrue(Arrays.equals("streamsets".getBytes(), result.get("byteArrayField").getValueAsByteArray()));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testReplaceNullCharFields() throws StageException {
 
     FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
@@ -494,7 +527,7 @@ public class TestFieldValueReplacer {
   }*/
 
   @Test
-  public void testFieldValueReplacerFieldsToNullAndReplaceNulls() throws StageException {
+  public void testFieldsToNullAndReplaceNulls() throws StageException {
 
     FieldValueReplacer.FieldValueReplacerConfig nameReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
     nameReplacement.fields = ImmutableList.of("/name");
@@ -530,6 +563,38 @@ public class TestFieldValueReplacer {
       Assert.assertEquals(null, result.get("age").getValue());
       Assert.assertTrue(result.containsKey("streetAddress"));
       Assert.assertEquals("Sansome Street", result.get("streetAddress").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testNonNullFields() throws StageException {
+
+    FieldValueReplacer.FieldValueReplacerConfig nameReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    nameReplacement.fields = ImmutableList.of("/name");
+    nameReplacement.newValue = "NewValue";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+      .addConfiguration("fieldsToNull", null)
+      .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(nameReplacement))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("name", Field.create(Field.Type.STRING, "streamsets"));
+      Record record = new RecordImpl("s", "s:1", null, null);
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 1);
+      Assert.assertTrue(result.containsKey("name"));
+      Assert.assertEquals("streamsets", result.get("name").getValue());
     } finally {
       runner.runDestroy();
     }

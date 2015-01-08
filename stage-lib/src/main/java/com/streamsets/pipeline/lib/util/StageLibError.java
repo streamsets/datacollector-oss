@@ -44,9 +44,11 @@ public enum StageLibError implements ErrorCode {
 
   //Field Type Converter Processor
   LIB_0400("Failed to convert value '{}' to type '{}', {}."),
+
+  //Field Hasher Processor
+  LIB_0500("Error creating message digest for {}, {}."),
+
   ;
-
-
   private final String msg;
 
   StageLibError(String msg) {

@@ -41,7 +41,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-
+    boolean recordInError = false;
     for(FieldTypeConverterConfig fieldTypeConverterConfig : fieldTypeConverterConfigs) {
       for(String fieldToConvert : fieldTypeConverterConfig.fields) {
         Field field = record.get(fieldToConvert);
@@ -63,11 +63,11 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
               fieldTypeConverterConfig.targetType.name(), e.getMessage());
             getContext().toError(record, StageLibError.LIB_0400, field.getValueAsString(),
               fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
+            return;
           }
         }
       }
     }
-
     batchMaker.addRecord(record);
   }
 

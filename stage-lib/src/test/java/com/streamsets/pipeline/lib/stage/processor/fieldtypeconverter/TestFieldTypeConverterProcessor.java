@@ -952,4 +952,59 @@ public class TestFieldTypeConverterProcessor {
     }
   }
 
+  @Test
+  public void testInvalidConversionFieldsNumber() throws StageException {
+    FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    fieldTypeConverterConfig.fields = ImmutableList.of("/invalidConversion");
+    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.FLOAT;
+    fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
+      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("invalidConversion", Field.create("float"));
+      Record record = new RecordImpl("s", "s:1", null, null);
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(0, output.getRecords().get("a").size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testInvalidConversionFieldsDate() throws StageException {
+    FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    fieldTypeConverterConfig.fields = ImmutableList.of("/invalidConversion");
+    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.DATE;
+    fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dateFormat = FieldTypeConverterProcessor.StandardDateFormats.DD_MM_YYYY.getFormat();
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
+      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("invalidConversion", Field.create("Hello World"));
+      Record record = new RecordImpl("s", "s:1", null, null);
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(0, output.getRecords().get("a").size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }

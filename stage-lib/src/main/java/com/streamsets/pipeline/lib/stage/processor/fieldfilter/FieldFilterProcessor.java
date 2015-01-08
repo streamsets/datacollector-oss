@@ -13,6 +13,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Set;
@@ -20,6 +22,8 @@ import java.util.Set;
 @GenerateResourceBundle
 @StageDef( version="1.0.0", label="Field Filter")
 public class FieldFilterProcessor extends SingleLaneRecordProcessor {
+
+  private static final Logger LOG = LoggerFactory.getLogger(FieldFilterProcessor.class);
 
   @ConfigDef(label = "Fields to keep", required = true, type = Type.MODEL, defaultValue="",
     description="The fields which must be retained in the record. All other fields will be dropped.")
@@ -34,6 +38,7 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
     fieldToRemove.removeAll(fields);
     fieldToRemove.remove("");
     for (String nameToRemove : fieldToRemove) {
+      LOG.debug("Removing field {} from Record {}.", fieldToRemove, record.getHeader().getSourceId());
       recordClone.delete(nameToRemove);
     }
     batchMaker.addRecord(recordClone);

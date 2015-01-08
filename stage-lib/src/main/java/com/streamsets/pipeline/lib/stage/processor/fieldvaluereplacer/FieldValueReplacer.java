@@ -32,12 +32,12 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldValueReplacer.class);
 
-  @ConfigDef(label = "Fields to replace with null", required = false, type = Type.MODEL, defaultValue="",
-    description="The fields whose values must be replaced with nulls")
+  @ConfigDef(label = "Fields to NUll", required = false, type = Type.MODEL, defaultValue="",
+    description="The fields whose values must be set to null")
   @FieldSelector
   public List<String> fieldsToNull;
 
-  @ConfigDef(label = "Fields with null values to be replaced", required = false, type = Type.MODEL, defaultValue="",
+  @ConfigDef(label = "Field Replacement Configuration", required = false, type = Type.MODEL, defaultValue="",
     description="Fields whose values, if null, to be replaced with the specified value")
   @ComplexField
   public List<FieldValueReplacerConfig> fieldsToReplaceIfNull;
@@ -46,12 +46,12 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     if(fieldsToNull != null && !fieldsToNull.isEmpty()) {
       for (String fieldToNull : fieldsToNull) {
-        Field field = record.get(fieldToNull);
-        if(field == null) {
+        if(record.has(fieldToNull)) {
+          Field field = record.get(fieldToNull);
+          record.set(fieldToNull, Field.create(field, null));
+        } else {
           LOG.warn("Record {} does not have field {}. Ignoring field replacement.", record.getHeader().getSourceId(),
             fieldToNull);
-        } else {
-          record.set(fieldToNull, Field.create(field, null));
         }
       }
     }
@@ -59,13 +59,18 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
     if(fieldsToReplaceIfNull !=null && !fieldsToReplaceIfNull.isEmpty()) {
       for (FieldValueReplacerConfig fieldValueReplacerConfig : fieldsToReplaceIfNull) {
         for (String fieldToReplace : fieldValueReplacerConfig.fields) {
-          Field field = record.get(fieldToReplace);
-          if(field == null) {
+          if(record.has(fieldToReplace)) {
+            Field field = record.get(fieldToReplace);
+            if (field.getValue() == null) {
+              record.set(fieldToReplace, Field.create(field, convertToType(
+                fieldValueReplacerConfig.newValue, field.getType())));
+            } else {
+              LOG.debug("Field {} in Record {} is not null. Ignoring field replacement.", fieldToReplace,
+                record.getHeader().getSourceId());
+            }
+          } else {
             LOG.warn("Record {} does not have field {}. Ignoring field replacement.", record.getHeader().getSourceId(),
               fieldToReplace);
-          } else if (field.getValue() == null) {
-            record.set(fieldToReplace, Field.create(field, convertToType(
-              fieldValueReplacerConfig.newValue, field.getType())));
           }
         }
       }
@@ -124,7 +129,7 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
   public static class FieldValueReplacerConfig {
 
     @ConfigDef(label = "Fields to replace", required = true,type = Type.MODEL, defaultValue="",
-      description="The fields which must be replaced with the given value if the current value is null")
+      description="The fields to be replaced with the given value if the current value is null")
     @FieldSelector
     public List<String> fields;
 
