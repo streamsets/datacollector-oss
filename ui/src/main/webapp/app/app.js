@@ -1,5 +1,6 @@
 angular.module('pipelineAgentApp')
-  .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, uiSelectConfig){
+  .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider,
+                   uiSelectConfig, $httpProvider){
     $locationProvider.html5Mode(true);
     $routeProvider.otherwise({
       redirect: '/'
@@ -19,6 +20,19 @@ angular.module('pipelineAgentApp')
     tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');
 
     uiSelectConfig.theme = 'bootstrap';
+
+    //Reload the page when the server is down.
+    $httpProvider.interceptors.push(function($q) {
+      return {
+        responseError: function(rejection) {
+          if(rejection.status === 0) {
+            window.location.reload();
+            return;
+          }
+          return $q.reject(rejection);
+        }
+      };
+    });
 
   })
   .run(function ($location, $rootScope, $modal, api) {
