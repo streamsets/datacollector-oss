@@ -15,7 +15,7 @@
 
   </div>
 
-  <div class="panel-body">
+  <div class="panel-body" ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
     <pre ng-if="logMessages && logMessages.length">{{logMessages}}</pre>
     <pre ng-if="!logMessages || logMessages.length === 0">{{'logs.emptyMessage' | translate}}</pre>
   </div>

@@ -610,6 +610,7 @@ angular
         //No Pipieline config exists
         ignoreUpdate = true;
         $scope.pipelineConfig = undefined;
+        $scope.hideLibraryPanel = true;
       }
     });
 

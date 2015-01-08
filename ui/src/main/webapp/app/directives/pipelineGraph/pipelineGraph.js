@@ -40,13 +40,19 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       };
 
       // define arrow markers for graph links
-      var defs = svg.append('svg:defs');
+
+      var markerWidth = 3.5,
+        markerHeight = 3.5,
+        cRadius = -7, // play with the cRadius value
+        refX = cRadius + (markerWidth * 2),
+        defs = svg.append('svg:defs');
+
       defs.append('svg:marker')
         .attr('id', 'end-arrow')
         .attr('viewBox', '0 -5 10 10')
-        .attr('refX', '13')
-        .attr('markerWidth', 3.5)
-        .attr('markerHeight', 3.5)
+        .attr('refX', refX)
+        .attr('markerWidth', markerWidth)
+        .attr('markerHeight', markerHeight)
         .attr('orient', 'auto')
         .append('svg:path')
         .attr('d', 'M0,-5L10,0L0,5');
@@ -189,8 +195,19 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     GraphCreator.prototype.dragmove = function(d) {
       var thisGraph = this;
       if (thisGraph.state.shiftNodeDrag){
-        thisGraph.dragLine.attr('d', 'M' + (d.uiInfo.xPos + thisGraph.consts.rectWidth) + ',' + (d.uiInfo.yPos + thisGraph.state.shiftNodeDragYPos) +
-          'L' + d3.mouse(thisGraph.svgG.node())[0] + ',' + d3.mouse(this.svgG.node())[1]);
+        var sourceX = (d.uiInfo.xPos + thisGraph.consts.rectWidth),
+          sourceY = (d.uiInfo.yPos + thisGraph.state.shiftNodeDragYPos),
+          targetX = d3.mouse(thisGraph.svgG.node())[0],
+          targetY = d3.mouse(this.svgG.node())[1],
+          sourceTangentX = sourceX + (targetX - sourceX)/2,
+          sourceTangentY = sourceY,
+          targetTangentX = targetX - (targetX - sourceX)/2,
+          targetTangentY = targetY;
+
+        thisGraph.dragLine.attr('d', 'M ' + sourceX + ',' + sourceY +
+        'C' + sourceTangentX + ',' + sourceTangentY + ' ' +
+        targetTangentX + ',' + targetTangentY + ' ' +
+        targetX + ',' + targetY);
       } else{
         $scope.$apply(function() {
           d.uiInfo.xPos += d3.event.dx;
@@ -397,7 +414,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
       thisGraph.dragLine.classed('hidden', true);
 
-      if (mouseDownNode !== d){
+      if (mouseDownNode.instanceName && mouseDownNode.instanceName !== d.instanceName){
         // we're in a different node: create new edge for mousedown edge and add to graph
         var newEdge = {
           source: mouseDownNode,
@@ -759,13 +776,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         return d === state.selectedEdge;
       })
         .attr('d', function(d){
-          var totalLanes = d.source.outputLanes.length,
-            outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
-            y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) +
-                  ((consts.rectHeight * (outputLaneIndex))/totalLanes));
-
-          return 'M' + (d.source.uiInfo.xPos + consts.rectWidth) + ',' + (d.source.uiInfo.yPos + y) +
-            'L' + d.target.uiInfo.xPos + ',' + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
+          return thisGraph.getPathDValue(d);
         });
 
       // add new paths
@@ -774,14 +785,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .style('marker-end','url(#end-arrow)')
         .classed('link', true)
         .attr('d', function(d) {
-
-          var totalLanes = d.source.outputLanes.length,
-            outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
-            y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) +
-                  ((consts.rectHeight * (outputLaneIndex))/totalLanes));
-
-          return 'M' + (d.source.uiInfo.xPos + consts.rectWidth) + ',' + (d.source.uiInfo.yPos + y) +
-            'L' + d.target.uiInfo.xPos + ',' + (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
+          return thisGraph.getPathDValue(d);
         })
         .on('mousedown', function(d){
           thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
@@ -804,7 +808,28 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           });
         }
       });
+    };
 
+    GraphCreator.prototype.getPathDValue = function(d) {
+      debugger;
+      var thisGraph = this,
+        consts = thisGraph.consts,
+        totalLanes = d.source.outputLanes.length,
+        outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
+        y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes)),
+        sourceX = (d.source.uiInfo.xPos + consts.rectWidth),
+        sourceY = (d.source.uiInfo.yPos + y),
+        targetX = d.target.uiInfo.xPos -30,
+        targetY = (d.target.uiInfo.yPos + consts.rectWidth/2 - 20),
+        sourceTangentX = sourceX + (targetX - sourceX)/2,
+        sourceTangentY = sourceY,
+        targetTangentX = targetX - (targetX - sourceX)/2,
+        targetTangentY = targetY;
+
+      return 'M ' + sourceX + ',' + sourceY +
+        'C' + sourceTangentX + ',' + sourceTangentY + ' ' +
+        targetTangentX + ',' + targetTangentY + ' ' +
+        targetX + ',' + targetY;
     };
 
     GraphCreator.prototype.zoomed = function(){
