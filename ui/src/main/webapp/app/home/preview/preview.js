@@ -223,10 +223,10 @@ angular
         });
     });
 
-    $scope.$on('onStageSelection', function(event, stageInstance) {
+    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
       if($scope.previewMode) {
-        if (stageInstance) {
-          updatePreviewDataForStage(stageInstance);
+        if (type === pipelineConstant.STAGE_INSTANCE) {
+          updatePreviewDataForStage(selectedObject);
         } else {
           $scope.stagePreviewData = {
             input: {},

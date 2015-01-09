@@ -1,7 +1,7 @@
 <div ng-controller="ConfigurationController" class="configuration-tab">
 
 
-  <div ng-class="'col-md-7'">
+  <div ng-class="'col-md-7'" ng-if="selectedType !== pipelineConstant.LINK">
     <div class="panel panel-default">
       <div class="panel-heading">Configuration</div>
       <div class="panel-body">
@@ -10,7 +10,7 @@
         <form class="form " role="form" name="{{detailPaneConfig.instanceName || 'pipeline'}}">
 
           <!-- General Configuration for Pipeline-->
-          <div class="form-group" ng-if="detailPaneConfig.stages !== undefined">
+          <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
             <label class="control-label" translate="global.form.name">Name</label>
             <div>
               <input readonly type="text" class="form-control" name="name"
@@ -18,7 +18,7 @@
             </div>
           </div>
 
-          <div class="form-group" ng-if="detailPaneConfig.stages !== undefined">
+          <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
             <label class="control-label" translate="global.form.description">Description</label>
             <div>
               <textarea class="form-control" name="description"
@@ -29,7 +29,7 @@
 
 
           <!-- General Configuration for Stages-->
-          <div class="form-group" ng-if="detailPaneConfig.stages === undefined">
+          <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
             <label class="control-label" translate="global.form.label">Label</label>
             <div>
               <input type="text" class="form-control" name="name"
@@ -38,7 +38,7 @@
           </div>
 
 
-          <div class="form-group" ng-if="detailPaneConfig.stages === undefined">
+          <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
             <label class="control-label" translate="global.form.description">Description</label>
             <div>
               <textarea class="form-control" name="description"
@@ -392,7 +392,7 @@
     </div>
   </div>
 
-  <div class="col-md-5 source-preview">
+  <div class="col-md-5 source-preview" ng-if="selectedType !== pipelineConstant.LINK">
 
     <div class="panel panel-default" ng-if="detailPaneConfigDefn.rawSourceDefinition">
       <div class="panel-heading" translate="home.detailPane.configurationTab.rawSourcePreview">Raw Source Preview</div>
@@ -460,11 +460,21 @@
     </div>
 
 
-    <ng-include ng-if="!stageSelected" src="'app/home/detail/configuration/pipelineInformation.tpl.html'"></ng-include>
+    <ng-include ng-if="selectedType === pipelineConstant.PIPELINE"
+                src="'app/home/detail/configuration/pipelineInformation.tpl.html'"></ng-include>
 
-    <ng-include ng-if="stageSelected" src="'app/home/detail/configuration/stageInformation.tpl.html'"></ng-include>
+    <ng-include ng-if="selectedType === pipelineConstant.STAGE_INSTANCE"
+                src="'app/home/detail/configuration/stageInformation.tpl.html'"></ng-include>
+
 
   </div>
+
+
+
+  <div class="col-md-8 source-preview" ng-if="selectedType === pipelineConstant.LINK">
+    <ng-include src="'app/home/detail/configuration/linkInformation.tpl.html'"></ng-include>
+  </div>
+
 
 </div>
 

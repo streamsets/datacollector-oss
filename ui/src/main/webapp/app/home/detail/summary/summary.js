@@ -155,14 +155,18 @@ angular
       $scope.$broadcast('summaryDataUpdated');
     };
 
-    $scope.$on('onStageSelection', function() {
-      if($scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
+    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
+      if($scope.isPipelineRunning &&
+        $rootScope.common.pipelineMetrics &&
+        type !== pipelineConstant.LINK) {
         updateSummaryData();
       }
     });
 
     $rootScope.$watch('common.pipelineMetrics', function() {
-      if($scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
+      if($scope.isPipelineRunning &&
+        $rootScope.common.pipelineMetrics &&
+        $scope.selectedType !== pipelineConstant.LINK ) {
         updateSummaryData();
       }
     });

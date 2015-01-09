@@ -37,6 +37,9 @@
       "export": "Export",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
+      "fromStage": "From Stage",
+      "fromStageLane": "From Stage Lane",
+      "fromStageLanePredicate": "From Stage Lane Predicate",
       "histogram": "Record Count Histogram (5 minutes decay)",
       "import": "Import",
       "label": "Label",
@@ -66,6 +69,7 @@
       "step": "Step",
       "targets": "Targets",
       "timestamp": "Timestamp",
+      "toStage": "To Stage",
       "type": "Type",
       "username": "Login",
       "username.placeholder": "Your login",
@@ -130,6 +134,7 @@
       },
       "configuration": "Configuration",
       "configurationTab": {
+        "linkInformation": "Link Information",
         "enterKey": "Enter Key",
         "enterPredicate": "Enter Predicate",
         "enterValue": "Enter Value",
@@ -141,6 +146,8 @@
         "stageInformation": "Stage Information"
       },
       "general": "General",
+      "inspectingData": "Inspecting Data",
+      "monitoring": "Monitoring",
       "rules": "Rules",
       "summary": "Summary",
       "summaryTab": {

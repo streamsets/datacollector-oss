@@ -184,8 +184,20 @@ angular
 
       removeFromCustomField: function(stageInstance, configValue, $index) {
         configValue.splice($index, 1);
-      }
+      },
 
+      getLaneIndex: function(edge) {
+        return _.indexOf(edge.source.outputLanes, edge.outputLane) + 1;
+      },
+
+      getLanePredicate: function(edge) {
+        var laneIndex = _.indexOf(edge.source.outputLanes, edge.outputLane),
+          lanePredicatesConfiguration = _.find(edge.source.configuration, function(configuration) {
+            return configuration.name === 'lanePredicates';
+          }),
+          lanePredicateObject = lanePredicatesConfiguration ? lanePredicatesConfiguration.value[laneIndex] : '';
+        return lanePredicateObject ? lanePredicateObject.predicate : '';
+      }
     });
 
 
@@ -225,8 +237,8 @@ angular
       }
     };
 
-    $scope.$on('onStageSelection', function(event, stageInstance) {
-      if (stageInstance) {
+    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
+      if (type === pipelineConstant.STAGE_INSTANCE) {
         fieldsPathList = undefined;
         $scope.fieldPaths = [];
       }

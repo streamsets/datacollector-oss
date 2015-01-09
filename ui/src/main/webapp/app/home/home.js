@@ -24,6 +24,8 @@ angular
       destroyed = false;
 
     angular.extend($scope, {
+      pipelineConstant: pipelineConstant,
+      selectedType: pipelineConstant.PIPELINE,
       loaded: false,
       isPipelineRunning: false,
       pipelines: [],
@@ -125,7 +127,11 @@ angular
        */
       changeStageSelection: function(stageInstance) {
         $scope.$broadcast('selectNode', stageInstance);
-        updateDetailPane(stageInstance);
+        if(stageInstance) {
+          updateDetailPane(stageInstance, pipelineConstant.STAGE_INSTANCE);
+        } else {
+          updateDetailPane(stageInstance, pipelineConstant.PIPELINE);
+        }
       },
 
       /**
@@ -168,7 +174,7 @@ angular
        */
       moveGraphToCenter: function() {
         $scope.$broadcast('moveGraphToCenter');
-        updateDetailPane();
+        updateDetailPane(undefined, pipelineConstant.PIPELINE);
       },
 
       /**
@@ -394,13 +400,14 @@ angular
       if ($scope.detailPaneConfig === undefined) {
         //First time
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
-        $scope.detailPaneConfig = $scope.pipelineConfig;
+        $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
       } else {
         //Check
-        if ($scope.detailPaneConfig.stages) {
+
+        if ($scope.selectedType === pipelineConstant.PIPELINE) {
           //In case of detail pane is Pipeline Configuration
-          $scope.detailPaneConfig = $scope.pipelineConfig;
-        } else {
+          $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
+        } else if($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
           //In case of detail pane is stage instance
           angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
             if (stageInstance.instanceName === $scope.detailPaneConfig.instanceName) {
@@ -409,15 +416,13 @@ angular
           });
 
           if (selectedStageInstance) {
-            $scope.detailPaneConfig = selectedStageInstance;
+            $scope.detailPaneConfig = $scope.selectedObject = selectedStageInstance;
             $scope.stageSelected = true;
           } else {
-            $scope.detailPaneConfig = $scope.pipelineConfig;
+            $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
             $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
           }
-
         }
-
       }
 
       $timeout(function() {
@@ -436,25 +441,31 @@ angular
     /**
      * Update Detail Pane when selection changes in Pipeline Graph.
      *
-     * @param stageInstance
+     * @param selectedObject
+     * @param type
      */
-    var updateDetailPane = function(stageInstance) {
+    var updateDetailPane = function(selectedObject, type) {
 
-      if(stageInstance) {
+      $scope.selectedType = type;
+
+      if(type === pipelineConstant.STAGE_INSTANCE) {
         $scope.stageSelected = true;
         //Stage Instance Configuration
-        $scope.detailPaneConfig = stageInstance;
+        $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
         $scope.detailPaneConfigDefn = _.find($scope.stageLibraries, function (stageLibrary) {
-          return stageLibrary.name === stageInstance.stageName &&
-            stageLibrary.version === stageInstance.stageVersion;
+          return stageLibrary.name === selectedObject.stageName &&
+            stageLibrary.version === selectedObject.stageVersion;
         });
-      } else {
+      } else if(type === pipelineConstant.PIPELINE){
         //Pipeline Configuration
         $scope.stageSelected = false;
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
-        $scope.detailPaneConfig = $scope.pipelineConfig;
+        $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
+      } else if(type === pipelineConstant.LINK) {
+        $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
       }
-      $scope.$broadcast('onStageSelection', stageInstance);
+
+      $scope.$broadcast('onSelectionChange', selectedObject, type);
 
       $timeout(function () {
         $scope.$broadcast('show-errors-check-validity');
@@ -583,6 +594,26 @@ angular
       return firstOpenLane;
     };
 
+    var derivePipelineRunning = function() {
+      var pipelineStatus = $rootScope.common.pipelineStatus,
+        config = $scope.pipelineConfig;
+      return (pipelineStatus && config && pipelineStatus.name === config.info.name &&
+      pipelineStatus.state === 'RUNNING');
+    };
+
+    var derivePipelineStatus = function() {
+      var pipelineStatus = $rootScope.common.pipelineStatus,
+        config = $scope.pipelineConfig;
+
+      if(pipelineStatus && config && pipelineStatus.name === config.info.name) {
+        return pipelineStatus;
+      } else {
+        return {
+          state: 'STOPPED'
+        };
+      }
+    };
+
     //Event Handling
 
     $scope.$watch('pipelineConfig', function (newValue, oldValue) {
@@ -602,11 +633,15 @@ angular
     }, true);
 
     $scope.$on('onNodeSelection', function (event, stageInstance) {
-      updateDetailPane(stageInstance);
+      updateDetailPane(stageInstance, pipelineConstant.STAGE_INSTANCE);
+    });
+
+    $scope.$on('onEdgeSelection', function (event, edge) {
+      updateDetailPane(edge, pipelineConstant.LINK);
     });
 
     $scope.$on('onRemoveNodeSelection', function () {
-      updateDetailPane();
+      updateDetailPane(undefined, pipelineConstant.PIPELINE);
     });
 
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
@@ -626,26 +661,6 @@ angular
     $scope.$on('changeStateInstance', function (event, stageInstance) {
       updateDetailPane(stageInstance);
     });
-
-    var derivePipelineRunning = function() {
-      var pipelineStatus = $rootScope.common.pipelineStatus,
-        config = $scope.pipelineConfig;
-      return (pipelineStatus && config && pipelineStatus.name === config.info.name &&
-          pipelineStatus.state === 'RUNNING');
-    };
-
-    var derivePipelineStatus = function() {
-      var pipelineStatus = $rootScope.common.pipelineStatus,
-        config = $scope.pipelineConfig;
-
-      if(pipelineStatus && config && pipelineStatus.name === config.info.name) {
-        return pipelineStatus;
-      } else {
-        return {
-          state: 'STOPPED'
-        };
-      }
-    };
 
     $scope.$watch('pipelineConfig.info.name', function() {
       $scope.isPipelineRunning = derivePipelineRunning();

@@ -5,13 +5,12 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('DetailController', function ($scope, $rootScope, _) {
+  .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant) {
     var detailTabsInEditMode = [{
         name:'configuration',
         template:'app/home/detail/configuration/configuration.tpl.html',
         iconClass: 'fa fa-gear fa-12x'
-      }
-      ],
+      }],
       detailTabsInRunningMode = [
         {
           name:'summary',
@@ -22,6 +21,18 @@ angular
           name:'errors',
           template:'app/home/detail/badRecords/badRecords.tpl.html',
           iconClass: 'fa fa-exclamation-triangle fa-12x'
+        },
+        {
+          name:'configuration',
+          template:'app/home/detail/configuration/configuration.tpl.html',
+          iconClass: 'fa fa-gear fa-12x'
+        }
+      ],
+      linkDetailTabsInRunningMode = [
+        {
+          name:'summary',
+          template:'app/home/detail/dataSummary/dataSummary.tpl.html',
+          iconClass: 'fa fa-bar-chart fa-12x'
         },
         {
           name:'alerts',
@@ -42,6 +53,25 @@ angular
 
     angular.extend($scope, {
       detailPaneTabs: detailTabsInEditMode,
+
+      /**
+       * Returns label for Detail Pane
+       */
+      getDetailPaneLabel: function() {
+        var selectedType = $scope.selectedType,
+          selectedObject = $scope.selectedObject;
+
+        if(selectedObject) {
+          switch(selectedType) {
+            case pipelineConstant.PIPELINE:
+              return selectedObject.info.name;
+            case pipelineConstant.STAGE_INSTANCE:
+              return selectedObject.uiInfo.label;
+            case pipelineConstant.LINK:
+              return 'Link ( ' + selectedObject.source.uiInfo.label + ' - ' + selectedObject.target.uiInfo.label + ' )';
+          }
+        }
+      },
 
       /**
        * Checks if configuration has any issue.
@@ -72,6 +102,18 @@ angular
           return $scope.hasConfigurationIssues($scope.detailPaneConfig);
         }
         return false;
+      }
+    });
+
+    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
+      if($scope.isPipelineRunning) {
+        if (type === pipelineConstant.LINK) {
+          $scope.detailPaneTabs = linkDetailTabsInRunningMode;
+        } else {
+          $scope.detailPaneTabs = detailTabsInRunningMode;
+        }
+      } else {
+        $scope.detailPaneTabs = detailTabsInEditMode;
       }
     });
 

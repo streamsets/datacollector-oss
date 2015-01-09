@@ -1,12 +1,17 @@
 <div class="panel panel-default detail-pane" ng-hide="previewMode || snapshotMode" ng-controller="DetailController">
 
   <div class="panel-heading clearfix">
-    <h3 class="panel-title pull-left" ng-if="isPipelineRunning">Monitoring:</h3>
 
+    <h3 class="panel-title pull-left"
+        ng-if="isPipelineRunning && selectedType !== pipelineConstant.LINK">{{'home.detailPane.monitoring' | translate}}:</h3>
+
+    <h3 class="panel-title pull-left"
+        ng-if="isPipelineRunning && selectedType === pipelineConstant.LINK">{{'home.detailPane.inspectingData' | translate}}:</h3>
 
     <div class="btn-group pull-left detail-name-dropdown">
       <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
-        <span>{{detailPaneConfig.uiInfo.label || pipelineConfig.info.name}}</span>
+        <span>{{getDetailPaneLabel()}}</span>
+
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">

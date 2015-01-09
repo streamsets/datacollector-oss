@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('BadRecordsController', function ($scope, $rootScope, _, api) {
+  .controller('BadRecordsController', function ($scope, $rootScope, _, api, pipelineConstant) {
 
     angular.extend($scope, {
       showBadRecordsLoading: false,
@@ -78,12 +78,12 @@ angular
         });
     };
 
-    $scope.$on('onStageSelection', function() {
+    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
       var pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig;
       if($scope.isPipelineRunning && pipelineMetrics && pipelineMetrics.meters) {
 
-        if(currentSelection.instanceName) {  //Stage Instance
+        if(type === pipelineConstant.STAGE_INSTANCE) {  //Stage Instance
           //Bad Records
           var errorRecordsCount = $scope.errorRecordsCount = pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter'];
           $scope.stageBadRecords = [];
@@ -102,7 +102,7 @@ angular
           $scope.errorRecordsHistogram = pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.errorRecords.histogramM5'];
           $scope.errorsHistogram = pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.stageErrors.histogramM5'];
 
-        } else {  //Pipeline
+        } else if(type === pipelineConstant.PIPELINE){  //Pipeline
           $scope.errorRecordsCount = pipelineMetrics.meters['pipeline.batchErrorRecords.meter'];
           $scope.stageBadRecords = [];
 

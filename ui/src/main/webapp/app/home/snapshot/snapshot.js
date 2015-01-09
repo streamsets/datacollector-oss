@@ -148,10 +148,10 @@ angular
         });
     });
 
-    $scope.$on('onStageSelection', function(event, stageInstance) {
+    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
       if($scope.snapshotMode) {
-        if (stageInstance) {
-          updateSnapshotDataForStage(stageInstance);
+        if (type === pipelineConstant.STAGE_INSTANCE) {
+          updateSnapshotDataForStage(selectedObject);
         } else {
           $scope.stagePreviewData = {
             input: {},

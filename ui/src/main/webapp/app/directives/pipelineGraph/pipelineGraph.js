@@ -791,7 +791,11 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           return (d.source.uiInfo.xPos + consts.rectWidth + (d.target.uiInfo.xPos -30))/2;
         })
         .attr('y', function(d) {
-          return ((d.source.uiInfo.yPos + consts.rectHeight/2 + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 13;
+          var totalLanes = d.source.outputLanes.length,
+            outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
+            y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes));
+
+          return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 13;
         });
 
       var pathNewGs= paths.enter()
@@ -802,6 +806,9 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .classed(consts.pathGClass, true)
         .on('mousedown', function(d) {
           thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
+          $scope.$apply(function(){
+            $scope.$emit('onEdgeSelection', d);
+          });
         })
         .on('mouseup', function(d) {
           state.mouseDownLink = null;
@@ -821,14 +828,18 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         pathNewGs
           .append('svg:foreignObject')
           .attr('class', 'edge-preview-container graph-bootstrap-tooltip')
-          .attr('title', 'Data Monitoring')
+          .attr('title', 'Inspect Data')
           .attr('width', 30)
           .attr('height', 30)
           .attr('x', function(d) {
             return (d.source.uiInfo.xPos + consts.rectWidth + (d.target.uiInfo.xPos -30))/2;
           })
           .attr('y', function(d) {
-            return ((d.source.uiInfo.yPos + consts.rectHeight/2 + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 13;
+            var totalLanes = d.source.outputLanes.length,
+              outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
+              y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes));
+
+            return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 13;
           })
           .append('xhtml:span')
           .attr('class', 'fa fa-eye fa-2x pointer edge-preview');
