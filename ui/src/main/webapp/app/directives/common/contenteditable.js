@@ -14,7 +14,11 @@ angular.module('pipelineAgentApp.commonDirectives')
         }
 
         ngModel.$render = function() {
-          element.html(ngModel.$viewValue || '');
+          if(ngModel.$viewValue !== undefined || ngModel.$viewValue !== null) {
+            element.html(ngModel.$viewValue + '');
+          } else {
+            element.html('');
+          }
         };
 
         element.bind('input', function() {

@@ -352,9 +352,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       state.mouseDownNode = d;
       if (state.shiftNodeDrag){
         // reposition dragged directed edge
-        thisGraph.dragLine.classed('hidden', false);
-          //.attr('d', 'M' + d.uiInfo.xPos + ',' + d.uiInfo.yPos + 'L' + d.uiInfo.xPos + ',' + d.uiInfo.yPos);
-        return;
+        thisGraph.dragLine.classed('hidden', false)
+          .attr('d', 'M' + d.uiInfo.xPos + ',' + d.uiInfo.yPos + 'L' + d.uiInfo.xPos + ',' + d.uiInfo.yPos);
       }
     };
 
