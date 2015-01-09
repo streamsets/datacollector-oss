@@ -29,10 +29,12 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
-public class SinglePartitionKafkaTargetTest {
+public class TestKafkaTargetSinglePartition {
 
   private static KafkaServer kafkaServer;
   private static ZkClient zkClient;
@@ -108,13 +110,17 @@ public class SinglePartitionKafkaTargetTest {
   @Test
   public void testWriteStringRecords() throws InterruptedException, StageException {
 
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+
     KafkaTarget kafkaTarget = new KafkaTarget();
     TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
       .addConfiguration("topic", TOPIC)
       .addConfiguration("partition", 0)
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
-      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("payloadType", PayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.FIXED)
       .addConfiguration("csvFileFormat", "DEFAULT")

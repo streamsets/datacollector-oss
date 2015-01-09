@@ -21,6 +21,7 @@ import kafka.javaapi.consumer.SimpleConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -82,6 +83,8 @@ public class KafkaConsumer {
     }
     leader = new KafkaBroker(metadata.leader().host(), metadata.leader().port());
     //recreate consumer instance with the leader information for that topic
+    LOG.info("Creating SimpleConsumer using the following configuration: host {}, port {}, max wait time {}, max " +
+      "fetch size {}, client name {}", leader.getHost(), leader.getPort(), maxWaitTime, maxFetchSize, clientName);
     consumer = new SimpleConsumer(leader.getHost(), leader.getPort(), maxWaitTime, maxFetchSize, clientName);
   }
 
@@ -91,10 +94,23 @@ public class KafkaConsumer {
     }
   }
 
-  public List<MessageAndOffset> read(long offset) throws Exception {
+  public List<MessageAndOffset> read(long offset) throws StageException {
 
     FetchRequest req = buildFetchRequest(offset);
-    FetchResponse fetchResponse = consumer.fetch(req);
+    FetchResponse fetchResponse = null;
+    try {
+      fetchResponse = consumer.fetch(req);
+    } catch (Exception e) {
+      if(e instanceof SocketTimeoutException) {
+        //If the value of consumer.timeout.ms is set to a positive integer, a timeout exception is thrown to the
+        //consumer if no message is available for consumption after the specified timeout value.
+        //If this happens exit gracefully
+        LOG.warn(StageLibError.LIB_0308.getMessage());
+        return Collections.emptyList();
+      } else {
+        throw new StageException(StageLibError.LIB_0309, e.getMessage(), e);
+      }
+    }
 
     if(fetchResponse.hasError()) {
       short code = fetchResponse.errorCode(topic, partition);
@@ -143,21 +159,26 @@ public class KafkaConsumer {
 
 
   public static long getLastOffset(SimpleConsumer consumer, String topic, int partition,
-                                   long whichTime, String clientName) {
-    TopicAndPartition topicAndPartition = new TopicAndPartition(topic, partition);
-    Map<TopicAndPartition, PartitionOffsetRequestInfo> requestInfo = new HashMap<>();
-    requestInfo.put(topicAndPartition, new PartitionOffsetRequestInfo(whichTime, 1));
-    kafka.javaapi.OffsetRequest request = new kafka.javaapi.OffsetRequest(
-      requestInfo, kafka.api.OffsetRequest.CurrentVersion(), clientName);
-    OffsetResponse response = consumer.getOffsetsBefore(request);
+                                   long whichTime, String clientName) throws StageException {
+    try {
+      TopicAndPartition topicAndPartition = new TopicAndPartition(topic, partition);
+      Map<TopicAndPartition, PartitionOffsetRequestInfo> requestInfo = new HashMap<>();
+      requestInfo.put(topicAndPartition, new PartitionOffsetRequestInfo(whichTime, 1));
+      kafka.javaapi.OffsetRequest request = new kafka.javaapi.OffsetRequest(
+        requestInfo, kafka.api.OffsetRequest.CurrentVersion(), clientName);
+      OffsetResponse response = consumer.getOffsetsBefore(request);
 
-    if (response.hasError()) {
-      LOG.error(StageLibError.LIB_0302.getMessage(), consumer.host(),
-        response.errorCode(topic, partition) );
-      return 0;
+      if (response.hasError()) {
+        LOG.error(StageLibError.LIB_0302.getMessage(), consumer.host() + ":" + consumer.port(),
+          response.errorCode(topic, partition));
+        return 0;
+      }
+      long[] offsets = response.offsets(topic, partition);
+      return offsets[0];
+    } catch (Exception e) {
+      LOG.error(StageLibError.LIB_0310.getMessage());
+      throw new StageException(StageLibError.LIB_0310, e.getMessage(), e);
     }
-    long[] offsets = response.offsets(topic, partition);
-    return offsets[0];
   }
 
   private KafkaBroker findNewLeader(KafkaBroker oldLeader, String topic, int partition) throws StageException {
@@ -189,8 +210,12 @@ public class KafkaConsumer {
     for(KafkaBroker broker : brokers) {
       SimpleConsumer simpleConsumer = null;
       try {
+        LOG.info("Creating SimpleConsumer using the following configuration: host {}, port {}, max wait time {}, max " +
+          "fetch size {}, client name {}", broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
+          METADATA_READER_CLIENT);
         simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
           METADATA_READER_CLIENT);
+
         List<String> topics = Collections.singletonList(topic);
         TopicMetadataRequest req = new TopicMetadataRequest(topics);
         kafka.javaapi.TopicMetadataResponse resp = simpleConsumer.send(req);
@@ -222,7 +247,7 @@ public class KafkaConsumer {
     return returnMetaData;
   }
 
-  public long getOffsetToRead(boolean fromBeginning) {
+  public long getOffsetToRead(boolean fromBeginning) throws StageException {
     long whichTime = kafka.api.OffsetRequest.LatestTime();
     if (fromBeginning) {
       whichTime = kafka.api.OffsetRequest.EarliestTime();
@@ -245,6 +270,8 @@ public class KafkaConsumer {
 
     //3. maxFetchSize is the maximum bytes to include in the message set for this partition.
     //   This helps bound the size of the response.
+    LOG.info("Building fetch request with clientId {}, minBytes {}, maxWait {}, topic {}, partition {}, offset {}, " +
+      "max fetch size {}.", clientName, minFetchSize, maxWaitTime, topic, partition, offset, maxFetchSize);
     return new FetchRequestBuilder()
       .clientId(clientName)
       .minBytes(minFetchSize)

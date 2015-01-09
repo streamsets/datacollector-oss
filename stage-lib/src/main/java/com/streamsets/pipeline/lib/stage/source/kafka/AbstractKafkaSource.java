@@ -111,18 +111,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
     //if offsetToReturn is initialized to null, the pipeline will terminate if no data is available
     String offsetToReturn = String.valueOf(offsetToRead);
     List<MessageAndOffset> partitionToPayloadList = new ArrayList<>();
-    try {
-      partitionToPayloadList.addAll(kafkaConsumer.read(offsetToRead));
-    } catch (SocketTimeoutException e) {
-      //If the value of consumer.timeout.ms is set to a positive integer, a timeout exception is thrown to the
-      //consumer if no message is available for consumption after the specified timeout value.
-      //If this happens exit gracefully
-      LOG.warn(StageLibError.LIB_0308.getMessage());
-    } catch (StageException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new StageException(StageLibError.LIB_0309, e.getMessage(), e);
-    }
+    partitionToPayloadList.addAll(kafkaConsumer.read(offsetToRead));
 
     int recordCounter = 0;
     for(MessageAndOffset partitionToPayloadMap : partitionToPayloadList) {

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class MultiPartitionKafkaTargetTest {
+public class TestKafkaTargetMultiPartition {
 
   private static List<KafkaServer> kafkaServers;
   private static ZkClient zkClient;

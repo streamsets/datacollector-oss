@@ -17,6 +17,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.lib.stage.source.spooldir.csv.CvsFileModeChooserValues;
 import com.streamsets.pipeline.lib.stage.source.util.CsvUtil;
 import com.streamsets.pipeline.lib.stage.source.util.JsonUtil;
+import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,11 +122,15 @@ public class KafkaTarget extends BaseTarget {
         try {
           kafkaProducer.enqueueMessage(serializeRecord(r));
         } catch (IOException e) {
-          throw new StageException(null, e.getMessage(), e);
+          throw new StageException(StageLibError.LIB_0351, e.getMessage(), e);
         }
         batchRecordCounter++;
       }
-      kafkaProducer.write();
+      try {
+        kafkaProducer.write();
+      } catch (Exception e) {
+        throw new StageException(StageLibError.LIB_0350, e.getMessage(), e);
+      }
       recordCounter += batchRecordCounter;
     }
   }

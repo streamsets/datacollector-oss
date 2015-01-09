@@ -37,7 +37,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SinglePartitionKafkaSourceTest {
+public class TestKafkaSourceSinglePartition {
 
   private static KafkaServer kafkaServer;
   private static ZkClient zkClient;
@@ -260,5 +260,4 @@ public class SinglePartitionKafkaSourceTest {
     sourceRunner.runDestroy();
 
   }
-
 }
