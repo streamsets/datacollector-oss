@@ -99,6 +99,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       thisGraph.paths = svgG.append('g').selectAll('g');
       thisGraph.rects = svgG.append('g').selectAll('g');
 
+
       thisGraph.drag = d3.behavior.drag()
         .origin(function(d){
           return {x: d.uiInfo.xPos, y: d.uiInfo.yPos};
@@ -176,7 +177,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     GraphCreator.prototype.consts =  {
       selectedClass: 'selected',
       connectClass: 'connect-node',
-      circleGClass: 'conceptG',
+      rectGClass: 'rectangleG',
+      pathGClass: 'pathG',
       graphClass: 'graph',
       activeEditId: 'active-editing',
       startNodeClass: 'startNode',
@@ -620,7 +622,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       var newGs= thisGraph.rects.enter()
         .append('g');
 
-      newGs.classed(consts.circleGClass, true)
+      newGs.classed(consts.rectGClass, true)
         .attr('transform', function(d){return 'translate(' + d.uiInfo.xPos + ',' + d.uiInfo.yPos + ')';})
         .on('mouseover', function(d){
           if (state.shiftNodeDrag){
@@ -770,29 +772,67 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       thisGraph.rects.exit().remove();
 
       var paths = thisGraph.paths;
+
       // update existing paths
-      paths.style('marker-end', 'url(#end-arrow)')
-        .classed(consts.selectedClass, function(d){
-        return d === state.selectedEdge;
-      })
-        .attr('d', function(d){
+      paths.selectAll('path')
+        .style('marker-end', 'url(#end-arrow)')
+        .classed(consts.selectedClass, function(d) {
+          return d === state.selectedEdge;
+        })
+        .attr('d', function(d) {
           return thisGraph.getPathDValue(d);
         });
 
+      paths.selectAll('.edge-preview-container')
+        .classed(consts.selectedClass, function(d) {
+          return d === state.selectedEdge;
+        })
+        .attr('x', function(d) {
+          return (d.source.uiInfo.xPos + consts.rectWidth + (d.target.uiInfo.xPos -30))/2;
+        })
+        .attr('y', function(d) {
+          return ((d.source.uiInfo.yPos + consts.rectHeight/2 + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 13;
+        });
+
+      var pathNewGs= paths.enter()
+        .append('g');
+
+
+      pathNewGs
+        .classed(consts.pathGClass, true)
+        .on('mousedown', function(d) {
+          thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
+        })
+        .on('mouseup', function(d) {
+          state.mouseDownLink = null;
+        });
+
       // add new paths
-      paths.enter()
+      pathNewGs
         .append('path')
-        .style('marker-end','url(#end-arrow)')
+        .style('marker-end', 'url(#end-arrow)')
         .classed('link', true)
         .attr('d', function(d) {
           return thisGraph.getPathDValue(d);
-        })
-        .on('mousedown', function(d){
-          thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
-        })
-        .on('mouseup', function(d){
-          state.mouseDownLink = null;
         });
+
+
+      if(thisGraph.showEdgePreviewIcon) {
+        pathNewGs
+          .append('svg:foreignObject')
+          .attr('class', 'edge-preview-container graph-bootstrap-tooltip')
+          .attr('title', 'Data Monitoring')
+          .attr('width', 30)
+          .attr('height', 30)
+          .attr('x', function(d) {
+            return (d.source.uiInfo.xPos + consts.rectWidth + (d.target.uiInfo.xPos -30))/2;
+          })
+          .attr('y', function(d) {
+            return ((d.source.uiInfo.yPos + consts.rectHeight/2 + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 13;
+          })
+          .append('xhtml:span')
+          .attr('class', 'fa fa-eye fa-2x pointer edge-preview');
+      }
 
       // remove old links
       paths.exit().remove();
@@ -811,25 +851,41 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
     GraphCreator.prototype.getPathDValue = function(d) {
-      debugger;
       var thisGraph = this,
         consts = thisGraph.consts,
         totalLanes = d.source.outputLanes.length,
         outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
         y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes)),
-        sourceX = (d.source.uiInfo.xPos + consts.rectWidth),
-        sourceY = (d.source.uiInfo.yPos + y),
-        targetX = d.target.uiInfo.xPos -30,
-        targetY = (d.target.uiInfo.yPos + consts.rectWidth/2 - 20),
-        sourceTangentX = sourceX + (targetX - sourceX)/2,
-        sourceTangentY = sourceY,
-        targetTangentX = targetX - (targetX - sourceX)/2,
-        targetTangentY = targetY;
+        sourceX,sourceY,targetX,targetY, sourceTangentX, sourceTangentY, targetTangentX, targetTangentY;
+
+
+
+      sourceX = (d.source.uiInfo.xPos + consts.rectWidth);
+      sourceY = (d.source.uiInfo.yPos + y);
+
+      if(d.target.uiInfo.xPos > (sourceX + 30)) {
+        targetX = (d.target.uiInfo.xPos - 30);
+      } else if(d.target.uiInfo.xPos > sourceX) {
+        targetX = (d.target.uiInfo.xPos + 10);
+      } else {
+        targetX = (d.target.uiInfo.xPos + 30);
+      }
+
+
+      targetY = (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
+      sourceTangentX = sourceX + (targetX - sourceX)/2;
+      sourceTangentY = sourceY;
+      targetTangentX = targetX - (targetX - sourceX)/2;
+      targetTangentY = targetY;
 
       return 'M ' + sourceX + ',' + sourceY +
         'C' + sourceTangentX + ',' + sourceTangentY + ' ' +
         targetTangentX + ',' + targetTangentY + ' ' +
         targetX + ',' + targetY;
+
+
+      /*return 'M ' + sourceX + ',' + sourceY +
+        'L' + (d.target.uiInfo.xPos - 30) + ',' + targetY;*/
     };
 
     GraphCreator.prototype.zoomed = function(){
@@ -922,7 +978,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         edges = options.edges,
         issues = options.issues,
         selectNode = options.selectNode,
-        stageErrorCounts = options.stageErrorCounts;
+        stageErrorCounts = options.stageErrorCounts,
+        showEdgePreviewIcon = options.showEdgePreviewIcon;
 
       if(graph !== undefined) {
         graph.deleteGraph();
@@ -965,6 +1022,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       graph.edges = edges;
       graph.issues = issues;
       graph.stageErrorCounts = stageErrorCounts;
+      graph.showEdgePreviewIcon = showEdgePreviewIcon;
       graph.updateGraph();
 
       if(selectNode) {

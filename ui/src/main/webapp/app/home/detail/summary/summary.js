@@ -97,7 +97,7 @@ angular
             };
             break;
         }
-      } else {
+      } else if(pipelineMetrics && pipelineMetrics.histograms){
         $scope.histogramList = ['inputRecords', 'outputRecords', 'errorRecords', 'errors'];
         $scope.summaryHistograms = {
           inputRecords:

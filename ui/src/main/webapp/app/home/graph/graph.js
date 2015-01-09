@@ -143,6 +143,10 @@ angular
               function (res) {
                 $rootScope.common.pipelineMetrics = res.data;
                 $rootScope.common.pipelineStatus = startResponse;
+
+                $timeout(function() {
+                  $scope.refreshGraph();
+                });
               },
               function (data) {
                 $rootScope.common.errors = [data];
@@ -165,6 +169,7 @@ angular
         api.pipelineAgent.stopPipeline().
           success(function(res) {
             $scope.moveGraphToCenter();
+            $scope.refreshGraph();
             $rootScope.common.pipelineStatus = res;
             $scope.$broadcast('updateErrorCount', {});
           }).

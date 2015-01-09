@@ -190,6 +190,13 @@ angular
        */
       clearFirstOpenLaneStage: function() {
         $scope.firstOpenLaneStage = undefined;
+      },
+
+      /**
+       * Refresh the Pipeline Graph.
+       */
+      refreshGraph : function() {
+        updateGraph($scope.pipelineConfig);
       }
     });
 
@@ -419,7 +426,8 @@ angular
           edges: edges,
           issues: $scope.pipelineConfig.issues,
           selectNode: ($scope.detailPaneConfig && !$scope.detailPaneConfig.stages) ? $scope.detailPaneConfig : undefined,
-          stageErrorCounts: stageErrorCounts
+          stageErrorCounts: stageErrorCounts,
+          showEdgePreviewIcon: $scope.isPipelineRunning
         });
       });
 

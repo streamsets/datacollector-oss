@@ -48,7 +48,7 @@ pipeline-graph {
   }
 
   g {
-    &.conceptG {
+    &.rectangleG {
       .lane-number {
         fill: #000000;
       }
@@ -198,28 +198,48 @@ pipeline-graph {
         opacity: 0.75;
       }
     }
-  }
 
-  path {
-    &.link {
-      fill: none;
-      stroke: @default-pipeline-graph-fill-color;
-      stroke-width: 6px;
-      cursor: default;
 
-      &:hover {
-        stroke: @default-pipeline-graph-selection-color;
+    &.pathG {
+
+      .link {
+        fill: none;
+        stroke: @default-pipeline-graph-fill-color;
+        stroke-width: 6px;
+        cursor: default;
+
+        &:hover {
+          stroke: @default-pipeline-graph-selection-color;
+        }
+
+        &.hidden {
+          stroke-width: 0;
+        }
       }
 
-      &.hidden {
-        stroke-width: 0;
+      .edge-preview {
+        color:  @default-pipeline-graph-stroke-color;
+
+        &:hover {
+          color: @default-pipeline-graph-selection-color;
+        }
       }
 
       &.selected {
-        stroke: @default-pipeline-graph-selection-color;
+        .link {
+          stroke: @default-pipeline-graph-selection-color;
+          opacity: 0.8;
+        }
+
+        .edge-preview {
+          color:  @default-pipeline-graph-selection-color;
+        }
       }
+
     }
   }
+
+
 
   .axis line {
     fill: none;
