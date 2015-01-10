@@ -471,6 +471,19 @@ angular.module('pipelineAgentApp.common')
           url: url
         });
       },
+
+      /**
+       * Reset Offset for Pipeline
+       *
+       * @param name
+       */
+      resetOffset: function(name) {
+        var url = apiBase + '/pipeline/resetOffset/' + name;
+        return $http({
+          method: 'POST',
+          url: url
+        });
+      }
     };
 
     return api;

@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title" translate="home.resetOffset.confirmationTitle">Reset Offset Confirmation</h3>
+</div>
+<div class="modal-body reset-offset-modal-body">
+  <p ng-hide="isOffsetResetSucceed || showLoading"
+     translate="home.resetOffset.confirmationMessage" translate-values="{name: pipelineInfo.name}"></p>
+
+  <div class="alert alert-success" role="alert"
+       ng-show="isOffsetResetSucceed"
+       translate="home.resetOffset.successMessage">
+  </div>
+
+  <div show-loading="showLoading"></div>
+</div>
+<div class="modal-footer" ng-hide="showLoading">
+  <button type="button" class="btn btn-default"
+          ng-hide="isOffsetResetSucceed"
+          ng-click="no()"
+          translate="global.form.no">No</button>
+  <button type="button" class="btn btn-primary"
+          ng-hide="isOffsetResetSucceed"
+          ng-click="yes()"
+          translate="global.form.yes">Yes</button>
+  <button type="button" class="btn btn-primary"
+          ng-show="isOffsetResetSucceed"
+          ng-click="close()"
+          translate="global.form.close">Close</button>
+</div>

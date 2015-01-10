@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('GraphController', function ($scope, $rootScope, $timeout, _, api, $translate, pipelineService) {
+  .controller('GraphController', function ($scope, $rootScope, $timeout, _, api, $translate, pipelineService, $modal) {
 
     angular.extend($scope, {
 
@@ -176,8 +176,26 @@ angular
           error(function(data) {
             $rootScope.common.errors = [data];
           });
-      }
+      },
 
+
+      /**
+       * Reset Offset of pipeline
+       *
+       */
+      resetOffset: function() {
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/resetOffset/resetOffset.tpl.html',
+          controller: 'ResetOffsetModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineInfo: function () {
+              return $scope.activeConfigInfo;
+            }
+          }
+        });
+      }
     });
 
     /**

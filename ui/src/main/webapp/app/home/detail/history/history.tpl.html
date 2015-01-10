@@ -1,10 +1,10 @@
-<div ng-controller="HistoryController">
+<div class="history-tab" ng-controller="HistoryController">
 
   <div class="row">
     <div class="col-sm-12">
       <div class="panel panel-default">
         <div class="panel-heading">History</div>
-        <div class="panel-body">
+        <div class="panel-body history-messages">
 
           <table class="table">
             <thead>
@@ -22,7 +22,7 @@
               </tr>
 
               <tr ng-if="runHistory.length === 0">
-                <td colspan="3" class="no-records text-center" translate="home.previewPane.noRecords">No Records.</td>
+                <td colspan="3" class="no-status text-center" translate="home.detailPane.historyTab.noStatus">No Status.</td>
               </tr>
 
             </tbody>

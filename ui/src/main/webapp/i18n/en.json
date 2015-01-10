@@ -151,6 +151,9 @@
       },
       "general": "General",
       "history": "History",
+      "historyTab": {
+        "noStatus": "No Status to view."
+      },
       "inspectingData": "Inspecting Data",
       "monitoring": "Monitoring",
       "rules": "Rules",
@@ -198,6 +201,11 @@
       "headerLabel" : "Import Pipeline",
       "fileUploadPlaceholder": "No file chosen",
       "browse": "Browse"
+    },
+    "resetOffset": {
+      "confirmationTitle": "Reset Offset Confirmation",
+      "confirmationMessage": "Are you sure you want to reset offset for Pipeline '{{name}}'?",
+      "successMessage": "Reset Offset is successful."
     },
     "shutdown": {
       "headerLabel": "Shutdown Collector",

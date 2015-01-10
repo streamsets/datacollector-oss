@@ -106,13 +106,25 @@
       <span translate="home.header.closePreview">Close Preview</span>
     </button>
 
-    <button type="button" class="btn btn-primary btn-sm"
-            ng-click="startPipeline()"
-            ng-hide="isPipelineRunning || previewMode"
-            ng-disabled="!pipelineConfig.valid">
-      <span class="glyphicon glyphicon-play"></span>
-      <span translate="home.header.start">Start</span>
-    </button>
+    <div class="btn-group"
+         ng-hide="isPipelineRunning || previewMode">
+      <button type="button" class="btn btn-primary btn-sm"
+              ng-disabled="!pipelineConfig.valid"
+              ng-click="startPipeline()">
+        <span class="glyphicon glyphicon-play"></span>
+        <span translate="home.header.start">Start</span>
+      </button>
+      <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
+              ng-disabled="!pipelineConfig.valid"
+              data-toggle="dropdown"
+              aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu pull-right" role="menu">
+        <li><a href="#" ng-click="resetOffset()">Reset offset </a></li>
+      </ul>
+    </div>
 
     <button type="button" class="btn btn-danger btn-sm"
             ng-click="stopPipeline()"
