@@ -58,6 +58,10 @@ angular
         currentSelection = $scope.detailPaneConfig,
         isStageSelected = $scope.stageSelected;
 
+      if(angular.equals({},pipelineMetrics)) {
+        return;
+      }
+
       //histogram
       if(isStageSelected) {
         var inputRecordsHistogram =

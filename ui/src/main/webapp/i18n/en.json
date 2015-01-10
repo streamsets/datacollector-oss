@@ -45,8 +45,10 @@
       "label": "Label",
       "lastModifiedBy": "Last Modified By",
       "lastModifiedOn": "Last Modified On",
+      "lastStatusChange": "Last Status Change",
       "library": "Library",
       "loading": "Loading",
+      "message": "Message",
       "metrics": "Metrics",
       "name": "Name",
       "nextStage": "Next Stage",
@@ -66,6 +68,7 @@
       "stage": "Stage",
       "stages": "Stages",
       "stageErrors": "Stage Errors",
+      "state": "State",
       "step": "Step",
       "targets": "Targets",
       "timestamp": "Timestamp",
@@ -108,6 +111,7 @@
       "stop": "Stop",
       "stoppingPipeline": "Stopping Pipeline...",
       "targets": "Targets",
+      "toggleLibraryPane": "Toggle Library Pane",
       "uptime": "Uptime"
     },
     "graphPane": {
@@ -146,6 +150,7 @@
         "stageInformation": "Stage Information"
       },
       "general": "General",
+      "history": "History",
       "inspectingData": "Inspecting Data",
       "monitoring": "Monitoring",
       "rules": "Rules",

@@ -1,0 +1,37 @@
+<div ng-controller="HistoryController">
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">History</div>
+        <div class="panel-body">
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="col-md-3" translate="global.form.lastStatusChange">Last Status Change</th>
+                <th class="col-md-3" translate="global.form.state">State</th>
+                <th class="col-md-6" translate="global.form.message">Message</th>
+              </tr>
+            </thead>
+            <tbody ng-hide="showBadRecordsLoading">
+              <tr ng-repeat="history in runHistory">
+                <td>{{history.lastStatusChange | date:'medium'}}</td>
+                <td ng-bind="history.state"></td>
+                <td ng-bind="history.message"></td>
+              </tr>
+
+              <tr ng-if="runHistory.length === 0">
+                <td colspan="3" class="no-records text-center" translate="home.previewPane.noRecords">No Records.</td>
+              </tr>
+
+            </tbody>
+          </table>
+
+          <div show-loading></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

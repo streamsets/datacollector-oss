@@ -6,12 +6,47 @@ angular
   .module('pipelineAgentApp.home')
 
   .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant) {
-    var detailTabsInEditMode = [{
+    var
+      pipelineTabsEdit = [
+        {
+          name:'configuration',
+          template:'app/home/detail/configuration/configuration.tpl.html',
+          iconClass: 'fa fa-gear fa-12x'
+        },
+        {
+          name:'history',
+          template:'app/home/detail/history/history.tpl.html',
+          iconClass: 'fa fa-history fa-12x'
+        }
+      ],
+      pipelineTabsRunning = [
+        {
+          name:'summary',
+          template:'app/home/detail/summary/summary.tpl.html',
+          iconClass: 'fa fa-bar-chart fa-12x'
+        },
+        {
+          name:'errors',
+          template:'app/home/detail/badRecords/badRecords.tpl.html',
+          iconClass: 'fa fa-exclamation-triangle fa-12x'
+        },
+        {
+          name:'configuration',
+          template:'app/home/detail/configuration/configuration.tpl.html',
+          iconClass: 'fa fa-gear fa-12x'
+        },
+        {
+          name:'history',
+          template:'app/home/detail/history/history.tpl.html',
+          iconClass: 'fa fa-history fa-12x'
+        }
+      ],
+      stageTabsEdit = [{
         name:'configuration',
         template:'app/home/detail/configuration/configuration.tpl.html',
         iconClass: 'fa fa-gear fa-12x'
       }],
-      detailTabsInRunningMode = [
+      stageTabsRunning = [
         {
           name:'summary',
           template:'app/home/detail/summary/summary.tpl.html',
@@ -28,7 +63,7 @@ angular
           iconClass: 'fa fa-gear fa-12x'
         }
       ],
-      linkDetailTabsInRunningMode = [
+      linkTabsRunning = [
         {
           name:'summary',
           template:'app/home/detail/dataSummary/dataSummary.tpl.html',
@@ -52,7 +87,7 @@ angular
       ];
 
     angular.extend($scope, {
-      detailPaneTabs: detailTabsInEditMode,
+      detailPaneTabs: pipelineTabsEdit,
 
       /**
        * Returns label for Detail Pane
@@ -105,24 +140,38 @@ angular
       }
     });
 
-    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
-      if($scope.isPipelineRunning) {
-        if (type === pipelineConstant.LINK) {
-          $scope.detailPaneTabs = linkDetailTabsInRunningMode;
-        } else {
-          $scope.detailPaneTabs = detailTabsInRunningMode;
-        }
-      } else {
-        $scope.detailPaneTabs = detailTabsInEditMode;
+    var getDetailTabsList = function(type, isPipelineRunning) {
+      switch(type) {
+        case pipelineConstant.PIPELINE:
+          if(isPipelineRunning) {
+            return pipelineTabsRunning;
+          } else {
+            return pipelineTabsEdit;
+          }
+          break;
+        case pipelineConstant.STAGE_INSTANCE:
+          if(isPipelineRunning) {
+            return stageTabsRunning;
+          } else {
+            return stageTabsEdit;
+          }
+          break;
+        case pipelineConstant.LINK:
+          if(isPipelineRunning) {
+            return linkTabsRunning;
+          } else {
+            return stageTabsEdit;
+          }
+          break;
       }
+    };
+
+    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
+      $scope.detailPaneTabs = getDetailTabsList(type, $scope.isPipelineRunning);
     });
 
     $scope.$watch('isPipelineRunning', function(newValue) {
-      if(newValue) {
-        $scope.detailPaneTabs = detailTabsInRunningMode;
-      } else {
-        $scope.detailPaneTabs = detailTabsInEditMode;
-      }
+      $scope.detailPaneTabs = getDetailTabsList($scope.selectedType, newValue);
     });
 
     $scope.$on('showBadRecordsSelected', function() {

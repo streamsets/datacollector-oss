@@ -454,7 +454,23 @@ angular.module('pipelineAgentApp.common')
           method: 'GET',
           url: url
         });
-      }
+      },
+
+
+      /**
+       * Get history of the pipeline
+       *
+       * @param name
+       * @param rev
+       * @returns {*}
+       */
+      getHistory: function(name, rev) {
+        var url = apiBase + '/pipeline/history/' + name;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
     };
 
     return api;
