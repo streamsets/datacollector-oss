@@ -49,6 +49,9 @@ public enum StageLibError implements ErrorCode {
   //Field Hasher Processor
   LIB_0500("Error creating message digest for {}, {}."),
 
+  //Expression processor
+  LIB_0600("Failed to evaluate expression '{}', {}"),
+
   ;
   private final String msg;
 

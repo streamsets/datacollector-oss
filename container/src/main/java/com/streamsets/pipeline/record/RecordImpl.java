@@ -506,4 +506,27 @@ public class RecordImpl implements Record {
     }
     return fieldToReplace;
   }
+
+  @Override
+  public void add(String fieldPath, Field newField) {
+    List<PathElement> elements = parse(fieldPath);
+    List<Field> fields = get(elements);
+    int fieldPos = fields.size();
+    if (elements.size() -1  == fieldPos) {
+      if (fieldPos == 0) {
+        //need to convert existing field to map or string!!
+        //FIXME<Hari>:
+        value = newField;
+      } else {
+        switch (elements.get(fieldPos).getType()) {
+          case MAP:
+            fields.get(fieldPos - 1).getValueAsMap().put(elements.get(fieldPos).getName(), newField);
+            break;
+          case LIST:
+            fields.get(fieldPos - 1).getValueAsList().add(newField);
+            break;
+        }
+      }
+    }
+  }
 }

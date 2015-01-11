@@ -109,4 +109,6 @@ public interface Record {
 
   public Field set(String fieldPath, Field newField);
 
+  public void add(String fieldPath, Field newField);
+
 }

@@ -99,7 +99,7 @@ public class ELEvaluator {
   }
 
   // ExpressionEvaluatorImpl can be used as a singleton
-  private static final ExpressionEvaluatorImpl EVALUATOR = new ExpressionEvaluatorImpl();;
+  private static final ExpressionEvaluatorImpl EVALUATOR = new ExpressionEvaluatorImpl();
   private final static ThreadLocal<Variables> VARIABLES_IN_SCOPE_TL = new ThreadLocal<>();
 
   private final Map<String, Object> constants;
@@ -165,6 +165,10 @@ public class ELEvaluator {
     } finally {
       VARIABLES_IN_SCOPE_TL.set(null);
     }
+  }
+
+  public Object parseExpression(String expressionString) throws ELException {
+    return EVALUATOR.parseExpressionString(expressionString);
   }
 
 }
