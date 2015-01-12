@@ -109,6 +109,8 @@
       "sources": "Sources",
       "start": "Start",
       "stop": "Stop",
+      "stopConfirmationTitle": "Stop Pipeline Confirmation",
+      "stopConfirmationMessage": "Are you sure you want to stop Pipeline '{{name}}'?",
       "stoppingPipeline": "Stopping Pipeline...",
       "targets": "Targets",
       "toggleLibraryPane": "Toggle Library Pane",

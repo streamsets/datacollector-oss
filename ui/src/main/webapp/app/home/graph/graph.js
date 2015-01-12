@@ -166,16 +166,26 @@ angular
        *
        */
       stopPipeline: function() {
-        api.pipelineAgent.stopPipeline().
-          success(function(res) {
-            $scope.moveGraphToCenter();
-            $scope.refreshGraph();
-            $rootScope.common.pipelineStatus = res;
-            $scope.$broadcast('updateErrorCount', {});
-          }).
-          error(function(data) {
-            $rootScope.common.errors = [data];
-          });
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/graph/stop/stopConfirmation.tpl.html',
+          controller: 'StopConfirmationModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineInfo: function () {
+              return $scope.activeConfigInfo;
+            }
+          }
+        });
+
+        modalInstance.result.then(function(status) {
+          $scope.moveGraphToCenter();
+          $scope.refreshGraph();
+          $rootScope.common.pipelineStatus = status;
+          $scope.$broadcast('updateErrorCount', {});
+        }, function () {
+
+        });
       },
 
 
