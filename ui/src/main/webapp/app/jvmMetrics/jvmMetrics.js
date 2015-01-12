@@ -17,27 +17,283 @@ angular
       destroyed = false;
 
     angular.extend($scope, {
-      metrics: {}
+      metrics: {},
+      jmxList: [],
+
+      dateFormat: function() {
+        return function(d){
+          return d3.time.format('%H:%M:%S')(new Date(d));
+        };
+      },
+
+      sizeFormat: function(){
+        return function(d){
+          var mbValue = d / 1000000;
+          return mbValue.toFixed(0) + ' MB';
+        };
+      },
+
+      cpuPercentageFormat: function() {
+        return function(d){
+          var mbValue = d * 1000/ 10.0;
+          return mbValue.toFixed(1) + ' %';
+        };
+      },
+
+      formatValue: function(d, chart) {
+        if(chart.yAxisTickFormat) {
+          return chart.yAxisTickFormat(d);
+        } else {
+          return d;
+        }
+      }
     });
+
+    $scope.chartList = [
+      {
+        name: 'cpuUsage',
+        label: 'CPU Usage',
+        xAxisTickFormat: $scope.dateFormat(),
+        yAxisTickFormat: $scope.cpuPercentageFormat(),
+        values: [
+          {
+            name: 'java.lang:type=OperatingSystem',
+            property: 'ProcessCpuLoad',
+            key: 'CPU Usage',
+            values: []
+          }
+        ]
+      },
+      {
+        name: 'threads',
+        label: 'Threads',
+        xAxisTickFormat: $scope.dateFormat(),
+        values: [
+          {
+            name: 'java.lang:type=Threading',
+            property: 'ThreadCount',
+            key: 'Live Threads',
+            values: []
+          }
+        ],
+        displayProperties: [
+          {
+            name: 'java.lang:type=Threading',
+            property: 'PeakThreadCount',
+            key: 'Peak',
+            value:''
+          },
+          {
+            name: 'java.lang:type=Threading',
+            property: 'TotalStartedThreadCount',
+            key: 'Total',
+            value: ''
+          }
+        ]
+      },
+      {
+        name: 'heapMemoryUsage',
+        label: 'Heap Memory Usage',
+        xAxisTickFormat: $scope.dateFormat(),
+        yAxisTickFormat: $scope.sizeFormat(),
+        values: [
+          {
+            name: 'metrics:name=jvm.memory.heap.max',
+            property: 'Value',
+            key: 'Max',
+            values: []
+          },
+          {
+            name: 'metrics:name=jvm.memory.heap.committed',
+            property: 'Value',
+            key: 'Committed',
+            values: []
+          },
+          {
+            name: 'metrics:name=jvm.memory.heap.used',
+            property: 'Value',
+            key: 'Used',
+            values: []
+          }
+        ]
+      },
+      {
+        name: 'nonHeapMemoryUsage',
+        label: 'Non-Heap Memory Usage',
+        xAxisTickFormat: $scope.dateFormat(),
+        yAxisTickFormat: $scope.sizeFormat(),
+        values: [
+          {
+            name: 'metrics:name=jvm.memory.non-heap.max',
+            property: 'Value',
+            key: 'Max',
+            values: []
+          },
+          {
+            name: 'metrics:name=jvm.memory.non-heap.committed',
+            property: 'Value',
+            key: 'Committed',
+            values: []
+          },
+          {
+            name: 'metrics:name=jvm.memory.non-heap.used',
+            property: 'Value',
+            key: 'Used',
+            values: []
+          }
+        ]
+      },
+      {
+        name: 'psEdenSpaceHeapMemoryUsage',
+        label: 'Memory Pool "PS Eden Space"',
+        xAxisTickFormat: $scope.dateFormat(),
+        yAxisTickFormat: $scope.sizeFormat(),
+        values: [
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Eden Space',
+            property: 'Usage/max',
+            key: 'Max',
+            values: []
+          },
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Eden Space',
+            property: 'Usage/committed',
+            key: 'Committed',
+            values: []
+          },
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Eden Space',
+            property: 'Usage/used',
+            key: 'Used',
+            values: []
+          }
+        ]
+      },
+      {
+        name: 'psSurvivorSpaceHeapMemoryUsage',
+        label: 'Memory Pool "PS Survivor Space"',
+        xAxisTickFormat: $scope.dateFormat(),
+        yAxisTickFormat: $scope.sizeFormat(),
+        values: [
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Survivor Space',
+            property: 'Usage/max',
+            key: 'Max',
+            values: []
+          },
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Survivor Space',
+            property: 'Usage/committed',
+            key: 'Committed',
+            values: []
+          },
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Survivor Space',
+            property: 'Usage/used',
+            key: 'Used',
+            values: []
+          }
+        ]
+      },
+      {
+        name: 'psOldGenHeapMemoryUsage',
+        label: 'Memory Pool "PS Old Gen"',
+        xAxisTickFormat: $scope.dateFormat(),
+        yAxisTickFormat: $scope.sizeFormat(),
+        values: [
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Old Gen',
+            property: 'Usage/max',
+            key: 'Max',
+            values: []
+          },
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Old Gen',
+            property: 'Usage/committed',
+            key: 'Committed',
+            values: []
+          },
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Old Gen',
+            property: 'Usage/used',
+            key: 'Used',
+            values: []
+          }
+        ]
+      },
+      {
+        name: 'psPermGenHeapMemoryUsage',
+        label: 'Memory Pool "PS Perm Gen"',
+        xAxisTickFormat: $scope.dateFormat(),
+        yAxisTickFormat: $scope.sizeFormat(),
+        values: [
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Perm Gen',
+            property: 'Usage/max',
+            key: 'Max',
+            values: []
+          },
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Perm Gen',
+            property: 'Usage/committed',
+            key: 'Committed',
+            values: []
+          },
+          {
+            name: 'java.lang:type=MemoryPool,name=PS Perm Gen',
+            property: 'Usage/used',
+            key: 'Used',
+            values: []
+          }
+        ]
+      },
+      {
+        name: 'psCodeCacheHeapMemoryUsage',
+        label: 'Memory Pool "Code Cache"',
+        xAxisTickFormat: $scope.dateFormat(),
+        yAxisTickFormat: $scope.sizeFormat(),
+        values: [
+          {
+            name: 'java.lang:type=MemoryPool,name=Code Cache',
+            property: 'Usage/max',
+            key: 'Max',
+            values: []
+          },
+          {
+            name: 'java.lang:type=MemoryPool,name=Code Cache',
+            property: 'Usage/committed',
+            key: 'Committed',
+            values: []
+          },
+          {
+            name: 'java.lang:type=MemoryPool,name=Code Cache',
+            property: 'Usage/used',
+            key: 'Used',
+            values: []
+          }
+        ]
+      }
+    ];
+
 
     /**
      * Fetch the JVM Metrics every Refresh Interval time.
      *
      */
-    var refreshPipelineJVMMetrics = function() {
+    var refreshPipelineJMX = function() {
 
       jvmMetricsTimer = $timeout(
         function() {
         },
-        configuration.getRefreshInterval()
+        4000 //configuration.getRefreshInterval()
       );
 
       jvmMetricsTimer.then(
         function() {
-          api.admin.getJVMMetrics()
+          api.admin.getJMX()
             .success(function(data) {
-              $scope.metrics = data;
-              refreshPipelineJVMMetrics();
+              updateGraphData(data);
+              refreshPipelineJMX();
             })
             .error(function(data, status, headers, config) {
               $rootScope.common.errors = [data];
@@ -49,7 +305,60 @@ angular
       );
     };
 
-    refreshPipelineJVMMetrics();
+
+    var updateGraphData = function(jmxData) {
+      var chartList = $scope.chartList,
+        date = (new Date()).getTime();
+
+      angular.forEach(jmxData.beans, function(bean) {
+        angular.forEach(chartList, function(chartObj) {
+
+          angular.forEach(chartObj.values, function(chartBean) {
+            if(chartBean.name === bean.name) {
+              var propertyList = chartBean.property.split('/'),
+                propertyValue = bean;
+
+              angular.forEach(propertyList, function(property) {
+                if(propertyValue) {
+                  propertyValue = propertyValue[property];
+                }
+              });
+
+              chartBean.values.push([date, propertyValue]);
+            }
+          });
+
+          if(chartObj.displayProperties) {
+            angular.forEach(chartObj.displayProperties, function(chartBean) {
+              if(chartBean.name === bean.name) {
+                var propertyList = chartBean.property.split('/'),
+                  propertyValue = bean;
+
+                angular.forEach(propertyList, function(property) {
+                  if(propertyValue) {
+                    propertyValue = propertyValue[property];
+                  }
+                });
+
+                chartBean.value = propertyValue;
+              }
+            });
+          }
+
+
+        });
+      });
+    };
+
+    api.admin.getJMX()
+      .success(function(data) {
+        updateGraphData(data);
+        refreshPipelineJMX();
+      })
+      .error(function(data, status, headers, config) {
+        $rootScope.common.errors = [data];
+      });
+
 
     $scope.$on('$destroy', function(){
       $timeout.cancel(jvmMetricsTimer);

@@ -8,6 +8,19 @@ angular.module('pipelineAgentApp.common')
       api = {events: {}};
 
     api.admin = {
+
+      /**
+       * Fetches JVM Metrics
+       * @returns {*}
+       */
+      getJMX : function() {
+        var url = 'jmx';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
       /**
        * Fetches JVM Metrics
        * @returns {*}
