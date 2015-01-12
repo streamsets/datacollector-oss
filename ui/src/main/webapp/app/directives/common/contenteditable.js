@@ -24,6 +24,14 @@ angular.module('pipelineAgentApp.commonDirectives')
         element.bind('input', function() {
           scope.$apply(read);
         });
+
+        element.keypress(function(e) {
+          if(e.which === 13) {
+            element.blur();
+            return false;
+          }
+          return true;
+        });
       }
     };
   });
