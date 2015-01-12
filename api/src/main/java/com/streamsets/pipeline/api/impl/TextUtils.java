@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class TextUtils {
 
-  public static final String VALID_NAME= "[0-9A-Za-z_]+";
+  public static final String VALID_NAME= "[0-9A-Za-z_\\s]+";
 
   private static final Pattern VALID_NAME_PATTERN = Pattern.compile(VALID_NAME);
 

@@ -34,6 +34,7 @@ import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -350,7 +351,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   }
 
   private void createPipelineDirIfNotExist(String name) throws PipelineManagerException {
-    File pipelineDir = new File(new File(runtimeInfo.getDataDir(), RUN_INFO_DIR), name);
+    File pipelineDir = new File(new File(runtimeInfo.getDataDir(), RUN_INFO_DIR),
+      PipelineDirectoryUtil.getEscapedPipelineName(name));
     if(!pipelineDir.exists()) {
       if(!pipelineDir.mkdirs()) {
         throw new PipelineManagerException(ContainerError.CONTAINER_0110, name,

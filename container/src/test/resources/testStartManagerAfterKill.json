@@ -1,5 +1,5 @@
 {
-  "name" : "myPipeline",
+  "name" : "my pipeline",
   "rev" : "2.0",
   "state" : "RUNNING",
   "message" : "The pipeline is running",

@@ -43,7 +43,7 @@ import java.util.List;
 
 public class TestProductionRun {
 
-  private static final String MY_PIPELINE = "myPipeline";
+  private static final String MY_PIPELINE = "my pipeline";
   private static final String PIPELINE_REV = "2.0";
   private static final String MY_PROCESSOR = "p";
   private ProductionPipelineManagerTask manager;

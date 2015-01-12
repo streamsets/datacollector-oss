@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.validation;
 
+import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -22,5 +23,10 @@ public class TestPipelineConfigurationValidator {
     Assert.assertTrue(validator.canPreview());
     Assert.assertFalse(validator.getIssues().hasIssues());
     Assert.assertTrue(validator.getOpenLanes().isEmpty());
+  }
+
+  @Test
+  public void testSpaceInName() {
+    Assert.assertTrue(TextUtils.isValidName("Hello World"));
   }
 }

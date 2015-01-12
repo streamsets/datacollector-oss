@@ -15,7 +15,7 @@ public class PipelineDirectoryUtil {
   private static final String PIPELINE_BASE_DIR = "runInfo";
 
   public static File getPipelineDir(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
-    File pipelineDir = new File(new File(new File(runtimeInfo.getDataDir(), PIPELINE_BASE_DIR), pipelineName), rev);
+    File pipelineDir = new File(new File(new File(runtimeInfo.getDataDir(), PIPELINE_BASE_DIR), getEscapedPipelineName(pipelineName)), rev);
     if(!pipelineDir.exists()) {
       if(!pipelineDir.mkdirs()) {
         throw new RuntimeException(Utils.format("Could not create directory '{}'", pipelineDir.getAbsolutePath()));
@@ -23,4 +23,9 @@ public class PipelineDirectoryUtil {
     }
     return pipelineDir;
   }
+
+  public static String getEscapedPipelineName(String pipelineName) {
+    return pipelineName.replaceAll(" ", ".");
+  }
+
 }

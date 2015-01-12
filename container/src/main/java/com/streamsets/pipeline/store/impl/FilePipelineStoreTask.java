@@ -8,19 +8,20 @@ package com.streamsets.pipeline.store.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
-import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -92,7 +93,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   private File getPipelineDir(String name) {
-    return new File(storeDir, name);
+    return new File(storeDir, PipelineDirectoryUtil.getEscapedPipelineName(name));
   }
 
   @VisibleForTesting
