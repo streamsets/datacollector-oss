@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.restapi;
 
-import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
@@ -38,16 +37,13 @@ public class AdminResource implements LogStreamer.Releaser {
   private final BuildInfo buildInfo;
   private final Configuration config;
   private final RuntimeInfo runtimeInfo;
-  private final MetricRegistry metrics;
   private static volatile int logTailClients;
 
   @Inject
-  public AdminResource(Configuration configuration, RuntimeInfo runtimeInfo, BuildInfo buildInfo,
-                       MetricRegistry metrics) {
+  public AdminResource(Configuration configuration, RuntimeInfo runtimeInfo, BuildInfo buildInfo) {
     this.buildInfo = buildInfo;
     this.config = configuration;
     this.runtimeInfo = runtimeInfo;
-    this.metrics = metrics;
   }
 
   @POST
@@ -63,7 +59,6 @@ public class AdminResource implements LogStreamer.Releaser {
           try {
             Thread.sleep(500);
           } catch (InterruptedException ex) {
-            //NOP
           }
           runtimeInfo.shutdown();
         }
@@ -98,13 +93,6 @@ public class AdminResource implements LogStreamer.Releaser {
       }
     }
     return Response.status(Response.Status.OK).entity(new LogStreamer(runtimeInfo, this).getLogTailReader()).build();
-  }
-
-  @GET
-  @Path("/jvm-metrics")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response get() throws PipelineException, IOException {
-    return Response.status(Response.Status.OK).entity(metrics).build();
   }
 
   @GET
