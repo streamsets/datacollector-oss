@@ -24,25 +24,49 @@
     </fileSet>
 
     <!-- bin -->
+    <!-- For now we are not exposing the SDC_HOME capabilities -->
     <fileSet>
       <directory>${basedir}/src/main</directory>
       <outputDirectory>/</outputDirectory>
       <includes>
-        <include>bin/*</include>
+        <include>bin/sdc</include>
+      </includes>
+      <!--<excludes>-->
+        <!--<exclude>bin/_*</exclude>-->
+      <!--</excludes>-->
+      <filtered>true</filtered>
+      <fileMode>0755</fileMode>
+    </fileSet>
+    <!--<fileSet>-->
+      <!--<directory>${basedir}/src/main</directory>-->
+      <!--<outputDirectory>/</outputDirectory>-->
+      <!--<includes>-->
+        <!--<include>bin/_*</include>-->
+      <!--</includes>-->
+      <!--<filtered>true</filtered>-->
+      <!--<fileMode>0644</fileMode>-->
+    <!--</fileSet>-->
+
+    <!-- initd -->
+    <fileSet>
+      <directory>${basedir}/src/main</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>initd/*</include>
       </includes>
       <excludes>
-        <exclude>bin/_*</exclude>
+        <exclude>README</exclude>
+        <exclude>initd/_*</exclude>
       </excludes>
-      <filtered>true</filtered>
       <fileMode>0755</fileMode>
     </fileSet>
     <fileSet>
       <directory>${basedir}/src/main</directory>
       <outputDirectory>/</outputDirectory>
       <includes>
-        <include>bin/_*</include>
+        <include>README</include>
+        <include>initd/_*</include>
       </includes>
-      <filtered>true</filtered>
       <fileMode>0644</fileMode>
     </fileSet>
 

@@ -1,0 +1,29 @@
+StreamSets Data Collector Unix init.d script installation
+
+You'll need root or sudo privileges to perform these steps.
+
+Copy the '_sdcinitd_prototype' script to the '/etc/init.d/' directory as
+'sdc.initd'
+
+Edit the 'sdc.initd' file and set the SDC_DIST environment variable to
+the base directory of the data collector binaries.
+
+Make the 'sdc.initd' file executable.
+
+Configure the system to start/stop the data collector at startup/shutdown.
+This can be done using the install_initd Linux command. Refer to your Linux
+documentation for details.
+
+Create a system user/group to run the data collector. The default user/group
+are 'sdc/sdc'
+
+Create an '/etc/sdc/' directory and copy the files in '$SDC_DIST/etc/' to it.
+
+  User to run the sdc daemon: sdc
+  Group to run the sdc daemon: sdc
+  Data collector configuration directory: /etc/sdc/
+  Data collector log directory: /var/log/sdc/
+  Data collector data directory: /var/run/sdc/
+
+If you need to change any of these values to a custom value, edit the
+'$SDC_DIST/libexec/sdcd-env.sh' script to the required custom values.

@@ -25,9 +25,12 @@ SDC_DIST=${BASEDIR}
 
 SDC_HOME=${SDC_HOME:=${SDC_DIST}}
 
-if [ -f ${SDC_HOME}/libexec/sdc-env.sh ]
+if [ ! "$1" = "-skipenvsourcing" ]
 then
-source ${SDC_HOME}/libexec/sdc-env.sh
+  if [ -f ${SDC_HOME}/libexec/sdc-env.sh ]
+  then
+    source ${SDC_HOME}/libexec/sdc-env.sh
+  fi
 fi
 
 SDC_CONF=${SDC_CONF:=${SDC_HOME}/etc}

@@ -1,0 +1,192 @@
+#! /bin/bash
+
+#
+# (c) 2014 StreamSets, Inc. All rights reserved. May not
+# be copied, modified, or distributed in whole or part without
+# written consent of StreamSets, Inc.
+#
+# Starts StreamSets Data Collector
+#
+# chkconfig: 345 90 10
+# description: StreamSets Data Collector
+#
+### BEGIN INIT INFO
+# Provides:          sdc
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:     $remote_fs
+# Should-Start:      $named
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: StreamSets data collector daemon
+### END INIT INFO
+
+# installation directory of the data collector  IT MUST BE SET
+export SDC_DIST=""
+if [ -z "$SDC_DIST" ]
+then
+  echo "Error: SDC_DIST is not defined."
+  exit 4
+fi
+
+if [ ! -f "$SDC_DIST/libexec/sdcd-env.sh" ]
+then
+  echo "Error: '$SDC_DIST/libexec/sdcd-env.sh' must exist."
+  exit 4
+fi
+
+. $SDC_DIST/libexec/sdcd-env.sh
+
+# PID file for the data collector daemon
+export SDC_PID=$SDC_DATA/sdc.pid
+
+# User $SDC_USER must exist
+if ! id -u "$SDC_USER" >/dev/null 2>&1
+then
+  echo "Error: user '$SDC_USER' does not exist."
+  exit 4
+fi
+
+# Group $SDC_GROUP mut exist
+if ! groups "$SDC_USER" | grep "$SDC_GROUP" >/dev/null 2>&1
+then
+  echo "Error: group '$SDC_GROUP' does not exist."
+  exit 4
+fi
+
+# Check config dir for SDC under /etc exists
+if [ ! -d "$SDC_CONF" ]
+then
+  echo "Error: '$SDC_CONF' config directory does not exist."
+  exit 4
+fi
+
+# Autodetect JAVA_HOME if not defined
+find_java() {
+JAVA7_HOME_CANDIDATES='\
+    /usr/java/jdk1.7* \
+    /usr/java/jre1.7* \
+    /usr/lib/jvm/j2sdk1.7-oracle \
+    /usr/lib/jvm/j2sdk1.7-oracle/jre \
+    /usr/lib/jvm/java-7-oracle* \
+    /usr/lib/jdk7-latest'
+
+OPENJAVA7_HOME_CANDIDATES='\
+    /usr/lib/jvm/java-1.7.0-openjdk* \
+    /usr/lib/jvm/java-7-openjdk*'
+
+MISCJAVA_HOME_CANDIDATES='\
+    /Library/Java/Home \
+    /usr/java/default \
+    /usr/lib/jvm/default-java \
+    /usr/lib/jvm/java-openjdk \
+    /usr/lib/jvm/jre-openjdk'
+
+JAVA_HOME_CANDIDATES="$JAVA7_HOME_CANDIDATES $MISCJAVA_HOME_CANDIDATES $OPENJAVA7_HOME_CANDIDATES"
+
+# attempt to find java
+if [ -z "$JAVA_HOME" ]
+then
+  for candidate_regex in $JAVA_HOME_CANDIDATES
+  do
+      for candidate in `ls -rd $candidate_regex 2>/dev/null`
+      do
+        if [ -e $candidate/bin/java ]
+        then
+          export JAVA_HOME=$candidate
+          break 2
+        fi
+      done
+  done
+fi
+}
+
+
+is_sdc_alive() {
+  if [ ! -f "$SDC_PID" ]
+  then
+    #not running
+    STATUS=3
+  elif read pid < "$SDC_PID" && ps -p "$pid" > /dev/null 2>&1
+  then
+    #running
+    STATUS=0
+  else
+    #pid file but not running
+    STATUS=1
+  fi
+}
+
+start_sdc() {
+  install -d -o $SDC_USER -g $SDC_GROUP $SDC_DATA
+  install -d -o $SDC_USER -g $SDC_GROUP $SDC_LOG
+  su -m $SDC_USER -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd start"
+  exit $?
+}
+
+stop_sdc() {
+  is_sdc_alive
+  if [ "${STATUS}" = "0" ]; then
+    su -m $SDC_USER -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd stop"
+    if [ $? -eq 0 ]; then
+      is_sdc_alive
+      if [ "${STATUS}" = "1" ]; then
+        rm ${SDC_PID}
+      elif [ "${STATUS}" = "0" ]; then
+        su -m $SDC_USER -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd stop -force"
+        exit $?
+      fi
+    fi
+  elif [ "${STATUS}" = "1" ]; then
+    rm ${SDC_PID}
+  fi
+}
+
+case "$1" in
+  start)
+        is_sdc_alive
+        if [ "${STATUS}" = "0" ]; then
+          exit 0
+        fi
+        if [ "${STATUS}" = "1" ]; then
+          rm ${SDC_PID}
+        fi
+        find_java
+        start_sdc
+        ;;
+  stop)
+        find_java
+        stop_sdc
+        ;;
+  restart)
+        find_java
+        stop_sdc
+        start_sdc
+        ;;
+  status)
+        is_sdc_alive
+        case ${STATUS} in
+          3)
+            echo "not running."
+            exit ${STATUS}
+            ;;
+          1)
+            echo "not running but $SDC_PID exists."
+            exit ${STATUS}
+            ;;
+          0)
+            echo "running"
+            exit ${STATUS}
+            ;;
+          *)
+            echo "unexpected error"
+            exit 5
+            ;;
+        esac
+        ;;
+  *)
+        echo "Usage: $0 start|stop|restart|status" >&2
+        exit 3
+        ;;
+esac
+exit 6
