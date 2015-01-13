@@ -21,9 +21,10 @@ import java.util.Map;
 public class TestFieldFilterProcessor {
 
   @Test
-  public void testFieldFilterProcessor() throws StageException {
+  public void testKeep() throws StageException {
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterProcessor.class)
-      .addConfiguration("fields", ImmutableList.of("/name"))
+      .addConfiguration("fields", ImmutableList.of("/name", "/age"))
+      .addConfiguration("filterOperation", FieldFilterProcessor.FilterOperation.KEEP)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -40,17 +41,19 @@ public class TestFieldFilterProcessor {
       Field field = output.getRecords().get("a").get(0).get();
       Assert.assertTrue(field.getValue() instanceof Map);
       Map<String, Field> result = field.getValueAsMap();
-      Assert.assertTrue(result.size() == 1);
+      Assert.assertTrue(result.size() == 2);
       Assert.assertTrue(result.containsKey("name"));
+      Assert.assertTrue(result.containsKey("age"));
     } finally {
       runner.runDestroy();
     }
   }
 
   @Test
-  public void testFieldFilterProcessorNonExistingFiled() throws StageException {
+  public void testKeepNonExistingFiled() throws StageException {
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterProcessor.class)
       .addConfiguration("fields", ImmutableList.of("/city"))
+      .addConfiguration("filterOperation", FieldFilterProcessor.FilterOperation.KEEP)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -74,16 +77,17 @@ public class TestFieldFilterProcessor {
   }
 
   @Test
-  public void testFieldFilterProcessorMultipleFields() throws StageException {
+  public void testRemove() throws StageException {
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterProcessor.class)
       .addConfiguration("fields", ImmutableList.of("/name", "/age"))
+      .addConfiguration("filterOperation", FieldFilterProcessor.FilterOperation.REMOVE)
       .addOutputLane("a").build();
     runner.runInit();
 
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("name", Field.create("a"));
-      map.put("age", Field.create(21));
+      map.put("age", Field.create("b"));
       map.put("streetAddress", Field.create("c"));
       Record record = new RecordImpl("s", "s:1", null, null);
       record.set(Field.create(map));
@@ -93,11 +97,38 @@ public class TestFieldFilterProcessor {
       Field field = output.getRecords().get("a").get(0).get();
       Assert.assertTrue(field.getValue() instanceof Map);
       Map<String, Field> result = field.getValueAsMap();
-      Assert.assertTrue(result.size() == 2);
+      Assert.assertTrue(result.size() == 1);
+      Assert.assertTrue(result.containsKey("streetAddress"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRemoveNonExistingFiled() throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterProcessor.class)
+      .addConfiguration("fields", ImmutableList.of("/city"))
+      .addConfiguration("filterOperation", FieldFilterProcessor.FilterOperation.REMOVE)
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("name", Field.create("a"));
+      map.put("age", Field.create("b"));
+      map.put("streetAddress", Field.create("c"));
+      Record record = new RecordImpl("s", "s:1", null, null);
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 3);
       Assert.assertTrue(result.containsKey("name"));
-      Assert.assertEquals("a", result.get("name").getValue());
       Assert.assertTrue(result.containsKey("age"));
-      Assert.assertEquals(21, result.get("age").getValue());
+      Assert.assertTrue(result.containsKey("streetAddress"));
     } finally {
       runner.runDestroy();
     }
