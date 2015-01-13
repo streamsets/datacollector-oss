@@ -9,10 +9,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-all</artifactId>
+  <artifactId>streamsets-datacollector</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets All</description>
-  <name>StreamSets All</name>
+  <description>StreamSets Data Collector</description>
+  <name>StreamSets Data Collector</name>
   <packaging>pom</packaging>
 
   <organization>

@@ -10,12 +10,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-root</artifactId>
+    <artifactId>streamsets-datacollector-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-pipeline-bootstrap</artifactId>
+  <artifactId>streamsets-datacollector-bootstrap</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <description>StreamSets Pipeline Bootstrap</description>
   <name>StreamSets Pipeline Bootstrap</name>

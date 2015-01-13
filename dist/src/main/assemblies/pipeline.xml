@@ -115,7 +115,7 @@
       <unpack>false</unpack>
       <scope>compile</scope>
       <includes>
-        <include>com.streamsets:streamsets-pipeline-bootstrap</include>
+        <include>com.streamsets:streamsets-datacollector-bootstrap</include>
       </includes>
     </dependencySet>
 
@@ -127,7 +127,7 @@
       <unpack>false</unpack>
       <scope>compile</scope>
       <includes>
-        <include>com.streamsets:streamsets-pipeline-api</include>
+        <include>com.streamsets:streamsets-datacollector-api</include>
       </includes>
     </dependencySet>
 
@@ -139,10 +139,10 @@
       <unpack>false</unpack>
       <scope>compile</scope>
       <includes>
-        <include>com.streamsets:streamsets-pipeline-container</include>
+        <include>com.streamsets:streamsets-datacollector-container</include>
       </includes>
       <excludes>
-        <exclude>com.streamsets:streamsets-pipeline-api</exclude>
+        <exclude>com.streamsets:streamsets-datacollector-api</exclude>
       </excludes>
     </dependencySet>
 
