@@ -17,8 +17,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-sdk-test</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Pipeline SDK Test</description>
-  <name>StreamSets Pipeline SDK Test</name>
+  <description>StreamSets Data Collector SDK Test</description>
+  <name>StreamSets Data Collector SDK Test</name>
   <packaging>jar</packaging>
 
   <dependencies>

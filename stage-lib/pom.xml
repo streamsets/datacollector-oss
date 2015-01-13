@@ -17,8 +17,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-stage-lib</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Pipeline Stage Library</description>
-  <name>StreamSets Pipeline Stage Library</name>
+  <description>StreamSets Data Collector Stage Library</description>
+  <name>StreamSets Data Collector Stage Library</name>
   <packaging>jar</packaging>
 
   <dependencies>

@@ -17,8 +17,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-dist</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Pipeline Distribution</description>
-  <name>StreamSets Pipeline Dist</name>
+  <description>StreamSets Data Collector Distribution</description>
+  <name>StreamSets Data Collector Dist</name>
   <packaging>jar</packaging>
 
   <properties>

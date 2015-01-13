@@ -17,8 +17,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-el</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Pipeline EL</description>
-  <name>StreamSets Pipeline EL</name>
+  <description>StreamSets Data Collector EL</description>
+  <name>StreamSets Data Collector EL</name>
   <packaging>jar</packaging>
 
   <dependencies>

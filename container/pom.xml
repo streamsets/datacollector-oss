@@ -17,8 +17,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-container</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Pipeline Container</description>
-  <name>StreamSets Pipeline Container</name>
+  <description>StreamSets Data Collector Container</description>
+  <name>StreamSets Data Collector Container</name>
   <packaging>jar</packaging>
 
   <dependencies>

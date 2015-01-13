@@ -18,8 +18,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-ui</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Pipeline UI</description>
-  <name>StreamSets Pipeline UI</name>
+  <description>StreamSets Data Collector UI</description>
+  <name>StreamSets Data Collector UI</name>
   <packaging>jar</packaging>
 
   <dependencies>
