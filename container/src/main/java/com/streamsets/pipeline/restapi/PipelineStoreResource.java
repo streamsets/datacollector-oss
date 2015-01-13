@@ -25,6 +25,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
@@ -96,7 +97,7 @@ public class PipelineStoreResource {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
     validator.validate();
     pipeline.setValidation(validator);
-    return Response.created(new URI(uri.toString() + "/" + name)).entity(pipeline).build();
+    return Response.created(UriBuilder.fromUri(uri).path(name).build()).entity(pipeline).build();
   }
 
   @Path("/{name}")

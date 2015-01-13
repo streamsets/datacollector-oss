@@ -44,7 +44,7 @@ angular.module('pipelineAgentApp')
       },
       saveOperationInProgress: false,
       pipelineStatus: {},
-      namePattern: '^[a-zA-Z0-9_\s]+$',
+      namePattern: '^[a-zA-Z0-9 _]+$',
       errors: [],
       activeDetailTab: undefined,
       dontShowHelpAlert: false,

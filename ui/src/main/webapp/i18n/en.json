@@ -194,7 +194,7 @@
       "newPipelineDefinition": "New Pipeline",
       "namePlaceholder": "Pipeline Definition Name",
       "nameRequiredValidation": "Please enter name of the pipeline.",
-      "nameValidation": "Enter alphanumeric characters and underscores.",
+      "nameValidation": "Enter alphanumeric characters, spaces and underscores.",
       "processorPlaceholder": "Select Processor...",
       "sourcePlaceholder":"Select Source...",
       "targetPlaceholder": "Select Target..."
