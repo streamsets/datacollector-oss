@@ -16,6 +16,7 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.el.ELBasicSupport;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
+import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.el.ELUtils;
 import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
@@ -55,6 +56,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     elEvaluator = new ELEvaluator();
     ELBasicSupport.registerBasicFunctions(elEvaluator);
     ELRecordSupport.registerRecordFunctions(elEvaluator);
+    ELStringSupport.registerStringFunctions(elEvaluator);
     validateExpressions();
     LOG.debug("Expressions passed validation");
   }

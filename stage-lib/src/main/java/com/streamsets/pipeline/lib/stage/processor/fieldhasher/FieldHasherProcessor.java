@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.lib.stage.processor.fieldhasher;
 
+import com.streamsets.pipeline.api.ChooserMode;
+import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.Field;
@@ -13,6 +15,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
@@ -27,47 +30,47 @@ import java.util.List;
 public class FieldHasherProcessor extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldHasherProcessor.class);
-  private static final String SHA_256 = "SHA-256";
 
-  @ConfigDef(label = "Fields to hash", required = true, type = Type.MODEL, defaultValue="",
-    description="The fields whose values must be replaced by their SHA values. Non string values will be " +
-      "converted to String values for has computation. Fields with Map and List types will be ignored.")
-  @FieldSelector
-  public List<String> fields;
+  @ConfigDef(label = "Field Hasher Configuration", required = true, type = Type.MODEL, defaultValue="",
+    description="Field Hasher Configuration")
+  @ComplexField
+  public List<FieldHasherConfig> fieldHasherConfigs;
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    for (String fieldToHash : fields) {
-      if(record.has(fieldToHash)) {
-        Field field = record.get(fieldToHash);
-        if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST) {
-          LOG.info("The field {} in record {} is of type {}. Ignoring field.", fieldToHash,
-            record.getHeader().getSourceId(), field.getType().name());
-        } else if(field.getValue() == null) {
-          LOG.info("The field {} in record {} has null value. Ignoring field.", fieldToHash,
-            record.getHeader().getSourceId());
+    for(FieldHasherConfig fieldHasherConfig : fieldHasherConfigs) {
+      for(String fieldToHash : fieldHasherConfig.fieldsToHash) {
+        if(record.has(fieldToHash)) {
+          Field field = record.get(fieldToHash);
+          if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST) {
+            LOG.warn("The field {} in record {} is of type {}. Ignoring field.", fieldToHash,
+              record.getHeader().getSourceId(), field.getType().name());
+          } else if(field.getValue() == null) {
+            LOG.info("The field {} in record {} has null value. Ignoring field.", fieldToHash,
+              record.getHeader().getSourceId());
+          } else {
+            Field newField = Field.create(generateHashForField(field, fieldHasherConfig.hashType));
+            record.set(fieldToHash, newField);
+          }
         } else {
-          Field newField = Field.create(generateHashForField(field));
-          record.set(fieldToHash, newField);
+          LOG.info("Could not find field {} in record {}.", fieldToHash, record.getHeader().getSourceId());
         }
-      } else {
-        LOG.info("Could not find field {} in record {}.", fieldToHash, record.getHeader().getSourceId());
       }
     }
     batchMaker.addRecord(record);
   }
 
-  private String generateHashForField(Field field) throws StageException {
+  private String generateHashForField(Field field, HashType hashType) throws StageException {
     String valueAsString = getValueAsString(field);
     if(valueAsString == null) {
       return null;
     }
     MessageDigest messageDigest;
     try {
-      messageDigest = MessageDigest.getInstance(SHA_256);
+      messageDigest = MessageDigest.getInstance(hashType.getDigest());
     } catch (NoSuchAlgorithmException e) {
-      LOG.error(StageLibError.LIB_0500.getMessage(), SHA_256, e.getMessage());
-      throw new StageException(StageLibError.LIB_0500, SHA_256, e.getMessage(), e);
+      LOG.error(StageLibError.LIB_0500.getMessage(), hashType.getDigest(), e.getMessage());
+      throw new StageException(StageLibError.LIB_0500, hashType.getDigest(), e.getMessage(), e);
     }
     messageDigest.update(valueAsString.getBytes());
     byte byteData[] = messageDigest.digest();
@@ -109,6 +112,36 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       return String.valueOf(field.getValueAsString());
     }
     return null;
+  }
+
+  public static class FieldHasherConfig {
+
+    @ConfigDef(label = "Fields to Hash", required = true, type = Type.MODEL, defaultValue="",
+      description="The fields whose values must be replaced by their SHA values. Non string values will be " +
+        "converted to String values for has computation. Fields with Map and List types will be ignored.")
+    @FieldSelector
+    public List<String> fieldsToHash;
+
+    @ConfigDef(label = "Hash Type", required = true, type = Type.MODEL, defaultValue="",
+      description="The hash algorithm that must be used to hash the fields.")
+    @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = HashTypeChooserValue.class)
+    public HashType hashType;
+  }
+
+  public enum HashType {
+    MD5("MD5"),
+    SHA1("SHA-1"),
+    SHA2("SHA-256");
+
+    private String digest;
+
+    private HashType(String digest) {
+      this.digest = digest;
+    }
+
+    public String getDigest() {
+      return digest;
+    }
   }
 
 }

@@ -182,15 +182,15 @@ public class TestExpressionProcessor {
   public void testSubstringExpression() throws StageException {
 
     ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
-    expressionProcessorConfig.expression = "substring(record:value(\"/fullName\") , 6, 20)";
+    expressionProcessorConfig.expression = "str:substring(record:value(\"/fullName\") , 6, 20)";
     expressionProcessorConfig.fieldToSet = "/lastName";
 
     ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig1 = new ExpressionProcessor.ExpressionProcessorConfig();
-    expressionProcessorConfig1.expression = "substring(record:value(\"/fullName\") , 10, 20)";
+    expressionProcessorConfig1.expression = "str:substring(record:value(\"/fullName\") , 10, 20)";
     expressionProcessorConfig1.fieldToSet = "/empty";
 
     ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig2 = new ExpressionProcessor.ExpressionProcessorConfig();
-    expressionProcessorConfig2.expression = "substring(record:value(\"/fullName\") , 0, 6)";
+    expressionProcessorConfig2.expression = "str:substring(record:value(\"/fullName\") , 0, 6)";
     expressionProcessorConfig2.fieldToSet = "/first";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)

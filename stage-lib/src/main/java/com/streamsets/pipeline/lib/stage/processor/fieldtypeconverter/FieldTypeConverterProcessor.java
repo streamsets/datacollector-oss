@@ -35,35 +35,47 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
 
   @ConfigDef(label = "Field Type Converter Configuration", required = false, type = Type.MODEL, defaultValue="",
-    description="Fields whose type must be converted from String type to the target type.")
+    description="Field Type Converter Configuration")
   @ComplexField
   public List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    boolean recordInError = false;
     for(FieldTypeConverterConfig fieldTypeConverterConfig : fieldTypeConverterConfigs) {
       for(String fieldToConvert : fieldTypeConverterConfig.fields) {
         Field field = record.get(fieldToConvert);
         if(field == null) {
           LOG.warn("Record {} does not have field {}. Ignoring conversion.", record.getHeader().getSourceId(),
             fieldToConvert);
-        } else if(field.getType() != Field.Type.STRING) {
-          LOG.warn("Field {} in record {} is not of type String. Ignoring conversion.", fieldToConvert,
-            record.getHeader().getSourceId());
-        } else if(field.getValue() == null) {
-          LOG.warn("Field {} in record {} has null value. Ignoring conversion.", fieldToConvert,
-            record.getHeader().getSourceId());
         } else {
-          try {
-            record.set(fieldToConvert, convertToType(field, fieldTypeConverterConfig.targetType,
-              fieldTypeConverterConfig.dataLocale.getLocale(), fieldTypeConverterConfig.dateFormat));
-          } catch (ParseException | NumberFormatException e) {
-            LOG.warn(StageLibError.LIB_0400.getMessage(), field.getValueAsString(),
-              fieldTypeConverterConfig.targetType.name(), e.getMessage());
-            getContext().toError(record, StageLibError.LIB_0400, field.getValueAsString(),
-              fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
-            return;
+          if(field.getType() == Field.Type.STRING) {
+            if(field.getValue() == null) {
+              LOG.warn("Field {} in record {} has null value. Converting the type of filed to '{}' with null value.",
+              fieldToConvert, record.getHeader().getSourceId(), fieldTypeConverterConfig.targetType);
+              record.set(fieldToConvert, Field.create(fieldTypeConverterConfig.targetType, null));
+            } else {
+              try {
+                record.set(fieldToConvert, convertStringToTargetType(field, fieldTypeConverterConfig.targetType,
+                  fieldTypeConverterConfig.dataLocale.getLocale(), fieldTypeConverterConfig.dateFormat));
+              } catch (ParseException | NumberFormatException e) {
+                LOG.warn(StageLibError.LIB_0400.getMessage(), field.getValueAsString(),
+                  fieldTypeConverterConfig.targetType.name(), e.getMessage());
+                getContext().toError(record, StageLibError.LIB_0400, field.getValueAsString(),
+                  fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
+                return;
+              }
+            }
+          } else {
+            try {
+              //use the built in type conversion provided by TypeSupport
+              record.set(fieldToConvert, Field.create(fieldTypeConverterConfig.targetType, field.getValue()));
+            } catch (IllegalArgumentException e) {
+              LOG.warn(StageLibError.LIB_0400.getMessage(), field.getValueAsString(),
+                fieldTypeConverterConfig.targetType.name(), e.getMessage());
+              getContext().toError(record, StageLibError.LIB_0400, field.getValueAsString(),
+                fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
+              return;
+            }
           }
         }
       }
@@ -71,10 +83,10 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     batchMaker.addRecord(record);
   }
 
-  public Field convertToType(Field field, FieldType fieldType, Locale dataLocale, String dateMask)
+  public Field convertStringToTargetType(Field field, Field.Type targetType, Locale dataLocale, String dateMask)
     throws ParseException {
     String stringValue = field.getValueAsString();
-    switch(fieldType) {
+    switch(targetType) {
       case BOOLEAN:
         return Field.create(Boolean.valueOf(stringValue));
       case BYTE:
@@ -84,9 +96,11 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       case CHAR:
         return Field.create(stringValue.charAt(0));
       case DATE:
-      case DATETIME:
         java.text.DateFormat dateFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
         return Field.createDate(dateFormat.parse(stringValue));
+      case DATETIME:
+        java.text.DateFormat dateTimeFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
+        return Field.createDatetime(dateTimeFormat.parse(stringValue));
       case DECIMAL:
         Number decimal = NumberFormat.getInstance(dataLocale).parse(stringValue);
         return Field.create(new BigDecimal(decimal.toString()));
@@ -101,8 +115,6 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       case SHORT:
         return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).shortValue());
       default:
-        //return String field
-
         return field;
     }
   }
@@ -110,18 +122,18 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   public static class FieldTypeConverterConfig {
 
     @ConfigDef(label = "Fields to convert", required = true,type = Type.MODEL, defaultValue="",
-      description="The fields whose type must be converted from String to the specified type.")
+      description="The fields whose type must be converted to the target type.")
     @FieldSelector
     public List<String> fields;
 
     @ConfigDef(label = "Target type", required = true, type = Type.MODEL, defaultValue="INTEGER",
-      description="The new type to which the string field must be converted to.")
+      description="The new type to which the field must be converted to.")
     @ValueChooser(chooserValues = ConverterValuesProvider.class, type = ChooserMode.PROVIDED)
-    public FieldType targetType;
+    public Field.Type targetType;
 
     @ConfigDef(label = "Data Locale", required = true, type = Type.MODEL, defaultValue="ENGLISH",
       description="The current locale of the data which must be converted. " +
-        "This is required to convert string with ',' and '.' to number types.")
+        "This is required to convert string field values containing  ',' and '.' to number types.")
     @ValueChooser(chooserValues = LocaleValuesProvider.class, type = ChooserMode.PROVIDED)
     public DataLocale dataLocale;
 
@@ -131,23 +143,6 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     @ValueChooser(chooserValues = DateFormatValuesProvider.class, type = ChooserMode.SUGGESTED)
     public String dateFormat;
 
-  }
-
-  public enum FieldType {
-    BOOLEAN,
-    CHAR,
-    BYTE,
-    SHORT,
-    INTEGER,
-    LONG,
-    FLOAT,
-    DOUBLE,
-    DATE,
-    DATETIME,
-    DECIMAL,
-    STRING,
-    BYTE_ARRAY
-    //MAP and LIST are not supported
   }
 
   public enum DataLocale {
@@ -179,7 +174,8 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     DD_MM_YYYY("dd-MMM-YYYY"),
     YYYY_MM_DD_HH_MM_SS("yyyy-MM-dd HH:mm:ss"),
     YYYY_MM_DD_HH_MM_SS_SSS("yyyy-MM-dd HH:mm:ss.SSS"),
-    YYYY_MM_DD_HH_MM_SS_SSS_Z("yyyy-MM-dd HH:mm:ss.SSS Z");
+    YYYY_MM_DD_HH_MM_SS_SSS_Z("yyyy-MM-dd HH:mm:ss.SSS Z"),
+    YYYY_MM_DD_T_HH_MM_Z("yyyy-MM-dd'T'HH:mm'Z'");
 
     private String format;
 

@@ -28,7 +28,7 @@ public class TestFieldTypeConverterProcessor {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/nonExistent", "/beginner", "/expert", "/skilled");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.BOOLEAN;
+    fieldTypeConverterConfig.targetType = Field.Type.BOOLEAN;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -71,63 +71,12 @@ public class TestFieldTypeConverterProcessor {
   }
 
   @Test
-  public void testStringToNonStringField() throws StageException {
-    FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
-    fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert"
-      , "/null", "/nonString");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.BOOLEAN;
-    fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
-
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
-    runner.runInit();
-
-    try {
-      Map<String, Field> map = new LinkedHashMap<>();
-      map.put("beginner", Field.create("false"));
-      map.put("intermediate", Field.create("yes"));
-      map.put("advanced", Field.create("no"));
-      map.put("expert", Field.create("true"));
-      map.put("skilled", Field.create("122345566"));
-      map.put("nonString", Field.create(123));
-      map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
-      record.set(Field.create(map));
-
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-      Assert.assertEquals(1, output.getRecords().get("a").size());
-      Field field = output.getRecords().get("a").get(0).get();
-      Assert.assertTrue(field.getValue() instanceof Map);
-      Map<String, Field> result = field.getValueAsMap();
-      Assert.assertTrue(result.size() == 7);
-      Assert.assertTrue(result.containsKey("beginner"));
-      Assert.assertEquals(false, result.get("beginner").getValue());
-      Assert.assertTrue(result.containsKey("intermediate"));
-      Assert.assertEquals(false, result.get("intermediate").getValue());
-      Assert.assertTrue(result.containsKey("advanced"));
-      Assert.assertEquals(false, result.get("advanced").getValue());
-      Assert.assertTrue(result.containsKey("expert"));
-      Assert.assertEquals(true, result.get("expert").getValue());
-      Assert.assertTrue(result.containsKey("skilled"));
-      Assert.assertEquals(false, result.get("skilled").getValue());
-      Assert.assertTrue(result.containsKey("null"));
-      Assert.assertEquals(null, result.get("null").getValue());
-      Assert.assertTrue(result.containsKey("nonString"));
-      Assert.assertEquals(123, result.get("nonString").getValue());
-    } finally {
-      runner.runDestroy();
-    }
-  }
-
-  @Test
   public void testStringToBoolean() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert"
       , "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.BOOLEAN;
+    fieldTypeConverterConfig.targetType = Field.Type.BOOLEAN;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -174,7 +123,7 @@ public class TestFieldTypeConverterProcessor {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.BYTE;
+    fieldTypeConverterConfig.targetType = Field.Type.BYTE;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -212,7 +161,7 @@ public class TestFieldTypeConverterProcessor {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.CHAR;
+    fieldTypeConverterConfig.targetType = Field.Type.CHAR;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -250,7 +199,7 @@ public class TestFieldTypeConverterProcessor {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.BYTE_ARRAY;
+    fieldTypeConverterConfig.targetType = Field.Type.BYTE_ARRAY;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -289,7 +238,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
       "/skilled", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.DECIMAL;
+    fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -337,7 +286,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
       "/skilled", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.DECIMAL;
+    fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -386,7 +335,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
       "/skilled", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.DOUBLE;
+    fieldTypeConverterConfig.targetType = Field.Type.DOUBLE;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -434,7 +383,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
       "/skilled", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.DECIMAL;
+    fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -483,7 +432,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.INTEGER;
+    fieldTypeConverterConfig.targetType = Field.Type.INTEGER;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -531,7 +480,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.INTEGER;
+    fieldTypeConverterConfig.targetType = Field.Type.INTEGER;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -579,7 +528,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.LONG;
+    fieldTypeConverterConfig.targetType = Field.Type.LONG;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -627,7 +576,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.LONG;
+    fieldTypeConverterConfig.targetType = Field.Type.LONG;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -675,7 +624,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.SHORT;
+    fieldTypeConverterConfig.targetType = Field.Type.SHORT;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -723,7 +672,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.SHORT;
+    fieldTypeConverterConfig.targetType = Field.Type.SHORT;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -771,7 +720,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.FLOAT;
+    fieldTypeConverterConfig.targetType = Field.Type.FLOAT;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -819,7 +768,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.FLOAT;
+    fieldTypeConverterConfig.targetType = Field.Type.FLOAT;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.GERMAN;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -866,35 +815,131 @@ public class TestFieldTypeConverterProcessor {
     FieldTypeConverterProcessor.FieldTypeConverterConfig beginnerConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     beginnerConfig.fields = ImmutableList.of("/beginner");
-    beginnerConfig.targetType = FieldTypeConverterProcessor.FieldType.DATE;
+    beginnerConfig.targetType = Field.Type.DATE;
     beginnerConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
     beginnerConfig.dateFormat = "yyyy-MM-dd";
 
     FieldTypeConverterProcessor.FieldTypeConverterConfig intermediateConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     intermediateConfig.fields = ImmutableList.of("/intermediate");
-    intermediateConfig.targetType = FieldTypeConverterProcessor.FieldType.DATE;
+    intermediateConfig.targetType = Field.Type.DATE;
     intermediateConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
     intermediateConfig.dateFormat = "dd-MM-YYYY";
 
     FieldTypeConverterProcessor.FieldTypeConverterConfig skilledConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     skilledConfig.fields = ImmutableList.of("/skilled");
-    skilledConfig.targetType = FieldTypeConverterProcessor.FieldType.DATE;
+    skilledConfig.targetType = Field.Type.DATE;
     skilledConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
     skilledConfig.dateFormat = "yyyy-MM-dd HH:mm:ss";
 
     FieldTypeConverterProcessor.FieldTypeConverterConfig advancedConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     advancedConfig.fields = ImmutableList.of("/advanced");
-    advancedConfig.targetType = FieldTypeConverterProcessor.FieldType.DATE;
+    advancedConfig.targetType = Field.Type.DATE;
     advancedConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
     advancedConfig.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS";
 
     FieldTypeConverterProcessor.FieldTypeConverterConfig expertConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     expertConfig.fields = ImmutableList.of("/expert");
-    expertConfig.targetType = FieldTypeConverterProcessor.FieldType.DATE;
+    expertConfig.targetType = Field.Type.DATE;
+    expertConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
+    expertConfig.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS Z";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
+      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(beginnerConfig, advancedConfig,
+        intermediateConfig, skilledConfig, expertConfig))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("beginner", Field.create("2015-01-03")); //
+      map.put("intermediate", Field.create("03-01-2015"));
+      map.put("advanced", Field.create("2015-01-03 21:31:02.777"));//
+      map.put("expert", Field.create("2015-01-03 21:32:32.333 PST"));//
+      map.put("skilled", Field.create("2015-01-03 21:30:01"));//
+      map.put("null", Field.create(Field.Type.STRING, null));
+      Record record = new RecordImpl("s", "s:1", null, null);
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 6);
+
+      Assert.assertTrue(result.containsKey("beginner"));
+      Assert.assertEquals(Field.Type.DATE,result.get("beginner").getType());
+      SimpleDateFormat beginnerDateFormat = new SimpleDateFormat(beginnerConfig.dateFormat);
+      Assert.assertEquals("2015-01-03", beginnerDateFormat.format(result.get("beginner").getValueAsDate()));
+
+      /*Assert.assertTrue(result.containsKey("intermediate"));
+      SimpleDateFormat intermediateDateFormat = new SimpleDateFormat(intermediateConfig.dateFormat);
+      Assert.assertEquals("03-01-2015", intermediateDateFormat.format(result.get("intermediate").getValueAsDate()));*/
+
+      Assert.assertTrue(result.containsKey("advanced"));
+      Assert.assertEquals(Field.Type.DATE,result.get("advanced").getType());
+      SimpleDateFormat advancedDateFormat = new SimpleDateFormat(advancedConfig.dateFormat);
+      Assert.assertEquals("2015-01-03 21:31:02.777",
+        advancedDateFormat.format(result.get("advanced").getValueAsDate()));
+
+      Assert.assertTrue(result.containsKey("expert"));
+      Assert.assertEquals(Field.Type.DATE,result.get("expert").getType());
+      SimpleDateFormat expertDateFormat = new SimpleDateFormat(expertConfig.dateFormat);
+      Assert.assertEquals("2015-01-03 21:32:32.333 -0800",
+        expertDateFormat.format(result.get("expert").getValueAsDate()));
+
+      Assert.assertTrue(result.containsKey("skilled"));
+      Assert.assertEquals(Field.Type.DATE,result.get("skilled").getType());
+      SimpleDateFormat skilledDateFormat = new SimpleDateFormat(skilledConfig.dateFormat);
+      Assert.assertEquals("2015-01-03 21:30:01", skilledDateFormat.format(result.get("skilled").getValueAsDate()));
+
+      Assert.assertTrue(result.containsKey("null"));
+      Assert.assertEquals(Field.Type.STRING,result.get("null").getType());
+      Assert.assertEquals(null, result.get("null").getValueAsDate());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStringToDateTime() throws StageException {
+    FieldTypeConverterProcessor.FieldTypeConverterConfig beginnerConfig =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    beginnerConfig.fields = ImmutableList.of("/beginner");
+    beginnerConfig.targetType = Field.Type.DATETIME;
+    beginnerConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
+    beginnerConfig.dateFormat = "yyyy-MM-dd";
+
+    FieldTypeConverterProcessor.FieldTypeConverterConfig intermediateConfig =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    intermediateConfig.fields = ImmutableList.of("/intermediate");
+    intermediateConfig.targetType = Field.Type.DATETIME;
+    intermediateConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
+    intermediateConfig.dateFormat = "dd-MM-YYYY";
+
+    FieldTypeConverterProcessor.FieldTypeConverterConfig skilledConfig =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    skilledConfig.fields = ImmutableList.of("/skilled");
+    skilledConfig.targetType = Field.Type.DATETIME;
+    skilledConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
+    skilledConfig.dateFormat = "yyyy-MM-dd HH:mm:ss";
+
+    FieldTypeConverterProcessor.FieldTypeConverterConfig advancedConfig =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    advancedConfig.fields = ImmutableList.of("/advanced");
+    advancedConfig.targetType = Field.Type.DATETIME;
+    advancedConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
+    advancedConfig.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS";
+
+    FieldTypeConverterProcessor.FieldTypeConverterConfig expertConfig =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    expertConfig.fields = ImmutableList.of("/expert");
+    expertConfig.targetType = Field.Type.DATETIME;
     expertConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
     expertConfig.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS Z";
 
@@ -931,20 +976,24 @@ public class TestFieldTypeConverterProcessor {
       Assert.assertEquals("03-01-2015", intermediateDateFormat.format(result.get("intermediate").getValueAsDate()));*/
 
       Assert.assertTrue(result.containsKey("advanced"));
+      Assert.assertEquals(Field.Type.DATETIME,result.get("advanced").getType());
       SimpleDateFormat advancedDateFormat = new SimpleDateFormat(advancedConfig.dateFormat);
       Assert.assertEquals("2015-01-03 21:31:02.777",
         advancedDateFormat.format(result.get("advanced").getValueAsDate()));
 
       Assert.assertTrue(result.containsKey("expert"));
+      Assert.assertEquals(Field.Type.DATETIME,result.get("expert").getType());
       SimpleDateFormat expertDateFormat = new SimpleDateFormat(expertConfig.dateFormat);
       Assert.assertEquals("2015-01-03 21:32:32.333 -0800",
         expertDateFormat.format(result.get("expert").getValueAsDate()));
 
       Assert.assertTrue(result.containsKey("skilled"));
+      Assert.assertEquals(Field.Type.DATETIME,result.get("skilled").getType());
       SimpleDateFormat skilledDateFormat = new SimpleDateFormat(skilledConfig.dateFormat);
       Assert.assertEquals("2015-01-03 21:30:01", skilledDateFormat.format(result.get("skilled").getValueAsDate()));
 
-      Assert.assertTrue(result.containsKey("skilled"));
+      Assert.assertTrue(result.containsKey("null"));
+      Assert.assertEquals(Field.Type.STRING,result.get("null").getType());
       Assert.assertEquals(null, result.get("null").getValueAsDate());
 
     } finally {
@@ -957,7 +1006,7 @@ public class TestFieldTypeConverterProcessor {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/invalidConversion");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.FLOAT;
+    fieldTypeConverterConfig.targetType = Field.Type.FLOAT;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -980,11 +1029,11 @@ public class TestFieldTypeConverterProcessor {
   }
 
   @Test
-  public void testInvalidConversionFieldsDate() throws StageException {
+  public void testInvalidConversionStringToDate() throws StageException {
     FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
       new FieldTypeConverterProcessor.FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/invalidConversion");
-    fieldTypeConverterConfig.targetType = FieldTypeConverterProcessor.FieldType.DATE;
+    fieldTypeConverterConfig.targetType = Field.Type.DATE;
     fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
     fieldTypeConverterConfig.dateFormat = FieldTypeConverterProcessor.StandardDateFormats.DD_MM_YYYY.getFormat();
 
@@ -1000,7 +1049,91 @@ public class TestFieldTypeConverterProcessor {
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      //Expect no output, record sent to error
       Assert.assertEquals(0, output.getRecords().get("a").size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testInvalidConversionNonStringToDate() throws StageException {
+    FieldTypeConverterProcessor.FieldTypeConverterConfig fieldTypeConverterConfig =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    fieldTypeConverterConfig.fields = ImmutableList.of("/invalidConversion");
+    fieldTypeConverterConfig.targetType = Field.Type.DATE;
+    fieldTypeConverterConfig.dataLocale = FieldTypeConverterProcessor.DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dateFormat = FieldTypeConverterProcessor.StandardDateFormats.DD_MM_YYYY.getFormat();
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
+      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("invalidConversion", Field.create(123456789234L));
+      Record record = new RecordImpl("s", "s:1", null, null);
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      //Expect no output, record sent to error
+      Assert.assertEquals(0, output.getRecords().get("a").size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testNonStringFieldToNonStringField() throws StageException {
+    FieldTypeConverterProcessor.FieldTypeConverterConfig decimalToInteger =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    decimalToInteger.fields = ImmutableList.of("/base");
+    decimalToInteger.targetType = Field.Type.INTEGER;
+
+    FieldTypeConverterProcessor.FieldTypeConverterConfig floatToShort =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    floatToShort.fields = ImmutableList.of("/bonus");
+    floatToShort.targetType = Field.Type.SHORT;
+
+    FieldTypeConverterProcessor.FieldTypeConverterConfig longToByte =
+      new FieldTypeConverterProcessor.FieldTypeConverterConfig();
+    longToByte.fields = ImmutableList.of("/benefits");
+    longToByte.targetType = Field.Type.BYTE;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
+      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(decimalToInteger, floatToShort, longToByte))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("base", Field.create(Field.Type.DECIMAL, new BigDecimal(1234.56)));
+      map.put("bonus", Field.create(Field.Type.FLOAT, 200.45f));
+      map.put("benefits", Field.create(Field.Type.LONG, 123456789L));
+      Record record = new RecordImpl("s", "s:1", null, null);
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 3);
+
+      Assert.assertTrue(result.containsKey("base"));
+      Assert.assertEquals(Field.Type.INTEGER, result.get("base").getType());
+      Assert.assertEquals(1234, result.get("base").getValue());
+
+      Assert.assertTrue(result.containsKey("bonus"));
+      Assert.assertEquals(Field.Type.SHORT, result.get("bonus").getType());
+      Assert.assertEquals((short)200, result.get("bonus").getValue());
+
+      Assert.assertTrue(result.containsKey("benefits"));
+      Assert.assertEquals(Field.Type.BYTE, result.get("benefits").getType());
+      Assert.assertEquals((byte)21, result.get("benefits").getValue());
 
     } finally {
       runner.runDestroy();

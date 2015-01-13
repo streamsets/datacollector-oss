@@ -1,0 +1,165 @@
+/**
+ * (c) 2014 StreamSets, Inc. All rights reserved. May not
+ * be copied, modified, or distributed in whole or part without
+ * written consent of StreamSets, Inc.
+ */
+package com.streamsets.pipeline.el;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import javax.servlet.jsp.el.ELException;
+
+public class TestELStringSupport {
+
+  @Test
+  public void testConcat2() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertEquals("streamsets", eval.eval(variables, "${str:concat2(\"stream\", \"sets\")}"));
+  }
+
+  @Test
+  public void testConcat3() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertEquals("streamsetsinc", eval.eval(variables, "${str:concat3(\"stream\", \"sets\", \"inc\")}"));
+  }
+
+  @Test
+  public void testConcat4() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertEquals("streamsets inc", eval.eval(variables, "${str:concat4(\"stream\", \"sets\", \" \", \"inc\")}"));
+  }
+
+  @Test
+  public void testConcat5() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertEquals("The StreamSets Inc", eval.eval(variables,
+      "${str:concat5(\"The \",\"Stream\", \"Sets\", \" \", \"Inc\")}"));
+  }
+
+  @Test
+  public void testSubstring() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertEquals("StreamSets", eval.eval(variables,
+      "${str:substring(\"The StreamSets Inc\", 4, 14)}"));
+
+    //End index greater than length, return beginIndex to end of string
+    Assert.assertEquals("StreamSets Inc", eval.eval(variables,
+      "${str:substring(\"The StreamSets Inc\", 4, 50)}"));
+
+    //Begin Index > length, return ""
+    Assert.assertEquals("", eval.eval(variables,
+      "${str:substring(\"The StreamSets Inc\", 50, 60)}"));
+  }
+
+  @Test
+  public void testSubstringNegative() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    try {
+      eval.eval(variables, "${str:substring(\"The StreamSets Inc\", -1, 14)}");
+      Assert.fail("ELException expected as the begin index is negative");
+    } catch (ELException e) {
+
+    }
+
+    try {
+      eval.eval(variables, "${str:substring(\"The StreamSets Inc\", 0, -3)}");
+      Assert.fail("ELException expected as the end index is negative");
+    } catch (ELException e) {
+
+    }
+
+    //Input is empty, return empty
+    Assert.assertEquals("", eval.eval(variables, "${str:substring(\"\", 0, 5)}"));
+  }
+
+  @Test
+  public void testTrim() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertEquals("StreamSets", eval.eval(variables,
+      "${str:trim(\"   StreamSets  \")}"));
+  }
+
+  @Test
+  public void testToUpper() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertEquals("STREAMSETS", eval.eval(variables,
+      "${str:toUpper(\"StreamSets\")}"));
+  }
+
+  @Test
+  public void testToLower() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertEquals("streamsets inc", eval.eval(variables,
+      "${str:toLower(\"StreamSets INC\")}"));
+  }
+
+  @Test
+  public void testReplace() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertEquals("The.Streamsets.Inc", eval.eval(variables,
+      "${str:replace(\"The Streamsets Inc\", ' ', '.')}"));
+  }
+
+  @Test
+  public void testReplaceAll() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertEquals("The Streamsets Company", eval.eval(variables,
+      "${str:replaceAll(\"The Streamsets Inc\", \"Inc\", \"Company\")}"));
+  }
+
+  @Test
+  public void testTruncate() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertEquals("The StreamSets", eval.eval(variables,
+      "${str:truncate(\"The StreamSets Inc\", 14)}"));
+  }
+}
