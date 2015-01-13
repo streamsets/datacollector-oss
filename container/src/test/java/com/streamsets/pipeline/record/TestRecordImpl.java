@@ -343,4 +343,82 @@ public class TestRecordImpl {
     testEscaping(']');
   }
 
+  @Test
+  public void testSetInMap() {
+    // Root field is the list
+    // "[0]" is the map containing a boolean "true" with key a
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    Map<String, Field> map = new HashMap<>();
+    map.put("a", Field.create(true));
+    Field mapField = Field.create(map);
+    List<Field> list = new ArrayList<>();
+    list.add(mapField);
+    Field listField = Field.create(list);
+    r.set(listField);
+
+    //add boolean "false" in the map [0] with key "b"
+    r.set("[0]/b", Field.create(false));
+    Assert.assertTrue(r.has("[0]/b"));
+    Assert.assertEquals(false, r.get("[0]/b").getValueAsBoolean());
+
+    //add boolean "true" in the map [0] with key "b". It should replace old value
+    r.set("[0]/b", Field.create(true));
+    Assert.assertTrue(r.has("[0]/b"));
+    Assert.assertEquals(true, r.get("[0]/b").getValueAsBoolean());
+
+    r.set("[0]/c", Field.create("Hello world"));
+    Assert.assertTrue(r.has("[0]/c"));
+    Assert.assertEquals("Hello world", r.get("[0]/c").getValueAsString());
+  }
+
+  @Test
+  public void testSetInList() {
+    // Root field is the list
+    // "[0]" is a boolean true
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    List<Field> list = new ArrayList<>();
+    list.add(Field.create(true));
+    Field listField = Field.create(list);
+    r.set(listField);
+
+    //add element to list, index == current size of list
+    r.set("[1]", Field.create(false));
+    Assert.assertTrue(r.has("[1]"));
+    Assert.assertEquals(false, r.get("[1]").getValueAsBoolean());
+
+    //replace element in list
+    r.set("[1]", Field.create(true));
+    Assert.assertTrue(r.has("[1]"));
+    Assert.assertEquals(true, r.get("[1]").getValueAsBoolean());
+
+    //ensure no insert
+    Assert.assertFalse(r.has("[2]"));
+
+    //add element to list, index == current size of list
+    r.set("[2]", Field.create(false));
+    Assert.assertTrue(r.has("[2]"));
+    Assert.assertEquals(false, r.get("[2]").getValueAsBoolean());
+
+    try {
+      r.set("[8]", Field.create(true));
+      Assert.fail("Expected IndexOutOfBoundsException as the list contains only 3 elements");
+    } catch (IndexOutOfBoundsException e) {
+
+    }
+  }
+
+  @Test
+  public void testAddAPINonListNonMapParent() {
+    //record with boolean field at the root
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    r.set(Field.create(true));
+
+    try {
+      r.set("/a", Field.create(false));
+      Assert.fail("Expected IllegalArgumentException as the root field is not map or list");
+    } catch (IllegalArgumentException e) {
+
+    }
+  }
+
 }

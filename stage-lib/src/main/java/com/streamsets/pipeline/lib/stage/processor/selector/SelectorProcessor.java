@@ -150,9 +150,6 @@ public class SelectorProcessor extends RecordProcessor {
         return null;
       }
 
-      @Override
-      public void add(String fieldPath, Field newField) {
-      }
     };
 
     variables.addVariable("default", false);

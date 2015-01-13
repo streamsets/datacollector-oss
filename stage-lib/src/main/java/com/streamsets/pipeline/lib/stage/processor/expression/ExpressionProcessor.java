@@ -100,10 +100,6 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       public Field set(String fieldPath, Field newField) {
         return null;
       }
-
-      @Override
-      public void add(String fieldPath, Field newField) {
-      }
     };
 
     ELRecordSupport.setRecordInContext(variables, record);
@@ -135,7 +131,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
         record.set(expressionProcessorConfig.fieldToSet, newField);
       } else {
         LOG.debug("Creating new field '{}' with value '{}'", expressionProcessorConfig.fieldToSet, result);
-        record.add(expressionProcessorConfig.fieldToSet, newField);
+        record.set(expressionProcessorConfig.fieldToSet, newField);
       }
     }
     batchMaker.addRecord(record);

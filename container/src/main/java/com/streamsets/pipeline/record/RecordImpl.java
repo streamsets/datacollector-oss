@@ -218,6 +218,10 @@ public class RecordImpl implements Record {
   private static final String INVALID_FIELD_PATH = "Invalid fieldPath '{}' at char '{}'";
 
   List<PathElement> parse(String fieldPath) {
+    return parse(fieldPath, false);
+  }
+
+  List<PathElement> parse(String fieldPath, boolean add) {
     Preconditions.checkNotNull(fieldPath, "fieldPath cannot be null");
     List<PathElement> elements = new ArrayList<>();
     elements.add(PathElement.ROOT);
@@ -489,44 +493,40 @@ public class RecordImpl implements Record {
     Field fieldToReplace = null;
     int fieldPos = fields.size();
     if (elements.size() == fieldPos) {
+      //set use case
       fieldPos--;
-      if (fieldPos == 0) {
-        fieldToReplace = value;
-        value = newField;
-      } else {
-        switch (elements.get(fieldPos).getType()) {
-          case MAP:
-            fieldToReplace = fields.get(fieldPos - 1).getValueAsMap().put(elements.get(fieldPos).getName(), newField);
-            break;
-          case LIST:
-            fieldToReplace = fields.get(fieldPos - 1).getValueAsList().set(elements.get(fieldPos).getIndex(), newField);
-            break;
-        }
-      }
+      fieldToReplace = doSet(fieldPos, newField, elements, fields);
+    } else if (elements.size() -1 == fieldPos) {
+      //add use case
+      fieldToReplace = doSet(fieldPos, newField, elements, fields);
     }
     return fieldToReplace;
   }
 
-  @Override
-  public void add(String fieldPath, Field newField) {
-    List<PathElement> elements = parse(fieldPath);
-    List<Field> fields = get(elements);
-    int fieldPos = fields.size();
-    if (elements.size() -1  == fieldPos) {
-      if (fieldPos == 0) {
-        //need to convert existing field to map or string!!
-        //FIXME<Hari>:
-        value = newField;
-      } else {
-        switch (elements.get(fieldPos).getType()) {
-          case MAP:
-            fields.get(fieldPos - 1).getValueAsMap().put(elements.get(fieldPos).getName(), newField);
-            break;
-          case LIST:
+  private Field doSet(int fieldPos, Field newField, List<PathElement> elements, List<Field> fields) {
+    Field fieldToReplace = null;
+    if (fieldPos == 0) {
+      fieldToReplace = value;
+      value = newField;
+    } else {
+      switch (elements.get(fieldPos).getType()) {
+        case MAP:
+          String elementName = elements.get(fieldPos).getName();
+          fieldToReplace = fields.get(fieldPos - 1).getValueAsMap().put(elementName, newField);
+          break;
+        case LIST:
+          int elementIndex = elements.get(fieldPos).getIndex();
+          if(elementIndex == fields.get(fieldPos - 1).getValueAsList().size()){
+            //add at end
             fields.get(fieldPos - 1).getValueAsList().add(newField);
-            break;
-        }
+          } else {
+            //replace existing value
+            //If elementIndex+1 != fields.get(fieldPos - 1).getValueAsList().size() IndexOutOfBoundsException is thrown
+            fieldToReplace = fields.get(fieldPos - 1).getValueAsList().set(elementIndex, newField);
+          }
+          break;
       }
     }
+    return fieldToReplace;
   }
 }
