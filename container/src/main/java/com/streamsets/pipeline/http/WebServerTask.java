@@ -21,21 +21,13 @@ import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.session.SessionHandler;
-import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
-import org.eclipse.jetty.util.security.Password;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -44,7 +36,7 @@ public class WebServerTask extends AbstractTask {
   private static final int PORT_NUMBER_DEFAULT = 8080;
 
   private static final String AUTHENTICATION_KEY = "http.authentication";
-  private static final String AUTHENTICATION_DEFAULT = "none";
+  private static final String AUTHENTICATION_DEFAULT = "form";
 
   private static final String DIGEST_REALM_KEY = "http.digest.realm";
   private static final String DIGEST_REALM_DEFAULT = "local-realm";
