@@ -166,8 +166,9 @@ angular
        * @param stage
        */
       updateDetailPaneObject: function(stageInstance, stage) {
-        $scope.detailPaneConfig = stageInstance;
+        $scope.detailPaneConfig = $scope.selectedObject = stageInstance;
         $scope.detailPaneConfigDefn = stage;
+        $scope.selectedType = pipelineConstant.STAGE_INSTANCE;
       },
 
       /**
@@ -413,6 +414,7 @@ angular
         if ($scope.selectedType === pipelineConstant.PIPELINE) {
           //In case of detail pane is Pipeline Configuration
           $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
+          $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
         } else if($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
           //In case of detail pane is stage instance
           angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
@@ -436,7 +438,7 @@ angular
           nodes: $scope.pipelineConfig.stages,
           edges: edges,
           issues: $scope.pipelineConfig.issues,
-          selectNode: ($scope.detailPaneConfig && !$scope.detailPaneConfig.stages) ? $scope.detailPaneConfig : undefined,
+          selectNode: ($scope.selectedType && $scope.selectedType === pipelineConstant.STAGE_INSTANCE) ? $scope.selectedObject : undefined,
           stageErrorCounts: stageErrorCounts,
           showEdgePreviewIcon: $scope.isPipelineRunning,
           isReadOnly: $scope.isPipelineRunning
