@@ -5,5 +5,5 @@
 # written consent of StreamSets, Inc.
 #
 
-export PIPELINE_HOME=#PIPELINE_HOME#
-exec #PIPELINE_DIST#/bin/pipeline
+export SDC_HOME=#SDC_HOME#
+exec #SDC_DIST#/bin/sdc

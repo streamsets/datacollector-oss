@@ -42,17 +42,17 @@ public class TestFileSnapshotStore {
 
   @BeforeClass
   public static void beforeClass() {
-    System.setProperty("pipeline.data.dir", "./target/var");
+    System.setProperty(RuntimeInfo.DATA_DIR, "./target/var");
   }
 
   @AfterClass
   public static void afterClass() {
-    System.getProperties().remove("pipeline.data.dir");
+    System.getProperties().remove(RuntimeInfo.DATA_DIR);
   }
 
   @Before
   public void setUp() throws IOException {
-    File f = new File(System.getProperty("pipeline.data.dir"));
+    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     RuntimeInfo info = new RuntimeInfo(ImmutableList.of(getClass().getClassLoader()));
     snapshotStore = new FileSnapshotStore(info);

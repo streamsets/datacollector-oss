@@ -50,20 +50,20 @@ public class TestProductionRun {
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    System.setProperty("pipeline.data.dir", "target/var");
-    File f = new File(System.getProperty("pipeline.data.dir"));
+    System.setProperty(RuntimeInfo.DATA_DIR, "target/var");
+    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     TestUtil.captureStagesForProductionRun();
   }
 
   @AfterClass
   public static void afterClass() throws IOException {
-    System.getProperties().remove("pipeline.data.dir");
+    System.getProperties().remove(RuntimeInfo.DATA_DIR);
   }
 
   @Before
   public void setUp() throws IOException, PipelineManagerException {
-    File f = new File(System.getProperty("pipeline.data.dir"));
+    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     ObjectGraph g = ObjectGraph.create(TestProdManagerModule.class);
     manager = g.get(ProductionPipelineManagerTask.class);
@@ -204,7 +204,7 @@ public class TestProductionRun {
     manager.stop();
     //copy pre-created pipelineState.json into the state directory and start manager
     InputStream in = getClass().getClassLoader().getResourceAsStream("testStartManagerAfterKill.json");
-    File f = new File(new File(System.getProperty("pipeline.data.dir"), "runInfo") , "pipelineState.json");
+    File f = new File(new File(System.getProperty(RuntimeInfo.DATA_DIR), "runInfo") , "pipelineState.json");
     OutputStream out = new FileOutputStream(f);
     IOUtils.copy(in, out);
     in.close();
@@ -408,9 +408,9 @@ public class TestProductionRun {
     }
 
     @Provides
-    public ProductionPipelineManagerTask provideStateManager(RuntimeInfo runtimeInfo, Configuration configuration
+    public ProductionPipelineManagerTask provideStateManager(RuntimeInfo RuntimeInfo, Configuration configuration
         ,PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
-      return new ProductionPipelineManagerTask(runtimeInfo, configuration, pipelineStore, stageLibrary);
+      return new ProductionPipelineManagerTask(RuntimeInfo, configuration, pipelineStore, stageLibrary);
     }
   }
 

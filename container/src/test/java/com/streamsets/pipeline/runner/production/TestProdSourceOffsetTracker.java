@@ -20,12 +20,12 @@ public class TestProdSourceOffsetTracker {
 
   @BeforeClass
   public static void beforeClass() {
-    System.setProperty("pipeline.data.dir", "./target/var");
+    System.setProperty(RuntimeInfo.DATA_DIR, "./target/var");
   }
 
   @AfterClass
   public static void afterClass() {
-    System.getProperties().remove("pipeline.data.dir");
+    System.getProperties().remove(RuntimeInfo.DATA_DIR);
   }
 
   @Test

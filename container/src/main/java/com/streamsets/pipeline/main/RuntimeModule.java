@@ -38,7 +38,7 @@ public class RuntimeModule {
   public Configuration provideConfiguration(RuntimeInfo runtimeInfo) {
     Configuration.setFileRefsBaseDir(new File(runtimeInfo.getConfigDir()));
     Configuration conf = new Configuration();
-    File configFile = new File(runtimeInfo.getConfigDir(), "pipeline.properties");
+    File configFile = new File(runtimeInfo.getConfigDir(), "sdc.properties");
     if (configFile.exists()) {
       try {
         conf.load(new FileReader(configFile));

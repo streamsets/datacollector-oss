@@ -1,4 +1,4 @@
-StreamSets - Pipeline Development Environment
+StreamSets - Data Collector Development Environment
 
 -------
 
@@ -16,9 +16,9 @@ Software requirements:
 
 Maven Profiles (use -P<profile-name>):
 
-* (default) : builds the pipeline modules without the ui module
-* ui        : builds the pipeline modules with the ui module
-* dist      : builds a distribution of the pipeline
+* (default) : builds the data collector modules without the ui module
+* ui        : builds the data collector modules with the ui module
+* dist      : builds a distribution of the data collector
               (if the 'ui' profile is active it will bundle UI in the distribution)
 * docs      : used in conjunction with the 'dist' profile to generate documentation
               as part of the build

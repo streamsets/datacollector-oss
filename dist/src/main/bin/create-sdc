@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+# (c) 2014 StreamSets, Inc. All rights reserved. May not
+# be copied, modified, or distributed in whole or part without
+# written consent of StreamSets, Inc.
+#
+
+# resolve links - $0 may be a softlink
+PRG="${0}"
+
+run() {
+  "${@}"
+  ret=$?
+  if [ $ret != 0 ]; then
+    echo
+    echo "Failed!"
+    echo
+    exit $ret
+  fi
+}
+
+while [ -h "${PRG}" ]; do
+  ls=`ls -ld "${PRG}"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "${PRG}"`/"$link"
+  fi
+done
+
+BASEDIR=`dirname ${PRG}`
+BASEDIR=`cd ${BASEDIR}/..;pwd`
+
+SDC_DIST=${BASEDIR}
+
+SDC_HOME=""
+SDC_PORT=""
+while test $# -gt 0; do
+  case "$1" in
+    -home=*)
+      SDC_HOME=`echo $1 | sed -e 's/^[^=]*=//g'`
+      shift
+      ;;
+    -port=*)
+      SDC_PORT=`echo $1 | sed -e 's/^[^=]*=//g'`
+      shift
+      ;;
+    -help)
+      echo "createsdc -home=<SDC_HOME_DIR> -port=<SDC_HTTP_PORT>"
+      echo ""
+      exit 0
+      ;;
+    *)
+      echo "Invalid arguments, run 'createsdc -help'"
+      echo ""
+      $0 -help
+      exit 1
+      ;;
+  esac
+done
+
+if [[ -z "${SDC_HOME}" || -z "${SDC_PORT}" ]]
+then
+  echo "Missing arguments, run 'createsdc -help'"
+  echo ""
+  $0 -help
+  exit 1
+fi
+
+if [ -d "${SDC_HOME}" ]
+then
+  echo "Specified home directory must not exist"
+  echo ""
+  exit 1
+fi
+
+
+run mkdir "${SDC_HOME}"
+SDC_HOME=`cd ${SDC_HOME};pwd`
+
+run mkdir "${SDC_HOME}/bin"
+run mkdir "${SDC_HOME}/etc"
+run sed -e "s|#SDC_HOME#|${SDC_HOME}|" -e "s|#SDC_DIST#|${SDC_DIST}|" \
+    < "${SDC_DIST}/bin/_sdc_prototype" > "${SDC_HOME}/bin/sdc"
+run chmod a+x "${SDC_HOME}/bin/sdc"
+run cp "${SDC_DIST}/etc/log4j.properties" "${SDC_HOME}/etc"
+run sed -e "s|http.port=8080|http.port=${SDC_PORT}|" \
+    < "${SDC_DIST}/etc/sdc.properties" > "${SDC_HOME}/etc/sdc.properties"
+
+echo ""
+echo "New sdc created at ${SDC_HOME} on port ${SDC_PORT}"
+echo ""
+echo "Use '${SDC_HOME}/bin/sdc' to run the new sdc"
+echo ""
+exit 0

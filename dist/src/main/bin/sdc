@@ -1,0 +1,89 @@
+#!/bin/bash
+#
+# (c) 2014 StreamSets, Inc. All rights reserved. May not
+# be copied, modified, or distributed in whole or part without
+# written consent of StreamSets, Inc.
+#
+
+# resolve links - $0 may be a softlink
+PRG="${0}"
+
+while [ -h "${PRG}" ]; do
+ls=`ls -ld "${PRG}"`
+link=`expr "$ls" : '.*-> \(.*\)$'`
+if expr "$link" : '/.*' > /dev/null; then
+PRG="$link"
+else
+PRG=`dirname "${PRG}"`/"$link"
+fi
+done
+
+BASEDIR=`dirname ${PRG}`
+BASEDIR=`cd ${BASEDIR}/..;pwd`
+
+SDC_DIST=${BASEDIR}
+
+SDC_HOME=${SDC_HOME:=${SDC_DIST}}
+
+if [ -f ${SDC_HOME}/libexec/sdc-env.sh ]
+then
+source ${SDC_HOME}/libexec/sdc-env.sh
+fi
+
+SDC_CONF=${SDC_CONF:=${SDC_HOME}/etc}
+SDC_DATA=${SDC_DATA:=${SDC_HOME}/data}
+SDC_LOG=${SDC_LOG:=${SDC_HOME}/log}
+SDC_JAVA_OPTS=${SDC_JAVA_OPTS:="-Xmx1024m"}
+SDC_MAIN_CLASS=${SDC_MAIN_CLASS:="com.streamsets.pipeline.main.Main"}
+
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.conf.dir=${SDC_CONF}"
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.data.dir=${SDC_DATA}"
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.log.dir=${SDC_LOG}"
+
+BOOTSTRAP_CLASSPATH="${SDC_DIST}/bin/streamsets-pipeline-bootstrap-${project.version}.jar"
+
+API_CLASSPATH="${SDC_DIST}/api-lib/"'*.jar'
+
+if [ ! -z "${SDC_PRE_CLASSPATH}" ]
+then
+  SDC_PRE_CLASSPATH="${SDC_PRE_CLASSPATH}:"
+fi
+if [ ! -z "${SDC_POST_CLASSPATH}" ]
+then
+  SDC_POST_CLASSPATH=":${SDC_POST_CLASSPATH}"
+fi
+
+CONTAINER_CLASSPATH="${SDC_CONF}:${SDC_DIST}/container-lib/"'*.jar'
+CONTAINER_CLASSPATH="${SDC_PRE_CLASSPATH}${CONTAINER_CLASSPATH}${SDC_POST_CLASSPATH}"
+
+STAGE_LIBRARIES_DIR="${SDC_HOME}/stage-libs"
+if [ ! -d "${STAGES_LIBRARY_DIR}" ]
+then
+  STAGE_LIBRARIES_DIR="${SDC_DIST}/stage-libs"
+fi
+
+if [ "$1" = "-verbose" ];
+then
+echo "Sdc Agent:"
+echo "  DIST               : ${SDC_DIST}"
+echo "  HOME               : ${SDC_HOME}"
+echo "  CONF               : ${SDC_CONF}"
+echo "  DATA               : ${SDC_DATA}"
+echo "  LOG                : ${SDC_LOG}"
+echo "  JAVA PATH          : `which java`"
+echo "  BOOTSTRAP_CLASSPATH: ${BOOTSTRAP_CLASSPATH}"
+echo "  API_CLASSPATH      : ${API_CLASSPATH}"
+echo "  CONTAINER_CLASSPATH: ${CONTAINER_CLASSPATH}"
+echo "  STAGE_LIBRARIES_DIR: ${STAGE_LIBRARIES_DIR}"
+echo "  JAVA OPTS          : ${SDC_JAVA_OPTS}"
+echo "  MAIN CLASS         : ${SDC_MAIN_CLASS}"
+fi
+
+cd ${SDC_DIST}
+
+exec java -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
+-mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
+-stageLibrariesDir "${STAGE_LIBRARIES_DIR}"
+status=$?
+echo "Exit: $status"
+exit $status

@@ -27,15 +27,15 @@ public class TestStateTracker {
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    System.setProperty("pipeline.data.dir", "./target/var");
-    File f = new File(System.getProperty("pipeline.data.dir"));
+    System.setProperty(RuntimeInfo.DATA_DIR, "./target/var");
+    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     TestUtil.captureMockStages();
   }
 
   @AfterClass
   public static void afterClass() throws IOException {
-    System.getProperties().remove("pipeline.data.dir");
+    System.getProperties().remove(RuntimeInfo.DATA_DIR);
   }
 
   @Before()

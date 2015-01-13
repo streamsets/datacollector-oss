@@ -22,10 +22,10 @@ public class TestRuntimeInfo {
   @Before
   @After
   public void cleanUp() {
-    System.getProperties().remove("pipeline.conf.dir");
-    System.getProperties().remove("pipeline.log.dir");
-    System.getProperties().remove("pipeline.data.dir");
-    System.getProperties().remove("pipeline.static-web.dir");
+    System.getProperties().remove(RuntimeInfo.CONFIG_DIR);
+    System.getProperties().remove(RuntimeInfo.LOG_DIR);
+    System.getProperties().remove(RuntimeInfo.DATA_DIR);
+    System.getProperties().remove(RuntimeInfo.STATIC_WEB_DIR);
   }
 
   @Test
@@ -43,10 +43,10 @@ public class TestRuntimeInfo {
 
   @Test
   public void testInfoCustom() {
-    System.setProperty("pipeline.static-web.dir", "w");
-    System.setProperty("pipeline.conf.dir", "x");
-    System.setProperty("pipeline.log.dir", "y");
-    System.setProperty("pipeline.data.dir", "z");
+    System.setProperty(RuntimeInfo.STATIC_WEB_DIR, "w");
+    System.setProperty(RuntimeInfo.CONFIG_DIR, "x");
+    System.setProperty(RuntimeInfo.LOG_DIR, "y");
+    System.setProperty(RuntimeInfo.DATA_DIR, "z");
 
     List<? extends ClassLoader> customCLs = Arrays.asList(new URLClassLoader(new URL[0], null));
     RuntimeInfo info = new RuntimeInfo(customCLs);

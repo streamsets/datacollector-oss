@@ -14,6 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 public class RuntimeInfo {
+  public static final String CONFIG_DIR = "sdc.conf.dir";
+  public static final String DATA_DIR = "sdc.data.dir";
+  public static final String LOG_DIR = "sdc.log.dir";
+  public static final String STATIC_WEB_DIR = "sdc.static-web.dir";
+
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
   private final Map<String, Object> attributes;
@@ -29,19 +34,19 @@ public class RuntimeInfo {
   }
 
   public String getStaticWebDir() {
-    return System.getProperty("pipeline.static-web.dir", getRuntimeDir() + "/static-web");
+    return System.getProperty(STATIC_WEB_DIR, getRuntimeDir() + "/static-web");
   }
 
   public String getConfigDir() {
-    return System.getProperty("pipeline.conf.dir", getRuntimeDir() + "/etc");
+    return System.getProperty(CONFIG_DIR, getRuntimeDir() + "/etc");
   }
 
   public String getLogDir() {
-    return System.getProperty("pipeline.log.dir", getRuntimeDir() + "/log");
+    return System.getProperty(LOG_DIR, getRuntimeDir() + "/log");
   }
 
   public String getDataDir() {
-    return System.getProperty("pipeline.data.dir", getRuntimeDir() + "/var");
+    return System.getProperty(DATA_DIR, getRuntimeDir() + "/var");
   }
 
   public boolean hasAttribute(String key) {
