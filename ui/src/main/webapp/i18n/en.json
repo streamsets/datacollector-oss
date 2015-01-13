@@ -70,7 +70,7 @@
       "stageErrors": "Stage Errors",
       "state": "State",
       "step": "Step",
-      "targets": "Targets",
+      "targets": "Destinations",
       "timestamp": "Timestamp",
       "toStage": "To Stage",
       "type": "Type",
@@ -104,15 +104,15 @@
       "preview": "Preview",
       "processors": "Processors",
       "refreshPreview": "Refresh Preview",
-      "selectorProcessors": "Selector Processors",
+      "selectorProcessors": "Selectors",
       "snapshot": "Snapshot",
-      "sources": "Sources",
+      "sources": "Origins",
       "start": "Start",
       "stop": "Stop",
       "stopConfirmationTitle": "Stop Pipeline Confirmation",
       "stopConfirmationMessage": "Are you sure you want to stop Pipeline '{{name}}'?",
       "stoppingPipeline": "Stopping Pipeline...",
-      "targets": "Targets",
+      "targets": "Destinations",
       "toggleLibraryPane": "Toggle Library Pane",
       "uptime": "Uptime"
     },
@@ -122,7 +122,7 @@
       "errorStackTrace": "Error Stack Trace",
       "dontShowAgain": "Don't show again.",
       "selectProcessor": "Select Processor to connect...",
-      "selectTarget": "Select Target to connect..."
+      "selectTarget": "Select Destination to connect..."
     },
     "detailPane": {
       "alerts": "Alerts",
@@ -196,8 +196,8 @@
       "nameRequiredValidation": "Please enter name of the pipeline.",
       "nameValidation": "Enter alphanumeric characters, spaces and underscores.",
       "processorPlaceholder": "Select Processor...",
-      "sourcePlaceholder":"Select Source...",
-      "targetPlaceholder": "Select Target..."
+      "sourcePlaceholder":"Select Origin...",
+      "targetPlaceholder": "Select Destination..."
     },
     "import": {
       "headerLabel" : "Import Pipeline",

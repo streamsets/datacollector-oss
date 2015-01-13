@@ -21,16 +21,18 @@ angular.module('pipelineAgentApp.commonDirectives')
           }
         };
 
-        element.bind('input', function() {
-          scope.$apply(read);
-        });
-
-        element.keypress(function(e) {
-          if(e.which === 13) {
-            element.blur();
-            return false;
+        element.on({
+          'input': function() {
+             scope.$apply(read);
+          },
+          'keypress': function(e) {
+            if(e.which === 13) {
+              $('<div class="temp-contenteditable-el" contenteditable="true"></div>')
+                .appendTo('body').focus().remove();
+              return false;
+            }
+            return true;
           }
-          return true;
         });
       }
     };
