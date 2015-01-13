@@ -19,7 +19,9 @@
       <directory>${basedir}/../</directory>
       <outputDirectory>/</outputDirectory>
       <includes>
-        <include>*.txt</include>
+        <include>LICENSE.txt</include>
+        <include>NOTICE.txt</include>
+        <include>README.txt</include>
       </includes>
     </fileSet>
 
