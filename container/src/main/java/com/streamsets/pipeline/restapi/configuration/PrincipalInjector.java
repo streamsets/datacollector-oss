@@ -16,12 +16,15 @@ public class PrincipalInjector implements Factory<Principal> {
 
   @Inject
   public PrincipalInjector(HttpServletRequest request) {
-    principal = new Principal() {
-      @Override
-      public String getName() {
-        return "nobody";
-      }
-    };
+    principal = request.getUserPrincipal();
+    if (principal == null) {
+      principal = new Principal() {
+        @Override
+        public String getName() {
+          return "anonymous";
+        }
+      };
+    }
   }
 
   @Override
