@@ -128,8 +128,9 @@ public class PipelineManagerResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getHistory(
       @PathParam("name") String name,
-      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getHistory(name, rev)).build();
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      @QueryParam("fromBeginning") @DefaultValue("false") boolean fromBeginning) throws PipelineManagerException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getHistory(name, rev, fromBeginning)).build();
   }
 
   @Path("/history/{pipelineName}")

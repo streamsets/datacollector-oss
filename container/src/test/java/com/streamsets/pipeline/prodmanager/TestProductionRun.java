@@ -167,7 +167,7 @@ public class TestProductionRun {
 
     waitForPipelineToStop();
 
-    List<PipelineState> pipelineStates = manager.getHistory(MY_PIPELINE, PIPELINE_REV);
+    List<PipelineState> pipelineStates = manager.getHistory(MY_PIPELINE, PIPELINE_REV, false);
     Assert.assertEquals(6, pipelineStates.size());
 
     //make sure that the history is returned in the LIFO order
@@ -189,13 +189,13 @@ public class TestProductionRun {
 
     waitForPipelineToStop();
 
-    manager.getHistory("nonExistingPipeline", PIPELINE_REV);
+    manager.getHistory("nonExistingPipeline", PIPELINE_REV, true);
   }
 
   @Test
   public void testGetHistoryPipelineNeverRun() throws PipelineStoreException, PipelineManagerException,
       PipelineRuntimeException, StageException, InterruptedException {
-    List<PipelineState> pipelineStates = manager.getHistory(MY_PIPELINE, PIPELINE_REV);
+    List<PipelineState> pipelineStates = manager.getHistory(MY_PIPELINE, PIPELINE_REV, true);
     Assert.assertEquals(0, pipelineStates.size());
   }
 

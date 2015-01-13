@@ -126,7 +126,7 @@ public class StateTracker {
   }
 
   @SuppressWarnings("unchecked")
-  public List<PipelineState> getHistory(String pipelineName, String rev) {
+  public List<PipelineState> getHistory(String pipelineName, String rev, boolean fromBeginning) {
     if(!pipelineDirExists(pipelineName, rev) || !pipelineStateFileExists(pipelineName, rev)) {
       return Collections.emptyList();
     }
@@ -138,7 +138,12 @@ public class StateTracker {
                                                                                             PipelineState.class);
       List<PipelineState> pipelineStates =  pipelineStateMappingIterator.readAll();
       Collections.reverse(pipelineStates);
-      return pipelineStates;
+      if(fromBeginning) {
+        return pipelineStates;
+      } else {
+        int toIndex = pipelineStates.size() > 100 ? 100 : pipelineStates.size();
+        return pipelineStates.subList(0,toIndex);
+      }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

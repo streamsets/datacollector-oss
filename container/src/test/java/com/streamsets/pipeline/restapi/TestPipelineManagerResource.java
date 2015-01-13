@@ -229,7 +229,7 @@ public class TestPipelineManagerResource extends JerseyTest {
       states.add(new PipelineState(PIPELINE_NAME, "1", State.RUNNING, "", System.currentTimeMillis()));
       states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis()));
       try {
-        Mockito.when(pipelineManager.getHistory(PIPELINE_NAME, DEFAULT_PIPELINE_REV)).thenReturn(states);
+        Mockito.when(pipelineManager.getHistory(PIPELINE_NAME, DEFAULT_PIPELINE_REV, false)).thenReturn(states);
       } catch (PipelineManagerException e) {
         e.printStackTrace();
       }

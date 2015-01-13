@@ -231,9 +231,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return prodPipeline.getErrorMessages(instanceName);
   }
 
-  public List<PipelineState> getHistory(String pipelineName, String rev) throws PipelineManagerException {
+  public List<PipelineState> getHistory(String pipelineName, String rev, boolean fromBeginning) throws PipelineManagerException {
     validatePipelineExistence(pipelineName);
-    return stateTracker.getHistory(pipelineName, rev);
+    return stateTracker.getHistory(pipelineName, rev, fromBeginning);
   }
 
   public void deleteSnapshot(String pipelineName, String rev) {
