@@ -14,7 +14,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     var consts = {
       defaultTitle: 'random variable'
-    };
+    }, showTransition = false;
 
     // define graphcreator object
     var GraphCreator = function(svg, nodes, edges, issues){
@@ -905,8 +905,18 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     GraphCreator.prototype.zoomed = function(){
       this.state.justScaleTransGraph = true;
-      d3.select('.' + this.consts.graphClass)
-        .attr('transform', 'translate(' + d3.event.translate + ') scale(' + d3.event.scale + ')');
+
+      if(showTransition) {
+        showTransition = false;
+        this.svgG
+          .transition()
+          .duration(750)
+          .attr('transform', 'translate(' + d3.event.translate + ') scale(' + d3.event.scale + ')');
+      } else {
+        this.svgG
+          .attr('transform', 'translate(' + d3.event.translate + ') scale(' + d3.event.scale + ')');
+      }
+
     };
 
     GraphCreator.prototype.zoomIn = function() {
@@ -928,13 +938,12 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         consts = thisGraph.consts,
         svgWidth = thisGraph.svg.style('width').replace('px', ''),
         svgHeight = thisGraph.svg.style('height').replace('px', ''),
-        x = svgWidth / 2 - (stageInstance.uiInfo.xPos + consts.rectWidth/2),
-        y = svgHeight / 2 - (stageInstance.uiInfo.yPos + consts.rectHeight/2);
+        currentScale = thisGraph.state.currentScale,
+        x = svgWidth / 2 - (stageInstance.uiInfo.xPos + consts.rectWidth/2)*currentScale,
+        y = svgHeight / 2 - (stageInstance.uiInfo.yPos + consts.rectHeight/2)*currentScale;
 
-      thisGraph.svgG
-        .transition()
-        .duration(750)
-        .attr('transform', 'translate(' + x + ',' + y + ')');
+      showTransition = true;
+      this.zoom.translate([x, y]).event(this.svg);
     };
 
     GraphCreator.prototype.moveNodeToVisibleArea = function(stageInstance) {
@@ -948,11 +957,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
     GraphCreator.prototype.moveGraphToCenter = function() {
-      var thisGraph = this;
-      thisGraph.svgG
-        .transition()
-        .duration(750)
-        .attr('transform', 'translate(0,0)');
+      showTransition = true;
+      this.zoom.translate([0,0]).event(this.svg);
     };
 
 
