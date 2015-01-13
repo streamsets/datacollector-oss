@@ -90,6 +90,7 @@ angular
         $scope.$storage.maximizeDetailPane = false;
         $scope.$storage.minimizeDetailPane = false;
         $scope.setGraphReadOnly(true);
+        $scope.setGraphPreviewMode(true);
         $scope.$broadcast('previewPipeline', nextBatch);
       },
 
@@ -99,6 +100,7 @@ angular
       closePreview: function () {
         $scope.previewMode = false;
         $scope.setGraphReadOnly(false);
+        $scope.setGraphPreviewMode(false);
         $scope.moveGraphToCenter();
       },
 
@@ -110,6 +112,7 @@ angular
         $scope.snapshotMode = true;
         $scope.$storage.maximizeDetailPane = false;
         $scope.$storage.minimizeDetailPane = false;
+        $scope.setGraphPreviewMode(true);
         $scope.$broadcast('snapshotPipeline');
       },
 
@@ -119,6 +122,7 @@ angular
        */
       closeSnapshot: function () {
         $scope.snapshotMode = false;
+        $scope.setGraphPreviewMode(false);
         $scope.moveGraphToCenter();
       },
 
@@ -208,8 +212,22 @@ angular
         updateGraph($scope.pipelineConfig);
       },
 
+      /**
+       * Set Pipeline Graph Read Only.
+       *
+       * @param flag
+       */
       setGraphReadOnly: function(flag) {
         $scope.$broadcast('setGraphReadOnly', flag);
+      },
+
+      /**
+       * Set Pipeline Graph Preview Mode.
+       *
+       * @param flag
+       */
+      setGraphPreviewMode: function(flag) {
+        $scope.$broadcast('setGraphPreviewMode', flag);
       }
     });
 

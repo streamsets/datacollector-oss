@@ -12,9 +12,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
   })
   .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter, pipelineConstant){
 
-    var consts = {
-      defaultTitle: 'random variable'
-    }, showTransition = false;
+    var showTransition = false;
 
     // define graphcreator object
     var GraphCreator = function(svg, nodes, edges, issues){
@@ -139,11 +137,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           }
           return true;
         })
-        .on('zoomstart', function(){
-          var ael = d3.select('#' + thisGraph.consts.activeEditId).node();
-          if (ael){
-            ael.blur();
-          }
+        .on('zoomstart', function() {
           if (d3.event && d3.event.sourceEvent && !d3.event.sourceEvent.shiftKey) {
             d3.select('body').style('cursor', 'move');
           }
@@ -164,10 +158,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       svg.on('wheel.zoom', null);
       svg.on('mousewheel.zoom', null);
       svg.on('MozMousePixelScroll.zoom', null);
-
-      // listen for resize
-      window.onresize = function(){thisGraph.updateWindow(svg);};
-
     };
 
     GraphCreator.prototype.setIdCt = function(idct){
@@ -180,7 +170,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       rectGClass: 'rectangleG',
       pathGClass: 'pathG',
       graphClass: 'graph',
-      activeEditId: 'active-editing',
       startNodeClass: 'startNode',
       endNodeClass: 'endNode',
       BACKSPACE_KEY: 8,
@@ -219,7 +208,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       }
     };
 
-    GraphCreator.prototype.deleteGraph = function(skipPrompt){
+    GraphCreator.prototype.deleteGraph = function(){
       var thisGraph = this;
       thisGraph.nodes = [];
       thisGraph.edges = [];
@@ -236,6 +225,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       sel.removeAllRanges();
       sel.addRange(range);
     };
+
     /**
      * http://bl.ocks.org/mbostock/7555321
      *
@@ -345,7 +335,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
     // mousedown on node
-    GraphCreator.prototype.circleMouseDown = function(d3node, d){
+    GraphCreator.prototype.stageMouseDown = function(d3node, d){
       var thisGraph = this,
         state = thisGraph.state;
       d3.event.stopPropagation();
@@ -357,48 +347,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       }
     };
 
-    /* place editable text on node in place of svg text */
-    GraphCreator.prototype.changeTextOfNode = function(d3node, d){
-      var thisGraph= this,
-        consts = thisGraph.consts,
-        htmlEl = d3node.node();
-      d3node.selectAll('text').remove();
-      var nodeBCR = htmlEl.getBoundingClientRect(),
-        curScale = nodeBCR.width/consts.nodeRadius,
-        placePad  =  5*curScale,
-        useHW = curScale > 1 ? nodeBCR.width*0.71 : consts.nodeRadius*1.42;
-      // replace with editableconent text
-      var d3txt = thisGraph.svg.selectAll('foreignObject')
-        .data([d])
-        .enter()
-        .append('foreignObject')
-        .attr('x', nodeBCR.left + placePad )
-        .attr('y', nodeBCR.top + placePad)
-        .attr('height', 2*useHW)
-        .attr('width', useHW)
-        .append('xhtml:p')
-        .attr('id', consts.activeEditId)
-        .attr('contentEditable', 'true')
-        .text(d.title)
-        .on('mousedown', function(d){
-          d3.event.stopPropagation();
-        })
-        .on('keydown', function(d){
-          d3.event.stopPropagation();
-          if (d3.event.keyCode == consts.ENTER_KEY && !d3.event.shiftKey){
-            this.blur();
-          }
-        })
-        .on('blur', function(d){
-          d.title = this.textContent;
-          thisGraph.insertTitleLinebreaks(d3node, d.title);
-          d3.select(this.parentElement).remove();
-        });
-      return d3txt;
-    };
-
     // mouseup on nodes
-    GraphCreator.prototype.circleMouseUp = function(d3node, d){
+    GraphCreator.prototype.stageMouseUp = function(d3node, d){
       var thisGraph = this,
         state = thisGraph.state,
         consts = thisGraph.consts;
@@ -462,17 +412,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     // mousedown on main svg
     GraphCreator.prototype.svgMouseDown = function(){
       this.state.graphMouseDown = true;
-
-      if(this.state.selectedNode) {
-        this.removeSelectFromNode();
-      } else if(this.state.selectedEdge) {
-        this.removeSelectFromEdge();
-      }
-
-      $scope.$apply(function(){
-        $scope.$emit('onRemoveNodeSelection');
-      });
-
     };
 
     // mouseup on main svg
@@ -482,23 +421,20 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       if (state.justScaleTransGraph) {
         // dragged not clicked
         state.justScaleTransGraph = false;
-      } else if (state.graphMouseDown && d3.event.shiftKey){
-        // clicked not dragged from svg
-        var xycoords = d3.mouse(thisGraph.svgG.node()),
-          d = {id: thisGraph.idct++, title: consts.defaultTitle, x: xycoords[0], y: xycoords[1]};
-        thisGraph.nodes.push(d);
-        thisGraph.updateGraph();
-        // make title of text immediently editable
-        var d3txt = thisGraph.changeTextOfNode(thisGraph.rects.filter(function(dval){
-            return dval.instanceName === d.instanceName;
-          }), d),
-          txtNode = d3txt.node();
-        thisGraph.selectElementContents(txtNode);
-        txtNode.focus();
       } else if (state.shiftNodeDrag){
         // dragged from node
         state.shiftNodeDrag = false;
         thisGraph.dragLine.classed('hidden', true);
+      } else if(this.state.graphMouseDown && !this.isPreviewMode) {
+        if(this.state.selectedNode) {
+          this.removeSelectFromNode();
+        } else if(this.state.selectedEdge) {
+          this.removeSelectFromEdge();
+        }
+
+        $scope.$apply(function(){
+          $scope.$emit('onRemoveNodeSelection');
+        });
       }
       state.graphMouseDown = false;
     };
@@ -637,13 +573,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           d3.select(this).classed(consts.connectClass, false);
         })
         .on('mousedown', function(d){
-          thisGraph.circleMouseDown.call(thisGraph, d3.select(this), d);
+          thisGraph.stageMouseDown.call(thisGraph, d3.select(this), d);
           $scope.$apply(function(){
             $scope.$emit('onNodeSelection', d);
           });
         })
         .on('mouseup', function(d){
-          thisGraph.circleMouseUp.call(thisGraph, d3.select(this), d);
+          thisGraph.stageMouseUp.call(thisGraph, d3.select(this), d);
         })
         .call(thisGraph.drag);
 
@@ -809,10 +745,12 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       pathNewGs
         .classed(consts.pathGClass, true)
         .on('mousedown', function(d) {
-          thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
-          $scope.$apply(function(){
-            $scope.$emit('onEdgeSelection', d);
-          });
+          if(!thisGraph.isPreviewMode) {
+            thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
+            $scope.$apply(function(){
+              $scope.$emit('onEdgeSelection', d);
+            });
+          }
         })
         .on('mouseup', function(d) {
           state.mouseDownLink = null;
@@ -939,8 +877,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         svgWidth = thisGraph.svg.style('width').replace('px', ''),
         svgHeight = thisGraph.svg.style('height').replace('px', ''),
         currentScale = thisGraph.state.currentScale,
-        x = svgWidth / 2 - (stageInstance.uiInfo.xPos + consts.rectWidth/2)*currentScale,
-        y = svgHeight / 2 - (stageInstance.uiInfo.yPos + consts.rectHeight/2)*currentScale;
+        x = svgWidth / 2 - (stageInstance.uiInfo.xPos + consts.rectWidth/2) * currentScale,
+        y = svgHeight / 2 - (stageInstance.uiInfo.yPos + consts.rectHeight/2) * currentScale;
 
       showTransition = true;
       this.zoom.translate([x, y]).event(this.svg);
@@ -948,10 +886,12 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     GraphCreator.prototype.moveNodeToVisibleArea = function(stageInstance) {
       var thisGraph = this,
+        currentScale = thisGraph.state.currentScale,
         svgWidth = thisGraph.svg.style('width').replace('px', ''),
         svgHeight = thisGraph.svg.style('height').replace('px', '');
 
-      if(stageInstance.uiInfo.xPos > svgWidth || stageInstance.uiInfo.yPos > svgHeight) {
+      if((stageInstance.uiInfo.xPos * currentScale) > svgWidth ||
+        (stageInstance.uiInfo.yPos * currentScale) > svgHeight) {
         thisGraph.moveNodeToCenter(stageInstance);
       }
     };
@@ -980,15 +920,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       thisGraph.rects.filter(function(cd){
         return cd.instanceName === endNode.instanceName;
       }).classed(thisGraph.consts.endNodeClass, true);
-    };
-
-
-
-    GraphCreator.prototype.updateWindow = function(svg){
-      /*var svgEl = $element.parent();
-      var x = svgEl.width();
-      var y = svgEl.height();
-      svg.attr('width', x).attr('height', y);*/
     };
 
     /** MAIN SVG **/
@@ -1059,6 +990,11 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     $scope.$on('selectNode', function(event, stageInstance) {
       if(stageInstance) {
         graph.moveNodeToCenter(stageInstance);
+
+        if(graph.state.selectedEdge) {
+          graph.removeSelectFromEdge();
+        }
+
         graph.selectNode(stageInstance);
       } else if (graph.state.selectedNode){
         graph.removeSelectFromNode();
@@ -1085,9 +1021,14 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     $scope.$on('moveGraphToCenter', function() {
       if(graph) {
-        if (graph.state.selectedNode){
+        if (graph.state.selectedNode) {
           graph.removeSelectFromNode();
         }
+
+        if(graph.state.selectedEdge) {
+          graph.removeSelectFromEdge();
+        }
+
         graph.clearStartAndEndNode();
         graph.moveGraphToCenter();
       }
@@ -1108,6 +1049,12 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     $scope.$on('setGraphReadOnly', function(event, flag) {
       if(graph) {
         graph.isReadOnly = flag;
+      }
+    });
+
+    $scope.$on('setGraphPreviewMode', function(event, flag) {
+      if(graph) {
+        graph.isPreviewMode = flag;
       }
     });
 

@@ -24,7 +24,7 @@ angular
 
     var intervalPromise = $interval(function() {
       $scope.logMessages = $rootScope.common.getLogMessages();
-    }, 3000);
+    }, 2000);
 
     $scope.$on('$destroy', function() {
       if(angular.isDefined(intervalPromise)) {
