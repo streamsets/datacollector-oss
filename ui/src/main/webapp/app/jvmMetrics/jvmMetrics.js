@@ -285,7 +285,7 @@ angular
       jvmMetricsTimer = $timeout(
         function() {
         },
-        4000 //configuration.getRefreshInterval()
+        configuration.getJVMMetricsRefreshInterval()
       );
 
       jvmMetricsTimer.then(
@@ -344,7 +344,6 @@ angular
               }
             });
           }
-
 
         });
       });

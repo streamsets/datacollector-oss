@@ -89,6 +89,7 @@ angular
         $scope.previewMode = true;
         $scope.$storage.maximizeDetailPane = false;
         $scope.$storage.minimizeDetailPane = false;
+        $scope.setGraphReadOnly(true);
         $scope.$broadcast('previewPipeline', nextBatch);
       },
 
@@ -97,6 +98,7 @@ angular
        */
       closePreview: function () {
         $scope.previewMode = false;
+        $scope.setGraphReadOnly(false);
         $scope.moveGraphToCenter();
       },
 
@@ -203,6 +205,10 @@ angular
        */
       refreshGraph : function() {
         updateGraph($scope.pipelineConfig);
+      },
+
+      setGraphReadOnly: function(flag) {
+        $scope.$broadcast('setGraphReadOnly', flag);
       }
     });
 
@@ -432,7 +438,8 @@ angular
           issues: $scope.pipelineConfig.issues,
           selectNode: ($scope.detailPaneConfig && !$scope.detailPaneConfig.stages) ? $scope.detailPaneConfig : undefined,
           stageErrorCounts: stageErrorCounts,
-          showEdgePreviewIcon: $scope.isPipelineRunning
+          showEdgePreviewIcon: $scope.isPipelineRunning,
+          isReadOnly: $scope.isPipelineRunning
         });
       });
 

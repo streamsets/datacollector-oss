@@ -10,7 +10,7 @@ describe('pipelineAgentApp module', function() {
   }));
 
   it('should have correct page title.', function() {
-    expect($rootScope.common.title == 'StreamSets | Data In Motion').toBeTruthy();
+    expect($rootScope.common.title == 'StreamSets Data Collector').toBeTruthy();
   });
 
 });

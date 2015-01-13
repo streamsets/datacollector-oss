@@ -415,7 +415,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
       thisGraph.dragLine.classed('hidden', true);
 
-      if (mouseDownNode.instanceName && mouseDownNode.instanceName !== d.instanceName){
+      if (mouseDownNode.instanceName && mouseDownNode.instanceName !== d.instanceName &&
+        d.uiInfo.stageType !== pipelineConstant.SOURCE_STAGE_TYPE && !thisGraph.isReadOnly){
         // we're in a different node: create new edge for mousedown edge and add to graph
         var newEdge = {
           source: mouseDownNode,
@@ -423,10 +424,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           outputLane: mouseDownNodeLane
         };
         var filtRes = thisGraph.paths.filter(function(d){
-          if (d.source === newEdge.target && d.target === newEdge.source){
-            thisGraph.edges.splice(thisGraph.edges.indexOf(d), 1);
-          }
-          return d.source === newEdge.source && d.target === newEdge.target;
+          return d.source.instanceName === newEdge.source.instanceName &&
+            d.target.instanceName === newEdge.target.instanceName;
         });
         if (!filtRes[0].length){
           thisGraph.edges.push(newEdge);
@@ -439,7 +438,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
                 newEdge.target.inputLanes = [];
               }
 
-              if(newEdge.source.outputLanes && newEdge.source.outputLanes.length) {
+              if(newEdge.source.outputLanes && newEdge.source.outputLanes.length &&
+                mouseDownNodeLane) {
                 newEdge.target.inputLanes.push(mouseDownNodeLane);
               }
             }
@@ -521,6 +521,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         case consts.BACKSPACE_KEY:
         case consts.DELETE_KEY:
           d3.event.preventDefault();
+          if(thisGraph.isReadOnly) {
+            //Graph is read only
+            return;
+          }
           if (selectedNode) {
             $scope.$apply(function() {
               var nodeIndex = thisGraph.nodes.indexOf(selectedNode);
@@ -539,7 +543,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
                 thisGraph.spliceLinksForNode(selectedNode);
                 state.selectedNode = null;
-
+                $scope.$emit('onRemoveNodeSelection');
                 thisGraph.updateGraph();
               }
             });
@@ -554,6 +558,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
                 thisGraph.edges.splice(edgeIndex, 1);
                 state.selectedEdge = null;
+                $scope.$emit('onRemoveNodeSelection');
                 thisGraph.updateGraph();
               }
             });
@@ -1033,6 +1038,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       graph.issues = issues;
       graph.stageErrorCounts = stageErrorCounts;
       graph.showEdgePreviewIcon = showEdgePreviewIcon;
+      graph.isReadOnly = options.isReadOnly;
       graph.updateGraph();
 
       if(selectNode) {
@@ -1090,6 +1096,12 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     $scope.$on('clearStartAndEndNode', function() {
       if(graph) {
         graph.clearStartAndEndNode();
+      }
+    });
+
+    $scope.$on('setGraphReadOnly', function(event, flag) {
+      if(graph) {
+        graph.isReadOnly = flag;
       }
     });
 

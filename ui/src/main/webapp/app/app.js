@@ -36,7 +36,7 @@ angular.module('pipelineAgentApp')
 
   })
   .run(function ($location, $rootScope, $modal, api) {
-    var defaultTitle = 'StreamSets | Data In Motion';
+    var defaultTitle = 'StreamSets Data Collector';
     $rootScope.common = $rootScope.common || {
       title : defaultTitle,
       active: {

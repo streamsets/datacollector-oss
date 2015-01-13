@@ -4,7 +4,8 @@
 angular.module('pipelineAgentApp.common')
   .service('configuration', function($rootScope, api, $q) {
     var self = this,
-      REFRESH_INTERVAL = 'ui.refresh.interval.ms';
+      REFRESH_INTERVAL = 'ui.refresh.interval.ms',
+      JVM_METRICS_REFRESH_INTERVAL = 'ui.jvmMetrics.refresh.interval.ms';
 
     this.initializeDefer = undefined;
     this.uiConfig = undefined;
@@ -25,7 +26,7 @@ angular.module('pipelineAgentApp.common')
     /**
      * Returns refresh interval in milliseconds
      *
-     * @returns Long
+     * @returns number
      */
     this.getRefreshInterval = function() {
       if(self.uiConfig) {
@@ -33,5 +34,18 @@ angular.module('pipelineAgentApp.common')
       }
       return 2000;
     };
+
+    /**
+     * Returns refresh interval in milliseconds
+     *
+     * @returns number
+     */
+    this.getJVMMetricsRefreshInterval = function() {
+      if(self.uiConfig) {
+        return self.uiConfig[JVM_METRICS_REFRESH_INTERVAL];
+      }
+      return 4000;
+    };
+
 
   });

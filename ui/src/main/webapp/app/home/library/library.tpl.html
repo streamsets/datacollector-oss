@@ -26,7 +26,8 @@
             <i class="fa fa-ellipsis-v"></i>
           </span>
           <ul class="dropdown-menu" role="menu">
-            <li role="presentation">
+            <li role="presentation"
+                ng-hide="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
               <a role="menuitem" tabindex="-1" href="#"
                  dropdown-toggle
                  translate="global.form.delete"

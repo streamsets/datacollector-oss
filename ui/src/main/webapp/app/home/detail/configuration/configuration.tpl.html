@@ -14,6 +14,7 @@
             <label class="control-label" translate="global.form.name">Name</label>
             <div>
               <input readonly type="text" class="form-control" name="name"
+                     ng-readonly="isPipelineRunning"
                      ng-model="pipelineConfig.info.name">
             </div>
           </div>
@@ -22,6 +23,7 @@
             <label class="control-label" translate="global.form.description">Description</label>
             <div>
               <textarea class="form-control" name="description"
+                        ng-readonly="isPipelineRunning"
                         ng-model="pipelineConfig.description"></textarea>
             </div>
           </div>
@@ -33,6 +35,7 @@
             <label class="control-label" translate="global.form.label">Label</label>
             <div>
               <input type="text" class="form-control" name="name"
+                     ng-readonly="isPipelineRunning"
                      ng-model="detailPaneConfig.uiInfo.label">
             </div>
           </div>
@@ -42,6 +45,7 @@
             <label class="control-label" translate="global.form.description">Description</label>
             <div>
               <textarea class="form-control" name="description"
+                        ng-readonly="isPipelineRunning"
                         ng-model="detailPaneConfig.uiInfo.description"></textarea>
             </div>
           </div>
@@ -55,7 +59,8 @@
             <div class="checkbox" ng-switch-when="BOOLEAN">
               <label>
                 <input type="checkbox" name="{{configDefinition.name}}"
-                     ng-model="detailPaneConfig.configuration[$index].value">  {{configDefinition.label}}
+                       ng-disabled="isPipelineRunning"
+                       ng-model="detailPaneConfig.configuration[$index].value">  {{configDefinition.label}}
                 <i class="fa fa-info-circle help-icon"
                    popover-placement="right"
                    popover-append-to-body="false"
@@ -74,6 +79,7 @@
                  popover="{{configDefinition.description}}"
                  popover-trigger="mouseenter"></i>
               <input type="number" class="form-control" name="{{configDefinition.name}}"
+                     ng-readonly="isPipelineRunning"
                      ng-model="detailPaneConfig.configuration[$index].value"
                      ng-required="configDefinition.required">
 
@@ -88,6 +94,7 @@
                  popover="{{configDefinition.description}}"
                  popover-trigger="mouseenter"></i>
               <input type="text" class="form-control" name="{{configDefinition.name}}"
+                     ng-readonly="isPipelineRunning"
                      ng-model="detailPaneConfig.configuration[$index].value"
                      ng-required="configDefinition.required">
 
@@ -111,6 +118,7 @@
                          name="{{configDefinition.name + 'key' + $index}}"
                          placeholder="{{'home.detailPane.configurationTab.enterKey' | translate}}"
                          ng-required="true"
+                         ng-readonly="isPipelineRunning"
                          ng-model="mapObject.key"/>
                 </div>
 
@@ -121,10 +129,12 @@
                          name="{{configDefinition.name + 'value' + $index}}"
                          placeholder="{{'home.detailPane.configurationTab.enterValue' | translate}}"
                          ng-required="true"
+                         ng-readonly="isPipelineRunning"
                          ng-model="mapObject.value"/>
                 </div>
 
-                <div class="col-md-2 btn-group" role="group" aria-label="Default button group">
+                <div class="col-md-2 btn-group" role="group" aria-label="Default button group"
+                  ng-hide="isPipelineRunning">
                   <button type="button" class="btn btn-default btn-sm"
                           ng-click="removeFromMap(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, mapObject, $index)">
                     <i class="fa fa-minus pointer"></i>
@@ -139,7 +149,8 @@
               </div>
 
 
-              <div ng-if="detailPaneConfig.configuration[$index].value.length === 0" class="row">
+              <div ng-if="detailPaneConfig.configuration[$index].value.length === 0" class="row"
+                   ng-hide="isPipelineRunning">
                 <div class="col-md-2 btn-group" role="group">
                   <button type="button" class="btn btn-default btn-sm"
                           ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[$index].value)">
@@ -167,6 +178,7 @@
                   <select class="form-control"
                           ng-switch-when="PROVIDED"
                           name="{{configDefinition.name}}"
+                          ng-disabled="isPipelineRunning"
                           ng-model="detailPaneConfig.configuration[$index].value">
                     <option ng-repeat="listValue in configDefinition.model.values"
                             value="{{listValue}}"
@@ -178,6 +190,7 @@
                   <input type="text"
                          ng-switch-when="SUGGESTED"
                          name="{{configDefinition.name}}"
+                         ng-readonly="isPipelineRunning"
                          ng-model="detailPaneConfig.configuration[$index].value"
                          typeahead="listValue for listValue in configDefinition.model.values"
                          typeahead-min-length="0"
@@ -200,6 +213,7 @@
                    popover-trigger="mouseenter"></i>
 
                 <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+                           ng-disabled="isPipelineRunning"
                            ng-model="detailPaneConfig.configuration[$index].value">
                   <ui-select-match
                     placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
@@ -210,7 +224,7 @@
                   </ui-select-choices>
                 </ui-select>
 
-                <div class="pull-right field-selector-btn">
+                <div class="pull-right field-selector-btn" ng-hide="isPipelineRunning">
                   <button class="btn btn-link"
                           translate="home.detailPane.configurationTab.requiredFieldsSelectionButton"
                           ng-click="showFieldSelectorModal(detailPaneConfig.configuration[$index])">
@@ -244,10 +258,12 @@
                            placeholder="{{'home.detailPane.configurationTab.enterPredicate' | translate}}"
                            ng-required="true"
                            name="{{configDefinition.name + $index}}"
+                           ng-readonly="isPipelineRunning"
                            ng-model="lanePredicateMapping.predicate"/>
                   </div>
 
-                  <div class="col-xs-2 btn-group" role="group" aria-label="Default button group">
+                  <div class="col-xs-2 btn-group" role="group" aria-label="Default button group"
+                       ng-hide="isPipelineRunning">
                     <button type="button" class="btn btn-default btn-sm"
                             ng-hide="$first && $last"
                             ng-click="removeLane(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, lanePredicateMapping, $index)">
@@ -301,6 +317,7 @@
                         <input type="number" class="form-control"
                                name="{{customFieldConfigDefinition.name + $index}}"
                                placeholder="{{customFieldConfigDefinition.label}}"
+                               ng-readonly="isPipelineRunning"
                                ng-model="customFieldValue[customFieldConfigDefinition.name]"
                                ng-required="customFieldConfigDefinition.required">
                       </div>
@@ -309,6 +326,7 @@
                         <input type="text" class="form-control"
                                name="{{customFieldConfigDefinition.name + $index}}"
                                placeholder="{{customFieldConfigDefinition.label}}"
+                               ng-readonly="isPipelineRunning"
                                ng-model="customFieldValue[customFieldConfigDefinition.name]"
                                ng-required="customFieldConfigDefinition.required">
                       </div>
@@ -323,6 +341,7 @@
                           <select class="form-control"
                                   ng-switch-when="PROVIDED"
                                   name="{{customFieldConfigDefinition.name + $index}}"
+                                  ng-disabled="isPipelineRunning"
                                   ng-model="customFieldValue[customFieldConfigDefinition.name]">
                             <option ng-repeat="listValue in customFieldConfigDefinition.model.values"
                                     value="{{listValue}}"
@@ -334,6 +353,7 @@
                           <input type="text"
                                  name="{{customFieldConfigDefinition.name + $index}}"
                                  ng-switch-when="SUGGESTED"
+                                 ng-readonly="isPipelineRunning"
                                  ng-model="customFieldValue[customFieldConfigDefinition.name]"
                                  typeahead="listValue for listValue in customFieldConfigDefinition.model.values"
                                  class="form-control">
@@ -345,6 +365,7 @@
                              ng-click="onFieldSelectorFocus(detailPaneConfig)"
                              class="clearfix">
                           <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+                                     ng-disabled="isPipelineRunning"
                                      ng-model="customFieldValue[customFieldConfigDefinition.name]">
                             <ui-select-match
                               placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
@@ -363,7 +384,7 @@
                     <td>
                       <div class="col-xs-1 btn-group" role="group" aria-label="Default button group">
                         <button type="button" class="btn btn-default btn-sm"
-                                ng-hide="$first && $last"
+                                ng-hide="$first && $last && isPipelineRunning"
                                 ng-click="removeFromCustomField(detailPaneConfig, customeFieldValueList, $index)">
                           <i class="fa fa-minus pointer"></i>
                         </button>
@@ -377,8 +398,9 @@
 
 
                 <button type="button" class="btn btn-primary btn-sm pull-right"
+                        ng-hide="isPipelineRunning"
                         ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[$index].value, configDefinition.model.configDefinitions)">
-                  Add <i class="fa fa-plus pointer"></i>
+                  {{'global.form.add' | translate}} <i class="fa fa-plus pointer"></i>
                 </button>
 
               </div>
