@@ -130,7 +130,7 @@ public class RecordImpl implements Record {
     FieldWithPath fieldWithPath = null;
     if (field != null) {
       if (field.getValue() == null) {
-        fieldWithPath = new FieldWithPath("", field.getType(), null);
+        fieldWithPath = new FieldWithPath(path, field.getType(), null);
       } else {
         switch (field.getType()) {
           case LIST:
