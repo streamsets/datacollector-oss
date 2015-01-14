@@ -49,6 +49,11 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-hdfs-lib</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>compile</scope>
     </dependency>
@@ -78,7 +83,7 @@
               <attach>false</attach>
               <finalName>streamsets-datacollector-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/pipeline.xml</descriptor>
+                <descriptor>src/main/assemblies/datacollector.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>

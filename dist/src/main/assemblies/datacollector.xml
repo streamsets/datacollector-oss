@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ (c) 2014 StreamSets, Inc. All rights reserved. May not
+ be copied, modified, or distributed in whole or part without
+ written consent of StreamSets, Inc.
+-->
+<assembly>
+  <id>dist</id>
+  <formats>
+    <format>dir</format>
+    <format>tar.gz</format>
+  </formats>
+  <includeBaseDirectory>true</includeBaseDirectory>
+
+  <fileSets>
+
+    <!-- License, Notice, etc -->
+    <fileSet>
+      <directory>${basedir}/../</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>LICENSE.txt</include>
+        <include>NOTICE.txt</include>
+        <include>README.txt</include>
+      </includes>
+    </fileSet>
+
+    <!-- bin -->
+    <!-- For now we are not exposing the SDC_HOME capabilities -->
+    <fileSet>
+      <directory>${basedir}/src/main</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>bin/sdc</include>
+      </includes>
+      <!--<excludes>-->
+        <!--<exclude>bin/_*</exclude>-->
+      <!--</excludes>-->
+      <filtered>true</filtered>
+      <fileMode>0755</fileMode>
+    </fileSet>
+    <!--<fileSet>-->
+      <!--<directory>${basedir}/src/main</directory>-->
+      <!--<outputDirectory>/</outputDirectory>-->
+      <!--<includes>-->
+        <!--<include>bin/_*</include>-->
+      <!--</includes>-->
+      <!--<filtered>true</filtered>-->
+      <!--<fileMode>0644</fileMode>-->
+    <!--</fileSet>-->
+
+    <!-- initd -->
+    <fileSet>
+      <directory>${basedir}/src/main</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>initd/*</include>
+      </includes>
+      <excludes>
+        <exclude>README</exclude>
+        <exclude>initd/_*</exclude>
+      </excludes>
+      <fileMode>0755</fileMode>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/src/main</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>README</include>
+        <include>initd/_*</include>
+      </includes>
+      <fileMode>0644</fileMode>
+    </fileSet>
+
+    <!-- libexec -->
+    <fileSet>
+      <directory>${basedir}/src/main</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>libexec/*</include>
+      </includes>
+      <fileMode>0755</fileMode>
+    </fileSet>
+
+    <!-- configuration -->
+    <fileSet>
+      <directory>${basedir}/src/main/etc</directory>
+      <outputDirectory>/etc</outputDirectory>
+      <excludes>
+        <exclude>*-password.txt</exclude>
+      </excludes>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/src/main/etc</directory>
+      <outputDirectory>/etc</outputDirectory>
+      <includes>
+        <include>*-password.txt</include>
+      </includes>
+      <fileMode>0600</fileMode>
+    </fileSet>
+
+    <!-- log dir -->
+    <fileSet>
+      <directory>${basedir}/src/main/emptydir</directory>
+      <outputDirectory>/log</outputDirectory>
+    </fileSet>
+
+    <!-- data dir -->
+    <fileSet>
+      <directory>${basedir}/src/main/emptydir</directory>
+      <outputDirectory>/data</outputDirectory>
+    </fileSet>
+
+    <!-- static web -->
+    <fileSet>
+      <directory>${ui.dist-dir}</directory>
+      <outputDirectory>/static-web</outputDirectory>
+    </fileSet>
+
+    <!-- javadocs -->
+    <fileSet>
+      <directory>${basedir}/target/site/apidocs</directory>
+      <outputDirectory>/docs/api</outputDirectory>
+    </fileSet>
+
+    <!-- stage-lib -->
+    <fileSet>
+      <directory>${basedir}/../stage-lib/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
+
+    <!-- hdfs-lib -->
+    <fileSet>
+      <directory>${basedir}/../hdfs-lib/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
+
+  </fileSets>
+
+  <dependencySets>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <outputDirectory>/bin</outputDirectory>
+      <unpack>false</unpack>
+      <scope>compile</scope>
+      <includes>
+        <include>com.streamsets:streamsets-datacollector-bootstrap</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>true</useTransitiveDependencies>
+      <useTransitiveFiltering>true</useTransitiveFiltering>
+      <outputDirectory>/api-lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>compile</scope>
+      <includes>
+        <include>com.streamsets:streamsets-datacollector-api</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>true</useTransitiveDependencies>
+      <useTransitiveFiltering>true</useTransitiveFiltering>
+      <outputDirectory>/container-lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>compile</scope>
+      <includes>
+        <include>com.streamsets:streamsets-datacollector-container</include>
+      </includes>
+      <excludes>
+        <exclude>com.streamsets:streamsets-datacollector-api</exclude>
+      </excludes>
+    </dependencySet>
+
+  </dependencySets>
+
+  </assembly>
