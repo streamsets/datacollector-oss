@@ -122,7 +122,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   private static final ConfigDefinition REQUIRED_FIELDS_CONFIG = new ConfigDefinition(
       ConfigDefinition.REQUIRED_FIELDS, ConfigDef.Type.MODEL, "Required Fields", "Record required fields",
-      null, false, "system", null, new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null, null, null));
+      null, false, "system", null, new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null, null, null), "",
+      new String[] {});
 
   private void addSystemConfigurations(StageDefinition stage) {
     if (stage.getType() != StageType.SOURCE) {

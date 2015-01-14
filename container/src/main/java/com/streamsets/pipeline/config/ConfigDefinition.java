@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,6 +33,8 @@ public class ConfigDefinition {
   private final boolean required;
   private final String group;
   private final String fieldName;
+  private final String dependsOn;
+  private final String[] triggeredByValues;
   private final ModelDefinition model;
 
   @JsonCreator
@@ -44,7 +47,9 @@ public class ConfigDefinition {
       @JsonProperty("required") boolean required,
       @JsonProperty("group") String group,
       @JsonProperty("fieldName") String fieldName,
-      @JsonProperty("model") ModelDefinition model) {
+      @JsonProperty("model") ModelDefinition model,
+      @JsonProperty("dependsOn") String dependsOn,
+      @JsonProperty("triggeredByValues") String[] triggeredByValues) {
     this.name = name;
     this.type = type;
     this.label = label;
@@ -54,6 +59,8 @@ public class ConfigDefinition {
     this.group = group;
     this.fieldName = fieldName;
     this.model = model;
+    this.dependsOn = dependsOn;
+    this.triggeredByValues = triggeredByValues;
   }
 
   public String getName() {
@@ -90,6 +97,14 @@ public class ConfigDefinition {
     return fieldName;
   }
 
+  public String getDependsOn() {
+    return dependsOn;
+  }
+
+  public String[] getTriggeredByValues() {
+    return triggeredByValues;
+  }
+
   private final static String CONFIG_LABEL = "{}.label";
   private final static String CONFIG_DESCRIPTION = "{}.description";
 
@@ -103,7 +118,7 @@ public class ConfigDefinition {
         .getLocalized();
 
     return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(),
-      isRequired(), getGroup(), getFieldName(), getModel());
+      isRequired(), getGroup(), getFieldName(), getModel(), getDependsOn(), getTriggeredByValues());
   }
 
   @Override

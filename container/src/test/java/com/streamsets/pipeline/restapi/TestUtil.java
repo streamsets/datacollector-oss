@@ -81,13 +81,16 @@ public class TestUtil {
     StageLibraryTask lib = Mockito.mock(StageLibraryTask.class);
     List<ConfigDefinition> configDefs = new ArrayList<>();
     ConfigDefinition configDef = new ConfigDefinition("string", ConfigDef.Type.STRING, "l1", "d1", "--", true, "g",
-        "stringVar", null);
+        "stringVar", null, "", new String[] {});
     configDefs.add(configDef);
-    configDef = new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", null);
+    configDef = new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", null, "",
+      new String[] {});
     configDefs.add(configDef);
-    configDef = new ConfigDefinition("long", ConfigDef.Type.INTEGER, "l3", "d3", "-2", true, "g", "longVar", null);
+    configDef = new ConfigDefinition("long", ConfigDef.Type.INTEGER, "l3", "d3", "-2", true, "g", "longVar", null, "",
+      new String[] {});
     configDefs.add(configDef);
-    configDef = new ConfigDefinition("boolean", ConfigDef.Type.BOOLEAN, "l4", "d4", "false", true, "g", "booleanVar", null);
+    configDef = new ConfigDefinition("boolean", ConfigDef.Type.BOOLEAN, "l4", "d4", "false", true, "g", "booleanVar",
+      null, "", new String[] {});
     configDefs.add(configDef);
     StageDefinition sourceDef = new StageDefinition(
         TSource.class.getName(), "source", "1.0.0", "label", "description",

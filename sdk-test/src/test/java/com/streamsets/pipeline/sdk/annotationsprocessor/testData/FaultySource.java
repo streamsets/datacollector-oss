@@ -136,22 +136,31 @@ public class FaultySource {
   public long phone;
 
   //17. The type is int but the default value is string
+  //19. Depends on "myPhone" which does not exist
   @ConfigDef(
       defaultValue = "Hello",
       label = "floor",
       required = true,
       description = "The domain of the twitter user",
-      type = ConfigDef.Type.INTEGER)
+      type = ConfigDef.Type.INTEGER,
+      dependsOn = "myPhone",
+      triggeredByValue = {"123", "567"})
   public int extension;
 
   //18. The type is boolean but default value is not true or false
+  //20. Depends on "myExtension" which exists but is not a configuration
   @ConfigDef(
       defaultValue = "Hello",
       label = "floor",
       required = true,
       description = "The domain of the twitter user",
-      type = ConfigDef.Type.BOOLEAN)
+      type = ConfigDef.Type.BOOLEAN,
+      dependsOn = "myExtension",
+      triggeredByValue = {"123", "567"})
   public boolean callMe;
+
+  String myExtension;
+
 
   //15. Inner class ChooserValues must be static
   public class MyChooserValues implements ChooserValues {

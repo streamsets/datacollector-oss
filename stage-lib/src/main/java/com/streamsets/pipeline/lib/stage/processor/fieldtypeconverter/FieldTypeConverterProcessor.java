@@ -139,7 +139,8 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
     @ConfigDef(label = "Date Format", required = true, type = Type.MODEL, defaultValue="yyyy-MM-dd",
       description="The format of the date into which the string field must be converted to. " +
-        "This option is used only if the target type is Date or Date time.")
+        "This option is used only if the target type is Date or Date time.",
+      dependsOn = "targetType", triggeredByValue = {"DATE", "DATETIME"})
     @ValueChooser(chooserValues = DateFormatValuesProvider.class, type = ChooserMode.SUGGESTED)
     public String dateFormat;
 

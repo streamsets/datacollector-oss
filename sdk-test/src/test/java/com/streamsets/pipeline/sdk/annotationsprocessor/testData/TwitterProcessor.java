@@ -48,7 +48,9 @@ public class TwitterProcessor extends BaseProcessor{
       label = "tweetType2",
       required = true,
       description = "The regular expression used to parse the tweet",
-      type = ConfigDef.Type.MODEL
+      type = ConfigDef.Type.MODEL,
+      dependsOn = "tweetType1",
+      triggeredByValue = {"a", "b", "c"}
   )
   public Map<String, TweetType> tweetType2;
 

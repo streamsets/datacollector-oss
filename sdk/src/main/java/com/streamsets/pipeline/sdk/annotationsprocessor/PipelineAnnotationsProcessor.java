@@ -355,7 +355,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             configDefAnnot.required(),
             ""/*group name - need to remove it*/,
             variableElement.getSimpleName().toString(),
-            model);
+            model,
+            configDefAnnot.dependsOn(),
+            configDefAnnot.triggeredByValue());
         configDefinitions.add(configDefinition);
       }
     }
@@ -633,7 +635,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * @param variableElement
    * @param configDefAnnot
    */
-  private boolean validateConfigDefAnnotation(Element typeElement, VariableElement variableElement,
+  private boolean validateConfigDefAnnotation(TypeElement typeElement, VariableElement variableElement,
                                               ConfigDef configDefAnnot) {
     boolean valid = true;
     //field must be declared public
@@ -666,7 +668,29 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       valid &= validateNonModelConfig(configDefAnnot, typeElement, variableElement);
     }
 
+    //validate DependsOn and triggered by
+    valid &= validateDependsOn(typeElement, variableElement, configDefAnnot);
+
     return valid;
+  }
+
+  private boolean validateDependsOn(TypeElement typeElement, VariableElement variableElement, ConfigDef configDefAnnot) {
+    String dependsOnConfig = configDefAnnot.dependsOn();
+    if(dependsOnConfig != null && !dependsOnConfig.isEmpty()) {
+      boolean valid = false;
+      for(VariableElement v : getAllFields(typeElement)) {
+        if(v.getSimpleName().toString().equals(dependsOnConfig) && v.getAnnotation(ConfigDef.class) != null) {
+          valid = true;
+        }
+      }
+      if(!valid) {
+        printError("field.validation.dependsOn",
+          "The \"ConfigDef\" annotation for field {} indicates that it depends on field '{}' which does not exist or is not a configuration option.",
+          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString(), dependsOnConfig);
+      }
+      return valid;
+    }
+    return true;
   }
 
   private boolean validateModelAnnotationsAreNotPresent(Element typeElement, VariableElement variableElement) {

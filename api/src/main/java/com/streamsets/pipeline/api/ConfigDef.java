@@ -27,4 +27,8 @@ public @interface ConfigDef {
   String label();
 
   String description() default "";
+
+  String dependsOn() default "";
+
+  String[] triggeredByValue() default {};
 }

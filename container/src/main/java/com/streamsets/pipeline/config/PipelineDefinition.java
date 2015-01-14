@@ -77,7 +77,9 @@ public class PipelineDefinition {
       true,
       "",
       "",
-      null);
+      null,
+      "",
+      new String[] {});
 
     return seConfigDef;
   }
@@ -112,7 +114,9 @@ public class PipelineDefinition {
       true,
       "",
       "",
-      gdModelDefinition);
+      gdModelDefinition,
+      "",
+      new String[] {});
 
     return dgConfigDef;
   }

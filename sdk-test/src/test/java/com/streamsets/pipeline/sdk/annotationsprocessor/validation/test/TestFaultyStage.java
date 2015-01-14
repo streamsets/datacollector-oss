@@ -56,7 +56,8 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The Stage FaultySource has constructor with arguments but no default constructor.");
     expectedSet.add("Annotation RawSource is applied on stage com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultySource which is not a \"Source\".");
     expectedSet.add("RawSourcePreviewer com.streamsets.pipeline.sdk.annotationsprocessor.testData.TestRawSourcePreviewer.FaultyRawSourcePreviewer is an inner class. Inner class RawSourcePreviewer implementations are not supported.");
-
+    expectedSet.add("The \"ConfigDef\" annotation for field FaultySource.extension indicates that it depends on field 'myPhone' which does not exist or is not a configuration option.");
+    expectedSet.add("The \"ConfigDef\" annotation for field FaultySource.callMe indicates that it depends on field 'myExtension' which does not exist or is not a configuration option.");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());
