@@ -7,6 +7,7 @@ package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.RawSource;
@@ -19,6 +20,7 @@ import java.util.List;
 @RawSource(rawSourcePreviewer = TwitterRawSourcePreviewer.class)
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
 , version = "1.0")
+@ConfigGroups(value = TwitterSource.TwitterConfigGroups.class)
 public class TwitterSource extends BaseSource {
 
   @FieldSelector
@@ -27,7 +29,8 @@ public class TwitterSource extends BaseSource {
     label = "username",
     required = true,
     description = "The user name of the twitter user",
-    type = ConfigDef.Type.MODEL
+    type = ConfigDef.Type.MODEL,
+    group = "USER_INFO"
   )
   public List<String> username;
 
@@ -36,7 +39,8 @@ public class TwitterSource extends BaseSource {
     label = "password",
     required = true,
     description = "The password the twitter user",
-    type = ConfigDef.Type.STRING
+    type = ConfigDef.Type.STRING,
+    group = "USER_INFO"
   )
   public String password;
 
@@ -54,5 +58,10 @@ public class TwitterSource extends BaseSource {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     return null;
+  }
+
+  enum TwitterConfigGroups implements ConfigGroups.Groups {
+    USER_INFO,
+    OTHER
   }
 }

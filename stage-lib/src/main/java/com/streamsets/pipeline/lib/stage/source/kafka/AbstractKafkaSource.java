@@ -7,18 +7,24 @@ package com.streamsets.pipeline.lib.stage.source.kafka;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.net.SocketTimeoutException;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+@ConfigGroups(value = AbstractKafkaSource.KafkaSourceConfigGroups.class)
 public abstract class AbstractKafkaSource extends BaseSource {
+
+  public enum KafkaSourceConfigGroups implements ConfigGroups.Groups {
+    KAFKA_PROPERTIES
+  }
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractKafkaSource.class);
   private static final String CLIENT_PREFIX = "StreamSetsKafkaConsumer";

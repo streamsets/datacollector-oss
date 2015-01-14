@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.stage.devtest;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -14,19 +15,23 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 
 @GenerateResourceBundle
 @StageDef(version="1.0.0", label="Dummy Hbase Target", icon = "HbaseTarget.svg")
-
+@ConfigGroups(HbaseTarget.Groups.class)
 public class HbaseTarget extends BaseTarget {
 
+  public enum Groups implements ConfigGroups.Groups {
+    GENERAL, ADVANCED
+  }
+
   @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "HBase URI", defaultValue = "",
-            description = "HBase server URI")
+            description = "HBase server URI", group="GENERAL")
   public String uri;
 
   @ConfigDef(required = true, type = ConfigDef.Type.BOOLEAN, label = "Security enabled",
-             defaultValue = "false", description = "Kerberos enabled for HBase")
+             defaultValue = "false", description = "Kerberos enabled for HBase", group="ADVANCED")
   public boolean security;
 
   @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "Table", defaultValue = "",
-             description = "HBase table name")
+             description = "HBase table name", group="GENERAL")
   public String table;
 
   @Override

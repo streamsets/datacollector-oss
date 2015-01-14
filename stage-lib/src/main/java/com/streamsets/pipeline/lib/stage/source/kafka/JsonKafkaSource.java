@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.stage.source.kafka;
 
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
@@ -28,13 +29,19 @@ import java.io.InputStreamReader;
 @StageDef(version="0.0.1",
   label="Json Kafka Source",
   icon="kafka.png")
+@ConfigGroups(value = JsonKafkaSource.JsonKafkaSourceConfigGroups.class)
 public class JsonKafkaSource extends AbstractKafkaSource {
+
+  public enum JsonKafkaSourceConfigGroups implements ConfigGroups.Groups {
+    JSON_PROPERTIES
+  }
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.MODEL,
     label = "JSON Content",
     description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects",
-    defaultValue = "ARRAY_OBJECTS")
+    defaultValue = "ARRAY_OBJECTS",
+    group = "JSON_CONFIGURATIONS")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
   public StreamingJsonParser.Mode jsonContent;
 
@@ -43,7 +50,8 @@ public class JsonKafkaSource extends AbstractKafkaSource {
     label = "Maximum JSON Object Length",
     description = "The maximum length for a JSON Object being converted to a record, if greater the full JSON " +
       "object is discarded and processing continues with the next JSON object",
-    defaultValue = "4096")
+    defaultValue = "4096",
+    group = "JSON_CONFIGURATIONS")
   public int maxJsonObjectLen;
 
   @Override

@@ -11,7 +11,7 @@
                               "label" : "username",
                               "description" : "The user name of the twitter user",
                               "required" : true,
-                              "group" : "",
+                              "group" : "USER_INFO",
                               "fieldName" : "username",
                               "model" : {
                                 "modelType" : "FIELD_SELECTOR",
@@ -27,7 +27,7 @@
                               "label" : "password",
                               "description" : "The password the twitter user",
                               "required" : true,
-                              "group" : "",
+                              "group" : "USER_INFO",
                               "fieldName" : "password",
                               "model" : null,
                               "defaultValue" : "admin"

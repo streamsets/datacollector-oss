@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -24,7 +25,6 @@ import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.api.impl.Utils;
-
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -194,6 +194,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           PrintWriter pw = new PrintWriter(resource.openWriter());
           pw.println(STAGE_LABEL + EQUALS + s.getLabel());
           pw.println(STAGE_DESCRIPTION + EQUALS + s.getDescription());
+          for(String group : s.getConfigOptionGroups()) {
+            pw.println(group + SEPARATOR + LABEL + EQUALS + group);
+          }
           for (ConfigDefinition c : s.getConfigDefinitions()) {
             pw.println(c.getName() + SEPARATOR + LABEL + EQUALS + c.getLabel());
             pw.println(c.getName() + SEPARATOR + DESCRIPTION + EQUALS + c.getDescription());
@@ -270,6 +273,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         rawSourceDefinition = getRawSourceDefinition(rawSourceAnnot);
       }
 
+      Set<String> configOptionGroups = getConfigOptionGroupsForStage(typeElement);
+
       String stageName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
       stageDefinition = new StageDefinition(
           typeElement.getQualifiedName().toString(),
@@ -280,11 +285,21 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           StageType.valueOf(getStageTypeFromElement(typeElement)),
           configDefinitions,
           rawSourceDefinition,
-          stageDefAnnotation.icon());
+          stageDefAnnotation.icon(),
+          configOptionGroups);
     } else {
       stageDefValidationError = true;
     }
     return stageDefinition;
+  }
+
+  private Set<String> getConfigOptionGroupsForStage(TypeElement typeElement) {
+    Map<VariableElement, String> allConfigGroups = getAllConfigGroups(typeElement);
+    Set<String> configOptionGroups = new HashSet<>();
+    for(Map.Entry<VariableElement, String> v : allConfigGroups.entrySet()) {
+      configOptionGroups.add(v.getKey().getSimpleName().toString());
+    }
+    return configOptionGroups;
   }
 
   private void createErrorEnum(TypeElement typeElement) {
@@ -353,7 +368,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             configDefAnnot.description(),
             getDefaultValue(variableElement, configDefAnnot.defaultValue()),
             configDefAnnot.required(),
-            ""/*group name - need to remove it*/,
+            configDefAnnot.group(),
             variableElement.getSimpleName().toString(),
             model,
             configDefAnnot.dependsOn(),
@@ -1056,13 +1071,61 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * @return
    */
   private boolean validateStageDef(TypeElement typeElement, StageDef stageDefAnnotation) {
-    boolean validInterface = validateInterface(typeElement);
-    boolean validStage = validateAndCacheStageDef(typeElement, stageDefAnnotation);
-    boolean validConstructor = validateStageForConstructor(typeElement);
-    boolean validateIcon = validateIconExists(typeElement, stageDefAnnotation);
-    boolean validateRawSource = validateRawSource(typeElement);
+    boolean valid = true;
+    valid &= validateInterface(typeElement);
+    valid &= validateAndCacheStageDef(typeElement, stageDefAnnotation);
+    valid &= validateStageForConstructor(typeElement);
+    valid &= validateIconExists(typeElement, stageDefAnnotation);
+    valid &= validateRawSource(typeElement);
+    valid &= validateOptionGroups(typeElement);
 
-    return validInterface && validStage && validConstructor && validateIcon && validateRawSource;
+    return valid;
+  }
+
+  private boolean validateOptionGroups(TypeElement typeElement) {
+    boolean valid = true;
+    Map<VariableElement, String> allConfigGroups = getAllConfigGroups(typeElement);
+    //go over each type and check if it has ConfigGroup annotation
+    Set<String> groups = new HashSet<>();
+    for(Map.Entry<VariableElement, String> v : allConfigGroups.entrySet()) {
+      if(groups.contains(v.getKey().getSimpleName().toString())) {
+        printError("configOptionGroup.duplicate.group.name",
+          "Duplicate option group name {} encountered in Stage {}.",
+          v.getValue() + SEPARATOR + v.getKey().getSimpleName().toString(), typeElement.getSimpleName().toString());
+        valid = false;
+      } else {
+        groups.add(v.getKey().getSimpleName().toString());
+      }
+    }
+    return valid;
+  }
+
+  private Map<VariableElement, String> getAllConfigGroups(TypeElement typeElement) {
+    List<TypeMirror> allTypes = new ArrayList<>();
+    allTypes.add(typeElement.asType());
+    allTypes.addAll(getAllSuperTypes(typeElement));
+    Map<VariableElement, String> allConfigGroups = new HashMap<>();
+
+    for(TypeMirror typeMirror : allTypes) {
+      TypeElement t = (TypeElement)processingEnv.getTypeUtils().asElement(typeMirror);
+      ConfigGroups configGroups = t.getAnnotation(ConfigGroups.class);
+      if(configGroups != null) {
+        TypeMirror cgTypeMirror = null;
+        try {
+          configGroups.value();
+        } catch (MirroredTypeException e) {
+          cgTypeMirror = e.getTypeMirror();
+        }
+
+        //Make sure raw source previewer implementation is top level
+        Element cgElement = processingEnv.getTypeUtils().asElement(cgTypeMirror);
+        List<? extends Element> enclosedElements = cgElement.getEnclosedElements();
+        for(VariableElement v : ElementFilter.fieldsIn(enclosedElements)) {
+          allConfigGroups.put(v, cgElement.getSimpleName().toString());
+        }
+      }
+    }
+    return allConfigGroups;
   }
 
   private boolean validateRawSource(TypeElement typeElement) {

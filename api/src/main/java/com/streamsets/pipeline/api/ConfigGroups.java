@@ -13,25 +13,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface ConfigDef {
+@Target(ElementType.TYPE)
+public @interface ConfigGroups {
 
-  public enum Type { BOOLEAN, INTEGER, STRING, LIST, MAP, MODEL}
+  public interface Groups{}
 
-  Type type();
-
-  String defaultValue() default "";
-
-  boolean required();
-
-  String label();
-
-  String description() default "";
-
-  String group() default "";
-
-  String dependsOn() default "";
-
-  String[] triggeredByValue() default {};
+  Class<? extends Groups> value();
 
 }

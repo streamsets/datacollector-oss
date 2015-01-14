@@ -48,6 +48,7 @@ public class StageDefinition {
   private List<ConfigDefinition> configDefinitions;
   private Map<String, ConfigDefinition> configDefinitionsMap;
   private final String icon;
+  private final Set<String> configOptionGroups;
 
   @JsonCreator
   public StageDefinition(
@@ -59,7 +60,8 @@ public class StageDefinition {
     @JsonProperty("type") StageType type,
     @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions,
     @JsonProperty("rawSourceDefinition") RawSourceDefinition rawSourceDefinition,
-    @JsonProperty("icon") String icon) {
+    @JsonProperty("icon") String icon,
+    @JsonProperty("configOptionGroups") Set<String> configOptionGroups) {
     this.className = className;
     this.name = name;
     this.version = version;
@@ -73,6 +75,7 @@ public class StageDefinition {
       configDefinitionsMap.put(conf.getName(), conf);
     }
     this.icon = icon;
+    this.configOptionGroups = configOptionGroups;
   }
 
   public void setLibrary(String library, ClassLoader classLoader) {
@@ -133,6 +136,10 @@ public class StageDefinition {
     return type;
   }
 
+  public Set<String> getConfigOptionGroups() {
+    return configOptionGroups;
+  }
+
   public void addConfiguration(ConfigDefinition confDef) {
     if (configDefinitionsMap.containsKey(confDef.getName())) {
       throw new IllegalArgumentException(Utils.format("Stage '{}:{}:{}', configuration definition '{}' already exists",
@@ -187,7 +194,7 @@ public class StageDefinition {
         getLocalized();
     StageDefinition def = new StageDefinition(
       getClassName(), getName(), getVersion(), label, description,
-      getType(), configDefs, rsd, getIcon());
+      getType(), configDefs, rsd, getIcon(), getConfigOptionGroups());
     def.setLibrary(getLibrary(), getStageClassLoader());
 
     for(ConfigDefinition configDef : def.getConfigDefinitions()) {
