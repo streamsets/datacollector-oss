@@ -52,17 +52,22 @@
   </div>
 
   <div class="panel-body">
-    <tabset class="detail-tabs-left tabs-left icon-only">
+    <tabset class="detail-tabs-left tabs-left">
       <tab ng-repeat="tab in detailPaneTabs" active="tab.active" disabled="tab.disabled">
-        <tab-heading tooltip-placement="right" tooltip="{{ 'home.detailPane.' + tab.name | translate }}">
+        <tab-heading>  <!--tooltip-placement="right" tooltip="{{tab.label}}" -->
           <i class="fa fa-exclamation-triangle icon-danger"
              ng-show="showWarning(tab)"></i>
 
           <i class="{{tab.iconClass}}"
              ng-hide="showWarning(tab)"></i>
+
+          <span>{{tab.label}}</span>
         </tab-heading>
         <div ng-include="tab.template"></div>
       </tab>
     </tabset>
   </div>
 </div>
+
+
+<ng-include src="'app/home/detail/fieldSelectorModal.tpl.html'"></ng-include>

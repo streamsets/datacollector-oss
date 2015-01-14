@@ -146,10 +146,14 @@
         "enterValue": "Enter Value",
         "noRecord": "No Preview Record.",
         "pipelineInformation": "Pipeline Information",
-        "rawSourcePreview": "Raw Source Preview",
+        "rawSourcePreview": "Raw Preview",
         "requiredFieldsSelectionButton": "Select Field Using Preview Data",
         "selectFields": "Select Fields...",
-        "stageInformation": "Stage Information"
+        "stageInformation": "Stage Information",
+        "stageDescription": "Stage Description",
+        "stageName": "Stage Name",
+        "stageLibrary": "Stage Library",
+        "stageType": "Stage Type"
       },
       "general": "General",
       "history": "History",
@@ -178,7 +182,9 @@
       }
     },
     "previewPane": {
-      "previewingStage": "Previewing Stage: ",
+      "previewingStage": "PreviewStage: ",
+      "previewSingleStage": "Preview Single Stage",
+      "previewMultipleStages": "Preview Multiple Stages",
       "previewRecords": "Preview Records",
       "inputData": "Input Data",
       "outputData": "Output Data",
@@ -205,9 +211,10 @@
       "browse": "Browse"
     },
     "resetOffset": {
-      "confirmationTitle": "Reset Offset Confirmation",
-      "confirmationMessage": "Are you sure you want to reset offset for Pipeline '{{name}}'?",
-      "successMessage": "Reset Offset is successful."
+      "title": "Reset Origin",
+      "confirmationTitle": "Reset Origin Confirmation",
+      "confirmationMessage": "The Data Collector will request all available data from the origin instead of continuing from the last processed record. This might result in processing data that was already processed. Continue?",
+      "successMessage": "Reset Origin is successful."
     },
     "shutdown": {
       "headerLabel": "Shutdown Collector",

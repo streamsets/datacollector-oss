@@ -6,8 +6,67 @@ angular
   .module('pipelineAgentApp.home')
 
   .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant) {
-    var
+    var generalTab =  {
+        name:'general',
+        label: 'General',
+        template:'app/home/detail/general/general.tpl.html',
+        iconClass: 'fa fa-info-circle fa-12x'
+      },
+      historyTab = {
+        name:'history',
+        label: 'History',
+        template:'app/home/detail/history/history.tpl.html',
+        iconClass: 'fa fa-history fa-12x'
+      },
+      configurationTab = {
+        name:'configuration',
+        label: 'Configuration',
+        template:'app/home/detail/configuration/configuration.tpl.html',
+        iconClass: 'fa fa-gear fa-12x'
+      },
+      rawPreviewTab = {
+        name:'rawPreview',
+        label: 'Raw Preview',
+        template:'app/home/detail/rawPreview/rawPreview.tpl.html',
+        iconClass: 'fa fa-eye fa-12x'
+      },
+      summaryTab = {
+        name:'summary',
+        label: 'Summary',
+        template:'app/home/detail/summary/summary.tpl.html',
+        iconClass: 'fa fa-bar-chart fa-12x'
+      },
+      errorTab = {
+        name:'errors',
+        label: 'Errors',
+        template:'app/home/detail/badRecords/badRecords.tpl.html',
+        iconClass: 'fa fa-exclamation-triangle fa-12x'
+      },
+      dataSummaryTab = {
+        name:'summary',
+        label: 'Summary',
+        template:'app/home/detail/dataSummary/dataSummary.tpl.html',
+        iconClass: 'fa fa-bar-chart fa-12x'
+      },
+      alertsTab = {
+        name:'alerts',
+        label: 'Alerts',
+        template:'app/home/detail/alerts/alerts.tpl.html',
+        iconClass: 'glyphicon glyphicon-exclamation-sign fa-12x'
+      },
+      rulesTab = {
+        name:'rules',
+        label: 'Rules',
+        template:'app/home/detail/rules/rules.tpl.html',
+        iconClass: 'fa fa-list fa-12x'
+      },
       pipelineTabsEdit = [
+        {
+          name:'general',
+          label: 'General',
+          template:'app/home/detail/general/general.tpl.html',
+          iconClass: 'fa fa-info-circle fa-12x'
+        },
         {
           name:'configuration',
           template:'app/home/detail/configuration/configuration.tpl.html',
@@ -15,6 +74,7 @@ angular
         },
         {
           name:'history',
+          label: 'History',
           template:'app/home/detail/history/history.tpl.html',
           iconClass: 'fa fa-history fa-12x'
         }
@@ -140,34 +200,40 @@ angular
       }
     });
 
-    var getDetailTabsList = function(type, isPipelineRunning) {
+    var getDetailTabsList = function(type, isPipelineRunning, selectedObject) {
       switch(type) {
         case pipelineConstant.PIPELINE:
           if(isPipelineRunning) {
-            return pipelineTabsRunning;
+            return [summaryTab, errorTab, generalTab, configurationTab, historyTab];
           } else {
-            return pipelineTabsEdit;
+            return [generalTab, configurationTab, historyTab];
           }
           break;
         case pipelineConstant.STAGE_INSTANCE:
+          var tabsList = [];
           if(isPipelineRunning) {
-            return stageTabsRunning;
+            tabsList = [summaryTab, errorTab, generalTab, configurationTab];
           } else {
-            return stageTabsEdit;
+            tabsList = [generalTab, configurationTab];
           }
-          break;
+
+          if($scope.detailPaneConfigDefn.rawSourceDefinition) {
+            tabsList.push(rawPreviewTab);
+          }
+
+          return tabsList;
         case pipelineConstant.LINK:
           if(isPipelineRunning) {
-            return linkTabsRunning;
+            return [dataSummaryTab, alertsTab, rulesTab, generalTab];
           } else {
-            return stageTabsEdit;
+            return [generalTab];
           }
           break;
       }
     };
 
     $scope.$on('onSelectionChange', function(event, selectedObject, type) {
-      $scope.detailPaneTabs = getDetailTabsList(type, $scope.isPipelineRunning);
+      $scope.detailPaneTabs = getDetailTabsList(type, $scope.isPipelineRunning, selectedObject);
     });
 
     $scope.$watch('isPipelineRunning', function(newValue) {

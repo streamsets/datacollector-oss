@@ -1,0 +1,49 @@
+<form class="form-horizontal" role="form" name="stageGeneralInfo">
+
+  <!-- General Configuration for Pipeline-->
+  <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
+    <label class="col-md-3 control-label" translate="global.form.name">Name</label>
+    <div class="controls col-md-7">
+      <input readonly type="text" class="form-control" name="name"
+             ng-model="pipelineConfig.info.name">
+    </div>
+  </div>
+
+  <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
+    <label class="col-md-3 control-label" translate="global.form.description">Description</label>
+    <div class="controls col-md-7">
+              <textarea class="form-control" name="description"
+                        ng-readonly="isPipelineRunning"
+                        ng-model="pipelineConfig.description"></textarea>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" translate="global.form.lastModifiedBy">Last Modified By</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{pipelineConfig.info.lastModifier}}</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" translate="global.form.lastModifiedOn">Last Modified On</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{pipelineConfig.info.lastModified | date:'medium'}}</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" translate="global.form.createdBy">Created By</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{pipelineConfig.info.creator}}</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" translate="global.form.createdOn">Created On</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{pipelineConfig.info.created  | date:'medium'}}</p>
+    </div>
+  </div>
+
+</form>

@@ -1,0 +1,32 @@
+<form class="form-horizontal information-form" role="form" name="linkGeneralInfo">
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" translate="global.form.fromStage">From Stage</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{selectedObject.source.uiInfo.label}}</p>
+    </div>
+  </div>
+
+  <div class="form-group" ng-if="selectedObject.source.outputLanes.length > 1">
+    <label class="col-md-3 control-label" translate="global.form.fromStageLane">From Stage Lane</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{getLaneIndex(selectedObject)}}</p>
+    </div>
+  </div>
+
+
+  <div class="form-group" ng-if="selectedObject.source.outputLanes.length > 1">
+    <label class="col-md-3 control-label" translate="global.form.fromStageLanePredicate">From Stage Lane Predicate</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{getLanePredicate(selectedObject)}}</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" translate="global.form.toStage">To Stage</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{selectedObject.target.uiInfo.label}}</p>
+    </div>
+  </div>
+
+</form>

@@ -5,18 +5,19 @@
   <div class="panel-heading clearfix">
     <div class="btn-group pull-left detail-name-dropdown">
       <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
-        <span>{{'home.previewPane.previewingStage' | translate}}</span>
+        <span ng-if="!previewMultipleStages">{{'home.previewPane.previewSingleStage' | translate}}</span>
+        <span ng-if="previewMultipleStages">{{'home.previewPane.previewMultipleStages' | translate}}</span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
         <li role="presentation" ng-if="!previewMultipleStages">
           <a role="menuitem" tabindex="-1" href="#"
-             ng-click="changeToPreviewMultipleStages()">Preview Between Multiple Stages</a>
+             ng-click="changeToPreviewMultipleStages()" translate="home.previewPane.previewMultipleStages">Preview Multiple Stages</a>
         </li>
 
         <li role="presentation" ng-if="previewMultipleStages">
           <a role="menuitem" tabindex="-1" href="#"
-             ng-click="changeToPreviewSingleStage()">Preview Single Stage</a>
+             ng-click="changeToPreviewSingleStage()" translate="home.previewPane.previewSingleStage">Preview Single Stage</a>
         </li>
       </ul>
     </div>
