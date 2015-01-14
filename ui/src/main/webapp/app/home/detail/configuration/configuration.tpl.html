@@ -54,6 +54,7 @@
 
           <div class="form-group"
                ng-switch="configDefinition.type"
+               ng-if="!configDefinition.dependsOn || verifyDependsOn(detailPaneConfig, configDefinition)"
                ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions" show-errors>
 
             <div class="checkbox" ng-switch-when="BOOLEAN">

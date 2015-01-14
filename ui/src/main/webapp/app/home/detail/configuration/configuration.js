@@ -137,6 +137,12 @@ angular
       },
 
 
+      /**
+       * Add Lane
+       *
+       * @param stageInstance
+       * @param configValue
+       */
       addLane: function(stageInstance, configValue) {
         var outputLaneName = stageInstance.instanceName + 'OutputLane' + (new Date()).getTime();
         stageInstance.outputLanes.push(outputLaneName);
@@ -146,6 +152,15 @@ angular
         });
       },
 
+
+      /**
+       * Remove Lane
+       *
+       * @param stageInstance
+       * @param configValue
+       * @param lanePredicateMapping
+       * @param $index
+       */
       removeLane: function(stageInstance, configValue, lanePredicateMapping, $index) {
         var stages = $scope.pipelineConfig.stages;
 
@@ -162,6 +177,12 @@ angular
         });
       },
 
+      /**
+       * Add object to Map Configuration.
+       *
+       * @param stageInstance
+       * @param configValue
+       */
       addToMap: function(stageInstance, configValue) {
         configValue.push({
           key: '',
@@ -169,10 +190,26 @@ angular
         });
       },
 
+      /**
+       * Remove object from Map Configuration.
+       *
+       * @param stageInstance
+       * @param configValue
+       * @param mapObject
+       * @param $index
+       */
       removeFromMap: function(stageInstance, configValue, mapObject, $index) {
         configValue.splice($index, 1);
       },
 
+
+      /**
+       * Add Object to Custom Field Configuration.
+       *
+       * @param stageInstance
+       * @param configValue
+       * @param configDefinitions
+       */
       addToCustomField: function(stageInstance, configValue, configDefinitions) {
         var complexFieldObj = {};
         angular.forEach(configDefinitions, function (complexFiledConfigDefinition) {
@@ -182,14 +219,34 @@ angular
         configValue.push(complexFieldObj);
       },
 
+
+      /**
+       * Remove Object from Custom Field Configuration.
+       *
+       * @param stageInstance
+       * @param configValue
+       * @param $index
+       */
       removeFromCustomField: function(stageInstance, configValue, $index) {
         configValue.splice($index, 1);
       },
 
+      /**
+       * Return Lane Index.
+       *
+       * @param edge
+       * @returns {*}
+       */
       getLaneIndex: function(edge) {
         return _.indexOf(edge.source.outputLanes, edge.outputLane) + 1;
       },
 
+      /**
+       * Returns Lane Predicate value from configuration lanePredicates.
+       *
+       * @param edge
+       * @returns {string|config.value.predicate|predicate|d.value.predicate}
+       */
       getLanePredicate: function(edge) {
         var laneIndex = _.indexOf(edge.source.outputLanes, edge.outputLane),
           lanePredicatesConfiguration = _.find(edge.source.configuration, function(configuration) {
@@ -197,6 +254,24 @@ angular
           }),
           lanePredicateObject = lanePredicatesConfiguration ? lanePredicatesConfiguration.value[laneIndex] : '';
         return lanePredicateObject ? lanePredicateObject.predicate : '';
+      },
+
+      /**
+       * Returns true if dependsOn configuration contains value in triggeredByValues.
+       *
+       * @param stageInstance
+       * @param configuration
+       * @returns {*}
+       */
+      verifyDependsOn: function(stageInstance, configuration) {
+        var dependsOnConfigName = configuration.dependsOn,
+          triggeredByValues = configuration.triggeredByValues,
+          dependsOnConfiguration = _.find(stageInstance.configuration, function(configuration) {
+          return configuration.name === dependsOnConfigName;
+        });
+
+        return dependsOnConfiguration && dependsOnConfiguration.value &&
+          _.contains(triggeredByValues, dependsOnConfiguration.value);
       }
     });
 
