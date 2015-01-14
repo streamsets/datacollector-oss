@@ -182,7 +182,7 @@
       }
     },
     "previewPane": {
-      "previewingStage": "PreviewStage: ",
+      "previewStage": "Preview Stage",
       "previewSingleStage": "Preview Single Stage",
       "previewMultipleStages": "Preview Multiple Stages",
       "previewRecords": "Preview Records",
