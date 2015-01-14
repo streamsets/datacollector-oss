@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -84,39 +83,46 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   void loadStages() {
     if (LOG.isDebugEnabled()) {
       for (ClassLoader cl : stageClassLoaders) {
-        LOG.debug("About to load stages from library '{}'", getLibraryName(cl));
+        LOG.debug("About to load stages from library '{}'", StageLibraryUtils.getLibraryName(cl));
       }
     }
-    for (ClassLoader cl : stageClassLoaders) {
-      String libraryName = getLibraryName(cl);
-      LOG.debug("Loading stages from library '{}'", libraryName);
-      try {
-        Enumeration<URL> resources = cl.getResources(PIPELINE_STAGES_JSON);
-        while (resources.hasMoreElements()) {
-          Map<String, String> stagesInLibrary = new HashMap<>();
+    try {
+      LocaleInContext.set(Locale.getDefault());
+      for (ClassLoader cl : stageClassLoaders) {
+        String libraryName = StageLibraryUtils.getLibraryName(cl);
+        String libraryLabel = StageLibraryUtils.getLibraryLabel(cl);
+        LOG.debug("Loading stages from library '{}'", libraryName);
+        try {
+          Enumeration<URL> resources = cl.getResources(PIPELINE_STAGES_JSON);
+          while (resources.hasMoreElements()) {
+            Map<String, String> stagesInLibrary = new HashMap<>();
 
-          URL url = resources.nextElement();
-          InputStream is = url.openStream();
-          StageDefinition[] stages = json.readValue(is, StageDefinition[].class);
-          for (StageDefinition stage : stages) {
-            stage.setLibrary(libraryName, cl);
-            String key = createKey(libraryName, stage.getName(), stage.getVersion());
-            LOG.debug("Loaded stage '{}' (library:name:version)", key);
-            if (stagesInLibrary.containsKey(key)) {
-              throw new IllegalStateException(Utils.format(
-                  "Library '{}' contains more than one definition for stage '{}', class '{}' and class '{}'",
-                  libraryName, key, stagesInLibrary.get(key), stage.getStageClass()));
+            URL url = resources.nextElement();
+            InputStream is = url.openStream();
+            StageDefinition[] stages = json.readValue(is, StageDefinition[].class);
+            for (StageDefinition stage : stages) {
+              stage.setLibrary(libraryName, libraryLabel, cl);
+              String key = createKey(libraryName, stage.getName(), stage.getVersion());
+              LOG.debug("Loaded stage '{}' (library:name:version)", key);
+              if (stagesInLibrary.containsKey(key)) {
+                throw new IllegalStateException(Utils.format(
+                    "Library '{}' contains more than one definition for stage '{}', class '{}' and class '{}'",
+                    libraryName, key, stagesInLibrary.get(key), stage.getStageClass()));
+              }
+              addSystemConfigurations(stage);
+              stagesInLibrary.put(key, stage.getClassName());
+              stageList.add(stage);
+              stageMap.put(key, stage);
             }
-            addSystemConfigurations(stage);
-            stagesInLibrary.put(key, stage.getClassName());
-            stageList.add(stage);
-            stageMap.put(key, stage);
           }
+        } catch (IOException ex) {
+          throw new RuntimeException(
+              Utils.format("Could not load stages definition from '{}', {}", cl, ex.getMessage()),
+              ex);
         }
-      } catch (IOException ex) {
-        throw new RuntimeException(Utils.format("Could not load stages definition from '{}', {}", cl, ex.getMessage()),
-                                   ex);
       }
+    } finally {
+      LocaleInContext.set(null);
     }
   }
 
@@ -149,19 +155,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @SuppressWarnings("unchecked")
   public StageDefinition getStage(String library, String name, String version) {
     return stageMap.get(createKey(library, name, version));
-  }
-
-  private String getLibraryName(ClassLoader cl) {
-    String name;
-    try {
-      Method method = cl.getClass().getMethod("getName");
-      name = (String) method.invoke(cl);
-    } catch (NoSuchMethodException ex ) {
-      name = "default";
-    } catch (Exception ex ) {
-      throw new RuntimeException(ex);
-    }
-    return name;
   }
 
 }

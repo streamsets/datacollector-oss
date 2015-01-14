@@ -8,15 +8,13 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.ChooserValues;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +33,7 @@ public class StageDefinition {
   private static final String FIELD_VALUE_CHOOSER = "FieldValueChooser";
 
   private String library;
+  private String libraryLabel;
   private ClassLoader classLoader;
   private Class klass;
 
@@ -78,8 +77,9 @@ public class StageDefinition {
     this.configOptionGroups = configOptionGroups;
   }
 
-  public void setLibrary(String library, ClassLoader classLoader) {
+  public void setLibrary(String library, String label, ClassLoader classLoader) {
     this.library = library;
+    this.libraryLabel = label;
     this.classLoader = classLoader;
     try {
       klass = classLoader.loadClass(getClassName());
@@ -91,6 +91,10 @@ public class StageDefinition {
 
   public String getLibrary() {
     return library;
+  }
+
+  public String getLibraryLabel() {
+    return libraryLabel;
   }
 
   @JsonIgnore
@@ -192,10 +196,11 @@ public class StageDefinition {
     String label = new LocalizableMessage(classLoader, rbName, STAGE_LABEL, getLabel(), null).getLocalized();
     String description = new LocalizableMessage(classLoader, rbName, STAGE_DESCRIPTION, getDescription(), null).
         getLocalized();
+    String libraryLabel = StageLibraryUtils.getLibraryLabel(classLoader);
     StageDefinition def = new StageDefinition(
       getClassName(), getName(), getVersion(), label, description,
       getType(), configDefs, rsd, getIcon(), getConfigOptionGroups());
-    def.setLibrary(getLibrary(), getStageClassLoader());
+    def.setLibrary(getLibrary(), libraryLabel, classLoader);
 
     for(ConfigDefinition configDef : def.getConfigDefinitions()) {
       if(configDef.getModel() != null &&

@@ -92,11 +92,11 @@ public class TestStageRuntime {
     StageDefinition sourceDef = new StageDefinition(
       TSource.class.getName(), "source", "1.0.0", "label", "description",
       StageType.SOURCE, configDefs, null/*raw source definition*/,"", null);
-    sourceDef.setLibrary("library", Thread.currentThread().getContextClassLoader());
+    sourceDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
     StageDefinition targetDef = new StageDefinition(
       TTarget.class.getName(), "target", "1.0.0", "label", "description",
       StageType.TARGET, Collections.EMPTY_LIST, null/*raw source definition*/,"", null);
-    targetDef.setLibrary("library", Thread.currentThread().getContextClassLoader());
+    targetDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"))).thenReturn(targetDef);
     return lib;

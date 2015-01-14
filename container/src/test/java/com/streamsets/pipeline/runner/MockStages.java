@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -151,15 +150,15 @@ public class MockStages {
       StageDefinition sDef = new StageDefinition(
         MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
         "sourceDesc", StageType.SOURCE, Collections.EMPTY_LIST, null/*raw source definition*/,"", null);
-      sDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
+      sDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
       StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel",
           "sourceDescription", StageType.PROCESSOR, Collections.EMPTY_LIST, null/*raw source definition*/, "", null);
 
-      pDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
+      pDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
       StageDefinition tDef = new StageDefinition(
         MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
         "targetDesc", StageType.TARGET, Collections.EMPTY_LIST, null/*raw source definition*/, "", null);
-      tDef.setLibrary("default", Thread.currentThread().getContextClassLoader());
+      tDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
       stages = ImmutableList.of(sDef, pDef, tDef);
     }
 
