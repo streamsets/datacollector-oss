@@ -150,19 +150,19 @@ angular
         yAxisTickFormat: $scope.sizeFormat(),
         values: [
           {
-            name: 'java.lang:type=MemoryPool,name=PS Eden Space',
+            name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Eden Space',
             property: 'Usage/max',
             key: 'Max',
             values: []
           },
           {
-            name: 'java.lang:type=MemoryPool,name=PS Eden Space',
+            name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Eden Space',
             property: 'Usage/committed',
             key: 'Committed',
             values: []
           },
           {
-            name: 'java.lang:type=MemoryPool,name=PS Eden Space',
+            name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Eden Space',
             property: 'Usage/used',
             key: 'Used',
             values: []
@@ -176,19 +176,19 @@ angular
         yAxisTickFormat: $scope.sizeFormat(),
         values: [
           {
-            name: 'java.lang:type=MemoryPool,name=PS Survivor Space',
+            name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Survivor Space',
             property: 'Usage/max',
             key: 'Max',
             values: []
           },
           {
-            name: 'java.lang:type=MemoryPool,name=PS Survivor Space',
+            name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Survivor Space',
             property: 'Usage/committed',
             key: 'Committed',
             values: []
           },
           {
-            name: 'java.lang:type=MemoryPool,name=PS Survivor Space',
+            name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Survivor Space',
             property: 'Usage/used',
             key: 'Used',
             values: []
@@ -202,19 +202,19 @@ angular
         yAxisTickFormat: $scope.sizeFormat(),
         values: [
           {
-            name: 'java.lang:type=MemoryPool,name=PS Old Gen',
+            name: 'java.lang:type=MemoryPool,name=PS Old Gen|java.lang:type=MemoryPool,name=Tenured Gen',
             property: 'Usage/max',
             key: 'Max',
             values: []
           },
           {
-            name: 'java.lang:type=MemoryPool,name=PS Old Gen',
+            name: 'java.lang:type=MemoryPool,name=PS Old Gen|java.lang:type=MemoryPool,name=Tenured Gen',
             property: 'Usage/committed',
             key: 'Committed',
             values: []
           },
           {
-            name: 'java.lang:type=MemoryPool,name=PS Old Gen',
+            name: 'java.lang:type=MemoryPool,name=PS Old Gen|java.lang:type=MemoryPool,name=Tenured Gen',
             property: 'Usage/used',
             key: 'Used',
             values: []
@@ -228,19 +228,19 @@ angular
         yAxisTickFormat: $scope.sizeFormat(),
         values: [
           {
-            name: 'java.lang:type=MemoryPool,name=PS Perm Gen',
+            name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Perm Gen',
             property: 'Usage/max',
             key: 'Max',
             values: []
           },
           {
-            name: 'java.lang:type=MemoryPool,name=PS Perm Gen',
+            name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Perm Gen',
             property: 'Usage/committed',
             key: 'Committed',
             values: []
           },
           {
-            name: 'java.lang:type=MemoryPool,name=PS Perm Gen',
+            name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Perm Gen',
             property: 'Usage/used',
             key: 'Used',
             values: []
@@ -314,7 +314,8 @@ angular
         angular.forEach(chartList, function(chartObj) {
 
           angular.forEach(chartObj.values, function(chartBean) {
-            if(chartBean.name === bean.name) {
+            var regExp = new RegExp(chartBean.name);
+            if(regExp.test(bean.name)) {
               var propertyList = chartBean.property.split('/'),
                 propertyValue = bean;
 
