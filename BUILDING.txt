@@ -44,5 +44,12 @@ Aggregating the coverage report for all modules:
   The aggregated coverage report will be at root/target/site/cobertura/index.html
 
 
+IMPORTANT TEST INSTRUCTIONS:
+
+'mvn test' must be run within the module for the following modules:
+
+*cdh5_2_1-lib
+*cdh5_3_0_lib
+*apache-kafka0_8_1-lib
 
 

@@ -40,6 +40,10 @@
     <module>stage-lib</module>
     <module>sdk</module>
     <module>sdk-test</module>
+    <module>hdfs-lib</module>
+    <module>hdfs-lib-test</module>
+    <module>cdh5_3_0-lib</module>
+    <module>cdh5_2_1-lib</module>
   </modules>
 
   <build>

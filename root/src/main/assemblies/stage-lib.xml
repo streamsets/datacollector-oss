@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- (c) 2014 StreamSets, Inc. All rights reserved. May not
+ (c) 2015 StreamSets, Inc. All rights reserved. May not
  be copied, modified, or distributed in whole or part without
  written consent of StreamSets, Inc.
+-->
+<!--
+  Common assembly used by stage library modules
 -->
 <assembly>
   <id>stage-lib</id>
@@ -20,7 +23,7 @@
       <useProjectArtifact>true</useProjectArtifact>
       <useTransitiveDependencies>true</useTransitiveDependencies>
       <useTransitiveFiltering>true</useTransitiveFiltering>
-      <outputDirectory>/streamsets-basic/lib</outputDirectory>
+      <outputDirectory>/${project.artifactId}/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
     </dependencySet>
