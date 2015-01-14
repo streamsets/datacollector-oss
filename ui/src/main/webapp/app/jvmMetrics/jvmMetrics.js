@@ -92,6 +92,31 @@ angular
         ]
       },
       {
+        name: 'classes',
+        label: 'Classes',
+        xAxisTickFormat: $scope.dateFormat(),
+        values: [
+          {
+            name: 'java.lang:type=ClassLoading',
+            property: 'LoadedClassCount',
+            key: 'Loaded',
+            values: []
+          },
+          {
+            name: 'java.lang:type=ClassLoading',
+            property: 'UnloadedClassCount',
+            key: 'Unloaded',
+            values: []
+          },
+          {
+            name: 'java.lang:type=ClassLoading',
+            property: 'TotalLoadedClassCount',
+            key: 'Total',
+            values: []
+          }
+        ]
+      },
+      {
         name: 'heapMemoryUsage',
         label: 'Heap Memory Usage',
         xAxisTickFormat: $scope.dateFormat(),
