@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -24,6 +25,7 @@ import java.util.List;
 @RawSource(rawSourcePreviewer = TestRawSourcePreviewer.FaultyRawSourcePreviewer.class)
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
   , version = "1.0")
+@ConfigGroups(FaultySource.MyGroups.class)
 public class FaultySource {
 
   //1.Faulty config should not be final
@@ -156,7 +158,8 @@ public class FaultySource {
       description = "The domain of the twitter user",
       type = ConfigDef.Type.BOOLEAN,
       dependsOn = "myExtension",
-      triggeredByValue = {"123", "567"})
+      triggeredByValue = {"123", "567"},
+      group = "X")
   public boolean callMe;
 
   String myExtension;
@@ -173,6 +176,15 @@ public class FaultySource {
     @Override
     public List<String> getLabels() {
       return ImmutableList.of("a", "b");
+    }
+  }
+
+  //21. My Groups must be enum
+  public class MyGroups implements ConfigGroups.Groups {
+
+    @Override
+    public String getLabel() {
+      return "a";
     }
   }
 

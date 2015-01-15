@@ -8,9 +8,9 @@ package com.streamsets.pipeline.lib.stage.source.kafka;
 import kafka.producer.Partitioner;
 import kafka.utils.VerifiableProperties;
 
-public class FixedPartitioner implements Partitioner {
+public class ExpressionPartitioner implements Partitioner {
 
-  public FixedPartitioner(VerifiableProperties props) {
+  public ExpressionPartitioner(VerifiableProperties props) {
 
   }
 

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.ChooserValues;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -47,7 +47,8 @@ public class StageDefinition {
   private List<ConfigDefinition> configDefinitions;
   private Map<String, ConfigDefinition> configDefinitionsMap;
   private final String icon;
-  private final Set<String> configOptionGroups;
+  private final ConfigGroupDefinition configGroupDefinition;
+
 
   @JsonCreator
   public StageDefinition(
@@ -60,7 +61,7 @@ public class StageDefinition {
     @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions,
     @JsonProperty("rawSourceDefinition") RawSourceDefinition rawSourceDefinition,
     @JsonProperty("icon") String icon,
-    @JsonProperty("configOptionGroups") Set<String> configOptionGroups) {
+    @JsonProperty("configGroupDefinition") ConfigGroupDefinition configGroupDefinition) {
     this.className = className;
     this.name = name;
     this.version = version;
@@ -74,7 +75,7 @@ public class StageDefinition {
       configDefinitionsMap.put(conf.getName(), conf);
     }
     this.icon = icon;
-    this.configOptionGroups = configOptionGroups;
+    this.configGroupDefinition = configGroupDefinition;
   }
 
   public void setLibrary(String library, String label, ClassLoader classLoader) {
@@ -87,6 +88,11 @@ public class StageDefinition {
       throw new RuntimeException(ex);
     }
     updateValuesAndLabelsFromValuesProvider();
+    updateGroupLabels();
+  }
+
+  public ConfigGroupDefinition getConfigGroupDefinition() {
+    return configGroupDefinition;
   }
 
   public String getLibrary() {
@@ -138,10 +144,6 @@ public class StageDefinition {
 
   public StageType getType() {
     return type;
-  }
-
-  public Set<String> getConfigOptionGroups() {
-    return configOptionGroups;
   }
 
   public void addConfiguration(ConfigDefinition confDef) {
@@ -196,10 +198,25 @@ public class StageDefinition {
     String label = new LocalizableMessage(classLoader, rbName, STAGE_LABEL, getLabel(), null).getLocalized();
     String description = new LocalizableMessage(classLoader, rbName, STAGE_DESCRIPTION, getDescription(), null).
         getLocalized();
+
     String libraryLabel = StageLibraryUtils.getLibraryLabel(classLoader);
+
+    ConfigGroupDefinition configGroupDefinition = getConfigGroupDefinition();
+    ConfigGroupDefinition localizedConfGroupDef = null;
+    //localize group names
+    if(configGroupDefinition != null) {
+      Map<String, String> localizedGroups = new HashMap<>();
+      for (Map.Entry<String, String> group : getConfigGroupDefinition().getGroupNameToLabelMap().entrySet()) {
+        localizedGroups.put(group.getKey(),
+          new LocalizableMessage(classLoader, rbName, group.getKey(), group.getValue(), null).getLocalized());
+      }
+      localizedConfGroupDef = new ConfigGroupDefinition(configGroupDefinition.getClassNameToGroupsMap(),
+        localizedGroups);
+    }
+
     StageDefinition def = new StageDefinition(
       getClassName(), getName(), getVersion(), label, description,
-      getType(), configDefs, rsd, getIcon(), getConfigOptionGroups());
+      getType(), configDefs, rsd, getIcon(), localizedConfGroupDef);
     def.setLibrary(getLibrary(), libraryLabel, classLoader);
 
     for(ConfigDefinition configDef : def.getConfigDefinitions()) {
@@ -210,13 +227,15 @@ public class StageDefinition {
         List<String> labels = configDef.getModel().getLabels();
         List<String> localizedLabels = new ArrayList<>(values.size());
         for(int i = 0; i < values.size(); i++) {
-          String key = configDef.getName() + SEPARATOR + FIELD_VALUE_CHOOSER + SEPARATOR + values.get(i);
+          String key = configDef.getName() + SEPARATOR + configDef.getModel().getModelType().name() + SEPARATOR +
+            values.get(i);
           String l = new LocalizableMessage(classLoader, rbName, key, labels.get(i), null).getLocalized();
           localizedLabels.add(l);
         }
         configDef.getModel().setLabels(localizedLabels);
       }
     }
+
     return def;
   }
 
@@ -259,9 +278,28 @@ public class StageDefinition {
       }
       configDef.getModel().setValues(values);
       configDef.getModel().setLabels(labels);
-    } catch (ClassNotFoundException | InstantiationException |
-      IllegalAccessException e) {
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  private void updateGroupLabels() {
+    ConfigGroupDefinition configGroupDefinition = getConfigGroupDefinition();
+    if(configGroupDefinition != null) {
+      Map<String, List<String>> classNameToGroupsMap = configGroupDefinition.getClassNameToGroupsMap();
+      Map<String, String> groupNameToLabelMap = configGroupDefinition.getGroupNameToLabelMap();
+
+      for (Map.Entry<String, List<String>> entry : classNameToGroupsMap.entrySet()) {
+        try {
+          Class configGroupsClass = classLoader.loadClass(entry.getKey());
+          for (String groupName : entry.getValue()) {
+            ConfigGroups.Groups group = (ConfigGroups.Groups) Enum.valueOf(configGroupsClass, groupName);
+            groupNameToLabelMap.put(groupName, group.getLabel());
+          }
+        } catch (ClassNotFoundException e) {
+          throw new RuntimeException(e);
+        }
+      }
     }
   }
 }

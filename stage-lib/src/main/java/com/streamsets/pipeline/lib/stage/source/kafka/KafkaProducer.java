@@ -5,6 +5,11 @@
  */
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.util.StageLibError;
+import kafka.javaapi.TopicMetadata;
+import kafka.javaapi.TopicMetadataRequest;
+import kafka.javaapi.consumer.SimpleConsumer;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
@@ -13,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -33,13 +39,16 @@ public class KafkaProducer {
   private static final String PARTITIONER_CLASS_KEY = "partitioner.class";
   private static final String RANDOM_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.stage.source.kafka.RandomPartitioner";
   private static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.stage.source.kafka.RoundRobinPartitioner";
-  private static final String FIXED_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.stage.source.kafka.FixedPartitioner";
+  private static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.stage.source.kafka.ExpressionPartitioner";
   private static final String COLON = ":";
+
+  private static final int METADATA_READER_TIME_OUT = 10000;
+  private static final int BUFFER_SIZE = 64 * 1024;
+  private static final String METADATA_READER_CLIENT = "metadataReaderClient";
+
 
   /*Topic to readData from*/
   private final String topic;
-  /*Topic to readData from*/
-  private final String partitionKey;
   /*Host on which the seed broker is running*/
   private final KafkaBroker broker;
 
@@ -51,10 +60,11 @@ public class KafkaProducer {
   private List<KeyedMessage<String, byte[]>> messageList;
   private Producer<String, byte[]> producer;
 
-  public KafkaProducer(String topic, String partitionKey, KafkaBroker broker, PayloadType payloadType,
+  private int numberOfPartitions;
+
+  public KafkaProducer(String topic, KafkaBroker broker, PayloadType payloadType,
                        PartitionStrategy partitionStrategy, Map<String, String> kafkaProducerConfigs) {
     this.topic = topic;
-    this.partitionKey = partitionKey;
     this.broker = broker;
     this.payloadType = payloadType;
     this.partitionStrategy = partitionStrategy;
@@ -62,7 +72,7 @@ public class KafkaProducer {
     this.kafkaProducerConfigs = kafkaProducerConfigs;
   }
 
-  public void init() {
+  public void init() throws StageException {
     Properties props = new Properties();
     //metadata.broker.list
     props.put(METADATA_BROKER_LIST_KEY, this.broker.getHost() + COLON + this.broker.getPort());
@@ -81,6 +91,42 @@ public class KafkaProducer {
 
     ProducerConfig config = new ProducerConfig(props);
     producer = new Producer<>(config);
+
+    numberOfPartitions = findNumberOfPartitions();
+  }
+
+  private int findNumberOfPartitions() throws StageException {
+    SimpleConsumer simpleConsumer = null;
+    try {
+      LOG.info("Creating SimpleConsumer using the following configuration: host {}, port {}, max wait time {}, max " +
+          "fetch size {}, client name {}", broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
+        METADATA_READER_CLIENT);
+      simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
+        METADATA_READER_CLIENT);
+
+      List<String> topics = Collections.singletonList(topic);
+      TopicMetadataRequest req = new TopicMetadataRequest(topics);
+      kafka.javaapi.TopicMetadataResponse resp = simpleConsumer.send(req);
+
+      List<TopicMetadata> topicMetadataList = resp.topicsMetadata();
+      if(topicMetadataList == null || topicMetadataList.isEmpty()) {
+        LOG.error(StageLibError.LIB_0353.getMessage(), topic , broker.getHost() + ":" + broker.getPort());
+        throw new StageException(StageLibError.LIB_0353, topic , broker.getHost() + ":" + broker.getPort());
+      }
+      TopicMetadata topicMetadata = topicMetadataList.iterator().next();
+      //set number of partitions
+      numberOfPartitions = topicMetadata.partitionsMetadata().size();
+    } catch (Exception e) {
+      LOG.error(StageLibError.LIB_0352.getMessage(), topic , broker.getHost() + ":" + broker.getPort(), e.getMessage());
+      throw new StageException(StageLibError.LIB_0352, topic , broker.getHost() + ":" + broker.getPort(),
+        e.getMessage(), e);
+    } finally {
+      if (simpleConsumer != null) {
+        simpleConsumer.close();
+      }
+    }
+
+    return 0;
   }
 
   public void destroy() {
@@ -89,7 +135,7 @@ public class KafkaProducer {
     }
   }
 
-  public void enqueueMessage(byte[] message) throws IOException {
+  public void enqueueMessage(byte[] message, String partitionKey) throws IOException {
     messageList.add(new KeyedMessage<>(topic, partitionKey, message));
   }
 
@@ -109,8 +155,8 @@ public class KafkaProducer {
       props.put(PARTITIONER_CLASS_KEY, RANDOM_PARTITIONER_CLASS);
     } else if (partitionStrategy == PartitionStrategy.ROUND_ROBIN) {
       props.put(PARTITIONER_CLASS_KEY, ROUND_ROBIN_PARTITIONER_CLASS);
-    } else if (partitionStrategy == PartitionStrategy.FIXED) {
-      props.put(PARTITIONER_CLASS_KEY, FIXED_PARTITIONER_CLASS);
+    } else if (partitionStrategy == PartitionStrategy.EXPRESSION) {
+      props.put(PARTITIONER_CLASS_KEY, EXPRESSION_PARTITIONER_CLASS);
     }
   }
 
@@ -130,4 +176,7 @@ public class KafkaProducer {
     }
   }
 
+  public int getNumberOfPartitions() {
+    return numberOfPartitions;
+  }
 }

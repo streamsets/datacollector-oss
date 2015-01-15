@@ -65,7 +65,7 @@ public class KafkaTestUtil {
     Properties props = new Properties();
     props.put("metadata.broker.list", host + ":" + port);
     props.put("serializer.class", "kafka.serializer.StringEncoder");
-    props.put("partitioner.class", "com.streamsets.pipeline.lib.stage.source.kafka.FixedPartitioner");
+    props.put("partitioner.class", "com.streamsets.pipeline.lib.stage.source.kafka.ExpressionPartitioner");
     props.put("request.required.acks", "1");
     ProducerConfig config = new ProducerConfig(props);
 
@@ -82,6 +82,16 @@ public class KafkaTestUtil {
     for(int i = 0; i < 9; i++) {
       Record r = new RecordImpl("s", "s:1", (TEST_STRING + i).getBytes(), MIME);
       r.set(Field.create((TEST_STRING + i)));
+      records.add(r);
+    }
+    return records;
+  }
+
+  public static List<Record> createIntegerRecords() {
+    List<Record> records = new ArrayList<>(9);
+    for(int i = 0; i < 9; i++) {
+      Record r = new RecordImpl("s", "s:1", (TEST_STRING + i).getBytes(), MIME);
+      r.set(Field.create(i));
       records.add(r);
     }
     return records;

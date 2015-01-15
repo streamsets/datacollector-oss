@@ -82,12 +82,13 @@ public class TestKafkaTargetMultiPartition {
     KafkaTarget kafkaTarget = new KafkaTarget();
     TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
       .addConfiguration("topic", TOPIC)
-      .addConfiguration("partition", -1)
+      .addConfiguration("partition", "-1")
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", PayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.ROUND_ROBIN)
+      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -125,12 +126,13 @@ public class TestKafkaTargetMultiPartition {
     KafkaTarget kafkaTarget = new KafkaTarget();
     TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
       .addConfiguration("topic", TOPIC)
-      .addConfiguration("partition", -1)
+      .addConfiguration("partition", "-1")
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", PayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.RANDOM)
+      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -166,4 +168,49 @@ public class TestKafkaTargetMultiPartition {
     Assert.assertEquals(0, records.size());
   }
 
+  @Test
+  public void testWriteStringExpression() throws InterruptedException, StageException {
+
+    KafkaTarget kafkaTarget = new KafkaTarget();
+    TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
+      .addConfiguration("topic", TOPIC)
+      //record has a map which contains an integer field with key "partitionKey",
+      //kafka has 3 partitions. Expression distributes the record to partition based on the condition
+      .addConfiguration("partition", "record:value(\"/\") % 3")
+      .addConfiguration("brokerHost", HOST)
+      .addConfiguration("brokerPort", port)
+      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("payloadType", PayloadType.LOG)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("constants", null)
+      .addConfiguration("csvFileFormat", "DEFAULT")
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createIntegerRecords();
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    List<String> records = new ArrayList<>();
+    for(Record r : logRecords) {
+      records.add(r.get().getValueAsString());
+    }
+    List<String> messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams.size() == PARTITIONS);
+    for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams) {
+      ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
+      try {
+        while (it.hasNext()) {
+          messages.add(new String(it.next().message()));
+        }
+      } catch (kafka.consumer.ConsumerTimeoutException e) {
+        //no-op
+      }
+      Assert.assertEquals(3, messages.size());
+      for(String message : messages) {
+        Assert.assertTrue(records.contains(message));
+      }
+      messages.clear();
+    }
+  }
 }

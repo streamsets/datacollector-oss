@@ -78,16 +78,16 @@ public class TestStageRuntime {
     StageLibraryTask lib = Mockito.mock(StageLibraryTask.class);
     List<ConfigDefinition> configDefs = new ArrayList<ConfigDefinition>();
     ConfigDefinition configDef = new ConfigDefinition("string", ConfigDef.Type.STRING, "l1", "d1", "--", true, "g",
-                                                      "stringVar", null, "", new String[] {});
+                                                      "stringVar", null, "", new String[] {}, 0);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", null, "",
-      new String[] {});
+      new String[] {}, 0);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("long", ConfigDef.Type.INTEGER, "l3", "d3", "-2", true, "g", "longVar", null, "",
-      new String[] {});
+      new String[] {}, 0);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("boolean", ConfigDef.Type.BOOLEAN, "l4", "d4", "false", true, "g", "booleanVar",
-      null, "", new String[] {});
+      null, "", new String[] {}, 0);
     configDefs.add(configDef);
     StageDefinition sourceDef = new StageDefinition(
       TSource.class.getName(), "source", "1.0.0", "label", "description",

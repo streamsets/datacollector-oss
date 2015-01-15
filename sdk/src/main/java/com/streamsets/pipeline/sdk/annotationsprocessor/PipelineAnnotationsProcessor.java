@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.ConfigGroupDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.RawSourceDefinition;
@@ -194,18 +195,39 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           PrintWriter pw = new PrintWriter(resource.openWriter());
           pw.println(STAGE_LABEL + EQUALS + s.getLabel());
           pw.println(STAGE_DESCRIPTION + EQUALS + s.getDescription());
-          for(String group : s.getConfigOptionGroups()) {
-            pw.println(group + SEPARATOR + LABEL + EQUALS + group);
+          for(Map.Entry<String, String> configGroup: s.getConfigGroupDefinition().getGroupNameToLabelMap().entrySet()) {
+            pw.println(configGroup.getKey() + SEPARATOR + LABEL + EQUALS + configGroup.getValue());
           }
           for (ConfigDefinition c : s.getConfigDefinitions()) {
             pw.println(c.getName() + SEPARATOR + LABEL + EQUALS + c.getLabel());
             pw.println(c.getName() + SEPARATOR + DESCRIPTION + EQUALS + c.getDescription());
-            if(c.getModel() != null && c.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
-              for(ConfigDefinition configDefinition : c.getModel().getConfigDefinitions()) {
-                pw.println(c.getName() + SEPARATOR + configDefinition.getName() + SEPARATOR + LABEL + EQUALS +
-                  c.getLabel());
-                pw.println(c.getName() + SEPARATOR + configDefinition.getName() + SEPARATOR + DESCRIPTION + EQUALS +
-                  c.getDescription());
+            if(c.getModel() != null) {
+              if(c.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
+                for (ConfigDefinition configDefinition : c.getModel().getConfigDefinitions()) {
+                  pw.println(c.getName() + SEPARATOR + configDefinition.getName() + SEPARATOR + LABEL + EQUALS +
+                    configDefinition.getLabel());
+                  pw.println(c.getName() + SEPARATOR + configDefinition.getName() + SEPARATOR + DESCRIPTION + EQUALS +
+                    configDefinition.getDescription());
+                  if(configDefinition.getModel() != null) {
+                    //generate values and labels for value chooser
+                    ModelDefinition modelDefinition = configDefinition.getModel();
+                    if(modelDefinition.getValues() != null) {
+                      for (int i = 0; i < modelDefinition.getValues().size(); i++) {
+                        pw.println(configDefinition.getName() + SEPARATOR + modelDefinition.getModelType().name() +
+                          SEPARATOR + modelDefinition.getValues().get(i) + EQUALS + modelDefinition.getLabels().get(i));
+                      }
+                    }
+                  }
+                }
+              } else {
+                //generate values and labels for value chooser
+                List<String> values = c.getModel().getValues();
+                if(values != null) {
+                  for (int i = 0; i < values.size(); i++) {
+                    pw.println(c.getName() + SEPARATOR + values.get(i) + EQUALS +
+                      c.getModel().getLabels().get(i));
+                  }
+                }
               }
             }
           }
@@ -273,8 +295,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         rawSourceDefinition = getRawSourceDefinition(rawSourceAnnot);
       }
 
-      Set<String> configOptionGroups = getConfigOptionGroupsForStage(typeElement);
-
       String stageName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
       stageDefinition = new StageDefinition(
           typeElement.getQualifiedName().toString(),
@@ -286,20 +306,29 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           configDefinitions,
           rawSourceDefinition,
           stageDefAnnotation.icon(),
-          configOptionGroups);
+          getConfigOptionGroupsForStage(typeElement));
     } else {
       stageDefValidationError = true;
     }
     return stageDefinition;
   }
 
-  private Set<String> getConfigOptionGroupsForStage(TypeElement typeElement) {
-    Map<VariableElement, String> allConfigGroups = getAllConfigGroups(typeElement);
-    Set<String> configOptionGroups = new HashSet<>();
-    for(Map.Entry<VariableElement, String> v : allConfigGroups.entrySet()) {
-      configOptionGroups.add(v.getKey().getSimpleName().toString());
+  private ConfigGroupDefinition getConfigOptionGroupsForStage(TypeElement typeElement) {
+    Map<String, List<VariableElement>> allConfigGroups = getAllConfigGroups(typeElement);
+
+    Map<String, List<String>> classNameToGroupsMap = new HashMap<>();
+    Map<String, String> groupNameToLabelMap = new HashMap<>();
+
+    for(Map.Entry<String, List<VariableElement>> v : allConfigGroups.entrySet()) {
+      List<String> groupNames = new ArrayList<>();
+      classNameToGroupsMap.put(v.getKey(), groupNames);
+      for(VariableElement variableElement : v.getValue()) {
+        groupNames.add(variableElement.getSimpleName().toString());
+        groupNameToLabelMap.put(variableElement.getSimpleName().toString(), (String) variableElement.getConstantValue());
+      }
     }
-    return configOptionGroups;
+
+    return new ConfigGroupDefinition(classNameToGroupsMap, groupNameToLabelMap);
   }
 
   private void createErrorEnum(TypeElement typeElement) {
@@ -309,7 +338,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     Map<String, String> literalToValueMap = new HashMap<>();
     for (VariableElement variableElement : variableElements) {
       if(variableElement.getKind() == ElementKind.ENUM_CONSTANT) {
-        literalToValueMap.put(variableElement.getSimpleName().toString(),
+          literalToValueMap.put(variableElement.getSimpleName().toString(),
             (String) variableElement.getConstantValue());
       }
     }
@@ -372,7 +401,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             variableElement.getSimpleName().toString(),
             model,
             configDefAnnot.dependsOn(),
-            configDefAnnot.triggeredByValue());
+            configDefAnnot.triggeredByValue(),
+            configDefAnnot.displayPosition());
         configDefinitions.add(configDefinition);
       }
     }
@@ -1025,17 +1055,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return valid;
   }
 
-  private boolean checkMultipleModelAnnot(FieldValueChooser fieldValueChooser, FieldSelector fieldSelector,
-                                          ValueChooser valueChooser) {
-    if(fieldValueChooser != null && (fieldSelector != null || valueChooser!= null)) {
-      return true;
-    }
-    if(fieldSelector != null && valueChooser!= null) {
-      return true;
-    }
-    return false;
-  }
-
   /**
    * Validates that a stage definition with the same name and version is not
    * already encountered. If encountered, the "error" flag is set to true.
@@ -1084,23 +1103,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   private boolean validateOptionGroups(TypeElement typeElement) {
     boolean valid = true;
-    Map<VariableElement, String> allConfigGroups = getAllConfigGroups(typeElement);
-    //go over each type and check if it has ConfigGroup annotation
-    Set<String> groups = new HashSet<>();
-    for(Map.Entry<VariableElement, String> v : allConfigGroups.entrySet()) {
-      if(groups.contains(v.getKey().getSimpleName().toString())) {
-        printError("configOptionGroup.duplicate.group.name",
-          "Duplicate option group name {} encountered in Stage {}.",
-          v.getValue() + SEPARATOR + v.getKey().getSimpleName().toString(), typeElement.getSimpleName().toString());
-        valid = false;
-      } else {
-        groups.add(v.getKey().getSimpleName().toString());
-      }
-    }
-    return valid;
-  }
-
-  private Map<VariableElement, String> getAllConfigGroups(TypeElement typeElement) {
     List<TypeMirror> allTypes = new ArrayList<>();
     allTypes.add(typeElement.asType());
     allTypes.addAll(getAllSuperTypes(typeElement));
@@ -1119,9 +1121,63 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
         //Make sure raw source previewer implementation is top level
         Element cgElement = processingEnv.getTypeUtils().asElement(cgTypeMirror);
+        if(cgElement.getKind() != ElementKind.ENUM) {
+          printError("configOptionGroup.not.enum",
+            "'{}' implements interface 'ConfigGroups.Groups' but is not an enum." +
+              " An implementation of 'ConfigGroups.Groups' must be an enum.",
+            cgElement.getSimpleName().toString());
+          valid = false;
+        }
         List<? extends Element> enclosedElements = cgElement.getEnclosedElements();
         for(VariableElement v : ElementFilter.fieldsIn(enclosedElements)) {
-          allConfigGroups.put(v, cgElement.getSimpleName().toString());
+          if(v.getKind() == ElementKind.ENUM_CONSTANT) {
+            allConfigGroups.put(v, cgElement.getSimpleName().toString());
+          }
+        }
+      }
+    }
+
+    //go over each type and check if it has ConfigGroup annotation
+    Set<String> groups = new HashSet<>();
+    for(Map.Entry<VariableElement, String> v : allConfigGroups.entrySet()) {
+      if(groups.contains(v.getKey().getSimpleName().toString())) {
+        printError("configOptionGroup.duplicate.group.name",
+          "Duplicate option group name {} encountered in Stage {}.",
+          v.getValue() + SEPARATOR + v.getKey().getSimpleName().toString(), typeElement.getSimpleName().toString());
+        valid = false;
+      } else {
+        groups.add(v.getKey().getSimpleName().toString());
+      }
+    }
+    return valid;
+  }
+
+  private Map<String, List<VariableElement>> getAllConfigGroups(TypeElement typeElement) {
+    List<TypeMirror> allTypes = new ArrayList<>();
+    allTypes.add(typeElement.asType());
+    allTypes.addAll(getAllSuperTypes(typeElement));
+    Map<String, List<VariableElement>> allConfigGroups = new HashMap<>();
+
+    for(TypeMirror typeMirror : allTypes) {
+      TypeElement t = (TypeElement)processingEnv.getTypeUtils().asElement(typeMirror);
+      ConfigGroups configGroups = t.getAnnotation(ConfigGroups.class);
+      if(configGroups != null) {
+        TypeMirror cgTypeMirror = null;
+        try {
+          configGroups.value();
+        } catch (MirroredTypeException e) {
+          cgTypeMirror = e.getTypeMirror();
+        }
+
+        //Make sure raw source previewer implementation is top level
+        Element cgElement = processingEnv.getTypeUtils().asElement(cgTypeMirror);
+        List<? extends Element> enclosedElements = cgElement.getEnclosedElements();
+        List<VariableElement> variableElements = new ArrayList<>();
+        allConfigGroups.put(getClassNameFromTypeMirror(cgTypeMirror), variableElements);
+        for(VariableElement v : ElementFilter.fieldsIn(enclosedElements)) {
+          if(v.getKind() == ElementKind.ENUM_CONSTANT) {
+            variableElements.add(v);
+          }
         }
       }
     }

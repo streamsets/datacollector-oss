@@ -20,7 +20,7 @@ import java.util.List;
 @RawSource(rawSourcePreviewer = TwitterRawSourcePreviewer.class)
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
 , version = "1.0")
-@ConfigGroups(value = TwitterSource.TwitterConfigGroups.class)
+@ConfigGroups(TwitterSource.TwitterConfigGroups.class)
 public class TwitterSource extends BaseSource {
 
   @FieldSelector
@@ -60,8 +60,18 @@ public class TwitterSource extends BaseSource {
     return null;
   }
 
-  enum TwitterConfigGroups implements ConfigGroups.Groups {
-    USER_INFO,
-    OTHER
+  public enum TwitterConfigGroups implements ConfigGroups.Groups {
+    USER_INFO("User Info"),
+    OTHER("Other");
+
+    private final String label;
+
+    private TwitterConfigGroups(String label) {
+      this.label = label;
+    }
+
+    public String getLabel() {
+      return this.label;
+    }
   }
 }

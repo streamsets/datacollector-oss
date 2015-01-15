@@ -32,6 +32,8 @@ public @interface ConfigDef {
 
   String dependsOn() default "";
 
+  int displayPosition() default 0;
+
   String[] triggeredByValue() default {};
 
 }

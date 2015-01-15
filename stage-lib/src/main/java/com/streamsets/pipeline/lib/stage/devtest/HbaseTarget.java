@@ -19,7 +19,17 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 public class HbaseTarget extends BaseTarget {
 
   public enum Groups implements ConfigGroups.Groups {
-    GENERAL, ADVANCED
+    GENERAL("General"), ADVANCED("Advanced");
+
+    private final String label;
+
+    private Groups(String label) {
+      this.label = label;
+    }
+
+    public String getLabel() {
+      return this.label;
+    }
   }
 
   @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "HBase URI", defaultValue = "",

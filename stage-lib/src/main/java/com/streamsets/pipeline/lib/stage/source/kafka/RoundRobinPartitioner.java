@@ -8,15 +8,12 @@ package com.streamsets.pipeline.lib.stage.source.kafka;
 import kafka.producer.Partitioner;
 import kafka.utils.VerifiableProperties;
 
-import java.util.Random;
-
 public class RoundRobinPartitioner implements Partitioner {
 
-  private Random random;
   private int lastPartition = 0;
 
   public RoundRobinPartitioner(VerifiableProperties props) {
-    random = new Random();
+
   }
 
   public int partition(Object key, int numPartitions) {

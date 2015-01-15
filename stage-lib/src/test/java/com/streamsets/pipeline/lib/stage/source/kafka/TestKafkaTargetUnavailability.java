@@ -75,12 +75,13 @@ public class TestKafkaTargetUnavailability {
     KafkaTarget kafkaTarget = new KafkaTarget();
     TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
       .addConfiguration("topic", TOPIC)
-      .addConfiguration("partition", 0)
+      .addConfiguration("partition", "0")
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", PayloadType.LOG)
-      .addConfiguration("partitionStrategy", PartitionStrategy.FIXED)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -105,12 +106,13 @@ public class TestKafkaTargetUnavailability {
     KafkaTarget kafkaTarget = new KafkaTarget();
     TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
       .addConfiguration("topic", TOPIC)
-      .addConfiguration("partition", 0)
+      .addConfiguration("partition", "0")
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", PayloadType.LOG)
-      .addConfiguration("partitionStrategy", PartitionStrategy.FIXED)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 

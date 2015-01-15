@@ -8,5 +8,5 @@ package com.streamsets.pipeline.lib.stage.source.kafka;
 public enum PartitionStrategy {
   RANDOM,
   ROUND_ROBIN,
-  FIXED
+  EXPRESSION
 }

@@ -58,6 +58,7 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("RawSourcePreviewer com.streamsets.pipeline.sdk.annotationsprocessor.testData.TestRawSourcePreviewer.FaultyRawSourcePreviewer is an inner class. Inner class RawSourcePreviewer implementations are not supported.");
     expectedSet.add("The \"ConfigDef\" annotation for field FaultySource.extension indicates that it depends on field 'myPhone' which does not exist or is not a configuration option.");
     expectedSet.add("The \"ConfigDef\" annotation for field FaultySource.callMe indicates that it depends on field 'myExtension' which does not exist or is not a configuration option.");
+    expectedSet.add("'MyGroups' implements interface 'ConfigGroups.Groups' but is not an enum. An implementation of 'ConfigGroups.Groups' must be an enum.");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());

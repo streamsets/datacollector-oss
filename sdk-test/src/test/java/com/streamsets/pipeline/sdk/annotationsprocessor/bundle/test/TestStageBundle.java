@@ -52,8 +52,8 @@ public class TestStageBundle extends TestPipelineAnnotationProcessorBase {
     List<String> expectedStrings = new ArrayList<String>(6);
     expectedStrings.add("label=twitter_source");
     expectedStrings.add("description=Produces twitter feeds");
-    expectedStrings.add("OTHER.label=OTHER");
-    expectedStrings.add("USER_INFO.label=USER_INFO");
+    expectedStrings.add("OTHER.label=null");
+    expectedStrings.add("USER_INFO.label=null");
     expectedStrings.add("username.label=username");
     expectedStrings.add("username.description=The user name of the twitter user");
     expectedStrings.add("password.label=password");

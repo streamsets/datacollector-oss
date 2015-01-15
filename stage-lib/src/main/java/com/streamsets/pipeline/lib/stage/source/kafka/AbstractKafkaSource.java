@@ -23,7 +23,17 @@ import java.util.List;
 public abstract class AbstractKafkaSource extends BaseSource {
 
   public enum KafkaSourceConfigGroups implements ConfigGroups.Groups {
-    KAFKA_PROPERTIES
+    KAFKA_PROPERTIES("Kafka Configuration Properties");
+
+    private final String label;
+
+    private KafkaSourceConfigGroups(String label) {
+      this.label = label;
+    }
+
+    public String getLabel() {
+      return this.label;
+    }
   }
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractKafkaSource.class);

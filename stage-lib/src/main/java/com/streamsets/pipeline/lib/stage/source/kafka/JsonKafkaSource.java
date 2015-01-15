@@ -33,7 +33,17 @@ import java.io.InputStreamReader;
 public class JsonKafkaSource extends AbstractKafkaSource {
 
   public enum JsonKafkaSourceConfigGroups implements ConfigGroups.Groups {
-    JSON_PROPERTIES
+    JSON_PROPERTIES("Json Data Properties");
+
+    private final String label;
+
+    private JsonKafkaSourceConfigGroups(String label) {
+      this.label = label;
+    }
+
+    public String getLabel() {
+      return this.label;
+    }
   }
 
   @ConfigDef(required = true,
@@ -41,7 +51,7 @@ public class JsonKafkaSource extends AbstractKafkaSource {
     label = "JSON Content",
     description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects",
     defaultValue = "ARRAY_OBJECTS",
-    group = "JSON_CONFIGURATIONS")
+    group = "JSON_PROPERTIES")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
   public StreamingJsonParser.Mode jsonContent;
 
@@ -51,7 +61,7 @@ public class JsonKafkaSource extends AbstractKafkaSource {
     description = "The maximum length for a JSON Object being converted to a record, if greater the full JSON " +
       "object is discarded and processing continues with the next JSON object",
     defaultValue = "4096",
-    group = "JSON_CONFIGURATIONS")
+    group = "JSON_PROPERTIES")
   public int maxJsonObjectLen;
 
   @Override
