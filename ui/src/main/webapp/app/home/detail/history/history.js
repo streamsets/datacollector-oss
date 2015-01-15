@@ -38,4 +38,10 @@ angular
       }
     });
 
+    $scope.$watch('isPipelineRunning', function(newValue) {
+      if($scope.pipelineConfig) {
+        updateHistory($scope.pipelineConfig.info.name);
+      }
+    });
+
   });

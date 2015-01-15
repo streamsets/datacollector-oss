@@ -127,12 +127,19 @@ angular
       },
 
       /**
-       * Update Preview Stage Instance.
+       * Update Selection Stage Instance.
        *
        * @param stageInstance
+       * @param type
+       * @param detailTabName
+       * @param configName
+       * @param ignoreBroadCast - Boolean flag for telling not to update Graph
        */
-      changeStageSelection: function(stageInstance, type, detailTabName, configName) {
-        $scope.$broadcast('selectNode', stageInstance);
+      changeStageSelection: function(stageInstance, type, detailTabName, configName, ignoreBroadCast) {
+        if(!ignoreBroadCast) {
+          $scope.$broadcast('selectNode', stageInstance);
+        }
+
         if(stageInstance) {
           updateDetailPane(stageInstance, pipelineConstant.STAGE_INSTANCE, detailTabName, configName);
         } else {
@@ -161,18 +168,6 @@ angular
       onMaximizeDetailPane: function() {
         $scope.$storage.minimizeDetailPane = false;
         $scope.$storage.maximizeDetailPane = !$scope.$storage.maximizeDetailPane;
-      },
-
-      /**
-       * Update detailPaneConfig & detailPaneConfigDefn from child scope.
-       *
-       * @param stageInstance
-       * @param stage
-       */
-      updateDetailPaneObject: function(stageInstance, stage) {
-        $scope.detailPaneConfig = $scope.selectedObject = stageInstance;
-        $scope.detailPaneConfigDefn = stage;
-        $scope.selectedType = pipelineConstant.STAGE_INSTANCE;
       },
 
       /**

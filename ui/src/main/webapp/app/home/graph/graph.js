@@ -43,7 +43,7 @@ angular
         var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig, undefined, firstOpenLane),
           edge;
 
-        $scope.updateDetailPaneObject(stageInstance, stage);
+        $scope.changeStageSelection(stageInstance, pipelineConstant.STAGE_INSTANCE, undefined, undefined, true);
 
         if(firstOpenLane && firstOpenLane.stageInstance) {
           edge = {
