@@ -1,8 +1,7 @@
   <form class="form-horizontal" role="form" name="{{detailPaneConfig.instanceName || 'pipeline'}}">
     <div class="form-group"
          ng-switch="configDefinition.type"
-         ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: groupName} | orderBy: 'displayPosition'"
-         ng-if="(!configDefinition.dependsOn || verifyDependsOn(detailPaneConfig, configDefinition)) && configDefinition.group === groupName"
+         ng-repeat="configDefinition in groupConfigDefinitions"
          ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)"
          show-errors>
 

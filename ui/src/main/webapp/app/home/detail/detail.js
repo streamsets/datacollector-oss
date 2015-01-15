@@ -70,7 +70,7 @@ angular
             tabsList = [infoTab, configurationTab, historyTab];
           }
 
-          return tabsList;
+          return angular.copy(tabsList);
         case pipelineConstant.STAGE_INSTANCE:
           if(isPipelineRunning) {
             tabsList = [summaryTab, errorTab, infoTab, configurationTab];
@@ -82,7 +82,7 @@ angular
             tabsList.push(rawPreviewTab);
           }
 
-          return tabsList;
+          return angular.copy(tabsList);
         case pipelineConstant.LINK:
           if(isPipelineRunning) {
             return [dataSummaryTab, alertsTab, rulesTab, infoTab];
