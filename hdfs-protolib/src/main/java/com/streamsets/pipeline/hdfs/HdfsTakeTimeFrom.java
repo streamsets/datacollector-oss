@@ -5,12 +5,6 @@
  */
 package com.streamsets.pipeline.hdfs;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-
-public class TimeFromChooserValues extends BaseEnumChooserValues {
-
-  public TimeFromChooserValues() {
-    super(HdfsTakeTimeFrom.class);
-  }
-
+public enum HdfsTakeTimeFrom {
+  DATA_COLLECTOR_CLOCK;
 }

@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 public class DataFormatChooserValues extends BaseEnumChooserValues {
 
   public DataFormatChooserValues() {
-    super(HdfsTarget.DataFormat.class);
+    super(HdfsDataFormat.class);
   }
 
 }

@@ -16,38 +16,8 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 
 import java.util.Map;
 
-@ConfigGroups(BaseHdfsTarget.ConfigGroups.class)
+@ConfigGroups(HdfsConfigGroups.class)
 public abstract class BaseHdfsTarget extends BaseTarget {
-
-  public enum ConfigGroups implements com.streamsets.pipeline.api.ConfigGroups.Groups {
-    FILE("Files"),
-    LATE_RECORDS("Late Records"),
-    ;
-
-    private final String label;
-    ConfigGroups(String label) {
-      this.label = label;
-    }
-
-    @Override
-    public String getLabel() {
-      return label;
-    }
-  }
-
-  public enum FileType implements BaseEnumChooserValues.EnumWithLabel {
-    TEXT("Text files"), SEQUENCE_FILE("Sequence files"), AVRO_FILE("Avro files");
-
-    private String label;
-    FileType(String label) {
-      this.label = label;
-    }
-    @Override
-    public String getLabel() {
-      return label;
-    }
-
-  }
 
   public enum Compression { NONE, GZIP, BZIP2, SNAPPY}
 
@@ -62,17 +32,14 @@ public abstract class BaseHdfsTarget extends BaseTarget {
 //
 //  }
 
-  public enum TimeFrom  {
-    DATA_COLLECTOR_CLOCK;
-  }
-
-  public enum LateRecordsAction implements BaseEnumChooserValues.EnumWithLabel {
+  public enum HdfsLateRecordsAction implements BaseEnumChooserValues.EnumWithLabel {
     SEND_TO_ERROR("Send to error"),
     SEND_TO_LATE_RECORDS_FILE("Send to late records file"),
+    DISCARD("Discard"),
 
     ;
     private final String label;
-    LateRecordsAction(String label) {
+    HdfsLateRecordsAction(String label) {
       this.label = label;
     }
 
@@ -150,7 +117,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       group = "FILE",
       displayPosition = 101)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileTypeChooserValues.class)
-  public FileType fileType;
+  public HdfsFileType fileType;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
@@ -214,17 +181,18 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       triggeredByValue = "DATA_COLLECTOR_CLOCK",
       displayPosition = 107)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = LateRecordsActionChooserValues.class)
-  public LateRecordsAction lateRecordsAction;
+  public HdfsLateRecordsAction lateRecordsAction;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
       description = "Path template for the HDFS files for late records, the template supports the following time tokens: " +
-                    "${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}",
-      defaultValue = " ",
+                    "${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}. IMPORTANT: Used only if 'Late Records' is " +
+                    "set to 'Send to late records file'.",
+      defaultValue = "",
       group = "LATE_RECORDS",
       label = "Late Records Path Template",
-      dependsOn = "lateRecordsAction",
-      triggeredByValue = "SEND_TO_LATE_RECORDS_FILE",
+      dependsOn = "useTimeFrom",
+      triggeredByValue = "DATA_COLLECTOR_CLOCK",
       displayPosition = 108)
   public String lateRecordsPathTemplate;
 
