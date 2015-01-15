@@ -195,9 +195,9 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       type = ConfigDef.Type.INTEGER,
       description = "Time limit (in seconds) for a record to be written to the default HDFS file, if the limit is " +
                     "exceeded the record will be written to the current late records file. 0 means no limit.",
-      label = "Record Time Limit (Secs)",
+      label = "Late Records Time Limit (Secs)",
       defaultValue = "0",
-      group = "FILE",
+      group = "LATE_RECORDS",
       dependsOn = "useTimeFrom",
       triggeredByValue = "DATA_COLLECTOR_CLOCK",
       displayPosition = 106)
@@ -207,7 +207,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       type = ConfigDef.Type.MODEL,
       description = "Indicates if the time should be driven by the Data Collector clock or by a time specified in " +
                     "a record field",
-      label = "Use Time From",
+      label = "Late Records",
       defaultValue = "SEND_TO_ERROR",
       group = "LATE_RECORDS",
       dependsOn = "useTimeFrom",
