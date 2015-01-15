@@ -175,8 +175,6 @@ angular
             tab.active = true;
           }
         });
-      } else if($scope.detailPaneTabs && $scope.detailPaneTabs.length) {
-        $scope.detailPaneTabs[0].active = true;
       }
 
       $scope.autoFocusConfigName = configName;
@@ -185,6 +183,7 @@ angular
 
     $scope.$watch('isPipelineRunning', function(newValue) {
       $scope.detailPaneTabs = getDetailTabsList($scope.selectedType, newValue);
+      $scope.detailPaneTabs[0].active = true;
     });
 
     $scope.$on('showBadRecordsSelected', function() {
