@@ -282,11 +282,17 @@ angular
        * @param configuration
        * @returns {*}
        */
-      getConfigModelObject: function(stageInstance, configuration) {
+      getConfigIndex: function(stageInstance, configuration) {
         if(stageInstance && configuration) {
-          return _.find(stageInstance.configuration, function(config) {
-            return configuration.name === config.name;
+          var configIndex;
+          _.find(stageInstance.configuration, function(config, index) {
+            if(configuration.name === config.name) {
+              configIndex = index;
+              return true;
+            }
           });
+
+          return configIndex;
         }
       }
     });

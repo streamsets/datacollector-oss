@@ -3,7 +3,7 @@
          ng-switch="configDefinition.type"
          ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: groupName} | orderBy: 'displayPosition'"
          ng-if="(!configDefinition.dependsOn || verifyDependsOn(detailPaneConfig, configDefinition)) && configDefinition.group === groupName"
-         ng-init="configModel = getConfigModelObject(detailPaneConfig, configDefinition)"
+         ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)"
          show-errors>
 
       <div ng-switch-when="BOOLEAN">
@@ -19,7 +19,7 @@
         <div class="controls col-md-7">
           <input type="checkbox" name="{{configDefinition.name}}"
                  ng-disabled="isPipelineRunning"
-                 ng-model="configModel.value">
+                 ng-model="detailPaneConfig.configuration[configIndex].value">
 
           <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
         </div>
@@ -39,7 +39,7 @@
           <input type="number" class="form-control" name="{{configDefinition.name}}"
                  focus-me="{{autoFocusConfigName === configDefinition.name}}"
                  ng-readonly="isPipelineRunning"
-                 ng-model="configModel.value"
+                 ng-model="detailPaneConfig.configuration[configIndex].value"
                  ng-required="configDefinition.required">
 
           <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
@@ -60,7 +60,7 @@
           <input type="text" class="form-control" name="{{configDefinition.name}}"
                  focus-me="{{autoFocusConfigName === configDefinition.name}}"
                  ng-readonly="isPipelineRunning"
-                 ng-model="configModel.value"
+                 ng-model="detailPaneConfig.configuration[configIndex].value"
                  ng-required="configDefinition.required">
 
           <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
@@ -79,7 +79,7 @@
         </label>
 
         <div class="controls col-md-7">
-          <div class="row lane-predicate" ng-repeat="mapObject in configModel.value track by $index">
+          <div class="row lane-predicate" ng-repeat="mapObject in detailPaneConfig.configuration[configIndex].value track by $index">
 
             <div class="col-xs-3">
               <input type="text" class="form-control input-sm"
@@ -116,11 +116,11 @@
 
           </div>
 
-          <div ng-if="configModel.value.length === 0" class="row"
+          <div ng-if="detailPaneConfig.configuration[configIndex].value.length === 0" class="row"
                ng-hide="isPipelineRunning">
             <div class="col-md-2 btn-group" role="group">
               <button type="button" class="btn btn-default btn-sm"
-                      ng-click="addToMap(detailPaneConfig, configModel.value)">
+                      ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[configIndex].value)">
                 <i class="fa fa-plus pointer"></i>
               </button>
             </div>
@@ -152,7 +152,7 @@
                       name="{{configDefinition.name}}"
                       focus-me="{{autoFocusConfigName === configDefinition.name}}"
                       ng-disabled="isPipelineRunning"
-                      ng-model="configModel.value">
+                      ng-model="detailPaneConfig.configuration[configIndex].value">
                 <option ng-repeat="listValue in configDefinition.model.values"
                         value="{{listValue}}"
                         ng-selected="listValue === detailPaneConfig.configuration[$parent.$index].value">
@@ -164,7 +164,7 @@
                      ng-switch-when="SUGGESTED"
                      name="{{configDefinition.name}}"
                      ng-readonly="isPipelineRunning"
-                     ng-model="configModel.value"
+                     ng-model="detailPaneConfig.configuration[configIndex].value"
                      typeahead="listValue for listValue in configDefinition.model.values"
                      typeahead-min-length="0"
                      class="form-control">
@@ -192,12 +192,12 @@
           <div class="controls col-md-7">
             <ui-select multiple tagging tagging-label="false" reset-search-input="true"
                        ng-disabled="isPipelineRunning"
-                       ng-model="configModel.value">
+                       ng-model="detailPaneConfig.configuration[configIndex].value">
               <ui-select-match
                 placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
                 {{$item}}
               </ui-select-match>
-              <ui-select-choices repeat="fieldPath in fieldPaths.concat(configModel.value) | filter:$select.search">
+              <ui-select-choices repeat="fieldPath in fieldPaths.concat(detailPaneConfig.configuration[configIndex].value) | filter:$select.search">
                 {{fieldPath}}
               </ui-select-choices>
             </ui-select>
@@ -205,7 +205,7 @@
             <div class="pull-right field-selector-btn" ng-hide="isPipelineRunning">
               <button class="btn btn-link"
                       translate="home.detailPane.configurationTab.requiredFieldsSelectionButton"
-                      ng-click="showFieldSelectorModal(configModel)">
+                      ng-click="showFieldSelectorModal(detailPaneConfig.configuration[configIndex])">
                 Select Field Using Preview Data
               </button>
             </div>
@@ -226,7 +226,7 @@
 
           <div class="controls col-md-7">
             <div class="row lane-predicate"
-                 ng-repeat="lanePredicateMapping in configModel.value track by $index">
+                 ng-repeat="lanePredicateMapping in detailPaneConfig.configuration[configIndex].value track by $index">
 
               <div class="col-xs-1">
                 <!--input type="text" readonly class="form-control input-sm"
@@ -292,7 +292,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr ng-repeat="customFieldValue in customeFieldValueList = configModel.value track by $index">
+              <tr ng-repeat="customFieldValue in customeFieldValueList = detailPaneConfig.configuration[configIndex].value track by $index">
 
                 <td class="col-md-5"
                     ng-switch="customFieldConfigDefinition.type"
@@ -383,7 +383,7 @@
 
             <button type="button" class="btn btn-primary btn-sm pull-right"
                     ng-hide="isPipelineRunning"
-                    ng-click="addToCustomField(detailPaneConfig, configModel.value, configDefinition.model.configDefinitions)">
+                    ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, configDefinition.model.configDefinitions)">
               {{'global.form.add' | translate}} <i class="fa fa-plus pointer"></i>
             </button>
 
