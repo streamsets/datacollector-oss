@@ -7,18 +7,33 @@ package com.streamsets.pipeline.hdfs;
 
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 
 @GenerateResourceBundle
 @StageDef(version = "1.0.0",
     label = "HDFS",
     description = "Writes records to HDFS files")
-public class HdfsTarget extends AbstractHdfsTarget {
+@ConfigGroups(HdfsTarget.ConfigGroups.class)
+public class HdfsTarget extends BaseHdfsTarget {
+
+    public enum ConfigGroups implements com.streamsets.pipeline.api.ConfigGroups.Groups {
+        DATA("Data"),
+        ;
+
+        private final String label;
+        ConfigGroups(String label) {
+            this.label = label;
+        }
+
+        @Override
+        public String getLabel() {
+            return label;
+        }
+    }
 
     public enum DataFormat implements BaseEnumChooserValues.EnumWithLabel {
         CSV("Comma Separated Values"),
@@ -42,7 +57,11 @@ public class HdfsTarget extends AbstractHdfsTarget {
         type = ConfigDef.Type.MODEL,
         description = "Data Format",
         label = "Data Format",
-        defaultValue = "JSON")
+        defaultValue = "JSON",
+        group = "DATA",
+        dependsOn = "fileType",
+        triggeredByValue = { "TEXT", "SEQUENCE_FILE"},
+        displayPosition = 200)
     @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
     public DataFormat dataFormat;
 

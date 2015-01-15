@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 public class TimeFromChooserValues extends BaseEnumChooserValues {
 
   public TimeFromChooserValues() {
-    super(AbstractHdfsTarget.TimeFrom.class);
+    super(BaseHdfsTarget.TimeFrom.class);
   }
 
 }

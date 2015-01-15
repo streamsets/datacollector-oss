@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 public class FileTypeChooserValues extends BaseEnumChooserValues {
 
   public FileTypeChooserValues() {
-    super(AbstractHdfsTarget.FileType.class);
+    super(BaseHdfsTarget.FileType.class);
   }
 
 }

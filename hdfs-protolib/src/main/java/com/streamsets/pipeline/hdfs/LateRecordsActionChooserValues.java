@@ -7,10 +7,10 @@ package com.streamsets.pipeline.hdfs;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class CompressionChooserValues extends BaseEnumChooserValues {
+public class LateRecordsActionChooserValues extends BaseEnumChooserValues {
 
-  public CompressionChooserValues() {
-    super(BaseHdfsTarget.Compression.class);
+  public LateRecordsActionChooserValues() {
+    super(HdfsTarget.LateRecordsAction.class);
   }
 
 }
