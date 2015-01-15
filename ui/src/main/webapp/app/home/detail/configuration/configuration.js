@@ -313,6 +313,9 @@ angular
     };
 
     $scope.$on('onSelectionChange', function(event, selectedObject, type) {
+
+      $scope.showGroups = $scope.detailPaneConfigDefn.configGroupDefinition ?
+        !angular.equals($scope.detailPaneConfigDefn.configGroupDefinition.groupNameToLabelMap, {}) : false;
       if (type === pipelineConstant.STAGE_INSTANCE) {
         fieldsPathList = undefined;
         $scope.fieldPaths = [];

@@ -135,20 +135,21 @@ angular
     });
 
     var getDetailTabsList = function(type, isPipelineRunning, selectedObject) {
+      var tabsList = [];
       switch(type) {
         case pipelineConstant.PIPELINE:
           if(isPipelineRunning) {
-            return [summaryTab, errorTab, generalTab, configurationTab, historyTab];
+            tabsList = [summaryTab, errorTab, configurationTab, historyTab];
           } else {
-            return [generalTab, configurationTab, historyTab];
+            tabsList = [configurationTab, historyTab];
           }
-          break;
+
+          return tabsList;
         case pipelineConstant.STAGE_INSTANCE:
-          var tabsList = [];
           if(isPipelineRunning) {
-            tabsList = [summaryTab, errorTab, generalTab, configurationTab];
+            tabsList = [summaryTab, errorTab, configurationTab];
           } else {
-            tabsList = [generalTab, configurationTab];
+            tabsList = [configurationTab];
           }
 
           if($scope.detailPaneConfigDefn.rawSourceDefinition) {
@@ -158,9 +159,9 @@ angular
           return tabsList;
         case pipelineConstant.LINK:
           if(isPipelineRunning) {
-            return [dataSummaryTab, alertsTab, rulesTab, generalTab];
+            return [dataSummaryTab, alertsTab, rulesTab, configurationTab];
           } else {
-            return [generalTab];
+            return [configurationTab];
           }
           break;
       }

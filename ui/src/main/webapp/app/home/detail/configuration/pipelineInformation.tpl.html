@@ -1,0 +1,30 @@
+<form class="form-horizontal cozy-form" role="form" name="stageGeneralInfo">
+  <div class="form-group">
+    <label class="col-md-3 control-label" translate="global.form.lastModifiedBy">Last Modified By</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{pipelineConfig.info.lastModifier}}</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" translate="global.form.lastModifiedOn">Last Modified On</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{pipelineConfig.info.lastModified | date:'medium'}}</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" translate="global.form.createdBy">Created By</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{pipelineConfig.info.creator}}</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" translate="global.form.createdOn">Created On</label>
+    <div class="controls col-md-7">
+      <p class="form-control-static">{{pipelineConfig.info.created  | date:'medium'}}</p>
+    </div>
+  </div>
+
+</form>

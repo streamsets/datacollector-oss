@@ -18,32 +18,27 @@
     </div>
   </div>
 
-  <div class="form-group">
-    <label class="col-md-3 control-label" translate="global.form.lastModifiedBy">Last Modified By</label>
+  <!-- General Configuration for Stages-->
+  <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
+    <label class="col-md-3 control-label" translate="global.form.label">Label</label>
     <div class="controls col-md-7">
-      <p class="form-control-static">{{pipelineConfig.info.lastModifier}}</p>
+      <input type="text" class="form-control" name="name"
+             ng-readonly="isPipelineRunning"
+             ng-model="detailPaneConfig.uiInfo.label">
     </div>
   </div>
 
-  <div class="form-group">
-    <label class="col-md-3 control-label" translate="global.form.lastModifiedOn">Last Modified On</label>
-    <div class="controls col-md-7">
-      <p class="form-control-static">{{pipelineConfig.info.lastModified | date:'medium'}}</p>
-    </div>
-  </div>
 
-  <div class="form-group">
-    <label class="col-md-3 control-label" translate="global.form.createdBy">Created By</label>
+  <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
+    <label class="col-md-3 control-label" translate="global.form.description">Description</label>
     <div class="controls col-md-7">
-      <p class="form-control-static">{{pipelineConfig.info.creator}}</p>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="col-md-3 control-label" translate="global.form.createdOn">Created On</label>
-    <div class="controls col-md-7">
-      <p class="form-control-static">{{pipelineConfig.info.created  | date:'medium'}}</p>
+      <textarea class="form-control" name="description"
+                ng-readonly="isPipelineRunning"
+                ng-model="detailPaneConfig.uiInfo.description"></textarea>
     </div>
   </div>
 
 </form>
+
+<ng-include ng-if="selectedType !== pipelineConstant.LINK"
+            src="'app/home/detail/configuration/groupConfiguration.tpl.html'" onload="groupName=''"></ng-include>
