@@ -8,6 +8,7 @@
       <div ng-switch-when="BOOLEAN">
         <label class="col-md-3 control-label">{{configDefinition.label}}
           <i class="fa fa-info-circle help-icon"
+             ng-if="configDefinition.description"
              popover-placement="right"
              popover-append-to-body="false"
              popover="{{configDefinition.description}}"
@@ -26,6 +27,7 @@
       <div ng-switch-when="INTEGER">
         <label class="col-md-3 control-label">{{configDefinition.label}}
           <i class="fa fa-info-circle help-icon"
+             ng-if="configDefinition.description"
              popover-placement="right"
              popover-append-to-body="false"
              popover="{{configDefinition.description}}"
@@ -34,6 +36,7 @@
 
         <div class="controls col-md-7">
           <input type="number" class="form-control" name="{{configDefinition.name}}"
+                 focus-me="{{autoFocusConfigName === configDefinition.name}}"
                  ng-readonly="isPipelineRunning"
                  ng-model="detailPaneConfig.configuration[$index].value"
                  ng-required="configDefinition.required">
@@ -45,6 +48,7 @@
       <div ng-switch-when="STRING">
         <label class="col-md-3 control-label">{{configDefinition.label}}
           <i class="fa fa-info-circle help-icon"
+             ng-if="configDefinition.description"
              popover-placement="right"
              popover-append-to-body="false"
              popover="{{configDefinition.description}}"
@@ -53,6 +57,7 @@
 
         <div class="controls col-md-7">
           <input type="text" class="form-control" name="{{configDefinition.name}}"
+                 focus-me="{{autoFocusConfigName === configDefinition.name}}"
                  ng-readonly="isPipelineRunning"
                  ng-model="detailPaneConfig.configuration[$index].value"
                  ng-required="configDefinition.required">
@@ -65,6 +70,7 @@
       <div ng-switch-when="MAP">
         <label class="col-md-3 control-label">{{configDefinition.label}}
           <i class="fa fa-info-circle help-icon"
+             ng-if="configDefinition.description"
              popover-placement="right"
              popover-append-to-body="false"
              popover="{{configDefinition.description}}"
@@ -130,6 +136,7 @@
         <div ng-switch-when="VALUE_CHOOSER">
           <label class="col-md-3 control-label">{{configDefinition.label}}
             <i class="fa fa-info-circle help-icon"
+               ng-if="configDefinition.description"
                popover-placement="right"
                popover-append-to-body="false"
                popover="{{configDefinition.description}}"
@@ -142,6 +149,7 @@
               <select class="form-control"
                       ng-switch-when="PROVIDED"
                       name="{{configDefinition.name}}"
+                      focus-me="{{autoFocusConfigName === configDefinition.name}}"
                       ng-disabled="isPipelineRunning"
                       ng-model="detailPaneConfig.configuration[$index].value">
                 <option ng-repeat="listValue in configDefinition.model.values"
@@ -173,6 +181,7 @@
              class="clearfix">
           <label class="col-md-3 control-label">{{configDefinition.label}}
             <i class="fa fa-info-circle help-icon"
+               ng-if="configDefinition.description"
                popover-placement="right"
                popover-append-to-body="false"
                popover="{{configDefinition.description}}"
@@ -207,6 +216,7 @@
         <div ng-switch-when="LANE_PREDICATE_MAPPING">
           <label class="col-md-3 control-label">{{configDefinition.label}}
             <i class="fa fa-info-circle help-icon"
+               ng-if="configDefinition.description"
                popover-placement="right"
                popover-append-to-body="false"
                popover="{{configDefinition.description}}"
@@ -256,6 +266,7 @@
         <div ng-switch-when="COMPLEX_FIELD" class="clearfix">
           <label class="col-md-3 control-label">{{configDefinition.label}}
             <i class="fa fa-info-circle help-icon"
+               ng-if="configDefinition.description"
                popover-placement="right"
                popover-append-to-body="false"
                popover="{{configDefinition.description}}"
@@ -270,6 +281,7 @@
                     ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions">
                   <span>{{customeFieldConfigDefintion.label}}</span>
                   <i class="fa fa-info-circle help-icon"
+                     ng-if="customeFieldConfigDefintion.description"
                      popover-placement="right"
                      popover-append-to-body="false"
                      popover="{{customeFieldConfigDefintion.description}}"

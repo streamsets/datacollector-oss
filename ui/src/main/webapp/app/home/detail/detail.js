@@ -78,72 +78,6 @@ angular
           template:'app/home/detail/history/history.tpl.html',
           iconClass: 'fa fa-history fa-12x'
         }
-      ],
-      pipelineTabsRunning = [
-        {
-          name:'summary',
-          template:'app/home/detail/summary/summary.tpl.html',
-          iconClass: 'fa fa-bar-chart fa-12x'
-        },
-        {
-          name:'errors',
-          template:'app/home/detail/badRecords/badRecords.tpl.html',
-          iconClass: 'fa fa-exclamation-triangle fa-12x'
-        },
-        {
-          name:'configuration',
-          template:'app/home/detail/configuration/configuration.tpl.html',
-          iconClass: 'fa fa-gear fa-12x'
-        },
-        {
-          name:'history',
-          template:'app/home/detail/history/history.tpl.html',
-          iconClass: 'fa fa-history fa-12x'
-        }
-      ],
-      stageTabsEdit = [{
-        name:'configuration',
-        template:'app/home/detail/configuration/configuration.tpl.html',
-        iconClass: 'fa fa-gear fa-12x'
-      }],
-      stageTabsRunning = [
-        {
-          name:'summary',
-          template:'app/home/detail/summary/summary.tpl.html',
-          iconClass: 'fa fa-bar-chart fa-12x'
-        },
-        {
-          name:'errors',
-          template:'app/home/detail/badRecords/badRecords.tpl.html',
-          iconClass: 'fa fa-exclamation-triangle fa-12x'
-        },
-        {
-          name:'configuration',
-          template:'app/home/detail/configuration/configuration.tpl.html',
-          iconClass: 'fa fa-gear fa-12x'
-        }
-      ],
-      linkTabsRunning = [
-        {
-          name:'summary',
-          template:'app/home/detail/dataSummary/dataSummary.tpl.html',
-          iconClass: 'fa fa-bar-chart fa-12x'
-        },
-        {
-          name:'alerts',
-          template:'app/home/detail/alerts/alerts.tpl.html',
-          iconClass: 'glyphicon glyphicon-exclamation-sign fa-12x'
-        },
-        {
-          name:'rules',
-          template:'app/home/detail/rules/rules.tpl.html',
-          iconClass: 'fa fa-list fa-12x'
-        },
-        {
-          name:'configuration',
-          template:'app/home/detail/configuration/configuration.tpl.html',
-          iconClass: 'fa fa-gear fa-12x'
-        }
       ];
 
     angular.extend($scope, {
@@ -232,8 +166,21 @@ angular
       }
     };
 
-    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
+    $scope.$on('onSelectionChange', function(event, selectedObject, type, detailTabName, configName) {
       $scope.detailPaneTabs = getDetailTabsList(type, $scope.isPipelineRunning, selectedObject);
+
+      if(detailTabName) {
+        angular.forEach($scope.detailPaneTabs, function(tab) {
+          if(tab.name === detailTabName) {
+            tab.active = true;
+          }
+        });
+      } else if($scope.detailPaneTabs && $scope.detailPaneTabs.length) {
+        $scope.detailPaneTabs[0].active = true;
+      }
+
+      $scope.autoFocusConfigName = configName;
+
     });
 
     $scope.$watch('isPipelineRunning', function(newValue) {

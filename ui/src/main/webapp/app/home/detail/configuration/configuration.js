@@ -271,7 +271,7 @@ angular
         });
 
         return dependsOnConfiguration && dependsOnConfiguration.value &&
-          _.contains(triggeredByValues, dependsOnConfiguration.value);
+          _.contains(triggeredByValues, dependsOnConfiguration.value + '');
       }
     });
 

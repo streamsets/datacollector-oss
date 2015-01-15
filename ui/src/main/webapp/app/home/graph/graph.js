@@ -5,7 +5,8 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('GraphController', function ($scope, $rootScope, $timeout, _, api, $translate, pipelineService, $modal) {
+  .controller('GraphController', function ($scope, $rootScope, $timeout, _, api, $translate,
+                                           pipelineService, pipelineConstant, $modal) {
 
     angular.extend($scope, {
 
@@ -96,7 +97,7 @@ angular
 
       /**
        * On clicking issue in Issues dropdown selects the stage and if issue level is STAGE_CONFIG
-       * Configuration is
+       *
        * @param issue
        * @param instanceName
        */
@@ -110,7 +111,7 @@ angular
           stageInstance = _.find(pipelineConfig.stages, function(stage) {
             return stage.instanceName === instanceName;
           });
-          $scope.changeStageSelection(stageInstance);
+          $scope.changeStageSelection(stageInstance, pipelineConstant.STAGE_INSTANCE, 'configuration', issue.configName);
           //$('.configuration-tabs a:last').tab('show');
         } else {
           //Select Pipeline Config

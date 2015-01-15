@@ -131,12 +131,12 @@ angular
        *
        * @param stageInstance
        */
-      changeStageSelection: function(stageInstance) {
+      changeStageSelection: function(stageInstance, type, detailTabName, configName) {
         $scope.$broadcast('selectNode', stageInstance);
         if(stageInstance) {
-          updateDetailPane(stageInstance, pipelineConstant.STAGE_INSTANCE);
+          updateDetailPane(stageInstance, pipelineConstant.STAGE_INSTANCE, detailTabName, configName);
         } else {
-          updateDetailPane(stageInstance, pipelineConstant.PIPELINE);
+          updateDetailPane(stageInstance, pipelineConstant.PIPELINE, detailTabName, configName);
         }
       },
 
@@ -471,7 +471,7 @@ angular
      * @param selectedObject
      * @param type
      */
-    var updateDetailPane = function(selectedObject, type) {
+    var updateDetailPane = function(selectedObject, type, detailTabName, configName) {
 
       $scope.selectedType = type;
 
@@ -492,7 +492,7 @@ angular
         $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
       }
 
-      $scope.$broadcast('onSelectionChange', selectedObject, type);
+      $scope.$broadcast('onSelectionChange', selectedObject, type, detailTabName, configName);
 
       $timeout(function () {
         $scope.$broadcast('show-errors-check-validity');
