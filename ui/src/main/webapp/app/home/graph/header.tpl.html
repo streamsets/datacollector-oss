@@ -147,7 +147,7 @@
       <li role="presentation"
           ng-repeat="stageLibrary in sources" ng-class="{disabled: sourceExists}">
         <a role="menuitem" tabindex="-1" href="#"
-           ng-click="sourceExists || addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
+           ng-click="sourceExists || addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
       </li>
 
       <li role="presentation" class="divider"></li>
@@ -156,7 +156,7 @@
           translate="home.header.processors">Processors</li>
       <li role="presentation" ng-repeat="stageLibrary in processors">
         <a role="menuitem" tabindex="-1" href="#"
-           ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
+           ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
       </li>
 
       <li role="presentation" class="divider"></li>
@@ -165,7 +165,7 @@
           translate="home.header.selectorProcessors">Selector Processors</li>
       <li role="presentation" ng-repeat="stageLibrary in selectorProcessors">
         <a role="menuitem" tabindex="-1" href="#"
-           ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
+           ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
       </li>
 
       <li role="presentation" class="divider"></li>
@@ -174,7 +174,7 @@
           translate="home.header.targets">Targets</li>
       <li role="presentation" ng-repeat="stageLibrary in targets">
         <a role="menuitem" tabindex="-1" href="#"
-           ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label}}</a>
+           ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
       </li>
 
     </ul>
