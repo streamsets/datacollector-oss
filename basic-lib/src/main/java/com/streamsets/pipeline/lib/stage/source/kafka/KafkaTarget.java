@@ -20,7 +20,8 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.el.ELUtils;
-import com.streamsets.pipeline.lib.stage.source.spooldir.csv.CvsFileModeChooserValues;
+import com.streamsets.pipeline.lib.stage.source.spooldir.CsvFileMode;
+import com.streamsets.pipeline.lib.stage.source.spooldir.CvsFileModeChooserValues;
 import com.streamsets.pipeline.lib.stage.source.util.CsvUtil;
 import com.streamsets.pipeline.lib.stage.source.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.StageLibError;
@@ -114,7 +115,7 @@ public class KafkaTarget extends BaseTarget {
     defaultValue = "DEFAULT",
     dependsOn = "payloadType", triggeredByValue = {"CSV"})
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
-  public String csvFileFormat;
+  public CsvFileMode csvFileFormat;
 
   private KafkaProducer kafkaProducer;
   private long recordCounter = 0;
@@ -272,7 +273,7 @@ public class KafkaTarget extends BaseTarget {
     } if (payloadType == PayloadType.JSON) {
       return JsonUtil.jsonRecordToString(r).getBytes();
     } if (payloadType == PayloadType.CSV) {
-      return CsvUtil.csvRecordToString(r, CvsFileModeChooserValues.getCSVFormat(csvFileFormat)).getBytes();
+      return CsvUtil.csvRecordToString(r, csvFileFormat.getFormat()).getBytes();
     }
     return null;
   }

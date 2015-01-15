@@ -3,26 +3,16 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.stage.source.spooldir.csv;
+package com.streamsets.pipeline.lib.stage.source.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ChooserMode;
-import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
-import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
-import com.streamsets.pipeline.lib.stage.source.spooldir.AbstractSpoolDirSource;
-import com.streamsets.pipeline.lib.stage.source.spooldir.BadSpoolFileException;
 import org.apache.commons.csv.CSVFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -33,54 +23,24 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@GenerateResourceBundle
-@RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class, mimeType = "text/csv")
-@StageDef(version = "1.0.0",
-    label = "CSV files spool directory",
-    description = "Consumes CSV files from a spool directory",
-    icon = "csv.png")
-public class CsvSpoolDirSource extends AbstractSpoolDirSource {
-  private final static Logger LOG = LoggerFactory.getLogger(CsvSpoolDirSource.class);
-
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "CSV Format",
-      description = "The specific CSV format of the files",
-      defaultValue = "DEFAULT")
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
-  public String csvFileFormat;
-
-
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Header Line",
-      description = "Indicates if the CSV files start with a header line",
-      defaultValue = "TRUE")
-  public boolean hasHeaderLine;
-
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Convert to Map",
-      description = "Converts CVS data array to a Map using the headers as keys",
-      defaultValue = "TRUE")
-  public boolean convertToMap;
-
-  private CSVFormat csvFormat;
+public class CsvDataProducer implements DataProducer {
+  private final Source.Context context;
+  private final CSVFormat csvFormat;
+  private final boolean hasHeaderLine;
+  private final boolean convertToMap;
   private File previousFile;
   private String[] headers;
   private List<Field> headerFields;
 
-  @Override
-  protected void init() throws StageException {
-    super.init();
-    csvFormat = CvsFileModeChooserValues.getCSVFormat(csvFileFormat);
-    if (hasHeaderLine) {
-      csvFormat = csvFormat.withHeader();
-    }
+  public CsvDataProducer(Source.Context context, CsvFileMode csvMode, boolean hasHeaderLine, boolean convertToMap) {
+    this.context = context;
+    this.csvFormat = (hasHeaderLine) ? csvMode.getFormat().withHeader() : csvMode.getFormat();
+    this.hasHeaderLine = hasHeaderLine;
+    this.convertToMap = convertToMap;
   }
 
   @Override
-  protected long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker)
+  public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker)
       throws StageException, BadSpoolFileException {
     OverrunCsvParser parser = null;
     if (hasHeaderLine) {
@@ -136,8 +96,7 @@ public class CsvSpoolDirSource extends AbstractSpoolDirSource {
   }
 
   protected Record createRecord(String sourceFile, long offset, int offsetIndex, String[] columns) throws IOException {
-    Record record = getContext().createRecord(Utils.format("file={} offset={} idx={}", sourceFile, offset,
-                                                           offsetIndex));
+    Record record = context.createRecord(Utils.format("file={} offset={} idx={}", sourceFile, offset, offsetIndex));
     Map<String, Field> map = new LinkedHashMap<>();
     if (convertToMap) {
       for (int i = 0; i < columns.length; i++) {

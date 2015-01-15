@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,7 +76,9 @@ public abstract class StageRunner<S extends Stage> {
       if (!fields.equals(configs)) {
         Set<String> missingConfigs = Sets.difference(fields, configs);
         Set<String> extraConfigs = Sets.difference(configs, fields);
-        if (missingConfigs.size() + extraConfigs.size() > 0) {
+
+        missingConfigs = filterNonActiveConfigurationsFromMissing(stage, configuration, missingConfigs);
+        if (missingConfigs.size() + extraConfigs.size() > 0) { //x
           throw new RuntimeException(Utils.format(
               "Invalid stage configuration for '{}', Missing configurations '{}' and invalid configurations '{}'",
               stage.getClass().getName(), missingConfigs, extraConfigs));
@@ -84,26 +87,28 @@ public abstract class StageRunner<S extends Stage> {
       for (Field field : stage.getClass().getFields()) {
         if (field.isAnnotationPresent(ConfigDef.class)) {
           ConfigDef configDef = field.getAnnotation(ConfigDef.class);
-          if ( configDef.type() != ConfigDef.Type.MAP) {
-            field.set(stage, configuration.get(field.getName()));
-          } else {
-            //we need to handle special case of List of Map elements with key/value entries
-            Object value = configuration.get(field.getName());
-            if (value != null && value instanceof List) {
-              Map map = new HashMap();
-              for (Map element : (List<Map>) value) {
-                if (!element.containsKey("key") || !element.containsKey("value")) {
-                  throw new RuntimeException(Utils.format("Invalid stage configuration for '{}' Map as list must have" +
-                                                          " a List of Maps all with 'key' and 'value' entries",
-                      field.getName()));
+          if (isConfigurationActive(configDef, configuration)) {
+            if ( configDef.type() != ConfigDef.Type.MAP) {
+              field.set(stage, configuration.get(field.getName()));
+            } else {
+              //we need to handle special case of List of Map elements with key/value entries
+              Object value = configuration.get(field.getName());
+              if (value != null && value instanceof List) {
+                Map map = new HashMap();
+                for (Map element : (List<Map>) value) {
+                  if (!element.containsKey("key") || !element.containsKey("value")) {
+                    throw new RuntimeException(Utils.format("Invalid stage configuration for '{}' Map as list must have" +
+                                                            " a List of Maps all with 'key' and 'value' entries",
+                                                            field.getName()));
+                  }
+                  String k = (String) element.get("key");
+                  String v = (String) element.get("value");
+                  map.put(k, v);
                 }
-                String k = (String) element.get("key");
-                String v = (String) element.get("value");
-                map.put(k, v);
+                value = map;
               }
-              value = map;
+              field.set(stage, value);
             }
-            field.set(stage, value);
           }
         }
       }
@@ -113,6 +118,41 @@ public abstract class StageRunner<S extends Stage> {
       }
       throw new RuntimeException(ex);
     }
+  }
+
+  private Set<String> filterNonActiveConfigurationsFromMissing(S stage, Map<String, Object> configuration,
+      Set<String> missingConfigs) {
+    missingConfigs = new HashSet<>(missingConfigs);
+    Iterator<String> it = missingConfigs.iterator();
+    while (it.hasNext()) {
+      String name = it.next();
+      try {
+        Field field = stage.getClass().getField(name);
+        if (!isConfigurationActive(field.getAnnotation(ConfigDef.class), configuration)) {
+          it.remove();
+        }
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+    return missingConfigs;
+  }
+
+  private boolean isConfigurationActive(ConfigDef configDef, Map<String, Object> configuration) {
+    String dependsOn = configDef.dependsOn();
+    if (!dependsOn.isEmpty()) {
+      Object dependsOnValue = configuration.get(dependsOn);
+      if (dependsOnValue != null) {
+        String valueStr = dependsOnValue.toString();
+        for (String trigger : configDef.triggeredByValue()) {
+          if (valueStr.endsWith(trigger)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    }
+    return true;
   }
 
   @SuppressWarnings("unchecked")

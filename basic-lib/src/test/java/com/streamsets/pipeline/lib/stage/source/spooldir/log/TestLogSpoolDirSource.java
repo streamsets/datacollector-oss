@@ -5,20 +5,16 @@
  */
 package com.streamsets.pipeline.lib.stage.source.spooldir.log;
 
-import com.codahale.metrics.Counter;
-import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
+import com.streamsets.pipeline.lib.stage.source.spooldir.FileDataType;
+import com.streamsets.pipeline.lib.stage.source.spooldir.SpoolDirSource;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -48,7 +44,7 @@ public class TestLogSpoolDirSource {
 
   @Test
   public void testProduceFullFile() throws Exception {
-    SourceRunner runner = new SourceRunner.Builder(LogSpoolDirSource.class)
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirSource.class)
         .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
         .addConfiguration("filePattern", "file-[0-9].log")
         .addConfiguration("maxSpoolFiles", 10)
@@ -58,12 +54,13 @@ public class TestLogSpoolDirSource {
         .addConfiguration("initialFileToProcess", null)
         .addConfiguration("poolingTimeoutSecs", 0)
         .addConfiguration("errorArchiveDir", null)
+        .addConfiguration("fileDataType", FileDataType.LOG_FILES)
         .addConfiguration("maxLogLineLength", 10)
         .addOutputLane("lane")
         .build();
     runner.runInit();
     try {
-      LogSpoolDirSource source = (LogSpoolDirSource) runner.getStage();
+      SpoolDirSource source = (SpoolDirSource) runner.getStage();
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
       Assert.assertEquals(-1, source.produce(createLogFile(), 0, 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
@@ -81,7 +78,7 @@ public class TestLogSpoolDirSource {
 
   @Test
   public void testProduceLessThanFile() throws Exception {
-    SourceRunner runner = new SourceRunner.Builder(LogSpoolDirSource.class)
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirSource.class)
         .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
         .addConfiguration("filePattern", "file-[0-9].log")
         .addConfiguration("maxSpoolFiles", 10)
@@ -91,12 +88,13 @@ public class TestLogSpoolDirSource {
         .addConfiguration("initialFileToProcess", null)
         .addConfiguration("poolingTimeoutSecs", 0)
         .addConfiguration("errorArchiveDir", null)
+        .addConfiguration("fileDataType", FileDataType.LOG_FILES)
         .addConfiguration("maxLogLineLength", 10)
         .addOutputLane("lane")
         .build();
     runner.runInit();
     try {
-      LogSpoolDirSource source = (LogSpoolDirSource) runner.getStage();
+      SpoolDirSource source = (SpoolDirSource) runner.getStage();
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
       long offset = source.produce(createLogFile(), 0, 1, batchMaker);
       Assert.assertEquals(11, offset);

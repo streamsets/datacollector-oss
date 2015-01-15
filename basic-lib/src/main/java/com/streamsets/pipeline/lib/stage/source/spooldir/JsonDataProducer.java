@@ -3,27 +3,19 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.stage.source.spooldir.json;
+package com.streamsets.pipeline.lib.stage.source.spooldir;
 
 import com.codahale.metrics.Counter;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ChooserMode;
-import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
-import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
-import com.streamsets.pipeline.lib.stage.source.spooldir.AbstractSpoolDirSource;
-import com.streamsets.pipeline.lib.stage.source.spooldir.BadSpoolFileException;
 import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,40 +30,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@GenerateResourceBundle
-@RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class, mimeType = "application/json")
-@StageDef(version = "1.0.0",
-    label = "JSON files spool directory",
-    description = "Consumes JSON files from a spool directory")
-public class JsonSpoolDirSource extends AbstractSpoolDirSource {
-  private final static Logger LOG = LoggerFactory.getLogger(JsonSpoolDirSource.class);
+public class JsonDataProducer implements DataProducer {
+  private final static Logger LOG = LoggerFactory.getLogger(JsonDataProducer.class);
 
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "JSON Content",
-      description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects",
-      defaultValue = "ARRAY_OBJECTS")
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
-  public StreamingJsonParser.Mode jsonContent;
+  private final Source.Context context;
+  private final StreamingJsonParser.Mode jsonContent;
+  private final int maxJsonObjectLen;
+  private final Counter jsonObjectsOverMaxLen;
 
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.INTEGER,
-      label = "Maximum JSON Object Length",
-      description = "The maximum length for a JSON Object being converted to a record, if greater the full JSON " +
-                    "object is discarded and processing continues with the next JSON object",
-      defaultValue = "4096")
-  public int maxJsonObjectLen;
-
-  private Counter jsonObjectsOverMaxLen;
-
-  @Override
-  protected void init() throws StageException {
-    super.init();
-    jsonObjectsOverMaxLen = getContext().createCounter("jsonObjectsOverMaxLen");
+  public JsonDataProducer(Source.Context context, JsonFileMode jsonMode, int maxJsonObjectLen) {
+    this.context = context;
+    this.jsonContent = jsonMode.getFormat();
+    this.maxJsonObjectLen = maxJsonObjectLen;
+    jsonObjectsOverMaxLen = context.createCounter("jsonObjectsOverMaxLen");
   }
 
   @Override
-  protected long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker)
+  public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker)
       throws StageException, BadSpoolFileException {
     String sourceFile = file.getName();
     OverrunStreamingJsonParser parser = null;
@@ -101,7 +76,7 @@ public class JsonSpoolDirSource extends AbstractSpoolDirSource {
         }
       } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
         jsonObjectsOverMaxLen.inc();
-        getContext().reportError(StageLibError.LIB_0200, ex.getJsonSnippet(), maxJsonObjectLen, sourceFile, offset);
+        context.reportError(StageLibError.LIB_0200, ex.getJsonSnippet(), maxJsonObjectLen, sourceFile, offset);
         LOG.warn(StageLibError.LIB_0200.getMessage(), ex.getJsonSnippet(), maxJsonObjectLen, sourceFile, offset);
       }
     }
@@ -109,7 +84,7 @@ public class JsonSpoolDirSource extends AbstractSpoolDirSource {
   }
 
   protected Record createRecord(String sourceFile, long offset, Object json) throws IOException {
-    Record record = getContext().createRecord(Utils.format("file={} offset={}", sourceFile, offset));
+    Record record = context.createRecord(Utils.format("file={} offset={}", sourceFile, offset));
     record.set(jsonToField(json));
     return record;
   }

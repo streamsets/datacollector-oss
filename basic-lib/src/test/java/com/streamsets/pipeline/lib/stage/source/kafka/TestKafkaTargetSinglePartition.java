@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.stage.source.kafka;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.stage.source.spooldir.CsvFileMode;
 import com.streamsets.pipeline.lib.stage.source.util.CsvUtil;
 import com.streamsets.pipeline.lib.stage.source.util.JsonUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -200,7 +201,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("payloadType", PayloadType.CSV)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("constants", null)
-      .addConfiguration("csvFileFormat", "DEFAULT")
+      .addConfiguration("csvFileFormat", CsvFileMode.CSV)
       .build();
 
     targetRunner.runInit();

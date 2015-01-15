@@ -17,7 +17,7 @@ import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
-import com.streamsets.pipeline.lib.stage.source.spooldir.json.JsonFileModeChooserValues;
+import com.streamsets.pipeline.lib.stage.source.spooldir.JsonFileModeChooserValues;
 import com.streamsets.pipeline.lib.stage.source.util.JsonUtil;
 
 import java.io.BufferedReader;

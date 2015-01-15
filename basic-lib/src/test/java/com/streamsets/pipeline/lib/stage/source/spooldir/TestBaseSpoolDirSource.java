@@ -17,7 +17,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.UUID;
 
-public class TestAbstractSpoolDirSource {
+public class TestBaseSpoolDirSource {
 
   private String createTestDir() {
     File f = new File("target", UUID.randomUUID().toString());
@@ -25,7 +25,7 @@ public class TestAbstractSpoolDirSource {
     return f.getAbsolutePath();
   }
 
-  public static class TSpoolDirSource extends AbstractSpoolDirSource {
+  public static class TSpoolDirSource extends BaseSpoolDirSource {
     File file;
     long offset;
     int maxBatchSize;
@@ -43,7 +43,7 @@ public class TestAbstractSpoolDirSource {
     }
   }
 
-  private SourceRunner createSourceRunner(AbstractSpoolDirSource source, String initialFile) {
+  private SourceRunner createSourceRunner(BaseSpoolDirSource source, String initialFile) {
     return new SourceRunner.Builder(source)
         .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
         .addConfiguration("filePattern", "file-[0-9].log")

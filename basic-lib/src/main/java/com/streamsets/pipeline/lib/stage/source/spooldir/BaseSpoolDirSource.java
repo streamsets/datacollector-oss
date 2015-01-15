@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.stage.source.spooldir;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
@@ -21,20 +22,22 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public abstract class AbstractSpoolDirSource extends BaseSource {
-  private final static Logger LOG = LoggerFactory.getLogger(AbstractSpoolDirSource.class);
+public abstract class BaseSpoolDirSource extends BaseSource {
+  private final static Logger LOG = LoggerFactory.getLogger(BaseSpoolDirSource.class);
 
   private static final String OFFSET_SEPARATOR = "::";
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
-      label = "Spool Directory")
+      label = "Spool Directory",
+      displayPosition = 0)
   public String spoolDir;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       label = "File Pattern",
-      description = "File pattern to look for, files must be lexicographically monotonic increasing")
+      description = "File pattern to look for, files must be lexicographically monotonic increasing",
+      displayPosition = 1)
   public String filePattern;
 
   @ConfigDef(required = true,
@@ -42,51 +45,60 @@ public abstract class AbstractSpoolDirSource extends BaseSource {
       label = "Max Files in Spool Directory",
       defaultValue = "10",
       description =
-          "Maximum number of files in spool directory waiting to be processed, if exceeded teh source goes into error")
+          "Maximum number of files in spool directory waiting to be processed, if exceeded the source goes into error",
+      displayPosition = 2)
   public int maxSpoolFiles;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
       label = "First File to Process",
       description = "If set, all files lexicographically older than this will be ignored",
-      defaultValue = "")
+      defaultValue = "",
+      displayPosition = 3)
   public String initialFileToProcess;
 
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       label = "File Post Processing Handling",
-      description = "Action to take after the file has been processed: NONE (default), DELETE, ARCHIVE",
-      defaultValue = "NONE")
+      description = "Action to take after the file has been processed",
+      defaultValue = "NONE",
+      displayPosition = 4)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PostProcessingOptionsChooserValues.class)
   public DirectorySpooler.FilePostProcessing postProcessing;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
       label = "Archive Directory",
-      description = "Directory to archive processed files after processing. " +
-                    "Only used if post processing is set to ARCHIVE")
+      description = "Directory to archive processed files after processing",
+      displayPosition = 5,
+      dependsOn = "postProcessing",
+      triggeredByValue = "ARCHIVE")
   public String archiveDir;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.INTEGER,
       label = "Archive Retention Time (minutes)",
-      description = "How long archived files should be kept before deleting, a value of zero means forever. " +
-                    "Only used if post processing is set to ARCHIVE",
-      defaultValue = "0")
+      description = "How long archived files should be kept before deleting, a value of zero means forever",
+      defaultValue = "0",
+      displayPosition = 6,
+      dependsOn = "postProcessing",
+      triggeredByValue = "ARCHIVE")
   public long retentionTimeMins;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.INTEGER,
       label = "File Pooling Timeout (secs)",
       description = "Timeout when waiting for a new file, when a timeout happens, an empty batch will be run",
-      defaultValue = "60")
+      defaultValue = "60",
+      displayPosition = 7)
   public long poolingTimeoutSecs;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
       label = "Error Archive Directory",
-      description = "Directory to archive files that could not be fully processed due to unrecoverable data errors")
+      description = "Directory to archive files that could not be fully processed due to unrecoverable data errors",
+      displayPosition = 8)
   public String errorArchiveDir;
 
   private DirectorySpooler spooler;

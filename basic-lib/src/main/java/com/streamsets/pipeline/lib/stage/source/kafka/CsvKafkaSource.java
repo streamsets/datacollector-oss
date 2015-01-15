@@ -16,7 +16,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.io.CountingReader;
-import com.streamsets.pipeline.lib.stage.source.spooldir.csv.CvsFileModeChooserValues;
+import com.streamsets.pipeline.lib.stage.source.spooldir.CsvFileMode;
+import com.streamsets.pipeline.lib.stage.source.spooldir.CvsFileModeChooserValues;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -39,13 +40,13 @@ public class CsvKafkaSource extends AbstractKafkaSource {
     description = "The specific CSV format of the files",
     defaultValue = "DEFAULT")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
-  public String csvFileFormat;
+  public CsvFileMode csvFileFormat;
 
   @Override
   protected void populateRecordFromBytes(Record record, byte[] bytes) throws StageException {
     try (CountingReader reader =
            new CountingReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes))))) {
-      OverrunCsvParser parser = new OverrunCsvParser(reader, CvsFileModeChooserValues.getCSVFormat(csvFileFormat));
+      OverrunCsvParser parser = new OverrunCsvParser(reader, csvFileFormat.getFormat());
       String[] columns = parser.read();
       Map<String, Field> map = new LinkedHashMap<>();
       List<Field> values = new ArrayList<>(columns.length);

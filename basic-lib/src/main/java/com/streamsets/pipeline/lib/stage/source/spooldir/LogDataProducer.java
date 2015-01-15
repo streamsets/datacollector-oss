@@ -3,20 +3,17 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.stage.source.spooldir.log;
+package com.streamsets.pipeline.lib.stage.source.spooldir;
 
 import com.codahale.metrics.Counter;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunLineReader;
-import com.streamsets.pipeline.lib.stage.source.spooldir.AbstractSpoolDirSource;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,35 +24,26 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@GenerateResourceBundle
-@StageDef(version = "1.0.0",
-    label = "Log spool directory",
-    description = "Consumes log files from a spool directory")
-public class LogSpoolDirSource extends AbstractSpoolDirSource {
-  private final static Logger LOG = LoggerFactory.getLogger(LogSpoolDirSource.class);
+public class LogDataProducer implements DataProducer {
+  private final static Logger LOG = LoggerFactory.getLogger(LogDataProducer.class);
 
-  public static final String LINE = "line";
-  public static final String TRUNCATED = "truncated";
+  private static final String LINE = "line";
+  private static final String TRUNCATED = "truncated";
 
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.INTEGER,
-      label = "Maximum Log Line Length",
-      description = "The maximum length for log lines, if a line exceeds that length, it will be truncated",
-      defaultValue = "1024")
-  public int maxLogLineLength;
+  private final Source.Context context;
+  private final int maxLogLineLength;
+  private final StringBuilder line;
+  private final Counter linesOverMaxLengthCounter;
 
-  private StringBuilder line;
-  private Counter linesOverMaxLengthCounter;
-
-  @Override
-  protected void init() throws StageException {
-    super.init();
+  public LogDataProducer(Source.Context context, int maxLogLineLength) {
+    this.context = context;
+    this.maxLogLineLength = maxLogLineLength;
     line = new StringBuilder(maxLogLineLength);
-    linesOverMaxLengthCounter = getContext().createCounter("linesOverMaxLen");
+    linesOverMaxLengthCounter = context.createCounter("linesOverMaxLen");
   }
 
   @Override
-  protected long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+  public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     String sourceFile = file.getName();
     try (CountingReader reader = new CountingReader(new FileReader(file))) {
       IOUtils.skipFully(reader, offset);
@@ -77,7 +65,7 @@ public class LogSpoolDirSource extends AbstractSpoolDirSource {
                  sourceFile, offset);
       }
       if (len > -1) {
-        Record record = getContext().createRecord(Utils.format("file={} offset={}", sourceFile, offset));
+        Record record = context.createRecord(Utils.format("file={} offset={}", sourceFile, offset));
         Map<String, Field> map = new LinkedHashMap<>();
         map.put(LINE, Field.create(line.toString()));
         map.put(TRUNCATED, Field.create(len > maxLogLineLength));
