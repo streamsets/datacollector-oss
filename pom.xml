@@ -37,11 +37,11 @@
     <module>el</module>
     <module>container</module>
     <module>bootstrap</module>
-    <module>stage-lib</module>
+    <module>basic-lib</module>
     <module>sdk</module>
     <module>sdk-test</module>
-    <module>hdfs-lib</module>
-    <module>hdfs-lib-test</module>
+    <module>hdfs-protolib</module>
+    <module>hdfs-protolib-test</module>
     <module>cdh5_3_0-lib</module>
     <module>cdh5_2_1-lib</module>
   </modules>

@@ -92,17 +92,17 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-stage-lib</artifactId>
+        <artifactId>streamsets-datacollector-basic-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-hdfs-lib</artifactId>
+        <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-hdfs-lib-test</artifactId>
+        <artifactId>streamsets-datacollector-hdfs-protolib-test</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

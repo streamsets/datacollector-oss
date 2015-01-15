@@ -39,12 +39,12 @@
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-hdfs-lib</artifactId>
+      <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-hdfs-lib-test</artifactId>
+      <artifactId>streamsets-datacollector-hdfs-protolib-test</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -56,7 +56,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <dependenciesToScan>
-            <dependency>com.streamsets:streamsets-datacollector-hdfs-lib-test</dependency>
+            <dependency>com.streamsets:streamsets-datacollector-hdfs-protolib-test</dependency>
           </dependenciesToScan>
         </configuration>
       </plugin>

@@ -18,16 +18,16 @@
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-hdfs-lib-test</artifactId>
+  <artifactId>streamsets-datacollector-hdfs-protolib-test</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Data Collector HDFS Library Test</description>
-  <name>StreamSets Data Collector HDFS Library Test</name>
+  <description>StreamSets Data Collector HDFS ProtoLibrary Test</description>
+  <name>StreamSets Data Collector HDFS ProtoLibrary Test</name>
   <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-hdfs-lib</artifactId>
+      <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
       <scope>provided</scope>
     </dependency>
 

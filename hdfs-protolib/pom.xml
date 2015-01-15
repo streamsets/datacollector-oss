@@ -15,10 +15,10 @@
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-hdfs-lib</artifactId>
+  <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Data Collector HDFS Library</description>
-  <name>StreamSets Data Collector HDFS Library</name>
+  <description>StreamSets Data Collector HDFS ProtoLibrary</description>
+  <name>StreamSets Data Collector HDFS ProtoLibrary</name>
   <packaging>jar</packaging>
 
   <dependencies>

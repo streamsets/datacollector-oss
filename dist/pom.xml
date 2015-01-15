@@ -44,19 +44,24 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-stage-lib</artifactId>
-      <scope>compile</scope>
+      <artifactId>streamsets-datacollector-basic-lib</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-hdfs-lib</artifactId>
-      <scope>compile</scope>
+      <artifactId>streamsets-datacollector-cdh5_3_0-lib</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdk</artifactId>
-      <scope>compile</scope>
+      <artifactId>streamsets-datacollector-cdh5_2_1-lib</artifactId>
+      <scope>provided</scope>
     </dependency>
+    <!--<dependency>-->
+      <!--<groupId>com.streamsets</groupId>-->
+      <!--<artifactId>streamsets-datacollector-sdk</artifactId>-->
+      <!--<scope>compile</scope>-->
+    <!--</dependency>-->
   </dependencies>
 
   <build>

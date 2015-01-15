@@ -126,7 +126,7 @@
 
     <!-- stage-lib -->
     <fileSet>
-      <directory>${basedir}/../stage-lib/target/stage-libs/</directory>
+      <directory>${basedir}/../basic-lib/target/stage-libs/</directory>
       <outputDirectory>/stage-libs/</outputDirectory>
     </fileSet>
 
