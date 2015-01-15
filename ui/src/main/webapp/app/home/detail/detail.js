@@ -6,82 +6,95 @@ angular
   .module('pipelineAgentApp.home')
 
   .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant) {
-    var generalTab =  {
-        name:'general',
-        label: 'General',
-        template:'app/home/detail/general/general.tpl.html',
+    var infoTab =  {
+        name:'info',
+        template:'app/home/detail/info/info.tpl.html',
         iconClass: 'fa fa-info-circle fa-12x'
       },
       historyTab = {
         name:'history',
-        label: 'History',
         template:'app/home/detail/history/history.tpl.html',
         iconClass: 'fa fa-history fa-12x'
       },
       configurationTab = {
         name:'configuration',
-        label: 'Configuration',
         template:'app/home/detail/configuration/configuration.tpl.html',
-        iconClass: 'fa fa-gear fa-12x'
+        iconClass: 'fa fa-gear fa-12x',
+        active: true
       },
       rawPreviewTab = {
         name:'rawPreview',
-        label: 'Raw Preview',
         template:'app/home/detail/rawPreview/rawPreview.tpl.html',
         iconClass: 'fa fa-eye fa-12x'
       },
       summaryTab = {
         name:'summary',
-        label: 'Summary',
         template:'app/home/detail/summary/summary.tpl.html',
         iconClass: 'fa fa-bar-chart fa-12x'
       },
       errorTab = {
         name:'errors',
-        label: 'Errors',
         template:'app/home/detail/badRecords/badRecords.tpl.html',
         iconClass: 'fa fa-exclamation-triangle fa-12x'
       },
       dataSummaryTab = {
         name:'summary',
-        label: 'Summary',
         template:'app/home/detail/dataSummary/dataSummary.tpl.html',
         iconClass: 'fa fa-bar-chart fa-12x'
       },
       alertsTab = {
         name:'alerts',
-        label: 'Alerts',
         template:'app/home/detail/alerts/alerts.tpl.html',
         iconClass: 'glyphicon glyphicon-exclamation-sign fa-12x'
       },
       rulesTab = {
         name:'rules',
-        label: 'Rules',
         template:'app/home/detail/rules/rules.tpl.html',
         iconClass: 'fa fa-list fa-12x'
-      },
-      pipelineTabsEdit = [
-        {
-          name:'general',
-          label: 'General',
-          template:'app/home/detail/general/general.tpl.html',
-          iconClass: 'fa fa-info-circle fa-12x'
-        },
-        {
-          name:'configuration',
-          template:'app/home/detail/configuration/configuration.tpl.html',
-          iconClass: 'fa fa-gear fa-12x'
-        },
-        {
-          name:'history',
-          label: 'History',
-          template:'app/home/detail/history/history.tpl.html',
-          iconClass: 'fa fa-history fa-12x'
-        }
-      ];
+      };
+
+    /**
+     * Returns list tabs based on type.
+     *
+     * @param type
+     * @param isPipelineRunning
+     * @returns {*}
+     */
+    var getDetailTabsList = function(type, isPipelineRunning) {
+      var tabsList = [];
+      switch(type) {
+        case pipelineConstant.PIPELINE:
+          if(isPipelineRunning) {
+            tabsList = [summaryTab, errorTab, infoTab, configurationTab, historyTab];
+          } else {
+            tabsList = [infoTab, configurationTab, historyTab];
+          }
+
+          return tabsList;
+        case pipelineConstant.STAGE_INSTANCE:
+          if(isPipelineRunning) {
+            tabsList = [summaryTab, errorTab, infoTab, configurationTab];
+          } else {
+            tabsList = [infoTab, configurationTab];
+          }
+
+          if($scope.detailPaneConfigDefn.rawSourceDefinition) {
+            tabsList.push(rawPreviewTab);
+          }
+
+          return tabsList;
+        case pipelineConstant.LINK:
+          if(isPipelineRunning) {
+            return [dataSummaryTab, alertsTab, rulesTab, infoTab];
+          } else {
+            return [infoTab];
+          }
+          break;
+      }
+    };
 
     angular.extend($scope, {
-      detailPaneTabs: pipelineTabsEdit,
+      detailPaneTabs: getDetailTabsList(pipelineConstant.PIPELINE, false),
 
       /**
        * Returns label for Detail Pane
@@ -134,39 +147,6 @@ angular
       }
     });
 
-    var getDetailTabsList = function(type, isPipelineRunning, selectedObject) {
-      var tabsList = [];
-      switch(type) {
-        case pipelineConstant.PIPELINE:
-          if(isPipelineRunning) {
-            tabsList = [summaryTab, errorTab, configurationTab, historyTab];
-          } else {
-            tabsList = [configurationTab, historyTab];
-          }
-
-          return tabsList;
-        case pipelineConstant.STAGE_INSTANCE:
-          if(isPipelineRunning) {
-            tabsList = [summaryTab, errorTab, configurationTab];
-          } else {
-            tabsList = [configurationTab];
-          }
-
-          if($scope.detailPaneConfigDefn.rawSourceDefinition) {
-            tabsList.push(rawPreviewTab);
-          }
-
-          return tabsList;
-        case pipelineConstant.LINK:
-          if(isPipelineRunning) {
-            return [dataSummaryTab, alertsTab, rulesTab, configurationTab];
-          } else {
-            return [configurationTab];
-          }
-          break;
-      }
-    };
-
     $scope.$on('onSelectionChange', function(event, selectedObject, type, detailTabName, configName) {
       $scope.detailPaneTabs = getDetailTabsList(type, $scope.isPipelineRunning, selectedObject);
 
@@ -184,7 +164,13 @@ angular
 
     $scope.$watch('isPipelineRunning', function(newValue) {
       $scope.detailPaneTabs = getDetailTabsList($scope.selectedType, newValue);
-      $scope.detailPaneTabs[0].active = true;
+
+      if(newValue || $scope.detailPaneTabs.length < 2 ) {
+        $scope.detailPaneTabs[0].active = true;
+      } else if($scope.detailPaneTabs.length > 1) {
+        $scope.detailPaneTabs[1].active = true;
+      }
+
     });
 
     $scope.$on('showBadRecordsSelected', function() {

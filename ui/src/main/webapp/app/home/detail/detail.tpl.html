@@ -61,7 +61,7 @@
           <i class="{{tab.iconClass}}"
              ng-hide="showWarning(tab)"></i>
 
-          <span>{{tab.label}}</span>
+          <span>{{'home.detailPane.' + tab.name | translate}}</span>
         </tab-heading>
         <div ng-include="tab.template"></div>
       </tab>

@@ -126,9 +126,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     }
   }
 
+  //Group name needs to be empty for UI to show the config in General Group.
   private static final ConfigDefinition REQUIRED_FIELDS_CONFIG = new ConfigDefinition(
       ConfigDefinition.REQUIRED_FIELDS, ConfigDef.Type.MODEL, "Required Fields", "Record required fields",
-      null, false, "system", null, new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null, null, null), "",
+      null, false, "", null, new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null, null, null), "",
       new String[] {}, 0);
 
   private void addSystemConfigurations(StageDefinition stage) {

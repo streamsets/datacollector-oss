@@ -144,6 +144,8 @@
         "enterKey": "Enter Key",
         "enterPredicate": "Enter Predicate",
         "enterValue": "Enter Value",
+        "general": "General",
+        "info": "Information",
         "noRecord": "No Preview Record.",
         "pipelineInformation": "Pipeline Information",
         "rawSourcePreview": "Raw Preview",
@@ -160,8 +162,10 @@
       "historyTab": {
         "noStatus": "No Status to view."
       },
+      "info": "Info",
       "inspectingData": "Inspecting Data",
       "monitoring": "Monitoring",
+      "rawPreview": "Raw Preview",
       "rules": "Rules",
       "summary": "Summary",
       "summaryTab": {

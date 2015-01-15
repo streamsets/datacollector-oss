@@ -266,12 +266,28 @@ angular
       verifyDependsOn: function(stageInstance, configuration) {
         var dependsOnConfigName = configuration.dependsOn,
           triggeredByValues = configuration.triggeredByValues,
-          dependsOnConfiguration = _.find(stageInstance.configuration, function(configuration) {
-          return configuration.name === dependsOnConfigName;
+          dependsOnConfiguration = _.find(stageInstance.configuration, function(config) {
+          return config.name === dependsOnConfigName;
         });
 
         return dependsOnConfiguration && dependsOnConfiguration.value &&
           _.contains(triggeredByValues, dependsOnConfiguration.value + '');
+      },
+
+
+      /**
+       * Returns Config Model Object
+       *
+       * @param stageInstance
+       * @param configuration
+       * @returns {*}
+       */
+      getConfigModelObject: function(stageInstance, configuration) {
+        if(stageInstance && configuration) {
+          return _.find(stageInstance.configuration, function(config) {
+            return configuration.name === config.name;
+          });
+        }
       }
     });
 
