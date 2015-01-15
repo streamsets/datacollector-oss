@@ -19,13 +19,12 @@
     </tab>
 
 
-    <tab ng-repeat="(groupName, configGroupLabel) in detailPaneConfigDefn.configGroupDefinition.groupNameToLabelMap"
-      ng-init="groupConfigDefinitions = getGroupConfigDefinitions(detailPaneConfig, detailPaneConfigDefn.configDefinitions, groupName)">
-      <tab-heading ng-show="groupConfigDefinitions && groupConfigDefinitions.length">
+    <tab ng-repeat="(groupName, configGroupLabel) in detailPaneConfigDefn.configGroupDefinition.groupNameToLabelMap">
+      <tab-heading>
         <span>{{configGroupLabel}}</span>
       </tab-heading>
 
-      <div class="tabs-content" ng-show="groupConfigDefinitions && groupConfigDefinitions.length">
+      <div class="tabs-content">
         <ng-include ng-if="selectedType !== pipelineConstant.LINK"
                     src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
 

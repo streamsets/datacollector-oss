@@ -284,7 +284,7 @@ angular
        */
       getConfigIndex: function(stageInstance, configuration) {
         if(stageInstance && configuration) {
-          var configIndex = null;
+          var configIndex;
           _.find(stageInstance.configuration, function(config, index) {
             if(configuration.name === config.name) {
               configIndex = index;
@@ -294,33 +294,7 @@ angular
 
           return configIndex;
         }
-      },
-
-
-      /**
-       * Returns filtered & sorted Group Configurations.
-       *
-       * @param stageInstance
-       * @param configDefinitions
-       * @param groupName
-       * @returns {*}
-       */
-      getGroupConfigDefinitions: function(stageInstance, configDefinitions, groupName) {
-        var groupConfigDefinitions = [];
-
-        angular.forEach(configDefinitions, function(configDefinition) {
-          if(configDefinition.group === groupName &&
-            (!configDefinition.dependsOn || $scope.verifyDependsOn(stageInstance, configDefinition))) {
-            groupConfigDefinitions.push(configDefinition);
-          }
-        });
-
-        return _.sortBy(groupConfigDefinitions, function(defn) {
-          return defn.displayPosition;
-        });
-
       }
-
     });
 
 
@@ -360,26 +334,16 @@ angular
       }
     };
 
-    var initialize = function() {
+    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
 
-      if($scope.detailPaneConfigDefn && $scope.detailPaneConfigDefn.configGroupDefinition) {
-        $scope.showGroups = $scope.detailPaneConfigDefn.configGroupDefinition ?
-          !angular.equals($scope.detailPaneConfigDefn.configGroupDefinition.groupNameToLabelMap, {}) : false;
-      }
-
-      if ($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
+      $scope.showGroups = $scope.detailPaneConfigDefn.configGroupDefinition ?
+        !angular.equals($scope.detailPaneConfigDefn.configGroupDefinition.groupNameToLabelMap, {}) : false;
+      if (type === pipelineConstant.STAGE_INSTANCE) {
         fieldsPathList = undefined;
         $scope.fieldPaths = [];
       }
-
-    };
-
-    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
-      initialize();
     });
 
-
-    initialize();
 
   }).
 
