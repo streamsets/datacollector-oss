@@ -112,7 +112,7 @@ public class KafkaTarget extends BaseTarget {
     type = ConfigDef.Type.MODEL,
     label = "CSV Format",
     description = "The specific CSV format of the files",
-    defaultValue = "DEFAULT",
+    defaultValue = "CSV",
     dependsOn = "payloadType", triggeredByValue = {"CSV"})
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
