@@ -33,7 +33,7 @@ public class HbaseTarget extends BaseTarget {
   }
 
   @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "HBase URI", defaultValue = "",
-            description = "HBase server URI", group="GENERAL")
+            description = "HBase server URI", group="")
   public String uri;
 
   @ConfigDef(required = true, type = ConfigDef.Type.BOOLEAN, label = "Security enabled",
@@ -41,7 +41,7 @@ public class HbaseTarget extends BaseTarget {
   public boolean security;
 
   @ConfigDef(required = true, type = ConfigDef.Type.STRING, label = "Table", defaultValue = "",
-             description = "HBase table name", group="GENERAL")
+             description = "HBase table name", group="")
   public String table;
 
   @Override

@@ -170,7 +170,7 @@ angular
     $rootScope.$watch('common.pipelineMetrics', function() {
       if($scope.isPipelineRunning &&
         $rootScope.common.pipelineMetrics &&
-        $scope.selectedType !== pipelineConstant.LINK ) {
+        $scope.selectedType !== pipelineConstant.LINK && !$scope.monitoringPaused) {
         updateSummaryData();
       }
     });

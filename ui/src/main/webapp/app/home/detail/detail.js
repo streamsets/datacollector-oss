@@ -139,11 +139,32 @@ angular
         });
       },
 
+      /**
+       * Returns true to display icon on tab.
+       *
+       * @param tab
+       * @returns {*}
+       */
       showWarning: function(tab) {
         if(tab.name === 'configuration') {
           return $scope.hasConfigurationIssues($scope.detailPaneConfig);
         }
         return false;
+      },
+
+      /**
+       * Pause Updating Monitoring Data
+       */
+      pauseMonitoring: function() {
+        $scope.monitoringPaused = true;
+      },
+
+
+      /**
+       * Continue Updating Monitoring Data
+       */
+      continueMonitoring: function() {
+        $scope.monitoringPaused = false;
       }
     });
 
