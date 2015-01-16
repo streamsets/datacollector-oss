@@ -46,10 +46,7 @@ Aggregating the coverage report for all modules:
 
 IMPORTANT TEST INSTRUCTIONS:
 
-'mvn test' must be run within the module for the following modules:
-
-*cdh5_2_1-lib
-*cdh5_3_0_lib
-*apache-kafka0_8_1-lib
-
+Use 'mvn package' to run tests. This triggers the shading of the SDK dependencies which
+is required for libraries like hdfs-lib/cdh5_3_0-lib/cdh5_2_1-lib not to fail when running
+their test cases.
 

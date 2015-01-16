@@ -6,14 +6,13 @@
 package com.streamsets.pipeline.lib.dirspooler;
 
 import com.codahale.metrics.Meter;
-import com.codahale.metrics.MetricRegistry;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.runner.StageContext;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -24,7 +23,6 @@ public class TestDirectorySpooler {
   private File spoolDir;
   private File archiveDir;
 
-  private MetricRegistry metrics;
   private Source.Context context;
 
   @Before
@@ -32,10 +30,7 @@ public class TestDirectorySpooler {
     File dir = new File("target", UUID.randomUUID().toString());
     spoolDir = new File(dir, "spool");
     archiveDir = new File(dir, "archive");
-    metrics = new MetricRegistry();
-    context = Mockito.mock(StageContext.class);
-    Mockito.when(context.getMetrics()).thenReturn(metrics);
-    Mockito.when(context.createMeter(Mockito.anyString())).thenCallRealMethod();
+    context = ContextInfoCreator.createSourceContext("s", ImmutableSet.of("a"));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -69,7 +64,7 @@ public class TestDirectorySpooler {
     spooler.init("x1.log");
     Assert.assertEquals(logFile, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
-    Meter meter = metrics.getMeters().values().iterator().next();
+    Meter meter = context.getMetrics().getMeters().values().iterator().next();
     Assert.assertNotNull(meter);
     Assert.assertTrue(meter.getCount() > 0);
     spooler.destroy();

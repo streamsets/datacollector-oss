@@ -173,7 +173,7 @@ public abstract class StageRunner<S extends Stage> {
     String name = getName(stage.getClass());
     String version = getVersion(stage.getClass());
     String instanceName = name + "_1";
-    info = new StageInfo(name, version, instanceName);
+    info = ContextInfoCreator.createInfo(name, version, instanceName);
     context = new StageContext(instanceName, outputLanes);
     status = Status.CREATED;
   }

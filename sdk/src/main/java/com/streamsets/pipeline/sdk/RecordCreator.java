@@ -14,18 +14,26 @@ public class RecordCreator {
   private static long counter;
 
   public static Record create() {
-    return create(null, null);
+    return create("sdk", "sdk:");
   }
 
   public static Record create(byte[] raw, String rawMimeType) {
     return create("sdk", "sdk:" + counter++, null, raw, rawMimeType);
   }
 
+  public static Record create(String stageCreator, String recordSourceId) {
+    return create(stageCreator, recordSourceId, null, null, null);
+  }
+
   public static Record create(String stageCreator, String recordSourceId, List<String> stagesPath) {
     return create(stageCreator, recordSourceId, stagesPath, null, null);
   }
 
-  public static Record create(String stageCreator, String recordSourceId, List<String> stagesPath, byte[] raw,
+  public static Record create(String stageCreator, String recordSourceId, byte[] raw, String rawMimeType) {
+    return create(stageCreator, recordSourceId, null, raw, rawMimeType);
+  }
+
+    public static Record create(String stageCreator, String recordSourceId, List<String> stagesPath, byte[] raw,
       String rawMimeType) {
     RecordImpl record = new RecordImpl(stageCreator, recordSourceId, raw, rawMimeType);
     if (stagesPath != null) {

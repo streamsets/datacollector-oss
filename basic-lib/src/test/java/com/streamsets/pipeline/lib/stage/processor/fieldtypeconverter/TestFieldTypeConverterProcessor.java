@@ -9,8 +9,8 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("true"));
       map.put("skilled", Field.create("122345566"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -92,7 +92,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("true"));
       map.put("skilled", Field.create("122345566"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -136,7 +136,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("beginner", Field.create("1"));
       map.put("intermediate", Field.create("126"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -174,7 +174,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("beginner", Field.create("a"));
       map.put("intermediate", Field.create("yes"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -212,7 +212,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("beginner", Field.create("abc"));
       map.put("intermediate", Field.create("yes"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -254,7 +254,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("intermediate", Field.create("1.234,56789"));
       map.put("skilled", Field.create("-1.23E-12"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -302,7 +302,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("intermediate", Field.create("1.234,56789"));
       map.put("skilled", Field.create("-1.23E-12"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -351,7 +351,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("intermediate", Field.create("1.234,56789"));
       map.put("skilled", Field.create("-1.23E-12"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -399,7 +399,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("intermediate", Field.create("1.234,56789"));
       map.put("skilled", Field.create("-1.23E-12"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -448,7 +448,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("1.234"));
       map.put("skilled", Field.create("1234"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -496,7 +496,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("1.234"));
       map.put("skilled", Field.create("1234"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -544,7 +544,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("12,345,678,910"));
       map.put("skilled", Field.create("12.345.678.910"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -592,7 +592,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("12,345,678,910"));
       map.put("skilled", Field.create("12.345.678.910"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -640,7 +640,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("-32,767"));
       map.put("skilled", Field.create("32.767"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -688,7 +688,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("-32,767"));
       map.put("skilled", Field.create("32.767"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -736,7 +736,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("-3,767.45"));
       map.put("skilled", Field.create("3.767,45"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -784,7 +784,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("-3,767.45"));
       map.put("skilled", Field.create("3.767,45"));
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -861,7 +861,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("2015-01-03 21:32:32.333 PST"));//
       map.put("skilled", Field.create("2015-01-03 21:30:01"));//
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -957,7 +957,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("expert", Field.create("2015-01-03 21:32:32.333 PST"));//
       map.put("skilled", Field.create("2015-01-03 21:30:01"));//
       map.put("null", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -1017,7 +1017,7 @@ public class TestFieldTypeConverterProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("invalidConversion", Field.create("float"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -1045,7 +1045,7 @@ public class TestFieldTypeConverterProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("invalidConversion", Field.create("Hello World"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -1074,7 +1074,7 @@ public class TestFieldTypeConverterProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("invalidConversion", Field.create(123456789234L));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -1113,7 +1113,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("base", Field.create(Field.Type.DECIMAL, new BigDecimal(1234.56)));
       map.put("bonus", Field.create(Field.Type.FLOAT, 200.45f));
       map.put("benefits", Field.create(Field.Type.LONG, 123456789L));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));

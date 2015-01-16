@@ -9,8 +9,8 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("name", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -66,7 +66,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("name", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -93,7 +93,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("name", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -122,7 +122,7 @@ public class TestFieldValueReplacer {
       map.put("name", Field.create(Field.Type.STRING, null));
       map.put("age", Field.create(21));
       map.put("streetAddress", Field.create("c"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -158,7 +158,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("stringField", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -190,7 +190,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("intField", Field.create(Field.Type.INTEGER, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -222,7 +222,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("doubleField", Field.create(Field.Type.DOUBLE, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -254,7 +254,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("longField", Field.create(Field.Type.LONG, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -286,7 +286,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("shortField", Field.create(Field.Type.SHORT, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -318,7 +318,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("floatField", Field.create(Field.Type.FLOAT, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -350,7 +350,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("decimalField", Field.create(Field.Type.DECIMAL, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -382,7 +382,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("byteField", Field.create(Field.Type.BYTE, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -414,7 +414,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("byteArrayField", Field.create(Field.Type.BYTE_ARRAY, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -446,7 +446,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("charField", Field.create(Field.Type.CHAR, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -478,7 +478,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("booleanField", Field.create(Field.Type.BOOLEAN, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -510,7 +510,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("dateField", Field.create(Field.Type.SHORT, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -548,7 +548,7 @@ public class TestFieldValueReplacer {
       map.put("name", Field.create(Field.Type.STRING, null));
       map.put("age", Field.create(21));
       map.put("streetAddress", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -584,7 +584,7 @@ public class TestFieldValueReplacer {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("name", Field.create(Field.Type.STRING, "streamsets"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));

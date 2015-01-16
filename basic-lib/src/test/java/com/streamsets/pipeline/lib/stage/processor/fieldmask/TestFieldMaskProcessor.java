@@ -9,8 +9,8 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class TestFieldMaskProcessor {
       map.put("age", Field.create("12"));
       map.put("ssn", Field.create("123-45-6789"));
       map.put("phone", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -77,7 +77,7 @@ public class TestFieldMaskProcessor {
       map.put("age", Field.create("12"));
       map.put("ssn", Field.create("123-45-6789"));
       map.put("phone", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -117,7 +117,7 @@ public class TestFieldMaskProcessor {
       map.put("age", Field.create("12"));
       map.put("ssn", Field.create("123-45-6789"));
       map.put("phone", Field.create(Field.Type.STRING, null));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -155,7 +155,7 @@ public class TestFieldMaskProcessor {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("name", Field.create(12345));
       map.put("age", Field.create(123.56));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -203,7 +203,7 @@ public class TestFieldMaskProcessor {
       map.put("age", Field.create("12"));
       map.put("ssn", Field.create("123-45-6789"));
       map.put("phone", Field.create("9876543210"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -242,7 +242,7 @@ ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
       map.put("age", Field.create("12"));
       map.put("ssn", Field.create("123-45-6789"));
       map.put("phone", Field.create("9876543210"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));

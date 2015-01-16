@@ -9,8 +9,8 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class TestFieldFilterProcessor {
       map.put("name", Field.create("a"));
       map.put("age", Field.create("b"));
       map.put("streetAddress", Field.create("c"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -62,7 +62,7 @@ public class TestFieldFilterProcessor {
       map.put("name", Field.create("a"));
       map.put("age", Field.create("b"));
       map.put("streetAddress", Field.create("c"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -89,7 +89,7 @@ public class TestFieldFilterProcessor {
       map.put("name", Field.create("a"));
       map.put("age", Field.create("b"));
       map.put("streetAddress", Field.create("c"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -117,7 +117,7 @@ public class TestFieldFilterProcessor {
       map.put("name", Field.create("a"));
       map.put("age", Field.create("b"));
       map.put("streetAddress", Field.create("c"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));

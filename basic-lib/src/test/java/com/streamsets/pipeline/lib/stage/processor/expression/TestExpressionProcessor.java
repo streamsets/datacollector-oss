@@ -10,8 +10,8 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.util.StageLibError;
-import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class TestExpressionProcessor {
       map.put("baseSalary", Field.create(Field.Type.DOUBLE, 100000.25));
       map.put("bonus", Field.create(Field.Type.INTEGER, 2000));
       map.put("tax", Field.create(Field.Type.DECIMAL, new BigDecimal(30000.25)));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -94,7 +94,7 @@ public class TestExpressionProcessor {
       map.put("baseSalary", Field.create(Field.Type.DOUBLE, 100000.25));
       map.put("bonus", Field.create(Field.Type.INTEGER, 2000));
       map.put("tax", Field.create(Field.Type.DECIMAL, new BigDecimal(30000.25)));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -128,7 +128,7 @@ public class TestExpressionProcessor {
       map.put("baseSalary", Field.create(Field.Type.DOUBLE, 100000.25));
       map.put("bonus", Field.create(Field.Type.INTEGER, 2000));
       map.put("perks", Field.create(Field.Type.SHORT, 200));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -162,7 +162,7 @@ public class TestExpressionProcessor {
       map.put("firstName", Field.create(Field.Type.STRING, "stream"));
       map.put("middleName", Field.create(Field.Type.STRING, "sets"));
       map.put("lastName", Field.create(Field.Type.STRING, ".inc"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -202,7 +202,7 @@ public class TestExpressionProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("fullName", Field.create(Field.Type.STRING, "streamsets"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));

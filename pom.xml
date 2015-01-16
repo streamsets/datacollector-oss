@@ -32,7 +32,9 @@
   </licenses>
 
   <modules>
+    <module>root-proto</module>
     <module>root</module>
+    <module>root-lib</module>
     <module>api</module>
     <module>el</module>
     <module>container</module>

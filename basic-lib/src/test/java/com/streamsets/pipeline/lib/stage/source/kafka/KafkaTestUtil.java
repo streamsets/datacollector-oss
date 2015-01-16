@@ -9,9 +9,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.stage.source.util.JsonUtil;
-import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import kafka.admin.AdminUtils;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
@@ -80,7 +79,7 @@ public class KafkaTestUtil {
   public static List<Record> createStringRecords() {
     List<Record> records = new ArrayList<>(9);
     for(int i = 0; i < 9; i++) {
-      Record r = new RecordImpl("s", "s:1", (TEST_STRING + i).getBytes(), MIME);
+      Record r = RecordCreator.create("s", "s:1", (TEST_STRING + i).getBytes(), MIME);
       r.set(Field.create((TEST_STRING + i)));
       records.add(r);
     }
@@ -90,7 +89,7 @@ public class KafkaTestUtil {
   public static List<Record> createIntegerRecords() {
     List<Record> records = new ArrayList<>(9);
     for(int i = 0; i < 9; i++) {
-      Record r = new RecordImpl("s", "s:1", (TEST_STRING + i).getBytes(), MIME);
+      Record r = RecordCreator.create("s", "s:1", (TEST_STRING + i).getBytes(), MIME);
       r.set(Field.create(i));
       records.add(r);
     }
@@ -113,7 +112,7 @@ public class KafkaTestUtil {
 
     List<KeyedMessage<String, String>> messages = new ArrayList<>();
     for(Map<String, String> map: listOfJson) {
-      messages.add(new KeyedMessage<>(topic, partition, ObjectMapperFactory.get().writeValueAsString(map)));
+      messages.add(new KeyedMessage<>(topic, partition, new ObjectMapper().writeValueAsString(map)));
     }
     return messages;
   }
@@ -144,7 +143,7 @@ public class KafkaTestUtil {
       .getResourceAsStream("testKafkaTarget.json"), typeRef);
     List<Record> records = new ArrayList<>();
     for(Map<String, String> map : o) {
-      Record r = new RecordImpl("s", "s:1", null, null);
+      Record r = RecordCreator.create("s", "s:1", null, null);
       r.set(JsonUtil.jsonToField(map));
       records.add(r);
     }
@@ -164,7 +163,7 @@ public class KafkaTestUtil {
         values.add(Field.create(column));
       }
       map.put("values", Field.create(values));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1", null, null);
       record.set(Field.create(map));
       records.add(record);
     }

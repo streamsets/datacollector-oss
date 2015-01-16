@@ -9,8 +9,8 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("name", Field.create("streamsets"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -70,7 +70,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("age", Field.create(Field.Type.DECIMAL, new BigDecimal(345.678)));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -101,7 +101,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("age", Field.create(Field.Type.INTEGER, -123));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -131,7 +131,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("age", Field.create(Field.Type.SHORT, 123));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -161,7 +161,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("age", Field.create(Field.Type.LONG, 21474836478L));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -191,7 +191,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("age", Field.create(Field.Type.BYTE, 125));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -221,7 +221,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("age", Field.create(Field.Type.CHAR, 'c'));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -251,7 +251,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("age", Field.create(Field.Type.BOOLEAN, true));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -281,7 +281,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("age", Field.create(Field.Type.DATE, new Date(123456789)));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -312,7 +312,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("age", Field.create(Field.Type.DATETIME, new Date(123456789)));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -343,7 +343,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("age", Field.create(Field.Type.FLOAT, 2.3842e-07f));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -374,7 +374,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("age", Field.create(Field.Type.DOUBLE, 12342.3842));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -405,7 +405,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("byteArray", Field.create(Field.Type.BYTE_ARRAY, "streamsets".getBytes()));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -439,7 +439,7 @@ public class TestFieldHasherProcessor {
       map.put("age", Field.create(21));
       map.put("sex", Field.create(Field.Type.STRING, null));
       map.put("streetAddress", Field.create("c"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -486,7 +486,7 @@ public class TestFieldHasherProcessor {
       map.put("age", Field.create(21));
       map.put("sex", Field.create(Field.Type.STRING, "male"));
       map.put("streetAddress", Field.create("sansome street"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -523,7 +523,7 @@ public class TestFieldHasherProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("name", Field.create("streamsets"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -561,7 +561,7 @@ public class TestFieldHasherProcessor {
       map.put("mapField", Field.create(mapField));
       map.put("listField", Field.create(Field.Type.LIST, ImmutableList.of(Field.create("e1"), Field.create("e2"))));
 
-      Record record = new RecordImpl("s", "s:1", null, null);
+            Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));

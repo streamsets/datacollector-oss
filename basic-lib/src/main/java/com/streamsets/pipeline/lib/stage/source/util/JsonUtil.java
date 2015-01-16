@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -122,7 +121,7 @@ public class JsonUtil {
   public static String jsonRecordToString(Record r) throws IOException {
     //Using ObjectMapperFactory from container lib causes a NoClassDefFoundError. Need to investigate
     ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+//    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
     return objectMapper.writeValueAsString(JsonUtil.fieldToJsonObject(r.get()));
   }
 }

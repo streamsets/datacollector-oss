@@ -10,9 +10,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-datacollector-root</artifactId>
+    <artifactId>streamsets-datacollector-root-lib</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../root</relativePath>
+    <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-basic-lib</artifactId>
@@ -21,6 +21,16 @@
   <name>StreamSets Data Collector Basic Library</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <guava.version>18.0</guava.version>
+    <commons-io.version>2.4</commons-io.version>
+    <jackson.version>2.4.3</jackson.version>
+    <commons-csv.version>1.1</commons-csv.version>
+    <kafka.version>0.8.1.1</kafka.version>
+    <tec.version>0.3</tec.version>
+    <scala.version>2.8.0</scala.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -28,13 +38,18 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-el</artifactId>
-      <scope>compile</scope>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -47,6 +62,7 @@
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -57,50 +73,66 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-el</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
+      <version>${commons-io.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-csv</artifactId>
+      <version>${commons-csv.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.101tec</groupId>
       <artifactId>zkclient</artifactId>
+      <version>${tec.version}</version>
       <scope>compile</scope> <!-- Needed for high level consumer -->
     </dependency>
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.8.0</artifactId>
+      <version>${kafka.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.8.0</artifactId>
+      <version>${kafka.version}</version>
       <classifier>test</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
       <scope>compile</scope>
       <!-- Changed the scope from test to compile so that it gets shipped in the dist.
       without this lib i see class not found exception at times while starting pipeline.
