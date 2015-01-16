@@ -96,10 +96,12 @@
     "getStarted": "Get Started",
     "header" : {
       "addStage": "Add Stage",
-      "definePipeline": "Define Pipeline:",
+      "continueMonitoring": "Continue Monitoring",
       "closePreview": "Close Preview",
       "closeSnapshot": "Close Snapshot",
+      "definePipeline": "Define Pipeline:",
       "nextBatch": "Preview Next Batch",
+      "pauseMonitoring": "Pause Monitoring",
       "pipelineIssues": "Pipeline Issues",
       "preview": "Preview",
       "processors": "Processors",

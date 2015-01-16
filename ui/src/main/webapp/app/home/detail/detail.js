@@ -150,21 +150,6 @@ angular
           return $scope.hasConfigurationIssues($scope.detailPaneConfig);
         }
         return false;
-      },
-
-      /**
-       * Pause Updating Monitoring Data
-       */
-      pauseMonitoring: function() {
-        $scope.monitoringPaused = true;
-      },
-
-
-      /**
-       * Continue Updating Monitoring Data
-       */
-      continueMonitoring: function() {
-        $scope.monitoringPaused = false;
       }
     });
 

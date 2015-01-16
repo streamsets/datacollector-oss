@@ -39,20 +39,6 @@
 
 
     <div class="pull-right">
-      <button class="btn btn-primary btn-sm" type="button"
-              ng-click="pauseMonitoring()"
-              ng-if="isPipelineRunning && !monitoringPaused">
-        <i class="fa fa-pause"></i>
-        <span>Pause</span>
-      </button>
-
-      <button class="btn btn-primary btn-sm" type="button"
-              ng-click="continueMonitoring()"
-              ng-if="isPipelineRunning && monitoringPaused">
-        <i class="fa fa-play"></i>
-        <span>Continue</span>
-      </button>
-
       <div class="pull-right size-toolbar">
         <span class="glyphicon pointer"
               ng-hide="$storage.maximizeDetailPane"
@@ -63,7 +49,6 @@
               ng-class="{'glyphicon-fullscreen' : !$storage.maximizeDetailPane , 'glyphicon-resize-small': $storage.maximizeDetailPane}"
               ng-click="onMaximizeDetailPane()"></span>
       </div>
-
     </div>
 
 

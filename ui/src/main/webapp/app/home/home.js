@@ -231,6 +231,21 @@ angular
        */
       setGraphPreviewMode: function(flag) {
         $scope.$broadcast('setGraphPreviewMode', flag);
+      },
+
+      /**
+       * Pause Updating Monitoring Data
+       */
+      pauseMonitoring: function() {
+        $scope.monitoringPaused = true;
+      },
+
+
+      /**
+       * Continue Updating Monitoring Data
+       */
+      continueMonitoring: function() {
+        $scope.monitoringPaused = false;
       }
     });
 
@@ -558,7 +573,9 @@ angular
         function() {
           api.pipelineAgent.getPipelineMetrics()
             .success(function(data) {
-              $rootScope.common.pipelineMetrics = data;
+              if(!$scope.monitoringPaused) {
+                $rootScope.common.pipelineMetrics = data;
+              }
               refreshPipelineMetrics();
             })
             .error(function(data, status, headers, config) {

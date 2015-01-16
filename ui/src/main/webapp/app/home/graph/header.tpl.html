@@ -106,25 +106,13 @@
       <span translate="home.header.closePreview">Close Preview</span>
     </button>
 
-    <div class="btn-group"
-         ng-hide="isPipelineRunning || previewMode">
-      <button type="button" class="btn btn-primary btn-sm"
-              ng-disabled="!pipelineConfig.valid"
-              ng-click="startPipeline()">
-        <span class="glyphicon glyphicon-play"></span>
-        <span translate="home.header.start">Start</span>
-      </button>
-      <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
-              ng-disabled="!pipelineConfig.valid"
-              data-toggle="dropdown"
-              aria-expanded="false">
-        <span class="caret"></span>
-        <span class="sr-only">Toggle Dropdown</span>
-      </button>
-      <ul class="dropdown-menu pull-right" role="menu">
-        <li><a href="#" ng-click="resetOffset()" translate="home.resetOffset.title">Reset Origin</a></li>
-      </ul>
-    </div>
+    <button type="button" class="btn btn-primary btn-sm"
+            ng-hide="isPipelineRunning || previewMode"
+            ng-disabled="!pipelineConfig.valid"
+            ng-click="startPipeline()">
+      <span class="glyphicon glyphicon-play"></span>
+      <span translate="home.header.start">Start</span>
+    </button>
 
     <button type="button" class="btn btn-danger btn-sm"
             ng-click="stopPipeline()"
@@ -132,6 +120,26 @@
       <span class="glyphicon glyphicon-stop"></span>
       <span translate="home.header.stop">Stop</span>
     </button>
+
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+        <span class="fa fa-gear"></span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu pull-right" role="menu">
+        <li role="presentation" ng-class="{'disabled': !pipelineConfig.valid}">
+          <a href="#" ng-click="resetOffset()" translate="home.resetOffset.title">Reset Origin</a>
+        </li>
+
+        <li role="presentation" ng-if="isPipelineRunning && !monitoringPaused">
+          <a href="#" ng-click="pauseMonitoring()" translate="home.header.pauseMonitoring">Pause Monitoring</a>
+        </li>
+
+        <li role="presentation" ng-if="isPipelineRunning && monitoringPaused">
+          <a href="#" ng-click="continueMonitoring()" translate="home.header.continueMonitoring">Continue Monitoring</a>
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="btn-group pull-right stage-dropdown" ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
