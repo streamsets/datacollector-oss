@@ -356,11 +356,11 @@ angular
       }
     };
 
-    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
-
-      $scope.showGroups = $scope.detailPaneConfigDefn.configGroupDefinition ?
-        !angular.equals($scope.detailPaneConfigDefn.configGroupDefinition.groupNameToLabelMap, {}) : false;
-      if (type === pipelineConstant.STAGE_INSTANCE) {
+    $scope.$on('onSelectionChange', function(event, options) {
+      var groupDefn = $scope.detailPaneConfigDefn.configGroupDefinition;
+      $scope.showGroups = (groupDefn && groupDefn.groupNameToLabelMapList) ?
+                                groupDefn.groupNameToLabelMapList.length > 0 : false;
+      if (options.type === pipelineConstant.STAGE_INSTANCE) {
         fieldsPathList = undefined;
         $scope.fieldPaths = [];
       }

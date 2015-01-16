@@ -35,7 +35,10 @@ angular
       changeToPreviewSingleStage: function() {
         $scope.previewMultipleStages = false;
         $scope.clearStartAndEndStageInstance();
-        $scope.changeStageSelection($scope.pipelineConfig.stages[0]);
+        $scope.changeStageSelection({
+          selectedObject: $scope.pipelineConfig.stages[0],
+          type: pipelineConstant.STAGE_INSTANCE
+        });
       },
 
       /**
@@ -44,7 +47,10 @@ angular
        * @param stageInstance
        */
       previousStagePreview: function(stageInstance) {
-        $scope.changeStageSelection(stageInstance);
+        $scope.changeStageSelection({
+          selectedObject: stageInstance,
+          type: pipelineConstant.STAGE_INSTANCE
+        });
       },
 
       /**
@@ -56,7 +62,10 @@ angular
         if($scope.stepExecuted && stageInstance.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE) {
           $scope.stepPreview(stageInstance, inputRecords);
         } else {
-          $scope.changeStageSelection(stageInstance);
+          $scope.changeStageSelection({
+            selectedObject: stageInstance,
+            type: pipelineConstant.STAGE_INSTANCE
+          });
         }
       },
 
@@ -115,7 +124,11 @@ angular
               }
             });
 
-            $scope.changeStageSelection(stageInstance);
+            $scope.changeStageSelection({
+              selectedObject: stageInstance,
+              type: pipelineConstant.STAGE_INSTANCE
+            });
+
             $scope.stepExecuted = true;
             $scope.showLoading = false;
             $rootScope.common.errors = [];
@@ -136,7 +149,11 @@ angular
         $scope.stepExecuted = false;
 
         var firstStageInstance = $scope.pipelineConfig.stages[0];
-        $scope.changeStageSelection(firstStageInstance);
+        $scope.changeStageSelection({
+          selectedObject: firstStageInstance,
+          type: pipelineConstant.STAGE_INSTANCE
+        });
+
       },
 
       /**
@@ -211,8 +228,10 @@ angular
           if(!$scope.previewMultipleStages) {
             firstStageInstance = $scope.pipelineConfig.stages[0];
           }
-
-          $scope.changeStageSelection(firstStageInstance);
+          $scope.changeStageSelection({
+            selectedObject: firstStageInstance,
+            type: pipelineConstant.STAGE_INSTANCE
+          });
 
           $scope.showLoading = false;
         }).
@@ -223,10 +242,10 @@ angular
         });
     });
 
-    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
+    $scope.$on('onSelectionChange', function(event, options) {
       if($scope.previewMode) {
-        if (type === pipelineConstant.STAGE_INSTANCE) {
-          updatePreviewDataForStage(selectedObject);
+        if (options.type === pipelineConstant.STAGE_INSTANCE) {
+          updatePreviewDataForStage(options.selectedObject);
         } else {
           $scope.stagePreviewData = {
             input: {},

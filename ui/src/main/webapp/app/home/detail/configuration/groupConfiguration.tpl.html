@@ -1,8 +1,8 @@
   <form class="form-horizontal form-group-sm" role="form" name="{{detailPaneConfig.instanceName || 'pipeline'}}">
     <div class="form-group"
          ng-switch="configDefinition.type"
-         ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: groupName} | orderBy: 'displayPosition'"
-         ng-if="(!configDefinition.dependsOn || verifyDependsOn(detailPaneConfig, configDefinition)) && configDefinition.group === groupName"
+         ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: groupNameToLabelMap.name} | orderBy: 'displayPosition'"
+         ng-if="(!configDefinition.dependsOn || verifyDependsOn(detailPaneConfig, configDefinition)) && configDefinition.group === groupNameToLabelMap.name"
          ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)"
          show-errors>
 
@@ -104,12 +104,12 @@
             <div class="col-md-2 btn-group" role="group" aria-label="Default button group"
                  ng-hide="isPipelineRunning">
               <button type="button" class="btn btn-default btn-sm"
-                      ng-click="removeFromMap(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, mapObject, $index)">
+                      ng-click="removeFromMap(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, mapObject, $index)">
                 <i class="fa fa-minus pointer"></i>
               </button>
               <button type="button" class="btn btn-default btn-sm"
                       ng-show="$last"
-                      ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value)">
+                      ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[configIndex].value)">
                 <i class="fa fa-plus pointer"></i>
               </button>
             </div>
@@ -155,7 +155,7 @@
                       ng-model="detailPaneConfig.configuration[configIndex].value">
                 <option ng-repeat="listValue in configDefinition.model.values"
                         value="{{listValue}}"
-                        ng-selected="listValue === detailPaneConfig.configuration[$parent.$index].value">
+                        ng-selected="listValue === detailPaneConfig.configuration[configIndex].value">
                   {{configDefinition.model.labels[$index]}}
                 </option>
               </select>
@@ -263,12 +263,12 @@
                    ng-hide="isPipelineRunning">
                 <button type="button" class="btn btn-default btn-sm"
                         ng-hide="$first && $last"
-                        ng-click="removeLane(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, lanePredicateMapping, $index)">
+                        ng-click="removeLane(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, lanePredicateMapping, $index)">
                   <i class="fa fa-minus pointer"></i>
                 </button>
                 <button type="button" class="btn btn-default btn-sm"
                         ng-show="$last"
-                        ng-click="addLane(detailPaneConfig, detailPaneConfig.configuration[$parent.$index].value, lanePredicateMapping)">
+                        ng-click="addLane(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, lanePredicateMapping)">
                   <i class="fa fa-plus pointer"></i>
                 </button>
               </div>

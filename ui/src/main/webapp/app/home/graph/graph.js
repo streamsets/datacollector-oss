@@ -43,7 +43,11 @@ angular
         var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig, undefined, firstOpenLane),
           edge;
 
-        $scope.changeStageSelection(stageInstance, pipelineConstant.STAGE_INSTANCE, undefined, undefined, true);
+        $scope.changeStageSelection({
+          selectedObject: stageInstance,
+          type: pipelineConstant.STAGE_INSTANCE,
+          ignoreBroadCast: true
+        });
 
         if(firstOpenLane && firstOpenLane.stageInstance) {
           edge = {
@@ -111,12 +115,22 @@ angular
           stageInstance = _.find(pipelineConfig.stages, function(stage) {
             return stage.instanceName === instanceName;
           });
-          $scope.changeStageSelection(stageInstance, pipelineConstant.STAGE_INSTANCE, 'configuration', issue.configName);
-          //$('.configuration-tabs a:last').tab('show');
+
+          $scope.changeStageSelection({
+            selectedObject: stageInstance,
+            type: pipelineConstant.STAGE_INSTANCE,
+            detailTabName: 'configuration',
+            configGroup: issue.configGroup,
+            configName: issue.configName
+          });
+
         } else {
           //Select Pipeline Config
           $scope.$broadcast('selectNode');
-          $scope.changeStageSelection();
+          $scope.changeStageSelection({
+            selectedObject: undefined,
+            type: pipelineConstant.PIPELINE
+          });
         }
       },
 

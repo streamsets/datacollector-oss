@@ -19,10 +19,10 @@
     </tab>
 
 
-    <tab ng-repeat="(groupName, configGroupLabel) in detailPaneConfigDefn.configGroupDefinition.groupNameToLabelMap"
-      ng-show="isGroupVisible(detailPaneConfig, detailPaneConfigDefn.configDefinitions, groupName)">
+    <tab ng-repeat="groupNameToLabelMap in detailPaneConfigDefn.configGroupDefinition.groupNameToLabelMapList"
+      ng-show="isGroupVisible(detailPaneConfig, detailPaneConfigDefn.configDefinitions, groupNameToLabelMap.name)">
       <tab-heading>
-        <span>{{configGroupLabel}}</span>
+        <span>{{groupNameToLabelMap.label}}</span>
       </tab-heading>
 
       <div class="tabs-content">

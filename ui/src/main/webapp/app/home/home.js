@@ -129,21 +129,25 @@ angular
       /**
        * Update Selection Stage Instance.
        *
-       * @param stageInstance
-       * @param type
-       * @param detailTabName
-       * @param configName
-       * @param ignoreBroadCast - Boolean flag for telling not to update Graph
+       * @param options
+       *  stageInstance
+       *  type
+       *  detailTabName
+       *  configGroup
+       *  configName
+       *  ignoreBroadCast - Boolean flag for telling not to update Graph
        */
-      changeStageSelection: function(stageInstance, type, detailTabName, configName, ignoreBroadCast) {
-        if(!ignoreBroadCast) {
-          $scope.$broadcast('selectNode', stageInstance);
+      changeStageSelection: function(options) {
+        if(!options.ignoreBroadCast) {
+          $scope.$broadcast('selectNode', options.stageInstance);
         }
 
-        if(stageInstance) {
-          updateDetailPane(stageInstance, pipelineConstant.STAGE_INSTANCE, detailTabName, configName);
+        if(options.stageInstance) {
+          options.type = pipelineConstant.STAGE_INSTANCE;
+          updateDetailPane(options);
         } else {
-          updateDetailPane(stageInstance, pipelineConstant.PIPELINE, detailTabName, configName);
+          options.type = pipelineConstant.PIPELINE;
+          updateDetailPane(options);
         }
       },
 
@@ -176,7 +180,10 @@ angular
        */
       moveGraphToCenter: function() {
         $scope.$broadcast('moveGraphToCenter');
-        updateDetailPane(undefined, pipelineConstant.PIPELINE);
+        updateDetailPane({
+          selectedObject: undefined,
+          type: pipelineConstant.PIPELINE
+        });
       },
 
       /**
@@ -463,10 +470,11 @@ angular
     /**
      * Update Detail Pane when selection changes in Pipeline Graph.
      *
-     * @param selectedObject
-     * @param type
+     * @param options
      */
-    var updateDetailPane = function(selectedObject, type, detailTabName, configName) {
+    var updateDetailPane = function(options) {
+      var selectedObject = options.selectedObject,
+        type = options.type;
 
       $scope.selectedType = type;
 
@@ -487,7 +495,7 @@ angular
         $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
       }
 
-      $scope.$broadcast('onSelectionChange', selectedObject, type, detailTabName, configName);
+      $scope.$broadcast('onSelectionChange', options);
 
       $timeout(function () {
         $scope.$broadcast('show-errors-check-validity');
@@ -655,15 +663,24 @@ angular
     }, true);
 
     $scope.$on('onNodeSelection', function (event, stageInstance) {
-      updateDetailPane(stageInstance, pipelineConstant.STAGE_INSTANCE);
+      updateDetailPane({
+        selectedObject: stageInstance,
+        type: pipelineConstant.STAGE_INSTANCE
+      });
     });
 
     $scope.$on('onEdgeSelection', function (event, edge) {
-      updateDetailPane(edge, pipelineConstant.LINK);
+      updateDetailPane({
+        selectedObject: edge,
+        type: pipelineConstant.LINK
+      });
     });
 
     $scope.$on('onRemoveNodeSelection', function () {
-      updateDetailPane(undefined, pipelineConstant.PIPELINE);
+      updateDetailPane({
+        selectedObject: undefined,
+        type: pipelineConstant.PIPELINE
+      });
     });
 
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
@@ -681,7 +698,10 @@ angular
 
     //Preview Panel Events
     $scope.$on('changeStateInstance', function (event, stageInstance) {
-      updateDetailPane(stageInstance);
+      updateDetailPane({
+        selectedObject: stageInstance,
+        type: pipelineConstant.STAGE_INSTANCE
+      });
     });
 
     $scope.$watch('pipelineConfig.info.name', function() {

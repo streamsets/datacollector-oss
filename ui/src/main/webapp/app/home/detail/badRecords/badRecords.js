@@ -78,8 +78,10 @@ angular
         });
     };
 
-    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
-      var pipelineMetrics = $rootScope.common.pipelineMetrics,
+    $scope.$on('onSelectionChange', function(event, options) {
+      var selectedObject = options.selectedObject,
+        type = options.type,
+        pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig;
       if($scope.isPipelineRunning && pipelineMetrics && pipelineMetrics.meters) {
 

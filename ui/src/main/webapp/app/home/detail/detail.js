@@ -121,14 +121,14 @@ angular
        * @param {Object} configObject - The Pipeline Configuration/Stage Configuration Object.
        * @returns {Boolean} - Returns true if configuration has any issue otherwise false.
        */
-      hasConfigurationIssues: function(configObject) {
+      hasConfigurationIssues: function(stageInstance) {
         var config = $scope.pipelineConfig,
           issues;
 
         if(config && config.issues) {
-          if(configObject.instanceName && config.issues.stageIssues &&
-            config.issues.stageIssues && config.issues.stageIssues[configObject.instanceName]) {
-            issues = config.issues.stageIssues[configObject.instanceName];
+          if(stageInstance.instanceName && config.issues.stageIssues &&
+            config.issues.stageIssues && config.issues.stageIssues[stageInstance.instanceName]) {
+            issues = config.issues.stageIssues[stageInstance.instanceName];
           } else if(config.issues.pipelineIssues){
             issues = config.issues.pipelineIssues;
           }
@@ -147,19 +147,19 @@ angular
       }
     });
 
-    $scope.$on('onSelectionChange', function(event, selectedObject, type, detailTabName, configName) {
-      $scope.detailPaneTabs = getDetailTabsList(type, $scope.isPipelineRunning, selectedObject);
+    $scope.$on('onSelectionChange', function(event, options) {
+      $scope.detailPaneTabs = getDetailTabsList(options.type, $scope.isPipelineRunning, options.selectedObject);
 
-      if(detailTabName) {
+      if(options.detailTabName) {
         angular.forEach($scope.detailPaneTabs, function(tab) {
-          if(tab.name === detailTabName) {
+          if(tab.name === options.detailTabName) {
             tab.active = true;
           }
         });
       }
 
-      $scope.autoFocusConfigName = configName;
-
+      $scope.autoFocusConfigGroup = options.configGroup;
+      $scope.autoFocusConfigName = options.configName;
     });
 
     $scope.$watch('isPipelineRunning', function(newValue) {

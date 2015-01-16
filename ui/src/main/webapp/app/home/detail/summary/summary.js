@@ -159,10 +159,10 @@ angular
       $scope.$broadcast('summaryDataUpdated');
     };
 
-    $scope.$on('onSelectionChange', function(event, selectedObject, type) {
+    $scope.$on('onSelectionChange', function(event, options) {
       if($scope.isPipelineRunning &&
         $rootScope.common.pipelineMetrics &&
-        type !== pipelineConstant.LINK) {
+        options.type !== pipelineConstant.LINK) {
         updateSummaryData();
       }
     });
