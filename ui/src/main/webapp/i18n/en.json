@@ -155,7 +155,8 @@
         "stageDescription": "Stage Description",
         "stageName": "Stage Name",
         "stageLibrary": "Stage Library",
-        "stageType": "Stage Type"
+        "stageType": "Stage Type",
+        "stageVersion": "Stage Version"
       },
       "general": "General",
       "history": "History",
