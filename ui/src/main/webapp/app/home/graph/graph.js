@@ -9,7 +9,7 @@ angular
                                            pipelineService, pipelineConstant, $modal) {
 
     angular.extend($scope, {
-
+      iconOnly: true,
       selectedSource: {},
       connectStage: {},
 
