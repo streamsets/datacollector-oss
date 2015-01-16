@@ -1,4 +1,4 @@
-  <form class="form-horizontal" role="form" name="{{detailPaneConfig.instanceName || 'pipeline'}}">
+  <form class="form-horizontal form-group-sm" role="form" name="{{detailPaneConfig.instanceName || 'pipeline'}}">
     <div class="form-group"
          ng-switch="configDefinition.type"
          ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: groupName} | orderBy: 'displayPosition'"
@@ -160,14 +160,30 @@
                 </option>
               </select>
 
-              <input type="text"
+              <!--input type="text"
                      ng-switch-when="SUGGESTED"
                      name="{{configDefinition.name}}"
                      ng-readonly="isPipelineRunning"
                      ng-model="detailPaneConfig.configuration[configIndex].value"
                      typeahead="listValue for listValue in configDefinition.model.values"
                      typeahead-min-length="0"
-                     class="form-control">
+                     typeahead-focus-first="false"
+                     typeahead-editable="true"
+                     class="form-control" -->
+
+              <div ng-switch-when="SUGGESTED" class="input-group">
+                <input type="text" class="form-control" ng-model="detailPaneConfig.configuration[configIndex].value">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown"><span class="caret"></span></button>
+                  <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li ng-repeat="listValue in configDefinition.model.values">
+                      <a href="#" ng-click="detailPaneConfig.configuration[configIndex].value = listValue">{{listValue}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+
             </div>
 
 
@@ -193,8 +209,7 @@
             <ui-select multiple tagging tagging-label="false" reset-search-input="true"
                        ng-disabled="isPipelineRunning"
                        ng-model="detailPaneConfig.configuration[configIndex].value">
-              <ui-select-match
-                placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
+              <ui-select-match>
                 {{$item}}
               </ui-select-match>
               <ui-select-choices repeat="fieldPath in fieldPaths.concat(detailPaneConfig.configuration[configIndex].value) | filter:$select.search">
@@ -203,7 +218,7 @@
             </ui-select>
 
             <div class="pull-right field-selector-btn" ng-hide="isPipelineRunning">
-              <button class="btn btn-link"
+              <button type="button" class="btn btn-link"
                       translate="home.detailPane.configurationTab.requiredFieldsSelectionButton"
                       ng-click="showFieldSelectorModal(detailPaneConfig.configuration[configIndex])">
                 Select Field Using Preview Data

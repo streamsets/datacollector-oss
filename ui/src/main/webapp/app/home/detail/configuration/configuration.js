@@ -294,6 +294,28 @@ angular
 
           return configIndex;
         }
+      },
+
+
+      /**
+       * Returns filtered & sorted Group Configurations.
+       *
+       * @param stageInstance
+       * @param configDefinitions
+       * @param groupName
+       * @returns {*}
+       */
+      isGroupVisible: function(stageInstance, configDefinitions, groupName) {
+        var visible = false;
+
+        angular.forEach(configDefinitions, function(configDefinition) {
+          if(configDefinition.group === groupName &&
+            (!configDefinition.dependsOn || $scope.verifyDependsOn(stageInstance, configDefinition))) {
+            visible = true;
+          }
+        });
+
+        return visible;
       }
     });
 
