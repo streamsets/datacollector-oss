@@ -22,6 +22,7 @@
   <packaging>jar</packaging>
 
   <dependencies>
+    <!-- we need to duplicate all provided dependencies in the lib modules -->
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
