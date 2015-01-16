@@ -127,22 +127,23 @@ angular
       },
 
       /**
-       * Update Selection Stage Instance.
+       * Update Selection Object.
        *
        * @param options
-       *  stageInstance
+       *  selectedObject
        *  type
        *  detailTabName
        *  configGroup
        *  configName
        *  ignoreBroadCast - Boolean flag for telling not to update Graph
+       *  moveToCenter
        */
       changeStageSelection: function(options) {
         if(!options.ignoreBroadCast) {
-          $scope.$broadcast('selectNode', options.stageInstance);
+          $scope.$broadcast('selectNode', options.selectedObject, options.moveToCenter);
         }
 
-        if(options.stageInstance) {
+        if(options.selectedObject) {
           options.type = pipelineConstant.STAGE_INSTANCE;
           updateDetailPane(options);
         } else {
@@ -499,7 +500,7 @@ angular
 
       $timeout(function () {
         $scope.$broadcast('show-errors-check-validity');
-      }, 100);
+      }, 1000);
     };
 
 

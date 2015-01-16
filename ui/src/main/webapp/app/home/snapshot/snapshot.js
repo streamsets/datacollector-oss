@@ -34,7 +34,11 @@ angular
       changeToPreviewSingleStage: function() {
         $scope.previewMultipleStages = false;
         $scope.clearStartAndEndStageInstance();
-        $scope.changeStageSelection($scope.pipelineConfig.stages[0]);
+        $scope.changeStageSelection({
+          selectedObject: $scope.pipelineConfig.stages[0],
+          type: pipelineConstant.STAGE_INSTANCE,
+          moveToCenter: true
+        });
       },
 
       /**
@@ -43,7 +47,11 @@ angular
        * @param stageInstance
        */
       previousStagePreview: function(stageInstance) {
-        $scope.changeStageSelection(stageInstance);
+        $scope.changeStageSelection({
+          selectedObject: stageInstance,
+          type: pipelineConstant.STAGE_INSTANCE,
+          moveToCenter: true
+        });
       },
 
       /**
@@ -55,7 +63,11 @@ angular
         if($scope.stepExecuted && stageInstance.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE) {
           $scope.stepPreview(stageInstance, inputRecords);
         } else {
-          $scope.changeStageSelection(stageInstance);
+          $scope.changeStageSelection({
+            selectedObject: stageInstance,
+            type: pipelineConstant.STAGE_INSTANCE,
+            moveToCenter: true
+          });
         }
       }
     });
@@ -115,7 +127,11 @@ angular
                     $scope.previewData = res;
 
                     var firstStageInstance = $scope.pipelineConfig.stages[0];
-                    $scope.changeStageSelection(firstStageInstance);
+                    $scope.changeStageSelection({
+                      selectedObject: firstStageInstance,
+                      type: pipelineConstant.STAGE_INSTANCE,
+                      moveToCenter: true
+                    });
 
                     $scope.showLoading = false;
                   }).

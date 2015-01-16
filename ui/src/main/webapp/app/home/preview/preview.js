@@ -37,7 +37,8 @@ angular
         $scope.clearStartAndEndStageInstance();
         $scope.changeStageSelection({
           selectedObject: $scope.pipelineConfig.stages[0],
-          type: pipelineConstant.STAGE_INSTANCE
+          type: pipelineConstant.STAGE_INSTANCE,
+          moveToCenter: true
         });
       },
 
@@ -49,7 +50,8 @@ angular
       previousStagePreview: function(stageInstance) {
         $scope.changeStageSelection({
           selectedObject: stageInstance,
-          type: pipelineConstant.STAGE_INSTANCE
+          type: pipelineConstant.STAGE_INSTANCE,
+          moveToCenter: true
         });
       },
 
@@ -64,7 +66,8 @@ angular
         } else {
           $scope.changeStageSelection({
             selectedObject: stageInstance,
-            type: pipelineConstant.STAGE_INSTANCE
+            type: pipelineConstant.STAGE_INSTANCE,
+            moveToCenter: true
           });
         }
       },
@@ -126,7 +129,8 @@ angular
 
             $scope.changeStageSelection({
               selectedObject: stageInstance,
-              type: pipelineConstant.STAGE_INSTANCE
+              type: pipelineConstant.STAGE_INSTANCE,
+              moveToCenter: true
             });
 
             $scope.stepExecuted = true;
@@ -151,7 +155,8 @@ angular
         var firstStageInstance = $scope.pipelineConfig.stages[0];
         $scope.changeStageSelection({
           selectedObject: firstStageInstance,
-          type: pipelineConstant.STAGE_INSTANCE
+          type: pipelineConstant.STAGE_INSTANCE,
+          moveToCenter: true
         });
 
       },
@@ -230,7 +235,8 @@ angular
           }
           $scope.changeStageSelection({
             selectedObject: firstStageInstance,
-            type: pipelineConstant.STAGE_INSTANCE
+            type: pipelineConstant.STAGE_INSTANCE,
+            moveToCenter: true
           });
 
           $scope.showLoading = false;

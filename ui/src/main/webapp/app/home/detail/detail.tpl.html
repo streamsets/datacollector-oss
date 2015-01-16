@@ -21,7 +21,7 @@
 
         <li role="presentation">
           <a role="menuitem" tabindex="-1" href="#"
-             ng-click="changeStageSelection()">{{pipelineConfig.info.name}}</a>
+             ng-click="changeStageSelection({selectedObject: undefined, type: pipelineConstant.PIPELINE})">{{pipelineConfig.info.name}}</a>
         </li>
 
         <li role="presentation" class="divider"></li>
@@ -32,7 +32,7 @@
         <li role="presentation"
             ng-repeat="stageInstance in pipelineConfig.stages">
           <a role="menuitem" tabindex="-1" href="#"
-             ng-click="changeStageSelection(stageInstance)">{{stageInstance.uiInfo.label}}</a>
+             ng-click="changeStageSelection({selectedObject: stageInstance, type: pipelineConstant.PIPELINE})">{{stageInstance.uiInfo.label}}</a>
         </li>
       </ul>
     </div>

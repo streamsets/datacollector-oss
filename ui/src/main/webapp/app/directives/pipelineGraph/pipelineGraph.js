@@ -888,10 +888,16 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       var thisGraph = this,
         currentScale = thisGraph.state.currentScale,
         svgWidth = thisGraph.svg.style('width').replace('px', ''),
-        svgHeight = thisGraph.svg.style('height').replace('px', '');
-
-      if((stageInstance.uiInfo.xPos * currentScale) > svgWidth ||
-        (stageInstance.uiInfo.yPos * currentScale) > svgHeight) {
+        svgHeight = thisGraph.svg.style('height').replace('px', ''),
+        currentTranslatePos = this.zoom.translate(),
+        startX = -(currentTranslatePos[0]),
+        startY = -(currentTranslatePos[1]),
+        endX = parseInt(startX) + parseInt(svgWidth),
+        endY = parseInt(startY) + parseInt(svgHeight),
+        xPos = (stageInstance.uiInfo.xPos * currentScale),
+        yPos = (stageInstance.uiInfo.yPos * currentScale);
+      
+      if(xPos < startX || xPos > endX || yPos < startY || yPos > endY) {
         thisGraph.moveNodeToCenter(stageInstance);
       }
     };
@@ -987,9 +993,14 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       graph.addNode(stageInstance, edge);
     });
 
-    $scope.$on('selectNode', function(event, stageInstance) {
+    $scope.$on('selectNode', function(event, stageInstance, moveToCenter) {
       if(stageInstance) {
-        graph.moveNodeToCenter(stageInstance);
+
+        if(moveToCenter) {
+          graph.moveNodeToCenter(stageInstance);
+        } else {
+          graph.moveNodeToVisibleArea(stageInstance);
+        }
 
         if(graph.state.selectedEdge) {
           graph.removeSelectFromEdge();
