@@ -102,11 +102,6 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-hdfs-protolib-test</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh5_2_1-lib</artifactId>
         <version>${project.version}</version>
       </dependency>

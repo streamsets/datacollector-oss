@@ -41,7 +41,6 @@
     <module>sdk</module>
     <module>sdk-test</module>
     <module>hdfs-protolib</module>
-    <module>hdfs-protolib-test</module>
     <module>cdh5_3_0-lib</module>
     <module>cdh5_2_1-lib</module>
   </modules>
