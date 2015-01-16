@@ -21,7 +21,6 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionSourceOffsetTracker.class);
 
-  private static final String TEMP_OFFSET_FILE = "offset.json.tmp";
   private static final String OFFSET_FILE = "offset.json";
   private static final String DEFAULT_OFFSET = null;
 

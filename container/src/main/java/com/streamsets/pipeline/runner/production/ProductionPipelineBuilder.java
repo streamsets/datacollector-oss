@@ -5,9 +5,11 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.Issues;
@@ -31,13 +33,19 @@ public class ProductionPipelineBuilder {
     this.pipelineConf = pipelineConf;
   }
 
-  public ProductionPipeline build(ProductionPipelineRunner runner) throws PipelineRuntimeException {
+  public ProductionPipeline build(ProductionPipelineRunner runner, SourceOffsetTracker offsetTracker)
+      throws PipelineRuntimeException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     if (!validator.validate()) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, getFirstIssueAsString(
           validator.getIssues()));
     }
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, pipelineConf).build(runner);
+    if (pipeline.getSource() instanceof OffsetCommitter) {
+      runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker((OffsetCommitter) pipeline.getSource()));
+    } else {
+      runner.setOffsetTracker(offsetTracker);
+    }
     return new ProductionPipeline(pipeline);
   }
 

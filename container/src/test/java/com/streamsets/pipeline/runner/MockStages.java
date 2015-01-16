@@ -8,6 +8,7 @@ package com.streamsets.pipeline.runner;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
@@ -95,6 +96,16 @@ public class MockStages {
       }
     }
 
+    public static class MSourceOffsetCommitter extends MSource implements OffsetCommitter {
+
+      @Override
+      public void commit(String offset) throws StageException {
+        if (sourceCapture != null && sourceCapture instanceof OffsetCommitter) {
+          ((OffsetCommitter)sourceCapture).commit(offset);
+        }
+      }
+    }
+
     public static class MProcessor implements Processor {
 
       @Override
@@ -146,11 +157,17 @@ public class MockStages {
 
     @SuppressWarnings("unchecked")
     public MockStageLibraryTask() {
-      stages = new ArrayList<StageDefinition>();
+      stages = new ArrayList<>();
       StageDefinition sDef = new StageDefinition(
         MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
         "sourceDesc", StageType.SOURCE, Collections.EMPTY_LIST, null/*raw source definition*/,"", null);
       sDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+
+      StageDefinition socDef = new StageDefinition(
+          MSourceOffsetCommitter.class.getName(), "sourceOffsetCommitterName", "1.0.0", "sourceOffsetCommitterLabel",
+          "sourceDesc", StageType.SOURCE, Collections.EMPTY_LIST, null/*raw source definition*/,"", null);
+      socDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+
       StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel",
           "sourceDescription", StageType.PROCESSOR, Collections.EMPTY_LIST, null/*raw source definition*/, "", null);
 
@@ -159,7 +176,7 @@ public class MockStages {
         MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
         "targetDesc", StageType.TARGET, Collections.EMPTY_LIST, null/*raw source definition*/, "", null);
       tDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
-      stages = ImmutableList.of(sDef, pDef, tDef);
+      stages = ImmutableList.of(sDef, socDef, pDef, tDef);
     }
 
     @Override
@@ -219,6 +236,24 @@ public class MockStages {
   public static PipelineConfiguration createPipelineConfigurationSourceProcessorTarget() {
     List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
     StageConfiguration source = new StageConfiguration("s", "default", "sourceName", "1.0.0",
+                                                       Collections.EMPTY_LIST, null, Collections.EMPTY_LIST,
+                                                       ImmutableList.of("s"));
+    stages.add(source);
+    StageConfiguration processor = new StageConfiguration("p", "default", "processorName", "1.0.0",
+                                                          Collections.EMPTY_LIST, null, ImmutableList.of("s"),
+                                                          ImmutableList.of("p"));
+    stages.add(processor);
+    StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
+                                                       Collections.EMPTY_LIST, null, ImmutableList.of("p"),
+                                                       Collections.EMPTY_LIST);
+    stages.add(target);
+    return new PipelineConfiguration(UUID.randomUUID(), null, null, stages);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationSourceOffsetCommitterProcessorTarget() {
+    List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
+    StageConfiguration source = new StageConfiguration("s", "default", "sourceOffsetCommitterName", "1.0.0",
                                                        Collections.EMPTY_LIST, null, Collections.EMPTY_LIST,
                                                        ImmutableList.of("s"));
     stages.add(source);

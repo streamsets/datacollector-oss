@@ -43,7 +43,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunner.class);
 
   private final MetricRegistry metrics;
-  private final SourceOffsetTracker offsetTracker;
+  private SourceOffsetTracker offsetTracker;
   private final SnapshotStore snapshotStore;
   private final ErrorRecordStore errorRecordStore;
   private final int maxErrorRecordsPerStage;
@@ -79,10 +79,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private Map<String, EvictingQueue<ErrorMessage>> stageToErrorMessagesMap;
 
   public ProductionPipelineRunner(SnapshotStore snapshotStore, ErrorRecordStore errorRecordStore,
-                                  SourceOffsetTracker offsetTracker, int batchSize,
-                                  int maxErrorRecordsPerStage, int maxPipelineErrors, DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision) {
+                                  int batchSize, int maxErrorRecordsPerStage, int maxPipelineErrors,
+      DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision) {
     this.metrics = new MetricRegistry();
-    this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
     this.maxErrorRecordsPerStage = maxErrorRecordsPerStage;
     this.maxPipelineErrors = maxPipelineErrors;
@@ -110,6 +109,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
   @Override
   public MetricRegistry getMetrics() {
     return metrics;
+  }
+
+  public void setOffsetTracker(SourceOffsetTracker offsetTracker) {
+    this.offsetTracker = offsetTracker;
   }
 
   @Override

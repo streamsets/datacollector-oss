@@ -10,6 +10,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
@@ -20,10 +21,13 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.runner.Pipeline;
+import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;
 import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
 import com.streamsets.pipeline.runner.production.ProductionPipelineRunnable;
 import com.streamsets.pipeline.runner.production.ProductionPipelineRunner;
+import com.streamsets.pipeline.runner.production.ProductionSourceOffsetCommitterOffsetTracker;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
@@ -316,11 +320,13 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     stateTracker.register(name, rev);
 
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, errorRecordStore, offsetTracker,
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, errorRecordStore,
         maxBatchSize, maxErrorRecordsPerStage, maxPipelineErrors, deliveryGuarantee, name, rev);
     ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, pipelineConfiguration);
 
-    return builder.build(runner);
+    // the builder will replace the data collector offset tracker with a source based one if the source is an
+    // OffsetCommitter. TODO: refactor this to make it cleaner
+    return builder.build(runner, offsetTracker);
   }
 
   @VisibleForTesting

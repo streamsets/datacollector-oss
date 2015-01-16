@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -33,6 +34,10 @@ public class Pipeline {
   @VisibleForTesting
   Pipe[] getPipes() {
     return pipes;
+  }
+
+  public Source getSource() {
+    return (Source) pipes[0].getStage().getStage();
   }
 
   public PipelineRunner getRunner() {
