@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 public class CompressionChooserValues extends BaseEnumChooserValues {
 
   public CompressionChooserValues() {
-    super(BaseHdfsTarget.Compression.class);
+    super(CompressionMode.class);
   }
 
 }

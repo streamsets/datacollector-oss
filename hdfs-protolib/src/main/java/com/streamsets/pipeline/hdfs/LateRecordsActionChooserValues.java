@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 public class LateRecordsActionChooserValues extends BaseEnumChooserValues {
 
   public LateRecordsActionChooserValues() {
-    super(BaseHdfsTarget.HdfsLateRecordsAction.class);
+    super(HdfsLateRecordsAction.class);
   }
 
 }
