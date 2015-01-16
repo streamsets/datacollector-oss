@@ -22,10 +22,10 @@ import com.streamsets.pipeline.lib.stage.source.spooldir.JsonFileModeChooserValu
 @GenerateResourceBundle
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "application/json")
 @StageDef(version="0.0.1",
-  label="Kafka Consumer",
+  label="High Level Kafka Consumer",
   icon="kafka.png")
-@ConfigGroups(value = KafkaSource.KafkaSourceConfigGroups.class)
-public class KafkaSource extends AbstractKafkaSource {
+@ConfigGroups(value = HighLevelKafkaSource.KafkaSourceConfigGroups.class)
+public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.MODEL,

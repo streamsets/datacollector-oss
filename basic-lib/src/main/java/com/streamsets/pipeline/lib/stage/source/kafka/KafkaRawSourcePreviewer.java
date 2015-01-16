@@ -11,7 +11,6 @@ import com.streamsets.pipeline.api.RawSourcePreviewer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.util.List;
 
 public class KafkaRawSourcePreviewer implements RawSourcePreviewer {
@@ -56,15 +55,12 @@ public class KafkaRawSourcePreviewer implements RawSourcePreviewer {
   public InputStream preview(int maxLength) {
     KafkaConsumer kafkaConsumer = new KafkaConsumer(topic, partition, new KafkaBroker(brokerHost, brokerPort),
       0, maxLength, maxWaitTime, CLIENT_PREFIX + DOT + topic + DOT + partition);
-    kafkaConsumer.init();
     try {
+      kafkaConsumer.init();
       List<MessageAndOffset> messages = kafkaConsumer.read(kafkaConsumer.getOffsetToRead(true));
       ByteArrayOutputStream bOut = new ByteArrayOutputStream(maxLength);
       for(MessageAndOffset m : messages) {
-        ByteBuffer payload = m.getPayload();
-        byte[] bytes = new byte[payload.limit()];
-        payload.get(bytes);
-        bOut.write(bytes);
+        bOut.write(m.getPayload());
       }
       bOut.flush();
       bOut.close();

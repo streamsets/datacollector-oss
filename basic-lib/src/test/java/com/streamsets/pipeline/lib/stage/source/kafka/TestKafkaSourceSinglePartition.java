@@ -132,7 +132,8 @@ public class TestKafkaSourceSinglePartition {
       REPLICATION_FACTOR, TIME_OUT);
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(new ProducerRunnable(zkClient, kafkaServer, "testProduceStringRecordsFromEnd", 0, producer, startProducing));
+    executorService.submit(new ProducerRunnable("testProduceStringRecordsFromEnd", 1, producer,
+      startProducing, DataType.LOG));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
       .addOutputLane("lane")

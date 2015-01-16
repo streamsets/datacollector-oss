@@ -28,7 +28,7 @@ public enum StageLibError implements ErrorCode {
   // JsonSpoolDirSource
   LIB_0200("Discarding Json Object '{}', it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
 
-  //Kafka source and Target
+  //Kafka source and Target messages
   LIB_0300("A message with offset '{}' which is greater than the latest offset '{}' is requested from Kafka topic '{}' partition '{}'."),
   LIB_0301("Could not find new leader after kafka broker failure."),
   LIB_0302("Error fetching offset data from the Broker '{}' : {}"),
@@ -40,6 +40,8 @@ public enum StageLibError implements ErrorCode {
   LIB_0308("SocketTimeoutException encountered while fetching message from Kafka."),
   LIB_0309("Error fetching data from kafka, {}"),
   LIB_0310("Error fetching offset from kafka, {}"),
+  LIB_0311("Error creating Kafka consumer instance, {}"),
+
   LIB_0350("Error writing data to kafka broker, {}"),
   LIB_0351("Error serializing record, {}"),
   LIB_0352("Could not retrieve metadata for topic '{}' from Broker '{}'. Reason : {}"),

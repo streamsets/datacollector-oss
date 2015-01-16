@@ -7,29 +7,26 @@ package com.streamsets.pipeline.lib.stage.source.kafka;
 
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
-import kafka.server.KafkaServer;
-import org.I0Itec.zkclient.ZkClient;
 
 import java.util.concurrent.CountDownLatch;
 
 public class ProducerRunnable implements Runnable {
 
-  private final ZkClient zkClient;
-  private final KafkaServer kafkaServer;
   private final String topic;
-  private final int partition;
   private final Producer<String, String> producer;
   private final CountDownLatch startLatch;
+  private final DataType dataType;
+  private final int partitions;
+  private int lastPartition;
 
-  public ProducerRunnable(ZkClient zkClient, KafkaServer kafkaServer, String topic, int partition,
-                          Producer<String, String> producer,
-                          CountDownLatch startLatch) {
-    this.zkClient = zkClient;
-    this.kafkaServer = kafkaServer;
+  public ProducerRunnable(String topic, int partitions,
+                          Producer<String, String> producer, CountDownLatch startLatch, DataType dataType) {
     this.topic = topic;
-    this.partition = partition;
+    this.partitions = partitions;
     this.producer = producer;
     this.startLatch = startLatch;
+    this.dataType = dataType;
+    this.lastPartition = 0;
   }
 
   @Override
@@ -42,7 +39,12 @@ public class ProducerRunnable implements Runnable {
 
     int i = 0;
     while(true) {
-      producer.send(new KeyedMessage<>(topic, String.valueOf(partition), "Hello Kafka" + i++));
+      producer.send(new KeyedMessage<>(topic, getPartitionKey(), KafkaTestUtil.generateTestData(dataType)));
     }
+  }
+
+  private String getPartitionKey() {
+    lastPartition = (lastPartition + 1) % partitions;
+    return String.valueOf(lastPartition);
   }
 }

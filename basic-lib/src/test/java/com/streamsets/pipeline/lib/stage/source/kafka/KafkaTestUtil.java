@@ -176,4 +176,20 @@ public class KafkaTestUtil {
     AdminUtils.createTopic(zkClient, topic, partitions, replicationFactor, new Properties());
     TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), topic, 0, timeout);
   }
+
+  public static String generateTestData(DataType dataType) {
+    switch(dataType) {
+      case LOG:
+        return "Hello Kafka";
+      case JSON:
+        return "{\"version\":1,\n" +
+          " \"partitions\":[{\"topic\":\"foo1\",\"partition\":0,\"replicas\":[1,2]},\n" +
+          "               {\"topic\":\"foo2\",\"partition\":1,\"replicas\":[3,4]}]\n" +
+          "}";
+      case CSV:
+        return "2010,NLDS1,PHI,NL,CIN,NL,3,0,0";
+
+    }
+    throw new IllegalArgumentException("Unsupported data type requested");
+  }
 }

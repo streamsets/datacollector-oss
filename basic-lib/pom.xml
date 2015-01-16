@@ -85,7 +85,7 @@
     <dependency>
       <groupId>com.101tec</groupId>
       <artifactId>zkclient</artifactId>
-      <scope>test</scope>
+      <scope>compile</scope> <!-- Needed for high level consumer -->
     </dependency>
     <dependency>
       <groupId>org.apache.kafka</groupId>

@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,17 +70,17 @@ public class KafkaConsumer {
     this.replicaBrokers = new ArrayList<>();
   }
 
-  public void init() {
+  public void init() throws StageException {
     List<KafkaBroker> brokers = new ArrayList<>();
     brokers.add(broker);
     PartitionMetadata metadata = getPartitionMetadata(brokers, topic, partition);
     if (metadata == null) {
       LOG.error(StageLibError.LIB_0303.getMessage(), topic, partition);
-      return;
+      throw new StageException(StageLibError.LIB_0303, topic, partition);
     }
     if (metadata.leader() == null) {
       LOG.error(StageLibError.LIB_0304.getMessage(), topic, partition);
-      return;
+      throw new StageException(StageLibError.LIB_0304, topic, partition);
     }
     leader = new KafkaBroker(metadata.leader().host(), metadata.leader().port());
     //recreate consumer instance with the leader information for that topic
@@ -142,7 +143,10 @@ public class KafkaConsumer {
         LOG.warn(StageLibError.LIB_0307.getMessage(), currentOffset, offset);
         continue;
       }
-      MessageAndOffset partitionToPayloadMap = new MessageAndOffset(messageAndOffset.message().payload(), messageAndOffset.nextOffset());
+      ByteBuffer payload = messageAndOffset.message().payload();
+      byte[] bytes = new byte[payload.limit()];
+      payload.get(bytes);
+      MessageAndOffset partitionToPayloadMap = new MessageAndOffset(bytes, messageAndOffset.nextOffset(), partition);
       partitionToPayloadMapArrayList.add(partitionToPayloadMap);
       numberOfMessagesRead++;
     }

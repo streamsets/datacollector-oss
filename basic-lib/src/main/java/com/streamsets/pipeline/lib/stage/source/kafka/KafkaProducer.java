@@ -6,10 +6,6 @@
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.util.StageLibError;
-import kafka.javaapi.TopicMetadata;
-import kafka.javaapi.TopicMetadataRequest;
-import kafka.javaapi.consumer.SimpleConsumer;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
@@ -18,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -92,41 +87,8 @@ public class KafkaProducer {
     ProducerConfig config = new ProducerConfig(props);
     producer = new Producer<>(config);
 
-    numberOfPartitions = findNumberOfPartitions();
-  }
-
-  private int findNumberOfPartitions() throws StageException {
-    SimpleConsumer simpleConsumer = null;
-    try {
-      LOG.info("Creating SimpleConsumer using the following configuration: host {}, port {}, max wait time {}, max " +
-          "fetch size {}, client name {}", broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
-        METADATA_READER_CLIENT);
-      simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
-        METADATA_READER_CLIENT);
-
-      List<String> topics = Collections.singletonList(topic);
-      TopicMetadataRequest req = new TopicMetadataRequest(topics);
-      kafka.javaapi.TopicMetadataResponse resp = simpleConsumer.send(req);
-
-      List<TopicMetadata> topicMetadataList = resp.topicsMetadata();
-      if(topicMetadataList == null || topicMetadataList.isEmpty()) {
-        LOG.error(StageLibError.LIB_0353.getMessage(), topic , broker.getHost() + ":" + broker.getPort());
-        throw new StageException(StageLibError.LIB_0353, topic , broker.getHost() + ":" + broker.getPort());
-      }
-      TopicMetadata topicMetadata = topicMetadataList.iterator().next();
-      //set number of partitions
-      numberOfPartitions = topicMetadata.partitionsMetadata().size();
-    } catch (Exception e) {
-      LOG.error(StageLibError.LIB_0352.getMessage(), topic , broker.getHost() + ":" + broker.getPort(), e.getMessage());
-      throw new StageException(StageLibError.LIB_0352, topic , broker.getHost() + ":" + broker.getPort(),
-        e.getMessage(), e);
-    } finally {
-      if (simpleConsumer != null) {
-        simpleConsumer.close();
-      }
-    }
-
-    return 0;
+    numberOfPartitions = KafkaUtil.findNUmberOfPartitions(broker, topic, METADATA_READER_TIME_OUT, BUFFER_SIZE,
+      METADATA_READER_CLIENT);
   }
 
   public void destroy() {

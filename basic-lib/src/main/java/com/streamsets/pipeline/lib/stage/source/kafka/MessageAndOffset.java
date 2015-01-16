@@ -5,23 +5,27 @@
  */
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
-import java.nio.ByteBuffer;
-
 public class MessageAndOffset {
 
-  private final ByteBuffer payload;
+  private final byte[] payload;
   private final long offset;
+  private final int partition;
 
-  public MessageAndOffset(ByteBuffer payload, long offset) {
+  public MessageAndOffset(byte[] payload, long offset, int partition) {
     this.payload = payload;
     this.offset = offset;
+    this.partition = partition;
   }
 
-  public ByteBuffer getPayload() {
+  public byte[] getPayload() {
     return payload;
   }
 
   public long getOffset() {
     return offset;
+  }
+
+  public int getPartition() {
+    return partition;
   }
 }

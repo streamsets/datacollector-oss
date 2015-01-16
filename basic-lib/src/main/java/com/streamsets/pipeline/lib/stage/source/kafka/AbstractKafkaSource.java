@@ -18,7 +18,6 @@ import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,7 +124,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
   private KafkaConsumer kafkaConsumer;
 
   @Override
-  public void init() {
+  public void init() throws StageException {
     kafkaConsumer = new KafkaConsumer(topic, partition, new KafkaBroker(brokerHost, brokerPort), minBatchSize,
       maxBatchSize, maxWaitTime, CLIENT_PREFIX + DOT + topic + DOT + partition);
     kafkaConsumer.init();
@@ -164,12 +163,9 @@ public abstract class AbstractKafkaSource extends BaseSource {
       recordCounter++;
       Record record = getContext().createRecord(topic + DOT + partition + DOT + System.currentTimeMillis() + DOT
         + recordCounter);
-      ByteBuffer payload  = partitionToPayloadMap.getPayload();
-      byte[] bytes = new byte[payload.limit()];
-      payload.get(bytes);
 
       offsetToReturn = String.valueOf(partitionToPayloadMap.getOffset());
-      record.set(createField(bytes));
+      record.set(createField(partitionToPayloadMap.getPayload()));
       batchMaker.addRecord(record);
     }
     return offsetToReturn;
