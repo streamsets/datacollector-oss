@@ -59,6 +59,7 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The \"ConfigDef\" annotation for field FaultySource.extension indicates that it depends on field 'myPhone' which does not exist or is not a configuration option.");
     expectedSet.add("The \"ConfigDef\" annotation for field FaultySource.callMe indicates that it depends on field 'myExtension' which does not exist or is not a configuration option.");
     expectedSet.add("'MyGroups' implements interface 'ConfigGroups.Groups' but is not an enum. An implementation of 'ConfigGroups.Groups' must be an enum.");
+    expectedSet.add("Invalid group name X specified in the \"ConfigDef\" annotation for field FaultySource.callMe.");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());

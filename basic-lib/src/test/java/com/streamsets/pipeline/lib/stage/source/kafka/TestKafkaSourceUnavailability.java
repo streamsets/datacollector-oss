@@ -77,7 +77,7 @@ public class TestKafkaSourceUnavailability {
       producer.send(d);
     }
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(LogKafkaSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testKafkaServerDown")
       .addConfiguration("partition", 0)
@@ -87,6 +87,7 @@ public class TestKafkaSourceUnavailability {
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
+      .addConfiguration("payloadType", PayloadType.LOG)
       .build();
 
     sourceRunner.runInit();
@@ -105,7 +106,7 @@ public class TestKafkaSourceUnavailability {
       producer.send(d);
     }
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(LogKafkaSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testKafkaServerDown")
       .addConfiguration("partition", 0)
@@ -115,6 +116,7 @@ public class TestKafkaSourceUnavailability {
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
+      .addConfiguration("payloadType", PayloadType.LOG)
       .build();
 
     sourceRunner.runInit();

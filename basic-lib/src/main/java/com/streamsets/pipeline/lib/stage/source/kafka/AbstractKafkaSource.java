@@ -6,10 +6,13 @@
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
@@ -46,6 +49,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
     type = ConfigDef.Type.STRING,
     description = "The Kafka topic from which the messages must be read",
     label = "Topic",
+    group = "KAFKA_PROPERTIES",
     defaultValue = "topicName")
   public String topic;
 
@@ -53,6 +57,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
     type = ConfigDef.Type.INTEGER,
     description = "The partition of Kafka topic from which the messages must be read",
     label = "Partition",
+    group = "KAFKA_PROPERTIES",
     defaultValue = "0")
   public int partition;
 
@@ -60,6 +65,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
     type = ConfigDef.Type.STRING,
     description = "A known kafka broker. Does not have to be the leader of the partition",
     label = "Broker Host",
+    group = "KAFKA_PROPERTIES",
     defaultValue = "localhost")
   public String brokerHost;
 
@@ -67,6 +73,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
     type = ConfigDef.Type.INTEGER,
     description = "Port number of the known broker host supplied above. Does not have to be the leader of the partition",
     label = "Broker Port",
+    group = "KAFKA_PROPERTIES",
     defaultValue = "9092")
   public int brokerPort;
 
@@ -74,6 +81,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
     type = ConfigDef.Type.BOOLEAN,
     description = "Reads messages from the beginning if set to true",
     label = "From Beginning",
+    group = "KAFKA_PROPERTIES",
     defaultValue = "false")
   public boolean fromBeginning;
 
@@ -81,6 +89,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
     type = ConfigDef.Type.INTEGER,
     description = "The maximum data per batch. The source uses this size when making a fetch request from kafka",
     label = "Max Fetch Size",
+    group = "KAFKA_PROPERTIES",
     defaultValue = "64000")
   public int maxBatchSize;
 
@@ -88,6 +97,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
     type = ConfigDef.Type.INTEGER,
     description = "The maximum wait time in seconds before the kafka fetch request returns if no message is available.",
     label = "Max Wait Time",
+    group = "KAFKA_PROPERTIES",
     defaultValue = "1000")
   public int maxWaitTime;
 
@@ -95,8 +105,20 @@ public abstract class AbstractKafkaSource extends BaseSource {
     type = ConfigDef.Type.INTEGER,
     description = "The minimum data per batch. The source uses this size when making a fetch request from kafka",
     label = "Min Fetch Size",
+    group = "KAFKA_PROPERTIES",
     defaultValue = "8000")
   public int minBatchSize;
+
+  @ConfigDef(required = true,
+    type = ConfigDef.Type.MODEL,
+    description = "Type of data sent as kafka message payload",
+    label = "Payload Type",
+    group = "KAFKA_PROPERTIES",
+    defaultValue = "LOG")
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PayloadTypeChooserValues.class)
+  public PayloadType payloadType;
+
+
 
   /****************** End config options *******************/
 
@@ -147,7 +169,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
       payload.get(bytes);
 
       offsetToReturn = String.valueOf(partitionToPayloadMap.getOffset());
-      populateRecordFromBytes(record, bytes);
+      record.set(createField(bytes));
       batchMaker.addRecord(record);
     }
     return offsetToReturn;
@@ -159,6 +181,6 @@ public abstract class AbstractKafkaSource extends BaseSource {
     super.destroy();
   }
 
-  protected abstract void populateRecordFromBytes(Record record, byte[] bytes) throws StageException;
+  protected abstract Field createField(byte[] bytes) throws StageException;
 
 }

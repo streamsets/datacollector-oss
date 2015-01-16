@@ -14,22 +14,22 @@ import java.util.Map;
 public class ConfigGroupDefinition {
 
   private final Map<String, List<String>> classNameToGroupsMap;
-  private final Map<String, String> groupNameToLabelMap;
+  private final List<Map<String, String>> groupNameToLabelMapList;
 
   @JsonCreator
   public ConfigGroupDefinition(
     @JsonProperty("classNameToGroupsMap") Map<String, List<String>> classNameToGroupsMap,
-    @JsonProperty("groupNameToLabelMap") Map<String, String> groupNameToLabelMap) {
+    @JsonProperty("groupNameToLabelMapList") List<Map<String, String>> groupNameToLabelMap) {
     this.classNameToGroupsMap = classNameToGroupsMap;
-    this.groupNameToLabelMap = groupNameToLabelMap;
+    this.groupNameToLabelMapList = groupNameToLabelMap;
   }
 
   public Map<String, List<String>> getClassNameToGroupsMap() {
     return classNameToGroupsMap;
   }
 
-  public Map<String, String> getGroupNameToLabelMap() {
-    return groupNameToLabelMap;
+  public List<Map<String, String>> getGroupNameToLabelMapList() {
+    return groupNameToLabelMapList;
   }
 
  /* @Override

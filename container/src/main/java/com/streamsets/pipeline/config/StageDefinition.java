@@ -205,10 +205,13 @@ public class StageDefinition {
     ConfigGroupDefinition localizedConfGroupDef = null;
     //localize group names
     if(configGroupDefinition != null) {
-      Map<String, String> localizedGroups = new HashMap<>();
-      for (Map.Entry<String, String> group : getConfigGroupDefinition().getGroupNameToLabelMap().entrySet()) {
-        localizedGroups.put(group.getKey(),
-          new LocalizableMessage(classLoader, rbName, group.getKey(), group.getValue(), null).getLocalized());
+      List<Map<String, String>> localizedGroups = new ArrayList<>();
+      for (Map<String, String> groupNameToLabelMap : getConfigGroupDefinition().getGroupNameToLabelMapList()) {
+        Map<String, String> localizedGroupToLabelMap = new HashMap<>();
+        localizedGroupToLabelMap.put("name", groupNameToLabelMap.get("name"));
+        localizedGroupToLabelMap.put("label", new LocalizableMessage(classLoader, rbName,
+          groupNameToLabelMap.get("name"), groupNameToLabelMap.get("label"), null).getLocalized());
+        localizedGroups.add(localizedGroupToLabelMap);
       }
       localizedConfGroupDef = new ConfigGroupDefinition(configGroupDefinition.getClassNameToGroupsMap(),
         localizedGroups);
@@ -287,14 +290,18 @@ public class StageDefinition {
     ConfigGroupDefinition configGroupDefinition = getConfigGroupDefinition();
     if(configGroupDefinition != null) {
       Map<String, List<String>> classNameToGroupsMap = configGroupDefinition.getClassNameToGroupsMap();
-      Map<String, String> groupNameToLabelMap = configGroupDefinition.getGroupNameToLabelMap();
+      List<Map<String, String>> groupNameToLabelMapList = configGroupDefinition.getGroupNameToLabelMapList();
 
       for (Map.Entry<String, List<String>> entry : classNameToGroupsMap.entrySet()) {
         try {
           Class configGroupsClass = classLoader.loadClass(entry.getKey());
           for (String groupName : entry.getValue()) {
             ConfigGroups.Groups group = (ConfigGroups.Groups) Enum.valueOf(configGroupsClass, groupName);
-            groupNameToLabelMap.put(groupName, group.getLabel());
+            for(Map<String, String> groupNameToLabelMap : groupNameToLabelMapList) {
+              if(groupNameToLabelMap.get("name").equals(groupName)) {
+                groupNameToLabelMap.put("label", group.getLabel());
+              }
+            }
           }
         } catch (ClassNotFoundException e) {
           throw new RuntimeException(e);

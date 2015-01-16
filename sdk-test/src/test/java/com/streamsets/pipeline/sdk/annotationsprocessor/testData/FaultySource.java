@@ -151,6 +151,7 @@ public class FaultySource {
 
   //18. The type is boolean but default value is not true or false
   //20. Depends on "myExtension" which exists but is not a configuration
+  //22. Group name 'X' is invalid
   @ConfigDef(
       defaultValue = "Hello",
       label = "floor",

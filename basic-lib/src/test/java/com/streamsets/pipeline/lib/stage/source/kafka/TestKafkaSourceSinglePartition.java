@@ -88,7 +88,7 @@ public class TestKafkaSourceSinglePartition {
       producer.send(d);
     }
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(LogKafkaSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceStringRecords")
       .addConfiguration("partition", 0)
@@ -98,6 +98,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
+      .addConfiguration("payloadType", PayloadType.LOG)
       .build();
 
     sourceRunner.runInit();
@@ -133,7 +134,7 @@ public class TestKafkaSourceSinglePartition {
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(zkClient, kafkaServer, "testProduceStringRecordsFromEnd", 0, producer, startProducing));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(LogKafkaSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceStringRecordsFromEnd")
       .addConfiguration("partition", 0)
@@ -143,6 +144,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
+      .addConfiguration("payloadType", PayloadType.LOG)
       .build();
 
     sourceRunner.runInit();
@@ -181,7 +183,7 @@ public class TestKafkaSourceSinglePartition {
       producer.send(d);
     }
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(JsonKafkaSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceJsonRecords")
       .addConfiguration("partition", 0)
@@ -193,6 +195,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("minBatchSize", 100)
       .addConfiguration("jsonContent", StreamingJsonParser.Mode.MULTIPLE_OBJECTS)
       .addConfiguration("maxJsonObjectLen", 4096)
+      .addConfiguration("payloadType", PayloadType.JSON)
       .build();
 
     sourceRunner.runInit();
@@ -227,7 +230,7 @@ public class TestKafkaSourceSinglePartition {
       producer.send(d);
     }
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(CsvKafkaSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceCsvRecords")
       .addConfiguration("partition", 0)
@@ -238,6 +241,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
       .addConfiguration("csvFileFormat", CsvFileMode.CSV)
+      .addConfiguration("payloadType", PayloadType.CSV)
       .build();
 
     sourceRunner.runInit();

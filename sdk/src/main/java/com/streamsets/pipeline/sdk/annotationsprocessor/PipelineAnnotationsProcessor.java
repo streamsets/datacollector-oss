@@ -51,6 +51,7 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -195,8 +196,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           PrintWriter pw = new PrintWriter(resource.openWriter());
           pw.println(STAGE_LABEL + EQUALS + s.getLabel());
           pw.println(STAGE_DESCRIPTION + EQUALS + s.getDescription());
-          for(Map.Entry<String, String> configGroup: s.getConfigGroupDefinition().getGroupNameToLabelMap().entrySet()) {
-            pw.println(configGroup.getKey() + SEPARATOR + LABEL + EQUALS + configGroup.getValue());
+          for(Map<String, String> groupNameToLabelMap : s.getConfigGroupDefinition().getGroupNameToLabelMapList()) {
+            pw.println(groupNameToLabelMap.get("name") + SEPARATOR + LABEL + EQUALS + groupNameToLabelMap.get("label"));
           }
           for (ConfigDefinition c : s.getConfigDefinitions()) {
             pw.println(c.getName() + SEPARATOR + LABEL + EQUALS + c.getLabel());
@@ -317,18 +318,21 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     Map<String, List<VariableElement>> allConfigGroups = getAllConfigGroups(typeElement);
 
     Map<String, List<String>> classNameToGroupsMap = new HashMap<>();
-    Map<String, String> groupNameToLabelMap = new HashMap<>();
+    List<Map<String, String>> groupNameToLabelMapList = new ArrayList<>();
 
     for(Map.Entry<String, List<VariableElement>> v : allConfigGroups.entrySet()) {
       List<String> groupNames = new ArrayList<>();
       classNameToGroupsMap.put(v.getKey(), groupNames);
       for(VariableElement variableElement : v.getValue()) {
         groupNames.add(variableElement.getSimpleName().toString());
-        groupNameToLabelMap.put(variableElement.getSimpleName().toString(), (String) variableElement.getConstantValue());
+        Map<String, String> groupNameToLabelMap = new LinkedHashMap<>();
+        groupNameToLabelMap.put("name", variableElement.getSimpleName().toString());
+        groupNameToLabelMap.put("label", (String) variableElement.getConstantValue());
+        groupNameToLabelMapList.add(groupNameToLabelMap);
       }
     }
 
-    return new ConfigGroupDefinition(classNameToGroupsMap, groupNameToLabelMap);
+    return new ConfigGroupDefinition(classNameToGroupsMap, groupNameToLabelMapList);
   }
 
   private void createErrorEnum(TypeElement typeElement) {
@@ -1137,7 +1141,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
     }
 
-    //go over each type and check if it has ConfigGroup annotation
     Set<String> groups = new HashSet<>();
     for(Map.Entry<VariableElement, String> v : allConfigGroups.entrySet()) {
       if(groups.contains(v.getKey().getSimpleName().toString())) {
@@ -1149,6 +1152,21 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         groups.add(v.getKey().getSimpleName().toString());
       }
     }
+
+    //check if the group names used in the config defs of type element are valid
+    List<VariableElement> allFields = getAllFields(typeElement);
+    for(VariableElement v : allFields) {
+      ConfigDef configDef = v.getAnnotation(ConfigDef.class);
+      if(configDef != null && !configDef.group().isEmpty()) {
+        if(!groups.contains(configDef.group())) {
+          printError("ConfigDef.invalid.group.name",
+            "Invalid group name {} specified in the \"ConfigDef\" annotation for field {}.",configDef.group(),
+            typeElement.getSimpleName().toString() + SEPARATOR + v.getSimpleName().toString());
+          valid = false;
+        }
+      }
+    }
+
     return valid;
   }
 
@@ -1156,10 +1174,10 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     List<TypeMirror> allTypes = new ArrayList<>();
     allTypes.add(typeElement.asType());
     allTypes.addAll(getAllSuperTypes(typeElement));
-    Map<String, List<VariableElement>> allConfigGroups = new HashMap<>();
+    Map<String, List<VariableElement>> allConfigGroups = new LinkedHashMap<>();
 
-    for(TypeMirror typeMirror : allTypes) {
-      TypeElement t = (TypeElement)processingEnv.getTypeUtils().asElement(typeMirror);
+    for(int i = allTypes.size()-1; i>=0; i--) {
+      TypeElement t = (TypeElement)processingEnv.getTypeUtils().asElement(allTypes.get(i));
       ConfigGroups configGroups = t.getAnnotation(ConfigGroups.class);
       if(configGroups != null) {
         TypeMirror cgTypeMirror = null;
