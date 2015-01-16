@@ -157,9 +157,6 @@ angular
           }
         });
       }
-
-      $scope.autoFocusConfigGroup = options.configGroup;
-      $scope.autoFocusConfigName = options.configName;
     });
 
     $scope.$watch('isPipelineRunning', function(newValue) {

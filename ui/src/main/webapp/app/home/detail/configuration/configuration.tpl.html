@@ -9,7 +9,7 @@
     <tab active="true">
       <tab-heading>
         <i class="fa fa-exclamation-triangle icon-danger"
-           ng-show="showWarning(tab)"></i>
+           ng-show="showConfigurationWarning(detailPaneConfig, '')"></i>
         <span translate="home.detailPane.configurationTab.general">General</span>
       </tab-heading>
 
@@ -19,9 +19,12 @@
     </tab>
 
 
-    <tab ng-repeat="groupNameToLabelMap in detailPaneConfigDefn.configGroupDefinition.groupNameToLabelMapList"
-      ng-show="isGroupVisible(detailPaneConfig, detailPaneConfigDefn.configDefinitions, groupNameToLabelMap.name)">
+    <tab ng-repeat="groupNameToLabelMap in configGroupTabs"
+         ng-show="isGroupVisible(detailPaneConfig, detailPaneConfigDefn.configDefinitions, groupNameToLabelMap.name)"
+         active="groupNameToLabelMap.active">
       <tab-heading>
+        <i class="fa fa-exclamation-triangle icon-danger"
+           ng-show="showConfigurationWarning(detailPaneConfig, groupNameToLabelMap.name)"></i>
         <span>{{groupNameToLabelMap.label}}</span>
       </tab-heading>
 

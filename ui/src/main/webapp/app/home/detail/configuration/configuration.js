@@ -316,6 +316,25 @@ angular
         });
 
         return visible;
+      },
+
+
+      showConfigurationWarning: function(stageInstance, groupName) {
+        var config = $scope.pipelineConfig,
+          issues;
+
+        if(config && config.issues) {
+          if(stageInstance.instanceName && config.issues.stageIssues &&
+            config.issues.stageIssues && config.issues.stageIssues[stageInstance.instanceName]) {
+            issues = config.issues.stageIssues[stageInstance.instanceName];
+          } else if(config.issues.pipelineIssues){
+            issues = config.issues.pipelineIssues;
+          }
+        }
+
+        return _.find(issues, function(issue) {
+          return issue.level === 'STAGE_CONFIG' && issue.configGroup === groupName;
+        });
       }
     });
 
@@ -358,8 +377,27 @@ angular
 
     $scope.$on('onSelectionChange', function(event, options) {
       var groupDefn = $scope.detailPaneConfigDefn.configGroupDefinition;
-      $scope.showGroups = (groupDefn && groupDefn.groupNameToLabelMapList) ?
-                                groupDefn.groupNameToLabelMapList.length > 0 : false;
+
+      if(groupDefn && groupDefn.groupNameToLabelMapList) {
+        $scope.showGroups = (groupDefn.groupNameToLabelMapList.length > 0);
+
+        $scope.configGroupTabs = angular.copy(groupDefn.groupNameToLabelMapList);
+
+        $scope.autoFocusConfigGroup = options.configGroup;
+        $scope.autoFocusConfigName = options.configName;
+
+        if(options.configGroup) {
+          angular.forEach($scope.configGroupTabs, function(groupMap) {
+            if(groupMap.name === options.configGroup) {
+              groupMap.active = true;
+            }
+          });
+        }
+
+      } else {
+        $scope.showGroups = false;
+      }
+
       if (options.type === pipelineConstant.STAGE_INSTANCE) {
         fieldsPathList = undefined;
         $scope.fieldPaths = [];
