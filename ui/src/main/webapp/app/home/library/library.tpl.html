@@ -1,20 +1,17 @@
 <ng-include src="'app/home/library/import/importModal.tpl.html'"></ng-include>
 <div class="panel panel-default library-pane" ng-controller="LibraryController">
+
   <div class="panel-heading clearfix">
     <h3 class="panel-title pull-left" translate="global.form.library">Library</h3>
-
-    <button type="button" class="btn btn-primary btn-sm pull-right"
-            ng-click="addPipelineConfig()">
-      <span class="glyphicon glyphicon-plus"></span>
-    </button>
   </div>
 
   <div class="panel-body">
+
     <ul class="list-group">
       <li class="list-group-item pointer clearfix"
-         ng-class="{'active' : pipeline.name === activeConfigInfo.name}"
-         ng-repeat="pipeline in pipelines"
-         ng-click="onSelect(pipeline)">
+          ng-class="{'active' : pipeline.name === activeConfigInfo.name}"
+          ng-repeat="pipeline in pipelines"
+          ng-click="onSelect(pipeline)">
 
         <div class="pipeline-details pull-left">
           <h5 class="list-group-item-heading">{{pipeline.name}}</h5>
@@ -69,12 +66,17 @@
 
       </li>
 
+      <li class="list-group-item pointer" ng-click="addPipelineConfig()">
+        <span class="glyphicon glyphicon-plus"></span>
+        Create New Pipeline
+      </li>
 
       <li class="list-group-item" ng-if="!pipelines || pipelines.length === 0" translate="home.library.emptyPipelineList">
         No Pipeline to view.
       </li>
 
     </ul>
+
   </div>
 
  </div>

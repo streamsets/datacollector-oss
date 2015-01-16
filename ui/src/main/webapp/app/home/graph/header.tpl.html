@@ -148,16 +148,24 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu pull-right" role="menu">
-        <li role="presentation" ng-class="{'disabled': !pipelineConfig.valid}">
-          <a href="#" ng-click="resetOffset()" translate="home.resetOffset.title">Reset Origin</a>
+        <li role="presentation"
+            ng-if="!isPipelineRunning"
+            ng-class="{'disabled': !pipelineConfig.valid}">
+          <a href="#" ng-click="resetOffset()">
+            <i class="fa fa-power-off"></i> {{'home.resetOffset.title' | translate}}
+          </a>
         </li>
 
         <li role="presentation" ng-if="isPipelineRunning && !monitoringPaused">
-          <a href="#" ng-click="pauseMonitoring()" translate="home.header.pauseMonitoring">Pause Monitoring</a>
+          <a href="#" ng-click="pauseMonitoring()">
+            <i class="fa fa-pause"></i> {{'home.header.pauseMonitoring' | translate}}
+          </a>
         </li>
 
         <li role="presentation" ng-if="isPipelineRunning && monitoringPaused">
-          <a href="#" ng-click="continueMonitoring()" translate="home.header.continueMonitoring">Continue Monitoring</a>
+          <a href="#" ng-click="continueMonitoring()">
+            <i class="fa fa-play"></i> {{'home.header.continueMonitoring' | translate}}
+          </a>
         </li>
       </ul>
     </div>

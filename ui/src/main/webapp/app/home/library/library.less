@@ -8,6 +8,7 @@
 
   .panel-heading {
     padding: @smallPadding @smallPadding*3;
+    height: 45px;
 
     .panel-title {
       padding-top: 5px;
@@ -20,7 +21,7 @@
   }
 
   .panel-body {
-    padding: 0;
+    padding: @defaultPadding 0 0 0;
     height: calc(~"100% - 45px");
     box-sizing: border-box;
 
@@ -30,8 +31,10 @@
       box-sizing: border-box;
 
       .list-group-item {
-        border-right: none;
-        border-left: none;
+        border-top: 0;
+        border-bottom: 0;
+        border-right: 0;
+        border-left: 5px solid #ffffff;
         border-radius: 0;
 
         .pipeline-details {
@@ -54,16 +57,12 @@
           }
         }
 
-        &:first-child {
-          border-top: none;
-        }
-
         // Hover state
         &:hover,
         &:focus {
           text-decoration: none;
-          color: #555;
           background-color: #f5f5f5;
+          border-left: 5px solid #808080;
 
           .action-menu {
             visibility: visible;
@@ -72,9 +71,9 @@
 
 
         &.active {
-          background-color: #e7e7e7;
-          border-color: #e7e7e7;
-          color: @brand-primary;
+          color: @streamsets-color;
+          border-left: 5px solid @streamsets-color;
+          background-color: #ffffff;
 
           p {
             color: @brand-primary;
