@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.stage.source.kafka;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.util.StageLibError;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.admin.AdminUtils;
 import kafka.consumer.ConsumerIterator;
@@ -169,7 +170,7 @@ public class TestKafkaTargetMultiPartition {
   }
 
   @Test
-  public void testWriteStringExpression() throws InterruptedException, StageException {
+  public void testExpressionPartitioner() throws InterruptedException, StageException {
 
     KafkaTarget kafkaTarget = new KafkaTarget();
     TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
@@ -212,5 +213,112 @@ public class TestKafkaTargetMultiPartition {
       }
       messages.clear();
     }
+  }
+
+  @Test
+  public void testInvalidPartitionExpression() throws InterruptedException, StageException {
+
+    KafkaTarget kafkaTarget = new KafkaTarget();
+    TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
+      .addConfiguration("topic", TOPIC)
+        //record has a map which contains an integer field with key "partitionKey",
+        //kafka has 3 partitions. Expression distributes the record to partition based on the condition
+      .addConfiguration("partition", "value(\"/\") % 3")
+      .addConfiguration("brokerHost", HOST)
+      .addConfiguration("brokerPort", port)
+      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("payloadType", PayloadType.LOG)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("constants", null)
+      .addConfiguration("csvFileFormat", "DEFAULT")
+      .build();
+
+    try {
+      targetRunner.runInit();
+      Assert.fail("Expected StageException as the partition expression is not valid");
+    } catch (StageException e) {
+      Assert.assertEquals(StageLibError.LIB_0357, e.getErrorCode());
+    }
+  }
+
+  @Test
+  public void testPartitionExpressionEvaluationError() throws InterruptedException, StageException {
+
+    KafkaTarget kafkaTarget = new KafkaTarget();
+    TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
+      .addConfiguration("topic", TOPIC)
+        //record has a map which contains an integer field with key "partitionKey",
+        //kafka has 3 partitions. Expression distributes the record to partition based on the condition
+      .addConfiguration("partition", "record:value(\"/\") % 3")
+      .addConfiguration("brokerHost", HOST)
+      .addConfiguration("brokerPort", port)
+      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("payloadType", PayloadType.LOG)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("constants", null)
+      .addConfiguration("csvFileFormat", "DEFAULT")
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    targetRunner.runWrite(logRecords);
+    Assert.assertNotNull(targetRunner.getErrorRecords());
+    Assert.assertTrue(!targetRunner.getErrorRecords().isEmpty());
+    Assert.assertEquals(logRecords.size(), targetRunner.getErrorRecords().size());
+
+  }
+
+  @Test
+  public void testPartitionNumberOutOfRange() throws InterruptedException, StageException {
+
+    KafkaTarget kafkaTarget = new KafkaTarget();
+    TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
+      .addConfiguration("topic", TOPIC)
+        //record has a map which contains an integer field with key "partitionKey",
+        //kafka has 3 partitions. Expression distributes the record to partition based on the condition
+      .addConfiguration("partition", "13")
+      .addConfiguration("brokerHost", HOST)
+      .addConfiguration("brokerPort", port)
+      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("payloadType", PayloadType.LOG)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("constants", null)
+      .addConfiguration("csvFileFormat", "DEFAULT")
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    targetRunner.runWrite(logRecords);
+    Assert.assertNotNull(targetRunner.getErrorRecords());
+    Assert.assertTrue(!targetRunner.getErrorRecords().isEmpty());
+    Assert.assertEquals(logRecords.size(), targetRunner.getErrorRecords().size());
+
+  }
+
+  @Test
+  public void testInvalidPartition() throws InterruptedException, StageException {
+
+    KafkaTarget kafkaTarget = new KafkaTarget();
+    TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
+      .addConfiguration("topic", TOPIC)
+        //record has a map which contains an integer field with key "partitionKey",
+        //kafka has 3 partitions. Expression distributes the record to partition based on the condition
+      .addConfiguration("partition", "record:value(\"/\")")
+      .addConfiguration("brokerHost", HOST)
+      .addConfiguration("brokerPort", port)
+      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("payloadType", PayloadType.LOG)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("constants", null)
+      .addConfiguration("csvFileFormat", "DEFAULT")
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    targetRunner.runWrite(logRecords);
+    Assert.assertNotNull(targetRunner.getErrorRecords());
+    Assert.assertTrue(!targetRunner.getErrorRecords().isEmpty());
+    Assert.assertEquals(logRecords.size(), targetRunner.getErrorRecords().size());
+
   }
 }

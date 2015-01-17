@@ -186,9 +186,8 @@ public class KafkaTarget extends BaseTarget {
     try {
       elEvaluator.eval(variables, partition);
     } catch (ELException ex) {
-      //FIXME<HAri>: fix error code
-      LOG.error(StageLibError.LIB_0600.getMessage(), partition, ex.getMessage());
-      throw new StageException(StageLibError.LIB_0600, partition, ex.getMessage(), ex);
+      LOG.error(StageLibError.LIB_0357.getMessage(), partition, ex.getMessage());
+      throw new StageException(StageLibError.LIB_0357, partition, ex.getMessage(), ex);
     }
   }
 
@@ -205,8 +204,8 @@ public class KafkaTarget extends BaseTarget {
           //record in error
           continue;
         }
-        if(!partitionKey.isEmpty()) {
-          validatePartition(r, partitionKey);
+        if(!partitionKey.isEmpty() && !validatePartition(r, partitionKey)) {
+          continue;
         }
         try {
           kafkaProducer.enqueueMessage(serializeRecord(r), partitionKey);
@@ -215,6 +214,8 @@ public class KafkaTarget extends BaseTarget {
         }
         batchRecordCounter++;
       }
+
+      //FIXME<Hari>handle connection error here and try connecting for n number of times with reconnection
       try {
         kafkaProducer.write();
       } catch (Exception e) {

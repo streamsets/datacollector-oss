@@ -43,6 +43,35 @@ public class TestExpressionProcessor {
   }
 
   @Test
+  public void tesExpressionEvaluationFailure() throws StageException {
+
+    ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
+    expressionProcessorConfig.expression = "(record:value(\"/baseSalary\") + record:value(\"/bonus\") * 2"; //invalid expression string, missing ")"
+    expressionProcessorConfig.fieldToSet = "/grossSalary";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
+      .addConfiguration("constants", null)
+      .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
+      .addOutputLane("a").build();
+
+    try {
+      runner.runInit();
+
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("baseSalary", Field.create(Field.Type.STRING, "100000.25"));
+      map.put("bonus", Field.create(Field.Type.STRING, "2000"));
+      map.put("tax", Field.create(Field.Type.STRING, "30000.25"));
+      Record record = new RecordImpl("s", "s:1", null, null);
+      record.set(Field.create(map));
+
+      runner.runProcess(ImmutableList.of(record));
+      Assert.fail("Stage exception expected as the expression string is not valid");
+    } catch (StageException e) {
+      Assert.assertEquals(StageLibError.LIB_0600, e.getErrorCode());
+    }
+  }
+
+  @Test
   public void testReplaceExistingFieldInExpression() throws StageException {
 
     ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();

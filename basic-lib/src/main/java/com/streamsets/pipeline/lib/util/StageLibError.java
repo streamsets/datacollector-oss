@@ -49,6 +49,7 @@ public enum StageLibError implements ErrorCode {
   LIB_0354("Error evaluating partition expression '{}' for record '{}'. Reason {}"),
   LIB_0355("Error converting the result of partition expression '{}' to a partition id for topic '{}'. Reason : {}"),
   LIB_0356("Partition expression resulted in invalid partition id '{}'. Topic '{}' has {} partitions."),
+  LIB_0357("Failed to evaluate partition expression '{}', {}"),
 
   //Field Type Converter Processor
   LIB_0400("Failed to convert value '{}' to type '{}', {}."),
