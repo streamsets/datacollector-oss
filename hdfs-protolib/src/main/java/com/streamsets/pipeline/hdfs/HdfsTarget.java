@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.ValueChooser;
 @GenerateResourceBundle
 @StageDef(version = "1.0.0",
     label = "HDFS",
+    icon = "hdfs.png",
     description = "Writes records to HDFS files")
 public class HdfsTarget extends BaseHdfsTarget {
 

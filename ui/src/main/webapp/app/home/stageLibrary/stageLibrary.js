@@ -45,12 +45,12 @@ angular
       label: 'Origins'
     },{
       group: 'Type',
-      name: pipelineConstant.TARGET_STAGE_TYPE,
-      label: 'Destinations'
-    },{
-      group: 'Type',
       name: pipelineConstant.PROCESSOR_STAGE_TYPE,
       label: 'Processors'
+    },{
+      group: 'Type',
+      name: pipelineConstant.TARGET_STAGE_TYPE,
+      label: 'Destinations'
     }];
 
     var updateStageGroups = function() {
