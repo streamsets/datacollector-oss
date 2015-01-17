@@ -17,8 +17,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-basic-lib</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Data Collector Basic Library</description>
-  <name>StreamSets Data Collector Basic Library</name>
+  <description>StreamSets Data Collector Basic Lib</description>
+  <name>StreamSets Data Collector Basic Lib</name>
   <packaging>jar</packaging>
 
   <properties>

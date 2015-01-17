@@ -17,8 +17,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Data Collector HDFS ProtoLibrary</description>
-  <name>StreamSets Data Collector HDFS ProtoLibrary</name>
+  <description>StreamSets Data Collector HDFS ProtoLib</description>
+  <name>StreamSets Data Collector HDFS ProtoLib</name>
   <packaging>jar</packaging>
 
   <properties>

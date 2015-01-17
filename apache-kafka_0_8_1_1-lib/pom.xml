@@ -17,8 +17,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-apache-kafka_0_8_1_1-lib</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Data Collector Apache Kafka 0.8.1.1 Library</description>
-  <name>StreamSets Data Collector Apache Kafka 0.8.1.1 Library</name>
+  <description>StreamSets Data Collector Apache Kafka 0.8.1.1 Lib</description>
+  <name>StreamSets Data Collector Apache Kafka 0.8.1.1 Lib</name>
   <packaging>jar</packaging>
 
   <properties>

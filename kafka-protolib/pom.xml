@@ -17,8 +17,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-kafka-protolib</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Data Collector Kafka ProtoLibrary</description>
-  <name>StreamSets Data Collector Kafka ProtoLibrary</name>
+  <description>StreamSets Data Collector Kafka ProtoLib</description>
+  <name>StreamSets Data Collector Kafka ProtoLib</name>
   <packaging>jar</packaging>
 
   <properties>
