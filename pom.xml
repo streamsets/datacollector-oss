@@ -45,6 +45,8 @@
     <module>hdfs-protolib</module>
     <module>cdh5_3_0-lib</module>
     <module>cdh5_2_1-lib</module>
+    <module>kafka-protolib</module>
+    <module>apache-kafka_0_8_1_1-lib</module>
   </modules>
 
   <build>

@@ -142,6 +142,12 @@
       <outputDirectory>/stage-libs/</outputDirectory>
     </fileSet>
 
+    <!-- apache_kafka_0_8_1_1-lib -->
+    <fileSet>
+      <directory>${basedir}/../apache-kafka_0_8_1_1-lib/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
+
   </fileSets>
 
   <dependencySets>
