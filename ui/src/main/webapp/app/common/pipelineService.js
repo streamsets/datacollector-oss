@@ -81,22 +81,7 @@ angular.module('pipelineAgentApp.common')
         });
       }
 
-      if(stage.icon) {
-        stageInstance.uiInfo.icon = 'rest/v1/definitions/stages/icon?name=' + stage.name +
-        '&library=' + stage.library + '&version=' + stage.version;
-      } else {
-        switch(stage.type) {
-          case pipelineConstant.SOURCE_STAGE_TYPE:
-            stageInstance.uiInfo.icon = 'assets/stage/defaultSource.svg';
-            break;
-          case pipelineConstant.PROCESSOR_STAGE_TYPE:
-            stageInstance.uiInfo.icon = 'assets/stage/defaultProcessor.svg';
-            break;
-          case pipelineConstant.TARGET_STAGE_TYPE:
-            stageInstance.uiInfo.icon = 'assets/stage/defaultTarget.svg';
-            break;
-        }
-      }
+      stageInstance.uiInfo.icon = self.getStageIconURL(stage);
 
       return stageInstance;
     };
@@ -146,6 +131,22 @@ angular.module('pipelineAgentApp.common')
       }
 
       return config;
+    };
+
+    this.getStageIconURL = function(stage) {
+      if(stage.icon) {
+        return 'rest/v1/definitions/stages/icon?name=' + stage.name +
+        '&library=' + stage.library + '&version=' + stage.version;
+      } else {
+        switch(stage.type) {
+          case pipelineConstant.SOURCE_STAGE_TYPE:
+            return 'assets/stage/defaultSource.svg';
+          case pipelineConstant.PROCESSOR_STAGE_TYPE:
+            return 'assets/stage/defaultProcessor.svg';
+          case pipelineConstant.TARGET_STAGE_TYPE:
+            return 'assets/stage/defaultTarget.svg';
+        }
+      }
     };
 
   });

@@ -111,6 +111,7 @@
       "settings": "Settings",
       "snapshot": "Snapshot",
       "sources": "Origins",
+      "stageLibrary": "Stage Library",
       "start": "Start",
       "stop": "Stop",
       "stopConfirmationTitle": "Stop Pipeline Confirmation",

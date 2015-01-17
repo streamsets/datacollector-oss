@@ -72,6 +72,17 @@
   </div>
 
   <div class="pull-right" ng-if="activeConfigStatus.state !== 'STOPPING'">
+
+    <button type="button" class="btn btn-primary btn-sm"
+            tooltip-placement="bottom" tooltip="{{'home.header.stageLibrary' | translate}}"
+            tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+            ng-hide="isPipelineRunning || previewMode"
+            ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel">
+      <span class="fa fa-th-large fa-12x"></span>
+      <span ng-hide="iconOnly" translate="home.header.stageLibrary">Stage Library</span>
+    </button>
+
+
     <button type="button" class="btn btn-primary btn-sm"
             tooltip-placement="bottom" tooltip="{{'home.header.refreshPreview' | translate}}"
             tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
@@ -145,7 +156,6 @@
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               data-toggle="dropdown">
         <span class="fa fa-gear fa-12x"></span>
-        <span class="caret"></span>
       </button>
       <ul class="dropdown-menu pull-right" role="menu">
         <li role="presentation"
@@ -171,7 +181,7 @@
     </div>
   </div>
 
-  <div class="btn-group pull-right stage-dropdown" ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
+  <!--div class="btn-group pull-right stage-dropdown" ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
     <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
             tooltip-placement="bottom" tooltip="{{'home.header.addStage' | translate}}"
             tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
@@ -179,7 +189,6 @@
             data-toggle="dropdown">
       <span class="glyphicon glyphicon-plus fa-12x"></span>
       <span ng-hide="iconOnly" translate="home.header.addStage">Add Stage</span>
-      <span class="caret"></span>
     </button>
     <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 
@@ -219,7 +228,7 @@
       </li>
 
     </ul>
-  </div>
+  </div -->
 
 
   <div class="pull-right" ng-cloak ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">

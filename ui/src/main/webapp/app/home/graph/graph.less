@@ -102,9 +102,30 @@
     height: calc(~"100% - 104px");
     overflow: auto;
 
+    .pipeline-graph-div {
+      float: left;
+      height: 100%;
+
+      &.with-stage-library {
+        width: calc(~"100% - 240px");
+      }
+
+      &.with-out-stage-library {
+        width: 100%;
+      }
+    }
+
+    .stage-library-div {
+      float: left;
+      width: 240px;
+      height: 100%;
+      overflow: auto;
+    }
+
     .alert {
       margin-bottom: 0;
       border-radius: 0;
+      z-index: 5;
 
       &.alert-select-stage {
         position: absolute;
@@ -137,3 +158,5 @@
     }
   }
 }
+
+@import 'stageLibrary/stageLibrary.less';

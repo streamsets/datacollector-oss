@@ -220,6 +220,16 @@ angular
             }
           }
         });
+      },
+
+      /**
+       * Return Stage Icon URL
+       *
+       * @param stage
+       * @returns {*}
+       */
+      getStageIconURL: function(stage) {
+        return pipelineService.getStageIconURL(stage);
       }
     });
 
