@@ -131,10 +131,10 @@
     </fileSet>
 
     <!-- cdh5_2_1-lib -->
-    <fileSet>
-      <directory>${basedir}/../cdh5_2_1-lib/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
-    </fileSet>
+    <!--<fileSet>-->
+      <!--<directory>${basedir}/../cdh5_2_1-lib/target/stage-libs/</directory>-->
+      <!--<outputDirectory>/stage-libs/</outputDirectory>-->
+    <!--</fileSet>-->
 
     <!-- cdh5_3_0-lib -->
     <fileSet>
