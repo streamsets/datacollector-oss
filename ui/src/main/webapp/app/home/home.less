@@ -1,9 +1,9 @@
 .home-bg-splitter {
 
-  .split-panes {
+  >.split-panes {
     left: 0;
     right: 0;
-    top: 0;
+    top: 106px;
     bottom: 0;
     position: absolute;
 
@@ -14,8 +14,8 @@
     }
   }
 
-  /* Horizontal */
-  .split-panes.horizontal {
+  /* Library/Graph Splitter */
+  .split-panes.library-splitter {
     >.split-handler {
       width: 4px;
       top: 0;
@@ -25,10 +25,10 @@
     }
 
     >.split-pane1 {
-      margin-top: 60px;
+      //margin-top: 60px;
       width: 250px;
       position: absolute;
-      height: calc(~"100% - 60px");
+      //height: calc(~"100% - 145px");
     }
 
     >.split-pane2 {
@@ -36,7 +36,8 @@
       right: 0;
       border-left: 1px solid #aaa;
       position: absolute;
-      height: 100%;
+      //margin-top: 60px;
+      //height: calc(~"100% - 145px");
     }
 
 
@@ -60,6 +61,58 @@
         left: 0 !important;
         right: 0;
         border-left: 1px solid #aaa;
+      }
+    }
+
+  }
+
+
+  /* Graph/Stage Library Splitter */
+  .split-panes.stage-library-splitter {
+    >.split-handler {
+      width: 4px;
+      top: 0;
+      right: 240px;
+      bottom: 0;
+      cursor: ew-resize;
+    }
+
+    >.split-pane1 {
+      left: 0;
+      right: 240px;
+      width: calc(~"100% - 240px");
+      position: absolute;
+    }
+
+    >.split-pane2 {
+      right: 0;
+      left: initial;
+      width: 240px;
+      border-left: 1px solid #aaa;
+      position: absolute;
+      overflow: auto;
+    }
+
+
+    &.hide-stage-library-panel {
+      >.split-handler {
+        display: none;
+        left:0 !important;
+      }
+
+      >.split-pane1,>.split-pane2 {
+        position: absolute;
+        height: 100%;
+      }
+
+      >.split-pane1 {
+        right: 0;
+        width: 100%;
+      }
+
+      >.split-pane2 {
+        width: 0;
+        display: none;
       }
     }
 
@@ -94,11 +147,6 @@
     &.maximize-pane2 {
       >.split-handler {
         display: none;
-        /*height: 4px;
-        top: 105px !important;
-        left: 0;
-        right: 0;
-        cursor: ns-resize;*/
       }
 
       >.split-pane1, >.split-pane2 {
@@ -111,7 +159,7 @@
       }
 
       >.split-pane2 {
-        top: 105px !important;
+        top: 0 !important;
         bottom: 0;
         border-top: 1px solid #aaa;
       }
@@ -149,10 +197,10 @@
 .pipeline-empty-container {
   background: #29b4e1 url('/assets/logo-watermark-big.png') no-repeat center bottom;
   position: absolute;
-  top: 60px;
+  top: -45px;
   left: 0;
+  bottom: -45px;
   width: 100%;
-  height: calc(~"100% - 60px");
   overflow: hidden;
 
   display: none;
@@ -200,6 +248,7 @@
   background-color: inherit;
 }
 
+@import 'header/header.less';
 @import 'graph/graph.less';
 @import 'detail/detail.less';
 @import 'preview/preview.less';
@@ -208,7 +257,7 @@
 @import 'library/import/import.less';
 @import 'error/errorModal.less';
 @import 'resetOffset/resetOffset.less';
-
+@import 'stageLibrary/stageLibrary.less';
 
 
 

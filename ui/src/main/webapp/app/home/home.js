@@ -13,7 +13,7 @@ angular
     );
   }])
   .controller('HomeController', function ($scope, $rootScope, $timeout, api, configuration, _, $q, $modal,
-                                          $localStorage, pipelineConstant) {
+                                          $localStorage, pipelineService, pipelineConstant) {
     var stageCounter = 0,
       timeout,
       dirty = false,
@@ -56,6 +56,32 @@ angular
        */
       importPipelineConfig: function() {
         $scope.$broadcast('importPipelineConfig');
+      },
+
+      /**
+       * Add Stage Instance to the Pipeline Graph.
+       * @param stage
+       * @param firstOpenLane [optional]
+       */
+      addStageInstance: function (stage, firstOpenLane) {
+        var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig, undefined, firstOpenLane),
+          edge;
+
+        $scope.changeStageSelection({
+          selectedObject: stageInstance,
+          type: pipelineConstant.STAGE_INSTANCE,
+          ignoreBroadCast: true
+        });
+
+        if(firstOpenLane && firstOpenLane.stageInstance) {
+          edge = {
+            source: firstOpenLane.stageInstance,
+            target: stageInstance,
+            outputLane: firstOpenLane.laneName
+          };
+        }
+
+        $scope.$broadcast('addNode', stageInstance, edge);
       },
 
       /**

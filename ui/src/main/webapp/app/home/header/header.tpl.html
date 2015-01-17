@@ -1,0 +1,251 @@
+<div class="panel panel-default header-pane"
+     ng-show="pipelineConfig"
+     ng-controller="HeaderController">
+
+  <div class="panel-heading clearfix">
+    <div class="pull-left" ng-switch="activeConfigStatus.state">
+      <button type="button" class="navbar-toggle collapsed"
+              ng-class="{'selected' : !hideLibraryPanel}"
+              ng-click="toggleLibraryPanel()"
+              title="{{'home.header.toggleLibraryPane' | translate}}">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+
+      <div class="panel-title pull-left"
+           ng-switch-when="RUNNING">
+        <h3 class="pull-left">{{pipelineConfig.info.name}}: </h3>
+        <h3 class="pull-left" translate="home.header.uptime">Uptime</h3>
+        <h3 class="pull-left" am-time-ago="common.pipelineStatus.lastStatusChange"></h3>
+
+        <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
+      </div>
+
+
+      <div class="panel-title pull-left"
+           ng-switch-when="STOPPING">
+        <h3 class="pull-left" translate="home.header.stoppingPipeline">Stopping Pipeline</h3>
+        <i class="fa fa-spinner fa-spin fa-2x red-color"></i>
+      </div>
+
+      <div class="panel-title pull-left"
+           ng-switch-default>
+        <h3 class="pull-left" translate="home.header.definePipeline">Define Pipeline:</h3>
+        <h3 class="pull-left">{{pipelineConfig.info.name}}</h3>
+      </div>
+
+
+    </div>
+
+    <div class="btn-group pull-right issues-dropdown" ng-show="pipelineConfig.issues.issueCount > 0">
+      <button class="btn btn-danger btn-sm dropdown-toggle" type="button"
+              tooltip-placement="bottom" tooltip="{{'home.header.issues' | translate}}"
+              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+              data-toggle="dropdown">
+        <span class="fa fa-exclamation-triangle fa-12x"></span>
+        <span ng-hide="iconOnly" translate="home.header.issues">Issues</span>
+        <span class="badge alert-danger" ng-bind="pipelineConfig.issues.issueCount"></span>
+      </button>
+      <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+        <li role="presentation" class="dropdown-header"
+            translate="home.header.pipelineIssues"
+            ng-repeat-start="issue in pipelineConfig.issues.pipelineIssues">
+          Pipeline Issues
+        </li>
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="onIssueClick(issue)">{{issue.message}}</a>
+        </li>
+        <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+
+        <li role="presentation" class="dropdown-header"
+            ng-repeat-start="(instanceName, issues) in pipelineConfig.issues.stageIssues"
+            ng-bind="getStageInstanceLabel(instanceName)">
+        </li>
+        <li role="presentation" ng-repeat="issue in issues">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="onIssueClick(issue, instanceName)"
+             ng-bind="getIssuesMessage(instanceName, issue)"></a>
+        </li>
+        <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+
+      </ul>
+    </div>
+
+    <div class="pull-right" ng-if="activeConfigStatus.state !== 'STOPPING'">
+
+      <button type="button" class="btn btn-primary btn-sm"
+              tooltip-placement="bottom" tooltip="{{'home.header.stageLibrary' | translate}}"
+              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+              ng-hide="isPipelineRunning || previewMode"
+              ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel">
+        <span class="fa fa-th-large fa-12x"></span>
+        <span ng-hide="iconOnly" translate="home.header.stageLibrary">Stage Library</span>
+      </button>
+
+
+      <button type="button" class="btn btn-primary btn-sm"
+              tooltip-placement="bottom" tooltip="{{'home.header.refreshPreview' | translate}}"
+              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+              ng-show="previewMode"
+              ng-click="previewPipeline(true)">
+        <span class="glyphicon glyphicon-refresh fa-12x"></span>
+        <span ng-hide="iconOnly" translate="home.header.refreshPreview">Refresh Preview</span>
+      </button>
+
+
+      <button type="button" class="btn btn-primary btn-sm"
+              tooltip-placement="bottom" tooltip="{{'home.header.snapshot' | translate}}"
+              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+              ng-show="isPipelineRunning && !snapshotMode"
+              ng-click="captureSnapshot()">
+        <span class="glyphicon glyphicon-camera fa-12x"></span>
+        <span ng-hide="iconOnly" translate="home.header.snapshot">Snapshot</span>
+      </button>
+
+      <button type="button" class="btn btn-danger btn-sm"
+              tooltip-placement="bottom" tooltip="{{'home.header.closeSnapshot' | translate}}"
+              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+              ng-show="snapshotMode"
+              ng-click="closeSnapshot()">
+        <span class="glyphicon glyphicon-camera fa-12x"></span>
+        <span ng-hide="iconOnly" translate="home.header.closeSnapshot">Close Snapshot</span>
+      </button>
+
+
+      <button type="button" class="btn btn-primary btn-sm"
+              tooltip-placement="bottom" tooltip="{{'home.header.preview' | translate}}"
+              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+              ng-hide="isPipelineRunning || previewMode"
+              ng-click="previewPipeline()"
+              ng-disabled="!pipelineConfig.previewable">
+        <span class="glyphicon glyphicon-eye-open fa-12x"></span>
+        <span ng-hide="iconOnly" translate="home.header.preview">Preview</span>
+      </button>
+
+      <button type="button" class="btn btn-danger btn-sm"
+              tooltip-placement="bottom" tooltip="{{'home.header.closePreview' | translate}}"
+              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+              ng-show="previewMode"
+              ng-click="closePreview()">
+        <span class="glyphicon glyphicon-eye-close fa-12x"></span>
+        <span ng-hide="iconOnly" translate="home.header.closePreview">Close Preview</span>
+      </button>
+
+      <button type="button" class="btn btn-primary btn-sm"
+              tooltip-placement="bottom" tooltip="{{'home.header.start' | translate}}"
+              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+              ng-hide="isPipelineRunning || previewMode"
+              ng-disabled="!pipelineConfig.valid"
+              ng-click="startPipeline()">
+        <span class="glyphicon glyphicon-play fa-12x"></span>
+        <span ng-hide="iconOnly" translate="home.header.start">Start</span>
+      </button>
+
+      <button type="button" class="btn btn-danger btn-sm"
+              tooltip-placement="bottom" tooltip="{{'home.header.stop' | translate}}"
+              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+              ng-click="stopPipeline()"
+              ng-show="isPipelineRunning && !snapshotMode">
+        <span class="glyphicon glyphicon-stop fa-12x"></span>
+        <span ng-hide="iconOnly" translate="home.header.stop">Stop</span>
+      </button>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
+                tooltip-placement="bottom" tooltip="{{'home.header.settings' | translate}}"
+                tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+                data-toggle="dropdown">
+          <span class="fa fa-gear fa-12x"></span>
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+          <li role="presentation"
+              ng-if="!isPipelineRunning"
+              ng-class="{'disabled': !pipelineConfig.valid}">
+            <a href="#" ng-click="resetOffset()">
+              <i class="fa fa-power-off"></i> {{'home.resetOffset.title' | translate}}
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="isPipelineRunning && !monitoringPaused">
+            <a href="#" ng-click="pauseMonitoring()">
+              <i class="fa fa-pause"></i> {{'home.header.pauseMonitoring' | translate}}
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="isPipelineRunning && monitoringPaused">
+            <a href="#" ng-click="continueMonitoring()">
+              <i class="fa fa-play"></i> {{'home.header.continueMonitoring' | translate}}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!--div class="btn-group pull-right stage-dropdown" ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
+      <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+              tooltip-placement="bottom" tooltip="{{'home.header.addStage' | translate}}"
+              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+              tooltip-append-to-body="true"
+              data-toggle="dropdown">
+        <span class="glyphicon glyphicon-plus fa-12x"></span>
+        <span ng-hide="iconOnly" translate="home.header.addStage">Add Stage</span>
+      </button>
+      <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+        <li role="presentation" class="dropdown-header"
+            translate="home.header.sources">Sources</li>
+        <li role="presentation"
+            ng-repeat="stageLibrary in sources" ng-class="{disabled: sourceExists}">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="sourceExists || addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
+        </li>
+
+        <li role="presentation" class="divider"></li>
+
+        <li role="presentation" class="dropdown-header"
+            translate="home.header.processors">Processors</li>
+        <li role="presentation" ng-repeat="stageLibrary in processors">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
+        </li>
+
+        <li role="presentation" class="divider"></li>
+
+        <li role="presentation" class="dropdown-header"
+            translate="home.header.selectorProcessors">Selector Processors</li>
+        <li role="presentation" ng-repeat="stageLibrary in selectorProcessors">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
+        </li>
+
+        <li role="presentation" class="divider"></li>
+
+        <li role="presentation" class="dropdown-header"
+            translate="home.header.targets">Targets</li>
+        <li role="presentation" ng-repeat="stageLibrary in targets">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
+        </li>
+
+      </ul>
+    </div -->
+
+
+    <div class="pull-right" ng-cloak ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
+      <div class="pipelineAgent-status pull-right" ng-hide="common.saveOperationInProgress">
+        <span class="glyphicon glyphicon-ok-circle"></span>
+        <span translate="global.messages.info.saveOperationInProgress"></span>
+      </div>
+
+      <div class="pipelineAgent-status pull-right" ng-show="common.saveOperationInProgress"
+           translate="global.messages.info.savingConfiguration">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-body"></div>
+</div>

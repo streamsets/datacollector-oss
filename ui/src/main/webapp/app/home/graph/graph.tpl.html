@@ -1,10 +1,6 @@
 <div class="panel panel-default graph-pane"
      ng-controller="GraphController">
 
-  <div class="panel-heading clearfix">
-    <ng-include src="'app/home/graph/header.tpl.html'"></ng-include>
-  </div>
-
   <div class="panel-body">
 
     <div ng-repeat="issues in pipelineConfig.issues.pipelineIssues">
@@ -91,13 +87,15 @@
 
     <ng-include src="'errorAlertContent.html'"></ng-include>
 
-    <div class="pipeline-graph-div" ng-class="($storage.hideStageLibraryPanel || isPipelineRunning || previewMode || snapshotMode) ? 'with-out-stage-library': 'with-stage-library'">
+    <pipeline-graph graph-value="pipelineConfig" ></pipeline-graph>
+
+    <!--div class="pipeline-graph-div" ng-class="($storage.hideStageLibraryPanel || isPipelineRunning || previewMode || snapshotMode) ? 'with-out-stage-library': 'with-stage-library'">
       <pipeline-graph graph-value="pipelineConfig" ></pipeline-graph>
     </div>
 
     <div class="stage-library-div" ng-if="!$storage.hideStageLibraryPanel || isPipelineRunning || previewMode || snapshotMode">
       <ng-include src="'app/home/graph/stageLibrary/stageLibrary.tpl.html'"></ng-include>
-    </div>
+    </div-->
 
 
   </div>

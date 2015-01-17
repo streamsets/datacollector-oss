@@ -4,10 +4,26 @@
 
 angular
   .module('pipelineAgentApp.home')
-  .controller('StageLibraryController', function ($scope, pipelineConstant) {
+  .controller('StageLibraryController', function ($scope, pipelineService, pipelineConstant) {
     angular.extend($scope, {
       filterGroup: {},
 
+      /**
+       * Return Stage Icon URL
+       *
+       * @param stage
+       * @returns {*}
+       */
+      getStageIconURL: function(stage) {
+        return pipelineService.getStageIconURL(stage);
+      },
+
+      /**
+       * Filter callback function
+       *
+       * @param stage
+       * @returns {boolean}
+       */
       libraryFilter: function(stage) {
         var filterGroup = $scope.filterGroup.selected;
 

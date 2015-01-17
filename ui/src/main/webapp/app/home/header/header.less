@@ -1,5 +1,5 @@
-.graph-pane {
-  height: 100%;
+.header-pane {
+  margin-top: 60px;
 
   border: 0;
   -webkit-box-shadow: none;
@@ -8,6 +8,7 @@
   .panel-heading {
     height: 45px;
     padding: @smallPadding @smallPadding*3;
+    box-shadow: 0 1px 4px rgba(0,0,0,.2);
 
     button {
       margin-top: 2px;
@@ -93,66 +94,5 @@
       font-size: 12px;
     }
 
-  }
-
-  .panel-body {
-    padding: 0;
-    height: 100%;
-    overflow: auto;
-
-    .pipeline-graph-div {
-      float: left;
-      height: 100%;
-
-      &.with-stage-library {
-        width: calc(~"100% - 240px");
-      }
-
-      &.with-out-stage-library {
-        width: 100%;
-      }
-    }
-
-    .stage-library-div {
-      float: left;
-      width: 240px;
-      height: 100%;
-      overflow: auto;
-    }
-
-    .alert {
-      margin-bottom: 0;
-      border-radius: 0;
-      z-index: 5;
-
-      &.alert-select-stage {
-        position: absolute;
-        left: 0;
-        right: 0;
-        padding-top: @smallPadding;
-        padding-bottom: @smallPadding;
-
-        select {
-          display: inline-block;
-          width: 225px;
-          margin-left: @defaultPadding * 2;
-          margin-right: @defaultPadding * 1.5;
-        }
-
-        button {
-          padding-top: @smallPadding;
-        }
-
-        .dont-show-again {
-          margin-top: 2 * @defaultPadding;
-          margin-bottom: 0;
-        }
-
-      }
-    }
-
-    .draggable {
-      cursor: pointer;
-    }
   }
 }
