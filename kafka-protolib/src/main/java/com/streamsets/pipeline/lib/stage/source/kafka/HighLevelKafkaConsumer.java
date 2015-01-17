@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.util.StageLibError;
+import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
@@ -84,8 +84,8 @@ public class HighLevelKafkaConsumer {
       KafkaStream<byte[], byte[]> stream = topicList.get(0);
       consumerIterator = stream.iterator();
     } catch (Exception e) {
-      LOG.error(StageLibError.LIB_0311.getMessage(), e.getMessage());
-      throw new StageException(StageLibError.LIB_0311, e.getMessage(), e);
+      LOG.error(KafkaStageLibError.LIB_0311.getMessage(), e.getMessage());
+      throw new StageException(KafkaStageLibError.LIB_0311, e.getMessage(), e);
     }
   }
 

@@ -15,17 +15,14 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
-import com.streamsets.pipeline.lib.stage.source.spooldir.CsvFileMode;
-import com.streamsets.pipeline.lib.stage.source.spooldir.CvsFileModeChooserValues;
-import com.streamsets.pipeline.lib.stage.source.spooldir.JsonFileModeChooserValues;
 
 @GenerateResourceBundle
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "application/json")
 @StageDef(version="0.0.1",
-  label="Kafka Consumer",
+  label="High Level Kafka Consumer",
   icon="kafka.png")
-@ConfigGroups(value = KafkaSource.KafkaSourceConfigGroups.class)
-public class KafkaSource extends AbstractKafkaSource {
+@ConfigGroups(value = HighLevelKafkaSource.KafkaSourceConfigGroups.class)
+public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.MODEL,

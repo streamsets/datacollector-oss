@@ -20,11 +20,9 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.el.ELUtils;
-import com.streamsets.pipeline.lib.stage.source.spooldir.CsvFileMode;
-import com.streamsets.pipeline.lib.stage.source.spooldir.CvsFileModeChooserValues;
 import com.streamsets.pipeline.lib.stage.source.util.CsvUtil;
 import com.streamsets.pipeline.lib.stage.source.util.JsonUtil;
-import com.streamsets.pipeline.lib.util.StageLibError;
+import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -186,8 +184,8 @@ public class KafkaTarget extends BaseTarget {
     try {
       elEvaluator.eval(variables, partition);
     } catch (ELException ex) {
-      LOG.error(StageLibError.LIB_0357.getMessage(), partition, ex.getMessage());
-      throw new StageException(StageLibError.LIB_0357, partition, ex.getMessage(), ex);
+      LOG.error(KafkaStageLibError.LIB_0357.getMessage(), partition, ex.getMessage());
+      throw new StageException(KafkaStageLibError.LIB_0357, partition, ex.getMessage(), ex);
     }
   }
 
@@ -210,7 +208,7 @@ public class KafkaTarget extends BaseTarget {
         try {
           kafkaProducer.enqueueMessage(serializeRecord(r), partitionKey);
         } catch (IOException e) {
-          throw new StageException(StageLibError.LIB_0351, e.getMessage(), e);
+          throw new StageException(KafkaStageLibError.LIB_0351, e.getMessage(), e);
         }
         batchRecordCounter++;
       }
@@ -219,7 +217,7 @@ public class KafkaTarget extends BaseTarget {
       try {
         kafkaProducer.write();
       } catch (Exception e) {
-        throw new StageException(StageLibError.LIB_0350, e.getMessage(), e);
+        throw new StageException(KafkaStageLibError.LIB_0350, e.getMessage(), e);
       }
       recordCounter += batchRecordCounter;
     }
@@ -230,14 +228,14 @@ public class KafkaTarget extends BaseTarget {
     try {
       partition = Integer.parseInt(partitionKey);
     } catch (NumberFormatException e) {
-      LOG.warn(StageLibError.LIB_0355.getMessage(), partitionKey, topic, e.getMessage());
-      getContext().toError(r, StageLibError.LIB_0355, partitionKey, topic, e.getMessage(), e);
+      LOG.warn(KafkaStageLibError.LIB_0355.getMessage(), partitionKey, topic, e.getMessage());
+      getContext().toError(r, KafkaStageLibError.LIB_0355, partitionKey, topic, e.getMessage(), e);
       return false;
     }
     //partition number is an integer starting from 0 ... n-1, where n is the number of partitions for topic t
     if(partition < 0 || partition >= kafkaProducer.getNumberOfPartitions()) {
-      LOG.warn(StageLibError.LIB_0356.getMessage(), partition, topic, kafkaProducer.getNumberOfPartitions());
-      getContext().toError(r, StageLibError.LIB_0356, partition, topic, kafkaProducer.getNumberOfPartitions());
+      LOG.warn(KafkaStageLibError.LIB_0356.getMessage(), partition, topic, kafkaProducer.getNumberOfPartitions());
+      getContext().toError(r, KafkaStageLibError.LIB_0356, partition, topic, kafkaProducer.getNumberOfPartitions());
       return false;
     }
     return true;
@@ -250,8 +248,8 @@ public class KafkaTarget extends BaseTarget {
       try {
         result = elEvaluator.eval(variables, partition);
       } catch (ELException e) {
-        LOG.warn(StageLibError.LIB_0354.getMessage(), partition, record.getHeader().getSourceId(), e.getMessage());
-        getContext().toError(record, StageLibError.LIB_0354, partition, record.getHeader().getSourceId(),
+        LOG.warn(KafkaStageLibError.LIB_0354.getMessage(), partition, record.getHeader().getSourceId(), e.getMessage());
+        getContext().toError(record, KafkaStageLibError.LIB_0354, partition, record.getHeader().getSourceId(),
           e.getMessage(), e);
         return null;
       }

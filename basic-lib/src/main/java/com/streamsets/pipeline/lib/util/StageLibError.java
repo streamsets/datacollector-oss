@@ -28,29 +28,6 @@ public enum StageLibError implements ErrorCode {
   // JsonSpoolDirSource
   LIB_0200("Discarding Json Object '{}', it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
 
-  //Kafka source and Target messages
-  LIB_0300("A message with offset '{}' which is greater than the latest offset '{}' is requested from Kafka topic '{}' partition '{}'."),
-  LIB_0301("Could not find new leader after kafka broker failure."),
-  LIB_0302("Error fetching offset data from the Broker '{}' : {}"),
-  LIB_0303("Can't find metadata for Topic '{}' and Partition '{}'."),
-  LIB_0304("Can't find leader for Topic '{}' and Partition '{}'."),
-  LIB_0305("Error communicating with Broker '{}' to find leader for topic '{}' partition '{}'. Reason : {}"),
-  LIB_0306("Error fetching data from kafka. Topic '{}', Partition '{}', Offset '{}."),
-  LIB_0307("Found old offset '{}'. Expected offset '{}'. Discarding message"),
-  LIB_0308("SocketTimeoutException encountered while fetching message from Kafka."),
-  LIB_0309("Error fetching data from kafka, {}"),
-  LIB_0310("Error fetching offset from kafka, {}"),
-  LIB_0311("Error creating Kafka consumer instance, {}"),
-
-  LIB_0350("Error writing data to kafka broker, {}"),
-  LIB_0351("Error serializing record, {}"),
-  LIB_0352("Could not retrieve metadata for topic '{}' from Broker '{}'. Reason : {}"),
-  LIB_0353("Could not find metadata for topic '{}' from Broker '{}'."),
-  LIB_0354("Error evaluating partition expression '{}' for record '{}'. Reason {}"),
-  LIB_0355("Error converting the result of partition expression '{}' to a partition id for topic '{}'. Reason : {}"),
-  LIB_0356("Partition expression resulted in invalid partition id '{}'. Topic '{}' has {} partitions."),
-  LIB_0357("Failed to evaluate partition expression '{}', {}"),
-
   //Field Type Converter Processor
   LIB_0400("Failed to convert value '{}' to type '{}', {}."),
 

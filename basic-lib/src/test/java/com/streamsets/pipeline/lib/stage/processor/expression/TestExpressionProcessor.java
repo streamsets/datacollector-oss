@@ -61,7 +61,7 @@ public class TestExpressionProcessor {
       map.put("baseSalary", Field.create(Field.Type.STRING, "100000.25"));
       map.put("bonus", Field.create(Field.Type.STRING, "2000"));
       map.put("tax", Field.create(Field.Type.STRING, "30000.25"));
-      Record record = new RecordImpl("s", "s:1", null, null);
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       runner.runProcess(ImmutableList.of(record));

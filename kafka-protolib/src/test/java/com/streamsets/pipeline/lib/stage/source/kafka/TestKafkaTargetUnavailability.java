@@ -7,7 +7,7 @@ package com.streamsets.pipeline.lib.stage.source.kafka;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.util.StageLibError;
+import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.admin.AdminUtils;
 import kafka.consumer.KafkaStream;
@@ -94,7 +94,7 @@ public class TestKafkaTargetUnavailability {
       targetRunner.runWrite(logRecords);
       Assert.fail("Expected StageException, got none.");
     } catch (StageException e) {
-      Assert.assertEquals(StageLibError.LIB_0350, e.getErrorCode());
+      Assert.assertEquals(KafkaStageLibError.LIB_0350, e.getErrorCode());
     }
 
     targetRunner.runDestroy();
@@ -124,7 +124,7 @@ public class TestKafkaTargetUnavailability {
     try {
       targetRunner.runWrite(logRecords);
     } catch (StageException e) {
-      Assert.assertEquals(StageLibError.LIB_0350, e.getErrorCode());
+      Assert.assertEquals(KafkaStageLibError.LIB_0350, e.getErrorCode());
     }
     targetRunner.runDestroy();
   }

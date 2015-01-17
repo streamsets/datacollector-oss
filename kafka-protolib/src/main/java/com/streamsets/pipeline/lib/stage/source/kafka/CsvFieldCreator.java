@@ -9,7 +9,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.io.CountingReader;
-import com.streamsets.pipeline.lib.stage.source.spooldir.CsvFileMode;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

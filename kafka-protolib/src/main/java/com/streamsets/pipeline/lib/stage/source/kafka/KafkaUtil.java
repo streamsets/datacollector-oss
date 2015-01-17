@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.lib.stage.source.kafka;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.util.StageLibError;
+import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import kafka.javaapi.TopicMetadata;
 import kafka.javaapi.TopicMetadataRequest;
 import kafka.javaapi.consumer.SimpleConsumer;
@@ -37,15 +37,15 @@ public class KafkaUtil {
 
       List<TopicMetadata> topicMetadataList = resp.topicsMetadata();
       if(topicMetadataList == null || topicMetadataList.isEmpty()) {
-        LOG.error(StageLibError.LIB_0353.getMessage(), topic , broker.getHost() + ":" + broker.getPort());
-        throw new StageException(StageLibError.LIB_0353, topic , broker.getHost() + ":" + broker.getPort());
+        LOG.error(KafkaStageLibError.LIB_0353.getMessage(), topic , broker.getHost() + ":" + broker.getPort());
+        throw new StageException(KafkaStageLibError.LIB_0353, topic , broker.getHost() + ":" + broker.getPort());
       }
       TopicMetadata topicMetadata = topicMetadataList.iterator().next();
       //set number of partitions
       return topicMetadata.partitionsMetadata().size();
     } catch (Exception e) {
-      LOG.error(StageLibError.LIB_0352.getMessage(), topic , broker.getHost() + ":" + broker.getPort(), e.getMessage());
-      throw new StageException(StageLibError.LIB_0352, topic , broker.getHost() + ":" + broker.getPort(),
+      LOG.error(KafkaStageLibError.LIB_0352.getMessage(), topic , broker.getHost() + ":" + broker.getPort(), e.getMessage());
+      throw new StageException(KafkaStageLibError.LIB_0352, topic , broker.getHost() + ":" + broker.getPort(),
         e.getMessage(), e);
     } finally {
       if (simpleConsumer != null) {
