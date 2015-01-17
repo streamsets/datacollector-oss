@@ -8,6 +8,8 @@ package com.streamsets.pipeline.el;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.lang.reflect.Method;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ELStringSupport {
 
@@ -70,6 +72,15 @@ public class ELStringSupport {
     return string.substring(0, endIndex);
   }
 
+  public static String regExCapture(String string, String regEx, int groupNumber) {
+    Pattern pattern = Pattern.compile(regEx);
+    Matcher matcher = pattern.matcher(string);
+    if(matcher.find()) {
+      return matcher.group(groupNumber);
+    }
+    return null;
+  }
+
   private static final Method CONCAT2;
   private static final Method CONCAT3;
   private static final Method CONCAT4;
@@ -81,6 +92,7 @@ public class ELStringSupport {
   private static final Method REPLACE;
   private static final Method REPLACE_ALL;
   private static final Method TRUNCATE;
+  private static final Method REGEX_CAPTURE;
 
   static {
     try {
@@ -96,6 +108,7 @@ public class ELStringSupport {
       REPLACE = ELStringSupport.class.getMethod("replace", String.class, char.class, char.class);
       REPLACE_ALL = ELStringSupport.class.getMethod("replaceAll", String.class, String.class, String.class);
       TRUNCATE = ELStringSupport.class.getMethod("truncate", String.class, int.class);
+      REGEX_CAPTURE = ELStringSupport.class.getMethod("regExCapture", String.class, String.class, int.class);
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
@@ -114,6 +127,7 @@ public class ELStringSupport {
     elEvaluator.registerFunction(STRING_CONTEXT_VAR, "replace", REPLACE);
     elEvaluator.registerFunction(STRING_CONTEXT_VAR, "replaceAll", REPLACE_ALL);
     elEvaluator.registerFunction(STRING_CONTEXT_VAR, "truncate", TRUNCATE);
+    elEvaluator.registerFunction(STRING_CONTEXT_VAR, "regExCapture", REGEX_CAPTURE);
   }
 
 }

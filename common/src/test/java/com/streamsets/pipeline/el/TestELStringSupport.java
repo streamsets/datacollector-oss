@@ -162,4 +162,38 @@ public class TestELStringSupport {
     Assert.assertEquals("The StreamSets", eval.eval(variables,
       "${str:truncate(\"The StreamSets Inc\", 14)}"));
   }
+
+  @Test
+  public void testRegExCapture() throws Exception {
+
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    String result = (String)eval.eval(variables,
+      "${str:regExCapture(\"2015-01-18 22:31:51,813 DEBUG ZkClient - Received event: WatchedEvent state:Disconnected\"," +
+        " \"(\\\\d{4}-\\\\d{2}-\\\\d{2}) (\\\\d{2}:\\\\d{2}:\\\\d{2},\\\\d{3}) ([^ ]*) ([^ ]*) - (.*)$\", " +
+        "1)}");
+    Assert.assertEquals("2015-01-18", result);
+
+    result = (String)eval.eval(variables,
+      "${str:regExCapture(\"2015-01-18 22:31:51,813 DEBUG ZkClient - Received event: WatchedEvent state:Disconnected\"," +
+        " \"(\\\\d{4}-\\\\d{2}-\\\\d{2}) (\\\\d{2}:\\\\d{2}:\\\\d{2},\\\\d{3}) ([^ ]*) ([^ ]*) - (.*)$\", " +
+        "2)}");
+    Assert.assertEquals("22:31:51,813", result);
+
+    result = (String)eval.eval(variables,
+      "${str:regExCapture(\"2015-01-18 22:31:51,813 DEBUG ZkClient - Received event: WatchedEvent state:Disconnected\"," +
+        " \"(\\\\d{4}-\\\\d{2}-\\\\d{2}) (\\\\d{2}:\\\\d{2}:\\\\d{2},\\\\d{3}) ([^ ]*) ([^ ]*) - (.*)$\", " +
+        "3)}");
+    Assert.assertEquals("DEBUG", result);
+
+    result = (String)eval.eval(variables,
+      "${str:regExCapture(\"2015-01-18 22:31:51,813 DEBUG ZkClient - Received event: WatchedEvent state:Disconnected\"," +
+        " \"(\\\\d{4}-\\\\d{2}-\\\\d{2}) (\\\\d{2}:\\\\d{2}:\\\\d{2},\\\\d{3}) ([^ ]*) ([^ ]*) - (.*)$\", " +
+        "0)}");
+    Assert.assertEquals("2015-01-18 22:31:51,813 DEBUG ZkClient - Received event: WatchedEvent state:Disconnected",
+      result);
+  }
 }

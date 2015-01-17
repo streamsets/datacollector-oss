@@ -41,11 +41,12 @@ public enum KafkaStageLibError implements ErrorCode {
   LIB_0309("Error fetching data from kafka, {}"),
   LIB_0310("Error fetching offset from kafka, {}"),
   LIB_0311("Error creating Kafka consumer instance, {}"),
+  LIB_0312("Error getting iterator from Kafka Stream , {}"),
 
   LIB_0350("Error writing data to kafka broker, {}"),
   LIB_0351("Error serializing record, {}"),
   LIB_0352("Could not retrieve metadata for topic '{}' from Broker '{}'. Reason : {}"),
-  LIB_0353("Could not find metadata for topic '{}' from Broker '{}'."),
+  LIB_0353("Could not find metadata for topic '{}' from the supplied metadata broker list '{}'."),
   LIB_0354("Error evaluating partition expression '{}' for record '{}'. Reason {}"),
   LIB_0355("Error converting the result of partition expression '{}' to a partition id for topic '{}'. Reason : {}"),
   LIB_0356("Partition expression resulted in invalid partition id '{}'. Topic '{}' has {} partitions."),
