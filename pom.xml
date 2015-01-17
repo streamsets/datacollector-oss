@@ -36,7 +36,7 @@
     <module>root</module>
     <module>root-lib</module>
     <module>api</module>
-    <module>el</module>
+    <module>common</module>
     <module>container</module>
     <module>bootstrap</module>
     <module>basic-lib</module>
