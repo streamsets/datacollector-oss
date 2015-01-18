@@ -176,9 +176,9 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       DELETE_KEY: 46,
       ENTER_KEY: 13,
       nodeRadius: 70,
-      rectWidth: 160,
-      rectHeight: 120,
-      rectRound: 20
+      rectWidth: 140,
+      rectHeight: 100,
+      rectRound: 14
     };
 
     /* PROTOTYPE FUNCTIONS */
@@ -235,8 +235,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     GraphCreator.prototype.insertTitleLinebreaks = function (gEl, title) {
       var el = gEl.append('text')
         .attr('text-anchor','middle')
-        .attr('x', 80)
-        .attr('y', 90),
+        .attr('x', 50)
+        .attr('y', 75),
         text = el,
         words = title.split(/\s+/).reverse(),
         word,
@@ -245,7 +245,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         lineHeight = 1.1, // ems
         y = text.attr('y'),
         dy = 0,
-        tspan = text.text(null).append('tspan').attr('x', 80).attr('y', y).attr('dy', dy + 'em'),
+        tspan = text.text(null).append('tspan').attr('x', 70).attr('y', y).attr('dy', dy + 'em'),
         totalLines = 1;
 
       if(words.length === 1) {
@@ -258,12 +258,12 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             line.pop();
             tspan.text(line.join(' ').substring(0, 23));
 
-            if(totalLines === 3) {
+            if(totalLines === 2) {
               break;
             }
 
             line = [word];
-            tspan = text.append('tspan').attr('x', 80).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
+            tspan = text.append('tspan').attr('x', 70).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
             totalLines++;
           }
         }
@@ -638,9 +638,15 @@ angular.module('pipelineGraphDirectives', ['underscore'])
                 .attr({
                   'x': consts.rectWidth - 3,
                   'y': y + 5,
-                  'class': 'lane-number'
+                  'class': 'lane-number graph-bootstrap-tooltip',
+                  'title': lanePredicate ? lanePredicate.predicate : ''
                 })
-                .text(index+1);
+                .text(index+1)
+                .on('mousedown', function(d){
+                  thisGraph.state.shiftNodeDrag = true;
+                  thisGraph.state.shiftNodeDragYPos = y;
+                  thisGraph.state.mouseDownNodeLane = lane;
+                });
             }
 
           });
@@ -668,8 +674,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         })
         .attr('width', 30)
         .attr('height', 30)
-        .attr('x', consts.rectWidth - 35)
-        .attr('y', consts.rectHeight - 35)
+        .attr('x', consts.rectWidth - 20)
+        .attr('y', consts.rectHeight - 12)
         .append('xhtml:span')
         .attr('class', 'node-warning fa fa-exclamation-triangle');
 

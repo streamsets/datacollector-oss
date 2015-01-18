@@ -7,7 +7,10 @@ angular
   .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api, pipelineService,
                                                          sources, targets, processors) {
     angular.extend($scope, {
-      issues: [],
+      common: {
+        namePattern: '^[a-zA-Z0-9 _]+$',
+        errors: []
+      },
       sources: sources,
       targets: targets,
       processors: processors,
@@ -88,12 +91,12 @@ angular
                 $modalInstance.close(res.data);
               },
               function(res) {
-                $scope.issues = [res.data];
+                $scope.common.errors = [res.data];
               }
             );
         } else {
           $translate('home.library.nameRequiredValidation').then(function(translation) {
-            $scope.issues = [translation];
+            $scope.common.errors = [translation];
           });
 
         }

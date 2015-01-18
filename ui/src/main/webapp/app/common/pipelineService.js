@@ -10,7 +10,7 @@ angular.module('pipelineAgentApp.common')
       var prevStage = (firstOpenLane && firstOpenLane.stageInstance) ? firstOpenLane.stageInstance :
         ((pipelineConfig.stages && pipelineConfig.stages.length) ? pipelineConfig.stages[pipelineConfig.stages.length - 1] : undefined);
 
-      return prevStage ? prevStage.uiInfo.xPos + 300 : 200;
+      return prevStage ? prevStage.uiInfo.xPos + 220 : 60;
     };
 
     var getYPos = function(pipelineConfig, firstOpenLane, xPos) {
@@ -26,7 +26,7 @@ angular.module('pipelineAgentApp.common')
         }
       });
 
-      return maxYPos ? maxYPos + 130 : 70;
+      return maxYPos ? maxYPos + 130 : 50;
     };
 
     /**

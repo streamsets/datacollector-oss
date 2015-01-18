@@ -6,7 +6,9 @@ angular
   .module('pipelineAgentApp.home')
   .controller('DuplicateModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api, $q) {
     angular.extend($scope, {
-      issues: [],
+      common: {
+        errors: []
+      },
       newConfig : {
         name: pipelineInfo.name + 'copy',
         description: pipelineInfo.description
@@ -17,7 +19,7 @@ angular
           then(function(configObject) {
             $modalInstance.close(configObject);
           },function(data) {
-            $scope.issues = [data];
+            $scope.common.errors = [data];
           });
       },
       cancel : function () {
