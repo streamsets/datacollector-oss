@@ -3,7 +3,7 @@
        ng-controller="ErrorAlertController"
        ng-repeat="error in common.errors">
 
-    <button type="button" class="close" data-dismiss="alert">
+    <button type="button" class="close" ng-click="removeAlert(common.errors, $index)">
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>

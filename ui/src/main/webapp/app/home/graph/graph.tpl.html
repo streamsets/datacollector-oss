@@ -15,7 +15,7 @@
       </div>
 
       <div class="alert alert-dismissible alert-warning alert-select-stage" role="alert"
-           ng-if="issues.message.indexOf('VALIDATION_0001') !== -1 && !common.dontShowHelpAlert">
+           ng-if="issues.message.indexOf('VALIDATION_0001') !== -1 && !common.dontShowHelpAlert && !$storage.dontShowHelpAlert">
 
         <button type="button" class="close" data-dismiss="alert">
           <span aria-hidden="true">&times;</span>
@@ -33,12 +33,12 @@
           </option>
         </select>
 
-        <!--div class="checkbox dont-show-again">
+        <div class="pull-right checkbox dont-show-again">
           <label>
             <input type="checkbox" name="dontShowHelpAgain"
-                   ng-model="common.dontShowHelpAlert">  {{'home.graphPane.dontShowAgain' | translate}}
+                   ng-model="$storage.dontShowHelpAlert">  {{'home.graphPane.dontShowAgain' | translate}}
           </label>
-        </div-->
+        </div>
       </div>
 
     </div>
@@ -47,7 +47,7 @@
     <div class="alert alert-dismissible alert-warning alert-select-stage" role="alert"
          ng-if="firstOpenLane.stageInstance && common.errors.length === 0">
 
-      <button type="button" class="close" data-dismiss="alert">
+      <button type="button" class="close" ng-click="firstOpenLane.stageInstance = undefined">
         <span aria-hidden="true">&times;</span>
         <span class="sr-only">Close</span>
       </button>
@@ -76,12 +76,12 @@
         </select>
 
 
-      <!--div class="checkbox dont-show-again">
+      <div class="pull-right checkbox dont-show-again">
         <label>
           <input type="checkbox" name="dontShowHelpAgain"
-                 ng-model="common.dontShowHelpAlert">  {{'home.graphPane.dontShowAgain' | translate}}
+                 ng-model="$storage.dontShowHelpAlert">  {{'home.graphPane.dontShowAgain' | translate}}
         </label>
-      </div-->
+      </div>
 
     </div>
 

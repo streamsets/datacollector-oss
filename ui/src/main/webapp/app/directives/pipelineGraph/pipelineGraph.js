@@ -900,8 +900,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         startY = -(currentTranslatePos[1]),
         endX = parseInt(startX) + parseInt(svgWidth),
         endY = parseInt(startY) + parseInt(svgHeight),
-        xPos = (stageInstance.uiInfo.xPos * currentScale),
-        yPos = (stageInstance.uiInfo.yPos * currentScale);
+        xPos = ((stageInstance.uiInfo.xPos + thisGraph.consts.rectWidth) * currentScale),
+        yPos = ((stageInstance.uiInfo.yPos + thisGraph.consts.rectHeight) * currentScale);
       
       if(xPos < startX || xPos > endX || yPos < startY || yPos > endY) {
         thisGraph.moveNodeToCenter(stageInstance);

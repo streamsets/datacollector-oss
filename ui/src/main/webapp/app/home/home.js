@@ -42,7 +42,6 @@ angular
       minimizeDetailPane: false,
       maximizeDetailPane: false,
       $storage: $localStorage,
-      dontShowHelpAlert: false,
 
       /**
        * Add New Pipeline Configuration
@@ -64,6 +63,11 @@ angular
        * @param firstOpenLane [optional]
        */
       addStageInstance: function (stage, firstOpenLane) {
+        if($scope.sourceExists && stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
+          $rootScope.common.errors = ['Origin already exists.'];
+          return;
+        }
+
         var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig, undefined, firstOpenLane),
           edge;
 
@@ -457,7 +461,7 @@ angular
         }
       });
 
-      $scope.firstOpenLane = $rootScope.common.dontShowHelpAlert ? {} : getFirstOpenLane();
+      $scope.firstOpenLane = $scope.$storage.dontShowHelpAlert ? {} : getFirstOpenLane();
 
       if(pipelineStatus && pipelineStatus.name === pipelineConfig.info.name &&
         pipelineMetrics && pipelineMetrics.meters) {
