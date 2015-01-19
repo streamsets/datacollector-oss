@@ -104,6 +104,7 @@ module.exports = function(grunt) {
         'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.svg',
         'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf',
         'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff',
+        'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2',
         'bower_components/fontawesome/fonts/FontAwesome.woff',
         'bower_components/fontawesome/fonts/fontawesome-webfont.eot',
         'bower_components/fontawesome/fonts/fontawesome-webfont.svg',

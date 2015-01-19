@@ -6,7 +6,10 @@ angular
   .module('pipelineAgentApp.home')
   .controller('StageLibraryController', function ($scope, pipelineService, pipelineConstant) {
     angular.extend($scope, {
-      filterGroup: {},
+
+      allStage: {
+        group: 'All'
+      },
 
       /**
        * Return Stage Icon URL
@@ -25,7 +28,11 @@ angular
        * @returns {boolean}
        */
       libraryFilter: function(stage) {
-        var filterGroup = $scope.filterGroup.selected;
+        var filterGroup = $scope.$storage.stageFilterGroup;
+
+        if(filterGroup === undefined) {
+          $scope.$storage.stageFilterGroup = '';
+        }
 
         if(filterGroup) {
           if(filterGroup.group === 'Type') {
@@ -77,13 +84,11 @@ angular
       $scope.stageGroups = stageGroups;
     };
 
-
     updateStageGroups();
 
 
     $scope.$watch('stageLibraries', function() {
       updateStageGroups();
     });
-
 
   });

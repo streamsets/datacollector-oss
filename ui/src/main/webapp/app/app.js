@@ -102,7 +102,7 @@ angular.module('pipelineAgentApp')
 
     logWebSocket.onmessage = function (evt) {
       var received_msg = evt.data;
-      if(logMessages.length > 400) {
+      if(logMessages.length > 1000) {
         logMessages.shift();
       }
       logMessages.push(received_msg);

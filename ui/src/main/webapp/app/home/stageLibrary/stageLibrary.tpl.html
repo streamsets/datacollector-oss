@@ -2,8 +2,8 @@
   <form class="form-group-sm">
 
     <div class="stage-filter">
-      <select class="form-control" name="stageLibrary" ng-model="filterGroup.selected"
-              ng-options="stageGroup.label group by stageGroup.group for stageGroup in stageGroups">
+      <select class="form-control" name="stageLibrary" ng-model="$storage.stageFilterGroup"
+              ng-options="stageGroup.label group by stageGroup.group for stageGroup in stageGroups track by stageGroup.name">
         <option value="">All Stages</option>
       </select>
     </div>
