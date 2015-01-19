@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Locale;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Field Value Replacer")
+@StageDef( version="1.0.0", label="Field Value Replacer", icon="replacer.svg")
 public class FieldValueReplacer extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldValueReplacer.class);

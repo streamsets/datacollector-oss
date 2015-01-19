@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Expression Processor")
+@StageDef( version="1.0.0", label="Expression Processor", icon="expression.png")
 public class ExpressionProcessor extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExpressionProcessor.class);

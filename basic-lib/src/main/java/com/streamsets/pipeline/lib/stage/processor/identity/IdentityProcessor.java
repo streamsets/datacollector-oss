@@ -17,7 +17,8 @@ import java.util.Iterator;
 
 @GenerateResourceBundle
 @StageDef(version = "1.0.0", label = "Identity",
-          description = "It echoes every record it receives without changing, other than stage header information")
+          description = "It echoes every record it receives without changing, other than stage header information",
+          icon="identity.png")
 public class IdentityProcessor extends SingleLaneRecordProcessor {
 
   @Override

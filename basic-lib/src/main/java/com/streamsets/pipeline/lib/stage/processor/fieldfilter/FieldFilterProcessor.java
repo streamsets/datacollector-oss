@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Filter")
+@StageDef( version="1.0.0", label="Filter", icon="filter.png")
 public class FieldFilterProcessor extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldFilterProcessor.class);

@@ -24,7 +24,8 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef( version="1.0.0", label="Field Mask Processor",
-  description = "Replaces the selected string fields with the corresponding masks.")
+  description = "Replaces the selected string fields with the corresponding masks.",
+  icon="mask.png")
 public class FieldMaskProcessor extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldMaskProcessor.class);

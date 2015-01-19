@@ -14,7 +14,8 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 @GenerateResourceBundle
 @StageDef(version = "1.0.0",
     label = "Null Target",
-    description = "Discards all records")
+    description = "Discards all records",
+    icon="null.svg")
 public class NullTarget extends BaseTarget {
 
   @Override

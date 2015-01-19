@@ -26,7 +26,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Field Hasher")
+@StageDef( version="1.0.0", label="Field Hasher", icon="hash.png")
 public class FieldHasherProcessor extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldHasherProcessor.class);

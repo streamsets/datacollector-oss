@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 @GenerateResourceBundle
-@StageDef(version="1.0.0", label="Field Type Converter")
+@StageDef(version="1.0.0", label="Field Type Converter", icon="converter.png")
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);

@@ -19,7 +19,8 @@ import java.io.File;
 @GenerateResourceBundle
 @StageDef(version = "1.0.0",
     label = "Files in Directory",
-    description = "Consumes files from a spool directory")
+    description = "Consumes files from a spool directory",
+    icon="files.png")
 @ConfigGroups(FileDataType.class)
 public class SpoolDirSource extends BaseSpoolDirSource {
 
