@@ -103,6 +103,18 @@
         <module>dist</module>
       </modules>
     </profile>
+    <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>!release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>dummy-lib</module>
+      </modules>
+    </profile>
   </profiles>
 
 </project>

@@ -99,6 +99,22 @@
 
   <profiles>
     <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>!release</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-dummy-lib</artifactId>
+          <scope>compile</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>ui</id>
       <activation>
         <activeByDefault>false</activeByDefault>

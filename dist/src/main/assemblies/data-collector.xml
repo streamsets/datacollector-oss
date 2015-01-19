@@ -124,9 +124,16 @@
       <outputDirectory>/docs/api</outputDirectory>
     </fileSet>
 
-    <!-- stage-lib -->
+    <!-- basic-lib -->
     <fileSet>
       <directory>${basedir}/../basic-lib/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
+
+    <!-- dummy-lib -->
+    <!-- only picked up if dev profile is enabled -->
+    <fileSet>
+      <directory>${basedir}/../dummy-lib/target/stage-libs/</directory>
       <outputDirectory>/stage-libs/</outputDirectory>
     </fileSet>
 
