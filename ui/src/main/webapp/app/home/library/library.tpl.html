@@ -8,6 +8,12 @@
   <div class="panel-body">
 
     <ul class="list-group">
+
+      <li class="list-group-item pointer" ng-click="addPipelineConfig()">
+        <span class="glyphicon glyphicon-plus"></span>
+        Create New Pipeline
+      </li>
+
       <li class="list-group-item pointer clearfix"
           ng-class="{'active' : pipeline.name === activeConfigInfo.name}"
           ng-repeat="pipeline in pipelines"
@@ -64,11 +70,6 @@
           <i class="fa fa-spinner fa-spin fa-2x"></i>
         </div>
 
-      </li>
-
-      <li class="list-group-item pointer" ng-click="addPipelineConfig()">
-        <span class="glyphicon glyphicon-plus"></span>
-        Create New Pipeline
       </li>
 
       <li class="list-group-item" ng-if="!pipelines || pipelines.length === 0" translate="home.library.emptyPipelineList">
