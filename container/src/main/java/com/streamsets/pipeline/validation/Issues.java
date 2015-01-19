@@ -50,7 +50,11 @@ public class Issues {
   }
 
   public int getIssueCount() {
-    return pipeline.size() + stages.size();
+    int issueCount = pipeline.size();
+    for(String key: stages.keySet()) {
+      issueCount += stages.get(key).size();
+    }
+    return issueCount;
   }
 
   public String toString() {

@@ -66,7 +66,10 @@ angular
         if($scope.sourceExists && stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
           $rootScope.common.errors = ['Origin already exists.'];
           return;
+        } else {
+          $rootScope.common.errors = [];
         }
+
 
         var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig, undefined, firstOpenLane),
           edge;
