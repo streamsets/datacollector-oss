@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
@@ -27,11 +26,8 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.TimeZone;
 
 public class TestBaseHdfsTarget {
   private static MiniDFSCluster miniDFS;
@@ -127,82 +123,6 @@ public class TestBaseHdfsTarget {
   }
 
   @Test
-  public void testTimeZone() throws Exception {
-    BaseHdfsTarget target = new ForTestHdfsTarget();
-    configure(target);
-    try {
-      target.init();
-      Assert.assertNotNull(target.getTimeZone());
-      Assert.assertEquals("UTC", target.getTimeZone().getID());
-    } finally {
-      target.destroy();
-    }
-  }
-
-  private Date getFixedDate(TimeZone tz) {
-    Calendar calendar = Calendar.getInstance(tz);
-    calendar.set(Calendar.YEAR, 2015);
-    calendar.set(Calendar.MONTH, 0);
-    calendar.set(Calendar.DAY_OF_MONTH, 15);
-    calendar.set(Calendar.HOUR_OF_DAY, 21);
-    calendar.set(Calendar.MINUTE, 25);
-    calendar.set(Calendar.SECOND, 05);
-    return calendar.getTime();
-  }
-  @Test
-  public void testGetELVarsForTime() throws Exception {
-    BaseHdfsTarget target = new ForTestHdfsTarget();
-    configure(target);
-    try {
-      target.init();
-      Map<String, Object> map = target.getELVarsForTime(getFixedDate(target.getTimeZone()));
-      Assert.assertEquals("2015", map.get("YYYY"));
-      Assert.assertEquals("15", map.get("YY"));
-      Assert.assertEquals("01", map.get("MM"));
-      Assert.assertEquals("15", map.get("DD"));
-      Assert.assertEquals("21", map.get("hh"));
-      Assert.assertEquals("25", map.get("mm"));
-      Assert.assertEquals("05", map.get("ss"));
-    } finally {
-      target.destroy();
-    }
-  }
-
-  @Test
-  public void testDirPathElEval() throws Exception {
-    BaseHdfsTarget target = new ForTestHdfsTarget();
-    configure(target);
-    try {
-      target.init();
-      Assert.assertNotNull(target.getPathElEvaluator());
-      Map<String, Object> map = target.getELVarsForTime(getFixedDate(target.getTimeZone()));
-      ELEvaluator.Variables vars = new ELEvaluator.Variables(map, null);
-      Assert.assertEquals("2015/15/01/15/21/25/05",
-                          target.getPathElEvaluator().eval(vars, "${YYYY}/${YY}/${MM}/${DD}/${hh}/${mm}/${ss}"));
-      Record record = RecordCreator.create();
-      record.set(Field.create("field"));
-      ELRecordSupport.setRecordInContext(vars, record);
-      Assert.assertEquals("field", target.getPathElEvaluator().eval(vars, "${record:value('/')}"));
-    } finally {
-      target.destroy();
-    }
-  }
-
-  @Test(expected = StageException.class)
-  public void testInvalidPathTemplate() throws Exception {
-    BaseHdfsTarget target = new ForTestHdfsTarget();
-    configure(target);
-    target.dirPathTemplate = "${";
-    try {
-      target.init();
-      Assert.assertNotNull(target.getTimeZone());
-      Assert.assertEquals("UTC", target.getTimeZone().getID());
-    } finally {
-      target.destroy();
-    }
-  }
-
-  @Test
   public void testNoCompressionCodec() throws Exception {
     BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
@@ -272,6 +192,7 @@ public class TestBaseHdfsTarget {
     configure(target);
     try {
       target.init();
+      target.getBatchTime();
       Assert.assertEquals(3600, target.getLateRecordLimitSecs());
     } finally {
       target.destroy();
@@ -294,9 +215,10 @@ public class TestBaseHdfsTarget {
     configure(target);
     try {
       target.init();
+      target.getBatchTime();
       Record record = RecordCreator.create();
       ELEvaluator.Variables vars = new ELEvaluator.Variables(null, null);
-      target.processBatch(null); //forcing a setBatchTime()
+      target.write(null); //forcing a setBatchTime()
       Date now = target.getBatchTime();
       Assert.assertEquals(now, target.getRecordTime(record));
     } finally {

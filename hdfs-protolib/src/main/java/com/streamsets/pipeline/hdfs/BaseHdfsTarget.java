@@ -7,8 +7,10 @@ package com.streamsets.pipeline.hdfs;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ChooserMode;
+import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -16,7 +18,14 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
+import com.streamsets.pipeline.hdfs.writer.ActiveRecordWriters;
+import com.streamsets.pipeline.hdfs.writer.RecordWriterManager;
+import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
+import com.streamsets.pipeline.lib.recordserialization.JsonRecordToString;
+import com.streamsets.pipeline.lib.recordserialization.RecordToString;
+import com.streamsets.pipeline.lib.recordserialization.XmlRecordToString;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.io.compress.CompressionCodec;
@@ -29,12 +38,11 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.security.PrivilegedExceptionAction;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.UUID;
 
 @ConfigGroups(HdfsConfigGroups.class)
 public abstract class BaseHdfsTarget extends BaseTarget {
@@ -56,7 +64,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
 
   public boolean hdfsKerberos;
 
-  @ConfigDef(required = true,
+  @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
       description = "Kerberos principal used to connect to HDFS",
       label = "Kerberos principal",
@@ -64,7 +72,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       displayPosition = 2)
   public String kerberosPrincipal;
 
-  @ConfigDef(required = true,
+  @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
       description = "The location of the Kerberos keytab file with credentials for the Kerberos principal",
       label = "Kerberos keytab file",
@@ -80,10 +88,21 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   public Map<String, String> hdfsConfigs;
 
 
+  @ConfigDef(required = false,
+      type = ConfigDef.Type.STRING,
+      description = "If using more than one Data Collector to write data to the same HDFS directories, each Data " +
+                    "Collector must have a unique identifier. The identifier is used as file prefix for all the " +
+                    "created by this Data Collector.",
+      label = "Unique Identifier",
+      group = "FILE",
+      defaultValue = "",
+      displayPosition = 99)
+  public String uniquePrefix;
+
   @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       description = "Directory path template for the HDFS files, the template supports the following time tokens: " +
-                    "${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}, ${record:value(<fieldpath>)}. ",
+                    "${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}, ${record:value(<field-path>)}. ",
       label = "Directory Path Template",
       group = "FILE",
       displayPosition = 100)
@@ -111,7 +130,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
-      description = "Record key when using Hadoop Sequence Files. Valid values are a record:value('<fieldpath>') or " +
+      description = "Record key when using Hadoop Sequence Files. Valid values are a record:value('<field-path>') or " +
                     "uuid()",
       label = "Sequence File Key",
       defaultValue = "uuid()",
@@ -132,12 +151,24 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   public String compression;
 
   @ConfigDef(required = true,
+      type = ConfigDef.Type.MODEL,
+      description = "Specifies the compression type for Sequence Files if using a CompressionCodec",
+      label = "Compression Type",
+      defaultValue = "BLOCK",
+      group = "FILE",
+      displayPosition = 105,
+      dependsOn = "fileType",
+      triggeredByValue = "SEQUENCE_FILE")
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = HdfsSequenceFileCompressionTypeChooserValues.class)
+  public HdfsSequenceFileCompressionType seqFileCompressionType;
+
+  @ConfigDef(required = true,
       type = ConfigDef.Type.INTEGER,
       description = "Maximum number of records that trigger a file rollover. 0 does not trigger a rollover.",
       label = "Max records per File",
       defaultValue = "0",
       group = "FILE",
-      displayPosition = 105)
+      displayPosition = 106)
   public long maxRecordsPerFile;
 
   @ConfigDef(required = true,
@@ -146,7 +177,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       label = "Max file size (MBs)",
       defaultValue = "0",
       group = "FILE",
-      displayPosition = 106)
+      displayPosition = 107)
   public long maxFileSize;
 
   @ConfigDef(required = true,
@@ -156,7 +187,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       label = "Time Driver",
       defaultValue = "time:now()",
       group = "FILE",
-      displayPosition = 107)
+      displayPosition = 108)
   public String timeDriver;
 
   @ConfigDef(required = true,
@@ -168,17 +199,16 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       label = "Late Records Time Limit (Secs)",
       defaultValue = "1 * HOURS",
       group = "LATE_RECORDS",
-      displayPosition = 108)
+      displayPosition = 109)
   public String lateRecordsLimit;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
-      description = "Indicates if the time should be driven by the Data Collector clock or by a time specified in " +
-                    "a record field",
+      description = "Indicates what to do with late records",
       label = "Late Records",
       defaultValue = "SEND_TO_ERROR",
       group = "LATE_RECORDS",
-      displayPosition = 109)
+      displayPosition = 110)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = LateRecordsActionChooserValues.class)
   public HdfsLateRecordsAction lateRecordsAction;
 
@@ -192,7 +222,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       label = "Late Records Directory Path Template",
       dependsOn = "lateRecordsAction",
       triggeredByValue = "SEND_TO_LATE_RECORDS_FILE",
-      displayPosition = 110)
+      displayPosition = 111)
   public String lateRecordsDirPathTemplate;
 
   @ConfigDef(required = true,
@@ -205,60 +235,84 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       triggeredByValue = { "TEXT", "SEQUENCE_FILE"},
       displayPosition = 200)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
-  public HdfsDataFormat dataFormat;
+  public HdfsDataFormat dataFormat; //TODO
 
-  private static final String CONST_YYYY = "YYYY";
-  private static final String CONST_YY = "YY";
-  private static final String CONST_MM = "MM";
-  private static final String CONST_DD = "DD";
-  private static final String CONST_hh = "hh";
-  private static final String CONST_mm = "mm";
-  private static final String CONST_ss = "ss";
+
+
+  /********  For CSV Content  ***********/
+
+  @ConfigDef(required = false,
+      type = ConfigDef.Type.MODEL,
+      label = "CSV Format",
+      description = "The specific CSV format of the files",
+      defaultValue = "CSV",
+      dependsOn = "dataFormat", triggeredByValue = {"CSV", "TSV"},
+      group = "DATA",
+      displayPosition = 201)
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
+  public CsvFileMode csvFileFormat;
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.MODEL,
+      description = "Field to name mapping configuration",
+      label = "Field to Name Mapping",
+      dependsOn = "dataFormat",
+      triggeredByValue = {"CSV", "TSV"},
+      defaultValue = "LOG",
+      group = "DATA",
+      displayPosition = 202)
+  @ComplexField
+  public List<FieldPathToNameMappingConfig> fieldPathToNameMappingConfigList;
+
+  public static class FieldPathToNameMappingConfig {
+
+    @ConfigDef(required = true,
+        type = ConfigDef.Type.MODEL,
+        label = "Field Path",
+        description = "The fields which must be written to the target")
+    @FieldSelector
+    public List<String> fields;
+
+    @ConfigDef(required = true,
+        type = ConfigDef.Type.STRING,
+        label = "Delimited Column Name",
+        description = "The name which must be used for the fields in the target")
+    public String name;
+  }
+
+
 
   private static final String CONST_HOURS = "HOURS";
   private static final String CONST_MINUTES = "MINUTES";
 
   private Configuration hdfsConfiguration;
   private UserGroupInformation ugi;
-  private TimeZone timeZone;
-  private ELEvaluator pathElEval;
   private ELEvaluator timeDriverElEval;
-  private ELEvaluator keyElEval;
-  private Class<? extends CompressionCodec> compressionCodec;
-  private long lateRecordLimitSecs;
-  private Date batchTime;
+  private ActiveRecordWriters currentWriters;
+  private ActiveRecordWriters lateWriters;
+  private RecordToString recordToString;
 
-  Map<String, Object> getELVarsForTime(Date date) {
-    Calendar calendar = Calendar.getInstance(timeZone);
-    calendar.setTime(date);
-    Map<String, Object> map = new HashMap<>();
-    String year = String.format("%04d", calendar.get(Calendar.YEAR));
-    map.put(CONST_YYYY, year);
-    map.put(CONST_YY, year.substring(year.length() - 2));
-    map.put(CONST_MM, String.format("%02d", calendar.get(Calendar.MONTH) + 1));
-    map.put(CONST_DD, String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH)));
-    map.put(CONST_hh, String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY)));
-    map.put(CONST_mm, String.format("%02d", calendar.get(Calendar.MINUTE)));
-    map.put(CONST_ss, String.format("%02d", calendar.get(Calendar.SECOND)));
-    return map;
-  }
+  private Date batchTime;
 
   @Override
   protected void init() throws StageException {
     super.init();
-    setBatchTime(); // to validate ELs
     try {
       hdfsConfiguration = new HdfsConfiguration();
       for (Map.Entry<String, String> config : hdfsConfigs.entrySet()) {
         hdfsConfiguration.set(config.getKey(), config.getValue());
       }
-      //TODO: configure FS caching
+      hdfsConfiguration.setBoolean("fs.hdfs.impl.disable.cache", false);
       if (hdfsKerberos) {
+        hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
+                              UserGroupInformation.AuthenticationMethod.KERBEROS.name());
         ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(kerberosPrincipal, kerberosKeytab);
         if (ugi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
           throw new StageException(HdfsLibError.HDFS_0001);
         }
       } else {
+        hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
+                              UserGroupInformation.AuthenticationMethod.SIMPLE.name());
         ugi = UserGroupInformation.getLoginUser();
       }
       ugi.doAs(new PrivilegedExceptionAction<Void>() {
@@ -272,48 +326,9 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       throw new StageException(HdfsLibError.HDFS_0002, hdfsUri, ex.getMessage(), ex);
     }
 
-    timeZone = TimeZone.getTimeZone(timeZoneID);
-
-    pathElEval = new ELEvaluator();
-    ELRecordSupport.registerRecordFunctions(pathElEval);
-
-    validateDirPathTemplate(dirPathTemplate, HdfsLibError.HDFS_0003);
-
-    if (!lateRecordsDirPathTemplate.isEmpty()) {
-      validateDirPathTemplate(lateRecordsDirPathTemplate, HdfsLibError.HDFS_0004);
-    }
-    compressionCodec = CompressionMode.getCodec(compression);
-
-    try {
-      ELEvaluator elEval = new ELEvaluator();
-      elEval.registerConstant(CONST_MINUTES, 60);
-      elEval.registerConstant(CONST_HOURS, 60 * 60);
-      lateRecordsLimit = "${" + lateRecordsLimit + "}";
-      lateRecordLimitSecs = (long) elEval.eval(new ELEvaluator.Variables(null, null), lateRecordsLimit);
-    } catch (Exception ex) {
-      throw new StageException(HdfsLibError.HDFS_0008, lateRecordsLimit, ex.getMessage(), ex);
-    }
+    long lateRecordLimitSecs = getLateRecordLimitSecs();
     if (lateRecordLimitSecs <= 0) {
       throw new StageException(HdfsLibError.HDFS_0013, lateRecordsLimit);
-    }
-
-    timeDriverElEval = new ELEvaluator();
-    ELRecordSupport.registerRecordFunctions(timeDriverElEval);
-    timeDriverElEval.registerFunction("time", "now", TIME_NOW_FUNC);
-
-    timeDriver = "${" + timeDriver + "}";
-    validateTimeDriver(timeDriver);
-
-    keyEl = "${" + keyEl + "}";
-    keyElEval = new ELEvaluator();
-    ELRecordSupport.registerRecordFunctions(keyElEval);
-    keyElEval.registerFunction("", "uuid", UUID_FUNC);
-
-    try {
-      ELEvaluator.Variables vars = new ELEvaluator.Variables(null, null);
-      keyElEval.eval(vars, keyEl);
-    } catch (ELException ex) {
-      throw new StageException(HdfsLibError.HDFS_0009, keyEl, ex.getMessage(), ex);
     }
 
     if (maxFileSize < 0) {
@@ -323,10 +338,38 @@ public abstract class BaseHdfsTarget extends BaseTarget {
     if (maxRecordsPerFile < 0) {
       throw new StageException(HdfsLibError.HDFS_0012, maxRecordsPerFile);
     }
-  }
 
-  protected Configuration getHdfsConfiguration() {
-    return hdfsConfiguration;
+    try {
+      CompressionCodec compressionCodec = (CompressionMode.getCodec(compression) != null)
+                                          ? CompressionMode.getCodec(compression).newInstance() : null;
+      RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
+          dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordLimitSecs, maxRecordsPerFile, maxFileSize,
+          fileType, compressionCodec, seqFileCompressionType.getType(), keyEl, null);
+
+      currentWriters = new ActiveRecordWriters(mgr);
+    } catch (Exception ex) {
+
+    }
+    try {
+      if (!lateRecordsDirPathTemplate.isEmpty()) {
+        CompressionCodec compressionCodec = (getCompressionCodec() != null)
+                                            ? getCompressionCodec().newInstance() : null;
+        RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
+            lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordLimitSecs, maxRecordsPerFile,
+            maxFileSize, fileType, compressionCodec, seqFileCompressionType.getType(), keyEl, null);
+
+        lateWriters = new ActiveRecordWriters(mgr);
+      }
+    } catch (Exception ex) {
+
+    }
+
+    timeDriverElEval = new ELEvaluator();
+    ELRecordSupport.registerRecordFunctions(timeDriverElEval);
+    timeDriverElEval.registerFunction("time", "now", TIME_NOW_FUNC);
+    timeDriver = "${" + timeDriver + "}";
+
+    recordToString = createRecordToStringInstance();
   }
 
   private FileSystem getFileSystemForInitDestroy() throws IOException {
@@ -342,17 +385,34 @@ public abstract class BaseHdfsTarget extends BaseTarget {
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
-
   }
+
+  Configuration getHdfsConfiguration() {
+    return hdfsConfiguration;
+  }
+
+  Class<? extends CompressionCodec> getCompressionCodec() throws StageException {
+    return CompressionMode.getCodec(compression);
+  }
+
+  long getLateRecordLimitSecs() throws StageException {
+    try {
+      ELEvaluator elEval = new ELEvaluator();
+      elEval.registerConstant(CONST_MINUTES, 60);
+      elEval.registerConstant(CONST_HOURS, 60 * 60);
+      return (long) elEval.eval(new ELEvaluator.Variables(null, null), "${" + lateRecordsLimit + "}");
+    } catch (Exception ex) {
+      throw new StageException(HdfsLibError.HDFS_0008, lateRecordsLimit, ex.getMessage(), ex);
+    }
+  }
+
   static final String TIME_NOW_CONTEXT_VAR = "time_now";
 
   private static final Method TIME_NOW_FUNC;
-  private static final Method UUID_FUNC;
 
   static {
     try {
       TIME_NOW_FUNC = BaseHdfsTarget.class.getMethod("getTimeNowFunc");
-      UUID_FUNC = BaseHdfsTarget.class.getMethod("getUUIDFunc");
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
@@ -364,64 +424,51 @@ public abstract class BaseHdfsTarget extends BaseTarget {
     return now;
   }
 
-  public static String getUUIDFunc() {
-    return UUID.randomUUID().toString();
-  }
-
-  public static void setTimeNowInContext(ELEvaluator.Variables variables, Date now) {
+  static void setTimeNowInContext(ELEvaluator.Variables variables, Date now) {
     Utils.checkNotNull(variables, "variables");
     variables.addContextVariable(TIME_NOW_CONTEXT_VAR, now);
   }
 
-  private void validateDirPathTemplate(String template, HdfsLibError error) throws StageException {
-    try {
-      ELEvaluator.Variables vars = new ELEvaluator.Variables(getELVarsForTime(new Date()), null);
-      pathElEval.eval(vars, template);
-    } catch (ELException ex) {
-      throw new StageException(error, template, ex.getMessage(), ex);
+  private Map<String, String> getFieldPathToNameMapping() {
+    Map<String, String> fieldPathToNameMapping = new LinkedHashMap<>();
+    if(fieldPathToNameMappingConfigList != null && !fieldPathToNameMappingConfigList.isEmpty()) {
+      for (FieldPathToNameMappingConfig fieldPathToNameMappingConfig : fieldPathToNameMappingConfigList) {
+        for(String field : fieldPathToNameMappingConfig.fields) {
+          fieldPathToNameMapping.put(field, fieldPathToNameMappingConfig.name);
+        }
+      }
     }
+    return fieldPathToNameMapping;
   }
 
-  private void validateTimeDriver(String template) throws StageException {
-    try {
-      getRecordTime(null);
-    } catch (ELException ex) {
-      throw new StageException(HdfsLibError.HDFS_0009, template, ex.getMessage(), ex);
+  private RecordToString createRecordToStringInstance() {
+    RecordToString recordToString;
+    switch(dataFormat) {
+      case JSON:
+        recordToString = new JsonRecordToString();
+        break;
+      case CSV:
+        recordToString = new CsvRecordToString(csvFileFormat.getFormat());
+        break;
+      case XML:
+        recordToString = new XmlRecordToString();
+        break;
+      default:
+        throw new IllegalStateException(Utils.format("Invalid data format '{}'", dataFormat));
     }
-  }
-
-  protected TimeZone getTimeZone() {
-    return timeZone;
-  }
-
-  protected ELEvaluator getPathElEvaluator() {
-    return pathElEval;
-  }
-
-  protected long getLateRecordLimitSecs() {
-    return lateRecordLimitSecs;
-  }
-
-  protected Date getRecordTime(Record record) throws ELException {
-    ELEvaluator.Variables variables = new ELEvaluator.Variables(null, null);
-    setTimeNowInContext(variables, getBatchTime());
-    ELRecordSupport.setRecordInContext(variables, record);
-    return (Date) timeDriverElEval.eval(variables, timeDriver);
-  }
-
-  protected String getRecordKey(Record record) throws ELException {
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
-    ELRecordSupport.setRecordInContext(variables, record);
-    return (String) keyElEval.eval(variables, keyEl);
-  }
-
-  protected Class<? extends CompressionCodec> getCompressionCodec() {
-    return compressionCodec;
+    recordToString.setFieldPathToNameMapping(getFieldPathToNameMapping());
+    return recordToString;
   }
 
   @Override
   public void destroy() {
     try {
+      if (currentWriters != null) {
+        currentWriters.closeAll();
+      }
+      if (lateWriters != null) {
+        lateWriters.closeAll();
+      }
       getFileSystemForInitDestroy().close();
     } catch (IOException ex) {
       LOG.warn("Error while closing HDFS FileSystem URI='{}': {}", hdfsUri, ex.getMessage(), ex);
@@ -441,6 +488,21 @@ public abstract class BaseHdfsTarget extends BaseTarget {
 
   protected Date getBatchTime() {
     return batchTime;
+  }
+
+  protected ActiveRecordWriters getCurrentWriters() {
+    return currentWriters;
+  }
+
+  protected ActiveRecordWriters getLateWriters() {
+    return lateWriters;
+  }
+
+  protected Date getRecordTime(Record record) throws ELException {
+    ELEvaluator.Variables variables = new ELEvaluator.Variables(null, null);
+    setTimeNowInContext(variables, getBatchTime());
+    ELRecordSupport.setRecordInContext(variables, record);
+    return (Date) timeDriverElEval.eval(variables, timeDriver);
   }
 
   public abstract void processBatch(Batch batch) throws StageException;
