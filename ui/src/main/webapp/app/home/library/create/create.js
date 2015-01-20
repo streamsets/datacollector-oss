@@ -8,7 +8,6 @@ angular
                                                          sources, targets, processors) {
     angular.extend($scope, {
       common: {
-        namePattern: '^[a-zA-Z0-9 _]+$',
         errors: []
       },
       sources: sources,

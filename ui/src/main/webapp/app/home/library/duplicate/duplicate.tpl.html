@@ -13,7 +13,7 @@
     <div class="form-group">
       <label class="control-label" translate="global.form.name">Name</label>
       <input type="text" class="form-control" required
-             pattern="{{common.namePattern}}"
+             pattern="{{$root.common.namePattern}}"
              title="{{'home.library.nameValidation' | translate}}"
              placeholder="{{'home.library.namePlaceholder' | translate}}"
              ng-model="newConfig.name"

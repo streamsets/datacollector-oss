@@ -124,21 +124,23 @@ angular
               startResponse = res.data;
               return api.pipelineAgent.getPipelineMetrics();
             },
-            function (data) {
-              $rootScope.common.errors = [data];
+            function (res) {
+              $rootScope.common.errors = [res.data];
             }
           ).
             then(
             function (res) {
-              $rootScope.common.pipelineMetrics = res.data;
-              $rootScope.common.pipelineStatus = startResponse;
+              if(res) {
+                $rootScope.common.pipelineMetrics = res.data;
+                $rootScope.common.pipelineStatus = startResponse;
 
-              $timeout(function() {
-                $scope.refreshGraph();
-              });
+                $timeout(function() {
+                  $scope.refreshGraph();
+                });
+              }
             },
-            function (data) {
-              $rootScope.common.errors = [data];
+            function (res) {
+              $rootScope.common.errors = [res.data];
             }
           );
         } else {

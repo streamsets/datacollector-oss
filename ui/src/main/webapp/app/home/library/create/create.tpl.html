@@ -21,9 +21,9 @@
              autofocus
              name="name"
              class="form-control"
-             ng-pattern="common.namePattern"
+             ng-pattern="{$root.common.namePattern"
              ng-required
-             pattern="{{common.namePattern}}"
+             pattern="{{$root.common.namePattern}}"
              title="{{'home.library.nameValidation' | translate}}"
              placeholder="{{'home.library.namePlaceholder' | translate}}"
              ng-model="newConfig.name"

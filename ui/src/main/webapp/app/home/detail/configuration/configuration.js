@@ -422,8 +422,6 @@ angular
       }, {}),
 
       save: function() {
-        console.log($scope.selectedPath);
-
         var selectedFieldPaths = [];
         angular.forEach($scope.selectedPath, function(value, key) {
           if(value === true) {
