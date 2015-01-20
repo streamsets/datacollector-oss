@@ -161,27 +161,6 @@
           <span class="fa fa-gear fa-12x"></span>
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
-          <li role="presentation"
-              ng-if="!isPipelineRunning"
-              ng-class="{'disabled': !pipelineConfig.valid}">
-            <a href="#" ng-click="!pipelineConfig.valid || resetOffset()">
-              <i class="fa fa-power-off"></i> {{'home.resetOffset.title' | translate}}
-            </a>
-          </li>
-
-          <li role="presentation" ng-if="isPipelineRunning && !monitoringPaused">
-            <a href="#" ng-click="pauseMonitoring()">
-              <i class="fa fa-pause"></i> {{'home.header.pauseMonitoring' | translate}}
-            </a>
-          </li>
-
-          <li role="presentation" ng-if="isPipelineRunning && monitoringPaused">
-            <a href="#" ng-click="continueMonitoring()">
-              <i class="fa fa-play"></i> {{'home.header.continueMonitoring' | translate}}
-            </a>
-          </li>
-
-          <li ng-repeat-end role="presentation" class="divider"></li>
 
           <li role="presentation" class="dropdown-header"
               translate="home.header.displayDensity">Display density:</li>
@@ -207,6 +186,28 @@
             </a>
           </li>
 
+          <li ng-repeat-end role="presentation" class="divider"></li>
+
+          <li role="presentation"
+              ng-if="!isPipelineRunning"
+              ng-class="{'disabled': !pipelineConfig.valid}">
+            <a href="#" ng-click="!pipelineConfig.valid || resetOffset()">
+              <i class="fa fa-power-off"></i> {{'home.resetOffset.title' | translate}}
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="isPipelineRunning && !monitoringPaused">
+            <a href="#" ng-click="pauseMonitoring()">
+              <i class="fa fa-pause"></i> {{'home.header.pauseMonitoring' | translate}}
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="isPipelineRunning && monitoringPaused">
+            <a href="#" ng-click="continueMonitoring()">
+              <i class="fa fa-play"></i> {{'home.header.continueMonitoring' | translate}}
+            </a>
+          </li>
+          
         </ul>
       </div>
     </div>
