@@ -1,4 +1,6 @@
-<form class="form-horizontal form-group-sm" role="form" name="stageGeneralInfo">
+<form class="form-horizontal"
+      ng-class="{'form-group-sm': $storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT}"
+      role="form" name="stageGeneralInfo">
 
   <!-- General Configuration for Pipeline-->
   <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">

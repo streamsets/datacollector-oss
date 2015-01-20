@@ -3,7 +3,10 @@
 
 <ng-include src="'app/home/header/header.tpl.html'"></ng-include>
 
-<div class="home-bg-splitter" ng-cloak>
+<div class="home-bg-splitter" ng-cloak
+     ng-class="{'comfortable-density': $storage.displayDensity === pipelineConstant.DENSITY_COMFORTABLE,
+                   'cozy-density': $storage.displayDensity === pipelineConstant.DENSITY_COZY,
+                   'compact-density': $storage.displayDensity === pipelineConstant.DENSITY_COMPACT}">
   <bg-splitter orientation="horizontal" class="library-splitter" ng-class="{'hide-library-panel': hideLibraryPanel}">
 
     <bg-pane min-size="0">

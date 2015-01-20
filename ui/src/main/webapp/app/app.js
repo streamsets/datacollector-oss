@@ -25,6 +25,7 @@ angular.module('pipelineAgentApp')
     $httpProvider.interceptors.push(function($q) {
       return {
         responseError: function(rejection) {
+          console.log(rejection);
           if(rejection.status === 0) {
             window.location.reload();
             return;

@@ -192,6 +192,57 @@
       }
     }
   }
+
+  &.comfortable-density {
+    .form-group {
+      margin-bottom: @smallPadding * 3;
+    }
+  }
+
+  &.cozy-density {
+    .form-group {
+      margin-bottom: @smallPadding * 2;
+
+      .form-control {
+        padding: @smallPadding *.5 @defaultPadding;
+      }
+    }
+
+    .nav {
+      li {
+        a {
+          padding: @defaultPadding * .7 @smallPadding * 3;
+        }
+      }
+    }
+
+    .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 5px 8px;
+    }
+  }
+
+  &.compact-density {
+    .form-group {
+      margin-bottom: @smallPadding * .7;
+
+      .form-control {
+        height: 25px;
+        padding: 0 @smallPadding;
+      }
+    }
+
+    .nav {
+      li {
+        a {
+          padding: @defaultPadding * .4 @smallPadding * 3;
+        }
+      }
+    }
+
+    .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 3px 8px;
+    }
+  }
 }
 
 .pipeline-empty-container {

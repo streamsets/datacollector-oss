@@ -283,6 +283,10 @@ angular
     });
 
 
+    if(!$scope.$storage.displayDensity) {
+      $scope.$storage.displayDensity = pipelineConstant.DENSITY_COMFORTABLE;
+    }
+
     /**
      * Fetch definitions for Pipeline and Stages, fetch all pipeline configuration info, status and metric.
      */
@@ -327,7 +331,10 @@ angular
 
         $rootScope.common.pipelineStatus = pipelineStatus;
 
-        if(pipelineStatus && pipelineStatus.name) {
+        //Determine Active Config based on localStorage or based on last status updated config.
+        if($scope.$storage.activeConfigInfo && $scope.$storage.activeConfigInfo.name) {
+          $scope.activeConfigInfo = $scope.$storage.activeConfigInfo;
+        } else if(pipelineStatus && pipelineStatus.name) {
           $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
             return pipelineDefn.name === pipelineStatus.name;
           });
@@ -428,7 +435,7 @@ angular
       $scope.$broadcast('show-errors-check-validity');
 
       $scope.pipelineConfig = pipelineConfig || {};
-      $scope.activeConfigInfo = pipelineConfig.info;
+      $scope.activeConfigInfo = $scope.$storage.activeConfigInfo = pipelineConfig.info;
 
       //Update Pipeline Info list
       var index = _.indexOf($scope.pipelines, _.find($scope.pipelines, function(pipeline){

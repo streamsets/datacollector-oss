@@ -36,7 +36,6 @@
         <h3 class="pull-left">{{pipelineConfig.info.name}}</h3>
       </div>
 
-
     </div>
 
     <div class="btn-group pull-right issues-dropdown" ng-show="pipelineConfig.issues.issueCount > 0">
@@ -165,7 +164,7 @@
           <li role="presentation"
               ng-if="!isPipelineRunning"
               ng-class="{'disabled': !pipelineConfig.valid}">
-            <a href="#" ng-click="resetOffset()">
+            <a href="#" ng-click="!pipelineConfig.valid || resetOffset()">
               <i class="fa fa-power-off"></i> {{'home.resetOffset.title' | translate}}
             </a>
           </li>
@@ -181,59 +180,36 @@
               <i class="fa fa-play"></i> {{'home.header.continueMonitoring' | translate}}
             </a>
           </li>
+
+          <li ng-repeat-end role="presentation" class="divider"></li>
+
+          <li role="presentation" class="dropdown-header"
+              translate="home.header.displayDensity">Display density:</li>
+
+          <li role="presentation">
+            <a href="#" ng-click="$storage.displayDensity = pipelineConstant.DENSITY_COMFORTABLE">
+              <i class="fa fa-check density-check-icon" ng-if="$storage.displayDensity === pipelineConstant.DENSITY_COMFORTABLE"/>
+              <span>{{'home.header.comfortable' | translate}}</span>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a href="#" ng-click="$storage.displayDensity = pipelineConstant.DENSITY_COZY">
+              <i class="fa fa-check density-check-icon" ng-if="$storage.displayDensity === pipelineConstant.DENSITY_COZY"/>
+              <span>{{'home.header.cozy' | translate}}</span>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a href="#" ng-click="$storage.displayDensity = pipelineConstant.DENSITY_COMPACT">
+              <i class="fa fa-check density-check-icon" ng-if="$storage.displayDensity === pipelineConstant.DENSITY_COMPACT"/>
+              <span>{{'home.header.compact' | translate}}</span>
+            </a>
+          </li>
+
         </ul>
       </div>
     </div>
-
-    <!--div class="btn-group pull-right stage-dropdown" ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
-      <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
-              tooltip-placement="bottom" tooltip="{{'home.header.addStage' | translate}}"
-              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-              tooltip-append-to-body="true"
-              data-toggle="dropdown">
-        <span class="glyphicon glyphicon-plus fa-12x"></span>
-        <span ng-hide="iconOnly" translate="home.header.addStage">Add Stage</span>
-      </button>
-      <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
-
-        <li role="presentation" class="dropdown-header"
-            translate="home.header.sources">Sources</li>
-        <li role="presentation"
-            ng-repeat="stageLibrary in sources" ng-class="{disabled: sourceExists}">
-          <a role="menuitem" tabindex="-1" href="#"
-             ng-click="sourceExists || addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
-        </li>
-
-        <li role="presentation" class="divider"></li>
-
-        <li role="presentation" class="dropdown-header"
-            translate="home.header.processors">Processors</li>
-        <li role="presentation" ng-repeat="stageLibrary in processors">
-          <a role="menuitem" tabindex="-1" href="#"
-             ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
-        </li>
-
-        <li role="presentation" class="divider"></li>
-
-        <li role="presentation" class="dropdown-header"
-            translate="home.header.selectorProcessors">Selector Processors</li>
-        <li role="presentation" ng-repeat="stageLibrary in selectorProcessors">
-          <a role="menuitem" tabindex="-1" href="#"
-             ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
-        </li>
-
-        <li role="presentation" class="divider"></li>
-
-        <li role="presentation" class="dropdown-header"
-            translate="home.header.targets">Targets</li>
-        <li role="presentation" ng-repeat="stageLibrary in targets">
-          <a role="menuitem" tabindex="-1" href="#"
-             ng-click="addStageInstance(stageLibrary)">{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</a>
-        </li>
-
-      </ul>
-    </div -->
-
 
     <div class="pull-right" ng-cloak ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
       <div class="pipelineAgent-status pull-right" ng-hide="common.saveOperationInProgress">
