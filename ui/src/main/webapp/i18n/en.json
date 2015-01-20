@@ -179,6 +179,12 @@
       "monitoring": "Monitoring",
       "rawPreview": "Raw Preview",
       "rules": "Rules",
+      "rulesTab": {
+        "action": "Action",
+        "noRules": "No Rules to view.",
+        "predicate": "Predicate",
+        "threshold": "Threshold"
+      },
       "summary": "Summary",
       "summaryTab": {
         "batchThroughput": "Batch Throughput (batches/sec)",

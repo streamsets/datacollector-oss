@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="panel panel-default">
-        <div class="panel-heading">History</div>
+        <div class="panel-heading" translate="home.detailPane.history">History</div>
         <div class="panel-body history-messages">
 
           <table class="table">
@@ -14,7 +14,7 @@
                 <th class="col-md-6" translate="global.form.message">Message</th>
               </tr>
             </thead>
-            <tbody ng-hide="showBadRecordsLoading">
+            <tbody ng-hide="showLoading">
               <tr ng-repeat="history in runHistory">
                 <td>{{history.lastStatusChange | date:'medium'}}</td>
                 <td ng-bind="history.state"></td>
@@ -28,7 +28,7 @@
             </tbody>
           </table>
 
-          <div show-loading></div>
+          <div show-loading="showLoading"></div>
         </div>
       </div>
     </div>

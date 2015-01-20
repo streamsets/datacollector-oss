@@ -1,5 +1,30 @@
-<div ng-controller="RulesController">
+<div ng-controller="RulesController" class="rules-tab">
 
-  <h4> Rules Tab </h4>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading" translate="home.detailPane.rules">Rules</div>
+        <div class="panel-body rules-list">
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="col-md-3" translate="home.detailPane.rulesTab.predicate">Predicate</th>
+                <th class="col-md-3" translate="home.detailPane.rulesTab.threshold">Threshold</th>
+                <th class="col-md-6" translate="home.detailPane.rulesTab.action">Action</th>
+              </tr>
+            </thead>
+              <tbody ng-hide="showLoading">
+                <tr ng-if="rules.length === 0">
+                  <td colspan="3" class="no-rules text-center" translate="home.detailPane.rulesTab.noRules">No Rules.</td>
+                </tr>
+            </tbody>
+          </table>
+
+          <div show-loading="showLoading"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
