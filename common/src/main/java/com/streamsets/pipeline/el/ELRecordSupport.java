@@ -62,7 +62,6 @@ public class ELRecordSupport {
 
   public static void setRecordInContext(ELEvaluator.Variables variables, Record record) {
     Utils.checkNotNull(variables, "variables");
-    Utils.checkNotNull(record, "record");
     variables.addContextVariable(RECORD_CONTEXT_VAR, record);
   }
 

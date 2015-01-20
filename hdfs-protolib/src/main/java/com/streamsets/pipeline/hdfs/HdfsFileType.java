@@ -8,7 +8,7 @@ package com.streamsets.pipeline.hdfs;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
 public enum HdfsFileType implements BaseEnumChooserValues.EnumWithLabel {
-  TEXT("Text files"), SEQUENCE_FILE("Sequence files"), AVRO_FILE("Avro files");
+  TEXT("Text files"), SEQUENCE_FILE("Sequence files");
 
   private String label;
   HdfsFileType(String label) {

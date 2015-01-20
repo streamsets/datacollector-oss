@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.hdfs;
 
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -12,7 +13,6 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileOutputStream;
@@ -82,14 +82,19 @@ public class TestBaseHdfsTarget {
     target.lateRecordsLimit = "1 * HOURS";
   }
 
+  static class ForTestHdfsTarget extends BaseHdfsTarget {
+    @Override
+    public void processBatch(Batch batch) throws StageException {
+    }
+  }
+
   @Test
-  public void testGetFileSystem() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+  public void getGetHdfsConfiguration() throws Exception {
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     try {
       target.init();
-      Assert.assertNotNull(target.getFileSystem());
-      Assert.assertEquals(miniDFS.getURI(), target.getFileSystem().getUri());
+      Assert.assertNotNull(target.getHdfsConfiguration());
     } finally {
       target.destroy();
     }
@@ -97,64 +102,25 @@ public class TestBaseHdfsTarget {
 
   @Test
   public void testHdfsConfigs() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     try {
       target.init();
-      Assert.assertEquals("X", target.getFileSystem().getConf().get("x"));
-      Assert.assertEquals(miniDFS.getURI(), target.getFileSystem().getUri());
+      Assert.assertEquals("X", target.getHdfsConfiguration().get("x"));
     } finally {
       target.destroy();
     }
   }
 
   @Test(expected = StageException.class)
-  public void testKerberosWithHdfsConfigSimple() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+  public void testKerberosConfig() throws Exception {
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     target.hdfsKerberos = true;
     target.kerberosKeytab = "/tmp/keytab";
     target.kerberosPrincipal = "sdc/localhost";
     try {
       target.init();
-      Assert.assertEquals("X", target.getFileSystem().getConf().get("x"));
-      Assert.assertEquals(miniDFS.getURI(), target.getFileSystem().getUri());
-    } finally {
-      target.destroy();
-    }
-  }
-
-  @Test(expected = StageException.class)
-  public void testConfigSimpleWithHdfsConfigKerberos() throws Exception {
-    Configuration conf = new HdfsConfiguration();
-    conf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION, "kerberos");
-    UserGroupInformation.setConfiguration(conf);
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
-    configure(target);
-    target.hdfsKerberos = false;
-    try {
-      target.init();
-      Assert.assertEquals("X", target.getFileSystem().getConf().get("x"));
-      Assert.assertEquals(miniDFS.getURI(), target.getFileSystem().getUri());
-    } finally {
-      target.destroy();
-    }
-  }
-
-  @Test(expected = StageException.class)
-  public void testKerberosWithHdfsConfigKerberos() throws Exception {
-    Configuration conf = new HdfsConfiguration();
-    conf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION, "kerberos");
-    UserGroupInformation.setConfiguration(conf);
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
-    configure(target);
-    target.hdfsKerberos = true;
-    target.kerberosKeytab = "/tmp/keytab";
-    target.kerberosPrincipal = "sdc/localhost";
-    try {
-      target.init();
-      Assert.assertEquals("X", target.getFileSystem().getConf().get("x"));
-      Assert.assertEquals(miniDFS.getURI(), target.getFileSystem().getUri());
     } finally {
       target.destroy();
     }
@@ -162,7 +128,7 @@ public class TestBaseHdfsTarget {
 
   @Test
   public void testTimeZone() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     try {
       target.init();
@@ -185,7 +151,7 @@ public class TestBaseHdfsTarget {
   }
   @Test
   public void testGetELVarsForTime() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     try {
       target.init();
@@ -204,7 +170,7 @@ public class TestBaseHdfsTarget {
 
   @Test
   public void testDirPathElEval() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     try {
       target.init();
@@ -224,7 +190,7 @@ public class TestBaseHdfsTarget {
 
   @Test(expected = StageException.class)
   public void testInvalidPathTemplate() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     target.dirPathTemplate = "${";
     try {
@@ -238,7 +204,7 @@ public class TestBaseHdfsTarget {
 
   @Test
   public void testNoCompressionCodec() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     try {
       target.init();
@@ -250,7 +216,7 @@ public class TestBaseHdfsTarget {
 
   @Test
   public void testDefinedCompressionCodec() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     target.compression = CompressionMode.GZIP.name();
     try {
@@ -263,7 +229,7 @@ public class TestBaseHdfsTarget {
 
   @Test
   public void testCustomCompressionCodec() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     target.compression = DeflateCodec.class.getName();
     try {
@@ -276,7 +242,7 @@ public class TestBaseHdfsTarget {
 
   @Test(expected = StageException.class)
   public void testInvalidCompressionCodec() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     target.compression = String.class.getName();
     try {
@@ -289,7 +255,7 @@ public class TestBaseHdfsTarget {
 
   @Test(expected = StageException.class)
   public void testUnknownCompressionCodec() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     target.compression = "foo";
     try {
@@ -302,7 +268,7 @@ public class TestBaseHdfsTarget {
 
   @Test
   public void testLateRecordsLimitSecs() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     try {
       target.init();
@@ -311,7 +277,7 @@ public class TestBaseHdfsTarget {
       target.destroy();
     }
 
-    target = new BaseHdfsTarget() {};
+    target = new ForTestHdfsTarget();
     configure(target);
     target.lateRecordsLimit = "1 * MINUTES";
     try {
@@ -324,15 +290,15 @@ public class TestBaseHdfsTarget {
 
   @Test
   public void testTimeDriverElEvalNow() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     try {
       target.init();
-      Assert.assertNotNull(target.getTimeDriverElEval());
+      Record record = RecordCreator.create();
       ELEvaluator.Variables vars = new ELEvaluator.Variables(null, null);
-      target.setTimeNowInContext(vars);
-      Date now = (Date) vars.getContextVariable(target.TIME_NOW_CONTEXT_VAR);
-      Assert.assertEquals(now, target.getTimeDriverElEval().eval(vars, target.timeDriver));
+      target.processBatch(null); //forcing a setBatchTime()
+      Date now = target.getBatchTime();
+      Assert.assertEquals(now, target.getRecordTime(record));
     } finally {
       target.destroy();
     }
@@ -340,20 +306,18 @@ public class TestBaseHdfsTarget {
 
   @Test
   public void testTimeDriverElEvalRecordValue() throws Exception {
-    BaseHdfsTarget target = new BaseHdfsTarget() {};
+    BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
     target.timeDriver = "record:value('/')";
     try {
       target.init();
-      Assert.assertNotNull(target.getTimeDriverElEval());
-      Record record = RecordCreator.create();
       Date date = new Date();
+      Record record = RecordCreator.create();
       record.set(Field.createDatetime(date));
       ELEvaluator.Variables vars = new ELEvaluator.Variables(null, null);
-      Thread.sleep(1);
-      target.setTimeNowInContext(vars);
-      ELRecordSupport.setRecordInContext(vars, record);
-      Assert.assertEquals(date, target.getTimeDriverElEval().eval(vars, target.timeDriver));
+      Thread.sleep(1); // so batch time is later than date for sure
+      target.processBatch(null); //forcing a setBatchTime()
+      Assert.assertEquals(date, target.getRecordTime(record));
     } finally {
       target.destroy();
     }

@@ -5,11 +5,10 @@
  */
 package com.streamsets.pipeline.hdfs;
 
-import com.streamsets.pipeline.api.ChooserMode;
-import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.StageException;
 
 @GenerateResourceBundle
 @StageDef(version = "1.0.0",
@@ -18,16 +17,8 @@ import com.streamsets.pipeline.api.ValueChooser;
     description = "Writes records to HDFS files")
 public class HdfsTarget extends BaseHdfsTarget {
 
-    @ConfigDef(required = true,
-        type = ConfigDef.Type.MODEL,
-        description = "Data Format",
-        label = "Data Format",
-        defaultValue = "JSON",
-        group = "DATA",
-        dependsOn = "fileType",
-        triggeredByValue = { "TEXT", "SEQUENCE_FILE"},
-        displayPosition = 200)
-    @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
-    public HdfsDataFormat dataFormat;
+    @Override
+    public void processBatch(Batch batch) throws StageException {
 
+    }
 }

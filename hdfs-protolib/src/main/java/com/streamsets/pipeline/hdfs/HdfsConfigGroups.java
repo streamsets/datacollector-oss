@@ -9,8 +9,8 @@ import com.streamsets.pipeline.api.ConfigGroups;
 
 public enum HdfsConfigGroups implements ConfigGroups.Groups {
   FILE("Files"),
-  LATE_RECORDS("Late Records"),
   DATA("Data"),
+  LATE_RECORDS("Late Records"),
   ;
 
   private final String label;
