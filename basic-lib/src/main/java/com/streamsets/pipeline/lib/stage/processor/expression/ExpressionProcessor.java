@@ -183,7 +183,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       label = "Expression",
-      description = "Expression which must be evaluated to generate a value which will be set to the field",
+      description = "Expression which must be evaluated to generate a value for the field",
       defaultValue = "")
     public String expression;
 

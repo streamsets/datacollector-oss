@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.lib.recordserialization;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 
 import java.util.Map;
 
@@ -16,6 +17,6 @@ public interface RecordToString {
   // should be thrown in that case
   public void setFieldPathToNameMapping(Map<String, String> fieldPathToNameMap);
 
-  public String toString(Record record);
+  public String toString(Record record) throws StageException;
 
 }

@@ -42,7 +42,6 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The field FaultySource.streetAddress2 has \"ConfigDef\" annotation but is not declared public. Configuration fields must be declared public.");
     expectedSet.add("The type of field FaultySource.company is declared as \"MODEL\". Exactly one of '[FieldValueChooser, FieldSelector, ValueChooser, LanePredicateMapping, ComplexField]' annotations is expected.");
     expectedSet.add("The type of the field FaultySource.zip is expected to be String.");
-    expectedSet.add("The type of the field FaultySource.state is expected to be List<String>.");
     expectedSet.add("The type of the field FaultySource.streetAddress is expected to be Map<String, String> or Map<String, Enum>.");
     expectedSet.add("ChooserValues implementation 'com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultySource$MyChooserValues' is an inner class but is not declared as static. Inner class ChooserValues implementations must be declared static.");
     expectedSet.add("The type of field FaultySource.ste is declared as \"MODEL\". Exactly one of '[FieldValueChooser, FieldSelector, ValueChooser, LanePredicateMapping, ComplexField]' annotations is expected.");
@@ -60,6 +59,7 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The \"ConfigDef\" annotation for field FaultySource.callMe indicates that it depends on field 'myExtension' which does not exist or is not a configuration option.");
     expectedSet.add("'MyGroups' implements interface 'ConfigGroups.Groups' but is not an enum. An implementation of 'ConfigGroups.Groups' must be an enum.");
     expectedSet.add("Invalid group name X specified in the \"ConfigDef\" annotation for field FaultySource.callMe.");
+    expectedSet.add("Complex Field type 'com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultySource$PhoneConfig' is an inner class but is not declared as static. Inner class Complex Field types must be declared static.");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());

@@ -94,7 +94,7 @@ public class TestKafkaTargetUnavailability {
       targetRunner.runWrite(logRecords);
       Assert.fail("Expected StageException, got none.");
     } catch (StageException e) {
-      Assert.assertEquals(KafkaStageLibError.LIB_0350, e.getErrorCode());
+      Assert.assertEquals(KafkaStageLibError.KFK_0350, e.getErrorCode());
     }
 
     targetRunner.runDestroy();
@@ -125,7 +125,7 @@ public class TestKafkaTargetUnavailability {
     try {
       targetRunner.runWrite(logRecords);
     } catch (StageException e) {
-      Assert.assertEquals(KafkaStageLibError.LIB_0350, e.getErrorCode());
+      Assert.assertEquals(KafkaStageLibError.KFK_0350, e.getErrorCode());
     }
     targetRunner.runDestroy();
   }

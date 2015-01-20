@@ -144,8 +144,8 @@ public class HighLevelKafkaConsumer {
           Thread.sleep(300000);
       }
     } catch (InterruptedException e1) {
-      LOG.error(KafkaStageLibError.LIB_0311.getMessage(), e1.getMessage());
-      throw new StageException(KafkaStageLibError.LIB_0311, e1.getMessage(), e1);
+      LOG.error(KafkaStageLibError.KFK_0311.getMessage(), e1.getMessage());
+      throw new StageException(KafkaStageLibError.KFK_0311, e1.getMessage(), e1);
     }
   }
 
@@ -155,8 +155,8 @@ public class HighLevelKafkaConsumer {
     try {
       consumer = Consumer.createJavaConsumerConnector(consumerConfig);
     } catch (Exception e) {
-      LOG.error(KafkaStageLibError.LIB_0311.getMessage(), e.getMessage());
-      throw new StageException(KafkaStageLibError.LIB_0311, e.getMessage(), e);
+      LOG.error(KafkaStageLibError.KFK_0311.getMessage(), e.getMessage());
+      throw new StageException(KafkaStageLibError.KFK_0311, e.getMessage(), e);
     }
 
     Map<String, Integer> topicCountMap = new HashMap<>();
@@ -175,8 +175,8 @@ public class HighLevelKafkaConsumer {
     try {
       consumerIterator = stream.iterator();
     } catch (Exception e) {
-      LOG.error(KafkaStageLibError.LIB_0312.getMessage(), e.getMessage());
-      throw new StageException(KafkaStageLibError.LIB_0312, e.getMessage(), e);
+      LOG.error(KafkaStageLibError.KFK_0312.getMessage(), e.getMessage());
+      throw new StageException(KafkaStageLibError.KFK_0312, e.getMessage(), e);
     }
   }
 

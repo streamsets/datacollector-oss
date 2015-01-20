@@ -19,7 +19,7 @@ import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 @GenerateResourceBundle
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "application/json")
 @StageDef(version="0.0.1",
-  label="High Level Kafka Consumer",
+  label="Kafka Consumer",
   icon="kafka.png")
 @ConfigGroups(value = HighLevelKafkaSource.KafkaSourceConfigGroups.class)
 public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {

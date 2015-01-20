@@ -139,8 +139,8 @@ public abstract class AbstractKafkaSource extends BaseSource {
       offsetToRead = Long.parseLong(lastSourceOffset);
       long latestOffsetInKafka = kafkaConsumer.getOffsetToRead(false);
       if(offsetToRead > latestOffsetInKafka) {
-        LOG.error(KafkaStageLibError.LIB_0200.getMessage(), lastSourceOffset, latestOffsetInKafka, topic, partition);
-        throw new StageException(KafkaStageLibError.LIB_0300, lastSourceOffset, latestOffsetInKafka, topic, partition);
+        LOG.error(KafkaStageLibError.KFK_0300.getMessage(), lastSourceOffset, latestOffsetInKafka, topic, partition);
+        throw new StageException(KafkaStageLibError.KFK_0300, lastSourceOffset, latestOffsetInKafka, topic, partition);
       }
     }
     //This is where we want to start reading from kafka topic partition.

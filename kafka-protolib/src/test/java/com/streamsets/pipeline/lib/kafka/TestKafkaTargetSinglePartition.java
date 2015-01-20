@@ -5,9 +5,11 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.util.CsvUtil;
+import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
+import com.streamsets.pipeline.lib.recordserialization.RecordToString;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.admin.AdminUtils;
@@ -30,6 +32,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -187,6 +190,32 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteCsvRecords() throws InterruptedException, StageException, IOException {
 
+    //Test CSV is - "2010,NLDS1,PHI,NL,CIN,NL,3,0,0"
+    KafkaTarget.FieldPathToNameMappingConfig yearMapping =
+      new KafkaTarget.FieldPathToNameMappingConfig();
+    yearMapping.fields = ImmutableList.of("/values[0]");
+    yearMapping.name = "Year";
+
+    KafkaTarget.FieldPathToNameMappingConfig cityMapping =
+      new KafkaTarget.FieldPathToNameMappingConfig();
+    cityMapping.fields = ImmutableList.of("/values[2]");
+    cityMapping.name = "City1";
+
+    KafkaTarget.FieldPathToNameMappingConfig city2Mapping =
+      new KafkaTarget.FieldPathToNameMappingConfig();
+    city2Mapping.fields = ImmutableList.of("/values[3]");
+    city2Mapping.name = "City2";
+
+    KafkaTarget.FieldPathToNameMappingConfig nonExistingmapping =
+      new KafkaTarget.FieldPathToNameMappingConfig();
+    nonExistingmapping.fields = ImmutableList.of("/values[20]");
+    nonExistingmapping.name = "NonExistingCity";
+
+    KafkaTarget.FieldPathToNameMappingConfig city3Mapping =
+      new KafkaTarget.FieldPathToNameMappingConfig();
+    city3Mapping.fields = ImmutableList.of("/values[4]");
+    city3Mapping.name = "City3";
+
     KafkaTarget kafkaTarget = new KafkaTarget();
     TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
       .addConfiguration("topic", TOPIC)
@@ -197,6 +226,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", CsvFileMode.CSV)
+      .addConfiguration("fieldPathToNameMappingConfigList", ImmutableList.of(yearMapping, cityMapping,city2Mapping, nonExistingmapping, city3Mapping))
       .build();
 
     targetRunner.runInit();
@@ -215,8 +245,18 @@ public class TestKafkaTargetSinglePartition {
       //no-op
     }
     Assert.assertEquals(28, messages.size());
+
+    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT);
+    Map<String, String> fieldPathToName = new LinkedHashMap<>();
+    fieldPathToName.put("/values[0]", "Year");
+    fieldPathToName.put("/values[2]", "City1");
+    fieldPathToName.put("/values[3]", "City2");
+    fieldPathToName.put("/values[20]", "NonExistingCity");
+    fieldPathToName.put("/values[4]", "City3");
+    recordToString.setFieldPathToNameMapping(fieldPathToName);
+
     for (int i = 0; i < logRecords.size(); i++) {
-      Assert.assertEquals(CsvUtil.csvRecordToString(logRecords.get(i), CSVFormat.DEFAULT), messages.get(i));
+      Assert.assertEquals(recordToString.toString(logRecords.get(i)), messages.get(i));
     }
   }
 }

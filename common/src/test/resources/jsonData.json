@@ -1,0 +1,13 @@
+[{
+  "name" : "xyz",
+  "age" : 21,
+  "address" :[
+    {"street" : "180 Sansome",
+      "city" : "San Francisco"
+    },
+    {"street" : "200 Sansome",
+      "city" : "San Francisco"
+    }
+  ],
+  "phone" : ["1234567890", "0987654321"]
+}]

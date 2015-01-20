@@ -916,7 +916,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         printError("ComplexField.type.inner.class.and.not.static",
           "Complex Field type '{}' is an inner class but is not declared as static. " +
             "Inner class Complex Field types must be declared static.",
-          getClassNameFromTypeMirror(variableElement.asType()));
+          getClassNameFromTypeMirror(t.asType()));
         valid = false;
       }
     }
@@ -938,7 +938,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   private boolean validateFieldSelector(Element typeElement, VariableElement variableElement, FieldSelector fieldSelector) {
     boolean valid = true;
-    if (!variableElement.asType().toString().equals("java.util.List<java.lang.String>")) {
+    if (!variableElement.asType().toString().equals("java.util.List<java.lang.String>")
+      && !variableElement.asType().toString().equals("java.lang.String")) {
       printError("field.validation.type.is.not.list",
           "The type of the field {} is expected to be List<String>.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());

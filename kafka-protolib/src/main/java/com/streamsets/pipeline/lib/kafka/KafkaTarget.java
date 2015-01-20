@@ -7,8 +7,11 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ChooserMode;
+import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
@@ -20,15 +23,19 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.el.ELUtils;
-import com.streamsets.pipeline.lib.util.CsvUtil;
-import com.streamsets.pipeline.lib.util.JsonUtil;
+import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
+import com.streamsets.pipeline.lib.recordserialization.JsonRecordToString;
+import com.streamsets.pipeline.lib.recordserialization.LogRecordToString;
+import com.streamsets.pipeline.lib.recordserialization.RecordToString;
+import com.streamsets.pipeline.lib.recordserialization.XmlRecordToString;
 import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
-import java.io.IOException;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,6 +43,7 @@ import java.util.Set;
 @StageDef(version="0.0.1",
   label="Kafka Target",
   icon="kafka.png")
+@ConfigGroups(value = KafkaTarget.KafkaTargetConfigGroups.class)
 public class KafkaTarget extends BaseTarget {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaTarget.class);
@@ -44,7 +52,8 @@ public class KafkaTarget extends BaseTarget {
     type = ConfigDef.Type.STRING,
     description = "The Kafka topic from which the messages must be read",
     label = "Topic",
-    defaultValue = "topicName")
+    defaultValue = "topicName",
+    group = "KAFKA_CONNECTION_PROPERTIES")
   public String topic;
 
   @ConfigDef(required = true,
@@ -52,7 +61,8 @@ public class KafkaTarget extends BaseTarget {
     description = "Indicates the strategy to select a partition while writing a message." +
       "This option is activated only if a negative integer is supplied as the value for partition.",
     label = "Partition Strategy",
-    defaultValue = "ROUND_ROBIN")
+    defaultValue = "ROUND_ROBIN",
+    group = "KAFKA_CONNECTION_PROPERTIES")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PartitionStrategyChooserValues.class)
   public PartitionStrategy partitionStrategy;
 
@@ -62,7 +72,8 @@ public class KafkaTarget extends BaseTarget {
     label = "Partition Expression",
     defaultValue = "0",
     dependsOn = "partitionStrategy",
-    triggeredByValue = {"EXPRESSION"})
+    triggeredByValue = {"EXPRESSION"},
+    group = "KAFKA_CONNECTION_PROPERTIES")
   public String partition;
 
   @ConfigDef(required = true,
@@ -81,14 +92,16 @@ public class KafkaTarget extends BaseTarget {
       "can be a subset of brokers or a VIP pointing to a subset of brokers. " +
       "Please specify more than one broker information if known.",
     label = "Metadata Broker List",
-    defaultValue = "localhost:9092")
+    defaultValue = "localhost:9092",
+  group = "KAFKA_CONNECTION_PROPERTIES")
   public String metadataBrokerList;
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.MODEL,
     description = "Type of data sent as kafka message payload",
     label = "Payload Type",
-    defaultValue = "LOG")
+    defaultValue = "LOG",
+    group = "KAFKA_CONNECTION_PROPERTIES")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PayloadTypeChooserValues.class)
   public PayloadType payloadType;
 
@@ -98,7 +111,8 @@ public class KafkaTarget extends BaseTarget {
      "The following options, if specified, are ignored : \"metadata.broker.list\", \"producer.type\", " +
       "\"key.serializer.class\", \"partitioner.class\", \"serializer.class\".",
     defaultValue = "",
-    label = "Kafka Producer Configuration Properties")
+    label = "Kafka Producer Configuration Properties",
+   group = "KAFKA_ADVANCED_CONFIGURATION")
   public Map<String, String> kafkaProducerConfigs;
 
   /********  For CSV Content  ***********/
@@ -108,14 +122,63 @@ public class KafkaTarget extends BaseTarget {
     label = "CSV Format",
     description = "The specific CSV format of the files",
     defaultValue = "CSV",
-    dependsOn = "payloadType", triggeredByValue = {"CSV"})
+    dependsOn = "payloadType", triggeredByValue = {"CSV"},
+    group = "CSV_PROPERTIES")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
+
+  @ConfigDef(required = true,
+    type = ConfigDef.Type.MODEL,
+    description = "Field to name mapping configuration",
+    label = "Field to Name Mapping",
+    dependsOn = "payloadType",
+    triggeredByValue = {"CSV"},
+    defaultValue = "LOG",
+    group = "CSV_PROPERTIES")
+  @ComplexField
+  public List<FieldPathToNameMappingConfig> fieldPathToNameMappingConfigList;
+
+
+  public static class FieldPathToNameMappingConfig {
+
+    @ConfigDef(required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Field Path",
+      description = "The fields which must be written to the target")
+    @FieldSelector
+    public List<String> fields;
+
+    @ConfigDef(required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Field Name",
+      description = "The name which must be used for the fields in the target")
+    public String name;
+  }
+
+  public enum KafkaTargetConfigGroups implements ConfigGroups.Groups {
+    KAFKA_CONNECTION_PROPERTIES("Kafka Connection Configuration"),
+    KAFKA_ADVANCED_CONFIGURATION("Kafka Advanced Configuration"),
+    JSON_PROPERTIES("JSON Data Properties"),
+    CSV_PROPERTIES("CSV Data Properties"),
+    XML_PROPERTIES("XML Data Properties"),
+    LOG_PROPERTIES("Log Data Properties");
+
+    private final String label;
+
+    private KafkaTargetConfigGroups(String label) {
+      this.label = label;
+    }
+
+    public String getLabel() {
+      return this.label;
+    }
+  }
 
   private KafkaProducer kafkaProducer;
   private long recordCounter = 0;
   private ELEvaluator elEvaluator;
   private ELEvaluator.Variables variables;
+  private RecordToString recordToString;
 
   @Override
   public void init() throws StageException {
@@ -123,7 +186,7 @@ public class KafkaTarget extends BaseTarget {
       payloadType, partitionStrategy, kafkaProducerConfigs);
     kafkaProducer.init();
 
-    if(partitionStrategy == PartitionStrategy.EXPRESSION) {
+    if (partitionStrategy == PartitionStrategy.EXPRESSION) {
       variables = ELUtils.parseConstants(constants);
       elEvaluator = new ELEvaluator();
       ELBasicSupport.registerBasicFunctions(elEvaluator);
@@ -131,6 +194,38 @@ public class KafkaTarget extends BaseTarget {
       ELStringSupport.registerStringFunctions(elEvaluator);
       validateExpressions();
     }
+
+    createRecordToStringInstance(getFieldPathToNameMapping());
+  }
+
+  private Map<String, String> getFieldPathToNameMapping() {
+    Map<String, String> fieldPathToNameMapping = new LinkedHashMap<>();
+    if(fieldPathToNameMappingConfigList != null && !fieldPathToNameMappingConfigList.isEmpty()) {
+      for (FieldPathToNameMappingConfig fieldPathToNameMappingConfig : fieldPathToNameMappingConfigList) {
+        for(String field : fieldPathToNameMappingConfig.fields) {
+          fieldPathToNameMapping.put(field, fieldPathToNameMappingConfig.name);
+        }
+      }
+    }
+    return fieldPathToNameMapping;
+  }
+
+  private void createRecordToStringInstance(Map<String, String> fieldNameToPathMap) {
+    switch(payloadType) {
+      case JSON:
+        recordToString = new JsonRecordToString();
+        break;
+      case CSV:
+        recordToString = new CsvRecordToString(csvFileFormat.getFormat());
+        break;
+      case XML:
+        recordToString = new XmlRecordToString();
+        break;
+      case LOG:
+        recordToString = new LogRecordToString();
+        break;
+    }
+    recordToString.setFieldPathToNameMapping(fieldNameToPathMap);
   }
 
   private void validateExpressions() throws StageException {
@@ -181,8 +276,8 @@ public class KafkaTarget extends BaseTarget {
     try {
       elEvaluator.eval(variables, partition);
     } catch (ELException ex) {
-      LOG.error(KafkaStageLibError.LIB_0357.getMessage(), partition, ex.getMessage());
-      throw new StageException(KafkaStageLibError.LIB_0357, partition, ex.getMessage(), ex);
+      LOG.error(KafkaStageLibError.KFK_0357.getMessage(), partition, ex.getMessage());
+      throw new StageException(KafkaStageLibError.KFK_0357, partition, ex.getMessage(), ex);
     }
   }
 
@@ -202,11 +297,15 @@ public class KafkaTarget extends BaseTarget {
         if(!partitionKey.isEmpty() && !validatePartition(r, partitionKey)) {
           continue;
         }
+        byte[] message;
         try {
-          kafkaProducer.enqueueMessage(serializeRecord(r), partitionKey);
-        } catch (IOException e) {
-          throw new StageException(KafkaStageLibError.LIB_0351, e.getMessage(), e);
+          message = serializeRecord(r);
+        } catch (StageException e) {
+          LOG.warn(e.getMessage());
+          getContext().toError(r, e);
+          continue;
         }
+        kafkaProducer.enqueueMessage(message, partitionKey);
         batchRecordCounter++;
       }
 
@@ -220,14 +319,14 @@ public class KafkaTarget extends BaseTarget {
     try {
       partition = Integer.parseInt(partitionKey);
     } catch (NumberFormatException e) {
-      LOG.warn(KafkaStageLibError.LIB_0355.getMessage(), partitionKey, topic, e.getMessage());
-      getContext().toError(r, KafkaStageLibError.LIB_0355, partitionKey, topic, e.getMessage(), e);
+      LOG.warn(KafkaStageLibError.KFK_0355.getMessage(), partitionKey, topic, e.getMessage());
+      getContext().toError(r, KafkaStageLibError.KFK_0355, partitionKey, topic, e.getMessage(), e);
       return false;
     }
     //partition number is an integer starting from 0 ... n-1, where n is the number of partitions for topic t
     if(partition < 0 || partition >= kafkaProducer.getNumberOfPartitions()) {
-      LOG.warn(KafkaStageLibError.LIB_0356.getMessage(), partition, topic, kafkaProducer.getNumberOfPartitions());
-      getContext().toError(r, KafkaStageLibError.LIB_0356, partition, topic, kafkaProducer.getNumberOfPartitions());
+      LOG.warn(KafkaStageLibError.KFK_0356.getMessage(), partition, topic, kafkaProducer.getNumberOfPartitions());
+      getContext().toError(r, KafkaStageLibError.KFK_0356, partition, topic, kafkaProducer.getNumberOfPartitions());
       return false;
     }
     return true;
@@ -240,8 +339,8 @@ public class KafkaTarget extends BaseTarget {
       try {
         result = elEvaluator.eval(variables, partition);
       } catch (ELException e) {
-        LOG.warn(KafkaStageLibError.LIB_0354.getMessage(), partition, record.getHeader().getSourceId(), e.getMessage());
-        getContext().toError(record, KafkaStageLibError.LIB_0354, partition, record.getHeader().getSourceId(),
+        LOG.warn(KafkaStageLibError.KFK_0354.getMessage(), partition, record.getHeader().getSourceId(), e.getMessage());
+        getContext().toError(record, KafkaStageLibError.KFK_0354, partition, record.getHeader().getSourceId(),
           e.getMessage(), e);
         return null;
       }
@@ -258,14 +357,8 @@ public class KafkaTarget extends BaseTarget {
     }
   }
 
-  private byte[] serializeRecord(Record r) throws IOException {
-    if(payloadType == PayloadType.LOG) {
-      return r.get().getValue().toString().getBytes();
-    } if (payloadType == PayloadType.JSON) {
-      return JsonUtil.jsonRecordToString(r).getBytes();
-    } if (payloadType == PayloadType.CSV) {
-      return CsvUtil.csvRecordToString(r, csvFileFormat.getFormat()).getBytes();
-    }
-    return null;
+  private byte[] serializeRecord(Record r) throws StageException {
+    LOG.debug("Serializing record {}", r.getHeader().getSourceId());
+    return recordToString.toString(r).getBytes();
   }
 }

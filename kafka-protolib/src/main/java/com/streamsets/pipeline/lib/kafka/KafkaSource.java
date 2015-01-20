@@ -9,19 +9,10 @@ import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.RawSource;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 
-@GenerateResourceBundle
-@RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "application/json")
-@StageDef(version="0.0.1",
-  label="Kafka Consumer",
-  icon="kafka.png")
-@ConfigGroups(value = KafkaSource.KafkaSourceConfigGroups.class)
 public class KafkaSource extends AbstractKafkaSource {
 
   @ConfigDef(required = true,
@@ -56,23 +47,6 @@ public class KafkaSource extends AbstractKafkaSource {
     defaultValue = "CSV")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
-
-  public enum KafkaSourceConfigGroups implements ConfigGroups.Groups {
-    JSON_PROPERTIES("JSON Data Properties"),
-    CSV_PROPERTIES("CSV Data Properties"),
-    XML_PROPERTIES("XML Data Properties"),
-    LOG_PROPERTIES("Log Data Properties");
-
-    private final String label;
-
-    private KafkaSourceConfigGroups(String label) {
-      this.label = label;
-    }
-
-    public String getLabel() {
-      return this.label;
-    }
-  }
 
   private FieldCreator fieldCreator;
 

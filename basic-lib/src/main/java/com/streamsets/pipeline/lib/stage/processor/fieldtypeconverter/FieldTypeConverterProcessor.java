@@ -133,7 +133,8 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
     @ConfigDef(label = "Data Locale", required = true, type = Type.MODEL, defaultValue="ENGLISH",
       description="The current locale of the data which must be converted. " +
-        "This is required to convert string field values containing  ',' and '.' to number types.")
+        "This is required to convert string field values containing  ',' and '.' to number types.",
+      dependsOn = "targetType", triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT"})
     @ValueChooser(chooserValues = LocaleValuesProvider.class, type = ChooserMode.PROVIDED)
     public DataLocale dataLocale;
 

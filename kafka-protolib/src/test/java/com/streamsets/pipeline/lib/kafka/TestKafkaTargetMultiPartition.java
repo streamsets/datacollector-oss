@@ -233,7 +233,7 @@ public class TestKafkaTargetMultiPartition {
       targetRunner.runInit();
       Assert.fail("Expected StageException as the partition expression is not valid");
     } catch (StageException e) {
-      Assert.assertEquals(KafkaStageLibError.LIB_0357, e.getErrorCode());
+      Assert.assertEquals(KafkaStageLibError.KFK_0357, e.getErrorCode());
     }
   }
 

@@ -13,7 +13,10 @@ public class XmlRecordToString implements RecordToString {
 
   @Override
   public void setFieldPathToNameMapping(Map<String, String> fieldPathToNameMap) {
-
+    if(fieldPathToNameMap != null && !fieldPathToNameMap.isEmpty()) {
+      throw new IllegalArgumentException(
+        "Field path to name mapping configuration is not expected for XmlRecordToString.");
+    }
   }
 
   @Override

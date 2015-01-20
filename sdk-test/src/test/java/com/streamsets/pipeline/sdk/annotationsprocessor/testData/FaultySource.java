@@ -8,6 +8,7 @@ package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ChooserValues;
+import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
@@ -85,17 +86,6 @@ public class FaultySource {
     type = ConfigDef.Type.STRING)
   public int zip;
 
-  //8. Field selector should be modeled as List<String>
-  @FieldSelector
-  @ConfigDef(
-    defaultValue = "CA",
-    label = "state",
-    required = true,
-    description = "The domain of the twitter user",
-    type = ConfigDef.Type.MODEL)
-  public String state;
-
-
   //9. Field modifier should be modeled as Map<String, String>
   @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues = MyChooserValues.class)
   @ConfigDef(
@@ -165,6 +155,37 @@ public class FaultySource {
 
   String myExtension;
 
+
+  @ConfigDef(
+    defaultValue = "admin",
+    label = "username",
+    required = true,
+    description = "The user name of the twitter user",
+    type = ConfigDef.Type.MODEL
+  )
+    @ComplexField
+  public List<PhoneConfig> phoneConfigs;
+
+
+  //23. inner class must be static
+  public class PhoneConfig {
+
+    @ConfigDef(
+      defaultValue = "Hello",
+      label = "Phone",
+      required = true,
+      description = "The domain of the twitter user",
+      type = ConfigDef.Type.STRING)
+    public String phone;
+
+    @ConfigDef(
+      defaultValue = "Hello",
+      label = "Extension",
+      required = true,
+      description = "The domain of the twitter user",
+      type = ConfigDef.Type.STRING)
+    public String extn;
+  }
 
   //15. Inner class ChooserValues must be static
   public class MyChooserValues implements ChooserValues {

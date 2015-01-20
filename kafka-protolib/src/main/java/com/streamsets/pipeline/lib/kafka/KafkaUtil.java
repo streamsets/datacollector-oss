@@ -57,8 +57,8 @@ public class KafkaUtil {
     }
     if(topicMetadata == null) {
       //Could not get topic metadata from any of the supplied brokers
-      LOG.error(KafkaStageLibError.LIB_0353.getMessage(), topic, metadataBrokerList);
-      throw new StageException(KafkaStageLibError.LIB_0353, metadataBrokerList);
+      LOG.error(KafkaStageLibError.KFK_0353.getMessage(), topic, metadataBrokerList);
+      throw new StageException(KafkaStageLibError.KFK_0353, metadataBrokerList);
     }
     return topicMetadata.partitionsMetadata().size();
   }

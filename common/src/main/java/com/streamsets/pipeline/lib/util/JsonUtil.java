@@ -5,10 +5,12 @@
  */
 package com.streamsets.pipeline.lib.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.IOException;
@@ -70,7 +72,7 @@ public class JsonUtil {
     return field;
   }
 
-  public static Object fieldToJsonObject(Field field) throws IOException {
+  public static Object fieldToJsonObject(Record record, Field field) throws StageException {
     Object obj;
     if(field.getType()== Field.Type.BOOLEAN) {
       obj = field.getValueAsBoolean();
@@ -102,27 +104,29 @@ public class JsonUtil {
       List<Field> list = field.getValueAsList();
       List<Object> toReturn = new ArrayList<>(list.size());
       for(Field f : list) {
-        toReturn.add(fieldToJsonObject(f));
+        toReturn.add(fieldToJsonObject(record, f));
       }
       obj = toReturn;
     } else if(field.getType()== Field.Type.MAP) {
       Map<String, Field> map = field.getValueAsMap();
-      Map<String, Object> toReturn = new HashMap<>();
+      Map<String, Object> toReturn = new LinkedHashMap<>();
       for (Map.Entry<String, Field> entry :map.entrySet()) {
-        toReturn.put(entry.getKey(), fieldToJsonObject(entry.getValue()));
+        toReturn.put(entry.getKey(), fieldToJsonObject(record, entry.getValue()));
       }
       obj = toReturn;
     } else {
-      throw new IOException(Utils.format("Not recognized type '{}', value '{}'", field.getType(), field.getValue()));
+      throw new StageException(CommonError.CMN_0100, field.getType(), field.getValue(),
+        record.getHeader().getSourceId());
     }
     return obj;
   }
 
-  public static String jsonRecordToString(Record r) throws IOException {
-    //Using ObjectMapperFactory from container lib causes a NoClassDefFoundError. Need to investigate
+  public static String jsonRecordToString(Record r) throws StageException {
     ObjectMapper objectMapper = new ObjectMapper();
-    //Not indenting output on purpose
-    //objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    return objectMapper.writeValueAsString(JsonUtil.fieldToJsonObject(r.get()));
+    try {
+      return objectMapper.writeValueAsString(JsonUtil.fieldToJsonObject(r, r.get()));
+    } catch (JsonProcessingException e) {
+      throw new StageException(CommonError.CMN_0100, r.getHeader().getSourceId(), e.getMessage(), e);
+    }
   }
 }

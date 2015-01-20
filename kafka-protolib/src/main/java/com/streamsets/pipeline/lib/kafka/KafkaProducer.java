@@ -13,7 +13,6 @@ import kafka.producer.ProducerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -99,7 +98,7 @@ public class KafkaProducer {
     }
   }
 
-  public void enqueueMessage(byte[] message, String partitionKey) throws IOException {
+  public void enqueueMessage(byte[] message, String partitionKey) {
     messageList.add(new KeyedMessage<>(topic, partitionKey, message));
   }
 
@@ -127,13 +126,13 @@ public class KafkaProducer {
     LOG.warn("Attempting reconnection to kafka broker.");
     if (attemptNumber == MAX_RECONNECT_ATTEMPTS) {
       LOG.error("Reached max reconnect attempts {}. ", MAX_RECONNECT_ATTEMPTS);
-      throw new StageException(KafkaStageLibError.LIB_0350, cause.getMessage(), cause);
+      throw new StageException(KafkaStageLibError.KFK_0350, cause.getMessage(), cause);
     }
     try {
       waitBeforeReconnect(attemptNumber);
     } catch (InterruptedException e) {
-      LOG.error(KafkaStageLibError.LIB_0350.getMessage(), e.getMessage(), e);
-      throw new StageException(KafkaStageLibError.LIB_0350, e.getMessage(), e);
+      LOG.error(KafkaStageLibError.KFK_0350.getMessage(), e.getMessage(), e);
+      throw new StageException(KafkaStageLibError.KFK_0350, e.getMessage(), e);
     }
     try {
       destroy();
