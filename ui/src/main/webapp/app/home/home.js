@@ -333,7 +333,10 @@ angular
 
         //Determine Active Config based on localStorage or based on last status updated config.
         if($scope.$storage.activeConfigInfo && $scope.$storage.activeConfigInfo.name) {
-          $scope.activeConfigInfo = $scope.$storage.activeConfigInfo;
+          var localStorageConfigInfoName = $scope.$storage.activeConfigInfo;
+          $scope.activeConfigInfo = $scope.$storage.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
+            return pipelineDefn.name === localStorageConfigInfoName;
+          });
         } else if(pipelineStatus && pipelineStatus.name) {
           $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
             return pipelineDefn.name === pipelineStatus.name;
