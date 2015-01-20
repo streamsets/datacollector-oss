@@ -40,7 +40,8 @@ angular
       dataSummaryTab = {
         name:'summary',
         template:'app/home/detail/dataSummary/dataSummary.tpl.html',
-        iconClass: 'fa fa-bar-chart fa-12x'
+        iconClass: 'fa fa-bar-chart fa-12x',
+        active: true
       },
       alertsTab = {
         name:'alerts',

@@ -214,6 +214,15 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       thisGraph.edges = [];
       thisGraph.state.selectedNode = null;
       thisGraph.state.selectedEdge = null;
+
+      $('.graph-bootstrap-tooltip').each(function() {
+        var $this = $(this),
+          title = $this.attr('title');
+        if(title) {
+          $this.tooltip('destroy');
+        }
+      });
+
       thisGraph.updateGraph();
     };
 
@@ -741,7 +750,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
             y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes));
 
-          return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 13;
+          return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 26;
         });
 
       var pathNewGs= paths.enter()
@@ -787,10 +796,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
               outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
               y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes));
 
-            return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 13;
+            return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 26;
           })
           .append('xhtml:span')
-          .attr('class', 'fa fa-eye fa-2x pointer edge-preview');
+          .attr('class', 'fa fa-tachometer fa-2x pointer edge-preview');
       }
 
       // remove old links
