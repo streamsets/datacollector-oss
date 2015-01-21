@@ -105,7 +105,7 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
   @Override
   public void init() throws StageException {
     kafkaConsumer = new HighLevelKafkaConsumer(zookeeperConnect, topic, consumerGroup, maxBatchSize, maxWaitTime,
-      kafkaConsumerConfigs);
+      kafkaConsumerConfigs, getContext());
     kafkaConsumer.init();
     LOG.debug("Successfully initialized Kafka Consumer");
   }

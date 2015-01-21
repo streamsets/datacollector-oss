@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import kafka.consumer.Consumer;
@@ -54,18 +55,21 @@ public class HighLevelKafkaConsumer {
   private final String topic;
   private final int maxBatchSize;
   private final int maxWaitTime;
+  private final Source.Context context;
   private final Map<String, String> kafkaConsumerConfigs;
   private final String consumerGroup;
   private ConsumerConfig consumerConfig;
 
   public HighLevelKafkaConsumer(String zookeeperConnect, String topic, String consumerGroup, int batchUpperLimit,
-                                int consumerTimeout, Map<String, String> kafkaConsumerConfigs) {
+                                int consumerTimeout, Map<String, String> kafkaConsumerConfigs,
+                                Source.Context context) {
     this.topic = topic;
     this.maxBatchSize = batchUpperLimit;
     this.maxWaitTime = consumerTimeout;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
     this.zookeeperConnect = zookeeperConnect;
     this.consumerGroup = consumerGroup;
+    this.context = context;
   }
 
   public void init() throws StageException {
@@ -127,7 +131,9 @@ public class HighLevelKafkaConsumer {
       destroy();
       createConsumer();
     } catch (StageException e) {
-      //no-op, retry after a certain time.
+      //raise alert and retry after a certain time.
+      LOG.warn("Error connecting to kafka broker, '{}", e.getMessage());
+      context.reportError(e);
     }
     try {
       switch (attemptNumber) {

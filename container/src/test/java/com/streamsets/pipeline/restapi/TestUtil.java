@@ -17,7 +17,11 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.config.AlertDefinition;
 import com.streamsets.pipeline.config.ConfigDefinition;
-import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.CounterDefinition;
+import com.streamsets.pipeline.config.MetricElement;
+import com.streamsets.pipeline.config.MetricType;
+import com.streamsets.pipeline.config.MetricsAlertDefinition;
+import com.streamsets.pipeline.config.SamplingDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.observerstore.ObserverStore;
@@ -26,7 +30,6 @@ import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.record.RecordImpl;
-import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -270,19 +273,54 @@ public class TestUtil {
         e.printStackTrace();
       }
 
+      //alerts
       List<AlertDefinition> alerts = new ArrayList<>();
       alerts.add(new AlertDefinition("a1", "a1", "a", "2", null, true));
       alerts.add(new AlertDefinition("a2", "a1", "a", "2", null, true));
       alerts.add(new AlertDefinition("a3", "a1", "a", "2", null, true));
-
       ObserverStore mockObserver = Mockito.mock(ObserverStore.class);
       Mockito.when(mockObserver.retrieveAlerts(
         PIPELINE_NAME, PIPELINE_REV)).thenReturn(alerts);
-
       Mockito.when(mockObserver.storeAlerts(
         Matchers.anyString(), Matchers.anyString(), (List<AlertDefinition>) Matchers.any())).thenReturn(alerts);
-
       Mockito.when(pipelineManager.getObserverStore()).thenReturn(mockObserver);
+
+      //metric alerts
+      List<MetricsAlertDefinition> metricsAlertDefinitions = new ArrayList<>();
+      metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
+        MetricElement.COUNTER_COUNT, "p", true));
+      metricsAlertDefinitions.add(new MetricsAlertDefinition("m2", "m2", "a", MetricType.TIMER,
+        MetricElement.TIMER_M15_RATE, "p", true));
+      metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
+        MetricElement.HISTOGRAM_MEAN, "p", true));
+      Mockito.when(mockObserver.retrieveMetricAlerts(
+        PIPELINE_NAME, PIPELINE_REV)).thenReturn(metricsAlertDefinitions);
+      Mockito.when(mockObserver.storeMetricAlerts(
+        Matchers.anyString(), Matchers.anyString(), (List<MetricsAlertDefinition>) Matchers.any()))
+        .thenReturn(metricsAlertDefinitions);
+
+      //counters
+      List<CounterDefinition> counters = new ArrayList<>();
+      counters.add(new CounterDefinition("c1", "c1", "l", "p", "g", true, null));
+      counters.add(new CounterDefinition("c2", "c2", "l", "p", "g", true, null));
+      counters.add(new CounterDefinition("c3", "c3", "l", "p", "g", true, null));
+      Mockito.when(mockObserver.retrieveCounters(
+        PIPELINE_NAME, PIPELINE_REV)).thenReturn(counters);
+      Mockito.when(mockObserver.storeCounters(
+        Matchers.anyString(), Matchers.anyString(), (List<CounterDefinition>) Matchers.any()))
+        .thenReturn(counters);
+
+      //sampling definitions
+      List<SamplingDefinition> samplingDefinitions = new ArrayList<>();
+      samplingDefinitions.add(new SamplingDefinition("s1", "s1", "a", "2", null, true));
+      samplingDefinitions.add(new SamplingDefinition("s2", "s2", "a", "2", null, true));
+      samplingDefinitions.add(new SamplingDefinition("s3", "s3", "a", "2", null, true));
+
+      Mockito.when(mockObserver.retrieveSamplingDefinitions(
+        PIPELINE_NAME, PIPELINE_REV)).thenReturn(samplingDefinitions);
+      Mockito.when(mockObserver.storeSamplingDefinitions(
+        Matchers.anyString(), Matchers.anyString(), (List<SamplingDefinition>) Matchers.any()))
+        .thenReturn(samplingDefinitions);
 
       return pipelineManager;
     }

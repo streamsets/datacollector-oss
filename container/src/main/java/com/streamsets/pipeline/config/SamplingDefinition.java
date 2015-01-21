@@ -5,6 +5,10 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.api.impl.Utils;
+
 public class SamplingDefinition {
 
   private final String name;
@@ -14,7 +18,13 @@ public class SamplingDefinition {
   private final String samplingPercentage;
   private final boolean enabled;
 
-  public SamplingDefinition(String name, String label, String lane, String predicate, String samplingPercentage, boolean enabled) {
+  @JsonCreator
+  public SamplingDefinition(@JsonProperty("name") String name,
+                            @JsonProperty("label") String label,
+                            @JsonProperty("lane") String lane,
+                            @JsonProperty("predicate") String predicate,
+                            @JsonProperty("samplingPercentage") String samplingPercentage,
+                            @JsonProperty("enabled") boolean enabled) {
     this.name = name;
     this.label = label;
     this.lane = lane;
@@ -45,5 +55,12 @@ public class SamplingDefinition {
 
   public boolean isEnabled() {
     return enabled;
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format(
+      "SamplingDefinition[name='{}' label='{}' lane='{}' predicate='{}' samplingPercentage='{}', enabled='{}']",
+      getName(), getLabel(), getLane(), getPredicate(), getSamplingPercentage(), isEnabled());
   }
 }

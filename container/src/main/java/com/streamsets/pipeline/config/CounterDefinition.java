@@ -5,6 +5,10 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.api.impl.Utils;
+
 import java.util.Map;
 
 public class CounterDefinition {
@@ -15,13 +19,17 @@ public class CounterDefinition {
   private final String predicate;
   private final String counterGroup;
   private final boolean enabled;
-  //The possible set of keys are
-  //1. time
-  //2. count
+  //The possible set of keys are time, count
   private final Map<String, String> decay;
 
-
-  public CounterDefinition(String name, String label, String lane, String predicate, String counterGroup, boolean enabled, Map<String, String> decay) {
+  @JsonCreator
+  public CounterDefinition(@JsonProperty("name") String name,
+                           @JsonProperty("label") String label,
+                           @JsonProperty("lane") String lane,
+                           @JsonProperty("predicate") String predicate,
+                           @JsonProperty("counterGroup") String counterGroup,
+                           @JsonProperty("enabled") boolean enabled,
+                           @JsonProperty("decay") Map<String, String> decay) {
     this.name = name;
     this.label = label;
     this.lane = lane;
@@ -57,5 +65,12 @@ public class CounterDefinition {
 
   public Map<String, String> getDecay() {
     return decay;
+  }
+
+  @Override
+  public String toString() {
+    return Utils.format(
+      "CounterDefinition[name='{}' label='{}' lane='{}' predicate='{}' counterGroup='{}' isEnabled='{}']",
+      getName(), getLabel(), getLane(), getPredicate(), getCounterGroup(), isEnabled());
   }
 }

@@ -64,7 +64,7 @@ public class AlertDefinition {
 
   @Override
   public String toString() {
-    return Utils.format("AlertDefinition[name='{}' label='{}' lane='{}' predicate '{}' enabled '{}']",
+    return Utils.format("AlertDefinition[name='{}' label='{}' lane='{}' predicate='{}' enabled='{}']",
       getName(), getLabel(), getLane(), getPredicate(), isEnabled());
   }
 
