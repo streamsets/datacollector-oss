@@ -365,7 +365,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         if(configDefAnnot.type().equals(ConfigDef.Type.MODEL)) {
           FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
           if(fieldSelector != null) {
-            model = new ModelDefinition(ModelType.FIELD_SELECTOR, null, null, null, null, null);
+            ModelType modelType = ModelType.FIELD_SELECTOR_MULTI_VALUED;
+            if(fieldSelector.singleValued()) {
+              modelType = ModelType.FIELD_SELECTOR_SINGLE_VALUED;
+            }
+            model = new ModelDefinition(modelType, null, null, null, null, null);
           }
           FieldValueChooser fieldValueChooser = variableElement.getAnnotation(FieldValueChooser.class);
           //processingEnv.
@@ -931,6 +935,10 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           t.getSimpleName().toString());
         valid = false;
       }
+      ConfigDef configDefAnnot = v.getAnnotation(ConfigDef.class);
+      if(configDefAnnot != null) {
+        valid &= validateConfigDefAnnotation(t, v, configDefAnnot);
+      }
     }
 
     return valid;
@@ -938,11 +946,16 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   private boolean validateFieldSelector(Element typeElement, VariableElement variableElement, FieldSelector fieldSelector) {
     boolean valid = true;
-    if (!variableElement.asType().toString().equals("java.util.List<java.lang.String>")
-      && !variableElement.asType().toString().equals("java.lang.String")) {
+    if (!fieldSelector.singleValued() && !variableElement.asType().toString().equals("java.util.List<java.lang.String>")) {
       printError("field.validation.type.is.not.list",
-          "The type of the field {} is expected to be List<String>.",
+          "Field {} is annotated as multi valued FieldSelector. The type of the field {} expected to be List<String>.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+      valid = false;
+    }
+    if (fieldSelector.singleValued() && !variableElement.asType().toString().equals("java.lang.String")) {
+      printError("field.validation.type.is.not.String",
+        "Field {} is annotated as single valued FieldSelector. The type of the field is expected to be String.",
+        typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
       valid = false;
     }
     return valid;

@@ -129,7 +129,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
               group: "",
               fieldName: "fields",
               model: {
-                modelType: "FIELD_SELECTOR",
+                modelType: "FIELD_SELECTOR_MULTI_VALUED",
                 fieldModifierType: null,
                 valuesProviderClass: null,
                 values: null,

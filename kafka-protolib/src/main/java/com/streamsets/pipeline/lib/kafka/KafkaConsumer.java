@@ -85,7 +85,7 @@ public class KafkaConsumer {
     leader = new KafkaBroker(metadata.leader().host(), metadata.leader().port());
     //recreate consumer instance with the leader information for that topic
     LOG.info("Creating SimpleConsumer using the following configuration: host {}, port {}, max wait time {}, max " +
-      "fetch size {}, client name {}", leader.getHost(), leader.getPort(), maxWaitTime, maxFetchSize, clientName);
+      "fetch size {}, client columnName {}", leader.getHost(), leader.getPort(), maxWaitTime, maxFetchSize, clientName);
     consumer = new SimpleConsumer(leader.getHost(), leader.getPort(), maxWaitTime, maxFetchSize, clientName);
   }
 
@@ -215,7 +215,7 @@ public class KafkaConsumer {
       SimpleConsumer simpleConsumer = null;
       try {
         LOG.info("Creating SimpleConsumer using the following configuration: host {}, port {}, max wait time {}, max " +
-          "fetch size {}, client name {}", broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
+          "fetch size {}, client columnName {}", broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
           METADATA_READER_CLIENT);
         simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
           METADATA_READER_CLIENT);

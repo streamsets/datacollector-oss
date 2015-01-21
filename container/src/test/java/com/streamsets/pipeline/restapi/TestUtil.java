@@ -5,17 +5,34 @@
  */
 package com.streamsets.pipeline.restapi;
 
+import com.codahale.metrics.MetricRegistry;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.config.AlertDefinition;
 import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.observerstore.ObserverStore;
+import com.streamsets.pipeline.prodmanager.PipelineManagerException;
+import com.streamsets.pipeline.prodmanager.PipelineState;
+import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.State;
+import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.runner.MockStages;
+import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.PipelineStoreException;
 import org.glassfish.hk2.api.Factory;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
@@ -27,6 +44,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class TestUtil {
+
+  private static final String PIPELINE_NAME = "myPipeline";
+  private static final String PIPELINE_REV = "2.0";
+  private static final String DEFAULT_PIPELINE_REV = "0";
 
   /**
    * Mock source implementation
@@ -160,5 +181,114 @@ public class TestUtil {
     public void dispose(Principal principal) {
     }
 
+  }
+
+  static class PipelineManagerTestInjector implements Factory<ProductionPipelineManagerTask> {
+
+    public PipelineManagerTestInjector() {
+    }
+
+    @Singleton
+    @Override
+    public ProductionPipelineManagerTask provide() {
+
+
+      ProductionPipelineManagerTask pipelineManager = Mockito.mock(ProductionPipelineManagerTask.class);
+      try {
+        Mockito.when(pipelineManager.startPipeline(PIPELINE_NAME, PIPELINE_REV)).thenReturn(new PipelineState(
+          PIPELINE_NAME, "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis()));
+      } catch (PipelineManagerException | StageException | PipelineRuntimeException | PipelineStoreException e) {
+        e.printStackTrace();
+      }
+
+      try {
+        Mockito.when(pipelineManager.stopPipeline(false)).thenReturn(
+          new PipelineState(PIPELINE_NAME, PIPELINE_REV, State.STOPPED, "The pipeline is not running", System.currentTimeMillis()));
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState(PIPELINE_NAME, PIPELINE_REV, State.STOPPED
+        , "Pipeline is not running", System.currentTimeMillis()));
+
+      try {
+        Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME, DEFAULT_PIPELINE_REV))
+          .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
+          .thenReturn(null);
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      Mockito.when(pipelineManager.getSnapshotStatus()).thenReturn(new SnapshotStatus(false, true));
+
+      Mockito.when(pipelineManager.getMetrics()).thenReturn(new MetricRegistry());
+
+      List<PipelineState> states = new ArrayList<>();
+      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis()));
+      states.add(new PipelineState(PIPELINE_NAME, "1", State.RUNNING, "", System.currentTimeMillis()));
+      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis()));
+      try {
+        Mockito.when(pipelineManager.getHistory(PIPELINE_NAME, DEFAULT_PIPELINE_REV, false)).thenReturn(states);
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      Mockito.doNothing().when(pipelineManager).deleteSnapshot(PIPELINE_NAME, PIPELINE_REV);
+      try {
+        Mockito.doNothing().when(pipelineManager).deleteErrors(PIPELINE_NAME, "1");
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      try {
+        Mockito.when(pipelineManager.getErrors(PIPELINE_NAME, "0"))
+          .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
+          .thenReturn(null);
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      Record r = new RecordImpl("a", "b", "c".getBytes(), "d");
+      try {
+        Mockito.when(pipelineManager.getErrorRecords("myProcessorStage")).thenReturn(
+          ImmutableList.of(r));
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      ErrorMessage em = new ErrorMessage("a", "b", 2L);
+      try {
+        Mockito.when(pipelineManager.getErrorMessages("myProcessorStage")).thenReturn(
+          ImmutableList.of(em));
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      try {
+        Mockito.doNothing().when(pipelineManager).resetOffset(PIPELINE_NAME, PIPELINE_REV);
+      } catch (PipelineManagerException e) {
+        e.printStackTrace();
+      }
+
+      List<AlertDefinition> alerts = new ArrayList<>();
+      alerts.add(new AlertDefinition("a1", "a1", "a", "2", null, true));
+      alerts.add(new AlertDefinition("a2", "a1", "a", "2", null, true));
+      alerts.add(new AlertDefinition("a3", "a1", "a", "2", null, true));
+
+      ObserverStore mockObserver = Mockito.mock(ObserverStore.class);
+      Mockito.when(mockObserver.retrieveAlerts(
+        PIPELINE_NAME, PIPELINE_REV)).thenReturn(alerts);
+
+      Mockito.when(mockObserver.storeAlerts(
+        Matchers.anyString(), Matchers.anyString(), (List<AlertDefinition>) Matchers.any())).thenReturn(alerts);
+
+      Mockito.when(pipelineManager.getObserverStore()).thenReturn(mockObserver);
+
+      return pipelineManager;
+    }
+
+    @Override
+    public void dispose(ProductionPipelineManagerTask pipelineManagerTask) {
+    }
   }
 }

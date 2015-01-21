@@ -29,7 +29,7 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.STRING,
-    description = "The Consumer Group name",
+    description = "The Consumer Group columnName",
     label = "Consumer Group",
     group = "KAFKA_CONNECTION_PROPERTIES",
     defaultValue = "streamsetsDataCollector")

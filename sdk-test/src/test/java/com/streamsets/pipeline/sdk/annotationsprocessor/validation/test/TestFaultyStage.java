@@ -60,6 +60,7 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("'MyGroups' implements interface 'ConfigGroups.Groups' but is not an enum. An implementation of 'ConfigGroups.Groups' must be an enum.");
     expectedSet.add("Invalid group name X specified in the \"ConfigDef\" annotation for field FaultySource.callMe.");
     expectedSet.add("Complex Field type 'com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultySource$PhoneConfig' is an inner class but is not declared as static. Inner class Complex Field types must be declared static.");
+    expectedSet.add("Field PhoneConfig.phone is annotated as single valued FieldSelector. The type of the field is expected to be String.");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());

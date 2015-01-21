@@ -6,7 +6,8 @@
 package com.streamsets.pipeline.config;
 
 public enum ModelType {
-  FIELD_SELECTOR,
+  FIELD_SELECTOR_MULTI_VALUED,
+  FIELD_SELECTOR_SINGLE_VALUED,
   FIELD_VALUE_CHOOSER,
   VALUE_CHOOSER,
   LANE_PREDICATE_MAPPING,

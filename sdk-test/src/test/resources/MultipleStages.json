@@ -14,7 +14,7 @@
                               "group" : "USER_INFO",
                               "fieldName" : "username",
                               "model" : {
-                                "modelType" : "FIELD_SELECTOR",
+                                "modelType" : "FIELD_SELECTOR_MULTI_VALUED",
                                 "chooserMode" : null,
                                 "valuesProviderClass" : null,
                                 "values" : null,
@@ -44,7 +44,7 @@
                                 "group" : "",
                                 "fieldName" : "username",
                                 "model" : {
-                                  "modelType" : "FIELD_SELECTOR",
+                                  "modelType" : "FIELD_SELECTOR_MULTI_VALUED",
                                   "chooserMode" : null,
                                   "valuesProviderClass" : null,
                                   "values" : null,

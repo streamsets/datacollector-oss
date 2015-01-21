@@ -193,28 +193,28 @@ public class TestKafkaTargetSinglePartition {
     //Test CSV is - "2010,NLDS1,PHI,NL,CIN,NL,3,0,0"
     KafkaTarget.FieldPathToNameMappingConfig yearMapping =
       new KafkaTarget.FieldPathToNameMappingConfig();
-    yearMapping.fields = ImmutableList.of("/values[0]");
-    yearMapping.name = "Year";
+    yearMapping.fieldPath = "/values[0]";
+    yearMapping.columnName = "Year";
 
     KafkaTarget.FieldPathToNameMappingConfig cityMapping =
       new KafkaTarget.FieldPathToNameMappingConfig();
-    cityMapping.fields = ImmutableList.of("/values[2]");
-    cityMapping.name = "City1";
+    cityMapping.fieldPath = "/values[2]";
+    cityMapping.columnName = "City1";
 
     KafkaTarget.FieldPathToNameMappingConfig city2Mapping =
       new KafkaTarget.FieldPathToNameMappingConfig();
-    city2Mapping.fields = ImmutableList.of("/values[3]");
-    city2Mapping.name = "City2";
+    city2Mapping.fieldPath = "/values[3]";
+    city2Mapping.columnName = "City2";
 
     KafkaTarget.FieldPathToNameMappingConfig nonExistingmapping =
       new KafkaTarget.FieldPathToNameMappingConfig();
-    nonExistingmapping.fields = ImmutableList.of("/values[20]");
-    nonExistingmapping.name = "NonExistingCity";
+    nonExistingmapping.fieldPath = "/values[20]";
+    nonExistingmapping.columnName = "NonExistingCity";
 
     KafkaTarget.FieldPathToNameMappingConfig city3Mapping =
       new KafkaTarget.FieldPathToNameMappingConfig();
-    city3Mapping.fields = ImmutableList.of("/values[4]");
-    city3Mapping.name = "City3";
+    city3Mapping.fieldPath = "/values[4]";
+    city3Mapping.columnName = "City3";
 
     KafkaTarget kafkaTarget = new KafkaTarget();
     TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)

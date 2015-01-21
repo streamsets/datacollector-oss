@@ -105,7 +105,7 @@ angular.module('pipelineAgentApp.common')
         };
 
       if(configDefinition.type === 'MODEL') {
-        if(configDefinition.model.modelType === 'FIELD_SELECTOR') {
+        if(configDefinition.model.modelType === 'FIELD_SELECTOR_MULTI_VALUED') {
           config.value = [];
         } else if(configDefinition.model.modelType === 'LANE_PREDICATE_MAPPING') {
           config.value = [{

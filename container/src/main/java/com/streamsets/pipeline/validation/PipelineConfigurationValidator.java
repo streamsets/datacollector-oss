@@ -333,7 +333,7 @@ public class PipelineConfigurationValidator {
           preview = false;
         }
         break;
-      case FIELD_SELECTOR:
+      case FIELD_SELECTOR_MULTI_VALUED:
         if(!(conf.getValue() instanceof List)) {
           // stage configuration must be a model
           issues.add(StageIssue.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),

@@ -29,7 +29,7 @@ public class KafkaUtil {
     for(KafkaBroker broker : kafkaBrokers) {
       try {
         LOG.info("Creating SimpleConsumer using the following configuration: host {}, port {}, max wait time {}, max " +
-            "fetch size {}, client name {}", broker.getHost(), broker.getPort(), timeout, bufferSize,
+            "fetch size {}, client columnName {}", broker.getHost(), broker.getPort(), timeout, bufferSize,
           clientName);
         simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), timeout, bufferSize,
           clientName);

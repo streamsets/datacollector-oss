@@ -195,7 +195,7 @@
         </div>
 
 
-        <div ng-switch-when="FIELD_SELECTOR"
+        <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUED"
              ng-click="onFieldSelectorFocus(detailPaneConfig)"
              class="clearfix">
           <label class="col-md-3 control-label">{{configDefinition.label}}
@@ -364,7 +364,7 @@
                     </div>
 
 
-                    <div ng-switch-when="FIELD_SELECTOR"
+                    <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUED"
                          ng-click="onFieldSelectorFocus(detailPaneConfig)"
                          class="clearfix">
                       <ui-select multiple tagging tagging-label="false" reset-search-input="true"

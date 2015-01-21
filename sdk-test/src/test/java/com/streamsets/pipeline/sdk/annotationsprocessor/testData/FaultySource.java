@@ -170,13 +170,15 @@ public class FaultySource {
   //23. inner class must be static
   public class PhoneConfig {
 
+    //24. Single valued field selector must be of type String
     @ConfigDef(
       defaultValue = "Hello",
       label = "Phone",
       required = true,
       description = "The domain of the twitter user",
-      type = ConfigDef.Type.STRING)
-    public String phone;
+      type = ConfigDef.Type.MODEL)
+    @FieldSelector(singleValued = true)
+    public List<String> phone;
 
     @ConfigDef(
       defaultValue = "Hello",

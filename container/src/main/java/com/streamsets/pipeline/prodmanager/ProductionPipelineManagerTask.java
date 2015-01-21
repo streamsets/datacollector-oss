@@ -10,33 +10,31 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.config.DeliveryGuarantee;
-import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.runner.Pipeline;
-import com.streamsets.pipeline.runner.SourceOffsetTracker;
+import com.streamsets.pipeline.observerstore.ObserverStore;
+import com.streamsets.pipeline.observerstore.impl.FileObserverStore;
+import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;
 import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
 import com.streamsets.pipeline.runner.production.ProductionPipelineRunnable;
 import com.streamsets.pipeline.runner.production.ProductionPipelineRunner;
-import com.streamsets.pipeline.runner.production.ProductionSourceOffsetCommitterOffsetTracker;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.task.AbstractTask;
-import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import org.slf4j.Logger;
@@ -77,6 +75,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private final SnapshotStore snapshotStore;
   private final ErrorRecordStore errorRecordStore;
 
+
+  private final ObserverStore observerStore;
+
   /*References the thread that is executing the pipeline currently */
   private ProductionPipelineRunnable pipelineRunnable;
   /*The executor service that is currently executing the ProdPipelineRunnerThread*/
@@ -99,6 +100,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     this.stageLibrary = stageLibrary;
     snapshotStore = new FileSnapshotStore(runtimeInfo);
     errorRecordStore = new FileErrorRecordStore(runtimeInfo, configuration);
+    observerStore = new FileObserverStore(runtimeInfo);
   }
 
 
@@ -389,6 +391,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
       throw new PipelineManagerException(ContainerError.CONTAINER_0111, pipelineName);
     }
     stateTracker.deleteHistory(pipelineName, rev);
+  }
+
+  public ObserverStore getObserverStore() {
+    return observerStore;
   }
 
   @VisibleForTesting

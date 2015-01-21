@@ -6,28 +6,17 @@
 package com.streamsets.pipeline.restapi;
 
 import com.codahale.metrics.MetricRegistry;
-import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.ErrorMessage;
-import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
-import com.streamsets.pipeline.record.RecordImpl;
-import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
-import com.streamsets.pipeline.store.PipelineStoreException;
 import org.apache.commons.io.IOUtils;
-import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import javax.inject.Singleton;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
@@ -36,7 +25,6 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TestPipelineManagerResource extends JerseyTest {
@@ -180,102 +168,7 @@ public class TestPipelineManagerResource extends JerseyTest {
   static class PipelineManagerResourceConfig extends AbstractBinder {
     @Override
     protected void configure() {
-      bindFactory(PipelineManagerTestInjector.class).to(ProductionPipelineManagerTask.class);
-    }
-  }
-
-  static class PipelineManagerTestInjector implements Factory<ProductionPipelineManagerTask> {
-
-    public PipelineManagerTestInjector() {
-    }
-
-    @Singleton
-    @Override
-    public ProductionPipelineManagerTask provide() {
-
-
-      ProductionPipelineManagerTask pipelineManager = Mockito.mock(ProductionPipelineManagerTask.class);
-      try {
-        Mockito.when(pipelineManager.startPipeline(PIPELINE_NAME, PIPELINE_REV)).thenReturn(new PipelineState(
-            PIPELINE_NAME, "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis()));
-      } catch (PipelineManagerException | StageException | PipelineRuntimeException | PipelineStoreException e) {
-        e.printStackTrace();
-      }
-
-      try {
-        Mockito.when(pipelineManager.stopPipeline(false)).thenReturn(
-            new PipelineState(PIPELINE_NAME, PIPELINE_REV, State.STOPPED, "The pipeline is not running", System.currentTimeMillis()));
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState(PIPELINE_NAME, PIPELINE_REV, State.STOPPED
-          , "Pipeline is not running", System.currentTimeMillis()));
-
-      try {
-        Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME, DEFAULT_PIPELINE_REV))
-            .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
-            .thenReturn(null);
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      Mockito.when(pipelineManager.getSnapshotStatus()).thenReturn(new SnapshotStatus(false, true));
-
-      Mockito.when(pipelineManager.getMetrics()).thenReturn(new MetricRegistry());
-
-      List<PipelineState> states = new ArrayList<>();
-      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis()));
-      states.add(new PipelineState(PIPELINE_NAME, "1", State.RUNNING, "", System.currentTimeMillis()));
-      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis()));
-      try {
-        Mockito.when(pipelineManager.getHistory(PIPELINE_NAME, DEFAULT_PIPELINE_REV, false)).thenReturn(states);
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      Mockito.doNothing().when(pipelineManager).deleteSnapshot(PIPELINE_NAME, PIPELINE_REV);
-      try {
-        Mockito.doNothing().when(pipelineManager).deleteErrors(PIPELINE_NAME, "1");
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      try {
-        Mockito.when(pipelineManager.getErrors(PIPELINE_NAME, "0"))
-          .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
-          .thenReturn(null);
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      Record r = new RecordImpl("a", "b", "c".getBytes(), "d");
-      try {
-        Mockito.when(pipelineManager.getErrorRecords("myProcessorStage")).thenReturn(
-          ImmutableList.of(r));
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      ErrorMessage em = new ErrorMessage("a", "b", 2L);
-      try {
-        Mockito.when(pipelineManager.getErrorMessages("myProcessorStage")).thenReturn(
-          ImmutableList.of(em));
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      try {
-        Mockito.doNothing().when(pipelineManager).resetOffset(PIPELINE_NAME, PIPELINE_REV);
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      return pipelineManager;
-    }
-
-    @Override
-    public void dispose(ProductionPipelineManagerTask pipelineManagerTask) {
+      bindFactory(TestUtil.PipelineManagerTestInjector.class).to(ProductionPipelineManagerTask.class);
     }
   }
 }

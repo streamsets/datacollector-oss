@@ -19,4 +19,6 @@ import java.lang.annotation.RetentionPolicy;
  * The type of the field on which this annotation is applied should be "List<String>"
  */
 public @interface FieldSelector {
+
+  boolean singleValued() default false;
 }

@@ -129,7 +129,7 @@ public class KafkaTarget extends BaseTarget {
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.MODEL,
-    description = "Field to name mapping configuration",
+    description = "Field to columnName mapping configuration",
     label = "Field to Name Mapping",
     dependsOn = "payloadType",
     triggeredByValue = {"CSV"},
@@ -145,14 +145,14 @@ public class KafkaTarget extends BaseTarget {
       type = ConfigDef.Type.MODEL,
       label = "Field Path",
       description = "The fields which must be written to the target")
-    @FieldSelector
-    public List<String> fields;
+    @FieldSelector(singleValued = true)
+    public String fieldPath;
 
     @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
-      label = "Field Name",
-      description = "The name which must be used for the fields in the target")
-    public String name;
+      label = "CSV column columnName",
+      description = "The columnName which must be used for the fields in the target")
+    public String columnName;
   }
 
   public enum KafkaTargetConfigGroups implements ConfigGroups.Groups {
@@ -202,9 +202,7 @@ public class KafkaTarget extends BaseTarget {
     Map<String, String> fieldPathToNameMapping = new LinkedHashMap<>();
     if(fieldPathToNameMappingConfigList != null && !fieldPathToNameMappingConfigList.isEmpty()) {
       for (FieldPathToNameMappingConfig fieldPathToNameMappingConfig : fieldPathToNameMappingConfigList) {
-        for(String field : fieldPathToNameMappingConfig.fields) {
-          fieldPathToNameMapping.put(field, fieldPathToNameMappingConfig.name);
-        }
+        fieldPathToNameMapping.put(fieldPathToNameMappingConfig.fieldPath, fieldPathToNameMappingConfig.columnName);
       }
     }
     return fieldPathToNameMapping;
