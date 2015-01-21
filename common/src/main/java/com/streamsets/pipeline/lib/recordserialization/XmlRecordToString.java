@@ -13,10 +13,13 @@ public class XmlRecordToString implements RecordToString {
 
   @Override
   public void setFieldPathToNameMapping(Map<String, String> fieldPathToNameMap) {
-    if(fieldPathToNameMap != null && !fieldPathToNameMap.isEmpty()) {
-      throw new IllegalArgumentException(
-        "Field path to name mapping configuration is not expected for XmlRecordToString.");
-    }
+    //Throwing an exception here can cause trouble.
+    //For example if the user selects CSV and enters a big list of field path to column name mapping
+    //and then switches to JSON, the UI does not clear the previous information. What if the user changed from CSV
+    //to JSON by mistake? We should not expect everything to be reentered.
+
+    //In this case it is good to ignore options that are not relevant. UI hides non relevant option anyways.
+
   }
 
   @Override

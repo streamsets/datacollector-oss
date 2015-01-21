@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.StageException;
 import java.util.Map;
 
 public class LogRecordToString implements RecordToString {
+
   @Override
   public void setFieldPathToNameMapping(Map<String, String> fieldPathToNameMap) {
 
