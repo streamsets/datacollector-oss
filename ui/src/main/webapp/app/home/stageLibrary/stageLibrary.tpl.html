@@ -19,7 +19,8 @@
     <div class="stage-list-container">
       <ul class="stages-list">
 
-        <li ng-repeat="stageLibrary in stageLibraries | filter : libraryFilter | orderBy: 'label'"
+        <li id="item1" draggable drag-data="stageLibrary"
+            ng-repeat="stageLibrary in stageLibraries | filter : libraryFilter | orderBy: 'label'"
             ng-init="icon=getStageIconURL(stageLibrary)">
           <a role="menuitem" tabindex="-1" href="#"
              ng-click="addStageInstance(stageLibrary)"

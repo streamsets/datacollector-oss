@@ -31,6 +31,12 @@ angular
         $scope.addStageInstance(connectStage, $scope.firstOpenLane);
         $scope.connectStage = {};
         $scope.firstOpenLane.stageInstance = undefined;
+      },
+
+      stageDrop: function(e, stage) {
+        if(e && stage) {
+          $scope.addStageInstance(stage, undefined, e.x, e.y);
+        }
       }
     });
 

@@ -61,8 +61,10 @@ angular
        * Add Stage Instance to the Pipeline Graph.
        * @param stage
        * @param firstOpenLane [optional]
+       * @param relativeXPos [optional]
+       * @param relativeYPos [optional]
        */
-      addStageInstance: function (stage, firstOpenLane) {
+      addStageInstance: function (stage, firstOpenLane, relativeXPos, relativeYPos) {
         if($scope.sourceExists && stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
           $rootScope.common.errors = ['Origin already exists.'];
           return;
@@ -71,7 +73,8 @@ angular
         }
 
 
-        var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig, undefined, firstOpenLane),
+        var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig, undefined,
+            firstOpenLane, relativeXPos, relativeYPos),
           edge;
 
         $scope.changeStageSelection({
@@ -88,7 +91,7 @@ angular
           };
         }
 
-        $scope.$broadcast('addNode', stageInstance, edge);
+        $scope.$broadcast('addNode', stageInstance, edge, relativeXPos, relativeYPos);
       },
 
       /**

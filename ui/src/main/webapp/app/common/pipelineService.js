@@ -35,11 +35,13 @@ angular.module('pipelineAgentApp.common')
      * @param pipelineConfig
      * @param labelSuffix [Optional]
      * @param firstOpenLane [Optional]
+     * @param relativeXPos [Optional]
+     * @param relativeYPos [Optional]
      * @returns {{instanceName: *, library: (*|stageInstance.library|library|e.library), stageName: *, stageVersion: *, configuration: Array, uiInfo: {label: *, description: string, xPos: *, yPos: number, stageType: *}, inputLanes: Array, outputLanes: Array}}
      */
-    this.getNewStageInstance = function (stage, pipelineConfig, labelSuffix, firstOpenLane) {
-      var xPos = getXPos(pipelineConfig, firstOpenLane),
-        yPos = getYPos(pipelineConfig, firstOpenLane, xPos),
+    this.getNewStageInstance = function (stage, pipelineConfig, labelSuffix, firstOpenLane, relativeXPos, relativeYPos) {
+      var xPos = relativeXPos || getXPos(pipelineConfig, firstOpenLane),
+        yPos = relativeYPos || getYPos(pipelineConfig, firstOpenLane, xPos),
         stageLabel = self.getStageLabel(stage, pipelineConfig),
         stageInstance = {
           instanceName: stage.name + (new Date()).getTime() + (labelSuffix ? labelSuffix : ''),

@@ -1,7 +1,7 @@
 <div class="panel panel-default graph-pane"
      ng-controller="GraphController">
 
-  <div class="panel-body">
+  <div class="panel-body" droppable drop="stageDrop">
 
     <div ng-repeat="issues in pipelineConfig.issues.pipelineIssues">
 

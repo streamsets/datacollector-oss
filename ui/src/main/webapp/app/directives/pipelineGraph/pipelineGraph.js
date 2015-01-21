@@ -516,8 +516,21 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       this.state.lastKeyDown = -1;
     };
 
-    GraphCreator.prototype.addNode = function(node, edge) {
+    GraphCreator.prototype.addNode = function(node, edge, relativeX, relativeY) {
       var thisGraph = this;
+
+      if(relativeX && relativeY) {
+        var offsets = $element[0].getBoundingClientRect(),
+          top = offsets.top,
+          left = offsets.left,
+          currentTranslatePos = thisGraph.zoom.translate(),
+          startX = (currentTranslatePos[0] + left),
+          startY = (currentTranslatePos[1] + top);
+
+        node.uiInfo.xPos = (relativeX - startX)/ thisGraph.state.currentScale;
+        node.uiInfo.yPos = (relativeY - startY)/ thisGraph.state.currentScale;
+      }
+
       thisGraph.nodes.push(node);
 
       if(edge) {
@@ -527,7 +540,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       thisGraph.updateGraph();
       thisGraph.selectNode(node);
 
-      thisGraph.moveNodeToVisibleArea(node);
+      if(!relativeX) {
+        thisGraph.moveNodeToVisibleArea(node);
+      }
+
     };
 
 
@@ -1006,8 +1022,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       }
     });
 
-    $scope.$on('addNode', function(event, stageInstance, edge) {
-      graph.addNode(stageInstance, edge);
+    $scope.$on('addNode', function(event, stageInstance, edge, relativeX, relativeY) {
+      graph.addNode(stageInstance, edge, relativeX, relativeY);
     });
 
     $scope.$on('selectNode', function(event, stageInstance, moveToCenter) {
