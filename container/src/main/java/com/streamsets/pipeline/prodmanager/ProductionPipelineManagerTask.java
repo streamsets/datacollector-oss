@@ -74,8 +74,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private final StageLibraryTask stageLibrary;
   private final SnapshotStore snapshotStore;
   private final ErrorRecordStore errorRecordStore;
-
-
   private final ObserverStore observerStore;
 
   /*References the thread that is executing the pipeline currently */

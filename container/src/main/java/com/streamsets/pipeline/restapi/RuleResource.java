@@ -9,6 +9,7 @@ import com.streamsets.pipeline.config.AlertDefinition;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 
 import javax.inject.Inject;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -29,23 +30,23 @@ public class RuleResource {
     this.pipelineManager = pipelineManager;
   }
 
-  @Path("/{name}/alert")
+  @Path("/{name}/alerts")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getAlerts(
     @PathParam("name") String name,
-    @QueryParam("rev") String rev) {
+    @QueryParam("rev") @DefaultValue("0") String rev) {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
       pipelineManager.getObserverStore().retrieveAlerts(name, rev)).build();
 
   }
 
-  @Path("/{name}/alert")
+  @Path("/{name}/alerts")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response saveAlerts(
     @PathParam("name") String name,
-    @QueryParam("rev") String rev,
+    @QueryParam("rev") @DefaultValue("0") String rev,
     List<AlertDefinition> alerts) {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
       pipelineManager.getObserverStore().storeAlerts(name, rev, alerts)).build();
