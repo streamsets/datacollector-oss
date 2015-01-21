@@ -181,8 +181,13 @@
       "rules": "Rules",
       "rulesTab": {
         "action": "Action",
-        "noRules": "No Rules to view.",
+        "alerts": "Alerts",
+        "counters": "Counters",
+        "noAlerts": "No Alerts to view.",
+        "noSampling": "No Sampling to view.",
+        "noCounters": "No Counters to view.",
         "predicate": "Predicate",
+        "sampling": "Sampling",
         "threshold": "Threshold"
       },
       "summary": "Summary",

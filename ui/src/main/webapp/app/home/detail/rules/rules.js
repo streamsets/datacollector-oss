@@ -8,10 +8,45 @@ angular
   .controller('RulesController', function ($scope) {
     angular.extend($scope, {
       showLoading: false,
-      rules: [],
+      metricAlertRuleList: [],
+      alertRuleList: [],
+      counterRuleList: [],
+      samplingRuleList: [],
 
+      /**
+       * Refresh Rules
+       */
       refreshRules: function() {
         updateRules($scope.activeConfigInfo.name);
+      },
+
+      /**
+       * Callback function for Create New Alert Rule button.
+       *
+       */
+      createAlertRule: function() {
+
+      },
+
+      /**
+       * Callback function for Create New Counter Rule button.
+       */
+      createCounterRule: function() {
+
+      },
+
+      /**
+       * Callback function for Create New Sampling Rule button.
+       */
+      createSamplingRule: function() {
+
+      },
+
+      /**
+       * Callback function for Create New Metric Alert Rule button.
+       */
+      createMetricAlertRule: function() {
+
       }
     });
 

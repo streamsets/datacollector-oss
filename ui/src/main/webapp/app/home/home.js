@@ -13,7 +13,7 @@ angular
     );
   }])
   .controller('HomeController', function ($scope, $rootScope, $timeout, api, configuration, _, $q, $modal,
-                                          $localStorage, pipelineService, pipelineConstant) {
+                                          $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster) {
     var stageCounter = 0,
       timeout,
       dirty = false,
@@ -21,7 +21,8 @@ angular
       pipelineStatusTimer,
       pipelineMetricsTimer,
       edges = [],
-      destroyed = false;
+      destroyed = false,
+      pageHidden = false;
 
     angular.extend($scope, {
       pipelineConstant: pipelineConstant,
@@ -566,7 +567,7 @@ angular
 
 
     /**
-     * Fetch the Pipeline Status every 2 Seconds.
+     * Fetch the Pipeline Status every configured refresh interval.
      *
      */
     var refreshPipelineStatus = function() {
@@ -600,7 +601,7 @@ angular
 
 
     /**
-     * Fetch the Pipeline Status every 2 Seconds.
+     * Fetch the Pipeline Status for every configured refresh interval.
      *
      */
     var refreshPipelineMetrics = function() {
@@ -791,6 +792,18 @@ angular
       $timeout.cancel(pipelineStatusTimer);
       $timeout.cancel(pipelineMetricsTimer);
       destroyed = true;
+    });
+
+    $scope.$on('visibilityChange', function(event, isHidden) {
+      if (isHidden) {
+        $timeout.cancel(pipelineStatusTimer);
+        $timeout.cancel(pipelineMetricsTimer);
+        pageHidden = true;
+      } else {
+        refreshPipelineMetrics();
+        refreshPipelineStatus();
+        pageHidden = false;
+      }
     });
 
   });

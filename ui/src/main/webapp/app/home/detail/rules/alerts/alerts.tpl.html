@@ -1,0 +1,19 @@
+<div class="alerts-tab">
+  <button type="button" class="btn btn-primary btn-sm text-center">
+    <i class="fa fa-plus"></i>
+    <span>Create New Alert Rule</span>
+  </button>
+  <table class="table" ng-if="rules.length">
+    <thead>
+      <tr>
+        <th class="col-md-3" translate="home.detailPane.rulesTab.predicate">Predicate</th>
+        <th class="col-md-3" translate="home.detailPane.rulesTab.threshold">Threshold</th>
+        <th class="col-md-6" translate="home.detailPane.rulesTab.action">Action</th>
+      </tr>
+    </thead>
+    <tbody ng-hide="showLoading">
+    </tbody>
+  </table>
+
+  <div show-loading="showLoading"></div>
+</div>

@@ -9,49 +9,49 @@ angular
     var infoTab =  {
         name:'info',
         template:'app/home/detail/info/info.tpl.html',
-        iconClass: 'fa fa-info-circle fa-12x'
+        iconClass: 'fa fa-info-circle'
       },
       historyTab = {
         name:'history',
         template:'app/home/detail/history/history.tpl.html',
-        iconClass: 'fa fa-history fa-12x'
+        iconClass: 'fa fa-history'
       },
       configurationTab = {
         name:'configuration',
         template:'app/home/detail/configuration/configuration.tpl.html',
-        iconClass: 'fa fa-gear fa-12x',
+        iconClass: 'fa fa-gear',
         active: true
       },
       rawPreviewTab = {
         name:'rawPreview',
         template:'app/home/detail/rawPreview/rawPreview.tpl.html',
-        iconClass: 'fa fa-eye fa-12x'
+        iconClass: 'fa fa-eye'
       },
       summaryTab = {
         name:'summary',
         template:'app/home/detail/summary/summary.tpl.html',
-        iconClass: 'fa fa-bar-chart fa-12x'
+        iconClass: 'fa fa-bar-chart'
       },
       errorTab = {
         name:'errors',
         template:'app/home/detail/badRecords/badRecords.tpl.html',
-        iconClass: 'fa fa-exclamation-triangle fa-12x'
+        iconClass: 'fa fa-exclamation-triangle'
       },
       dataSummaryTab = {
         name:'summary',
         template:'app/home/detail/dataSummary/dataSummary.tpl.html',
-        iconClass: 'fa fa-bar-chart fa-12x',
+        iconClass: 'fa fa-bar-chart',
         active: true
       },
       alertsTab = {
         name:'alerts',
         template:'app/home/detail/alerts/alerts.tpl.html',
-        iconClass: 'glyphicon glyphicon-exclamation-sign fa-12x'
+        iconClass: 'glyphicon glyphicon-exclamation-sign'
       },
       rulesTab = {
         name:'rules',
         template:'app/home/detail/rules/rules.tpl.html',
-        iconClass: 'fa fa-list fa-12x'
+        iconClass: 'fa fa-list'
       };
 
     /**
@@ -66,17 +66,17 @@ angular
       switch(type) {
         case pipelineConstant.PIPELINE:
           if(isPipelineRunning) {
-            tabsList = [summaryTab, errorTab, infoTab, configurationTab, historyTab];
+            tabsList = [summaryTab, errorTab, infoTab, configurationTab, rulesTab, historyTab];
           } else {
-            tabsList = [infoTab, configurationTab, historyTab];
+            tabsList = [infoTab, configurationTab, rulesTab, historyTab];
           }
 
           return tabsList;
         case pipelineConstant.STAGE_INSTANCE:
           if(isPipelineRunning) {
-            tabsList = [summaryTab, errorTab, infoTab, configurationTab];
+            tabsList = [summaryTab, errorTab, infoTab, configurationTab, rulesTab];
           } else {
-            tabsList = [infoTab, configurationTab];
+            tabsList = [infoTab, configurationTab, rulesTab];
           }
 
           if($scope.detailPaneConfigDefn.rawSourceDefinition) {
@@ -86,9 +86,9 @@ angular
           return tabsList;
         case pipelineConstant.LINK:
           if(isPipelineRunning) {
-            return [dataSummaryTab, alertsTab, rulesTab, infoTab];
+            return [dataSummaryTab, rulesTab, infoTab];
           } else {
-            return [infoTab];
+            return [infoTab, rulesTab];
           }
           break;
       }

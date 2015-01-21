@@ -1,30 +1,38 @@
 <div ng-controller="RulesController" class="rules-tab">
 
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="panel panel-default">
-        <div class="panel-heading" translate="home.detailPane.rules">Rules</div>
-        <div class="panel-body rules-list">
+  <tabset ng-if="selectedType === pipelineConstant.LINK">
+    <tab>
+      <tab-heading>
+        <span  translate="home.detailPane.rulesTab.alerts">Alerts</span>
+      </tab-heading>
 
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="col-md-3" translate="home.detailPane.rulesTab.predicate">Predicate</th>
-                <th class="col-md-3" translate="home.detailPane.rulesTab.threshold">Threshold</th>
-                <th class="col-md-6" translate="home.detailPane.rulesTab.action">Action</th>
-              </tr>
-            </thead>
-              <tbody ng-hide="showLoading">
-                <tr ng-if="rules.length === 0">
-                  <td colspan="3" class="no-rules text-center" translate="home.detailPane.rulesTab.noRules">No Rules.</td>
-                </tr>
-            </tbody>
-          </table>
-
-          <div show-loading="showLoading"></div>
-        </div>
+      <div class="tabs-content">
+        <ng-include src="'app/home/detail/rules/alerts/alerts.tpl.html'"></ng-include>
       </div>
-    </div>
-  </div>
+    </tab>
+
+    <tab>
+      <tab-heading>
+        <span  translate="home.detailPane.rulesTab.sampling">Sampling</span>
+      </tab-heading>
+
+      <div class="tabs-content">
+        <ng-include src="'app/home/detail/rules/sampling/sampling.tpl.html'"></ng-include>
+      </div>
+    </tab>
+
+    <tab>
+      <tab-heading>
+        <span  translate="home.detailPane.rulesTab.counters">Counters</span>
+      </tab-heading>
+
+      <div class="tabs-content">
+        <ng-include src="'app/home/detail/rules/counters/counters.tpl.html'"></ng-include>
+      </div>
+    </tab>
+  </tabset>
+
+  <ng-include ng-if="selectedType !== pipelineConstant.LINK"
+              src="'app/home/detail/rules/metricAlerts/metricAlerts.tpl.html'"></ng-include>
 
 </div>

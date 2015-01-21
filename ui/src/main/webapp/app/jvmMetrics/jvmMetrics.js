@@ -12,7 +12,7 @@ angular
       }
     );
   }])
-  .controller('JVMMetricsController', function ($scope, $rootScope, $q, $timeout, api, configuration) {
+  .controller('JVMMetricsController', function ($scope, $rootScope, $q, $timeout, api, configuration, visibilityBroadcaster) {
     var jvmMetricsTimer,
       destroyed = false;
 
@@ -388,6 +388,18 @@ angular
     $scope.$on('$destroy', function(){
       $timeout.cancel(jvmMetricsTimer);
       destroyed = true;
+    });
+
+    $scope.$on('visibilityChange', function(event, isHidden) {
+      if (isHidden) {
+        console.log('hidden');
+        $timeout.cancel(jvmMetricsTimer);
+        destroyed = true;
+      } else {
+        refreshPipelineJMX();
+        destroyed = false;
+        console.log('hidden');
+      }
     });
 
   });

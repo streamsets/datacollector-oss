@@ -1,0 +1,18 @@
+<div class="sampling-tab">
+  <table class="table">
+    <thead>
+    <tr>
+      <th class="col-md-3" translate="home.detailPane.rulesTab.predicate">Predicate</th>
+      <th class="col-md-3" translate="home.detailPane.rulesTab.threshold">Threshold</th>
+      <th class="col-md-6" translate="home.detailPane.rulesTab.action">Action</th>
+    </tr>
+    </thead>
+    <tbody ng-hide="showLoading">
+    <tr ng-if="rules.length === 0">
+      <td colspan="3" class="no-records text-center" translate="home.detailPane.rulesTab.noSampling">No Sampling to view.</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div show-loading="showLoading"></div>
+</div>
