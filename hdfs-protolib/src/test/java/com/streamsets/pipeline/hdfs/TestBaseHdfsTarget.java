@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -76,6 +77,9 @@ public class TestBaseHdfsTarget {
     target.compression = CompressionMode.NONE.name();
     target.timeDriver = "time:now()";
     target.lateRecordsLimit = "1 * HOURS";
+    target.csvFileFormat = CsvFileMode.CSV;
+    target.dataFormat = HdfsDataFormat.CSV;
+    target.fieldPathToNameMappingConfigList = new ArrayList<>();
   }
 
   static class ForTestHdfsTarget extends BaseHdfsTarget {

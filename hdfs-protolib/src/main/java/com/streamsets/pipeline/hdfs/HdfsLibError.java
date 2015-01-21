@@ -21,6 +21,10 @@ public enum HdfsLibError implements ErrorCode {
   HDFS_0012("The maximum records per file must be zero greater than zero, '{}'"),
   HDFS_0013("The late record time limit expression '{}' must be greater than zero"),
 
+  HDFS_0014("Could not initialize the writer manager: {}"),
+
+  HDFS_0015("The record '{}' is late"),
+  HDFS_0016("Error while writing to HDFS: {}"),
   ;
   private final String msg;
 

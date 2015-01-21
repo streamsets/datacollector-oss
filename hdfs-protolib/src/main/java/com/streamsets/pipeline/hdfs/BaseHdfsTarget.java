@@ -28,6 +28,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
+import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
@@ -80,7 +81,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       displayPosition = 3)
   public String kerberosKeytab;
 
-  @ConfigDef(required = true,
+  @ConfigDef(required = false,
       type = ConfigDef.Type.MAP,
       description = "Additional HDFS configuration to be used by the client (i.e. replication factor, rpc timeout, etc.)",
       label = "HDFS configs",
@@ -339,29 +340,34 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       throw new StageException(HdfsLibError.HDFS_0012, maxRecordsPerFile);
     }
 
+    recordToString = createRecordToStringInstance();
+
+    SequenceFile.CompressionType compressionType = (seqFileCompressionType != null)
+                                                   ? seqFileCompressionType.getType() : null;
     try {
       CompressionCodec compressionCodec = (CompressionMode.getCodec(compression) != null)
                                           ? CompressionMode.getCodec(compression).newInstance() : null;
       RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
           dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordLimitSecs, maxRecordsPerFile, maxFileSize,
-          fileType, compressionCodec, seqFileCompressionType.getType(), keyEl, null);
+          fileType, compressionCodec, compressionType, keyEl, recordToString);
 
       currentWriters = new ActiveRecordWriters(mgr);
     } catch (Exception ex) {
-
+      throw new StageException(HdfsLibError.HDFS_0014, ex.getMessage(), ex);
     }
+
     try {
-      if (!lateRecordsDirPathTemplate.isEmpty()) {
+      if (lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
         CompressionCodec compressionCodec = (getCompressionCodec() != null)
                                             ? getCompressionCodec().newInstance() : null;
         RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
             lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordLimitSecs, maxRecordsPerFile,
-            maxFileSize, fileType, compressionCodec, seqFileCompressionType.getType(), keyEl, null);
+            maxFileSize, fileType, compressionCodec, compressionType, keyEl, recordToString);
 
         lateWriters = new ActiveRecordWriters(mgr);
       }
     } catch (Exception ex) {
-
+      throw new StageException(HdfsLibError.HDFS_0014, ex.getMessage(), ex);
     }
 
     timeDriverElEval = new ELEvaluator();
@@ -369,7 +375,6 @@ public abstract class BaseHdfsTarget extends BaseTarget {
     timeDriverElEval.registerFunction("time", "now", TIME_NOW_FUNC);
     timeDriver = "${" + timeDriver + "}";
 
-    recordToString = createRecordToStringInstance();
   }
 
   private FileSystem getFileSystemForInitDestroy() throws IOException {
