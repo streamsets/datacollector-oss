@@ -7,7 +7,7 @@ package com.streamsets.pipeline.observerstore.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.config.AlertDefinition;
-import com.streamsets.pipeline.config.MeterDefinition;
+import com.streamsets.pipeline.config.MetricDefinition;
 import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
@@ -62,7 +62,7 @@ public class TestFileObserverStore {
   public void testStoreAndRetrieveAlerts() {
     RuleDefinition ruleDefinition = observerStore.retrieveRules(PIPELINE_NAME, PIPELINE_REV);
     Assert.assertTrue(ruleDefinition.getAlertDefinitions().isEmpty());
-    Assert.assertTrue(ruleDefinition.getMeterDefinitions().isEmpty());
+    Assert.assertTrue(ruleDefinition.getMetricDefinitions().isEmpty());
     Assert.assertTrue(ruleDefinition.getSamplingDefinitions().isEmpty());
     Assert.assertTrue(ruleDefinition.getMetricsAlertDefinitions().isEmpty());
 
@@ -85,10 +85,10 @@ public class TestFileObserverStore {
     samplingDefinitions.add(new SamplingDefinition("s2", "s2", "a", "2", null, true));
     samplingDefinitions.add(new SamplingDefinition("s3", "s3", "a", "2", null, true));
 
-    List<MeterDefinition> counters = new ArrayList<>();
-    counters.add(new MeterDefinition("c1", "c1", "l", "p", "g", true));
-    counters.add(new MeterDefinition("c2", "c2", "l", "p", "g", true));
-    counters.add(new MeterDefinition("c3", "c3", "l", "p", "g", true));
+    List<MetricDefinition> counters = new ArrayList<>();
+    counters.add(new MetricDefinition("c1", "c1", "l", "p", "g", MetricType.METER, true));
+    counters.add(new MetricDefinition("c2", "c2", "l", "p", "g", MetricType.METER, true));
+    counters.add(new MetricDefinition("c3", "c3", "l", "p", "g", MetricType.METER, true));
 
     ruleDefinition = new RuleDefinition(alerts, metricsAlertDefinitions, samplingDefinitions, counters);
 
@@ -109,9 +109,9 @@ public class TestFileObserverStore {
     for(int i = 0; i < alerts.size(); i++) {
       Assert.assertEquals(ruleDefinition.getSamplingDefinitions().get(i).toString(), actualRuleDefinition.getSamplingDefinitions().get(i).toString());
     }
-    Assert.assertEquals(ruleDefinition.getMeterDefinitions().size(), actualRuleDefinition.getMeterDefinitions().size());
+    Assert.assertEquals(ruleDefinition.getMetricDefinitions().size(), actualRuleDefinition.getMetricDefinitions().size());
     for(int i = 0; i < alerts.size(); i++) {
-      Assert.assertEquals(ruleDefinition.getMeterDefinitions().get(i).toString(), actualRuleDefinition.getMeterDefinitions().get(i).toString());
+      Assert.assertEquals(ruleDefinition.getMetricDefinitions().get(i).toString(), actualRuleDefinition.getMetricDefinitions().get(i).toString());
     }
 
   }

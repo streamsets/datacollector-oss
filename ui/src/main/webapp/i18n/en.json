@@ -181,11 +181,11 @@
       "rules": "Rules",
       "rulesTab": {
         "action": "Action",
-        "alertsRule": "Alerts Rule",
-        "metersRule": "Meters Rule",
+        "alertRule": "Alert Rule",
+        "metricRule": "Metric Rule",
         "noAlertRules": "No Alert Rules to view.",
         "noSamplingRules": "No Sampling Rules to view.",
-        "noMeterRules": "No Meter Rules to view.",
+        "noMetricRules": "No Metric Rules to view.",
         "predicate": "Predicate",
         "samplingRule": "Sampling Rule",
         "threshold": "Threshold"

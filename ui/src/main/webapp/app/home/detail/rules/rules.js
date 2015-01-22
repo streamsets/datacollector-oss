@@ -37,20 +37,21 @@ angular
       },
 
       /**
-       * Callback function for Create New Meter Rule button.
+       * Callback function for Create New Metric Rule button.
        */
-      createMeterRule: function() {
+      createMetricRule: function() {
         var edge =  $scope.selectedObject,
-          newMeterDefn = {
+          newMetricDefn = {
             id: edge.outputLane + (new Date()).getTime(),
             label: '',
-            meterGroup: '',
+            metricGroup: '',
+            metricType: 'METER',
             lane: edge.outputLane,
             predicate: '',
             enabled: false
           };
 
-        $scope.pipelineRules.meterDefinitions.push(newMeterDefn);
+        $scope.pipelineRules.metricDefinitions.push(newMetricDefn);
       },
 
       /**

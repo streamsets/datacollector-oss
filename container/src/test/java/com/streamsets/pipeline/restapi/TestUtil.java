@@ -17,7 +17,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.config.AlertDefinition;
 import com.streamsets.pipeline.config.ConfigDefinition;
-import com.streamsets.pipeline.config.MeterDefinition;
+import com.streamsets.pipeline.config.MetricDefinition;
 import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
@@ -291,10 +291,10 @@ public class TestUtil {
       metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
         MetricElement.HISTOGRAM_MEAN, "p", true));
 
-      List<MeterDefinition> counters = new ArrayList<>();
-      counters.add(new MeterDefinition("c1", "c1", "l", "p", "g", true));
-      counters.add(new MeterDefinition("c2", "c2", "l", "p", "g", true));
-      counters.add(new MeterDefinition("c3", "c3", "l", "p", "g", true));
+      List<MetricDefinition> counters = new ArrayList<>();
+      counters.add(new MetricDefinition("c1", "c1", "l", "p", "g", MetricType.METER, true));
+      counters.add(new MetricDefinition("c2", "c2", "l", "p", "g", MetricType.METER, true));
+      counters.add(new MetricDefinition("c3", "c3", "l", "p", "g", MetricType.METER, true));
 
       List<SamplingDefinition> samplingDefinitions = new ArrayList<>();
       samplingDefinitions.add(new SamplingDefinition("s1", "s1", "a", "2", null, true));

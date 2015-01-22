@@ -1,4 +1,4 @@
-<div class="meters-tab">
+<div class="metrics-tab">
   <form class="form-horizontal" role="form"
         ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
         name="{{detailPaneConfig.instanceName || 'pipeline'}}">
@@ -15,39 +15,39 @@
       </thead>
       <tbody ng-hide="showLoading">
 
-      <tr ng-repeat="meterRule in meterDefinitions = (pipelineRules.meterDefinitions | filter: {lane: selectedObject.outputLane})">
+      <tr ng-repeat="metricRule in metricDefinitions = (pipelineRules.metricDefinitions | filter: {lane: selectedObject.outputLane})">
 
         <td>
           <input type="checkbox" name="enabled{{$index}}"
-                 ng-model="meterRule.enabled">
+                 ng-model="metricRule.enabled">
         </td>
 
         <td>
             <textarea class="form-control" name="alertText{{$index}}" rows="1"
                       placeholder="Label"
-                      ng-model="meterRule.label"
+                      ng-model="metricRule.label"
                       ng-required="true"></textarea>
         </td>
 
         <td>
           <input type="text" class="form-control" name="group{{$index}}"
                  placeholder="Group"
-                 ng-model="meterRule.meterGroup"
+                 ng-model="metricRule.metricGroup"
                  ng-required="true">
         </td>
 
         <td class="threshold-column">
           <input type="text" class="form-control" name="predicate{{$index}}"
                  placeholder="Predicate"
-                 ng-model="meterRule.predicate"
+                 ng-model="metricRule.predicate"
                  ng-required="true">
         </td>
 
         <td>
           <div class="col-xs-1 btn-group" role="group" aria-label="Default button group">
             <button type="button" class="btn btn-danger btn-sm"
-                    tooltip-placement="bottom" tooltip="Delete Meter Rule"
-                    ng-click="removeRule(pipelineRules.meterDefinitions, $index)">
+                    tooltip-placement="bottom" tooltip="Delete Metric Rule"
+                    ng-click="removeRule(pipelineRules.metricDefinitions, $index)">
               <i class="fa fa-minus pointer"></i>
             </button>
           </div>
@@ -55,9 +55,9 @@
 
       </tr>
 
-      <tr ng-if="meterDefinitions.length === 0">
+      <tr ng-if="metricDefinitions.length === 0">
         <td colspan="3" class="no-records text-center"
-            translate="home.detailPane.rulesTab.noMeterRules">No Meter Rules to view.</td>
+            translate="home.detailPane.rulesTab.noMetricRules">No Metric Rules to view.</td>
       </tr>
 
       </tbody>
@@ -66,7 +66,7 @@
     <div show-loading="showLoading"></div>
 
     <button type="button" class="btn btn-primary btn-sm pull-right add-button"
-            ng-click="createMeterRule()">
+            ng-click="createMetricRule()">
       <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
     </button>
 

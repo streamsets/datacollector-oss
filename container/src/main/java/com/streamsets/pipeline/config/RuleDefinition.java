@@ -15,17 +15,17 @@ public class RuleDefinition {
   private final List<AlertDefinition> alertDefinitions;
   private final List<MetricsAlertDefinition> metricsAlertDefinitions;
   private final List<SamplingDefinition> samplingDefinitions;
-  private final List<MeterDefinition> meterDefinitions;
+  private final List<MetricDefinition> metricDefinitions;
 
   @JsonCreator
   public RuleDefinition(@JsonProperty("alertDefinitions") List<AlertDefinition> alertDefinitions,
                         @JsonProperty("metricsAlertDefinitions") List<MetricsAlertDefinition> metricsAlertDefinitions,
                         @JsonProperty("samplingDefinitions") List<SamplingDefinition> samplingDefinitions,
-                        @JsonProperty("counterDefinitions") List<MeterDefinition> meterDefinitions) {
+                        @JsonProperty("counterDefinitions") List<MetricDefinition> meterDefinitions) {
     this.alertDefinitions = alertDefinitions;
     this.metricsAlertDefinitions = metricsAlertDefinitions;
     this.samplingDefinitions = samplingDefinitions;
-    this.meterDefinitions = meterDefinitions;
+    this.metricDefinitions = meterDefinitions;
   }
 
   public List<AlertDefinition> getAlertDefinitions() {
@@ -40,7 +40,7 @@ public class RuleDefinition {
     return samplingDefinitions;
   }
 
-  public List<MeterDefinition> getMeterDefinitions() {
-    return meterDefinitions;
+  public List<MetricDefinition> getMetricDefinitions() {
+    return metricDefinitions;
   }
 }

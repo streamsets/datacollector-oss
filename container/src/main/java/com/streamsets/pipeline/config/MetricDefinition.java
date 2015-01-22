@@ -9,27 +9,30 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
 
-public class MeterDefinition {
+public class MetricDefinition {
 
   private final String id;
   private final String label;
   private final String lane;
   private final String predicate;
-  private final String meterGroup;
+  private final String metricGroup;
+  private final MetricType metricType;
   private final boolean enabled;
 
   @JsonCreator
-  public MeterDefinition(@JsonProperty("id") String id,
-                         @JsonProperty("label") String label,
-                         @JsonProperty("lane") String lane,
-                         @JsonProperty("predicate") String predicate,
-                         @JsonProperty("meterGroup") String meterGroup,
-                         @JsonProperty("enabled") boolean enabled) {
+  public MetricDefinition(@JsonProperty("id") String id,
+                          @JsonProperty("label") String label,
+                          @JsonProperty("lane") String lane,
+                          @JsonProperty("predicate") String predicate,
+                          @JsonProperty("metricGroup") String metricGroup,
+                          @JsonProperty("metricType") MetricType metricType,
+                          @JsonProperty("enabled") boolean enabled) {
     this.id = id;
     this.label = label;
     this.lane = lane;
     this.predicate = predicate;
-    this.meterGroup = meterGroup;
+    this.metricGroup = metricGroup;
+    this.metricType = metricType;
     this.enabled = enabled;
   }
 
@@ -49,8 +52,12 @@ public class MeterDefinition {
     return predicate;
   }
 
-  public String getMeterGroup() {
-    return meterGroup;
+  public String getMetricGroup() {
+    return metricGroup;
+  }
+
+  public MetricType getMetricType() {
+    return metricType;
   }
 
   public boolean isEnabled() {
@@ -60,7 +67,7 @@ public class MeterDefinition {
   @Override
   public String toString() {
     return Utils.format(
-      "MeterDefinition[id='{}' label='{}' lane='{}' predicate='{}' meterGroup='{}' isEnabled='{}']",
-      getId(), getLabel(), getLane(), getPredicate(), getMeterGroup(), isEnabled());
+      "MetricDefinition[id='{}' label='{}' lane='{}' predicate='{}' metricGroup='{}' metricType='{}' isEnabled='{}']",
+      getId(), getLabel(), getLane(), getPredicate(), getMetricGroup(), getMetricType(), isEnabled());
   }
 }
