@@ -59,7 +59,7 @@ public class TestRuleResource  extends JerseyTest {
 
     RuleDefinition ruleDefinition = new RuleDefinition(alerts, metricsAlertDefinitions, samplingDefinitions, counters);
 
-    Response r = target("/v1/rules/myPipeline/rules").queryParam("rev", PIPELINE_REV).request()
+    Response r = target("/v1/rules/myPipeline").queryParam("rev", PIPELINE_REV).request()
       .post(Entity.json(ruleDefinition));
     RuleDefinition result = r.readEntity(RuleDefinition.class);
     Assert.assertEquals(3, result.getAlertDefinitions().size());
@@ -70,7 +70,7 @@ public class TestRuleResource  extends JerseyTest {
 
   @Test
   public void testGetRules() {
-    Response r = target("/v1/rules/myPipeline/rules").queryParam("rev", PIPELINE_REV)
+    Response r = target("/v1/rules/myPipeline").queryParam("rev", PIPELINE_REV)
       .request().get();
     Assert.assertNotNull(r);
     RuleDefinition result = r.readEntity(RuleDefinition.class);

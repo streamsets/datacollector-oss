@@ -29,7 +29,7 @@ public class RuleResource {
     this.pipelineManager = pipelineManager;
   }
 
-  @Path("/{name}/rules")
+  @Path("/{name}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getRules(
@@ -40,7 +40,7 @@ public class RuleResource {
 
   }
 
-  @Path("/{name}/rules")
+  @Path("/{name}")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response saveRules(
