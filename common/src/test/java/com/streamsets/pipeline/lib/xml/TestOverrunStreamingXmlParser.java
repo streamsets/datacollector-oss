@@ -89,7 +89,7 @@ public class TestOverrunStreamingXmlParser {
     }
     f = parser.read();
     Assert.assertNotNull(f);
-    Assert.assertEquals("r2", f.getValueAsMap().get("text").getValue());
+    Assert.assertEquals("r2", f.getValueAsMap().get("value").getValue());
 
     parser.close();
   }

@@ -43,12 +43,12 @@ public class TestStreamingXmlParser {
     f = parser.read();
     Assert.assertNotNull(f);
     Assert.assertEquals(1, f.getValueAsMap().size());
-    Assert.assertEquals("r1", f.getValueAsMap().get("text").getValue());
+    Assert.assertEquals("r1", f.getValueAsMap().get("value").getValue());
 
     f = parser.read();
     Assert.assertNotNull(f);
     Assert.assertEquals(1, f.getValueAsMap().size());
-    Assert.assertEquals("r2", f.getValueAsMap().get("text").getValue());
+    Assert.assertEquals("r2", f.getValueAsMap().get("value").getValue());
 
     f = parser.read();
     Assert.assertNotNull(f);
@@ -59,35 +59,35 @@ public class TestStreamingXmlParser {
     Assert.assertNotNull(f);
     Assert.assertEquals(2, f.getValueAsMap().size());
     Assert.assertEquals("y", f.getValueAsMap().get("ns|xmlns:x").getValue());
-    Assert.assertEquals("r4", f.getValueAsMap().get("text").getValue());
+    Assert.assertEquals("r4", f.getValueAsMap().get("value").getValue());
 
     f = parser.read();
     Assert.assertNotNull(f);
     Assert.assertEquals(1, f.getValueAsMap().size());
     Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().size());
     Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().size());
-    Assert.assertEquals("a", f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().get("text").getValue());
+    Assert.assertEquals("a", f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().get("value").getValue());
 
     f = parser.read();
     Assert.assertNotNull(f);
     Assert.assertEquals(2, f.getValueAsMap().size());
     Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().size());
     Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().size());
-    Assert.assertEquals("b", f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().get("text").getValue());
+    Assert.assertEquals("b", f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().get("value").getValue());
     Assert.assertEquals(1, f.getValueAsMap().get("data").getValueAsList().size());
     Map<String, Field> data = f.getValueAsMap().get("data").getValueAsList().get(0).getValueAsMap();
     Assert.assertEquals(1, data.size());
     List<Field> values = data.get("value").getValueAsList();
     Assert.assertEquals(2, values.size());
     Assert.assertEquals(1, values.get(0).getValueAsMap().size());
-    Assert.assertEquals("0", values.get(0).getValueAsMap().get("text").getValue());
+    Assert.assertEquals("0", values.get(0).getValueAsMap().get("value").getValue());
     Assert.assertEquals(1, values.get(1).getValueAsMap().size());
-    Assert.assertEquals("1", values.get(1).getValueAsMap().get("text").getValue());
+    Assert.assertEquals("1", values.get(1).getValueAsMap().get("value").getValue());
 
     f = parser.read();
     Assert.assertNotNull(f);
     Assert.assertEquals(1, f.getValueAsMap().size());
-    Assert.assertEquals("foobar", f.getValueAsMap().get("text").getValue());
+    Assert.assertEquals("foobar", f.getValueAsMap().get("value").getValue());
 
     f = parser.read();
     Assert.assertNull(f);
@@ -115,35 +115,35 @@ public class TestStreamingXmlParser {
     Assert.assertNotNull(f);
     Assert.assertEquals(2, f.getValueAsMap().size());
     Assert.assertEquals("y", f.getValueAsMap().get("ns|xmlns:x").getValue());
-    Assert.assertEquals("r4", f.getValueAsMap().get("text").getValue());
+    Assert.assertEquals("r4", f.getValueAsMap().get("value").getValue());
 
     f = parser.read();
     Assert.assertNotNull(f);
     Assert.assertEquals(1, f.getValueAsMap().size());
     Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().size());
     Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().size());
-    Assert.assertEquals("a", f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().get("text").getValue());
+    Assert.assertEquals("a", f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().get("value").getValue());
 
     f = parser.read();
     Assert.assertNotNull(f);
     Assert.assertEquals(2, f.getValueAsMap().size());
     Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().size());
     Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().size());
-    Assert.assertEquals("b", f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().get("text").getValue());
+    Assert.assertEquals("b", f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().get("value").getValue());
     Assert.assertEquals(1, f.getValueAsMap().get("data").getValueAsList().size());
     Map<String, Field> data = f.getValueAsMap().get("data").getValueAsList().get(0).getValueAsMap();
     Assert.assertEquals(1, data.size());
     List<Field> values = data.get("value").getValueAsList();
     Assert.assertEquals(2, values.size());
     Assert.assertEquals(1, values.get(0).getValueAsMap().size());
-    Assert.assertEquals("0", values.get(0).getValueAsMap().get("text").getValue());
+    Assert.assertEquals("0", values.get(0).getValueAsMap().get("value").getValue());
     Assert.assertEquals(1, values.get(1).getValueAsMap().size());
-    Assert.assertEquals("1", values.get(1).getValueAsMap().get("text").getValue());
+    Assert.assertEquals("1", values.get(1).getValueAsMap().get("value").getValue());
 
     f = parser.read();
     Assert.assertNotNull(f);
     Assert.assertEquals(1, f.getValueAsMap().size());
-    Assert.assertEquals("foobar", f.getValueAsMap().get("text").getValue());
+    Assert.assertEquals("foobar", f.getValueAsMap().get("value").getValue());
 
     f = parser.read();
     Assert.assertNull(f);

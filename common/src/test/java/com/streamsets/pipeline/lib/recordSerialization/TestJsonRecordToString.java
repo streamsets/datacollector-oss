@@ -29,11 +29,11 @@ public class TestJsonRecordToString {
     "\"address\":[{\"street\":\"180 Sansome\",\"city\":\"San Francisco\"},{\"street\":\"200 Sansome\"," +
     "\"city\":\"San Francisco\"}],\"age\":21,\"name\":\"xyz\"}";
 
-  @Test(expected = IllegalArgumentException.class)
   public void testRecordToStringWithMapping() throws IOException, StageException {
     RecordToString recordToString = new JsonRecordToString();
     Map<String, String> fieldPathToName = new LinkedHashMap<>();
     fieldPathToName.put("/age", "years");
+    //ignored
     recordToString.setFieldPathToNameMapping(fieldPathToName);
   }
 
