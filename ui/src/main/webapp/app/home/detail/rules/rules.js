@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('RulesController', function ($scope) {
+  .controller('RulesController', function ($scope, pipelineConstant) {
     angular.extend($scope, {
       showLoading: false,
 
@@ -21,61 +21,81 @@ angular
        *
        */
       createAlertRule: function() {
-        var edge =  $scope.selectedObject,
-          newAlertDefn = {
-            id: edge.outputLane + (new Date()).getTime(),
-            label: '',
-            lane: edge.outputLane,
-            predicate: '',
-            thresholdType: 'COUNT',
-            thresholdValue: null,
-            minVolume: null,
-            enabled: false
-          };
+        if($scope.selectedType === pipelineConstant.LINK) {
+          var edge =  $scope.selectedObject,
+            newAlertDefn = {
+              id: edge.outputLane + (new Date()).getTime(),
+              label: '',
+              lane: edge.outputLane,
+              predicate: '',
+              thresholdType: 'COUNT',
+              thresholdValue: null,
+              minVolume: null,
+              enabled: false
+            };
 
-        $scope.pipelineRules.alertDefinitions.push(newAlertDefn);
+          $scope.pipelineRules.alertDefinitions.push(newAlertDefn);
+        }
       },
 
       /**
        * Callback function for Create New Metric Rule button.
        */
       createMetricRule: function() {
-        var edge =  $scope.selectedObject,
-          newMetricDefn = {
-            id: edge.outputLane + (new Date()).getTime(),
-            label: '',
-            metricGroup: '',
-            metricType: 'METER',
-            lane: edge.outputLane,
-            predicate: '',
-            enabled: false
-          };
+        if($scope.selectedType === pipelineConstant.LINK) {
+          var edge =  $scope.selectedObject,
+            newMetricDefn = {
+              id: edge.outputLane + (new Date()).getTime(),
+              label: '',
+              metricGroup: '',
+              metricType: 'METER',
+              lane: edge.outputLane,
+              predicate: '',
+              enabled: false
+            };
 
-        $scope.pipelineRules.metricDefinitions.push(newMetricDefn);
+          $scope.pipelineRules.metricDefinitions.push(newMetricDefn);
+        }
       },
 
       /**
        * Callback function for Create New Sampling Rule button.
        */
       createSamplingRule: function() {
-        var edge =  $scope.selectedObject,
-          newSamplingDefn = {
-            id: edge.outputLane + (new Date()).getTime(),
-            label: '',
-            lane: edge.outputLane,
-            predicate: '',
-            samplingPercentage: '',
-            enabled: false
-          };
+        if($scope.selectedType === pipelineConstant.LINK) {
+          var edge =  $scope.selectedObject,
+            newSamplingDefn = {
+              id: edge.outputLane + (new Date()).getTime(),
+              label: '',
+              lane: edge.outputLane,
+              predicate: '',
+              samplingPercentage: '',
+              enabled: false
+            };
 
-        $scope.pipelineRules.samplingDefinitions.push(newSamplingDefn);
+          $scope.pipelineRules.samplingDefinitions.push(newSamplingDefn);
+        }
       },
 
       /**
        * Callback function for Create New Metric Alert Rule button.
        */
       createMetricAlertRule: function() {
+        if($scope.selectedType !== pipelineConstant.LINK) {
+          var selectedObject =  $scope.selectedObject,
+            id = selectedObject.instanceName || selectedObject.info.name,
+            newMetricAlertDefn = {
+              id: edge.outputLane + (new Date()).getTime(),
+              label: '',
+              predicate: '',
+              metricId: null,
+              metricType: null,
+              metricElement: null,
+              enabled: false
+            };
 
+          $scope.pipelineRules.metricsAlertDefinitions.push(newMetricAlertDefn);
+        }
       },
 
       /**

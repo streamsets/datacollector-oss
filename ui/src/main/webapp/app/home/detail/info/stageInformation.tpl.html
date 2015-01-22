@@ -16,7 +16,12 @@
   <div class="form-group">
     <label class="col-md-3 control-label" translate="home.detailPane.configurationTab.stageType">Stage Type</label>
     <div class="controls col-md-7">
-      <p class="form-control-static">{{detailPaneConfigDefn.type}}</p>
+      <p class="form-control-static" ng-if="detailPaneConfigDefn.type === pipelineConstant.SOURCE_STAGE_TYPE"
+         translate="global.form.source"></p>
+      <p class="form-control-static" ng-if="detailPaneConfigDefn.type === pipelineConstant.PROCESSOR_STAGE_TYPE"
+         translate="global.form.processor"></p>
+      <p class="form-control-static" ng-if="detailPaneConfigDefn.type === pipelineConstant.TARGET_STAGE_TYPE"
+         translate="global.form.target"></p>
     </div>
   </div>
 

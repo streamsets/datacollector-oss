@@ -1,19 +1,100 @@
-<div class="alerts-tab">
-  <button type="button" class="btn btn-primary btn-sm text-center">
-    <i class="fa fa-plus"></i>
-    <span>Create New Alert</span>
-  </button>
-  <table class="table" ng-if="rules.length">
-    <thead>
-      <tr>
-        <th class="col-md-3" translate="home.detailPane.rulesTab.predicate">Predicate</th>
-        <th class="col-md-3" translate="home.detailPane.rulesTab.threshold">Threshold</th>
-        <th class="col-md-6" translate="home.detailPane.rulesTab.action">Action</th>
-      </tr>
-    </thead>
-    <tbody ng-hide="showLoading">
-    </tbody>
-  </table>
+<div class="panel panel-default">
+  <div class="panel-heading" translate="home.detailPane.rulesTab.metricAlertRules">Metric Alert Rules</div>
+  <div class="panel-body history-messages metric-alert-tab">
+    <form class="form-horizontal" role="form"
+          ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
+          name="{{detailPaneConfig.instanceName || 'pipeline'}}">
 
-  <div show-loading="showLoading"></div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th class="col-md-1">Enabled</th>
+          <th class="col-md-3">Alert Text</th>
+          <th class="col-md-2">Metric ID</th>
+          <th class="col-md-2">Metric Type</th>
+          <th class="col-md-2">Metric Element</th>
+          <th class="col-md-3">Predicate</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody ng-hide="showLoading">
+
+        <tr ng-repeat="alertRule in metricsAlertDefinitions = (pipelineRules.metricsAlertDefinitions | filter: {lane: selectedObject.outputLane})">
+
+          <td>
+            <input type="checkbox" name="enabled{{$index}}"
+                   ng-model="alertRule.enabled">
+          </td>
+
+          <td>
+          <textarea class="form-control" name="alertText{{$index}}" rows="1"
+                    placeholder="Text to display when alert is triggered"
+                    ng-model="alertRule.label"
+                    ng-required="true"></textarea>
+          </td>
+
+          <td>
+            <select class="form-control" name="metricId{{$index}}"
+                    ng-model="alertRule.metricId">
+              <option value="COUNT">Count</option>
+              <option value="PERCENTAGE">Percentage</option>
+            </select>
+          </td>
+
+          <td>
+            <select class="form-control" name="metricType{{$index}}"
+                    ng-model="alertRule.metricType">
+              <option value="COUNTER">COUNTER</option>
+              <option value="HISTOGRAM">HISTOGRAM</option>
+              <option value="METER">METER</option>
+              <option value="TIMER">TIMER</option>
+            </select>
+          </td>
+
+          <td>
+            <select class="form-control" name="metricElement{{$index}}"
+                    ng-model="alertRule.metricElement">
+              <option value="COUNT">Count</option>
+              <option value="PERCENTAGE">Percentage</option>
+            </select>
+          </td>
+
+
+          <td>
+            <input type="text" class="form-control" name="predicate{{$index}}"
+                   placeholder="Predicate"
+                   ng-model="alertRule.predicate"
+                   ng-required="true">
+          </td>
+
+          <td>
+            <div class="col-xs-1 btn-group" role="group" aria-label="Default button group">
+              <button type="button" class="btn btn-danger btn-sm"
+                      tooltip-placement="bottom" tooltip="Delete Alert Rule"
+                      ng-click="removeRule(pipelineRules.metricsAlertDefinitions, $index)">
+                <i class="fa fa-minus pointer"></i>
+              </button>
+            </div>
+          </td>
+
+        </tr>
+
+        <tr ng-if="metricsAlertDefinitions.length === 0">
+          <td colspan="3" class="no-records text-center"
+              translate="home.detailPane.rulesTab.noMetricAlertRules">No Metric Alert Rules to view.</td>
+        </tr>
+
+        </tbody>
+      </table>
+
+      <div show-loading="showLoading"></div>
+
+      <button type="button" class="btn btn-primary btn-sm pull-right add-button"
+              ng-click="createMetricAlertRule()">
+        <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
+      </button>
+
+    </form>
+
+  </div>
 </div>

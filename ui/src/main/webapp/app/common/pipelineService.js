@@ -51,7 +51,7 @@ angular.module('pipelineAgentApp.common')
           configuration: [],
           uiInfo: {
             label: stageLabel,
-            description: stage.description,
+            description: '', //stage.description,
             xPos: xPos,
             yPos: yPos,
             stageType: stage.type

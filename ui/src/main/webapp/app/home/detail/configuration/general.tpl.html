@@ -15,6 +15,7 @@
     <label class="col-md-3 control-label" translate="global.form.description">Description</label>
     <div class="controls col-md-7">
       <textarea class="form-control" name="description"
+                rows="1"
                 ng-readonly="isPipelineRunning"
                 ng-model="pipelineConfig.description"></textarea>
     </div>
@@ -22,7 +23,7 @@
 
   <!-- General Configuration for Stages-->
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
-    <label class="col-md-3 control-label" translate="global.form.label">Label</label>
+    <label class="col-md-3 control-label" translate="global.form.name">Name</label>
     <div class="controls col-md-7">
       <input type="text" class="form-control" name="name"
              ng-readonly="isPipelineRunning"
@@ -30,11 +31,11 @@
     </div>
   </div>
 
-
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
     <label class="col-md-3 control-label" translate="global.form.description">Description</label>
     <div class="controls col-md-7">
       <textarea class="form-control" name="description"
+                rows="1"
                 ng-readonly="isPipelineRunning"
                 ng-model="detailPaneConfig.uiInfo.description"></textarea>
     </div>

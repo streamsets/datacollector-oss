@@ -4,22 +4,16 @@
     <div class="stage-filter">
       <select class="form-control" name="stageLibrary" ng-model="$storage.stageFilterGroup"
               ng-options="stageGroup.label group by stageGroup.group for stageGroup in stageGroups track by stageGroup.name">
-        <option value="">All Stages</option>
+        <option value="">{{'global.form.allStages' | translate}}</option>
       </select>
     </div>
-
-    <!--div class="form-group">
-      <div class="controls col-md-12">
-        <input type="text" class="form-control" name="stageSearchText"
-               placeholder="Type to search stage library"
-               ng-model="stageSearchText">
-      </div>
-    </div-->
 
     <div class="stage-list-container">
       <ul class="stages-list">
 
         <li id="item1" draggable drag-data="stageLibrary"
+            tooltip-placement="bottom" tooltip="{{stageLibrary.description}}"
+            tooltip-append-to-body="true"
             ng-repeat="stageLibrary in stageLibraries | filter : libraryFilter | orderBy: 'label'"
             ng-init="icon=getStageIconURL(stageLibrary)">
           <a role="menuitem" tabindex="-1" href="#"

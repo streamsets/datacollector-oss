@@ -1,11 +1,5 @@
 <div ng-controller="ConfigurationController" class="configuration-tab">
-
-  <div ng-if="!showGroups">
-    <ng-include src="'app/home/detail/configuration/general.tpl.html'"></ng-include>
-  </div>
-
-  <tabset ng-if="showGroups">
-
+  <tabset>
     <tab active="true">
       <tab-heading>
         <i class="fa fa-exclamation-triangle icon-danger"
