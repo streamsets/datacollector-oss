@@ -17,6 +17,7 @@ angular
     var stageCounter = 0,
       timeout,
       dirty = false,
+      rulesDirty = false,
       ignoreUpdate = false,
       pipelineStatusTimer,
       pipelineMetricsTimer,
@@ -357,16 +358,19 @@ angular
         refreshPipelineMetrics();
 
         if($scope.activeConfigInfo) {
-          return api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name);
+          return $q.all([api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name),
+            api.pipelineAgent.getPipelineRules($scope.activeConfigInfo.name)]);
         }
 
       },function(data, status, headers, config) {
           $rootScope.common.errors = [data];
       })
-      .then(function(res) {
+      .then(function(results) {
         //Pipeline Configuration
-        if(res && res.data) {
-          updateGraph(res.data);
+        if(results && results.length > 1) {
+          var config = results[0].data,
+            rules = results[1].data;
+          updateGraph(config, rules);
         }
         $scope.loaded = true;
       },function(data, status, headers, config) {
@@ -378,12 +382,15 @@ angular
      * @param configName
      */
     var loadPipelineConfig = function(configName) {
-      api.pipelineAgent.getPipelineConfig(configName).
-        success(function(res) {
+
+      $q.all([api.pipelineAgent.getPipelineConfig(configName),
+        api.pipelineAgent.getPipelineRules(configName)]).
+        then(function(results) {
+          var config = results[0].data,
+            rules = results[1].data;
           $rootScope.common.errors = [];
-          updateGraph(res);
-        }).
-        error(function(data, status, headers, config) {
+          updateGraph(config, rules);
+        },function(data, status, headers, config) {
           $rootScope.common.errors = [data];
         });
     };
@@ -430,7 +437,7 @@ angular
      *
      * @param pipelineConfig
      */
-    var updateGraph = function (pipelineConfig) {
+    var updateGraph = function (pipelineConfig, pipelineRules) {
       var selectedStageInstance,
         stageErrorCounts,
         pipelineMetrics = $rootScope.common.pipelineMetrics,
@@ -443,6 +450,7 @@ angular
 
       $scope.pipelineConfig = pipelineConfig || {};
       $scope.activeConfigInfo = $scope.$storage.activeConfigInfo = pipelineConfig.info;
+      $scope.pipelineRules = pipelineRules;
 
       //Update Pipeline Info list
       var index = _.indexOf($scope.pipelines, _.find($scope.pipelines, function(pipeline){
@@ -709,6 +717,36 @@ angular
       }
     };
 
+
+    /**
+     * Save Rules Update
+     * @param rules
+     */
+    var saveRulesUpdate = function (rules) {
+      if ($rootScope.common.saveOperationInProgress) {
+        return;
+      }
+
+      if (!rules) {
+        rules = _.clone($scope.pipelineRules);
+      }
+
+      rulesDirty = false;
+
+      $rootScope.common.saveOperationInProgress = true;
+      api.pipelineAgent.savePipelineRules($scope.activeConfigInfo.name, rules).
+        success(function (res) {
+          $rootScope.common.saveOperationInProgress = false;
+          if (rulesDirty) {
+            rules = _.clone($scope.pipelineRules);
+            saveRulesUpdate(rules);
+          }
+        }).
+        error(function(data, status, headers, config) {
+          $rootScope.common.errors = [data];
+        });
+    };
+
     //Event Handling
 
     $scope.$watch('pipelineConfig', function (newValue, oldValue) {
@@ -724,6 +762,22 @@ angular
           $timeout.cancel(timeout);
         }
         timeout = $timeout(saveUpdates, 1000);
+      }
+    }, true);
+
+    $scope.$watch('pipelineRules', function (newValue, oldValue) {
+      if (ignoreUpdate) {
+        $timeout(function () {
+          ignoreUpdate = false;
+        });
+        return;
+      }
+      if (!angular.equals(newValue, oldValue)) {
+        rulesDirty = true;
+        if (timeout) {
+          $timeout.cancel(timeout);
+        }
+        timeout = $timeout(saveRulesUpdate, 1000);
       }
     }, true);
 

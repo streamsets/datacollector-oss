@@ -51,6 +51,20 @@
     height: calc(~"100% - 40px");
     overflow: auto;
 
+    .preview-tabs-left {
+      height: 100%;
+      padding: 0 @smallPadding * 3;
+
+      >.nav-tabs {
+        min-height: 250px;
+        padding-top: @smallPadding * 3;
+      }
+
+      >.tab-content {
+        padding-top: @smallPadding * 3;
+      }
+    }
+
     .pipeline-preview {
       .preview-heading {
         padding: @defaultPadding @defaultPadding;

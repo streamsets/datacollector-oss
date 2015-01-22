@@ -3,8 +3,34 @@
   .alerts-tab, .sampling-tab, .counters-tab {
     padding: @defaultPadding;
 
+    .threshold-column {
+      .form-control {
+        margin-right: @smallPadding;
+        float: left;
+      }
+
+      .threshold-type {
+        width: 40%;
+      }
+
+      .threshold-value {
+        width: 25%;
+      }
+
+      .threshold-min-volume {
+        width: 25%;
+      }
+    }
+
+    .no-records {
+      text-align: center;
+      padding-top: @defaultPadding * 4;
+    }
+
+    .add-button {
+      margin-right: @defaultPadding;
+    }
+
   }
-
-
 
 }

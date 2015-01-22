@@ -3,7 +3,7 @@
   <tabset ng-if="selectedType === pipelineConstant.LINK">
     <tab>
       <tab-heading>
-        <span  translate="home.detailPane.rulesTab.alerts">Alerts</span>
+        <span  translate="home.detailPane.rulesTab.alertsRule">Alerts Rule</span>
       </tab-heading>
 
       <div class="tabs-content">
@@ -13,7 +13,7 @@
 
     <tab>
       <tab-heading>
-        <span  translate="home.detailPane.rulesTab.sampling">Sampling</span>
+        <span  translate="home.detailPane.rulesTab.samplingRule">Sampling Rule</span>
       </tab-heading>
 
       <div class="tabs-content">
@@ -23,11 +23,11 @@
 
     <tab>
       <tab-heading>
-        <span  translate="home.detailPane.rulesTab.counters">Counters</span>
+        <span  translate="home.detailPane.rulesTab.metersRule">Meters Rule</span>
       </tab-heading>
 
       <div class="tabs-content">
-        <ng-include src="'app/home/detail/rules/counters/counters.tpl.html'"></ng-include>
+        <ng-include src="'app/home/detail/rules/meters/meters.tpl.html'"></ng-include>
       </div>
     </tab>
   </tabset>

@@ -15,7 +15,7 @@ public class MeterDefinition {
   private final String label;
   private final String lane;
   private final String predicate;
-  private final String counterGroup;
+  private final String meterGroup;
   private final boolean enabled;
 
   @JsonCreator
@@ -23,13 +23,13 @@ public class MeterDefinition {
                          @JsonProperty("label") String label,
                          @JsonProperty("lane") String lane,
                          @JsonProperty("predicate") String predicate,
-                         @JsonProperty("counterGroup") String counterGroup,
+                         @JsonProperty("meterGroup") String meterGroup,
                          @JsonProperty("enabled") boolean enabled) {
     this.id = id;
     this.label = label;
     this.lane = lane;
     this.predicate = predicate;
-    this.counterGroup = counterGroup;
+    this.meterGroup = meterGroup;
     this.enabled = enabled;
   }
 
@@ -49,8 +49,8 @@ public class MeterDefinition {
     return predicate;
   }
 
-  public String getCounterGroup() {
-    return counterGroup;
+  public String getMeterGroup() {
+    return meterGroup;
   }
 
   public boolean isEnabled() {
@@ -60,7 +60,7 @@ public class MeterDefinition {
   @Override
   public String toString() {
     return Utils.format(
-      "CounterDefinition[id='{}' label='{}' lane='{}' predicate='{}' counterGroup='{}' isEnabled='{}']",
-      getId(), getLabel(), getLane(), getPredicate(), getCounterGroup(), isEnabled());
+      "MeterDefinition[id='{}' label='{}' lane='{}' predicate='{}' meterGroup='{}' isEnabled='{}']",
+      getId(), getLabel(), getLane(), getPredicate(), getMeterGroup(), isEnabled());
   }
 }

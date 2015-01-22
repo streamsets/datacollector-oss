@@ -1,4 +1,4 @@
-<div class="sampling-tab">
+<div class="meters-tab">
   <form class="form-horizontal" role="form"
         ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
         name="{{detailPaneConfig.instanceName || 'pipeline'}}">
@@ -8,46 +8,46 @@
       <tr>
         <th class="col-md-1">Enabled</th>
         <th class="col-md-4">Label</th>
-        <th class="col-md-3">Predicate</th>
-        <th class="col-md-5">Sampling Percentage</th>
+        <th class="col-md-3">Group</th>
+        <th class="col-md-5">Predicate</th>
         <th></th>
       </tr>
       </thead>
       <tbody ng-hide="showLoading">
 
-      <tr ng-repeat="samplingRule in pipelineRules.samplingDefinitions | filter: { lane: selectedObject.outputLane }">
+      <tr ng-repeat="meterRule in pipelineRules.meterDefinitions | filter: {lane: selectedObject.outputLane}">
 
         <td>
           <input type="checkbox" name="enabled{{$index}}"
-                 ng-model="samplingRule.enabled">
+                 ng-model="meterRule.enabled">
         </td>
 
         <td>
-          <textarea class="form-control" name="alertText{{$index}}" rows="1"
-                    placeholder="Label"
-                    ng-model="samplingRule.label"
-                    ng-required="true"></textarea>
+            <textarea class="form-control" name="alertText{{$index}}" rows="1"
+                      placeholder="Label"
+                      ng-model="meterRule.label"
+                      ng-required="true"></textarea>
         </td>
 
         <td>
-          <input type="text" class="form-control" name="predicate{{$index}}"
-                 placeholder="Predicate"
-                 ng-model="samplingRule.predicate"
+          <input type="text" class="form-control" name="group{{$index}}"
+                 placeholder="Group"
+                 ng-model="meterRule.meterGroup"
                  ng-required="true">
         </td>
 
         <td class="threshold-column">
-          <input type="text" class="form-control" name="samplingPercentage{{$index}}"
-                 placeholder="Percentage"
-                 ng-model="samplingRule.samplingPercentage"
+          <input type="text" class="form-control" name="predicate{{$index}}"
+                 placeholder="Predicate"
+                 ng-model="meterRule.predicate"
                  ng-required="true">
         </td>
 
         <td>
           <div class="col-xs-1 btn-group" role="group" aria-label="Default button group">
             <button type="button" class="btn btn-danger btn-sm"
-                    tooltip-placement="bottom" tooltip="Delete Sampling Rule"
-                    ng-click="removeRule(pipelineRules.samplingDefinitions, $index)">
+                    tooltip-placement="bottom" tooltip="Delete Meter Rule"
+                    ng-click="removeRule(pipelineRules.meterDefinitions, $index)">
               <i class="fa fa-minus pointer"></i>
             </button>
           </div>
@@ -55,9 +55,9 @@
 
       </tr>
 
-      <tr ng-if="pipelineRules.samplingDefinitions.length === 0">
+      <tr ng-if="pipelineRules.meterDefinitions.length === 0">
         <td colspan="3" class="no-records text-center"
-            translate="home.detailPane.rulesTab.noSamplingRules">No Sampling Rules to view.</td>
+            translate="home.detailPane.rulesTab.noMeterRules">No Meter Rules to view.</td>
       </tr>
 
       </tbody>
@@ -67,7 +67,7 @@
 
     <button type="button" class="btn btn-primary btn-sm pull-right add-button"
             ng-hide="isPipelineRunning"
-            ng-click="createSamplingRule()">
+            ng-click="createMeterRule()">
       <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
     </button>
 

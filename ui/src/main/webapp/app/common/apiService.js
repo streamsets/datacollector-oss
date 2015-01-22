@@ -469,7 +469,6 @@ angular.module('pipelineAgentApp.common')
         });
       },
 
-
       /**
        * Get history of the pipeline
        *
@@ -495,6 +494,38 @@ angular.module('pipelineAgentApp.common')
         return $http({
           method: 'POST',
           url: url
+        });
+      },
+
+      /**
+       * Fetches Pipeline Rules.
+       *
+       * @param name
+       * @returns {*}
+       */
+      getPipelineRules: function(name) {
+        var url;
+
+        url = apiBase + '/rules/' + name;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Sends updated Pipeline rules to server for update.
+       *
+       * @param name - Pipeline Name
+       * @param rules - Modified Pipeline Configuration
+       * @returns Updated Pipeline Rules
+       */
+      savePipelineRules: function(name, rules) {
+        var url = apiBase + '/rules/' + name;
+        return $http({
+          method: 'POST',
+          url: url,
+          data: rules
         });
       }
     };

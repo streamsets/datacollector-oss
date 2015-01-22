@@ -1,19 +1,86 @@
 <div class="alerts-tab">
-  <button type="button" class="btn btn-primary btn-sm text-center">
-    <i class="fa fa-plus"></i>
-    <span>Create New Alert Rule</span>
-  </button>
-  <table class="table" ng-if="rules.length">
-    <thead>
-      <tr>
-        <th class="col-md-3" translate="home.detailPane.rulesTab.predicate">Predicate</th>
-        <th class="col-md-3" translate="home.detailPane.rulesTab.threshold">Threshold</th>
-        <th class="col-md-6" translate="home.detailPane.rulesTab.action">Action</th>
-      </tr>
-    </thead>
-    <tbody ng-hide="showLoading">
-    </tbody>
-  </table>
+  <form class="form-horizontal" role="form"
+        ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
+        name="{{detailPaneConfig.instanceName || 'pipeline'}}">
 
-  <div show-loading="showLoading"></div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-md-1">Enabled</th>
+          <th class="col-md-4">Alert Text</th>
+          <th class="col-md-3">Predicate</th>
+          <th class="col-md-5">Threshold</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody ng-hide="showLoading">
+
+        <tr ng-repeat="alertRule in pipelineRules.alertDefinitions | filter: {lane: selectedObject.outputLane}">
+
+          <td>
+            <input type="checkbox" name="enabled{{$index}}"
+                   ng-model="alertRule.enabled">
+          </td>
+
+          <td>
+            <textarea class="form-control" name="alertText{{$index}}" rows="1"
+                      placeholder="Text to display when alert is triggered"
+                      ng-model="alertRule.label"
+                      ng-required="true"></textarea>
+          </td>
+
+          <td>
+            <input type="text" class="form-control" name="predicate{{$index}}"
+                   placeholder="Predicate"
+                   ng-model="alertRule.predicate"
+                   ng-required="true">
+          </td>
+
+          <td class="threshold-column">
+            <select class="form-control threshold-type" name="thresholdType{{$index}}"
+              ng-model="alertRule.thresholdType">
+              <option value="COUNT">Count</option>
+              <option value="PERCENTAGE">Percentage</option>
+            </select>
+
+            <input type="text" class="form-control threshold-value" name="thresholdValue{{$index}}"
+                   placeholder="Value"
+                   ng-model="alertRule.thresholdValue"
+                   ng-required="true">
+
+            <input type="text" class="form-control threshold-min-volume" name="minVolume{{$index}}"
+                   placeholder="Minimum Volume"
+                   ng-if="alertRule.thresholdType === 'PERCENTAGE'"
+                   ng-model="alertRule.minVolume">
+          </td>
+
+          <td>
+            <div class="col-xs-1 btn-group" role="group" aria-label="Default button group">
+              <button type="button" class="btn btn-danger btn-sm"
+                      tooltip-placement="bottom" tooltip="Delete Alert Rule"
+                      ng-click="removeRule(pipelineRules.alertDefinitions, $index)">
+                <i class="fa fa-minus pointer"></i>
+              </button>
+            </div>
+          </td>
+
+        </tr>
+
+        <tr ng-if="pipelineRules.alertDefinitions.length === 0">
+          <td colspan="3" class="no-records text-center"
+              translate="home.detailPane.rulesTab.noAlertRules">No Alert Rules to view.</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div show-loading="showLoading"></div>
+
+    <button type="button" class="btn btn-primary btn-sm pull-right add-button"
+            ng-hide="isPipelineRunning"
+            ng-click="createAlertRule()">
+      <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
+    </button>
+
+  </form>
 </div>

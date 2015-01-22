@@ -8,10 +8,6 @@ angular
   .controller('RulesController', function ($scope) {
     angular.extend($scope, {
       showLoading: false,
-      metricAlertRuleList: [],
-      alertRuleList: [],
-      counterRuleList: [],
-      samplingRuleList: [],
 
       /**
        * Refresh Rules
@@ -25,21 +21,53 @@ angular
        *
        */
       createAlertRule: function() {
+        var edge =  $scope.selectedObject,
+          newAlertDefn = {
+            id: edge.outputLane + (new Date()).getTime(),
+            label: '',
+            lane: edge.outputLane,
+            predicate: '',
+            thresholdType: 'COUNT',
+            thresholdValue: null,
+            minVolume: null,
+            enabled: false
+          };
 
+        $scope.pipelineRules.alertDefinitions.push(newAlertDefn);
       },
 
       /**
-       * Callback function for Create New Counter Rule button.
+       * Callback function for Create New Meter Rule button.
        */
-      createCounterRule: function() {
+      createMeterRule: function() {
+        var edge =  $scope.selectedObject,
+          newMeterDefn = {
+            id: edge.outputLane + (new Date()).getTime(),
+            label: '',
+            meterGroup: '',
+            lane: edge.outputLane,
+            predicate: '',
+            enabled: false
+          };
 
+        $scope.pipelineRules.meterDefinitions.push(newMeterDefn);
       },
 
       /**
        * Callback function for Create New Sampling Rule button.
        */
       createSamplingRule: function() {
+        var edge =  $scope.selectedObject,
+          newSamplingDefn = {
+            id: edge.outputLane + (new Date()).getTime(),
+            label: '',
+            lane: edge.outputLane,
+            predicate: '',
+            samplingPercentage: '',
+            enabled: false
+          };
 
+        $scope.pipelineRules.samplingDefinitions.push(newSamplingDefn);
       },
 
       /**
@@ -47,6 +75,16 @@ angular
        */
       createMetricAlertRule: function() {
 
+      },
+
+      /**
+       * Remove Callback function
+       *
+       * @param ruleList
+       * @param $index
+       */
+      removeRule: function(ruleList, $index) {
+        ruleList.splice($index, 1);
       }
     });
 
