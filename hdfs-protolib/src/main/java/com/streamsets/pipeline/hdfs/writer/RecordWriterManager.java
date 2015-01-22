@@ -261,8 +261,8 @@ public class RecordWriterManager {
   }
 
   public boolean isOverThresholds(RecordWriter writer) throws IOException {
-    boolean overLength = writer.getLength() >= cutOffSize;
-    boolean overRecords = writer.getRecords() >= cutOffRecords;
+    boolean overLength = (cutOffSize > 0) && writer.getLength() >= cutOffSize;
+    boolean overRecords = (cutOffRecords > 0) && writer.getRecords() >= cutOffRecords;
     boolean over = overLength || overRecords;
     if (over) {
       //TODO LOG DEBUG

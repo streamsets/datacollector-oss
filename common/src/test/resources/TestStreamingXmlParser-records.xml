@@ -1,0 +1,22 @@
+<root xmlns:foo="x">
+  <x a="1"/>
+  <record/>
+  <record>r1</record>
+  <foo:record>r2</foo:record>
+  <a>
+    <record>r3</record>
+  </a>
+  <record a="A"/>
+  <record xmlns:x="y">r4</record>
+  <record>
+    <name>a</name>
+  </record>
+  <record>
+    <name>b</name>
+    <data>
+      <value>0</value>
+      <value>1</value>
+    </data>
+  </record>
+  <record>foo<![CDATA[bar]]></record>
+</root>

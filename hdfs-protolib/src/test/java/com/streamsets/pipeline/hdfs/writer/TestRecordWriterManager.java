@@ -343,6 +343,112 @@ public class TestRecordWriterManager {
     mgr.commitWriter(writer);
   }
 
+
+  @Test
+  public void testThresholdRecords() throws Exception {
+    URI uri = new URI("file:///");
+    Configuration conf = new HdfsConfiguration();
+    String prefix = "prefix";
+    String template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}/${hh}/${mm}/${ss}/${record:value('/')}";
+    TimeZone timeZone = TimeZone.getTimeZone("UTC");
+    long cutOffSecs = 10;
+    long cutOffSize = 50000;
+    long cutOffRecords = 2;
+    HdfsFileType fileType = HdfsFileType.TEXT;
+    DefaultCodec compressionCodec = new DefaultCodec();
+    compressionCodec.setConf(conf);
+    SequenceFile.CompressionType compressionType = null;
+    String keyEL = null;
+    RecordToString toString = new DummyRecordToString();
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+                                                      cutOffRecords, fileType, compressionCodec , compressionType,
+                                                      keyEL, toString);
+    Date now = getFixedDate();
+
+    Date recordDate = now;
+    Record record = RecordCreator.create();
+    record.set(Field.create("a"));
+    RecordWriter writer = mgr.getWriter(now, recordDate, record);
+    Assert.assertNotNull(writer);
+    for (int i = 0; i < 2; i++) {
+      Assert.assertFalse(mgr.isOverThresholds(writer));
+      writer.write(record);
+      writer.flush();
+    }
+    Assert.assertTrue(mgr.isOverThresholds(writer));
+    mgr.commitWriter(writer);
+  }
+
+  @Test
+  public void testThresholdSize() throws Exception {
+    URI uri = new URI("file:///");
+    Configuration conf = new HdfsConfiguration();
+    String prefix = "prefix";
+    String template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}/${hh}/${mm}/${ss}/${record:value('/')}";
+    TimeZone timeZone = TimeZone.getTimeZone("UTC");
+    long cutOffSecs = 10;
+    long cutOffSize = 4;
+    long cutOffRecords = 20;
+    HdfsFileType fileType = HdfsFileType.TEXT;
+    DefaultCodec compressionCodec = new DefaultCodec();
+    compressionCodec.setConf(conf);
+    SequenceFile.CompressionType compressionType = null;
+    String keyEL = null;
+    RecordToString toString = new DummyRecordToString();
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+                                                      cutOffRecords, fileType, compressionCodec , compressionType,
+                                                      keyEL, toString);
+    Date now = getFixedDate();
+
+    Date recordDate = now;
+    Record record = RecordCreator.create();
+    record.set(Field.create("a"));
+    RecordWriter writer = mgr.getWriter(now, recordDate, record);
+    Assert.assertNotNull(writer);
+    for (int i = 0; i < 2; i++) {
+      Assert.assertFalse(mgr.isOverThresholds(writer));
+      writer.write(record);
+      writer.flush();
+    }
+    Assert.assertTrue(mgr.isOverThresholds(writer));
+    mgr.commitWriter(writer);
+  }
+
+  @Test
+  public void testNoThreshold() throws Exception {
+    URI uri = new URI("file:///");
+    Configuration conf = new HdfsConfiguration();
+    String prefix = "prefix";
+    String template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}/${hh}/${mm}/${ss}/${record:value('/')}";
+    TimeZone timeZone = TimeZone.getTimeZone("UTC");
+    long cutOffSecs = 10;
+    long cutOffSize = 0;
+    long cutOffRecords = 0;
+    HdfsFileType fileType = HdfsFileType.TEXT;
+    DefaultCodec compressionCodec = new DefaultCodec();
+    compressionCodec.setConf(conf);
+    SequenceFile.CompressionType compressionType = null;
+    String keyEL = null;
+    RecordToString toString = new DummyRecordToString();
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+                                                      cutOffRecords, fileType, compressionCodec , compressionType,
+                                                      keyEL, toString);
+    Date now = getFixedDate();
+
+    Date recordDate = now;
+    Record record = RecordCreator.create();
+    record.set(Field.create("a"));
+    RecordWriter writer = mgr.getWriter(now, recordDate, record);
+    Assert.assertNotNull(writer);
+    for (int i = 0; i < 10; i++) {
+      Assert.assertFalse(mgr.isOverThresholds(writer));
+      writer.write(record);
+      writer.flush();
+    }
+    Assert.assertFalse(mgr.isOverThresholds(writer));
+    mgr.commitWriter(writer);
+  }
+
   @Test
   public void testCeilingDate() throws Exception {
     URI uri = new URI("file:///");
