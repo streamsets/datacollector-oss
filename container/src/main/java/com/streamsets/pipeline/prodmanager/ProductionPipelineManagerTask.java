@@ -23,6 +23,9 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.observerstore.ObserverStore;
 import com.streamsets.pipeline.observerstore.impl.FileObserverStore;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.runner.production.ProductionObserveRequest;
+import com.streamsets.pipeline.runner.production.ProductionObserver;
+import com.streamsets.pipeline.runner.production.ProductionObserverRunnable;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;
 import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
 import com.streamsets.pipeline.runner.production.ProductionPipelineRunnable;
@@ -46,6 +49,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -76,8 +81,12 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private final ErrorRecordStore errorRecordStore;
   private final ObserverStore observerStore;
 
+  /*Queue shared by the ProductionPipelineRunnable and ProductionObserverRunnable*/
+  BlockingQueue<ProductionObserveRequest> productionObserveRequests;
   /*References the thread that is executing the pipeline currently */
   private ProductionPipelineRunnable pipelineRunnable;
+  /*References the thread that is executing the observer stuff*/
+  private ProductionObserverRunnable observerRunnable;
   /*The executor service that is currently executing the ProdPipelineRunnerThread*/
   private ExecutorService executor;
   /*The pipeline being executed or the pipeline in the context*/
@@ -98,7 +107,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     this.stageLibrary = stageLibrary;
     snapshotStore = new FileSnapshotStore(runtimeInfo);
     errorRecordStore = new FileErrorRecordStore(runtimeInfo, configuration);
-    observerStore = new FileObserverStore(runtimeInfo);
+    observerStore = new FileObserverStore(runtimeInfo, configuration);
   }
 
 
@@ -114,8 +123,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public void initTask() {
     LOG.debug("Initializing Production Pipeline Manager");
     stateTracker.init();
-    executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(PRODUCTION_PIPELINE_RUNNER)
-        .setDaemon(true).build());
+    executor = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder().setNameFormat(PRODUCTION_PIPELINE_RUNNER)
+      .setDaemon(true).build());
     PipelineState ps = getPipelineState();
     if(ps != null) {
       switch (ps.getState()) {
@@ -138,8 +147,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
           //Normal start/restart
           //create the pipeline instance. This was the pipeline in the context before the manager shutdown previously
           try {
-            prodPipeline = createProductionPipeline(ps.getName(), ps.getRev(), configuration, pipelineStore,
-              stageLibrary);
+            createPipeline(ps.getName(), ps.getRev());
           } catch (Exception e) {
             //log error and shutdown again
             LOG.error(ContainerError.CONTAINER_0108.getMessage(), e.getMessage());
@@ -229,6 +237,11 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return prodPipeline.getErrorRecords(instanceName);
   }
 
+  public List<Record> getSampledRecords(String sampleDefinitionId) throws PipelineManagerException {
+    checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0106);
+    return observerRunnable.getSampledRecords(sampleDefinitionId);
+  }
+
   public List<ErrorMessage> getErrorMessages(String instanceName) throws PipelineManagerException {
     checkState(getPipelineState() != null && getPipelineState().getState().equals(State.RUNNING),
       ContainerError.CONTAINER_0106);
@@ -275,7 +288,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
   private void handleStartRequest(String name, String rev) throws PipelineManagerException, StageException
       , PipelineRuntimeException, PipelineStoreException {
-    prodPipeline = createProductionPipeline(name, rev, configuration, pipelineStore, stageLibrary);
+    createPipeline(name, rev);
+    observerRunnable = new ProductionObserverRunnable(name, rev, this, productionObserveRequests);
+    executor.submit(observerRunnable);
     pipelineRunnable = new ProductionPipelineRunnable(this, prodPipeline, name, rev);
     executor.submit(pipelineRunnable);
     LOG.debug("Started pipeline {} {}", name, rev);
@@ -287,14 +302,19 @@ public class ProductionPipelineManagerTask extends AbstractTask {
       pipelineRunnable.stop(nodeProcessShutdown);
       pipelineRunnable = null;
     }
+    if(observerRunnable != null) {
+      observerRunnable.stop();
+      observerRunnable = null;
+    }
     LOG.debug("Stopped pipeline");
   }
 
   @VisibleForTesting
-  ProductionPipeline createProductionPipeline(String name, String rev
-      , com.streamsets.pipeline.util.Configuration configuration, PipelineStoreTask pipelineStore
-      , StageLibraryTask stageLibrary) throws PipelineStoreException, PipelineRuntimeException, StageException
-      , PipelineManagerException {
+  ProductionPipeline createProductionPipeline(String name, String rev,
+                                              com.streamsets.pipeline.util.Configuration configuration,
+                                              StageLibraryTask stageLibrary, ProductionObserver observer,
+                                              PipelineConfiguration pipelineConfiguration)
+    throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineManagerException {
 
     //retrieve pipeline properties from the pipeline configuration
     int maxBatchSize = configuration.get(Configuration.MAX_BATCH_SIZE_KEY, Configuration.MAX_BATCH_SIZE_DEFAULT);
@@ -303,8 +323,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     int maxPipelineErrors = configuration.get(Configuration.MAX_PIPELINE_ERRORS_KEY,
       Configuration.MAX_PIPELINE_ERRORS_DEFAULT);
 
-    //load pipeline configuration from store
-    PipelineConfiguration pipelineConfiguration = pipelineStore.load(name, rev);
     DeliveryGuarantee deliveryGuarantee = DeliveryGuarantee.AT_LEAST_ONCE;
     for(ConfigConfiguration config : pipelineConfiguration.getConfiguration()) {
       if(Configuration.DELIVERY_GUARANTEE.equals(config.getName())) {
@@ -317,16 +335,27 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     createPipelineDirIfNotExist(name);
     //register the pipeline with the error record store
     errorRecordStore.register(name, rev);
+    observerStore.register(name, rev);
     stateTracker.register(name, rev);
 
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, errorRecordStore,
-        maxBatchSize, maxErrorRecordsPerStage, maxPipelineErrors, deliveryGuarantee, name, rev);
-    ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, pipelineConfiguration);
+        maxBatchSize, maxErrorRecordsPerStage, maxPipelineErrors, deliveryGuarantee, name, rev, observerStore);
 
-    // the builder will replace the data collector offset tracker with a source based one if the source is an
-    // OffsetCommitter. TODO: refactor this to make it cleaner
-    return builder.build(runner, offsetTracker);
+    ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, pipelineConfiguration);
+    return builder.build(runner, offsetTracker, observer);
+  }
+
+  void createPipeline(String name, String rev)
+    throws PipelineStoreException, PipelineManagerException, StageException, PipelineRuntimeException {
+    ProductionObserver observer = null;
+    PipelineConfiguration pipelineConfiguration = pipelineStore.load(name, rev);
+    if(pipelineConfiguration.getStages() != null && !pipelineConfiguration.getStages().isEmpty()) {
+      productionObserveRequests = new ArrayBlockingQueue<>(pipelineConfiguration.getStages().size());
+      observer = new ProductionObserver(productionObserveRequests);
+    }
+    prodPipeline = createProductionPipeline(name, rev, configuration, stageLibrary,
+      observer, pipelineConfiguration);
   }
 
   @VisibleForTesting

@@ -61,6 +61,10 @@ public enum ContainerError implements ErrorCode {
   // AdminResource
   CONTAINER_0300("Reached maximum number of concurrent clients '{}' tailing the log via the REST API"),
 
+  //Observer
+  CONTAINER_0400("Failed to evaluate expression '{}' for record '{}'. Reason: {}"),
+  CONTAINER_0401("Failed to evaluate expression '{}'. Reason: {}"),
+
   ;
 
   private final String msg;

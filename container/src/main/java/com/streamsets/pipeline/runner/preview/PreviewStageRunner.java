@@ -9,6 +9,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipe;
 import com.streamsets.pipeline.runner.PipeBatch;
 import com.streamsets.pipeline.runner.PipelineRunner;
@@ -68,6 +69,11 @@ public class PreviewStageRunner implements PipelineRunner {
   @Override
   public String getNewSourceOffset() {
     return null;
+  }
+
+  @Override
+  public void setObserver(Observer observer) {
+
   }
 
   @Override

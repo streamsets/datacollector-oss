@@ -13,12 +13,15 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.EvictingQueue;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.config.DeliveryGuarantee;
-import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.observerstore.ObserverStore;
 import com.streamsets.pipeline.runner.FullPipeBatch;
+import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipe;
 import com.streamsets.pipeline.runner.PipeBatch;
 import com.streamsets.pipeline.runner.PipelineRunner;
@@ -26,7 +29,6 @@ import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
 
 public class ProductionPipelineRunner implements PipelineRunner {
 
@@ -46,6 +49,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private SourceOffsetTracker offsetTracker;
   private final SnapshotStore snapshotStore;
   private final ErrorRecordStore errorRecordStore;
+  private final ObserverStore observerStore;
   private final int maxErrorRecordsPerStage;
   private final int maxPipelineErrors;
 
@@ -77,10 +81,13 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private Map<String, EvictingQueue<Record>> stageToErrorRecordsMap;
   /*Cache last N error messages in memory*/
   private Map<String, EvictingQueue<ErrorMessage>> stageToErrorMessagesMap;
+  private Observer observer;
+
+  private Object errorRecordsMutex;
 
   public ProductionPipelineRunner(SnapshotStore snapshotStore, ErrorRecordStore errorRecordStore,
                                   int batchSize, int maxErrorRecordsPerStage, int maxPipelineErrors,
-      DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision) {
+      DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision, ObserverStore observerStore) {
     this.metrics = new MetricRegistry();
     this.batchSize = batchSize;
     this.maxErrorRecordsPerStage = maxErrorRecordsPerStage;
@@ -104,6 +111,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.errorRecordStore = errorRecordStore;
     this.stageToErrorRecordsMap = new HashMap<>();
     this.stageToErrorMessagesMap = new HashMap<>();
+    this.observerStore = observerStore;
+
+    errorRecordsMutex = new Object();
   }
 
   @Override
@@ -137,6 +147,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   public String getNewSourceOffset() {
     return newSourceOffset;
+  }
+
+  @Override
+  public void setObserver(Observer observer) {
+    this.observer = observer;
   }
 
   public String getCommittedOffset() {
@@ -176,6 +191,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     long start = System.currentTimeMillis();
     sourceOffset = pipeBatch.getPreviousOffset();
+
+    if(observer != null) {
+      RuleDefinition ruleDefinition = observerStore.retrieveRules(pipelineName, revision);
+      ((ProductionObserver) observer).setRuleDefinition(ruleDefinition);
+    }
 
     for (Pipe pipe : pipes) {
       //TODO Define an interface to handle delivery guarantee
@@ -227,41 +247,48 @@ public class ProductionPipelineRunner implements PipelineRunner {
     return this.offsetTracker;
   }
 
-  private void retainErrorsInMemory(Map<String, List<Record>> errorRecords, Map<String, List<ErrorMessage>> errorMessages) {
-    for(Map.Entry<String, List<Record>> e : errorRecords.entrySet()) {
-      EvictingQueue<Record> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
-      if(errorRecordList == null) {
-        //replace with a data structure with an upper cap
-        errorRecordList = EvictingQueue.create(maxErrorRecordsPerStage);
-        stageToErrorRecordsMap.put(e.getKey(), errorRecordList);
+  private void retainErrorsInMemory(Map<String, List<Record>> errorRecords, Map<String,
+    List<ErrorMessage>> errorMessages) {
+    synchronized (errorRecordsMutex) {
+      for (Map.Entry<String, List<Record>> e : errorRecords.entrySet()) {
+        EvictingQueue<Record> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
+        if (errorRecordList == null) {
+          //replace with a data structure with an upper cap
+          errorRecordList = EvictingQueue.create(maxErrorRecordsPerStage);
+          stageToErrorRecordsMap.put(e.getKey(), errorRecordList);
+        }
+        errorRecordList.addAll(errorRecords.get(e.getKey()));
       }
-      errorRecordList.addAll(errorRecords.get(e.getKey()));
-    }
-    for(Map.Entry<String, List<ErrorMessage>> e : errorMessages.entrySet()) {
-      EvictingQueue<ErrorMessage> errorMessageList = stageToErrorMessagesMap.get(e.getKey());
-      if(errorMessageList == null) {
-        //replace with a data structure with an upper cap
-        errorMessageList = EvictingQueue.create(maxPipelineErrors);
-        stageToErrorMessagesMap.put(e.getKey(), errorMessageList);
+      for (Map.Entry<String, List<ErrorMessage>> e : errorMessages.entrySet()) {
+        EvictingQueue<ErrorMessage> errorMessageList = stageToErrorMessagesMap.get(e.getKey());
+        if (errorMessageList == null) {
+          //replace with a data structure with an upper cap
+          errorMessageList = EvictingQueue.create(maxPipelineErrors);
+          stageToErrorMessagesMap.put(e.getKey(), errorMessageList);
+        }
+        errorMessageList.addAll(errorMessages.get(e.getKey()));
       }
-      errorMessageList.addAll(errorMessages.get(e.getKey()));
     }
   }
 
   @SuppressWarnings("unchecked")
   public List<Record> getErrorRecords(String instanceName) {
-    if(stageToErrorRecordsMap == null || stageToErrorRecordsMap.isEmpty()
+    synchronized (errorRecordsMutex) {
+      if (stageToErrorRecordsMap == null || stageToErrorRecordsMap.isEmpty()
         || stageToErrorRecordsMap.get(instanceName) == null || stageToErrorRecordsMap.get(instanceName).isEmpty()) {
-      return Collections.EMPTY_LIST;
+        return Collections.EMPTY_LIST;
+      }
     }
     return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName));
   }
 
   public List<ErrorMessage> getErrorMessages(String instanceName) {
-    if(stageToErrorMessagesMap == null || stageToErrorMessagesMap.isEmpty()
+    synchronized (errorRecordsMutex) {
+      if (stageToErrorMessagesMap == null || stageToErrorMessagesMap.isEmpty()
         || stageToErrorMessagesMap.get(instanceName) == null
         || stageToErrorMessagesMap.get(instanceName).isEmpty()) {
-      return Collections.EMPTY_LIST;
+        return Collections.EMPTY_LIST;
+      }
     }
     return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName));
   }

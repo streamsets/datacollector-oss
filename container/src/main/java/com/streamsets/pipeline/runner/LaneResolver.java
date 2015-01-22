@@ -113,4 +113,8 @@ public class LaneResolver {
     return Utils.format("LaneResolver[stages='{}']", names);
   }
 
+  public static String getPostFixedLaneForObserver(String laneName) {
+    return laneName + STAGE_OUT;
+  }
+
 }

@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.FullPipeBatch;
+import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipe;
 import com.streamsets.pipeline.runner.PipeBatch;
 import com.streamsets.pipeline.runner.PipelineRunner;
@@ -78,5 +79,10 @@ public class PreviewPipelineRunner implements PipelineRunner {
 
   public String getNewSourceOffset() {
     return newSourceOffset;
+  }
+
+  @Override
+  public void setObserver(Observer observer) {
+
   }
 }

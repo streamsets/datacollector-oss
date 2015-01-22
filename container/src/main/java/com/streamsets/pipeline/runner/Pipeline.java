@@ -81,6 +81,7 @@ public class Pipeline {
   }
 
   public void run() throws StageException, PipelineRuntimeException {
+    runner.setObserver(observer);
     runner.run(pipes);
   }
 

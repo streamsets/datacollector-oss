@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.observerstore.impl.FileObserverStore;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
@@ -42,6 +43,7 @@ public class TestProdPipelineRunnable {
   private static final String PIPELINE_NAME = "xyz";
   private static final String REVISION = "1.0";
   private ProductionPipelineManagerTask manager = null;
+  private RuntimeInfo info = null;
 
   @BeforeClass
   public static void beforeClass() throws IOException {
@@ -58,7 +60,7 @@ public class TestProdPipelineRunnable {
   @Before()
   public void setUp() {
     MockStages.resetStageCaptures();
-    RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+    info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
     manager = new ProductionPipelineManagerTask(info, Mockito.mock(Configuration.class)
         , Mockito.mock(FilePipelineStoreTask.class), Mockito.mock(StageLibraryTask.class));
     manager.init();
@@ -169,9 +171,9 @@ public class TestProdPipelineRunnable {
 
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, fileErrorRecordStore, 5
-        , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION);
+        , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION, new FileObserverStore(info, new Configuration()));
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
-        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner, tracker);
+        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner, tracker, null);
     manager.getStateTracker().register(PIPELINE_NAME, REVISION);
     manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPED, null);
 

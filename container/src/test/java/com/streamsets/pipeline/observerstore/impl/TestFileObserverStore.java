@@ -15,6 +15,7 @@ import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.config.SamplingDefinition;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.util.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -50,7 +51,7 @@ public class TestFileObserverStore {
     File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     RuntimeInfo info = new RuntimeInfo(ImmutableList.of(getClass().getClassLoader()));
-    observerStore = new FileObserverStore(info);
+    observerStore = new FileObserverStore(info, new Configuration());
   }
 
   @After

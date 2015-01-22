@@ -8,21 +8,25 @@ package com.streamsets.pipeline.runner.production;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
+import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.observerstore.impl.FileObserverStore;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
+import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.TestUtil;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import java.util.Arrays;
 
 public class TestProductionPipeline {
 
@@ -133,14 +137,15 @@ public class TestProductionPipeline {
 
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, fileErrorRecordStore, 5
-        , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION);
+        , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION,
+      new FileObserverStore(new RuntimeInfo(Arrays.asList(getClass().getClassLoader())), new Configuration()));
 
     PipelineConfiguration pConf = (sourceOffsetCommitter)
         ? MockStages.createPipelineConfigurationSourceOffsetCommitterProcessorTarget()
         : MockStages.createPipelineConfigurationSourceProcessorTarget();
 
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name", pConf)
-        .build(runner, tracker);
+        .build(runner, tracker, null);
 
     if(capturenextBatch) {
       runner.captureNextBatch(1);

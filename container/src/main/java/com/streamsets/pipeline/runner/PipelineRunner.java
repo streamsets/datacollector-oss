@@ -22,4 +22,6 @@ public interface PipelineRunner {
 
   public String getNewSourceOffset();
 
+  public void setObserver(Observer observer);
+
 }

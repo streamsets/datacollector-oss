@@ -181,4 +181,13 @@ public class PipelineManagerResource {
         pipelineManager.getErrorMessages(stageInstanceName)).build();
   }
 
+  @Path("/sampledRecords")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getSampledRecords(
+    @QueryParam ("sampleId") String sampleId) throws PipelineManagerException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
+      pipelineManager.getSampledRecords(sampleId)).build();
+  }
+
 }
