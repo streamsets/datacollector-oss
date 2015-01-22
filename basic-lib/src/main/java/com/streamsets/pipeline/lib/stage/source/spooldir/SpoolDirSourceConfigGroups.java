@@ -8,16 +8,14 @@ package com.streamsets.pipeline.lib.stage.source.spooldir;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public enum FileDataType implements BaseEnumChooserValues.EnumWithLabel, ConfigGroups.Groups {
-  LOG_FILES("Log Files"),
-  JSON_FILES("JSON Files"),
-  DELIMITED_FILES("Delimited Files"),
-  XML_FILES("XML Files"),
+public enum SpoolDirSourceConfigGroups implements ConfigGroups.Groups {
+  INPUT_FILES("Input Files"),
+  POST_PROCESSING("Post Processing"),
   ;
 
   private final String label;
 
-  FileDataType(String label) {
+  SpoolDirSourceConfigGroups(String label) {
     this.label = label;
   }
 

@@ -9,8 +9,8 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 
 public enum JsonFileMode implements BaseEnumChooserValues.EnumWithLabel {
-  ARRAY_OBJECTS("A file has an JSON array of objects", StreamingJsonParser.Mode.ARRAY_OBJECTS),
-  MULTIPLE_OBJECTS("A file has multiple JSON objects", StreamingJsonParser.Mode.MULTIPLE_OBJECTS),
+  ARRAY_OBJECTS("Array of objects", StreamingJsonParser.Mode.ARRAY_OBJECTS),
+  MULTIPLE_OBJECTS("Multiple objects", StreamingJsonParser.Mode.MULTIPLE_OBJECTS),
   ;
 
   private final String label;
