@@ -15,7 +15,7 @@ public class StageLibraryUtils {
   static String getLibraryName(ClassLoader cl) {
     String name;
     try {
-      Method method = cl.getClass().getMethod("getName");
+      Method method = cl.getClass().getMethod("getId");
       name = (String) method.invoke(cl);
     } catch (NoSuchMethodException ex ) {
       name = "default";

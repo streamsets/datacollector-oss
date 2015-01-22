@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 public class SamplingDefinition {
 
-  private final String name;
+  private final String id;
   private final String label;
   private final String lane;
   private final String predicate;
@@ -19,13 +19,13 @@ public class SamplingDefinition {
   private final boolean enabled;
 
   @JsonCreator
-  public SamplingDefinition(@JsonProperty("name") String name,
+  public SamplingDefinition(@JsonProperty("id") String id,
                             @JsonProperty("label") String label,
                             @JsonProperty("lane") String lane,
                             @JsonProperty("predicate") String predicate,
                             @JsonProperty("samplingPercentage") String samplingPercentage,
                             @JsonProperty("enabled") boolean enabled) {
-    this.name = name;
+    this.id = id;
     this.label = label;
     this.lane = lane;
     this.predicate = predicate;
@@ -33,8 +33,8 @@ public class SamplingDefinition {
     this.enabled = enabled;
   }
 
-  public String getName() {
-    return name;
+  public String getId() {
+    return id;
   }
 
   public String getLabel() {
@@ -60,7 +60,7 @@ public class SamplingDefinition {
   @Override
   public String toString() {
     return Utils.format(
-      "SamplingDefinition[name='{}' label='{}' lane='{}' predicate='{}' samplingPercentage='{}', enabled='{}']",
-      getName(), getLabel(), getLane(), getPredicate(), getSamplingPercentage(), isEnabled());
+      "SamplingDefinition[id='{}' label='{}' lane='{}' predicate='{}' samplingPercentage='{}', enabled='{}']",
+      getId(), getLabel(), getLane(), getPredicate(), getSamplingPercentage(), isEnabled());
   }
 }

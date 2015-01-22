@@ -9,37 +9,38 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
 
-import java.util.Map;
-
 public class AlertDefinition {
 
-  private final String name;
+  private final String id;
   private final String label;
   private final String lane;
   private final String predicate;
-  //The possible set of keys are
-  //1. count
-  //2. percentage and minVolume
-  private final Map<String, String> threshold;
+  private final ThresholdType thresholdType;
+  private final String thresholdValue;
+  private final long minVolume;
   private final boolean enabled;
 
   @JsonCreator
-  public AlertDefinition(@JsonProperty("name")String name,
+  public AlertDefinition(@JsonProperty("id")String id,
                          @JsonProperty("label")String label,
                          @JsonProperty("lane")String lane,
                          @JsonProperty("predicate")String predicate,
-                         @JsonProperty("threshold")Map<String, String> threshold,
+                         @JsonProperty("thresholdType") ThresholdType thresholdType,
+                         @JsonProperty("thresholdValue") String thresholdValue,
+                         @JsonProperty("minVolume") long minVolume,
                          @JsonProperty("enabled")boolean enabled) {
-    this.name = name;
+    this.id = id;
     this.label = label;
     this.lane = lane;
     this.predicate = predicate;
-    this.threshold = threshold;
+    this.thresholdType = thresholdType;
+    this.thresholdValue = thresholdValue;
+    this.minVolume = minVolume;
     this.enabled = enabled;
   }
 
-  public String getName() {
-    return name;
+  public String getId() {
+    return id;
   }
 
   public String getLabel() {
@@ -54,8 +55,16 @@ public class AlertDefinition {
     return predicate;
   }
 
-  public Map<String, String> getThreshold() {
-    return threshold;
+  public ThresholdType getThresholdType() {
+    return thresholdType;
+  }
+
+  public String getThresholdValue() {
+    return thresholdValue;
+  }
+
+  public long getMinVolume() {
+    return minVolume;
   }
 
   public boolean isEnabled() {
@@ -64,8 +73,8 @@ public class AlertDefinition {
 
   @Override
   public String toString() {
-    return Utils.format("AlertDefinition[name='{}' label='{}' lane='{}' predicate='{}' enabled='{}']",
-      getName(), getLabel(), getLane(), getPredicate(), isEnabled());
+    return Utils.format("AlertDefinition[id='{}' label='{}' lane='{}' predicate='{}' enabled='{}']",
+      getId(), getLabel(), getLane(), getPredicate(), isEnabled());
   }
 
 }

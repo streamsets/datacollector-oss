@@ -63,7 +63,7 @@ public class TestStageLibraryResource extends JerseyTest {
     Assert.assertTrue(stages.get(0) instanceof StageDefinition);
     StageDefinition s1 = (StageDefinition) stages.get(0);
     Assert.assertNotNull(s1);
-    Assert.assertEquals("source", s1.getName());
+    Assert.assertEquals("source", s1.getId());
     Assert.assertEquals("com.streamsets.pipeline.restapi.TestStageLibraryResource$TSource", s1.getClassName());
     Assert.assertEquals("1.0.0", s1.getVersion());
     Assert.assertEquals("label", s1.getLabel());
@@ -73,7 +73,7 @@ public class TestStageLibraryResource extends JerseyTest {
     Assert.assertTrue(stages.get(1) instanceof StageDefinition);
     StageDefinition s2 = (StageDefinition) stages.get(1);
     Assert.assertNotNull(s2);
-    Assert.assertEquals("target", s2.getName());
+    Assert.assertEquals("target", s2.getId());
     Assert.assertEquals("com.streamsets.pipeline.restapi.TestStageLibraryResource$TTarget", s2.getClassName());
     Assert.assertEquals("1.0.0", s2.getVersion());
     Assert.assertEquals("label", s2.getLabel());

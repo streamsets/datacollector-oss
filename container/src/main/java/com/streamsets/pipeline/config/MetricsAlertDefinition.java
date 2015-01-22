@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 public class MetricsAlertDefinition {
 
-  private final String name;
+  private final String id;
   private final String label;
   private final String metricId;
   private final MetricType metricType;
@@ -20,14 +20,14 @@ public class MetricsAlertDefinition {
   private final boolean enabled;
 
   @JsonCreator
-  public MetricsAlertDefinition(@JsonProperty("name") String name,
+  public MetricsAlertDefinition(@JsonProperty("id") String id,
                                 @JsonProperty("label") String label,
                                 @JsonProperty("metricId") String metricId,
                                 @JsonProperty("metricType") MetricType metricType,
                                 @JsonProperty("metricElement") MetricElement metricElement,
                                 @JsonProperty("predicate") String predicate,
                                 @JsonProperty("enabled") boolean enabled) {
-    this.name = name;
+    this.id = id;
     this.label = label;
     this.metricId = metricId;
     this.metricType = metricType;
@@ -36,8 +36,8 @@ public class MetricsAlertDefinition {
     this.enabled = enabled;
   }
 
-  public String getName() {
-    return name;
+  public String getId() {
+    return id;
   }
 
   public String getLabel() {
@@ -67,7 +67,7 @@ public class MetricsAlertDefinition {
   @Override
   public String toString() {
     return Utils.format(
-      "MetricsAlertDefinition[name='{}' label='{}' predicate='{}' enabled='{}', metricType='{}', metricElement='{}']",
-      getName(), getLabel(), getPredicate(), isEnabled(), getMetricType().name(), getMetricElement().name());
+      "MetricsAlertDefinition[id='{}' label='{}' predicate='{}' enabled='{}', metricType='{}', metricElement='{}']",
+      getId(), getLabel(), getPredicate(), isEnabled(), getMetricType().name(), getMetricElement().name());
   }
 }

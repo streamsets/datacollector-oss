@@ -5,10 +5,7 @@
  */
 package com.streamsets.pipeline.restapi;
 
-import com.streamsets.pipeline.config.AlertDefinition;
-import com.streamsets.pipeline.config.CounterDefinition;
-import com.streamsets.pipeline.config.MetricsAlertDefinition;
-import com.streamsets.pipeline.config.SamplingDefinition;
+import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 
 import javax.inject.Inject;
@@ -21,7 +18,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Path("/v1/rules")
 public class RuleResource {
@@ -33,91 +29,25 @@ public class RuleResource {
     this.pipelineManager = pipelineManager;
   }
 
-  @Path("/{name}/alerts")
+  @Path("/{name}/rules")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getAlerts(
+  public Response getRules(
     @PathParam("name") String name,
     @QueryParam("rev") @DefaultValue("0") String rev) {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getObserverStore().retrieveAlerts(name, rev)).build();
+      pipelineManager.getObserverStore().retrieveRules(name, rev)).build();
 
   }
 
-  @Path("/{name}/alerts")
+  @Path("/{name}/rules")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response saveAlerts(
+  public Response saveRules(
     @PathParam("name") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    List<AlertDefinition> alerts) {
+    RuleDefinition ruleDefinition) {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getObserverStore().storeAlerts(name, rev, alerts)).build();
-  }
-
-  @Path("/{name}/metricAlerts")
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getMetricAlerts(
-    @PathParam("name") String name,
-    @QueryParam("rev") @DefaultValue("0") String rev) {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getObserverStore().retrieveMetricAlerts(name, rev)).build();
-
-  }
-
-  @Path("/{name}/metricAlerts")
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response saveMetricAlerts(
-    @PathParam("name") String name,
-    @QueryParam("rev") @DefaultValue("0") String rev,
-    List<MetricsAlertDefinition> metricsAlerts) {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getObserverStore().storeMetricAlerts(name, rev, metricsAlerts)).build();
-  }
-
-  @Path("/{name}/sampling")
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getSamplingDefinitions(
-    @PathParam("name") String name,
-    @QueryParam("rev") @DefaultValue("0") String rev) {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getObserverStore().retrieveSamplingDefinitions(name, rev)).build();
-
-  }
-
-  @Path("/{name}/sampling")
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response saveSamplingDefinitions(
-    @PathParam("name") String name,
-    @QueryParam("rev") @DefaultValue("0") String rev,
-    List<SamplingDefinition> samplingDefinitions) {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getObserverStore().storeSamplingDefinitions(name, rev, samplingDefinitions)).build();
-  }
-
-  @Path("/{name}/counters")
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getCounters(
-    @PathParam("name") String name,
-    @QueryParam("rev") @DefaultValue("0") String rev) {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getObserverStore().retrieveCounters(name, rev)).build();
-
-  }
-
-  @Path("/{name}/counters")
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response saveCounters(
-    @PathParam("name") String name,
-    @QueryParam("rev") @DefaultValue("0") String rev,
-    List<CounterDefinition> counters) {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getObserverStore().storeCounters(name, rev, counters)).build();
+      pipelineManager.getObserverStore().storeRules(name, rev, ruleDefinition)).build();
   }
 }

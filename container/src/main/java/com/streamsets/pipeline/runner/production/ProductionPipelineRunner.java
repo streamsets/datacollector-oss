@@ -176,6 +176,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     long start = System.currentTimeMillis();
     sourceOffset = pipeBatch.getPreviousOffset();
+
     for (Pipe pipe : pipes) {
       //TODO Define an interface to handle delivery guarantee
       if (deliveryGuarantee == DeliveryGuarantee.AT_MOST_ONCE
