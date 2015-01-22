@@ -185,7 +185,7 @@
         "metersRule": "Meters Rule",
         "noAlertRules": "No Alert Rules to view.",
         "noSamplingRules": "No Sampling Rules to view.",
-        "noCounterRules": "No Counter Rules to view.",
+        "noMeterRules": "No Meter Rules to view.",
         "predicate": "Predicate",
         "samplingRule": "Sampling Rule",
         "threshold": "Threshold"

@@ -250,7 +250,7 @@ angular
        * Refresh the Pipeline Graph.
        */
       refreshGraph : function() {
-        updateGraph($scope.pipelineConfig);
+        updateGraph($scope.pipelineConfig, $scope.pipelineRules);
       },
 
       /**
@@ -425,7 +425,7 @@ angular
 
             saveUpdates(config);
           }
-          updateGraph(res);
+          updateGraph(res, $scope.pipelineRules);
         }).
         error(function(data, status, headers, config) {
           $rootScope.common.errors = [data];

@@ -15,7 +15,7 @@
       </thead>
       <tbody ng-hide="showLoading">
 
-        <tr ng-repeat="alertRule in pipelineRules.alertDefinitions | filter: {lane: selectedObject.outputLane}">
+        <tr ng-repeat="alertRule in alertDefinitions = (pipelineRules.alertDefinitions | filter: {lane: selectedObject.outputLane})">
 
           <td>
             <input type="checkbox" name="enabled{{$index}}"
@@ -66,7 +66,7 @@
 
         </tr>
 
-        <tr ng-if="pipelineRules.alertDefinitions.length === 0">
+        <tr ng-if="alertDefinitions.length === 0">
           <td colspan="3" class="no-records text-center"
               translate="home.detailPane.rulesTab.noAlertRules">No Alert Rules to view.</td>
         </tr>
@@ -77,7 +77,6 @@
     <div show-loading="showLoading"></div>
 
     <button type="button" class="btn btn-primary btn-sm pull-right add-button"
-            ng-hide="isPipelineRunning"
             ng-click="createAlertRule()">
       <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
     </button>

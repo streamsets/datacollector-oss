@@ -15,7 +15,7 @@
       </thead>
       <tbody ng-hide="showLoading">
 
-      <tr ng-repeat="meterRule in pipelineRules.meterDefinitions | filter: {lane: selectedObject.outputLane}">
+      <tr ng-repeat="meterRule in meterDefinitions = (pipelineRules.meterDefinitions | filter: {lane: selectedObject.outputLane})">
 
         <td>
           <input type="checkbox" name="enabled{{$index}}"
@@ -55,7 +55,7 @@
 
       </tr>
 
-      <tr ng-if="pipelineRules.meterDefinitions.length === 0">
+      <tr ng-if="meterDefinitions.length === 0">
         <td colspan="3" class="no-records text-center"
             translate="home.detailPane.rulesTab.noMeterRules">No Meter Rules to view.</td>
       </tr>
@@ -66,7 +66,6 @@
     <div show-loading="showLoading"></div>
 
     <button type="button" class="btn btn-primary btn-sm pull-right add-button"
-            ng-hide="isPipelineRunning"
             ng-click="createMeterRule()">
       <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
     </button>
