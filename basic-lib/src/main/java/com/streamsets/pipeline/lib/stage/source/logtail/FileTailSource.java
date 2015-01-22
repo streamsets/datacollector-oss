@@ -23,9 +23,11 @@ import java.util.concurrent.BlockingQueue;
 
 @GenerateResourceBundle
 @StageDef(version="1.0.0",
-          label="Tail log files",
-          icon="log.png")
-public class LogTailSource extends BaseSource {
+          label="File Tail",
+          description = "Reads lines from the specified file as they are written to it. It must be text file, " +
+                        "typically a log file.",
+          icon="fileTail.png")
+public class FileTailSource extends BaseSource {
 
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
 
@@ -33,45 +35,41 @@ public class LogTailSource extends BaseSource {
 
   @ConfigDef(required = true,
              type = ConfigDef.Type.STRING,
-             label = "Log file")
-  public String logFileName;
+             label = "File Path",
+             description = "Full file path of the file to tail",
+             displayPosition = 0)
+  public String fileName;
 
-  @ConfigDef(required = false,
-             type = ConfigDef.Type.BOOLEAN,
-             label = "Tail from end of log file",
-             defaultValue = "true")
-  public boolean tailFromEnd;
-
-  @ConfigDef(required = false,
+  @ConfigDef(required = true,
              type = ConfigDef.Type.INTEGER,
-             label = "Maximum lines prefetch",
-             defaultValue = "100")
-  public int maxLinesPrefetch;
-
-  @ConfigDef(required = false,
-             type = ConfigDef.Type.INTEGER,
-             label = "Batch size",
-             defaultValue = "10")
+             label = "Maximum Lines per Batch",
+             description = "The maximum number of file lines that will be sent in a single batch",
+             defaultValue = "10",
+             displayPosition = 10)
   public int batchSize;
 
-  @ConfigDef(required = false,
+  @ConfigDef(required = true,
              type = ConfigDef.Type.INTEGER,
-             label = "Maximum wait time to fill up a batch",
-             defaultValue = "5000")
-  public int maxWaitTime;
+             label = "Batch Wait Time (secs)",
+             description = " Maximum amount of time to wait to fill a batch before sending it",
+             defaultValue = "5",
+             displayPosition = 20)
+  public int maxWaitTimeSecs;
 
   private BlockingQueue<String> logLinesQueue;
+  private long maxWaitTimeMillis;
   private LogTail logTail;
 
   @Override
   protected void init() throws StageException {
     super.init();
-    File logFile = new File(logFileName);
+    File logFile = new File(fileName);
     if (logFile.exists() && !logFile.canRead()) {
       throw new StageException(StageLibError.LIB_0001, logFile);
     }
-    logLinesQueue = new ArrayBlockingQueue<>(maxLinesPrefetch);
-    logTail = new LogTail(logFile, tailFromEnd, getInfo(), logLinesQueue);
+    maxWaitTimeMillis = maxWaitTimeSecs * 1000;
+    logLinesQueue = new ArrayBlockingQueue<>(2 * batchSize);
+    logTail = new LogTail(logFile, true, getInfo(), logLinesQueue);
     logTail.start();
   }
 
@@ -87,7 +85,7 @@ public class LogTailSource extends BaseSource {
     int fetch = Math.min(batchSize, maxBatchSize);
     String now = "." + Long.toString(System.currentTimeMillis()) + ".";
     List<String> lines = new ArrayList<>(fetch);
-    while (((System.currentTimeMillis() - start) < maxWaitTime) && (logLinesQueue.size() < fetch)) {
+    while (((System.currentTimeMillis() - start) < maxWaitTimeMillis) && (logLinesQueue.size() < fetch)) {
       try {
         Thread.sleep(SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS);
       } catch (InterruptedException ex) {
@@ -96,7 +94,7 @@ public class LogTailSource extends BaseSource {
     }
     logLinesQueue.drainTo(lines, fetch);
     for (int i = 0; i < lines.size(); i++) {
-      Record record = getContext().createRecord(logFileName + now + i);
+      Record record = getContext().createRecord(fileName + now + i);
       record.set(Field.create(lines.get(i)));
       batchMaker.addRecord(record);
     }

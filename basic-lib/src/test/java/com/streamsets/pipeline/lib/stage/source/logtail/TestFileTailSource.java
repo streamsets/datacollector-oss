@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
-public class TestTailLogSource {
+public class TestFileTailSource {
   private String logFile;
 
   @Before
@@ -36,12 +36,10 @@ public class TestTailLogSource {
 
   @Test
   public void testTailFromEnd() throws Exception {
-    SourceRunner runner = new SourceRunner.Builder(LogTailSource.class)
-      .addConfiguration("logFileName", logFile)
-      .addConfiguration("tailFromEnd", true)
-      .addConfiguration("maxLinesPrefetch", 50)
+    SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
+      .addConfiguration("fileName", logFile)
       .addConfiguration("batchSize", 25)
-      .addConfiguration("maxWaitTime", 100)
+      .addConfiguration("maxWaitTimeSecs", 1)
       .addOutputLane("lane")
       .build();
     runner.runInit();
@@ -49,30 +47,9 @@ public class TestTailLogSource {
       long start = System.currentTimeMillis();
       StageRunner.Output output = runner.runProduce(null, 1000);
       long end = System.currentTimeMillis();
-      Assert.assertTrue(end - start > 100);
+      Assert.assertTrue(end - start >= 1000);
       Assert.assertNotNull(output.getNewOffset());
       Assert.assertTrue(output.getRecords().get("lane").isEmpty());
-    } finally {
-      runner.runDestroy();
-    }
-  }
-
-  @Test
-  public void testTailFromBeginning() throws Exception {
-    SourceRunner runner = new SourceRunner.Builder(LogTailSource.class)
-        .addConfiguration("logFileName", logFile)
-        .addConfiguration("tailFromEnd", false)
-        .addConfiguration("maxLinesPrefetch", 50)
-        .addConfiguration("batchSize", 25)
-        .addConfiguration("maxWaitTime", 100)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
-    try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      Assert.assertNotNull(output.getNewOffset());
-      Assert.assertFalse(output.getRecords().get("lane").isEmpty());
-      Assert.assertEquals("FIRST", output.getRecords().get("lane").get(0).get().getValueAsString());
     } finally {
       runner.runDestroy();
     }
