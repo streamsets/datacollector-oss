@@ -103,13 +103,37 @@ public class SpoolDirSource extends BaseSpoolDirSource {
   @ConfigDef(required = true,
       type = ConfigDef.Type.INTEGER,
       label = "Maximum Log Line Length",
-      description = "The maximum length for log lines, if a line exceeds that length, it will be truncated",
+      description = "The maximum length for log lines, if a line exceeds this length, it will be truncated",
       defaultValue = "1024",
       displayPosition = 400,
       group = "LOG_FILES",
       dependsOn = "fileDataType",
       triggeredByValue = "LOG_FILES")
   public int maxLogLineLength;
+
+  // XML Configuration
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.INTEGER,
+      label = "Maximum XML Record Length",
+      description = "The maximum length for an XML record, if a record exceeds this length, it will be discarded",
+      defaultValue = "4096",
+      displayPosition = 500,
+      group = "XML_FILES",
+      dependsOn = "fileDataType",
+      triggeredByValue = "XML_FILES")
+  public int maxXmlObjectLen;
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.STRING,
+      label = "XML Element Record Delimiter",
+      description = "The first level XML element name that acts as record delimiter",
+      defaultValue = "",
+      displayPosition = 501,
+      group = "XML_FILES",
+      dependsOn = "fileDataType",
+      triggeredByValue = "XML_FILES")
+  public String xmlRecordElement;
 
   private DataProducer dataProducer;
 
@@ -125,6 +149,9 @@ public class SpoolDirSource extends BaseSpoolDirSource {
         break;
       case DELIMITED_FILES:
         dataProducer = new CsvDataProducer(getContext(), csvFileFormat, hasHeaderLine, convertToMap);
+        break;
+      case XML_FILES:
+        dataProducer = new XmlDataProducer(getContext(), xmlRecordElement, maxXmlObjectLen);
         break;
     }
   }

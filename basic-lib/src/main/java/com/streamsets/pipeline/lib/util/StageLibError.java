@@ -26,7 +26,10 @@ public enum StageLibError implements ErrorCode {
   LIB_0101("Error while processing file '{}' at position '{}', {}"),
 
   // JsonSpoolDirSource
-  LIB_0200("Discarding Json Object '{}', it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
+  LIB_0200("Discarding Json Object, it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
+
+  // XmlSpoolDirSource
+  LIB_0300("Discarding Xml Object, it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
 
   //Field Type Converter Processor
   LIB_0400("Failed to convert value '{}' to type '{}', {}."),

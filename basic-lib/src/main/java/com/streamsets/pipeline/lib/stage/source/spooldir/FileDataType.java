@@ -12,6 +12,7 @@ public enum FileDataType implements BaseEnumChooserValues.EnumWithLabel, ConfigG
   LOG_FILES("Log Files"),
   JSON_FILES("JSON Files"),
   DELIMITED_FILES("Delimited Values Files (CVS, TSF)"),
+  XML_FILES("XML Files"),
   ;
 
   private final String label;
