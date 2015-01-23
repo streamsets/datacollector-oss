@@ -32,7 +32,8 @@ public class SpoolDirSource extends BaseSpoolDirSource {
       label = "Data Format",
       description = "The data format in the files",
       defaultValue = "",
-      displayPosition = 100)
+      displayPosition = 100,
+      group = "INPUT_FILES")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileDataTypeChooserValues.class)
   public FileDataType fileDataType;
 
