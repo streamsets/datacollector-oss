@@ -68,6 +68,7 @@ public class RecordWriterManager {
     this.recordToString = recordToString;
     pathElEval = new ELEvaluator();
     ELRecordSupport.registerRecordFunctions(pathElEval);
+    getCeilingDateBasedOnTemplate(new Date());
   }
 
   private static final String CONST_YYYY = "YYYY";
