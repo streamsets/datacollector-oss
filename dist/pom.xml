@@ -25,7 +25,7 @@
     <!-- trick to avoid pulling UI files if the 'ui' profile is not active -->
     <ui.dist-dir>${basedir}/src/main/emptydir</ui.dist-dir>
     <!-- trick to avoid pulling dummy-lib files if the 'release' profile is active -->
-    <dummy-lib.dist-dir>${basedir}/src/main/emptydir</dummy-lib.dist-dir>
+    <dummy.dist-dir>${basedir}/src/main/emptydir</dummy.dist-dir>
   </properties>
 
   <dependencies>
@@ -109,7 +109,8 @@
         </property>
       </activation>
       <properties>
-        <dummy-lib.dist-dir>${basedir}/../ui/target/dist</dummy-lib.dist-dir>
+        <!-- trick to avoid pulling dummy-lib files if the 'release' profile is active -->
+        <dummy-lib.dist-dir>${basedir}/../dummy-lib/target/stage-libs</dummy-lib.dist-dir>
       </properties>
       <dependencies>
         <dependency>
@@ -125,6 +126,7 @@
         <activeByDefault>false</activeByDefault>
       </activation>
       <properties>
+        <!-- trick to avoid pulling UI files if the 'ui' profile is not active -->
         <ui.dist-dir>${basedir}/../ui/target/dist</ui.dist-dir>
       </properties>
       <dependencies>
