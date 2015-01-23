@@ -26,7 +26,7 @@
 
 
     <div class="pull-right size-toolbar">
-      <span class="fa fa-question-circle fa-13x pointer"
+      <span class="fa fa-question-circle fa-14x pointer"
             ng-click="launchHelp('previewPane')"></span>
       <span class="glyphicon pointer"
             ng-hide="$storage.maximizeDetailPane"
@@ -41,7 +41,7 @@
 
     <!-- Buttons for Single Stage Preview -->
 
-    <div class="pull-right preview-toolbar"  ng-if="!previewMultipleStages">
+    <div class="pull-right preview-toolbar"  ng-if="!previewMultipleStages && !showLoading">
 
       <div ng-if="previousStageInstances.length > 1" class="dropdown pull-left">
         <button type="button" class="btn btn-primary btn-sm"

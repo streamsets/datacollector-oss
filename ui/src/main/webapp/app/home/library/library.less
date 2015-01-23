@@ -25,6 +25,10 @@
     height: calc(~"100% - 45px");
     box-sizing: border-box;
 
+    .create-pipeline-btn {
+      margin: @defaultPadding 0 @defaultPadding @defaultPadding*3.5;
+    }
+
     .list-group {
       height: 100%;
       overflow: auto;
@@ -36,6 +40,7 @@
         border-right: 0;
         border-left: 5px solid #ffffff;
         border-radius: 0;
+        padding: @smallPadding @smallPadding * 3;
 
         .pipeline-details {
           width: 76%;
@@ -57,7 +62,7 @@
           }
 
           visibility: hidden;
-          padding: @defaultPadding 0 0 0;
+          padding: 0;
           color: #8A8787;
           span {
             padding: @defaultPadding;

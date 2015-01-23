@@ -1,9 +1,14 @@
 <div class="panel panel-default">
   <div class="panel-heading" translate="home.detailPane.rulesTab.metricAlertRules">Metric Alert Rules</div>
-  <div class="panel-body history-messages metric-alert-tab">
+  <div class="panel-body metric-alert-tab">
     <form class="form-horizontal" role="form"
           ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
           name="{{detailPaneConfig.instanceName || 'pipeline'}}">
+
+      <button type="button" class="btn btn-primary btn-sm add-button"
+              ng-click="createMetricAlertRule()">
+        <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
+      </button>
 
       <table class="table">
         <thead>
@@ -85,11 +90,6 @@
       </table>
 
       <div show-loading="showLoading"></div>
-
-      <button type="button" class="btn btn-primary btn-sm pull-right add-button"
-              ng-click="createMetricAlertRule()">
-        <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
-      </button>
 
     </form>
 

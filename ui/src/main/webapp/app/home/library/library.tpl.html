@@ -7,21 +7,21 @@
 
   <div class="panel-body">
 
+    <button type="button" class="btn btn-primary btn-sm create-pipeline-btn" ng-click="addPipelineConfig()">
+      <span class="glyphicon glyphicon-plus"></span>
+      <span translate="home.header.createNewPipeline">Create New Pipeline</span>
+    </button>
+
     <ul class="list-group">
-
-      <li class="list-group-item pointer" ng-click="addPipelineConfig()">
-        <span class="glyphicon glyphicon-plus"></span>
-        <span translate="home.header.createNewPipeline">Create New Pipeline</span>
-      </li>
-
       <li class="list-group-item pointer clearfix"
           ng-class="{'active' : pipeline.name === activeConfigInfo.name}"
           ng-repeat="pipeline in pipelines"
           ng-click="onSelect(pipeline)">
 
         <div class="pipeline-details pull-left">
-          <h5 class="list-group-item-heading">{{pipeline.name}}</h5>
-          <p class="list-group-item-text">{{pipeline.description}}</p>
+          <span>{{pipeline.name}}</span>
+          <!--h5 class="list-group-item-heading">{{pipeline.name}}</h5-->
+          <!--p class="list-group-item-text">{{pipeline.description}}</p-->
         </div>
 
         <div class="action-menu pull-right" dropdown>
