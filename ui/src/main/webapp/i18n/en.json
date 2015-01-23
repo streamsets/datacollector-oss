@@ -40,7 +40,7 @@
       "fieldName.placeholder": "New Field Name",
       "fromStage": "From Stage",
       "fromStageLane": "From Stage Lane",
-      "fromStageLanePredicate": "From Stage Lane Predicate",
+      "fromStageLanePredicate": "From Stage Lane Condition",
       "histogram": "Record Count Histogram (5 minutes decay)",
       "import": "Import",
       "label": "Label",
@@ -156,7 +156,7 @@
       "configurationTab": {
         "linkInformation": "Link Information",
         "enterKey": "Enter Key",
-        "enterPredicate": "Enter Predicate",
+        "enterPredicate": "Enter Condition",
         "enterValue": "Enter Value",
         "general": "General",
         "info": "Information",
@@ -191,7 +191,7 @@
         "noMetricAlertRules": "No Metric Alert Rules to view.",
         "noSamplingRules": "No Sampling Rules to view.",
         "noMetricRules": "No Metric Rules to view.",
-        "predicate": "Predicate",
+        "predicate": "Condition",
         "samplingRules": "Sampling Rules",
         "threshold": "Threshold"
       },

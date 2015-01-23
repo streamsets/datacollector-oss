@@ -1,0 +1,201 @@
+<script type="text/ng-template" id="labelConfigurationTemplate">
+  <label class="col-md-3 control-label">{{configDefinition.label}}
+    <i class="fa fa-info-circle help-icon"
+       ng-if="configDefinition.description"
+       tooltip-placement="right"
+       tooltip-append-to-body="false"
+       tooltip="{{configDefinition.description}}"
+       tooltip-trigger="mouseenter"></i>
+  </label>
+</script>
+
+<script type="text/ng-template" id="stringConfigurationTemplate">
+  <div class="controls col-md-7">
+    <input type="text" class="form-control" name="{{configDefinition.name}}"
+           focus-me="{{autoFocusConfigName === configDefinition.name}}"
+           ng-readonly="isPipelineRunning"
+           ng-model="detailPaneConfig.configuration[configIndex].value"
+           ng-required="configDefinition.required">
+
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+  </div>
+</script>
+
+<script type="text/ng-template" id="booleanConfigurationTemplate">
+  <div class="controls col-md-7">
+    <input type="checkbox" name="{{configDefinition.name}}"
+           ng-disabled="isPipelineRunning"
+           ng-model="detailPaneConfig.configuration[configIndex].value">
+
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+  </div>
+</script>
+
+<script type="text/ng-template" id="integerConfigurationTemplate">
+  <div class="controls col-md-7">
+    <input type="number" class="form-control" name="{{configDefinition.name}}"
+           focus-me="{{autoFocusConfigName === configDefinition.name}}"
+           ng-readonly="isPipelineRunning"
+           ng-model="detailPaneConfig.configuration[configIndex].value"
+           ng-required="configDefinition.required">
+
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+  </div>
+</script>
+
+<script type="text/ng-template" id="mapConfigurationTemplate">
+  <div class="controls col-md-7">
+    <div class="row lane-predicate" ng-repeat="mapObject in detailPaneConfig.configuration[configIndex].value track by $index">
+
+      <div class="col-xs-3">
+        <input type="text" class="form-control input-sm"
+               name="{{configDefinition.name + 'key' + $index}}"
+               placeholder="{{'home.detailPane.configurationTab.enterKey' | translate}}"
+               ng-required="true"
+               ng-readonly="isPipelineRunning"
+               ng-model="mapObject.key"/>
+      </div>
+
+      <div class="col-xs-1">:</div>
+
+      <div class="col-xs-6">
+        <input type="text" class="form-control input-sm"
+               name="{{configDefinition.name + 'value' + $index}}"
+               placeholder="{{'home.detailPane.configurationTab.enterValue' | translate}}"
+               ng-required="true"
+               ng-readonly="isPipelineRunning"
+               ng-model="mapObject.value"/>
+      </div>
+
+      <div class="col-md-2 btn-group" role="group" aria-label="Default button group"
+           ng-hide="isPipelineRunning">
+        <button type="button" class="btn btn-default btn-sm"
+                ng-click="removeFromMap(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, mapObject, $index)">
+          <i class="fa fa-minus pointer"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm"
+                ng-show="$last"
+                ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[configIndex].value)">
+          <i class="fa fa-plus pointer"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <div ng-if="detailPaneConfig.configuration[configIndex].value.length === 0" class="row"
+         ng-hide="isPipelineRunning">
+      <div class="col-md-2 btn-group" role="group">
+        <button type="button" class="btn btn-default btn-sm"
+                ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[configIndex].value)">
+          <i class="fa fa-plus pointer"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="valueChooserConfigurationTemplate">
+  <div class="controls col-md-7">
+    <div ng-switch="configDefinition.model.chooserMode">
+
+      <select class="form-control"
+              ng-switch-when="PROVIDED"
+              name="{{configDefinition.name}}"
+              focus-me="{{autoFocusConfigName === configDefinition.name}}"
+              ng-disabled="isPipelineRunning"
+              ng-model="detailPaneConfig.configuration[configIndex].value">
+        <option ng-repeat="listValue in configDefinition.model.values"
+                value="{{listValue}}"
+                ng-selected="listValue === detailPaneConfig.configuration[configIndex].value">
+          {{configDefinition.model.labels[$index]}}
+        </option>
+      </select>
+
+      <div ng-switch-when="SUGGESTED" class="input-group">
+        <input type="text" class="form-control" ng-model="detailPaneConfig.configuration[configIndex].value">
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown"><span class="caret"></span></button>
+          <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+            <li ng-repeat="listValue in configDefinition.model.values">
+              <a href="#" ng-click="detailPaneConfig.configuration[configIndex].value = listValue">{{listValue}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+  </div>
+</script>
+
+<script type="text/ng-template" id="fieldSelectorMultiValuedConfigurationTemplate">
+  <div class="controls col-md-7">
+    <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+               ng-disabled="isPipelineRunning"
+               ng-model="detailPaneConfig.configuration[configIndex].value">
+      <ui-select-match>
+        {{$item}}
+      </ui-select-match>
+      <ui-select-choices repeat="fieldPath in fieldPaths.concat(detailPaneConfig.configuration[configIndex].value) | filter:$select.search">
+        {{fieldPath}}
+      </ui-select-choices>
+    </ui-select>
+
+    <div class="pull-right field-selector-btn" ng-hide="isPipelineRunning">
+      <button type="button" class="btn btn-link"
+              translate="home.detailPane.configurationTab.requiredFieldsSelectionButton"
+              ng-click="showFieldSelectorModal(detailPaneConfig.configuration[configIndex])">
+        Select Field Using Preview Data
+      </button>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="lanePredicateMappingConfigurationTemplate">
+  <div class="controls col-md-7">
+    <div class="row lane-predicate"
+         ng-repeat="lanePredicateMapping in detailPaneConfig.configuration[configIndex].value track by $index">
+
+      <div class="col-xs-1">
+        <!--input type="text" readonly class="form-control input-sm"
+               value="{{$index + 1}}"/-->
+        <label class="lane-label">{{$index + 1}}</label>
+      </div>
+
+      <div class="col-xs-7 expression-language">
+
+        <input type="text" class="form-control input-sm"
+               placeholder="{{'home.detailPane.configurationTab.enterPredicate' | translate}}"
+               ng-required="true"
+               name="{{configDefinition.name + $index}}"
+               ng-readonly="isPipelineRunning"
+               ng-model="lanePredicateMapping.predicate"/>
+      </div>
+
+      <div class="col-xs-2 btn-group" role="group" aria-label="Default button group"
+           ng-hide="isPipelineRunning">
+        <button type="button" class="btn btn-default btn-sm"
+                ng-hide="$first && $last"
+                ng-click="removeLane(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, lanePredicateMapping, $index)">
+          <i class="fa fa-minus pointer"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm"
+                ng-show="$last"
+                ng-click="addLane(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, lanePredicateMapping)">
+          <i class="fa fa-plus pointer"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="stringComplexConfigurationTemplate">
+  <input type="text" class="form-control"
+         name="{{customFieldConfigDefinition.name + $index}}"
+         placeholder="{{customFieldConfigDefinition.label}}"
+         ng-readonly="isPipelineRunning"
+         ng-model="customFieldValue[customFieldConfigDefinition.name]"
+         ng-required="customFieldConfigDefinition.required">
+</script>
