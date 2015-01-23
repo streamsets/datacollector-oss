@@ -23,12 +23,6 @@ public class PipelineDefinition {
   private final static String DELIVERY_GUARANTEE_DESCRIPTION_KEY = "config.deliveryGuarantee.description";
   private final static String DELIVERY_GUARANTEE_DESCRIPTION_DEFAULT = "This is the option for the delivery guarantee";
 
-  private final static String STOP_ON_ERROR_LABEL_KEY = "config.stopOnError.label";
-  private static final String STOP_ON_ERROR_LABEL_VALUE = "Stop On Error";
-
-  private final static String STOP_ON_ERROR_DESCRIPTION_KEY = "config.stopOnError.description";
-  private static final String STOP_ON_ERROR_DESCRIPTION_DEFAULT = "This is the option for Stop on Error";
-
   private final static String DELIVERY_GUARANTEE_AT_LEAST_ONCE_KEY = "config.deliveryGuarantee.AT_LEAST_ONCE";
   private final static String DELIVERY_GUARANTEE_AT_LEAST_ONCE_DEFAULT = "At Least Once";
   private final static String DELIVERY_GUARANTEE_AT_MOST_ONCE_KEY = "config.deliveryGuarantee.AT_MOST_ONCE";
@@ -42,9 +36,8 @@ public class PipelineDefinition {
   private List<ConfigDefinition> configDefinitions;
 
   public PipelineDefinition() {
-    configDefinitions = new ArrayList<>(2);
+    configDefinitions = new ArrayList<>();
     configDefinitions.add(createDeliveryGuaranteeOption());
-    configDefinitions.add(createStopOnErrorOption());
   }
 
   /*Need this API for Jackson to serialize*/
@@ -60,30 +53,6 @@ public class PipelineDefinition {
   /**************************************************************/
   /********************** Private methods ***********************/
   /**************************************************************/
-
-  private ConfigDefinition createStopOnErrorOption() {
-    String seLabel = new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
-        STOP_ON_ERROR_LABEL_KEY, STOP_ON_ERROR_LABEL_VALUE, null).getLocalized();
-    String seDescription = new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
-        STOP_ON_ERROR_DESCRIPTION_KEY, STOP_ON_ERROR_DESCRIPTION_DEFAULT, null).getLocalized();
-
-    //create configuration for guaranteed delivery option
-    ConfigDefinition seConfigDef = new ConfigDefinition(
-      "stopPipelineOnError",
-      ConfigDef.Type.BOOLEAN,
-      seLabel,
-      seDescription,
-      "true",
-      true,
-      "",
-      "",
-      null,
-      "",
-      new String[] {},
-      0);
-
-    return seConfigDef;
-  }
 
   private ConfigDefinition createDeliveryGuaranteeOption() {
 
