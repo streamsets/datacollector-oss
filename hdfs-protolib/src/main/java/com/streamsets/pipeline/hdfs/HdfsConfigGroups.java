@@ -8,7 +8,8 @@ package com.streamsets.pipeline.hdfs;
 import com.streamsets.pipeline.api.ConfigGroups;
 
 public enum HdfsConfigGroups implements ConfigGroups.Groups {
-  FILE("Files"),
+  HADOOP_FS("Hadoop FS"),
+  FILES("Files"),
   DATA("Data"),
   LATE_RECORDS("Late Records"),
   ;

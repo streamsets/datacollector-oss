@@ -8,10 +8,10 @@ package com.streamsets.pipeline.hdfs;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
 public enum HdfsDataFormat implements BaseEnumChooserValues.EnumWithLabel {
+    JSON("JSON Object"),
     CSV("Comma Separated Values"),
     TSV("Tab Separated Values"),
-    JSON("JSON Object"),
-    XML("XML Object");
+    ;
 
     private String label;
 

@@ -23,7 +23,6 @@ import com.streamsets.pipeline.hdfs.writer.RecordWriterManager;
 import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.JsonRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
-import com.streamsets.pipeline.lib.recordserialization.XmlRecordToString;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
@@ -51,41 +50,46 @@ public abstract class BaseHdfsTarget extends BaseTarget {
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
-      description = "The URI of the Hadoop HDFS Cluster",
-      label = "HDFS URI",
-      displayPosition = 0)
+      description = "The URI of the Hadoop FileSystem",
+      label = "Hadoop FS URI",
+      displayPosition = 10,
+      group = "HADOOP_FS")
   public String hdfsUri;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.BOOLEAN,
-      description = "Indicates if HDFS requires Kerberos authentication",
+      description = "Indicates if Hadoop FileSystem requires Kerberos authentication",
       label = "Kerberos Enabled",
       defaultValue = "false",
-      displayPosition = 1)
-
+      displayPosition = 20,
+      group = "HADOOP_FS")
   public boolean hdfsKerberos;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
-      description = "Kerberos principal used to connect to HDFS",
+      description = "Kerberos principal used to connect to Hadoop FileSystem",
       label = "Kerberos principal",
       dependsOn = "hdfsKerberos", triggeredByValue = "true",
-      displayPosition = 2)
+      displayPosition = 30,
+      group = "HADOOP_FS")
   public String kerberosPrincipal;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
       description = "The location of the Kerberos keytab file with credentials for the Kerberos principal",
-      label = "Kerberos keytab file",
+      label = "Kerberos keytab",
       dependsOn = "hdfsKerberos", triggeredByValue = "true",
-      displayPosition = 3)
+      displayPosition = 40,
+      group = "HADOOP_FS")
   public String kerberosKeytab;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.MAP,
-      description = "Additional HDFS configuration to be used by the client (i.e. replication factor, rpc timeout, etc.)",
-      label = "HDFS configs",
-      displayPosition = 4)
+      description = "Additional Hadoop FileSystem configuration to be used by the client (i.e. replication factor, " +
+                    "rpc timeout, etc.)",
+      label = "Hadoop FS configs",
+      displayPosition = 50,
+      group = "HADOOP_FS")
   public Map<String, String> hdfsConfigs;
 
 
@@ -94,10 +98,10 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       description = "If using more than one Data Collector to write data to the same HDFS directories, each Data " +
                     "Collector must have a unique identifier. The identifier is used as file prefix for all the " +
                     "created by this Data Collector.",
-      label = "Unique Identifier",
-      group = "FILE",
+      label = "Files Unique Prefix",
+      group = "FILES",
       defaultValue = "",
-      displayPosition = 99)
+      displayPosition = 100)
   public String uniquePrefix;
 
   @ConfigDef(required = true,
@@ -106,8 +110,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
                     "${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}, ${record:value(<field-path>)}. ",
       label = "Directory Path Template",
       defaultValue = "/tmp/out/${YYYY}-${MM}-${DD}-${hh}-${mm}-${ss}",
-      group = "FILE",
-      displayPosition = 100)
+      group = "FILES",
+      displayPosition = 110)
   public String dirPathTemplate;
 
   @ConfigDef(required = true,
@@ -115,18 +119,56 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       description = "Timezone code used to resolve directory paths",
       label = "Timezone",
       defaultValue = "UTC",
-      group = "FILE",
-      displayPosition = 101)
+      group = "FILES",
+      displayPosition = 120)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = TimeZoneChooserValues.class)
   public String timeZoneID;
 
   @ConfigDef(required = true,
+      type = ConfigDef.Type.EL_DATE,
+      description = "Date expression that indicates where the time should be taken for a record. It can be the " +
+                    "'time:now()' or a 'record:value(<filepath>)' that resolves to a date",
+      label = "Time Driver",
+      defaultValue = "${time:now()}",
+      group = "FILES",
+      displayPosition = 130)
+  public String timeDriver;
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.INTEGER,
+      description = "Maximum number of records that trigger a file rollover. 0 does not trigger a rollover.",
+      label = "Max records per File",
+      defaultValue = "0",
+      group = "FILES",
+      displayPosition = 140)
+  public long maxRecordsPerFile;
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.INTEGER,
+      description = "Maximum file size in Megabytes that trigger a file rollover. 0 does not trigger a rollover",
+      label = "Max file size (MBs)",
+      defaultValue = "0",
+      group = "FILES",
+      displayPosition = 150)
+  public long maxFileSize;
+
+  @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
-      description = "File type to create in HDFS",
+      description = "Compression codec to use",
+      label = "Compression Codec",
+      defaultValue = "NONE",
+      group = "FILES",
+      displayPosition = 160)
+  @ValueChooser(type = ChooserMode.SUGGESTED, chooserValues = CompressionChooserValues.class)
+  public String compression;
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.MODEL,
+      description = "Type of file type to create",
       label = "File Type",
       defaultValue = "TEXT",
-      group = "FILE",
-      displayPosition = 102)
+      group = "FILES",
+      displayPosition = 170)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileTypeChooserValues.class)
   public HdfsFileType fileType;
 
@@ -136,61 +178,23 @@ public abstract class BaseHdfsTarget extends BaseTarget {
                     "uuid()",
       label = "Sequence File Key",
       defaultValue = "uuid()",
-      group = "FILE",
-      displayPosition = 103,
+      group = "FILES",
+      displayPosition = 180,
       dependsOn = "fileType",
       triggeredByValue = "SEQUENCE_FILE")
   public String keyEl;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
-      description = "Compression codec to use",
-      label = "Compression Codec",
-      defaultValue = "NONE",
-      group = "FILE",
-      displayPosition = 104)
-  @ValueChooser(type = ChooserMode.SUGGESTED, chooserValues = CompressionChooserValues.class)
-  public String compression;
-
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.MODEL,
       description = "Specifies the compression type for Sequence Files if using a CompressionCodec",
       label = "Compression Type",
       defaultValue = "BLOCK",
-      group = "FILE",
-      displayPosition = 105,
+      group = "FILES",
+      displayPosition = 190,
       dependsOn = "fileType",
       triggeredByValue = "SEQUENCE_FILE")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = HdfsSequenceFileCompressionTypeChooserValues.class)
   public HdfsSequenceFileCompressionType seqFileCompressionType;
-
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.INTEGER,
-      description = "Maximum number of records that trigger a file rollover. 0 does not trigger a rollover.",
-      label = "Max records per File",
-      defaultValue = "0",
-      group = "FILE",
-      displayPosition = 106)
-  public long maxRecordsPerFile;
-
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.INTEGER,
-      description = "Maximum file size in Megabytes that trigger a file rollover. 0 does not trigger a rollover",
-      label = "Max file size (MBs)",
-      defaultValue = "0",
-      group = "FILE",
-      displayPosition = 107)
-  public long maxFileSize;
-
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.EL_DATE,
-      description = "Date expression that indicates where the time should be taken for a record. It can be the " +
-                    "'time:now()' or a 'record:value(<filepath>)' that resolves to a date",
-      label = "Time Driver",
-      defaultValue = "${time:now()}",
-      group = "FILE",
-      displayPosition = 108)
-  public String timeDriver;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.EL_NUMBER,
@@ -201,7 +205,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       label = "Late Records Time Limit (Secs)",
       defaultValue = "${1 * HOURS}",
       group = "LATE_RECORDS",
-      displayPosition = 109)
+      displayPosition = 200)
   public String lateRecordsLimit;
 
   @ConfigDef(required = true,
@@ -210,7 +214,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       label = "Late Records",
       defaultValue = "SEND_TO_ERROR",
       group = "LATE_RECORDS",
-      displayPosition = 110)
+      displayPosition = 210)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = LateRecordsActionChooserValues.class)
   public HdfsLateRecordsAction lateRecordsAction;
 
@@ -224,7 +228,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       label = "Late Records Directory Path Template",
       dependsOn = "lateRecordsAction",
       triggeredByValue = "SEND_TO_LATE_RECORDS_FILE",
-      displayPosition = 111)
+      displayPosition = 220)
   public String lateRecordsDirPathTemplate;
 
   @ConfigDef(required = true,
@@ -235,10 +239,9 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       group = "DATA",
       dependsOn = "fileType",
       triggeredByValue = { "TEXT", "SEQUENCE_FILE"},
-      displayPosition = 200)
+      displayPosition = 300)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
   public HdfsDataFormat dataFormat; //TODO
-
 
 
   /********  For CSV Content  ***********/
@@ -248,11 +251,13 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       label = "CSV Format",
       description = "The specific CSV format of the files",
       defaultValue = "CSV",
-      dependsOn = "dataFormat", triggeredByValue = {"CSV", "TSV"},
+      dependsOn = "dataFormat", triggeredByValue = "CSV",
       group = "DATA",
-      displayPosition = 201)
+      displayPosition = 310)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
+
+  /********  For CSV & TSV Content  ***********/
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
@@ -262,7 +267,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       triggeredByValue = {"CSV", "TSV"},
       defaultValue = "LOG",
       group = "DATA",
-      displayPosition = 202)
+      displayPosition = 320)
   @ComplexField
   public List<FieldPathToNameMappingConfig> fieldPathToNameMappingConfigList;
 
@@ -281,8 +286,6 @@ public abstract class BaseHdfsTarget extends BaseTarget {
         description = "The name which must be used for the fields in the target")
     public String name;
   }
-
-
 
   private static final String CONST_HOURS = "HOURS";
   private static final String CONST_MINUTES = "MINUTES";
@@ -454,8 +457,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       case CSV:
         recordToString = new CsvRecordToString(csvFileFormat.getFormat());
         break;
-      case XML:
-        recordToString = new XmlRecordToString();
+      case TSV:
+        recordToString = new CsvRecordToString(csvFileFormat.getFormat());
         break;
       default:
         throw new IllegalStateException(Utils.format("Invalid data format '{}'", dataFormat));

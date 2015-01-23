@@ -13,7 +13,6 @@ public enum CsvFileMode implements BaseEnumChooserValues.EnumWithLabel {
   EXCEL("MS Excel CSV", CSVFormat.EXCEL),
   MYSQL("MySQL CSV", CSVFormat.MYSQL),
   RFC4180("RFC4180 CSV", CSVFormat.RFC4180),
-  TDF("Tab Separated Values", CSVFormat.TDF)
   ;
 
   private final String label;

@@ -65,7 +65,9 @@ public class CsvRecordToString implements RecordToString {
   }
 
   private String getValueAsString(Record record, Field field) throws StageException {
-    if(field.getType()== Field.Type.BOOLEAN) {
+    if (field.getValue() == null) {
+      return "";
+    } else if(field.getType()== Field.Type.BOOLEAN) {
       return String.valueOf(field.getValueAsBoolean());
     } else if(field.getType()== Field.Type.BYTE) {
       return String.valueOf(field.getValueAsByte());

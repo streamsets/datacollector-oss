@@ -21,9 +21,9 @@ import java.util.Iterator;
 
 @GenerateResourceBundle
 @StageDef(version = "1.0.0",
-    label = "HDFS",
+    label = "Hadoop FS",
     icon = "hdfs.svg",
-    description = "Writes records to HDFS files")
+    description = "Writes records to files in a Hadoop FS")
 public class HdfsTarget extends BaseHdfsTarget {
     private Counter toHdfsRecordsCounter;
     private Meter toHdfsRecordsMeter;

@@ -5,20 +5,12 @@
  */
 package com.streamsets.pipeline.lib.recordserialization;
 
-import com.streamsets.pipeline.api.Record;
+import org.apache.commons.csv.CSVFormat;
 
-import java.util.Map;
+public class TsvRecordToString extends CsvRecordToString {
 
-public class TsvRecordToString implements RecordToString {
-
-  @Override
-  public void setFieldPathToNameMapping(Map<String, String> fieldPathToNameMap) {
-
-  }
-
-  @Override
-  public String toString(Record record) {
-    return "/tab";
+  public TsvRecordToString() {
+    super(CSVFormat.TDF);
   }
 
 }
