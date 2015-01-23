@@ -24,6 +24,8 @@
   <properties>
     <!-- trick to avoid pulling UI files if the 'ui' profile is not active -->
     <ui.dist-dir>${basedir}/src/main/emptydir</ui.dist-dir>
+    <!-- trick to avoid pulling dummy-lib files if the 'release' profile is active -->
+    <dummy-lib.dist-dir>${basedir}/src/main/emptydir</dummy-lib.dist-dir>
   </properties>
 
   <dependencies>
@@ -106,6 +108,9 @@
           <name>!release</name>
         </property>
       </activation>
+      <properties>
+        <dummy-lib.dist-dir>${basedir}/../ui/target/dist</dummy-lib.dist-dir>
+      </properties>
       <dependencies>
         <dependency>
           <groupId>com.streamsets</groupId>

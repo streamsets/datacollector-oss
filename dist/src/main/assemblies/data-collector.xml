@@ -133,7 +133,7 @@
     <!-- dummy-lib -->
     <!-- only picked up if dev profile is enabled -->
     <fileSet>
-      <directory>${basedir}/../dummy-lib/target/stage-libs/</directory>
+      <directory>${dummy-lib.dist-dir}</directory>
       <outputDirectory>/stage-libs/</outputDirectory>
     </fileSet>
 
