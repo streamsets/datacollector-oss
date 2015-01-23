@@ -10,10 +10,10 @@
         <tr>
           <th class="col-md-1">Enabled</th>
           <th class="col-md-3">Alert Text</th>
-          <th class="col-md-2">Metric ID</th>
-          <th class="col-md-2">Metric Type</th>
-          <th class="col-md-2">Metric Element</th>
-          <th class="col-md-3">Predicate</th>
+          <th class="col-md-1">Metric ID</th>
+          <th class="col-md-3">Metric Type</th>
+          <th class="col-md-1">Metric Element</th>
+          <th class="col-md-2">Predicate</th>
           <th></th>
         </tr>
         </thead>
@@ -27,38 +27,35 @@
           </td>
 
           <td>
-          <textarea class="form-control" name="alertText{{$index}}" rows="1"
+            <textarea class="form-control" name="alertText{{$index}}" rows="1"
                     placeholder="Text to display when alert is triggered"
                     ng-model="alertRule.label"
                     ng-required="true"></textarea>
           </td>
 
           <td>
-            <select class="form-control" name="metricId{{$index}}"
-                    ng-model="alertRule.metricId">
-              <option value="COUNT">Count</option>
-              <option value="PERCENTAGE">Percentage</option>
+            <select class="form-control" name="metricType{{$index}}"
+                    ng-model="alertRule.metricType">
+              <option value="COUNTER">Counter</option>
+              <option value="HISTOGRAM">Histogram</option>
+              <option value="METER">Meter</option>
+              <option value="TIMER">Timer</option>
             </select>
           </td>
 
           <td>
-            <select class="form-control" name="metricType{{$index}}"
-                    ng-model="alertRule.metricType">
-              <option value="COUNTER">COUNTER</option>
-              <option value="HISTOGRAM">HISTOGRAM</option>
-              <option value="METER">METER</option>
-              <option value="TIMER">TIMER</option>
+            <select class="form-control" name="metricId{{$index}}"
+                    ng-model="alertRule.metricId"
+                    ng-options="obj.value as obj.label for obj in metricIDList[alertRule.metricType]">
             </select>
           </td>
 
           <td>
             <select class="form-control" name="metricElement{{$index}}"
-                    ng-model="alertRule.metricElement">
-              <option value="COUNT">Count</option>
-              <option value="PERCENTAGE">Percentage</option>
+                    ng-model="alertRule.metricElement"
+                    ng-options="obj.value as obj.label for obj in metricElementList[alertRule.metricType]">
             </select>
           </td>
-
 
           <td>
             <input type="text" class="form-control" name="predicate{{$index}}"

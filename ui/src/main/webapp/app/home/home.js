@@ -371,6 +371,10 @@ angular
           var config = results[0].data,
             rules = results[1].data;
           updateGraph(config, rules);
+          updateDetailPane({
+            selectedObject: undefined,
+            type: pipelineConstant.PIPELINE
+          });
         }
         $scope.loaded = true;
       },function(data, status, headers, config) {
@@ -390,6 +394,10 @@ angular
             rules = results[1].data;
           $rootScope.common.errors = [];
           updateGraph(config, rules);
+          updateDetailPane({
+            selectedObject: undefined,
+            type: pipelineConstant.PIPELINE
+          });
         },function(data, status, headers, config) {
           $rootScope.common.errors = [data];
         });

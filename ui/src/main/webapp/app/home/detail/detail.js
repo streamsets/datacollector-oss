@@ -74,9 +74,9 @@ angular
           return tabsList;
         case pipelineConstant.STAGE_INSTANCE:
           if(isPipelineRunning) {
-            tabsList = [summaryTab, errorTab, infoTab, configurationTab, rulesTab];
+            tabsList = [summaryTab, errorTab, infoTab, configurationTab];
           } else {
-            tabsList = [infoTab, configurationTab, rulesTab];
+            tabsList = [infoTab, configurationTab];
           }
 
           if($scope.detailPaneConfigDefn.rawSourceDefinition) {

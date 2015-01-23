@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('RulesController', function ($scope, pipelineConstant) {
+  .controller('RulesController', function ($scope, pipelineConstant, pipelineService) {
     angular.extend($scope, {
       showLoading: false,
 
@@ -83,13 +83,13 @@ angular
       createMetricAlertRule: function() {
         if($scope.selectedType !== pipelineConstant.LINK) {
           var selectedObject =  $scope.selectedObject,
-            id = selectedObject.instanceName || selectedObject.info.name,
+            id = selectedObject.info.name + (new Date()).getTime(),
             newMetricAlertDefn = {
-              id: edge.outputLane + (new Date()).getTime(),
+              id: id,
               label: '',
               predicate: '',
               metricId: null,
-              metricType: null,
+              metricType: 'COUNTER',
               metricElement: null,
               enabled: false
             };
@@ -109,10 +109,19 @@ angular
       }
     });
 
-    var updateRules = function(pipelineName) {
-      $scope.showLoading = true;
-      $scope.showLoading = false;
-    };
+    $scope.metricElementList = pipelineService.getMetricElementList();
 
-    updateRules();
+
+    function updateMetricIDList() {
+      if($scope.pipelineConfig) {
+        $scope.metricIDList = pipelineService.getMetricIDList($scope.pipelineConfig);
+      }
+    }
+
+    $scope.$on('onSelectionChange', function(event, options) {
+      updateMetricIDList();
+    });
+
+    updateMetricIDList();
+
   });

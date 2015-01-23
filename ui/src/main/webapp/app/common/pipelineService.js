@@ -88,6 +88,13 @@ angular.module('pipelineAgentApp.common')
       return stageInstance;
     };
 
+    /**
+     * Return Stage Label
+     *
+     * @param stage
+     * @param pipelineConfig
+     * @returns {*}
+     */
     this.getStageLabel = function(stage, pipelineConfig) {
       var label = stage.label,
         similarStageInstances = _.filter(pipelineConfig.stages, function(stageInstance) {
@@ -98,6 +105,13 @@ angular.module('pipelineAgentApp.common')
     };
 
 
+    /**
+     * Sets default value for config.
+     *
+     * @param configDefinition
+     * @param stageInstance
+     * @returns {{name: *, value: (defaultValue|*|string|Variable.defaultValue|undefined)}}
+     */
     this.setDefaultValueForConfig = function(configDefinition, stageInstance) {
       var config = {
           name: configDefinition.name,
@@ -135,6 +149,12 @@ angular.module('pipelineAgentApp.common')
       return config;
     };
 
+    /**
+     * Return Stage Icon URL
+     *
+     * @param stage
+     * @returns {string}
+     */
     this.getStageIconURL = function(stage) {
       if(stage.icon) {
         return 'rest/v1/definitions/stages/icon?name=' + stage.name +
@@ -150,5 +170,302 @@ angular.module('pipelineAgentApp.common')
         }
       }
     };
+
+    /**
+     * Returns Metric element list
+     */
+    this.getMetricElementList = function() {
+      return {
+        COUNTER: [
+          {
+            value: 'COUNTER_COUNT',
+            label: 'count'
+          }
+        ],
+        HISTOGRAM: [
+          {
+            value: 'HISTOGRAM_COUNT',
+            label: 'count'
+          },
+          {
+            value: 'HISTOGRAM_MAX',
+            label: 'max'
+          },
+          {
+            value: 'HISTOGRAM_MIN',
+            label: 'mean'
+          },
+          {
+            value: 'HISTOGRAM_MEAN',
+            label: 'min'
+          },
+          {
+            value: 'HISTOGRAM_P50',
+            label: 'p50'
+          },
+          {
+            value: 'HISTOGRAM_P75',
+            label: 'p75'
+          },
+          {
+            value: 'HISTOGRAM_P95',
+            label: 'p95'
+          },
+          {
+            value: 'HISTOGRAM_P98',
+            label: 'p98'
+          },
+          {
+            value: 'HISTOGRAM_P99',
+            label: 'p99'
+          },
+          {
+            value: 'HISTOGRAM_P999',
+            label: 'p999'
+          },
+          {
+            value: 'HISTOGRAM_STD_DEV',
+            label: 'stddev'
+          }
+        ],
+        METER: [
+          {
+            value: 'METER_COUNT',
+            label: 'count'
+          },
+          {
+            value: 'METER_M1_RATE',
+            label: 'm1_rate'
+          },
+          {
+            value: 'METER_M5_RATE',
+            label: 'm5_rate'
+          },
+          {
+            value: 'METER_M15_RATE',
+            label: 'm15_rate'
+          },
+          {
+            value: 'METER_M30_RATE',
+            label: 'm30_rate'
+          },
+          {
+            value: 'METER_H1_RATE',
+            label: 'h1_rate'
+          },
+          {
+            value: 'METER_H6_RATE',
+            label: 'h6_rate'
+          },
+          {
+            value: 'METER_H12_RATE',
+            label: 'h12_rate'
+          },
+          {
+            value: 'METER_H24_RATE',
+            label: 'h24_rate'
+          },
+          {
+            value: 'METER_MEAN_RATE',
+            label: 'mean_rate'
+          }
+        ],
+        TIMER: [
+          {
+            value: 'TIMER_COUNT',
+            label: 'count'
+          },
+          {
+            value: 'TIMER_MAX',
+            label: 'max'
+          },
+          {
+            value: 'TIMER_MEAN',
+            label: 'mean'
+          },
+          {
+            value: 'TIMER_MIN',
+            label: 'min'
+          },
+          {
+            value: 'TIMER_P50',
+            label: 'p50'
+          },
+          {
+            value: 'TIMER_P75',
+            label: 'p75'
+          },
+          {
+            value: 'TIMER_P95',
+            label: 'p95'
+          },
+          {
+            value: 'TIMER_P98',
+            label: 'p98'
+          },
+          {
+            value: 'TIMER_P99',
+            label: 'p99'
+          },
+          {
+            value: 'TIMER_P999',
+            label: 'p999'
+          },
+          {
+            value: 'TIMER_STD_DEV',
+            label: 'stddev'
+          },
+          {
+            value: 'TIMER_M1_RATE',
+            label: 'm1_rate'
+          },
+          {
+            value: 'TIMER_M5_RATE',
+            label: 'm5_rate'
+          },
+          {
+            value: 'TIMER_M15_RATE',
+            label: 'm15_rate'
+          },
+          {
+            value: 'TIMER_MEAN_RATE',
+            label: 'mean_rate'
+          }
+        ]
+      };
+    };
+
+
+    /**
+     * Returns metric element list for the given pipeline.
+     *
+     * @param pipelineConfig
+     */
+    this.getMetricIDList = function(pipelineConfig) {
+      var metricIDList = {
+        COUNTER: [],
+        HISTOGRAM: [
+            {
+              value: 'pipeline.inputRecordsPerBatch.histogramM5',
+              label: 'Pipeline Input Records Per Batch Histogram M5'
+            },
+            {
+              value: 'pipeline.outputRecordsPerBatch.histogramM5',
+              label: 'Pipeline Output Records Per Batch Histogram M5'
+            },
+            {
+              value: 'pipeline.errorRecordsPerBatch.histogramM5',
+              label: 'Pipeline Error Records Per Batch Histogram M5'
+            },
+            {
+              value: 'pipeline.errorsPerBatch.histogramM5',
+              label: 'Pipeline Errors Per Batch Histogram M5'
+            }
+          ],
+        METER: [
+            {
+              value: 'pipeline.batchCount.meter',
+              label: 'Pipeline Batch Count Meter'
+            },
+            {
+              value: 'pipeline.batchInputRecords.meter',
+              label: 'Pipeline Batch Input Records Meter'
+            },
+            {
+              value: 'pipeline.batchOutputRecords.meter',
+              label: 'Pipeline Batch Output Records Meter '
+            },
+            {
+              value: 'pipeline.batchErrorRecords.meter',
+              label: 'Pipeline Batch Error Records Meter'
+            },
+            {
+              value: 'pipeline.batchErrorMessages.meter',
+              label: 'Pipeline Batch Error Messages Meter'
+            }
+          ],
+        TIMER: [{
+            value: 'pipeline.batchProcessing.timer',
+            label: 'Pipeline Batch Processing Timer'
+          }]
+        };
+
+
+
+      angular.forEach(pipelineConfig.stages, function(stage) {
+        var instanceName = stage.instanceName,
+          label = stage.uiInfo.label;
+
+        //Counters
+        metricIDList.COUNTER.push.apply(metricIDList.COUNTER, [
+          {
+            value: 'stage.' + instanceName + '.inputRecords.counter',
+            label: label + ' Input Records Counter'
+          },
+          {
+            value: 'stage.' + instanceName + '.outputRecords.counter',
+            label: label + ' Output Records Counter'
+          },
+          {
+            value: 'stage.' + instanceName + '.errorRecords.counter',
+            label: label + ' Error Records Counter'
+          },
+          {
+            value: 'stage.' + instanceName + '.stageErrors.counter',
+            label: label + ' Stage Errors Counter'
+          }
+        ]);
+
+        //histograms
+        metricIDList.HISTOGRAM.push.apply(metricIDList.HISTOGRAM, [
+          {
+            value: 'stage.' + instanceName + '.inputRecords.histogramM5',
+            label: label + ' Input Records Histogram'
+          },
+          {
+            value: 'stage.' + instanceName + '.outputRecords.histogramM5',
+            label: label + ' Output Records Histogram'
+          },
+          {
+            value: 'stage.' + instanceName + '.errorRecords.histogramM5',
+            label: label + ' Error Records Histogram'
+          },
+          {
+            value: 'stage.' + instanceName + '.stageErrors.histogramM5',
+            label: label + ' Stage Errors Histogram'
+          }
+        ]);
+
+        //meters
+        metricIDList.METER.push.apply(metricIDList.METER, [
+          {
+            value: 'stage.' + instanceName + '.inputRecords.meter',
+            label: label + ' Input Records Meter'
+          },
+          {
+            value: 'stage.' + instanceName + '.outputRecords.meter',
+            label: label + ' Output Records Meter'
+          },
+          {
+            value: 'stage.' + instanceName + '.errorRecords.meter',
+            label: label + ' Error Records Meter'
+          },
+          {
+            value: 'stage.' + instanceName + '.stageErrors.meter',
+            label: label + ' Stage Errors Meter'
+          }
+        ]);
+
+
+        metricIDList.TIMER.push({
+          value: 'stage.' + instanceName + '.batchProcessing.timer',
+          label: label + ' Batch Processing Timer'
+        });
+
+      });
+
+      return metricIDList;
+    };
+
 
   });
