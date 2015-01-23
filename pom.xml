@@ -112,7 +112,7 @@
         </property>
       </activation>
       <modules>
-        <module>dummy-lib</module>
+        <module>dev-lib</module>
       </modules>
     </profile>
   </profiles>

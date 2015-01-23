@@ -24,8 +24,8 @@
   <properties>
     <!-- trick to avoid pulling UI files if the 'ui' profile is not active -->
     <ui.dist-dir>${basedir}/src/main/emptydir</ui.dist-dir>
-    <!-- trick to avoid pulling dummy-lib files if the 'release' profile is active -->
-    <dummy.dist-dir>${basedir}/src/main/emptydir</dummy.dist-dir>
+    <!-- trick to avoid pulling dev-lib files if the 'release' profile is active -->
+    <dev.dist-dir>${basedir}/src/main/emptydir</dev.dist-dir>
   </properties>
 
   <dependencies>
@@ -109,13 +109,13 @@
         </property>
       </activation>
       <properties>
-        <!-- trick to avoid pulling dummy-lib files if the 'release' profile is active -->
-        <dummy-lib.dist-dir>${basedir}/../dummy-lib/target/stage-libs</dummy-lib.dist-dir>
+        <!-- trick to avoid pulling dev-lib files if the 'release' profile is active -->
+        <dev-lib.dist-dir>${basedir}/../dev-lib/target/stage-libs</dev-lib.dist-dir>
       </properties>
       <dependencies>
         <dependency>
           <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-dummy-lib</artifactId>
+          <artifactId>streamsets-datacollector-dev-lib</artifactId>
           <scope>compile</scope>
         </dependency>
       </dependencies>

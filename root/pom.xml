@@ -90,7 +90,7 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-dummy-lib</artifactId>
+        <artifactId>streamsets-datacollector-dev-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

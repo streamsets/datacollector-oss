@@ -130,10 +130,10 @@
       <outputDirectory>/stage-libs/</outputDirectory>
     </fileSet>
 
-    <!-- dummy-lib -->
+    <!-- dev-lib -->
     <!-- only picked up if dev profile is enabled -->
     <fileSet>
-      <directory>${dummy-lib.dist-dir}</directory>
+      <directory>${dev-lib.dist-dir}</directory>
       <outputDirectory>/stage-libs/</outputDirectory>
     </fileSet>
 
