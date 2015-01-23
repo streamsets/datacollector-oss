@@ -74,7 +74,9 @@ public class JsonUtil {
 
   public static Object fieldToJsonObject(Record record, Field field) throws StageException {
     Object obj;
-    if(field.getType()== Field.Type.BOOLEAN) {
+    if (field.getValue() == null) {
+      obj = null;
+    } else if(field.getType()== Field.Type.BOOLEAN) {
       obj = field.getValueAsBoolean();
     } else if(field.getType()== Field.Type.BYTE) {
       obj = field.getValueAsByte();
