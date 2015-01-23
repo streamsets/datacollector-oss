@@ -335,12 +335,15 @@ public class DirectorySpooler {
     return (next != null) ? next.toFile() : null;
   }
 
-  public void handleFileInError(File file) throws IOException {
+  public void handleCurrentFileAsError() throws IOException {
     if (errorArchiveDirPath != null) {
-      LOG.error("Archiving file in error '{}' in error archive directory '{}'", file, errorArchiveDirPath);
-      Files.move(file.toPath(), errorArchiveDirPath.resolve(file.toPath().getFileName()));
+      Path current = spoolDirPath.resolve(previousFile);
+      LOG.error("Archiving file in error '{}' in error archive directory '{}'", previousFile, errorArchiveDirPath);
+      Files.move(current, errorArchiveDirPath.resolve(current.getFileName()));
+      // we need to set the currentFile to null because we just moved to error.
+      previousFile = null;
     } else {
-      LOG.error("Leaving file in error '{}' in spool directory", file);
+      LOG.error("Leaving file in error '{}' in spool directory", currentFile);
     }
   }
 

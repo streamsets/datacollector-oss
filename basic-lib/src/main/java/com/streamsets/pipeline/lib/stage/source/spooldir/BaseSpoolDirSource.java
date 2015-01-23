@@ -9,13 +9,10 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
-import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -254,14 +251,11 @@ public abstract class BaseSpoolDirSource extends BaseSource {
         // we ask for a batch from the currentFile starting at offset
         offset = produce(currentFile, offset, maxBatchSize, batchMaker);
       } catch (BadSpoolFileException ex) {
-        // the processing fo the current file had an unrecoverable error we log the reason, file and offset if avail
-        long filePos = (ex.getCause() != null && ex.getCause() instanceof OverrunException)
-                       ? ((OverrunException)ex.getCause()).getStreamOffset() : -1;
-        LOG.error(StageLibError.LIB_0101.getMessage(), currentFile, filePos, ex.getMessage(), ex);
-        getContext().reportError(StageLibError.LIB_0101, currentFile, filePos, ex.getMessage());
+        LOG.error(StageLibError.LIB_0101.getMessage(), ex.getFile(), ex.getPos(), ex.getMessage(), ex);
+        getContext().reportError(StageLibError.LIB_0101, ex.getFile(), ex.getPos(), ex.getMessage());
         try {
           // then we ask the spooler to error handle the failed file
-          spooler.handleFileInError(currentFile);
+          spooler.handleCurrentFileAsError();
         } catch (IOException ex1) {
           throw new StageException(StageLibError.LIB_0100, currentFile, ex1.getMessage(), ex1);
         }
