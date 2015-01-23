@@ -101,10 +101,11 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   public String uniquePrefix;
 
   @ConfigDef(required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.EL_STRING,
       description = "Directory path template for the HDFS files, the template supports the following time tokens: " +
                     "${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}, ${record:value(<field-path>)}. ",
       label = "Directory Path Template",
+      defaultValue = "/tmp/out/${YYYY}-${MM}-${DD}-${hh}-${mm}-${ss}",
       group = "FILE",
       displayPosition = 100)
   public String dirPathTemplate;
@@ -182,23 +183,23 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   public long maxFileSize;
 
   @ConfigDef(required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.EL_DATE,
       description = "Date expression that indicates where the time should be taken for a record. It can be the " +
                     "'time:now()' or a 'record:value(<filepath>)' that resolves to a date",
       label = "Time Driver",
-      defaultValue = "time:now()",
+      defaultValue = "${time:now()}",
       group = "FILE",
       displayPosition = 108)
   public String timeDriver;
 
   @ConfigDef(required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.EL_NUMBER,
       description = "Time limit (in seconds) for a record to be written to the corresponding HDFS directory, if the " +
                     "limit is exceeded the record will be written to the current late records file. 0 means no limit. " +
                     "If a number is used it is considered seconds, it can be multiplied by 'MINUTES' or 'HOURS', ie: " +
                     "30 * MINUTES",
       label = "Late Records Time Limit (Secs)",
-      defaultValue = "1 * HOURS",
+      defaultValue = "${1 * HOURS}",
       group = "LATE_RECORDS",
       displayPosition = 109)
   public String lateRecordsLimit;
@@ -214,11 +215,11 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   public HdfsLateRecordsAction lateRecordsAction;
 
   @ConfigDef(required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.EL_STRING,
       description = "Directory path template for the HDFS files for late records, the template supports the following " +
                     "time tokens: ${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}. IMPORTANT: Used only if " +
                     "'Late Records' is set to 'Send to late records file'.",
-      defaultValue = "",
+      defaultValue = "/tmp/late/${YYYY}-${MM}-${DD}",
       group = "LATE_RECORDS",
       label = "Late Records Directory Path Template",
       dependsOn = "lateRecordsAction",
@@ -373,8 +374,6 @@ public abstract class BaseHdfsTarget extends BaseTarget {
     timeDriverElEval = new ELEvaluator();
     ELRecordSupport.registerRecordFunctions(timeDriverElEval);
     timeDriverElEval.registerFunction("time", "now", TIME_NOW_FUNC);
-    timeDriver = "${" + timeDriver + "}";
-
   }
 
   private FileSystem getFileSystemForInitDestroy() throws IOException {
@@ -405,7 +404,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       ELEvaluator elEval = new ELEvaluator();
       elEval.registerConstant(CONST_MINUTES, 60);
       elEval.registerConstant(CONST_HOURS, 60 * 60);
-      return (long) elEval.eval(new ELEvaluator.Variables(null, null), "${" + lateRecordsLimit + "}");
+      return (long) elEval.eval(new ELEvaluator.Variables(null, null), lateRecordsLimit);
     } catch (Exception ex) {
       throw new StageException(HdfsLibError.HDFS_0008, lateRecordsLimit, ex.getMessage(), ex);
     }

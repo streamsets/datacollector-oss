@@ -175,7 +175,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("topic", TOPIC)
       //record has a map which contains an integer field with key "partitionKey",
       //kafka has 3 partitions. Expression distributes the record to partition based on the condition
-      .addConfiguration("partition", "record:value(\"/\") % 3")
+      .addConfiguration("partition", "${record:value('/') % 3}")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", PayloadType.LOG)
@@ -220,7 +220,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("topic", TOPIC)
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
-      .addConfiguration("partition", "value(\"/\") % 3")
+      .addConfiguration("partition", "${value('/') % 3}")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", PayloadType.LOG)
@@ -245,7 +245,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("topic", TOPIC)
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
-      .addConfiguration("partition", "record:value(\"/\") % 3")
+      .addConfiguration("partition", "${record:value('/') % 3}")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", PayloadType.LOG)
@@ -297,7 +297,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("topic", TOPIC)
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
-      .addConfiguration("partition", "record:value(\"/\")")
+      .addConfiguration("partition", "${record:value('/')}")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", PayloadType.LOG)

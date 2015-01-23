@@ -83,7 +83,7 @@ public class TestSelectorProcessor {
   @Test(expected = StageException.class)
   public void testInitLanePredicatesInvalidPredicate() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "x"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "${x}"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
         .addOutputLane("a")
@@ -117,9 +117,9 @@ public class TestSelectorProcessor {
   @Test
   public void testSelectWithDefault() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "record:value('') == 1",
-                                                                 "b", "record:value('') == 2",
-                                                                 "c", "default"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
+                                                                 "b", "${record:value('') == 2}",
+                                                                 "c", "${default}"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
         .addOutputLane("a")
@@ -156,8 +156,8 @@ public class TestSelectorProcessor {
   @Test
   public void testSelectWithoutDefaultDropping() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "record:value('') == 1",
-                                                                 "b", "record:value('') == 2"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
+                                                                 "b", "${record:value('') == 2}"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
         .addOutputLane("a")
@@ -191,8 +191,8 @@ public class TestSelectorProcessor {
   @Test
   public void testSelectWithoutDefaultToError() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "record:value('') == 1",
-                                                                 "b", "record:value('') == 2"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
+                                                                 "b", "${record:value('') == 2}"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.RECORD_TO_ERROR)
         .addOutputLane("a")
@@ -228,8 +228,8 @@ public class TestSelectorProcessor {
   @Test(expected = StageException.class)
   public void testSelectWithoutDefaultFailPipeline() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "record:value('') == 1",
-                                                                 "b", "record:value('') == 2"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
+                                                                 "b", "${record:value('') == 2}"))
         .addConfiguration("constants", null)
         .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.FAIL_PIPELINE)
         .addOutputLane("a")

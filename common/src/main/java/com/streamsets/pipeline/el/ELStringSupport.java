@@ -15,22 +15,6 @@ public class ELStringSupport {
 
   private static final String STRING_CONTEXT_VAR = "str";
 
-  public static String concat2(String string1, String string2) {
-    return string1 + string2;
-  }
-
-  public static String concat3(String string1, String string2, String string3) {
-    return string1 + string2 + string3;
-  }
-
-  public static String concat4(String string1, String string2, String string3, String string4) {
-    return string1 + string2 + string3 + string4;
-  }
-
-  public static String concat5(String string1, String string2, String string3, String string4, String string5) {
-    return string1 + string2 + string3 + string4 + string5;
-  }
-
   public static String substring(String string, int beginIndex, int endIndex) {
     Utils.checkArgument(beginIndex >= 0, "Argument beginIndex should be 0 or greater");
     Utils.checkArgument(endIndex >= 0, "Argument endIndex should be 0 or greater");
@@ -81,10 +65,6 @@ public class ELStringSupport {
     return null;
   }
 
-  private static final Method CONCAT2;
-  private static final Method CONCAT3;
-  private static final Method CONCAT4;
-  private static final Method CONCAT5;
   private static final Method SUBSTRING;
   private static final Method TRIM;
   private static final Method TO_UPPER;
@@ -96,11 +76,6 @@ public class ELStringSupport {
 
   static {
     try {
-      CONCAT2 = ELStringSupport.class.getMethod("concat2", String.class, String.class);
-      CONCAT3 = ELStringSupport.class.getMethod("concat3", String.class, String.class, String.class);
-      CONCAT4 = ELStringSupport.class.getMethod("concat4", String.class, String.class, String.class, String.class);
-      CONCAT5 = ELStringSupport.class.getMethod("concat5", String.class, String.class, String.class, String.class,
-        String.class);
       SUBSTRING = ELStringSupport.class.getMethod("substring", String.class, int.class, int.class);
       TRIM = ELStringSupport.class.getMethod("trim", String.class);
       TO_UPPER = ELStringSupport.class.getMethod("toUpper", String.class);
@@ -116,10 +91,6 @@ public class ELStringSupport {
 
   public static void registerStringFunctions(ELEvaluator elEvaluator) {
     Utils.checkNotNull(elEvaluator, "elEvaluator");
-    elEvaluator.registerFunction(STRING_CONTEXT_VAR, "concat2", CONCAT2);
-    elEvaluator.registerFunction(STRING_CONTEXT_VAR, "concat3", CONCAT3);
-    elEvaluator.registerFunction(STRING_CONTEXT_VAR, "concat4", CONCAT4);
-    elEvaluator.registerFunction(STRING_CONTEXT_VAR, "concat5", CONCAT5);
     elEvaluator.registerFunction(STRING_CONTEXT_VAR, "substring", SUBSTRING);
     elEvaluator.registerFunction(STRING_CONTEXT_VAR, "trim", TRIM);
     elEvaluator.registerFunction(STRING_CONTEXT_VAR, "toUpper", TO_UPPER);

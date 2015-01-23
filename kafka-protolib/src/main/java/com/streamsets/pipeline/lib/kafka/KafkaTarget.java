@@ -67,7 +67,7 @@ public class KafkaTarget extends BaseTarget {
   public PartitionStrategy partitionStrategy;
 
   @ConfigDef(required = false,
-    type = ConfigDef.Type.STRING,
+    type = ConfigDef.Type.EL_NUMBER,
     description = "Expression that determines the partition of Kafka topic to which the messages must be written",
     label = "Partition Expression",
     defaultValue = "0",
@@ -270,7 +270,6 @@ public class KafkaTarget extends BaseTarget {
     };
 
     ELRecordSupport.setRecordInContext(variables, record);
-    partition = "${" + partition + "}";
     try {
       elEvaluator.eval(variables, partition);
     } catch (ELException ex) {

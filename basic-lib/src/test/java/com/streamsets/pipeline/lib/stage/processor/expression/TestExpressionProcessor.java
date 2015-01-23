@@ -26,7 +26,7 @@ public class TestExpressionProcessor {
   public void testInvalidExpression() throws StageException {
 
     ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
-    expressionProcessorConfig.expression = "(record:value(\"/baseSalary\") +record:value(\"/bonus\") * 2"; //invalid expression string, missing ")"
+    expressionProcessorConfig.expression = "${(record:value('baseSalary') +record:value('bonus') * 2}"; //invalid expression string, missing ")"
     expressionProcessorConfig.fieldToSet = "/grossSalary";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
@@ -46,7 +46,7 @@ public class TestExpressionProcessor {
   public void tesExpressionEvaluationFailure() throws StageException {
 
     ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
-    expressionProcessorConfig.expression = "(record:value(\"/baseSalary\") + record:value(\"/bonus\") * 2"; //invalid expression string, missing ")"
+    expressionProcessorConfig.expression = "${(record:value('/baseSalary') + record:value('/bonus') * 2}"; //invalid expression string, missing ")"
     expressionProcessorConfig.fieldToSet = "/grossSalary";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
@@ -75,7 +75,7 @@ public class TestExpressionProcessor {
   public void testReplaceExistingFieldInExpression() throws StageException {
 
     ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
-    expressionProcessorConfig.expression = "record:value(\"/baseSalary\") + record:value(\"/bonus\") - record:value(\"/tax\")";
+    expressionProcessorConfig.expression = "${record:value('/baseSalary') + record:value('/bonus') - record:value('/tax')}";
     expressionProcessorConfig.fieldToSet = "/baseSalary";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
@@ -109,7 +109,7 @@ public class TestExpressionProcessor {
   public void testSimpleExpression() throws StageException {
 
     ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
-    expressionProcessorConfig.expression = "record:value(\"/baseSalary\") + record:value(\"/bonus\") - record:value(\"/tax\")";
+    expressionProcessorConfig.expression = "${record:value('/baseSalary') + record:value('/bonus') - record:value('/tax')}";
     expressionProcessorConfig.fieldToSet = "/netSalary";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
@@ -143,7 +143,7 @@ public class TestExpressionProcessor {
   public void testComplexExpression() throws StageException {
 
     ExpressionProcessor.ExpressionProcessorConfig complexExpressionConfig = new ExpressionProcessor.ExpressionProcessorConfig();
-    complexExpressionConfig.expression = "((record:value(\"/baseSalary\") * 2) + record:value(\"/bonus\") - (record:value(\"/perks\") / record:value(\"/bonus\")))/2";
+    complexExpressionConfig.expression = "${((record:value('/baseSalary') * 2) + record:value('/bonus') - (record:value('/perks') / record:value('/bonus')))/2}";
     complexExpressionConfig.fieldToSet = "/complexResult";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
@@ -173,53 +173,19 @@ public class TestExpressionProcessor {
     }
   }
 
-  //@Test
-  public void testConcatExpression() throws StageException {
-
-    ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
-    expressionProcessorConfig.expression = "concat(record:value(\"/firstName\") + record:value(\"/middleName\") + record:value(\"/lastName\"))";
-    expressionProcessorConfig.fieldToSet = "/fullName";
-
-    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
-      .addConfiguration("constants", null)
-      .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
-      .addOutputLane("a").build();
-    runner.runInit();
-
-    try {
-      Map<String, Field> map = new LinkedHashMap<>();
-      map.put("firstName", Field.create(Field.Type.STRING, "stream"));
-      map.put("middleName", Field.create(Field.Type.STRING, "sets"));
-      map.put("lastName", Field.create(Field.Type.STRING, ".inc"));
-      Record record = RecordCreator.create("s", "s:1");
-      record.set(Field.create(map));
-
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-      Assert.assertEquals(1, output.getRecords().get("a").size());
-      Field field = output.getRecords().get("a").get(0).get();
-      Assert.assertTrue(field.getValue() instanceof Map);
-      Map<String, Field> result = field.getValueAsMap();
-      Assert.assertEquals(4, result.size());
-      Assert.assertTrue(result.containsKey("fullName"));
-      Assert.assertEquals("streamsets.inc", result.get("fullName").getValue());
-    } finally {
-      runner.runDestroy();
-    }
-  }
-
   @Test
   public void testSubstringExpression() throws StageException {
 
     ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
-    expressionProcessorConfig.expression = "str:substring(record:value(\"/fullName\") , 6, 20)";
+    expressionProcessorConfig.expression = "${str:substring(record:value('/fullName') , 6, 20)}";
     expressionProcessorConfig.fieldToSet = "/lastName";
 
     ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig1 = new ExpressionProcessor.ExpressionProcessorConfig();
-    expressionProcessorConfig1.expression = "str:substring(record:value(\"/fullName\") , 10, 20)";
+    expressionProcessorConfig1.expression = "${str:substring(record:value('/fullName') , 10, 20)}";
     expressionProcessorConfig1.fieldToSet = "/empty";
 
     ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig2 = new ExpressionProcessor.ExpressionProcessorConfig();
-    expressionProcessorConfig2.expression = "str:substring(record:value(\"/fullName\") , 0, 6)";
+    expressionProcessorConfig2.expression = "${str:substring(record:value('/fullName') , 0, 6)}";
     expressionProcessorConfig2.fieldToSet = "/first";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)

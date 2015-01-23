@@ -69,7 +69,7 @@ public class SelectorProcessor extends RecordProcessor {
         throw new StageException(StageLibError.LIB_0012, outputLane, predicate);
       }
       predicateLanes[count] = new String[2];
-      predicateLanes[count][0] = "${" + predicate + "}";
+      predicateLanes[count][0] = (String) predicate;
       predicateLanes[count][1] = outputLane;
       LOG.debug("Predicate:'{}' Lane:'{}'", predicate, outputLane);
       count++;

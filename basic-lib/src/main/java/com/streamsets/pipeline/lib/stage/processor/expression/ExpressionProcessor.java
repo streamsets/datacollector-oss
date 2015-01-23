@@ -106,7 +106,6 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
 
     ELRecordSupport.setRecordInContext(variables, record);
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
-      expressionProcessorConfig.expression = "${" + expressionProcessorConfig.expression + "}";
       try {
         elEvaluator.eval(variables, expressionProcessorConfig.expression);
       } catch (ELException ex) {
@@ -181,7 +180,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     public String fieldToSet;
 
     @ConfigDef(required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.EL_OBJECT,
       label = "Expression",
       description = "Expression which must be evaluated to generate a value for the field",
       defaultValue = "")

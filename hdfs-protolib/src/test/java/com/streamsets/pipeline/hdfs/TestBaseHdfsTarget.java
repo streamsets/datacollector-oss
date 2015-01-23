@@ -75,8 +75,8 @@ public class TestBaseHdfsTarget {
     target.dirPathTemplate = "${YYYY}";
     target.lateRecordsDirPathTemplate = "";
     target.compression = CompressionMode.NONE.name();
-    target.timeDriver = "time:now()";
-    target.lateRecordsLimit = "1 * HOURS";
+    target.timeDriver = "${time:now()}";
+    target.lateRecordsLimit = "${1 * HOURS}";
     target.csvFileFormat = CsvFileMode.CSV;
     target.dataFormat = HdfsDataFormat.CSV;
     target.fieldPathToNameMappingConfigList = new ArrayList<>();
@@ -204,7 +204,7 @@ public class TestBaseHdfsTarget {
 
     target = new ForTestHdfsTarget();
     configure(target);
-    target.lateRecordsLimit = "1 * MINUTES";
+    target.lateRecordsLimit = "${1 * MINUTES}";
     try {
       target.init();
       Assert.assertEquals(60, target.getLateRecordLimitSecs());
@@ -234,7 +234,7 @@ public class TestBaseHdfsTarget {
   public void testTimeDriverElEvalRecordValue() throws Exception {
     BaseHdfsTarget target = new ForTestHdfsTarget();
     configure(target);
-    target.timeDriver = "record:value('/')";
+    target.timeDriver = "${record:value('/')}";
     try {
       target.init();
       Date date = new Date();

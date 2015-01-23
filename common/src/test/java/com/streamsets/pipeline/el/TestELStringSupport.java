@@ -13,47 +13,6 @@ import javax.servlet.jsp.el.ELException;
 public class TestELStringSupport {
 
   @Test
-  public void testConcat2() throws Exception {
-    ELEvaluator eval = new ELEvaluator();
-    ELStringSupport.registerStringFunctions(eval);
-
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
-
-    Assert.assertEquals("streamsets", eval.eval(variables, "${str:concat2(\"stream\", \"sets\")}"));
-  }
-
-  @Test
-  public void testConcat3() throws Exception {
-    ELEvaluator eval = new ELEvaluator();
-    ELStringSupport.registerStringFunctions(eval);
-
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
-
-    Assert.assertEquals("streamsetsinc", eval.eval(variables, "${str:concat3(\"stream\", \"sets\", \"inc\")}"));
-  }
-
-  @Test
-  public void testConcat4() throws Exception {
-    ELEvaluator eval = new ELEvaluator();
-    ELStringSupport.registerStringFunctions(eval);
-
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
-
-    Assert.assertEquals("streamsets inc", eval.eval(variables, "${str:concat4(\"stream\", \"sets\", \" \", \"inc\")}"));
-  }
-
-  @Test
-  public void testConcat5() throws Exception {
-    ELEvaluator eval = new ELEvaluator();
-    ELStringSupport.registerStringFunctions(eval);
-
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
-
-    Assert.assertEquals("The StreamSets Inc", eval.eval(variables,
-      "${str:concat5(\"The \",\"Stream\", \"Sets\", \" \", \"Inc\")}"));
-  }
-
-  @Test
   public void testSubstring() throws Exception {
     ELEvaluator eval = new ELEvaluator();
     ELStringSupport.registerStringFunctions(eval);
