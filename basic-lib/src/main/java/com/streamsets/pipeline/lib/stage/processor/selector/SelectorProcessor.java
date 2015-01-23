@@ -36,8 +36,9 @@ public class SelectorProcessor extends RecordProcessor {
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Lane/Record-predicate mapping",
-      description = "Associates output lanes with predicates records must match in order to go to the lane")
+      label = "Lane/Record-condition mapping",
+      description = "Associates output lanes with a condition that records must match in order to go to the " +
+                    "associated lane")
   @LanePredicateMapping
   public List<Map<String, String>> lanePredicates;
 
