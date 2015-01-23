@@ -26,6 +26,8 @@
     <h3 class="panel-title pull-left" ng-if="!previewMultipleStages"> {{detailPaneConfig.uiInfo.label}} </h3>
 
     <div class="pull-right size-toolbar">
+      <span class="fa fa-question-circle fa-13x pointer"
+            ng-click="launchHelp('snapshotPane')"></span>
       <span class="glyphicon pointer"
             ng-hide="$storage.maximizeDetailPane"
             ng-class="{'glyphicon-minus' : !$storage.minimizeDetailPane , 'glyphicon-resize-full': $storage.minimizeDetailPane}"
