@@ -5,8 +5,11 @@
  */
 package com.streamsets.pipeline.validation;
 
+import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.impl.TextUtils;
+import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import org.junit.Assert;
@@ -22,6 +25,32 @@ public class TestPipelineConfigurationValidator {
     Assert.assertTrue(validator.validate());
     Assert.assertTrue(validator.canPreview());
     Assert.assertFalse(validator.getIssues().hasIssues());
+    Assert.assertTrue(validator.getOpenLanes().isEmpty());
+  }
+
+  @Test
+  public void testRequiredInactiveConfig() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineWithRequiredDependentConfig();
+    StageConfiguration stageConf = conf.getStages().get(0);
+    stageConf.setConfig(
+        Lists.newArrayList(new ConfigConfiguration("dependencyConfName", 0),
+                           new ConfigConfiguration("triggeredConfName", null)));
+
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    Assert.assertTrue(validator.validate());
+    Assert.assertTrue(validator.canPreview());
+    Assert.assertFalse(validator.getIssues().hasIssues());
+    Assert.assertTrue(validator.getOpenLanes().isEmpty());
+
+    stageConf.setConfig(
+        Lists.newArrayList(new ConfigConfiguration("dependencyConfName", 1),
+                           new ConfigConfiguration("triggeredConfName", null)));
+
+    validator = new PipelineConfigurationValidator(lib, "name", conf);
+    Assert.assertFalse(validator.validate());
+    Assert.assertFalse(validator.canPreview());
+    Assert.assertTrue(validator.getIssues().hasIssues());
     Assert.assertTrue(validator.getOpenLanes().isEmpty());
   }
 

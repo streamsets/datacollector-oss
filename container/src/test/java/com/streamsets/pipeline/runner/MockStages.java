@@ -6,13 +6,17 @@
 package com.streamsets.pipeline.runner;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
@@ -170,13 +174,26 @@ public class MockStages {
 
       StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel",
           "sourceDescription", StageType.PROCESSOR, Collections.EMPTY_LIST, null/*raw source definition*/, "", null);
-
       pDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+
       StageDefinition tDef = new StageDefinition(
         MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
         "targetDesc", StageType.TARGET, Collections.EMPTY_LIST, null/*raw source definition*/, "", null);
       tDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
-      stages = ImmutableList.of(sDef, socDef, pDef, tDef);
+
+      ConfigDefinition depConfDef = new ConfigDefinition(
+          "dependencyConfName", ConfigDef.Type.INTEGER, "dependencyConfLabel", "dependencyConfDesc", "", true,
+          "groupName", "dependencyConfFieldName", null, "", null, 0);
+      ConfigDefinition triggeredConfDef = new ConfigDefinition(
+          "triggeredConfName", ConfigDef.Type.INTEGER, "triggeredConfLabel", "triggeredConfDesc", "", true,
+          "groupName", "triggeredConfFieldName", null, "dependencyConfName", new String[] { "1" }, 0);
+      StageDefinition swcDef = new StageDefinition(
+          MSource.class.getName(), "sourceWithConfigsName", "1.0.0", "sourceWithConfigsLabel",
+          "sourceWithConfigsDesc", StageType.SOURCE, Lists.newArrayList(depConfDef, triggeredConfDef),
+          null/*raw source definition*/,"", null);
+      swcDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+
+      stages = ImmutableList.of(sDef, socDef, pDef, tDef, swcDef);
     }
 
     @Override
@@ -264,6 +281,21 @@ public class MockStages {
     StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
                                                        Collections.EMPTY_LIST, null, ImmutableList.of("p"),
                                                        Collections.EMPTY_LIST);
+    stages.add(target);
+    return new PipelineConfiguration(UUID.randomUUID(), null, null, stages);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineWithRequiredDependentConfig() {
+    List<String> lanes = ImmutableList.of("a");
+    List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
+
+    StageConfiguration source = new StageConfiguration("s", "default", "sourceWithConfigsName", "1.0.0",
+                                                       Lists.<ConfigConfiguration>newArrayList(), null,
+                                                       Collections.EMPTY_LIST, lanes);
+    stages.add(source);
+    StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
+                                                       Collections.EMPTY_LIST, null, lanes, Collections.EMPTY_LIST);
     stages.add(target);
     return new PipelineConfiguration(UUID.randomUUID(), null, null, stages);
   }

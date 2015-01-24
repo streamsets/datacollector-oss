@@ -8,8 +8,10 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,14 +47,12 @@ public class StageConfiguration {
     this.library = library;
     this.stageName = stageName;
     this.stageVersion = stageVersion;
-    this.configuration = configuration;
     this.uiInfo = uiInfo;
     this.inputLanes = inputLanes;
     this.outputLanes = outputLanes;
-    configurationMap = new HashMap<>();
-    for (ConfigConfiguration conf : configuration) {
-      configurationMap.put(conf.getName(), conf);
-    }
+    this.configuration = new ArrayList<>();
+    this.configurationMap = new HashMap<>();
+    setConfig(configuration);
   }
 
   public String getInstanceName() {
@@ -89,6 +89,16 @@ public class StageConfiguration {
 
   public ConfigConfiguration getConfig(String name) {
     return configurationMap.get(name);
+  }
+
+  @VisibleForTesting
+  public void setConfig(List<ConfigConfiguration> configList) {
+    configuration.clear();
+    configuration.addAll(configList);
+    configurationMap.clear();
+    for (ConfigConfiguration conf : configuration) {
+      configurationMap.put(conf.getName(), conf);
+    }
   }
 
   public void setSystemGenerated() {

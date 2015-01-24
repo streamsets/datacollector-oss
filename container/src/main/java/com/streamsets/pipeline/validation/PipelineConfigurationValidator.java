@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -240,9 +241,15 @@ public class PipelineConfigurationValidator {
                                                     ValidationError.VALIDATION_0008));
           } else if (conf.getValue() == null && confDef.isRequired()) {
             // stage configuration has a NULL value for a configuration that requires a value
-            issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
-                                                    ValidationError.VALIDATION_0007));
-            preview = false;
+            String dependsOn = confDef.getDependsOn();
+            String[] triggeredBy = confDef.getTriggeredByValues();
+            // If the config doesn't depend on anything or the config should be triggered, config is invalid
+            if (dependsOn == null || dependsOn.isEmpty() ||
+                (Arrays.asList(triggeredBy).contains(String.valueOf(stageConf.getConfig(dependsOn).getValue())))) {
+              issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
+                                                      ValidationError.VALIDATION_0007));
+              preview = false;
+            }
           }
           if (conf.getValue() != null) {
             switch (confDef.getType()) {
