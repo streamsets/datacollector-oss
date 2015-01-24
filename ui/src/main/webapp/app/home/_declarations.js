@@ -18,8 +18,7 @@ angular
     'ngSanitize',
     'ui.select',
     'showLoadingDirectives',
-    'recordTreeDirectives',
-    'ngStorage'
+    'recordTreeDirectives'
   ])
   .constant('amTimeAgoConfig', {
     withoutSuffix: true

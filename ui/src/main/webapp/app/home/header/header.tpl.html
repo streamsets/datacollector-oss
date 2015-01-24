@@ -155,38 +155,12 @@
 
       <div class="btn-group">
         <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
-                tooltip-placement="bottom" tooltip="{{'home.header.settings' | translate}}"
+                tooltip-placement="bottom" tooltip="{{'home.header.more' | translate}}"
                 tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
                 data-toggle="dropdown">
-          <span class="fa fa-gear fa-12x"></span>
+          <span class="fa fa-ellipsis-h fa-12x"></span>
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
-
-          <li role="presentation" class="dropdown-header"
-              translate="home.header.displayDensity">Display density:</li>
-
-          <li role="presentation">
-            <a href="#" ng-click="$storage.displayDensity = pipelineConstant.DENSITY_COMFORTABLE">
-              <i class="fa fa-check density-check-icon" ng-if="$storage.displayDensity === pipelineConstant.DENSITY_COMFORTABLE"/>
-              <span>{{'home.header.comfortable' | translate}}</span>
-            </a>
-          </li>
-
-          <li role="presentation">
-            <a href="#" ng-click="$storage.displayDensity = pipelineConstant.DENSITY_COZY">
-              <i class="fa fa-check density-check-icon" ng-if="$storage.displayDensity === pipelineConstant.DENSITY_COZY"/>
-              <span>{{'home.header.cozy' | translate}}</span>
-            </a>
-          </li>
-
-          <li role="presentation">
-            <a href="#" ng-click="$storage.displayDensity = pipelineConstant.DENSITY_COMPACT">
-              <i class="fa fa-check density-check-icon" ng-if="$storage.displayDensity === pipelineConstant.DENSITY_COMPACT"/>
-              <span>{{'home.header.compact' | translate}}</span>
-            </a>
-          </li>
-
-          <li ng-repeat-end role="presentation" class="divider"></li>
 
           <li role="presentation"
               ng-if="!isPipelineRunning"

@@ -3,13 +3,18 @@
         ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
         name="{{detailPaneConfig.instanceName || 'pipeline'}}">
 
+    <button type="button" class="btn btn-primary btn-sm add-button"
+            ng-click="createSamplingRule()">
+      <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
+    </button>
+
     <table class="table">
       <thead>
       <tr>
-        <th class="col-md-1">Enabled</th>
-        <th class="col-md-4">Label</th>
-        <th class="col-md-3">Predicate</th>
-        <th class="col-md-5">Sampling Percentage</th>
+        <th class="col-md-1">{{'home.detailPane.rulesTab.enabled' | translate}}</th>
+        <th class="col-md-5">{{'home.detailPane.rulesTab.label' | translate}}</th>
+        <th class="col-md-4">{{'home.detailPane.rulesTab.condition' | translate}}</th>
+        <th class="col-md-1">{{'home.detailPane.rulesTab.samplingPercentage' | translate}}</th>
         <th></th>
       </tr>
       </thead>
@@ -24,21 +29,21 @@
 
         <td>
           <textarea class="form-control" name="alertText{{$index}}" rows="1"
-                    placeholder="Label"
+                    placeholder="{{'home.detailPane.rulesTab.labelPlaceholder' | translate}}"
                     ng-model="samplingRule.label"
                     ng-required="true"></textarea>
         </td>
 
-        <td>
+        <td class="expression-language">
           <input type="text" class="form-control" name="predicate{{$index}}"
-                 placeholder="Predicate"
+                 placeholder="{{'home.detailPane.rulesTab.condition' | translate}}"
                  ng-model="samplingRule.predicate"
                  ng-required="true">
         </td>
 
         <td class="threshold-column">
           <input type="text" class="form-control" name="samplingPercentage{{$index}}"
-                 placeholder="Percentage"
+                 placeholder="{{'home.detailPane.rulesTab.samplingPercentagePlaceholder' | translate}}"
                  ng-model="samplingRule.samplingPercentage"
                  ng-required="true">
         </td>
@@ -46,7 +51,7 @@
         <td>
           <div class="col-xs-1 btn-group" role="group" aria-label="Default button group">
             <button type="button" class="btn btn-danger btn-sm"
-                    tooltip-placement="bottom" tooltip="Delete Sampling Rule"
+                    tooltip-placement="bottom" tooltip="{{'home.detailPane.rulesTab.deleteRuleTooltip' | translate}}"
                     ng-click="removeRule(pipelineRules.samplingDefinitions, $index)">
               <i class="fa fa-minus pointer"></i>
             </button>
@@ -64,11 +69,5 @@
     </table>
 
     <div show-loading="showLoading"></div>
-
-    <button type="button" class="btn btn-primary btn-sm pull-right add-button"
-            ng-click="createSamplingRule()">
-      <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
-    </button>
-
   </form>
 </div>

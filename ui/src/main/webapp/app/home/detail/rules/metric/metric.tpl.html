@@ -3,14 +3,19 @@
         ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
         name="{{detailPaneConfig.instanceName || 'pipeline'}}">
 
+    <button type="button" class="btn btn-primary btn-sm add-button"
+            ng-click="createMetricRule()">
+      <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
+    </button>
+
     <table class="table">
       <thead>
       <tr>
-        <th class="col-md-1">Enabled</th>
-        <th class="col-md-3">Label</th>
-        <th class="col-md-3">Group</th>
-        <th class="col-md-2">Metric Type</th>
-        <th class="col-md-4">Predicate</th>
+        <th class="col-md-1">{{'home.detailPane.rulesTab.enabled' | translate}}</th>
+        <th class="col-md-3">{{'home.detailPane.rulesTab.label' | translate}}</th>
+        <th class="col-md-3">{{'home.detailPane.rulesTab.group' | translate}}</th>
+        <th class="col-md-2">{{'home.detailPane.rulesTab.metricType' | translate}}</th>
+        <th class="col-md-4">{{'home.detailPane.rulesTab.condition' | translate}}</th>
         <th></th>
       </tr>
       </thead>
@@ -25,14 +30,14 @@
 
         <td>
             <textarea class="form-control" name="alertText{{$index}}" rows="1"
-                      placeholder="Label"
+                      placeholder="{{'home.detailPane.rulesTab.labelPlaceholder' | translate}}"
                       ng-model="metricRule.label"
                       ng-required="true"></textarea>
         </td>
 
         <td>
           <input type="text" class="form-control" name="group{{$index}}"
-                 placeholder="Group"
+                 placeholder="{{'home.detailPane.rulesTab.groupPlaceholder' | translate}}"
                  ng-model="metricRule.metricGroup"
                  ng-required="true">
         </td>
@@ -40,14 +45,14 @@
         <td>
           <select class="form-control" name="metricType{{$index}}"
                   ng-model="metricRule.metricType">
-            <option value="METER">Meter</option>
-            <option value="HISTOGRAM">Histogram</option>
+            <option value="METER">{{'home.detailPane.rulesTab.meter' | translate}}</option>
+            <option value="HISTOGRAM">{{'home.detailPane.rulesTab.histogram' | translate}}</option>
           </select>
         </td>
 
-        <td class="threshold-column">
+        <td class="expression-language">
           <input type="text" class="form-control" name="predicate{{$index}}"
-                 placeholder="Predicate"
+                 placeholder="{{'home.detailPane.rulesTab.condition' | translate}}"
                  ng-model="metricRule.predicate"
                  ng-required="true">
         </td>
@@ -55,7 +60,7 @@
         <td>
           <div class="col-xs-1 btn-group" role="group" aria-label="Default button group">
             <button type="button" class="btn btn-danger btn-sm"
-                    tooltip-placement="bottom" tooltip="Delete Metric Rule"
+                    tooltip-placement="bottom" tooltip="{{'home.detailPane.rulesTab.deleteRuleTooltip' | translate}}"
                     ng-click="removeRule(pipelineRules.metricDefinitions, $index)">
               <i class="fa fa-minus pointer"></i>
             </button>
@@ -73,11 +78,6 @@
     </table>
 
     <div show-loading="showLoading"></div>
-
-    <button type="button" class="btn btn-primary btn-sm pull-right add-button"
-            ng-click="createMetricRule()">
-      <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
-    </button>
 
   </form>
 </div>

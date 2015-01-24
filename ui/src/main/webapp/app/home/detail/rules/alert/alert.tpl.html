@@ -3,13 +3,18 @@
         ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
         name="{{detailPaneConfig.instanceName || 'pipeline'}}">
 
+    <button type="button" class="btn btn-primary btn-sm add-button"
+            ng-click="createAlertRule()">
+      <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
+    </button>
+
     <table class="table">
       <thead>
         <tr>
-          <th class="col-md-1">Enabled</th>
-          <th class="col-md-4">Alert Text</th>
-          <th class="col-md-3">Predicate</th>
-          <th class="col-md-5">Threshold</th>
+          <th class="col-md-1">{{'home.detailPane.rulesTab.enabled' | translate}}</th>
+          <th class="col-md-4">{{'home.detailPane.rulesTab.alertText' | translate}}</th>
+          <th class="col-md-3">{{'home.detailPane.rulesTab.condition' | translate}}</th>
+          <th class="col-md-5">{{'home.detailPane.rulesTab.threshold' | translate}}</th>
           <th></th>
         </tr>
       </thead>
@@ -24,14 +29,14 @@
 
           <td>
             <textarea class="form-control" name="alertText{{$index}}" rows="1"
-                      placeholder="Text to display when alert is triggered"
+                      placeholder="{{'home.detailPane.rulesTab.alertTextPlaceholder' | translate}}"
                       ng-model="alertRule.label"
                       ng-required="true"></textarea>
           </td>
 
-          <td>
+          <td class="expression-language">
             <input type="text" class="form-control" name="predicate{{$index}}"
-                   placeholder="Predicate"
+                   placeholder="{{'home.detailPane.rulesTab.condition' | translate}}"
                    ng-model="alertRule.predicate"
                    ng-required="true">
           </td>
@@ -44,12 +49,12 @@
             </select>
 
             <input type="text" class="form-control threshold-value" name="thresholdValue{{$index}}"
-                   placeholder="Value"
+                   placeholder="{{'home.detailPane.rulesTab.valuePlaceholder' | translate}}"
                    ng-model="alertRule.thresholdValue"
                    ng-required="true">
 
             <input type="text" class="form-control threshold-min-volume" name="minVolume{{$index}}"
-                   placeholder="Minimum Volume"
+                   placeholder="{{'home.detailPane.rulesTab.minVolumePlaceholder' | translate}}"
                    ng-if="alertRule.thresholdType === 'PERCENTAGE'"
                    ng-model="alertRule.minVolume">
           </td>
@@ -57,7 +62,7 @@
           <td>
             <div class="col-xs-1 btn-group" role="group" aria-label="Default button group">
               <button type="button" class="btn btn-danger btn-sm"
-                      tooltip-placement="bottom" tooltip="Delete Alert Rule"
+                      tooltip-placement="bottom" tooltip="{{'home.detailPane.rulesTab.deleteRuleTooltip' | translate}}"
                       ng-click="removeRule(pipelineRules.alertDefinitions, $index)">
                 <i class="fa fa-minus pointer"></i>
               </button>
@@ -75,11 +80,6 @@
     </table>
 
     <div show-loading="showLoading"></div>
-
-    <button type="button" class="btn btn-primary btn-sm pull-right add-button"
-            ng-click="createAlertRule()">
-      <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
-    </button>
 
   </form>
 </div>

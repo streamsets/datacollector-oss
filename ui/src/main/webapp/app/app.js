@@ -36,8 +36,12 @@ angular.module('pipelineAgentApp')
     });
 
   })
-  .run(function ($location, $rootScope, $modal, api) {
+  .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage) {
     var defaultTitle = 'StreamSets Data Collector';
+
+    $rootScope.pipelineConstant = pipelineConstant;
+    $rootScope.$storage = $localStorage;
+
     $rootScope.common = $rootScope.common || {
       title : defaultTitle,
       active: {

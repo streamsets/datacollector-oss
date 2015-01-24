@@ -4,7 +4,7 @@
 
   <!-- General Configuration for Pipeline-->
   <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
-    <label class="col-md-3 control-label" translate="global.form.name">Name</label>
+    <label class="col-md-4 control-label" translate="global.form.name">Name</label>
     <div class="controls col-md-7">
       <input readonly type="text" class="form-control" name="name"
              ng-model="pipelineConfig.info.name">
@@ -12,7 +12,7 @@
   </div>
 
   <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
-    <label class="col-md-3 control-label" translate="global.form.description">Description</label>
+    <label class="col-md-4 control-label" translate="global.form.description">Description</label>
     <div class="controls col-md-7">
       <textarea class="form-control" name="description"
                 rows="1"
@@ -23,7 +23,7 @@
 
   <!-- General Configuration for Stages-->
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
-    <label class="col-md-3 control-label" translate="global.form.name">Name</label>
+    <label class="col-md-4 control-label" translate="global.form.name">Name</label>
     <div class="controls col-md-7">
       <input type="text" class="form-control" name="name"
              ng-readonly="isPipelineRunning"
@@ -32,7 +32,7 @@
   </div>
 
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
-    <label class="col-md-3 control-label" translate="global.form.description">Description</label>
+    <label class="col-md-4 control-label" translate="global.form.description">Description</label>
     <div class="controls col-md-7">
       <textarea class="form-control" name="description"
                 rows="1"

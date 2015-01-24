@@ -13,12 +13,12 @@
       <table class="table">
         <thead>
         <tr>
-          <th class="col-md-1">Enabled</th>
-          <th class="col-md-3">Alert Text</th>
-          <th class="col-md-1">Metric ID</th>
-          <th class="col-md-3">Metric Type</th>
-          <th class="col-md-1">Metric Element</th>
-          <th class="col-md-2">Predicate</th>
+          <th class="col-md-1">{{'home.detailPane.rulesTab.enabled' | translate}}</th>
+          <th class="col-md-3">{{'home.detailPane.rulesTab.alertText' | translate}}</th>
+          <th class="col-md-1">{{'home.detailPane.rulesTab.metricType' | translate}}</th>
+          <th class="col-md-3">{{'home.detailPane.rulesTab.metricID' | translate}}</th>
+          <th class="col-md-1">{{'home.detailPane.rulesTab.metricElement' | translate}}</th>
+          <th class="col-md-2">{{'home.detailPane.rulesTab.condition' | translate}}</th>
           <th></th>
         </tr>
         </thead>
@@ -33,7 +33,7 @@
 
           <td>
             <textarea class="form-control" name="alertText{{$index}}" rows="1"
-                    placeholder="Text to display when alert is triggered"
+                    placeholder="{{'home.detailPane.rulesTab.alertTextPlaceholder' | translate}}"
                     ng-model="alertRule.label"
                     ng-required="true"></textarea>
           </td>
@@ -41,10 +41,10 @@
           <td>
             <select class="form-control" name="metricType{{$index}}"
                     ng-model="alertRule.metricType">
-              <option value="COUNTER">Counter</option>
-              <option value="HISTOGRAM">Histogram</option>
-              <option value="METER">Meter</option>
-              <option value="TIMER">Timer</option>
+              <option value="COUNTER">{{'home.detailPane.rulesTab.counter' | translate}}</option>
+              <option value="HISTOGRAM">{{'home.detailPane.rulesTab.histogram' | translate}}</option>
+              <option value="METER">{{'home.detailPane.rulesTab.meter' | translate}}</option>
+              <option value="TIMER">{{'home.detailPane.rulesTab.timer' | translate}}</option>
             </select>
           </td>
 
@@ -62,9 +62,9 @@
             </select>
           </td>
 
-          <td>
+          <td class="expression-language">
             <input type="text" class="form-control" name="predicate{{$index}}"
-                   placeholder="Predicate"
+                   placeholder="{{'home.detailPane.rulesTab.condition' | translate}}"
                    ng-model="alertRule.predicate"
                    ng-required="true">
           </td>
@@ -72,7 +72,7 @@
           <td>
             <div class="col-xs-1 btn-group" role="group" aria-label="Default button group">
               <button type="button" class="btn btn-danger btn-sm"
-                      tooltip-placement="bottom" tooltip="Delete Alert Rule"
+                      tooltip-placement="bottom" tooltip="{{'home.detailPane.rulesTab.deleteRuleTooltip' | translate}}"
                       ng-click="removeRule(pipelineRules.metricsAlertDefinitions, $index)">
                 <i class="fa fa-minus pointer"></i>
               </button>

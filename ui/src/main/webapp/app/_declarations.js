@@ -12,5 +12,6 @@ angular.module('pipelineAgentApp', [
   'pipelineAgentApp.common',
   'pipelineAgentApp.home',
   'pipelineAgentApp.jvmMetrics',
-  'pipelineAgentApp.logs'
+  'pipelineAgentApp.logs',
+  'ngStorage'
 ]);

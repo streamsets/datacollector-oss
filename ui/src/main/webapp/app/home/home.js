@@ -26,7 +26,6 @@ angular
       pageHidden = false;
 
     angular.extend($scope, {
-      pipelineConstant: pipelineConstant,
       selectedType: pipelineConstant.PIPELINE,
       loaded: false,
       isPipelineRunning: false,
@@ -43,7 +42,6 @@ angular
       },
       minimizeDetailPane: false,
       maximizeDetailPane: false,
-      $storage: $localStorage,
 
       /**
        * Add New Pipeline Configuration
@@ -125,8 +123,8 @@ angular
        */
       previewPipeline: function (nextBatch) {
         $scope.previewMode = true;
-        $scope.$storage.maximizeDetailPane = false;
-        $scope.$storage.minimizeDetailPane = false;
+        $rootScope.$storage.maximizeDetailPane = false;
+        $rootScope.$storage.minimizeDetailPane = false;
         $scope.setGraphReadOnly(true);
         $scope.setGraphPreviewMode(true);
         $scope.$broadcast('previewPipeline', nextBatch);
@@ -148,8 +146,8 @@ angular
        */
       captureSnapshot: function() {
         $scope.snapshotMode = true;
-        $scope.$storage.maximizeDetailPane = false;
-        $scope.$storage.minimizeDetailPane = false;
+        $rootScope.$storage.maximizeDetailPane = false;
+        $rootScope.$storage.minimizeDetailPane = false;
         $scope.setGraphPreviewMode(true);
         $scope.$broadcast('snapshotPipeline');
       },
@@ -201,16 +199,16 @@ angular
        * On Detail Pane Minimize button is clicked.
        */
       onMinimizeDetailPane: function() {
-        $scope.$storage.maximizeDetailPane = false;
-        $scope.$storage.minimizeDetailPane = !$scope.$storage.minimizeDetailPane;
+        $rootScope.$storage.maximizeDetailPane = false;
+        $rootScope.$storage.minimizeDetailPane = !$rootScope.$storage.minimizeDetailPane;
       },
 
       /**
        * On Detail Pane Maximize button is clicked.
        */
       onMaximizeDetailPane: function() {
-        $scope.$storage.minimizeDetailPane = false;
-        $scope.$storage.maximizeDetailPane = !$scope.$storage.maximizeDetailPane;
+        $rootScope.$storage.minimizeDetailPane = false;
+        $rootScope.$storage.maximizeDetailPane = !$rootScope.$storage.maximizeDetailPane;
       },
 
       /**
@@ -288,8 +286,8 @@ angular
     });
 
 
-    if(!$scope.$storage.displayDensity) {
-      $scope.$storage.displayDensity = pipelineConstant.DENSITY_COMFORTABLE;
+    if(!$rootScope.$storage.displayDensity) {
+      $rootScope.$storage.displayDensity = pipelineConstant.DENSITY_COMFORTABLE;
     }
 
     /**
@@ -337,9 +335,9 @@ angular
         $rootScope.common.pipelineStatus = pipelineStatus;
 
         //Determine Active Config based on localStorage or based on last status updated config.
-        if($scope.$storage.activeConfigInfo && $scope.$storage.activeConfigInfo.name) {
-          var localStorageConfigInfoName = $scope.$storage.activeConfigInfo.name;
-          $scope.activeConfigInfo = $scope.$storage.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
+        if($rootScope.$storage.activeConfigInfo && $rootScope.$storage.activeConfigInfo.name) {
+          var localStorageConfigInfoName = $rootScope.$storage.activeConfigInfo.name;
+          $scope.activeConfigInfo = $rootScope.$storage.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
             return pipelineDefn.name === localStorageConfigInfoName;
           });
         } else if(pipelineStatus && pipelineStatus.name) {
@@ -457,7 +455,7 @@ angular
       $scope.$broadcast('show-errors-check-validity');
 
       $scope.pipelineConfig = pipelineConfig || {};
-      $scope.activeConfigInfo = $scope.$storage.activeConfigInfo = pipelineConfig.info;
+      $scope.activeConfigInfo = $rootScope.$storage.activeConfigInfo = pipelineConfig.info;
       $scope.pipelineRules = pipelineRules;
 
       //Update Pipeline Info list
@@ -494,7 +492,7 @@ angular
         }
       });
 
-      $scope.firstOpenLane = $scope.$storage.dontShowHelpAlert ? {} : getFirstOpenLane();
+      $scope.firstOpenLane = $rootScope.$storage.dontShowHelpAlert ? {} : getFirstOpenLane();
 
       if(pipelineStatus && pipelineStatus.name === pipelineConfig.info.name &&
         pipelineMetrics && pipelineMetrics.meters) {

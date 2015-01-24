@@ -95,6 +95,34 @@
             </span>
           </a>
           <ul class="dropdown-menu">
+
+            <li role="presentation" class="dropdown-header"
+                translate="home.header.displayDensity">Display density:</li>
+
+            <li role="presentation">
+              <a href="#" ng-click="$storage.displayDensity = pipelineConstant.DENSITY_COMFORTABLE">
+                <i class="fa fa-check density-check-icon" ng-if="$storage.displayDensity === pipelineConstant.DENSITY_COMFORTABLE"></i>
+                <span>{{'home.header.comfortable' | translate}}</span>
+              </a>
+            </li>
+
+            <li role="presentation">
+              <a href="#" ng-click="$storage.displayDensity = pipelineConstant.DENSITY_COZY">
+                <i class="fa fa-check density-check-icon" ng-if="$storage.displayDensity === pipelineConstant.DENSITY_COZY"></i>
+                <span>{{'home.header.cozy' | translate}}</span>
+              </a>
+            </li>
+
+            <li role="presentation">
+              <a href="#" ng-click="$storage.displayDensity = pipelineConstant.DENSITY_COMPACT">
+                <i class="fa fa-check density-check-icon" ng-if="$storage.displayDensity === pipelineConstant.DENSITY_COMPACT"></i>
+                <span>{{'home.header.compact' | translate}}</span>
+              </a>
+            </li>
+
+            <li role="presentation" class="divider"></li>
+
+
             <li>
               <a href="javascript:;" ng-click="common.showAbout()">
                 <span class="fa fa-info-circle"></span>
