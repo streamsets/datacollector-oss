@@ -79,7 +79,7 @@ public class TestBaseHdfsTarget {
     target.lateRecordsLimit = "${1 * HOURS}";
     target.csvFileFormat = CsvFileMode.CSV;
     target.dataFormat = HdfsDataFormat.CSV;
-    target.fieldPathToNameMappingConfigList = new ArrayList<>();
+    target.cvsFieldPathToNameMappingConfigList = new ArrayList<>();
   }
 
   static class ForTestHdfsTarget extends BaseHdfsTarget {

@@ -31,8 +31,8 @@ public abstract class BaseSpoolDirSource extends BaseSource {
       type = ConfigDef.Type.STRING,
       label = "Directory",
       description = "The directory where to read the files from",
-      displayPosition = 0,
-      group = "INPUT_FILES")
+      displayPosition = 5,
+      group = "FILES")
   public String spoolDir;
 
   @ConfigDef(required = true,
@@ -41,7 +41,7 @@ public abstract class BaseSpoolDirSource extends BaseSource {
       description = "A glob or regular expression that defines the pattern of file names in the directory. " +
                     "File names must be created in naturally ascending order.",
       displayPosition = 10,
-      group = "INPUT_FILES")
+      group = "FILES")
   public String filePattern;
 
   @ConfigDef(required = true,
@@ -52,7 +52,7 @@ public abstract class BaseSpoolDirSource extends BaseSource {
           "Maximum number of files matching the pattern waiting to be processed. " +
           "Additional files in the directory causes the pipeline to fail",
       displayPosition = 20,
-      group = "INPUT_FILES")
+      group = "FILES")
   public int maxSpoolFiles;
 
   @ConfigDef(required = false,
@@ -61,7 +61,7 @@ public abstract class BaseSpoolDirSource extends BaseSource {
       description = "When configured, the Data Collector does not process earlier (naturally ascending order) file names",
       defaultValue = "",
       displayPosition = 30,
-      group = "INPUT_FILES")
+      group = "FILES")
   public String initialFileToProcess;
 
   @ConfigDef(required = false,
@@ -70,7 +70,7 @@ public abstract class BaseSpoolDirSource extends BaseSource {
       description = "Seconds to wait for new files before triggering an empty batch for processing",
       defaultValue = "600",
       displayPosition = 40,
-      group = "INPUT_FILES")
+      group = "FILES")
   public long poolingTimeoutSecs;
 
   @ConfigDef(required = false,

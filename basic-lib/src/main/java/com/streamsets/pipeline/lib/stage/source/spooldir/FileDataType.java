@@ -9,10 +9,10 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
 public enum FileDataType implements BaseEnumChooserValues.EnumWithLabel, ConfigGroups.Groups {
-  LOG_FILES("Log Files"),
-  JSON_FILES("JSON Files"),
-  DELIMITED_FILES("Delimited Files"),
-  XML_FILES("XML Files"),
+  LOG_DATA("Log Data"),
+  JSON_DATA("JSON Data"),
+  DELIMITED_DATA("Delimited Data"),
+  XML_DATA("XML Data"),
   ;
 
   private final String label;

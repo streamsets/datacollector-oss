@@ -31,9 +31,8 @@ public class SpoolDirSource extends BaseSpoolDirSource {
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       description = "The data format in the files",
-      defaultValue = "",
-      displayPosition = 100,
-      group = "INPUT_FILES")
+      displayPosition = 1,
+      group = "FILES")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileDataTypeChooserValues.class)
   public FileDataType fileDataType;
 
@@ -45,9 +44,9 @@ public class SpoolDirSource extends BaseSpoolDirSource {
       description = "The specific Delimited File format",
       defaultValue = "CSV",
       displayPosition = 200,
-      group = "DELIMITED_FILES",
+      group = "DELIMITED_DATA",
       dependsOn = "fileDataType",
-      triggeredByValue = "DELIMITED_FILES")
+      triggeredByValue = "DELIMITED_DATA")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
 
@@ -57,9 +56,9 @@ public class SpoolDirSource extends BaseSpoolDirSource {
       description = "If the files start with a header line",
       defaultValue = "TRUE",
       displayPosition = 210,
-      group = "DELIMITED_FILES",
+      group = "DELIMITED_DATA",
       dependsOn = "fileDataType",
-      triggeredByValue = "DELIMITED_FILES")
+      triggeredByValue = "DELIMITED_DATA")
   public boolean hasHeaderLine;
 
   @ConfigDef(required = true,
@@ -68,9 +67,9 @@ public class SpoolDirSource extends BaseSpoolDirSource {
       description = "Converts delimited values to a map based on the header or placeholder header values",
       defaultValue = "TRUE",
       displayPosition = 220,
-      group = "DELIMITED_FILES",
+      group = "DELIMITED_DATA",
       dependsOn = "fileDataType",
-      triggeredByValue = "DELIMITED_FILES")
+      triggeredByValue = "DELIMITED_DATA")
   public boolean convertToMap;
 
   // JSON Configuration
@@ -81,9 +80,9 @@ public class SpoolDirSource extends BaseSpoolDirSource {
       description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects",
       defaultValue = "ARRAY_OBJECTS",
       displayPosition = 300,
-      group = "JSON_FILES",
+      group = "JSON_DATA",
       dependsOn = "fileDataType",
-      triggeredByValue = "JSON_FILES")
+      triggeredByValue = "JSON_DATA")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
   public JsonFileMode jsonContent;
 
@@ -93,9 +92,9 @@ public class SpoolDirSource extends BaseSpoolDirSource {
       description = "Larger objects are not processed",
       defaultValue = "4096",
       displayPosition = 310,
-      group = "JSON_FILES",
+      group = "JSON_DATA",
       dependsOn = "fileDataType",
-      triggeredByValue = "JSON_FILES")
+      triggeredByValue = "JSON_DATA")
   public int maxJsonObjectLen;
 
   // LOG Configuration
@@ -106,9 +105,9 @@ public class SpoolDirSource extends BaseSpoolDirSource {
       description = "Longer lines are truncated",
       defaultValue = "1024",
       displayPosition = 400,
-      group = "LOG_FILES",
+      group = "LOG_DATA",
       dependsOn = "fileDataType",
-      triggeredByValue = "LOG_FILES")
+      triggeredByValue = "LOG_DATA")
   public int maxLogLineLength;
 
   // XML Configuration
@@ -117,11 +116,10 @@ public class SpoolDirSource extends BaseSpoolDirSource {
       type = ConfigDef.Type.STRING,
       label = "Element Record Delimiter",
       description = "XML element name that acts as record delimiter",
-      defaultValue = "record",
       displayPosition = 500,
-      group = "XML_FILES",
+      group = "XML_DATA",
       dependsOn = "fileDataType",
-      triggeredByValue = "XML_FILES")
+      triggeredByValue = "XML_DATA")
   public String xmlRecordElement;
 
   @ConfigDef(required = true,
@@ -130,9 +128,9 @@ public class SpoolDirSource extends BaseSpoolDirSource {
       description = "Larger records are not processed",
       defaultValue = "4096",
       displayPosition = 510,
-      group = "XML_FILES",
+      group = "XML_DATA",
       dependsOn = "fileDataType",
-      triggeredByValue = "XML_FILES")
+      triggeredByValue = "XML_DATA")
   public int maxXmlObjectLen;
 
   private DataProducer dataProducer;
@@ -141,16 +139,16 @@ public class SpoolDirSource extends BaseSpoolDirSource {
   protected void init() throws StageException {
     super.init();
     switch (fileDataType) {
-      case LOG_FILES:
+      case LOG_DATA:
         dataProducer = new LogDataProducer(getContext(), maxLogLineLength);
         break;
-      case JSON_FILES:
+      case JSON_DATA:
         dataProducer = new JsonDataProducer(getContext(), jsonContent, maxJsonObjectLen);
         break;
-      case DELIMITED_FILES:
+      case DELIMITED_DATA:
         dataProducer = new CsvDataProducer(getContext(), csvFileFormat, hasHeaderLine, convertToMap);
         break;
-      case XML_FILES:
+      case XML_DATA:
         dataProducer = new XmlDataProducer(getContext(), xmlRecordElement, maxXmlObjectLen);
         break;
     }

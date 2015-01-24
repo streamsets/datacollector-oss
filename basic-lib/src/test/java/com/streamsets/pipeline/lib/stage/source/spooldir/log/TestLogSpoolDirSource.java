@@ -54,7 +54,7 @@ public class TestLogSpoolDirSource {
         .addConfiguration("initialFileToProcess", null)
         .addConfiguration("poolingTimeoutSecs", 0)
         .addConfiguration("errorArchiveDir", null)
-        .addConfiguration("fileDataType", FileDataType.LOG_FILES)
+        .addConfiguration("fileDataType", FileDataType.LOG_DATA)
         .addConfiguration("maxLogLineLength", 10)
         .addOutputLane("lane")
         .build();
@@ -88,7 +88,7 @@ public class TestLogSpoolDirSource {
         .addConfiguration("initialFileToProcess", null)
         .addConfiguration("poolingTimeoutSecs", 0)
         .addConfiguration("errorArchiveDir", null)
-        .addConfiguration("fileDataType", FileDataType.LOG_FILES)
+        .addConfiguration("fileDataType", FileDataType.LOG_DATA)
         .addConfiguration("maxLogLineLength", 10)
         .addOutputLane("lane")
         .build();

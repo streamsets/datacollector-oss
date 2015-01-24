@@ -9,9 +9,10 @@ import com.streamsets.pipeline.api.ConfigGroups;
 
 public enum HdfsConfigGroups implements ConfigGroups.Groups {
   HADOOP_FS("Hadoop FS"),
-  FILES("Files"),
-  DATA("Data"),
+  OUTPUT_FILES("Output Files"),
   LATE_RECORDS("Late Records"),
+  CSV("CSV Data"),
+  TSV("Tab Separated Data"),
   ;
 
   private final String label;

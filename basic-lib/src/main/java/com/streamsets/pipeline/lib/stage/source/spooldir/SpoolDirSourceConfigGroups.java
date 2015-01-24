@@ -9,7 +9,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
 public enum SpoolDirSourceConfigGroups implements ConfigGroups.Groups {
-  INPUT_FILES("Input Files"),
+  FILES("Files"),
   POST_PROCESSING("Post Processing"),
   ;
 

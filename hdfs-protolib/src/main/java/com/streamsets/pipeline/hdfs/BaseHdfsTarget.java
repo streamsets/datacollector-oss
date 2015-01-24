@@ -99,9 +99,9 @@ public abstract class BaseHdfsTarget extends BaseTarget {
                     "Collector must have a unique identifier. The identifier is used as file prefix for all the " +
                     "created by this Data Collector.",
       label = "Files Unique Prefix",
-      group = "FILES",
+      group = "OUTPUT_FILES",
       defaultValue = "",
-      displayPosition = 100)
+      displayPosition = 105)
   public String uniquePrefix;
 
   @ConfigDef(required = true,
@@ -110,7 +110,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
                     "${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}, ${record:value(<field-path>)}. ",
       label = "Directory Path Template",
       defaultValue = "/tmp/out/${YYYY}-${MM}-${DD}-${hh}-${mm}-${ss}",
-      group = "FILES",
+      group = "OUTPUT_FILES",
       displayPosition = 110)
   public String dirPathTemplate;
 
@@ -119,7 +119,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       description = "Timezone code used to resolve directory paths",
       label = "Timezone",
       defaultValue = "UTC",
-      group = "FILES",
+      group = "OUTPUT_FILES",
       displayPosition = 120)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = TimeZoneChooserValues.class)
   public String timeZoneID;
@@ -130,7 +130,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
                     "'time:now()' or a 'record:value(<filepath>)' that resolves to a date",
       label = "Time Driver",
       defaultValue = "${time:now()}",
-      group = "FILES",
+      group = "OUTPUT_FILES",
       displayPosition = 130)
   public String timeDriver;
 
@@ -139,7 +139,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       description = "Maximum number of records that trigger a file rollover. 0 does not trigger a rollover.",
       label = "Max records per File",
       defaultValue = "0",
-      group = "FILES",
+      group = "OUTPUT_FILES",
       displayPosition = 140)
   public long maxRecordsPerFile;
 
@@ -148,7 +148,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       description = "Maximum file size in Megabytes that trigger a file rollover. 0 does not trigger a rollover",
       label = "Max file size (MBs)",
       defaultValue = "0",
-      group = "FILES",
+      group = "OUTPUT_FILES",
       displayPosition = 150)
   public long maxFileSize;
 
@@ -157,7 +157,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       description = "Compression codec to use",
       label = "Compression Codec",
       defaultValue = "NONE",
-      group = "FILES",
+      group = "OUTPUT_FILES",
       displayPosition = 160)
   @ValueChooser(type = ChooserMode.SUGGESTED, chooserValues = CompressionChooserValues.class)
   public String compression;
@@ -167,7 +167,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       description = "Type of file type to create",
       label = "File Type",
       defaultValue = "TEXT",
-      group = "FILES",
+      group = "OUTPUT_FILES",
       displayPosition = 170)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileTypeChooserValues.class)
   public HdfsFileType fileType;
@@ -178,7 +178,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
                     "uuid()",
       label = "Sequence File Key",
       defaultValue = "uuid()",
-      group = "FILES",
+      group = "OUTPUT_FILES",
       displayPosition = 180,
       dependsOn = "fileType",
       triggeredByValue = "SEQUENCE_FILE")
@@ -189,7 +189,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       description = "Specifies the compression type for Sequence Files if using a CompressionCodec",
       label = "Compression Type",
       defaultValue = "BLOCK",
-      group = "FILES",
+      group = "OUTPUT_FILES",
       displayPosition = 190,
       dependsOn = "fileType",
       triggeredByValue = "SEQUENCE_FILE")
@@ -236,10 +236,10 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       description = "Data Format",
       label = "Data Format",
       defaultValue = "JSON",
-      group = "DATA",
+      group = "OUTPUT_FILES",
       dependsOn = "fileType",
       triggeredByValue = { "TEXT", "SEQUENCE_FILE"},
-      displayPosition = 300)
+      displayPosition = 100)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
   public HdfsDataFormat dataFormat; //TODO
 
@@ -252,24 +252,34 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       description = "The specific CSV format of the files",
       defaultValue = "CSV",
       dependsOn = "dataFormat", triggeredByValue = "CSV",
-      group = "DATA",
+      group = "CSV",
       displayPosition = 310)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
-
-  /********  For CSV & TSV Content  ***********/
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       description = "Field to name mapping configuration",
       label = "Field to Name Mapping",
       dependsOn = "dataFormat",
-      triggeredByValue = {"CSV", "TSV"},
-      defaultValue = "LOG",
-      group = "DATA",
+      triggeredByValue = "CSV",
+      group = "CSV",
       displayPosition = 320)
   @ComplexField
-  public List<FieldPathToNameMappingConfig> fieldPathToNameMappingConfigList;
+  public List<FieldPathToNameMappingConfig> cvsFieldPathToNameMappingConfigList;
+
+  /********  For TSV Content  ***********/
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.MODEL,
+      description = "Field to name mapping configuration",
+      label = "Field to Name Mapping",
+      dependsOn = "dataFormat",
+      triggeredByValue = "TSV",
+      group = "TSV",
+      displayPosition = 320)
+  @ComplexField
+  public List<FieldPathToNameMappingConfig> tsvFieldPathToNameMappingConfigList;
 
   public static class FieldPathToNameMappingConfig {
 
@@ -436,10 +446,10 @@ public abstract class BaseHdfsTarget extends BaseTarget {
     variables.addContextVariable(TIME_NOW_CONTEXT_VAR, now);
   }
 
-  private Map<String, String> getFieldPathToNameMapping() {
+  private Map<String, String> getFieldPathToNameMapping(List<FieldPathToNameMappingConfig> mapping) {
     Map<String, String> fieldPathToNameMapping = new LinkedHashMap<>();
-    if(fieldPathToNameMappingConfigList != null && !fieldPathToNameMappingConfigList.isEmpty()) {
-      for (FieldPathToNameMappingConfig fieldPathToNameMappingConfig : fieldPathToNameMappingConfigList) {
+    if(mapping != null && !mapping.isEmpty()) {
+      for (FieldPathToNameMappingConfig fieldPathToNameMappingConfig : mapping) {
         for(String field : fieldPathToNameMappingConfig.fields) {
           fieldPathToNameMapping.put(field, fieldPathToNameMappingConfig.name);
         }
@@ -456,14 +466,15 @@ public abstract class BaseHdfsTarget extends BaseTarget {
         break;
       case CSV:
         recordToString = new CsvRecordToString(csvFileFormat.getFormat());
+        recordToString.setFieldPathToNameMapping(getFieldPathToNameMapping(cvsFieldPathToNameMappingConfigList));
         break;
       case TSV:
         recordToString = new CsvRecordToString(csvFileFormat.getFormat());
+        recordToString.setFieldPathToNameMapping(getFieldPathToNameMapping(tsvFieldPathToNameMappingConfigList));
         break;
       default:
         throw new IllegalStateException(Utils.format("Invalid data format '{}'", dataFormat));
     }
-    recordToString.setFieldPathToNameMapping(getFieldPathToNameMapping());
     return recordToString;
   }
 
