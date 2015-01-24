@@ -4,16 +4,16 @@
 
   <!-- General Configuration for Pipeline-->
   <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
-    <label class="col-md-4 control-label" translate="global.form.name">Name</label>
-    <div class="controls col-md-7">
+    <label class="col-lg-3 col-md-4 control-label" translate="global.form.name">Name</label>
+    <div class="controls col-lg-7 col-md-8">
       <input readonly type="text" class="form-control" name="name"
              ng-model="pipelineConfig.info.name">
     </div>
   </div>
 
   <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
-    <label class="col-md-4 control-label" translate="global.form.description">Description</label>
-    <div class="controls col-md-7">
+    <label class="col-lg-3 col-md-4 control-label" translate="global.form.description">Description</label>
+    <div class="controls col-lg-7 col-md-8">
       <textarea class="form-control" name="description"
                 rows="1"
                 ng-readonly="isPipelineRunning"
@@ -23,8 +23,8 @@
 
   <!-- General Configuration for Stages-->
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
-    <label class="col-md-4 control-label" translate="global.form.name">Name</label>
-    <div class="controls col-md-7">
+    <label class="col-lg-3 col-md-4 control-label" translate="global.form.name">Name</label>
+    <div class="controls col-lg-7 col-md-8">
       <input type="text" class="form-control" name="name"
              ng-readonly="isPipelineRunning"
              ng-model="detailPaneConfig.uiInfo.label">
@@ -32,8 +32,8 @@
   </div>
 
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
-    <label class="col-md-4 control-label" translate="global.form.description">Description</label>
-    <div class="controls col-md-7">
+    <label class="col-lg-3 col-md-4 control-label" translate="global.form.description">Description</label>
+    <div class="controls col-lg-7 col-md-8">
       <textarea class="form-control" name="description"
                 rows="1"
                 ng-readonly="isPipelineRunning"
