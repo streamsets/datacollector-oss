@@ -43,6 +43,41 @@
   </div>
 </script>
 
+<script type="text/ng-template" id="listConfigurationTemplate">
+  <div class="controls col-lg-7 col-md-8">
+    <div class="row lane-predicate"
+         ng-repeat="listValue in detailPaneConfig.configuration[configIndex].value track by $index">
+
+      <div class="col-xs-1">
+        <label class="lane-label">{{$index + 1}}</label>
+      </div>
+
+      <div class="col-xs-7">
+        <input type="text" class="form-control input-sm"
+               ng-required="true"
+               name="{{configDefinition.name + $index}}"
+               ng-readonly="isPipelineRunning"
+               ng-model="listValue"/>
+      </div>
+
+      <div class="col-xs-2 btn-group" role="group" aria-label="Default button group"
+           ng-hide="isPipelineRunning">
+        <button type="button" class="btn btn-default btn-sm"
+                ng-hide="$last"
+                ng-click="removeFromList(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, $index)">
+          <i class="fa fa-minus pointer"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm"
+                ng-show="$last"
+                ng-click="addToList(detailPaneConfig, detailPaneConfig.configuration[configIndex].value)">
+          <i class="fa fa-plus pointer"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</script>
+
 <script type="text/ng-template" id="mapConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
     <div class="row lane-predicate" ng-repeat="mapObject in detailPaneConfig.configuration[configIndex].value track by $index">

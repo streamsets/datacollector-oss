@@ -142,6 +142,8 @@ angular.module('pipelineAgentApp.common')
         }
       } else if(configDefinition.type === 'BOOLEAN' && config.value === undefined) {
         config.value = false;
+      } else if(configDefinition.type === 'LIST') {
+        config.value = [];
       } else if(configDefinition.type === 'MAP') {
         config.value = [];
       }

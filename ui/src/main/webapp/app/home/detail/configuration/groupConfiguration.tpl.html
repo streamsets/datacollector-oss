@@ -48,6 +48,11 @@
         <ng-include src="'stringConfigurationTemplate'"></ng-include>
       </div>
 
+      <div ng-switch-when="LIST">
+        <ng-include src="'labelConfigurationTemplate'"></ng-include>
+        <ng-include src="'listConfigurationTemplate'"></ng-include>
+      </div>
+
       <div ng-switch-when="MAP">
         <ng-include src="'labelConfigurationTemplate'"></ng-include>
         <ng-include src="'mapConfigurationTemplate'"></ng-include>

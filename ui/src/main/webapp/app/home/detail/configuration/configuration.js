@@ -178,6 +178,27 @@ angular
       },
 
       /**
+       * Add object to List Configuration.
+       *
+       * @param stageInstance
+       * @param configValue
+       */
+      addToList: function(stageInstance, configValue) {
+        configValue.push('');
+      },
+
+      /**
+       * Remove object from List Configuration.
+       *
+       * @param stageInstance
+       * @param configValue
+       * @param $index
+       */
+      removeFromList: function(stageInstance, configValue, $index) {
+        configValue.splice($index, 1);
+      },
+
+      /**
        * Add object to Map Configuration.
        *
        * @param stageInstance
