@@ -2,7 +2,7 @@
 <div ng-controller="RawPreviewController" class="raw-preview-tab">
   <form class="form row form-group-sm" role="form" ng-submit="rawSourcePreview()">
 
-    <div class="col-md-4">
+    <div class="col-md-4 raw-source-config">
       <div class="form-group"
            ng-switch="configDefinition.type"
            ng-repeat="configDefinition in detailPaneConfigDefn.rawSourceDefinition.configDefinitions">
@@ -11,10 +11,10 @@
           <label class="control-label">{{configDefinition.label}}
             <i class="fa fa-info-circle help-icon"
                ng-if="configDefinition.description"
-               popover-placement="right"
-               popover-append-to-body="false"
-               popover="{{configDefinition.description}}"
-               popover-trigger="mouseenter"></i>
+               tooltip-placement="right"
+               tooltip-append-to-body="false"
+               tooltip="{{configDefinition.description}}"
+               tooltip-trigger="mouseenter"></i>
           </label>
 
           <div class="controls">
@@ -29,10 +29,10 @@
           <label class="control-label">{{configDefinition.label}}
             <i class="fa fa-info-circle help-icon"
                ng-if="configDefinition.description"
-               popover-placement="right"
-               popover-append-to-body="false"
-               popover="{{configDefinition.description}}"
-               popover-trigger="mouseenter"></i>
+               tooltip-placement="right"
+               tooltip-append-to-body="false"
+               tooltip="{{configDefinition.description}}"
+               tooltip-trigger="mouseenter"></i>
           </label>
 
           <div class="controls">
@@ -46,10 +46,10 @@
           <label class="control-label">{{configDefinition.label}}
             <i class="fa fa-info-circle help-icon"
                ng-if="configDefinition.description"
-               popover-placement="right"
-               popover-append-to-body="false"
-               popover="{{configDefinition.description}}"
-               popover-trigger="mouseenter"></i>
+               tooltip-placement="right"
+               tooltip-append-to-body="false"
+               tooltip="{{configDefinition.description}}"
+               tooltip-trigger="mouseenter"></i>
           </label>
           <div class="controls">
             <input type="number" class="form-control" name="{{configDefinition.name}}"
