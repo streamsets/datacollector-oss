@@ -15,7 +15,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 @StageDef(version = "1.0.0",
     label = "Trash",
     description = "Discards all records",
-    icon="null.svg")
+    icon="trash.png")
 public class NullTarget extends BaseTarget {
 
   @Override
