@@ -1,9 +1,41 @@
 <div class="container-fluid summary-tab" ng-controller="SummaryController">
 
+  <div class="row" ng-if="selectedType === pipelineConstant.PIPELINE">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading" translate="home.detailPane.summaryTab.alertsTitle">Alerts</div>
+        <div class="panel-body">
+
+          <table class="table">
+            <tbody>
+              <tr>
+                <td class="col-md-10">
+                  <i class="fa fa-exclamation-circle icon-danger"></i>
+                  <span>High Incidence of bad records</span>
+
+                  <i class="fa fa-trash-o"></i>
+                  <i class="fa fa-edit"></i>
+
+                </td>
+              </tr>
+              <tr>
+                <td class="col-md-10">
+                  <i class="fa fa-exclamation-circle icon-danger"></i>
+                  <span>High Incidence of null values</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
 
     <div class="col-sm-4"
-         ng-if="detailPaneConfig.instanceName"
+         ng-if="selectedType === pipelineConstant.STAGE_INSTANCE"
          ng-controller="RecordPercentagePieChartController">
       <div class="panel panel-default">
         <div class="panel-heading" translate="home.detailPane.summaryTab.recordsProcessed">Records Processed</div>

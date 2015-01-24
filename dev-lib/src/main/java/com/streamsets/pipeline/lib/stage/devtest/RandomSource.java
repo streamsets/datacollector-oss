@@ -28,6 +28,12 @@ public class RandomSource extends BaseSource {
              label = "Record fields to generate, comma separated")
   public String fields;
 
+  @ConfigDef(required = true, type = ConfigDef.Type.INTEGER,
+    defaultValue = "1000",
+    label = "Delay between each batch")
+  public int delay;
+
+
   private int batchCount;
   private int batchSize;
   private String[] fieldArr;
@@ -54,6 +60,14 @@ public class RandomSource extends BaseSource {
     if (batchCount++ % (random.nextInt(maxBatchSize) + 1) == 0) {
       batchSize = random.nextInt(maxBatchSize + 1);
     }
+
+    if(delay > 0) {
+      try {
+        Thread.sleep(delay);
+      } catch (InterruptedException e) {
+      }
+    }
+
     for (int i = 0; i < batchSize; i++ ) {
       batchMaker.addRecord(createRecord(lastSourceOffset, i), lanes[i % lanes.length]);
     }

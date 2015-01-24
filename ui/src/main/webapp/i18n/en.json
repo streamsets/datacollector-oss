@@ -217,6 +217,7 @@
       },
       "summary": "Summary",
       "summaryTab": {
+        "alertsTitle": "Alerts",
         "batchThroughput": "Batch Throughput (batches/sec)",
         "recordsProcessed": "Records Processed (since last startup)",
         "recordCountBarChartTitle": "Record Count (since last startup)",

@@ -713,7 +713,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         })
         .attr('width', 100)
         .attr('height', 30)
-        .attr('x', consts.rectWidth - 55)
+        .attr('x', consts.rectWidth - 40)
         .attr('y', 10)
         .append('xhtml:span')
         .attr('title', 'Mean value of Error Histogram (5 minutes decay)')
@@ -733,7 +733,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           return '';
         })
         .on('mousedown', function() {
-          $rootScope.$apply(function(){
+          $rootScope.$apply(function() {
             $rootScope.$broadcast('showBadRecordsSelected');
           });
         });
@@ -872,7 +872,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         'L' + (d.target.uiInfo.xPos - 30) + ',' + targetY;*/
     };
 
-    GraphCreator.prototype.zoomed = function(){
+    GraphCreator.prototype.zoomed = function() {
       this.state.justScaleTransGraph = true;
 
       if(showTransition) {
@@ -941,13 +941,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
 
-    GraphCreator.prototype.clearStartAndEndNode = function(){
+    GraphCreator.prototype.clearStartAndEndNode = function() {
       var thisGraph = this;
       thisGraph.rects.classed(thisGraph.consts.startNodeClass, false);
       thisGraph.rects.classed(thisGraph.consts.endNodeClass, false);
     };
 
-    GraphCreator.prototype.updateStartAndEndNode = function(startNode, endNode){
+    GraphCreator.prototype.updateStartAndEndNode = function(startNode, endNode) {
       var thisGraph = this;
 
       thisGraph.clearStartAndEndNode();
