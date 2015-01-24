@@ -22,34 +22,34 @@ import java.util.UUID;
 public class TestFileTailSource {
   private String logFile;
 
-  @Before
-  public void setUp() throws IOException {
+  @Test
+  public void testTail() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDataDir.mkdirs());
-    logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
+    String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("testLogFile.txt");
     OutputStream os = new FileOutputStream(logFile);
     IOUtils.copy(is, os);
     is.close();
-    os.close();
-  }
 
-  @Test
-  public void testTailFromEnd() throws Exception {
     SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
-      .addConfiguration("fileName", logFile)
-      .addConfiguration("batchSize", 25)
-      .addConfiguration("maxWaitTimeSecs", 1)
-      .addOutputLane("lane")
-      .build();
+        .addConfiguration("fileName", logFile)
+        .addConfiguration("batchSize", 25)
+        .addConfiguration("maxWaitTimeSecs", 1)
+        .addOutputLane("lane")
+        .build();
     runner.runInit();
+    Thread.sleep(500);
+    os.write("HELLO\n".getBytes());
+    Thread.sleep(500);
     try {
       long start = System.currentTimeMillis();
       StageRunner.Output output = runner.runProduce(null, 1000);
       long end = System.currentTimeMillis();
       Assert.assertTrue(end - start >= 1000);
       Assert.assertNotNull(output.getNewOffset());
-      Assert.assertTrue(output.getRecords().get("lane").isEmpty());
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      Assert.assertEquals("HELLO", output.getRecords().get("lane").get(0).get("/line").getValueAsString());
     } finally {
       runner.runDestroy();
     }

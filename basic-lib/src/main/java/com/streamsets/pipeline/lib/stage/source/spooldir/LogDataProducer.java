@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunLineReader;
+import com.streamsets.pipeline.lib.util.LineToRecord;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,19 +28,18 @@ import java.util.Map;
 public class LogDataProducer implements DataProducer {
   private final static Logger LOG = LoggerFactory.getLogger(LogDataProducer.class);
 
-  private static final String LINE = "line";
-  private static final String TRUNCATED = "truncated";
-
   private final Source.Context context;
   private final int maxLogLineLength;
   private final StringBuilder line;
   private final Counter linesOverMaxLengthCounter;
+  private final LineToRecord lineToRecord;
 
   public LogDataProducer(Source.Context context, int maxLogLineLength) {
     this.context = context;
     this.maxLogLineLength = maxLogLineLength;
     line = new StringBuilder(maxLogLineLength);
     linesOverMaxLengthCounter = context.createCounter("linesOverMaxLen");
+    lineToRecord = new LineToRecord();
   }
 
   @Override
@@ -65,11 +65,7 @@ public class LogDataProducer implements DataProducer {
                  sourceFile, offset);
       }
       if (len > -1) {
-        Record record = context.createRecord(Utils.format("file={} offset={}", sourceFile, offset));
-        Map<String, Field> map = new LinkedHashMap<>();
-        map.put(LINE, Field.create(line.toString()));
-        map.put(TRUNCATED, Field.create(len > maxLogLineLength));
-        record.set(Field.create(map));
+        Record record = lineToRecord.createRecord(context, sourceFile, offset, line.toString(), len > maxLogLineLength);
         batchMaker.addRecord(record);
         offset = lineReader.getCount();
       } else {

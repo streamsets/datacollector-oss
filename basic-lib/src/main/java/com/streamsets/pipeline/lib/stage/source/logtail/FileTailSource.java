@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.util.LineToRecord;
 import com.streamsets.pipeline.lib.util.StageLibError;
 
 import java.io.File;
@@ -59,6 +60,7 @@ public class FileTailSource extends BaseSource {
   private BlockingQueue<String> logLinesQueue;
   private long maxWaitTimeMillis;
   private LogTail logTail;
+  private LineToRecord lineToRecord;
 
   @Override
   protected void init() throws StageException {
@@ -71,6 +73,7 @@ public class FileTailSource extends BaseSource {
     logLinesQueue = new ArrayBlockingQueue<>(2 * batchSize);
     logTail = new LogTail(logFile, true, getInfo(), logLinesQueue);
     logTail.start();
+    lineToRecord = new LineToRecord();
   }
 
   @Override
@@ -94,8 +97,7 @@ public class FileTailSource extends BaseSource {
     }
     logLinesQueue.drainTo(lines, fetch);
     for (int i = 0; i < lines.size(); i++) {
-      Record record = getContext().createRecord(fileName + now + i);
-      record.set(Field.create(lines.get(i)));
+      Record record = lineToRecord.createRecord(getContext(), fileName, -1, lines.get(i), false);
       batchMaker.addRecord(record);
     }
     return OFFSET;
