@@ -7,12 +7,13 @@ package com.streamsets.pipeline.lib.stage.source.logtail;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.lib.util.LineToRecord;
 import com.streamsets.pipeline.lib.util.StageLibError;
 
@@ -28,6 +29,7 @@ import java.util.concurrent.BlockingQueue;
           description = "Reads lines from the specified file as they are written to it. It must be text file, " +
                         "typically a log file.",
           icon="fileTail.png")
+@RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 public class FileTailSource extends BaseSource {
 
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
