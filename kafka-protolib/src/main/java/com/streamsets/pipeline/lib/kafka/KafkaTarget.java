@@ -27,7 +27,6 @@ import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.JsonRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.LogRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
-import com.streamsets.pipeline.lib.recordserialization.XmlRecordToString;
 import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,7 +159,6 @@ public class KafkaTarget extends BaseTarget {
     KAFKA_ADVANCED_CONFIGURATION("Kafka Advanced Configuration"),
     JSON_PROPERTIES("JSON Data Properties"),
     CSV_PROPERTIES("CSV Data Properties"),
-    XML_PROPERTIES("XML Data Properties"),
     LOG_PROPERTIES("Log Data Properties");
 
     private final String label;
@@ -215,9 +213,6 @@ public class KafkaTarget extends BaseTarget {
         break;
       case CSV:
         recordToString = new CsvRecordToString(csvFileFormat.getFormat());
-        break;
-      case XML:
-        recordToString = new XmlRecordToString();
         break;
       case LOG:
         recordToString = new LogRecordToString();
