@@ -478,16 +478,15 @@ angular.module('pipelineAgentApp.common')
      */
     this.getTriggeredAlerts = function(pipelineRules, pipelineMetrics) {
       var gauges = pipelineMetrics.gauges,
-        alerts = {
-          pipeline: []
-        };
+        alerts = [];
 
       angular.forEach(pipelineRules.metricsAlertDefinitions, function(rule) {
         var gaugeName = 'alert.' + rule.id + '.gauge';
         if(gauges[gaugeName]) {
-          alerts.pipeline.push({
+          alerts.push({
             rule: rule,
-            gauge: gauges[gaugeName]
+            gauge: gauges[gaugeName],
+            type: 'METRIC_ALERT'
           });
         }
       });
@@ -495,14 +494,10 @@ angular.module('pipelineAgentApp.common')
       angular.forEach(pipelineRules.alertDefinitions, function(rule) {
         var gaugeName = 'alert.' + rule.id + '.gauge';
         if(gauges[gaugeName]) {
-
-          if(!alerts[rule.lane]) {
-            alerts[rule.lane] = [];
-          }
-
-          alerts[rule.lane].push({
+          alerts.push({
             rule: rule,
-            gauge: gauges[gaugeName]
+            gauge: gauges[gaugeName],
+            type: 'DATA_ALERT'
           });
         }
       });

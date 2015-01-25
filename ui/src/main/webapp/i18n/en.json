@@ -112,6 +112,7 @@
       "issues": "Issues",
       "more": "More",
       "nextBatch": "Preview Next Batch",
+      "notifications": "Notifications",
       "pauseMonitoring": "Pause Monitoring",
       "pipelineIssues": "Pipeline Issues",
       "preview": "Preview",
@@ -172,6 +173,9 @@
         "stageLibrary": "Stage Library",
         "stageType": "Stage Type",
         "stageVersion": "Stage Version"
+      },
+      "dataSummaryTab": {
+        "noRulesMessage": "No Rules added for this lane. Add Rules in Rules Tab for Inspecting Data."
       },
       "general": "General",
       "history": "History",

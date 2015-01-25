@@ -95,6 +95,27 @@
         <span ng-hide="iconOnly" translate="home.header.refreshPreview">Refresh Preview</span>
       </button>
 
+      <div class="btn-group notifications-dropdown"
+           ng-show="triggeredAlerts.length > 0">
+        <button class="btn btn-link dropdown-toggle" type="button"
+                data-toggle="dropdown">
+          <span class="fa fa-bell fa-12x"></span>
+          <span ng-hide="iconOnly" translate="home.header.notifications">Notifications</span>
+          <span class="badge" ng-bind="triggeredAlerts.length"></span>
+        </button>
+        <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+          <li role="presentation"
+              ng-repeat-start="alert in triggeredAlerts">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="onIssueClick(issue, instanceName)"
+               ng-bind="alert.rule.label"></a>
+          </li>
+          <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+
+        </ul>
+      </div>
+
 
       <button type="button" class="btn btn-primary btn-sm"
               tooltip-placement="bottom" tooltip="{{'home.header.snapshot' | translate}}"

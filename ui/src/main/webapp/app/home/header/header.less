@@ -10,10 +10,6 @@
     padding: @smallPadding @smallPadding*3;
     box-shadow: 0 1px 4px rgba(0,0,0,.2);
 
-    button {
-      margin-top: 2px;
-    }
-
     .navbar-toggle {
       display: block;
       float: left;
@@ -60,7 +56,6 @@
     }
 
     .issues-dropdown {
-
       padding-left: @smallPadding;
 
       li {
@@ -80,8 +75,48 @@
       }
     }
 
-    .btn {
-      //margin-left: @defaultPadding;
+
+    .notifications-dropdown {
+      padding-left: @smallPadding;
+      height: 30px;
+
+      .btn {
+        padding-bottom: 0;
+        padding-top: 0;
+        margin: 0;
+        color: @streamsets-icon-btn-color;
+
+        &:hover {
+          color: @streamsets-icon-btn-hover-color;
+        }
+
+        .fa-bell {
+          position: absolute;
+          top: 8px;
+          right: 30px;
+        }
+
+        .badge {
+          position: absolute;
+          top: 1px;
+          right: 12px;
+          color: #fff;
+          background-color: #d9534f;
+        }
+      }
+
+      li {
+        a {
+          white-space: normal;
+          width: 400px;
+        }
+
+        &.dropdown-header {
+          text-transform: capitalize;
+        }
+      }
+
+
     }
 
     .stage-dropdown {

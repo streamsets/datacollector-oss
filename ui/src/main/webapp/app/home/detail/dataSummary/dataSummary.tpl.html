@@ -1,8 +1,8 @@
 <div class="container-fluid data-summary-tab" ng-controller="DataSummaryController">
 
-  <div class="row" ng-if="triggeredAlerts[selectedObject.outputLane].length">
-    <div class="col-sm-12 col-md-6 col-lg-4 triggered-alerts"
-         ng-repeat="triggeredAlert in triggeredAlerts[selectedObject.outputLane]">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 triggered-alerts"
+         ng-repeat="triggeredAlert in laneAlerts  = (triggeredAlerts | filter : {rule: {lane : selectedObject.outputLane}})">
       <div class="alert alert-danger" role="alert">
         <i class="fa fa-exclamation-triangle"></i> {{triggeredAlert.rule.label}} ({{triggeredAlert.gauge.value.currentValue}})
       </div>
@@ -31,8 +31,6 @@
             data="chartData"
             id="{{metricRule.id}}"
             height="250"
-            yAxisTickFormat="valueFormatFunction()"
-            valueformat="valueFormatFunction()"
             staggerLabels="true"
             showXAxis="true"
             showYAxis="true"
@@ -40,7 +38,7 @@
             showLegend="true"
             tooltips="true"
             tooltipcontent="getTooltipContent()"
-            margin="{left:40,top:20,bottom:40,right:20}">
+            margin="{left:40,top:10,bottom:40,right:20}">
           </nvd3-discrete-bar-chart>
 
         </div>
@@ -63,8 +61,6 @@
             data="chartData"
             id="{{metricRule.id}}"
             height="250"
-            yAxisTickFormat="valueFormatFunction()"
-            valueformat="valueFormatFunction()"
             staggerLabels="true"
             showXAxis="true"
             showYAxis="true"
@@ -72,7 +68,7 @@
             showLegend="true"
             tooltips="true"
             tooltipcontent="getTooltipContent()"
-            margin="{left:40,top:20,bottom:40,right:20}">
+            margin="{left:40,top:10,bottom:40,right:20}">
           </nvd3-discrete-bar-chart>
 
         </div>
@@ -123,6 +119,15 @@
       </div>
     </div>
 
+
+    <div class="col-md-12" ng-if="laneAlerts.length === 0 && metricDefinitions.length === 0 && samplingDefinitions.length ===0">
+      <div class="alert alert-info" role="alert">
+        <i class="fa fa-info-circle"></i>
+        <span>{{'home.detailPane.dataSummaryTab.noRulesMessage' | translate}}</span>
+      </div>
+    </div>
+
   </div>
+
 
 </div>

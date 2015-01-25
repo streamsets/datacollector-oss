@@ -26,7 +26,7 @@ angular
         pipelineMetrics = $rootScope.common.pipelineMetrics;
 
       if(pipelineMetrics && pipelineMetrics.meters) {
-        var meterData = pipelineMetrics.meters[metricRule.id + '.meter'];
+        var meterData = pipelineMetrics.meters['user.' + metricRule.id + '.meter'];
 
         if(meterData) {
           $scope.count = meterData.count;
@@ -73,7 +73,7 @@ angular
         pipelineMetrics = $rootScope.common.pipelineMetrics;
 
       if(pipelineMetrics && pipelineMetrics.histograms) {
-        var histogramData = pipelineMetrics.histograms[metricRule.id + '.histogramM5'];
+        var histogramData = pipelineMetrics.histograms['user.' + metricRule.id + '.histogramM5'];
 
         if(histogramData) {
           $scope.count = histogramData.count;

@@ -1,8 +1,8 @@
 <div class="container-fluid summary-tab" ng-controller="SummaryController">
 
-  <div class="row" ng-if="selectedType === pipelineConstant.PIPELINE && triggeredAlerts.pipeline.length">
-    <div class="col-sm-12 col-md-6 col-lg-4 triggered-alerts"
-         ng-repeat="triggeredAlert in triggeredAlerts.pipeline">
+  <div class="row" ng-if="selectedType === pipelineConstant.PIPELINE && triggeredAlerts.length">
+    <div class="col-sm-12 col-md-12 col-lg-12 triggered-alerts"
+         ng-repeat="triggeredAlert in triggeredAlerts | filter: {type: 'METRIC_ALERT'}">
       <div class="alert alert-danger" role="alert">
         <i class="fa fa-exclamation-triangle"></i> {{triggeredAlert.rule.label}} ({{triggeredAlert.gauge.value.currentValue}})
       </div>
