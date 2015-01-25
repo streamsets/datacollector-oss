@@ -1,5 +1,32 @@
 .data-summary-tab {
-  .row {
-    margin-bottom: @smallPadding * 3;
+  .panel {
+    min-height: 300px;
+    max-height: 600px;
+    overflow: auto;
+
+    .loading-screen-display-box {
+      left: 25%;
+    }
+
+    .properties {
+      list-style: none;
+      font-size: 0.9em;
+      padding: @defaultPadding @defaultPadding*2 0 0;
+      margin: 0;
+      float: right;
+
+      li {
+        display: inline-block;
+        padding-left: @defaultPadding;
+      }
+
+      .properties-label {
+        opacity: 0.6;
+      }
+
+      .properties-value {
+
+      }
+    }
   }
 }

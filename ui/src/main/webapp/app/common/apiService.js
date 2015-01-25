@@ -527,6 +527,21 @@ angular.module('pipelineAgentApp.common')
           url: url,
           data: rules
         });
+      },
+
+
+      /**
+       * Get Sampled data for given sampling rule id.
+       *
+       * @param samplingRuleId
+       * @returns {*}
+       */
+      getSampledRecords: function(samplingRuleId) {
+        var url = apiBase + '/pipeline/sampledRecords/?sampleId=' + samplingRuleId ;
+        return $http({
+          method: 'GET',
+          url: url
+        });
       }
     };
 

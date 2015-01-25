@@ -470,4 +470,44 @@ angular.module('pipelineAgentApp.common')
     };
 
 
+    /**
+     * Return Pipeline and lane triggered alerts.
+     *
+     * @param pipelineRules
+     * @param pipelineMetrics
+     */
+    this.getTriggeredAlerts = function(pipelineRules, pipelineMetrics) {
+      var gauges = pipelineMetrics.gauges,
+        alerts = {
+          pipeline: []
+        };
+
+      angular.forEach(pipelineRules.metricsAlertDefinitions, function(rule) {
+        var gaugeName = 'alert.' + rule.id + '.gauge';
+        if(gauges[gaugeName]) {
+          alerts.pipeline.push({
+            rule: rule,
+            gauge: gauges[gaugeName]
+          });
+        }
+      });
+
+      angular.forEach(pipelineRules.alertDefinitions, function(rule) {
+        var gaugeName = 'alert.' + rule.id + '.gauge';
+        if(gauges[gaugeName]) {
+
+          if(!alerts[rule.lane]) {
+            alerts[rule.lane] = [];
+          }
+
+          alerts[rule.lane].push({
+            rule: rule,
+            gauge: gauges[gaugeName]
+          });
+        }
+      });
+
+      return alerts;
+    };
+
   });

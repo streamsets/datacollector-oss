@@ -55,10 +55,20 @@
       }
     }
   }
+
+
+  .triggered-alerts {
+    .alert {
+      padding: @smallPadding @smallPadding * 3;
+      margin-bottom: @defaultPadding;
+    }
+  }
+
 }
 
 
 @import 'configuration/configuration.less';
+@import 'dataSummary/dataSummary.less';
 @import 'badRecords/badRecords.less';
 @import 'summary/summary.less';
 @import 'history/history.less';

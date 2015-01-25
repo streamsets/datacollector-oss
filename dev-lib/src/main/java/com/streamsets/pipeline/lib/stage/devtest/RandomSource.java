@@ -25,7 +25,8 @@ import java.util.Random;
 public class RandomSource extends BaseSource {
 
   @ConfigDef(required = true, type = ConfigDef.Type.STRING,
-             label = "Record fields to generate, comma separated")
+    defaultValue = "a,b,c",
+    label = "Record fields to generate, comma separated")
   public String fields;
 
   @ConfigDef(required = true, type = ConfigDef.Type.INTEGER,

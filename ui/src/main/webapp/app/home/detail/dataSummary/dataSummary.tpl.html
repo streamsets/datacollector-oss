@@ -1,21 +1,124 @@
 <div class="container-fluid data-summary-tab" ng-controller="DataSummaryController">
 
-  <div class="row">
-
-    <div class="col-sm-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">Sample Records (1%)</div>
-        <div class="panel-body">
-          <p> &nbsp; &nbsp; Coming Soon...</p>
-        </div>
+  <div class="row" ng-if="triggeredAlerts[selectedObject.outputLane].length">
+    <div class="col-sm-12 col-md-6 col-lg-4 triggered-alerts"
+         ng-repeat="triggeredAlert in triggeredAlerts[selectedObject.outputLane]">
+      <div class="alert alert-danger" role="alert">
+        <i class="fa fa-exclamation-triangle"></i> {{triggeredAlert.rule.label}} ({{triggeredAlert.gauge.value.currentValue}})
       </div>
     </div>
+  </div>
 
-    <div class="col-sm-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">Null Values Per 100 Records</div>
+  <div class="row">
+
+    <div class="col-sm-6 col-md-4 col-lg-4"
+         ng-repeat="metricRule in metricDefinitions = (pipelineRules.metricDefinitions | filter: {lane: selectedObject.outputLane})">
+
+      <div class="panel panel-default"
+           ng-if="metricRule.metricType === 'METER'"
+           ng-controller="DataSummaryMeterController">
+        <div class="panel-heading">{{metricRule.label}}</div>
         <div class="panel-body">
-          <p>&nbsp; &nbsp; Coming Soon...</p>
+
+          <ul class="properties">
+            <li>
+              <span class="properties-label">Count:</span>
+              <span class="properties-value">{{count}}</span>
+            </li>
+          </ul>
+
+          <nvd3-discrete-bar-chart
+            data="chartData"
+            id="{{metricRule.id}}"
+            height="250"
+            yAxisTickFormat="valueFormatFunction()"
+            valueformat="valueFormatFunction()"
+            staggerLabels="true"
+            showXAxis="true"
+            showYAxis="true"
+            showValues="false"
+            showLegend="true"
+            tooltips="true"
+            tooltipcontent="getTooltipContent()"
+            margin="{left:40,top:20,bottom:40,right:20}">
+          </nvd3-discrete-bar-chart>
+
+        </div>
+      </div>
+
+      <div class="panel panel-default"
+           ng-if="metricRule.metricType === 'HISTOGRAM'"
+           ng-controller="DataSummaryHistogramController">
+        <div class="panel-heading">{{metricRule.label}}</div>
+        <div class="panel-body">
+
+          <ul class="properties">
+            <li>
+              <span class="properties-label">Count:</span>
+              <span class="properties-value">{{count}}</span>
+            </li>
+          </ul>
+
+          <nvd3-discrete-bar-chart
+            data="chartData"
+            id="{{metricRule.id}}"
+            height="250"
+            yAxisTickFormat="valueFormatFunction()"
+            valueformat="valueFormatFunction()"
+            staggerLabels="true"
+            showXAxis="true"
+            showYAxis="true"
+            showValues="false"
+            showLegend="true"
+            tooltips="true"
+            tooltipcontent="getTooltipContent()"
+            margin="{left:40,top:20,bottom:40,right:20}">
+          </nvd3-discrete-bar-chart>
+
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="col-sm-6 col-md-4 col-lg-4"
+         ng-repeat="samplingRule in samplingDefinitions = (pipelineRules.samplingDefinitions | filter: {lane: selectedObject.outputLane})">
+
+      <div class="panel panel-default"
+           ng-controller="DataSummarySamplingController">
+        <div class="panel-heading">{{samplingRule.label}}</div>
+        <div class="panel-body">
+
+          <table class="table">
+            <thead>
+            <tr>
+              <th class="col-md-4">
+                <span translate="global.form.records">Records</span>
+                <i class="fa fa-refresh pointer icon-button"
+                   ng-click="refreshSamplingRecords()"
+                   tooltip-placement="right"
+                   tooltip="{{'global.form.refresh' | translate}}"></i>
+              </th>
+            </tr>
+            </thead>
+            <tbody ng-hide="showBadRecordsLoading">
+            <tr ng-repeat="record in samplingRecords">
+              <td>
+                <record-tree
+                  record="record"
+                  record-value="record.value"
+                  field-name="('global.form.record' | translate)+($index+1)"
+                  is-root="true"
+                  editable="false">
+                </record-tree>
+              </td>
+            </tr>
+
+            </tbody>
+
+          </table>
+          <div show-loading="showRecordsLoading"></div>
+
         </div>
       </div>
     </div>

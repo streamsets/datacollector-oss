@@ -13,7 +13,7 @@
       <tr>
         <th class="col-md-1">{{'home.detailPane.rulesTab.enabled' | translate}}</th>
         <th class="col-md-3">{{'home.detailPane.rulesTab.label' | translate}}</th>
-        <th class="col-md-3">{{'home.detailPane.rulesTab.group' | translate}}</th>
+        <!--th class="col-md-3">{{'home.detailPane.rulesTab.group' | translate}}</th-->
         <th class="col-md-2">{{'home.detailPane.rulesTab.metricType' | translate}}</th>
         <th class="col-md-4">{{'home.detailPane.rulesTab.condition' | translate}}</th>
         <th></th>
@@ -35,12 +35,12 @@
                       ng-required="true"></textarea>
         </td>
 
-        <td>
+        <!--td>
           <input type="text" class="form-control" name="group{{$index}}"
                  placeholder="{{'home.detailPane.rulesTab.groupPlaceholder' | translate}}"
                  ng-model="metricRule.metricGroup"
                  ng-required="true">
-        </td>
+        </td-->
 
         <td>
           <select class="form-control" name="metricType{{$index}}"
