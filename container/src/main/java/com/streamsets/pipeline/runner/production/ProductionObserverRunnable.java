@@ -21,10 +21,10 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
-import com.streamsets.pipeline.util.ObserverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -103,7 +103,7 @@ public class ProductionObserverRunnable implements Runnable {
             }
           }
         }
-      } catch(ObserverException  | InterruptedException e){
+      } catch(InterruptedException e){
         LOG.error("Stopping the Pipeline Observer, Reason: {}", e.getMessage());
         runningThread = null;
         return;
@@ -113,7 +113,10 @@ public class ProductionObserverRunnable implements Runnable {
 
   public List<Record> getSampledRecords(String sampleDefinitionId) {
     //FIXME<Hari>: synchronize acccess to evicting queue
-    return new CopyOnWriteArrayList<>(sampleIdToRecordsMap.get(sampleDefinitionId));
+    if(sampleIdToRecordsMap.get(sampleDefinitionId) != null) {
+      return new CopyOnWriteArrayList<>(sampleIdToRecordsMap.get(sampleDefinitionId));
+    }
+    return Collections.emptyList();
   }
 
   public void stop() {

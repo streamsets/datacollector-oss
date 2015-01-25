@@ -39,37 +39,44 @@ public class FileObserverStore implements ObserverStore {
   private final RuntimeInfo runtimeInfo;
   private final Configuration configuration;
 
+  private final Object rulesMutex;
+
   public FileObserverStore(RuntimeInfo runtimeInfo, Configuration configuration) {
     this.configuration = configuration;
     this.runtimeInfo = runtimeInfo;
+    rulesMutex = new Object();
   }
 
   @Override
   public RuleDefinition storeRules(String pipelineName, String rev, RuleDefinition ruleDefinition) {
-    LOG.trace("Writing rule definitions to '{}'", getRulesFile(pipelineName, rev).getAbsolutePath());
-    try {
-      ObjectMapperFactory.get().writeValue(new DataStore(getRulesFile(pipelineName, rev)).getOutputStream(),
-        ruleDefinition);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    synchronized (rulesMutex) {
+      LOG.trace("Writing rule definitions to '{}'", getRulesFile(pipelineName, rev).getAbsolutePath());
+      try {
+        ObjectMapperFactory.get().writeValue(new DataStore(getRulesFile(pipelineName, rev)).getOutputStream(),
+          ruleDefinition);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+      return ruleDefinition;
     }
-    return ruleDefinition;
   }
 
   @Override
   public RuleDefinition retrieveRules(String pipelineName, String rev) {
-    if(!PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev).exists() ||
-      !getRulesFile(pipelineName, rev).exists()) {
-      return new RuleDefinition(Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST,
-        Collections.EMPTY_LIST);
-    }
-    LOG.trace("Reading rule definitions from '{}'", getRulesFile(pipelineName, rev).getAbsolutePath());
-    try {
-      RuleDefinition ruleDefinition = ObjectMapperFactory.get().readValue(
-        new DataStore(getRulesFile(pipelineName, rev)).getInputStream(), RuleDefinition.class);
-      return ruleDefinition;
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    synchronized (rulesMutex) {
+      if (!PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev).exists() ||
+        !getRulesFile(pipelineName, rev).exists()) {
+        return new RuleDefinition(Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST,
+          Collections.EMPTY_LIST);
+      }
+      LOG.trace("Reading rule definitions from '{}'", getRulesFile(pipelineName, rev).getAbsolutePath());
+      try {
+        RuleDefinition ruleDefinition = ObjectMapperFactory.get().readValue(
+          new DataStore(getRulesFile(pipelineName, rev)).getInputStream(), RuleDefinition.class);
+        return ruleDefinition;
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 

@@ -13,6 +13,8 @@ import com.streamsets.pipeline.util.ObserverException;
 
 public class AlertsUtil {
 
+  private static final String ALERT_PREFIX = "alert.";
+
   public static boolean evaluateRecord(Record record, String predicate, ELEvaluator.Variables variables,
                                        ELEvaluator elEvaluator) throws ObserverException {
     try {
@@ -30,5 +32,9 @@ public class AlertsUtil {
     } catch (Exception ex) {
       throw new ObserverException(ContainerError.CONTAINER_0400, predicate, ex.getMessage(), ex);
     }
+  }
+
+  public static String getAlertGuageName(String ruleId) {
+    return  ALERT_PREFIX + ruleId;
   }
 }

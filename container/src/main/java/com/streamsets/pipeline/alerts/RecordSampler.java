@@ -12,6 +12,8 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.observerstore.ObserverStore;
 import com.streamsets.pipeline.runner.LaneResolver;
 import com.streamsets.pipeline.util.ObserverException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 public class RecordSampler {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RecordSampler.class);
 
   private static final int MAX_SAMPLED_RECORDS_PER_SAMPLE_DEF = 100;
 
@@ -40,7 +44,7 @@ public class RecordSampler {
     this.elEvaluator = elEvaluator;
   }
 
-  public void sample(Map<String, List<Record>> snapshot,Map<String, EvictingQueue<Record>> sampleIdToRecordsMap) throws ObserverException {
+  public void sample(Map<String, List<Record>> snapshot,Map<String, EvictingQueue<Record>> sampleIdToRecordsMap) {
 
     if(samplingDefinition.isEnabled()) {
       String lane = samplingDefinition.getLane();
@@ -51,9 +55,22 @@ public class RecordSampler {
       Collections.shuffle(records);
       List<Record> samplingRecords = records.subList(0, (int) numberOfRecordsToSample);
       List<Record> matchingRecords = new ArrayList<>();
-      for (Record r : samplingRecords) {
-        if (AlertsUtil.evaluateRecord(r, predicate, variables, elEvaluator)) {
-          matchingRecords.add(r);
+      if(predicate == null || predicate.isEmpty()) {
+        matchingRecords.addAll(samplingRecords);
+      } else {
+        for (Record r : samplingRecords) {
+          boolean success = false;
+          try {
+            success = AlertsUtil.evaluateRecord(r, predicate, variables, elEvaluator);
+          } catch (ObserverException e) {
+            //A faulty condition should not take down rest of the alerts with it.
+            //Log and it and continue for now
+            LOG.error("Error processing sampling definition '{}', reason: {}", samplingDefinition.getId(),
+              e.getMessage());
+          }
+          if (success) {
+            matchingRecords.add(r);
+          }
         }
       }
       if(!matchingRecords.isEmpty()) {

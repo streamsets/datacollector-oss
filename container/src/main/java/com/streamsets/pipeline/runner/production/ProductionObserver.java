@@ -32,8 +32,11 @@ public class ProductionObserver implements Observer {
 
   @Override
   public boolean isObserving(Stage.Info info) {
+    //For now, if some alert configuration is specified, return true.
+    //Need to optimise this
     if(ruleDefinition != null) {
-      if(ruleDefinition.getMetricsAlertDefinitions() != null && !ruleDefinition.getMetricsAlertDefinitions().isEmpty()) {
+      if(ruleDefinition.getMetricsAlertDefinitions() != null &&
+        !ruleDefinition.getMetricsAlertDefinitions().isEmpty()) {
         return true;
       }
       if(ruleDefinition.getMetricDefinitions() != null && !ruleDefinition.getMetricDefinitions().isEmpty()) {

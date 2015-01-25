@@ -14,6 +14,8 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.LaneResolver;
 import com.streamsets.pipeline.util.ObserverException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +23,14 @@ import java.util.Map;
 
 public class AlertsChecker {
 
+  private static final Logger LOG = LoggerFactory.getLogger(AlertsChecker.class);
+
   private final AlertDefinition alertDefinition;
   private final Counter matchingRecordCounter;
   private final MetricRegistry metrics;
   private final ELEvaluator.Variables variables;
   private final ELEvaluator elEvaluator;
+  private final Map<String, Object> alertResponse;
 
   public AlertsChecker(AlertDefinition alertDefinition, MetricRegistry metrics,
                        ELEvaluator.Variables variables, ELEvaluator elEvaluator) {
@@ -34,6 +39,7 @@ public class AlertsChecker {
     this.variables = variables;
     this.elEvaluator = elEvaluator;
     this.matchingRecordCounter = initMatchingRecordCounter();
+    alertResponse = new HashMap<>();
   }
 
   private Counter initMatchingRecordCounter() {
@@ -44,7 +50,7 @@ public class AlertsChecker {
     return tempCounter;
   }
 
-  public void checkForAlerts(Map<String, List<Record>> snapshot) throws ObserverException {
+  public void checkForAlerts(Map<String, List<Record>> snapshot) {
     if(alertDefinition.isEnabled()) {
       String lane = alertDefinition.getLane();
       String predicate = alertDefinition.getPredicate();
@@ -54,40 +60,57 @@ public class AlertsChecker {
       }
 
       List<Record> records = snapshot.get(LaneResolver.getPostFixedLaneForObserver(lane));
-      for (Record record : records) {
-        recordCounter.inc();
-        if (AlertsUtil.evaluateRecord(record, predicate, variables, elEvaluator)) {
-          matchingRecordCounter.inc();
+      if(records != null && !records.isEmpty()) {
+        for (Record record : records) {
+          recordCounter.inc();
+          boolean success = false;
+          try {
+            success = AlertsUtil.evaluateRecord(record, predicate, variables, elEvaluator);
+          } catch (ObserverException e) {
+            //A faulty condition should not take down rest of the alerts with it.
+            //Log and it and continue for now
+            LOG.error("Error processing alert definition '{}', reason: {}", alertDefinition.getId(), e.getMessage());
+            //FIXME<Hari>: remove the alert definition from store?
+          }
+          if (success) {
+            matchingRecordCounter.inc();
+          }
         }
-      }
-      long threshold = Long.valueOf(alertDefinition.getThresholdValue());
-      switch (alertDefinition.getThresholdType()) {
-        case COUNT:
-          if(matchingRecordCounter.getCount() > threshold) {
-            raiseAlert();
-          }
-          break;
-        case PERCENTAGE:
-          if((matchingRecordCounter.getCount()/recordCounter.getCount())*100 > threshold
-            && matchingRecordCounter.getCount() >= alertDefinition.getMinVolume()) {
-            raiseAlert();
-          }
-          break;
+        long threshold = Long.valueOf(alertDefinition.getThresholdValue());
+        switch (alertDefinition.getThresholdType()) {
+          case COUNT:
+            if (matchingRecordCounter.getCount() > threshold) {
+              raiseAlert(matchingRecordCounter.getCount());
+            }
+            break;
+          case PERCENTAGE:
+            if ((matchingRecordCounter.getCount() * 100 / recordCounter.getCount()) > threshold
+              && recordCounter.getCount() >= alertDefinition.getMinVolume()) {
+              raiseAlert(matchingRecordCounter.getCount());
+            }
+            break;
+        }
       }
     }
   }
 
-  private void raiseAlert() {
-    if(metrics.getGauges().get(alertDefinition.getId() + ".gauge") == null) {
-      Gauge<Map<String, Object>> alertResponseGauge = new Gauge<Map<String, Object>>() {
-        @Override
-        public Map<String, Object> getValue() {
-          Map<String, Object> response = new HashMap<>();
-          response.put(alertDefinition.getId(), matchingRecordCounter.getCount());
-          return response;
-        }
-      };
-      metrics.register(alertDefinition.getId() + ".gauge", alertResponseGauge);
+  private void raiseAlert(Object value) {
+    alertResponse.put("currentValue", value);
+    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+    if (gauge == null) {
+      alertResponse.put("timestamp", System.currentTimeMillis());
+    } else {
+      //remove existing gauge
+      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+      alertResponse.put("timestamp", ((Map<String, Object>)gauge.getValue()).get("timestamp"));
     }
+    Gauge<Object> alertResponseGauge = new Gauge<Object>() {
+      @Override
+      public Object getValue() {
+        return alertResponse;
+      }
+    };
+    MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()),
+      alertResponseGauge);
   }
 }

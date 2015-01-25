@@ -15,12 +15,15 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.util.ObserverException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MetricAlertsChecker {
 
+  private static final Logger LOG = LoggerFactory.getLogger(MetricAlertsChecker.class);
   private static final String VAL = "val()";
 
   private final MetricsAlertDefinition metricsAlertDefinition;
@@ -35,10 +38,10 @@ public class MetricAlertsChecker {
     this.metrics = metricRegistry;
     this.variables = variables;
     this.elEvaluator = elEvaluator;
-    this.alertResponse = new HashMap<>();
+    alertResponse = new HashMap<>();
   }
 
-  public void checkForAlerts() throws ObserverException {
+  public void checkForAlerts() {
     if(metricsAlertDefinition.isEnabled()) {
       switch(metricsAlertDefinition.getMetricType()) {
         case HISTOGRAM:
@@ -57,7 +60,7 @@ public class MetricAlertsChecker {
     }
   }
 
-  private void checkForTimerAlerts() throws ObserverException {
+  private void checkForTimerAlerts() {
     Timer t = metrics.getTimers().get(metricsAlertDefinition.getMetricId());
     if(t != null) {
       Object value = null;
@@ -112,7 +115,7 @@ public class MetricAlertsChecker {
     }
   }
 
-  private void checkForCounterAlerts() throws ObserverException {
+  private void checkForCounterAlerts() {
     Counter c = metrics.getCounters().get(metricsAlertDefinition.getMetricId());
     if(c !=null) {
       Object value = null;
@@ -125,7 +128,7 @@ public class MetricAlertsChecker {
     }
   }
 
-  private void checkForMeterAlerts() throws ObserverException {
+  private void checkForMeterAlerts() {
     ExtendedMeter m = (ExtendedMeter) metrics.getMeters().get(metricsAlertDefinition.getMetricId());
     if(m != null) {
       Object value = null;
@@ -165,7 +168,7 @@ public class MetricAlertsChecker {
     }
   }
 
-  private void checkForHistogramAlerts() throws ObserverException {
+  private void checkForHistogramAlerts() {
     Histogram h = metrics.getHistograms().get(metricsAlertDefinition.getMetricId());
     if (h != null) {
       Object value = null;
@@ -208,30 +211,43 @@ public class MetricAlertsChecker {
     }
   }
 
-  private void evaluate(Object value) throws ObserverException {
+  private void evaluate(Object value) {
     //predicate String is of the form "val()<200" or "val() < 200 && val() > 100" etc
     //replace val() with the actual value, append dollar and curly braces and evaluate the resulting EL expression
     // string
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append("${");
     String predicateWithValue = metricsAlertDefinition.getPredicate().replace(VAL, String.valueOf(value));
     stringBuilder.append(predicateWithValue);
-    stringBuilder.append("}");
-    if(AlertsUtil.evaluateExpression(stringBuilder.toString(), variables, elEvaluator)) {
-      raiseAlert(value);
+    try {
+      if (AlertsUtil.evaluateExpression(stringBuilder.toString(), variables, elEvaluator)) {
+        raiseAlert(value);
+      }
+    } catch (ObserverException e) {
+      //A faulty condition should not take down rest of the alerts with it.
+      //Log and it and continue for now
+      LOG.error("Error processing metric definition alert '{}', reason: {}", metricsAlertDefinition.getId(),
+        e.getMessage());
     }
   }
 
   private void raiseAlert(Object value) {
-    alertResponse.put(metricsAlertDefinition.getId(), value);
-    if(MetricsConfigurator.getGauge(metrics, metricsAlertDefinition.getId()) == null) {
-      Gauge<Map<String, Object>> alertResponseGauge = new Gauge<Map<String, Object>>() {
-        @Override
-        public Map<String, Object> getValue() {
-          return alertResponse;
-        }
-      };
-      MetricsConfigurator.createGuage(metrics, metricsAlertDefinition.getId(), alertResponseGauge);
+    alertResponse.put("currentValue", value);
+    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
+      AlertsUtil.getAlertGuageName(metricsAlertDefinition.getId()));
+    if (gauge == null) {
+      alertResponse.put("timestamp", System.currentTimeMillis());
+    } else {
+      //remove existing gauge
+      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGuageName(metricsAlertDefinition.getId()));
+      alertResponse.put("timestamp", ((Map<String, Object>)gauge.getValue()).get("timestamp"));
     }
+    Gauge<Object> alertResponseGauge = new Gauge<Object>() {
+      @Override
+      public Object getValue() {
+        return alertResponse;
+      }
+    };
+    MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGuageName(metricsAlertDefinition.getId()),
+      alertResponseGauge);
   }
 }

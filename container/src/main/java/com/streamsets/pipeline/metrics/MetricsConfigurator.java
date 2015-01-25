@@ -14,7 +14,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SlidingTimeWindowReservoir;
 import com.codahale.metrics.Timer;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class MetricsConfigurator {
@@ -41,8 +40,8 @@ public class MetricsConfigurator {
     return metrics.register(name + HISTOGRAM_M5_SUFFIX, new Histogram(new ExponentiallyDecayingReservoir()));
   }
 
-  public static Gauge<Map<String, Object>> createGuage(MetricRegistry metrics, String name,
-                                                       Gauge<Map<String, Object>> guage) {
+  public static Gauge<Object> createGuage(MetricRegistry metrics, String name,
+                                                       Gauge<Object> guage) {
     return metrics.register(name + GAUGE_SUFFIX, guage);
   }
 
@@ -62,8 +61,12 @@ public class MetricsConfigurator {
     return metrics.getTimers().get(name + TIMER_SUFFIX);
   }
 
-  public static Gauge<Map<String, Object>> getGauge(MetricRegistry metrics, String name) {
+  public static Gauge<Object> getGauge(MetricRegistry metrics, String name) {
     return metrics.getGauges().get(name + GAUGE_SUFFIX);
+  }
+
+  public static boolean removeGauge(MetricRegistry metrics, String name) {
+    return metrics.remove(name + GAUGE_SUFFIX);
   }
 
 }
