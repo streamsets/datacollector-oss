@@ -19,9 +19,10 @@ public class TestRandomSource {
   @Test
   public void testRandomSource() throws Exception{
     SourceRunner runner = new SourceRunner.Builder(RandomSource.class)
-        .addConfiguration("fields", "a,b")
-        .addOutputLane("a")
-        .build();
+      .addConfiguration("fields", "a,b")
+      .addConfiguration("delay", 0)
+      .addOutputLane("a")
+      .build();
     runner.runInit();
     try {
       StageRunner.Output output = runner.runProduce(null, 25);
