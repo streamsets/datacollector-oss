@@ -23,6 +23,7 @@ import java.util.Map;
 public class MetricsChecker {
 
   private static final Logger LOG = LoggerFactory.getLogger(MetricsChecker.class);
+  private static final String USER_PREFIX = "user.";
 
   private final MetricDefinition metricDefinition;
   private final MetricRegistry metrics;
@@ -54,16 +55,16 @@ public class MetricsChecker {
         if (success) {
           switch (metricDefinition.getMetricType()) {
             case METER:
-              Meter meter = MetricsConfigurator.getMeter(metrics, metricDefinition.getId());
+              Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + metricDefinition.getId());
               if (meter == null) {
-                meter = MetricsConfigurator.createMeter(metrics, metricDefinition.getId());
+                meter = MetricsConfigurator.createMeter(metrics, USER_PREFIX + metricDefinition.getId());
               }
               meter.mark();
               break;
             case HISTOGRAM:
-              Histogram histogram = MetricsConfigurator.getHistogram(metrics, metricDefinition.getId());
+              Histogram histogram = MetricsConfigurator.getHistogram(metrics, USER_PREFIX + metricDefinition.getId());
               if (histogram == null) {
-                histogram = MetricsConfigurator.createHistogram5Min(metrics, metricDefinition.getId());
+                histogram = MetricsConfigurator.createHistogram5Min(metrics, USER_PREFIX + metricDefinition.getId());
               }
               histogram.update(1);
             default:

@@ -18,7 +18,7 @@ import java.util.concurrent.BlockingQueue;
 
 public class ProductionObserver implements Observer {
 
-  private RuleDefinition ruleDefinition;
+  private volatile RuleDefinition ruleDefinition;
   private BlockingQueue<ProductionObserveRequest> observeRequests;
 
   public ProductionObserver(BlockingQueue<ProductionObserveRequest> observeRequests) {

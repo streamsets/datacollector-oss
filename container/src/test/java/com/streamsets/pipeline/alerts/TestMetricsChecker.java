@@ -21,7 +21,7 @@ import org.junit.Test;
 
 public class TestMetricsChecker {
 
-  private static final String LANE = "lane";
+  private static final String USER_PREFIX = "user.";
 
   private static MetricRegistry metrics;
   private static ELEvaluator elEvaluator;
@@ -43,7 +43,7 @@ public class TestMetricsChecker {
       "${record:value(\"/name\")==null}", "blah", MetricType.METER, true);
     MetricsChecker metricsChecker = new MetricsChecker(metricDefinition, metrics, variables, elEvaluator);
     metricsChecker.recordMetrics(TestUtil.createSnapshot("testMeter"));
-    Meter meter = MetricsConfigurator.getMeter(metrics, metricDefinition.getId());
+    Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + metricDefinition.getId());
     Assert.assertNotNull(meter);
     Assert.assertEquals(3, meter.getCount());
   }
@@ -54,7 +54,7 @@ public class TestMetricsChecker {
       "${record:value(\"/name\")==null}", "blah", MetricType.METER, false);
     MetricsChecker metricsChecker = new MetricsChecker(metricDefinition, metrics, variables, elEvaluator);
     metricsChecker.recordMetrics(TestUtil.createSnapshot("testMeterDisabled"));
-    Meter meter = MetricsConfigurator.getMeter(metrics, metricDefinition.getId());
+    Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + metricDefinition.getId());
     Assert.assertNull(meter);
   }
 
@@ -66,7 +66,7 @@ public class TestMetricsChecker {
       "${record:value(\"/age\")==\"streamsets\"}", "blah", MetricType.METER, true);
     MetricsChecker metricsChecker = new MetricsChecker(metricDefinition, metrics, variables, elEvaluator);
     metricsChecker.recordMetrics(TestUtil.createSnapshot("testMeterInvalid"));
-    Meter meter = MetricsConfigurator.getMeter(metrics, metricDefinition.getId());
+    Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + metricDefinition.getId());
     Assert.assertNull(meter);
   }
 
@@ -76,7 +76,7 @@ public class TestMetricsChecker {
       "${record:value(\"/name\")==null}", "blah", MetricType.HISTOGRAM, true);
     MetricsChecker metricsChecker = new MetricsChecker(metricDefinition, metrics, variables, elEvaluator);
     metricsChecker.recordMetrics(TestUtil.createSnapshot("testHistogram"));
-    Histogram histogram = MetricsConfigurator.getHistogram(metrics, metricDefinition.getId());
+    Histogram histogram = MetricsConfigurator.getHistogram(metrics, USER_PREFIX + metricDefinition.getId());
     Assert.assertNotNull(histogram);
     Assert.assertEquals(3, histogram.getCount());
   }
@@ -89,7 +89,7 @@ public class TestMetricsChecker {
       "${record:value(\"/age\")==\"streamsets\"}", "blah", MetricType.HISTOGRAM, true);
     MetricsChecker metricsChecker = new MetricsChecker(metricDefinition, metrics, variables, elEvaluator);
     metricsChecker.recordMetrics(TestUtil.createSnapshot("testHistogramInvalid"));
-    Histogram histogram = MetricsConfigurator.getHistogram(metrics, metricDefinition.getId());
+    Histogram histogram = MetricsConfigurator.getHistogram(metrics, USER_PREFIX +  metricDefinition.getId());
     Assert.assertNull(histogram);
   }
 }

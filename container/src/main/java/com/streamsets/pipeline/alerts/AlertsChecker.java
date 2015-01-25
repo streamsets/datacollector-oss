@@ -70,13 +70,18 @@ public class AlertsChecker {
             //A faulty condition should not take down rest of the alerts with it.
             //Log and it and continue for now
             LOG.error("Error processing alert definition '{}', reason: {}", alertDefinition.getId(), e.getMessage());
-            //FIXME<Hari>: remove the alert definition from store?
           }
           if (success) {
             matchingRecordCounter.inc();
           }
         }
-        long threshold = Long.valueOf(alertDefinition.getThresholdValue());
+        double threshold;
+        try {
+          threshold = Double.valueOf(alertDefinition.getThresholdValue());
+        } catch (NumberFormatException e) {
+          LOG.error("Error interpreting threshold '{}' as a number", alertDefinition.getThresholdValue());
+          return;
+        }
         switch (alertDefinition.getThresholdType()) {
           case COUNT:
             if (matchingRecordCounter.getCount() > threshold) {

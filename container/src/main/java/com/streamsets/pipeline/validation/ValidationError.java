@@ -41,6 +41,9 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0026("Configuration of type Map expressed as List of key/value pairs must have Map entries in the List," +
                   "element at index '{}' has '{}'"),
 
+  VALIDATION_0027("Rule Definition '{}' refers to a lane '{}' which is not found in the pipeline configuration."),
+  VALIDATION_0028("Rule Definition '{}' refers to a instance '{}' which is not found in the pipeline configuration."),
+
   ;
 
   private final String msg;

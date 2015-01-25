@@ -6,9 +6,12 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.store.PipelineStoreException;
 
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -46,8 +49,20 @@ public class RuleResource {
   public Response saveRules(
     @PathParam("name") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    RuleDefinition ruleDefinition) {
+    RuleDefinition ruleDefinition) throws PipelineStoreException {
+    RuleDefinition validatedRuleDefinition = pipelineManager.validateRuleDefinition(name, rev, ruleDefinition);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getObserverStore().storeRules(name, rev, ruleDefinition)).build();
+      pipelineManager.getObserverStore().storeRules(name, rev, validatedRuleDefinition)).build();
+  }
+
+  @Path("/{name}/deleteAlert")
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response deleteAlert(
+    @PathParam("name") String name,
+    @QueryParam("rev") @DefaultValue("0") String rev,
+    @QueryParam("alertId") String alertId) throws PipelineManagerException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
+      pipelineManager.deleteAlert(alertId)).build();
   }
 }
