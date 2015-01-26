@@ -203,15 +203,9 @@ angular
       }
     };
 
-    $scope.$on('previewPipeline', function(event, nextBatch) {
+    $scope.$on('previewPipeline', function(event) {
       $scope.stepExecuted = false;
       $scope.showLoading = true;
-
-      if (nextBatch) {
-        $scope.previewSourceOffset += $scope.previewBatchSize;
-      } else {
-        $scope.previewSourceOffset = 0;
-      }
 
       api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
         success(function (previewData) {

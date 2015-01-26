@@ -118,16 +118,14 @@ angular
       /**
        * Fetches preview data for the pipeline and sets previewMode flag to true.
        *
-       * @param nextBatch - By default it starts fetching from sourceOffset=0, if nextBatch is true sourceOffset is
-       * updated to fetch next batch.
        */
-      previewPipeline: function (nextBatch) {
+      previewPipeline: function () {
         $scope.previewMode = true;
         $rootScope.$storage.maximizeDetailPane = false;
         $rootScope.$storage.minimizeDetailPane = false;
         $scope.setGraphReadOnly(true);
         $scope.setGraphPreviewMode(true);
-        $scope.$broadcast('previewPipeline', nextBatch);
+        $scope.$broadcast('previewPipeline');
       },
 
       /**
