@@ -21,6 +21,19 @@
   </div>
 </script>
 
+<script type="text/ng-template" id="characterConfigurationTemplate">
+  <div class="controls col-lg-7 col-md-8">
+    <input type="text" class="form-control character-type" name="{{configDefinition.name}}"
+           focus-me="{{autoFocusConfigName === configDefinition.name}}"
+           ng-maxlength="1"
+           ng-readonly="isPipelineRunning"
+           ng-model="detailPaneConfig.configuration[configIndex].value"
+           ng-required="configDefinition.required">
+
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+  </div>
+</script>
+
 <script type="text/ng-template" id="booleanConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
     <input type="checkbox" name="{{configDefinition.name}}"
@@ -46,7 +59,7 @@
 <script type="text/ng-template" id="listConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
     <div class="row lane-predicate"
-         ng-repeat="listValue in detailPaneConfig.configuration[configIndex].value track by $index">
+         ng-repeat="val in listValue = detailPaneConfig.configuration[configIndex].value track by $index">
 
       <div class="col-xs-1">
         <label class="lane-label">{{$index + 1}}</label>
@@ -57,13 +70,12 @@
                ng-required="true"
                name="{{configDefinition.name + $index}}"
                ng-readonly="isPipelineRunning"
-               ng-model="listValue"/>
+               ng-model="listValue[$index]"/>
       </div>
 
       <div class="col-xs-2 btn-group" role="group" aria-label="Default button group"
            ng-hide="isPipelineRunning">
         <button type="button" class="btn btn-default btn-sm"
-                ng-hide="$last"
                 ng-click="removeFromList(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, $index)">
           <i class="fa fa-minus pointer"></i>
         </button>
@@ -75,6 +87,18 @@
       </div>
 
     </div>
+
+    <div ng-if="detailPaneConfig.configuration[configIndex].value.length === 0" class="row"
+         ng-hide="isPipelineRunning">
+      <div class="col-md-2 btn-group" role="group">
+        <button type="button" class="btn btn-default btn-sm"
+                ng-click="addToList(detailPaneConfig, detailPaneConfig.configuration[configIndex].value)">
+          <i class="fa fa-plus pointer"></i>
+        </button>
+      </div>
+    </div>
+
+
   </div>
 </script>
 

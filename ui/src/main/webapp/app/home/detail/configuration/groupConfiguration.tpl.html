@@ -23,6 +23,11 @@
         <ng-include src="'stringConfigurationTemplate'"></ng-include>
       </div>
 
+      <div ng-switch-when="CHARACTER">
+        <ng-include src="'labelConfigurationTemplate'"></ng-include>
+        <ng-include src="'characterConfigurationTemplate'"></ng-include>
+      </div>
+
       <div ng-switch-when="EL_STRING" class="expression-language">
         <ng-include src="'labelConfigurationTemplate'"></ng-include>
         <ng-include src="'stringConfigurationTemplate'"></ng-include>
