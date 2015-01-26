@@ -212,7 +212,7 @@ public class StageRuntime {
             if(confDef.getModel() != null && confDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
               setComplexField(var, stageDef, stageConf, stage, confDef, value);
             } else {
-              setFiled(var, stageDef, stageConf, stage, confDef, value);
+              setField(var, stageDef, stageConf, stage, confDef, value);
             }
           } catch (PipelineRuntimeException ex) {
             throw ex;
@@ -248,7 +248,8 @@ public class StageRuntime {
             customConfigObjects.add(customConfigObj);
             for (ConfigDefinition configDefinition : confDef.getModel().getConfigDefinitions()) {
               Field f = klass.getField(configDefinition.getFieldName());
-              setFiled(f, stageDef, stageConf, customConfigObj, configDefinition, map.get(configDefinition.getFieldName()));
+              setField(f, stageDef, stageConf, customConfigObj, configDefinition,
+                       map.get(configDefinition.getFieldName()));
             }
           }
         }
@@ -256,8 +257,8 @@ public class StageRuntime {
       }
     }
 
-    private void setFiled(Field var, StageDefinition stageDef, StageConfiguration stageConf, Object stage,
-                          ConfigDefinition confDef, Object value) throws IllegalAccessException, PipelineRuntimeException {
+    private void setField(Field var, StageDefinition stageDef, StageConfiguration stageConf, Object stage,
+        ConfigDefinition confDef, Object value) throws IllegalAccessException, PipelineRuntimeException {
       if(var.getType().isEnum()) {
         var.set(stage, Enum.valueOf((Class<Enum>) var.getType(), (String) value));
       } else {
@@ -273,6 +274,8 @@ public class StageRuntime {
             }
           } else if (value instanceof Map) {
             validateMap((Map) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
+          } else if (confDef.getType() == ConfigDef.Type.CHARACTER) {
+            value = ((String)value).charAt(0);
           }
         }
         var.set(stage, value);
