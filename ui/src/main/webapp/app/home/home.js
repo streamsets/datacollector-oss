@@ -382,8 +382,9 @@ angular
           });
         }
         $scope.loaded = true;
-      },function(data, status, headers, config) {
-        $rootScope.common.errors = [data];
+      },function(resp) {
+        $scope.pipelineConfig = undefined;
+        $rootScope.common.errors = [resp.data];
       });
 
     /**
@@ -391,7 +392,6 @@ angular
      * @param configName
      */
     var loadPipelineConfig = function(configName) {
-
       $q.all([api.pipelineAgent.getPipelineConfig(configName),
         api.pipelineAgent.getPipelineRules(configName)]).
         then(function(results) {
@@ -403,8 +403,9 @@ angular
             selectedObject: undefined,
             type: pipelineConstant.PIPELINE
           });
-        },function(data, status, headers, config) {
-          $rootScope.common.errors = [data];
+        },function(resp) {
+          $scope.pipelineConfig = undefined;
+          $rootScope.common.errors = [resp.data];
         });
     };
 
@@ -765,6 +766,10 @@ angular
     //Event Handling
 
     $scope.$watch('pipelineConfig', function (newValue, oldValue) {
+      if(newValue === undefined) {
+        return;
+      }
+
       if (ignoreUpdate) {
         $timeout(function () {
           ignoreUpdate = false;

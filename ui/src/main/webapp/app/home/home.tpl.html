@@ -15,7 +15,7 @@
 
     <bg-pane min-size="0">
 
-      <bg-splitter orientation="horizontal" class="stage-library-splitter" ng-show="pipelineConfig"
+      <bg-splitter orientation="horizontal" class="stage-library-splitter"
                    ng-class="{'hide-stage-library-panel': !$storage.hideStageLibraryPanel || $storage.maximizeDetailPane || isPipelineRunning || previewMode || snapshotMode}">
 
         <bg-pane min-size="0">
@@ -26,7 +26,7 @@
               <ng-include src="'app/home/graph/graph.tpl.html'"></ng-include>
             </bg-pane>
 
-            <bg-pane min-size="0">
+            <bg-pane min-size="0" ng-show="pipelineConfig">
               <ng-include src="'app/home/detail/detail.tpl.html'"></ng-include>
               <ng-include src="'app/home/preview/preview.tpl.html'"></ng-include>
               <ng-include src="'app/home/snapshot/snapshot.tpl.html'"></ng-include>
@@ -40,7 +40,7 @@
 
       </bg-splitter>
 
-      <div class="pipeline-empty-container" ng-class="{'show': !pipelineConfig && loaded}"  ng-cloak>
+      <div class="pipeline-empty-container" ng-class="{'show': (!pipelines || pipelines.length === 0) && !pipelineConfig && loaded}"  ng-cloak>
         <div class="create-pipeline-btn">
           <h2 translate="home.getStarted">Get Started</h2>
           <button class="btn btn-primary pull-left" ng-click="addPipelineConfig()">

@@ -1,5 +1,4 @@
 <div class="panel panel-default header-pane"
-     ng-show="pipelineConfig"
      ng-controller="HeaderController">
 
   <div class="panel-heading clearfix">
@@ -33,48 +32,58 @@
       <div class="panel-title pull-left"
            ng-switch-default>
         <h3 class="pull-left" translate="home.header.definePipeline">Define Pipeline:</h3>
-        <h3 class="pull-left">{{pipelineConfig.info.name}}</h3>
+        <h3 class="pull-left">{{activeConfigInfo.name}}</h3>
       </div>
 
     </div>
 
-    <div class="btn-group pull-right issues-dropdown" ng-show="pipelineConfig.issues.issueCount > 0">
-      <button class="btn btn-danger btn-sm dropdown-toggle" type="button"
-              tooltip-placement="bottom" tooltip="{{'home.header.issues' | translate}}"
-              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-              data-toggle="dropdown">
-        <span class="fa fa-exclamation-triangle fa-12x"></span>
-        <span ng-hide="iconOnly" translate="home.header.issues">Issues</span>
-        <span class="badge alert-danger" ng-bind="pipelineConfig.issues.issueCount"></span>
-      </button>
-      <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 
-        <li role="presentation" class="dropdown-header"
-            translate="home.header.pipelineIssues"
-            ng-repeat-start="issue in pipelineConfig.issues.pipelineIssues">
-          Pipeline Issues
-        </li>
-        <li role="presentation">
-          <a role="menuitem" tabindex="-1" href="#"
-             ng-click="onIssueClick(issue)">{{issue.message}}</a>
-        </li>
-        <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+    <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.state !== 'STOPPING'">
 
-        <li role="presentation" class="dropdown-header"
-            ng-repeat-start="(instanceName, issues) in pipelineConfig.issues.stageIssues"
-            ng-bind="getStageInstanceLabel(instanceName)">
-        </li>
-        <li role="presentation" ng-repeat="issue in issues">
-          <a role="menuitem" tabindex="-1" href="#"
-             ng-click="onIssueClick(issue, instanceName)"
-             ng-bind="getIssuesMessage(instanceName, issue)"></a>
-        </li>
-        <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+      <div class="pull-left" ng-cloak ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
+        <div class="pipelineAgent-status pull-right" ng-hide="common.saveOperationInProgress">
+          <span class="glyphicon glyphicon-ok-circle"></span>
+          <span translate="global.messages.info.saveOperationInProgress"></span>
+        </div>
 
-      </ul>
-    </div>
+        <div class="pipelineAgent-status pull-right" ng-show="common.saveOperationInProgress"
+             translate="global.messages.info.savingConfiguration">
+        </div>
+      </div>
 
-    <div class="pull-right" ng-if="activeConfigStatus.state !== 'STOPPING'">
+      <div class="btn-group issues-dropdown" ng-show="pipelineConfig && pipelineConfig.issues.issueCount > 0">
+        <button class="btn btn-link dropdown-toggle" type="button"
+                data-toggle="dropdown">
+          <span class="fa fa-exclamation-triangle fa-12x"></span>
+          <span ng-hide="iconOnly" translate="home.header.issues">Issues</span>
+          <span class="badge" ng-bind="pipelineConfig.issues.issueCount"></span>
+        </button>
+        <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+          <li role="presentation" class="dropdown-header"
+              translate="home.header.pipelineIssues"
+              ng-repeat-start="issue in pipelineConfig.issues.pipelineIssues">
+            Pipeline Issues
+          </li>
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="onIssueClick(issue)">{{issue.message}}</a>
+          </li>
+          <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+
+          <li role="presentation" class="dropdown-header"
+              ng-repeat-start="(instanceName, issues) in pipelineConfig.issues.stageIssues"
+              ng-bind="getStageInstanceLabel(instanceName)">
+          </li>
+          <li role="presentation" ng-repeat="issue in issues">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="onIssueClick(issue, instanceName)"
+               ng-bind="getIssuesMessage(instanceName, issue)"></a>
+          </li>
+          <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+
+        </ul>
+      </div>
 
       <button type="button" class="btn btn-primary btn-sm"
               tooltip-placement="bottom" tooltip="{{'home.header.stageLibrary' | translate}}"
@@ -211,16 +220,6 @@
       </div>
     </div>
 
-    <div class="pull-right" ng-cloak ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
-      <div class="pipelineAgent-status pull-right" ng-hide="common.saveOperationInProgress">
-        <span class="glyphicon glyphicon-ok-circle"></span>
-        <span translate="global.messages.info.saveOperationInProgress"></span>
-      </div>
-
-      <div class="pipelineAgent-status pull-right" ng-show="common.saveOperationInProgress"
-           translate="global.messages.info.savingConfiguration">
-      </div>
-    </div>
   </div>
 
   <div class="panel-body"></div>
