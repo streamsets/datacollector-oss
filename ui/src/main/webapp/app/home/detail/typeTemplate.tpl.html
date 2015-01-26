@@ -161,6 +161,7 @@
               ng-switch-when="PROVIDED"
               name="{{configDefinition.name}}"
               focus-me="{{autoFocusConfigName === configDefinition.name}}"
+              ng-required="configDefinition.required"
               ng-disabled="isPipelineRunning"
               ng-model="detailPaneConfig.configuration[configIndex].value">
         <option ng-repeat="listValue in configDefinition.model.values"
