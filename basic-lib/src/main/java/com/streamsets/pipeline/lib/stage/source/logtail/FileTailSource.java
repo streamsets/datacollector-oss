@@ -75,7 +75,7 @@ public class FileTailSource extends BaseSource {
     logLinesQueue = new ArrayBlockingQueue<>(2 * batchSize);
     logTail = new LogTail(logFile, true, getInfo(), logLinesQueue);
     logTail.start();
-    lineToRecord = new LineToRecord();
+    lineToRecord = new LineToRecord(false);
   }
 
   @Override

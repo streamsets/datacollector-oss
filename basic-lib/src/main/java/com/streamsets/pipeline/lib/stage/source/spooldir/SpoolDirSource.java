@@ -110,6 +110,18 @@ public class SpoolDirSource extends BaseSpoolDirSource {
       triggeredByValue = "LOG_DATA")
   public int maxLogLineLength;
 
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use truncated flag",
+      description = "Set '/truncated' to TRUE or FALSE indicating that the line has been truncated or not",
+      defaultValue = "false",
+      displayPosition = 410,
+      group = "LOG_DATA",
+      dependsOn = "fileDataType",
+      triggeredByValue = "LOG_DATA")
+
+  public boolean setTruncated;
+
   // XML Configuration
 
   @ConfigDef(required = true,
@@ -140,7 +152,7 @@ public class SpoolDirSource extends BaseSpoolDirSource {
     super.init();
     switch (fileDataType) {
       case LOG_DATA:
-        dataProducer = new LogDataProducer(getContext(), maxLogLineLength);
+        dataProducer = new LogDataProducer(getContext(), maxLogLineLength, setTruncated);
         break;
       case JSON_DATA:
         dataProducer = new JsonDataProducer(getContext(), jsonContent, maxJsonObjectLen);

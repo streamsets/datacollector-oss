@@ -17,11 +17,19 @@ public class LineToRecord {
   private static final String LINE = "line";
   private static final String TRUNCATED = "truncated";
 
+  private boolean setTruncated;
+
+  public LineToRecord(boolean setTruncated) {
+    this.setTruncated = setTruncated;
+  }
+
   public Record createRecord(Source.Context context, String sourceFile, long offset, String line, boolean truncated) {
     Record record = context.createRecord(Utils.format("file={} offset={}", sourceFile, offset));
     Map<String, Field> map = new LinkedHashMap<>();
     map.put(LINE, Field.create(line));
-    map.put(TRUNCATED, Field.create(truncated));
+    if (setTruncated) {
+      map.put(TRUNCATED, Field.create(truncated));
+    }
     record.set(Field.create(map));
     return record;
   }

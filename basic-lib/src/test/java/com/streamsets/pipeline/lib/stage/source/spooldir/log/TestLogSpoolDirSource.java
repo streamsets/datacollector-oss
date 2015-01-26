@@ -55,6 +55,7 @@ public class TestLogSpoolDirSource {
         .addConfiguration("poolingTimeoutSecs", 0)
         .addConfiguration("errorArchiveDir", null)
         .addConfiguration("fileDataType", FileDataType.LOG_DATA)
+        .addConfiguration("setTruncated", false)
         .addConfiguration("maxLogLineLength", 10)
         .addOutputLane("lane")
         .build();
@@ -68,9 +69,9 @@ public class TestLogSpoolDirSource {
       Assert.assertNotNull(records);
       Assert.assertEquals(2, records.size());
       Assert.assertEquals(LINE1, records.get(0).get().getValueAsMap().get("line").getValueAsString());
-      Assert.assertEquals(false, records.get(0).get().getValueAsMap().get("truncated").getValueAsBoolean());
+      Assert.assertNull(records.get(0).get().getValueAsMap().get("truncated"));
       Assert.assertEquals(LINE2.substring(0, 10), records.get(1).get().getValueAsMap().get("line").getValueAsString());
-      Assert.assertEquals(true, records.get(1).get().getValueAsMap().get("truncated").getValueAsBoolean());
+      Assert.assertNull(records.get(1).get().getValueAsMap().get("truncated"));
     } finally {
       runner.runDestroy();
     }
@@ -89,6 +90,7 @@ public class TestLogSpoolDirSource {
         .addConfiguration("poolingTimeoutSecs", 0)
         .addConfiguration("errorArchiveDir", null)
         .addConfiguration("fileDataType", FileDataType.LOG_DATA)
+        .addConfiguration("setTruncated", true)
         .addConfiguration("maxLogLineLength", 10)
         .addOutputLane("lane")
         .build();

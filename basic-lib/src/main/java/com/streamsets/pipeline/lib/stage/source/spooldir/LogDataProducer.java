@@ -34,12 +34,12 @@ public class LogDataProducer implements DataProducer {
   private final Counter linesOverMaxLengthCounter;
   private final LineToRecord lineToRecord;
 
-  public LogDataProducer(Source.Context context, int maxLogLineLength) {
+  public LogDataProducer(Source.Context context, int maxLogLineLength, boolean setTruncated) {
     this.context = context;
     this.maxLogLineLength = maxLogLineLength;
     line = new StringBuilder(maxLogLineLength);
     linesOverMaxLengthCounter = context.createCounter("linesOverMaxLen");
-    lineToRecord = new LineToRecord();
+    lineToRecord = new LineToRecord(setTruncated);
   }
 
   @Override
