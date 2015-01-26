@@ -293,10 +293,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     GraphCreator.prototype.replaceSelectEdge = function(d3Path, edgeData){
       var thisGraph = this;
-      d3Path.classed(thisGraph.consts.selectedClass, true);
       if (thisGraph.state.selectedEdge){
         thisGraph.removeSelectFromEdge();
       }
+      d3Path.classed(thisGraph.consts.selectedClass, true);
       thisGraph.state.selectedEdge = edgeData;
     };
 

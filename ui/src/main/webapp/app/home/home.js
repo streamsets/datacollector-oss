@@ -174,7 +174,7 @@ angular
        */
       changeStageSelection: function(options) {
         if(!options.type) {
-          if(options.selectedObject) {
+          if(options.selectedObject && options.selectedObject.instanceName) {
             options.type = pipelineConstant.STAGE_INSTANCE;
           } else {
             options.type = pipelineConstant.PIPELINE;
