@@ -76,6 +76,7 @@ public class AlertsChecker {
           }
         }
         double threshold;
+        //Soft error for now as we don't want this alert to stop other rules
         try {
           threshold = Double.valueOf(alertDefinition.getThresholdValue());
         } catch (NumberFormatException e) {

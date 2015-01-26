@@ -50,7 +50,16 @@ public class RecordSampler {
       String lane = samplingDefinition.getLane();
       String predicate = samplingDefinition.getPredicate();
       List<Record> records = snapshot.get(LaneResolver.getPostFixedLaneForObserver(lane));
-      double samplingPercentage = Double.valueOf(samplingDefinition.getSamplingPercentage());
+      double samplingPercentage;
+
+      //Soft error for now as we don't want this alert to stop other rules
+      try {
+        samplingPercentage = Double.valueOf(samplingDefinition.getSamplingPercentage());
+      } catch (NumberFormatException e) {
+        LOG.error("Error interpreting sampling percentage '{}'", samplingDefinition.getSamplingPercentage());
+        return;
+      }
+
       double numberOfRecordsToSample = Math.floor(records.size() * samplingPercentage/100);
       Collections.shuffle(records);
       List<Record> samplingRecords = records.subList(0, (int) numberOfRecordsToSample);
