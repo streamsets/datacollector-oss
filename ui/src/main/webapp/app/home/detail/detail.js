@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant) {
+  .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant, api) {
     var infoTab =  {
         name:'info',
         template:'app/home/detail/info/info.tpl.html',
@@ -151,6 +151,31 @@ angular
           return $scope.hasConfigurationIssues($scope.detailPaneConfig);
         }
         return false;
+      },
+
+      /**
+       * Delete Triggered Alert
+       */
+      deleteTriggeredAlert: function(triggeredAlert) {
+        api.pipelineAgent.deleteAlert($scope.pipelineConfig.info.name, triggeredAlert.rule.id)
+          .success(function() {
+            //Alert deleted successfully
+          })
+          .error(function(data, status, headers, config) {
+            $rootScope.common.errors = [data];
+          });
+      },
+
+      /**
+       * Select the Rules Tab
+       * @param triggeredAlert
+       */
+      selectRulesTab: function(triggeredAlert) {
+        angular.forEach($scope.detailPaneTabs, function(tab) {
+          if(tab.name === 'rules') {
+            tab.active = true;
+          }
+        });
       }
     });
 
@@ -164,6 +189,12 @@ angular
           }
         });
       }
+
+      //To fix NVD3 JS errors - https://github.com/novus/nvd3/pull/396
+      window.nv.charts = {};
+      window.nv.graphs = [];
+      window.nv.logs = {};
+      window.onresize = null;
     });
 
     $scope.$watch('isPipelineRunning', function(newValue) {

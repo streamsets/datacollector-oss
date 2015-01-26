@@ -542,6 +542,22 @@ angular.module('pipelineAgentApp.common')
           method: 'GET',
           url: url
         });
+      },
+
+      /**
+       * Delete Alert
+       *
+       * @param name
+       * @param ruleId
+       * @returns {*}
+       */
+      deleteAlert: function(name, ruleId) {
+        var url = apiBase + '/rules/' + name + '/deleteAlert?alertId=' + ruleId;
+
+        return $http({
+          method: 'DELETE',
+          url: url
+        });
       }
     };
 

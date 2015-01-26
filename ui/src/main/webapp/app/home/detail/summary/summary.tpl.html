@@ -5,6 +5,21 @@
          ng-repeat="triggeredAlert in triggeredAlerts | filter: {type: 'METRIC_ALERT'}">
       <div class="alert alert-danger" role="alert">
         <i class="fa fa-exclamation-triangle"></i> {{triggeredAlert.rule.label}} ({{triggeredAlert.gauge.value.currentValue}})
+
+        <div class="pull-right">
+          <a href="#"
+             ng-click="deleteTriggeredAlert(triggeredAlert)">
+            <span translate="global.form.delete">Delete</span>
+          </a>
+
+          <span> | </span>
+
+          <a href="#"
+             ng-click="selectRulesTab(triggeredAlert)">
+            <span translate="global.form.changeRule">Change Rule</span>
+          </a>
+        </div>
+
       </div>
     </div>
   </div>
