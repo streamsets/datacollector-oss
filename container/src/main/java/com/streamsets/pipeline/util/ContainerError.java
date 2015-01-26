@@ -64,6 +64,7 @@ public enum ContainerError implements ErrorCode {
   //Observer
   CONTAINER_0400("Failed to evaluate expression '{}' for record '{}'. Reason: {}"),
   CONTAINER_0401("Failed to evaluate expression '{}'. Reason: {}"),
+  CONTAINER_0402("Could not access alerts because pipeline is not running"),
 
   ;
 

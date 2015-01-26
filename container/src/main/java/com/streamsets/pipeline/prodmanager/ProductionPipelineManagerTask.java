@@ -439,7 +439,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   }
 
   public boolean deleteAlert(String alertId) throws PipelineManagerException {
-    checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0106);
+    checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0402);
     return MetricsConfigurator.removeGauge(getMetrics(), AlertsUtil.getAlertGuageName(alertId));
   }
 
