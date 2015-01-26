@@ -175,17 +175,24 @@ angular
        *  moveToCenter
        */
       changeStageSelection: function(options) {
-        if(!options.ignoreBroadCast) {
-          $scope.$broadcast('selectNode', options.selectedObject, options.moveToCenter);
+        if(!options.type) {
+          if(options.selectedObject) {
+            options.type = pipelineConstant.STAGE_INSTANCE;
+          } else {
+            options.type = pipelineConstant.PIPELINE;
+          }
         }
 
-        if(options.selectedObject) {
-          options.type = pipelineConstant.STAGE_INSTANCE;
-          updateDetailPane(options);
-        } else {
-          options.type = pipelineConstant.PIPELINE;
-          updateDetailPane(options);
+        if(!options.ignoreBroadCast) {
+          if(options.type !== pipelineConstant.LINK) {
+            $scope.$broadcast('selectNode', options.selectedObject, options.moveToCenter);
+          } else {
+            $scope.$broadcast('selectEdge', options.selectedObject, options.moveToCenter);
+          }
         }
+
+
+        updateDetailPane(options);
       },
 
       /**
@@ -491,6 +498,8 @@ angular
           });
         }
       });
+
+      $scope.edges = edges;
 
       $scope.firstOpenLane = $rootScope.$storage.dontShowHelpAlert ? {} : getFirstOpenLane();
 
@@ -847,6 +856,8 @@ angular
         $scope.$broadcast('updateErrorCount', getStageErrorCounts());
         $scope.triggeredAlerts = pipelineService.getTriggeredAlerts($scope.pipelineRules,
           $rootScope.common.pipelineMetrics);
+      } else {
+        $scope.triggeredAlerts = [];
       }
     });
 

@@ -100,6 +100,7 @@
     "getStarted": "Get Started",
     "header" : {
       "addStage": "Add Stage",
+      "alerts": "Alerts",
       "continueMonitoring": "Continue Monitoring",
       "closePreview": "Close Preview",
       "closeSnapshot": "Close Snapshot",

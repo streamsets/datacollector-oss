@@ -563,6 +563,23 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     };
 
+    GraphCreator.prototype.selectEdge = function(edge) {
+      var thisGraph = this,
+        edgeExists,
+        addedEdge = thisGraph.paths.filter(function(d){
+          if(d.source.instanceName === edge.source.instanceName &&
+            d.target.instanceName === edge.target.instanceName) {
+            edgeExists = true;
+            return true;
+          }
+          return false;
+        });
+
+      if(edgeExists) {
+        thisGraph.replaceSelectEdge(addedEdge, edge);
+      }
+    };
+
     // call to propagate changes to graph
     GraphCreator.prototype.updateGraph = function(){
 
@@ -1040,10 +1057,26 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         }
 
         graph.selectNode(stageInstance);
-      } else if (graph.state.selectedNode){
-        graph.removeSelectFromNode();
+      } else {
+        if (graph.state.selectedNode){
+          graph.removeSelectFromNode();
+        }
+
+        if(graph.state.selectedEdge) {
+          graph.removeSelectFromEdge();
+        }
+
         graph.moveGraphToCenter();
       }
+    });
+
+
+    $scope.$on('selectEdge', function(event, edge) {
+      graph.moveNodeToVisibleArea(edge.source);
+      if(graph.state.selectedNode) {
+        graph.removeSelectFromNode();
+      }
+      graph.selectEdge(edge);
     });
 
     $scope.$on('updateErrorCount', function(event, stageInstanceErrorCounts) {

@@ -196,6 +196,37 @@ angular
             }
           }
         });
+      },
+
+      /**
+       * Callback function when Notification is clicked.
+       *
+       * @param alert
+       */
+      onNotificationClick: function(alert) {
+        var edges = $scope.edges,
+          edge;
+        $scope.$storage.maximizeDetailPane = false;
+        $scope.$storage.minimizeDetailPane = false;
+
+        if(alert.type === 'METRIC_ALERT') {
+          //Select Pipeline Config
+          $scope.$broadcast('selectNode');
+          $scope.changeStageSelection({
+            selectedObject: undefined,
+            type: pipelineConstant.PIPELINE
+          });
+        } else {
+          //Select edge
+          edge = _.find(edges, function(ed) {
+            return ed.outputLane === alert.rule.lane;
+          });
+
+          $scope.changeStageSelection({
+            selectedObject: edge,
+            type: pipelineConstant.LINK
+          });
+        }
       }
     });
 

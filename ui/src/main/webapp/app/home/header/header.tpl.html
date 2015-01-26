@@ -105,13 +105,17 @@
         </button>
         <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 
+          <li role="presentation" class="dropdown-header"
+              translate="home.header.alerts">
+            Alerts
+          </li>
+
           <li role="presentation"
-              ng-repeat-start="alert in triggeredAlerts">
+              ng-repeat="alert in triggeredAlerts">
             <a role="menuitem" tabindex="-1" href="#"
-               ng-click="onIssueClick(issue, instanceName)"
+               ng-click="onNotificationClick(alert)"
                ng-bind="alert.rule.label"></a>
           </li>
-          <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
 
         </ul>
       </div>
