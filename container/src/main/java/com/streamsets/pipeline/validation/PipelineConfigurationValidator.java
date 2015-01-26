@@ -277,6 +277,18 @@ public class PipelineConfigurationValidator {
                   preview = false;
                 }
                 break;
+              case CHARACTER:
+                if (!(conf.getValue() instanceof String)) {
+                  issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+                                                          confDef.getName(), ValidationError.VALIDATION_0009,
+                                                          confDef.getType()));
+                  preview = false;
+                } else if (((String)conf.getValue()).length() > 1) {
+                  issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+                                                          confDef.getName(), ValidationError.VALIDATION_0031,
+                                                          conf.getValue()));
+                }
+                break;
               case MAP:
                 if (conf.getValue() instanceof List) {
                   int count = 0;
@@ -316,6 +328,25 @@ public class PipelineConfigurationValidator {
                                                           confDef.getType()));
                   preview = false;
                 }
+                break;
+              case EL_BOOLEAN:
+              case EL_DATE:
+              case EL_NUMBER:
+                if (!(conf.getValue() instanceof String)) {
+                  issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+                                                          confDef.getName(), ValidationError.VALIDATION_0029,
+                                                          confDef.getType()));
+                  preview = false;
+                }
+                String value = (String) conf.getValue();
+                if (!value.startsWith("${") || !value.endsWith("}")) {
+                  issues.add(StageIssue.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+                                                          confDef.getName(), ValidationError.VALIDATION_0030, value));
+                  preview = false;
+                }
+                break;
+              case EL_STRING:
+              case EL_OBJECT:
                 break;
               case MODEL:
                 preview &= validateModel(stageConf.getInstanceName(), confDef, conf);

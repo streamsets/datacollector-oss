@@ -44,6 +44,11 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0027("Rule Definition '{}' refers to a lane '{}' which is not found in the pipeline configuration."),
   VALIDATION_0028("Rule Definition '{}' refers to a instance '{}' which is not found in the pipeline configuration."),
 
+  VALIDATION_0029("Configuration must be a String, is a '{}'"),
+  VALIDATION_0030("The expression value '{}' must be within '${...}'"),
+
+  VALIDATION_0031("Configuration '{}' should be a single character"),
+
   ;
 
   private final String msg;

@@ -40,6 +40,11 @@ public enum StageLibError implements ErrorCode {
   //Expression processor
   LIB_0600("Failed to evaluate expression '{}', {}"),
 
+  //Splitter processor
+  LIB_0700("The number of splits fields must be greater than one"),
+  LIB_0701("The record '{}' does not have the field-path '{}', cannot split"),
+  LIB_0702("The record '{}' does not have enough splits"),
+
   ;
   private final String msg;
 
