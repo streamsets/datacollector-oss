@@ -9,6 +9,8 @@ package com.streamsets.pipeline.hdfs.writer;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Date;
@@ -19,6 +21,7 @@ import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
 public class ActiveRecordWriters {
+  private final static Logger LOG = LoggerFactory.getLogger(ActiveRecordWriters.class);
 
   private static class DelayedRecordWriter implements Delayed {
     private RecordWriter writer;
@@ -59,9 +62,11 @@ public class ActiveRecordWriters {
   }
 
   public void purge() throws IOException {
+    LOG.debug("Purge");
     DelayedRecordWriter delayedWriter = cutOffQueue.poll();
     while (delayedWriter != null) {
       if (!delayedWriter.getWriter().isClosed()) {
+        LOG.debug("Purging '{}'", delayedWriter.getWriter().getPath());
         writers.remove(delayedWriter.getWriter().getPath().toString());
         manager.commitWriter(delayedWriter.getWriter());
       }
@@ -75,6 +80,7 @@ public class ActiveRecordWriters {
     if (writer == null) {
       writer = manager.getWriter(now, recordDate, record);
       if (writer != null) {
+        LOG.debug("Got '{}'", writer.getPath());
         writers.put(path, writer);
         cutOffQueue.add(new DelayedRecordWriter(writer));
       }
@@ -84,6 +90,7 @@ public class ActiveRecordWriters {
 
   public void release(RecordWriter writer) throws IOException {
     if (manager.isOverThresholds(writer)) {
+      LOG.debug("Release '{}'", writer.getPath());
       writers.remove(writer.getPath().toString());
       manager.commitWriter(writer);
     }
@@ -91,6 +98,7 @@ public class ActiveRecordWriters {
   }
 
   public void closeAll() {
+    LOG.debug("Close all");
     for (RecordWriter writer : writers.values()) {
       if (!writer.isClosed()) {
         try {

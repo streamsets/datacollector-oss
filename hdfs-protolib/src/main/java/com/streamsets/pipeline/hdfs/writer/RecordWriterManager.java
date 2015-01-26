@@ -20,6 +20,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.compress.CompressionCodec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
 import java.io.IOException;
@@ -34,6 +36,8 @@ import java.util.Set;
 import java.util.TimeZone;
 
 public class RecordWriterManager {
+  private final static Logger LOG = LoggerFactory.getLogger(RecordWriterManager.class);
+
   private URI hdfsUri;;
   private Configuration hdfsConf;
   private String uniquePrefix;
@@ -239,14 +243,17 @@ public class RecordWriterManager {
   public RecordWriter getWriter(Date now, Date recordDate, Record record) throws StageException, IOException {
     RecordWriter writer = null;
     long writerTimeToLive = getTimeToLiveMillis(now, recordDate);
+    Path tempPath = getPath(recordDate, record);
     if (writerTimeToLive > 0) {
-      Path tempPath = getPath(recordDate, record);
       FileSystem fs = FileSystem.get(hdfsUri, hdfsConf);
       if (fs.exists(tempPath)) {
-        //TODO LOG WARN
-        renameTempToNextPart(fs, tempPath);
+        Path path = renameTempToNextPart(fs, tempPath);
+        LOG.warn("Path[{}] - Found previous file '{}', committing it", tempPath, path);
       }
+      LOG.debug("Path[{}] - Create writer,  time to live '{}ms'", tempPath, writerTimeToLive);
       writer = createWriter(fs, tempPath, writerTimeToLive);
+    } else {
+      LOG.warn("Path[{}] - Cannot not create writer, requested date already cut off", tempPath);
     }
     return writer;
   }
@@ -257,6 +264,7 @@ public class RecordWriterManager {
       writer.close();
       FileSystem fs = FileSystem.get(hdfsUri, hdfsConf);
       path = renameTempToNextPart(fs, writer.getPath());
+      LOG.debug("Path[{}] - Committing Writer to '{}'", writer.getPath(), path);
     }
     return path;
   }
@@ -266,7 +274,7 @@ public class RecordWriterManager {
     boolean overRecords = (cutOffRecords > 0) && writer.getRecords() >= cutOffRecords;
     boolean over = overLength || overRecords;
     if (over) {
-      //TODO LOG DEBUG
+      LOG.debug("Path[{}] - Over threshold, length={} records={}", writer.getPath(), overLength, overRecords);
     }
     return over;
   }

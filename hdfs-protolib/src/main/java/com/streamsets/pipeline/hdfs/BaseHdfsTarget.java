@@ -341,6 +341,10 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       throw new StageException(HdfsLibError.HDFS_0002, hdfsUri, ex.getMessage(), ex);
     }
 
+    if (uniquePrefix == null) {
+      uniquePrefix = "";
+    }
+
     long lateRecordLimitSecs = getLateRecordLimitSecs();
     if (lateRecordLimitSecs <= 0) {
       throw new StageException(HdfsLibError.HDFS_0013, lateRecordsLimit);
@@ -362,7 +366,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       CompressionCodec compressionCodec = (CompressionMode.getCodec(compression) != null)
                                           ? CompressionMode.getCodec(compression).newInstance() : null;
       RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-          dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordLimitSecs, maxRecordsPerFile, maxFileSize,
+          dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordLimitSecs, maxFileSize, maxRecordsPerFile,
           fileType, compressionCodec, compressionType, keyEl, recordToString);
 
       currentWriters = new ActiveRecordWriters(mgr);
@@ -375,8 +379,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
         CompressionCodec compressionCodec = (getCompressionCodec() != null)
                                             ? getCompressionCodec().newInstance() : null;
         RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-            lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordLimitSecs, maxRecordsPerFile,
-            maxFileSize, fileType, compressionCodec, compressionType, keyEl, recordToString);
+            lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordLimitSecs, maxFileSize,
+            maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl, recordToString);
 
         lateWriters = new ActiveRecordWriters(mgr);
       }
@@ -495,9 +499,19 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   }
 
   @Override
-  public void write(Batch batch) throws StageException {
+  public void write(final Batch batch) throws StageException {
     setBatchTime();
-    processBatch(batch);
+    try {
+      ugi.doAs(new PrivilegedExceptionAction<Void>() {
+        @Override
+        public Void run() throws Exception {
+          processBatch(batch);
+          return null;
+        }
+      });
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   private void setBatchTime() {

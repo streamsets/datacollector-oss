@@ -15,6 +15,8 @@ import org.apache.commons.io.output.CountingOutputStream;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
 import java.io.IOException;
@@ -25,6 +27,8 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 
 public class RecordWriter {
+    private final static Logger LOG = LoggerFactory.getLogger(RecordWriter.class);
+
     private static final Method UUID_FUNC;
 
     static {
@@ -60,6 +64,7 @@ public class RecordWriter {
         this.expires = System.currentTimeMillis() + timeToLiveMillis;
         this.path = path;
         this.recordToString = recordToString;
+        LOG.debug("Path[{}] - Creating", path);
     }
 
     public RecordWriter(Path path, long timeToLiveMillis, OutputStream textOutputStream, RecordToString recordToString) {
@@ -92,6 +97,7 @@ public class RecordWriter {
     }
 
     public void write(Record record) throws IOException, StageException, ELException {
+        LOG.debug("Path[{}] - Writing ['{}']", path, record.getHeader().getSourceId());
         if (writer != null) {
             String str = recordToString.toString(record);
             Utils.checkArgument(!str.contains("\n") && !str.contains("\r"),
@@ -110,6 +116,7 @@ public class RecordWriter {
     }
 
     public void flush() throws IOException {
+        LOG.debug("Path[{}] - Flushing", path);
         if (writer != null) {
             writer.flush();
         } else if (seqWriter != null) {
@@ -134,6 +141,7 @@ public class RecordWriter {
     }
 
     public void close() throws IOException {
+        LOG.debug("Path[{}] - Closing", path);
         try {
             if (writer != null) {
                 writer.close();
