@@ -69,7 +69,7 @@ public class KafkaTarget extends BaseTarget {
     type = ConfigDef.Type.EL_NUMBER,
     description = "Expression that determines the partition of Kafka topic to which the messages must be written",
     label = "Partition Expression",
-    defaultValue = "0",
+    defaultValue = "${0}",
     dependsOn = "partitionStrategy",
     triggeredByValue = {"EXPRESSION"},
     group = "KAFKA_CONNECTION_PROPERTIES")

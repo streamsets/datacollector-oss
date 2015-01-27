@@ -128,6 +128,15 @@ public class PipelineConfigurationValidator {
     return preview;
   }
 
+  private ConfigConfiguration getConfig(List<ConfigConfiguration> configs, String name) {
+    for (ConfigConfiguration config : configs) {
+      if (config.getName().equals(name)) {
+        return config;
+      }
+    }
+    return null;
+  }
+
   @VisibleForTesting
   boolean validatePipelineConfiguration() {
     boolean preview = true;
@@ -251,7 +260,21 @@ public class PipelineConfigurationValidator {
               preview = false;
             }
           }
-          if (conf.getValue() != null) {
+          boolean validateConfig = true;
+          if (confDef.getDependsOn() != null &&
+              (confDef.getTriggeredByValues() != null && confDef.getTriggeredByValues().length > 0)) {
+            String dependsOn = confDef.getDependsOn();
+            String[] triggeredBy = confDef.getTriggeredByValues();
+            ConfigConfiguration dependsOnConfig = getConfig(stageConf.getConfiguration(), dependsOn);
+            if (dependsOnConfig.getValue() != null) {
+              validateConfig = false;
+              String valueStr = dependsOnConfig.getValue().toString();
+              for (String trigger : triggeredBy) {
+                validateConfig |= valueStr.equals(trigger);
+              }
+            }
+          }
+          if (validateConfig && conf.getValue() != null) {
             switch (confDef.getType()) {
               case BOOLEAN:
                 if (!(conf.getValue() instanceof Boolean)) {
