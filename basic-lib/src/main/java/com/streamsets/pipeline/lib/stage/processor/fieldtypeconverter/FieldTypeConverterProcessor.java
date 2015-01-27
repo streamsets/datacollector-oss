@@ -34,8 +34,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
 
-  @ConfigDef(label = "Field Type Converter Configuration", required = false, type = Type.MODEL, defaultValue="",
-    description="Field Type Converter Configuration")
+  @ConfigDef(label = "Field Converter Configuration", required = false, type = Type.MODEL, defaultValue="")
   @ComplexField
   public List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
 
@@ -121,26 +120,22 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
   public static class FieldTypeConverterConfig {
 
-    @ConfigDef(label = "Fields to convert", required = true,type = Type.MODEL, defaultValue="",
-      description="The fields whose type must be converted to the target type.")
+    @ConfigDef(label = "Fields to Convert", required = true,type = Type.MODEL, defaultValue="")
     @FieldSelector
     public List<String> fields;
 
-    @ConfigDef(label = "Target type", required = true, type = Type.MODEL, defaultValue="INTEGER",
-      description="The new type to which the field must be converted to.")
+    @ConfigDef(label = "Convert to Type", required = true, type = Type.MODEL, defaultValue="INTEGER")
     @ValueChooser(chooserValues = ConverterValuesProvider.class, type = ChooserMode.PROVIDED)
     public Field.Type targetType;
 
     @ConfigDef(label = "Data Locale", required = true, type = Type.MODEL, defaultValue="ENGLISH",
-      description="The current locale of the data which must be converted. " +
-        "This is required to convert string field values containing  ',' and '.' to number types.",
+      description="Affects the interpretation of locale sensitive data, such as using the comma as a decimal separator",
       dependsOn = "targetType", triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT"})
     @ValueChooser(chooserValues = LocaleValuesProvider.class, type = ChooserMode.PROVIDED)
     public DataLocale dataLocale;
 
     @ConfigDef(label = "Date Format", required = true, type = Type.MODEL, defaultValue="yyyy-MM-dd",
-      description="The format of the date into which the string field must be converted to. " +
-        "This option is used only if the target type is Date or Date time.",
+      description="Select or Enter any valid date or datetime format.",
       dependsOn = "targetType", triggeredByValue = {"DATE", "DATETIME"})
     @ValueChooser(chooserValues = DateFormatValuesProvider.class, type = ChooserMode.SUGGESTED)
     public String dateFormat;
