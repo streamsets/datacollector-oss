@@ -34,7 +34,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
   @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       label = "Field to Split",
-      defaultValue = "1",
+      defaultValue = "",
       description = "Record field path of the string value to split")
   public String fieldPath;
 
