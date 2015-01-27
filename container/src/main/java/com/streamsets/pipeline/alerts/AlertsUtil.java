@@ -34,7 +34,7 @@ public class AlertsUtil {
     }
   }
 
-  public static String getAlertGuageName(String ruleId) {
+  public static String getAlertGaugeName(String ruleId) {
     return  ALERT_PREFIX + ruleId;
   }
 }

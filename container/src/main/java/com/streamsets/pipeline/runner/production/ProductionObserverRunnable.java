@@ -98,7 +98,7 @@ public class ProductionObserverRunnable implements Runnable {
           if (productionObserveRequest.getRuleDefinition().getSamplingDefinitions() != null) {
             for (SamplingDefinition samplingDefinition : productionObserveRequest.getRuleDefinition().getSamplingDefinitions()) {
               RecordSampler recordSampler = new RecordSampler(pipelineName, rev, samplingDefinition,
-                pipelineManager.getObserverStore(), variables, elEvaluator);
+                pipelineManager.getSamplingStore(), variables, elEvaluator);
               recordSampler.sample(productionObserveRequest.getSnapshot(), sampleIdToRecordsMap);
             }
           }
@@ -111,10 +111,10 @@ public class ProductionObserverRunnable implements Runnable {
     }
   }
 
-  public List<Record> getSampledRecords(String sampleDefinitionId) {
-    //FIXME<Hari>: synchronize acccess to evicting queue
+  public List<Record> getSampledRecords(String sampleDefinitionId, int size) {
+    //FIXME<Hari>: synchronize access to evicting queue
     if(sampleIdToRecordsMap.get(sampleDefinitionId) != null) {
-      return new CopyOnWriteArrayList<>(sampleIdToRecordsMap.get(sampleDefinitionId));
+      return new CopyOnWriteArrayList<>(sampleIdToRecordsMap.get(sampleDefinitionId)).subList(0, size);
     }
     return Collections.emptyList();
   }

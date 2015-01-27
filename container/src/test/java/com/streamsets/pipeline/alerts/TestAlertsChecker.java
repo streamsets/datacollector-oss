@@ -44,7 +44,7 @@ public class TestAlertsChecker {
       "${record:value(\"/name\")==null}", ThresholdType.COUNT, "2", 5, true);
     AlertsChecker alertsChecker = new AlertsChecker(alertDefinition, metrics, variables, elEvaluator);
     alertsChecker.checkForAlerts(TestUtil.createSnapshot("testAlertRaisedCount"));
-    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
     Assert.assertNotNull(((Map<String, Object>) gauge.getValue()).get("timestamp"));
@@ -56,7 +56,7 @@ public class TestAlertsChecker {
       "${record:value(\"/name\")==null}", ThresholdType.COUNT, "2", 5, false);
     AlertsChecker alertsChecker = new AlertsChecker(alertDefinition, metrics, variables, elEvaluator);
     alertsChecker.checkForAlerts(TestUtil.createSnapshot("testAlertRaisedCountDisabled"));
-    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
     Assert.assertNull(gauge);
   }
 
@@ -67,7 +67,7 @@ public class TestAlertsChecker {
       "${record:value(\"/name\")==null", ThresholdType.COUNT, "2", 5, true);
     AlertsChecker alertsChecker = new AlertsChecker(alertDefinition, metrics, variables, elEvaluator);
     alertsChecker.checkForAlerts(TestUtil.createSnapshot("testNoExceptionInvalidExpression"));
-    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
     Assert.assertNull(gauge);
   }
 
@@ -77,7 +77,7 @@ public class TestAlertsChecker {
       "${record:value(\"/name\")==null}", ThresholdType.COUNT, "3", 5, true);
     AlertsChecker alertsChecker = new AlertsChecker(alertDefinition, metrics, variables, elEvaluator);
     alertsChecker.checkForAlerts(TestUtil.createSnapshot("testNoAlertRaisedCount"));
-    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
     Assert.assertNull(gauge);
   }
 
@@ -87,7 +87,7 @@ public class TestAlertsChecker {
       "${record:value(\"/name\")==null}", ThresholdType.PERCENTAGE, "40", 5, true);
     AlertsChecker alertsChecker = new AlertsChecker(alertDefinition, metrics, variables, elEvaluator);
     alertsChecker.checkForAlerts(TestUtil.createSnapshot("testAlertRaisedPercentage"));
-    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long)3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
   }
@@ -98,7 +98,7 @@ public class TestAlertsChecker {
       "${record:value(\"/name\")==null}", ThresholdType.PERCENTAGE, "60", 5, true);
     AlertsChecker alertsChecker = new AlertsChecker(alertDefinition, metrics, variables, elEvaluator);
     alertsChecker.checkForAlerts(TestUtil.createSnapshot("testNoAlertRaisedPercentage"));
-    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
     Assert.assertNull(gauge);
   }
 
@@ -109,13 +109,13 @@ public class TestAlertsChecker {
     AlertsChecker alertsChecker = new AlertsChecker(alertDefinition, metrics, variables, elEvaluator);
 
     alertsChecker.checkForAlerts(TestUtil.createSnapshot("testGaugeChange"));
-    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
     Assert.assertNotNull(((Map<String, Object>) gauge.getValue()).get("timestamp"));
 
     alertsChecker.checkForAlerts(TestUtil.createSnapshot("testGaugeChange"));
-    gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+    gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 6, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
     Assert.assertNotNull(((Map<String, Object>) gauge.getValue()).get("timestamp"));

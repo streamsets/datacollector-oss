@@ -58,7 +58,7 @@ public class TestMetricAlertsChecker {
 
     //get alert gauge
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
-      AlertsUtil.getAlertGuageName(metricsAlertDefinition.getId()));
+      AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long)3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
   }
@@ -79,7 +79,7 @@ public class TestMetricAlertsChecker {
 
     //get alert gauge
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
-      AlertsUtil.getAlertGuageName(metricsAlertDefinition.getId()));
+      AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
     Assert.assertNull(gauge);
   }
 
@@ -100,7 +100,7 @@ public class TestMetricAlertsChecker {
 
     //get alert gauge
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
-      AlertsUtil.getAlertGuageName(metricsAlertDefinition.getId()));
+      AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
     Assert.assertNull(gauge);
   }
 }

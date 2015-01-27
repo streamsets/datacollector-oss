@@ -9,7 +9,7 @@ import com.google.common.collect.EvictingQueue;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.SamplingDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.observerstore.ObserverStore;
+import com.streamsets.pipeline.observerstore.SamplingStore;
 import com.streamsets.pipeline.runner.LaneResolver;
 import com.streamsets.pipeline.util.ObserverException;
 import org.slf4j.Logger;
@@ -28,18 +28,18 @@ public class RecordSampler {
   private static final int MAX_SAMPLED_RECORDS_PER_SAMPLE_DEF = 100;
 
   private final SamplingDefinition samplingDefinition;
-  private final ObserverStore observerStore;
+  private final SamplingStore samplingStore;
   private final ELEvaluator.Variables variables;
   private final ELEvaluator elEvaluator;
   private final String pipelineName;
   private final String rev;
 
   public RecordSampler(String pipelineName, String rev, SamplingDefinition samplingDefinition,
-                       ObserverStore observerStore, ELEvaluator.Variables variables, ELEvaluator elEvaluator) {
+                       SamplingStore samplingStore, ELEvaluator.Variables variables, ELEvaluator elEvaluator) {
     this.pipelineName = pipelineName;
     this.rev = rev;
     this.samplingDefinition = samplingDefinition;
-    this.observerStore = observerStore;
+    this.samplingStore = samplingStore;
     this.variables = variables;
     this.elEvaluator = elEvaluator;
   }
@@ -50,50 +50,54 @@ public class RecordSampler {
       String lane = samplingDefinition.getLane();
       String predicate = samplingDefinition.getPredicate();
       List<Record> records = snapshot.get(LaneResolver.getPostFixedLaneForObserver(lane));
-      double samplingPercentage;
+      //As of now we know that this definition does not apply to this stage because the snapshot does not
+      //have the lane. This will be fixed when we have per stage Observer implementation
+      if(records != null && !records.isEmpty()) {
+        double samplingPercentage;
 
-      //Soft error for now as we don't want this alert to stop other rules
-      try {
-        samplingPercentage = Double.valueOf(samplingDefinition.getSamplingPercentage());
-      } catch (NumberFormatException e) {
-        LOG.error("Error interpreting sampling percentage '{}'", samplingDefinition.getSamplingPercentage());
-        return;
-      }
+        //Soft error for now as we don't want this alert to stop other rules
+        try {
+          samplingPercentage = Double.valueOf(samplingDefinition.getSamplingPercentage());
+        } catch (NumberFormatException e) {
+          LOG.error("Error interpreting sampling percentage '{}'", samplingDefinition.getSamplingPercentage());
+          return;
+        }
 
-      double numberOfRecordsToSample = Math.floor(records.size() * samplingPercentage/100);
-      Collections.shuffle(records);
-      List<Record> samplingRecords = records.subList(0, (int) numberOfRecordsToSample);
-      List<Record> matchingRecords = new ArrayList<>();
-      if(predicate == null || predicate.isEmpty()) {
-        matchingRecords.addAll(samplingRecords);
-      } else {
-        for (Record r : samplingRecords) {
-          boolean success = false;
-          try {
-            success = AlertsUtil.evaluateRecord(r, predicate, variables, elEvaluator);
-          } catch (ObserverException e) {
-            //A faulty condition should not take down rest of the alerts with it.
-            //Log and it and continue for now
-            LOG.error("Error processing sampling definition '{}', reason: {}", samplingDefinition.getId(),
-              e.getMessage());
-          }
-          if (success) {
-            matchingRecords.add(r);
+        double numberOfRecordsToSample = Math.floor(records.size() * samplingPercentage / 100);
+        Collections.shuffle(records);
+        List<Record> samplingRecords = records.subList(0, (int) numberOfRecordsToSample);
+        List<Record> matchingRecords = new ArrayList<>();
+        if (predicate == null || predicate.isEmpty()) {
+          matchingRecords.addAll(samplingRecords);
+        } else {
+          for (Record r : samplingRecords) {
+            boolean success = false;
+            try {
+              success = AlertsUtil.evaluateRecord(r, predicate, variables, elEvaluator);
+            } catch (ObserverException e) {
+              //A faulty condition should not take down rest of the alerts with it.
+              //Log and it and continue for now
+              LOG.error("Error processing sampling definition '{}', reason: {}", samplingDefinition.getId(),
+                e.getMessage());
+            }
+            if (success) {
+              matchingRecords.add(r);
+            }
           }
         }
-      }
-      if(!matchingRecords.isEmpty()) {
-        Map<String, List<Record>> sampleIdToRecords = new HashMap<>();
-        sampleIdToRecords.put(samplingDefinition.getId(), matchingRecords);
-        //store sampleIdToRecords to file
-        observerStore.storeSampledRecords(pipelineName, rev, sampleIdToRecords);
-        //retain sampleIdToRecords in memory
-        EvictingQueue<Record> sampledRecords = sampleIdToRecordsMap.get(samplingDefinition.getId());
-        if (sampledRecords == null) {
-          sampledRecords = EvictingQueue.create(MAX_SAMPLED_RECORDS_PER_SAMPLE_DEF);
-          sampleIdToRecordsMap.put(samplingDefinition.getId(), sampledRecords);
+        if (!matchingRecords.isEmpty()) {
+          Map<String, List<Record>> sampleIdToRecords = new HashMap<>();
+          sampleIdToRecords.put(samplingDefinition.getId(), matchingRecords);
+          //store sampleIdToRecords to file
+          samplingStore.storeSampledRecords(pipelineName, rev, sampleIdToRecords);
+          //retain sampleIdToRecords in memory
+          EvictingQueue<Record> sampledRecords = sampleIdToRecordsMap.get(samplingDefinition.getId());
+          if (sampledRecords == null) {
+            sampledRecords = EvictingQueue.create(MAX_SAMPLED_RECORDS_PER_SAMPLE_DEF);
+            sampleIdToRecordsMap.put(samplingDefinition.getId(), sampledRecords);
+          }
+          sampledRecords.addAll(sampleIdToRecords.get(samplingDefinition.getId()));
         }
-        sampledRecords.addAll(sampleIdToRecords.get(samplingDefinition.getId()));
       }
     }
   }

@@ -11,7 +11,6 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.observerstore.impl.FileObserverStore;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
@@ -171,7 +170,7 @@ public class TestProdPipelineRunnable {
 
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, fileErrorRecordStore, 5
-        , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION, new FileObserverStore(info, new Configuration()));
+        , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION, new FilePipelineStoreTask(info, new Configuration()));
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
         MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner, tracker, null);
     manager.getStateTracker().register(PIPELINE_NAME, REVISION);

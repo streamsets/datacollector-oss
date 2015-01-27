@@ -5,11 +5,15 @@
  */
 package com.streamsets.pipeline.el;
 
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.jsp.el.ELException;
 import java.util.Map;
+import java.util.Set;
 
 public class ELUtils {
 
@@ -24,5 +28,53 @@ public class ELUtils {
       }
     }
     return variables;
+  }
+
+  public static void validateExpression(ELEvaluator elEvaluator, ELEvaluator.Variables variables, String expression)
+    throws ELException {
+    Record record = new Record(){
+      @Override
+      public Header getHeader() {
+        return null;
+      }
+
+      @Override
+      public Field get() {
+        return null;
+      }
+
+      @Override
+      public Field set(Field field) {
+        return null;
+      }
+
+      @Override
+      public Field get(String fieldPath) {
+        return null;
+      }
+
+      @Override
+      public Field delete(String fieldPath) {
+        return null;
+      }
+
+      @Override
+      public boolean has(String fieldPath) {
+        return false;
+      }
+
+      @Override
+      public Set<String> getFieldPaths() {
+        return null;
+      }
+
+      @Override
+      public Field set(String fieldPath, Field newField) {
+        return null;
+      }
+    };
+
+    ELRecordSupport.setRecordInContext(variables, record);
+    elEvaluator.eval(variables, expression);
   }
 }

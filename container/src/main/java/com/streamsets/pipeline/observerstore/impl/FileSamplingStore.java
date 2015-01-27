@@ -7,11 +7,9 @@ package com.streamsets.pipeline.observerstore.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.config.RuleDefinition;
-import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.observerstore.ObserverStore;
+import com.streamsets.pipeline.observerstore.SamplingStore;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.LogUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
@@ -22,62 +20,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class FileObserverStore implements ObserverStore {
+public class FileSamplingStore implements SamplingStore {
 
-  private static final Logger LOG = LoggerFactory.getLogger(FileObserverStore.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FileSamplingStore.class);
 
   private static final String SAMPLE = "sample";
-  private static final String RULES_FILE = "rules.json";
   private static final String SAMPLED_RECORDS_FILE = "sampledRecords.json";
 
   private final RuntimeInfo runtimeInfo;
   private final Configuration configuration;
 
-  private final Object rulesMutex;
-
-  public FileObserverStore(RuntimeInfo runtimeInfo, Configuration configuration) {
+  public FileSamplingStore(RuntimeInfo runtimeInfo, Configuration configuration) {
     this.configuration = configuration;
     this.runtimeInfo = runtimeInfo;
-    rulesMutex = new Object();
-  }
-
-  @Override
-  public RuleDefinition storeRules(String pipelineName, String rev, RuleDefinition ruleDefinition) {
-    synchronized (rulesMutex) {
-      LOG.trace("Writing rule definitions to '{}'", getRulesFile(pipelineName, rev).getAbsolutePath());
-      try {
-        ObjectMapperFactory.get().writeValue(new DataStore(getRulesFile(pipelineName, rev)).getOutputStream(),
-          ruleDefinition);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-      return ruleDefinition;
-    }
-  }
-
-  @Override
-  public RuleDefinition retrieveRules(String pipelineName, String rev) {
-    synchronized (rulesMutex) {
-      if (!PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev).exists() ||
-        !getRulesFile(pipelineName, rev).exists()) {
-        return new RuleDefinition(Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST,
-          Collections.EMPTY_LIST);
-      }
-      LOG.trace("Reading rule definitions from '{}'", getRulesFile(pipelineName, rev).getAbsolutePath());
-      try {
-        RuleDefinition ruleDefinition = ObjectMapperFactory.get().readValue(
-          new DataStore(getRulesFile(pipelineName, rev)).getInputStream(), RuleDefinition.class);
-        return ruleDefinition;
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
   }
 
   @Override
@@ -138,10 +97,6 @@ public class FileObserverStore implements ObserverStore {
       }
     });
     return samplesFile;
-  }
-
-  private File getRulesFile(String pipelineName, String rev) {
-    return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev), RULES_FILE);
   }
 
 }

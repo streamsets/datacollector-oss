@@ -12,8 +12,8 @@ import com.streamsets.pipeline.el.ELBasicSupport;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
-import com.streamsets.pipeline.observerstore.ObserverStore;
-import com.streamsets.pipeline.observerstore.impl.FileObserverStore;
+import com.streamsets.pipeline.observerstore.SamplingStore;
+import com.streamsets.pipeline.observerstore.impl.FileSamplingStore;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class TestRecordSampler {
 
   private static ELEvaluator elEvaluator;
   private static ELEvaluator.Variables variables;
-  private static ObserverStore observerStore;
+  private static SamplingStore samplingStore;
 
   @BeforeClass
   public static void setUp() {
@@ -36,8 +36,8 @@ public class TestRecordSampler {
     ELBasicSupport.registerBasicFunctions(elEvaluator);
     ELRecordSupport.registerRecordFunctions(elEvaluator);
     ELStringSupport.registerStringFunctions(elEvaluator);
-    observerStore = Mockito.mock(FileObserverStore.class);
-    Mockito.doNothing().when(observerStore).storeSampledRecords(
+    samplingStore = Mockito.mock(FileSamplingStore.class);
+    Mockito.doNothing().when(samplingStore).storeSampledRecords(
       Matchers.anyString(), Matchers.anyString(), Matchers.anyMap());
   }
 
@@ -45,7 +45,7 @@ public class TestRecordSampler {
   public void testRecordSampler() {
     SamplingDefinition samplingDefinition = new SamplingDefinition("testRecordSampler", "testRecordSampler", "testRecordSampler",
       "${record:value(\"/name\")!=null}", "75", true);
-    RecordSampler recordSampler = new RecordSampler("p", "1", samplingDefinition, observerStore, variables, elEvaluator);
+    RecordSampler recordSampler = new RecordSampler("p", "1", samplingDefinition, samplingStore, variables, elEvaluator);
     Map<String, EvictingQueue<Record>> result = new HashMap<>();
     recordSampler.sample(TestUtil.createSnapshot("testRecordSampler"), result);
     Assert.assertTrue(result.size() >= 1);
@@ -55,7 +55,7 @@ public class TestRecordSampler {
   public void testRecordSamplerDisabled() {
     SamplingDefinition samplingDefinition = new SamplingDefinition("testRecordSampler", "testRecordSampler", "testRecordSampler",
       "${record:value(\"/name\")!=null}", "75", false);
-    RecordSampler recordSampler = new RecordSampler("p", "1", samplingDefinition, observerStore, variables, elEvaluator);
+    RecordSampler recordSampler = new RecordSampler("p", "1", samplingDefinition, samplingStore, variables, elEvaluator);
     Map<String, EvictingQueue<Record>> result = new HashMap<>();
     recordSampler.sample(TestUtil.createSnapshot("testRecordSampler"), result);
     Assert.assertTrue(result.size() == 0);

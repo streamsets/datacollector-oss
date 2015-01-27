@@ -233,12 +233,12 @@ public class MetricAlertsChecker {
   private void raiseAlert(Object value) {
     alertResponse.put("currentValue", value);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
-      AlertsUtil.getAlertGuageName(metricsAlertDefinition.getId()));
+      AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
     if (gauge == null) {
       alertResponse.put("timestamp", System.currentTimeMillis());
     } else {
       //remove existing gauge
-      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGuageName(metricsAlertDefinition.getId()));
+      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
       alertResponse.put("timestamp", ((Map<String, Object>)gauge.getValue()).get("timestamp"));
     }
     Gauge<Object> alertResponseGauge = new Gauge<Object>() {
@@ -247,7 +247,7 @@ public class MetricAlertsChecker {
         return alertResponse;
       }
     };
-    MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGuageName(metricsAlertDefinition.getId()),
+    MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()),
       alertResponseGauge);
   }
 }

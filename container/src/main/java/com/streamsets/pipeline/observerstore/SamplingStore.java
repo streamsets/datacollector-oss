@@ -6,17 +6,12 @@
 package com.streamsets.pipeline.observerstore;
 
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.config.RuleDefinition;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-public interface ObserverStore {
-
-  public RuleDefinition retrieveRules(String name, String rev);
-
-  public RuleDefinition storeRules(String pipelineName, String rev, RuleDefinition ruleDefinition);
+public interface SamplingStore {
 
   public void storeSampledRecords(String pipelineName, String rev, Map<String, List<Record>> errorRecords);
 

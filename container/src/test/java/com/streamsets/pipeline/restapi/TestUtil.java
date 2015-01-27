@@ -15,18 +15,9 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
-import com.streamsets.pipeline.config.AlertDefinition;
 import com.streamsets.pipeline.config.ConfigDefinition;
-import com.streamsets.pipeline.config.MetricDefinition;
-import com.streamsets.pipeline.config.MetricElement;
-import com.streamsets.pipeline.config.MetricType;
-import com.streamsets.pipeline.config.MetricsAlertDefinition;
-import com.streamsets.pipeline.config.RuleDefinition;
-import com.streamsets.pipeline.config.SamplingDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.config.ThresholdType;
-import com.streamsets.pipeline.observerstore.ObserverStore;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
@@ -37,7 +28,6 @@ import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import org.glassfish.hk2.api.Factory;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
@@ -124,7 +114,7 @@ public class TestUtil {
     sourceDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
     StageDefinition targetDef = new StageDefinition(
         TTarget.class.getName(), "target", "1.0.0", "label", "description",
-        StageType.TARGET, Collections.EMPTY_LIST, null/*raw source definition*/,
+        StageType.TARGET, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,
         "TargetIcon.svg", null);
     targetDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
@@ -196,7 +186,6 @@ public class TestUtil {
     @Singleton
     @Override
     public ProductionPipelineManagerTask provide() {
-
 
       ProductionPipelineManagerTask pipelineManager = Mockito.mock(ProductionPipelineManagerTask.class);
       try {
@@ -274,40 +263,6 @@ public class TestUtil {
       } catch (PipelineManagerException e) {
         e.printStackTrace();
       }
-
-      //Rules
-      ObserverStore mockObserver = Mockito.mock(ObserverStore.class);
-
-      List<AlertDefinition> alerts = new ArrayList<>();
-      alerts.add(new AlertDefinition("a1", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
-      alerts.add(new AlertDefinition("a2", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
-      alerts.add(new AlertDefinition("a3", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
-
-      List<MetricsAlertDefinition> metricsAlertDefinitions = new ArrayList<>();
-      metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
-        MetricElement.COUNTER_COUNT, "p", true));
-      metricsAlertDefinitions.add(new MetricsAlertDefinition("m2", "m2", "a", MetricType.TIMER,
-        MetricElement.TIMER_M15_RATE, "p", true));
-      metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
-        MetricElement.HISTOGRAM_MEAN, "p", true));
-
-      List<MetricDefinition> counters = new ArrayList<>();
-      counters.add(new MetricDefinition("c1", "c1", "l", "p", "g", MetricType.METER, true));
-      counters.add(new MetricDefinition("c2", "c2", "l", "p", "g", MetricType.METER, true));
-      counters.add(new MetricDefinition("c3", "c3", "l", "p", "g", MetricType.METER, true));
-
-      List<SamplingDefinition> samplingDefinitions = new ArrayList<>();
-      samplingDefinitions.add(new SamplingDefinition("s1", "s1", "a", "2", null, true));
-      samplingDefinitions.add(new SamplingDefinition("s2", "s2", "a", "2", null, true));
-      samplingDefinitions.add(new SamplingDefinition("s3", "s3", "a", "2", null, true));
-
-      RuleDefinition rules = new RuleDefinition(alerts, metricsAlertDefinitions, samplingDefinitions, counters);
-
-      Mockito.when(pipelineManager.getObserverStore()).thenReturn(mockObserver);
-      Mockito.when(mockObserver.retrieveRules(PIPELINE_NAME, PIPELINE_REV)).thenReturn(rules);
-      Mockito.when(mockObserver.storeRules(
-        Matchers.anyString(), Matchers.anyString(), (RuleDefinition) Matchers.any()))
-        .thenReturn(rules);
 
       return pipelineManager;
     }

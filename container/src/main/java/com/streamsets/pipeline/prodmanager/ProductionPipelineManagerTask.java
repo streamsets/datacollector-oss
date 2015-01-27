@@ -15,21 +15,15 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.AlertDefinition;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
-import com.streamsets.pipeline.config.MetricDefinition;
-import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.RuleDefinition;
-import com.streamsets.pipeline.config.SamplingDefinition;
-import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.observerstore.ObserverStore;
-import com.streamsets.pipeline.observerstore.impl.FileObserverStore;
+import com.streamsets.pipeline.observerstore.SamplingStore;
+import com.streamsets.pipeline.observerstore.impl.FileSamplingStore;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionObserveRequest;
 import com.streamsets.pipeline.runner.production.ProductionObserver;
@@ -48,16 +42,12 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
-import com.streamsets.pipeline.validation.RuleIssue;
-import com.streamsets.pipeline.validation.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -72,9 +62,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineManagerTask.class);
   private static final String PRODUCTION_PIPELINE_MANAGER = "productionPipelineManager";
   private static final String PRODUCTION_PIPELINE_RUNNER = "ProductionPipelineRunner";
-  private static final String STAGE_PREFIX = "stage.";
   private static final String RUN_INFO_DIR = "runInfo";
-  private static final String DOT_REGEX = "\\.";
+
 
   private static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
     .put(State.STOPPED, ImmutableSet.of(State.RUNNING))
@@ -93,7 +82,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private final StageLibraryTask stageLibrary;
   private final SnapshotStore snapshotStore;
   private final ErrorRecordStore errorRecordStore;
-  private final ObserverStore observerStore;
+  private final SamplingStore samplingStore;
 
   /*Queue shared by the ProductionPipelineRunnable and ProductionObserverRunnable*/
   BlockingQueue<ProductionObserveRequest> productionObserveRequests;
@@ -121,7 +110,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     this.stageLibrary = stageLibrary;
     snapshotStore = new FileSnapshotStore(runtimeInfo);
     errorRecordStore = new FileErrorRecordStore(runtimeInfo, configuration);
-    observerStore = new FileObserverStore(runtimeInfo, configuration);
+    samplingStore = new FileSamplingStore(runtimeInfo, configuration);
   }
 
 
@@ -251,9 +240,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return prodPipeline.getErrorRecords(instanceName);
   }
 
-  public List<Record> getSampledRecords(String sampleDefinitionId) throws PipelineManagerException {
+  public List<Record> getSampledRecords(String sampleDefinitionId, int size) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0106);
-    return observerRunnable.getSampledRecords(sampleDefinitionId);
+    return observerRunnable.getSampledRecords(sampleDefinitionId, size);
   }
 
   public List<ErrorMessage> getErrorMessages(String instanceName) throws PipelineManagerException {
@@ -349,12 +338,12 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     createPipelineDirIfNotExist(name);
     //register the pipeline with the error record store
     errorRecordStore.register(name, rev);
-    observerStore.register(name, rev);
+    samplingStore.register(name, rev);
     stateTracker.register(name, rev);
 
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, errorRecordStore,
-        maxBatchSize, maxErrorRecordsPerStage, maxPipelineErrors, deliveryGuarantee, name, rev, observerStore);
+        maxBatchSize, maxErrorRecordsPerStage, maxPipelineErrors, deliveryGuarantee, name, rev, pipelineStore);
 
     ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, pipelineConfiguration);
     return builder.build(runner, offsetTracker, observer);
@@ -434,58 +423,13 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     stateTracker.deleteHistory(pipelineName, rev);
   }
 
-  public ObserverStore getObserverStore() {
-    return observerStore;
+  public SamplingStore getSamplingStore() {
+    return samplingStore;
   }
 
   public boolean deleteAlert(String alertId) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0402);
-    return MetricsConfigurator.removeGauge(getMetrics(), AlertsUtil.getAlertGuageName(alertId));
-  }
-
-  public RuleDefinition validateRuleDefinition(String name, String rev, RuleDefinition ruleDefinition)
-    throws PipelineStoreException {
-    PipelineConfiguration pipelineConfig = pipelineStore.load(name, rev);
-    Set<String> pipelineOutputLanes = new HashSet<>();
-    Set<String> stageInstanceNames = new HashSet<>();
-
-    for(StageConfiguration stageConfiguration : pipelineConfig.getStages()) {
-      pipelineOutputLanes.addAll(stageConfiguration.getOutputLanes());
-      stageInstanceNames.add(stageConfiguration.getInstanceName());
-    }
-
-    List<RuleIssue> ruleIssues = new ArrayList<>();
-    for(AlertDefinition alertDefinition : ruleDefinition.getAlertDefinitions()) {
-      if(!pipelineOutputLanes.contains(alertDefinition.getLane())) {
-        ruleIssues.add(RuleIssue.createRuleIssue(alertDefinition.getId(), ValidationError.VALIDATION_0027,
-          alertDefinition.getId(), alertDefinition.getLane()));
-      }
-    }
-    for(MetricDefinition metricDefinition : ruleDefinition.getMetricDefinitions()) {
-      if(!pipelineOutputLanes.contains(metricDefinition.getLane())) {
-        ruleIssues.add(RuleIssue.createRuleIssue(metricDefinition.getId(), ValidationError.VALIDATION_0027,
-          metricDefinition.getId(), metricDefinition.getLane()));
-      }
-    }
-    for(SamplingDefinition samplingDefinition : ruleDefinition.getSamplingDefinitions()) {
-      if(!pipelineOutputLanes.contains(samplingDefinition.getLane())) {
-        ruleIssues.add(RuleIssue.createRuleIssue(samplingDefinition.getId(), ValidationError.VALIDATION_0027,
-          samplingDefinition.getId(), samplingDefinition.getLane()));
-      }
-    }
-    for(MetricsAlertDefinition metricsAlertDefinition : ruleDefinition.getMetricsAlertDefinitions()) {
-      if(metricsAlertDefinition.getMetricId() != null &&
-        metricsAlertDefinition.getMetricId().startsWith(STAGE_PREFIX)) {
-        String[] strings = metricsAlertDefinition.getMetricId().split(DOT_REGEX);
-        String instanceName = strings[1];
-        if (!stageInstanceNames.contains(instanceName)) {
-          ruleIssues.add(RuleIssue.createRuleIssue(metricsAlertDefinition.getId(), ValidationError.VALIDATION_0028,
-            metricsAlertDefinition.getId(), instanceName));
-        }
-      }
-    }
-    ruleDefinition.setIssues(ruleIssues);
-    return ruleDefinition;
+    return MetricsConfigurator.removeGauge(getMetrics(), AlertsUtil.getAlertGaugeName(alertId));
   }
 
   @VisibleForTesting

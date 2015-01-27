@@ -506,7 +506,7 @@ angular.module('pipelineAgentApp.common')
       getPipelineRules: function(name) {
         var url;
 
-        url = apiBase + '/rules/' + name;
+        url = apiBase + '/pipeline-library/' + name + '/rules';
         return $http({
           method: 'GET',
           url: url
@@ -521,7 +521,7 @@ angular.module('pipelineAgentApp.common')
        * @returns Updated Pipeline Rules
        */
       savePipelineRules: function(name, rules) {
-        var url = apiBase + '/rules/' + name;
+        var url = apiBase + '/pipeline-library/' + name + '/rules';
         return $http({
           method: 'POST',
           url: url,

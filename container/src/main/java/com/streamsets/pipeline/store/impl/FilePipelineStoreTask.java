@@ -9,9 +9,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.AlertDefinition;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.MetricDefinition;
+import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.SamplingDefinition;
+import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.store.PipelineInfo;
@@ -22,19 +29,26 @@ import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
+import com.streamsets.pipeline.validation.RuleIssue;
+import com.streamsets.pipeline.validation.ValidationError;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class FilePipelineStoreTask extends AbstractTask implements PipelineStoreTask {
   public static final String CREATE_DEFAULT_PIPELINE_KEY = "create.default.pipeline";
   public static final boolean CREATE_DEFAULT_PIPELINE_DEFAULT = true;
+  private static final String STAGE_PREFIX = "stage.";
+  private static final String DOT_REGEX = "\\.";
 
   @VisibleForTesting
   static final String DEFAULT_PIPELINE_NAME = "xyz";
@@ -50,11 +64,16 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   private static final String INFO_FILE = "info.json";
   private static final String PIPELINE_FILE = "pipeline.json";
+  private static final String RULES_FILE = "rules.json";
 
   private final RuntimeInfo runtimeInfo;
   private final Configuration conf;
   private File storeDir;
   private ObjectMapper json;
+
+  //rules can be modified while the pipeline is running
+  //runner will look up the rule definition before running each batch, we need synchronization
+  private final Object rulesMutex;
 
   @Inject
   public FilePipelineStoreTask(RuntimeInfo runtimeInfo, Configuration conf) {
@@ -62,6 +81,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     this.runtimeInfo = runtimeInfo;
     this.conf = conf;
     json = ObjectMapperFactory.get();
+    rulesMutex = new Object();
   }
 
   @VisibleForTesting
@@ -103,6 +123,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   private File getPipelineFile(String name) {
     return new File(getPipelineDir(name), PIPELINE_FILE);
+  }
+
+  private File getRulesFile(String name) {
+    return new File(getPipelineDir(name), RULES_FILE);
   }
 
   @Override
@@ -248,6 +272,103 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       throw new PipelineStoreException(ContainerError.CONTAINER_0206, name, ex.getMessage(),
                                        ex);
     }
+  }
+
+  @Override
+  public RuleDefinition retrieveRules(String name, String tagOrRev) throws PipelineStoreException {
+    if (!hasPipeline(name)) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
+    }
+    if(!getRulesFile(name).exists()) {
+      //Has no rule definition, return empty rules
+      return new RuleDefinition(Collections.<com.streamsets.pipeline.config.AlertDefinition>emptyList(),
+        Collections.<com.streamsets.pipeline.config.MetricsAlertDefinition>emptyList(),
+        Collections.<com.streamsets.pipeline.config.SamplingDefinition>emptyList(),
+        Collections.<com.streamsets.pipeline.config.MetricDefinition>emptyList());
+    }
+    synchronized (rulesMutex) {
+      try {
+        RuleDefinition ruleDefinition = ObjectMapperFactory.get().readValue(
+          new DataStore(getRulesFile(name)).getInputStream(), RuleDefinition.class);
+        return ruleDefinition;
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
+  @Override
+  public RuleDefinition storeRules(String pipelineName, String tag, RuleDefinition ruleDefinition)
+    throws PipelineStoreException {
+    if (!hasPipeline(pipelineName)) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0200, pipelineName);
+    }
+    RuleDefinition validatedRuleDefinition = validateRuleDefinition(pipelineName, tag, ruleDefinition);
+    synchronized (rulesMutex) {
+      try {
+        ObjectMapperFactory.get().writeValue(new DataStore(getRulesFile(pipelineName)).getOutputStream(),
+          validatedRuleDefinition);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+      return validatedRuleDefinition;
+    }
+  }
+
+  @Override
+  public boolean deleteRules(String name) throws PipelineStoreException {
+    if(hasPipeline(name) && getRulesFile(name) != null && getRulesFile(name).exists()) {
+      return getRulesFile(name).delete();
+    }
+    return false;
+  }
+
+  private RuleDefinition validateRuleDefinition(String name, String rev, RuleDefinition ruleDefinition)
+    throws PipelineStoreException {
+    PipelineConfiguration pipelineConfig = load(name, rev);
+    Set<String> pipelineOutputLanes = new HashSet<>();
+    Set<String> stageInstanceNames = new HashSet<>();
+
+    for(StageConfiguration stageConfiguration : pipelineConfig.getStages()) {
+      pipelineOutputLanes.addAll(stageConfiguration.getOutputLanes());
+      stageInstanceNames.add(stageConfiguration.getInstanceName());
+    }
+
+    //TODO: Also validate all the EL expressions and create issues if they are not valid.
+    //TODO: Create a RuleDefinition validator similar to PipelineConfigurationValidator
+
+    List<RuleIssue> ruleIssues = new ArrayList<>();
+    for(AlertDefinition alertDefinition : ruleDefinition.getAlertDefinitions()) {
+      if(!pipelineOutputLanes.contains(alertDefinition.getLane())) {
+        ruleIssues.add(RuleIssue.createRuleIssue(alertDefinition.getId(), ValidationError.VALIDATION_0027,
+          alertDefinition.getId(), alertDefinition.getLane()));
+      }
+    }
+    for(MetricDefinition metricDefinition : ruleDefinition.getMetricDefinitions()) {
+      if(!pipelineOutputLanes.contains(metricDefinition.getLane())) {
+        ruleIssues.add(RuleIssue.createRuleIssue(metricDefinition.getId(), ValidationError.VALIDATION_0027,
+          metricDefinition.getId(), metricDefinition.getLane()));
+      }
+    }
+    for(SamplingDefinition samplingDefinition : ruleDefinition.getSamplingDefinitions()) {
+      if(!pipelineOutputLanes.contains(samplingDefinition.getLane())) {
+        ruleIssues.add(RuleIssue.createRuleIssue(samplingDefinition.getId(), ValidationError.VALIDATION_0027,
+          samplingDefinition.getId(), samplingDefinition.getLane()));
+      }
+    }
+    for(MetricsAlertDefinition metricsAlertDefinition : ruleDefinition.getMetricsAlertDefinitions()) {
+      if(metricsAlertDefinition.getMetricId() != null &&
+        metricsAlertDefinition.getMetricId().startsWith(STAGE_PREFIX)) {
+        String[] strings = metricsAlertDefinition.getMetricId().split(DOT_REGEX);
+        String instanceName = strings[1];
+        if (!stageInstanceNames.contains(instanceName)) {
+          ruleIssues.add(RuleIssue.createRuleIssue(metricsAlertDefinition.getId(), ValidationError.VALIDATION_0028,
+            metricsAlertDefinition.getId(), instanceName));
+        }
+      }
+    }
+    ruleDefinition.setIssues(ruleIssues);
+    return ruleDefinition;
   }
 
 }

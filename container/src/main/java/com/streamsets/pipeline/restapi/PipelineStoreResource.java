@@ -7,6 +7,7 @@ package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -36,8 +37,6 @@ public class PipelineStoreResource {
   private final StageLibraryTask stageLibrary;
   private final URI uri;
   private final String user;
-
-
 
   @Inject
   public PipelineStoreResource(URI uri, Principal user, StageLibraryTask stageLibrary, PipelineStoreTask store) {
@@ -107,6 +106,7 @@ public class PipelineStoreResource {
       @PathParam("name") String name)
       throws PipelineStoreException, URISyntaxException {
     store.delete(name);
+    store.deleteRules(name);
     return Response.ok().build();
   }
 
@@ -125,6 +125,25 @@ public class PipelineStoreResource {
     pipeline.setValidation(validator);
     pipeline = store.save(name, user, tag, tagDescription, pipeline);
     return Response.ok().entity(pipeline).build();
+  }
+
+  @Path("/{name}/rules")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getRules(
+    @PathParam("name") String name,
+    @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(store.retrieveRules(name, rev)).build();
+  }
+
+  @Path("/{name}/rules")
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response saveRules(
+    @PathParam("name") String name,
+    @QueryParam("rev") @DefaultValue("0") String rev,
+    RuleDefinition ruleDefinition) throws PipelineStoreException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(store.storeRules(name, rev, ruleDefinition)).build();
   }
 
 }

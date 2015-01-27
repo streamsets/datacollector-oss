@@ -67,7 +67,8 @@ public class TestMetricsChecker {
     MetricsChecker metricsChecker = new MetricsChecker(metricDefinition, metrics, variables, elEvaluator);
     metricsChecker.recordMetrics(TestUtil.createSnapshot("testMeterInvalid"));
     Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + metricDefinition.getId());
-    Assert.assertNull(meter);
+    Assert.assertNotNull(meter);
+    Assert.assertEquals(0, meter.getCount());
   }
 
   @Test
@@ -90,6 +91,7 @@ public class TestMetricsChecker {
     MetricsChecker metricsChecker = new MetricsChecker(metricDefinition, metrics, variables, elEvaluator);
     metricsChecker.recordMetrics(TestUtil.createSnapshot("testHistogramInvalid"));
     Histogram histogram = MetricsConfigurator.getHistogram(metrics, USER_PREFIX +  metricDefinition.getId());
-    Assert.assertNull(histogram);
+    Assert.assertNotNull(histogram);
+    Assert.assertEquals(0, histogram.getCount());
   }
 }

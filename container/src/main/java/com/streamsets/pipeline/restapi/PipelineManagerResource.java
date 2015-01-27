@@ -185,9 +185,21 @@ public class PipelineManagerResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getSampledRecords(
-    @QueryParam ("sampleId") String sampleId) throws PipelineManagerException {
+    @QueryParam ("sampleId") String sampleId,
+    @QueryParam ("sampleSize") @DefaultValue("10") int sampleSize) throws PipelineManagerException {
+    sampleSize = sampleSize > 100 ? 100 : sampleSize;
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getSampledRecords(sampleId)).build();
+      pipelineManager.getSampledRecords(sampleId, sampleSize)).build();
   }
 
+  @Path("/alerts/{pipelineName}")
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response deleteAlert(
+    @PathParam("pipelineName") String pipelineName,
+    @QueryParam("rev") @DefaultValue("0") String rev,
+    @QueryParam("alertId") String alertId) throws PipelineManagerException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
+      pipelineManager.deleteAlert(alertId)).build();
+  }
 }

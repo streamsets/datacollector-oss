@@ -58,8 +58,9 @@ public class AlertsChecker {
       if(recordCounter == null) {
         recordCounter = MetricsConfigurator.createCounter(metrics, LaneResolver.getPostFixedLaneForObserver(lane));
       }
-
       List<Record> records = snapshot.get(LaneResolver.getPostFixedLaneForObserver(lane));
+      //As of now we know that this definition does not apply to this stage because the snapshot does not
+      //have the lane. This will be fixed when we have per stage Observer implementation
       if(records != null && !records.isEmpty()) {
         for (Record record : records) {
           recordCounter.inc();
@@ -102,12 +103,12 @@ public class AlertsChecker {
 
   private void raiseAlert(Object value) {
     alertResponse.put("currentValue", value);
-    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
     if (gauge == null) {
       alertResponse.put("timestamp", System.currentTimeMillis());
     } else {
       //remove existing gauge
-      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()));
+      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
       alertResponse.put("timestamp", ((Map<String, Object>)gauge.getValue()).get("timestamp"));
     }
     Gauge<Object> alertResponseGauge = new Gauge<Object>() {
@@ -116,7 +117,7 @@ public class AlertsChecker {
         return alertResponse;
       }
     };
-    MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGuageName(alertDefinition.getId()),
+    MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()),
       alertResponseGauge);
   }
 }

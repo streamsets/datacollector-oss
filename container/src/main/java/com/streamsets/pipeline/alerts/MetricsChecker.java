@@ -40,38 +40,58 @@ public class MetricsChecker {
 
   public void recordMetrics(Map<String, List<Record>> snapshot) {
     if(metricDefinition.isEnabled()) {
-      String lane = metricDefinition.getLane();
-      String predicate = metricDefinition.getPredicate();
-      List<Record> records = snapshot.get(LaneResolver.getPostFixedLaneForObserver(lane));
-      for (Record record : records) {
-        boolean success = false;
-        try {
-          success = AlertsUtil.evaluateRecord(record, predicate, variables, elEvaluator);
-        } catch (ObserverException e) {
-          //A faulty condition should not take down rest of the alerts with it.
-          //Log and it and continue for now
-          LOG.error("Error processing metric definition '{}', reason: {}", metricDefinition.getId(), e.getMessage());
-        }
-        if (success) {
-          switch (metricDefinition.getMetricType()) {
-            case METER:
-              Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + metricDefinition.getId());
-              if (meter == null) {
-                meter = MetricsConfigurator.createMeter(metrics, USER_PREFIX + metricDefinition.getId());
-              }
-              meter.mark();
-              break;
-            case HISTOGRAM:
-              Histogram histogram = MetricsConfigurator.getHistogram(metrics, USER_PREFIX + metricDefinition.getId());
-              if (histogram == null) {
-                histogram = MetricsConfigurator.createHistogram5Min(metrics, USER_PREFIX + metricDefinition.getId());
-              }
-              histogram.update(1);
-            default:
-              //no-op
-          }
+      List<Record> records = snapshot.get(LaneResolver.getPostFixedLaneForObserver(metricDefinition.getLane()));
+      //As of now we know that this definition does not apply to this stage because the snapshot does not
+      //have the lane. This will be fixed when we have per stage Observer implementation
+      if(records != null && !records.isEmpty()) {
+        switch (metricDefinition.getMetricType()) {
+          case METER:
+            Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + metricDefinition.getId());
+            if (meter == null) {
+              meter = MetricsConfigurator.createMeter(metrics, USER_PREFIX + metricDefinition.getId());
+            }
+            recordMeter(meter, records);
+            break;
+          case HISTOGRAM:
+            Histogram histogram = MetricsConfigurator.getHistogram(metrics, USER_PREFIX + metricDefinition.getId());
+            if (histogram == null) {
+              histogram = MetricsConfigurator.createHistogram5Min(metrics, USER_PREFIX + metricDefinition.getId());
+            }
+            recordHistogram(histogram, records);
+            break;
+          default:
+            //no-op
         }
       }
+    }
+  }
+
+  private void recordHistogram(Histogram histogram, List<Record> records) {
+    for(Record record : records) {
+      boolean success = evaluate(record);
+      if (success) {
+        histogram.update(1);
+      }
+    }
+  }
+
+  private void recordMeter(Meter meter, List<Record> records) {
+    for (Record record : records) {
+      boolean success = evaluate(record);
+      if (success) {
+        meter.mark();
+      }
+    }
+  }
+
+  private boolean evaluate(Record record) {
+    try {
+      return AlertsUtil.evaluateRecord(record, metricDefinition.getPredicate(), variables, elEvaluator);
+    } catch (ObserverException e) {
+      //A faulty condition should not take down rest of the alerts with it.
+      //Log and it and continue for now
+      LOG.error("Error processing metric definition '{}', reason: {}", metricDefinition.getId(), e.getMessage());
+      return false;
     }
   }
 }

@@ -19,7 +19,7 @@ import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.observerstore.ObserverStore;
+import com.streamsets.pipeline.observerstore.SamplingStore;
 import com.streamsets.pipeline.runner.FullPipeBatch;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipe;
@@ -29,6 +29,9 @@ import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
+import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.util.ContainerError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReadWriteLock;
 
 public class ProductionPipelineRunner implements PipelineRunner {
 
@@ -49,7 +51,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private SourceOffsetTracker offsetTracker;
   private final SnapshotStore snapshotStore;
   private final ErrorRecordStore errorRecordStore;
-  private final ObserverStore observerStore;
+  private final PipelineStoreTask pipelineStore;
   private final int maxErrorRecordsPerStage;
   private final int maxPipelineErrors;
 
@@ -87,7 +89,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   public ProductionPipelineRunner(SnapshotStore snapshotStore, ErrorRecordStore errorRecordStore,
                                   int batchSize, int maxErrorRecordsPerStage, int maxPipelineErrors,
-      DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision, ObserverStore observerStore) {
+      DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision, PipelineStoreTask pipelineStore) {
     this.metrics = new MetricRegistry();
     this.batchSize = batchSize;
     this.maxErrorRecordsPerStage = maxErrorRecordsPerStage;
@@ -109,10 +111,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.pipelineName = pipelineName;
     this.revision = revision;
     this.errorRecordStore = errorRecordStore;
+    this.pipelineStore = pipelineStore;
     this.stageToErrorRecordsMap = new HashMap<>();
     this.stageToErrorMessagesMap = new HashMap<>();
-    this.observerStore = observerStore;
-
     errorRecordsMutex = new Object();
   }
 
@@ -193,7 +194,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
     sourceOffset = pipeBatch.getPreviousOffset();
 
     if(observer != null) {
-      RuleDefinition ruleDefinition = observerStore.retrieveRules(pipelineName, revision);
+      RuleDefinition ruleDefinition = null;
+      try {
+        ruleDefinition = pipelineStore.retrieveRules(pipelineName, revision);
+      } catch (PipelineStoreException e) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0000, e.getMessage());
+      }
       ((ProductionObserver) observer).setRuleDefinition(ruleDefinition);
     }
 
@@ -276,7 +282,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     synchronized (errorRecordsMutex) {
       if (stageToErrorRecordsMap == null || stageToErrorRecordsMap.isEmpty()
         || stageToErrorRecordsMap.get(instanceName) == null || stageToErrorRecordsMap.get(instanceName).isEmpty()) {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
       }
     }
     return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName));
@@ -287,7 +293,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
       if (stageToErrorMessagesMap == null || stageToErrorMessagesMap.isEmpty()
         || stageToErrorMessagesMap.get(instanceName) == null
         || stageToErrorMessagesMap.get(instanceName).isEmpty()) {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
       }
     }
     return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName));
