@@ -19,7 +19,7 @@ public class TestListTypeSupport {
     ListTypeSupport ts = new ListTypeSupport();
     List map = new ArrayList();
     Assert.assertEquals(map, ts.create(map));
-    Assert.assertSame(map, ts.create(map));
+    Assert.assertNotSame(map, ts.create(map));
   }
 
   @Test

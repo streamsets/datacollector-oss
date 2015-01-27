@@ -33,11 +33,11 @@ public class ListTypeSupport extends TypeSupport<List> {
   @Override
   @SuppressWarnings("unchecked")
   public Object clone(Object value) {
-    List List = null;
+    List list = null;
     if (value != null) {
-      List = deepCopy((List<Field>)value);
+      list = deepCopy((List<Field>)value);
     }
-    return List;
+    return list;
   }
 
   private List<Field> deepCopy(List<Field> list) {
@@ -47,6 +47,11 @@ public class ListTypeSupport extends TypeSupport<List> {
       copy.add(field.clone());
     }
     return copy;
+  }
+
+  @Override
+  public Object create(Object value) {
+    return clone(value);
   }
 
 }
