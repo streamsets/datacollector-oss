@@ -65,7 +65,82 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     Record record = new Record(){
       @Override
       public Header getHeader() {
-        return null;
+        return new Header() {
+          @Override
+          public String getStageCreator() {
+            return null;
+          }
+
+          @Override
+          public String getSourceId() {
+            return null;
+          }
+
+          @Override
+          public String getTrackingId() {
+            return null;
+          }
+
+          @Override
+          public String getPreviousTrackingId() {
+            return null;
+          }
+
+          @Override
+          public String getStagesPath() {
+            return null;
+          }
+
+          @Override
+          public byte[] getRaw() {
+            return new byte[0];
+          }
+
+          @Override
+          public String getRawMimeType() {
+            return null;
+          }
+
+          @Override
+          public Set<String> getAttributeNames() {
+            return null;
+          }
+
+          @Override
+          public String getAttribute(String name) {
+            return null;
+          }
+
+          @Override
+          public void setAttribute(String name, String value) {
+
+          }
+
+          @Override
+          public void deleteAttribute(String name) {
+
+          }
+
+          @Override
+          public String getErrorCode() {
+            return null;
+          }
+
+          @Override
+          public String getErrorMessage() {
+            return null;
+          }
+
+          @Override
+          public String getErrorStage() {
+            return null;
+          }
+
+          @Override
+          public long getErrorTimestamp() {
+            return 0;
+          }
+        };
       }
 
       @Override

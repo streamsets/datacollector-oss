@@ -216,4 +216,36 @@ public class TestExpressionProcessor {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testRecordId() throws StageException {
+
+    ExpressionProcessor.ExpressionProcessorConfig complexExpressionConfig = new ExpressionProcessor.ExpressionProcessorConfig();
+    complexExpressionConfig.expression = "${record:id()}";
+    complexExpressionConfig.fieldToSet = "/id";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
+        .addConfiguration("constants", null)
+        .addConfiguration("expressionProcessorConfigs", ImmutableList.of(complexExpressionConfig))
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertEquals(1, result.size());
+      Assert.assertTrue(result.containsKey("id"));
+      Assert.assertEquals("s:1", result.get("id").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }

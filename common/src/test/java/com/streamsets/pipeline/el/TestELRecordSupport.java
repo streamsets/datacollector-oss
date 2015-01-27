@@ -20,7 +20,10 @@ public class TestELRecordSupport {
 
     ELEvaluator.Variables variables = new ELEvaluator.Variables();
 
+    Record.Header header = Mockito.mock(Record.Header.class);
+    Mockito.when(header.getSourceId()).thenReturn("id");
     Record record = Mockito.mock(Record.class);
+    Mockito.when(record.getHeader()).thenReturn(header);
     Mockito.when(record.get(Mockito.eq(""))).thenReturn(Field.create(1));
     Mockito.when(record.get(Mockito.eq("/x"))).thenReturn(null);
 
@@ -29,6 +32,7 @@ public class TestELRecordSupport {
     Assert.assertTrue(eval.eval(variables, "${record:type('') eq INTEGER}", Boolean.class));
     Assert.assertTrue(eval.eval(variables, "${record:value('') eq 1}", Boolean.class));
     Assert.assertNull(eval.eval(variables, "${record:value('/x')}"));
+    Assert.assertEquals("id", eval.eval(variables, "${record:id()}"));
   }
 
 }

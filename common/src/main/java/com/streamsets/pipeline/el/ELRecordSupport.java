@@ -39,13 +39,24 @@ public class ELRecordSupport {
     return value;
   }
 
+  public static String getId() {
+    String id = null;
+    Record record = (Record) ELEvaluator.getVariablesInScope().getContextVariable(RECORD_CONTEXT_VAR);
+    if (record != null) {
+      id = record.getHeader().getSourceId();
+    }
+    return id;
+  }
+
   private static final Method RECORD_TYPE;
   private static final Method RECORD_VALUE;
+  private static final Method RECORD_ID;
 
   static {
     try {
       RECORD_TYPE = ELRecordSupport.class.getMethod("getType", String.class);
       RECORD_VALUE = ELRecordSupport.class.getMethod("getValue", String.class);
+      RECORD_ID = ELRecordSupport.class.getMethod("getId");
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
@@ -55,6 +66,7 @@ public class ELRecordSupport {
     Utils.checkNotNull(elEvaluator, "elEvaluator");
     elEvaluator.registerFunction("record", "type", RECORD_TYPE);
     elEvaluator.registerFunction("record", "value", RECORD_VALUE);
+    elEvaluator.registerFunction("record", "id", RECORD_ID);
     for (Field.Type type : Field.Type.values()) {
       elEvaluator.registerConstant(type.toString(), type);
     }
