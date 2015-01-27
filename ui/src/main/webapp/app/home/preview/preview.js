@@ -221,11 +221,11 @@ angular
 
           if(!$scope.previewMultipleStages) {
             firstStageInstance = $scope.pipelineConfig.stages[0];
+            $scope.changeStageSelection({
+              selectedObject: firstStageInstance,
+              type: pipelineConstant.STAGE_INSTANCE
+            });
           }
-          $scope.changeStageSelection({
-            selectedObject: firstStageInstance,
-            type: pipelineConstant.STAGE_INSTANCE
-          });
 
           $scope.showLoading = false;
         }).
