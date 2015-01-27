@@ -139,6 +139,9 @@ module.exports = function(grunt) {
         '/**\n' +
         ' * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' * <%= pkg.homepage %>\n' +
+        ' * (c) 2015 StreamSets, Inc. All rights reserved. May not \n' +
+        ' * be copied, modified, or distributed in whole or part without \n' +
+        ' * written consent of StreamSets, Inc. \n' +
         ' */\n'
     },
 
@@ -260,7 +263,7 @@ module.exports = function(grunt) {
        */
       build_css: {
         src: getBuildConcatCSSFiles(),
-        dest: '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css'
+        dest: '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css'
       },
       /**
        * The `compile_js` target is the concatenation of our application source
@@ -271,7 +274,7 @@ module.exports = function(grunt) {
           banner: '<%= meta.banner %>'
         },
         src: getCompileJSFiles(),
-        dest: '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.js'
+        dest: '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.js'
       }
     },
 
@@ -314,12 +317,12 @@ module.exports = function(grunt) {
     less: {
       build: {
         files: {
-          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= base_dir %><%= app_files.less %>'
+          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css': '<%= base_dir %><%= app_files.less %>'
         }
       },
       compile: {
         files: {
-          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= base_dir %><%= app_files.less %>'
+          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css': '<%= base_dir %><%= app_files.less %>'
         },
         options: {
           cleancss: true,
@@ -409,7 +412,7 @@ module.exports = function(grunt) {
           'templates-app.js',
           'templates-common.js',
           '<%= vendor_files.css %>',
-          'assets/<%= pkg.name %>-<%= pkg.version %>.css'
+          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css'
         ]
       },
 
@@ -421,9 +424,9 @@ module.exports = function(grunt) {
       compile: {
         cwd: '<%= build_dir %>',
         src: [
-          'assets/<%= pkg.name %>-<%= pkg.version %>.js',
+          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.js',
           '<%= vendor_files.css %>',
-          'assets/<%= pkg.name %>-<%= pkg.version %>.css'
+          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css'
         ]
       }
     },
@@ -436,14 +439,14 @@ module.exports = function(grunt) {
       build: {
         cwd: '<%= build_dir %>',
         src: [
-          'assets/<%= pkg.name %>-<%= pkg.version %>.css'
+          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css'
         ]
       },
 
       compile: {
         cwd: '<%= build_dir %>',
         src: [
-          'assets/<%= pkg.name %>-<%= pkg.version %>.css'
+          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css'
         ]
       }
     },
@@ -636,7 +639,7 @@ module.exports = function(grunt) {
       cssFiles.push(targetDir + '/' + file);
     });
 
-    cssFiles.push('<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css');
+    cssFiles.push('<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css');
 
     console.log(cssFiles);
 
