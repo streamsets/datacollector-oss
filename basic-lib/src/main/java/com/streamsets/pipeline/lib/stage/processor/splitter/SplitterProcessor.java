@@ -25,7 +25,7 @@ import java.util.List;
 @GenerateResourceBundle
 @StageDef(
     version="1.0.0",
-    label="String Splitter",
+    label="Field Splitter",
     description = "Splits a string field into multiple strings based on the specified character separator",
     icon="splitter.png")
 public class SplitterProcessor extends SingleLaneRecordProcessor {

@@ -40,7 +40,7 @@ import java.util.Set;
 
 @GenerateResourceBundle
 @StageDef(version="0.0.1",
-  label="Kafka Target",
+  label="Kafka Producer",
   icon="kafka.png")
 @ConfigGroups(value = KafkaTarget.KafkaTargetConfigGroups.class)
 public class KafkaTarget extends BaseTarget {

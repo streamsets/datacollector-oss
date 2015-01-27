@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Field Mask Processor",
+@StageDef( version="1.0.0", label="Field Masker",
   description = "Replaces the selected string fields with the corresponding masks.",
   icon="mask.png")
 public class FieldMaskProcessor extends SingleLaneRecordProcessor {
