@@ -415,7 +415,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
       valid: false
     });
 
-    $httpBackend.expectGET('rest/v1/rules/xyz').respond({});
+    $httpBackend.expectGET('rest/v1/pipeline-library/xyz/rules').respond({});
 
 
     $controller('HomeController', {

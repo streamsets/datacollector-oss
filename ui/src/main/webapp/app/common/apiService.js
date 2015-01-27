@@ -552,7 +552,7 @@ angular.module('pipelineAgentApp.common')
        * @returns {*}
        */
       deleteAlert: function(name, ruleId) {
-        var url = apiBase + '/rules/' + name + '/deleteAlert?alertId=' + ruleId;
+        var url = apiBase + '/pipeline/alerts/' + name + '?alertId=' + ruleId;
 
         return $http({
           method: 'DELETE',

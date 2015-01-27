@@ -117,7 +117,11 @@ public class ProductionObserverRunnable implements Runnable {
   public List<Record> getSampledRecords(String sampleDefinitionId, int size) {
     //FIXME<Hari>: synchronize access to evicting queue
     if(sampleIdToRecordsMap.get(sampleDefinitionId) != null) {
-      return new CopyOnWriteArrayList<>(sampleIdToRecordsMap.get(sampleDefinitionId)).subList(0, size);
+      if(sampleIdToRecordsMap.get(sampleDefinitionId).size() > size) {
+        return new CopyOnWriteArrayList<>(sampleIdToRecordsMap.get(sampleDefinitionId)).subList(0, size);
+      } else {
+        return new CopyOnWriteArrayList<>(sampleIdToRecordsMap.get(sampleDefinitionId));
+      }
     }
     return Collections.emptyList();
   }
