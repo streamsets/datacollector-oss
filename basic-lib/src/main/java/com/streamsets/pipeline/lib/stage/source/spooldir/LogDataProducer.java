@@ -15,6 +15,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunLineReader;
 import com.streamsets.pipeline.lib.util.LineToRecord;
+import com.streamsets.pipeline.lib.util.StageLibError;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,7 @@ public class LogDataProducer implements DataProducer {
       OverrunLineReader lineReader = new OverrunLineReader(reader, maxLogLineLength);
       return produce(sourceFile, offset, lineReader, maxBatchSize, batchMaker);
     } catch (IOException ex) {
-      throw new StageException(null, ex.getMessage(), ex);
+      throw new StageException(StageLibError.LIB_0003, file, offset, ex.getMessage(), ex);
     }
   }
 

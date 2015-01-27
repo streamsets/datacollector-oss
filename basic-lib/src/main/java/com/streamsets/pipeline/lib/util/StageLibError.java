@@ -13,6 +13,8 @@ public enum StageLibError implements ErrorCode {
   LIB_0001("Log File '{}' does not exist"),
   LIB_0002("Insufficient permissions to read the log file '{}'"),
 
+  LIB_0003("LogDatProducer file='{}' offset='{}', {}"),
+
   // Selector
   LIB_0010("Selector must have at least 1 output lane"),
   LIB_0011("There are more output lanes '{}' than lane-predicates '{}'"),

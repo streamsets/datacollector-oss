@@ -32,8 +32,8 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldValueReplacer.class);
 
-  @ConfigDef(label = "Fields to NUll", required = false, type = Type.MODEL, defaultValue="",
-    description="The fields whose values must be set to null")
+  @ConfigDef(label = "Fields to check for Null", required = false, type = Type.MODEL, defaultValue="",
+    description="The fields whose values must be set if they are Null")
   @FieldSelector
   public List<String> fieldsToNull;
 

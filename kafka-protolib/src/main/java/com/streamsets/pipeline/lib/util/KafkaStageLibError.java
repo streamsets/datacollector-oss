@@ -9,6 +9,9 @@ import com.streamsets.pipeline.api.ErrorCode;
 
 public enum KafkaStageLibError implements ErrorCode {
 
+  KFK_0100("Could not parse CVS, {}"),
+  KFK_0101("Could not parse JSON, {}"),
+
   //Kafka source and Target messages
   KFK_0300("A message with offset '{}' which is greater than the latest offset '{}' is requested from Kafka topic '{}' partition '{}'"),
   KFK_0301("Could not find new leader after kafka broker failure"),

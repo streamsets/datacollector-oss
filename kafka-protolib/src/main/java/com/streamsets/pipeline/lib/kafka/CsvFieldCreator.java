@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.io.CountingReader;
+import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -40,7 +41,7 @@ public class CsvFieldCreator implements FieldCreator {
       map.put("values", Field.create(values));
       return Field.create(map);
     }catch (Exception e) {
-      throw new StageException(null, e.getMessage(), e);
+      throw new StageException(KafkaStageLibError.KFK_0100, e.getMessage(), e);
     }
   }
 }
