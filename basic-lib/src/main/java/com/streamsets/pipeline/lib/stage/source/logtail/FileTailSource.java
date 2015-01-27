@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.stage.source.logtail;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
@@ -30,7 +31,7 @@ import java.util.concurrent.BlockingQueue;
                         "typically a log file.",
           icon="fileTail.png")
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
-public class FileTailSource extends BaseSource {
+public class FileTailSource extends BaseSource implements OffsetCommitter {
 
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
 
@@ -64,18 +65,36 @@ public class FileTailSource extends BaseSource {
   private LogTail logTail;
   private LineToRecord lineToRecord;
 
+  private String fileOffset;
+  private long recordCount;
+
   @Override
   protected void init() throws StageException {
     super.init();
     File logFile = new File(fileName);
+    if (!logFile.exists()) {
+      try {
+        // waiting for a second in case the log is in the middle of a file rotation and the file does not exist
+        // at this very moment.
+        Thread.sleep(1000);
+      } catch (InterruptedException ex) {
+        //NOP
+      }
+      if (!logFile.exists()) {
+        throw new StageException(StageLibError.LIB_0001, logFile);
+      }
+    }
     if (logFile.exists() && !logFile.canRead()) {
-      throw new StageException(StageLibError.LIB_0001, logFile);
+      throw new StageException(StageLibError.LIB_0002, logFile);
     }
     maxWaitTimeMillis = maxWaitTimeSecs * 1000;
     logLinesQueue = new ArrayBlockingQueue<>(2 * batchSize);
     logTail = new LogTail(logFile, true, getInfo(), logLinesQueue);
     logTail.start();
     lineToRecord = new LineToRecord(false);
+
+    fileOffset = String.format("%s::%d", fileName, System.currentTimeMillis());
+    recordCount = 0;
   }
 
   @Override
@@ -84,11 +103,18 @@ public class FileTailSource extends BaseSource {
     super.destroy();
   }
 
+  String getFileOffset() {
+    return fileOffset;
+  }
+
+  long getRecordCount() {
+    return recordCount;
+  }
+
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     long start = System.currentTimeMillis();
     int fetch = Math.min(batchSize, maxBatchSize);
-    String now = "." + Long.toString(System.currentTimeMillis()) + ".";
     List<String> lines = new ArrayList<>(fetch);
     while (((System.currentTimeMillis() - start) < maxWaitTimeMillis) && (logLinesQueue.size() < fetch)) {
       try {
@@ -99,10 +125,16 @@ public class FileTailSource extends BaseSource {
     }
     logLinesQueue.drainTo(lines, fetch);
     for (int i = 0; i < lines.size(); i++) {
-      Record record = lineToRecord.createRecord(getContext(), fileName, -1, lines.get(i), false);
+      Record record = lineToRecord.createRecord(getContext(), getFileOffset(), getRecordCount(), lines.get(i), false);
       batchMaker.addRecord(record);
+      recordCount++;
     }
-    return OFFSET;
+    return String.format("%s::%d", getFileOffset(), getRecordCount());
+  }
+
+  @Override
+  public void commit(String offset) throws StageException {
+    //NOP
   }
 
 }

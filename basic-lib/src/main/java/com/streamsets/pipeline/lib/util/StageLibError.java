@@ -10,7 +10,8 @@ import com.streamsets.pipeline.api.ErrorCode;
 public enum StageLibError implements ErrorCode {
 
   // LogTailSource
-  LIB_0001("Insufficient permissions to read the log file '{}'"),
+  LIB_0001("Log File '{}' does not exist"),
+  LIB_0002("Insufficient permissions to read the log file '{}'"),
 
   // Selector
   LIB_0010("Selector must have at least 1 output lane"),
