@@ -72,6 +72,7 @@ angular
           $rootScope.common.errors = [];
         }
 
+        $scope.previewMode = false;
 
         var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig, undefined,
             firstOpenLane, relativeXPos, relativeYPos),

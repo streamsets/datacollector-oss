@@ -45,7 +45,7 @@
 
 
     <div class="alert alert-dismissible alert-warning alert-select-stage" role="alert"
-         ng-if="firstOpenLane.stageInstance && common.errors.length === 0">
+         ng-if="firstOpenLane.stageInstance && common.errors.length === 0 && !previewMode">
 
       <button type="button" class="close" ng-click="firstOpenLane.stageInstance = undefined">
         <span aria-hidden="true">&times;</span>
