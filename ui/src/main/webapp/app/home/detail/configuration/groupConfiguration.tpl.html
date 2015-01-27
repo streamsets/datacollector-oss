@@ -103,7 +103,7 @@
                      tooltip="{{customeFieldConfigDefintion.description}}"
                      tooltip-trigger="mouseenter"></i>
                 </th>
-                <th class=""></th>
+                <th class="custom-field-buttons"></th>
               </tr>
               </thead>
               <tbody>
@@ -197,11 +197,16 @@
                 </td>
 
                 <td>
-                  <div class="col-xs-1 btn-group" role="group" aria-label="Default button group">
+                  <div class="btn-group" role="group" aria-label="Default button group">
                     <button type="button" class="btn btn-default btn-sm"
                             ng-hide="$first && $last && isPipelineRunning"
                             ng-click="removeFromCustomField(detailPaneConfig, customeFieldValueList, $index)">
                       <i class="fa fa-minus pointer"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm"
+                            ng-hide="isPipelineRunning"
+                            ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, configDefinition.model.configDefinitions)">
+                      <i class="fa fa-plus pointer"></i>
                     </button>
                   </div>
                 </td>
@@ -210,10 +215,11 @@
               </tbody>
             </table>
 
-            <button type="button" class="btn btn-primary btn-sm pull-right"
+            <button type="button" class="btn btn-default btn-sm pull-right"
+                    ng-if="customeFieldValueList.length === 0"
                     ng-hide="isPipelineRunning"
                     ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, configDefinition.model.configDefinitions)">
-              <i class="fa fa-plus pointer"></i>{{'global.form.add' | translate}}
+              <i class="fa fa-plus pointer"></i>
             </button>
 
           </div>
