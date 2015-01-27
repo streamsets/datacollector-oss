@@ -122,7 +122,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
     @FieldSelector
     public List<String> fieldsToHash;
 
-    @ConfigDef(label = "Hash Type", required = true, type = Type.MODEL, defaultValue="",
+    @ConfigDef(label = "Hash Type", required = true, type = Type.MODEL, defaultValue="MD5",
       description="The hash algorithm that must be used to hash the fields.")
     @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = HashTypeChooserValue.class)
     public HashType hashType;

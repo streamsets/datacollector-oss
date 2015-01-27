@@ -21,6 +21,21 @@
   </div>
 </script>
 
+<script type="text/ng-template" id="elStringConfigurationTemplate">
+  <div class="controls col-lg-7 col-md-8">
+    <textarea class="form-control"
+              rows="1"
+              name="{{configDefinition.name}}"
+              focus-me="{{autoFocusConfigName === configDefinition.name}}"
+              ng-readonly="isPipelineRunning"
+              ng-model="detailPaneConfig.configuration[configIndex].value"
+              ng-required="configDefinition.required"></textarea>
+
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+  </div>
+</script>
+
+
 <script type="text/ng-template" id="characterConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
     <input type="text" class="form-control character-type" name="{{configDefinition.name}}"
@@ -258,4 +273,15 @@
          ng-readonly="isPipelineRunning"
          ng-model="customFieldValue[customFieldConfigDefinition.name]"
          ng-required="customFieldConfigDefinition.required">
+</script>
+
+
+<script type="text/ng-template" id="elStringComplexConfigurationTemplate">
+  <textarea class="form-control"
+            rows="1"
+            name="{{customFieldConfigDefinition.name + $index}}"
+            placeholder="{{customFieldConfigDefinition.label}}"
+            ng-readonly="isPipelineRunning"
+            ng-model="customFieldValue[customFieldConfigDefinition.name]"
+            ng-required="customFieldConfigDefinition.required"></textarea>
 </script>
