@@ -21,6 +21,7 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.ShutdownObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,7 @@ public class ProductionObserverRunnable implements Runnable {
   private final String rev;
   private final ProductionPipelineManagerTask pipelineManager;
   private final BlockingQueue<ProductionObserveRequest> requestQueue;
+  private final ShutdownObject shutdownObject;
   private volatile Thread runningThread;
   private final MetricRegistry metrics;
   private ELEvaluator elEvaluator;
@@ -48,14 +50,15 @@ public class ProductionObserverRunnable implements Runnable {
   private final Map<String, EvictingQueue<Record>> sampleIdToRecordsMap;
 
   public ProductionObserverRunnable(String pipelineName, String rev, ProductionPipelineManagerTask pipelineManager,
-                                    BlockingQueue<ProductionObserveRequest> requestQueue) {
+                                    BlockingQueue<ProductionObserveRequest> requestQueue,
+                                    ShutdownObject shutdownObject) {
     this.pipelineName = pipelineName;
     this.rev = rev;
     this.pipelineManager = pipelineManager;
     this.requestQueue = requestQueue;
     this.metrics = this.pipelineManager.getMetrics();
     this.sampleIdToRecordsMap = new ConcurrentHashMap<>();
-
+    this.shutdownObject = shutdownObject;
     elEvaluator = new ELEvaluator();
     variables = new ELEvaluator.Variables();
     ELBasicSupport.registerBasicFunctions(elEvaluator);
@@ -66,7 +69,7 @@ public class ProductionObserverRunnable implements Runnable {
   @Override
   public void run() {
     runningThread = Thread.currentThread();
-    while(true) {
+    while(!shutdownObject.isStop()) {
       try {
         ProductionObserveRequest productionObserveRequest = requestQueue.poll(1000, TimeUnit.MILLISECONDS);
         if (productionObserveRequest != null && productionObserveRequest.getRuleDefinition() != null) {

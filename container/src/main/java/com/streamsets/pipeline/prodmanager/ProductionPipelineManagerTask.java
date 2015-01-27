@@ -292,9 +292,13 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private void handleStartRequest(String name, String rev) throws PipelineManagerException, StageException
       , PipelineRuntimeException, PipelineStoreException {
     createPipeline(name, rev);
-    observerRunnable = new ProductionObserverRunnable(name, rev, this, productionObserveRequests);
+    //Shutdown object is shared between Observer and Pipeline Runner.
+    //When pipeline runner stops because of an exception or because of finishing work normally, it signals
+    //the observer thread to stop using this object
+    ShutdownObject shutdownObject = new ShutdownObject();
+    observerRunnable = new ProductionObserverRunnable(name, rev, this, productionObserveRequests, shutdownObject);
     executor.submit(observerRunnable);
-    pipelineRunnable = new ProductionPipelineRunnable(this, prodPipeline, name, rev);
+    pipelineRunnable = new ProductionPipelineRunnable(this, prodPipeline, name, rev, shutdownObject);
     executor.submit(pipelineRunnable);
     LOG.debug("Started pipeline {} {}", name, rev);
   }

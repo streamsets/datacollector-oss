@@ -8,6 +8,7 @@ package com.streamsets.pipeline.runner.production;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.ShutdownObject;
 import com.streamsets.pipeline.prodmanager.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +24,15 @@ public class ProductionPipelineRunnable implements Runnable {
   private volatile Thread runningThread;
   private volatile boolean nodeProcessShutdown;
   private boolean exception;
+  private final ShutdownObject shutdownObject;
 
   public ProductionPipelineRunnable(ProductionPipelineManagerTask pipelineManager, ProductionPipeline pipeline,
-                                    String name, String rev) {
+                                    String name, String rev, ShutdownObject shutdownObject) {
     this.pipelineManager = pipelineManager;
     this.pipeline = pipeline;
     this.rev = rev;
     this.name = name;
+    this.shutdownObject = shutdownObject;
   }
 
   @Override
@@ -55,6 +58,8 @@ public class ProductionPipelineRunnable implements Runnable {
       throw e;
     } finally {
       runningThread = null;
+      //signal observer thread [which shares this object] to stop
+      shutdownObject.setStop(true);
     }
 
     if(pipeline.wasStopped()) {

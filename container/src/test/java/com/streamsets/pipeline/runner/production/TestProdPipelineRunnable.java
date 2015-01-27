@@ -13,6 +13,7 @@ import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.ShutdownObject;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -77,7 +78,8 @@ public class TestProdPipelineRunnable {
     TestUtil.captureMockStages();
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION);
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION,
+      new ShutdownObject());
     runnable.run();
 
     //The source returns null offset because all the data from source was read
@@ -92,7 +94,8 @@ public class TestProdPipelineRunnable {
     TestUtil.captureMockStages();
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION);
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION,
+      new ShutdownObject());
 
     runnable.stop(false);
     Assert.assertTrue(pipeline.wasStopped());
@@ -127,7 +130,8 @@ public class TestProdPipelineRunnable {
     });
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION);
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION,
+      new ShutdownObject());
 
     Thread t = new Thread(runnable);
     t.start();
@@ -149,7 +153,8 @@ public class TestProdPipelineRunnable {
     });
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION);
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION,
+      new ShutdownObject());
 
     //Stops after the first batch
     runnable.run();
