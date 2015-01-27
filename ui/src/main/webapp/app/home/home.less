@@ -223,8 +223,12 @@
       margin-bottom: @smallPadding * .7;
 
       .form-control {
-        height: 25px;
+        min-height: 25px;
         padding: 0 @smallPadding;
+      }
+
+      input.form-control, select.form-control, textarea.form-control {
+        height: 25px;
       }
     }
 
