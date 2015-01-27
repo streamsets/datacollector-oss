@@ -30,17 +30,17 @@ body {
   overflow: hidden;
 
   .navbar-fixed-top {
-    height: 60px;
+    height: 50px;
 
     a.logo {
       padding: 0 20px;
       display: inline-block;
       width: 260px;
-      height: 60px;
+      height: 50px;
       overflow: hidden;
 
       img {
-        width: 240px;
+        width: 210px;
         margin-top: -19px;
       }
     }
@@ -50,8 +50,8 @@ body {
       >li {
         >a {
           font-size: 1.05em;
-          padding-top: 20px;
-          padding-bottom: 20px;
+          padding-top: @defaultPadding * 1.5;
+          padding-bottom: @defaultPadding * 1.5;
         }
 
         .density-check-icon {
@@ -70,7 +70,7 @@ body {
 
 
   .page-panel {
-    margin-top: 60px;
+    margin-top: 50px;
     height: 100%;
 
     border: 0;
@@ -164,10 +164,10 @@ body {
   .login-container {
     background: #29b4e1 url('/assets/logo-watermark-big.png') no-repeat center bottom;
     position: absolute;
-    top: 60px;
+    top: 50px;
     left: 0;
     width: 100%;
-    height: calc(~"100% - 60px");
+    height: calc(~"100% - 50px");
     overflow: hidden;
 
     .alert-danger {
