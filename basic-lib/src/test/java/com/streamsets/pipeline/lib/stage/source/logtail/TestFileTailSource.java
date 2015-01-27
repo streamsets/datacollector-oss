@@ -28,6 +28,7 @@ public class TestFileTailSource {
     String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
 
     SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
+        .addConfiguration("fileDataType", FileDataType.LOG_DATA)
         .addConfiguration("fileName", logFile)
         .addConfiguration("batchSize", 25)
         .addConfiguration("maxWaitTimeSecs", 1)
@@ -48,6 +49,7 @@ public class TestFileTailSource {
       Assert.assertTrue(file.setReadable(false));
 
       SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
+          .addConfiguration("fileDataType", FileDataType.LOG_DATA)
           .addConfiguration("fileName", logFile)
           .addConfiguration("batchSize", 25)
           .addConfiguration("maxWaitTimeSecs", 1)
@@ -60,7 +62,7 @@ public class TestFileTailSource {
   }
 
   @Test
-  public void testTail() throws Exception {
+  public void testTailLog() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDataDir.mkdirs());
     String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
@@ -70,6 +72,7 @@ public class TestFileTailSource {
     is.close();
 
     SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
+        .addConfiguration("fileDataType", FileDataType.LOG_DATA)
         .addConfiguration("fileName", logFile)
         .addConfiguration("batchSize", 25)
         .addConfiguration("maxWaitTimeSecs", 1)
@@ -89,8 +92,48 @@ public class TestFileTailSource {
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Record record = output.getRecords().get("lane").get(0);
       Assert.assertEquals("HELLO", record.get("/line").getValueAsString());
-      Assert.assertEquals("file=" + ((FileTailSource)runner.getStage()).getFileOffset() + " offset=0",
-                          record.getHeader().getSourceId());
+      Assert.assertEquals(((FileTailSource)runner.getStage()).getFileOffset() + "::0", record.getHeader().getSourceId());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testTailJson() throws Exception {
+    File testDataDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir.mkdirs());
+    String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
+    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("testLogFile.txt");
+    OutputStream os = new FileOutputStream(logFile);
+    IOUtils.copy(is, os);
+    is.close();
+
+    SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
+        .addConfiguration("fileDataType", FileDataType.JSON_DATA)
+        .addConfiguration("fileName", logFile)
+        .addConfiguration("batchSize", 25)
+        .addConfiguration("maxWaitTimeSecs", 1)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    Thread.sleep(500);
+    os.write("{\"a\": 1}\n".getBytes());
+    os.write("[{\"b\": 2}]\n".getBytes());
+    Thread.sleep(500);
+    try {
+      long start = System.currentTimeMillis();
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      long end = System.currentTimeMillis();
+      Assert.assertTrue(end - start >= 1000);
+      Assert.assertNotNull(output.getNewOffset());
+      Assert.assertEquals(((FileTailSource) runner.getStage()).getFileOffset() + "::2", output.getNewOffset());
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      Record record = output.getRecords().get("lane").get(0);
+      Assert.assertEquals(1, record.get("/a").getValue());
+      Assert.assertEquals(((FileTailSource)runner.getStage()).getFileOffset() + "::0", record.getHeader().getSourceId());
+      record = output.getRecords().get("lane").get(1);
+      Assert.assertEquals(2, record.get("[0]/b").getValue());
+      Assert.assertEquals(((FileTailSource)runner.getStage()).getFileOffset() + "::1", record.getHeader().getSourceId());
     } finally {
       runner.runDestroy();
     }

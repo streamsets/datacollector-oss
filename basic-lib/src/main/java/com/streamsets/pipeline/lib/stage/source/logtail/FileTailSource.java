@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.lib.stage.source.logtail;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.OffsetCommitter;
@@ -13,10 +14,13 @@ import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
+import com.streamsets.pipeline.lib.util.JsonLineToRecord;
 import com.streamsets.pipeline.lib.util.LineToRecord;
 import com.streamsets.pipeline.lib.util.StageLibError;
+import com.streamsets.pipeline.lib.util.ToRecord;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,13 +39,19 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
 
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
 
-  private static final String OFFSET = "tailing";
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Data Format",
+      description = "The data format in the files",
+      displayPosition = 10)
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileDataTypeChooserValues.class)
+  public FileDataType fileDataType;
 
   @ConfigDef(required = true,
              type = ConfigDef.Type.STRING,
              label = "File Path",
              description = "Full file path of the file to tail",
-             displayPosition = 0)
+             displayPosition = 20)
   public String fileName;
 
   @ConfigDef(required = true,
@@ -49,7 +59,7 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
              label = "Maximum Lines per Batch",
              description = "The maximum number of file lines that will be sent in a single batch",
              defaultValue = "10",
-             displayPosition = 10)
+             displayPosition = 20)
   public int batchSize;
 
   @ConfigDef(required = true,
@@ -57,13 +67,13 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
              label = "Batch Wait Time (secs)",
              description = " Maximum amount of time to wait to fill a batch before sending it",
              defaultValue = "5",
-             displayPosition = 20)
+             displayPosition = 30)
   public int maxWaitTimeSecs;
 
   private BlockingQueue<String> logLinesQueue;
   private long maxWaitTimeMillis;
   private LogTail logTail;
-  private LineToRecord lineToRecord;
+  private ToRecord lineToRecord;
 
   private String fileOffset;
   private long recordCount;
@@ -91,7 +101,16 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     logLinesQueue = new ArrayBlockingQueue<>(2 * batchSize);
     logTail = new LogTail(logFile, true, getInfo(), logLinesQueue);
     logTail.start();
-    lineToRecord = new LineToRecord(false);
+    switch (fileDataType) {
+      case LOG_DATA:
+        lineToRecord = new LineToRecord(false);
+        break;
+      case JSON_DATA:
+        lineToRecord = new JsonLineToRecord();
+        break;
+      default:
+        throw new StageException(StageLibError.LIB_0006, "fileDataType", fileDataType);
+    }
 
     fileOffset = String.format("%s::%d", fileName, System.currentTimeMillis());
     recordCount = 0;

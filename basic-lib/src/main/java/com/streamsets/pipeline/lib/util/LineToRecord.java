@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class LineToRecord {
+public class LineToRecord implements ToRecord {
   private static final String LINE = "line";
   private static final String TRUNCATED = "truncated";
 
@@ -23,8 +23,9 @@ public class LineToRecord {
     this.setTruncated = setTruncated;
   }
 
+  @Override
   public Record createRecord(Source.Context context, String sourceFile, long offset, String line, boolean truncated) {
-    Record record = context.createRecord(Utils.format("file={} offset={}", sourceFile, offset));
+    Record record = context.createRecord(Utils.format("{}::{}", sourceFile, offset));
     Map<String, Field> map = new LinkedHashMap<>();
     map.put(LINE, Field.create(line));
     if (setTruncated) {

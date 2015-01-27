@@ -15,6 +15,10 @@ public enum StageLibError implements ErrorCode {
 
   LIB_0003("LogDatProducer file='{}' offset='{}', {}"),
 
+  LIB_0005("Error parsing a single line JSON '{}': {}"),
+
+  LIB_0006("Invalid configuration, name='{}', value='{}'"),
+
   // Selector
   LIB_0010("Selector must have at least 1 output lane"),
   LIB_0011("There are more output lanes '{}' than lane-predicates '{}'"),
