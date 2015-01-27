@@ -126,6 +126,11 @@
               </td>
             </tr>
 
+            <tr ng-if="samplingRecords.length === 0">
+              <td class="no-records text-center"
+                  translate="home.previewPane.noRecords">No Records to view.</td>
+            </tr>
+
             </tbody>
 
           </table>

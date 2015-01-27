@@ -659,14 +659,17 @@ angular
 
 
     var getStageErrorCounts = function() {
-      var stageInstanceErrorCounts = {};
+      var stageInstanceErrorCounts = {},
+        pipelineMetrics = $rootScope.common.pipelineMetrics;
 
-      angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
-        stageInstanceErrorCounts[stageInstance.instanceName] = Math.round(
-          $rootScope.common.pipelineMetrics.histograms['stage.' + stageInstance.instanceName + '.errorRecords.histogramM5'].mean +
-          $rootScope.common.pipelineMetrics.histograms['stage.' + stageInstance.instanceName + '.stageErrors.histogramM5'].mean
-        );
-      });
+      if(pipelineMetrics && pipelineMetrics.histograms) {
+        angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
+          stageInstanceErrorCounts[stageInstance.instanceName] = Math.round(
+            pipelineMetrics.histograms['stage.' + stageInstance.instanceName + '.errorRecords.histogramM5'].mean +
+            pipelineMetrics.histograms['stage.' + stageInstance.instanceName + '.stageErrors.histogramM5'].mean
+          );
+        });
+      }
 
       return stageInstanceErrorCounts;
     };
@@ -847,8 +850,15 @@ angular
     });
 
     $rootScope.$watch('common.pipelineStatus', function() {
+      var oldActiveConfigStatus = $scope.activeConfigStatus;
+
       $scope.isPipelineRunning = derivePipelineRunning();
       $scope.activeConfigStatus = derivePipelineStatus();
+
+      if(oldActiveConfigStatus.lastStatusChange !== $scope.activeConfigStatus.lastStatusChange &&
+        $scope.activeConfigStatus.state === 'ERROR') {
+        $rootScope.common.errors = [$scope.activeConfigStatus.message];
+      }
     });
 
     $rootScope.$watch('common.pipelineMetrics', function() {

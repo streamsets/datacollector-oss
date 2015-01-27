@@ -57,15 +57,15 @@
 </script>
 
 <script type="text/ng-template" id="listConfigurationTemplate">
-  <div class="controls col-lg-7 col-md-8">
+  <div class="controls col-lg-7 col-md-8 container-fluid">
     <div class="row lane-predicate"
          ng-repeat="val in listValue = detailPaneConfig.configuration[configIndex].value track by $index">
 
-      <div class="col-xs-1">
+      <div class="col-md-1">
         <label class="lane-label">{{$index + 1}}</label>
       </div>
 
-      <div class="col-xs-7">
+      <div class="col-md-7">
         <input type="text" class="form-control input-sm"
                ng-required="true"
                name="{{configDefinition.name + $index}}"
@@ -73,7 +73,7 @@
                ng-model="listValue[$index]"/>
       </div>
 
-      <div class="col-xs-2 btn-group" role="group" aria-label="Default button group"
+      <div class="col-md-4 btn-group" role="group" aria-label="Default button group"
            ng-hide="isPipelineRunning">
         <button type="button" class="btn btn-default btn-sm"
                 ng-click="removeFromList(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, $index)">

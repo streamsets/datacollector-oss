@@ -90,7 +90,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
     Field field = record.get(fieldPath);
     String[] splits = null;
     ErrorCode error = null;
-    if (field.getValue() == null) {
+    if (field == null || field.getValue() == null) {
       error = StageLibError.LIB_0701;
     } else {
       String str = field.getValueAsString();
