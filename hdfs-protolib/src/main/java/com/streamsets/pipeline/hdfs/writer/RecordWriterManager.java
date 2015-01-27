@@ -27,10 +27,13 @@ import javax.servlet.jsp.el.ELException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
@@ -122,7 +125,11 @@ public class RecordWriterManager {
                                                          getExtension()));
     int count = 0;
     if (status.length > 0) {
-      String name = status[status.length - 1].getPath().getName();
+      List<FileStatus> list = new ArrayList<>(status.length);
+      Collections.addAll(list, status);
+
+      Collections.sort(list);
+      String name = list.get(list.size() - 1).getPath().getName();
       String countStr = name.substring(uniquePrefix.length() + 1, uniquePrefix.length() + 1 + 6);
       count = Integer.parseInt(countStr) + 1;
     }
