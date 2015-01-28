@@ -128,7 +128,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   //Group name needs to be empty for UI to show the config in General Group.
   private static final ConfigDefinition REQUIRED_FIELDS_CONFIG = new ConfigDefinition(
-      ConfigDefinition.REQUIRED_FIELDS, ConfigDef.Type.MODEL, "Required Fields", "Record required fields",
+      ConfigDefinition.REQUIRED_FIELDS, ConfigDef.Type.MODEL, "Required Fields", "Records that do not include these fields are dropped from the pipeline",
       null, false, "", null, new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUED, null, null, null, null, null), "",
       new String[] {}, Integer.MAX_VALUE);
 
