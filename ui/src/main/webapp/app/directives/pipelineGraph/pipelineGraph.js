@@ -1041,6 +1041,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     $scope.$on('addNode', function(event, stageInstance, edge, relativeX, relativeY) {
       graph.addNode(stageInstance, edge, relativeX, relativeY);
+      $(graph.svg[0]).focus();
     });
 
     $scope.$on('selectNode', function(event, stageInstance, moveToCenter) {
@@ -1069,7 +1070,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         graph.moveGraphToCenter();
       }
     });
-
 
     $scope.$on('selectEdge', function(event, edge) {
       graph.moveNodeToVisibleArea(edge.source);

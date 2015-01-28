@@ -13,7 +13,7 @@ angular
     );
   }])
   .controller('HomeController', function ($scope, $rootScope, $timeout, api, configuration, _, $q, $modal,
-                                          $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster) {
+                                          $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster, $translate) {
     var stageCounter = 0,
       timeout,
       dirty = false,
@@ -65,9 +65,22 @@ angular
        * @param relativeYPos [optional]
        */
       addStageInstance: function (stage, firstOpenLane, relativeXPos, relativeYPos) {
-        if($scope.sourceExists && stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
-          $rootScope.common.errors = ['Origin already exists.'];
-          return;
+        if(stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
+          var sourceExists = false;
+          angular.forEach($scope.pipelineConfig.stages, function (sourceStageInstance) {
+            if (sourceStageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
+              sourceExists = true;
+            }
+          });
+
+          if(sourceExists) {
+            $translate('global.messages.info.originExists').then(function(translation) {
+              $rootScope.common.errors = [translation];
+            });
+            return;
+          } else {
+            $rootScope.common.errors = [];
+          }
         } else {
           $rootScope.common.errors = [];
         }

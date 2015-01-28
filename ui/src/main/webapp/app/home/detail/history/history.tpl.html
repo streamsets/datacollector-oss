@@ -15,7 +15,7 @@
               </tr>
             </thead>
             <tbody ng-hide="showLoading">
-              <tr ng-repeat="history in runHistory">
+              <tr ng-repeat="history in runHistory track by $index">
                 <td>{{history.lastStatusChange | date:'medium'}}</td>
                 <td ng-bind="history.state"></td>
                 <td ng-bind="history.message"></td>

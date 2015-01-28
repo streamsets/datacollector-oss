@@ -87,7 +87,8 @@
     "messages": {
       "info": {
         "saveOperationInProgress" : "All Changes Saved",
-        "savingConfiguration" : "Saving..."
+        "savingConfiguration" : "Saving...",
+        "originExists": "Origin already exists."
       },
       "error": {
       },
