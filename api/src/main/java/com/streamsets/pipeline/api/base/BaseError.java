@@ -8,7 +8,7 @@ package com.streamsets.pipeline.api.base;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum BaseError implements ErrorCode {
-  BASE_0001("Stage '{}', there should be 1 output lane but there are '{}'"),
+  BASE_0001("Stage '{}', there should be 1 output stream but there are '{}'"),
   BASE_0002("Cannot convert {} '{}' to a boolean"),
   BASE_0003("Cannot convert {} '{}' to a byte[]"),
   BASE_0004("Cannot convert byte[] to other type, {}"),

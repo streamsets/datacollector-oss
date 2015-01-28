@@ -46,7 +46,7 @@ public class TargetRunner extends StageRunner<Target> {
 
     @Override
     public TargetRunner build() {
-      Utils.checkState(outputLanes.isEmpty(), "A Target cannot have output lanes");
+      Utils.checkState(outputLanes.isEmpty(), "A Target cannot have output streams");
       return (stage != null) ? new TargetRunner(stage, configs) : new TargetRunner(stageClass, configs);
     }
 

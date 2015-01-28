@@ -144,13 +144,13 @@ public class FullPipeBatch implements PipeBatch {
   @Override
   public void moveLane(String inputLane, String outputLane) {
     fullPayload.put(outputLane, Preconditions.checkNotNull(fullPayload.remove(inputLane), Utils.format(
-        "Lane '{}' does not exist", inputLane)));
+        "Stream '{}' does not exist", inputLane)));
   }
 
   @Override
   public void moveLaneCopying(String inputLane, List<String> outputLanes) {
     List<Record> records = Preconditions.checkNotNull(fullPayload.remove(inputLane), Utils.format(
-        "Lane '{}' does not exist", inputLane));
+        "Stream '{}' does not exist", inputLane));
     for (String lane : outputLanes) {
       Preconditions.checkNotNull(fullPayload.containsKey(lane), Utils.format("Lane '{}' does not exist", lane));
       fullPayload.put(lane, createCopy(records));
@@ -178,7 +178,7 @@ public class FullPipeBatch implements PipeBatch {
     fullPayload.put(to, new ArrayList<Record>());
     for (String lane : lanes) {
       List<Record> records = Preconditions.checkNotNull(fullPayload.remove(lane), Utils.format(
-          "Lane '{}' does not exist", lane));
+          "Stream '{}' does not exist", lane));
       fullPayload.get(to).addAll(records);
     }
   }

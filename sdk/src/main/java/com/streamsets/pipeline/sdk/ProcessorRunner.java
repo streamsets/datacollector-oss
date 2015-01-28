@@ -48,7 +48,7 @@ public class ProcessorRunner extends StageRunner<Processor> {
 
     @Override
     public ProcessorRunner build() {
-      Utils.checkState(!outputLanes.isEmpty(), "A Processor must have at least one output lane");
+      Utils.checkState(!outputLanes.isEmpty(), "A Processor must have at least one output stream");
       return  (stage != null) ? new ProcessorRunner(stage, configs, outputLanes)
                               : new ProcessorRunner(stageClass, configs, outputLanes);
     }

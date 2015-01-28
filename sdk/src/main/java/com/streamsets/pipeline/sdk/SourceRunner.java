@@ -43,7 +43,7 @@ public class SourceRunner extends StageRunner<Source> {
 
     @Override
     public SourceRunner build() {
-      Utils.checkState(!outputLanes.isEmpty(), "A Source must have at least one output lane");
+      Utils.checkState(!outputLanes.isEmpty(), "A Source must have at least one output stream");
       return  (stage != null) ? new SourceRunner(stage, configs, outputLanes)
                               : new SourceRunner(stageClass, configs, outputLanes);
     }

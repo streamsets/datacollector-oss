@@ -18,21 +18,21 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0007("Configuration value is required"),
   VALIDATION_0008("Invalid configuration"),
   VALIDATION_0009("Configuration should be a '{}'"),
-  VALIDATION_0010("Output lanes '{}' already defined by stage instance '{}'"),
-  VALIDATION_0011("Instance has open lanes '{}'"),
-  VALIDATION_0012("{} cannot have input lanes '{}'"),
-  VALIDATION_0013("{} cannot have output lanes '{}'"),
-  VALIDATION_0014("{} must have input lanes"),
-  VALIDATION_0015("{} must have output lanes"),
+  VALIDATION_0010("Output streams '{}' already defined by stage instance '{}'"),
+  VALIDATION_0011("Instance has open streams '{}'"),
+  VALIDATION_0012("{} cannot have input streams '{}'"),
+  VALIDATION_0013("{} cannot have output streams '{}'"),
+  VALIDATION_0014("{} must have input streams"),
+  VALIDATION_0015("{} must have output streams"),
   VALIDATION_0016("Invalid instance name, names can only contain the following characters '{}'"),
-  VALIDATION_0017("Invalid input lane names '{}', lanes can only contain the following characters '{}'"),
-  VALIDATION_0018("Invalid output lane names '{}', lanes can only contain the following characters '{}'"),
+  VALIDATION_0017("Invalid input stream names '{}', streams can only contain the following characters '{}'"),
+  VALIDATION_0018("Invalid output stream names '{}', streams can only contain the following characters '{}'"),
 
-  VALIDATION_0019("Lane predicate at index '{}' is not a Map"),
-  VALIDATION_0020("Lane predicate at index '{}' must have a '{}' entry"),
-  VALIDATION_0021("Lane predicate at index '{}' entry '{}' cannot be NULL"),
-  VALIDATION_0022("Lane predicate at index '{}' entry '{}' must be a String"),
-  VALIDATION_0023("Lane predicate at index '{}' entry '{}' cannot be empty"),
+  VALIDATION_0019("Stream condition at index '{}' is not a Map"),
+  VALIDATION_0020("Stream condition at index '{}' must have a '{}' entry"),
+  VALIDATION_0021("Stream condition at index '{}' entry '{}' cannot be NULL"),
+  VALIDATION_0022("Stream condition at index '{}' entry '{}' must be a String"),
+  VALIDATION_0023("Stream condition at index '{}' entry '{}' cannot be empty"),
 
   VALIDATION_0024("Configuration of type Map expressed as List of key/value pairs cannot have NULL elements in the " +
                   "list, element at index '{}' is NULL"),
@@ -41,7 +41,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0026("Configuration of type Map expressed as List of key/value pairs must have Map entries in the List," +
                   "element at index '{}' has '{}'"),
 
-  VALIDATION_0027("Rule Definition '{}' refers to a lane '{}' which is not found in the pipeline configuration."),
+  VALIDATION_0027("Rule Definition '{}' refers to a stream '{}' which is not found in the pipeline configuration."),
   VALIDATION_0028("Rule Definition '{}' refers to a instance '{}' which is not found in the pipeline configuration."),
 
   VALIDATION_0029("Configuration must be a String, is a '{}'"),

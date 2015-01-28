@@ -69,17 +69,17 @@ public class BatchMakerImpl implements BatchMaker {
 
     if (lanes.length == 0) {
       Preconditions.checkArgument(outputLanes.size() == 1, Utils.format(
-          "No lane has been specified and the stage '{}' has multiple output lanes '{}'", instanceName, outputLanes));
+          "No stream has been specified and the stage '{}' has multiple output streams '{}'", instanceName, outputLanes));
       stageOutput.get(singleOutputLane).add(record);
     } else {
       if (lanes.length > 1) {
         Set<String> laneSet = ImmutableSet.copyOf(lanes);
         Preconditions.checkArgument(laneSet.size() == lanes.length, Utils.format(
-            "Specified lanes cannot have duplicates '{}'", laneSet));
+            "Specified streams cannot have duplicates '{}'", laneSet));
       }
       for (String lane : lanes) {
         Preconditions.checkArgument(outputLanes.contains(lane), Utils.format(
-            "Invalid output lane '{}' for stage '{}', available lanes '{}'", lane, instanceName, outputLanes));
+            "Invalid output stream '{}' for stage '{}', available streams '{}'", lane, instanceName, outputLanes));
         stageOutput.get(lane).add(record);
       }
     }

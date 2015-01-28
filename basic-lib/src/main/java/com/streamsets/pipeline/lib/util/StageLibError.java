@@ -20,13 +20,13 @@ public enum StageLibError implements ErrorCode {
   LIB_0006("Invalid configuration, name='{}', value='{}'"),
 
   // Selector
-  LIB_0010("Selector must have at least 1 output lane"),
-  LIB_0011("There are more output lanes '{}' than lane-predicates '{}'"),
-  LIB_0012("The Selector stage does not define the output lane '{}' associated with predicate '{}'"),
-  LIB_0013("Failed to validate the Selector predicate '{}', {}"),
-  LIB_0014("Failed to evaluate the Selector predicate '{}', {}"),
-  LIB_0015("Record did not match any predicate"),
-  LIB_0016("Record does not satisfy any predicate, failing pipeline. Record '{}'"),
+  LIB_0010("Selector must have at least 1 output stream"),
+  LIB_0011("There are more output streams '{}' than stream-conditions '{}'"),
+  LIB_0012("The Selector stage does not define the output stream '{}' associated with condition '{}'"),
+  LIB_0013("Failed to validate the Selector condition '{}', {}"),
+  LIB_0014("Failed to evaluate the Selector condition '{}', {}"),
+  LIB_0015("Record did not match any condition"),
+  LIB_0016("Record does not satisfy any condition, failing pipeline. Record '{}'"),
 
   // AbstractSpoolDirSource
   LIB_0100("Could not archive file '{}' in error, {}"),

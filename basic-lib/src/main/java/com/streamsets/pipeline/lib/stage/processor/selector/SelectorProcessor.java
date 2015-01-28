@@ -30,30 +30,30 @@ import java.util.Set;
 
 @GenerateResourceBundle
 @StageDef(version = "1.0.0", label = "Stream Selector",
-    description = "Lane Selector based on record predicates", icon="laneSelector.png")
+    description = "Stream Selector based on user defined conditions", icon="laneSelector.png")
 public class SelectorProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SelectorProcessor.class);
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Lane/Record-condition mapping",
-      description = "Associates output lanes with a condition that records must match in order to go to the " +
-                    "associated lane")
+      label = "Stream/Record-condition mapping",
+      description = "Associates output streams with a condition that records must match in order to go to the " +
+                    "associated stream")
   @LanePredicateMapping
   public List<Map<String, String>> lanePredicates;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Not Matching Predicate Action",
-      description = "Action to take with records not matching any predicate",
+      label = "On No Matching Condition",
+      description = "Action to take for records not matching any condition",
       defaultValue = "DROP_RECORD")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnNoPredicateMatchChooserValues.class)
   public OnNoPredicateMatch onNoPredicateMatch;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MAP,
-      label = "Constants for predicates",
-      description = "Defines constant values available to all predicates")
+      label = "Constants for Conditions",
+      description = "Defines constant values available in all conditions")
   public Map<String, ?> constants;
 
   private String[][] predicateLanes;
@@ -72,7 +72,7 @@ public class SelectorProcessor extends RecordProcessor {
       predicateLanes[count] = new String[2];
       predicateLanes[count][0] = (String) predicate;
       predicateLanes[count][1] = outputLane;
-      LOG.debug("Predicate:'{}' Lane:'{}'", predicate, outputLane);
+      LOG.debug("Condition:'{}' Stream:'{}'", predicate, outputLane);
       count++;
     }
     return predicateLanes;
@@ -105,7 +105,7 @@ public class SelectorProcessor extends RecordProcessor {
     ELBasicSupport.registerBasicFunctions(elEvaluator);
     ELRecordSupport.registerRecordFunctions(elEvaluator);
     validateELs();
-    LOG.debug("All predicates validated");
+    LOG.debug("All conditions validated");
   }
 
   private void validateELs() throws StageException {
@@ -172,12 +172,12 @@ public class SelectorProcessor extends RecordProcessor {
       variables.addVariable("default", !matchedAtLeastOnePredicate);
       try {
         if (elEvaluator.eval(variables, pl[0], Boolean.class)) {
-          LOG.trace("Record '{}' satisfies predicate '{}', going to lane '{}'", record.getHeader().getSourceId(),
+          LOG.trace("Record '{}' satisfies condition '{}', going to stream '{}'", record.getHeader().getSourceId(),
                     pl[0], pl[1]);
           batchMaker.addRecord(record, pl[1]);
           matchedAtLeastOnePredicate = true;
         } else{
-          LOG.trace("Record '{}' does not satisfy predicate '{}', skipping lane '{}'", record.getHeader().getSourceId(),
+          LOG.trace("Record '{}' does not satisfy condition '{}', skipping stream '{}'", record.getHeader().getSourceId(),
                     pl[0], pl[1]);
         }
       } catch (ELException ex) {
@@ -187,10 +187,10 @@ public class SelectorProcessor extends RecordProcessor {
     if (!matchedAtLeastOnePredicate) {
       switch (onNoPredicateMatch) {
         case DROP_RECORD:
-          LOG.trace("Record '{}' does not satisfy any predicate, dropping it", record.getHeader().getSourceId());
+          LOG.trace("Record '{}' does not satisfy any condition, dropping it", record.getHeader().getSourceId());
           break;
         case RECORD_TO_ERROR:
-          LOG.trace("Record '{}' does not satisfy any predicate, sending it to error",
+          LOG.trace("Record '{}' does not satisfy any condition, sending it to error",
                     record.getHeader().getSourceId());
           getContext().toError(record, StageLibError.LIB_0015);
           break;
