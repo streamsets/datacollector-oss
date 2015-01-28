@@ -10,9 +10,14 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       controller: 'PipelineGraphController'
     };
   })
-  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter, pipelineConstant){
+  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter, pipelineConstant, $translate){
 
-    var showTransition = false;
+    var showTransition = false,
+      graphErrorBadgeLabel = '';
+
+    $translate('global.messages.info.graphErrorBadgeLabel').then(function(translation) {
+      graphErrorBadgeLabel = [translation];
+    });
 
     // define graphcreator object
     var GraphCreator = function(svg, nodes, edges, issues){
@@ -733,7 +738,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr('x', consts.rectWidth - 40)
         .attr('y', 10)
         .append('xhtml:span')
-        .attr('title', 'Mean value of Error Histogram (5 minutes decay)')
+        .attr('title', graphErrorBadgeLabel)
         .attr('class', 'badge alert-danger pointer graph-bootstrap-tooltip')
         .style('visibility', function(d) {
           if(stageErrorCounts && stageErrorCounts[d.instanceName] &&

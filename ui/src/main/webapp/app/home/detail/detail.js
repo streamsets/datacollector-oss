@@ -111,7 +111,7 @@ angular
             case pipelineConstant.STAGE_INSTANCE:
               return selectedObject.uiInfo.label;
             case pipelineConstant.LINK:
-              return 'Link ( ' + selectedObject.source.uiInfo.label + ' - ' + selectedObject.target.uiInfo.label + ' )';
+              return 'Stream ( ' + selectedObject.source.uiInfo.label + ' - ' + selectedObject.target.uiInfo.label + ' )';
           }
         }
       },

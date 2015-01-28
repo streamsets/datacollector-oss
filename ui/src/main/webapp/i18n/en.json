@@ -40,8 +40,8 @@
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
       "fromStage": "From Stage",
-      "fromStageLane": "From Stage Lane",
-      "fromStageLanePredicate": "From Stage Lane Condition",
+      "fromStageLane": "From Stage Stream",
+      "fromStageLanePredicate": "From Stage Stream Condition",
       "histogram": "Record Count Histogram (5 minutes decay)",
       "import": "Import",
       "label": "Label",
@@ -88,7 +88,8 @@
       "info": {
         "saveOperationInProgress" : "All Changes Saved",
         "savingConfiguration" : "Saving...",
-        "originExists": "Origin already exists."
+        "originExists": "Origin already exists.",
+        "graphErrorBadgeLabel": "Total count of error records & stage errors in last 1 minute."
       },
       "error": {
       },
@@ -159,7 +160,7 @@
       },
       "configuration": "Configuration",
       "configurationTab": {
-        "linkInformation": "Link Information",
+        "linkInformation": "Stream Information",
         "enterKey": "Enter Key",
         "enterPredicate": "Enter Condition",
         "enterValue": "Enter Value",
@@ -178,7 +179,8 @@
         "stageVersion": "Stage Version"
       },
       "dataSummaryTab": {
-        "noRulesMessage": "No Rules added for this lane. Add Rules in Rules Tab for Inspecting Data."
+        "noRulesMessage": "No Rules added for this stream. Add Rules in Rules Tab for Inspecting Data.",
+        "meterGraphPostFix": " (records/sec)"
       },
       "general": "General",
       "history": "History",

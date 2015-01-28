@@ -676,11 +676,11 @@ angular
       var stageInstanceErrorCounts = {},
         pipelineMetrics = $rootScope.common.pipelineMetrics;
 
-      if(pipelineMetrics && pipelineMetrics.histograms) {
+      if(pipelineMetrics && pipelineMetrics.meters) {
         angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
           stageInstanceErrorCounts[stageInstance.instanceName] = Math.round(
-            pipelineMetrics.histograms['stage.' + stageInstance.instanceName + '.errorRecords.histogramM5'].mean +
-            pipelineMetrics.histograms['stage.' + stageInstance.instanceName + '.stageErrors.histogramM5'].mean
+            pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'].m1_rate +
+            pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.stageErrors.meter'].m1_rate
           );
         });
       }

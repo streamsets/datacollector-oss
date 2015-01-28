@@ -2,7 +2,7 @@
 
   <tab>
     <tab-heading>
-      {{'home.detailPane.badRecords' | translate}} <span class="badge alert-danger">{{ errorRecordsHistogram.mean | number:0}}</span>
+      {{'home.detailPane.badRecords' | translate}} <span class="badge alert-danger">{{ errorRecordsCount.m1_rate | number:0}}</span>
     </tab-heading>
     <div class="tabs-content">
       <div class="row">
@@ -18,12 +18,12 @@
             <thead>
             <tr>
               <th class="col-md-4">
-                <span class="glyphicon glyphicon-expand pointer"
+                <!--span class="glyphicon glyphicon-expand pointer"
                   ng-if="!expandAllErrorData"
                   ng-click="onExpandAllErrorData()"></span>
                 <span class="glyphicon glyphicon-collapse-down pointer"
                   ng-if="expandAllErrorData"
-                  ng-click="onCollapseAllErrorData()"></span>
+                  ng-click="onCollapseAllErrorData()"></span-->
                 <span translate="home.detailPane.badRecords">Bad Records</span>
               </th>
               <th class="col-md-3" translate="global.form.timestamp">Timestamp</th>
@@ -90,7 +90,7 @@
 
   <tab>
     <tab-heading>
-      {{'global.form.stageErrors' | translate}} <span class="badge alert-danger">{{errorsHistogram.mean | number:0}}</span>
+      {{'global.form.stageErrors' | translate}} <span class="badge alert-danger">{{errorMessagesCount.m1_rate | number:0}}</span>
     </tab-heading>
 
     <div class="tabs-content">
