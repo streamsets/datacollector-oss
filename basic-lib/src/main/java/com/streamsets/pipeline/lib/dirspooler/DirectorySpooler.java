@@ -263,7 +263,7 @@ public class DirectorySpooler {
   void addFileToQueue(Path file, boolean checkCurrent) {
     Preconditions.checkNotNull(file, "file cannot be null");
     if (checkCurrent) {
-      Preconditions.checkState(currentFile.compareTo(file.getFileName().toString()) < 0);
+      Preconditions.checkState(currentFile == null || currentFile.compareTo(file.getFileName().toString()) < 0);
     }
     if (!filesQueue.contains(file)) {
       if (filesQueue.size() >= maxSpoolFiles) {

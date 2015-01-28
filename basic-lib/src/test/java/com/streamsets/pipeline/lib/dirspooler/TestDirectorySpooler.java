@@ -54,6 +54,31 @@ public class TestDirectorySpooler {
   }
 
   @Test
+  public void testEmptySpoolDirNoInitialFile() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
+    spooler.init(null);
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
+  @Test
+  public void testEmptySpoolDirNoInitialFileThenFile() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
+    spooler.init(null);
+    new FileWriter(new File(spoolDir, "x0.log")).close();
+    spooler.finder.run();
+    spooler.finder.run();
+    Assert.assertNotNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
+  @Test
   public void testMatchingFileSpoolDir() throws Exception {
     Assert.assertTrue(spoolDir.mkdirs());
     File logFile = new File(spoolDir, "x2.log").getAbsoluteFile();
