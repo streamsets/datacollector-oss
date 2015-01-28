@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.api.impl;
 
+import com.streamsets.pipeline.api.base.BaseError;
+
 import java.math.BigDecimal;
 
 public class LongTypeSupport extends TypeSupport<Long> {
@@ -35,7 +37,7 @@ public class LongTypeSupport extends TypeSupport<Long> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).longValue();
     }
-    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a long",
+    throw new IllegalArgumentException(Utils.format(BaseError.Base_0015.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

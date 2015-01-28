@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.api.impl;
 
+import com.streamsets.pipeline.api.base.BaseError;
+
 import java.text.ParseException;
 import java.util.Date;
 
@@ -20,11 +22,10 @@ public class DateTypeSupport extends TypeSupport<Date> {
       try {
         return Utils.parse((String) value);
       } catch (ParseException ex) {
-        throw new IllegalArgumentException(Utils.format("Cannot parse '{}' to a Date, format must be ISO8601 UTC" +
-                                                        "(yyyy-MM-dd'T'HH:mm'Z')", value));
+        throw new IllegalArgumentException(Utils.format(BaseError.BASE_0007.getMessage(), value));
       }
     }
-    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a Date",
+    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0008.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.api.impl;
 
+import com.streamsets.pipeline.api.base.BaseError;
+
 import java.math.BigDecimal;
 
 public class IntegerTypeSupport extends TypeSupport<Integer> {
@@ -35,7 +37,7 @@ public class IntegerTypeSupport extends TypeSupport<Integer> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).intValue();
     }
-    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a int",
+    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0012.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.api.impl;
 
+import com.streamsets.pipeline.api.base.BaseError;
+
 import java.math.BigDecimal;
 
 public class FloatTypeSupport extends TypeSupport<Float> {
@@ -35,7 +37,7 @@ public class FloatTypeSupport extends TypeSupport<Float> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).floatValue();
     }
-    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a float",
+    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0011.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

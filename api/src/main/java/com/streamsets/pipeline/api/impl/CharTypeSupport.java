@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.api.impl;
 
+import com.streamsets.pipeline.api.base.BaseError;
+
 public class CharTypeSupport extends TypeSupport<Character> {
 
   @Override
@@ -18,7 +20,7 @@ public class CharTypeSupport extends TypeSupport<Character> {
         return s.charAt(0);
       }
     }
-    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a char",
+    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0006.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

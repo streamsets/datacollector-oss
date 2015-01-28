@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.api.impl;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.base.BaseError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class ListTypeSupport extends TypeSupport<List> {
     if (value instanceof List) {
       return (List) value;
     }
-    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a List",
+    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0013.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 
@@ -26,7 +27,7 @@ public class ListTypeSupport extends TypeSupport<List> {
     if (targetTypeSupport instanceof ListTypeSupport) {
       return value;
     } else {
-      throw new IllegalArgumentException(Utils.format("Cannot convert List to other type, {}", targetTypeSupport));
+      throw new IllegalArgumentException(Utils.format(BaseError.BASE_0014.getMessage(), targetTypeSupport));
     }
   }
 

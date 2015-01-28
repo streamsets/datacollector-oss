@@ -369,6 +369,14 @@ public class TestRecordImpl {
     r.set("[0]/c", Field.create("Hello world"));
     Assert.assertTrue(r.has("[0]/c"));
     Assert.assertEquals("Hello world", r.get("[0]/c").getValueAsString());
+
+    try {
+      r.set("[0]/c/d", Field.create("Hello world"));
+      Assert.fail("IllegalArgumentException expected as type of [0]/c is not map");
+    } catch (IllegalArgumentException e) {
+
+    }
+
   }
 
   @Test
@@ -403,6 +411,13 @@ public class TestRecordImpl {
       r.set("[8]", Field.create(true));
       Assert.fail("Expected IndexOutOfBoundsException as the list contains only 3 elements");
     } catch (IndexOutOfBoundsException e) {
+
+    }
+
+    try {
+      r.set("[2]/c", Field.create("Hello world"));
+      Assert.fail("IllegalArgumentException expected as type of [2] is not map");
+    } catch (IllegalArgumentException e) {
 
     }
   }

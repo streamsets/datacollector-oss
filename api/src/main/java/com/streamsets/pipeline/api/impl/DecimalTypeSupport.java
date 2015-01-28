@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.api.impl;
 
+import com.streamsets.pipeline.api.base.BaseError;
+
 import java.math.BigDecimal;
 
 public class DecimalTypeSupport extends TypeSupport<BigDecimal> {
@@ -35,7 +37,7 @@ public class DecimalTypeSupport extends TypeSupport<BigDecimal> {
     if (value instanceof Double) {
       return new BigDecimal((Double)value);
     }
-    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a BigDecimal",
+    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0009.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

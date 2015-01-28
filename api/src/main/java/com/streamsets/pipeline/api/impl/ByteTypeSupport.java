@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.api.impl;
 
+import com.streamsets.pipeline.api.base.BaseError;
+
 import java.math.BigDecimal;
 
 public class ByteTypeSupport extends TypeSupport<Byte> {
@@ -35,7 +37,7 @@ public class ByteTypeSupport extends TypeSupport<Byte> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).byteValue();
     }
-    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a byte",
+    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0005.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

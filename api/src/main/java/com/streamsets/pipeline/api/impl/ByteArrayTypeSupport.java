@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.api.impl;
 
+import com.streamsets.pipeline.api.base.BaseError;
+
 // we are making a Field for byte[]'s to have 'immutable' values by cloning on create/get/clone
 public class ByteArrayTypeSupport extends TypeSupport<byte[]> {
 
@@ -13,7 +15,7 @@ public class ByteArrayTypeSupport extends TypeSupport<byte[]> {
     if (value instanceof byte[]) {
       return (byte[])value;
     }
-    throw new IllegalArgumentException(Utils.format("Cannot convert {} '{}' to a byte[]",
+    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0003.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 
@@ -22,7 +24,7 @@ public class ByteArrayTypeSupport extends TypeSupport<byte[]> {
     if (targetTypeSupport instanceof ByteArrayTypeSupport) {
       return value;
     } else {
-      throw new IllegalArgumentException(Utils.format("Cannot convert byte[] to other type, {}", targetTypeSupport));
+      throw new IllegalArgumentException(Utils.format(BaseError.BASE_0004.getMessage(), targetTypeSupport));
     }
   }
 

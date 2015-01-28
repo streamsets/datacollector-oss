@@ -488,16 +488,21 @@ public class RecordImpl implements Record {
 
   @Override
   public Field set(String fieldPath, Field newField) {
+    //get all the elements present in the fieldPath, including the newest element
+    //For example, if the existing record has /a/b/c and the argument fieldPath is /a/b/d the parser returns three
+    // elements - a, b and d
     List<PathElement> elements = parse(fieldPath);
+    //return all *existing* fields form the list of elements
+    //In the above case it is going to return only field a and field b. Field d does not exist.
     List<Field> fields = get(elements);
     Field fieldToReplace = null;
     int fieldPos = fields.size();
     if (elements.size() == fieldPos) {
-      //set use case
+      //The number of elements in the path is same as the number of fields => set use case
       fieldPos--;
       fieldToReplace = doSet(fieldPos, newField, elements, fields);
     } else if (elements.size() -1 == fieldPos) {
-      //add use case
+      //The number of elements in the path is on more than the number of fields => add use case
       fieldToReplace = doSet(fieldPos, newField, elements, fields);
     }
     return fieldToReplace;
@@ -506,23 +511,30 @@ public class RecordImpl implements Record {
   private Field doSet(int fieldPos, Field newField, List<PathElement> elements, List<Field> fields) {
     Field fieldToReplace = null;
     if (fieldPos == 0) {
+      //root element
       fieldToReplace = value;
       value = newField;
     } else {
+      //get the type of the element based on the output of the parser.
+      //Note that this is not the real type of the field, this is how the parser interpreted the fieldPath argument
+      //to the set API above. For example if fieldPath is /a/b parser interprets a as type map, if fieldPath is a[0]/b
+      //parser interprets a as of type list
       switch (elements.get(fieldPos).getType()) {
         case MAP:
+          //get the name of the field which must be added
           String elementName = elements.get(fieldPos).getName();
+          //attempt to get the parent as a map type.
           fieldToReplace = fields.get(fieldPos - 1).getValueAsMap().put(elementName, newField);
           break;
         case LIST:
           int elementIndex = elements.get(fieldPos).getIndex();
-          if(elementIndex == fields.get(fieldPos - 1).getValueAsList().size()){
+          Field parentField = fields.get(fieldPos - 1);
+          if(elementIndex == parentField.getValueAsList().size()){
             //add at end
-            fields.get(fieldPos - 1).getValueAsList().add(newField);
+            parentField.getValueAsList().add(newField);
           } else {
             //replace existing value
-            //If elementIndex+1 != fields.get(fieldPos - 1).getValueAsList().size() IndexOutOfBoundsException is thrown
-            fieldToReplace = fields.get(fieldPos - 1).getValueAsList().set(elementIndex, newField);
+            fieldToReplace = parentField.getValueAsList().set(elementIndex, newField);
           }
           break;
       }
