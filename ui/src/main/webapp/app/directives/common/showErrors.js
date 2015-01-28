@@ -55,7 +55,9 @@ angular.module('pipelineAgentApp.commonDirectives')
         }
         inputNgEl.bind(trigger, function() {
           blurred = true;
-          return toggleClasses(formCtrl[inputName].$invalid);
+          if(formCtrl[inputName]) {
+            return toggleClasses(formCtrl[inputName].$invalid);
+          }
         });
         scope.$watch(function() {
           return formCtrl[inputName] && formCtrl[inputName].$invalid;
@@ -66,7 +68,9 @@ angular.module('pipelineAgentApp.commonDirectives')
           return toggleClasses(invalid);
         });
         scope.$on('show-errors-check-validity', function() {
-          return toggleClasses(formCtrl[inputName].$invalid);
+          if(formCtrl[inputName]) {
+            return toggleClasses(formCtrl[inputName].$invalid);
+          }
         });
         scope.$on('show-errors-reset', function() {
           return $timeout(function() {

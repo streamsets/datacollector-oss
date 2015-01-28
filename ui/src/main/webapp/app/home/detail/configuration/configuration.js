@@ -297,6 +297,22 @@ angular
 
 
       /**
+       * Returns true if dependsOn Custom Field configuration contains value in triggeredByValues.
+       *
+       * @param stageInstance
+       * @param customFieldConfigValue
+       * @param customConfiguration
+       * @returns {*}
+       */
+      verifyCustomFieldDependsOn: function(stageInstance, customFieldConfigValue, customConfiguration) {
+        var dependsOnConfigName = customConfiguration.dependsOn,
+          triggeredByValues = customConfiguration.triggeredByValues,
+          dependsOnConfiguration = customFieldConfigValue[dependsOnConfigName];
+
+        return dependsOnConfiguration && _.contains(triggeredByValues, dependsOnConfiguration + '');
+      },
+
+      /**
        * Returns Config Model Object
        *
        * @param stageInstance

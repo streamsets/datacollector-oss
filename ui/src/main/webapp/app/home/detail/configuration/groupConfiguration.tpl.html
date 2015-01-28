@@ -110,91 +110,93 @@
               <tr ng-repeat="customFieldValue in customeFieldValueList = detailPaneConfig.configuration[configIndex].value track by $index">
 
                 <td class="col-md-5"
-                    ng-switch="customFieldConfigDefinition.type"
                     ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions">
 
-
-                  <div ng-switch-when="INTEGER">
-                    <input type="number" class="form-control"
-                           name="{{customFieldConfigDefinition.name + $index}}"
-                           placeholder="{{customFieldConfigDefinition.label}}"
-                           ng-readonly="isPipelineRunning"
-                           ng-model="customFieldValue[customFieldConfigDefinition.name]"
-                           ng-required="customFieldConfigDefinition.required">
-                  </div>
-
-                  <div ng-switch-when="STRING">
-                    <ng-include src="'stringComplexConfigurationTemplate'"></ng-include>
-                  </div>
-
-                  <div ng-switch-when="EL_STRING" class="expression-language">
-                    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
-                  </div>
-
-                  <div ng-switch-when="EL_NUMBER" class="expression-language">
-                    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
-                  </div>
-
-                  <div ng-switch-when="EL_DATE" class="expression-language">
-                    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
-                  </div>
-
-                  <div ng-switch-when="EL_BOOLEAN" class="expression-language">
-                    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
-                  </div>
-
-                  <div ng-switch-when="EL_OBJECT" class="expression-language">
-                    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
-                  </div>
-
-                  <div ng-switch-when="MODEL"
-                       ng-switch="customFieldConfigDefinition.model.modelType">
-
-                    <div ng-switch-when="VALUE_CHOOSER"
-                         ng-switch="customFieldConfigDefinition.model.chooserMode">
-
-                      <select class="form-control"
-                              ng-switch-when="PROVIDED"
-                              name="{{customFieldConfigDefinition.name + $index}}"
-                              ng-disabled="isPipelineRunning"
-                              ng-model="customFieldValue[customFieldConfigDefinition.name]">
-                        <option ng-repeat="listValue in customFieldConfigDefinition.model.values"
-                                value="{{listValue}}"
-                                ng-selected="listValue === customFieldValue[customFieldConfigDefinition.name]">
-                          {{customFieldConfigDefinition.model.labels[$index]}}
-                        </option>
-                      </select>
-
-                      <input type="text"
+                  <div ng-if="(!customFieldConfigDefinition.dependsOn || verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))"
+                       ng-switch="customFieldConfigDefinition.type">
+                    <div ng-switch-when="INTEGER">
+                      <input type="number" class="form-control"
                              name="{{customFieldConfigDefinition.name + $index}}"
-                             ng-switch-when="SUGGESTED"
+                             placeholder="{{customFieldConfigDefinition.label}}"
                              ng-readonly="isPipelineRunning"
                              ng-model="customFieldValue[customFieldConfigDefinition.name]"
-                             typeahead="listValue for listValue in customFieldConfigDefinition.model.values"
-                             class="form-control">
-
+                             ng-required="customFieldConfigDefinition.required">
                     </div>
 
-
-                    <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUED"
-                         ng-click="onFieldSelectorFocus(detailPaneConfig)"
-                         class="clearfix">
-                      <ui-select multiple tagging tagging-label="false" reset-search-input="true"
-                                 ng-disabled="isPipelineRunning"
-                                 ng-model="customFieldValue[customFieldConfigDefinition.name]">
-                        <ui-select-match
-                          placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
-                          {{$item}}
-                        </ui-select-match>
-                        <ui-select-choices repeat="fieldPath in fieldPaths.concat(customFieldValue[customFieldConfigDefinition.name]) | filter:$select.search">
-                          {{fieldPath}}
-                        </ui-select-choices>
-                      </ui-select>
+                    <div ng-switch-when="STRING">
+                      <ng-include src="'stringComplexConfigurationTemplate'"></ng-include>
                     </div>
 
+                    <div ng-switch-when="EL_STRING" class="expression-language">
+                      <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+                    </div>
+
+                    <div ng-switch-when="EL_NUMBER" class="expression-language">
+                      <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+                    </div>
+
+                    <div ng-switch-when="EL_DATE" class="expression-language">
+                      <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+                    </div>
+
+                    <div ng-switch-when="EL_BOOLEAN" class="expression-language">
+                      <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+                    </div>
+
+                    <div ng-switch-when="EL_OBJECT" class="expression-language">
+                      <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+                    </div>
+
+                    <div ng-switch-when="MODEL"
+                         ng-switch="customFieldConfigDefinition.model.modelType">
+
+                      <div ng-switch-when="VALUE_CHOOSER"
+                           ng-switch="customFieldConfigDefinition.model.chooserMode">
+
+                        <select class="form-control"
+                                ng-switch-when="PROVIDED"
+                                name="{{customFieldConfigDefinition.name + $index}}"
+                                ng-disabled="isPipelineRunning"
+                                ng-model="customFieldValue[customFieldConfigDefinition.name]">
+                          <option ng-repeat="listValue in customFieldConfigDefinition.model.values"
+                                  value="{{listValue}}"
+                                  ng-selected="listValue === customFieldValue[customFieldConfigDefinition.name]">
+                            {{customFieldConfigDefinition.model.labels[$index]}}
+                          </option>
+                        </select>
+
+                        <input type="text"
+                               name="{{customFieldConfigDefinition.name + $index}}"
+                               ng-switch-when="SUGGESTED"
+                               ng-readonly="isPipelineRunning"
+                               ng-model="customFieldValue[customFieldConfigDefinition.name]"
+                               typeahead="listValue for listValue in customFieldConfigDefinition.model.values"
+                               class="form-control">
+
+                      </div>
+
+
+                      <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUED"
+                           ng-click="onFieldSelectorFocus(detailPaneConfig)"
+                           class="clearfix">
+                        <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+                                   ng-disabled="isPipelineRunning"
+                                   ng-model="customFieldValue[customFieldConfigDefinition.name]">
+                          <ui-select-match
+                            placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
+                            {{$item}}
+                          </ui-select-match>
+                          <ui-select-choices repeat="fieldPath in fieldPaths.concat(customFieldValue[customFieldConfigDefinition.name]) | filter:$select.search">
+                            {{fieldPath}}
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+
+                    </div>
                   </div>
 
                 </td>
+
 
                 <td>
                   <div class="btn-group" role="group" aria-label="Default button group">
