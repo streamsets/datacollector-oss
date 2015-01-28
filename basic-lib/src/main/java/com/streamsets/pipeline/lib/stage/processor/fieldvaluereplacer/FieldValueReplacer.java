@@ -27,18 +27,18 @@ import java.util.List;
 import java.util.Locale;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Field Value Replacer", icon="replacer.svg")
+@StageDef( version="1.0.0", label="Value Replacer", icon="replacer.svg")
 public class FieldValueReplacer extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldValueReplacer.class);
 
-  @ConfigDef(label = "Fields to check for Null", required = false, type = Type.MODEL, defaultValue="",
-    description="The fields whose values must be set if they are Null")
+  @ConfigDef(label = "Fields to NULL", required = false, type = Type.MODEL, defaultValue="",
+    description="Replaces field values with null value.")
   @FieldSelector
   public List<String> fieldsToNull;
 
-  @ConfigDef(label = "Field Replacement Configuration", required = false, type = Type.MODEL, defaultValue="",
-    description="Fields whose values, if null, to be replaced with the specified value")
+  @ConfigDef(label = "Replace Null values", required = false, type = Type.MODEL, defaultValue="",
+    description="Replaces the null values in a field with a specified value.")
   @ComplexField
   public List<FieldValueReplacerConfig> fieldsToReplaceIfNull;
 
@@ -128,13 +128,12 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
 
   public static class FieldValueReplacerConfig {
 
-    @ConfigDef(label = "Fields to replace", required = true,type = Type.MODEL, defaultValue="",
-      description="The fields to be replaced with the given value if the current value is null")
+    @ConfigDef(label = "Fields to Replace", required = true,type = Type.MODEL, defaultValue="")
     @FieldSelector
     public List<String> fields;
 
-    @ConfigDef(label = "New value", required = true,type = Type.STRING, defaultValue="",
-      description="The new value which must be set if the current value is null")
+    @ConfigDef(label = "Replacement value", required = true,type = Type.STRING, defaultValue="",
+      description="Value to replace null values")
     public String newValue;
 
   }
