@@ -2,8 +2,8 @@
 <html lang="en" ng-app="pipelineAgentApp">
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="Sample Spring boot angularjs application.">
-  <title ng-bind="common.title">StreamSets | Data In Motion</title>
+  <meta name="description" content="StreamSets Data Collector">
+  <title ng-bind="common.title">StreamSets Data Collector</title>
   <base href="/" />
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,22 +25,21 @@
   <div class="login-container">
     <div class="row">
       <div id="loginErrorMessageDivId" class="col-md-3 alert alert-danger" role="alert">
-        Login Failed.
+        Log In Failed.
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-3 form-login">
         <form class="form-horizontal" action="/j_security_check" method="POST">
-          <h4>Login</h4>
+          <h4>Log In</h4>
           <input type="text" name="j_username" class="form-control" placeholder="username" autofocus="true"/>
           <input type="password" name="j_password" class="form-control" placeholder="password" />
-          <button type="submit" class="btn btn-primary pull-right">login <i class="fa fa-sign-in"></i></button>
+          <button type="submit" class="btn btn-primary pull-right">Log In <i class="fa fa-sign-in"></i></button>
         </form>
       </div>
     </div>
   </div>
-
 
   <script>
     var queryString = window.location.search;
