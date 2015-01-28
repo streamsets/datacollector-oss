@@ -23,7 +23,7 @@
           <span class="field-type"> Map  </span>
 
           <record-tree
-            ng-show="isOpen || (isRoot && record.expand)"
+            ng-if="isOpen || (isRoot && record.expand)"
             ng-repeat="(_fieldName, _recordValue) in recordValue.value"
             record="record"
             record-value="_recordValue"
@@ -41,7 +41,7 @@
           <span class="field-type"> List [ {{recordValue.value.length}} ]</span>
 
           <record-tree
-            ng-show="isOpen || (isRoot && record.expand)"
+            ng-if="isOpen || (isRoot && record.expand)"
             ng-repeat="(_fieldName, _recordValue) in recordValue.value"
             record="record"
             record-value="_recordValue"

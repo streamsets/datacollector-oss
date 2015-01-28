@@ -203,7 +203,8 @@ angular
       }
     };
 
-    $scope.$on('previewPipeline', function(event) {
+
+    var previewPipeline = function() {
       $scope.stepExecuted = false;
       $scope.showLoading = true;
 
@@ -234,7 +235,17 @@ angular
           $scope.closePreview();
           $scope.showLoading = false;
         });
+    };
+
+    if($scope.previewMode) {
+      previewPipeline();
+    }
+
+
+    $scope.$on('previewPipeline', function(event) {
+      previewPipeline();
     });
+
 
     $scope.$on('onSelectionChange', function(event, options) {
       if($scope.previewMode) {

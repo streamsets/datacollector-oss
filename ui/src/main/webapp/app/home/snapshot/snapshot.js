@@ -152,13 +152,22 @@ angular
       );
     };
 
-    $scope.$on('snapshotPipeline', function(event, nextBatch) {
+
+    var snapshotPipeline = function() {
       $scope.showLoading = true;
       api.pipelineAgent.captureSnapshot(snapshotBatchSize).
         then(function() {
           checkForCaptureSnapshotStatus();
         });
+    };
+
+    $scope.$on('snapshotPipeline', function() {
+      snapshotPipeline();
     });
+
+    if($scope.snapshotMode) {
+      snapshotPipeline();
+    }
 
     $scope.$on('onSelectionChange', function(event, options) {
       if($scope.snapshotMode) {
