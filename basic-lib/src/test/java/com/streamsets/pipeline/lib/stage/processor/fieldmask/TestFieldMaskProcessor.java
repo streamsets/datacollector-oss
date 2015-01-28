@@ -25,7 +25,9 @@ public class TestFieldMaskProcessor {
 
     FieldMaskProcessor.FieldMaskConfig nameMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
     nameMaskConfig.fields = ImmutableList.of("/name", "/age", "/ssn", "/phone");
-    nameMaskConfig.maskType = "VARIABLE_LENGTH_MASK";
+    nameMaskConfig.maskType = FieldMaskProcessor.Type.VARIABLE_LENGTH;
+    nameMaskConfig.mask = null;
+
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(nameMaskConfig))
       .addOutputLane("a").build();
@@ -64,7 +66,8 @@ public class TestFieldMaskProcessor {
 
     FieldMaskProcessor.FieldMaskConfig ageMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
     ageMaskConfig.fields = ImmutableList.of("/name", "/age", "/ssn", "/phone");
-    ageMaskConfig.maskType = "FIXED_LENGTH_MASK";
+    ageMaskConfig.maskType = FieldMaskProcessor.Type.FIXED_LENGTH;
+    ageMaskConfig.mask = null;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(ageMaskConfig))
@@ -104,7 +107,8 @@ public class TestFieldMaskProcessor {
 
     FieldMaskProcessor.FieldMaskConfig formatPreserveMask = new FieldMaskProcessor.FieldMaskConfig();
     formatPreserveMask.fields = ImmutableList.of("/name", "/age", "/ssn", "/phone");
-    formatPreserveMask.maskType = "xxx-xx-####";
+    formatPreserveMask.maskType = FieldMaskProcessor.Type.CUSTOM;
+    formatPreserveMask.mask = "xxx-xx-####";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(formatPreserveMask))
@@ -144,7 +148,8 @@ public class TestFieldMaskProcessor {
 
     FieldMaskProcessor.FieldMaskConfig formatPreserveMask = new FieldMaskProcessor.FieldMaskConfig();
     formatPreserveMask.fields = ImmutableList.of("/name", "/age");
-    formatPreserveMask.maskType = "xxx-xx-####";
+    formatPreserveMask.maskType = FieldMaskProcessor.Type.CUSTOM;
+    formatPreserveMask.mask = "xxx-xx-####";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(formatPreserveMask))
@@ -178,19 +183,23 @@ public class TestFieldMaskProcessor {
 
     FieldMaskProcessor.FieldMaskConfig nameMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
     nameMaskConfig.fields = ImmutableList.of("/name");
-    nameMaskConfig.maskType = "VARIABLE_LENGTH_MASK";
+    nameMaskConfig.maskType = FieldMaskProcessor.Type.VARIABLE_LENGTH;
+    nameMaskConfig.mask = null;
 
     FieldMaskProcessor.FieldMaskConfig ageMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
     ageMaskConfig.fields = ImmutableList.of("/age");
-    ageMaskConfig.maskType = "FIXED_LENGTH_MASK";
+    ageMaskConfig.maskType = FieldMaskProcessor.Type.FIXED_LENGTH;
+    ageMaskConfig.mask = null;
 
     FieldMaskProcessor.FieldMaskConfig ssnMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
     ssnMaskConfig.fields = ImmutableList.of("/ssn");
-    ssnMaskConfig.maskType = "xxx-xx-####";
+    ssnMaskConfig.maskType = FieldMaskProcessor.Type.CUSTOM;
+    ssnMaskConfig.mask = "xxx-xx-####";
 
     FieldMaskProcessor.FieldMaskConfig phoneMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
     phoneMaskConfig.fields = ImmutableList.of("/phone");
-    phoneMaskConfig.maskType = "###-###-####";
+    phoneMaskConfig.maskType = FieldMaskProcessor.Type.CUSTOM;
+    phoneMaskConfig.mask = "###-###-####";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(nameMaskConfig, ageMaskConfig, ssnMaskConfig, phoneMaskConfig))
@@ -230,7 +239,8 @@ public class TestFieldMaskProcessor {
 
     FieldMaskProcessor.FieldMaskConfig nameMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
     nameMaskConfig.fields = ImmutableList.of("/name");
-    nameMaskConfig.maskType = "VARIABLE_LENGTH_MASK";
+    nameMaskConfig.maskType = FieldMaskProcessor.Type.VARIABLE_LENGTH;
+    nameMaskConfig.mask = null;
 
 ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(nameMaskConfig))

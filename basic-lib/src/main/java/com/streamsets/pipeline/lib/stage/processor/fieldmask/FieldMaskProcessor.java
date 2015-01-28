@@ -65,35 +65,42 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   }
 
   private String maskField(Field field, FieldMaskConfig fieldMaskConfig) {
-    if(fieldMaskConfig.maskType.equals(Type.FIXED_LENGTH_MASK.name())) {
+    if(fieldMaskConfig.maskType == Type.FIXED_LENGTH) {
       return fixedLengthMask();
-    } else if (fieldMaskConfig.maskType.equals(Type.VARIABLE_LENGTH_MASK.name())) {
+    } else if (fieldMaskConfig.maskType == Type.VARIABLE_LENGTH) {
       return variableLengthMask(field.getValueAsString());
-    } else {
-      return mask(field.getValueAsString(), fieldMaskConfig.maskType);
+    } else if (fieldMaskConfig.maskType == Type.CUSTOM) {
+      return mask(field.getValueAsString(), fieldMaskConfig.mask);
     }
+    //Should not happen
+    return null;
   }
 
   public static class FieldMaskConfig {
-    @ConfigDef(label = "Fields to mask", required = true, type = ConfigDef.Type.MODEL, defaultValue="",
-      description="The fields whose value must be masked. Non String fields will be ignored.")
+    @ConfigDef(label = "Fields to Mask", required = true, type = ConfigDef.Type.MODEL, defaultValue="",
+      description="String field to be masked. Non-string fields cannot be masked.")
     @FieldSelector
     public List<String> fields;
 
-    @ConfigDef(label = "Mask Type", required = true, type = ConfigDef.Type.MODEL, defaultValue="VARIABLE_LENGTH_MASK",
-      description="The mask that must be applied to the fields. User can select the predefined masks or input a " +
-        "mask string. The input mask string should be made up of 'x' and/or '#' and/or other characters. " +
-        "Character x in the mask means replace the original character with character 'x' in the output string. " +
-        "Character # means retain the original character at that index in the output string. " +
-        "Any other character from mask is retained in that position in the output string.")
-    @ValueChooser(type = ChooserMode.SUGGESTED, chooserValues = MaskTypeChooseValues.class)
-    public String maskType;
+    @ConfigDef(label = "Mask Type", required = true, type = ConfigDef.Type.MODEL, defaultValue="VARIABLE_LENGTH",
+      description="The mask that must be applied to the fields")
+    @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = MaskTypeChooseValues.class)
+    public Type maskType;
+
+    @ConfigDef(label = "Custom Mask", required = true, type = ConfigDef.Type.STRING, dependsOn = "maskType",
+      description = "The custom mask string should be made up of 'x' and/or '#' and/or other characters. " +
+      "Character x in the mask replaces the original character with character 'x' in the output string. " +
+      "Character # retains the original character at that index in the output string. " +
+      "Any other character from mask is retained in that position in the output string.",
+      triggeredByValue = {"CUSTOM"})
+    public String mask;
 
   }
 
   public enum Type {
-    FIXED_LENGTH_MASK,
-    VARIABLE_LENGTH_MASK
+    FIXED_LENGTH,
+    VARIABLE_LENGTH,
+    CUSTOM
   }
 
   @VisibleForTesting
