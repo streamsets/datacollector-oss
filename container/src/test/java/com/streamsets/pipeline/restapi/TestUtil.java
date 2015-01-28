@@ -244,7 +244,7 @@ public class TestUtil {
 
       Record r = new RecordImpl("a", "b", "c".getBytes(), "d");
       try {
-        Mockito.when(pipelineManager.getErrorRecords("myProcessorStage")).thenReturn(
+        Mockito.when(pipelineManager.getErrorRecords("myProcessorStage", 100)).thenReturn(
           ImmutableList.of(r));
       } catch (PipelineManagerException e) {
         e.printStackTrace();

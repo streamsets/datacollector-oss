@@ -166,9 +166,11 @@ public class PipelineManagerResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getErrorRecords(
-      @QueryParam ("stageInstanceName") @DefaultValue("") String stageInstanceName) throws PipelineManagerException {
+      @QueryParam ("stageInstanceName") @DefaultValue("") String stageInstanceName,
+      @QueryParam ("size") @DefaultValue("10") int size) throws PipelineManagerException {
+    size = size > 100 ? 100 : size;
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-        pipelineManager.getErrorRecords(stageInstanceName)).build();
+        pipelineManager.getErrorRecords(stageInstanceName, size)).build();
   }
 
   @Path("/errorMessages")

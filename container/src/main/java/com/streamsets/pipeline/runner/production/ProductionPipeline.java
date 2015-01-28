@@ -57,8 +57,8 @@ public class ProductionPipeline {
     offsetTracker.commitOffset();
   }
 
-  public List<Record> getErrorRecords(String instanceName) {
-    return pipelineRunner.getErrorRecords(instanceName);
+  public List<Record> getErrorRecords(String instanceName, int size) {
+    return pipelineRunner.getErrorRecords(instanceName, size);
   }
 
   public List<ErrorMessage> getErrorMessages(String instanceName) {

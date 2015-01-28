@@ -89,7 +89,7 @@
         "saveOperationInProgress" : "All Changes Saved",
         "savingConfiguration" : "Saving...",
         "originExists": "Origin already exists.",
-        "graphErrorBadgeLabel": "Total count of error records & stage errors in last 1 minute."
+        "graphErrorBadgeLabel": "Rate of error records in last 1 minute per second."
       },
       "error": {
       },

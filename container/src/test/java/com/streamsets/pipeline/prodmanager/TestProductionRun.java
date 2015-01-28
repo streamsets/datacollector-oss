@@ -225,7 +225,7 @@ public class TestProductionRun {
     manager.startPipeline(MY_PIPELINE, PIPELINE_REV);
     waitForErrorRecords(MY_PROCESSOR);
 
-    List<Record> errorRecords = manager.getErrorRecords(MY_PROCESSOR);
+    List<Record> errorRecords = manager.getErrorRecords(MY_PROCESSOR, 100);
     Assert.assertNotNull(errorRecords);
     Assert.assertEquals(false, errorRecords.isEmpty());
 
@@ -251,7 +251,7 @@ public class TestProductionRun {
 
     waitForErrorRecords(MY_PROCESSOR);
 
-    List<Record> errorRecords = manager.getErrorRecords(MY_PROCESSOR);
+    List<Record> errorRecords = manager.getErrorRecords(MY_PROCESSOR, 100);
     Assert.assertNotNull(errorRecords);
     Assert.assertEquals(false, errorRecords.isEmpty());
 
@@ -445,7 +445,7 @@ public class TestProductionRun {
   }
 
   private void waitForErrorRecords(String instanceName) throws InterruptedException, PipelineManagerException {
-    while(manager.getErrorRecords(instanceName).isEmpty()) {
+    while(manager.getErrorRecords(instanceName, 100).isEmpty()) {
       Thread.sleep(5);
     }
   }

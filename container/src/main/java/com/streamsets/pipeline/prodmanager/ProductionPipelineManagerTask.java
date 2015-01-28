@@ -235,9 +235,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return errorRecordStore.getErrors(pipelineName, rev);
   }
 
-  public List<Record> getErrorRecords(String instanceName) throws PipelineManagerException {
+  public List<Record> getErrorRecords(String instanceName, int size) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0106);
-    return prodPipeline.getErrorRecords(instanceName);
+    return prodPipeline.getErrorRecords(instanceName, size);
   }
 
   public List<Record> getSampledRecords(String sampleDefinitionId, int size) throws PipelineManagerException {

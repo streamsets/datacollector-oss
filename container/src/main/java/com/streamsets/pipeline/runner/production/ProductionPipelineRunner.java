@@ -278,14 +278,19 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   @SuppressWarnings("unchecked")
-  public List<Record> getErrorRecords(String instanceName) {
+  public List<Record> getErrorRecords(String instanceName, int size) {
     synchronized (errorRecordsMutex) {
       if (stageToErrorRecordsMap == null || stageToErrorRecordsMap.isEmpty()
         || stageToErrorRecordsMap.get(instanceName) == null || stageToErrorRecordsMap.get(instanceName).isEmpty()) {
         return Collections.emptyList();
       }
     }
-    return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName));
+
+    if(stageToErrorRecordsMap.get(instanceName).size() > size) {
+      return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName)).subList(0, size);
+    } else {
+      return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName));
+    }
   }
 
   public List<ErrorMessage> getErrorMessages(String instanceName) {
