@@ -35,15 +35,14 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExpressionProcessor.class);
 
-  @ConfigDef(label = "Expression Configuration", required = false, type = ConfigDef.Type.MODEL, defaultValue="",
-    description="Fields that must be set to the value returned by evaluating the expression")
+  @ConfigDef(label = "Expression Configuration", required = false, type = ConfigDef.Type.MODEL, defaultValue="")
   @ComplexField
   public List<ExpressionProcessorConfig> expressionProcessorConfigs;
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.MAP,
-    label = "Constants for expressions",
-    description = "Defines constant values available to all expressions")
+    label = "Constants",
+    description = "Constants that can be used within the processor")
   public Map<String, ?> constants;
 
   private ELEvaluator elEvaluator;
@@ -251,13 +250,14 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     @ConfigDef(label = "Field", required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      description = "Field to set")
+      description = "Use an existing field or enter a new field name. " +
+        "Using an existing field replaces the current value with the new value.")
     public String fieldToSet;
 
     @ConfigDef(required = true,
       type = ConfigDef.Type.EL_OBJECT,
       label = "Expression",
-      description = "Expression which must be evaluated to generate a value for the field",
+      description = "Expression to generate value for the field",
       defaultValue = "")
     public String expression;
 
