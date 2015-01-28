@@ -57,9 +57,7 @@
         <div ng-switch-default>
           <span ng-if="editable !== true"
                 class="field-value"
-                ng-class="recordValue.type">
-                {{recordValue.value + ''}}
-          </span>
+                ng-class="recordValue.type">{{recordValue.value + ''}}</span>
           <span class="field-value"
                 ng-if="editable === true"
                 ng-class="recordValue.dirty ? 'dirty ' + recordValue.type : recordValue.type"
