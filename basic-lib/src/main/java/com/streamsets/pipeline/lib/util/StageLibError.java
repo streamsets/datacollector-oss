@@ -15,7 +15,7 @@ public enum StageLibError implements ErrorCode {
 
   LIB_0003("LogDatProducer file='{}' offset='{}', {}"),
 
-  LIB_0005("Error parsing a single line JSON '{}': {}"),
+  LIB_0005("Error parsing a JSON string '{}': {}"),
 
   LIB_0006("Invalid configuration, name='{}', value='{}'"),
 
@@ -51,6 +51,11 @@ public enum StageLibError implements ErrorCode {
   LIB_0700("The number of splits fields must be greater than one"),
   LIB_0701("The record '{}' does not have the field-path '{}', cannot split"),
   LIB_0702("The record '{}' does not have enough splits"),
+
+  //JSONParser processor
+  LIB_0800("Record '{}' does not have the field-path '{}', cannot parse"),
+  LIB_0801("Record '{}' has the field-path '{}' set to NULL, cannot parse"),
+  LIB_0802("Record '{}' cannot set the parsed JSON  at field-path='{}', field-path does not exist"),
 
   ;
   private final String msg;
