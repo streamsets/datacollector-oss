@@ -73,7 +73,7 @@
       "stageErrors": "Stage Errors",
       "state": "State",
       "status": "Status",
-      "step": "Step",
+      "step": "Re-run Stage",
       "target": "Destination",
       "targets": "Destinations",
       "timestamp": "Timestamp",
