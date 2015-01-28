@@ -84,7 +84,6 @@ public class TestDirectorySpooler {
   }
 
   @Test
-  @Ignore("Switch off by default as it takes 20secs")
   public void testSpoolingOutOfOrderOK() throws Exception {
     Assert.assertTrue(spoolDir.mkdirs());
     File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
@@ -98,10 +97,11 @@ public class TestDirectorySpooler {
     Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
     new FileWriter(logFile2).close();
-    //nasty but the FS watcher has a delay of aprox 10 sec
-    Thread.sleep(20000);
+    spooler.finder.run();
     Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.finder.run();
     Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.finder.run();
     Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     spooler.destroy();
   }

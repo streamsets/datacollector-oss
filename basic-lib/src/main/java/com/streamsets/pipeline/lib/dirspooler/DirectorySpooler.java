@@ -21,10 +21,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
@@ -144,7 +143,6 @@ public class DirectorySpooler {
   private Path archiveDirPath;
   private Path errorArchiveDirPath;
   private PathMatcher fileMatcher;
-  private WatchService watchService;
   private PriorityBlockingQueue<Path> filesQueue;
   private Path previousFile;
   private ScheduledExecutorService scheduledExecutor;
@@ -154,6 +152,7 @@ public class DirectorySpooler {
   private volatile boolean running;
 
   volatile FilePurger purger;
+  volatile FileFinder finder;
 
   private void checkBaseDir(Path path) {
     Preconditions.checkState(path.isAbsolute(), Utils.format("Path '{}' is not an absolute path", path));
@@ -186,26 +185,26 @@ public class DirectorySpooler {
 
       fileMatcher = fs.getPathMatcher("glob:" + pattern);
 
-      watchService = fs.newWatchService();
-      spoolDirPath.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
-
       filesQueue = new PriorityBlockingQueue<>();
 
       spoolQueueMeter = context.createMeter("spoolQueue");
 
       running = true;
 
-      handleOlderFiles();
-      queueExistingFiles();
+      handleOlderFiles(currentFile);
+      String lastFound = findAndQueueFiles(currentFile, true, false);
+      LOG.debug("Last file found '{}' on startup", lastFound);
 
-      scheduledExecutor = Executors.newScheduledThreadPool(2, new ThreadFactoryBuilder()
-          .setNameFormat("directory-spool-archive-retention").setDaemon(true).build());
-      scheduledExecutor.execute(new Watcher());
+      scheduledExecutor = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder()
+          .setNameFormat("directory-spooler").setDaemon(true).build());
+
+      finder = new FileFinder(lastFound);
+      scheduledExecutor.scheduleAtFixedRate(finder, 5, 5, TimeUnit.SECONDS);
+
       if (postProcessing == FilePostProcessing.ARCHIVE && archiveRetentionMillis > 0) {
         purger = new FilePurger();
         scheduledExecutor.scheduleAtFixedRate(purger, 1, 1, TimeUnit.MINUTES);
       }
-
 
     } catch (IOException ex) {
       destroy();
@@ -223,18 +222,10 @@ public class DirectorySpooler {
     } catch (RuntimeException ex) {
       LOG.warn("Error during scheduledExecutor.shutdownNow(), {}", ex.getMessage(), ex);
     }
-    try {
-      if (watchService != null) {
-        watchService.close();
-        watchService = null;
-      }
-    } catch (IOException|RuntimeException ex) {
-      LOG.warn("Error during watchService.close(), {}", ex.getMessage(), ex);
-    }
   }
 
   public boolean isRunning() {
-    return watchService != null;
+    return running;
   }
 
   public Source.Context getContext() {
@@ -347,75 +338,95 @@ public class DirectorySpooler {
     }
   }
 
-  void queueExistingFiles() throws IOException {
-    DirectoryStream<Path> matchingFile = Files.newDirectoryStream(spoolDirPath, new DirectoryStream.Filter<Path>() {
+  String findAndQueueFiles(final String startingFile, final boolean includeStartingFile, boolean checkCurrent)
+      throws IOException {
+    DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
       @Override
       public boolean accept(Path entry) throws IOException {
-        return fileMatcher.matches(entry.getFileName()) &&
-               (currentFile == null || entry.getFileName().toString().compareTo(currentFile) >= 0);
+        boolean accept = false;
+        if (fileMatcher.matches(entry.getFileName())) {
+          if (startingFile == null) {
+            accept = true;
+          } else {
+            int compares = entry.getFileName().toString().compareTo(startingFile);
+            accept = (compares == 0 && includeStartingFile) || (compares > 0);
+          }
+        }
+        return accept;
       }
-    });
-    for (Path file : matchingFile) {
-      LOG.debug("Found file '{}', during initialization", file);
-      addFileToQueue(file, false);
+    };
+    List<Path> foundFiles = new ArrayList<>(maxSpoolFiles);
+    try (DirectoryStream<Path> matchingFile = Files.newDirectoryStream(spoolDirPath, filter)) {
+      for (Path file : matchingFile) {
+        if (!running) {
+          return null;
+        }
+        LOG.trace("Found file '{}'", file);
+        foundFiles.add(file);
+        if (foundFiles.size() > maxSpoolFiles) {
+          throw new IllegalStateException(Utils.format("Exceeded max number '{}' of spool files in directory",
+                                                       maxSpoolFiles));
+        }
+      }
     }
+    Collections.sort(foundFiles);
+    for (Path file : foundFiles) {
+      addFileToQueue(file, checkCurrent);
+      if (filesQueue.size() > maxSpoolFiles) {
+        throw new IllegalStateException(Utils.format("Exceeded max number '{}' of spool files in directory",
+                                                     maxSpoolFiles));
+      }
+    }
+    spoolQueueMeter.mark(filesQueue.size());
+    LOG.debug("Found '{}' files", filesQueue.size());
+    return (foundFiles.isEmpty()) ? startingFile : foundFiles.get(foundFiles.size() - 1).getFileName().toString();
   }
 
-  void handleOlderFiles() throws IOException {
+  void handleOlderFiles(final String startingFile) throws IOException {
     if (postProcessing != FilePostProcessing.NONE) {
-      DirectoryStream<Path> matchingFile = Files.newDirectoryStream(spoolDirPath, new DirectoryStream.Filter<Path>() {
+      DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
         @Override
         public boolean accept(Path entry) throws IOException {
           return fileMatcher.matches(entry.getFileName()) &&
-                 (currentFile != null && entry.getFileName().toString().compareTo(currentFile) < 0);
+                 (startingFile != null && entry.getFileName().toString().compareTo(startingFile) < 0);
         }
-      });
-      for (Path file : matchingFile) {
-        switch (postProcessing) {
-          case DELETE:
-            LOG.debug("Deleting old file '{}'", file);
-            Files.delete(file);
-            break;
-          case ARCHIVE:
-            LOG.debug("Archiving old file '{}'", file);
-            Files.move(file, archiveDirPath.resolve(file.getFileName()));
-            break;
+      };
+      try (DirectoryStream<Path> matchingFile = Files.newDirectoryStream(spoolDirPath, filter)) {
+        for (Path file : matchingFile) {
+          switch (postProcessing) {
+            case DELETE:
+              LOG.debug("Deleting old file '{}'", file);
+              Files.delete(file);
+              break;
+            case ARCHIVE:
+              LOG.debug("Archiving old file '{}'", file);
+              Files.move(file, archiveDirPath.resolve(file.getFileName()));
+              break;
+          }
         }
       }
     }
   }
 
-  class Watcher implements Runnable {
+  class FileFinder implements Runnable {
+    private String lastFound;
 
-    @SuppressWarnings("unchecked")
-    public void run() {
-      try {
-        while (running) {
-          WatchKey key = watchService.take();
-          for (WatchEvent<?> event : key.pollEvents()) {
-            WatchEvent.Kind<?> kind = event.kind();
-            if (kind == StandardWatchEventKinds.OVERFLOW) {
-              LOG.error("Watcher cannot keep up with filesystem watcher notifications");
-              running = false;
-            } else {
-              Path file = ((WatchEvent<Path>) event).context();
-              if (fileMatcher.matches(file)) {
-                file = spoolDirPath.resolve(file.getFileName());
-                LOG.debug("Watcher Found new file '{}', via filesystem watcher", file);
-                addFileToQueue(file, true);
-              }
-            }
-          }
-          if (!key.reset()) {
-            LOG.error("Watcher, spool directory '{}' is not valid anymore", spoolDirPath);
-            running = false;
-          }
-        }
-      } catch (InterruptedException ex) {
-        LOG.debug("File watcher interrupted, shutting down");
-      }
+    public FileFinder(String lastFound) {
+      this.lastFound = lastFound;
     }
 
+    @Override
+    public synchronized void run() {
+      // by using current we give a chance to have unprocessed files out of order
+      LOG.debug("Starting file finder from '{}'", currentFile);
+      try {
+        lastFound = findAndQueueFiles(currentFile, false, true);
+      } catch (Exception ex) {
+        LOG.warn("Error while scanning directory '{}' for files newer than '{}': {}", archiveDirPath, lastFound,
+                 ex.getMessage(), ex);
+      }
+      LOG.debug("Finished file finder at '{}'", lastFound);
+    }
   }
 
   class FilePurger implements Runnable {
