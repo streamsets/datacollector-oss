@@ -24,7 +24,7 @@ public class FilterOperationValues implements ChooserValues {
   public List<String> getLabels() {
     List<String> labels = new ArrayList<>();
     for (FieldFilterProcessor.FilterOperation filterOperation : FieldFilterProcessor.FilterOperation.values()) {
-      labels.add(filterOperation.toString());
+      labels.add(filterOperation.getLabel());
     }
     return labels;
   }

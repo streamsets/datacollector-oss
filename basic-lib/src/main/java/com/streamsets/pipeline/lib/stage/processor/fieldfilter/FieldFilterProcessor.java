@@ -28,13 +28,13 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(FieldFilterProcessor.class);
 
-  @ConfigDef(label = "Fields to filter", required = true, type = Type.MODEL, defaultValue="",
-    description="The fields which must be retained or removed based on the filter option.")
+  @ConfigDef(label = "Fields", required = true, type = Type.MODEL, defaultValue="",
+    displayPosition = 2)
   @FieldSelector
   public List<String> fields;
 
   @ConfigDef(label = "Filter Operation", required = true,type = Type.MODEL, defaultValue="KEEP",
-    description="The filter operation on the selected fields")
+    displayPosition = 1)
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FilterOperationValues.class)
   public FilterOperation filterOperation;
 
@@ -56,8 +56,18 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
   }
 
   enum FilterOperation {
-    KEEP,
-    REMOVE
+    KEEP("Keep Listed Fields"),
+    REMOVE("Remove Listed Fields");
+
+    private String label;
+
+    private FilterOperation(String label) {
+      this.label = label;
+    }
+
+    public String getLabel() {
+      return label;
+    }
   }
 
 }
