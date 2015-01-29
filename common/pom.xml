@@ -42,8 +42,12 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
-
-
+    <!-- This is for testing Kafka Consumer with XML messages. Need to create XML messages -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-xml</artifactId>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>

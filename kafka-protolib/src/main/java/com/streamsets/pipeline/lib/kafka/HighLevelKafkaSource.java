@@ -21,7 +21,8 @@ import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "application/json")
 @StageDef(version="0.0.1",
   label="Kafka Consumer",
-  icon="kafka.png")
+  icon="kafka.png",
+  description = "Reads messages from Kafka brokers. Message data can be: LOG, CSV, TSV, XML or JSON")
 @ConfigGroups(value = HighLevelKafkaSource.KafkaSourceConfigGroups.class)
 public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
 
@@ -30,7 +31,7 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
     label = "JSON Content",
     description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects",
     defaultValue = "ARRAY_OBJECTS",
-    dependsOn = "payloadType",
+    dependsOn = "consumerPayloadType",
     triggeredByValue = {"JSON"},
     group = "JSON_PROPERTIES")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
@@ -42,7 +43,7 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
     description = "The maximum length for a JSON Object being converted to a record, if greater the full JSON " +
       "object is discarded and processing continues with the next JSON object",
     defaultValue = "4096",
-    dependsOn = "payloadType",
+    dependsOn = "consumerPayloadType",
     triggeredByValue = {"JSON"},
     group = "JSON_PROPERTIES")
   public int maxJsonObjectLen;
@@ -52,17 +53,17 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
     label = "CSV Format",
     description = "The specific CSV format of the files",
     group = "CSV_PROPERTIES",
-    dependsOn = "payloadType",
+    dependsOn = "consumerPayloadType",
     triggeredByValue = {"CSV"},
     defaultValue = "CSV")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
 
   public enum KafkaSourceConfigGroups implements Label {
-    JSON_PROPERTIES("JSON Data Properties"),
-    CSV_PROPERTIES("CSV Data Properties"),
-    XML_PROPERTIES("XML Data Properties"),
-    LOG_PROPERTIES("Log Data Properties");
+    JSON_PROPERTIES("JSON Data"),
+    CSV_PROPERTIES("CSV Data"),
+    XML_PROPERTIES("XML Data"),
+    LOG_PROPERTIES("Log Data");
 
     private final String label;
 
@@ -80,7 +81,7 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
   @Override
   public void init() throws StageException {
     super.init();
-    switch ((payloadType)) {
+    switch ((consumerPayloadType)) {
       case JSON:
         fieldCreator = new JsonFieldCreator(jsonContent, maxJsonObjectLen);
         break;
@@ -89,6 +90,9 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
         break;
       case CSV:
         fieldCreator = new CsvFieldCreator(csvFileFormat);
+        break;
+      case XML:
+        fieldCreator = new XmlFieldCreator();
         break;
       default :
     }

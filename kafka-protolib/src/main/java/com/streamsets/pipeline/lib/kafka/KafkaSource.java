@@ -7,7 +7,6 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -20,7 +19,7 @@ public class KafkaSource extends AbstractKafkaSource {
     label = "JSON Content",
     description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects",
     defaultValue = "ARRAY_OBJECTS",
-    dependsOn = "payloadType",
+    dependsOn = "consumerPayloadType",
     triggeredByValue = {"JSON"},
     group = "JSON_PROPERTIES")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
@@ -32,7 +31,7 @@ public class KafkaSource extends AbstractKafkaSource {
     description = "The maximum length for a JSON Object being converted to a record, if greater the full JSON " +
       "object is discarded and processing continues with the next JSON object",
     defaultValue = "4096",
-    dependsOn = "payloadType",
+    dependsOn = "consumerPayloadType",
     triggeredByValue = {"JSON"},
     group = "JSON_PROPERTIES")
   public int maxJsonObjectLen;
@@ -42,7 +41,7 @@ public class KafkaSource extends AbstractKafkaSource {
     label = "CSV Format",
     description = "The specific CSV format of the files",
     group = "CSV_PROPERTIES",
-    dependsOn = "payloadType",
+    dependsOn = "consumerPayloadType",
     triggeredByValue = {"CSV"},
     defaultValue = "CSV")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
@@ -53,7 +52,7 @@ public class KafkaSource extends AbstractKafkaSource {
   @Override
   public void init() throws StageException {
     super.init();
-    switch ((payloadType)) {
+    switch ((consumerPayloadType)) {
       case JSON:
         fieldCreator = new JsonFieldCreator(jsonContent, maxJsonObjectLen);
         break;

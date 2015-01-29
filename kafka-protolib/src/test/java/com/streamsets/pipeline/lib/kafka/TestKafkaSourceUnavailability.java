@@ -87,7 +87,7 @@ public class TestKafkaSourceUnavailability {
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
-      .addConfiguration("payloadType", PayloadType.LOG)
+      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
       .build();
 
     sourceRunner.runInit();
@@ -116,7 +116,7 @@ public class TestKafkaSourceUnavailability {
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
-      .addConfiguration("payloadType", PayloadType.LOG)
+      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
       .build();
 
     sourceRunner.runInit();

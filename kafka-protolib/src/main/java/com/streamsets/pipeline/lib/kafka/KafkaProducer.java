@@ -50,7 +50,7 @@ public class KafkaProducer {
 
   private final Map<String, String> kafkaProducerConfigs;
 
-  private final PayloadType payloadType;
+  private final ProducerPayloadType producerPayloadType;
   private final PartitionStrategy partitionStrategy;
 
   private List<KeyedMessage<String, byte[]>> messageList;
@@ -58,11 +58,11 @@ public class KafkaProducer {
 
   private int numberOfPartitions;
 
-  public KafkaProducer(String topic, String metadataBrokerList, PayloadType payloadType,
+  public KafkaProducer(String topic, String metadataBrokerList, ProducerPayloadType producerPayloadType,
                        PartitionStrategy partitionStrategy, Map<String, String> kafkaProducerConfigs) {
     this.topic = topic;
     this.metadataBrokerList = metadataBrokerList;
-    this.payloadType = payloadType;
+    this.producerPayloadType = producerPayloadType;
     this.partitionStrategy = partitionStrategy;
     this.messageList = new ArrayList<>();
     this.kafkaProducerConfigs = kafkaProducerConfigs;
@@ -79,7 +79,7 @@ public class KafkaProducer {
     //partitioner.class
     configurePartitionStrategy(props, partitionStrategy);
     //serializer.class
-    configureSerializer(props, payloadType);
+    configureSerializer(props, producerPayloadType);
     //request.required.acks
     props.put(REQUEST_REQUIRED_ACKS_KEY, REQUEST_REQUIRED_ACKS_DEFAULT);
 
@@ -163,8 +163,8 @@ public class KafkaProducer {
     Thread.sleep(timeToWait);
   }
 
-  private void configureSerializer(Properties props, PayloadType payloadType) {
-    if(payloadType == PayloadType.LOG) {
+  private void configureSerializer(Properties props, ProducerPayloadType producerPayloadType) {
+    if(producerPayloadType == ProducerPayloadType.LOG) {
       props.put(SERIALIZER_CLASS_KEY, DEFAULT_ENCODER_CLASS);
     }
   }

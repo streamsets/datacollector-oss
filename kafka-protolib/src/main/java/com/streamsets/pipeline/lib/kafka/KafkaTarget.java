@@ -102,8 +102,8 @@ public class KafkaTarget extends BaseTarget {
     label = "Payload Type",
     defaultValue = "LOG",
     group = "KAFKA_CONNECTION_PROPERTIES")
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PayloadTypeChooserValues.class)
-  public PayloadType payloadType;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ProducerPayloadTypeChooserValues.class)
+  public ProducerPayloadType payloadType;
 
   @ConfigDef(required = false,
     type = ConfigDef.Type.MAP,

@@ -24,6 +24,7 @@ import kafka.utils.TestUtils;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -117,6 +118,22 @@ public class KafkaTestUtil {
     return messages;
   }
 
+  public static List<KeyedMessage<String, String>> produceXmlMessages(String topic, String partition) throws IOException {
+
+    List<String> stringList = IOUtils.readLines(KafkaTestUtil.class.getClassLoader().getResourceAsStream("testKafkaTarget.xml"));
+    StringBuilder sb = new StringBuilder();
+    for(String s : stringList) {
+      sb.append(s);
+    }
+    String xmlString = sb.toString();
+
+    List<KeyedMessage<String, String>> messages = new ArrayList<>();
+    for(int i = 0; i < 10; i++) {
+      messages.add(new KeyedMessage<>(topic, partition, xmlString));
+    }
+    return messages;
+  }
+
   public static List<KeyedMessage<String, String>> produceCsvMessages(String topic, String partition,
                                                                       CSVFormat csvFormat) throws IOException {
     List<KeyedMessage<String, String>> messages = new ArrayList<>();
@@ -187,6 +204,15 @@ public class KafkaTestUtil {
           "}";
       case CSV:
         return "2010,NLDS1,PHI,NL,CIN,NL,3,0,0";
+      case XML:
+        return "<book id=\"bk104\">\n" +
+          "<author>Corets, Eva</author>\n" +
+          "<title>Oberon's Legacy</title>\n" +
+          "<genre>Fantasy</genre>\n" +
+          "<price>5.95</price>\n" +
+          "<publish_date>2001-03-10</publish_date>\n" +
+          "<description>Description</description>\n" +
+          "</book>";
 
     }
     throw new IllegalArgumentException("Unsupported data type requested");

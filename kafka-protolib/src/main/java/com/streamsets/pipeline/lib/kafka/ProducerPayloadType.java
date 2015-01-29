@@ -5,9 +5,8 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
-public enum DataType {
+public enum ProducerPayloadType {
   LOG,
   JSON,
-  CSV,
-  XML
+  CSV
 }

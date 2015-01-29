@@ -12,15 +12,15 @@ import com.streamsets.pipeline.api.ChooserValues;
 
 import java.util.List;
 
-public class PayloadTypeChooserValues implements ChooserValues {
+public class ConsumerPayloadTypeChooserValues implements ChooserValues {
 
   private static final List<String> VALUES;
 
   static {
-    VALUES = ImmutableList.copyOf(Lists.transform(ImmutableList.copyOf(PayloadType.values()),
-      new Function<PayloadType, String>() {
+    VALUES = ImmutableList.copyOf(Lists.transform(ImmutableList.copyOf(ConsumerPayloadType.values()),
+      new Function<ConsumerPayloadType, String>() {
         @Override
-        public String apply(PayloadType input) {
+        public String apply(ConsumerPayloadType input) {
           return input.toString();
         }
       }));

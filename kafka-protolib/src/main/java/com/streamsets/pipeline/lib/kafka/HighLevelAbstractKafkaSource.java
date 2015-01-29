@@ -31,7 +31,6 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
     type = ConfigDef.Type.STRING,
     description = "The Consumer Group columnName",
     label = "Consumer Group",
-    group = "KAFKA_CONNECTION_PROPERTIES",
     defaultValue = "streamsetsDataCollector")
   public String consumerGroup;
 
@@ -39,7 +38,6 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
     type = ConfigDef.Type.STRING,
     description = "The Kafka topic from which the messages must be read",
     label = "Topic",
-    group = "KAFKA_CONNECTION_PROPERTIES",
     defaultValue = "topicName")
   public String topic;
 
@@ -47,7 +45,6 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
     type = ConfigDef.Type.STRING,
     description = "Comma separated zookeeper connect strings.",
     label = "Zookeeper Connect String",
-    group = "KAFKA_CONNECTION_PROPERTIES",
     defaultValue = "localhost:2181")
   public String zookeeperConnect;
 
@@ -55,7 +52,6 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
     type = ConfigDef.Type.INTEGER,
     description = "The maximum number of messages to be read from Kafka for one batch.",
     label = "Max Batch Size",
-    group = "KAFKA_CONNECTION_PROPERTIES",
     defaultValue = "1000")
   public int maxBatchSize;
 
@@ -63,7 +59,6 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
     type = ConfigDef.Type.INTEGER,
     description = "The maximum time in milli seconds for which the Kafka consumer waits to fill a batch.",
     label = "Batch Duration Time",
-    group = "KAFKA_CONNECTION_PROPERTIES",
     defaultValue = "1000")
   public int maxWaitTime;
 
@@ -71,23 +66,21 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
     type = ConfigDef.Type.MODEL,
     description = "Type of data sent as kafka message payload",
     label = "Payload Type",
-    group = "KAFKA_CONNECTION_PROPERTIES",
     defaultValue = "LOG")
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PayloadTypeChooserValues.class)
-  public PayloadType payloadType;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ConsumerPayloadTypeChooserValues.class)
+  public ConsumerPayloadType consumerPayloadType;
 
   @ConfigDef(required = false,
     type = ConfigDef.Type.MAP,
     description = "Additional configuration properties which will be used by the underlying Kafka consumer.",
     defaultValue = "",
-    group = "KAFKA_ADVANCED_CONFIGURATION",
-    label = "Kafka Consumer Configuration Properties")
+    group = "ADVANCED",
+    label = "Advanced Configuration")
   public Map<String, String> kafkaConsumerConfigs;
 
 
   public enum HighLevelKafkaSourceConfigGroups implements Label {
-    KAFKA_CONNECTION_PROPERTIES("Kafka Connection Configuration"),
-    KAFKA_ADVANCED_CONFIGURATION("Kafka Advanced Configuration");
+    ADVANCED("Advanced Properties");
 
     private final String label;
 

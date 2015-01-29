@@ -7,70 +7,20 @@ package com.streamsets.pipeline.lib.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JsonUtil {
 
-  public static Field jsonToField(Object json) throws IOException {
-    Field field;
-    if (json == null) {
-      field = Field.create(Field.Type.STRING, null);
-    } else if (json instanceof List) {
-      List jsonList = (List) json;
-      List<Field> list = new ArrayList<>(jsonList.size());
-      for (Object element : jsonList) {
-        list.add(jsonToField(element));
-      }
-      field = Field.create(list);
-    } else if (json instanceof Map) {
-      Map<String, Object> jsonMap = (Map<String, Object>) json;
-      Map<String, Field> map = new LinkedHashMap<>();
-      for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
-        map.put(entry.getKey(), jsonToField(entry.getValue()));
-      }
-      field = Field.create(map);
-    } else if (json instanceof String) {
-      field = Field.create((String) json);
-    } else if (json instanceof Boolean) {
-      field = Field.create((Boolean) json);
-    } else if (json instanceof Character) {
-      field = Field.create((Character) json);
-    } else if (json instanceof Byte) {
-      field = Field.create((Byte) json);
-    } else if (json instanceof Short) {
-      field = Field.create((Short) json);
-    } else if (json instanceof Integer) {
-      field = Field.create((Integer) json);
-    } else if (json instanceof Long) {
-      field = Field.create((Long) json);
-    } else if (json instanceof Float) {
-      field = Field.create((Float) json);
-    } else if (json instanceof Double) {
-      field = Field.create((Double) json);
-    } else if (json instanceof byte[]) {
-      field = Field.create((byte[]) json);
-    } else if (json instanceof Date) {
-      field = Field.createDate((Date) json);
-    } else if (json instanceof BigDecimal) {
-      field = Field.create((BigDecimal) json);
-    } else {
-      throw new IOException(Utils.format("Not recognized type '{}', value '{}'", json.getClass(), json));
-    }
-    return field;
-  }
+public class XmlUtil {
 
-  public static Object fieldToJsonObject(Record record, Field field) throws StageException {
+  public static Object fieldToObject(Record record, Field field) throws StageException {
     Object obj;
     if (field.getValue() == null) {
       obj = null;
@@ -104,14 +54,14 @@ public class JsonUtil {
       List<Field> list = field.getValueAsList();
       List<Object> toReturn = new ArrayList<>(list.size());
       for(Field f : list) {
-        toReturn.add(fieldToJsonObject(record, f));
+        toReturn.add(fieldToObject(record, f));
       }
       obj = toReturn;
     } else if(field.getType()== Field.Type.MAP) {
       Map<String, Field> map = field.getValueAsMap();
       Map<String, Object> toReturn = new LinkedHashMap<>();
       for (Map.Entry<String, Field> entry :map.entrySet()) {
-        toReturn.put(entry.getKey(), fieldToJsonObject(record, entry.getValue()));
+        toReturn.put(entry.getKey(), fieldToObject(record, entry.getValue()));
       }
       obj = toReturn;
     } else {
@@ -120,11 +70,10 @@ public class JsonUtil {
     }
     return obj;
   }
-
-  public static String jsonRecordToString(Record r) throws StageException {
-    ObjectMapper objectMapper = new ObjectMapper();
+  public static String xmlRecordToString(Record r) throws StageException {
+    ObjectMapper xmlMapper = new XmlMapper();
     try {
-      return objectMapper.writeValueAsString(JsonUtil.fieldToJsonObject(r, r.get()));
+      return xmlMapper.writeValueAsString(fieldToObject(r, r.get()));
     } catch (JsonProcessingException e) {
       throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.getMessage(), e);
     }

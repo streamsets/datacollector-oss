@@ -91,7 +91,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("payloadType", PayloadType.LOG)
+      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();
 
@@ -132,7 +132,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("payloadType", PayloadType.LOG)
+      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();
 
@@ -173,7 +173,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("payloadType", PayloadType.JSON)
+      .addConfiguration("consumerPayloadType", ConsumerPayloadType.JSON)
       .addConfiguration("jsonContent", StreamingJsonParser.Mode.MULTIPLE_OBJECTS)
       .addConfiguration("maxJsonObjectLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
@@ -203,6 +203,53 @@ public class TestHighLevelKafkaSource {
   }
 
   @Test
+  public void testProduceXmlRecords() throws StageException, IOException {
+
+    CountDownLatch startLatch = new CountDownLatch(1);
+    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceXmlRecords", SINGLE_PARTITION,
+      REPLICATION_FACTOR, TIME_OUT);
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    executorService.submit(new ProducerRunnable( "testProduceXmlRecords", SINGLE_PARTITION,
+      producer, startLatch, DataType.XML));
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(HighLevelKafkaSource.class)
+      .addOutputLane("lane")
+      .addConfiguration("topic", "testProduceXmlRecords")
+      .addConfiguration("consumerGroup", CONSUMER_GROUP)
+      .addConfiguration("zookeeperConnect", zkConnect)
+      .addConfiguration("maxBatchSize", 9)
+      .addConfiguration("maxWaitTime", 5000)
+      .addConfiguration("consumerPayloadType", ConsumerPayloadType.XML)
+      .addConfiguration("jsonContent", null)
+      .addConfiguration("maxJsonObjectLen", null)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .build();
+
+    sourceRunner.runInit();
+
+    startLatch.countDown();
+    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    executorService.shutdown();
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(9, records.size());
+
+    XmlFieldCreator xmlFieldCreator = new XmlFieldCreator();
+    for(int i = 0; i < records.size(); i++) {
+      Assert.assertNotNull(records.get(i).get().getValueAsMap());
+      Assert.assertTrue(!records.get(i).get().getValueAsMap().isEmpty());
+      Assert.assertEquals(
+        xmlFieldCreator.createField(KafkaTestUtil.generateTestData(DataType.XML).getBytes()).getValueAsMap(),
+        records.get(i).get().getValueAsMap());
+    }
+    sourceRunner.runDestroy();
+
+  }
+
+  @Test
   public void testProduceCsvRecords() throws StageException, IOException {
     CountDownLatch startLatch = new CountDownLatch(1);
     KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceCsvRecords", SINGLE_PARTITION,
@@ -218,7 +265,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("payloadType", PayloadType.CSV)
+      .addConfiguration("consumerPayloadType", ConsumerPayloadType.CSV)
       .addConfiguration("csvFileFormat", CsvFileMode.CSV)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();

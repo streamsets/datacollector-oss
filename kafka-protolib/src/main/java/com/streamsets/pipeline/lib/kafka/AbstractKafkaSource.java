@@ -115,8 +115,8 @@ public abstract class AbstractKafkaSource extends BaseSource {
     label = "Payload Type",
     group = "KAFKA_PROPERTIES",
     defaultValue = "LOG")
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PayloadTypeChooserValues.class)
-  public PayloadType payloadType;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ConsumerPayloadTypeChooserValues.class)
+  public ConsumerPayloadType consumerPayloadType;
 
 
 
