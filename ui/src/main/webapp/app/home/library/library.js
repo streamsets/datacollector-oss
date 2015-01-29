@@ -5,7 +5,7 @@
 angular
   .module('pipelineAgentApp.home')
 
-  .controller('LibraryController', function ($scope, $modal, _, api) {
+  .controller('LibraryController', function ($scope, $rootScope, $modal, _, api) {
 
     angular.extend($scope, {
 
@@ -15,7 +15,7 @@ angular
        * @param pipeline
        */
       onSelect : function(pipeline) {
-        $scope.$emit('onPipelineConfigSelect', pipeline);
+        $rootScope.$broadcast('onPipelineConfigSelect', pipeline);
       },
 
       /**
@@ -46,7 +46,7 @@ angular
           });
 
           $scope.pipelines.splice(index, 0, configObject.info);
-          $scope.$emit('onPipelineConfigSelect', configObject.info);
+          $rootScope.$broadcast('onPipelineConfigSelect', configObject.info);
 
         }, function () {
 

@@ -26,10 +26,10 @@
               <ng-include src="'app/home/graph/graph.tpl.html'"></ng-include>
             </bg-pane>
 
-            <bg-pane min-size="0" ng-show="pipelineConfig">
-              <ng-include src="'app/home/detail/detail.tpl.html'"></ng-include>
-              <ng-include src="'app/home/preview/preview.tpl.html'"></ng-include>
-              <ng-include src="'app/home/snapshot/snapshot.tpl.html'"></ng-include>
+            <bg-pane min-size="0">
+              <ng-include ng-if="pipelineConfig" src="'app/home/detail/detail.tpl.html'"></ng-include>
+              <ng-include ng-if="pipelineConfig" src="'app/home/preview/preview.tpl.html'"></ng-include>
+              <ng-include ng-if="pipelineConfig" src="'app/home/snapshot/snapshot.tpl.html'"></ng-include>
             </bg-pane>
           </bg-splitter>
         </bg-pane>
@@ -56,8 +56,6 @@
       </div>
 
     </bg-pane>
-
-
 
   </bg-splitter>
 </div>

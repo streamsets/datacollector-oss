@@ -32,9 +32,9 @@ angular
         });
     };
 
-    $scope.$watch('pipelineConfig.info.name', function() {
-      if($scope.pipelineConfig) {
-        updateHistory($scope.pipelineConfig.info.name);
+    $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
+      if(configInfo) {
+        updateHistory(configInfo.name);
       }
     });
 

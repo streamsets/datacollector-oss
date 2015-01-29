@@ -14,8 +14,7 @@ angular
   }])
   .controller('HomeController', function ($scope, $rootScope, $timeout, api, configuration, _, $q, $modal,
                                           $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster, $translate) {
-    var stageCounter = 0,
-      timeout,
+    var timeout,
       dirty = false,
       rulesDirty = false,
       ignoreUpdate = false,
@@ -484,9 +483,6 @@ angular
       }));
       $scope.pipelines[index] = pipelineConfig.info;
 
-      stageCounter = ($scope.pipelineConfig && $scope.pipelineConfig.stages) ?
-        $scope.pipelineConfig.stages.length : 0;
-
       //Determine edges from input lanes and output lanes
       //And also set flag sourceExists if pipeline Config contains source
       edges = [];
@@ -525,8 +521,8 @@ angular
 
       if ($scope.detailPaneConfig === undefined) {
         //First time
-        $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
         $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
+        $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
       } else {
         //Check
 

@@ -116,6 +116,10 @@ angular
 
 
     $rootScope.$watch('common.pipelineMetrics', function() {
+      if(!$scope.pipelineConfig) {
+        return;
+      }
+
       var pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig,
         stages = $scope.pipelineConfig.stages,
