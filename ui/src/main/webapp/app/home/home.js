@@ -675,8 +675,8 @@ angular
       if(pipelineMetrics && pipelineMetrics.meters) {
         angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
           stageInstanceErrorCounts[stageInstance.instanceName] = Math.round(
-            pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'].m1_rate +
-            pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.stageErrors.meter'].m1_rate
+            pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'].count +
+            pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.stageErrors.meter'].count
           );
         });
       }
