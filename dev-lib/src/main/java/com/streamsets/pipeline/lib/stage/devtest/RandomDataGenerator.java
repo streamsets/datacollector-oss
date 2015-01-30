@@ -102,7 +102,8 @@ public class RandomDataGenerator extends BaseSource {
     public String field;
 
     @ConfigDef(required = true, type = ConfigDef.Type.MODEL,
-      label = "Field Type")
+      label = "Field Type",
+      defaultValue = "STRING")
     @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = TypeChooserValueProvider.class)
     public Type type;
   }

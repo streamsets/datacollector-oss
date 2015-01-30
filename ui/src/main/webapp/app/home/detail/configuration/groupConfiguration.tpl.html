@@ -199,14 +199,13 @@
 
 
                 <td>
-                  <div class="btn-group" role="group" aria-label="Default button group">
+                  <div class="btn-group" role="group" aria-label="Default button group" ng-hide="isPipelineRunning">
                     <button type="button" class="btn btn-default btn-sm"
-                            ng-hide="$first && $last && isPipelineRunning"
                             ng-click="removeFromCustomField(detailPaneConfig, customeFieldValueList, $index)">
                       <i class="fa fa-minus pointer"></i>
                     </button>
                     <button type="button" class="btn btn-default btn-sm"
-                            ng-hide="isPipelineRunning"
+                            ng-show="$last"
                             ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, configDefinition.model.configDefinitions)">
                       <i class="fa fa-plus pointer"></i>
                     </button>

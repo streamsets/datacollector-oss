@@ -264,6 +264,7 @@ angular
 
       /**
        * Refresh the Pipeline Graph.
+       *
        */
       refreshGraph : function() {
         updateGraph($scope.pipelineConfig, $scope.pipelineRules);
@@ -461,10 +462,11 @@ angular
      * Update Pipeline Graph
      *
      * @param pipelineConfig
+     * @param pipelineRules
      */
     var updateGraph = function (pipelineConfig, pipelineRules) {
       var selectedStageInstance,
-        stageErrorCounts,
+        stageErrorCounts = {},
         pipelineMetrics = $rootScope.common.pipelineMetrics,
         pipelineStatus = $rootScope.common.pipelineStatus;
 
@@ -513,7 +515,7 @@ angular
       $scope.firstOpenLane = $rootScope.$storage.dontShowHelpAlert ? {} : getFirstOpenLane();
 
       if(pipelineStatus && pipelineStatus.name === pipelineConfig.info.name &&
-        pipelineMetrics && pipelineMetrics.meters) {
+        pipelineStatus.state === 'RUNNING' && pipelineMetrics && pipelineMetrics.meters) {
         stageErrorCounts = getStageErrorCounts();
       }
 

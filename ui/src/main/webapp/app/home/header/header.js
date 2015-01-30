@@ -171,9 +171,8 @@ angular
 
         modalInstance.result.then(function(status) {
           $scope.moveGraphToCenter();
-          $scope.refreshGraph();
           $rootScope.common.pipelineStatus = status;
-          $scope.$broadcast('updateErrorCount', {});
+          $scope.refreshGraph();
         }, function () {
 
         });

@@ -73,7 +73,7 @@
 
 <script type="text/ng-template" id="listConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8 container-fluid">
-    <div class="row lane-predicate"
+    <div class="row map-list-type"
          ng-repeat="val in listValue = detailPaneConfig.configuration[configIndex].value track by $index">
 
       <div class="col-md-1">
@@ -119,7 +119,7 @@
 
 <script type="text/ng-template" id="mapConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
-    <div class="row lane-predicate" ng-repeat="mapObject in detailPaneConfig.configuration[configIndex].value track by $index">
+    <div class="row map-list-type" ng-repeat="mapObject in detailPaneConfig.configuration[configIndex].value track by $index">
 
       <div class="col-xs-3">
         <input type="text" class="form-control input-sm"
@@ -132,7 +132,7 @@
 
       <div class="col-xs-1">:</div>
 
-      <div class="col-xs-6">
+      <div class="col-xs-5">
         <input type="text" class="form-control input-sm"
                name="{{configDefinition.name + 'value' + $index}}"
                placeholder="{{'home.detailPane.configurationTab.enterValue' | translate}}"
@@ -141,7 +141,7 @@
                ng-model="mapObject.value"/>
       </div>
 
-      <div class="col-md-2 btn-group" role="group" aria-label="Default button group"
+      <div class="col-md-3 btn-group" role="group" aria-label="Default button group"
            ng-hide="isPipelineRunning">
         <button type="button" class="btn btn-default btn-sm"
                 ng-click="removeFromMap(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, mapObject, $index)">
@@ -228,7 +228,7 @@
 
 <script type="text/ng-template" id="lanePredicateMappingConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
-    <div class="row lane-predicate"
+    <div class="row map-list-type"
          ng-repeat="lanePredicateMapping in detailPaneConfig.configuration[configIndex].value track by $index">
 
       <div class="col-xs-1">
