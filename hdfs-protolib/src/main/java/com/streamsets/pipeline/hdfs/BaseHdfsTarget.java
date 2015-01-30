@@ -317,7 +317,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       for (Map.Entry<String, String> config : hdfsConfigs.entrySet()) {
         hdfsConfiguration.set(config.getKey(), config.getValue());
       }
-      hdfsConfiguration.setBoolean("fs.hdfs.impl.disable.cache", false);
+      hdfsConfiguration.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
       if (hdfsKerberos) {
         hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
                               UserGroupInformation.AuthenticationMethod.KERBEROS.name());
