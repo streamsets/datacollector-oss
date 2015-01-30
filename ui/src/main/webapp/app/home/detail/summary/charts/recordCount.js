@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('RecordCountBarChartController', function($scope, $rootScope, pipelineConstant) {
     var color = $scope.recordsColor;
 

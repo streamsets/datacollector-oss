@@ -3,6 +3,6 @@
  */
 
 angular
-  .module('pipelineAgentApp.logs', [
+  .module('dataCollectorApp.logs', [
     'ngRoute'
   ]);

@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('ResetOffsetModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api) {
     angular.extend($scope, {
       showLoading: false,

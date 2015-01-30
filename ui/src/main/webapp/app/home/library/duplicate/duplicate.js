@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('DuplicateModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api, $q) {
     angular.extend($scope, {
       common: {

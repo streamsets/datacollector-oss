@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api, pipelineService,
                                                          sources, targets, processors) {
     angular.extend($scope, {

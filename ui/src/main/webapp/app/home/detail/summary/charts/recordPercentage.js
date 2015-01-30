@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('RecordPercentagePieChartController', function($scope) {
     var colorArray = ['#5cb85c', '#FF3333'];
 

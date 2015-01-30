@@ -3,13 +3,13 @@
  */
 
 angular
-  .module('pipelineAgentApp.home', [
+  .module('dataCollectorApp.home', [
     'ngRoute',
     'jsonFormatter',
     'splitterDirectives',
     'tabDirectives',
     'pipelineGraphDirectives',
-    'pipelineAgentApp.commonDirectives',
+    'dataCollectorApp.commonDirectives',
     'underscore',
     'ui.bootstrap',
     'angularMoment',

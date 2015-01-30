@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
 
   .controller('AlertsController', function ($scope, _, api) {
 

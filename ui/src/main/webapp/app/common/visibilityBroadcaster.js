@@ -1,7 +1,7 @@
 /**
  * Service for broadcasting whether browser is visible or not using HTML5 Page Visibility API.
  */
-angular.module('pipelineAgentApp.common')
+angular.module('dataCollectorApp.common')
   .service('visibilityBroadcaster', function($rootScope, $document, _) {
 
     var document = $document[0],

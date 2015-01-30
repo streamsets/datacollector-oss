@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
 
   .controller('RawPreviewController', function ($scope, $rootScope, $q, $modal, _, api) {
 

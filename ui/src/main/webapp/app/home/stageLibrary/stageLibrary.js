@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('StageLibraryController', function ($scope, pipelineService, pipelineConstant) {
     angular.extend($scope, {
 

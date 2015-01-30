@@ -2,7 +2,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
   var $rootScope, $scope, $controller, $httpBackend, mockedApi;
 
 
-  beforeEach(module('pipelineAgentApp'));
+  beforeEach(module('dataCollectorApp'));
 
   beforeEach(inject(function (_$rootScope_, _$controller_, _$httpBackend_, api, _) {
     $rootScope = _$rootScope_;

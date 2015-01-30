@@ -2,7 +2,7 @@
  * Directive for draggable.
  */
 
-angular.module('pipelineAgentApp.commonDirectives')
+angular.module('dataCollectorApp.commonDirectives')
   .directive("draggable", function () {
     return {
       scope: {

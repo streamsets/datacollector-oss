@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.jvmMetrics')
+  .module('dataCollectorApp.jvmMetrics')
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/collector/jvmMetrics',
       {

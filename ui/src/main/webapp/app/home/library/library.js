@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
 
   .controller('LibraryController', function ($scope, $rootScope, $modal, _, api) {
 

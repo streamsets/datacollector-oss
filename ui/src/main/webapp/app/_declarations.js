@@ -2,16 +2,16 @@
  * Main Module
  */
 
-angular.module('pipelineAgentApp', [
+angular.module('dataCollectorApp', [
   'ngRoute',
   'ngCookies',
   'tmh.dynamicLocale',
   'pascalprecht.translate',
   'templates-app',
   'templates-common',
-  'pipelineAgentApp.common',
-  'pipelineAgentApp.home',
-  'pipelineAgentApp.jvmMetrics',
-  'pipelineAgentApp.logs',
+  'dataCollectorApp.common',
+  'dataCollectorApp.home',
+  'dataCollectorApp.jvmMetrics',
+  'dataCollectorApp.logs',
   'ngStorage'
 ]);

@@ -2,7 +2,7 @@
  * Directive for resize
  */
 
-angular.module('pipelineAgentApp.commonDirectives')
+angular.module('dataCollectorApp.commonDirectives')
   .directive('resize', function ($window) {
     return function (scope, element) {
       var w = angular.element($window);

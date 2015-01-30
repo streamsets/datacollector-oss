@@ -2,7 +2,7 @@
  * Directive for droppable.
  */
 
-angular.module('pipelineAgentApp.commonDirectives')
+angular.module('dataCollectorApp.commonDirectives')
   .directive("droppable", function () {
     return {
       scope: {

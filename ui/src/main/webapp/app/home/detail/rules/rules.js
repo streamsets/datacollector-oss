@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
 
   .controller('RulesController', function ($scope, pipelineConstant, pipelineService) {
     angular.extend($scope, {

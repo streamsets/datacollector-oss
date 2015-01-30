@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
 
   .controller('BadRecordsController', function ($scope, $rootScope, _, api, pipelineConstant) {
 

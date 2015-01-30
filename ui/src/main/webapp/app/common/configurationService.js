@@ -1,7 +1,7 @@
 /**
  * Service for providing access to the UI configuration from dist/src/main/etc/pipeline.properties.
  */
-angular.module('pipelineAgentApp.common')
+angular.module('dataCollectorApp.common')
   .service('configuration', function($rootScope, api, $q) {
     var self = this,
       REFRESH_INTERVAL = 'ui.refresh.interval.ms',

@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
 
   .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant, api) {
     var infoTab =  {

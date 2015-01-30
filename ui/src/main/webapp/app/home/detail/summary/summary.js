@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
 
   .controller('SummaryController', function ($scope, $rootScope, pipelineConstant) {
 

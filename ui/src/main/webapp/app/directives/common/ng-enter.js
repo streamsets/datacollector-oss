@@ -2,7 +2,7 @@
  * Directive for submitting form or calling function on pressing Enter.
  */
 
-angular.module('pipelineAgentApp.commonDirectives')
+angular.module('dataCollectorApp.commonDirectives')
   .directive('ngEnter', function() {
     return function(scope, element, attrs) {
       element.bind("keydown keypress", function(event) {

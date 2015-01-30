@@ -3,4 +3,4 @@
  */
 
 angular
-  .module('pipelineAgentApp.commonDirectives', []);
+  .module('dataCollectorApp.commonDirectives', []);

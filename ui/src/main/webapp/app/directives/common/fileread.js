@@ -2,7 +2,7 @@
  * ng-model for <input type=“file”/>
  */
 
-angular.module('pipelineAgentApp.commonDirectives')
+angular.module('dataCollectorApp.commonDirectives')
   .directive("fileread", [function () {
     return {
       scope: {

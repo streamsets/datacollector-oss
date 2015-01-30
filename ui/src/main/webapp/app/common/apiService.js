@@ -2,7 +2,7 @@
  * Service for providing access to the backend API via HTTP.
  */
 
-angular.module('pipelineAgentApp.common')
+angular.module('dataCollectorApp.common')
   .factory('api', function($rootScope, $http, $q) {
     var apiBase = 'rest/v1',
       api = {events: {}};

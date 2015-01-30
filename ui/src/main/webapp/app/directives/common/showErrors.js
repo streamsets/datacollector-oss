@@ -3,7 +3,7 @@
  *
  */
 
-angular.module('pipelineAgentApp.commonDirectives')
+angular.module('dataCollectorApp.commonDirectives')
   .provider('showErrorsConfig', function() {
     var _showSuccess, _trigger;
     _showSuccess = false;

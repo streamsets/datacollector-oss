@@ -3,6 +3,6 @@
  */
 
 angular
-  .module('pipelineAgentApp.jvmMetrics', [
+  .module('dataCollectorApp.jvmMetrics', [
     'ngRoute'
   ]);

@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('HistoryController', function ($rootScope, $scope, _, api) {
 
     angular.extend($scope, {

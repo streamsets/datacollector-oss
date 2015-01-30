@@ -1,4 +1,4 @@
-angular.module('pipelineAgentApp')
+angular.module('dataCollectorApp')
   .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider,
                    uiSelectConfig, $httpProvider){
     $locationProvider.html5Mode(true);

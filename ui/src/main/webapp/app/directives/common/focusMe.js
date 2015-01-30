@@ -5,7 +5,7 @@
  *
  */
 
-angular.module('pipelineAgentApp.commonDirectives')
+angular.module('dataCollectorApp.commonDirectives')
   .directive("focusMe", function($timeout, $parse) {
     return {
       link: function(scope, element, attrs) {

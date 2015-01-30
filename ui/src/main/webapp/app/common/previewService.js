@@ -1,7 +1,7 @@
 /**
  * Service for providing access to the Preview/Snapshot utility functions.
  */
-angular.module('pipelineAgentApp.common')
+angular.module('dataCollectorApp.common')
   .service('previewService', function(api, $q) {
 
     var self = this;

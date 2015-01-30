@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('MeterBarChartController', function($scope, $rootScope, pipelineConstant) {
     var color = $scope.recordsColor;
 

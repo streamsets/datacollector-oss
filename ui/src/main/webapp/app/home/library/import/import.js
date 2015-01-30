@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('ImportModalInstanceController', function ($scope, $modalInstance, api, pipelineInfo) {
     var errorMsg = 'Not a valid Pipeline Configuration file.';
 

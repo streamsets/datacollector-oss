@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('BatchTimerChartController', function($scope, $translate) {
     var label = {
         frequency : 'Frequency (batches/sec)',

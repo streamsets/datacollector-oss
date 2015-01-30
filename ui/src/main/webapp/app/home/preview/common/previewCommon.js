@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('PreviewCommonController', function ($scope, $rootScope, _, previewService) {
     angular.extend($scope, {
       expandAllInputData: false,

@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('ErrorAlertController', function ($scope, $modal) {
 
     angular.extend($scope, {

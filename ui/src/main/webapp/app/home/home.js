@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/',
       {

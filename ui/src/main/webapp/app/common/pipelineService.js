@@ -1,7 +1,7 @@
 /**
  * Service for providing access to the Pipeline utility functions.
  */
-angular.module('pipelineAgentApp.common')
+angular.module('dataCollectorApp.common')
   .service('pipelineService', function(pipelineConstant) {
 
     var self = this;

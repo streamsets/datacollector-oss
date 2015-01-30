@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
   .controller('ShutdownModalInstanceController', function ($scope, $modalInstance, api, $window) {
     angular.extend($scope, {
       issues: [],

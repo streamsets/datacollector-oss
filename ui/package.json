@@ -1,8 +1,8 @@
 {
-  "name": "streamsets-pipeline-ui",
+  "name": "data-collector-ui",
   "private": true,
   "version": "0.0.1",
-  "description": "StreamSets Pipeline UI",
+  "description": "StreamSets Data Collector UI",
   "homepage": "http://streamsets.com/",
   "devDependencies": {
     "bower": "^1.3.1",

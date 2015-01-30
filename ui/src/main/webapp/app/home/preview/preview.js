@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.home')
+  .module('dataCollectorApp.home')
 
   .controller('PreviewController', function ($scope, $rootScope, _, api, previewService, pipelineConstant) {
     var previewDataBackup;

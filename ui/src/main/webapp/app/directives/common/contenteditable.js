@@ -2,7 +2,7 @@
  * Editing Text In-Place using HTML5 ContentEditable
  */
 
-angular.module('pipelineAgentApp.commonDirectives')
+angular.module('dataCollectorApp.commonDirectives')
   .directive('contenteditable', function() {
     return {
       restrict: 'A',

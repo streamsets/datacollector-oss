@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp.logs')
+  .module('dataCollectorApp.logs')
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/collector/logs',
       {

@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('pipelineAgentApp')
+  .module('dataCollectorApp')
   .controller('AboutModalInstanceController', function ($scope, $modalInstance, api) {
     angular.extend($scope, {
       buildInfo: {},
