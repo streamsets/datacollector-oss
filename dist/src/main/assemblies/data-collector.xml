@@ -116,6 +116,11 @@
     <fileSet>
       <directory>${ui.dist-dir}</directory>
       <outputDirectory>/static-web</outputDirectory>
+      <excludes>
+        <exclude>karma-conf.js</exclude>
+        <exclude>app/**</exclude>
+        <exclude>bower_components/**</exclude>
+      </excludes>
     </fileSet>
 
     <!-- javadocs -->
