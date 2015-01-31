@@ -58,6 +58,11 @@ public enum StageLibError implements ErrorCode {
   LIB_0801("Record '{}' has the field-path '{}' set to NULL, cannot parse"),
   LIB_0802("Record '{}' cannot set the parsed JSON  at field-path='{}', field-path does not exist"),
 
+  //De-dup processor
+  LIB_0900("Maximum record count must be greater than zero, it is '{}'"),
+  LIB_0901("Time window must be zero (disabled) or greater than zero, it is '{}'"),
+  LIB_0902("At least one field-path to hash must be specified"),
+
   ;
   private final String msg;
 
