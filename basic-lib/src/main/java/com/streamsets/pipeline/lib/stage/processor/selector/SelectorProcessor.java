@@ -30,7 +30,8 @@ import java.util.Set;
 
 @GenerateResourceBundle
 @StageDef(version = "1.0.0", label = "Stream Selector",
-    description = "Stream Selector based on user defined conditions", icon="laneSelector.png")
+    description = "Stream Selector based on user defined conditions", icon="laneSelector.png",
+    outputStreams = StageDef.VariableOutputStreams.class, outputStreamsDrivenByConfig = "lanePredicates")
 public class SelectorProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SelectorProcessor.class);
 

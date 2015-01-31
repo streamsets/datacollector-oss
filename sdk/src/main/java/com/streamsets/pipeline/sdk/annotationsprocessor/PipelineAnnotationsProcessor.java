@@ -296,6 +296,10 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         rawSourceDefinition = getRawSourceDefinition(rawSourceAnnot);
       }
 
+      boolean variableOutputStreams = getVariableOutputStreams(typeElement);
+      int outputStreams = getOutputStreams(typeElement);
+      String outputStreamsLabelProviderClass = getOutputStreamLabelsProviderClass(typeElement);
+
       String stageName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
       stageDefinition = new StageDefinition(
           typeElement.getQualifiedName().toString(),
@@ -307,7 +311,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           configDefinitions,
           rawSourceDefinition,
           stageDefAnnotation.icon(),
-          getConfigOptionGroupsForStage(typeElement));
+          getConfigOptionGroupsForStage(typeElement),
+          variableOutputStreams,
+          outputStreams,
+          outputStreamsLabelProviderClass
+      );
     } else {
       stageDefValidationError = true;
     }
@@ -1115,7 +1123,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     valid &= validateIconExists(typeElement, stageDefAnnotation);
     valid &= validateRawSource(typeElement);
     valid &= validateOptionGroups(typeElement);
-
+    valid &= validateMultipleOutputStreams(typeElement);
     return valid;
   }
 
@@ -1407,6 +1415,35 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
     }
     return true;
+  }
+
+  private boolean validateMultipleOutputStreams(TypeElement typeElement) {
+    //TODO if StageDef has outputStreams=@StageDef.VariableOutputStreams.class return true must be a source or processor
+    //TODO and it must have @StageDef.outputStreamsDrivenByConfig not empty and @StageDef.outputStreamsDrivenByConfig must be
+    //TODO a @ConfigDef configuration with MODEL type and @LanePredicateMapping
+
+    //TODO if stage is a target @StageDef.outputStreams must be @StageDef.DefaultOutputStreams
+
+    //TODO if StageDef has @StageDef.outputStreams=@StageDef.DefaultOutputStreams it must validate that
+    //TODO @StageDef.outputStreamsDrivenByConfig is empty
+
+    return true;
+  }
+
+  private boolean getVariableOutputStreams(TypeElement typeElement) {
+    //TODO TRUE if @StageDef.outputStreams=@StageDef.VariableOutputStreams.class true, FALSE otherwise
+    return false;
+  }
+
+  public int getOutputStreams(TypeElement typeElement) {
+    //TODO if TARGET return 0
+    //TODO if SOURCE/PROCESSOR return cardinality of the @StageDef.outputStreams enum
+    return 1;
+  }
+
+  public String getOutputStreamLabelsProviderClass(TypeElement typeElement) {
+    //TODO return the value of the @StageDef.outputStreams
+    return null;
   }
 
 }

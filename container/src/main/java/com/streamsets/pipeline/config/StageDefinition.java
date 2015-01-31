@@ -8,8 +8,10 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
@@ -48,20 +50,27 @@ public class StageDefinition {
   private Map<String, ConfigDefinition> configDefinitionsMap;
   private final String icon;
   private final ConfigGroupDefinition configGroupDefinition;
+  private final boolean variableOutputStreams;
+  private final int outputStreams;
+  private final String outputStreamLabelProviderClass;
+  private List<String> outputStreamLabels;
 
 
   @JsonCreator
   public StageDefinition(
-    @JsonProperty("className") String className,
-    @JsonProperty("name") String name,
-    @JsonProperty("version") String version,
-    @JsonProperty("label") String label,
-    @JsonProperty("description") String description,
-    @JsonProperty("type") StageType type,
-    @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions,
-    @JsonProperty("rawSourceDefinition") RawSourceDefinition rawSourceDefinition,
-    @JsonProperty("icon") String icon,
-    @JsonProperty("configGroupDefinition") ConfigGroupDefinition configGroupDefinition) {
+      @JsonProperty("className") String className,
+      @JsonProperty("name") String name,
+      @JsonProperty("version") String version,
+      @JsonProperty("label") String label,
+      @JsonProperty("description") String description,
+      @JsonProperty("type") StageType type,
+      @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions,
+      @JsonProperty("rawSourceDefinition") RawSourceDefinition rawSourceDefinition,
+      @JsonProperty("icon") String icon,
+      @JsonProperty("configGroupDefinition") ConfigGroupDefinition configGroupDefinition,
+      @JsonProperty("variableOutputStreams") boolean variableOutputStreams,
+      @JsonProperty("outputStreams") int outputStreams,
+      @JsonProperty("outputStreamLabelProviderClass") String outputStreamLabelProviderClass) {
     this.className = className;
     this.name = name;
     this.version = version;
@@ -76,6 +85,9 @@ public class StageDefinition {
     }
     this.icon = icon;
     this.configGroupDefinition = configGroupDefinition;
+    this.variableOutputStreams = variableOutputStreams;
+    this.outputStreams = outputStreams;
+    this.outputStreamLabelProviderClass = outputStreamLabelProviderClass;
   }
 
   public void setLibrary(String library, String label, ClassLoader classLoader) {
@@ -89,6 +101,7 @@ public class StageDefinition {
     }
     updateValuesAndLabelsFromValuesProvider();
     updateGroupLabels();
+    updateOutputStreamLabelsFromProvider();
   }
 
   public ConfigGroupDefinition getConfigGroupDefinition() {
@@ -173,6 +186,26 @@ public class StageDefinition {
     return icon;
   }
 
+  public boolean isVariableOutputStreams() {
+    return variableOutputStreams;
+  }
+
+  public int getOutputStreams() {
+    return outputStreams;
+  }
+
+  public String getOutputStreamLabelProviderClass() {
+    return outputStreamLabelProviderClass;
+  }
+
+  public List<String> getOutputStreamLabels() {
+    return outputStreamLabels;
+  }
+
+  public void setOutputStreamLabels(List<String> labels) {
+    this.outputStreamLabels = labels;
+  }
+
   private final static String STAGE_LABEL = "label";
   private final static String STAGE_DESCRIPTION = "description";
 
@@ -217,9 +250,14 @@ public class StageDefinition {
         localizedGroups);
     }
 
+    List<String> localizedOutputStreamLabels = getOutputStreamLabels();
+    //TODO
+    //TODO we should specially handle the case of the built-in Output localization
+
     StageDefinition def = new StageDefinition(
       getClassName(), getName(), getVersion(), label, description,
-      getType(), configDefs, rsd, getIcon(), localizedConfGroupDef);
+      getType(), configDefs, rsd, getIcon(), localizedConfGroupDef, isVariableOutputStreams(), getOutputStreams(),
+      getOutputStreamLabelProviderClass());
     def.setLibrary(getLibrary(), libraryLabel, classLoader);
 
     for(ConfigDefinition configDef : def.getConfigDefinitions()) {
@@ -309,4 +347,27 @@ public class StageDefinition {
       }
     }
   }
+
+
+  private void updateOutputStreamLabelsFromProvider() {
+    if (getOutputStreamLabelProviderClass() != null) {
+      try {
+        List<String> list = new ArrayList<>();
+        Class providerClass = classLoader.loadClass(getOutputStreamLabelProviderClass());
+        for (Object e : providerClass.getEnumConstants()) {
+          if (StageDef.Label.class.isAssignableFrom(providerClass)) {
+            list.add(((StageDef.Label)e).getLabel());
+          } else {
+            list.add(e.toString());
+          }
+        }
+        setOutputStreamLabels(list);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    } else {
+      setOutputStreamLabels(ImmutableList.of("Output"));
+    }
+  }
+
 }

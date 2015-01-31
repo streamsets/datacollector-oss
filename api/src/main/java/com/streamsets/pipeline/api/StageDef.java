@@ -16,6 +16,33 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface StageDef {
 
+  public interface Label {
+    public String getLabel();
+  }
+
+  public enum VariableOutputStreams implements Label {
+    ;
+
+    @Override
+    public String getLabel() {
+      return null;
+    }
+  }
+
+    public enum DefaultOutputStream implements Label {
+    OUTPUT("Output");
+
+    private final String label;
+
+    DefaultOutputStream(String label) {
+      this.label = label;
+    }
+
+    @Override
+    public String getLabel() {
+      return label;
+    }
+  }
   String version();
 
   String label();
@@ -23,5 +50,9 @@ public @interface StageDef {
   String description() default "";
 
   String icon() default "";
+
+  String outputStreamsDrivenByConfig() default ""; //selector  case
+
+  Class<? extends Label> outputStreams() default DefaultOutputStream.class;
 
 }
