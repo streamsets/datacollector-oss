@@ -1,0 +1,147 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Stream Selector passes data to different streams based on user-defined conditions. You can pass data to as many streams as you like. The Stream Selector passes data to all streams where the data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Stream Selector"></meta><meta name="abstract" content="The Stream Selector passes data to different streams based on user-defined conditions. You can pass data to as many streams as you like. The Stream Selector passes data to all streams where the data matches the condition."></meta><meta name="description" content="The Stream Selector passes data to different streams based on user-defined conditions. You can pass data to as many streams as you like. The Stream Selector passes data to all streams where the data matches the condition."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_tqv_t5r_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Stream Selector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_tqv_t5r_wq">
+ <h1 class="title topictitle1">Stream Selector</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Stream Selector passes data to different streams based on user-defined conditions.
+  You can pass data to as many streams as you like. The Stream Selector passes data to all streams
+  where the data matches the condition. </p>
+
+  <p class="p">When you configure a condition for a stream, the Stream Selector creates an output node for the
+   stage. When incoming data matches the condition for a stream, the Stream Selector passes the data
+   to the stage connected to the output node. The Stream Selector uses a fallback action for data
+   that does not match the conditions, but you can configure alternative actions.</p>
+
+  <p class="p">
+   
+  </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_sn5_5kx_wq">
+ <h2 class="title topictitle2">Handling Non-Matching Records</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can handle data that does not match any configured conditions in one of the
+  following ways:</p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">Use the fallback action</dt>
+
+     <dd class="dd">The Fallback Action property determines how the Stream Selector handles records that do not
+      match any conditions. The Stream Selector can perform one of the following fallback
+       actions:<ul class="ul" id="concept_sn5_5kx_wq__ul_jhg_fkx_wq">
+       <li class="li">Drop the record.</li>
+
+       <li class="li">Write the record to the error log. </li>
+
+       <li class="li">Stop the pipeline.</li>
+
+      </ul>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">Create a default condition</dt>
+
+     <dd class="dd">You can create an additional default condition to capture records that do not match the
+      other conditions. When you create a default condition, you connect the associated node with a
+      stream in the pipeline. You can configure the stream to perform additional processing or write
+      it directly to a destination. If you do not need the records, you can use the Trash
+      destination . </dd>
+
+    
+   </dl>
+
+  </div>
+
+  <p class="p">In the following example, Stream 1 passes data with no locale information to a stream that
+   replaces the nulls before writing to the Kafka destination. Stream 2 passes data with the English
+   locale directly to the same Kafka destination. Stream 3 uses the default condition to capture
+   data from other locales and stream it to a different destination.</p>
+
+  <p class="p"> </p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_iss_2zx_wq">
+    <h2 class="title topictitle2">Configuring the Stream Selector</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Use a Stream Selector to route data to different streams. </p>
+
+        <div class="section context">
+            <p class="p"></p>
+
+        </div>
+
+        <ol class="ol steps" id="task_iss_2zx_wq__steps_tsx_3gf_xq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, optionally enter a name and description for the
+                    stage.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter a condition for the first stream.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To create another stream, click the <span class="ph uicontrol">Add</span> icon and then
+                    enter the condition for the second stream.</span>
+                <div class="itemgroup info">Repeat this step to configure the number of streams that you need. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use a default stream to capture any records that do not match the other
+                    conditions, click the <span class="ph uicontrol">Add</span> icon and then enter the
+                    following condition: <samp class="ph codeph">${default}</samp>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd"> For <span class="ph uicontrol">Fallback Action</span>, select the action to take for
+                    records that do not match the conditions:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_iss_2zx_wq__ul_uxy_r3f_xq">
+                        <li class="li">Drop record. Drops the record from the pipeline. </li>
+
+                        <li class="li">Record to error. Writes the record to the error log.</li>
+
+                        <li class="li">Fail pipeline. Stops the pipeline.</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To define a constant for use in conditions, enter the name and value for the
+                    constant. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To add additional constants, click <span class="ph uicontrol">Add</span> and configure the
+                    constant.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Optionally include <span class="ph uicontrol">Required Fields</span> for the stage.</span>
+                <div class="itemgroup info">You might want to add any field that you use in condition as a required
+                    field.</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
+</body>
+</html>

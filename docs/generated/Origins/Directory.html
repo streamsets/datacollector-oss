@@ -1,0 +1,455 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Directory origin reads data from log files, JSON files, and delimited files. Directory reads the files in a directory with names that match a user-defined pattern. It can optionally begin ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Directory"></meta><meta name="abstract" content="The Directory origin reads data from log files, JSON files, and delimited files."></meta><meta name="description" content="The Directory origin reads data from log files, JSON files, and delimited files."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_qcq_54n_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Directory</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_qcq_54n_jq">
+ <h1 class="title topictitle1">Directory</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Directory origin reads data from log files, JSON files, and delimited files. </p>
+
+  <p class="p">Directory reads the files in a directory with names that match a user-defined pattern. It can
+   optionally begin processing with a specific file name. Then, it reads files with similar names in
+   ascending order. After processing a file, Directory archives or deletes the file. </p>
+
+  <p class="p">The Directory origin processes data differently based on the file type:</p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">Log files</dt>
+
+     <dd class="dd">Generates a record for each line in the log file. </dd>
+
+     <dd class="dd">When you configure the Directory origin, you define the maximum number of characters for a
+      line. When a line exceeds the configured number of characters, Directory truncates the
+      line.</dd>
+
+    
+    
+     <dt class="dt dlterm">JSON files</dt>
+
+     <dd class="dd">Generates a record for each JSON object. </dd>
+
+     <dd class="dd">You can use JSON files that include multiple JSON objects or a JSON array.</dd>
+
+     <dd class="dd">When you configure the Directory origin, you define the maximum size of the JSON object.
+      When an object exceeds the configured size, Directory skips the object and continues
+      processing with the next object.</dd>
+
+    
+    
+     <dt class="dt dlterm">Delimited files</dt>
+
+     <dd class="dd">Generates a record for each delimited record. </dd>
+
+     <dd class="dd">You can use the following types of delimited files:<ul class="ul" id="concept_qcq_54n_jq__ul_a51_wzk_5q">
+       <li class="li">Generic comma-separated values (CSV)</li>
+
+       <li class="li">Microsoft Excel CSV</li>
+
+       <li class="li">MySQL CSV</li>
+
+       <li class="li">RFC4180 CSV</li>
+
+       <li class="li">Tab-separated values</li>
+
+      </ul>
+</dd>
+
+     <dd class="dd">The Directory origin can convert a file to a map based on the header line of the file. If
+      the file does not include a header, Directory creates the map based on column number.</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_bxt_ndl_5q">
+ <h2 class="title topictitle2">File Name Pattern</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Use a regular expression to define the file name pattern. Directory reads files in the
+  file directory that match the file name pattern.</p>
+
+  <p class="p">For example, if you use *.json, Directory reads all files with the .json extension.
+    </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ltv_r3l_5q">
+ <h2 class="title topictitle2">First File for Processing</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Configure a first file for processing when you want Directory to ignore certain files in
+    the file directory.</p>
+
+  <p class="p">When you start a pipeline, Directory starts processing with the file name that you enter and
+      continues processing files in ascending order. If you did not configure a file name, it starts
+      with the lowest file in alphabetical order. </p>
+
+  <p class="p">For example, the file directory includes the following files: File.log, File1.log, File2.log,
+      File3.log. If you configure File1.log as the first file, Directory processes File1.log and
+      continues with File2.log and File3.log. It does not process File.log. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_fqb_x1l_5q">
+ <h2 class="title topictitle2">File Wait Time and Empty Batches</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When the Directory origin completes processing for existing files, it can send empty
+  batches to pipeline destinations at regular intervals until new files appear. Use the File Wait
+  Time general property to define the number of seconds to wait for new files before sending an
+  empty batch.</p>
+
+  <p class="p">Send empty batches when you want to write to destination systems regularly. For example, you
+   might send empty batches to keep connections to destination systems from timing out or to trigger
+   additional workflows in destinations systems.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ig1_lck_5q">
+ <h2 class="title topictitle2">Configuring Directory Properties</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you configure the Directory origin, configure the general properties, including the
+  file type. Then, configure the properties based on the file type.</p>
+
+  <p class="p">The Directory properties display on the following tabs in the Properties panel: </p>
+
+  <div class="p">
+   <ul class="ul" id="concept_ig1_lck_5q__ul_v32_yck_5q">
+    <li class="li"><span class="ph uicontrol">General</span>. Configuration properties for all file types.</li>
+
+    <li class="li"><span class="ph uicontrol">Log Files</span>. Properties for log files.</li>
+
+    <li class="li"><span class="ph uicontrol">JSON Files</span>. Properties for JSON files.</li>
+
+    <li class="li"><span class="ph uicontrol">Delimited Files</span>. Properties for delimited files, such as
+     comma-separated or tab-separated files.</li>
+
+   </ul>
+
+  </div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_cls_1vk_5q">
+ <h3 class="title topictitle3">General Properties</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure the following general properties for the Directory origin:</p>
+
+  
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_cls_1vk_5q__table_tm4_vck_5q" class="table" frame="border" border="1" rules="all">
+    
+    
+    <thead class="thead" align="left">
+     <tr class="row">
+      <th class="entry" valign="top" width="34.96503496503497%" id="d2868e228">Directory General Property</th>
+
+      <th class="entry" valign="top" width="65.03496503496503%" id="d2868e231">Description</th>
+
+     </tr>
+
+    </thead>
+
+    <tbody class="tbody">
+     <tr class="row">
+      <td class="entry" valign="top" width="34.96503496503497%" headers="d2868e228 ">Name</td>
+
+      <td class="entry" valign="top" width="65.03496503496503%" headers="d2868e231 ">Stage name.</td>
+
+     </tr>
+
+     <tr class="row">
+      <td class="entry" valign="top" width="34.96503496503497%" headers="d2868e228 ">Description</td>
+
+      <td class="entry" valign="top" width="65.03496503496503%" headers="d2868e231 ">Optional description.</td>
+
+     </tr>
+
+     <tr class="row">
+      <td class="entry" valign="top" width="34.96503496503497%" headers="d2868e228 ">Directory</td>
+
+      <td class="entry" valign="top" width="65.03496503496503%" headers="d2868e231 ">A directory local to the <span class="ph">Data
+                  Collector</span>
+              where source files are stored.</td>
+
+     </tr>
+
+     <tr class="row">
+       <td class="entry" valign="top" width="34.96503496503497%" headers="d2868e228 ">File Name Pattern <a class="xref" href="Directory.html#concept_bxt_ndl_5q" title="Use a regular expression to define the file name pattern. Directory reads files in the file directory that match the file name pattern."> <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a>
+            </td>
+
+      <td class="entry" valign="top" width="65.03496503496503%" headers="d2868e231 ">Regular expression that describes the file names. For example, *.log.</td>
+
+     </tr>
+
+     <tr class="row">
+      <td class="entry" valign="top" width="34.96503496503497%" headers="d2868e228 ">Max Files in Directory</td>
+
+      <td class="entry" valign="top" width="65.03496503496503%" headers="d2868e231 ">The maximum number of files allowed in the directory. When the directory contains more
+              files, the pipeline fails.</td>
+
+     </tr>
+
+     <tr class="row">
+       <td class="entry" valign="top" width="34.96503496503497%" headers="d2868e228 ">First File to Process <a class="xref" href="Directory.html#concept_ltv_r3l_5q" title="Configure a first file for processing when you want Directory to ignore certain files in the file directory.">
+         <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a>
+            </td>
+
+      <td class="entry" valign="top" width="65.03496503496503%" headers="d2868e231 ">Name of the first file to process. Use a name that uses the file name pattern. <p class="p">When
+                you enter a file name, Directory reads the first file and other files in the
+                directory with ascending names.</p>
+</td>
+
+     </tr>
+
+     <tr class="row">
+      <td class="entry" valign="top" width="34.96503496503497%" headers="d2868e228 ">File Post-Processing</td>
+
+      <td class="entry" valign="top" width="65.03496503496503%" headers="d2868e231 ">After processing a file, Directory performs one of the following tasks:<ul class="ul" id="concept_cls_1vk_5q__ul_wsr_h4l_5q">
+                <li class="li">Archive - Moves the file to the archive directory.</li>
+
+                <li class="li">Delete - Deletes the file.</li>
+
+              </ul>
+</td>
+
+     </tr>
+
+     <tr class="row">
+      <td class="entry" valign="top" width="34.96503496503497%" headers="d2868e228 ">Archive Directory</td>
+
+      <td class="entry" valign="top" width="65.03496503496503%" headers="d2868e231 ">The directory for processed files. Available when you select Archive for the File Post
+              Processing property.</td>
+
+     </tr>
+
+     <tr class="row">
+       <td class="entry" valign="top" width="34.96503496503497%" headers="d2868e228 ">File Wait Time (secs) <a class="xref" href="Directory.html#concept_fqb_x1l_5q" title="When the Directory origin completes processing for existing files, it can send empty batches to pipeline destinations at regular intervals until new files appear. Use the File Wait Time general property to define the number of seconds to wait for new files before sending an empty batch.">
+         <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a>
+            </td>
+
+      <td class="entry" valign="top" width="65.03496503496503%" headers="d2868e231 ">Number of seconds to wait for a new file. If a new file does not arrive within the
+              specified time, Directory sends an empty batch to destinations.</td>
+
+     </tr>
+
+     <tr class="row">
+      <td class="entry" valign="top" width="34.96503496503497%" headers="d2868e228 ">Error Directory</td>
+
+      <td class="entry" valign="top" width="65.03496503496503%" headers="d2868e231 ">The directory for files that were not completely processed due to data handling
+              errors.</td>
+
+     </tr>
+
+     <tr class="row">
+      <td class="entry" valign="top" width="34.96503496503497%" headers="d2868e228 ">Data Format</td>
+
+      <td class="entry" valign="top" width="65.03496503496503%" headers="d2868e231 ">Data format for source files. Use one of the following formats:<ul class="ul" id="concept_cls_1vk_5q__ul_y1t_wql_5q">
+        <li class="li">Log files</li>
+
+        <li class="li">JSON files</li>
+
+        <li class="li">Delimited files</li>
+
+       </ul>
+</td>
+
+     </tr>
+
+    </tbody>
+
+   </table>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_a4s_qgl_5q">
+ <h3 class="title topictitle3">Log File Properties</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure the following log file properties for the Directory
+  origin:</p>
+
+  <div class="p">
+   
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_a4s_qgl_5q__table_bzb_vgl_5q" class="table" frame="border" border="1" rules="all">
+     
+     
+     <thead class="thead" align="left">
+      <tr class="row">
+       <th class="entry" valign="top" width="30.48780487804878%" id="d2868e418">Directory Log File Property</th>
+
+       <th class="entry" valign="top" width="69.51219512195121%" id="d2868e421">Description</th>
+
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr class="row">
+       <td class="entry" valign="top" width="30.48780487804878%" headers="d2868e418 ">Maximum Line Length</td>
+
+       <td class="entry" valign="top" width="69.51219512195121%" headers="d2868e421 ">Maximum number of characters allowed for a line. Longer lines are truncated.</td>
+
+      </tr>
+
+     </tbody>
+
+    </table>
+</div>
+
+  </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_cdj_crl_5q">
+ <h3 class="title topictitle3">JSON File Properties</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure the following JSON file properties for the Directory
+  origin:</p>
+
+  
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_cdj_crl_5q__table_bzb_vgl_5q" class="table" frame="border" border="1" rules="all">
+    
+    
+    <thead class="thead" align="left">
+     <tr class="row">
+      <th class="entry" valign="top" width="30.48780487804878%" id="d2868e467">Directory JSON File Property</th>
+
+      <th class="entry" valign="top" width="69.51219512195121%" id="d2868e470">Description</th>
+
+     </tr>
+
+    </thead>
+
+    <tbody class="tbody">
+     <tr class="row">
+      <td class="entry" valign="top" width="30.48780487804878%" headers="d2868e467 ">JSON Content</td>
+
+      <td class="entry" valign="top" width="69.51219512195121%" headers="d2868e470 ">Type of content in JSON files. Use one of the following options: <div class="p">
+        <ul class="ul" id="concept_cdj_crl_5q__ul_atw_krl_5q">
+         <li class="li">Array of Objects </li>
+
+         <li class="li">Multiple Objects.</li>
+
+        </ul>
+
+       </div>
+</td>
+
+     </tr>
+
+     <tr class="row">
+      <td class="entry" valign="top" width="30.48780487804878%" headers="d2868e467 ">Maximum Object Length</td>
+
+      <td class="entry" valign="top" width="69.51219512195121%" headers="d2868e470 ">Maximum length for a JSON object. Larger objects are not processed. </td>
+
+     </tr>
+
+    </tbody>
+
+   </table>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_oh3_srl_5q">
+ <h3 class="title topictitle3">Delimited File Properties</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure the following delimited file properties for the Directory
+  origin:</p>
+
+  
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_oh3_srl_5q__table_bzb_vgl_5q" class="table" frame="border" border="1" rules="all">
+    
+    
+    <thead class="thead" align="left">
+     <tr class="row">
+      <th class="entry" valign="top" width="30.48780487804878%" id="d2868e537">Directory Delimited File Property</th>
+
+      <th class="entry" valign="top" width="69.51219512195121%" id="d2868e540">Description</th>
+
+     </tr>
+
+    </thead>
+
+    <tbody class="tbody">
+     <tr class="row">
+      <td class="entry" valign="top" width="30.48780487804878%" headers="d2868e537 ">File Type</td>
+
+      <td class="entry" valign="top" width="69.51219512195121%" headers="d2868e540 ">File type. Use one of the following options: <div class="p">
+        <ul class="ul" id="concept_oh3_srl_5q__ul_atw_krl_5q">
+         <li class="li">Basic CSV - file that includes comma-separated values</li>
+
+         <li class="li">MS Excel CSV - Microsoft Excel comma-separated file</li>
+
+         <li class="li">MySQL CSV - MySQL comma separated file</li>
+
+         <li class="li">RFC4180 CSV - comma-separated file that strictly follows RFC4180 guidelines</li>
+
+         <li class="li">Tab-Separated Values - file that includes tab-separated values</li>
+
+         <li class="li">
+          
+         </li>
+
+        </ul>
+
+       </div>
+</td>
+
+     </tr>
+
+     <tr class="row">
+      <td class="entry" valign="top" width="30.48780487804878%" headers="d2868e537 ">Header Line</td>
+
+      <td class="entry" valign="top" width="69.51219512195121%" headers="d2868e540 ">Indicates whether a file contains a header line.</td>
+
+     </tr>
+
+     <tr class="row">
+      <td class="entry" valign="top" width="30.48780487804878%" headers="d2868e537 ">Convert to Map</td>
+
+      <td class="entry" valign="top" width="69.51219512195121%" headers="d2868e540 ">Converts a file to a map based on the fields in the header. If no header exists, uses
+       column numbers to map the fields.</td>
+
+     </tr>
+
+    </tbody>
+
+   </table>
+</div>
+
+ </div>
+
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
+</body>
+</html>

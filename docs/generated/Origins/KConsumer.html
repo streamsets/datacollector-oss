@@ -1,0 +1,197 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Kafka Consumer reads data from a Kafka cluster and processes the data based on the type of data stored in Kafka. You can use the Kafka Consumer to read log, JSON, and CSV data from a Kafka ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kafka Consumer"></meta><meta name="abstract" content="The Kafka Consumer reads data from a Kafka cluster and processes the data based on the type of data stored in Kafka. You can use the Kafka Consumer to read log, JSON, and CSV data from a Kafka cluster."></meta><meta name="description" content="The Kafka Consumer reads data from a Kafka cluster and processes the data based on the type of data stored in Kafka. You can use the Kafka Consumer to read log, JSON, and CSV data from a Kafka cluster."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_msz_wnr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Consumer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_msz_wnr_5q">
+ <h1 class="title topictitle1">Kafka Consumer</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Kafka Consumer reads data from a Kafka cluster and processes the data based on the
+  type of data stored in Kafka. You can use the Kafka Consumer to read log, JSON, and CSV data from
+  a Kafka cluster. </p>
+
+  <p class="p">When you configure a Kafka Consumer, you configure the consumer group name, topic, and
+   ZooKeeper connection information. You can optionally configure custom properties to add
+   additional Kafka configuration properties.</p>
+
+  <p class="p">When you start a pipeline, the Kafka Consumer becomes a new consumer group for the topic and
+   starts reading data from the topic based on the offset provided by the ZooKeeper.</p>
+
+  <p class="p">The Kafka Consumer processes data from all partitions in the topic. It saves the offset with
+   the ZooKeeper after passing data to destinations. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_npx_xgf_vq">
+    <h2 class="title topictitle2">Configuring the Kafka Consumer</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">When you configure the Kafka Consumer, you configure the general properties,
+        including Kafka and ZooKeeper details. You can optionally add custom advanced properties.
+        And after you select the type of data to be processed, you can configure related properties
+        for that type.</p>
+
+        <div class="section context">
+            <div class="p">The Kafka Consumer properties display in the following tabs in the Properties
+                    panel:<ul class="ul" id="task_npx_xgf_vq__ul_vq3_b3f_vq">
+                    <li class="li"><span class="ph uicontrol">General</span>. Kafka configuration details, batch
+                        information, and payload type.</li>
+
+                    <li class="li"><span class="ph uicontrol">Advanced</span>. Custom Kafka properties that you want to
+                        use.</li>
+
+                    <li class="li"><span class="ph uicontrol">Log</span>. </li>
+
+                    <li class="li"><span class="ph uicontrol">JSON</span>. JSON properties for JSON paylods.</li>
+
+                    <li class="li"><span class="ph uicontrol">CSV</span>. CSV properties for CSV payloads.</li>
+
+                </ul>
+</div>
+
+        </div>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_wtb_rrf_vq">
+ <h3 class="title topictitle3">General Properties</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure the following general properties for the Kafka Consumer:</p>
+
+  <div class="p">
+   
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_wtb_rrf_vq__table_hyg_wrf_vq" class="table" frame="border" border="1" rules="all">
+     
+     
+     <thead class="thead" align="left">
+      <tr class="row">
+       <th class="entry" valign="top" width="34.48275862068966%" id="d4021e113">Kafka Consumer General Property</th>
+
+       <th class="entry" valign="top" width="65.51724137931035%" id="d4021e116">Description</th>
+
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr class="row">
+       <td class="entry" valign="top" width="34.48275862068966%" headers="d4021e113 ">Name</td>
+
+       <td class="entry" valign="top" width="65.51724137931035%" headers="d4021e116 ">Stage name.</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="34.48275862068966%" headers="d4021e113 ">Description</td>
+
+       <td class="entry" valign="top" width="65.51724137931035%" headers="d4021e116 ">Optional description.</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="34.48275862068966%" headers="d4021e113 ">Consumer Group</td>
+
+       <td class="entry" valign="top" width="65.51724137931035%" headers="d4021e116 ">Name of the consumer group that the pipeline represents.</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="34.48275862068966%" headers="d4021e113 ">Topic</td>
+
+       <td class="entry" valign="top" width="65.51724137931035%" headers="d4021e116 ">Kafka topic to be read.</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="34.48275862068966%" headers="d4021e113 ">ZooKeeper Connect String</td>
+
+       <td class="entry" valign="top" width="65.51724137931035%" headers="d4021e116 ">Connection string for the ZooKeeper of the Kafka cluster. To use more than one
+        ZooKeeper, enter a comma-separated list of connection strings.</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="34.48275862068966%" headers="d4021e113 ">Max Batch Size</td>
+
+       <td class="entry" valign="top" width="65.51724137931035%" headers="d4021e116 ">Maximum number of messages processed at one time.</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="34.48275862068966%" headers="d4021e113 ">Batch Duration Time</td>
+
+       <td class="entry" valign="top" width="65.51724137931035%" headers="d4021e116 ">Amount of time the Kafka Consumer waits before sending a partial or empty batch.
+       </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="34.48275862068966%" headers="d4021e113 ">Payload Type</td>
+
+       <td class="entry" valign="top" width="65.51724137931035%" headers="d4021e116 ">Type of data to be processed. Use one of the following formats:<ul class="ul" id="concept_wtb_rrf_vq__ul_oxx_xsg_vq">
+         <li class="li">Log</li>
+
+         <li class="li">JSON</li>
+
+         <li class="li">CSV</li>
+
+         <li class="li">XML </li>
+
+        </ul>
+</td>
+
+      </tr>
+
+     </tbody>
+
+    </table>
+</div>
+
+  </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_d5f_n2g_vq">
+ <h3 class="title topictitle3">Advanced Properties</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can add custom properties to pass Kafka configuration properties that you want to
+  use.</p>
+
+  <p class="p">When you add the Kafka configuration property, enter the Kafka property name and the value.
+   The Kafka Consumer does not validate the property names or values.</p>
+
+  <div class="p">
+   <div class="note note"><span class="notetitle">Note:</span> The Kafka Consumer uses the following Kafka configuration properties. If you add these
+    properties, they do not override the values used by the Kafka Consumer:<ul class="ul" id="concept_d5f_n2g_vq__ul_ajb_c3g_vq">
+     <li class="li">auto.commit.enable</li>
+
+     <li class="li">group.id</li>
+
+     <li class="li">zookeeper.connect</li>
+
+    </ul>
+</div>
+
+  </div>
+
+ </div>
+
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
+</body>
+</html>

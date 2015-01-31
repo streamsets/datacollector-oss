@@ -1,0 +1,87 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="A processor stage represents a type of data processing that you want to perform within the pipeline. You can use as many processors in a pipeline as you need. The Data Collector provides the following ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Processors"></meta><meta name="abstract" content="A processor stage represents a type of data processing that you want to perform within the pipeline. You can use as many processors in a pipeline as you need."></meta><meta name="description" content="A processor stage represents a type of data processing that you want to perform within the pipeline. You can use as many processors in a pipeline as you need."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hpr_twm_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Processors</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_hpr_twm_jq">
+  <h1 class="title topictitle1">Processors</h1>
+
+  
+  <div class="body conbody"><p class="shortdesc">A processor stage represents a type of data processing that you want to perform within
+    the pipeline. You can use as many processors in a pipeline as you need.</p>
+
+    <div class="p">The <span class="ph">Data
+                  Collector</span>
+      provides the following processors:<ul class="ul" id="concept_hpr_twm_jq__ul_mxz_jxm_jq">
+        <li class="li">Expression - Performs calculations on a row-by-row basis.</li>
+
+        <li class="li">Field Converter - Converts the data type of a field.</li>
+
+        <li class="li">Field Hasher - Uses an algorithm to encode sensitive data.</li>
+
+        <li class="li">Field Masker - Masks sensitive data.</li>
+
+        <li class="li">Field Remover.  Removes fields from a record.</li>
+
+        <li class="li">Stream Selector.  Routes data to different streams based on conditions.</li>
+
+        <li class="li">Value Replacer  Replaces null values or replaces values with NULLs.</li>
+
+        <li class="li">Field Splitter. </li>
+
+        <li class="li">JSON Parser. </li>
+
+      </ul>
+</div>
+
+  </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_hjk_b4l_vq">
+ <h2 class="title topictitle2">Referencing Field Names</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Stages display a field name with a preceding slash as follows: <samp class="ph codeph">/&lt;field
+   name&gt;</samp>. For example, a field named CITY displays as /CITY. </p>
+
+  <p class="p">Generally, you can select fields from a list. When a list is not available, use a preceding
+   slash when you reference a field name. </p>
+
+  <p class="p">For example, the following Expression processor replaces values in the "first" field. The
+   Expression Configuration Field property requires you to enter the field name manually with the
+   preceding slash. The Required Fields property provides a list of fields to select from. </p>
+
+  <p class="p"><img class="image" id="concept_hjk_b4l_vq__image_gxw_d2m_xq" src="../Graphics/FieldName-referencing.png" height="236" width="568"></img></p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_dnj_bkm_vq">
+ <h2 class="title topictitle2">Required Fields in Processors</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">A required field must exist in a record to keep it in the pipeline. When a record does
+  not include a required field, the processor drops the record. You can configure required fields
+  for any processor stage.</p>
+
+  <p class="p">To minimize processing errors, define any field that a processor actively uses as a required
+   field. </p>
+
+  <p class="p">For example, the following Expression processor concatenates the first and last name fields. To
+   avoid processing errors, both fields are configured as required fields.</p>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
+</body>
+</html>
