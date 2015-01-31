@@ -22,6 +22,7 @@ module.exports = function(grunt) {
     build_dir: 'target/dist',
     target_dir: 'target',
     base_dir: 'src/main/webapp/',
+    docs_dir: '../docs/generated',
 
     /**
      * This is a collection of file patterns that refer to our app code (the
@@ -216,6 +217,16 @@ module.exports = function(grunt) {
             src: [ '<%= vendor_files.js %>', '<%= vendor_files.i18n %>' ],
             dest: '<%= build_dir %>/',
             cwd: '<%= target_dir %>',
+            expand: true
+          }
+        ]
+      },
+      build_docs: {
+        files: [
+          {
+            src: '**',
+            dest: '<%= build_dir %>/docs',
+            cwd: '<%= docs_dir %>',
             expand: true
           }
         ]
@@ -575,7 +586,7 @@ module.exports = function(grunt) {
   grunt.registerTask( 'build', [
     'clean', 'html2js', 'jshint', 'less:build', 'concat:build_css',
     'copy:build_app_assets', 'copy:build_vendor_assets', 'copy:build_vendor_fonts',
-    'copy:build_appjs', 'copy:build_vendorjs','index:build', 'login:build', 'karmaconfig'
+    'copy:build_appjs', 'copy:build_vendorjs', 'copy:build_docs', 'index:build', 'login:build', 'karmaconfig'
     //,'karma:continuous'
   ]);
 

@@ -2,9 +2,10 @@
  * Service for providing access to the Pipeline utility functions.
  */
 angular.module('dataCollectorApp.common')
-  .service('pipelineService', function(pipelineConstant) {
+  .service('pipelineService', function(pipelineConstant, $translate) {
 
-    var self = this;
+    var self = this,
+      translations = {};
 
     var getXPos = function(pipelineConfig, firstOpenLane) {
       var prevStage = (firstOpenLane && firstOpenLane.stageInstance) ? firstOpenLane.stageInstance :
@@ -173,168 +174,224 @@ angular.module('dataCollectorApp.common')
       }
     };
 
+    $translate([
+      'metrics.COUNTER_COUNT',
+
+      //Related to Histogram
+      'metrics.HISTOGRAM_COUNT',
+      'metrics.HISTOGRAM_MAX',
+      'metrics.HISTOGRAM_MIN',
+      'metrics.HISTOGRAM_MEAN',
+      'metrics.HISTOGRAM_MEDIAN',
+      'metrics.HISTOGRAM_P50',
+      'metrics.HISTOGRAM_P75',
+      'metrics.HISTOGRAM_P95',
+      'metrics.HISTOGRAM_P98',
+      'metrics.HISTOGRAM_P99',
+      'metrics.HISTOGRAM_P999',
+      'metrics.HISTOGRAM_STD_DEV',
+
+      //Meters
+      'metrics.METER_COUNT',
+      'metrics.METER_M1_RATE',
+      'metrics.METER_M5_RATE',
+      'metrics.METER_M15_RATE',
+      'metrics.METER_M30_RATE',
+      'metrics.METER_H1_RATE',
+      'metrics.METER_H6_RATE',
+      'metrics.METER_H12_RATE',
+      'metrics.METER_H24_RATE',
+      'metrics.METER_MEAN_RATE',
+
+      //Timer
+      'metrics.TIMER_COUNT',
+      'metrics.TIMER_MAX',
+      'metrics.TIMER_MIN',
+      'metrics.TIMER_MEAN',
+      'metrics.TIMER_P50',
+      'metrics.TIMER_P75',
+      'metrics.TIMER_P95',
+      'metrics.TIMER_P98',
+      'metrics.TIMER_P99',
+      'metrics.TIMER_P999',
+      'metrics.TIMER_STD_DEV',
+      'metrics.TIMER_M1_RATE',
+      'metrics.TIMER_M5_RATE',
+      'metrics.TIMER_M15_RATE',
+      'metrics.TIMER_MEAN_RATE'
+    ]).then(function (_translations) {
+      debugger;
+      translations = _translations;
+    });
+
     /**
      * Returns Metric element list
      */
     this.getMetricElementList = function() {
-      return {
+      var elementList = {
         COUNTER: [
           {
             value: 'COUNTER_COUNT',
-            label: 'count'
+            label: translations['metrics.COUNTER_COUNT']
           }
         ],
         HISTOGRAM: [
           {
             value: 'HISTOGRAM_COUNT',
-            label: 'count'
+            label: translations['metrics.HISTOGRAM_COUNT']
           },
           {
             value: 'HISTOGRAM_MAX',
-            label: 'max'
+            label: translations['metrics.HISTOGRAM_MAX']
           },
           {
             value: 'HISTOGRAM_MIN',
-            label: 'mean'
+            label: translations['metrics.HISTOGRAM_MIN']
           },
           {
             value: 'HISTOGRAM_MEAN',
-            label: 'min'
+            label: translations['metrics.HISTOGRAM_MEAN']
+          },
+          {
+            value: 'HISTOGRAM_MEDIAN',
+            label: translations['metrics.HISTOGRAM_MEDIAN']
           },
           {
             value: 'HISTOGRAM_P50',
-            label: 'p50'
+            label: translations['metrics.HISTOGRAM_P50']
           },
           {
             value: 'HISTOGRAM_P75',
-            label: 'p75'
+            label: translations['metrics.HISTOGRAM_P75']
           },
           {
             value: 'HISTOGRAM_P95',
-            label: 'p95'
+            label: translations['metrics.HISTOGRAM_P95']
           },
           {
             value: 'HISTOGRAM_P98',
-            label: 'p98'
+            label: translations['metrics.HISTOGRAM_P98']
           },
           {
             value: 'HISTOGRAM_P99',
-            label: 'p99'
+            label: translations['metrics.HISTOGRAM_P99']
           },
           {
             value: 'HISTOGRAM_P999',
-            label: 'p999'
+            label: translations['metrics.HISTOGRAM_P999']
           },
           {
             value: 'HISTOGRAM_STD_DEV',
-            label: 'stddev'
+            label: translations['metrics.HISTOGRAM_STD_DEV']
           }
         ],
         METER: [
           {
             value: 'METER_COUNT',
-            label: 'count'
+            label: translations['metrics.METER_COUNT']
           },
           {
             value: 'METER_M1_RATE',
-            label: 'm1_rate'
+            label: translations['metrics.METER_M1_RATE']
           },
           {
             value: 'METER_M5_RATE',
-            label: 'm5_rate'
+            label: translations['metrics.METER_M5_RATE']
           },
           {
             value: 'METER_M15_RATE',
-            label: 'm15_rate'
+            label: translations['metrics.METER_M15_RATE']
           },
           {
             value: 'METER_M30_RATE',
-            label: 'm30_rate'
+            label: translations['metrics.METER_M30_RATE']
           },
           {
             value: 'METER_H1_RATE',
-            label: 'h1_rate'
+            label: translations['metrics.METER_H1_RATE']
           },
           {
             value: 'METER_H6_RATE',
-            label: 'h6_rate'
+            label: translations['metrics.METER_H6_RATE']
           },
           {
             value: 'METER_H12_RATE',
-            label: 'h12_rate'
+            label: translations['metrics.METER_H12_RATE']
           },
           {
             value: 'METER_H24_RATE',
-            label: 'h24_rate'
+            label: translations['metrics.METER_H24_RATE']
           },
           {
             value: 'METER_MEAN_RATE',
-            label: 'mean_rate'
+            label: translations['metrics.METER_MEAN_RATE']
           }
         ],
         TIMER: [
           {
             value: 'TIMER_COUNT',
-            label: 'count'
+            label: translations['metrics.TIMER_COUNT']
           },
           {
             value: 'TIMER_MAX',
-            label: 'max'
+            label: translations['metrics.TIMER_MAX']
           },
           {
             value: 'TIMER_MEAN',
-            label: 'mean'
+            label: translations['metrics.TIMER_MEAN']
           },
           {
             value: 'TIMER_MIN',
-            label: 'min'
+            label: translations['metrics.TIMER_MIN']
           },
           {
             value: 'TIMER_P50',
-            label: 'p50'
+            label: translations['metrics.TIMER_P50']
           },
           {
             value: 'TIMER_P75',
-            label: 'p75'
+            label: translations['metrics.TIMER_P75']
           },
           {
             value: 'TIMER_P95',
-            label: 'p95'
+            label: translations['metrics.TIMER_P95']
           },
           {
             value: 'TIMER_P98',
-            label: 'p98'
+            label: translations['metrics.TIMER_P98']
           },
           {
             value: 'TIMER_P99',
-            label: 'p99'
+            label: translations['metrics.TIMER_P99']
           },
           {
             value: 'TIMER_P999',
-            label: 'p999'
+            label: translations['metrics.TIMER_P999']
           },
           {
             value: 'TIMER_STD_DEV',
-            label: 'stddev'
+            label: translations['metrics.TIMER_STD_DEV']
           },
           {
             value: 'TIMER_M1_RATE',
-            label: 'm1_rate'
+            label: translations['metrics.TIMER_M1_RATE']
           },
           {
             value: 'TIMER_M5_RATE',
-            label: 'm5_rate'
+            label: translations['metrics.TIMER_M5_RATE']
           },
           {
             value: 'TIMER_M15_RATE',
-            label: 'm15_rate'
+            label: translations['metrics.TIMER_M15_RATE']
           },
           {
             value: 'TIMER_MEAN_RATE',
-            label: 'mean_rate'
+            label: translations['metrics.TIMER_MEAN_RATE']
           }
         ]
       };
+
+      return elementList;
     };
 
 

@@ -96,6 +96,22 @@
           </a>
           <ul class="dropdown-menu">
 
+            <li>
+              <a href="/docs/index.html" target="_blank">
+                <span class="fa fa-book"></span>
+                <span translate="global.menu.help.onlineHelp">Online Help</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="javascript:;" ng-click="common.showAbout()">
+                <span class="fa fa-info-circle"></span>
+                <span translate="global.menu.help.about">About</span>
+              </a>
+            </li>
+
+            <li role="presentation" class="divider"></li>
+
             <li role="presentation" class="dropdown-header"
                 translate="home.header.displayDensity">Display density:</li>
 
@@ -120,15 +136,7 @@
               </a>
             </li>
 
-            <li role="presentation" class="divider"></li>
 
-
-            <li>
-              <a href="javascript:;" ng-click="common.showAbout()">
-                <span class="fa fa-info-circle"></span>
-                <span translate="global.menu.help.about">About</span>
-              </a>
-            </li>
           </ul>
         </li>
 

@@ -14,7 +14,8 @@
       },
       "help": {
         "about": "About",
-        "main": "Help"
+        "main": "Help",
+        "onlineHelp": "Online Help"
       },
       "home": "Home",
       "toggleNavigation": "Toggle navigation"
@@ -323,5 +324,48 @@
     "productName": "StreamSets Data Collector",
     "title": "About",
     "version": "Version:"
+  },
+  "metrics": {
+    "COUNTER_COUNT" : "Count",
+
+    "HISTOGRAM_COUNT" : "Count",
+    "HISTOGRAM_MAX" : "Max",
+    "HISTOGRAM_MIN" : "Min",
+    "HISTOGRAM_MEAN" : "Mean",
+    "HISTOGRAM_MEDIAN" : "Median",
+    "HISTOGRAM_P50" : "50 Percentiles",
+    "HISTOGRAM_P75" : "75 Percentiles",
+    "HISTOGRAM_P95" : "95 Percentiles",
+    "HISTOGRAM_P98" : "98 Percentiles",
+    "HISTOGRAM_P99" : "99 Percentiles",
+    "HISTOGRAM_P999" : "99.9 Percentiles",
+    "HISTOGRAM_STD_DEV" : "Standard Deviation",
+
+    "METER_COUNT" : "Count",
+    "METER_M1_RATE" : "1 Minute Rate",
+    "METER_M5_RATE" : "5 Minute Rate",
+    "METER_M15_RATE" : "15 Minute Rate",
+    "METER_M30_RATE" : "30 Minute Rate",
+    "METER_H1_RATE" : "1 Hour Rate",
+    "METER_H6_RATE" : "6 Hour Rate",
+    "METER_H12_RATE" : "12 Hour Rate",
+    "METER_H24_RATE" : "24 Hour Rate",
+    "METER_MEAN_RATE" : "Mean Rate",
+
+    "TIMER_COUNT" : "Count",
+    "TIMER_MAX" : "Max",
+    "TIMER_MIN" : "Min",
+    "TIMER_MEAN" : "Mean",
+    "TIMER_P50" : "50 Percentiles",
+    "TIMER_P75" : "75 Percentiles",
+    "TIMER_P95" : "95 Percentiles",
+    "TIMER_P98" : "98 Percentiles",
+    "TIMER_P99" : "99 Percentiles",
+    "TIMER_P999" : "99.9 Percentiles",
+    "TIMER_STD_DEV" : "Standard Deviation",
+    "TIMER_M1_RATE" : "1 Minute Rate",
+    "TIMER_M5_RATE" : "5 Minute Rate",
+    "TIMER_M15_RATE" : "15 Minute Rate",
+    "TIMER_MEAN_RATE" : "Mean Rate"
   }
 }
