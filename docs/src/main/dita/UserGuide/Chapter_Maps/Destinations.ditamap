@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Destinations</title>
+ <topicref href="../Destinations/Destinations_title.dita">
+  <topicref href="../Destinations/Destinations_overview.dita">
+   <topicref href="../Destinations/RequiredFieldsInDestinations.dita"/>
+   <topicref href="../Destinations/Trash.dita"/>
+  </topicref>
+ </topicref>
+</map>

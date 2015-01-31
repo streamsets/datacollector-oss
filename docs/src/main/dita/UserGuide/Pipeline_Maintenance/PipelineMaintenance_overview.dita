@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_zf1_3tr_5q">
+ <title>Pipeline Maintenance Overview</title>
+ <shortdesc>You can start and stop a pipeline. You can also duplicate, import, export, and delete
+  pipelines. </shortdesc>
+ <conbody/>
+</concept>

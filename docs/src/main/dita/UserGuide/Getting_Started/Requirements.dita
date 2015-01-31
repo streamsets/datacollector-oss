@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_vzg_n2p_kq">
+ <title>Installation Requirements</title>
+ <shortdesc>Install the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on a machine
+    with the following minimum requirements:<draft-comment author="Loretta">What do we need in this
+      table? Do we want to skip the whole thing?</draft-comment></shortdesc>
+ <conbody>
+  <p>
+   <simpletable frame="all" id="simpletable_rpp_y2p_kq">
+    <sthead>
+     <stentry>Requirement</stentry>
+     <stentry>Description</stentry>
+    </sthead>
+    <strow>
+     <stentry>Operating Systems</stentry>
+     <stentry>Mac:<p>Linux: </p></stentry>
+    </strow>
+    <strow>
+     <stentry>Java </stentry>
+     <stentry>JDK 7<draft-comment author="Loretta">Verify name - is it Java SE? Include link to
+              download?
+              http://www.oracle.com/technetwork/java/javase/downloads/index.html</draft-comment></stentry>
+    </strow>
+        <strow>
+          <stentry>Browser</stentry>
+          <stentry/>
+        </strow>
+   </simpletable>
+  </p>
+ </conbody>
+</concept>

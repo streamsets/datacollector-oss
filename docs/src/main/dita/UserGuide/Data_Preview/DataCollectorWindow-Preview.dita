@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_l4q_pbl_sq">
+ <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Window
+    - Preview Mode</title>
+ <shortdesc>In Preview mode, you can use the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window to
+    view how data passes through the pipeline.</shortdesc>
+ <conbody>
+  <p>The following image shows the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window in
+   Preview mode:</p>
+  <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="50"/><draft-comment
+        author="Loretta">Retake screenshot with sample data</draft-comment><table frame="all"
+        rowsep="1" colsep="1" id="table_nrm_fvt_sq">
+        <tgroup cols="3">
+          <colspec colname="c1" colnum="1" colwidth="1.11*"/>
+          <colspec colname="c2" colnum="2" colwidth="1*"/>
+          <colspec colname="c3" colnum="3" colwidth="3.78*"/>
+          <thead>
+            <row>
+              <entry>Area / Icon</entry>
+              <entry>Name</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>1</entry>
+              <entry>Pipeline canvas</entry>
+              <entry>Highlights the previewed stage. You can select a stage to view its data
+                preview.</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Preview panel</entry>
+              <entry>Displays input and output data.</entry>
+            </row>
+            <row>
+              <entry>3</entry>
+              <entry>Previewing Stage / Multiple Stages</entry>
+              <entry>Use to select the type of preview you want to perform. You can preview a single
+                stage or multiple stages.</entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon_PrevPrevStage.png" id="image_usm_kxn_tq"
+                  scale="70"/></entry>
+              <entry>Previous Stage icon</entry>
+              <entry>Use to preview the stage to the left of the selected stage.</entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon_PrevNextStage.png" id="image_jf4_3xn_tq"
+                  scale="70"/></entry>
+              <entry>Next Stage icon</entry>
+              <entry>Use to preview the stage to the right of the selected stage.</entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon_PrevStep.png" id="image_gv3_2yn_tq" scale="90"
+                /></entry>
+              <entry>Re-run Stage icon</entry>
+              <entry>Use to run edited input data through the stage so you can review the results. </entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon_MonDelete.png" id="image_kt2_m2p_tq"/></entry>
+              <entry>Delete icon</entry>
+              <entry>Use to delete a record from the data preview.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table></p>
+ </conbody>
+</concept>

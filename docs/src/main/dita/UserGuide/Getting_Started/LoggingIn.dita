@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_ewj_swy_sq">
+    <title>Logging in to the <ph>Data Collector</ph> Window</title>
+    <shortdesc>Log in to the <ph>Data Collector</ph> window to work with pipelines.</shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_fhq_bxy_sq">
+            <step>
+                <cmd id="AccessDC">To access the <ph>Data Collector</ph> window, enter the host and
+                    port name for the <ph>Data Collector</ph> in the address bar of your browser,
+                    and press <uicontrol>Enter</uicontrol>.</cmd>
+                <info>By default, the host and port name are:
+                    <codeblock>localhost:8080</codeblock></info>
+                <stepresult>The <ph>Data Collector</ph> login page displays. <p><image
+                            href="../Graphics/LoginPage.png" id="image_xqy_bcz_sq" scale="50"
+                    /></p></stepresult>
+            </step>
+            <step id="LoginDC">
+                <cmd>Enter your user name and password and click <uicontrol>Login</uicontrol>:</cmd>
+                <info>The default login credentials
+                        are:<codeblock>User Name:
+Password:</codeblock><draft-comment
+                        author="Loretta">add default user name/password.</draft-comment></info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

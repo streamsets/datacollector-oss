@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_wpy_1xr_5q">
+    <title>Starting a Pipeline</title>
+    <shortdesc>You can start a pipeline when it is valid. When you start a pipeline, the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs
+        the pipeline until you stop the pipeline or shut down the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        />.</shortdesc>
+    <taskbody>
+        <context>
+            <p>Depending on the type of origin in the pipeline, when you restart a pipeline, the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> starts the pipeline from where it last stopped.</p>
+            <p>The <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> starts from the last stopping point for the following origin types:<ul
+                    id="ul_wqz_1zr_5q">
+                    <li>File Reader</li>
+                    <li>Kafka Consumer<draft-comment author="Loretta">any more?</draft-comment></li>
+                </ul></p>
+            <p>For these origin types, you can configure a pipeline to forget the last stopping
+                point and read all available data.</p>
+        </context>
+        <steps id="steps_f5j_mzr_5q">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/PickPipeline">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>To start the pipeline, in the pipeline canvas, click the
+                        <uicontrol>Start</uicontrol> icon.</cmd>
+                <info>If the Start icon is not enabled, the pipeline is not valid or the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> is running a different pipeline.</info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

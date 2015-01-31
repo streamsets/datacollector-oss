@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_izr_f2p_rq">
+ <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Window
+    - Configuration Mode</title>
+ <conbody>
+  <p>The following image shows the pipeline configuration options for the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      window:</p>
+  <p><image href="../Graphics/DCWindow_Config.png" id="image_n4b_m4z_sq" scale="30"/></p>
+    <table frame="all" rowsep="1" colsep="1" id="table_qwf_byk_sq">
+      <tgroup cols="3">
+        <colspec colname="c1" colnum="1" colwidth=".5*"/>
+        <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+        <colspec colname="c3" colnum="3" colwidth="2.0*"/>
+        <thead>
+          <row>
+            <entry>Area / Icon</entry>
+            <entry>Name</entry>
+            <entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>1</entry>
+            <entry>Pipeline canvas</entry>
+            <entry>Displays the pipeline. Use to configure the stages for the pipeline.</entry>
+          </row>
+          <row>
+            <entry>2</entry>
+            <entry>Properties panel</entry>
+            <entry>Displays the properties of the pipeline or selected stage when you configure a
+              pipeline. </entry>
+          </row>
+          <row>
+            <entry>3</entry>
+            <entry>Stage list</entry>
+            <entry>Displays the name of the selected stage. To configure properties for a different
+              stage, select the stage from the list. Or, click the stage in the pipeline.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon_AddStage.png" id="image_kgj_44z_sq" scale="60"
+              /></entry>
+            <entry>Add Stage button</entry>
+            <entry>Displays a list of <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+              stages. Use to add stages to the pipeline.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" scale="60"
+              /></entry>
+            <entry>Issues button</entry>
+            <entry>Displays the number of validation issues in the pipeline. Click to view a
+              detailed list of issues.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon_error.png" id="image_dkw_q4z_sq" scale="60"
+              /></entry>
+            <entry>Error icon</entry>
+            <entry>Indicates one or more errors in stage configuration.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+ </conbody>
+</concept>

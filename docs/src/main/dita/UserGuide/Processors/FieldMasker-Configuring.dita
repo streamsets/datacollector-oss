@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_vgg_z44_wq">
+    <title>Configuring a Field Masker</title>
+    <shortdesc>Configure a Field Masker to mask sensitive data.</shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_ekd_cp4_wq">
+            <step>
+                <cmd>In the Properties panel, optionally enter a name and description for the
+                    stage.</cmd>
+            </step>
+            <step id="SelectHashField">
+                <cmd>To mask a field, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ozv_nnk_wq">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>Field Masker Configuration Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Mask Field</entry>
+                                    <entry>String field to be masked. </entry>
+                                </row>
+                                <row>
+                                    <entry>Mask Type <xref
+                                            href="FieldMasker_MaskTypes.dita#concept_vwp_gh4_wq">
+
+                                        <image href="../Graphics/icon_moreInfo.png" scale="12"/></xref></entry>
+                                    <entry>Mask type to hide field values. Select one of the
+                                        following options:<ul id="ul_kmd_rnk_wq">
+                                            <li>Fixed-length - Replaces values with a fixed-length
+                                                mask.</li>
+                                            <li>Variable-length - Replaces values with a mask the
+                                                length of the original value.</li>
+                                            <li>Custom - Replaces values with a user-defined
+                                                mask.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Custom Pattern <xref
+                                            href="FieldMasker_MaskTypes.dita#concept_vwp_gh4_wq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                                id="image_rx1_l1q_wq"/></xref></entry>
+                                    <entry>Mask pattern for a custom mask. Enter the pattern that
+                                        you want to use.<p>You can use the hash mark (#) to display
+                                            characters in the specified location. For example,
+                                            ###xxx reveals the first three characters of a
+                                            string.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>To mask another field, click <uicontrol>Add</uicontrol>, and then repeat the
+                    previous step.</cmd>
+            </step>
+            <step>
+                <cmd>Optionally include <uicontrol>Required Fields</uicontrol> for the stage.</cmd>
+                <info>You might want to add the fields that you are masking as required
+                    fields.</info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

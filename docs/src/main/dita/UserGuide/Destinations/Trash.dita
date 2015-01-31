@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_htf_ydj_wq">
+ <title>Trash</title>
+ <shortdesc>The Trash destination drops all records that you pass. Use the Trash destination during
+  development as a placeholder for a real destination. You might also use the Trash destination as a
+  visual representation of a stream of records to drop from the pipeline.</shortdesc>
+ <conbody>
+  <p>For example, the following pipeline uses the Selector to route data to the Kafka Producer and
+   HBase targets based on different  conditions. The Selector routes all records that are not
+   included in either of the other conditions to the Trash destination.</p>
+  <p>
+   <image href="../Graphics/TrashPipeline.png" id="image_djp_2fj_wq"/></p>
+  <p>You can configure required fields for the Trash destination. It has no additional properties to
+   configure. </p>
+ </conbody>
+</concept>

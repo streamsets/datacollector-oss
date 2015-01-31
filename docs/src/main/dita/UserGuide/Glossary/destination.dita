@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE glossentry PUBLIC "-//OASIS//DTD DITA Glossary//EN" "glossary.dtd">
+<glossentry id="glossentry_wml_hgh_tq">
+    <glossterm>destination</glossterm>
+    <glossdef>A stage type used in a pipeline to represent where the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> writes
+        processed data.</glossdef>
+</glossentry>

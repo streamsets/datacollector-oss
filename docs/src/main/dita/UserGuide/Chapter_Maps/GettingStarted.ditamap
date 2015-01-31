@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Getting Started</title>
+ <topicref href="../Getting_Started/GettingStarted_Title.dita">
+  <topicref href="../Getting_Started/What_isa_DataCollector.dita" chunk="to-content">
+   <topicref href="../Getting_Started/HowShouldIUsetheDataCollector.dita"/>
+  </topicref>
+  <topicref href="../Getting_Started/Requirements.dita"/>
+  <topicref href="../Getting_Started/Installing_the_DC.dita"/>
+  <topicref href="../Getting_Started/LoggingIn_CreatingPipeline.dita"/>
+  <topicref href="../Getting_Started/DCollector_Window.dita"/>
+ </topicref>
+</map>

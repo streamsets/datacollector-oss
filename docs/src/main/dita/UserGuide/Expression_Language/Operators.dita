@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ltp_5mj_wq">
+ <title>Operators</title>
+ <shortdesc>The following table lists the operators that you can use:</shortdesc>
+ <conbody>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="table_lyt_xmj_wq">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+     <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+     <thead>
+      <row>
+       <entry>Category</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>Arithmetic</entry>
+       <entry>You can use the following arithmetic operators:<ul id="ul_ef5_nnj_wq">
+         <li>+ </li>
+         <li>-</li>
+         <li>*</li>
+         <li>/ or "div"</li>
+         <li>% or "mod"</li>
+        </ul></entry>
+      </row>
+      <row>
+       <entry>Logical</entry>
+       <entry>You can use the following arithmetic operators:<ul id="ul_mmb_2rj_wq">
+         <li>and</li>
+         <li>&amp;&amp;</li>
+         <li>or</li>
+         <li>||</li>
+         <li>not</li>
+         <li>!</li>
+        </ul></entry>
+      </row>
+      <row>
+       <entry/>
+       <entry/>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
+ </conbody>
+</concept>

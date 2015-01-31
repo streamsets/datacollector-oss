@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ojj_v5l_sq">
+ <title>Pipeline Properties</title>
+ <shortdesc>Pipeline properties apply to the entire pipeline. Pipeline properties display in the
+  Properties panel when you click on the pipeline canvas.</shortdesc>
+ <conbody>
+  <p>You can configure the following pipeline properties:<ul id="ul_ixj_pvl_sq">
+    <li>Delivery Guarantee</li>
+   </ul></p>
+ </conbody>
+</concept>

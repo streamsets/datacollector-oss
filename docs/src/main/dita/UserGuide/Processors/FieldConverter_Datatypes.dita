@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ixz_s5q_wq">
+ <title>Conversion Data Types</title>
+ <shortdesc>You can convert fields to the following data types:</shortdesc>
+ <conbody>
+  <p>
+   <ul id="ul_ryh_y5q_wq">
+    <li>Boolean</li>
+    <li>Char</li>
+    <li>Byte</li>
+    <li>Short</li>
+    <li>Integer</li>
+    <li>Long</li>
+    <li>Float</li>
+    <li>Double</li>
+    <li>Date</li>
+    <li>Datetime</li>
+    <li>Decimal</li>
+    <li>String</li>
+    <li>List</li>
+    <li>Byte_Array<draft-comment author="Loretta">Descriptions? change to table? move to appendix?
+      Add specific info about what can be converted to what? </draft-comment></li>
+   </ul>
+  </p>
+ </conbody>
+</concept>

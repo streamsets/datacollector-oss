@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_a4s_qgl_5q">
+ <title>Log File Properties</title>
+ <shortdesc>You can configure the following log file properties for the Directory
+  origin:</shortdesc>
+ <conbody>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="table_bzb_vgl_5q">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1*"/>
+     <colspec colname="c2" colnum="2" colwidth="2.28*"/>
+     <thead>
+      <row>
+       <entry>Directory Log File Property</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>Maximum Line Length</entry>
+       <entry>Maximum number of characters allowed for a line. Longer lines are truncated.</entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
+ </conbody>
+</concept>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_qsy_lsf_tq">
+    <title>Logging In the First Time and Creating a Pipeline</title>
+    <shortdesc>After you start the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
+        can log in to the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window
+        and create your first pipeline.</shortdesc>
+    <taskbody>
+        <context>
+            <p>You can customize the address and login that you use to access the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                />. This procedure uses the default settings.</p>
+        </context>
+        <steps id="steps_gsd_wsf_tq">
+            <step>
+                <cmd id="AccessDC">To access the <ph>Data Collector</ph> window, enter the following
+                    text in the address bar of your browser: </cmd>
+                <info>
+                    <codeblock>localhost:8080</codeblock>
+                </info>
+                <stepresult>The <wintitle>Login</wintitle> dialog box displays. <p><image
+                            href="../Graphics/LoginDialog.png" scale="25" id="image_bzy_ftf_tq"
+                        /></p></stepresult>
+            </step>
+            <step id="LoginDC">
+                <cmd>Use the following credentials to log in:</cmd>
+                <info>
+                    <codeblock>User Name: Demo
+Password: lacucaracha</codeblock>
+                </info>
+                <stepresult>The Get Started page displays.<p><image
+                            href="../Graphics/GetStarted.png" id="image_zvf_4wf_tq" scale="35"
+                    /></p></stepresult>
+            </step>
+            <step>
+                <cmd>Click <uicontrol>Create Pipeline</uicontrol>.</cmd>
+                <stepresult>The New Pipeline window appears.<p><image
+                            href="../Graphics/NewPipelineDialog.png" id="image_uzw_syf_tq"
+                            scale="50"/></p></stepresult>
+            </step>
+            <step>
+                <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a name for the pipeline,
+                    optionally enter a description, and click <uicontrol>Save</uicontrol>.</cmd>
+                <info>The <ph>Data Collector</ph> window displays. The Properties panel displays the
+                    pipeline properties. </info>
+            </step>
+        </steps>
+        <postreq>For the steps to configure a pipeline, continue with step <xref
+                href="../Pipeline_Configuration/ConfiguringAPipeline.dita#task_xlv_jdw_kq/pipeProperties"
+                >5 in "Configuring a Pipeline"</xref>.<draft-comment author="Loretta">Links to step
+                in Configuring a Pipeline. I wonder if I should link to the beginning of the
+                Pipeline Config chapter instead to force them to look at more conceptual info? Or
+                let plow forward.</draft-comment></postreq>
+    </taskbody>
+</task>

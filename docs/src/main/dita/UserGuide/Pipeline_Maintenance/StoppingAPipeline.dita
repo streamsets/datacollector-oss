@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_ylb_f1s_5q">
+    <title>Stopping a Pipeline</title>
+    <shortdesc>Stop a pipeline when you want the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+        stop processing data for the pipeline.</shortdesc>
+    <taskbody>
+        <context>When the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            runs a pipeline, it displays in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            window in Monitor mode by default. </context>
+        <steps id="steps_zjh_4bs_5q">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/PickPipeline">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>To stop the pipeline, from the pipeline canvas, click the
+                        <uicontrol>Stop</uicontrol> icon.</cmd>
+                <info>The <wintitle>Stop Pipeline Confirmation windows</wintitle> appears.</info>
+            </step>
+            <step>
+                <cmd> To stop the pipeline, click <uicontrol>Yes</uicontrol>.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

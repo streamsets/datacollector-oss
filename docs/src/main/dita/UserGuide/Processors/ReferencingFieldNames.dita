@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hjk_b4l_vq">
+ <title>Referencing Field Names</title>
+ <shortdesc>Stages display a field name with a preceding slash as follows: <codeph>/&lt;field
+   name></codeph>. For example, a field named CITY displays as /CITY. </shortdesc>
+ <conbody>
+  <p>Generally, you can select fields from a list. When a list is not available, use a preceding
+   slash when you reference a field name. </p>
+  <p>For example, the following Expression processor replaces values in the "first" field. The
+   Expression Configuration Field property requires you to enter the field name manually with the
+   preceding slash. The Required Fields property provides a list of fields to select from. </p>
+  <p><image href="../Graphics/FieldName-referencing.png" id="image_gxw_d2m_xq" scale="80"/></p>
+ </conbody>
+</concept>

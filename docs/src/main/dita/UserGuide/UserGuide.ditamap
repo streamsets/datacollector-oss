@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE bookmap PUBLIC "-//OASIS//DTD DITA BookMap//EN" "bookmap.dtd">
+<bookmap>
+    <booktitle>
+        <mainbooktitle>Data Collector User Guide</mainbooktitle>
+    </booktitle>
+    <bookmeta>
+        <critdates>
+            <created date="2014-10-31" golive="2015-1-31"/>
+        </critdates>
+        <prodinfo>
+            <prodname>Data Collector</prodname>
+            <vrmlist>
+                <vrm version="1" release="0" modification="0 Beta"/>
+            </vrmlist>
+        </prodinfo>
+        <bookid>
+            <bookpartno>IIP-UG-000-0000-001B</bookpartno>
+        </bookid>
+        <bookrights>
+            <bookowner>
+                <organization>StreamSets</organization>
+            </bookowner>
+        </bookrights>
+    </bookmeta>
+    <frontmatter>
+        <booklists>
+            <toc/>
+        </booklists>
+    </frontmatter>
+    <chapter href="Chapter_Maps/GettingStarted.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/Pipeline.ditamap" format="ditamap" processing-role="normal"/>
+    <chapter href="Chapter_Maps/Origins.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/Processors.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/Destinations.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/DataPreview.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/PipelineMaintenance.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/PipelineMonitoring.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/Administration.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/Troubleshooting.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/Glossary.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/ExpressionLanguage.ditamap" format="ditamap" outputclass=""/>
+    <chapter href="Reusable_Content/ReusablePhrases.dita" collection-type="unordered"
+        processing-role="resource-only"/>
+    <backmatter>
+        <booklists>
+            <indexlist/>
+        </booklists>
+    </backmatter>
+</bookmap>

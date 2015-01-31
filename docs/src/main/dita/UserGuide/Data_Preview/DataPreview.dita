@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_jtn_s3m_lq">
+ <title>Data Preview</title>
+ <shortdesc>You can preview data to help build or fine-tune a pipeline. When you preview data, the
+      <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> reads
+    records from the origin and passes it through the pipeline. You can examine the data at each
+    stage to verify how the pipeline processes data. </shortdesc>
+ <conbody>
+    <p>You can preview data after you configure the origin stage.</p>
+    <p>When you preview data, the Preview panel displays the input and output data for the selected
+      stage. You can systematically preview data for each stage in the pipeline. When you preview a
+      single stage, you can edit preview data to perform detailed testing of the stage. </p>
+    <p>You can also preview the input and output data for a set of stages to verify how the set of
+      stages processes data.</p>
+    <p>You can refresh the data preview to review the pipeline with another set of data.</p>
+  </conbody>
+</concept>

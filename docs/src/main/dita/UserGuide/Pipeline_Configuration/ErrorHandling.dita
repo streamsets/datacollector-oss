@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pm4_txm_vq">
+ <title>Error Handling</title>
+ <shortdesc>
+  <draft-comment author="Loretta">what do we need to say here? errors are dropped where? What kind
+   of errors stop the pipeline.</draft-comment>
+ </shortdesc>
+ <conbody>
+  <p></p>
+ </conbody>
+</concept>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_oz1_g2b_tq">
+ <title>Running a Pipeline Overview</title>
+ <shortdesc>You can run a pipeline when the pipeline is valid. When you start a pipeline, the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> reads data from
+  the origin, processes the data, and writes it to the pipeline destinations. </shortdesc>
+ <conbody>
+  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   processes data as it arrives at the point of origin. When no data is available, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> waits until
+   new data arrives.</p>
+  <p>When you stop a pipeline, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> completes the
+   processing for the data in the pipeline and notes where it stopped. When you start the pipeline,
+   by default, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> continues
+   processing from where it stopped. You can also instruct the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to process all
+   available data.</p>
+ </conbody>
+</concept>

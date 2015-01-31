@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_nhf_bvr_5q">
+    <title>Duplicating a Pipeline</title>
+    <shortdesc>Duplicate a pipeline when you want to keep the existing version of a pipeline while
+        continuing to configure a duplicate version. A duplicate is an exact copy of the original
+        pipeline. </shortdesc>
+    <taskbody>
+        <context>
+            <p>When you duplicate a pipeline, you can rename the pipeline. By default, the duplicate
+                pipeline name is &lt;original pipeline name>copy. </p>
+            <p>After the duplication, the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> treats the pipelines as completely separate, individual pipelines.<draft-comment
+                    author="Loretta">necessary? delete?</draft-comment></p>
+        </context>
+        <steps id="steps_lgz_fvr_5q">
+            <step>
+                <cmd>In the Pipeline library, click the <uicontrol>Actions</uicontrol> icon for the
+                    pipeline that you want to duplicate.</cmd>
+            </step>
+            <step>
+                <cmd>Click <uicontrol>Duplicate</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>In the <uicontrol>Duplicate Pipeline</uicontrol> dialog box, enter a name for
+                    the duplicate pipeline and click <uicontrol>Duplicate</uicontrol>.</cmd>
+                <stepresult>The pipeline displays in the canvas.</stepresult>
+            </step>
+        </steps>
+    </taskbody>
+</task>

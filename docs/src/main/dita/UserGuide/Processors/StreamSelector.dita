@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_tqv_t5r_wq">
+ <title>Stream Selector</title>
+ <shortdesc>The Stream Selector passes data to different streams based on user-defined conditions.
+  You can pass data to as many streams as you like. The Stream Selector passes data to all streams
+  where the data matches the condition. </shortdesc>
+ <conbody>
+  <p>When you configure a condition for a stream, the Stream Selector creates an output node for the
+   stage. When incoming data matches the condition for a stream, the Stream Selector passes the data
+   to the stage connected to the output node. The Stream Selector uses a fallback action for data
+   that does not match the conditions, but you can configure alternative actions.</p>
+  <p>
+   <draft-comment author="Loretta">add example of same data to different streams?</draft-comment>
+  </p>
+ </conbody>
+</concept>

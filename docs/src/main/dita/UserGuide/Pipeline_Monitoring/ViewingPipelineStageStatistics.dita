@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_pkh_j23_tq">
+    <title>Viewing Pipeline and Stage Statistics</title>
+    <shortdesc>When you monitor a pipeline, you can view real-time summary and error statistics for
+        the pipeline and for stages in the pipeline. You can view the configuration of the pipeline
+        or selected stage to help determine if you need to make changes. You can also view the run
+        history for the pipeline.</shortdesc>
+    <taskbody>
+        <context>
+            <p>By default, the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> window displays pipeline monitoring information when it runs a pipeline. When you
+                go to the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> window, the Monitor panel displays pipeline summary information by default. You
+                can use tabs in the Monitor panel to view additional information.</p>
+            <p>The following table lists the monitoring information available on each
+                    tab:<simpletable frame="all" relcolwidth="1.0* 1.92* 9.06*"
+                    id="simpletable_xrx_sf3_tq">
+                    <sthead>
+                        <stentry>Icon</stentry>
+                        <stentry>Tab</stentry>
+                        <stentry>Information</stentry>
+                    </sthead>
+                    <strow>
+                        <stentry><image href="../Graphics/icon_MonSummary.png" id="image_wjj_lh3_tq"
+                            /></stentry>
+                        <stentry>Summary</stentry>
+                        <stentry>
+                            <p>Displays the record count for the pipeline, record and batch
+                                throughput for the pipeline or individual stages, and batch
+                                processing statistics for the pipeline or individual stages.</p>
+                            <note outputclass="" type="tip">You can hover over different parts of
+                                the charts to view exact numbers.</note>
+                        </stentry>
+                    </strow>
+                    <strow>
+                        <stentry><image href="../Graphics/icon_MonError.png" id="image_mb1_nj3_tq"
+                            /></stentry>
+                        <stentry>Error</stentry>
+                        <stentry>For a pipeline, displays histograms for the number of error records
+                            by five minute decay and the number of error records by stage since the
+                            pipeline started. <p>For a stage, displays the number of error records
+                                and the number of stage errors. </p></stentry>
+                    </strow>
+                    <strow>
+                        <stentry><image href="../Graphics/icon_MonConfig.png" id="image_tsh_1m3_tq"
+                            /></stentry>
+                        <stentry>Configuration</stentry>
+                        <stentry>Displays configuration information for the pipeline or selected
+                            stage. You cannot configure the pipeline when it is running.</stentry>
+                    </strow>
+                    <strow>
+                        <stentry><image href="../Graphics/icon_MonPipeHistory.png"
+                                id="image_jf2_km3_tq"/></stentry>
+                        <stentry>History</stentry>
+                        <stentry>Displays the status and history of the pipeline.</stentry>
+                    </strow>
+                </simpletable></p>
+        </context>
+    </taskbody>
+</task>

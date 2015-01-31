@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_tpx_tvl_sq">
+ <title>Stop on Error</title>
+ <shortdesc>You can configure a pipeline to stop on error. <draft-comment author="Loretta">Guys are
+   reviewing what this functionality should be. 1/12/15.</draft-comment></shortdesc>
+</concept>

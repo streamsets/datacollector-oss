@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_iss_2zx_wq">
+    <title>Configuring the Stream Selector</title>
+    <shortdesc>Use a Stream Selector to route data to different streams. </shortdesc>
+    <taskbody>
+        <context>
+            <p></p>
+        </context>
+        <steps id="steps_tsx_3gf_xq">
+            <step>
+                <cmd>In the Properties panel, optionally enter a name and description for the
+                    stage.</cmd>
+            </step>
+            <step>
+                <cmd>Enter a condition for the first stream.</cmd>
+            </step>
+            <step>
+                <cmd>To create another stream, click the <uicontrol>Add</uicontrol> icon and then
+                    enter the condition for the second stream.</cmd>
+                <info>Repeat this step to configure the number of streams that you need. </info>
+            </step>
+            <step>
+                <cmd>To use a default stream to capture any records that do not match the other
+                    conditions, click the <uicontrol>Add</uicontrol> icon and then enter the
+                    following condition: <codeph>${default}</codeph>.</cmd>
+            </step>
+            <step>
+                <cmd> For <uicontrol>Fallback Action</uicontrol>, select the action to take for
+                    records that do not match the conditions:</cmd>
+                <info>
+                    <ul id="ul_uxy_r3f_xq">
+                        <li>Drop record. Drops the record from the pipeline. </li>
+                        <li>Record to error. Writes the record to the error log.</li>
+                        <li>Fail pipeline. Stops the pipeline.</li>
+                    </ul>
+                </info>
+            </step>
+            <step>
+                <cmd>To define a constant for use in conditions, enter the name and value for the
+                    constant. </cmd>
+            </step>
+            <step>
+                <cmd>To add additional constants, click <uicontrol>Add</uicontrol> and configure the
+                    constant.</cmd>
+            </step>
+            <step>
+                <cmd>Optionally include <uicontrol>Required Fields</uicontrol> for the stage.</cmd>
+                <info>You might want to add any field that you use in condition as a required
+                    field.</info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

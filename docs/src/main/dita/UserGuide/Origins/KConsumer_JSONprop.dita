@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_c5q_3wg_vq">
+ <title>JSON Properties</title>
+ <shortdesc>You can configure the following properties for JSON data in Kafka:</shortdesc>
+ <conbody>
+  <p>
+   <simpletable frame="all" relcolwidth="1.0* 2.13*" id="simpletable_cyl_4wg_vq">
+    <sthead>
+     <stentry>Kafka Consumer JSON Property</stentry>
+     <stentry>Description</stentry>
+    </sthead>
+    <strow>
+     <stentry>JSON Content</stentry>
+     <stentry>Determines how the Kafka Consumer processes JSON content. Use one of the following
+       options:<ul id="ul_grb_ywg_vq">
+       <li>Array of Objects.</li>
+       <li>Multiple Objects.<draft-comment author="Loretta">Should i say this is how we treat the
+         data? Or do we put the data in this format? Confused.</draft-comment></li>
+      </ul></stentry>
+    </strow>
+    <strow>
+     <stentry>Maximum Object Length</stentry>
+     <stentry>Maximum length for a JSON object. Larger objects are not processed.</stentry>
+    </strow>
+   </simpletable>
+  </p>
+ </conbody>
+</concept>

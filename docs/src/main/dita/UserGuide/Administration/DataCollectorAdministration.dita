@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_tgc_gkr_sq">
+ <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+  Administration</title>
+ <shortdesc>You can view logs, JVM metrics, and shut down the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> from the
+  Administration menu.</shortdesc>
+ <conbody>
+  <p>
+   <draft-comment author="Loretta">come back to this - this is where UI for changes should show up,
+    I think.</draft-comment>
+  </p>
+ </conbody>
+</concept>

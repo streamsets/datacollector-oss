@@ -20,3 +20,9 @@ target
 node
 node_modules
 npm-debug.log
+
+#Oxygen
+__MACOSX
+
+#OSX
+.DS_Store

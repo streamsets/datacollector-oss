@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_svd_dvz_sq">
+    <title>Previewing Multiple Stages</title>
+    <shortdesc>You can preview data for a set of linked stages within a pipeline. Preview multiple
+        stages to verify that the set of stages processes data as expected. </shortdesc>
+    <taskbody>
+        <context>
+            <p>When you preview multiple stages, you select the first stage and the last stage in
+                the set. The Preview panel then displays the input data and the output data for the
+                set of stages. The input data is the data that enters the first stage in the set.
+                The output data is the data that exits the last stage in the set. </p>
+            <p>In the Preview panel, you can drill down to review the values for each record to
+                determine if the set of stages transforms data as expected.</p>
+        </context>
+        <steps id="steps_vsq_4vz_sq">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/StartPreview">
+                <cmd/>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DeletePreviewRecord">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>To preview multiple stages, click <menucascade>
+                        <uicontrol>Preview Stage</uicontrol>
+                        <uicontrol>Preview Multiple Stages</uicontrol>
+                    </menucascade>.</cmd>
+                <info>The Preview panel displays two lists of stages.<draft-comment author="Loretta"
+                        >add screenshot with new labels</draft-comment></info>
+            </step>
+            <step>
+                <cmd>From the <uicontrol>First</uicontrol> list, select the first stage to
+                    include.</cmd>
+            </step>
+            <step>
+                <cmd>In the <uicontrol>Last</uicontrol> list, select the last stage to
+                    include.</cmd>
+                <info>The Preview panel displays the input and output data for the set of stages.
+                    You can drill down to review the details of each record.</info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/RefreshPreview">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>To return to previewing a single stage, click <menucascade>
+                        <uicontrol>Preview Stage</uicontrol>
+                        <uicontrol>Preview Single Stage</uicontrol>
+                    </menucascade>.</cmd>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ClosePreview">
+                <cmd/>
+            </step>
+        </steps>
+    </taskbody>
+</task>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ (c) 2014 StreamSets, Inc. All rights reserved. May not
+ be copied, modified, or distributed in whole or part without
+ written consent of StreamSets, Inc.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>streamsets-datacollector-root</artifactId>
+    <groupId>com.streamsets</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../root</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.streamsets</groupId>
+  <artifactId>streamsets-datacollector-docs</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <description>StreamSets Data Collector Docs</description>
+  <name>StreamSets Data Collector Docs</name>
+  <packaging>jar</packaging>
+
+  <dependencies>
+
+  </dependencies>
+
+
+  <build>
+
+    <defaultGoal>package</defaultGoal>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ditaot-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>dita2chm</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <antProperties>
+                <transtype>xhtml</transtype>
+                <args.input>${basedir}/src/main/dita/UserGuide/UserGuide.ditamap</args.input>
+                <args.css>${basedir}/src/main/css/skin-ss.css</args.css>
+                <args.copycss>true</args.copycss>
+              </antProperties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ypd_vgr_5q">
+ <title>Batch Size and Wait Time</title>
+ <shortdesc>For the File Tail origin, the batch size determines the maximum number of rows sent
+    through the pipeline at one time. The batch wait time determines the time that File Tail waits
+    for additional data before sending a batch. At the end of the wait time, it sends the batch
+    regardless of how many rows the batch contains. </shortdesc>
+ <conbody>
+  <p>For example, say the batch size is 20 rows and the batch wait time is 240 seconds. When data
+      arrives quickly, File Tail fills a batch with 20 rows and sends it through the pipeline
+      immediately, creating a new batch and sending it again as soon as it is full. As incoming data
+      slows, a remaining batch contains a few rows, gaining an extra row periodically. 240 seconds
+      after creating the batch, File Tail sends the partially-full batch through the pipeline. It
+      immediately creates a new batch and starts a new countdown.</p>
+  <p>Configure the batch size based on the expected volume of data and the capabilities of the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> machine. </p>
+  <p>Configure the batch wait time based on your processing needs. You might reduce the batch wait
+   time to ensure all data is processed within a specified time frame or to make regular contact
+   with pipeline destinations. Use the default or increase the wait time if you prefer not to
+   process partial or empty batches.</p>
+ </conbody>
+</concept>

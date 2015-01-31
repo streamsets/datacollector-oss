@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_yth_5n5_jq">
+ <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    Window</title>
+ <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+  /> window provides a user interface to configure pipelines, preview data, and monitor pipelines. </shortdesc>
+ <conbody>
+  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   window includes the following general areas and icons:</p>
+  <p><image href="../Graphics/DCWindow.png" id="image_k5j_5pz_sq" scale="45"/></p>
+  <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 5.23* 9.44*">
+      <sthead>
+        <stentry>No</stentry>
+        <stentry>Name</stentry>
+        <stentry>Description</stentry>
+      </sthead>
+      <strow>
+        <stentry>1</stentry>
+        <stentry>Pipeline canvas</stentry>
+        <stentry>Canvas for configuring a pipeline. </stentry>
+      </strow>
+      <strow>
+        <stentry>2</stentry>
+        <stentry>Properties panel / Preview panel / Monitor panel</stentry>
+        <stentry>When you configure a pipeline, the Properties panel displays the properties of the
+          pipeline or selected stage.<p>When you preview data, the Preview panel displays the input
+            and output data for the selected stage. </p>When you monitor a running pipeline, the
+          Monitor panel displays real-time metrics and statistics. <p>You can resize, minimize and
+            maximize the panel.</p></stentry>
+      </strow>
+      <strow>
+        <stentry>3</stentry>
+        <stentry>Pipeline library</stentry>
+        <stentry>Library of pipelines available to the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+        </stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_LibraryToggle.png" id="image_kgq_klq_rq" scale="40"
+          /></stentry>
+        <stentry>Toggle Library icon</stentry>
+        <stentry>Icon to display or hide the library.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_AddPipeline.png" id="image_b2q_t4q_rq" scale="40"
+          /></stentry>
+        <stentry>Add Pipeline icon</stentry>
+        <stentry>Creates a new pipeline. </stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_PipelineOptions.png" id="image_vd2_jpq_rq" scale="40"
+          /></stentry>
+        <stentry>Pipeline Options icon</stentry>
+        <stentry>Allows you to import, export, dupliate, or delete the selected pipeline.</stentry>
+      </strow>
+    </simpletable>
+  <p>For information about pipeline configuration options, see <xref
+        href="../Pipeline_Configuration/DataCollectorWindow-Config.dita#concept_izr_f2p_rq"/>.</p>
+  <p>For information about data preview options, see <xref
+        href="../Data_Preview/DataCollectorWindow-Preview.dita#concept_l4q_pbl_sq"/>.</p>
+  <p>For information about pipeline monitoring options, see <xref
+        href="../Pipeline_Monitoring/DataCollectorWindow-Monitor.dita#concept_t1c_mf4_tq"/>.</p>
+ </conbody>
+</concept>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Data Preview</title>
+ <topicref href="../Data_Preview/DataPreview_Title.dita">
+  <topicref href="../Data_Preview/DataPreview.dita" chunk="to-content">
+   <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita"/>
+   <topicref href="../Data_Preview/Colors_Asterisks.dita"/>
+  </topicref>
+  <topicref href="../Data_Preview/PreviewingaSingleStage.dita" chunk="to-content"/>
+  <topicref href="../Data_Preview/PreviewingMultipleStages.dita"/>
+ </topicref>
+</map>

@@ -22,8 +22,9 @@
   <packaging>jar</packaging>
 
   <properties>
-    <!-- trick to avoid pulling UI files if the 'ui' profile is not active -->
+    <!-- trick to avoid pulling files from 'ui', 'docs' & 'dummy-lib' if the profile is not active -->
     <ui.dist-dir>${basedir}/src/main/emptydir</ui.dist-dir>
+    <docs.dist-dir>${basedir}/src/main/emptydir</docs.dist-dir>
     <!-- trick to avoid pulling dev-lib files if the 'release' profile is active -->
     <dev.dist-dir>${basedir}/src/main/emptydir</dev.dist-dir>
   </properties>
@@ -128,6 +129,9 @@
       <properties>
         <!-- trick to avoid pulling UI files if the 'ui' profile is not active -->
         <ui.dist-dir>${basedir}/../ui/target/dist</ui.dist-dir>
+
+        <!-- TODO: for now we copy committed generated docs  -->
+        <docs.dist-dir>${basedir}/../docs/generated</docs.dist-dir>
       </properties>
       <dependencies>
         <dependency>
@@ -142,6 +146,16 @@
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
+      <properties>
+        <docs.dist-dir>${basedir}/../docs/target/dita/out</docs.dist-dir>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-docs</artifactId>
+          <scope>compile</scope>
+        </dependency>
+      </dependencies>
       <build>
         <plugins>
           <plugin>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_cxd_p25_qq">
+    <title>Previewing and Tuning a Single Stage</title>
+    <shortdesc>You can preview data for a single stage. When you preview data for a single stage,
+        you can also change the data to test stage processing. Preview data to verify that the stage
+        processes data as expected. <draft-comment author="Loretta">Need new screenshots
+            here.</draft-comment></shortdesc>
+    <taskbody>
+        <context>
+            <p>In the Preview panel, you can drill down to review the values for each record to
+                determine if the stage transforms data as expected.</p>
+            <p>You can also change record values to view how the stage processes the changed data.
+                Use this functionality to fine-tune stage configuration. For example, if the stage
+                filters integer data based on an expression, you might change the input data to test
+                positive and negative integer values, as well as zero. </p>
+            <p>You can change values in the following locations: <ul
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_EditPreview"
+                    id="ul_rg5_xhn_tq">
+                    <li/>
+                </ul></p>
+            <p>When you change preview data, you can pass the changed data through the pipeline, or
+                you can revert your changes to return to the original data.</p>
+        </context>
+        <steps id="steps_gqh_zf5_qq">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/StartPreview">
+                <cmd/>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DeletePreviewRecord">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/NextStage">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>To change field values to test stage processing, in the Input Data column,
+                    click the value that you want to change and enter a new value. </cmd>
+                <info><p><image href="../Graphics/PreviewEditingField.png" id="image_fzk_rkn_tq"
+                            scale="40"/></p>You can edit values for any input data. </info>
+            </step>
+            <step>
+                <cmd>To process changed data, click <uicontrol>Re-run Stage</uicontrol>.</cmd>
+                <stepresult>In the Input Data column, records with changed values display with an
+                    asterisk and the changed values are highlighted. The Output Data column displays
+                    the results of the stage processing. You can change and process preview data as
+                    often as necessary. </stepresult>
+            </step>
+            <step>
+                <cmd>To use the changed data in other downstream stages, click <uicontrol>Next
+                        Stage</uicontrol>. To revert all changes and return to the beginning of the
+                    data preview, click <uicontrol>Revert Changes</uicontrol>.</cmd>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/RefreshPreview">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ClosePreview">
+                <cmd/>
+            </step>
+        </steps>
+    </taskbody>
+</task>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Origins</title>
+ <topicref href="../Origins/Origins_title.dita" >
+  <topicref href="../Origins/Origins_overview.dita" chunk="to-content">
+   <topicref href="../Origins/PreviewingRawSourceData.dita"/>
+  </topicref>
+  <topicref href="../Origins/Directory.dita" chunk="to-content">
+   <topicref href="../Origins/Directory_FNamePattern.dita"/>
+   <topicref href="../Origins/Directory_FirstFile.dita"/>
+   <topicref href="../Origins/Directory_FileWaitTime.dita"/>
+   <topicref href="../Origins/Directory_ConfigureProp.dita">
+    <topicref href="../Origins/Directory_GeneralProp.dita"/>
+    <topicref href="../Origins/Directory_LogFileProp.dita"/>
+    <topicref href="../Origins/Directory_JSONProp.dita"/>
+    <topicref href="../Origins/Directory_DelimProp.dita"/>
+   </topicref>
+  </topicref>
+  <topicref href="../Origins/FileTail.dita" chunk="to-content">
+   <topicref href="../Origins/FileTail_BatchSizeWaitTime.dita"/>
+   <topicref href="../Origins/FileTail_GeneralProp.dita"/>
+  </topicref>
+  <topicref href="../Origins/KConsumer.dita" chunk="to-content">
+   <topicref href="../Origins/ConfiguringKafkaConsumer.dita">
+    <topicref href="../Origins/KConsumer_GeneralProp.dita"/>
+    <topicref href="../Origins/KConsumer_AdvancedProp.dita"/>
+   </topicref>
+  </topicref>
+ </topicref>
+</map>

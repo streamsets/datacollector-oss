@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_w3y_cry_5q">
+ <title>Merging Streams</title>
+ <shortdesc>You can merge streams of data in a pipeline by connecting two or more stages to the same
+  downstream stage. When you merge streams of data, the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> channels the
+  data from all streams to the same stage, but does not perform a join of records in the stream. </shortdesc>
+ <conbody>
+  <p>For example, in the following pipeline, the stage named Routes Data sends data with null values
+   to Replaces Null Values for null replacement. The pipeline merges data from Routes Data and
+   Replaces Null Values at the Field-Level Expressions stage so expressions are performed on all
+   data. </p>
+  <p><image href="../Graphics/MergingStreams.png" id="image_kxc_jty_5q" scale="60"/></p>
+  <note>The pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
+   destinations, configure pipeline logic to remove duplicate data or prevent the generation of
+   duplicate data.</note>
+ </conbody>
+</concept>

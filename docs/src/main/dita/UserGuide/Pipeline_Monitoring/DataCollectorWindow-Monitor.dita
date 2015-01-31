@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_t1c_mf4_tq">
+ <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Window
+  - Monitor Mode</title>
+ <shortdesc>In Monitor mode, you can use the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window to view
+  data as it passes through the pipeline.</shortdesc>
+ <conbody>
+  <p>The following image shows the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window in
+   Monitor mode:</p>
+    <p><image href="../Graphics/CanvasMonitor.png" id="image_d3x_tf4_tq" scale="50"/></p>
+  <simpletable frame="all" relcolwidth="1.0* 1.46* 3.66*" id="simpletable_jb5_1k4_tq">
+   <sthead>
+    <stentry>Area / Icon</stentry>
+    <stentry>Name</stentry>
+    <stentry>Description</stentry>
+   </sthead>
+   <strow>
+    <stentry>1</stentry>
+    <stentry>Pipeline canvas</stentry>
+    <stentry>Displays the pipeline that the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is running.
+     You can click a stage to view statistics about the stage. Click an empty part of the canvas to
+     view pipeline statistics.</stentry>
+   </strow>
+   <strow>
+    <stentry>2</stentry>
+    <stentry>Monitor Panel</stentry>
+    <stentry>Displays statistics for the pipeline or selected stage. <p>When you click an Inspect
+      Data icon, &lt;come back to this>. <draft-comment author="Loretta">come back to
+       this.</draft-comment></p><p>When you click the Snapshot button, displays a snapshot of data
+      that moved through the pipeline.</p></stentry>
+   </strow>
+   <strow>
+    <stentry>3</stentry>
+    <stentry>Pipeline-Stage list</stentry>
+    <stentry>Lists the pipeline and stages in the pipeline. Use to select the information that you
+     want to view.</stentry>
+   </strow>
+   <strow>
+    <stentry><image href="../Graphics/icon_MonInspect.png" id="image_gz1_rk4_tq" scale="80"
+     /></stentry>
+    <stentry>Inspect Data icon</stentry>
+    <stentry>Displays data inspection information. <draft-comment author="Loretta">come back to
+      this. </draft-comment></stentry>
+   </strow>
+   <strow>
+    <stentry><image href="../Graphics/icon_MonSnapshot.png" id="image_w1q_zl4_tq" scale="80"/></stentry>
+    <stentry>Snapshot button</stentry>
+    <stentry>Captures a snapshot of data passing through the pipeline so you can review the details
+     of the data, like data preview.</stentry>
+   </strow>
+   <strow>
+    <stentry><image href="../Graphics/icon_MonStop.png" id="image_klq_1m4_tq" scale="80"/>
+    </stentry>
+    <stentry>Stop button</stentry>
+    <stentry>Stops the pipeline.</stentry>
+   </strow>
+  </simpletable>
+ </conbody>
+</concept>

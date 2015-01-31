@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_jp5_ql1_tq">
+    <title>Previewing Raw Source Data</title>
+    <shortdesc>You can preview raw source data when you configure an origin. Preview raw source data
+        to verify the correct configuration for the origin.</shortdesc>
+    <taskbody>
+        <context>When you request a preview a file origin, you enter a directory and file name. You
+            can use the real directory and actual source file. Or when appropriate, you might use a
+            different file that is similar to the source. When you preview a Kafka Consumer, you
+            enter the connection information for the Kafka cluster.<p>The data used for the raw
+                source preview in an origin stage is not used when previewing data for the
+                pipeline.</p></context>
+        <steps id="steps_k14_k41_tq">
+            <step>
+                <cmd>In the origin stage, in the <wintitle>Raw Preview</wintitle> tab.</cmd>
+            </step>
+            <step>
+                <cmd>For file origins, enter a directory and file name. For the Kafka Consumer,
+                    enter the following information:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_eh1_q2f_xq">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>Kafka Raw Preview Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Topic</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">get these from Kafka
+                                            properties</draft-comment>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Partition</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Broker Host</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Broker Port</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Batch Duration Time</entry>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>Click <uicontrol>Preview</uicontrol>.</cmd>
+            </step>
+        </steps>
+        <result>The Raw Source Preview area displays the preview.<p><image
+                    href="../Graphics/RawSourcePreview.png" id="image_ozk_lp1_tq" scale="50"
+            /></p></result>
+    </taskbody>
+</task>

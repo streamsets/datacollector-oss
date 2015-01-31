@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Processors</title>
+ <topicref href="../Processors/Processors_title.dita">
+  <topicref href="../Processors/Processors_overview.dita" chunk="to-content">
+   <topicref href="../Processors/ReferencingFieldNames.dita"/>
+   <topicref href="../Processors/RequiredFieldsinProcessors.dita"/>
+  </topicref>
+  <topicref href="../Processors/Expression.dita"/>
+  <topicref href="../Processors/FieldHasher.dita" chunk="to-content">
+   <topicref href="../Processors/FieldHasher-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Processors/FieldMasker.dita" chunk="to-content">
+   <topicref href="../Processors/FieldMasker_MaskTypes.dita"/>
+   <topicref href="../Processors/FieldMasker-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Processors/FieldConverter.dita" chunk="to-content">
+   <topicref href="../Processors/FieldConverter_Datatypes.dita"/>
+   <topicref href="../Processors/FieldConverter-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Processors/FieldRemover.dita" chunk="to-content">
+   <topicref href="../Processors/FieldRemover-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Processors/StreamSelector.dita" chunk="to-content">
+   <topicref href="../Processors/StreamSelector_fallback.dita"/>
+   <topicref href="../Processors/StreamSelector-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Processors/ConfiguringExpressionsConditions.dita">
+   <topicref href="../Processors/BasicSyntax.dita"/>
+   <topicref href="../Processors/CallingFieldNames.dita"/>
+   <topicref href="../Processors/DefiningConstants.dita"/>
+  </topicref>
+ </topicref>
+</map>

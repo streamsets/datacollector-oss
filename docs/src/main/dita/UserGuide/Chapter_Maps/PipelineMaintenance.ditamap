@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Pipeline Maintenance</title>
+ <topicref href="../Pipeline_Maintenance/PipelineMaintenance_title.dita">
+  <topicref href="../Pipeline_Maintenance/StartingAPipeline.dita" chunk="to-content">
+   <topicref href="../Pipeline_Maintenance/ResettingTheOrigin.dita"/>
+  </topicref>
+  <topicref href="../Pipeline_Maintenance/StoppingAPipeline.dita"/>
+  <topicref href="../Pipeline_Maintenance/ImportingAPipeline.dita"/>
+  <topicref href="../Pipeline_Maintenance/ExportingAPipeline.dita"/>
+  <topicref href="../Pipeline_Maintenance/DuplicatingAPipeline.dita"/>
+  <topicref href="../Pipeline_Maintenance/DeletingAPipeline.dita"/>
+ </topicref>
+</map>

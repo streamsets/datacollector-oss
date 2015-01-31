@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_h54_w4m_xq">
+ <title>Literals</title>
+ <shortdesc>The expression language includes the following literals:</shortdesc>
+ <conbody>
+  <ul id="ul_e3m_jpm_xq">
+   <li>Boolean literals - "true" and "false"</li>
+   <li>Integers</li>
+   <li>Floating point</li>
+   <li>Strings with single or double quotation marks. </li>
+   <li>Escape characters for strings: \ for both quotation marks and  \\ for \<draft-comment
+     author="Loretta">verify this translation. original: " is escaped as \", ' is escaped as \', and
+     \ is escaped as \\.</draft-comment></li>
+  </ul>
+  <p></p>
+ </conbody>
+</concept>

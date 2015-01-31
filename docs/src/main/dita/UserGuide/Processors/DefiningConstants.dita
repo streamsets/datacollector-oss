@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_ogd_zj3_wq">
+    <title>Defining Constants</title>
+    <shortdesc>You can define constants that you can reuse within a processor. Define a constant
+        when you have a constant value that you want use more than once in the processor or that you
+        want to be able to update easily. You can define constants in the Expression and Stream
+        Selector processors.</shortdesc>
+    <taskbody>
+        <context>
+            <p>For example, you might have an Expression processor that calculates the total income
+                for employees using .01 as a bonus percentage, as
+                follows:<codeblock>(record:value{"/SALARY"}) + (record:value{"/SALARY"}*.01)</codeblock></p>
+            <p>However, the bonus percentage will change for the next quarter. So instead of using
+                .01 directly in the expression, you can create a Bonus constant and set it to .01 as
+                    shown:<draft-comment author="Loretta">add screenshot.</draft-comment></p>
+            <p>Then you can use the Bonus constant in an expression as follows:</p>
+            <p>
+                <codeblock>(record:value{"/SALARY"}) + (record:value{"/SALARY"}*Bonus)</codeblock>
+            </p>
+        </context>
+    </taskbody>
+</task>

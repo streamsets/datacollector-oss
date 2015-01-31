@@ -164,6 +164,53 @@
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>1.9.1</version>
         </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>ditaot-maven-plugin</artifactId>
+          <version>1.0</version>
+          <!-- common config for all dita builds -->
+          <configuration>
+            <useDitaAnt>false</useDitaAnt>
+            <antHome>${env.ANT_HOME}</antHome>
+            <antOpts>-Xmx500m</antOpts>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>net.sourceforge.saxon</groupId>
+              <artifactId>saxon</artifactId>
+              <version>9.1.0.8</version>
+            </dependency>
+            <dependency>
+              <groupId>net.sourceforge.saxon</groupId>
+              <artifactId>saxon</artifactId>
+              <classifier>dom</classifier>
+              <version>9.1.0.8</version>
+            </dependency>
+            <dependency>
+              <groupId>com.ibm.icu</groupId>
+              <artifactId>icu4j</artifactId>
+              <version>49.1</version>
+            </dependency>
+            <!-- below is for PDF conversion -->
+            <dependency>
+              <groupId>org.apache.xmlgraphics</groupId>
+              <artifactId>fop</artifactId>
+              <version>1.0</version>
+              <exclusions>
+                <exclusion>
+                  <groupId>xalan</groupId>
+                  <artifactId>xalan</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
+            <dependency>
+              <groupId>xerces</groupId>
+              <artifactId>xercesImpl</artifactId>
+              <version>2.10.0</version>
+            </dependency>
+          </dependencies>
+        </plugin>
       </plugins>
     </pluginManagement>
 

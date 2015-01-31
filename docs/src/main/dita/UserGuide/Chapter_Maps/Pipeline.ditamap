@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Pipeline</title>
+ <topicref href="../Pipeline_Configuration/PipelineConfiguration_title.dita">
+  <topicref href="../Pipeline_Configuration/What_isa_Pipeline.dita"/>
+  <topicref href="../Pipeline_Configuration/DataCollectorWindow-Config.dita"/>
+  <topicref href="../Pipeline_Configuration/MergingStreams.dita"/>
+  <topicref href="../Pipeline_Configuration/ErrorHandling.dita"/>
+  <topicref href="../Pipeline_Configuration/PipelineProperties.dita" chunk="to-content">
+   <topicref href="../Pipeline_Configuration/DeliveryGuarantee.dita"/>
+  </topicref>
+  <topicref href="../Pipeline_Configuration/ConfiguringAPipeline.dita"/>
+ </topicref>
+</map>

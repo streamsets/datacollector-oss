@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ivv_c3k_wq">
+ <title>Field Hasher</title>
+ <shortdesc>The Field Hasher processor uses an algorithm to encode values in a field. The Field
+  Hasher can use MD5, SHA1 or SHA2 to hash field values. </shortdesc>
+ <conbody>
+  <p>Use the Field Hasher to securely encode sensitive data that you might want to decode at a later
+   date. For example, you might use the Field Hasher to encode social security numbers
+    .<draft-comment author="Loretta">come back to this example - why hash instead of
+    mask?</draft-comment></p>
+  <p>When you configure the Field Hasher, you select the field that you want to encode and the
+   algorithm that you want to use. </p>
+ </conbody>
+</concept>

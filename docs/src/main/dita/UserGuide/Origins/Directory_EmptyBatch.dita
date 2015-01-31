@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_fqb_x1l_5q">
+ <title>Writing an Empty Batch</title>
+ <shortdesc>When new data does not appear, the File Reader can send an empty batch to pipeline
+  destinations. Send an empty batch when you want to regularly force a commit in the destination
+  systems. </shortdesc>
+ <conbody>
+  <p>Use the File Wait Timeout general property to define the number of seconds that you want the
+   File Reader to wait before sending an empty batch. </p>
+  <p>For example, you have a pipeline that writes data to HDFS. When the pipeline origin does not
+   provide data to process, the HDFS &lt;&lt;hangs? what?>> while waiting for data. To force a
+   commit that releases the HDFS resources &lt;&lt;or whatever>>, you can configure File Wait
+   Timeout property for &lt;&lt;ask Natty>> seconds. When new files do not appear in &lt;xx>
+   seconds, the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+   /> sends and empty batch and &lt;&lt;make everybody happy.>><draft-comment author="Loretta">Ask
+    Natty.</draft-comment></p>
+ </conbody>
+</concept>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ig1_lck_5q">
+ <title>Configuring Directory Properties</title>
+ <shortdesc>When you configure the Directory origin, configure the general properties, including the
+  file type. Then, configure the properties based on the file type.<draft-comment author="Loretta"
+   >delete this topic and rename/promote the different groups of
+  properties?</draft-comment></shortdesc>
+ <conbody>
+  <p>The Directory properties display on the following tabs in the Properties panel: </p>
+  <p>
+   <ul id="ul_v32_yck_5q">
+    <li><uicontrol>General</uicontrol>. Configuration properties for all file types.</li>
+    <li><uicontrol>Log Files</uicontrol>. Properties for log files.</li>
+    <li><uicontrol>JSON Files</uicontrol>. Properties for JSON files.</li>
+    <li><uicontrol>Delimited Files</uicontrol>. Properties for delimited files, such as
+     comma-separated or tab-separated files.</li>
+   </ul>
+  </p>
+ </conbody>
+</concept>

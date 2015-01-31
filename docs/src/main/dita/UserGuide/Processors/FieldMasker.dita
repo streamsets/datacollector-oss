@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hjc_t4k_wq">
+ <title>Field Masker</title>
+ <shortdesc>The Field Masker processor masks string values based on the selected mask type. You can
+  use variable-length, fixed-length, or custom masks. </shortdesc>
+ <conbody>
+  <p>Use the Field Masker to mask sensitive string data. For example, you might use the Field Masker
+   to mask social security numbers.</p>
+  <p>
+   <note type="tip">To mask non-string data, you might use the Field Type Converter processor to
+    convert non-string data to String, then stream the data to the Field Masker. </note>
+  </p>
+ </conbody>
+</concept>

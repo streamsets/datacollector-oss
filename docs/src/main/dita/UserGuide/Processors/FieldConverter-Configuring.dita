@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_g23_2tq_wq">
+    <title>Configuring a Field Converter</title>
+    <shortdesc>Configure a Field Converter to convert the data type of a field. </shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_fdt_ttq_wq">
+            <step>
+                <cmd>In the Properties panel, optionally enter a name and description for the
+                    stage.</cmd>
+            </step>
+            <step>
+                <cmd>To convert a field, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ozv_nnk_wq">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.99*"/>
+                            <thead>
+                                <row>
+                                    <entry>Field Converter Configuration Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Convert Field</entry>
+                                    <entry>Field to be converted. </entry>
+                                </row>
+                                <row>
+                                    <entry>Target Type</entry>
+                                    <entry>Data type to convert to. </entry>
+                                </row>
+                                <row>
+                                    <entry>Data Locale</entry>
+                                    <entry>Locale of the data in the field. Can determine how the
+                                        Field Converter formats converted data.</entry>
+                                </row>
+                                <row>
+                                    <entry>Date Format</entry>
+                                    <entry>Format for a Date or Datetime field. Use any valid
+                                        format. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>To convert another field, click <uicontrol>Add</uicontrol> and then repeat the
+                    previous step.</cmd>
+            </step>
+            <step>
+                <cmd>Optionally, configure<uicontrol> Required Fields</uicontrol> for the stage.
+                </cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

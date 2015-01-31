@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_wvz_rfp_tq">
+    <title>Reviewing a Snapshot of Data</title>
+    <shortdesc>You can review a snapshot of data that passes through the pipeline. When you request
+        a snapshot, the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> takes
+        a snapshot of the data being processed. You can then review the snapshot stage by stage or
+        through a set of stages, like data preview.</shortdesc>
+    <taskbody>
+        <context>
+            <p>Review a snapshot of data to verify how the pipeline processes data. In the Monitor
+                panel, you can drill down to review the values of each record to determine if the
+                stage or stages transforms data as expected.</p>
+        </context>
+        <steps id="steps_esy_44p_tq">
+            <step>
+                <cmd>From the pipeline canvas of a running pipeline, click
+                        <uicontrol>Snapshot</uicontrol>.</cmd>
+                <stepresult>The canvas centers on the origin stage of the pipeline. The Monitor
+                    panel displays snapshot data in the Output Data column. Since this is the origin
+                    of the pipeline, no input data displays.</stepresult>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/NextStage">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>To preview multiple stages, click <menucascade>
+                        <uicontrol>Snapshot</uicontrol>
+                        <uicontrol>Between Multiple Stages</uicontrol>
+                    </menucascade>.</cmd>
+                <info>The Preview panel displays two lists of stages.<ol id="ol_nww_4rp_tq">
+                        <li>From the First list, select the first stage to include.</li>
+                        <li>In the Last list, select the last stage to include.</li>
+                    </ol></info>
+            </step>
+            <step>
+                <cmd>To exit the snapshot review and return to the default Monitor mode, click
+                        <uicontrol>Close Snapshot</uicontrol>.</cmd>
+            </step>
+
+        </steps>
+    </taskbody>
+</task>

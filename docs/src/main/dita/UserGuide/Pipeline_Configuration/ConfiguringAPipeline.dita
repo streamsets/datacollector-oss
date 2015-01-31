@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_xlv_jdw_kq">
+    <title>Configuring a Pipeline</title>
+    <shortdesc>Configure a pipeline to define the stream of data. After you configure the pipeline,
+        you can start the pipeline. </shortdesc>
+    <taskbody>
+        <context>
+            <p>A pipeline can include the following components:<ul id="ul_eyy_b2w_kq">
+                    <li>A single origin stage</li>
+                    <li>Multiple processor stages</li>
+                    <li>Multiple destination stages</li>
+                </ul></p>
+        </context>
+        <steps id="steps_tsx_d2w_kq">
+            <step>
+                <cmd>If this is the first pipeline for the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />, click <uicontrol>Create Pipeline</uicontrol>. </cmd>
+                <info>If you have created other pipelines, if necessary, use the <uicontrol>Toggle
+                        Library</uicontrol> icon to display the Library, and click the
+                        <uicontrol>Create New Pipeline</uicontrol> icon.</info>
+            </step>
+            <step>
+                <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and
+                    optional description, and click <uicontrol>Save</uicontrol>.</cmd>
+                <stepresult>The pipeline canvas displays the new name. The Properties panel displays
+                    the pipeline properties. </stepresult>
+            </step>
+            <step id="pipeProperties">
+                <cmd>Configure the following pipeline properties:</cmd>
+                <info>
+                    <simpletable frame="all" relcolwidth="1.0* 3.17*" id="simpletable_m1s_q1m_sq">
+                        <sthead>
+                            <stentry>Pipeline Property</stentry>
+                            <stentry>Description</stentry>
+                        </sthead>
+                        <strow>
+                            <stentry>Delivery Guarantee <xref
+                                    href="DeliveryGuarantee.dita#concept_ffz_hhw_kq">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                        alt="more info"/></xref></stentry>
+                            <stentry>Determines how the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> handles data after an unexpected event causes the pipeline to
+                                stop running. Select one of the following options:<ul
+                                    id="ul_b4v_51m_sq">
+                                    <li><uicontrol>At least once</uicontrol>. Ensures all data is
+                                        processed and written to the destination. Might result in
+                                        duplicate rows.</li>
+                                    <li><uicontrol>At most once</uicontrol>. Ensures that data is
+                                        not reprocessed to prevent writing duplicate data to the
+                                        destination. Might result in missing rows.</li>
+                                </ul><p>Default is <uicontrol>At least
+                                once</uicontrol>.</p></stentry>
+                        </strow>
+                    </simpletable>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the <uicontrol>Stage Library</uicontrol> icon to add an origin stage. In
+                    the Properties panel, configure the stage properties.</cmd>
+                <info>For configuration details about origin stages, see <xref
+                        href="../Origins/Origins_overview.dita#concept_hpr_twm_jq"/>.</info>
+            </step>
+            <step>
+                <cmd>Use the <uicontrol>Stage Library</uicontrol> button to add the next stage that
+                    you want to use, connect the origin to the new stage, and configure the new
+                    stage.</cmd>
+                <info> For configuration details about processors, see <xref
+                        href="../Processors/Processors_overview.dita#concept_hpr_twm_jq"/>.<p>For
+                        configuration details about destinations, see <xref
+                            href="../Destinations/Destinations_overview.dita#concept_hpr_twm_jq"
+                        />.</p></info>
+            </step>
+            <step>
+                <cmd>Set additional stages as necessary.</cmd>
+            </step>
+            <step>
+                <cmd>When the pipeline is valid, you can use the <uicontrol>Preview</uicontrol> icon
+                    to preview data to fine-tune pipeline configuration. </cmd>
+                <info>For more information, see <xref
+                        href="../Data_Preview/DataPreview.dita#concept_jtn_s3m_lq"/>. </info>
+            </step>
+            <step>
+                <cmd>When the pipeline is complete, use the <uicontrol>Start</uicontrol> icon to run
+                    the pipeline. </cmd>
+            </step>
+        </steps>
+        <result>The <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            starts the pipeline. The Monitor panel displays real-time statistics for the pipeline.
+        </result>
+    </taskbody>
+</task>

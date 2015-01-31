@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_e2p_5yv_4q">
+ <title>Error Tab</title>
+ <shortdesc>When you monitor a pipeline, the Error tab displays the number of error records
+  encountered by the pipeline and individual stages.</shortdesc>
+ <conbody>
+  <p>
+   <draft-comment author="Loretta">check on what the final info will be. Need for table or just
+    description in sentences? </draft-comment>
+  </p>
+ </conbody>
+</concept>

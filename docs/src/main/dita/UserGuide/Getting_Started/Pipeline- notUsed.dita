@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_s4r_rhy_3q">
+ <title>What is a pipeline?</title>
+ <shortdesc>A pipeline defines the data stream for a data collector. A pipeline consists of a
+  source, target, and stages that you add to manipulate or transform data. To use a data collector,
+  you configure a pipeline, and then start it. </shortdesc>
+ <conbody>
+  <p/>
+ </conbody>
+</concept>

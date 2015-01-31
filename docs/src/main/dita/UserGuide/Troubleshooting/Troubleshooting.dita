@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_vxd_tsm_tq">
+ <title>Troubleshooting</title>
+ <shortdesc>We hope the following troubleshooting tips might help you with any issues you might be
+  having. If you have suggestions for additional troubleshooting items, please send them to
+  docs@streamsets.com.</shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>When I go to the<ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window, I
+      get a "Webpage not available" error message.</dt>
+     <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      is not running. Start the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Why isn't the Data Preview icon enabled.</dt>
+     <dd>You can preview data after you configure the required fields for the origin. </dd>
+    </dlentry>
+    <dlentry>
+     <dt>Why doesn't the data preview show any data?</dt>
+     <dd>If data preview doesn't show any data, one of the following issues might have occurred:<ul
+       id="ul_uhn_pz2_xq">
+       <li>The origin might not be configured correctly. In the Preview panel, check the Issues tab
+        of the origin stage for related issues.</li>
+       <li>The origin might not have any data at the moment.</li>
+      </ul></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Why can't I edit preview data?</dt>
+     <dd>You can edit preview data when you preview a single stage. Editing data is not enabled when
+      you preview multiple stages.</dd>
+     <dd>When you edit a single stage, you can edit preview data in the following locations: <ul
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_EditPreview"
+       id="ul_ojz_yhn_tq">
+       <li/>
+      </ul></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Why isn't the Start icon enabled? </dt>
+     <dd>You can start a pipeline when it is valid. Use the Issues icon to review the list of issues
+      in your pipeline. When you resolve the issues, the Start icon becomes enabled.</dd>
+    </dlentry>
+
+   </dl>
+  </p>
+ </conbody>
+</concept>

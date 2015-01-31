@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kk2_mbm_xq">
+ <title>Calling Field Names</title>
+ <shortdesc></shortdesc>
+ <conbody>
+  <p></p>
+  <p>To use a field name in an expression, use the following
+   convention:<codeblock>record:value("/&lt;field name>")</codeblock></p>
+  <p>For example, the following expression add the values from the SALARY field with values from the
+   BONUS field:</p>
+  <p>
+   <codeblock>${record:value("/SALARY") + (record:value("/SALARY")*BONUS)}</codeblock>
+  </p>
+ </conbody>
+</concept>

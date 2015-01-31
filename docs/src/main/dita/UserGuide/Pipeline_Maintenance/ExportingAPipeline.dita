@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_dtz_4tr_5q">
+    <title>Exporting a Pipeline</title>
+    <shortdesc>Export a pipeline when you want to use the pipeline with another <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. You
+        might also export a  pipeline as a safeguard before you upgrade the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        />.</shortdesc>
+    <taskbody>
+        <context>
+            <p>When you export a pipeline, you receive a JSON file named after the pipeline. For
+                example, when you export a pipeline named MyPipeline, the exported file is named
+                MyPipeline.json.</p>
+        </context>
+        <steps id="steps_cns_ztr_5q">
+            <step>
+                <cmd>In the Pipeline library, click the <uicontrol>Actions</uicontrol> icon for the
+                    pipeline that you want to export.</cmd>
+            </step>
+            <step>
+                <cmd>Click <uicontrol>Export</uicontrol>.</cmd>
+                <stepresult>The <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> window generates the JSON file and saves it to your default downloads
+                    directory.</stepresult>
+            </step>
+        </steps>
+    </taskbody>
+</task>

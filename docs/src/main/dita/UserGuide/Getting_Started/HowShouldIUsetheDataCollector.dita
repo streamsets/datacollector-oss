@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_rlj_ftm_lq">
+ <title>How should I use the Data Collector?</title>
+ <shortdesc>Use the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> like a pipe in
+  the data stream. Throughout your enterprise data topology, you have streams of data that you need
+  to move, collect, and process on the way to their destinations. The <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides the
+  crucial connection between hops in the stream. </shortdesc>
+ <conbody>
+  <p>You can use a single <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, an array of
+    <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s, a series
+   of <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s - or
+   any combination - to solve your ingest dilemmas.</p>
+  <p>For example, you might install a single <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to stream log
+   file data from a web server to HDFS. Or, you might install an array of <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s to stream log
+   file data from each web server in your enterprise to a Hadoop data store. You might install a
+   series of arrays to combine data from the web logs with &lt;&lt;what other data?>> for
+    analysis.<draft-comment author="Loretta">Get better examples from Natty /
+    Arvind?</draft-comment></p>
+ </conbody>
+</concept>

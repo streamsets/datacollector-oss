@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_jdd_blr_wq">
+ <title>Field Remover</title>
+ <shortdesc>The Field Remover removes fields from the pipeline. Use the Field Remover to discard
+  data that you do not want to use.  </shortdesc>
+ <conbody>
+  <p>
+   <draft-comment author="Loretta">Anything else to add?</draft-comment>
+  </p>
+ </conbody>
+</concept>

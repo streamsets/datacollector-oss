@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_bxt_ndl_5q">
+ <title>File Name Pattern</title>
+ <shortdesc>Use a regular expression to define the file name pattern. Directory reads files in the
+  file directory that match the file name pattern.</shortdesc>
+ <conbody>
+  <p>For example, if you use *.json, Directory reads all files with the .json extension.
+    <draft-comment author="Loretta">do we need a more complex example than this?</draft-comment></p>
+ </conbody>
+</concept>

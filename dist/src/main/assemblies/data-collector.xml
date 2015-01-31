@@ -123,6 +123,12 @@
       </excludes>
     </fileSet>
 
+    <!-- local docs -->
+    <fileSet>
+      <directory>${docs.dist-dir}</directory>
+      <outputDirectory>/static-web/docs</outputDirectory>
+    </fileSet>
+
     <!-- javadocs -->
     <fileSet>
       <directory>${basedir}/target/site/apidocs</directory>

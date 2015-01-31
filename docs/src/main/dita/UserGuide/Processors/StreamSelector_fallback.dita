@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_sn5_5kx_wq">
+ <title>Handling Non-Matching Records</title>
+ <shortdesc>You can handle data that does not match any configured conditions in one of the
+  following ways:</shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Use the fallback action</dt>
+     <dd>The Fallback Action property determines how the Stream Selector handles records that do not
+      match any conditions. The Stream Selector can perform one of the following fallback
+       actions:<ul id="ul_jhg_fkx_wq">
+       <li>Drop the record.</li>
+       <li>Write the record to the error log. <draft-comment author="Loretta">verify what we
+         do.</draft-comment></li>
+       <li>Stop the pipeline.</li>
+      </ul></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Create a default condition</dt>
+     <dd>You can create an additional default condition to capture records that do not match the
+      other conditions. When you create a default condition, you connect the associated node with a
+      stream in the pipeline. You can configure the stream to perform additional processing or write
+      it directly to a destination. If you do not need the records, you can use the Trash
+      destination <draft-comment author="Loretta">asking why this is better than drop
+       record.</draft-comment>. </dd>
+    </dlentry>
+   </dl>
+  </p>
+  <p>In the following example, Stream 1 passes data with no locale information to a stream that
+   replaces the nulls before writing to the Kafka destination. Stream 2 passes data with the English
+   locale directly to the same Kafka destination. Stream 3 uses the default condition to capture
+   data from other locales and stream it to a different destination.<draft-comment author="Loretta"
+    >Show a pipeline with a pipeline and </draft-comment></p>
+  <p> </p>
+ </conbody>
+</concept>

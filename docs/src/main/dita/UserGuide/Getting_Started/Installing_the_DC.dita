@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_bt1_zcp_kq">
+    <title>Installing and Launching the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        /></title>
+    <shortdesc>Install the <ph id="pName-long">Data Collector</ph> on the machine that you want to
+        run a pipeline. After installation, you can launch the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        />.</shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_g53_l3p_kq">
+            <step>
+                <cmd>Download the <ph>Data Collector</ph> TAR file from the following
+                        location:<draft-comment author="Loretta">Add link to website? How else are
+                        they getting it?</draft-comment></cmd>
+            </step>
+            <step>
+                <cmd>At a command line, navigate to the location of the TAR file. </cmd>
+            </step>
+            <step>
+                <cmd>Enter the following command to expand the file and copy the contents to the
+                    specified directory:</cmd>
+                <info>
+                    <pre>tar xzf StreamSetsDataCollector.tar.gz &lt;install directory> </pre>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command to launch the <ph>Data Collector</ph> and run it in
+                    the background:</cmd>
+                <info>
+                    <codeblock>&lt;install directory>/bin/sdc &amp;</codeblock>
+                </info>
+                <stepresult>
+                    <draft-comment author="Loretta">What shows up? Leave the console open? Or can
+                        they close it?</draft-comment>
+                </stepresult>
+            </step>
+        </steps>
+    </taskbody>
+</task>

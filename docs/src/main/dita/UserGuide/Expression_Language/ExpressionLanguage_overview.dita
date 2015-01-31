@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_p54_4kl_vq">
+ <title>Expression Language</title>
+ <shortdesc>The expression language enables you to create expressions that evaluate or modify data.
+  Use the expression language to create expressions in the Expression processor and conditions in
+  the Stream Selector processor.</shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Basic Syntax</dt>
+     <dd>Precede all expressions with a dollar sign and enclose them with curly brackets, as
+      follows:<codeblock>${&lt;expression>}</codeblock></dd>
+     <dd>For example, to add 2 +2, use the following syntax:<codeph>${2+2}</codeph>.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Calling Fields</dt>
+     <dd>To use the values in a field in an expression, use the following
+      syntax:<codeblock>record:value{"/&lt;field_name>"}</codeblock><p>For example, to add the
+       sales of four quarters, you might use the following expression:
+       <codeblock>${record:value("/Q1_Sales") + record:value("/Q2_Sales") + record:value("/Q3_Sales") + record:value("/Q4_Sales")}</codeblock></p></dd> </dlentry>
+    <dlentry>
+     <dt>Literals</dt>
+     <dd></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Operators</dt>
+     <dd>You can use  operators in expressions. <draft-comment
+       author="Loretta">what type of operators?</draft-comment></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Constants</dt>
+     <dd>You can use constants in expressions. You can also define a constant variable. You can use
+      the variable to represent a constant for any expression in the processor.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Functions</dt>
+     <dd></dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_mj5_vjf_xq">
+    <title>Configuring Conditions</title>
+    <shortdesc>Configure a condition for each stream of data that you want to route. The Stream
+        Selector passes all data that matches the condition to the stream.</shortdesc>
+    <taskbody>
+        <context>
+            <p>Use the expression language to configure conditions. </p>
+        </context>
+    </taskbody>
+</task>

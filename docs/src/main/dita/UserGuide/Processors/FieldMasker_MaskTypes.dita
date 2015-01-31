@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_vwp_gh4_wq">
+ <title>Mask Types</title>
+ <shortdesc>You can use the following mask types to mask data: </shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Fixed-length</dt>
+     <dd>Replaces values with a fixed-length mask. Use when you want to mask any variability in
+      length in the data. </dd>
+     <dd>The following example uses a fixed-length masks to hide passwords:<simpletable frame="all"
+       relcolwidth="1.0* 2.7*" id="simpletable_ivb_fj4_wq">
+       <sthead>
+        <stentry>Password (original)</stentry>
+        <stentry>Password (fixed-length mask)</stentry>
+       </sthead>
+       <strow>
+        <stentry>1234<p>donKey</p><p>022367snowballrocks</p></stentry>
+        <stentry>asd302kd0<p>2v03msO3d</p><p>L92m1sN3q</p></stentry>
+       </strow>
+      </simpletable></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Variable-length</dt>
+     <dd>Replaces values with a variable-length mask. Use when you want to reveal the different
+      lengths of the original data. </dd>
+     <dd>The following example uses a variable lenght mask to hide the same passwords:<simpletable
+       frame="all" relcolwidth="1.0* 2.7*" id="simpletable_g3y_gk4_wq">
+       <sthead>
+        <stentry>Password (original)</stentry>
+        <stentry>Password (variable-length mask)</stentry>
+       </sthead>
+       <strow>
+        <stentry>1234<p>donKey</p><p>022367snowballrocks</p></stentry>
+        <stentry>asd3<p>2v03ms</p><p>L92m1sN3q0jaOmE67Ws</p></stentry>
+       </strow>
+      </simpletable></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Custom</dt>
+     <dd>Replaces values with a mask based on a user-defined pattern. When you define the pattern
+      for the mask, you can use the following special characters: <ul id="ul_fsv_hl4_wq">
+       <li>Hash mark (#) - Reveals the original character in that location.</li>
+       <li>
+        <draft-comment author="Loretta">checking with Hari</draft-comment>
+       </li>
+      </ul></dd>
+     <dd>All other characters are used as constants in the mask. For example, the following mask
+      pattern reveals the area code of a phone number: <codeph>###-xxx-xxxx</codeph>.</dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

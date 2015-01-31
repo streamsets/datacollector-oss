@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_qcq_54n_jq">
+ <title>Directory</title>
+ <shortdesc>The Directory origin reads data from log files, JSON files, and delimited files. </shortdesc>
+ <conbody>
+  <p>Directory reads the files in a directory with names that match a user-defined pattern. It can
+   optionally begin processing with a specific file name. Then, it reads files with similar names in
+   ascending order. After processing a file, Directory archives or deletes the file. </p>
+  <p>The Directory origin processes data differently based on the file type:</p>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Log files</dt>
+     <dd>Generates a record for each line in the log file. </dd>
+     <dd>When you configure the Directory origin, you define the maximum number of characters for a
+      line. When a line exceeds the configured number of characters, Directory truncates the
+      line.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>JSON files</dt>
+     <dd>Generates a record for each JSON object. </dd>
+     <dd>You can use JSON files that include multiple JSON objects or a JSON array.</dd>
+     <dd>When you configure the Directory origin, you define the maximum size of the JSON object.
+      When an object exceeds the configured size, Directory skips the object and continues
+      processing with the next object.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Delimited files</dt>
+     <dd>Generates a record for each delimited record. </dd>
+     <dd>You can use the following types of delimited files:<ul id="ul_a51_wzk_5q">
+       <li>Generic comma-separated values (CSV)</li>
+       <li>Microsoft Excel CSV</li>
+       <li>MySQL CSV</li>
+       <li>RFC4180 CSV</li>
+       <li>Tab-separated values</li>
+      </ul></dd>
+     <dd>The Directory origin can convert a file to a map based on the header line of the file. If
+      the file does not include a header, Directory creates the map based on column number.</dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

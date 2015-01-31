@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_rvt_qfr_5q">
+ <title>General Properties</title>
+ <shortdesc>You can configure the following general properties for the File Tail origin:</shortdesc>
+ <conbody>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="table_ld1_5fr_5q">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1*"/>
+     <colspec colname="c2" colnum="2" colwidth="2.45*"/>
+     <thead>
+      <row>
+       <entry>File Tail General Property</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>Name</entry>
+       <entry>Stage name.</entry>
+      </row>
+      <row>
+       <entry>Description</entry>
+       <entry>Optional description.</entry>
+      </row>
+      <row>
+       <entry>Log File</entry>
+       <entry>Log file name and directory.</entry>
+      </row>
+      <row>
+       <entry>Batch Size (rows) <xref href="FileTail_BatchSizeWaitTime.dita#concept_ypd_vgr_5q"
+        > <image href="../Graphics/icon_moreInfo.png" scale="12"/></xref></entry>
+       <entry>Maximum number of rows included in a batch. </entry>
+      </row>
+      <row>
+       <entry>Batch Wait Time (secs) <xref href="FileTail_BatchSizeWaitTime.dita#concept_ypd_vgr_5q"
+        ><image href="../Graphics/icon_moreInfo.png" scale="12"/></xref></entry>
+       <entry>Number of seconds to wait before sending a batch.</entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
+ </conbody>
+</concept>

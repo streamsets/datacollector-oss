@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_vhs_5tz_xp">
+ <title>Reusable phrases for the book</title>
+ <shortdesc>Use the following reusable phrases for conrefs in the book:</shortdesc>
+ <conbody>
+            <p>Company name: <ph id="company">StreamSets</ph></p>
+            <p>Full, init cap version of the product name: <ph id="pName-long">Data
+                  Collector</ph></p>
+            <p>
+                  <draft-comment author="Loretta">Do we need a plural generic version?
+                  </draft-comment>
+            </p>
+            <p>The following bullets are used in "Previewing a Single Stage" and
+                  "Troubleshooting":</p>
+       <ul id="ul_EditPreview">
+                  <li>The output data column for an origin stage.</li>
+                  <li>The input data column for all other stages.</li>
+            </ul>
+            <p>The following bullets are the types of origins that can be reset / that remember
+                  where you left off. These are used currently in Starting a Pipeline and Resetting
+                  an Origin:<ul id="ul_OffsetSavingOrigins">
+                        <li>File Reader</li>
+                        <li>Kafka Consumer<draft-comment author="Loretta">any
+                              more?</draft-comment></li>
+                  </ul></p>
+      </conbody>
+</concept>

@@ -95,6 +95,15 @@
       </modules>
     </profile>
     <profile>
+      <id>docs</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>docs</module>
+      </modules>
+    </profile>
+    <profile>
       <id>dist</id>
       <activation>
         <activeByDefault>false</activeByDefault>

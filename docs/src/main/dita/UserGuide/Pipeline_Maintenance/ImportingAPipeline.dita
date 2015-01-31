@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_fdf_hrr_5q">
+    <title>Importing a Pipeline</title>
+    <shortdesc>Import a pipeline to use a pipeline developed on a different <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. When
+        you import a pipeline, you create a pipeline and then import the pipeline. </shortdesc>
+    <taskbody>
+        <context>Import a pipeline from a pipeline file. Pipeline files are JSON files exported from
+            another <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />.</context>
+        <steps id="steps_slv_nrr_5q">
+            <step>
+                <cmd>In the Pipeline library, click <uicontrol>Create New
+                    Pipeline</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>In the <wintitle>New Pipeline</wintitle> dialog box, enter a pipeline name and
+                    optional description. Click <uicontrol>Save</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>In the Pipeline library, click the <uicontrol>Actions</uicontrol> icon of the
+                    new pipeline.</cmd>
+                <info><image href="../Graphics/Pipeline_import.png" id="image_avf_jsr_5q" scale="60"
+                    /></info>
+            </step>
+            <step>
+                <cmd>Click <uicontrol>Import</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>In the <wintitle>Import Pipeline</wintitle> window, browse to locate the
+                    pipeline file and click <uicontrol>Import</uicontrol>.</cmd>
+                <stepresult>The pipeline displays in the canvas.</stepresult>
+            </step>
+        </steps>
+    </taskbody>
+</task>

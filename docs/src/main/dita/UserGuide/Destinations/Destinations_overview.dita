@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hpr_twm_jq">
+ <title>Destinations</title>
+ <shortdesc>A destination stage represents the target data for the pipeline. You can use one or more
+    destinations in a pipeline.</shortdesc>
+ <conbody>
+  <p>You can use the following types of destinations in a pipeline: <draft-comment author="Loretta"
+        >list the target types. quick description.</draft-comment><ul id="ul_mxz_jxm_jq">
+        <li>Kafka Producer</li>
+        <li>HBase</li>
+        <li>Trash. Use to </li>
+      </ul></p>
+ </conbody>
+</concept>

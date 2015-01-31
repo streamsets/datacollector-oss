@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_cdj_crl_5q">
+ <title>JSON File Properties</title>
+ <shortdesc>You can configure the following JSON file properties for the Directory
+  origin:</shortdesc>
+ <conbody>
+  <table frame="all" rowsep="1" colsep="1" id="table_bzb_vgl_5q">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1*"/>
+    <colspec colname="c2" colnum="2" colwidth="2.28*"/>
+    <thead>
+     <row>
+      <entry>Directory JSON File Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>JSON Content</entry>
+      <entry>Type of content in JSON files. Use one of the following options: <p>
+        <ul id="ul_atw_krl_5q">
+         <li>Array of Objects </li>
+         <li>Multiple Objects.<draft-comment author="Loretta">Do I need to say
+          more?</draft-comment></li>
+        </ul>
+       </p></entry>
+     </row>
+     <row>
+      <entry>Maximum Object Length</entry>
+      <entry>Maximum length for a JSON object. Larger objects are not processed. </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+ </conbody>
+</concept>

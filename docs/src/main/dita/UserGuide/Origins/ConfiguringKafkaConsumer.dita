@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_npx_xgf_vq">
+    <title>Configuring the Kafka Consumer</title>
+    <shortdesc>When you configure the Kafka Consumer, you configure the general properties,
+        including Kafka and ZooKeeper details. You can optionally add custom advanced properties.
+        And after you select the type of data to be processed, you can configure related properties
+        for that type.</shortdesc>
+    <taskbody>
+        <context>
+            <p>The Kafka Consumer properties display in the following tabs in the Properties
+                    panel:<ul id="ul_vq3_b3f_vq">
+                    <li><uicontrol>General</uicontrol>. Kafka configuration details, batch
+                        information, and payload type.</li>
+                    <li><uicontrol>Advanced</uicontrol>. Custom Kafka properties that you want to
+                        use.</li>
+                    <li><uicontrol>Log</uicontrol>. <draft-comment author="Loretta">currently, no
+                            tab for this - no extra properties?</draft-comment></li>
+                    <li><uicontrol>JSON</uicontrol>. JSON properties for JSON paylods.</li>
+                    <li><uicontrol>CSV</uicontrol>. CSV properties for CSV payloads.</li>
+                </ul></p>
+        </context>
+    </taskbody>
+</task>

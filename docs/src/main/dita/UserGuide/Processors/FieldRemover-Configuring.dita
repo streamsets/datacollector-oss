@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_c1j_btr_wq">
+    <title>Configuring a Field Remover</title>
+    <shortdesc>Use a Field Remover to remove unwanted fields from the pipeline. </shortdesc>
+    <taskbody>
+        <context>
+            <p>When you configure a Field Remover, you can list the fields that you want to keep or
+                the fields that you want to drop.</p>
+        </context>
+        <steps id="steps_fdt_ttq_wq">
+            <step>
+                <cmd>In the Properties panel, optionally enter a name and description for the
+                    stage.</cmd>
+            </step>
+            <step>
+                <cmd>To remove a field, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ozv_nnk_wq">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.99*"/>
+                            <thead>
+                                <row>
+                                    <entry>Field Remover Configuration Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Field Operation</entry>
+                                    <entry>Indicates whether to keep or drop the listed fields.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Fields</entry>
+                                    <entry>List of fields to keep or remove.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>Optionally, configure<uicontrol> Required Fields</uicontrol> for the stage.
+                </cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

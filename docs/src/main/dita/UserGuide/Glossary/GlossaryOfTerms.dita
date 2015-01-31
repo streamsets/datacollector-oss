@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_h2c_pfh_tq">
+ <title>Glossary of Terms</title>
+ <conbody>
+  <dl>
+   <dlentry>
+    <dt>destination</dt>
+    <dd>A stage type used in a pipeline to represent where the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> writes
+     processed data.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>origin</dt>
+    <dd>A stage type used in a pipeline to represent the source of data in a pipeline.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>pipeline</dt>
+    <dd>A representation of a stream of data that is processed by the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</dd>
+   </dlentry>
+  </dl>
+ </conbody>
+</concept>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_kzs_5vz_sq">
+    <title>Reusable Steps</title>
+    <shortdesc>You can conref these steps. Don't change anything in this file without checking where
+        it is used.</shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_pf2_wvz_sq">
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">The steps below are for data preview. They are
+                        used in "Previewing a Single Stage" and "Previewing Multiple
+                        Stages."</draft-comment>
+                </cmd>
+            </step>
+            <step id="StartPreview">
+                <cmd>From the pipeline canvas, click <uicontrol>Preview</uicontrol>.</cmd>
+                <info>If the Preview button is disabled, the required fields for the origin stage
+                    are not configured. </info>
+                <stepresult>The canvas centers on the origin stage. The Preview panel displays
+                    preview data in the Output Data column. Since this is the origin of the
+                    pipeline, no input data displays. <p>You can drill down to view the details of a
+                        record. </p><p><image href="../Graphics/PreviewDrill.png"
+                            id="image_jwc_b5n_tq" scale="40"/></p></stepresult>
+            </step>
+            <step id="DeletePreviewRecord">
+                <cmd>To delete a record that you do not want to use in the preview, click the
+                        <uicontrol>Delete</uicontrol> icon.</cmd>
+            </step>
+            <step id="RefreshPreview">
+                <cmd>To preview the next set of data, click <uicontrol>Refresh Preview</uicontrol>. </cmd>
+            </step>
+            <step id="ClosePreview">
+                <cmd>To exit data preview and return to pipeline configuration, click
+                        <uicontrol>Close Preview</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">The following step is used in "Previewing a
+                        Single Stage" and "Reviewing Snapshot Data"</draft-comment>
+                </cmd>
+            </step>
+            <step id="NextStage">
+                <cmd>To view data for the next stage, click <uicontrol>Next Stage</uicontrol>. Or,
+                    to view data for a different stage, select the stage in the pipeline
+                    canvas.</cmd>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">The following step is used at the beginning of
+                        "Starting a Pipeline" "Resetting the Origin" and "Stopping a
+                        Pipeline".</draft-comment>
+                </cmd>
+            </step>
+            <step id="PickPipeline">
+                <cmd>Verify that the pipeline that you want to stop appears in the pipeline canvas. </cmd>
+                <info>If it does not, select the pipeline that you want to stop from the Pipeline
+                    library.</info>
+            </step>
+        </steps>
+    </taskbody>
+</task>
