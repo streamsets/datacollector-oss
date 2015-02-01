@@ -39,7 +39,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         lastKeyDown: -1,
         shiftNodeDrag: false,
         selectedText: null,
-        currentScale: 1
+        currentScale: 1,
+        copiedStage: undefined
       };
 
       // define arrow markers for graph links
@@ -180,6 +181,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       BACKSPACE_KEY: 8,
       DELETE_KEY: 46,
       ENTER_KEY: 13,
+      COMMAND_KEY: 91,
+      CTRL_KEY: 17,
+      COPY_KEY: 67,
+      PASTE_KEY: 86,
       nodeRadius: 70,
       rectWidth: 140,
       rectHeight: 100,
@@ -458,8 +463,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       var thisGraph = this,
         state = thisGraph.state,
         consts = thisGraph.consts;
+
       // make sure repeated key presses don't register for each keydown
-      if(state.lastKeyDown !== -1) {
+      if(state.lastKeyDown !== -1 && state.lastKeyDown !== consts.COMMAND_KEY &&
+        state.lastKeyDown !== consts.CTRL_KEY) {
         return;
       }
 
@@ -511,6 +518,24 @@ angular.module('pipelineGraphDirectives', ['underscore'])
                 $scope.$emit('onRemoveNodeSelection');
                 thisGraph.updateGraph();
               }
+            });
+          }
+          break;
+
+        case consts.COPY_KEY:
+          if((d3.event.metaKey || d3.event.ctrlKey) && selectedNode) {
+            state.copiedStage = selectedNode;
+          }
+          break;
+
+
+        case consts.PASTE_KEY:
+          if(thisGraph.isReadOnly) {
+            return;
+          }
+          if((d3.event.metaKey || d3.event.ctrlKey) && state.copiedStage) {
+            $scope.$apply(function() {
+              $scope.$emit('onPasteNode', state.copiedStage);
             });
           }
           break;

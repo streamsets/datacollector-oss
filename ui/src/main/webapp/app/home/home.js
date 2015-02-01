@@ -58,12 +58,22 @@ angular
 
       /**
        * Add Stage Instance to the Pipeline Graph.
-       * @param stage
-       * @param firstOpenLane [optional]
-       * @param relativeXPos [optional]
-       * @param relativeYPos [optional]
+       * @param options
+       *  stage
+       *  firstOpenLane [optional]
+       *  relativeXPos [optional]
+       *  relativeYPos [optional]
+       *  configuration [optional]
        */
-      addStageInstance: function (stage, firstOpenLane, relativeXPos, relativeYPos) {
+      addStageInstance: function (options) {
+        var stage = options.stage,
+          firstOpenLane = options.firstOpenLane,
+          relativeXPos = options.relativeXPos,
+          relativeYPos = options.relativeYPos,
+          configuration = options.configuration,
+          stageInstance,
+          edge;
+
         if(stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
           var sourceExists = false;
           angular.forEach($scope.pipelineConfig.stages, function (sourceStageInstance) {
@@ -86,9 +96,14 @@ angular
 
         $scope.previewMode = false;
 
-        var stageInstance = pipelineService.getNewStageInstance(stage, $scope.pipelineConfig, undefined,
-            firstOpenLane, relativeXPos, relativeYPos),
-          edge;
+        stageInstance = pipelineService.getNewStageInstance({
+          stage: stage,
+          pipelineConfig: $scope.pipelineConfig,
+          firstOpenLane: firstOpenLane,
+          relativeXPos: relativeXPos,
+          relativeYPos: relativeYPos,
+          configuration: configuration
+        });
 
         $scope.changeStageSelection({
           selectedObject: stageInstance,
@@ -818,6 +833,19 @@ angular
       updateDetailPane({
         selectedObject: stageInstance,
         type: pipelineConstant.STAGE_INSTANCE
+      });
+    });
+
+
+    $scope.$on('onPasteNode', function (event, stageInstance) {
+      var stageLibraries = $scope.stageLibraries,
+        newStage = _.find(stageLibraries, function(stage) {
+          return stage.library === stageInstance.library && stage.name === stageInstance.stageName;
+        });
+
+      $scope.addStageInstance({
+        stage: newStage,
+        configuration: angular.copy(stageInstance.configuration)
       });
     });
 

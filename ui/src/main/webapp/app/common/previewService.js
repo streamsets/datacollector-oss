@@ -177,7 +177,7 @@ angular.module('dataCollectorApp.common')
           lanePredicatesConfiguration = _.find(stageInstance.configuration, function(configuration) {
             return configuration.name === 'lanePredicates';
           }),
-          info = '<span class="lane-label">lane: </span><span class="lane-value">' + (index + 1) + '</span>';
+          info = '<span class="lane-label">stream: </span><span class="lane-value">' + (index + 1) + '</span>';
 
 
         if(lanePredicatesConfiguration) {

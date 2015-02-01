@@ -31,17 +31,26 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
-     * Construct new instance for give Stage Defintion
-     * @param stage
-     * @param pipelineConfig
-     * @param labelSuffix [Optional]
-     * @param firstOpenLane [Optional]
-     * @param relativeXPos [Optional]
-     * @param relativeYPos [Optional]
+     * Construct new instance for give Stage Definition
+     * @param options
+     *  stage
+     *  pipelineConfig
+     *  labelSuffix [Optional]
+     *  firstOpenLane [Optional]
+     *  relativeXPos [Optional]
+     *  relativeYPos [Optional]
+     *  configuration [Optional]
      * @returns {{instanceName: *, library: (*|stageInstance.library|library|e.library), stageName: *, stageVersion: *, configuration: Array, uiInfo: {label: *, description: string, xPos: *, yPos: number, stageType: *}, inputLanes: Array, outputLanes: Array}}
      */
-    this.getNewStageInstance = function (stage, pipelineConfig, labelSuffix, firstOpenLane, relativeXPos, relativeYPos) {
-      var xPos = relativeXPos || getXPos(pipelineConfig, firstOpenLane),
+    this.getNewStageInstance = function (options) {
+      var stage = options.stage,
+        pipelineConfig = options.pipelineConfig,
+        labelSuffix = options.labelSuffix,
+        firstOpenLane = options.firstOpenLane,
+        relativeXPos = options.relativeXPos,
+        relativeYPos = options.relativeYPos,
+        configuration = options.configuration,
+        xPos = relativeXPos || getXPos(pipelineConfig, firstOpenLane),
         yPos = relativeYPos || getYPos(pipelineConfig, firstOpenLane, xPos),
         stageLabel = self.getStageLabel(stage, pipelineConfig),
         stageInstance = {
@@ -85,6 +94,23 @@ angular.module('dataCollectorApp.common')
       }
 
       stageInstance.uiInfo.icon = self.getStageIconURL(stage);
+
+      if(configuration) {
+        //Special handling for lanePredicates
+        angular.forEach(configuration, function(config) {
+          if(config.name === 'lanePredicates') {
+            stageInstance.outputLanes = [];
+
+            angular.forEach(config.value, function(lanePredicate, index) {
+              var newOutputLane = stageInstance.instanceName + 'OutputLane' + (new Date()).getTime() + index;
+              lanePredicate.outputLane = newOutputLane;
+              stageInstance.outputLanes.push(newOutputLane);
+            });
+          }
+        });
+
+        stageInstance.configuration = configuration;
+      }
 
       return stageInstance;
     };
@@ -220,7 +246,6 @@ angular.module('dataCollectorApp.common')
       'metrics.TIMER_M15_RATE',
       'metrics.TIMER_MEAN_RATE'
     ]).then(function (_translations) {
-      debugger;
       translations = _translations;
     });
 

@@ -51,40 +51,6 @@ angular
       save : function () {
         if($scope.newConfig.name) {
           api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
-            /*then(
-              function(res) {
-                var newPipelineObject = res.data,
-                  selectedSource = $scope.selectedSource,
-                  selectedProcessors = $scope.selectedProcessors.selected,
-                  selectedTargets = $scope.selectedTargets.selected;
-
-                newPipelineObject.stages = [];
-
-                if(selectedSource) {
-                  newPipelineObject.stages.push(pipelineService.getNewStageInstance(selectedSource,
-                    newPipelineObject));
-                }
-
-                if(selectedProcessors && selectedProcessors.length) {
-                  angular.forEach(selectedProcessors, function(stage, index) {
-                    newPipelineObject.stages.push(pipelineService.getNewStageInstance(stage,
-                      newPipelineObject, index));
-                  });
-                }
-
-                if(selectedTargets && selectedTargets.length) {
-                  angular.forEach(selectedTargets, function(stage, index) {
-                    newPipelineObject.stages.push(pipelineService.getNewStageInstance(stage,
-                      newPipelineObject, index));
-                  });
-                }
-
-                return api.pipelineAgent.savePipelineConfig($scope.newConfig.name, newPipelineObject);
-              },
-              function(res) {
-                $scope.issues = [res.data];
-              }
-            ).*/
             then(
               function(res) {
                 $modalInstance.close(res.data);

@@ -20,7 +20,9 @@ angular
         var selectedStage = $scope.selectedSource.selected;
         $scope.pipelineConfig.issues = [];
         $scope.selectedSource = {};
-        $scope.addStageInstance(selectedStage);
+        $scope.addStageInstance({
+          stage: selectedStage
+        });
       },
 
       /**
@@ -28,14 +30,21 @@ angular
        */
       onConnectStageChange: function() {
         var connectStage = $scope.connectStage.selected;
-        $scope.addStageInstance(connectStage, $scope.firstOpenLane);
+        $scope.addStageInstance({
+          stage: connectStage,
+          firstOpenLane: $scope.firstOpenLane
+        });
         $scope.connectStage = {};
         $scope.firstOpenLane.stageInstance = undefined;
       },
 
       stageDrop: function(e, stage) {
         if(e && stage) {
-          $scope.addStageInstance(stage, undefined, e.x, e.y);
+          $scope.addStageInstance({
+            stage: stage,
+            relativeXPos: e.x,
+            relativeYPos: e.y
+          });
         }
       }
     });
