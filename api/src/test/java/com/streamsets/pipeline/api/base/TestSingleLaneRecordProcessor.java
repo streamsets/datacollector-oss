@@ -40,7 +40,7 @@ public class TestSingleLaneRecordProcessor {
 
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
-    Mockito.when(context.getOutputLanes()).thenReturn(ImmutableSet.of("l2"));
+    Mockito.when(context.getOutputLanes()).thenReturn(ImmutableList.of("l2"));
     processor.init(info, context);
 
     processor.process(batch, batchMaker);

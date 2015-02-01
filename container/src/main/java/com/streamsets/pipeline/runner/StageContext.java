@@ -11,7 +11,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
@@ -25,7 +24,6 @@ import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.List;
-import java.util.Set;
 
 public class StageContext implements Source.Context, Target.Context, Processor.Context {
 
@@ -34,15 +32,15 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final List<Stage.Info> pipelineInfo;
   private final MetricRegistry metrics;
   private final String instanceName;
-  private final Set<String> outputLanes;
+  private final List<String> outputLanes;
   private ErrorSink errorSink;
 
   //for SDK
-  public StageContext(String instanceName, Set<String> outputLanes) {
+  public StageContext(String instanceName, List<String> outputLanes) {
     pipelineInfo = ImmutableList.of();
     metrics = new MetricRegistry();
     this.instanceName = instanceName;
-    this.outputLanes = ImmutableSet.copyOf(outputLanes);
+    this.outputLanes = ImmutableList.copyOf(outputLanes);
     errorSink = new ErrorSink();
   }
 
@@ -50,7 +48,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.pipelineInfo = pipelineInfo;
     this.metrics = metrics;
     this.instanceName = stageRuntime.getConfiguration().getInstanceName();
-    this.outputLanes = ImmutableSet.copyOf(stageRuntime.getConfiguration().getOutputLanes());
+    this.outputLanes = ImmutableList.copyOf(stageRuntime.getConfiguration().getOutputLanes());
 
   }
 
@@ -136,7 +134,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   }
 
   @Override
-  public Set<String> getOutputLanes() {
+  public List<String> getOutputLanes() {
     return outputLanes;
   }
 

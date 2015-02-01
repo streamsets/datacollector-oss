@@ -19,12 +19,12 @@ public class TargetRunner extends StageRunner<Target> {
 
   @SuppressWarnings("unchecked")
   public TargetRunner(Target source, Map<String, Object> configuration) {
-    super(source, configuration, Collections.EMPTY_SET);
+    super(source, configuration, Collections.EMPTY_LIST);
   }
 
   @SuppressWarnings("unchecked")
   public TargetRunner(Class<Target> sourceClass, Map<String, Object> configuration) {
-    super(sourceClass, configuration, Collections.EMPTY_SET);
+    super(sourceClass, configuration, Collections.EMPTY_LIST);
   }
 
   public void runWrite(List<Record> inputRecords) throws StageException {

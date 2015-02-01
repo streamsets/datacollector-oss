@@ -35,7 +35,7 @@ public class TestSingleLaneProcessor {
 
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
-    Mockito.when(context.getOutputLanes()).thenReturn(Collections.EMPTY_SET);
+    Mockito.when(context.getOutputLanes()).thenReturn(Collections.EMPTY_LIST);
     try {
       processor.init(info, context);
     } catch (Exception ex) {
@@ -55,7 +55,7 @@ public class TestSingleLaneProcessor {
 
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
-    Mockito.when(context.getOutputLanes()).thenReturn(ImmutableSet.of("l2", "l3"));
+    Mockito.when(context.getOutputLanes()).thenReturn(ImmutableList.of("l2", "l3"));
     processor.init(info, context);
   }
 
@@ -76,7 +76,7 @@ public class TestSingleLaneProcessor {
 
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
-    Mockito.when(context.getOutputLanes()).thenReturn(Collections.EMPTY_SET);
+    Mockito.when(context.getOutputLanes()).thenReturn(Collections.EMPTY_LIST);
     processor.init(info, context);
   }
 
@@ -106,7 +106,7 @@ public class TestSingleLaneProcessor {
 
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
-    Mockito.when(context.getOutputLanes()).thenReturn(ImmutableSet.of("l2"));
+    Mockito.when(context.getOutputLanes()).thenReturn(ImmutableList.of("l2"));
     processor.init(info, context);
 
     processor.process(batch, batchMaker);

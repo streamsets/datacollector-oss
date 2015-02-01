@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.codahale.metrics.MetricRegistry;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Processor;
@@ -37,7 +37,7 @@ public class TestStagePipe {
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
         produce = true;
         Assert.assertEquals("offset1", lastSourceOffset);
-        Assert.assertEquals(ImmutableSet.of("s"), batchMaker.getLanes());
+        Assert.assertEquals(ImmutableList.of("s"), batchMaker.getLanes());
         return "offset2";
       }
 
@@ -56,7 +56,7 @@ public class TestStagePipe {
         .build(pipelineRunner);
     StagePipe pipe = (StagePipe) pipeline.getPipes()[0];
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
-    Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableSet.of("s"));
+    Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("s"));
 
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     Mockito.when(pipeBatch.getPreviousOffset()).thenReturn("offset1");
@@ -91,7 +91,7 @@ public class TestStagePipe {
       public void process(Batch batch, BatchMaker batchMaker) throws StageException {
         process = true;
         Assert.assertEquals("offset2", batch.getSourceOffset());
-        Assert.assertEquals(ImmutableSet.of("p"), batchMaker.getLanes());
+        Assert.assertEquals(ImmutableList.of("p"), batchMaker.getLanes());
       }
 
       @Override
@@ -109,7 +109,7 @@ public class TestStagePipe {
         .build(pipelineRunner);
     StagePipe pipe = (StagePipe) pipeline.getPipes()[4];
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
-    Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableSet.of("p"));
+    Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("p"));
 
     BatchImpl batch = Mockito.mock(BatchImpl.class);
     Mockito.when(batch.getSourceOffset()).thenReturn("offset2");
@@ -161,7 +161,7 @@ public class TestStagePipe {
         .build(pipelineRunner);
     StagePipe pipe = (StagePipe) pipeline.getPipes()[8];
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
-    Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableSet.of("t"));
+    Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("t"));
 
     BatchImpl batch = Mockito.mock(BatchImpl.class);
     Mockito.when(batch.getSourceOffset()).thenReturn("offset2");

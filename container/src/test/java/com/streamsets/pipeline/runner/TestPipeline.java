@@ -7,7 +7,6 @@ package com.streamsets.pipeline.runner;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
@@ -119,9 +118,9 @@ public class TestPipeline {
       Assert.assertSame(metrics, stage.getContext().getMetrics());
       Assert.assertEquals(infos, stage.getContext().getPipelineInfo());
       if (i < 3) {
-        Assert.assertEquals(ImmutableSet.of("s"), (((Source.Context)stage.getContext()).getOutputLanes()));
+        Assert.assertEquals(ImmutableList.of("s"), (((Source.Context)stage.getContext()).getOutputLanes()));
       } else if (i < 7) {
-        Assert.assertEquals(ImmutableSet.of("p"), (((Processor.Context)stage.getContext()).getOutputLanes()));
+        Assert.assertEquals(ImmutableList.of("p"), (((Processor.Context)stage.getContext()).getOutputLanes()));
       }
     }
   }

@@ -5,11 +5,11 @@
  */
 package com.streamsets.pipeline.api;
 
-import java.util.Set;
+import java.util.List;
 
 public interface BatchMaker {
 
-  public Set<String> getLanes();
+  public List<String> getLanes();
 
   public void addRecord(Record record, String... lanes);
 

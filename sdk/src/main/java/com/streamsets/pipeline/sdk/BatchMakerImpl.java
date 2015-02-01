@@ -7,18 +7,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Implementation of BatchMaker interface for SDK
  */
 class BatchMakerImpl implements BatchMaker {
 
-  private final Set<String> outputLanes;
+  private final List<String> outputLanes;
   private final Map<String, List<Record>> laneToRecordsMap;
   private final String singleLaneOutput;
 
-  public BatchMakerImpl(Set<String> outputLanes) {
+  public BatchMakerImpl(List<String> outputLanes) {
     this.outputLanes = outputLanes;
     if(outputLanes.size() == 1) {
       singleLaneOutput = outputLanes.iterator().next();
@@ -34,7 +33,7 @@ class BatchMakerImpl implements BatchMaker {
   }
 
   @Override
-  public Set<String> getLanes() {
+  public List<String> getLanes() {
     return outputLanes;
   }
 

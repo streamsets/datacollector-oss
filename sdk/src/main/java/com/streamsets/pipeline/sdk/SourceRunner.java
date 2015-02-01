@@ -10,16 +10,16 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class SourceRunner extends StageRunner<Source> {
 
-  public SourceRunner(Source source, Map<String, Object> configuration, Set<String> outputLanes) {
+  public SourceRunner(Source source, Map<String, Object> configuration, List<String> outputLanes) {
     super(source, configuration, outputLanes);
   }
 
-  public SourceRunner(Class<Source> sourceClass, Map<String, Object> configuration, Set<String> outputLanes) {
+  public SourceRunner(Class<Source> sourceClass, Map<String, Object> configuration, List<String> outputLanes) {
     super(sourceClass, configuration, outputLanes);
   }
 

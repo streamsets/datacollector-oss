@@ -5,13 +5,13 @@
  */
 package com.streamsets.pipeline.api;
 
-import java.util.Set;
+import java.util.List;
 
 public interface Processor extends Stage<Processor.Context> {
 
   public interface Context extends Stage.Context {
 
-    public Set<String> getOutputLanes();
+    public List<String> getOutputLanes();
 
     public Record createRecord(Record originatorRecord);
 

@@ -54,7 +54,7 @@ public class TestBatchMakerImpl {
     Assert.assertEquals(1, batchMaker.getStageOutput().size());
     Assert.assertEquals(ImmutableMap.of("o", Collections.EMPTY_LIST), batchMaker.getStageOutput());
     Assert.assertNull(batchMaker.getStageOutputSnapshot());
-    Assert.assertEquals(ImmutableSet.of("o"), batchMaker.getLanes());
+    Assert.assertEquals(ImmutableList.of("o"), batchMaker.getLanes());
 
     Record record1 = new RecordImpl("i", "source", null, null);
     record1.getHeader().setAttribute("r", "1");
@@ -111,7 +111,7 @@ public class TestBatchMakerImpl {
     Assert.assertEquals(ImmutableMap.of("o1", Collections.EMPTY_LIST, "o2", Collections.EMPTY_LIST),
                         batchMaker.getStageOutput());
     Assert.assertNull(batchMaker.getStageOutputSnapshot());
-    Assert.assertEquals(ImmutableSet.of("o1", "o2"), batchMaker.getLanes());
+    Assert.assertEquals(ImmutableList.of("o1", "o2"), batchMaker.getLanes());
 
     Record record1 = new RecordImpl("i", "source", null, null);
     record1.getHeader().setAttribute("r", "1");

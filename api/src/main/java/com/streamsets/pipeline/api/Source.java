@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.api;
 
-import java.util.Set;
+import java.util.List;
 
 public interface Source extends Stage<Source.Context> {
 
@@ -15,7 +15,7 @@ public interface Source extends Stage<Source.Context> {
 
     public Record createRecord(String recordSourceId, byte[] raw, String rawMime);
 
-    public Set<String> getOutputLanes();
+    public List<String> getOutputLanes();
 
   }
 

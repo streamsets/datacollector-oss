@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.runner.StageContext;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 public class ContextInfoCreator {
 
@@ -35,21 +35,21 @@ public class ContextInfoCreator {
     };
   }
 
-  private static StageContext createContext(String instanceName, Set<String> outputLanes) {
+  private static StageContext createContext(String instanceName, List<String> outputLanes) {
     return new StageContext(instanceName, outputLanes);
   }
 
-  public static Source.Context createSourceContext(String instanceName, Set<String> outputLanes) {
+  public static Source.Context createSourceContext(String instanceName, List<String> outputLanes) {
     return createContext(instanceName, outputLanes);
   }
 
-  public static Processor.Context createProcessorContext(String instanceName, Set<String> outputLanes) {
+  public static Processor.Context createProcessorContext(String instanceName, List<String> outputLanes) {
     return createContext(instanceName, outputLanes);
   }
 
   @SuppressWarnings("unchecked")
   public static Target.Context createTargetContext(String instanceName) {
-    return createContext(instanceName, Collections.EMPTY_SET);
+    return createContext(instanceName, Collections.EMPTY_LIST);
   }
 
 }

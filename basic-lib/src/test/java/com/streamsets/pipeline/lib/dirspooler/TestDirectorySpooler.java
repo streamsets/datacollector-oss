@@ -6,12 +6,11 @@
 package com.streamsets.pipeline.lib.dirspooler;
 
 import com.codahale.metrics.Meter;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -30,7 +29,7 @@ public class TestDirectorySpooler {
     File dir = new File("target", UUID.randomUUID().toString());
     spoolDir = new File(dir, "spool");
     archiveDir = new File(dir, "archive");
-    context = ContextInfoCreator.createSourceContext("s", ImmutableSet.of("a"));
+    context = ContextInfoCreator.createSourceContext("s", ImmutableList.of("a"));
   }
 
   @Test(expected = IllegalStateException.class)

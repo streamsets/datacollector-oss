@@ -15,15 +15,14 @@ import com.streamsets.pipeline.runner.BatchImpl;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ProcessorRunner extends StageRunner<Processor> {
 
-  public ProcessorRunner(Processor processor, Map<String, Object> configuration, Set<String> outputLanes) {
+  public ProcessorRunner(Processor processor, Map<String, Object> configuration, List<String> outputLanes) {
     super(processor, configuration, outputLanes);
   }
 
-  public ProcessorRunner(Class<Processor> processorClass, Map<String, Object> configuration, Set<String> outputLanes) {
+  public ProcessorRunner(Class<Processor> processorClass, Map<String, Object> configuration, List<String> outputLanes) {
     super(processorClass, configuration, outputLanes);
   }
 

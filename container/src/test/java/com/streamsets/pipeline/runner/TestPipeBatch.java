@@ -9,13 +9,12 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.record.RecordImpl;
-import com.streamsets.pipeline.record.TestRecordImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +63,7 @@ public class TestPipeBatch {
 
     // starting source
     BatchMakerImpl batchMaker = pipeBatch.startStage(pipe);
-    Assert.assertEquals(new HashSet<String>(stageOutputLanes), batchMaker.getLanes());
+    Assert.assertEquals(new ArrayList<String>(stageOutputLanes), batchMaker.getLanes());
 
     Record origRecord = new RecordImpl("i", "source", null, null);
     origRecord.getHeader().setAttribute("a", "A");
@@ -120,7 +119,7 @@ public class TestPipeBatch {
 
     // starting source
     BatchMakerImpl batchMaker = pipeBatch.startStage(sourcePipe);
-    Assert.assertEquals(new HashSet<String>(stageOutputLanes), batchMaker.getLanes());
+    Assert.assertEquals(new ArrayList<String>(stageOutputLanes), batchMaker.getLanes());
 
     Record origRecord = new RecordImpl("i", "source", null, null);
     origRecord.getHeader().setAttribute("a", "A");
@@ -206,7 +205,7 @@ public class TestPipeBatch {
 
     // starting source
     BatchMakerImpl batchMaker = pipeBatch.startStage(pipe);
-    Assert.assertEquals(new HashSet<String>(stageOutputLanes), batchMaker.getLanes());
+    Assert.assertEquals(new ArrayList<String>(stageOutputLanes), batchMaker.getLanes());
 
     Record record = new RecordImpl("i", "source", null, null);
     record.getHeader().setAttribute("a", "A");
@@ -240,7 +239,7 @@ public class TestPipeBatch {
 
     // starting source
     BatchMakerImpl batchMaker = pipeBatch.startStage(pipe);
-    Assert.assertEquals(new HashSet<String>(stageOutputLanes), batchMaker.getLanes());
+    Assert.assertEquals(new ArrayList<String>(stageOutputLanes), batchMaker.getLanes());
 
     Record record = new RecordImpl("i", "source", null, null);
     record.getHeader().setAttribute("a", "A");
@@ -286,7 +285,7 @@ public class TestPipeBatch {
 
     // starting source
     BatchMakerImpl batchMaker = pipeBatch.startStage(pipe);
-    Assert.assertEquals(new HashSet<String>(stageOutputLanes), batchMaker.getLanes());
+    Assert.assertEquals(new ArrayList<String>(stageOutputLanes), batchMaker.getLanes());
 
     Record record = new RecordImpl("i", "source", null, null);
     record.getHeader().setAttribute("a", "A");

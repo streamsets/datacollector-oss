@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
@@ -21,7 +22,7 @@ import java.util.Set;
 public class BatchMakerImpl implements BatchMaker {
   private final StagePipe stagePipe;
   private final String instanceName;
-  private final Set<String> outputLanes;
+  private final List<String> outputLanes;
   private final String singleOutputLane;
   private final Map<String, List<Record>> stageOutput;
   private final Map<String, List<Record>> stageOutputSnapshot;
@@ -35,7 +36,7 @@ public class BatchMakerImpl implements BatchMaker {
   public BatchMakerImpl(StagePipe stagePipe, boolean keepSnapshot, int recordAllowance) {
     this.stagePipe = stagePipe;
     this.instanceName= stagePipe.getStage().getInfo().getInstanceName();
-    outputLanes = ImmutableSet.copyOf(stagePipe.getStage().getConfiguration().getOutputLanes());
+    outputLanes = ImmutableList.copyOf(stagePipe.getStage().getConfiguration().getOutputLanes());
     singleOutputLane = (outputLanes.size() == 1) ? outputLanes.iterator().next() : null;
     stageOutput = new HashMap<>();
     stageOutputSnapshot = (keepSnapshot) ? new HashMap<String, List<Record>>() : null;
@@ -53,7 +54,7 @@ public class BatchMakerImpl implements BatchMaker {
   }
 
   @Override
-  public Set<String> getLanes() {
+  public List<String> getLanes() {
     return outputLanes;
   }
 

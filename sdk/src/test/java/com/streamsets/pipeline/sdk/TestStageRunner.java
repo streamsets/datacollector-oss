@@ -8,12 +8,11 @@ package com.streamsets.pipeline.sdk;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class TestStageRunner {
 
@@ -22,11 +21,11 @@ public class TestStageRunner {
 
   public static class DummyStageRunner extends StageRunner<DummyStage> {
 
-    DummyStageRunner(Class<DummyStage> stageClass, Map<String, Object> configuration, Set<String> outputLanes) {
+    DummyStageRunner(Class<DummyStage> stageClass, Map<String, Object> configuration, List<String> outputLanes) {
       super(stageClass, configuration, outputLanes);
     }
 
-    DummyStageRunner(DummyStage stage, Map<String, Object> configuration, Set<String> outputLanes) {
+    DummyStageRunner(DummyStage stage, Map<String, Object> configuration, List<String> outputLanes) {
       super(stage, configuration, outputLanes);
     }
 

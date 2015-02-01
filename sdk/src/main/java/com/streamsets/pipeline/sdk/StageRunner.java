@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.sdk;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -156,11 +156,11 @@ public abstract class StageRunner<S extends Stage> {
   }
 
   @SuppressWarnings("unchecked")
-  StageRunner(Class<S> stageClass, Map<String, Object> configuration, Set<String> outputLanes) {
+  StageRunner(Class<S> stageClass, Map<String, Object> configuration, List<String> outputLanes) {
     this((S) getStage(Utils.checkNotNull(stageClass, "stageClass")), configuration, outputLanes);
   }
 
-  StageRunner(S stage, Map < String, Object > configuration, Set < String > outputLanes) {
+  StageRunner(S stage, Map < String, Object > configuration, List< String > outputLanes) {
     Utils.checkNotNull(stage, "stage");
     Utils.checkNotNull(configuration, "configuration");
     Utils.checkNotNull(outputLanes, "outputLanes");
@@ -247,13 +247,13 @@ public abstract class StageRunner<S extends Stage> {
   public static abstract class Builder<S extends Stage, R extends StageRunner, B extends Builder> {
     final S stage;
     final Class<S> stageClass;
-    final Set<String> outputLanes;
+    final List<String> outputLanes;
     final Map<String, Object> configs;
 
     private Builder(Class<S> stageClass, S stage) {
       this.stageClass =stageClass;
       this.stage = stage;
-      outputLanes = new HashSet<>();
+      outputLanes = new ArrayList<>();
       configs = new HashMap<>();
     }
 
@@ -282,7 +282,7 @@ public abstract class StageRunner<S extends Stage> {
   }
 
   static BatchMaker createTestBatchMaker(String... outputLanes) {
-    return new BatchMakerImpl(ImmutableSet.copyOf(outputLanes));
+    return new BatchMakerImpl(ImmutableList.copyOf(outputLanes));
   }
 
   static Output getOutput(BatchMaker batchMaker) {
