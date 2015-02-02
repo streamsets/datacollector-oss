@@ -19,8 +19,7 @@ angular
       configurationTab = {
         name:'configuration',
         template:'app/home/detail/configuration/configuration.tpl.html',
-        iconClass: 'fa fa-gear',
-        active: true
+        iconClass: 'fa fa-gear'
       },
       rawPreviewTab = {
         name:'rawPreview',
@@ -30,7 +29,8 @@ angular
       summaryTab = {
         name:'summary',
         template:'app/home/detail/summary/summary.tpl.html',
-        iconClass: 'fa fa-bar-chart'
+        iconClass: 'fa fa-bar-chart',
+        active: true
       },
       errorTab = {
         name:'errors',

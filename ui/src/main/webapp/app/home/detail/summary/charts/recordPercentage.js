@@ -35,7 +35,7 @@ angular
 
       getTooltipContent: function() {
         return function(key, x, y, e, graph) {
-          return '<p>' + key + '</p><p>' + x +  '</p>';
+          return '<p>' + key + '</p><p>' + y.value +  '</p>';
         };
       }
     });
@@ -44,7 +44,7 @@ angular
       $scope.pieChartData = [
         {
           key: "goodRecords",
-          value: $scope.summaryMeters.outputRecords.count || 1
+          value: $scope.summaryMeters.outputRecords.count || $scope.summaryMeters.inputRecords.count
         },
         {
           key: "badRecords",
