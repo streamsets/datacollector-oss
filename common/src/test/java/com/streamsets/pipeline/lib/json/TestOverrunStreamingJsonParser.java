@@ -147,6 +147,21 @@ public class TestOverrunStreamingJsonParser {
     testStreamLevelOverrunMultipleObjects(true);
   }
 
+
+  @Test
+  public void testFastForwardBeyondOverrunMultipleObjects() throws Exception {
+    System.setProperty(OverrunReader.READ_LIMIT_SYS_PROP, "10000");
+    String json = "[\"a\"][\"" + Strings.repeat("a", 10000) + "\"][\"b\"]";
+    json += "[\"a\"][\"" + Strings.repeat("a", 20000) + "\"][\"b\"]";
+    int initialPos = json.length();
+    json += "[\"x\"]";
+    StreamingJsonParser parser = new OverrunStreamingJsonParser(new CountingReader(new StringReader(json)), initialPos,
+                                                                StreamingJsonParser.Mode.MULTIPLE_OBJECTS, 50);
+    List a1 = (List) parser.read();
+    Assert.assertNotNull(a1);
+    Assert.assertEquals(ImmutableList.of("x"), a1);
+  }
+
   @Test
   public void testArrayPositionable() throws Exception {
     StreamingJsonParser parser = new OverrunStreamingJsonParser(

@@ -8,7 +8,6 @@ package com.streamsets.pipeline.lib.xml;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 
@@ -18,21 +17,22 @@ import java.io.Reader;
 
 public class OverrunStreamingXmlParser  extends StreamingXmlParser {
 
-  private final CountingReader countingReader;
+  private final OverrunReader countingReader;
   private final int maxObjectLen;
   private long limit;
   private boolean overrun;
 
   public OverrunStreamingXmlParser(Reader reader, String recordElement, long initialPosition, int maxObjectLen)
       throws IOException, XMLStreamException {
-    super(new OverrunReader(reader, OverrunReader.getDefaultReadLimit()), recordElement, initialPosition);
-    countingReader = (CountingReader) getReader();
+    super(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), recordElement, initialPosition);
+    countingReader = (OverrunReader) getReader();
+    countingReader.setEnabled(true);
     this.maxObjectLen = maxObjectLen;
   }
 
   @Override
   protected void fastForwardLeaseReader() {
-    ((CountingReader) getReader()).resetCount();
+    ((OverrunReader) getReader()).resetCount();
   }
 
   @Override

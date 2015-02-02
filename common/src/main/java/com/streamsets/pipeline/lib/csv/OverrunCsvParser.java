@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.lib.csv;
 
-import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
@@ -16,7 +15,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class OverrunCsvParser extends CsvParser {
-  private final CountingReader countingReader;
+  private final OverrunReader countingReader;
   private boolean overrun;
 
   public OverrunCsvParser(Reader reader, CSVFormat format) throws IOException {
@@ -24,8 +23,9 @@ public class OverrunCsvParser extends CsvParser {
   }
 
   public OverrunCsvParser(Reader reader, CSVFormat format, long initialPosition) throws IOException {
-    super(new OverrunReader(reader, OverrunReader.getDefaultReadLimit()), format, initialPosition);
-    countingReader = (CountingReader) getReader();
+    super(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), format, initialPosition);
+    countingReader = (OverrunReader) getReader();
+    countingReader.setEnabled(true);
   }
 
   @Override

@@ -119,7 +119,7 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   private static final ThreadLocal<OverrunStreamingJsonParser> TL = new ThreadLocal<>();
 
-  private final CountingReader countingReader;
+  private final OverrunReader countingReader;
   private final int maxObjectLen;
   private long limit;
   private boolean overrun;
@@ -130,8 +130,9 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   public OverrunStreamingJsonParser(CountingReader reader, long initialPosition, Mode mode, int maxObjectLen)
       throws IOException {
-    super(new OverrunReader(reader, OverrunReader.getDefaultReadLimit()), initialPosition, mode);
-    countingReader = (CountingReader) getReader();
+    super(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), initialPosition, mode);
+    countingReader = (OverrunReader) getReader();
+    countingReader.setEnabled(true);
     this.maxObjectLen = maxObjectLen;
   }
 

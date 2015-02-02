@@ -23,16 +23,29 @@ public class OverrunReader extends CountingReader {
   }
 
   private final int readLimit;
+  private boolean enabled;
 
-  public OverrunReader(Reader in, int readLimit) {
+  public OverrunReader(Reader in, int readLimit, boolean enabled) {
     super(in);
     this.readLimit = readLimit;
+    setEnabled(enabled);
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+    if (enabled) {
+      resetCount();
+    }
+  }
+
+  public boolean isEnabled() {
+    return enabled;
   }
 
   @Override
   protected synchronized void afterRead(int n) {
     super.afterRead(n);
-    if (getCount() > readLimit) {
+    if (isEnabled() && getCount() > readLimit) {
       ExceptionUtils.throwUndeclared(new OverrunException(Utils.format(
           "Reader exceeded the read limit '{}'", readLimit), getPos()));
     }
