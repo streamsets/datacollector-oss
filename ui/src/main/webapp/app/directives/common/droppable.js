@@ -57,7 +57,7 @@ angular.module('dataCollectorApp.commonDirectives')
 
             this.classList.remove('over');
 
-            var dragData = JSON.parse(e.dataTransfer.getData('dragData'));
+            var dragData = JSON.parse(e.dataTransfer.getData('Text'));
 
             scope.$apply(function(scope) {
               var fn = scope.drop();

@@ -23,7 +23,7 @@ angular.module('dataCollectorApp.commonDirectives')
 
         element.on({
           'input': function() {
-             scope.$apply(read);
+            scope.$apply(read);
           },
           'keypress': function(e) {
             if(e.which === 13) {

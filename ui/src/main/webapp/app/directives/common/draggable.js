@@ -17,7 +17,7 @@ angular.module('dataCollectorApp.commonDirectives')
           'dragstart',
           function(e) {
             e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('dragData', JSON.stringify(scope.dragData));
+            e.dataTransfer.setData('Text', JSON.stringify(scope.dragData));
             this.classList.add('drag');
             return false;
           },
