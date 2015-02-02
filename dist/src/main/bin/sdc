@@ -43,7 +43,7 @@ SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.conf.dir=${SDC_CONF}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.data.dir=${SDC_DATA}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.log.dir=${SDC_LOG}"
 
-BOOTSTRAP_CLASSPATH="${SDC_DIST}/bin/streamsets-datacollector-bootstrap-${project.version}.jar"
+BOOTSTRAP_CLASSPATH="${SDC_DIST}/bin/streamsets-datacollector-bootstrap-0.0.1-SNAPSHOT.jar"
 
 API_CLASSPATH="${SDC_DIST}/api-lib/"'*.jar'
 
@@ -65,26 +65,33 @@ then
   STAGE_LIBRARIES_DIR="${SDC_DIST}/stage-libs"
 fi
 
+if [ -z "${JAVA_HOME}" ]
+then
+  JAVA=`which java`
+else
+  JAVA="${JAVA_HOME}/bin/java"
+fi
+
 if [ "$1" = "-verbose" ];
 then
-echo "Sdc Agent:"
-echo "  DIST               : ${SDC_DIST}"
-echo "  HOME               : ${SDC_HOME}"
-echo "  CONF               : ${SDC_CONF}"
-echo "  DATA               : ${SDC_DATA}"
-echo "  LOG                : ${SDC_LOG}"
-echo "  JAVA PATH          : `which java`"
-echo "  BOOTSTRAP_CLASSPATH: ${BOOTSTRAP_CLASSPATH}"
-echo "  API_CLASSPATH      : ${API_CLASSPATH}"
-echo "  CONTAINER_CLASSPATH: ${CONTAINER_CLASSPATH}"
-echo "  STAGE_LIBRARIES_DIR: ${STAGE_LIBRARIES_DIR}"
-echo "  JAVA OPTS          : ${SDC_JAVA_OPTS}"
-echo "  MAIN CLASS         : ${SDC_MAIN_CLASS}"
+  echo "SDC Agent:"
+  echo "  DIST               : ${SDC_DIST}"
+  echo "  HOME               : ${SDC_HOME}"
+  echo "  CONF               : ${SDC_CONF}"
+  echo "  DATA               : ${SDC_DATA}"
+  echo "  LOG                : ${SDC_LOG}"
+  echo "  JAVA PATH          : ${JAVA}"
+  echo "  BOOTSTRAP_CLASSPATH: ${BOOTSTRAP_CLASSPATH}"
+  echo "  API_CLASSPATH      : ${API_CLASSPATH}"
+  echo "  CONTAINER_CLASSPATH: ${CONTAINER_CLASSPATH}"
+  echo "  STAGE_LIBRARIES_DIR: ${STAGE_LIBRARIES_DIR}"
+  echo "  JAVA OPTS          : ${SDC_JAVA_OPTS}"
+  echo "  MAIN CLASS         : ${SDC_MAIN_CLASS}"
 fi
 
 cd ${SDC_DIST}
 
-exec java -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
+exec ${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
 -mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
 -stageLibrariesDir "${STAGE_LIBRARIES_DIR}"
 status=$?
