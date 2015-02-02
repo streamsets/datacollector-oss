@@ -19,7 +19,7 @@ angular
       getOutputRecords: function(outputRecords, inputRecord) {
         return _.filter(outputRecords, function(outputRecord) {
           if(outputRecord.header.previousTrackingId === inputRecord.header.trackingId) {
-            if(inputRecord.expand) {
+            if(inputRecord.expand && outputRecord.expand === undefined) {
               outputRecord.expand = true;
             }
             return true;
@@ -35,11 +35,11 @@ angular
        * @returns {*}
        */
       getErrorRecords: function(errorRecords, inputRecord) {
-        return _.filter(errorRecords, function(outputRecord) {
+        return _.filter(errorRecords, function(errorRecord) {
 
-          if(outputRecord.header.trackingId === inputRecord.header.trackingId) {
-            if(inputRecord.expand) {
-              outputRecord.expand = true;
+          if(errorRecord.header.trackingId === inputRecord.header.trackingId) {
+            if(inputRecord.expand && errorRecord.expand === undefined) {
+              errorRecord.expand = true;
             }
             return true;
           }
