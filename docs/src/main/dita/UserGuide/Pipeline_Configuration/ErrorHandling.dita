@@ -2,11 +2,24 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pm4_txm_vq">
  <title>Error Handling</title>
- <shortdesc>
-  <draft-comment author="Loretta">what do we need to say here? errors are dropped where? What kind
-   of errors stop the pipeline.</draft-comment>
- </shortdesc>
+ <shortdesc>Each stage in the pipeline includes built-in resilience. Some stages also include
+  configurable error handling. When the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> encounters an
+  unexpected error, it stops the pipeline.</shortdesc>
  <conbody>
-  <p></p>
+  <p>When a stage encounters a record that it does not expect, it discards the record. For example,
+   you have a Directory origin configured to read JSON objects with a maximum length of 1000. When
+   the Directory origin encounters a JSON object with a length of 1001 or longer, it drops the
+   object and continues with the next JSON object. As another example, if you configure a processor
+   stage to require an ID field, it drops any record that does not include the field.</p>
+  <p>Several processors, including the Field Splitter, JSON Parser, and Stream Selector, include the
+   following logic for records that do not match configured conditions: <ul id="ul_is5_zhh_yq">
+    <li>Discard the record</li>
+    <li>Writes the record to an error log</li>
+    <li>Stop the pipeline</li>
+   </ul></p>
+  <p>
+   <draft-comment author="Loretta">Check back on error handling.</draft-comment>
+  </p>
  </conbody>
 </concept>

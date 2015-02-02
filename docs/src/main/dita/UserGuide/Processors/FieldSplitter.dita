@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_vlj_vph_yq">
+ <title>Field Splitter</title>
+ <shortdesc>The Field Splitter splits string data in a field based on a separator character and
+  passes the separated data to new fields. Use the Field Splitter to split compound string values
+  into individual components. </shortdesc>
+ <conbody>
+  <p>For example, if a field contains an error code and error message separated by a dash, you can
+   use the dash to separate the error code and error message information into different fields.</p>
+  <p>The Field Splitter separates values into new fields based on the separator characters in the
+   record. When splitting a record would result in more fields than expected, the Field Splitter can
+   either include the remaining data as part of the last field or discard it.</p>
+  <p>When splitting a record would result in fewer fields than expected, the Field Splitter can
+   either pass data without the additional fields, discard the record, write the record to an error
+   file, or stop the pipeline.</p>
+  <section>
+   <title>Example</title>
+   <p>Say that a Field Splitter uses a comma to separate data into two fields and to discard records
+    that cannot be split as requested. When it encounters a single comma, it passes the data before
+    the comma to ErrorCode field and the data after the comma to the ErrorMessage field. If it
+    encounters a second comma, it can either discard the extra data or include it in the last field. </p>
+   <p>When the Field Splitter processes the following records:<simpletable frame="none"
+     relcolwidth="1.0*" id="simpletable_dqy_dd3_yq">
+     <strow>
+      <stentry>
+       <codeblock>GM-302,information that you might need
+ME-3042,message about this error,"additional information from the server"
+IMD-03234</codeblock>
+      </stentry>
+     </strow>
+    </simpletable></p>
+   <p>If you discard the extra data, the Field Splitter produces the following records:<simpletable
+     frame="none" relcolwidth="1.0* 4.1*" id="simpletable_kxh_fd3_yq">
+     <strow>
+      <stentry>
+       <codeblock><uicontrol>ErrorCode</uicontrol>
+GM-302 
+ME-3042</codeblock>
+      </stentry>
+      <stentry>
+       <codeblock><uicontrol>Message</uicontrol>
+information that you might need
+message about this error</codeblock>
+      </stentry>
+     </strow>
+    </simpletable></p>
+   <p>If you keep the extra data, the Field Splitter produces the following records:</p>
+   <p>
+    <simpletable frame="none" relcolwidth="1.0* 4.85*" id="simpletable_mlt_p23_yq">
+     <strow>
+      <stentry>
+       <codeblock><uicontrol>ErrorCode</uicontrol>
+GM-302 
+ME-3042</codeblock>
+      </stentry>
+      <stentry>
+       <codeblock><uicontrol>Message</uicontrol>
+information that you might need
+message about this error,"additional information from the server"</codeblock>
+      </stentry>
+     </strow>
+    </simpletable>
+   </p>
+   <p>Note that in both cases, the Field Splitter drops the IMD-03234 record because the record does
+    not include enough data to be split.</p>
+  </section>
+ </conbody>
+</concept>

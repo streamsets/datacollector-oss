@@ -36,8 +36,10 @@
      </row>
      <row>
       <entry>Max Files in Directory</entry>
-      <entry>The maximum number of files allowed in the directory. When the directory contains more
-              files, the pipeline fails.</entry>
+      <entry>
+              <p>The maximum number of files allowed in the directory. When the directory contains
+                more files, the pipeline fails.</p>
+            </entry>
      </row>
      <row>
        <entry>First File to Process <xref href="Directory_FirstFile.dita#concept_ltv_r3l_5q">

@@ -1,0 +1,109 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Field Splitter splits string data in a field based on a separator character and passes the separated data to new fields. Use the Field Splitter to split compound string values into individual ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Splitter"></meta><meta name="abstract" content="The Field Splitter splits string data in a field based on a separator character and passes the separated data to new fields. Use the Field Splitter to split compound string values into individual components."></meta><meta name="description" content="The Field Splitter splits string data in a field based on a separator character and passes the separated data to new fields. Use the Field Splitter to split compound string values into individual components."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Processors/FieldSplitter-Configuring.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vlj_vph_yq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Splitter</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody" id="concept_vlj_vph_yq">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+
+ <h1 class="title topictitle1">Field Splitter</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Field Splitter splits string data in a field based on a separator character and
+  passes the separated data to new fields. Use the Field Splitter to split compound string values
+  into individual components. </p>
+
+  <p class="p">For example, if a field contains an error code and error message separated by a dash, you can
+   use the dash to separate the error code and error message information into different fields.</p>
+
+  <p class="p">The Field Splitter separates values into new fields based on the separator characters in the
+   record. When splitting a record would result in more fields than expected, the Field Splitter can
+   either include the remaining data as part of the last field or discard it.</p>
+
+  <p class="p">When splitting a record would result in fewer fields than expected, the Field Splitter can
+   either pass data without the additional fields, discard the record, write the record to an error
+   file, or stop the pipeline.</p>
+
+  <div class="section"><h2 class="title sectiontitle">Example</h2>
+   
+   <p class="p">Say that a Field Splitter uses a comma to separate data into two fields and to discard records
+    that cannot be split as requested. When it encounters a single comma, it passes the data before
+    the comma to ErrorCode field and the data after the comma to the ErrorMessage field. If it
+    encounters a second comma, it can either discard the extra data or include it in the last field. </p>
+
+   <div class="p">When the Field Splitter processes the following records:<table cellpadding="4" cellspacing="0" summary="" id="concept_vlj_vph_yq__simpletable_dqy_dd3_yq" border="0" class="simpletable"><tr class="strow">
+      <td valign="top" class="stentry" width="100%">
+       <pre class="pre codeblock">GM-302,information that you might need
+ME-3042,message about this error,"additional information from the server"
+IMD-03234</pre>
+
+      </td>
+
+     </tr>
+</table>
+</div>
+
+   <div class="p">If you discard the extra data, the Field Splitter produces the following records:<table cellpadding="4" cellspacing="0" summary="" id="concept_vlj_vph_yq__simpletable_kxh_fd3_yq" border="0" class="simpletable"><tr class="strow">
+      <td valign="top" class="stentry" width="19.607843137254903%">
+       <pre class="pre codeblock"><span class="ph uicontrol">ErrorCode</span>
+GM-302 
+ME-3042</pre>
+
+      </td>
+
+      <td valign="top" class="stentry" width="80.3921568627451%">
+       <pre class="pre codeblock"><span class="ph uicontrol">Message</span>
+information that you might need
+message about this error</pre>
+
+      </td>
+
+     </tr>
+</table>
+</div>
+
+   <p class="p">If you keep the extra data, the Field Splitter produces the following records:</p>
+
+   <div class="p">
+    <table cellpadding="4" cellspacing="0" summary="" id="concept_vlj_vph_yq__simpletable_mlt_p23_yq" border="0" class="simpletable"><tr class="strow">
+      <td valign="top" class="stentry" width="17.094017094017094%">
+       <pre class="pre codeblock"><span class="ph uicontrol">ErrorCode</span>
+GM-302 
+ME-3042</pre>
+
+      </td>
+
+      <td valign="top" class="stentry" width="82.9059829059829%">
+       <pre class="pre codeblock"><span class="ph uicontrol">Message</span>
+information that you might need
+message about this error,"additional information from the server"</pre>
+
+      </td>
+
+     </tr>
+</table>
+
+   </div>
+
+   <p class="p">Note that in both cases, the Field Splitter drops the IMD-03234 record because the record does
+    not include enough data to be split.</p>
+
+  </div>
+
+ </div>
+
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="../Processors/FieldSplitter-Configuring.html">Configuring a Field Splitter</a></strong><br></br>
+Configure a Field Splitter to split data from a single field into multiple fields.         You can split data from a single field. To split additional fields, add another Field         Splitter to the pipeline.</li>
+</ul>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
+</body>
+</html>

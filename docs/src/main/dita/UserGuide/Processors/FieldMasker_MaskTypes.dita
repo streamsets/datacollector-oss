@@ -26,7 +26,7 @@
      <dt>Variable-length</dt>
      <dd>Replaces values with a variable-length mask. Use when you want to reveal the different
       lengths of the original data. </dd>
-     <dd>The following example uses a variable lenght mask to hide the same passwords:<simpletable
+     <dd>The following example uses a variable length mask to hide the same passwords:<simpletable
        frame="all" relcolwidth="1.0* 2.7*" id="simpletable_g3y_gk4_wq">
        <sthead>
         <stentry>Password (original)</stentry>

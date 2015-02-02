@@ -8,11 +8,9 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window
         and create your first pipeline.</shortdesc>
     <taskbody>
-        <context>
-            <p>You can customize the address and login that you use to access the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                />. This procedure uses the default settings.</p>
-        </context>
+        <context>You can customize the address and login that you use to access the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+            This procedure uses the default settings.</context>
         <steps id="steps_gsd_wsf_tq">
             <step>
                 <cmd id="AccessDC">To access the <ph>Data Collector</ph> window, enter the following
@@ -26,10 +24,7 @@
             </step>
             <step id="LoginDC">
                 <cmd>Use the following credentials to log in:</cmd>
-                <info>
-                    <codeblock>User Name: Demo
-Password: lacucaracha</codeblock>
-                </info>
+                <info>User Name: admin<p>Password: admin</p></info>
                 <stepresult>The Get Started page displays.<p><image
                             href="../Graphics/GetStarted.png" id="image_zvf_4wf_tq" scale="35"
                     /></p></stepresult>

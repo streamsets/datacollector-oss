@@ -8,7 +8,6 @@
    optionally begin processing with a specific file name. Then, it reads files with similar names in
    ascending order. After processing a file, Directory archives or deletes the file. </p>
   <p>The Directory origin processes data differently based on the file type:</p>
-  <p>
    <dl>
     <dlentry>
      <dt>Log files</dt>
@@ -39,6 +38,5 @@
       the file does not include a header, Directory creates the map based on column number.</dd>
     </dlentry>
    </dl>
-  </p>
  </conbody>
 </concept>

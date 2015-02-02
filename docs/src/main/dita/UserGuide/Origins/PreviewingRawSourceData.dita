@@ -5,12 +5,14 @@
     <shortdesc>You can preview raw source data when you configure an origin. Preview raw source data
         to verify the correct configuration for the origin.</shortdesc>
     <taskbody>
-        <context>When you request a preview a file origin, you enter a directory and file name. You
-            can use the real directory and actual source file. Or when appropriate, you might use a
-            different file that is similar to the source. When you preview a Kafka Consumer, you
-            enter the connection information for the Kafka cluster.<p>The data used for the raw
-                source preview in an origin stage is not used when previewing data for the
-                pipeline.</p></context>
+        <context>
+            <p>When you request a preview a file origin, you enter a directory and file name. You
+                can use the real directory and actual source file. Or when appropriate, you might
+                use a different file that is similar to the source. When you preview a Kafka
+                Consumer, you enter the connection information for the Kafka cluster.</p>
+            <p>The data used for the raw source preview in an origin stage is not used when
+                previewing data for the pipeline.</p>
+        </context>
         <steps id="steps_k14_k41_tq">
             <step>
                 <cmd>In the origin stage, in the <wintitle>Raw Preview</wintitle> tab.</cmd>

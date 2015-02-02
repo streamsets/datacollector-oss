@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_av1_5g3_yq">
+    <title>Configuring a Field Splitter</title>
+    <shortdesc>Configure a Field Splitter to split data from a single field into multiple fields.
+        You can split data from a single field. To split additional fields, add another Field
+        Splitter to the pipeline.</shortdesc>
+    <taskbody>
+        <context>
+            <p></p>
+        </context>
+        <steps id="steps_r4z_dh3_yq">
+            <step>
+                <cmd>In the Properties panel, optionally enter a name and description for the
+                    stage.</cmd>
+            </step>
+            <step>
+                <cmd>To split a field, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_j4l_w33_yq">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>Field Splitter Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Field to Split</entry>
+                                    <entry>The field containing data that you want to split.</entry>
+                                </row>
+                                <row>
+                                    <entry>Separator</entry>
+                                    <entry>Character to trigger a split.</entry>
+                                </row>
+                                <row>
+                                    <entry>Field-Paths for Splits</entry>
+                                    <entry>Names of the fields to create for the split data. Precede
+                                        the name with a slash as follows: /NewField.</entry>
+                                </row>
+                                <row>
+                                    <entry>Action for Insufficient Data</entry>
+                                    <entry>Action for records that cannot be split to the configured
+                                            fields:<ul id="ul_n5d_xn3_yq">
+                                            <li><uicontrol>Continue.</uicontrol> Passes the record
+                                                split as much as possible.</li>
+                                            <li><uicontrol>Discard.</uicontrol> Discards the
+                                                record.</li>
+                                            <li><uicontrol>Send to Error.</uicontrol> Writes the
+                                                record to the error log.</li>
+                                            <li><uicontrol>Stop Pipeline.</uicontrol> Stops the
+                                                pipeline.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Remove Unsplit Value</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">come back to
+                                            this.</draft-comment>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>Optionally, configure Required Fields for the stage. </cmd>
+                <info>You might want to include field that you are splitting as a required
+                    field.</info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

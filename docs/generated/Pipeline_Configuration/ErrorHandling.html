@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content=""></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Error Handling"></meta><meta name="abstract" content=""></meta><meta name="description" content=""></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pm4_txm_vq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Error Handling</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Each stage in the pipeline includes built-in resilience. Some stages also include configurable error handling. When the Data Collector encounters an unexpected error, it stops the pipeline. When a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Error Handling"></meta><meta name="abstract" content="Each stage in the pipeline includes built-in resilience. Some stages also include configurable error handling. When the Data Collector encounters an unexpected error, it stops the pipeline."></meta><meta name="description" content="Each stage in the pipeline includes built-in resilience. Some stages also include configurable error handling. When the Data Collector encounters an unexpected error, it stops the pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pm4_txm_vq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Error Handling</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,11 +14,31 @@
  <h1 class="title topictitle1">Error Handling</h1>
 
  
- <div class="body conbody"><p class="shortdesc">
-  
- </p>
+ <div class="body conbody"><p class="shortdesc">Each stage in the pipeline includes built-in resilience. Some stages also include
+  configurable error handling. When the <span class="ph">Data
+                  Collector</span> encounters an
+  unexpected error, it stops the pipeline.</p>
 
-  <p class="p"></p>
+  <p class="p">When a stage encounters a record that it does not expect, it discards the record. For example,
+   you have a Directory origin configured to read JSON objects with a maximum length of 1000. When
+   the Directory origin encounters a JSON object with a length of 1001 or longer, it drops the
+   object and continues with the next JSON object. As another example, if you configure a processor
+   stage to require an ID field, it drops any record that does not include the field.</p>
+
+  <div class="p">Several processors, including the Field Splitter, JSON Parser, and Stream Selector, include the
+   following logic for records that do not match configured conditions: <ul class="ul" id="concept_pm4_txm_vq__ul_is5_zhh_yq">
+    <li class="li">Discard the record</li>
+
+    <li class="li">Writes the record to an error log</li>
+
+    <li class="li">Stop the pipeline</li>
+
+   </ul>
+</div>
+
+  <p class="p">
+   
+  </p>
 
  </div>
 

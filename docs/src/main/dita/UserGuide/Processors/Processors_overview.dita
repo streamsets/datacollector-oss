@@ -15,8 +15,9 @@
         <li>Field Remover.  Removes fields from a record.</li>
         <li>Stream Selector.  Routes data to different streams based on conditions.</li>
         <li>Value Replacer  Replaces null values or replaces values with NULLs.</li>
-        <li>Field Splitter. </li>
-        <li>JSON Parser. </li>
+        <li>Field Splitter. Splits the values in a field into different fields based on a separator
+          character.</li>
+        <li>JSON Parser. Parses a JSON object that is embedded in a field</li>
       </ul></p>
   </conbody>
 </concept>

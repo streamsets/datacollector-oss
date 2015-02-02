@@ -22,6 +22,9 @@
   <topicref href="../Processors/FieldRemover.dita" chunk="to-content">
    <topicref href="../Processors/FieldRemover-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/FieldSplitter.dita">
+   <topicref href="../Processors/FieldSplitter-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/StreamSelector.dita" chunk="to-content">
    <topicref href="../Processors/StreamSelector_fallback.dita"/>
    <topicref href="../Processors/StreamSelector-Configuring.dita"/>
