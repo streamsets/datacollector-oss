@@ -59,7 +59,7 @@ angular
        * @param inputRecords
        */
       nextStagePreview: function(stageInstance, inputRecords) {
-        if($scope.stepExecuted && stageInstance.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE) {
+        if($scope.previewDataUpdated && stageInstance.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE) {
           $scope.stepPreview(stageInstance, inputRecords);
         } else {
           $scope.changeStageSelection({
@@ -167,7 +167,6 @@ angular
       removeRecord: function(stageInstance, recordList, record, $index) {
         var batchData = $scope.previewData.batchesOutput[0];
         recordList.splice($index, 1);
-        $scope.stepExecuted = true;
         $scope.previewDataUpdated = true;
         previewService.removeRecordFromSource(batchData, stageInstance, record);
       }
@@ -204,6 +203,10 @@ angular
     };
 
 
+    /**
+     * Preview Pipeline.
+     *
+     */
     var previewPipeline = function() {
       $scope.stepExecuted = false;
       $scope.showLoading = true;
@@ -241,11 +244,9 @@ angular
       previewPipeline();
     }
 
-
     $scope.$on('previewPipeline', function(event) {
       previewPipeline();
     });
-
 
     $scope.$on('onSelectionChange', function(event, options) {
       if($scope.previewMode) {
