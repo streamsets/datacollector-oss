@@ -5,10 +5,9 @@
  */
 package com.streamsets.pipeline.lib.stage.source.spooldir;
 
-import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
-public enum FileDataType implements BaseEnumChooserValues.EnumWithLabel, ConfigGroups.Groups {
+public enum FileDataType implements Label {
   LOG_DATA("Log Data"),
   JSON_DATA("JSON Data"),
   DELIMITED_DATA("Delimited Data"),

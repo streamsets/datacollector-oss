@@ -16,10 +16,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface ConfigGroups {
 
-  public interface Groups{
-    public String getLabel();
-  }
-
-  Class<? extends Groups> value();
+  Class<? extends Label> value();
 
 }

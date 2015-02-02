@@ -5,10 +5,9 @@
  */
 package com.streamsets.pipeline.lib.stage.source.spooldir;
 
-import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
-public enum SpoolDirSourceConfigGroups implements ConfigGroups.Groups {
+public enum SpoolDirSourceConfigGroups implements Label {
   FILES("Files"),
   POST_PROCESSING("Post Processing"),
   ;

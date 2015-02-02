@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.hdfs;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
 //  TODO: SCD-65
 //  public enum TimeFrom implements BaseEnumChooserValues.EnumWithLabel {
@@ -17,7 +17,7 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 //    }
 //
 //  }
-public enum HdfsLateRecordsAction implements BaseEnumChooserValues.EnumWithLabel {
+public enum HdfsLateRecordsAction implements Label {
   SEND_TO_ERROR("Send to error"),
   SEND_TO_LATE_RECORDS_FILE("Send to late records file"),
   DISCARD("Discard"),

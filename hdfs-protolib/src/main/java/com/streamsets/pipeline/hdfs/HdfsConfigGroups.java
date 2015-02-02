@@ -5,9 +5,9 @@
  */
 package com.streamsets.pipeline.hdfs;
 
-import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.Label;
 
-public enum HdfsConfigGroups implements ConfigGroups.Groups {
+public enum HdfsConfigGroups implements Label {
   HADOOP_FS("Hadoop FS"),
   OUTPUT_FILES("Output Files"),
   LATE_RECORDS("Late Records"),

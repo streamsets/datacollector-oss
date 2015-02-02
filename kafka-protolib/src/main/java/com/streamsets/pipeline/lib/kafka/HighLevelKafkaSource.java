@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -57,7 +58,7 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
 
-  public enum KafkaSourceConfigGroups implements ConfigGroups.Groups {
+  public enum KafkaSourceConfigGroups implements Label {
     JSON_PROPERTIES("JSON Data Properties"),
     CSV_PROPERTIES("CSV Data Properties"),
     XML_PROPERTIES("XML Data Properties"),

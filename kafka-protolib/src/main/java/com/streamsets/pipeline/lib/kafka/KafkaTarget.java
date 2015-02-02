@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -154,7 +155,7 @@ public class KafkaTarget extends BaseTarget {
     public String columnName;
   }
 
-  public enum KafkaTargetConfigGroups implements ConfigGroups.Groups {
+  public enum KafkaTargetConfigGroups implements Label {
     KAFKA_CONNECTION_PROPERTIES("Kafka Connection Configuration"),
     KAFKA_ADVANCED_CONFIGURATION("Kafka Advanced Configuration"),
     JSON_PROPERTIES("JSON Data Properties"),

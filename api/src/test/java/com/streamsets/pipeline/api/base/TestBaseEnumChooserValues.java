@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.ChooserValues;
+import com.streamsets.pipeline.api.Label;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class TestBaseEnumChooserValues {
 
   public enum EnumTest { A, B}
 
-  public enum EnumWithLabelTest implements BaseEnumChooserValues.EnumWithLabel{
+  public enum EnumWithLabelTest implements Label {
     X;
 
     @Override

@@ -16,10 +16,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface StageDef {
 
-  public interface Label {
-    public String getLabel();
-  }
-
+  //enum for processors using LanePredicateMapping configurations
   public enum VariableOutputStreams implements Label {
     ;
 
@@ -29,12 +26,13 @@ public @interface StageDef {
     }
   }
 
-    public enum DefaultOutputStream implements Label {
+  //default enum for processors that don;'t specify 'outputStreams'
+  public enum DefaultOutputStreams implements Label {
     OUTPUT("Output");
 
     private final String label;
 
-    DefaultOutputStream(String label) {
+    DefaultOutputStreams(String label) {
       this.label = label;
     }
 
@@ -43,6 +41,7 @@ public @interface StageDef {
       return label;
     }
   }
+
   String version();
 
   String label();
@@ -53,6 +52,6 @@ public @interface StageDef {
 
   String outputStreamsDrivenByConfig() default ""; //selector  case
 
-  Class<? extends Label> outputStreams() default DefaultOutputStream.class;
+  Class<? extends Label> outputStreams() default DefaultOutputStreams.class;
 
 }

@@ -5,10 +5,10 @@
  */
 package com.streamsets.pipeline.hdfs;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 import org.apache.commons.csv.CSVFormat;
 
-public enum CsvFileMode implements BaseEnumChooserValues.EnumWithLabel {
+public enum CsvFileMode implements Label {
   CSV("Basic CSV", CSVFormat.DEFAULT),
   EXCEL("MS Excel CSV", CSVFormat.EXCEL),
   MYSQL("MySQL CSV", CSVFormat.MYSQL),

@@ -5,10 +5,10 @@
  */
 package com.streamsets.pipeline.lib.stage.source.spooldir;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 import org.apache.commons.csv.CSVFormat;
 
-public enum CsvFileMode implements BaseEnumChooserValues.EnumWithLabel {
+public enum CsvFileMode implements Label {
   CSV("CSV (ignores empty lines)", CSVFormat.DEFAULT),
   RFC4180("CSV", CSVFormat.RFC4180),
   EXCEL("MS Excel CSV", CSVFormat.EXCEL),

@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -60,7 +61,7 @@ public class TwitterSource extends BaseSource {
     return null;
   }
 
-  public enum TwitterConfigGroups implements ConfigGroups.Groups {
+  public enum TwitterConfigGroups implements Label {
     USER_INFO("User Info"),
     OTHER("Other");
 

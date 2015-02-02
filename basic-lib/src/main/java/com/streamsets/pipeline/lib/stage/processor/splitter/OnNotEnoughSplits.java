@@ -5,9 +5,9 @@
  */
 package com.streamsets.pipeline.lib.stage.processor.splitter;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
-public enum OnNotEnoughSplits implements BaseEnumChooserValues.EnumWithLabel {
+public enum OnNotEnoughSplits implements Label {
   CONTINUE("Continue"),
   DISCARD("Discard"),
   TO_ERROR("Send to Error"),

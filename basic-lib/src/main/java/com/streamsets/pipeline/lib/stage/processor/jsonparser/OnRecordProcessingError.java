@@ -5,9 +5,9 @@
  */
 package com.streamsets.pipeline.lib.stage.processor.jsonparser;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
-public enum OnRecordProcessingError implements BaseEnumChooserValues.EnumWithLabel {
+public enum OnRecordProcessingError implements Label {
   DISCARD("Discard"),
   TO_ERROR("Send to Error"),
   STOP_PIPELINE("Stop Pipeline"),

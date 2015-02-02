@@ -10,12 +10,12 @@ import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.List;
@@ -85,7 +85,7 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
   public Map<String, String> kafkaConsumerConfigs;
 
 
-  public enum HighLevelKafkaSourceConfigGroups implements ConfigGroups.Groups {
+  public enum HighLevelKafkaSourceConfigGroups implements Label {
     KAFKA_CONNECTION_PROPERTIES("Kafka Connection Configuration"),
     KAFKA_ADVANCED_CONFIGURATION("Kafka Advanced Configuration");
 

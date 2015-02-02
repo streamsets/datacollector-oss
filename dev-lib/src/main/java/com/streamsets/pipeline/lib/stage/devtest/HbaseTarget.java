@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -18,7 +19,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 @ConfigGroups(HbaseTarget.Groups.class)
 public class HbaseTarget extends BaseTarget {
 
-  public enum Groups implements ConfigGroups.Groups {
+  public enum Groups implements Label {
     GENERAL("General"), ADVANCED("Advanced");
 
     private final String label;

@@ -5,10 +5,10 @@
  */
 package com.streamsets.pipeline.lib.stage.source.spooldir;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 
-public enum JsonFileMode implements BaseEnumChooserValues.EnumWithLabel {
+public enum JsonFileMode implements Label {
   ARRAY_OBJECTS("Array of objects", StreamingJsonParser.Mode.ARRAY_OBJECTS),
   MULTIPLE_OBJECTS("Multiple objects", StreamingJsonParser.Mode.MULTIPLE_OBJECTS),
   ;

@@ -5,10 +5,10 @@
  */
 package com.streamsets.pipeline.hdfs;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 import org.apache.hadoop.io.SequenceFile;
 
-public enum HdfsSequenceFileCompressionType implements BaseEnumChooserValues.EnumWithLabel {
+public enum HdfsSequenceFileCompressionType implements Label {
   BLOCK("Block Compression", SequenceFile.CompressionType.BLOCK),
   RECORD("Record Compression", SequenceFile.CompressionType.RECORD);
 

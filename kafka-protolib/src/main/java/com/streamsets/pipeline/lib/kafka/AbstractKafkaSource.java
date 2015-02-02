@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -24,7 +25,7 @@ import java.util.List;
 @ConfigGroups(value = AbstractKafkaSource.KafkaSourceConfigGroups.class)
 public abstract class AbstractKafkaSource extends BaseSource {
 
-  public enum KafkaSourceConfigGroups implements ConfigGroups.Groups {
+  public enum KafkaSourceConfigGroups implements Label {
     KAFKA_PROPERTIES("Kafka Configuration Properties");
 
     private final String label;

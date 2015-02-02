@@ -5,9 +5,9 @@
  */
 package com.streamsets.pipeline.hdfs;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
-public enum HdfsFileType implements BaseEnumChooserValues.EnumWithLabel {
+public enum HdfsFileType implements Label {
   TEXT("Text files"), SEQUENCE_FILE("Sequence files");
 
   private String label;

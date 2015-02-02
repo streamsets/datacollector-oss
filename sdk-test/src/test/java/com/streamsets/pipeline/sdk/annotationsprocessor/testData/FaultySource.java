@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -204,7 +205,7 @@ public class FaultySource {
   }
 
   //21. My Groups must be enum
-  public class MyGroups implements ConfigGroups.Groups {
+  public class MyGroups implements Label {
 
     @Override
     public String getLabel() {

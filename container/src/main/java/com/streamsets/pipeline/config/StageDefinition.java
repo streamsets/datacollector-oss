@@ -10,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ChooserValues;
-import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
@@ -334,7 +333,7 @@ public class StageDefinition {
         try {
           Class configGroupsClass = classLoader.loadClass(entry.getKey());
           for (String groupName : entry.getValue()) {
-            ConfigGroups.Groups group = (ConfigGroups.Groups) Enum.valueOf(configGroupsClass, groupName);
+            Label group = (Label) Enum.valueOf(configGroupsClass, groupName);
             for(Map<String, String> groupNameToLabelMap : groupNameToLabelMapList) {
               if(groupNameToLabelMap.get("name").equals(groupName)) {
                 groupNameToLabelMap.put("label", group.getLabel());
@@ -355,8 +354,8 @@ public class StageDefinition {
         List<String> list = new ArrayList<>();
         Class providerClass = classLoader.loadClass(getOutputStreamLabelProviderClass());
         for (Object e : providerClass.getEnumConstants()) {
-          if (StageDef.Label.class.isAssignableFrom(providerClass)) {
-            list.add(((StageDef.Label)e).getLabel());
+          if (com.streamsets.pipeline.api.Label.class.isAssignableFrom(providerClass)) {
+            list.add(((com.streamsets.pipeline.api.Label)e).getLabel());
           } else {
             list.add(e.toString());
           }

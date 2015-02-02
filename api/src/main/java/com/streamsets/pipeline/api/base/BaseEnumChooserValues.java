@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.ChooserValues;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
@@ -15,10 +16,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class BaseEnumChooserValues implements ChooserValues {
-
-  public interface EnumWithLabel {
-    public String getLabel();
-  }
 
   private static final Map<Class<? extends Enum>, List<String>> ENUM_VALUES_MAP = new ConcurrentHashMap<>();
   private static final Map<Class<? extends Enum>, List<String>> ENUM_LABELS_MAP = new ConcurrentHashMap<>();
@@ -31,13 +28,13 @@ public abstract class BaseEnumChooserValues implements ChooserValues {
     if (!ENUM_LABELS_MAP.containsKey(klass)) {
       synchronized (BaseEnumChooserValues.class) {
         if (!ENUM_LABELS_MAP.containsKey(klass)) {
-          boolean isEnumWithLabels = EnumWithLabel.class.isAssignableFrom(klass);
+          boolean isEnumWithLabels = Label.class.isAssignableFrom(klass);
           List<String> values = new ArrayList<>();
           List<String> labels = new ArrayList<>();
           for (Enum e : klass.getEnumConstants()) {
             values.add(e.toString());
             if (isEnumWithLabels) {
-              labels.add(((EnumWithLabel) e).getLabel());
+              labels.add(((Label) e).getLabel());
             } else {
               labels.add(e.toString());
             }
