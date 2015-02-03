@@ -50,6 +50,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0162("Stage '{}', instance '{}', variable  '{}', configuration injection error, value Map has non-String keys"),
   CONTAINER_0163("Stage '{}', instance '{}', variable  '{}', configuration injection error, value Map has non-String values"),
   CONTAINER_0164("Stage '{}', instance '{}', variable  '{}', configuration injection error, value Map as List has non-String elements"),
+  CONTAINER_0165("Stage(s) configuration validation issues, {}"),
 
   //PipelineStore
   CONTAINER_0200("Pipeline '{}' does not exist"),

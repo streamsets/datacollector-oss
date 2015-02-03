@@ -94,9 +94,17 @@ public class PreviewResource {
     PipelineConfiguration pipelineConf = store.load(name, rev);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(sourceOffset);
     PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize, batches, skipTargets);
-    PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
-    PreviewPipelineOutput previewOutput = pipeline.run();
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewOutput).build();
+    try {
+      PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
+      PreviewPipelineOutput previewOutput = pipeline.run();
+      return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewOutput).build();
+    } catch (PipelineRuntimeException ex) {
+      if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
+        return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(ex.getIssues()).build();
+      } else {
+        throw ex;
+      }
+    }
   }
 
   @Path("/{name}/preview")

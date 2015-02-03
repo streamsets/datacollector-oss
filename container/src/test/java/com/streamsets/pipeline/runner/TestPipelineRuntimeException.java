@@ -8,6 +8,7 @@ package com.streamsets.pipeline.runner;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.Issue;
+import com.streamsets.pipeline.validation.Issues;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,16 +19,16 @@ public class TestPipelineRuntimeException {
   @Test
   @SuppressWarnings("unchecked")
   public void testConstructor1() {
-    List<Issue> issues = ImmutableList.of();
-    PipelineRuntimeException ex = new PipelineRuntimeException(ContainerError.CONTAINER_0150, issues);
-    Assert.assertSame(issues, ex.getIssues());
+    Issues issues = new Issues();
+    PipelineRuntimeException ex = new PipelineRuntimeException(issues);
+    Assert.assertEquals(issues, ex.getIssues());
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void testConstructor2() {
     PipelineRuntimeException ex = new PipelineRuntimeException(ContainerError.CONTAINER_0151, "foo");
-    Assert.assertTrue(ex.getIssues().isEmpty());
+    Assert.assertNull(ex.getIssues());
   }
 
   @Test

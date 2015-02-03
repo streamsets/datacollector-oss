@@ -12,6 +12,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -79,8 +80,8 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
   private long recordCount;
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected List<ConfigIssue> validateConfigs() {
+    List<ConfigIssue> issues = super.validateConfigs();
     File logFile = new File(fileName);
     if (!logFile.exists()) {
       try {
@@ -91,12 +92,29 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
         //NOP
       }
       if (!logFile.exists()) {
-        throw new StageException(StageLibError.LIB_0001, logFile);
+        issues.add(getContext().createConfigIssue(StageLibError.LIB_0001, logFile));
       }
     }
     if (logFile.exists() && !logFile.canRead()) {
-      throw new StageException(StageLibError.LIB_0002, logFile);
+      issues.add(getContext().createConfigIssue(StageLibError.LIB_0002, logFile));
     }
+    if (logFile.exists() && !logFile.isFile()) {
+      issues.add(getContext().createConfigIssue(StageLibError.LIB_0007, logFile));
+    }
+    switch (fileDataType) {
+      case LOG_DATA:
+      case JSON_DATA:
+        break;
+      default:
+        issues.add(getContext().createConfigIssue(StageLibError.LIB_0006, "fileDataType", fileDataType));
+    }
+    return issues;
+  }
+
+  @Override
+  protected void init() throws StageException {
+    super.init();
+    File logFile = new File(fileName);
     maxWaitTimeMillis = maxWaitTimeSecs * 1000;
     logLinesQueue = new ArrayBlockingQueue<>(2 * batchSize);
     logTail = new LogTail(logFile, true, getInfo(), logLinesQueue);
@@ -111,7 +129,6 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
       default:
         throw new StageException(StageLibError.LIB_0006, "fileDataType", fileDataType);
     }
-
     fileOffset = String.format("%s::%d", fileName, System.currentTimeMillis());
     recordCount = 0;
   }

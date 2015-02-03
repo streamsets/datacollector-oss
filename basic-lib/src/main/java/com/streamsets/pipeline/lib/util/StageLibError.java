@@ -12,6 +12,7 @@ public enum StageLibError implements ErrorCode {
   // LogTailSource
   LIB_0001("Log File '{}' does not exist"),
   LIB_0002("Insufficient permissions to read the log file '{}'"),
+  LIB_0007("Path '{}' is no a file"),
 
   LIB_0003("LogDatProducer file='{}' offset='{}', {}"),
 

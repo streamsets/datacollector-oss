@@ -57,7 +57,7 @@ public class PreviewPipelineBuilder {
     if (!configIssues.isEmpty()) {
       Issues issues = validator.getIssues();
       issues.addAll(configIssues);
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0154, issues);
+      throw new PipelineRuntimeException(issues);
     }
     return new PreviewPipeline(pipeline, validator.getIssues());
   }
