@@ -16,6 +16,7 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,25 +85,39 @@ public class PipelineConfigurationValidator {
     Preconditions.checkState(!validated, "Already validated");
     validated = true;
     LOG.trace("Pipeline '{}' starting validation", name);
-    canPreview = sortStages();
-    canPreview &= checkIfPipelineIsEmpty();
-    canPreview &= validatePipelineConfiguration();
-    canPreview &= validatePipelineLanes();
-    if (LOG.isTraceEnabled() && issues.hasIssues()) {
-      for (Issue issue : issues.getPipelineIssues()) {
-        LOG.trace("Pipeline '{}', {}", name, issue);
-      }
-      for (List<StageIssue> stageIssues : issues.getStageIssues().values()) {
-        for (StageIssue stageIssue  :stageIssues) {
-          LOG.trace("Pipeline '{}', {}", name, stageIssue);
+    if (validSchemaVersion()) {
+      canPreview = sortStages();
+      canPreview &= checkIfPipelineIsEmpty();
+      canPreview &= validatePipelineConfiguration();
+      canPreview &= validatePipelineLanes();
+      if (LOG.isTraceEnabled() && issues.hasIssues()) {
+        for (Issue issue : issues.getPipelineIssues()) {
+          LOG.trace("Pipeline '{}', {}", name, issue);
+        }
+        for (List<StageIssue> stageIssues : issues.getStageIssues().values()) {
+          for (StageIssue stageIssue : stageIssues) {
+            LOG.trace("Pipeline '{}', {}", name, stageIssue);
+          }
         }
       }
+      LOG.debug("Pipeline '{}' validation. valid={}, canPreview={}, issuesCount={}", name, !issues.hasIssues(),
+                canPreview, issues.getIssueCount());
+    } else {
+      LOG.debug("Pipeline '{}' validation. Unsupported pipeline schema '{}'", name,
+                pipelineConfiguration.getSchemaVersion());
     }
-    LOG.debug("Pipeline '{}' validation. valid={}, canPreview={}, issuesCount={}", name, !issues.hasIssues(),
-              canPreview, issues.getIssueCount());
     return !issues.hasIssues();
   }
 
+  //TODO eventually, this should trigger a schema upgrade
+  public boolean validSchemaVersion() {
+    if (pipelineConfiguration.getSchemaVersion() != PipelineStoreTask.SCHEMA_VERSION) {
+      issues.addP(new Issue(ValidationError.VALIDATION_0000, pipelineConfiguration.getSchemaVersion()));
+      return false;
+    } else {
+      return true;
+    }
+  }
   public boolean canPreview() {
     Preconditions.checkState(validated, "validate() has not been called");
     return canPreview;

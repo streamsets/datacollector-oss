@@ -20,6 +20,7 @@ import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -126,7 +127,7 @@ public class TestStageRuntime {
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
-    return new PipelineConfiguration(UUID.randomUUID(), pipelineConfigs, null,
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), pipelineConfigs, null,
       stages);
   }
 

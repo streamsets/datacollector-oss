@@ -12,6 +12,7 @@ import com.streamsets.pipeline.task.Task;
 import java.util.List;
 
 public interface PipelineStoreTask extends Task {
+  public static final int SCHEMA_VERSION = 1;
 
   public PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException;
 

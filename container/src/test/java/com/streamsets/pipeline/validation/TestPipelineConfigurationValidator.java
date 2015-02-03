@@ -12,6 +12,7 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.util.ContainerError;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -58,4 +59,16 @@ public class TestPipelineConfigurationValidator {
   public void testSpaceInName() {
     Assert.assertTrue(TextUtils.isValidName("Hello World"));
   }
+
+  @Test
+  public void testInvalidSchemaVersion() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceProcessorTarget(0);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    Assert.assertFalse(validator.validate());
+    Assert.assertFalse(validator.canPreview());
+    Assert.assertTrue(validator.getIssues().hasIssues());
+    Assert.assertTrue(validator.getIssues().getPipelineIssues().get(0).getMessage().contains("VALIDATION_0000"));
+  }
+
 }

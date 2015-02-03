@@ -8,6 +8,7 @@ package com.streamsets.pipeline.validation;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum ValidationError implements ErrorCode {
+  VALIDATION_0000("Unsupported pipeline schema '{}'"),
 
   VALIDATION_0001("The pipeline is empty"),
   VALIDATION_0002("Stages are not fully wired, cannot reach the following stages '{}'"),

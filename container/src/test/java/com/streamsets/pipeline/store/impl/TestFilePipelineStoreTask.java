@@ -235,7 +235,8 @@ public class TestFilePipelineStoreTask {
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
-    return new PipelineConfiguration(uuid, pipelineConfigs, null, ImmutableList.of(stage));
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, uuid, pipelineConfigs,
+                                     null, ImmutableList.of(stage));
   }
 
   @Test

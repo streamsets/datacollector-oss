@@ -22,6 +22,7 @@ import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -282,8 +283,12 @@ public class MockStages {
     targetCapture = null;
   }
 
-  @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineConfigurationSourceProcessorTarget() {
+    return createPipelineConfigurationSourceProcessorTarget(PipelineStoreTask.SCHEMA_VERSION);
+  }
+
+    @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationSourceProcessorTarget(int schemaVersion) {
     List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
     StageConfiguration source = new StageConfiguration("s", "default", "sourceName", "1.0.0",
                                                        Collections.EMPTY_LIST, null, Collections.EMPTY_LIST,
@@ -297,7 +302,7 @@ public class MockStages {
                                                        Collections.EMPTY_LIST, null, ImmutableList.of("p"),
                                                        Collections.EMPTY_LIST);
     stages.add(target);
-    return new PipelineConfiguration(UUID.randomUUID(), null, null, stages);
+    return new PipelineConfiguration(schemaVersion, UUID.randomUUID(), null, null, stages);
   }
 
   @SuppressWarnings("unchecked")
@@ -315,7 +320,7 @@ public class MockStages {
                                                        Collections.EMPTY_LIST, null, ImmutableList.of("p"),
                                                        Collections.EMPTY_LIST);
     stages.add(target);
-    return new PipelineConfiguration(UUID.randomUUID(), null, null, stages);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages);
   }
 
   @SuppressWarnings("unchecked")
@@ -330,7 +335,7 @@ public class MockStages {
     StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
                                                        Collections.EMPTY_LIST, null, lanes, Collections.EMPTY_LIST);
     stages.add(target);
-    return new PipelineConfiguration(UUID.randomUUID(), null, null, stages);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages);
   }
 
   @SuppressWarnings("unchecked")
@@ -343,7 +348,7 @@ public class MockStages {
     StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
                                                       Collections.EMPTY_LIST, null, lanes, Collections.EMPTY_LIST);
     stages.add(target);
-    return new PipelineConfiguration(UUID.randomUUID(), null, null, stages);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages);
   }
 
   public static PipelineConfiguration createPipelineConfigurationSourceTwoTargets() {
@@ -358,7 +363,7 @@ public class MockStages {
     target = new StageConfiguration("t2", "default", "targetName", "1.0.0",
                                                       Collections.EMPTY_LIST, null, lanes, Collections.EMPTY_LIST);
     stages.add(target);
-    return new PipelineConfiguration(UUID.randomUUID(), null, null, stages);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages);
   }
 
 }

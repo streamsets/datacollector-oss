@@ -19,6 +19,7 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,7 +48,7 @@ public class TestPipeline {
     List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
       pipelineConfigs, null, stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
 
@@ -136,7 +137,7 @@ public class TestPipeline {
     List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
        pipelineConfigs, null,
       stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
@@ -186,7 +187,7 @@ public class TestPipeline {
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
        pipelineConfigs, null, stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
 
@@ -250,7 +251,7 @@ public class TestPipeline {
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(UUID.randomUUID(),
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
        pipelineConfigs, null, stageDefs);
     Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
 

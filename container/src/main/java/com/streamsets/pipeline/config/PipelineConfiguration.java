@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PipelineConfiguration {
-
+  private int schemaVersion;
   private UUID uuid = null;
   private PipelineInfo info;
   private String description;
@@ -32,10 +32,13 @@ public class PipelineConfiguration {
   private boolean previewable;
 
   @SuppressWarnings("unchecked")
-  public PipelineConfiguration(@JsonProperty("uuid") UUID uuid,
+  public PipelineConfiguration(
+      @JsonProperty("schemaVersion") int schemaVersion,
+      @JsonProperty("uuid") UUID uuid,
       @JsonProperty("configuration") List<ConfigConfiguration> configuration,
       @JsonProperty("uiInfo") Map<String, Object> uiInfo,
       @JsonProperty("stages") List<StageConfiguration> stages) {
+    this.schemaVersion = schemaVersion;
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.configuration = configuration;
     this.uiInfo = uiInfo;
@@ -50,6 +53,10 @@ public class PipelineConfiguration {
   @JsonIgnore
   public void setPipelineInfo(PipelineInfo info) {
     this.info = info;
+  }
+
+  public int getSchemaVersion() {
+    return schemaVersion;
   }
 
   public void setDescription(String description) {
