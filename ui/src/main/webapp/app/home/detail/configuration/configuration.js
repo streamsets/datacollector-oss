@@ -291,7 +291,7 @@ angular
           return config.name === dependsOnConfigName;
         });
 
-        return dependsOnConfiguration && dependsOnConfiguration.value &&
+        return dependsOnConfiguration && dependsOnConfiguration.value !== undefined &&
           _.contains(triggeredByValues, dependsOnConfiguration.value + '');
       },
 

@@ -26,18 +26,7 @@ angular
           templateUrl: 'app/home/library/create/create.tpl.html',
           controller: 'CreateModalInstanceController',
           size: '',
-          backdrop: 'static',
-          resolve: {
-            sources: function () {
-              return angular.copy($scope.sources);
-            },
-            processors: function () {
-              return angular.copy($scope.processors).concat($scope.selectorProcessors);
-            },
-            targets: function () {
-              return angular.copy($scope.targets);
-            }
-          }
+          backdrop: 'static'
         });
 
         modalInstance.result.then(function (configObject) {
@@ -46,7 +35,7 @@ angular
           });
 
           $scope.pipelines.splice(index, 0, configObject.info);
-          $rootScope.$broadcast('onPipelineConfigSelect', configObject.info);
+          $rootScope.$broadcast('onPipelineConfigSelect', configObject.info, true);
 
         }, function () {
 

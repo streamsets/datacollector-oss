@@ -86,9 +86,16 @@ angular
 
     updateStageGroups();
 
-
     $scope.$watch('stageLibraries', function() {
       updateStageGroups();
+    });
+
+    $scope.$on('onPipelineConfigSelect', function(configInfo, newPipeline) {
+      if(newPipeline) {
+        $scope.$storage.stageFilterGroup = _.find($scope.stageGroups, function(group) {
+          return group.name === pipelineConstant.SOURCE_STAGE_TYPE;
+        });
+      }
     });
 
   });

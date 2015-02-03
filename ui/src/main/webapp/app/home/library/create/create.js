@@ -4,15 +4,11 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api, pipelineService,
-                                                         sources, targets, processors) {
+  .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api, pipelineService) {
     angular.extend($scope, {
       common: {
         errors: []
       },
-      sources: sources,
-      targets: targets,
-      processors: processors,
       selectedSource: '',
       selectedProcessors: {},
       selectedTargets: {},
@@ -20,32 +16,6 @@ angular
         name: '',
         description: '',
         stages: []
-      },
-
-      onProcessorSelect: function($item) {
-        var index = _.indexOf($scope.processors, $item),
-          itemDuplicate = angular.copy($item);
-        $scope.processors.splice(index, 0, itemDuplicate);
-      },
-
-      onProcessorRemove: function($item) {
-        var index = _.indexOf($scope.processors, $item);
-        if(index !== -1) {
-          $scope.processors.splice(index, 1);
-        }
-      },
-
-      onTargetSelect: function($item) {
-        var index = _.indexOf($scope.targets, $item),
-          itemDuplicate = angular.copy($item);
-        $scope.targets.splice(index, 0, itemDuplicate);
-      },
-
-      onTargetRemove: function($item) {
-        var index = _.indexOf($scope.targets, $item);
-        if(index !== -1) {
-          $scope.targets.splice(index, 1);
-        }
       },
 
       save : function () {
