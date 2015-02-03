@@ -43,20 +43,22 @@
      <dd class="dd">Replaces values with a fixed-length mask. Use when you want to mask any variability in
       length in the data. </dd>
 
-     <dd class="dd">The following example uses a fixed-length masks to hide passwords:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_ivb_fj4_wq" border="1" class="simpletable"><tr class="sthead">
-        <th valign="bottom" align="left" id="d8770e68" class="stentry" width="27.027027027027025%">Password (original)</th>
+     <dd class="dd">The following example uses a fixed-length masks to hide passwords:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_zyf_5cj_yq" border="0" class="simpletable"><tr class="strow">
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Password</span> (original)
+1234
+donKey
+022367snowfall</pre>
 
-        <th valign="bottom" align="left" id="d8770e71" class="stentry" width="72.97297297297297%">Password (fixed-length mask)</th>
+        </td>
 
-       </tr>
-<tr class="strow">
-        <td valign="top" headers="d8770e68" class="stentry">1234<p class="p">donKey</p>
-<p class="p">022367snowballrocks</p>
-</td>
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Password</span> (fixed-lenth mask)
+asd302kd0
+2v03msO3d
+L92m1sN3q</pre>
 
-        <td valign="top" headers="d8770e71" class="stentry">asd302kd0<p class="p">2v03msO3d</p>
-<p class="p">L92m1sN3q</p>
-</td>
+        </td>
 
        </tr>
 </table>
@@ -69,20 +71,22 @@
      <dd class="dd">Replaces values with a variable-length mask. Use when you want to reveal the different
       lengths of the original data. </dd>
 
-     <dd class="dd">The following example uses a variable length mask to hide the same passwords:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_g3y_gk4_wq" border="1" class="simpletable"><tr class="sthead">
-        <th valign="bottom" align="left" id="d8770e108" class="stentry" width="27.027027027027025%">Password (original)</th>
+     <dd class="dd">The following example uses a variable length mask to hide the same passwords:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_jfq_bdj_yq" border="0" class="simpletable"><tr class="strow">
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Password</span> (original)
+1234
+donKey
+022367snowfall</pre>
 
-        <th valign="bottom" align="left" id="d8770e111" class="stentry" width="72.97297297297297%">Password (variable-length mask)</th>
+        </td>
 
-       </tr>
-<tr class="strow">
-        <td valign="top" headers="d8770e108" class="stentry">1234<p class="p">donKey</p>
-<p class="p">022367snowballrocks</p>
-</td>
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Password</span> (variable-lenth mask)
+asd3
+2v03ms
+L92m1sN3q0jaOmE67Ws</pre>
 
-        <td valign="top" headers="d8770e111" class="stentry">asd3<p class="p">2v03ms</p>
-<p class="p">L92m1sN3q0jaOmE67Ws</p>
-</td>
+        </td>
 
        </tr>
 </table>
@@ -92,19 +96,14 @@
     
      <dt class="dt dlterm">Custom</dt>
 
-     <dd class="dd">Replaces values with a mask based on a user-defined pattern. When you define the pattern
-      for the mask, you can use the following special characters: <ul class="ul" id="concept_vwp_gh4_wq__ul_fsv_hl4_wq">
-       <li class="li">Hash mark (#) - Reveals the original character in that location.</li>
+     <dd class="dd">Replaces values with a mask based on a user-defined pattern. </dd>
 
-       <li class="li">
-        
-       </li>
-
-      </ul>
+     <dd class="dd">When you define the pattern for the mask, you can use a hash mark (#) to reveal the
+      character in that location of the hash mark.  All other characters are used as constants in
+      the mask. For example, the following mask pattern reveals the area code of a phone number and
+      replaces all other digits in the phone number with an x: <samp class="ph codeph">###-xxx-xxxx</samp>.<div class="note tip"><span class="tiptitle">Tip:</span> To avoid confusing masking characters for real data, use a single masking
+       character.</div>
 </dd>
-
-     <dd class="dd">All other characters are used as constants in the mask. For example, the following mask
-      pattern reveals the area code of a phone number: <samp class="ph codeph">###-xxx-xxxx</samp>.</dd>
 
     
    </dl>
@@ -135,9 +134,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="50%" id="d8770e205">Field Masker Configuration Property</th>
+                                    <th class="entry" valign="top" width="50%" id="d8825e182">Field Masker Configuration Property</th>
 
-                                    <th class="entry" valign="top" width="50%" id="d8770e208">Description</th>
+                                    <th class="entry" valign="top" width="50%" id="d8825e185">Description</th>
 
                                 </tr>
 
@@ -145,18 +144,18 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d8770e205 ">Mask Field</td>
+                                    <td class="entry" valign="top" width="50%" headers="d8825e182 ">Mask Field</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d8770e208 ">String field to be masked. </td>
+                                    <td class="entry" valign="top" width="50%" headers="d8825e185 ">String field to be masked. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d8770e205 ">Mask Type <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                    <td class="entry" valign="top" width="50%" headers="d8825e182 ">Mask Type <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
 
                                         <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d8770e208 ">Mask type to hide field values. Select one of the
+                                    <td class="entry" valign="top" width="50%" headers="d8825e185 ">Mask type to hide field values. Select one of the
                                         following options:<ul class="ul" id="task_vgg_z44_wq__ul_kmd_rnk_wq">
                                             <li class="li">Fixed-length - Replaces values with a fixed-length
                                                 mask.</li>
@@ -173,14 +172,14 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d8770e205 ">Custom Pattern <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                    <td class="entry" valign="top" width="50%" headers="d8825e182 ">Custom Pattern <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
                                             <img class="image" id="task_vgg_z44_wq__image_rx1_l1q_wq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d8770e208 ">Mask pattern for a custom mask. Enter the pattern that
+                                    <td class="entry" valign="top" width="50%" headers="d8825e185 ">Mask pattern for a custom mask. Enter the pattern that
                                         you want to use.<p class="p">You can use the hash mark (#) to display
                                             characters in the specified location. For example,
-                                            ###xxx reveals the first three characters of a
-                                            string.</p>
+                                            ###xxx reveals the first three characters of a string
+                                            and masks the last three characters with x.</p>
 </td>
 
                                 </tr>

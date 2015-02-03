@@ -10,15 +10,21 @@
      <dt>Fixed-length</dt>
      <dd>Replaces values with a fixed-length mask. Use when you want to mask any variability in
       length in the data. </dd>
-     <dd>The following example uses a fixed-length masks to hide passwords:<simpletable frame="all"
-       relcolwidth="1.0* 2.7*" id="simpletable_ivb_fj4_wq">
-       <sthead>
-        <stentry>Password (original)</stentry>
-        <stentry>Password (fixed-length mask)</stentry>
-       </sthead>
+     <dd>The following example uses a fixed-length masks to hide passwords:<simpletable frame="none"
+       relcolwidth="1.0* 1.0*" id="simpletable_zyf_5cj_yq">
        <strow>
-        <stentry>1234<p>donKey</p><p>022367snowballrocks</p></stentry>
-        <stentry>asd302kd0<p>2v03msO3d</p><p>L92m1sN3q</p></stentry>
+        <stentry>
+         <codeblock><uicontrol>Password</uicontrol> (original)
+1234
+donKey
+022367snowfall</codeblock>
+        </stentry>
+        <stentry>
+         <codeblock><uicontrol>Password</uicontrol> (fixed-lenth mask)
+asd302kd0
+2v03msO3d
+L92m1sN3q</codeblock>
+        </stentry>
        </strow>
       </simpletable></dd>
     </dlentry>
@@ -27,28 +33,32 @@
      <dd>Replaces values with a variable-length mask. Use when you want to reveal the different
       lengths of the original data. </dd>
      <dd>The following example uses a variable length mask to hide the same passwords:<simpletable
-       frame="all" relcolwidth="1.0* 2.7*" id="simpletable_g3y_gk4_wq">
-       <sthead>
-        <stentry>Password (original)</stentry>
-        <stentry>Password (variable-length mask)</stentry>
-       </sthead>
+       frame="none" relcolwidth="1.0* 1.0*" id="simpletable_jfq_bdj_yq">
        <strow>
-        <stentry>1234<p>donKey</p><p>022367snowballrocks</p></stentry>
-        <stentry>asd3<p>2v03ms</p><p>L92m1sN3q0jaOmE67Ws</p></stentry>
+        <stentry>
+         <codeblock><uicontrol>Password</uicontrol> (original)
+1234
+donKey
+022367snowfall</codeblock>
+        </stentry>
+        <stentry>
+         <codeblock><uicontrol>Password</uicontrol> (variable-lenth mask)
+asd3
+2v03ms
+L92m1sN3q0jaOmE67Ws</codeblock>
+        </stentry>
        </strow>
       </simpletable></dd>
     </dlentry>
     <dlentry>
      <dt>Custom</dt>
-     <dd>Replaces values with a mask based on a user-defined pattern. When you define the pattern
-      for the mask, you can use the following special characters: <ul id="ul_fsv_hl4_wq">
-       <li>Hash mark (#) - Reveals the original character in that location.</li>
-       <li>
-        <draft-comment author="Loretta">checking with Hari</draft-comment>
-       </li>
-      </ul></dd>
-     <dd>All other characters are used as constants in the mask. For example, the following mask
-      pattern reveals the area code of a phone number: <codeph>###-xxx-xxxx</codeph>.</dd>
+     <dd>Replaces values with a mask based on a user-defined pattern. </dd>
+     <dd>When you define the pattern for the mask, you can use a hash mark (#) to reveal the
+      character in that location of the hash mark.  All other characters are used as constants in
+      the mask. For example, the following mask pattern reveals the area code of a phone number and
+      replaces all other digits in the phone number with an x: <codeph>###-xxx-xxxx</codeph>.<note
+       type="tip">To avoid confusing masking characters for real data, use a single masking
+       character.</note></dd>
     </dlentry>
    </dl>
   </p>

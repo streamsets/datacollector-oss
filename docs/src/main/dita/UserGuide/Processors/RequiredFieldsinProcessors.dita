@@ -3,8 +3,8 @@
 <concept id="concept_dnj_bkm_vq">
  <title>Required Fields in Processors</title>
  <shortdesc>A required field must exist in a record to keep it in the pipeline. When a record does
-  not include a required field, the processor drops the record. You can configure required fields
-  for any processor stage.</shortdesc>
+  not include a required field, the processor discards the record. You can configure required fields
+  for any processor or target stage.</shortdesc>
  <conbody>
   <p>To minimize processing errors, define any field that a processor actively uses as a required
    field. </p>

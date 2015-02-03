@@ -19,15 +19,15 @@
                   Collector</span> channels the
   data from all streams to the same stage, but does not perform a join of records in the stream. </p>
 
-  <p class="p">For example, in the following pipeline, the stage named Routes Data sends data with null values
-   to Replaces Null Values for null replacement. The pipeline merges data from Routes Data and
-   Replaces Null Values at the Field-Level Expressions stage so expressions are performed on all
-   data. </p>
+  <p class="p">For example, in the following pipeline, Routes Data sends data with null values to Replaces
+   Null Values. The data from stream 2 of Routes Data and all data from Replaces Null Values both
+   pass to Field-Level Expressions for further processing, but in no particular order and with no
+   record merging.</p>
 
-  <p class="p"><img class="image" id="concept_w3y_cry_5q__image_kxc_jty_5q" src="../Graphics/MergingStreams.png" height="90" width="444"></img></p>
+  <p class="p"><img class="image" id="concept_w3y_cry_5q__image_kxc_jty_5q" src="../Graphics/MergingStreams.png" height="120" width="592"></img></p>
 
   <div class="note note"><span class="notetitle">Note:</span> The pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
-   destinations, configure pipeline logic to remove duplicate data or prevent the generation of
+   destinations, configure pipeline logic to remove duplicate data or to prevent the generation of
    duplicate data.</div>
 
  </div>

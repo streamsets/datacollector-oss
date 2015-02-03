@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_bs1_4t3_yq">
  <title>JSON Parser</title>
- <shortdesc>The JSON parser parses a JSON object that is part of a map field and produces the
-  fields</shortdesc>
+ <shortdesc>The JSON parser parses a JSON object embedded in a field and produces the fields from
+  the JSON object.</shortdesc>
  <conbody>
   <p></p>
  </conbody>

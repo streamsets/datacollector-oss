@@ -10,6 +10,6 @@
   <p>For example, the following Expression processor replaces values in the "first" field. The
    Expression Configuration Field property requires you to enter the field name manually with the
    preceding slash. The Required Fields property provides a list of fields to select from. </p>
-  <p><image href="../Graphics/FieldName-referencing.png" id="image_gxw_d2m_xq" scale="80"/></p>
+  <p><image href="../Graphics/FieldName-referencing.png" id="image_gxw_d2m_xq" scale="60"/></p>
  </conbody>
 </concept>

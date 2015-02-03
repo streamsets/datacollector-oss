@@ -6,9 +6,7 @@
         You can split data from a single field. To split additional fields, add another Field
         Splitter to the pipeline.</shortdesc>
     <taskbody>
-        <context>
-            <p></p>
-        </context>
+        <context/>
         <steps id="steps_r4z_dh3_yq">
             <step>
                 <cmd>In the Properties panel, optionally enter a name and description for the
@@ -45,13 +43,13 @@
                                     <entry>Action for Insufficient Data</entry>
                                     <entry>Action for records that cannot be split to the configured
                                             fields:<ul id="ul_n5d_xn3_yq">
-                                            <li><uicontrol>Continue.</uicontrol> Passes the record
+                                            <li><uicontrol>Continue</uicontrol> - Passes the record
                                                 split as much as possible.</li>
-                                            <li><uicontrol>Discard.</uicontrol> Discards the
+                                            <li><uicontrol>Discard</uicontrol> - Discards the
                                                 record.</li>
-                                            <li><uicontrol>Send to Error.</uicontrol> Writes the
+                                            <li><uicontrol>Send to Error</uicontrol> - Writes the
                                                 record to the error log.</li>
-                                            <li><uicontrol>Stop Pipeline.</uicontrol> Stops the
+                                            <li><uicontrol>Stop Pipeline</uicontrol> - Stops the
                                                 pipeline.</li>
                                         </ul></entry>
                                 </row>
@@ -68,7 +66,7 @@
                 </info>
             </step>
             <step>
-                <cmd>Optionally, configure Required Fields for the stage. </cmd>
+                <cmd>Optionally, configure <uicontrol>Required Fields</uicontrol> for the stage. </cmd>
                 <info>You might want to include field that you are splitting as a required
                     field.</info>
             </step>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kk2_mbm_xq">
+ <title>Using Field Names in Expressions</title>
+ <shortdesc>When you use a field name in an expression, use the following syntax:</shortdesc>
+ <conbody>
+  <p>
+   <codeblock>record:value("/&lt;field name>")</codeblock>
+  </p>
+  <p>For example, the following expression concatenates the values from the DATE field with values
+   from the TIME field:</p>
+  <p>
+   <codeblock>${record:value("/DATE")||record:value("/TIME")}</codeblock>
+  </p>
+ </conbody>
+</concept>

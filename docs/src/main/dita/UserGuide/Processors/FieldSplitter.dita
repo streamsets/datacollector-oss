@@ -62,8 +62,8 @@ message about this error,"additional information from the server"</codeblock>
      </strow>
     </simpletable>
    </p>
-   <p>Note that in both cases, the Field Splitter drops the IMD-03234 record because the record does
-    not include enough data to be split.</p>
+   <p>Note that in both cases, the Field Splitter drops IMD-03234 because the record does not
+    include enough data to be split.</p>
   </section>
  </conbody>
 </concept>

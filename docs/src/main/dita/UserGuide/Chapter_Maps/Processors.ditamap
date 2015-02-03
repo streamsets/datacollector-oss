@@ -7,7 +7,10 @@
    <topicref href="../Processors/ReferencingFieldNames.dita"/>
    <topicref href="../Processors/RequiredFieldsinProcessors.dita"/>
   </topicref>
-  <topicref href="../Processors/Expression.dita"/>
+  <topicref href="../Processors/Expression.dita" chunk="to-content"> 
+   <topicref href="../Processors/Expression-OutputField.dita"/>
+   <topicref href="../Processors/Expression-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/FieldHasher.dita" chunk="to-content">
    <topicref href="../Processors/FieldHasher-Configuring.dita"/>
   </topicref>
@@ -22,16 +25,16 @@
   <topicref href="../Processors/FieldRemover.dita" chunk="to-content">
    <topicref href="../Processors/FieldRemover-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/FieldSplitter.dita">
+  <topicref href="../Processors/FieldSplitter.dita" chunk="to-content">
    <topicref href="../Processors/FieldSplitter-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/StreamSelector.dita" chunk="to-content">
    <topicref href="../Processors/StreamSelector_fallback.dita"/>
    <topicref href="../Processors/StreamSelector-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/ConfiguringExpressionsConditions.dita">
+  <topicref href="../Processors/ConfiguringExpressionsConditions.dita" chunk="to-content"><topicmeta><shortdesc/></topicmeta>
    <topicref href="../Processors/BasicSyntax.dita"/>
-   <topicref href="../Processors/CallingFieldNames.dita"/>
+   <topicref href="../Processors/UsingFieldNamesinExpressions.dita"/>
    <topicref href="../Processors/DefiningConstants.dita"/>
   </topicref>
  </topicref>

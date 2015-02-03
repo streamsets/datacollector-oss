@@ -4,9 +4,7 @@
     <title>Configuring the Stream Selector</title>
     <shortdesc>Use a Stream Selector to route data to different streams. </shortdesc>
     <taskbody>
-        <context>
-            <p></p>
-        </context>
+        <context/>
         <steps id="steps_tsx_3gf_xq">
             <step>
                 <cmd>In the Properties panel, optionally enter a name and description for the
@@ -51,4 +49,8 @@
             </step>
         </steps>
     </taskbody>
+    <related-links>
+        <link href="ConfiguringExpressionsConditions.dita#concept_ofb_1cm_xq"/>
+        <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
+    </related-links>
 </task>

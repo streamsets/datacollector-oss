@@ -10,13 +10,14 @@
         <context>
             <p>For example, you might have an Expression processor that calculates the total income
                 for employees using .01 as a bonus percentage, as
-                follows:<codeblock>(record:value{"/SALARY"}) + (record:value{"/SALARY"}*.01)</codeblock></p>
-            <p>However, the bonus percentage will change for the next quarter. So instead of using
-                .01 directly in the expression, you can create a Bonus constant and set it to .01 as
-                    shown:<draft-comment author="Loretta">add screenshot.</draft-comment></p>
+                follows:<codeblock>${(record:value("/SALARY")) + (record:value("/SALARY")*.01)}</codeblock></p>
+            <p>However, the bonus percentage changes regularly. So instead of using .01 directly in
+                the expression, you can create a Bonus constant and set it to .01 as shown:<image
+                    href="../Graphics/ExpressionStageConfig.png" id="image_qsg_pyp_yq" scale="60"
+                /></p>
             <p>Then you can use the Bonus constant in an expression as follows:</p>
             <p>
-                <codeblock>(record:value{"/SALARY"}) + (record:value{"/SALARY"}*Bonus)</codeblock>
+                <codeblock>${record:value("/SALARY")+(record:value("/SALARY")*BONUS)}</codeblock>
             </p>
         </context>
     </taskbody>

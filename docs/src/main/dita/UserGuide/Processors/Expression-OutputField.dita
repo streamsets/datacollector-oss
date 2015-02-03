@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pzk_fz4_yq">
+ <title>Expression Output Field</title>
+ <shortdesc>When you configure an expression, the Expression &lt;&lt;whatever>> writes the results
+  of the expression to a field. You can use an existing field or create a new field.</shortdesc>
+ <conbody>
+  <p>When you use an existing field, the Expression &lt;&lt;whatever>> replaces the incoming value
+   with the new value. When you use a new field, the Expression &lt;&lt;whatever>> adds the new
+   field to the record and passes the value of the expression.</p>
+ </conbody>
+</concept>

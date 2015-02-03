@@ -2,13 +2,13 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_isl_w44_kq">
  <title>What is a Pipeline?</title>
- <shortdesc>A pipeline describes the data flow for the <ph
+ <shortdesc>A pipeline describes the flow of data for the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
  <conbody>
   <p>Configure a pipeline on the <term>pipeline canvas</term>. To configure a pipeline, you add and
       configure an origin stage to represent source data, processor stages to perform processing and
       routing, and one or more destination stages to represent target data. Connect the stages to
-      create a data flow from origin to destinations. </p>
+      create the flow of data from origin to destinations. </p>
     <p>The canvas automatically saves and validates your work. The pipeline canvas provides warnings
       for parts of the pipeline that are not yet complete or valid. You can view a full list of
       issues to help you configure the pipeline. </p>
@@ -16,7 +16,7 @@
       transforms source data.</p>
     <p>When you start a pipeline, the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs the
-      pipeline until you stop pipeline or shut down the <ph
+      pipeline until you stop the pipeline or shut down the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. While the
       pipeline runs, you can monitor the pipeline and configure alerts to verify that the pipeline
       performs as expected.</p>

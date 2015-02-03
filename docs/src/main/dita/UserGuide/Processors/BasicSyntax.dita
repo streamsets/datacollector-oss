@@ -6,8 +6,5 @@
   follows: <codeph>${&lt;expression>}</codeph>.</shortdesc>
  <conbody>
   <p>For example, to add 2 +2, use the following syntax:${2+2}.</p>
-  <p>
-   <draft-comment author="Loretta">come back to this.</draft-comment>
-  </p>
  </conbody>
 </concept>

@@ -53,8 +53,7 @@
             </step>
             <step>
                 <cmd>Optionally, configure <uicontrol>Required Fields</uicontrol> for the stage. </cmd>
-                <info>You might want to include fields that you are hashing as required
-                    fields.</info>
+                <info>You might want to include fields that you are hashing.</info>
             </step>
         </steps>
     </taskbody>

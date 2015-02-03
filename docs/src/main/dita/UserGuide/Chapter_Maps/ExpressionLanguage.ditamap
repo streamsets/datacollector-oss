@@ -3,6 +3,9 @@
 <map>
  <title>Expression Language</title>
  <topicref href="../Expression_Language/ExpressionLanguage_title.dita">
-  <topicref href="../Expression_Language/ExpressionLanguage_overview.dita"/>
+  <topicmeta><shortdesc></shortdesc></topicmeta>
+  <topicref href="../Expression_Language/ExpressionLanguage_overview.dita">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+  </topicref>
  </topicref>
 </map>

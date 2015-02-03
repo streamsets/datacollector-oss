@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_x2h_tv4_yq">
+    <title>Configuring an Expression</title>
+    <shortdesc>Configure an Expression &lt;&lt;name>> to perform calculations on records on a
+        row-by-row basis.</shortdesc>
+    <taskbody>
+        <context>
+            <p/>
+        </context>
+        <steps id="steps_wxb_ky4_yq">
+            <step>
+                <cmd>In the Properties panel, optionally enter a name and description for the
+                    stage.</cmd>
+            </step>
+            <step>
+                <cmd>To configure an expression, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_zfp_zy4_yq">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>Expression Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Field</entry>
+                                    <entry>Name of the field to pass the results of the expression
+                                        to the next stage. Enter the name of the new or existing
+                                        field as follows: /&lt;field name><p>The Expression
+                                            &lt;&lt;name>> replaces values in existing field.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Expression</entry>
+                                    <entry>Expression to evaluate.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>Optionally define constants that you want to use within the processor. </cmd>
+                <info>To define a constant, click <uicontrol>Add</uicontrol>, and then enter a
+                        <uicontrol>Name</uicontrol> and <uicontrol>Value</uicontrol> for the
+                    constant.</info>
+            </step>
+            <step>
+                <cmd>Optionally, configure <uicontrol>Required Fields</uicontrol> for the stage. </cmd>
+                <info>You might want to include fields that you use in expressions.</info>
+            </step>
+        </steps>
+    </taskbody>
+    <related-links>
+        <link href="ConfiguringExpressionsConditions.dita#concept_ofb_1cm_xq"/>
+        <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
+    </related-links>
+</task>

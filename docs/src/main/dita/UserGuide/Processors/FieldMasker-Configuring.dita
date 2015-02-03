@@ -51,8 +51,8 @@
                                     <entry>Mask pattern for a custom mask. Enter the pattern that
                                         you want to use.<p>You can use the hash mark (#) to display
                                             characters in the specified location. For example,
-                                            ###xxx reveals the first three characters of a
-                                            string.</p></entry>
+                                            ###xxx reveals the first three characters of a string
+                                            and masks the last three characters with x.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

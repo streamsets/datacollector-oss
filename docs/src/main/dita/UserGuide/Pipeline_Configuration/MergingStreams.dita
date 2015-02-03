@@ -7,13 +7,13 @@
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> channels the
   data from all streams to the same stage, but does not perform a join of records in the stream. </shortdesc>
  <conbody>
-  <p>For example, in the following pipeline, the stage named Routes Data sends data with null values
-   to Replaces Null Values for null replacement. The pipeline merges data from Routes Data and
-   Replaces Null Values at the Field-Level Expressions stage so expressions are performed on all
-   data. </p>
-  <p><image href="../Graphics/MergingStreams.png" id="image_kxc_jty_5q" scale="60"/></p>
+  <p>For example, in the following pipeline, Routes Data sends data with null values to Replaces
+   Null Values. The data from stream 2 of Routes Data and all data from Replaces Null Values both
+   pass to Field-Level Expressions for further processing, but in no particular order and with no
+   record merging.</p>
+  <p><image href="../Graphics/MergingStreams.png" id="image_kxc_jty_5q" scale="80"/></p>
   <note>The pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
-   destinations, configure pipeline logic to remove duplicate data or prevent the generation of
+   destinations, configure pipeline logic to remove duplicate data or to prevent the generation of
    duplicate data.</note>
  </conbody>
 </concept>

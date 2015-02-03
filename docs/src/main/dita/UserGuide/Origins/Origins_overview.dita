@@ -7,9 +7,9 @@
  <conbody>
   <p>You can use the following types of origins in a pipeline: <draft-comment author="Loretta">list
         the origin types. quick description.</draft-comment><ul id="ul_mxz_jxm_jq">
-        <li>Directory. Reads files from a directory.</li>
-        <li>File Tail. Reads data as it is written to a file. </li>
-        <li>Kafka Consumer. Reads data from Kafka</li>
+        <li>Directory - Reads files from a directory.</li>
+        <li>File Tail - Reads data as it is written to a file. </li>
+        <li>Kafka Consumer - Reads data from Kafka</li>
       </ul></p>
  </conbody>
 </concept>
