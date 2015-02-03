@@ -22,8 +22,6 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PipelineConfiguration {
 
-  public enum OnError { DROP_RECORD, DROP_BATCH, STOP_PIPELINE }
-
   private UUID uuid = null;
   private PipelineInfo info;
   private String description;
