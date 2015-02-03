@@ -252,7 +252,8 @@
       "inputData": "Input Data",
       "outputData": "Output Data",
       "noOutputWarning": "No output records produced.",
-      "noRecords": "No Records to view."
+      "noRecords": "No Records to view.",
+      "stageErrorsWarning": "{{stageErrorsCount}} Stage Errors, check Errors tab for more detail."
     },
     "library": {
       "descriptionPlaceholder": "Pipeline Definition Description",

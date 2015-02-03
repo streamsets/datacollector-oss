@@ -120,7 +120,15 @@
             <tr ng-if="stagePreviewData.input.length === 0 &&
                         stagePreviewData.output.length === 0 &&
                         stagePreviewData.errorRecords.length === 0">
-              <td colspan="2" class="no-records" translate="home.previewPane.noRecords">No Records.</td>
+              <td colspan="2" class="no-records">
+                {{'home.previewPane.noRecords' | translate}}
+
+                <div ng-if="stagePreviewData.stageErrors && stagePreviewData.stageErrors.length">
+                  <span translate="home.previewPane.stageErrorsWarning"
+                        translate-values="{stageErrorsCount: stagePreviewData.stageErrors.length}"></span>
+                </div>
+
+              </td>
             </tr>
           </tbody>
 

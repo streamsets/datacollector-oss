@@ -282,7 +282,7 @@ angular
        *
        */
       refreshGraph : function() {
-        updateGraph($scope.pipelineConfig, $scope.pipelineRules);
+        updateGraph($scope.pipelineConfig, $scope.pipelineRules, true);
       },
 
       /**
@@ -451,6 +451,7 @@ angular
 
       dirty = false;
       $rootScope.common.saveOperationInProgress = true;
+      console.log('Saving ....');
       api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.name, config).
         success(function (res) {
           $rootScope.common.saveOperationInProgress = false;
@@ -478,14 +479,18 @@ angular
      *
      * @param pipelineConfig
      * @param pipelineRules
+     * @param manualUpdate
      */
-    var updateGraph = function (pipelineConfig, pipelineRules) {
+    var updateGraph = function (pipelineConfig, pipelineRules, manualUpdate) {
       var selectedStageInstance,
         stageErrorCounts = {},
         pipelineMetrics = $rootScope.common.pipelineMetrics,
         pipelineStatus = $rootScope.common.pipelineStatus;
 
-      ignoreUpdate = true;
+      if(!manualUpdate) {
+        ignoreUpdate = true;
+      }
+
 
       //Force Validity Check - showErrors directive
       $scope.$broadcast('show-errors-check-validity');
@@ -794,6 +799,7 @@ angular
     //Event Handling
 
     $scope.$watch('pipelineConfig', function (newValue, oldValue) {
+      //console.log('watch pipeline config');
       if(newValue === undefined) {
         return;
       }
@@ -806,6 +812,7 @@ angular
       }
       if (!angular.equals(newValue, oldValue)) {
         dirty = true;
+        //console.log('watch pipeline config inside equals');
         if (timeout) {
           $timeout.cancel(timeout);
         }
