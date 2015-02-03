@@ -55,8 +55,7 @@ public class PreviewPipelineBuilder {
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + ":preview", pipelineConf).build(runner);
     List<StageIssue> configIssues = pipeline.validateConfigs();
     if (!configIssues.isEmpty()) {
-      Issues issues = validator.getIssues();
-      issues.addAll(configIssues);
+      Issues issues = new Issues(configIssues);
       throw new PipelineRuntimeException(issues);
     }
     return new PreviewPipeline(pipeline, validator.getIssues());

@@ -20,8 +20,15 @@ public class Issues {
   private final Map<String, List<StageIssue>> stages;
 
   public Issues() {
+    this(new ArrayList<StageIssue>());
+  }
+
+  public Issues(List<StageIssue> issues) {
     pipeline = new ArrayList<>();
     stages = new HashMap<>();
+    for (StageIssue issue : issues) {
+      add(issue);
+    }
   }
 
   public void addP(Issue issue) {
@@ -37,7 +44,7 @@ public class Issues {
     stageIssues.add(issue);
   }
 
-  public void addAll(List<StageIssue> issues) {
+  private void addAll(List<StageIssue> issues) {
     for (StageIssue issue : issues) {
       add(issue);
     }
