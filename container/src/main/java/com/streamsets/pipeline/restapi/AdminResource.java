@@ -49,27 +49,21 @@ public class AdminResource implements LogStreamer.Releaser {
   @POST
   @Path("/shutdown")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response shutdown(@QueryParam("secret") String requestPassword) throws PipelineStoreException {
-    Response response;
-    String password = config.get(SHUTDOWN_SECRET_KEY, SHUTDOWN_SECRET_DEFAULT);
-    if (password.equals(requestPassword)) {
-      Thread thread = new Thread("Shutdown Request") {
-        @Override
-        public void run() {
-          try {
-            Thread.sleep(500);
-          } catch (InterruptedException ex) {
-          }
-          runtimeInfo.shutdown();
+  public Response shutdown() throws PipelineStoreException {
+    Thread thread = new Thread("Shutdown Request") {
+      @Override
+      public void run() {
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException ex) {
+          //NOP
         }
-      };
-      thread.setDaemon(true);
-      thread.start();
-      response = Response.ok().build();
-    } else {
-      response = Response.status(Response.Status.FORBIDDEN).build();
-    }
-    return response;
+        runtimeInfo.shutdown();
+      }
+    };
+    thread.setDaemon(true);
+    thread.start();
+    return Response.ok().build();
   }
 
   @POST
