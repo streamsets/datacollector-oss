@@ -283,6 +283,7 @@
       "successMessage": "Reset Origin is successful."
     },
     "shutdown": {
+      "confirmationMessage": "Are you sure you want to shutdown Data Collector?",
       "headerLabel": "Shutdown Collector",
       "secretPlaceholder": "Enter Secret...",
       "successMessage": "Collector is stopped."

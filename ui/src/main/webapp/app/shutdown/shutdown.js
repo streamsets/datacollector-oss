@@ -7,11 +7,10 @@ angular
   .controller('ShutdownModalInstanceController', function ($scope, $modalInstance, api, $window) {
     angular.extend($scope, {
       issues: [],
-      secret: '',
       isShutdownSucceed: false,
 
       shutdown: function() {
-        api.admin.shutdownCollector($scope.secret)
+        api.admin.shutdownCollector()
           .success(function() {
             $scope.isShutdownSucceed = true;
           })

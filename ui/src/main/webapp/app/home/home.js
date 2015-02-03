@@ -801,7 +801,7 @@ angular
     var getFirstOpenLane = function() {
       var pipelineConfig = $scope.pipelineConfig,
         firstOpenLane = {},
-        issueMessage,
+        issueObj,
         firstOpenLaneStageInstanceName;
 
       if(pipelineConfig && pipelineConfig.issues && pipelineConfig.issues.stageIssues) {
@@ -809,20 +809,19 @@ angular
           if(!firstOpenLaneStageInstanceName) {
             angular.forEach(issues, function(issue) {
               if(issue.message.indexOf('VALIDATION_0011') !== -1) {
-                issueMessage = issue.message;
+                issueObj = issue;
                 firstOpenLaneStageInstanceName = instanceName;
               }
             });
           }
         });
 
-        if(firstOpenLaneStageInstanceName) {
+        if(firstOpenLaneStageInstanceName && issueObj &&
+          issueObj.additionalInfo && issueObj.additionalInfo.openStreams) {
           var stageInstance = _.find(pipelineConfig.stages, function(stage) {
               return stage.instanceName === firstOpenLaneStageInstanceName;
             }),
-            laneName = _.find(stageInstance.outputLanes, function(outputLane) {
-              return issueMessage.indexOf(outputLane) !== -1;
-            }),
+            laneName = issueObj.additionalInfo.openStreams[0],
             laneIndex = _.indexOf(stageInstance.outputLanes, laneName);
 
           firstOpenLane = {

@@ -19,11 +19,8 @@
           {{issue}}
         </div>
 
-        <div class="form-group">
-          <input type="password" class="form-control" required
-                 focus-me="true"
-                 placeholder="{{'home.shutdown.secretPlaceholder' | translate}}" ng-model="secret">
-        </div>
+        <p translate="home.shutdown.confirmationMessage">
+        </p>
       </div>
 
       <div class="alert alert-danger alert-dismissible" role="alert"
@@ -33,11 +30,11 @@
 
     </div>
     <div class="modal-footer" ng-hide="isShutdownSucceed">
-      <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.cancel">
-        Cancel
+      <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.no">
+        No
       </button>
-      <button type="submit" class="btn btn-primary" translate="global.menu.admin.shutdown">
-        Shutdown
+      <button type="submit" class="btn btn-primary" translate="global.form.yes">
+        Yes
       </button>
     </div>
   </form>

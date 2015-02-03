@@ -685,11 +685,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           var totalLanes = d.outputLanes.length,
             lanePredicatesConfiguration = _.find(d.configuration, function(configuration) {
               return configuration.name === 'lanePredicates';
-            });
+            }),
+            outputStreamLabels = d.uiInfo.outputStreamLabels;
           angular.forEach(d.outputLanes, function(lane, index) {
             var y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) +
               ((consts.rectHeight * (index))/totalLanes)),
-              lanePredicate = lanePredicatesConfiguration ? lanePredicatesConfiguration.value[index] : undefined;
+              lanePredicate = lanePredicatesConfiguration ? lanePredicatesConfiguration.value[index] : undefined,
+              outputStreamLabel = outputStreamLabels ? outputStreamLabels[index] : undefined;
             stageNode
               .append('circle')
               .attr({
@@ -711,7 +713,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
                   'x': consts.rectWidth - 3,
                   'y': y + 5,
                   'class': 'lane-number graph-bootstrap-tooltip',
-                  'title': lanePredicate ? lanePredicate.predicate : ''
+                  'title': lanePredicate ? lanePredicate.predicate : outputStreamLabel
                 })
                 .text(index+1)
                 .on('mousedown', function(d){

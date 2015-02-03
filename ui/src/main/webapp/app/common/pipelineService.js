@@ -74,8 +74,14 @@ angular.module('dataCollectorApp.common')
         stageInstance.inputLanes.push(firstOpenLane.laneName);
       }
 
-      if (stage.type !== pipelineConstant.TARGET_STAGE_TYPE) {
-        stageInstance.outputLanes = [stageInstance.instanceName + 'OutputLane' + (new Date()).getTime()];
+      if (stage.outputStreams > 0) {
+        for(var i=0; i< stage.outputStreams; i++) {
+          stageInstance.outputLanes.push(stageInstance.instanceName + 'OutputLane' + (new Date()).getTime() + i);
+        }
+
+        if(stage.outputStreams > 1) {
+          stageInstance.uiInfo.outputStreamLabels = stage.outputStreamLabels;
+        }
       }
 
       angular.forEach(stage.configDefinitions, function (configDefinition) {

@@ -46,11 +46,10 @@ angular.module('dataCollectorApp.common')
 
       /**
        * Shutdown the Data Collector.
-       * @param secret
        * @returns {*}
        */
-      shutdownCollector: function(secret) {
-        var url = apiBase + '/admin/shutdown?secret=' + secret;
+      shutdownCollector: function() {
+        var url = apiBase + '/admin/shutdown';
         return $http({
           method: 'POST',
           url: url
