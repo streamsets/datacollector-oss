@@ -31,7 +31,7 @@ public class ErrorMessage implements LocalizableString {
   }
 
   public ErrorMessage(ErrorCode errorCode, Object... params) {
-    this(Utils.checkNotNull(errorCode, "errorCode").getClass().getName(), errorCode, params);
+    this(Utils.checkNotNull(errorCode, "errorCode").getClass().getName() + "-bundle", errorCode, params);
   }
 
   public ErrorMessage(String resourceBundle, ErrorCode errorCode, Object... params) {

@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,11 @@ public class StagePipe extends Pipe {
 
   public StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
     super(stage, inputLanes, outputLanes);
+  }
+
+  @Override
+  public List<StageIssue> validateConfigs() {
+    return getStage().validateConfigs();
   }
 
   @Override

@@ -13,6 +13,9 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 
+import java.util.Collections;
+import java.util.List;
+
 @GenerateResourceBundle
 @StageDef(description = "Consumes twitter feeds", label = "twitter_target"
 , version = "1.3")
@@ -55,6 +58,11 @@ public class TwitterTarget implements Target {
   @Override
   public void write(Batch batch) throws StageException {
 
+  }
+
+  @Override
+  public List<ConfigIssue> validateConfigs(Info info, Context context) {
+    return Collections.emptyList();
   }
 
   @Override

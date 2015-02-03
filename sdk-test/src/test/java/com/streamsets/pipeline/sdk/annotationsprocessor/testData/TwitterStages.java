@@ -18,6 +18,7 @@ import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.ChooserMode;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -143,6 +144,11 @@ public class TwitterStages {
     @Override
     public void write(Batch batch) throws StageException {
 
+    }
+
+    @Override
+    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+      return Collections.emptyList();
     }
 
     @Override

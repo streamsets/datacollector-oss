@@ -6,13 +6,20 @@
 package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.validation.StageIssue;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CombinerPipe extends Pipe {
 
   public CombinerPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
     super(stage, inputLanes, outputLanes);
+  }
+
+  @Override
+  public List<StageIssue> validateConfigs() {
+    return Collections.emptyList();
   }
 
   @Override

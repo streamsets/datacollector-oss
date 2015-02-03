@@ -9,10 +9,12 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +53,12 @@ public class PreviewPipelineBuilder {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0154, validator.getIssues());
     }
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + ":preview", pipelineConf).build(runner);
+    List<StageIssue> configIssues = pipeline.validateConfigs();
+    if (!configIssues.isEmpty()) {
+      Issues issues = validator.getIssues();
+      issues.addAll(configIssues);
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0154, issues);
+    }
     return new PreviewPipeline(pipeline, validator.getIssues());
   }
 

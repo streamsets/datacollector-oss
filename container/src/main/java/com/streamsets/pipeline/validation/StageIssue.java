@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.validation;
 
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.impl.Utils;
 
 public class StageIssue extends Issue {
@@ -21,7 +22,11 @@ public class StageIssue extends Issue {
     return new StageIssue(instanceName, configGroup, configName, error, args);
   }
 
-  private StageIssue(String instanceName, String configGroup, String configName, ValidationError error, Object... args) {
+  protected StageIssue(String instanceName, ErrorCode error, Object... args) {
+    this(instanceName, null, null, error, args);
+  }
+
+  private StageIssue(String instanceName, String configGroup, String configName, ErrorCode error, Object... args) {
     super(error, args);
     this.instanceName = instanceName;
     this.configGroup = configGroup;

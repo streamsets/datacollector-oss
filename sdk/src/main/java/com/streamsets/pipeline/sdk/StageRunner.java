@@ -17,6 +17,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.sdk.annotationsprocessor.StageHelper;
+import com.streamsets.pipeline.util.ContainerError;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -194,8 +195,17 @@ public abstract class StageRunner<S extends Stage> {
     return context;
   }
 
+  @SuppressWarnings("unchecked")
   public void runInit() throws StageException {
     ensureStatus(Status.CREATED);
+    List<Stage.ConfigIssue> issues = stage.validateConfigs(getInfo(), getContext());
+    if (!issues.isEmpty()) {
+      List<String> list = new ArrayList<>(issues.size());
+      for (Stage.ConfigIssue issue : issues) {
+        list.add(issue.toString());
+      }
+      throw new StageException(ContainerError.CONTAINER_0010, list);
+    }
     stage.init(getInfo(), getContext());
     status = Status.INITIALIZED;
   }

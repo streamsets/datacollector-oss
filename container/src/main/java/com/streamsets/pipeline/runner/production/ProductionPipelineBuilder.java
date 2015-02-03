@@ -43,6 +43,14 @@ public class ProductionPipelineBuilder {
     }
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, pipelineConf)
       .setObserver(observer).build(runner);
+
+    List<StageIssue> configIssues = pipeline.validateConfigs();
+    if (!configIssues.isEmpty()) {
+      Issues issues = validator.getIssues();
+      issues.addAll(configIssues);
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, getFirstIssueAsString(issues));
+    }
+
     if (pipeline.getSource() instanceof OffsetCommitter) {
       runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker((OffsetCommitter) pipeline.getSource()));
     } else {

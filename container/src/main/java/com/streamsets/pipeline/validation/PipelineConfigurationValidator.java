@@ -200,10 +200,15 @@ public class PipelineConfigurationValidator {
                                                      stageDef.getType(), stageConf.getInputLanes()));
               preview = false;
             }
-            if (stageConf.getOutputLanes().isEmpty()) {
+            if (!stageDef.isVariableOutputStreams()) {
+              // source stage must match the output stream defined in StageDef
+              if (stageDef.getOutputStreams() != stageConf.getOutputLanes().size()) {
+                issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0015,
+                                                       stageDef.getOutputStreams(), stageConf.getOutputLanes().size()));
+              }
+            } else {
               // source stage must have at least one output lane
-              issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0015,
-                                                     stageDef.getType()));
+              issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
             }
             break;
           case PROCESSOR:
@@ -213,10 +218,15 @@ public class PipelineConfigurationValidator {
                                                      stageDef.getType()));
               preview = false;
             }
-            if (stageConf.getOutputLanes().isEmpty()) {
-              // processor stage must have at least one ouput lane
-              issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0015,
-                                                     stageDef.getType()));
+            if (!stageDef.isVariableOutputStreams()) {
+              // processor stage must match the output stream defined in StageDef
+              if (stageDef.getOutputStreams() != stageConf.getOutputLanes().size()) {
+                issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0015,
+                                                       stageDef.getOutputStreams(), stageConf.getOutputLanes().size()));
+              }
+            } else {
+              // processor stage must have at least one output lane
+              issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
             }
             break;
           case TARGET:

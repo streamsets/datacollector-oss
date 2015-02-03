@@ -6,11 +6,13 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +53,11 @@ public class TestStageRunner {
   public static class DummyStage1 implements DummyStage {
     public boolean initialized;
     public boolean destroyed;
+
+    @Override
+    public List<ConfigIssue> validateConfigs(Info info, Stage.Context context) {
+      return Collections.emptyList();
+    }
 
     @Override
     public void init(Info info, Context context) throws StageException {

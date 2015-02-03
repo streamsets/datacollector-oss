@@ -15,6 +15,8 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0001("Exception: {}"),
   CONTAINER_0002("Error message: {}"),
 
+  CONTAINER_0010("Stage configuration validation error: {}"),
+
   // RequiredFieldsErrorPredicateSink
   CONTAINER_0050("The stage requires records to have the following fields '{}'"),
 

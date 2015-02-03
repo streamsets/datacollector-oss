@@ -26,6 +26,8 @@ public interface Stage<C extends Stage.Context> {
 
   public interface Context {
 
+    public ConfigIssue createConfigIssue(ErrorCode errorCode, Object... args);
+
     public List<Info> getPipelineInfo();
 
     public MetricRegistry getMetrics();
@@ -49,6 +51,11 @@ public interface Stage<C extends Stage.Context> {
     public void toError(Record record, ErrorCode errorCode, Object... args);
 
   }
+
+  public interface ConfigIssue {
+  }
+
+  public List<ConfigIssue> validateConfigs(Info info, C context);
 
   public void init(Info info, C context) throws StageException;
 

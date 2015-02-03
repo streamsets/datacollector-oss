@@ -37,6 +37,12 @@ public class Issues {
     stageIssues.add(issue);
   }
 
+  public void addAll(List<StageIssue> issues) {
+    for (StageIssue issue : issues) {
+      add(issue);
+    }
+  }
+
   public List<Issue> getPipelineIssues() {
     return pipeline;
   }

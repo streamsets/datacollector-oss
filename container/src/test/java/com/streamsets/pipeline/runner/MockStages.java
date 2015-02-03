@@ -77,6 +77,16 @@ public class MockStages {
   private static class MockStageLibraryTask implements StageLibraryTask {
 
     public static class MSource implements Source {
+
+      @Override
+      public List<ConfigIssue> validateConfigs(Info info, Context context) {
+        if (sourceCapture != null) {
+          return sourceCapture.validateConfigs(info, context);
+        } else {
+          return Collections.emptyList();
+        }
+      }
+
       @Override
       public void init(Info info, Context context) throws StageException {
         if (sourceCapture != null) {
@@ -113,6 +123,15 @@ public class MockStages {
     public static class MProcessor implements Processor {
 
       @Override
+      public List<ConfigIssue> validateConfigs(Info info, Processor.Context context) {
+        if (processorCapture != null) {
+          return processorCapture.validateConfigs(info, context);
+        } else {
+          return Collections.emptyList();
+        }
+      }
+
+      @Override
       public void init(Info info, Context context) throws StageException {
         if (processorCapture != null) {
           processorCapture.init(info, context);
@@ -135,6 +154,16 @@ public class MockStages {
     }
 
     public static class MTarget implements Target {
+
+      @Override
+      public List<ConfigIssue> validateConfigs(Info info, Target.Context context) {
+        if (targetCapture != null) {
+          return targetCapture.validateConfigs(info, context);
+        } else {
+          return Collections.emptyList();
+        }
+      }
+
       @Override
       public void init(Info info, Context context) throws StageException {
         if (targetCapture != null) {

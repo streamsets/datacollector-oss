@@ -9,11 +9,25 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.Context;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class BaseStage<C extends Context> implements Stage<C> {
   private Info info;
   private C context;
   private boolean requiresSuperInit;
   private boolean superInitCalled;
+
+  @Override
+  public List<ConfigIssue> validateConfigs(Info info, C context) {
+    this.info = info;
+    this.context = context;
+    return validateConfigs();
+  }
+
+  protected List<ConfigIssue> validateConfigs() {
+    return new ArrayList<>();
+  }
 
   @Override
   public final void init(Info info, C context) throws StageException {

@@ -13,6 +13,8 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +52,14 @@ public class Pipeline {
     }
   }
 
+  public List<StageIssue> validateConfigs() {
+    List<StageIssue> configIssues = new ArrayList<>();
+    for (Pipe pipe : pipes) {
+      configIssues.addAll(pipe.validateConfigs());
+    }
+    return configIssues;
+  }
+
   @SuppressWarnings("unchecked")
   public void init() throws StageException {
     int idx = 0;
@@ -57,10 +67,7 @@ public class Pipeline {
       for (; idx < pipes.length; idx++) {
         pipes[idx].init();
       }
-    } catch (StageException ex) {
-      destroy(idx);
-      throw ex;
-    } catch (RuntimeException ex) {
+    } catch (StageException|RuntimeException ex) {
       destroy(idx);
       throw ex;
     }

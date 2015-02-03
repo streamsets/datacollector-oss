@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.runner;
 
+
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.List;
 
@@ -32,6 +34,8 @@ public abstract class Pipe {
   public List<String> getOutputLanes() {
     return outputLanes;
   }
+
+  public abstract List<StageIssue> validateConfigs();
 
   public abstract void init() throws StageException;
 

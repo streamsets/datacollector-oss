@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.validation.StageIssue;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ObserverPipe extends Pipe {
@@ -15,6 +17,11 @@ public class ObserverPipe extends Pipe {
   public ObserverPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, Observer observer) {
     super(stage, inputLanes, outputLanes);
     this.observer = observer;
+  }
+
+  @Override
+  public List<StageIssue> validateConfigs() {
+    return Collections.emptyList();
   }
 
   @Override

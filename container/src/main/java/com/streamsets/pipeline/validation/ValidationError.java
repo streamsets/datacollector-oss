@@ -23,10 +23,11 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0012("{} cannot have input streams '{}'"),
   VALIDATION_0013("{} cannot have output streams '{}'"),
   VALIDATION_0014("{} must have input streams"),
-  VALIDATION_0015("{} must have output streams"),
+  VALIDATION_0015("Stage must have '{}' output stream(s) but has '{}'"),
   VALIDATION_0016("Invalid instance name, names can only contain the following characters '{}'"),
   VALIDATION_0017("Invalid input stream names '{}', streams can only contain the following characters '{}'"),
   VALIDATION_0018("Invalid output stream names '{}', streams can only contain the following characters '{}'"),
+  VALIDATION_0032("Stage must have at least one output stream"),
 
   VALIDATION_0019("Stream condition at index '{}' is not a Map"),
   VALIDATION_0020("Stream condition at index '{}' must have a '{}' entry"),

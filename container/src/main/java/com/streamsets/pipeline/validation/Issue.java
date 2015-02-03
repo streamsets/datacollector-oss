@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.validation;
 
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.LocalizableString;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -12,8 +13,12 @@ import com.streamsets.pipeline.api.impl.Utils;
 public class Issue {
   private final LocalizableString message;
 
-  public Issue(ValidationError error, Object... args) {
+  protected Issue(ErrorCode error, Object... args) {
     message = new ErrorMessage(error, args);
+  }
+
+  public Issue(ValidationError error, Object... args) {
+    this((ErrorCode) error, args);
   }
 
   public String getMessage() {

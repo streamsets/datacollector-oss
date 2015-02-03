@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.List;
 
@@ -50,6 +51,23 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.instanceName = stageRuntime.getConfiguration().getInstanceName();
     this.outputLanes = ImmutableList.copyOf(stageRuntime.getConfiguration().getOutputLanes());
 
+  }
+
+  private static class ConfigIssueImpl extends StageIssue implements Stage.ConfigIssue {
+
+    public ConfigIssueImpl(String instanceName, ErrorCode errorCode, Object... args) {
+      super(instanceName, errorCode, args);
+    }
+
+  }
+
+  private static final Object[] NULL_ONE_ARG = {null};
+
+  @Override
+  public Stage.ConfigIssue createConfigIssue(ErrorCode errorCode, Object... args) {
+    Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
+    args = (args != null) ? args.clone() : NULL_ONE_ARG;
+    return new ConfigIssueImpl(instanceName, errorCode, args);
   }
 
   @Override

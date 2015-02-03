@@ -24,11 +24,13 @@ import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.validation.StageIssue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +99,22 @@ public class StageRuntime {
   @SuppressWarnings("unchecked")
   public <T extends Stage.Context> T getContext() {
     return (T) context;
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<StageIssue> validateConfigs() {
+    Preconditions.checkState(context != null, "context has not been set");
+    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
+      List<StageIssue> issues = stage.validateConfigs(info, context);
+      if (issues == null) {
+        issues = Collections.emptyList();
+      }
+      return issues;
+    } finally {
+      Thread.currentThread().setContextClassLoader(cl);
+    }
   }
 
   @SuppressWarnings("unchecked")

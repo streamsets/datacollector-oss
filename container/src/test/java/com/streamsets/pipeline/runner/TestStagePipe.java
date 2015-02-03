@@ -18,6 +18,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.Collections;
+import java.util.List;
+
 public class TestStagePipe {
   private boolean produce;
   private boolean process;
@@ -39,6 +42,11 @@ public class TestStagePipe {
         Assert.assertEquals("offset1", lastSourceOffset);
         Assert.assertEquals(ImmutableList.of("s"), batchMaker.getLanes());
         return "offset2";
+      }
+
+      @Override
+      public List<ConfigIssue> validateConfigs(Info info, Context context) {
+        return Collections.emptyList();
       }
 
       @Override
@@ -86,6 +94,11 @@ public class TestStagePipe {
   public void testProcessor() throws Exception {
     process = false;
     MockStages.setProcessorCapture(new Processor() {
+
+      @Override
+      public List<ConfigIssue> validateConfigs(Info info, Processor.Context context) {
+        return Collections.emptyList();
+      }
 
       @Override
       public void process(Batch batch, BatchMaker batchMaker) throws StageException {
@@ -139,6 +152,11 @@ public class TestStagePipe {
   public void testTarget() throws Exception {
     write = false;
     MockStages.setTargetCapture(new Target() {
+
+      @Override
+      public List<ConfigIssue> validateConfigs(Info info, Target.Context context) {
+        return Collections.emptyList();
+      }
       @Override
       public void write(Batch batch) throws StageException {
         write = true;

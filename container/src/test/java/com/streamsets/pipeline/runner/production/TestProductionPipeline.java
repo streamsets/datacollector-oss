@@ -20,21 +20,25 @@ import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
+import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.TestUtil;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class TestProductionPipeline {
 
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String REVISION = "0";
 
-  @BeforeClass
-  public static void beforeClass() {
+  @Before
+  public void beforeClass() {
     TestUtil.captureMockStages();
   }
 
@@ -109,6 +113,11 @@ public class TestProductionPipeline {
     }
 
     @Override
+    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+      return Collections.emptyList();
+    }
+
+    @Override
     public void init(Info info, Context context) throws StageException {
 
     }
@@ -155,5 +164,38 @@ public class TestProductionPipeline {
     return pipeline;
   }
 
+  private static class SourceValidateConfigFailureCapture implements Source {
+    public int count;
+    public String offset;
+
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      return (count++ == 0) ? "x" : null;
+    }
+
+    @Override
+    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+      return Arrays.asList(context.createConfigIssue(ContainerError.CONTAINER_0000));
+    }
+
+    @Override
+    public void init(Info info, Context context) throws StageException {
+
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+  }
+
+
+  @Test(expected = PipelineRuntimeException.class)
+  public void testProductionRunWithFailedValidateConfigs() throws Exception {
+    Source capture = new SourceValidateConfigFailureCapture();
+    MockStages.setSourceCapture(capture);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    pipeline.run();
+  }
 
 }
