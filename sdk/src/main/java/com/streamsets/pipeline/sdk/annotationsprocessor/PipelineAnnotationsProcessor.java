@@ -1470,11 +1470,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   }
 
   public int getOutputStreams(TypeElement typeElement, StageDef stageDefAnnotation) {
-    TypeMirror typeMirror = typeElement.asType();
-    if(isTarget(typeMirror)) {
+    String stageType = getStageTypeFromElement(typeElement);
+    if(TARGET.equals(stageType)) {
       return 0;
     }
-    if(isSource(typeMirror) || isProcessor(typeMirror)) {
+    if(SOURCE.equals(stageType) || PROCESSOR.equals(stageType)) {
       List<? extends Element> enclosedElements = getOutputStreamEnumsTypeElement(stageDefAnnotation)
         .getEnclosedElements();
       List<VariableElement> variableElements = ElementFilter.fieldsIn(enclosedElements);
