@@ -316,6 +316,80 @@ angular
        */
       continueMonitoring: function() {
         $scope.monitoringPaused = false;
+      },
+
+      /**
+       * Returns label of the Stage Instance.
+       *
+       * @param stageInstanceName
+       * @returns {*|string}
+       */
+      getStageInstanceLabel: function (stageInstanceName) {
+        var instance;
+        angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
+          if (stageInstance.instanceName === stageInstanceName) {
+            instance = stageInstance;
+          }
+        });
+        return (instance && instance.uiInfo) ? instance.uiInfo.label : undefined;
+      },
+
+      /**
+       * Returns message string of the issue.
+       *
+       * @param stageInstanceName
+       * @param issue
+       * @returns {*}
+       */
+      getIssuesMessage: function (stageInstanceName, issue) {
+        var msg = issue.message;
+
+        if (issue.level === 'STAGE_CONFIG') {
+          var stageInstance = _.find($scope.pipelineConfig.stages, function (stage) {
+            return stage.instanceName === stageInstanceName;
+          });
+
+          if (stageInstance) {
+            msg += ' : ' + getConfigurationLabel(stageInstance, issue.configName);
+          }
+        }
+
+        return msg;
+      },
+
+      /**
+       * On clicking issue in Issues dropdown selects the stage and if issue level is STAGE_CONFIG
+       *
+       * @param issue
+       * @param instanceName
+       */
+      onIssueClick: function(issue, instanceName) {
+        var pipelineConfig = $scope.pipelineConfig,
+          stageInstance;
+        $scope.$storage.maximizeDetailPane = false;
+        $scope.$storage.minimizeDetailPane = false;
+        if(instanceName) {
+          //Select stage instance
+          stageInstance = _.find(pipelineConfig.stages, function(stage) {
+            return stage.instanceName === instanceName;
+          });
+
+          $scope.changeStageSelection({
+            selectedObject: stageInstance,
+            type: pipelineConstant.STAGE_INSTANCE,
+            detailTabName: 'configuration',
+            configGroup: issue.configGroup,
+            configName: issue.configName
+          });
+
+        } else {
+          //Select Pipeline Config
+          $scope.$broadcast('selectNode');
+          $scope.changeStageSelection({
+            selectedObject: undefined,
+            type: pipelineConstant.PIPELINE
+          });
+        }
       }
     });
 
@@ -451,7 +525,6 @@ angular
 
       dirty = false;
       $rootScope.common.saveOperationInProgress = true;
-      console.log('Saving ....');
       api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.name, config).
         success(function (res) {
           $rootScope.common.saveOperationInProgress = false;
@@ -689,6 +762,25 @@ angular
       );
     };
 
+    /**
+     * Returns label of Configuration for given Stage Instance object and Configuration Name.
+     *
+     * @param stageInstance
+     * @param configName
+     * @returns {*}
+     */
+    var getConfigurationLabel = function (stageInstance, configName) {
+      var stageDefinition = _.find($scope.stageLibraries, function (stage) {
+          return stageInstance.library === stage.library &&
+            stageInstance.stageName === stage.name &&
+            stageInstance.stageVersion === stage.version;
+        }),
+        configDefinition = _.find(stageDefinition.configDefinitions, function (configDefinition) {
+          return configDefinition.name === configName;
+        });
+
+      return configDefinition ? configDefinition.label : configName;
+    };
 
     var getStageErrorCounts = function() {
       var stageInstanceErrorCounts = {},
@@ -799,7 +891,6 @@ angular
     //Event Handling
 
     $scope.$watch('pipelineConfig', function (newValue, oldValue) {
-      //console.log('watch pipeline config');
       if(newValue === undefined) {
         return;
       }
@@ -812,7 +903,6 @@ angular
       }
       if (!angular.equals(newValue, oldValue)) {
         dirty = true;
-        //console.log('watch pipeline config inside equals');
         if (timeout) {
           $timeout.cancel(timeout);
         }

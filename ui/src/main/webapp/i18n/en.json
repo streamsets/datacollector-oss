@@ -93,8 +93,10 @@
         "graphErrorBadgeLabel": "Total Bad records + Stage errors."
       },
       "error": {
+        "operationFailed": "Operation Failed"
       },
       "validate": {
+        "validationErrors": "Validation Errors"
       }
     }
   },

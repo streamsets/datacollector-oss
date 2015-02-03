@@ -132,6 +132,13 @@ angular.module('dataCollectorApp')
           delete $rootScope.common.active[previousCtrl];
         }
       }
+
+
+      //To fix NVD3 JS errors - https://github.com/novus/nvd3/pull/396
+      window.nv.charts = {};
+      window.nv.graphs = [];
+      window.nv.logs = {};
+      window.onresize = null;
     });
 
     $rootScope.go = function ( path ) {
