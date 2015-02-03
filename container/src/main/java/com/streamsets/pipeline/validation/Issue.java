@@ -10,8 +10,12 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.LocalizableString;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Issue {
   private final LocalizableString message;
+  private Map<String, Object> additionalInfo;
 
   protected Issue(ErrorCode error, Object... args) {
     message = new ErrorMessage(error, args);
@@ -19,6 +23,17 @@ public class Issue {
 
   public Issue(ValidationError error, Object... args) {
     this((ErrorCode) error, args);
+  }
+
+  public void setAdditionalInfo(String key, Object value) {
+    if (additionalInfo == null) {
+      additionalInfo = new HashMap<>();
+    }
+    additionalInfo.put(key, value);
+  }
+
+  public Map getAdditionalInfo() {
+    return additionalInfo;
   }
 
   public String getMessage() {

@@ -221,7 +221,7 @@ public class PipelineConfigurationValidator {
                 issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0015,
                                                        stageDef.getOutputStreams(), stageConf.getOutputLanes().size()));
               }
-            } else {
+            } else if (stageConf.getOutputLanes().isEmpty()) {
               // source stage must have at least one output lane
               issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
             }
@@ -239,7 +239,7 @@ public class PipelineConfigurationValidator {
                 issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0015,
                                                        stageDef.getOutputStreams(), stageConf.getOutputLanes().size()));
               }
-            } else {
+            } else if (stageConf.getOutputLanes().isEmpty()) {
               // processor stage must have at least one output lane
               issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
             }
@@ -526,8 +526,9 @@ public class PipelineConfigurationValidator {
       if (!openOutputs.isEmpty()) {
         openLanes.addAll(openOutputs);
         // the stage has open output lanes
-        issues.add(StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0011,
-                                               openOutputs));
+        StageIssue issue = StageIssue.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0011);
+        issue.setAdditionalInfo("openStreams", openOutputs);
+        issues.add(issue);
       }
     }
     return preview;

@@ -14,18 +14,20 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0002("Stages are not fully wired, cannot reach the following stages '{}'"),
   VALIDATION_0003("The first stage must be a Source"),
   VALIDATION_0004("This stage cannot be a Source"),
-  VALIDATION_0005("Instance name already defined"),
+  VALIDATION_0005("Stage name already defined"),
   VALIDATION_0006("Stage definition does not exist, library '{}' name '{}' version '{}'"),
   VALIDATION_0007("Configuration value is required"),
   VALIDATION_0008("Invalid configuration"),
   VALIDATION_0009("Configuration should be a '{}'"),
-  VALIDATION_0010("Output streams '{}' already defined by stage instance '{}'"),
-  VALIDATION_0011("Instance has open streams '{}'"),
+  VALIDATION_0010("Output streams '{}' already defined by stage '{}'"),
+  VALIDATION_0011("Stage has open output streams"),
+    // Issues are augmented with an array of the open streams in the additionalInfo map property
+
   VALIDATION_0012("{} cannot have input streams '{}'"),
   VALIDATION_0013("{} cannot have output streams '{}'"),
   VALIDATION_0014("{} must have input streams"),
   VALIDATION_0015("Stage must have '{}' output stream(s) but has '{}'"),
-  VALIDATION_0016("Invalid instance name, names can only contain the following characters '{}'"),
+  VALIDATION_0016("Invalid stage name, names can only contain the following characters '{}'"),
   VALIDATION_0017("Invalid input stream names '{}', streams can only contain the following characters '{}'"),
   VALIDATION_0018("Invalid output stream names '{}', streams can only contain the following characters '{}'"),
   VALIDATION_0032("Stage must have at least one output stream"),
@@ -44,7 +46,7 @@ public enum ValidationError implements ErrorCode {
                   "element at index '{}' has '{}'"),
 
   VALIDATION_0027("Rule Definition '{}' refers to a stream '{}' which is not found in the pipeline configuration."),
-  VALIDATION_0028("Rule Definition '{}' refers to a instance '{}' which is not found in the pipeline configuration."),
+  VALIDATION_0028("Rule Definition '{}' refers to a stage '{}' which is not found in the pipeline configuration."),
 
   VALIDATION_0029("Configuration must be a String, is a '{}'"),
   VALIDATION_0030("The expression value '{}' must be within '${...}'"),
