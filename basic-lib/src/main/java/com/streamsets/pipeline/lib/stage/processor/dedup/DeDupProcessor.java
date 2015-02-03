@@ -192,8 +192,8 @@ public class DeDupProcessor extends RecordProcessor {
   private RecordFunnel funnel;
   private Cache<HashCode, Object> hashCache;
   private XEvictingQueue<HashCode> hashBuffer;
-  private String uniqueLane = "unique";
-  private String duplicateLane = "duplicate";
+  private String uniqueLane;
+  private String duplicateLane;
 
   private String hashAttrName;
 
@@ -230,10 +230,14 @@ public class DeDupProcessor extends RecordProcessor {
     });
     hashBuffer = XEvictingQueue.create(recordCountWindow);
     hashAttrName = getInfo() + ".hash";
+    uniqueLane = getContext().getOutputLanes().get(OutputStreams.UNIQUE.ordinal());
+    duplicateLane = getContext().getOutputLanes().get(OutputStreams.DUPLICATE.ordinal());
   }
 
-  boolean duplicateCheck(HashCode hash) {
+  boolean duplicateCheck(Record record) {
     boolean dup = true;
+    HashCode hash = hasher.hashObject(record, funnel);
+    record.getHeader().setAttribute(hashAttrName, hash.toString());
     if (hashCache.getIfPresent(hash) == null) {
       hashCache.put(hash, VOID);
       HashCode evicted = hashBuffer.addAndGetEvicted(hash);
@@ -247,9 +251,7 @@ public class DeDupProcessor extends RecordProcessor {
 
   @Override
   protected void process(Record record, BatchMaker batchMaker) throws StageException {
-    HashCode hash = hasher.hashObject(record, funnel);
-    record.getHeader().setAttribute(hashAttrName, hash.toString());
-    if (duplicateCheck(hash)) {
+    if (duplicateCheck(record)) {
       batchMaker.addRecord(record, duplicateLane);
     } else {
       batchMaker.addRecord(record, uniqueLane);
