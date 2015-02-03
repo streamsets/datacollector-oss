@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 @ConfigGroups(DeDupProcessor.Groups.class)
 public class DeDupProcessor extends RecordProcessor {
 
-  private static final int BYTES_PER_HASH = 25; //TODO find out the right number
+  private static final int MEMORY_USAGE_PER_HASH = 85;
 
   public enum Groups implements Label {
     DE_DUP;
@@ -208,6 +208,12 @@ public class DeDupProcessor extends RecordProcessor {
     }
     if (!hashAllFields && fieldsToHash.isEmpty()) {
       issues.add(getContext().createConfigIssue(StageLibError.LIB_0902));
+    }
+
+    long estimatedMemory = MEMORY_USAGE_PER_HASH * recordCountWindow;
+    if (estimatedMemory > Runtime.getRuntime().maxMemory() / 3) {
+      issues.add(getContext().createConfigIssue(StageLibError.LIB_0903, recordCountWindow, estimatedMemory / 1024,
+                                                Runtime.getRuntime().maxMemory() / 1024));
     }
     return issues;
   }

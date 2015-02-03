@@ -8,13 +8,15 @@ package com.streamsets.pipeline.lib.stage.processor.dedup;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,81 @@ public class TestDeDupProcessor {
     map.put("value", Field.create(value));
     record.set(Field.create(map));
     return record;
+  }
+
+  @Test(expected = StageException.class)
+  public void testValidateConfigs1() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
+        .addConfiguration("hashAllFields", false)
+        .addConfiguration("fieldsToHash", Collections.emptyList())
+        .addConfiguration("timeWindowSecs", 1)
+        .addConfiguration("recordCountWindow", 4)
+        .addOutputLane("unique")
+        .addOutputLane("duplicate")
+        .build();
+    runner.runInit();
+  }
+
+  @Test
+  public void testValidateConfigs2() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
+        .addConfiguration("hashAllFields", false)
+        .addConfiguration("fieldsToHash", Arrays.asList("/a"))
+        .addConfiguration("timeWindowSecs", 1)
+        .addConfiguration("recordCountWindow", 4)
+        .addOutputLane("unique")
+        .addOutputLane("duplicate")
+        .build();
+    runner.runInit();
+    runner.runDestroy();
+  }
+
+  @Test(expected = StageException.class)
+  public void testValidateConfigs3() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
+        .addConfiguration("hashAllFields", true)
+        .addConfiguration("timeWindowSecs", 0)
+        .addConfiguration("recordCountWindow", 0)
+        .addOutputLane("unique")
+        .addOutputLane("duplicate")
+        .build();
+    runner.runInit();
+  }
+
+  @Test
+  public void testValidateConfigs4() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
+        .addConfiguration("hashAllFields", true)
+        .addConfiguration("timeWindowSecs", 0)
+        .addConfiguration("recordCountWindow", 4)
+        .addOutputLane("unique")
+        .addOutputLane("duplicate")
+        .build();
+    runner.runInit();
+  }
+
+  @Test(expected = StageException.class)
+  public void testValidateConfigs5() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
+        .addConfiguration("hashAllFields", true)
+        .addConfiguration("timeWindowSecs", 0)
+        .addConfiguration("recordCountWindow", (int) (Runtime.getRuntime().maxMemory() / 3 / 85 + 1))
+        .addOutputLane("unique")
+        .addOutputLane("duplicate")
+        .build();
+    runner.runInit();
+  }
+
+  @Test
+  public void testValidateConfigs6() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
+        .addConfiguration("hashAllFields", true)
+        .addConfiguration("timeWindowSecs", 0)
+        .addConfiguration("recordCountWindow", (int) (Runtime.getRuntime().maxMemory() / 3 / 85 - 1))
+        .addOutputLane("unique")
+        .addOutputLane("duplicate")
+        .build();
+    runner.runInit();
   }
 
   @Test
@@ -276,5 +353,30 @@ public class TestDeDupProcessor {
       runner.runDestroy();
     }
   }
+
+// //TO TEST MEMORY USAGE
+//  private final static int MAX_RECORDS = 10000000;
+//  @Test
+//  public void testMemoryUsage() throws Exception {
+//    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
+//        .addConfiguration("hashAllFields", true)
+//        .addConfiguration("timeWindowSecs", 60 * 1000)
+//        .addConfiguration("recordCountWindow", MAX_RECORDS)
+//        .addOutputLane("unique")
+//        .addOutputLane("duplicate")
+//        .build();
+//    runner.runInit();
+//    try {
+//      Record record = RecordCreator.create();
+//      for (int i = 0; i < MAX_RECORDS; i++ ) {
+//        record.set(Field.create(i));
+//        ((DeDupProcessor)runner.getStage()).duplicateCheck(record);
+//      }
+//      System.out.println("XXXX");
+//      Thread.sleep(10000);
+//    } finally {
+//      runner.runDestroy();
+//    }
+//  }
 
 }

@@ -62,6 +62,8 @@ public enum StageLibError implements ErrorCode {
   LIB_0900("Maximum record count must be greater than zero, it is '{}'"),
   LIB_0901("Time window must be zero (disabled) or greater than zero, it is '{}'"),
   LIB_0902("At least one field-path to hash must be specified"),
+  LIB_0903("The estimated required memory for '{}' records is '{}'MBs, current maximum heap is '{}'MBs, the " +
+           "required memory must not exceed 1/3 of the maximum heap"),
 
   ;
   private final String msg;
