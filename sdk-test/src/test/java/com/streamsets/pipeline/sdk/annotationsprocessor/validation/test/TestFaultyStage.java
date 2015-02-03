@@ -23,7 +23,11 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
   @Override
   public List<String> getClassesToProcess() {
     //FaultySource stage is modeled with all kinds of validation errors
-    return Arrays.asList("com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultySource");
+    return Arrays.asList("com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultySource",
+      "com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultySource2",
+      "com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultySource3",
+      "com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultySource4",
+      "com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultyTarget");
   }
 
   @Override
@@ -61,6 +65,11 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("Invalid group name X specified in the \"ConfigDef\" annotation for field FaultySource.callMe.");
     expectedSet.add("Complex Field type 'com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultySource$PhoneConfig' is an inner class but is not declared as static. Inner class Complex Field types must be declared static.");
     expectedSet.add("Field PhoneConfig.phone is annotated as single valued FieldSelector. The type of the field is expected to be String.");
+    expectedSet.add("The stage FaultySource identifies \"com.streamsets.pipeline.api.StageDef$VariableOutputStreams\" as the output streams provider class but is not a source or processor.");
+    expectedSet.add("The stage FaultySource2 identifies \"com.streamsets.pipeline.api.StageDef$VariableOutputStreams\" as the output streams provider class but does not specify the 'outputStreamsDrivenByConfig' option.");
+    expectedSet.add("The stage FaultySource3 identifies \"com.streamsets.pipeline.api.StageDef$DefaultOutputStreams\" as the output streams provider class. It should not specify a value xyz for 'outputStreamsDrivenByConfig'.");
+    expectedSet.add("The stage FaultySource4 indicates a value 'xyz' for literal 'outputStreamsDrivenByConfig' but no configuration option is found with that name.");
+    expectedSet.add("The stage FaultyTarget is a target but identifies an output streams provider class 'com.streamsets.pipeline.api.StageDef$VariableOutputStreams' which is not \"com.streamsets.pipeline.api.StageDef$DefaultOutputStreams\".");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());

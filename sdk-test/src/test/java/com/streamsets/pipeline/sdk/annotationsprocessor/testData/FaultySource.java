@@ -23,10 +23,11 @@ import java.util.List;
 
 //13. Implementation of RawSourcePreviewer must be a top level class
 //14. Annotation RawSource is FaultySource which is not a Source
+//26. Source specifies variable output streams but does not indicate drivenByConfiguration
 @GenerateResourceBundle
 @RawSource(rawSourcePreviewer = TestRawSourcePreviewer.FaultyRawSourcePreviewer.class)
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
-  , version = "1.0")
+  , version = "1.0", outputStreams = StageDef.VariableOutputStreams.class)
 @ConfigGroups(FaultySource.MyGroups.class)
 public class FaultySource {
 

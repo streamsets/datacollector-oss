@@ -81,7 +81,10 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private static final String DOT = ".";
   private static final String DEFAULT_CONSTRUCTOR = "<init>";
   private static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
+  private static final String DC_RESOURCE_BUNDLES_JSON = "datacollector-resource-bundles.json";
   private static final String MAP_TYPE_WITH_KEY = "java.util.Map<java.lang.String,";
+  private static final String VARIABLE_OUTPUT_STREAMS_CLASS = StageDef.VariableOutputStreams.class.getName();
+  private static final String DEFAULT_OUTPUT_STREAMS_CLASS = StageDef.DefaultOutputStreams.class.getName();
 
   /**************** private variables ************/
 
@@ -141,7 +144,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         String elementName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
         if(stageNameToVersionMap.containsKey(elementName)) {
           //these are stages needing resource bundles.
-          stagesNeedingResourceBundles.add(elementName);
+          stagesNeedingResourceBundles.add(typeElement.getQualifiedName().toString());
         } else if(validateErrorDefinition(typeElement)) {
           //As of now these have to be enums that implement ErrorId. Validate and note down enums needing resource
           //bundle generation
@@ -166,7 +169,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       // configuration options
       if(!stageDefValidationError) {
         generateConfigFile();
-        generateStageBundles();
+        generateClassNeedingResourceBundle();
       }
       //generate a error bundle
       if(!errorEnumValidationFailure &&
@@ -181,62 +184,18 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   /********************* Private helper methods *****************************/
   /**************************************************************************/
 
-
   /**
-   * Generates <className>.properties file for each stage definition.
+   * generates datacollector-resource-bundles.json which contains names of all stages, enums that need resource bundle
+   * generation.
    */
-  private void generateStageBundles() {
-    //get source location
-    for(StageDefinition s : stageDefinitions) {
-      if(stagesNeedingResourceBundles.contains(s.getName())) {
-        try {
-          FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT,
-              s.getClassName().substring(0, s.getClassName().lastIndexOf(DOT)),
-              s.getClassName().substring(s.getClassName().lastIndexOf(DOT) + 1) + BUNDLE_SUFFIX, (Element[]) null);
-          PrintWriter pw = new PrintWriter(resource.openWriter());
-          pw.println(STAGE_LABEL + EQUALS + s.getLabel());
-          pw.println(STAGE_DESCRIPTION + EQUALS + s.getDescription());
-          for(Map<String, String> groupNameToLabelMap : s.getConfigGroupDefinition().getGroupNameToLabelMapList()) {
-            pw.println(groupNameToLabelMap.get("name") + SEPARATOR + LABEL + EQUALS + groupNameToLabelMap.get("label"));
-          }
-          for (ConfigDefinition c : s.getConfigDefinitions()) {
-            pw.println(c.getName() + SEPARATOR + LABEL + EQUALS + c.getLabel());
-            pw.println(c.getName() + SEPARATOR + DESCRIPTION + EQUALS + c.getDescription());
-            if(c.getModel() != null) {
-              if(c.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
-                for (ConfigDefinition configDefinition : c.getModel().getConfigDefinitions()) {
-                  pw.println(c.getName() + SEPARATOR + configDefinition.getName() + SEPARATOR + LABEL + EQUALS +
-                    configDefinition.getLabel());
-                  pw.println(c.getName() + SEPARATOR + configDefinition.getName() + SEPARATOR + DESCRIPTION + EQUALS +
-                    configDefinition.getDescription());
-                  if(configDefinition.getModel() != null) {
-                    //generate values and labels for value chooser
-                    ModelDefinition modelDefinition = configDefinition.getModel();
-                    if(modelDefinition.getValues() != null) {
-                      for (int i = 0; i < modelDefinition.getValues().size(); i++) {
-                        pw.println(configDefinition.getName() + SEPARATOR + modelDefinition.getModelType().name() +
-                          SEPARATOR + modelDefinition.getValues().get(i) + EQUALS + modelDefinition.getLabels().get(i));
-                      }
-                    }
-                  }
-                }
-              } else {
-                //generate values and labels for value chooser
-                List<String> values = c.getModel().getValues();
-                if(values != null) {
-                  for (int i = 0; i < values.size(); i++) {
-                    pw.println(c.getName() + SEPARATOR + values.get(i) + EQUALS +
-                      c.getModel().getLabels().get(i));
-                  }
-                }
-              }
-            }
-          }
-          pw.flush();
-          pw.close();
-        } catch (IOException e) {
-          processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
-        }
+  private void generateClassNeedingResourceBundle() {
+    if(!stagesNeedingResourceBundles.isEmpty()) {
+      try {
+        FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
+          DC_RESOURCE_BUNDLES_JSON);
+        json.writeValue(resource.openOutputStream(), stagesNeedingResourceBundles);
+      } catch (IOException e) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
       }
     }
   }
@@ -296,9 +255,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         rawSourceDefinition = getRawSourceDefinition(rawSourceAnnot);
       }
 
-      boolean variableOutputStreams = getVariableOutputStreams(typeElement);
-      int outputStreams = getOutputStreams(typeElement);
-      String outputStreamsLabelProviderClass = getOutputStreamLabelsProviderClass(typeElement);
+      boolean variableOutputStreams = isVariableOutputStreams(stageDefAnnotation);
+      int outputStreams = getOutputStreams(typeElement, stageDefAnnotation);
+      String outputStreamsLabelProviderClass = getOutputStreamLabelsProviderClass(stageDefAnnotation);
 
       String stageName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
       stageDefinition = new StageDefinition(
@@ -514,23 +473,51 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
     //Check if the stage extends one of the abstract classes
     for(TypeMirror typeMirror : getAllSuperTypes(typeElement)) {
-      if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseSource")
-        || typeMirror.toString().equals("com.streamsets.pipeline.api.Source")) {
+      if (isSource(typeMirror)) {
         return SOURCE;
-      } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseProcessor")
-        || typeMirror.toString().equals("com.streamsets.pipeline.api.base.RecordProcessor")
-        || typeMirror.toString().equals("com.streamsets.pipeline.api.base.SingleLaneProcessor")
-        || typeMirror.toString().equals("com.streamsets.pipeline.api.base.SingleLaneRecordProcessor")
-        || typeMirror.toString().equals("com.streamsets.pipeline.api.Processor")) {
+      } else if (isProcessor(typeMirror)) {
         return PROCESSOR;
-      } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseTarget")
-        || typeMirror.toString().equals("com.streamsets.pipeline.api.Target")) {
+      } else if (isTarget(typeMirror)) {
         return TARGET;
-      } else if (typeMirror.toString().equals("com.streamsets.pipeline.api.ErrorCode")) {
+      } else if (isError(typeMirror)) {
         return ERROR;
       }
     }
     return "";
+  }
+
+  private boolean isError(TypeMirror typeMirror) {
+    if(typeMirror.toString().equals("com.streamsets.pipeline.api.ErrorCode")) {
+      return true;
+    }
+    return false;
+  }
+
+  private boolean isSource(TypeMirror typeMirror) {
+    if(typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseSource")
+      || typeMirror.toString().equals("com.streamsets.pipeline.api.Source")) {
+      return true;
+    }
+    return false;
+  }
+
+  private boolean isProcessor(TypeMirror typeMirror) {
+    if(typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseProcessor")
+      || typeMirror.toString().equals("com.streamsets.pipeline.api.base.RecordProcessor")
+      || typeMirror.toString().equals("com.streamsets.pipeline.api.base.SingleLaneProcessor")
+      || typeMirror.toString().equals("com.streamsets.pipeline.api.base.SingleLaneRecordProcessor")
+      || typeMirror.toString().equals("com.streamsets.pipeline.api.Processor")) {
+      return true;
+    }
+    return false;
+  }
+
+  private boolean isTarget(TypeMirror typeMirror) {
+    if(typeMirror.toString().equals("com.streamsets.pipeline.api.base.BaseTarget")
+      || typeMirror.toString().equals("com.streamsets.pipeline.api.Target")) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -675,7 +662,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.
       printError("stagedef.validation.does.not.implement.interface",
-        "Stage {} neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, Processor, Target interface.",
+        "Stage {} neither extends one of BaseSource, BaseProcessor, BaseTarget classes nor implements one of Source, " +
+          "Processor, Target interface.",
         typeElement.getQualifiedName().toString());
       //Continue for now to find out if there are more issues.
       return false;
@@ -702,14 +690,16 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //field must be declared public
     if(!variableElement.getModifiers().contains(Modifier.PUBLIC)) {
       printError("field.validation.not.public",
-        "The field {} has \"ConfigDef\" annotation but is not declared public. Configuration fields must be declared public.",
+        "The field {} has \"ConfigDef\" annotation but is not declared public. " +
+          "Configuration fields must be declared public.",
         typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
       valid = false;
     }
     //field must not be final
     if(variableElement.getModifiers().contains(Modifier.FINAL)) {
       printError("field.validation.final.field",
-        "The field {} has \"ConfigDef\" annotation and is declared final. Configuration fields must not be declared final.",
+        "The field {} has \"ConfigDef\" annotation and is declared final. " +
+          "Configuration fields must not be declared final.",
         typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString()
       );
       valid = false;
@@ -717,7 +707,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //field must not be static
     if(variableElement.getModifiers().contains(Modifier.STATIC)) {
       printError("field.validation.static.field",
-        "The field {} has \"ConfigDef\" annotation and is declared static. Configuration fields must not be declared final.",
+        "The field {} has \"ConfigDef\" annotation and is declared static. " +
+          "Configuration fields must not be declared final.",
         typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
       valid = false;
     }
@@ -746,8 +737,10 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
       if(!valid) {
         printError("field.validation.dependsOn",
-          "The \"ConfigDef\" annotation for field {} indicates that it depends on field '{}' which does not exist or is not a configuration option.",
-          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString(), dependsOnConfig);
+          "The \"ConfigDef\" annotation for field {} indicates that it depends on field '{}' which does not exist or " +
+            "is not a configuration option.",
+          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString(),
+          dependsOnConfig);
       }
       return valid;
     }
@@ -769,7 +762,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return true;
   }
 
-  private boolean validateNonModelConfig(ConfigDef configDefAnnot, Element typeElement, VariableElement variableElement) {
+  private boolean validateNonModelConfig(ConfigDef configDefAnnot, Element typeElement,
+                                         VariableElement variableElement) {
     boolean valid = true;
     //type match
     TypeMirror fieldType = variableElement.asType();
@@ -952,9 +946,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return valid;
   }
 
-  private boolean validateFieldSelector(Element typeElement, VariableElement variableElement, FieldSelector fieldSelector) {
+  private boolean validateFieldSelector(Element typeElement, VariableElement variableElement,
+                                        FieldSelector fieldSelector) {
     boolean valid = true;
-    if (!fieldSelector.singleValued() && !variableElement.asType().toString().equals("java.util.List<java.lang.String>")) {
+    if (!fieldSelector.singleValued() &&
+      !variableElement.asType().toString().equals("java.util.List<java.lang.String>")) {
       printError("field.validation.type.is.not.list",
           "Field {} is annotated as multi valued FieldSelector. The type of the field {} expected to be List<String>.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
@@ -971,7 +967,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   private boolean validateLanePredicateMapping(Element typeElement, VariableElement variableElement) {
     boolean valid = true;
-    if (!variableElement.asType().toString().equals("java.util.List<java.util.Map<java.lang.String,java.lang.String>>")) {
+    if (!variableElement.asType().toString().equals(
+      "java.util.List<java.util.Map<java.lang.String,java.lang.String>>")) {
       printError("field.validation.type.is.not.map",
                  "The type of the field {} is expected to be Map<String, String>.",
                  typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
@@ -1060,7 +1057,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     boolean valid = true;
     if (valueProviderTypeMirror == null) {
       printError("field.validation.chooserValues.not.supplied",
-          "The field {} marked with ValueChooser annotation and the type is \"PROVIDED\" but no ChooserValues implementation is supplied",
+          "The field {} marked with ValueChooser annotation and the type is \"PROVIDED\" but no ChooserValues " +
+            "implementation is supplied",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
       valid = false;
     }
@@ -1123,7 +1121,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     valid &= validateIconExists(typeElement, stageDefAnnotation);
     valid &= validateRawSource(typeElement);
     valid &= validateOptionGroups(typeElement);
-    valid &= validateMultipleOutputStreams(typeElement);
+    valid &= validateMultipleOutputStreams(typeElement, stageDefAnnotation);
     return valid;
   }
 
@@ -1255,8 +1253,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       Element enclosingElement = e.getEnclosingElement();
       if(!enclosingElement.getKind().equals(ElementKind.PACKAGE)) {
         printError("rawSource.validation.rawSourcePreviewer.not.outer.class",
-            "RawSourcePreviewer {} is an inner class. Inner class RawSourcePreviewer implementations are not supported.",
-            rspTypeMirror.toString());
+            "RawSourcePreviewer {} is an inner class. Inner class RawSourcePreviewer implementations are not " +
+              "supported.",rspTypeMirror.toString());
         valid = false;
       }
     }
@@ -1417,33 +1415,118 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return true;
   }
 
-  private boolean validateMultipleOutputStreams(TypeElement typeElement) {
-    //TODO if StageDef has outputStreams=@StageDef.VariableOutputStreams.class return true must be a source or processor
-    //TODO and it must have @StageDef.outputStreamsDrivenByConfig not empty and @StageDef.outputStreamsDrivenByConfig must be
-    //TODO a @ConfigDef configuration with MODEL type and @LanePredicateMapping
+  private boolean validateMultipleOutputStreams(TypeElement typeElement, StageDef stageDef) {
+    boolean valid = true;
 
-    //TODO if stage is a target @StageDef.outputStreams must be @StageDef.DefaultOutputStreams
+    String stageType = getStageTypeFromElement(typeElement);
 
-    //TODO if StageDef has @StageDef.outputStreams=@StageDef.DefaultOutputStreams it must validate that
-    //TODO @StageDef.outputStreamsDrivenByConfig is empty
+    if(TARGET.equals(stageType) && !isDefaultOutputStream(stageDef)) {
+      printError("stagedef.validation.target.defines.outputStreams",
+        "The stage {} is a target but identifies an output streams provider class '{}' which is not" +
+          " \"com.streamsets.pipeline.api.StageDef$DefaultOutputStreams\".",
+        typeElement.getSimpleName().toString(), getOutputStreamLabelsProviderClass(stageDef));
+      valid = false;
+    }
 
-    return true;
+    if(isDefaultOutputStream(stageDef) && !stageDef.outputStreamsDrivenByConfig().isEmpty()) {
+      printError("stagedef.validation.target.defines.DefaultOutputStreams.and.outputStreamsDrivenByConfig",
+        "The stage {} identifies \"com.streamsets.pipeline.api.StageDef$DefaultOutputStreams\" as the output streams " +
+          "provider class. It should not specify a value {} for 'outputStreamsDrivenByConfig'.",
+        typeElement.getSimpleName().toString(), stageDef.outputStreamsDrivenByConfig());
+      valid = false;
+    }
+
+    if(isVariableOutputStreams(stageDef) && !TARGET.equals(stageType)) {
+      if(SOURCE.equals(stageType) || PROCESSOR.equals(stageType)) {
+        if(stageDef.outputStreamsDrivenByConfig().isEmpty()) {
+          printError("stagedef.validation.variableOutputStreams.but.no.outputStreamsDrivenByConfig",
+            "The stage {} identifies \"com.streamsets.pipeline.api.StageDef$VariableOutputStreams\" as the output " +
+              "streams provider class but does not specify the 'outputStreamsDrivenByConfig' option.",
+            typeElement.getSimpleName().toString());
+          valid = false;
+        } else {
+          boolean found = false;
+          String drivenByConfig = stageDef.outputStreamsDrivenByConfig();
+          for(VariableElement v : getAllFields(typeElement)) {
+            if(v.getSimpleName().toString().equals(drivenByConfig) && v.getAnnotation(ConfigDef.class) != null) {
+              found = true;
+            }
+          }
+          if(!found) {
+            printError("stagedef.validation.outputStreamsDrivenByConfig.invalid",
+              "The stage {} indicates a value '{}' for literal 'outputStreamsDrivenByConfig' but no configuration " +
+                "option is found with that name.",
+              typeElement.getSimpleName().toString(), drivenByConfig);
+          }
+        }
+      } else {
+        printError("stagedef.validation.variableOutputStreams.not.source.or.processor",
+          "The stage {} identifies \"com.streamsets.pipeline.api.StageDef$VariableOutputStreams\" as the output " +
+            "streams provider class but is not a source or processor.", typeElement.getSimpleName().toString());
+        valid = false;
+      }
+    }
+    return valid;
   }
 
-  private boolean getVariableOutputStreams(TypeElement typeElement) {
-    //TODO TRUE if @StageDef.outputStreams=@StageDef.VariableOutputStreams.class true, FALSE otherwise
-    return false;
-  }
-
-  public int getOutputStreams(TypeElement typeElement) {
-    //TODO if TARGET return 0
-    //TODO if SOURCE/PROCESSOR return cardinality of the @StageDef.outputStreams enum
+  public int getOutputStreams(TypeElement typeElement, StageDef stageDefAnnotation) {
+    TypeMirror typeMirror = typeElement.asType();
+    if(isTarget(typeMirror)) {
+      return 0;
+    }
+    if(isSource(typeMirror) || isProcessor(typeMirror)) {
+      List<? extends Element> enclosedElements = getOutputStreamEnumsTypeElement(stageDefAnnotation)
+        .getEnclosedElements();
+      List<VariableElement> variableElements = ElementFilter.fieldsIn(enclosedElements);
+      int cardinality = 0;
+      for (VariableElement variableElement : variableElements) {
+        if(variableElement.getKind() == ElementKind.ENUM_CONSTANT) {
+          cardinality++;
+        }
+      }
+      return cardinality;
+    }
     return 1;
   }
 
-  public String getOutputStreamLabelsProviderClass(TypeElement typeElement) {
-    //TODO return the value of the @StageDef.outputStreams
-    return null;
+  public String getOutputStreamLabelsProviderClass(StageDef stageDef) {
+    //Not the best way of getting the TypeMirror of the ChooserValues implementation
+    //Find a better solution
+    TypeMirror outputStreamsEnum = null;
+    try {
+      stageDef.outputStreams();
+    } catch (MirroredTypeException e) {
+      outputStreamsEnum = e.getTypeMirror();
+    }
+    return getClassNameFromTypeMirror(outputStreamsEnum);
+  }
+
+  private TypeElement getOutputStreamEnumsTypeElement(StageDef stageDef) {
+    //Not the best way of getting the TypeMirror of the ChooserValues implementation
+    //Find a better solution
+    TypeMirror outputStreamsEnum = null;
+    try {
+      stageDef.outputStreams();
+    } catch (MirroredTypeException e) {
+      outputStreamsEnum = e.getTypeMirror();
+    }
+    return getTypeElementFromMirror(outputStreamsEnum);
+  }
+
+  private boolean isVariableOutputStreams(StageDef stageDef) {
+    String outputStreamsName = getOutputStreamLabelsProviderClass(stageDef);
+    if(outputStreamsName.equals(VARIABLE_OUTPUT_STREAMS_CLASS)) {
+      return true;
+    }
+    return false;
+  }
+
+  private boolean isDefaultOutputStream(StageDef stageDef) {
+    String outputStreamsName = getOutputStreamLabelsProviderClass(stageDef);
+    if(outputStreamsName.equals(DEFAULT_OUTPUT_STREAMS_CLASS)) {
+      return true;
+    }
+    return false;
   }
 
 }
