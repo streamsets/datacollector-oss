@@ -2,9 +2,20 @@
  * Service for providing access to the Preview/Snapshot utility functions.
  */
 angular.module('dataCollectorApp.common')
-  .service('previewService', function(api, $q) {
+  .service('previewService', function(api, $q, $translate) {
 
-    var self = this;
+    var self = this,
+      translations;
+
+
+    $translate([
+      'global.form.stream',
+      'global.form.label',
+      'global.form.condition'
+    ]).then(function (_translations) {
+      translations = _translations;
+    });
+
 
     /**
      * Returns Preview input lane & output lane data for the given Stage Instance.
@@ -177,13 +188,20 @@ angular.module('dataCollectorApp.common')
           lanePredicatesConfiguration = _.find(stageInstance.configuration, function(configuration) {
             return configuration.name === 'lanePredicates';
           }),
-          info = '<span class="lane-label">stream: </span><span class="lane-value">' + (index + 1) + '</span>';
+          info = '<span class="lane-label">' + translations['global.form.stream'] + ': </span><span class="lane-value">' + (index + 1) + '</span>';
 
 
         if(lanePredicatesConfiguration) {
           var lanePredicate = lanePredicatesConfiguration.value[index];
           if(lanePredicate) {
-            info += ', <span class="predicate-label">predicate: </span><span class="predicate-value">"' + lanePredicate.predicate + '"</span>';
+            info += ', <span class="predicate-label">' + translations['global.form.condition'] + ': </span><span class="predicate-value">"' + lanePredicate.predicate + '"</span>';
+          }
+        } else {
+          var outputStreamLabels = stageInstance.uiInfo.outputStreamLabels,
+            outputStreamLabel = outputStreamLabels ? outputStreamLabels[index] : undefined;
+
+          if(outputStreamLabel) {
+            info += ', <span class="predicate-label">' + translations['global.form.label'] + ': </span><span class="predicate-value">"' + outputStreamLabel + '"</span>';
           }
         }
 

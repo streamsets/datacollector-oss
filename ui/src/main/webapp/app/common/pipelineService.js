@@ -82,6 +82,8 @@ angular.module('dataCollectorApp.common')
         if(stage.outputStreams > 1) {
           stageInstance.uiInfo.outputStreamLabels = stage.outputStreamLabels;
         }
+      } else if(stage.variableOutputStreams) {
+        stageInstance.outputLanes.push(stageInstance.instanceName + 'OutputLane' + (new Date()).getTime());
       }
 
       angular.forEach(stage.configDefinitions, function (configDefinition) {
