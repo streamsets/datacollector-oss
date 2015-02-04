@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -20,19 +21,23 @@ public class StageOutput {
   private final List<Record> errorRecords;
   private final List<ErrorMessage> stageErrors;
 
+  @SuppressWarnings("unchecked")
   public StageOutput(String instanceName, Map<String, List<Record>> output, ErrorSink errorSink) {
-    this(instanceName, output, errorSink.getErrorRecords(instanceName), errorSink.getStageErrors().get(instanceName));
+    this(instanceName, (Map) output, (List) errorSink.getErrorRecords(instanceName),
+         errorSink.getStageErrors().get(instanceName));
   }
 
-    @JsonCreator
+  @JsonCreator
+  @SuppressWarnings("unchecked")
+  //TODO fix generics typing here, now using RecordImpl to trick jackson into deserializing records
   public StageOutput(
       @JsonProperty("instanceName") String instanceName,
-      @JsonProperty("output") Map<String, List<Record>> output,
-      @JsonProperty("errorRecords") List<Record> errorRecords,
+      @JsonProperty("output") Map<String, List<RecordImpl>> output,
+      @JsonProperty("errorRecords") List<RecordImpl> errorRecords,
         @JsonProperty("stageErrors") List<ErrorMessage> stageErrors) {
     this.instanceName = instanceName;
-    this.output = output;
-    this.errorRecords = errorRecords;
+    this.output = (Map) output;
+    this.errorRecords = (List) errorRecords;
     this.stageErrors = stageErrors;
   }
 

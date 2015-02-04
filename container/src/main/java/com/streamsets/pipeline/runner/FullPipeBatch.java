@@ -141,6 +141,7 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public void overrideStageOutput(StagePipe pipe, StageOutput stageOutput) {
     startStage(pipe);
     List<String> stageLaneNames = new ArrayList<>(stageOutput.getOutput().keySet());
@@ -150,8 +151,9 @@ public class FullPipeBatch implements PipeBatch {
       fullPayload.put(pipeLaneName, stageOutput.getOutput().get(stageLaneName));
     }
     if (stageOutputSnapshot != null) {
-      stageOutputSnapshot.add(new StageOutput(stageOutput.getInstanceName(), createSnapshot(stageOutput.getOutput()),
-                                              stageOutput.getErrorRecords(), stageOutput.getStageErrors()));
+      stageOutputSnapshot.add(new StageOutput(stageOutput.getInstanceName(),
+                                              (Map) createSnapshot(stageOutput.getOutput()),
+                                              (List) stageOutput.getErrorRecords(), stageOutput.getStageErrors()));
     }
   }
 
