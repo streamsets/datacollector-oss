@@ -69,6 +69,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0401("Failed to evaluate expression '{}'. Reason: {}"),
   CONTAINER_0402("Could not access alerts because pipeline is not running"),
 
+  CONTAINER_0500("EmailSender error: {}"),
   ;
 
   private final String msg;
