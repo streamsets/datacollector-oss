@@ -7,10 +7,6 @@ package com.streamsets.pipeline.prodmanager;
 
 public class Configuration {
 
-  /*Pipeline related constants*/
-  public static final String DEFAULT_PIPELINE_NAME = "xyz";
-  public static final String DEFAULT_PIPELINE_REVISION = "1.0";
-
   /*pipeline configuration properties*/
   public static final String MAX_BATCH_SIZE_KEY = "production.maxBatchSize";
   public static final int MAX_BATCH_SIZE_DEFAULT = 1000;
@@ -23,9 +19,9 @@ public class Configuration {
   public static final int MAX_ERROR_RECORDS_PER_STAGE_DEFAULT = 100;
   public static final String MAX_PIPELINE_ERRORS_KEY = "production.maxPipelineErrors";
   public static final int MAX_PIPELINE_ERRORS_DEFAULT = 100;
+  public static final String OBSERVER_QUEUE_SIZE_KEY = "observer.queue.size";
+  public static final int OBSERVER_QUEUE_SIZE_DEFAULT = 100;
 
   public static final String STOP_PIPELINE_MESSAGE = "Requested via REST API";
-
-
 
 }

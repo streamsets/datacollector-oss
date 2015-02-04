@@ -5,9 +5,10 @@
  */
 package com.streamsets.pipeline.runner;
 
-import com.streamsets.pipeline.api.Stage;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import java.util.List;
 
 public class TestObserverPipe {
 
@@ -28,17 +29,17 @@ public class TestObserverPipe {
   private void testObserver(boolean observing) throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Observer observer = Mockito.mock(Observer.class);
-    Mockito.when(observer.isObserving(Mockito.any(Stage.Info.class))).thenReturn(observing);
+    Mockito.when(observer.isObserving(Mockito.any(List.class))).thenReturn(observing);
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceTarget()).setObserver(observer).build(pipelineRunner);
     ObserverPipe pipe = (ObserverPipe) pipeline.getPipes()[1];
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
-    Mockito.verify(observer, Mockito.times(1)).isObserving(Mockito.any(Stage.Info.class));
+    Mockito.verify(observer, Mockito.times(1)).isObserving(Mockito.any(List.class));
     Mockito.verify(pipeBatch, Mockito.times(1)).moveLane(Mockito.anyString(), Mockito.anyString());
     if (observing) {
       Mockito.verify(observer, Mockito.times(1)).observe(Mockito.eq(pipe), Mockito.anyMap());
-      Mockito.verify(pipeBatch, Mockito.times(1)).getPipeLanesSnapshot(Mockito.anyList());
+      Mockito.verify(pipeBatch, Mockito.times(1)).getLaneOutputRecords(Mockito.anyList());
     } else {
       Mockito.verifyNoMoreInteractions(observer);
       Mockito.verifyNoMoreInteractions(pipeBatch);

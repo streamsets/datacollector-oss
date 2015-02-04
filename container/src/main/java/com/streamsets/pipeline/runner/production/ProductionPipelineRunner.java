@@ -15,11 +15,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
-import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.observerstore.SamplingStore;
 import com.streamsets.pipeline.runner.FullPipeBatch;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipe;
@@ -29,9 +27,8 @@ import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
-import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +74,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private volatile boolean stop = false;
   /*indicates if the next batch of data should be captured, only the next batch*/
   private volatile boolean captureNextBatch = false;
+
+  private volatile RulesConfigurationChangeRequest nextConfig = null;
   /*indicates the batch size to be captured*/
   private volatile int snapshotBatchSize;
   /*Cache last N error records per stage in memory*/
@@ -188,6 +187,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
     /*value true indicates that this batch is captured */
     boolean batchCaptured = false;
     PipeBatch pipeBatch;
+    //pick up any recent changes done to the rule definitions
+    if(observer != null) {
+      observer.reconfigure();
+    }
 
     if(captureNextBatch) {
       batchCaptured = true;
@@ -198,16 +201,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     long start = System.currentTimeMillis();
     sourceOffset = pipeBatch.getPreviousOffset();
-
-    if(observer != null) {
-      RuleDefinition ruleDefinition = null;
-      try {
-        ruleDefinition = pipelineStore.retrieveRules(pipelineName, revision);
-      } catch (PipelineStoreException e) {
-        throw new PipelineRuntimeException(ContainerError.CONTAINER_0000, e.getMessage());
-      }
-      ((ProductionObserver) observer).setRuleDefinition(ruleDefinition);
-    }
 
     for (Pipe pipe : pipes) {
       //TODO Define an interface to handle delivery guarantee

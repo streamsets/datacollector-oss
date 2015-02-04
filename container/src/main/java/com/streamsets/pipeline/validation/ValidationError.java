@@ -30,7 +30,6 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0016("Invalid stage name, names can only contain the following characters '{}'"),
   VALIDATION_0017("Invalid input stream names '{}', streams can only contain the following characters '{}'"),
   VALIDATION_0018("Invalid output stream names '{}', streams can only contain the following characters '{}'"),
-  VALIDATION_0032("Stage must have at least one output stream"),
 
   VALIDATION_0019("Stream condition at index '{}' is not a Map"),
   VALIDATION_0020("Stream condition at index '{}' must have a '{}' entry"),
@@ -52,7 +51,16 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0030("The expression value '{}' must be within '${...}'"),
 
   VALIDATION_0031("Configuration '{}' should be a single character"),
+  VALIDATION_0032("Stage must have at least one output stream"),
 
+  //Rule Validation Errors
+  VALIDATION_0040("Configuration '{}' must be set for Data Rule Definition."),
+  VALIDATION_0041("Configuration 'Samplingpercentage' must have a value between 0 and 100."),
+  VALIDATION_0042("Email alert is enabled but no email is specified."),
+  VALIDATION_0043("The value specified for configuration 'threshold' is not a number."),
+  VALIDATION_0044("Configuration 'threshold' must have a value between 0 and 100."),
+
+  VALIDATION_0050("Configuration '{}' must be set for Metric Alert Definition."),
   ;
 
   private final String msg;

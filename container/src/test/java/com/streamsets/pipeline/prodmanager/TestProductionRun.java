@@ -8,22 +8,14 @@ package com.streamsets.pipeline.prodmanager;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
-import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
-import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
-import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.LogUtil;
 import com.streamsets.pipeline.util.TestUtil;
-import dagger.Module;
 import dagger.ObjectGraph;
-import dagger.Provides;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -38,7 +30,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.List;
 
 public class TestProductionRun {
@@ -65,7 +56,7 @@ public class TestProductionRun {
   public void setUp() throws IOException, PipelineManagerException {
     File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
-    ObjectGraph g = ObjectGraph.create(TestProdManagerModule.class);
+    ObjectGraph g = ObjectGraph.create(TestUtil.TestProdManagerModule.class);
     manager = g.get(ProductionPipelineManagerTask.class);
     manager.init();
     manager.setState(MY_PIPELINE, PIPELINE_REV, State.STOPPED, "Pipeline created");
@@ -74,7 +65,7 @@ public class TestProductionRun {
 
   @After
   public void tearDown() throws InterruptedException, PipelineManagerException {
-    stopPipelineIfNeeded();
+    TestUtil.stopPipelineIfNeeded(manager);
     LogUtil.unregisterAllLoggers();
     manager.stop();
   }
@@ -335,96 +326,6 @@ public class TestProductionRun {
 
   /*********************************************/
   /*********************************************/
-
-  @Module(library = true)
-  static class TestStageLibraryModule {
-
-    public TestStageLibraryModule() {
-    }
-
-    @Provides
-    public StageLibraryTask provideStageLibrary() {
-      return MockStages.createStageLibrary();
-    }
-  }
-
-  @Module(library = true, includes = {TestRuntimeModule.class, TestConfigurationModule.class})
-  static class TestPipelineStoreModule {
-
-    public TestPipelineStoreModule() {
-    }
-
-    @Provides
-    public PipelineStoreTask providePipelineStore(RuntimeInfo info, Configuration conf) {
-      FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(info, conf);
-      pipelineStoreTask.init();
-      try {
-        pipelineStoreTask.create(MY_PIPELINE, "description", "tag");
-        PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_PIPELINE, PIPELINE_REV);
-        PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
-        pipelineConf.setStages(mockPipelineConf.getStages());
-        pipelineStoreTask.save(MY_PIPELINE, "admin", "tag", "description"
-            , pipelineConf);
-      } catch (PipelineStoreException e) {
-        throw new RuntimeException(e);
-      }
-
-      return pipelineStoreTask;
-    }
-  }
-
-  @Module(library = true)
-  static class TestConfigurationModule {
-
-    public TestConfigurationModule() {
-    }
-
-    @Provides
-    public Configuration provideRuntimeInfo() {
-      Configuration conf = new Configuration();
-      return conf;
-    }
-  }
-
-  @Module(library = true)
-  static class TestRuntimeModule {
-
-    public TestRuntimeModule() {
-    }
-
-    @Provides
-    public RuntimeInfo provideRuntimeInfo() {
-      RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
-      return info;
-    }
-  }
-
-  @Module(injects = ProductionPipelineManagerTask.class
-      , library = true, includes = {TestRuntimeModule.class, TestPipelineStoreModule.class
-      , TestStageLibraryModule.class, TestConfigurationModule.class})
-  static class TestProdManagerModule {
-
-    public TestProdManagerModule() {
-    }
-
-    @Provides
-    public ProductionPipelineManagerTask provideStateManager(RuntimeInfo RuntimeInfo, Configuration configuration
-        ,PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
-      return new ProductionPipelineManagerTask(RuntimeInfo, configuration, pipelineStore, stageLibrary);
-    }
-  }
-
-  private void stopPipelineIfNeeded() throws InterruptedException, PipelineManagerException {
-    if(manager.getPipelineState().getState() == State.RUNNING) {
-      manager.stopPipeline(false);
-    }
-
-    while(manager.getPipelineState().getState() != State.FINISHED &&
-        manager.getPipelineState().getState() != State.STOPPED &&
-        manager.getPipelineState().getState() != State.ERROR) {
-      Thread.sleep(5);
-    }
-  }
 
   private void waitForPipelineToStop() throws InterruptedException {
     while(manager.getPipelineState().getState() != State.STOPPED) {

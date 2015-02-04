@@ -304,6 +304,7 @@ public class KafkaTarget extends BaseTarget {
 
       kafkaProducer.write();
       recordCounter += batchRecordCounter;
+      LOG.info("Wrote {} records in this batch.", batchRecordCounter);
     }
   }
 

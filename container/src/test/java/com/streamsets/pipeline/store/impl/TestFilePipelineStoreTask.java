@@ -6,23 +6,21 @@
 package com.streamsets.pipeline.store.impl;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.config.AlertDefinition;
-import com.streamsets.pipeline.config.MetricDefinition;
+import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinition;
-import com.streamsets.pipeline.config.SamplingDefinition;
+import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.config.ConfigConfiguration;
-import com.streamsets.pipeline.config.DeliveryGuarantee;
-import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.StageConfiguration;
-import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.store.PipelineInfo;
-import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.util.Configuration;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import org.junit.Assert;
@@ -226,7 +224,7 @@ public class TestFilePipelineStoreTask {
 
   private PipelineConfiguration createPipeline(UUID uuid) {
     ConfigConfiguration config = new ConfigConfiguration("a", "B");
-    Map<String, Object> uiInfo = new LinkedHashMap<String, Object>();
+    Map<String, Object> uiInfo = new LinkedHashMap<>();
     uiInfo.put("ui", "UI");
     StageConfiguration stage = new StageConfiguration(
       "instance", "library", "name", "version",
@@ -286,22 +284,13 @@ public class TestFilePipelineStoreTask {
   }
 
   @Test
-  public void testStoreAndRetrieveAlerts() throws PipelineStoreException {
+  public void testStoreAndRetrieveRules() throws PipelineStoreException {
     ObjectGraph dagger = ObjectGraph.create(new Module(true));
     PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
     RuleDefinition ruleDefinition = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
-    Assert.assertTrue(ruleDefinition.getAlertDefinitions().isEmpty());
-    Assert.assertTrue(ruleDefinition.getMetricDefinitions().isEmpty());
-    Assert.assertTrue(ruleDefinition.getSamplingDefinitions().isEmpty());
-    Assert.assertTrue(ruleDefinition.getMetricsAlertDefinitions().isEmpty());
-
-
-    List<AlertDefinition> alerts = new ArrayList<>();
-    alerts.add(new AlertDefinition("a1", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
-    alerts.add(new AlertDefinition("a2", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
-    alerts.add(new AlertDefinition("a3", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
+    Assert.assertNull(ruleDefinition);
 
     List<MetricsAlertDefinition> metricsAlertDefinitions = new ArrayList<>();
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
@@ -311,48 +300,19 @@ public class TestFilePipelineStoreTask {
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
       MetricElement.HISTOGRAM_MEAN, "p", true));
 
-    List<SamplingDefinition> samplingDefinitions = new ArrayList<>();
-    samplingDefinitions.add(new SamplingDefinition("s1", "s1", "a", "2", null, true));
-    samplingDefinitions.add(new SamplingDefinition("s2", "s2", "a", "2", null, true));
-    samplingDefinitions.add(new SamplingDefinition("s3", "s3", "a", "2", null, true));
+    List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
+    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
 
-    List<MetricDefinition> counters = new ArrayList<>();
-    counters.add(new MetricDefinition("c1", "c1", "l", "p", "g", MetricType.METER, true));
-    counters.add(new MetricDefinition("c2", "c2", "l", "p", "g", MetricType.METER, true));
-    counters.add(new MetricDefinition("c3", "c3", "l", "p", "g", MetricType.METER, true));
-
-    ruleDefinition = new RuleDefinition(alerts, metricsAlertDefinitions, samplingDefinitions, counters);
+    ruleDefinition = new RuleDefinition(metricsAlertDefinitions, dataRuleDefinitions);
 
     store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinition);
 
     RuleDefinition actualRuleDefinition = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
 
-    Assert.assertEquals(ruleDefinition.getAlertDefinitions().size(), actualRuleDefinition.getAlertDefinitions().size());
-    for(int i = 0; i < alerts.size(); i++) {
-      Assert.assertEquals(ruleDefinition.getAlertDefinitions().get(i).toString(),
-        actualRuleDefinition.getAlertDefinitions().get(i).toString());
-    }
-
-    Assert.assertEquals(ruleDefinition.getMetricsAlertDefinitions().size(),
-      actualRuleDefinition.getMetricsAlertDefinitions().size());
-    for(int i = 0; i < alerts.size(); i++) {
-      Assert.assertEquals(ruleDefinition.getMetricsAlertDefinitions().get(i).toString(),
-        actualRuleDefinition.getMetricsAlertDefinitions().get(i).toString());
-    }
-    Assert.assertEquals(ruleDefinition.getSamplingDefinitions().size(),
-      actualRuleDefinition.getSamplingDefinitions().size());
-    for(int i = 0; i < alerts.size(); i++) {
-      Assert.assertEquals(ruleDefinition.getSamplingDefinitions().get(i).toString(),
-        actualRuleDefinition.getSamplingDefinitions().get(i).toString());
-    }
-    Assert.assertEquals(ruleDefinition.getMetricDefinitions().size(),
-      actualRuleDefinition.getMetricDefinitions().size());
-    for(int i = 0; i < alerts.size(); i++) {
-      Assert.assertEquals(ruleDefinition.getMetricDefinitions().get(i).toString(),
-        actualRuleDefinition.getMetricDefinitions().get(i).toString());
-    }
-
+    Assert.assertTrue(ruleDefinition == actualRuleDefinition);
   }
 
 }

@@ -14,6 +14,7 @@ import com.streamsets.pipeline.util.ObserverException;
 public class AlertsUtil {
 
   private static final String ALERT_PREFIX = "alert.";
+  private static final String USER_PREFIX = "user.";
 
   public static boolean evaluateRecord(Record record, String predicate, ELEvaluator.Variables variables,
                                        ELEvaluator elEvaluator) throws ObserverException {
@@ -37,4 +38,9 @@ public class AlertsUtil {
   public static String getAlertGaugeName(String ruleId) {
     return  ALERT_PREFIX + ruleId;
   }
+
+  public static String getUserMeterName(String ruleId) {
+    return  USER_PREFIX + ruleId;
+  }
+
 }

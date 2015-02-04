@@ -114,10 +114,11 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
-  public Map<String, List<Record>> getPipeLanesSnapshot(List<String> pipeLanes) {
+  public Map<String, List<Record>> getLaneOutputRecords(List<String> pipeLanes) {
     Map<String, List<Record>> snapshot = new HashMap<>();
     for (String pipeLane : pipeLanes) {
-      snapshot.put(pipeLane, createSnapshot(fullPayload.get(pipeLane)));
+      //The observer will copy
+      snapshot.put(pipeLane, fullPayload.get(pipeLane));
     }
     return snapshot;
   }

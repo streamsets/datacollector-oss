@@ -25,7 +25,7 @@ public interface PipeBatch {
 
   void commitOffset();
 
-  Map<String, List<Record>> getPipeLanesSnapshot(List<String> pipeLanes);
+  Map<String, List<Record>> getLaneOutputRecords(List<String> pipeLanes);
 
   void overrideStageOutput(StagePipe pipe, StageOutput stageOutput);
 

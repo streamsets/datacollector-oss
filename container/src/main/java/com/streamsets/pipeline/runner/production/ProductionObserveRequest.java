@@ -6,26 +6,20 @@
 package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.config.RuleDefinition;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ProductionObserveRequest {
 
-  private final RuleDefinition ruleDefinition;
   private final Map<String, List<Record>> snapshot;
-
-  public ProductionObserveRequest(RuleDefinition ruleDefinition, Map<String, List<Record>> snapshot) {
-    this.ruleDefinition = ruleDefinition;
+  public ProductionObserveRequest(Map<String, List<Record>> snapshot) {
     this.snapshot = snapshot;
-  }
-
-  public RuleDefinition getRuleDefinition() {
-    return ruleDefinition;
   }
 
   public Map<String, List<Record>> getSnapshot() {
     return snapshot;
   }
+
 }

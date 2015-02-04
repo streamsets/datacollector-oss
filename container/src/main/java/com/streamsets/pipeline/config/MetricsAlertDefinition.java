@@ -16,7 +16,7 @@ public class MetricsAlertDefinition {
   private final String metricId;
   private final MetricType metricType;
   private final MetricElement metricElement;
-  private final String predicate;
+  private final String condition;
   private final boolean enabled;
 
   @JsonCreator
@@ -25,14 +25,14 @@ public class MetricsAlertDefinition {
                                 @JsonProperty("metricId") String metricId,
                                 @JsonProperty("metricType") MetricType metricType,
                                 @JsonProperty("metricElement") MetricElement metricElement,
-                                @JsonProperty("predicate") String predicate,
+                                @JsonProperty("condition") String condition,
                                 @JsonProperty("enabled") boolean enabled) {
     this.id = id;
     this.label = label;
     this.metricId = metricId;
     this.metricType = metricType;
     this.metricElement = metricElement;
-    this.predicate = predicate;
+    this.condition = condition;
     this.enabled = enabled;
   }
 
@@ -52,8 +52,8 @@ public class MetricsAlertDefinition {
     return metricElement;
   }
 
-  public String getPredicate() {
-    return predicate;
+  public String getCondition() {
+    return condition;
   }
 
   public boolean isEnabled() {
@@ -67,7 +67,7 @@ public class MetricsAlertDefinition {
   @Override
   public String toString() {
     return Utils.format(
-      "MetricsAlertDefinition[id='{}' label='{}' predicate='{}' enabled='{}', metricType='{}', metricElement='{}']",
-      getId(), getLabel(), getPredicate(), isEnabled(), getMetricType().name(), getMetricElement().name());
+      "MetricsAlertDefinition[id='{}' label='{}' condition='{}' enabled='{}', metricType='{}', metricElement='{}']",
+      getId(), getLabel(), getCondition(), isEnabled(), getMetricType().name(), getMetricElement().name());
   }
 }

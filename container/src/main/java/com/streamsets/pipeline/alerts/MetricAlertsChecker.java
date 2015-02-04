@@ -216,7 +216,7 @@ public class MetricAlertsChecker {
     //replace val() with the actual value, append dollar and curly braces and evaluate the resulting EL expression
     // string
     StringBuilder stringBuilder = new StringBuilder();
-    String predicateWithValue = metricsAlertDefinition.getPredicate().replace(VAL, String.valueOf(value));
+    String predicateWithValue = metricsAlertDefinition.getCondition().replace(VAL, String.valueOf(value));
     stringBuilder.append(predicateWithValue);
     try {
       if (AlertsUtil.evaluateExpression(stringBuilder.toString(), variables, elEvaluator)) {

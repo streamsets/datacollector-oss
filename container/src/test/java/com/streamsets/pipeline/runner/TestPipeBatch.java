@@ -219,7 +219,7 @@ public class TestPipeBatch {
     Record movedRecord = pipeBatch.getFullPayload().get("x").get(0);
     Assert.assertSame(origRecord, movedRecord);
 
-    Map<String, List<Record>> snapshot = pipeBatch.getPipeLanesSnapshot(ImmutableList.of("x"));
+    Map<String, List<Record>> snapshot = pipeBatch.getLaneOutputRecords(ImmutableList.of("x"));
     Assert.assertEquals(1, snapshot.size());
     Assert.assertEquals(1, snapshot.get("x").size());
     Assert.assertEquals("A", snapshot.get("x").get(0).getHeader().getAttribute("a"));
@@ -263,7 +263,7 @@ public class TestPipeBatch {
     Assert.assertNotSame(origRecord, copiedRecordY);
 
 
-    Map<String, List<Record>> snapshot = pipeBatch.getPipeLanesSnapshot(list);
+    Map<String, List<Record>> snapshot = pipeBatch.getLaneOutputRecords(list);
     Assert.assertEquals(2, snapshot.size());
     Assert.assertEquals(1, snapshot.get("x").size());
     Assert.assertEquals(1, snapshot.get("y").size());
@@ -301,7 +301,7 @@ public class TestPipeBatch {
     Record copiedRecordY = pipeBatch.getFullPayload().get("y").get(0);
 
     pipeBatch.combineLanes(list, "z");
-    Map<String, List<Record>> snapshot = pipeBatch.getPipeLanesSnapshot(ImmutableList.of("z"));
+    Map<String, List<Record>> snapshot = pipeBatch.getLaneOutputRecords(ImmutableList.of("z"));
 
     Assert.assertEquals(1, snapshot.size());
     Assert.assertEquals(2, snapshot.get("z").size());

@@ -69,4 +69,12 @@ public class MetricsConfigurator {
     return metrics.remove(name + GAUGE_SUFFIX);
   }
 
+  public static boolean removeMeter(MetricRegistry metrics, String name) {
+    return metrics.remove(name + METER_SUFFIX);
+  }
+
+  public static boolean removeCounter(MetricRegistry metrics, String name) {
+    return metrics.remove(name + COUNTER_SUFFIX);
+  }
+
 }

@@ -34,8 +34,8 @@ public class ObserverPipe extends Pipe {
 
   @Override
   public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
-    if (observer != null && observer.isObserving(getStage().getInfo())) {
-      observer.observe(this, pipeBatch.getPipeLanesSnapshot(getInputLanes()));
+    if (observer != null && observer.isObserving(getInputLanes())) {
+      observer.observe(this, pipeBatch.getLaneOutputRecords(getInputLanes()));
     }
     for (int i = 0; i < getInputLanes().size(); i++) {
       pipeBatch.moveLane(getInputLanes().get(i), getOutputLanes().get(i));

@@ -100,7 +100,7 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
     kafkaConsumer = new HighLevelKafkaConsumer(zookeeperConnect, topic, consumerGroup, maxBatchSize, maxWaitTime,
       kafkaConsumerConfigs, getContext());
     kafkaConsumer.init();
-    LOG.debug("Successfully initialized Kafka Consumer");
+    LOG.info("Successfully initialized Kafka Consumer");
   }
 
   @Override
@@ -115,20 +115,20 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
       record.set(createField(message.getPayload()));
       batchMaker.addRecord(record);
     }
-    LOG.debug("Produced {} number of records in this batch.", recordCounter);
+    LOG.info("Produced {} records in this batch.", recordCounter);
     return lastSourceOffset;
   }
 
   @Override
   public void destroy() {
-    LOG.debug("Destroying Kafka Consumer");
+    LOG.info("Destroying Kafka Consumer");
     kafkaConsumer.destroy();
     super.destroy();
   }
 
   @Override
   public void commit(String offset) throws StageException {
-    LOG.debug("Committing offset for topic.");
+    LOG.info("Committing offset for topic.");
     kafkaConsumer.commit();
   }
 

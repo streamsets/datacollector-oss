@@ -6,28 +6,16 @@
 package com.streamsets.pipeline.observerstore.impl;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.config.AlertDefinition;
-import com.streamsets.pipeline.config.MetricDefinition;
-import com.streamsets.pipeline.config.MetricElement;
-import com.streamsets.pipeline.config.MetricType;
-import com.streamsets.pipeline.config.MetricsAlertDefinition;
-import com.streamsets.pipeline.config.RuleDefinition;
-import com.streamsets.pipeline.config.SamplingDefinition;
-import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestFileObserverStore {
 

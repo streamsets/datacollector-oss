@@ -9,11 +9,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.util.Configuration;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.ArrayList;
@@ -44,12 +42,6 @@ public class Pipeline {
 
   public PipelineRunner getRunner() {
     return runner;
-  }
-
-  public void configure(Configuration conf) {
-    if (observer != null) {
-      observer.configure(conf);
-    }
   }
 
   public List<StageIssue> validateConfigs() {

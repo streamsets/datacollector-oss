@@ -18,6 +18,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -25,7 +26,6 @@ import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.observerstore.SamplingStore;
 import com.streamsets.pipeline.observerstore.impl.FileSamplingStore;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.runner.production.ProductionObserveRequest;
 import com.streamsets.pipeline.runner.production.ProductionObserver;
 import com.streamsets.pipeline.runner.production.ProductionObserverRunnable;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;
@@ -33,6 +33,8 @@ import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
 import com.streamsets.pipeline.runner.production.ProductionPipelineRunnable;
 import com.streamsets.pipeline.runner.production.ProductionPipelineRunner;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
+import com.streamsets.pipeline.runner.production.RulesConfigLoader;
+import com.streamsets.pipeline.runner.production.RulesConfigLoaderRunnable;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
@@ -64,7 +66,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private static final String PRODUCTION_PIPELINE_RUNNER = "ProductionPipelineRunner";
   private static final String RUN_INFO_DIR = "runInfo";
 
-
   private static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
     .put(State.STOPPED, ImmutableSet.of(State.RUNNING))
     .put(State.FINISHED, ImmutableSet.of(State.RUNNING))
@@ -84,12 +85,12 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private final ErrorRecordStore errorRecordStore;
   private final SamplingStore samplingStore;
 
-  /*Queue shared by the ProductionPipelineRunnable and ProductionObserverRunnable*/
-  BlockingQueue<ProductionObserveRequest> productionObserveRequests;
   /*References the thread that is executing the pipeline currently */
   private ProductionPipelineRunnable pipelineRunnable;
   /*References the thread that is executing the observer stuff*/
   private ProductionObserverRunnable observerRunnable;
+  /*Thread that is watching changes to the rules configuration*/
+  private RulesConfigLoaderRunnable configLoaderRunnable;
   /*The executor service that is currently executing the ProdPipelineRunnerThread*/
   private ExecutorService executor;
   /*The pipeline being executed or the pipeline in the context*/
@@ -126,7 +127,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public void initTask() {
     LOG.debug("Initializing Production Pipeline Manager");
     stateTracker.init();
-    executor = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder().setNameFormat(PRODUCTION_PIPELINE_RUNNER)
+    executor = Executors.newFixedThreadPool(3, new ThreadFactoryBuilder().setNameFormat(PRODUCTION_PIPELINE_RUNNER)
       .setDaemon(true).build());
     PipelineState ps = getPipelineState();
     if(ps != null) {
@@ -150,7 +151,11 @@ public class ProductionPipelineManagerTask extends AbstractTask {
           //Normal start/restart
           //create the pipeline instance. This was the pipeline in the context before the manager shutdown previously
           try {
-            createPipeline(ps.getName(), ps.getRev());
+            BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(
+              configuration.get(Configuration.OBSERVER_QUEUE_SIZE_KEY, Configuration.OBSERVER_QUEUE_SIZE_DEFAULT),
+              true /*FIFO*/);
+            ProductionObserver observer = new ProductionObserver(productionObserveRequests);
+            createPipeline(ps.getName(), ps.getRev(), observer);
           } catch (Exception e) {
             //log error and shutdown again
             LOG.error(ContainerError.CONTAINER_0108.getMessage(), e.getMessage());
@@ -291,13 +296,30 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
   private void handleStartRequest(String name, String rev) throws PipelineManagerException, StageException
       , PipelineRuntimeException, PipelineStoreException {
-    createPipeline(name, rev);
+
+    BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(
+      configuration.get(Configuration.OBSERVER_QUEUE_SIZE_KEY, Configuration.OBSERVER_QUEUE_SIZE_DEFAULT), true /*FIFO*/);
+    ProductionObserver observer = new ProductionObserver(productionObserveRequests);
+    createPipeline(name, rev, observer);
     //Shutdown object is shared between Observer and Pipeline Runner.
     //When pipeline runner stops because of an exception or because of finishing work normally, it signals
     //the observer thread to stop using this object
     ShutdownObject shutdownObject = new ShutdownObject();
-    observerRunnable = new ProductionObserverRunnable(name, rev, this, productionObserveRequests, shutdownObject);
+
+    //bootstrap the pipeline runner thread with rule configuration
+    RulesConfigLoader rulesConfigLoader = new RulesConfigLoader(name, rev, pipelineStore);
+    try {
+      rulesConfigLoader.load(observer);
+    } catch (InterruptedException e) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, e.getMessage(), e);
+    }
+    configLoaderRunnable = new RulesConfigLoaderRunnable(shutdownObject, rulesConfigLoader, observer);
+    executor.submit(configLoaderRunnable);
+
+    observerRunnable = new ProductionObserverRunnable(this, productionObserveRequests, shutdownObject,
+      new EmailSender(configuration));
     executor.submit(observerRunnable);
+
     pipelineRunnable = new ProductionPipelineRunnable(this, prodPipeline, name, rev, shutdownObject);
     executor.submit(pipelineRunnable);
     LOG.debug("Started pipeline {} {}", name, rev);
@@ -312,6 +334,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     if(observerRunnable != null) {
       observerRunnable.stop();
       observerRunnable = null;
+    }
+    if(configLoaderRunnable != null) {
+      configLoaderRunnable.stop();
+      configLoaderRunnable = null;
     }
     LOG.debug("Stopped pipeline");
   }
@@ -353,14 +379,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return builder.build(runner, offsetTracker, observer);
   }
 
-  void createPipeline(String name, String rev)
+  void createPipeline(String name, String rev, ProductionObserver observer)
     throws PipelineStoreException, PipelineManagerException, StageException, PipelineRuntimeException {
-    ProductionObserver observer = null;
     PipelineConfiguration pipelineConfiguration = pipelineStore.load(name, rev);
-    if(pipelineConfiguration.getStages() != null && !pipelineConfiguration.getStages().isEmpty()) {
-      productionObserveRequests = new ArrayBlockingQueue<>(pipelineConfiguration.getStages().size());
-      observer = new ProductionObserver(productionObserveRequests);
-    }
     prodPipeline = createProductionPipeline(name, rev, configuration, stageLibrary,
       observer, pipelineConfiguration);
   }

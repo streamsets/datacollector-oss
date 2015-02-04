@@ -45,7 +45,7 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
+    List<ConfigConfiguration> pipelineConfigs = new ArrayList<>(2);
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
@@ -72,14 +72,14 @@ public class TestPipeline {
     Assert.assertTrue(pipes[8] instanceof StagePipe);
 
     // assert the pipes wiring (in this case is just lineal, the TestLaneResolver covers the diff scenarios)
-    List<String> prevOutput = new ArrayList<String>();
+    List<String> prevOutput = new ArrayList<>();
     for (Pipe pipe : pipes) {
       Assert.assertEquals(prevOutput, pipe.getInputLanes());
       prevOutput = pipe.getOutputLanes();
     }
     Assert.assertTrue(prevOutput.isEmpty());
 
-    List<Stage.Info> infos = new ArrayList<Stage.Info>();
+    List<Stage.Info> infos = new ArrayList<>();
     infos.add(null);
     infos.add(null);
     infos.add(null);
@@ -134,7 +134,7 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
+    List<ConfigConfiguration> pipelineConfigs = new ArrayList<>(2);
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
@@ -148,8 +148,6 @@ public class TestPipeline {
 
     Pipeline pipeline = builder.build(runner);
 
-    pipeline.configure(new Configuration());
-    
     // assert the pipes
     Pipe[] pipes = pipeline.getPipes();
 
@@ -183,7 +181,7 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
+    List<ConfigConfiguration> pipelineConfigs = new ArrayList<>(2);
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
@@ -208,8 +206,6 @@ public class TestPipeline {
     Pipeline pipeline = builder.build(runner);
 
     Configuration conf = new Configuration();
-    pipeline.configure(conf);
-    Mockito.verify(observer, Mockito.times(1)).configure(conf);
 
     Mockito.verifyZeroInteractions(source);
     Mockito.verifyZeroInteractions(processor);
@@ -247,7 +243,7 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
+    List<ConfigConfiguration> pipelineConfigs = new ArrayList<>(2);
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 

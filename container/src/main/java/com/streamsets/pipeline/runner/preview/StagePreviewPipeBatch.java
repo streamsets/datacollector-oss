@@ -72,8 +72,8 @@ public class StagePreviewPipeBatch implements PipeBatch {
   }
 
   @Override
-  public Map<String, List<Record>> getPipeLanesSnapshot(List<String> pipeLanes) {
-    throw new UnsupportedOperationException("getPipeLanesSnapshot()");
+  public Map<String, List<Record>> getLaneOutputRecords(List<String> pipeLanes) {
+    throw new UnsupportedOperationException("getLaneOutputRecords()");
   }
 
 

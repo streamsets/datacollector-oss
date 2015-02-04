@@ -5,13 +5,14 @@
  */
 package com.streamsets.pipeline.restapi;
 
-import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
-import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
+import com.streamsets.pipeline.validation.RuleDefinitionValidator;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -133,7 +134,12 @@ public class PipelineStoreResource {
   public Response getRules(
     @PathParam("name") String name,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(store.retrieveRules(name, rev)).build();
+    RuleDefinition ruleDefinition = store.retrieveRules(name, rev);
+    if(ruleDefinition != null) {
+      RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
+      ruleDefinitionValidator.validateRuleDefinition(ruleDefinition);
+    }
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ruleDefinition).build();
   }
 
   @Path("/{name}/rules")
@@ -143,7 +149,10 @@ public class PipelineStoreResource {
     @PathParam("name") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
     RuleDefinition ruleDefinition) throws PipelineStoreException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(store.storeRules(name, rev, ruleDefinition)).build();
+    RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
+    ruleDefinitionValidator.validateRuleDefinition(ruleDefinition);
+    ruleDefinition = store.storeRules(name, rev, ruleDefinition);
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ruleDefinition).build();
   }
 
 }

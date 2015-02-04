@@ -14,16 +14,38 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.MetricsAlertDefinition;
+import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.ThresholdType;
+import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.prodmanager.PipelineManagerException;
+import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
+import dagger.Module;
+import dagger.Provides;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
 public class TestUtil {
+
+  public static final String MY_PIPELINE = "my pipeline";
+  public static final String PIPELINE_REV = "2.0";
 
   public static class SourceOffsetTrackerImpl implements SourceOffsetTracker {
     private String currentOffset;
@@ -58,6 +80,10 @@ public class TestUtil {
     }
   }
 
+
+  /********************************************/
+  /********* Pipeline using Mock Stages *******/
+  /********************************************/
 
   public static void captureMockStages() {
     MockStages.setSourceCapture(new BaseSource() {
@@ -137,6 +163,115 @@ public class TestUtil {
       public void write(Batch batch) throws StageException {
       }
     });
+  }
+
+  /********************************************/
+  /*************** Providers for Dagger *******/
+  /********************************************/
+
+  @Module(library = true)
+  public static class TestStageLibraryModule {
+
+    public TestStageLibraryModule() {
+    }
+
+    @Provides
+    public StageLibraryTask provideStageLibrary() {
+      return MockStages.createStageLibrary();
+    }
+  }
+
+  @Module(injects = PipelineStoreTask.class, library = true, includes = {TestRuntimeModule.class, TestConfigurationModule.class})
+  public static class TestPipelineStoreModule {
+
+    public TestPipelineStoreModule() {
+    }
+
+    @Provides
+    public PipelineStoreTask providePipelineStore(RuntimeInfo info, Configuration conf) {
+      FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(info, conf);
+      pipelineStoreTask.init();
+      try {
+        pipelineStoreTask.create(MY_PIPELINE, "description", "tag");
+        PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_PIPELINE, PIPELINE_REV);
+        PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+        pipelineConf.setStages(mockPipelineConf.getStages());
+        pipelineStoreTask.save(MY_PIPELINE, "admin", "tag", "description"
+          , pipelineConf);
+
+        //create a DataRuleDefinition for one of the stages
+        DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "p", 20, 10,
+          "${record:value(\"/\")==2}", true, ThresholdType.COUNT, "20", 100, true, false, null, true);
+        List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
+        dataRuleDefinitions.add(dataRuleDefinition);
+
+        RuleDefinition ruleDefinition = new RuleDefinition(Collections.<MetricsAlertDefinition>emptyList(),
+          dataRuleDefinitions);
+        pipelineStoreTask.storeRules(MY_PIPELINE, PIPELINE_REV, ruleDefinition);
+
+      } catch (PipelineStoreException e) {
+        throw new RuntimeException(e);
+      }
+
+      return pipelineStoreTask;
+    }
+  }
+
+  @Module(library = true)
+  public static class TestConfigurationModule {
+
+    public TestConfigurationModule() {
+    }
+
+    @Provides
+    public Configuration provideRuntimeInfo() {
+      Configuration conf = new Configuration();
+      return conf;
+    }
+  }
+
+  @Module(library = true)
+  public static class TestRuntimeModule {
+
+    public TestRuntimeModule() {
+    }
+
+    @Provides
+    public RuntimeInfo provideRuntimeInfo() {
+      RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+      return info;
+    }
+  }
+
+  @Module(injects = ProductionPipelineManagerTask.class
+    , library = true, includes = {TestRuntimeModule.class, TestPipelineStoreModule.class
+    , TestStageLibraryModule.class, TestConfigurationModule.class})
+  public static class TestProdManagerModule {
+
+    public TestProdManagerModule() {
+    }
+
+    @Provides
+    public ProductionPipelineManagerTask provideStateManager(RuntimeInfo RuntimeInfo, Configuration configuration
+      ,PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
+      return new ProductionPipelineManagerTask(RuntimeInfo, configuration, pipelineStore, stageLibrary);
+    }
+  }
+
+  /********************************************/
+  /*************** Utility methods ************/
+  /********************************************/
+
+  public static void stopPipelineIfNeeded(ProductionPipelineManagerTask manager) throws InterruptedException, PipelineManagerException {
+    if(manager.getPipelineState().getState() == State.RUNNING) {
+      manager.stopPipeline(false);
+    }
+
+    while(manager.getPipelineState().getState() != State.FINISHED &&
+      manager.getPipelineState().getState() != State.STOPPED &&
+      manager.getPipelineState().getState() != State.ERROR) {
+      Thread.sleep(5);
+    }
   }
 
 }

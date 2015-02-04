@@ -6,14 +6,12 @@
 package com.streamsets.pipeline.restapi;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.config.AlertDefinition;
-import com.streamsets.pipeline.config.MetricDefinition;
+import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinition;
-import com.streamsets.pipeline.config.SamplingDefinition;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.runner.MockStages;
@@ -23,6 +21,8 @@ import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.validation.RuleIssue;
+import com.streamsets.pipeline.validation.ValidationError;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -125,11 +125,6 @@ public class TestPipelineStoreResource extends JerseyTest {
   @Test
   public void testSaveRules() {
 
-    List<AlertDefinition> alerts = new ArrayList<>();
-    alerts.add(new AlertDefinition("a1", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
-    alerts.add(new AlertDefinition("a2", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
-    alerts.add(new AlertDefinition("a3", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
-
     List<MetricsAlertDefinition> metricsAlertDefinitions = new ArrayList<>();
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
       MetricElement.COUNTER_COUNT, "p", true));
@@ -138,25 +133,18 @@ public class TestPipelineStoreResource extends JerseyTest {
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
       MetricElement.HISTOGRAM_MEAN, "p", true));
 
-    List<SamplingDefinition> samplingDefinitions = new ArrayList<>();
-    samplingDefinitions.add(new SamplingDefinition("s1", "s1", "a", "2", null, true));
-    samplingDefinitions.add(new SamplingDefinition("s2", "s2", "a", "2", null, true));
-    samplingDefinitions.add(new SamplingDefinition("s3", "s3", "a", "2", null, true));
+    List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
+    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
 
-    List<MetricDefinition> counters = new ArrayList<>();
-    counters.add(new MetricDefinition("c1", "c1", "l", "p", "g", MetricType.METER, true));
-    counters.add(new MetricDefinition("c2", "c2", "l", "p", "g", MetricType.METER, true));
-    counters.add(new MetricDefinition("c3", "c3", "l", "p", "g", MetricType.METER, true));
-
-    RuleDefinition ruleDefinition = new RuleDefinition(alerts, metricsAlertDefinitions, samplingDefinitions, counters);
-
+    RuleDefinition ruleDefinition = new RuleDefinition(metricsAlertDefinitions, dataRuleDefinitions);
     Response r = target("/v1/pipeline-library/myPipeline/rules").queryParam("rev", "tag").request()
       .post(Entity.json(ruleDefinition));
     RuleDefinition result = r.readEntity(RuleDefinition.class);
-    Assert.assertEquals(3, result.getAlertDefinitions().size());
+
     Assert.assertEquals(3, result.getMetricsAlertDefinitions().size());
-    Assert.assertEquals(3, result.getSamplingDefinitions().size());
-    Assert.assertEquals(3, result.getMetricDefinitions().size());
+    Assert.assertEquals(3, result.getDataRuleDefinitions().size());
   }
 
   @Test
@@ -165,10 +153,8 @@ public class TestPipelineStoreResource extends JerseyTest {
       .request().get();
     Assert.assertNotNull(r);
     RuleDefinition result = r.readEntity(RuleDefinition.class);
-    Assert.assertEquals(3, result.getAlertDefinitions().size());
     Assert.assertEquals(3, result.getMetricsAlertDefinitions().size());
-    Assert.assertEquals(3, result.getSamplingDefinitions().size());
-    Assert.assertEquals(3, result.getMetricDefinitions().size());
+    Assert.assertEquals(3, result.getDataRuleDefinitions().size());
   }
 
   @Override
@@ -223,13 +209,7 @@ public class TestPipelineStoreResource extends JerseyTest {
         Mockito.when(pipelineStore.save(
             Matchers.anyString(), Matchers.anyString(), Matchers.anyString(), Matchers.anyString(),
             (PipelineConfiguration)Matchers.any())).thenReturn(
-            MockStages.createPipelineConfigurationSourceProcessorTarget());
-
-        //Rules
-        List<AlertDefinition> alerts = new ArrayList<>();
-        alerts.add(new AlertDefinition("a1", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
-        alerts.add(new AlertDefinition("a2", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
-        alerts.add(new AlertDefinition("a3", "a1", "a", "2", ThresholdType.COUNT, "10", 100, true));
+          MockStages.createPipelineConfigurationSourceProcessorTarget());
 
         List<MetricsAlertDefinition> metricsAlertDefinitions = new ArrayList<>();
         metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
@@ -239,17 +219,18 @@ public class TestPipelineStoreResource extends JerseyTest {
         metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
           MetricElement.HISTOGRAM_MEAN, "p", true));
 
-        List<MetricDefinition> counters = new ArrayList<>();
-        counters.add(new MetricDefinition("c1", "c1", "l", "p", "g", MetricType.METER, true));
-        counters.add(new MetricDefinition("c2", "c2", "l", "p", "g", MetricType.METER, true));
-        counters.add(new MetricDefinition("c3", "c3", "l", "p", "g", MetricType.METER, true));
+        List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
+        dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
+        dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
+        dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
 
-        List<SamplingDefinition> samplingDefinitions = new ArrayList<>();
-        samplingDefinitions.add(new SamplingDefinition("s1", "s1", "a", "2", null, true));
-        samplingDefinitions.add(new SamplingDefinition("s2", "s2", "a", "2", null, true));
-        samplingDefinitions.add(new SamplingDefinition("s3", "s3", "a", "2", null, true));
+        RuleDefinition rules = new RuleDefinition(metricsAlertDefinitions, dataRuleDefinitions);
+        List<RuleIssue> ruleIssues = new ArrayList<>();
+        ruleIssues.add(RuleIssue.createRuleIssue("a", ValidationError.VALIDATION_0000));
+        ruleIssues.add(RuleIssue.createRuleIssue("b", ValidationError.VALIDATION_0000));
+        ruleIssues.add(RuleIssue.createRuleIssue("c", ValidationError.VALIDATION_0000));
+        rules.setRuleIssues(ruleIssues);
 
-        RuleDefinition rules = new RuleDefinition(alerts, metricsAlertDefinitions, samplingDefinitions, counters);
         try {
           Mockito.when(pipelineStore.retrieveRules("myPipeline", "tag")).thenReturn(rules);
         } catch (PipelineStoreException e) {
