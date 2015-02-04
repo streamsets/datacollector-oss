@@ -311,4 +311,68 @@ public class TestPipeBatch {
   }
 
 
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testOverride() throws Exception {
+    SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
+    PipeBatch pipeBatch = new FullPipeBatch(tracker, -1, true);
+
+    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
+                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
+    List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
+    StagePipe sourcePipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
+                                         LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
+
+    // starting source
+    BatchMakerImpl batchMaker = pipeBatch.startStage(sourcePipe);
+    Assert.assertEquals(new ArrayList<String>(stageOutputLanes), batchMaker.getLanes());
+
+    Record origRecord = new RecordImpl("i", "source", null, null);
+    origRecord.getHeader().setAttribute("a", "A");
+    batchMaker.addRecord(origRecord, stageOutputLanes.get(0));
+
+    // completing source
+    pipeBatch.completeStage(batchMaker);
+
+    StagePipe targetPipe = new StagePipe(stages[1], LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
+                                         Collections.EMPTY_LIST);
+
+    // starting target
+    batchMaker = pipeBatch.startStage(targetPipe);
+
+    BatchImpl batch = pipeBatch.getBatch(targetPipe);
+
+    // completing target
+    pipeBatch.completeStage(batchMaker);
+
+    // getting stages ouptut
+    List<StageOutput> stageOutputs = pipeBatch.getSnapshotsOfAllStagesOutput();
+
+    StageOutput sourceOutput = stageOutputs.get(0);
+    Assert.assertEquals("s", sourceOutput.getInstanceName());
+
+    Record modRecord = new RecordImpl("i", "source", null, null);
+    modRecord.getHeader().setAttribute("a", "B");
+    //modifying the source output
+    sourceOutput.getOutput().get(stages[0].getConfiguration().getOutputLanes().get(0)).set(0, modRecord);
+
+    //starting a new pipe batch
+    pipeBatch = new FullPipeBatch(tracker, -1, true);
+
+    //instead running source, we inject its previous-modified output, it implicitly starts the pipe
+    pipeBatch.overrideStageOutput(sourcePipe, sourceOutput);
+
+    // starting target
+    pipeBatch.startStage(targetPipe);
+    batch = pipeBatch.getBatch(targetPipe);
+    Iterator<Record> it = batch.getRecords();
+    Record tRecord = it.next();
+    //check that we get the injected record.
+    Assert.assertEquals("B", tRecord.getHeader().getAttribute("a"));
+    Assert.assertFalse(it.hasNext());
+
+    // completing target
+    pipeBatch.completeStage(batchMaker);
+  }
+
 }

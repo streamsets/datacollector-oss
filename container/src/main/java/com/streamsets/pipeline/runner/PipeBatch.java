@@ -27,6 +27,8 @@ public interface PipeBatch {
 
   Map<String, List<Record>> getPipeLanesSnapshot(List<String> pipeLanes);
 
+  void overrideStageOutput(StagePipe pipe, StageOutput stageOutput);
+
   List<StageOutput> getSnapshotsOfAllStagesOutput();
 
   ErrorSink getErrorSink();

@@ -76,6 +76,12 @@ public class StagePreviewPipeBatch implements PipeBatch {
     throw new UnsupportedOperationException("getPipeLanesSnapshot()");
   }
 
+
+  @Override
+  public void overrideStageOutput(StagePipe pipe, StageOutput stageOutput) {
+    throw new UnsupportedOperationException();
+  }
+
   @Override
   public List<StageOutput> getSnapshotsOfAllStagesOutput() {
     return stageOutputSnapshot;

@@ -11,16 +11,22 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.FullPipeBatch;
+import com.streamsets.pipeline.runner.MultiplexerPipe;
 import com.streamsets.pipeline.runner.Observer;
+import com.streamsets.pipeline.runner.ObserverPipe;
 import com.streamsets.pipeline.runner.Pipe;
 import com.streamsets.pipeline.runner.PipeBatch;
 import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
+import com.streamsets.pipeline.runner.StagePipe;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class PreviewPipelineRunner implements PipelineRunner {
@@ -50,14 +56,32 @@ public class PreviewPipelineRunner implements PipelineRunner {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public void run(Pipe[] pipes) throws StageException, PipelineRuntimeException {
+    run(pipes, Collections.EMPTY_LIST);
+  }
+
+  @Override
+  public void run(Pipe[] pipes, List<StageOutput> stageOutputsToOverride)
+      throws StageException, PipelineRuntimeException {
+    Map<String, StageOutput> stagesToSkip = new HashMap<>();
+    for (StageOutput stageOutput : stageOutputsToOverride) {
+      stagesToSkip.put(stageOutput.getInstanceName(), stageOutput);
+    }
     for (int i = 0; i < batches; i++) {
       PipeBatch pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
       long start = System.currentTimeMillis();
       sourceOffset = pipeBatch.getPreviousOffset();
       for (Pipe pipe : pipes) {
-        if (!skipTargets || pipe.getStage().getDefinition().getType() != StageType.TARGET) {
-          pipe.process(pipeBatch);
+        StageOutput stageOutput = stagesToSkip.get(pipe.getStage().getInfo().getInstanceName());
+        if (stageOutput == null || (pipe instanceof ObserverPipe) || (pipe instanceof MultiplexerPipe) ) {
+          if (!skipTargets || pipe.getStage().getDefinition().getType() != StageType.TARGET) {
+            pipe.process(pipeBatch);
+          }
+        } else {
+          if (pipe instanceof StagePipe) {
+            pipeBatch.overrideStageOutput((StagePipe) pipe, stageOutput);
+          }
         }
       }
       offsetTracker.commitOffset();

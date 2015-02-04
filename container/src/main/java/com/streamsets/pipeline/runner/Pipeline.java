@@ -92,6 +92,11 @@ public class Pipeline {
     runner.run(pipes);
   }
 
+  public void run(List<StageOutput> stageOutputsToOverride) throws StageException, PipelineRuntimeException {
+    runner.setObserver(observer);
+    runner.run(pipes, stageOutputsToOverride);
+  }
+
   public static class Builder {
     private final StageLibraryTask stageLib;
     private final String name;

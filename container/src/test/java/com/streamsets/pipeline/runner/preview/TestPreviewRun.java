@@ -15,6 +15,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRunner;
@@ -133,6 +134,62 @@ public class TestPreviewRun {
     PipelineRunner runner = new PreviewPipelineRunner(tracker, -1, 1, true);
     new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name",
                          MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
+  }
+
+
+  @Test
+  public void testPreviewRunOverride() throws Exception {
+    MockStages.setSourceCapture(new BaseSource() {
+      @Override
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+        Record record = getContext().createRecord("x");
+        record.set(Field.create(1));
+        batchMaker.addRecord(record);
+        return "1";
+      }
+    });
+    MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
+      @Override
+      protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+        int currentValue = record.get().getValueAsInteger();
+        record.set(Field.create(currentValue * 2));
+        batchMaker.addRecord(record);
+      }
+    });
+    MockStages.setTargetCapture(new BaseTarget() {
+      @Override
+      public void write(Batch batch) throws StageException {
+      }
+    });
+    PipelineConfiguration pipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+    SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
+    PipelineRunner runner = new PreviewPipelineRunner(tracker, -1, 1, true);
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name", pipelineConf).build(runner);
+    pipeline.init();
+    pipeline.run();
+    pipeline.destroy();
+    List<StageOutput> output = runner.getBatchesOutput().get(0);
+    Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
+    Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).get().getValue());
+
+    StageOutput sourceOutput = output.get(0);
+    Assert.assertEquals("s", sourceOutput.getInstanceName());
+
+    Record modRecord = new RecordImpl("i", "source", null, null);
+    modRecord.set(Field.create(10));
+    //modifying the source output
+    sourceOutput.getOutput().get(pipelineConf.getStages().get(0).getOutputLanes().get(0)).set(0, modRecord);
+
+    runner = new PreviewPipelineRunner(tracker, -1, 1, true);
+    pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
+                                    MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
+
+    pipeline.init();
+    pipeline.run(Arrays.asList(sourceOutput));
+    pipeline.destroy();
+    output = runner.getBatchesOutput().get(0);
+    Assert.assertEquals(10, output.get(0).getOutput().get("s").get(0).get().getValue());
+    Assert.assertEquals(20, output.get(1).getOutput().get("p").get(0).get().getValue());
   }
 
 }

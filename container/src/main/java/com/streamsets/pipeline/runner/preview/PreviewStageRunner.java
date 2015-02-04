@@ -62,6 +62,12 @@ public class PreviewStageRunner implements PipelineRunner {
   }
 
   @Override
+  public void run(Pipe[] pipes, List<StageOutput> stageOutputsToOverride)
+      throws StageException, PipelineRuntimeException {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public String getSourceOffset() {
     return null;
   }

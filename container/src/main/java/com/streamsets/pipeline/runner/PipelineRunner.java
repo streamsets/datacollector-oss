@@ -16,6 +16,9 @@ public interface PipelineRunner {
 
   public void run(Pipe[] pipes)  throws StageException, PipelineRuntimeException;
 
+  public void run(Pipe[] pipes, List<StageOutput> stageOutputsToOverride)
+      throws StageException, PipelineRuntimeException;
+
   public List<List<StageOutput>> getBatchesOutput();
 
   public String getSourceOffset();

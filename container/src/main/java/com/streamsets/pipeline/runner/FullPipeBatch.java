@@ -131,6 +131,29 @@ public class FullPipeBatch implements PipeBatch {
     return list;
   }
 
+  private Map<String, List<Record>> createSnapshot(Map<String, List<Record>> output) {
+    Map<String, List<Record>> copy = new HashMap<>();
+    for (Map.Entry<String, List<Record>> entry : output.entrySet()) {
+      copy.put(entry.getKey(), createSnapshot(entry.getValue()));
+    }
+    return copy;
+  }
+
+  @Override
+  public void overrideStageOutput(StagePipe pipe, StageOutput stageOutput) {
+    startStage(pipe);
+    List<String> stageLaneNames = new ArrayList<>(stageOutput.getOutput().keySet());
+    for (int i = 0; i < stageLaneNames.size() ; i++) {
+      String stageLaneName = stageLaneNames.get(i);
+      String pipeLaneName = pipe.getOutputLanes().get(i);
+      fullPayload.put(pipeLaneName, stageOutput.getOutput().get(stageLaneName));
+    }
+    if (stageOutputSnapshot != null) {
+      stageOutputSnapshot.add(new StageOutput(stageOutput.getInstanceName(), createSnapshot(stageOutput.getOutput()),
+                                              stageOutput.getErrorRecords(), stageOutput.getStageErrors()));
+    }
+  }
+
   @Override
   public List<StageOutput> getSnapshotsOfAllStagesOutput() {
     return stageOutputSnapshot;

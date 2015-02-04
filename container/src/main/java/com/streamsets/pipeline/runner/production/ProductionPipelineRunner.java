@@ -134,6 +134,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   @Override
+  public void run(Pipe[] pipes, List<StageOutput> stageOutputsToOverride)
+      throws StageException, PipelineRuntimeException {
+    throw new UnsupportedOperationException();
+  }
+
+    @Override
   public List<List<StageOutput>> getBatchesOutput() {
     List<List<StageOutput>> batchOutput = new ArrayList<>();
     if(snapshotStore.getSnapshotStatus(pipelineName, revision).isExists()) {

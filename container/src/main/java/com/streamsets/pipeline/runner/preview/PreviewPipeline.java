@@ -8,7 +8,11 @@ package com.streamsets.pipeline.runner.preview;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.validation.Issues;
+
+import java.util.Collections;
+import java.util.List;
 
 public class PreviewPipeline {
   private final Pipeline pipeline;
@@ -19,9 +23,15 @@ public class PreviewPipeline {
     this.pipeline = pipeline;
   }
 
+  @SuppressWarnings("unchecked")
   public PreviewPipelineOutput run() throws StageException, PipelineRuntimeException{
+    return run(Collections.EMPTY_LIST);
+  }
+
+  public PreviewPipelineOutput run(List<StageOutput> stageOutputsToOverride)
+      throws StageException, PipelineRuntimeException{
     pipeline.init();
-    pipeline.run();
+    pipeline.run(stageOutputsToOverride);
     pipeline.destroy();
     return new PreviewPipelineOutput(issues, pipeline.getRunner());
   }
