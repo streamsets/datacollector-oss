@@ -28,6 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Collections;
 import java.util.Set;
 
@@ -114,13 +117,34 @@ public class WebServerTask extends AbstractTask {
     return handler;
   }
 
-  private Handler configureDigest(Server server, ServletContextHandler appHandler) {
-    String realm = conf.get(DIGEST_REALM_KEY, DIGEST_REALM_DEFAULT);
-    File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
+  private static final Set<PosixFilePermission> OWNER_PERMISSIONS = ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
+                                                                                    PosixFilePermission.OWNER_READ,
+                                                                                    PosixFilePermission.OWNER_WRITE);
+
+  private void validateRealmFile(File realmFile) {
     if (!realmFile.exists()) {
       throw new RuntimeException(Utils.format("Realm file '{}' does not exists", realmFile));
     }
+    if (!realmFile.isFile()) {
+      throw new RuntimeException(Utils.format("Realm file '{}' is not a file", realmFile));
+    }
+    try {
+      Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(realmFile.toPath());
+      permissions.removeAll(OWNER_PERMISSIONS);
+      if (!permissions.isEmpty()) {
+        throw new RuntimeException(Utils.format("The permissions of the realm file '{}' should be owner only",
+                                                realmFile));
+      }
+    } catch (IOException ex) {
+      throw new RuntimeException(Utils.format("Could not get the permissions of the realm file '{}', {}", realmFile,
+                                              ex.getMessage(), ex));
+    }
+  }
 
+  private Handler configureDigest(Server server, ServletContextHandler appHandler) {
+    String realm = conf.get(DIGEST_REALM_KEY, DIGEST_REALM_DEFAULT);
+    File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
+    validateRealmFile(realmFile);
     LoginService loginService = new HashLoginService(realm, realmFile.getAbsolutePath());
     server.addBean(loginService);
 
@@ -142,9 +166,7 @@ public class WebServerTask extends AbstractTask {
   private Handler configureForm(Server server, ServletContextHandler appHandler) {
     String realm = conf.get(DIGEST_REALM_KEY, DIGEST_REALM_DEFAULT);
     File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
-    if (!realmFile.exists()) {
-      throw new RuntimeException(Utils.format("Realm file '{}' does not exists", realmFile));
-    }
+    validateRealmFile(realmFile);
 
     ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
 
