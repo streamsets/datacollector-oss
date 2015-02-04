@@ -35,8 +35,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @GenerateResourceBundle
-@StageDef(version = "1.0.0", label = "Record De-duplicator",
-    description = "De-duplicates identical records within time windows and/or a record count windows", icon="dedup.png",
+@StageDef(version = "1.0.0", label = "Record De-dup",
+    description = "De-duplicates identical records within time windows and/or a record count windows", icon="dedup.svg",
     outputStreams = DeDupProcessor.OutputStreams.class)
 @ConfigGroups(DeDupProcessor.Groups.class)
 public class DeDupProcessor extends RecordProcessor {
