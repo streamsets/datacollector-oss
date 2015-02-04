@@ -15,9 +15,9 @@
             <p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> starts from the last stopping point for the following origin types:<ul
-                    id="ul_wqz_1zr_5q">
-                    <li>File Reader</li>
-                    <li>Kafka Consumer<draft-comment author="Loretta">any more?</draft-comment></li>
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_saveOffset"
+                    id="ul_vsh_xpw_yq">
+                    <li/>
                 </ul></p>
             <p>For these origin types, you can configure a pipeline to forget the last stopping
                 point and read all available data.</p>

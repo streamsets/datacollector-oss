@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_gz5_dqw_yq">
+ <title>Data Format</title>
+ <shortdesc>The Directory origin processes data differently based on the type of data in the file.
+  Directory can process the following types of data:</shortdesc>
+ <conbody>
+  <dl>
+   <dlentry>
+    <dt>Log</dt>
+    <dd>Generates a record for each line in the log file. </dd>
+    <dd>When you configure log data properties, you define the maximum number of characters for a
+     line. When a line exceeds the configured number of characters, Directory truncates the
+     line.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>JSON</dt>
+    <dd>Generates a record for each JSON object. </dd>
+    <dd>You can use JSON files that include multiple JSON objects or a JSON array.</dd>
+    <dd>When you configure the JSON data properties, you define the maximum length of the JSON
+     object. When an object exceeds the maximum length, Directory discards the object and continues
+     processing with the next object.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>Delimited</dt>
+    <dd>Generates a record for each delimited record. </dd>
+    <dd>You can use the following types of delimited files:<ul id="ul_a51_wzk_5q">
+      <li>Generic comma-separated values (CSV)</li>
+      <li>Microsoft Excel CSV</li>
+      <li>MySQL CSV</li>
+      <li>RFC4180 CSV</li>
+      <li>Tab-separated values</li>
+     </ul></dd>
+    <dd>The Directory origin can convert a file to a map based on the header line of the file. If
+     the file does not include a header, Directory creates the map based on column number.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>XML</dt>
+    <dd>Generates records based on the location of the record separator XML element.</dd>
+    <dd>When you configure the XML data properties, you define the maximum length of the XML record.
+     When a record exceeds the maximum length, Directory discards the record and continues
+     processing with the next record.</dd>
+   </dlentry>
+  </dl>
+ </conbody>
+</concept>

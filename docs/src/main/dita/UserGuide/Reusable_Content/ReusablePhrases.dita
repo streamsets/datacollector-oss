@@ -18,11 +18,26 @@
                   <li>The input data column for all other stages.</li>
             </ul>
             <p>The following bullets are the types of origins that can be reset / that remember
-                  where you left off. These are used currently in Starting a Pipeline and Resetting
-                  an Origin:<ul id="ul_OffsetSavingOrigins">
-                        <li>File Reader</li>
-                        <li>Kafka Consumer<draft-comment author="Loretta">any
-                              more?</draft-comment></li>
+                  where you left off. These are used currently in "Starting a Pipeline" and
+                  "Resetting an Origin":<ul id="ul_saveOffset">
+                        <li>Directory</li>
+                        <li>Kafka Consumer</li>
                   </ul></p>
+            <p>The following bullets are CSV file types. Used in "Configuring a Directory Origin"
+                  and "Configuring the Kafka Consumer"</p>
+            <p>
+                  <ul id="ul_delFileTypes">
+                        <li><uicontrol>Basic CSV</uicontrol> - File that includes comma-separated
+                              values.</li>
+                        <li><uicontrol>MS Excel CSV</uicontrol> - Microsoft Excel comma-separated
+                              file.</li>
+                        <li><uicontrol>MySQL CSV</uicontrol> - MySQL comma separated file.</li>
+                        <li><uicontrol>RFC4180 CSV</uicontrol> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+                        <li><uicontrol>Tab-Separated Values</uicontrol> - File that includes
+                              tab-separated values.<draft-comment author="Loretta">Do I need to say
+                                    more?</draft-comment></li>
+                  </ul>
+            </p>
       </conbody>
 </concept>

@@ -6,9 +6,8 @@
     the file directory.</shortdesc>
  <conbody>
   <p>When you start a pipeline, Directory starts processing with the file name that you enter and
-      continues processing files in ascending order. If you did not configure a file name, it starts
-      with the lowest file in alphabetical order. <draft-comment author="Loretta">better way to say
-        that?</draft-comment></p>
+         continues processing files in naturally ascending order. If you did not configure a file
+         name, it starts with the file with the lowest file name. </p>
   <p>For example, the file directory includes the following files: File.log, File1.log, File2.log,
       File3.log. If you configure File1.log as the first file, Directory processes File1.log and
       continues with File2.log and File3.log. It does not process File.log. </p>

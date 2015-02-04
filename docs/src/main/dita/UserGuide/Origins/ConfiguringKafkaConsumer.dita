@@ -1,24 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_npx_xgf_vq">
-    <title>Configuring the Kafka Consumer</title>
-    <shortdesc>When you configure the Kafka Consumer, you configure the general properties,
-        including Kafka and ZooKeeper details. You can optionally add custom advanced properties.
-        And after you select the type of data to be processed, you can configure related properties
-        for that type.</shortdesc>
+    <title>Configuring a Kafka Consumer</title>
+    <shortdesc>Configure a Kafka Consumer to read log, JSON, CSV, or XML data from a Kafka cluster.
+        When you configure the Kafka Consumer, you configure the general properties, including Kafka
+        and ZooKeeper details. For JSON and CSV data, configure additional related properties. You
+        can optionally add custom advanced properties. </shortdesc>
     <taskbody>
-        <context>
-            <p>The Kafka Consumer properties display in the following tabs in the Properties
-                    panel:<ul id="ul_vq3_b3f_vq">
-                    <li><uicontrol>General</uicontrol>. Kafka configuration details, batch
-                        information, and payload type.</li>
-                    <li><uicontrol>Advanced</uicontrol>. Custom Kafka properties that you want to
-                        use.</li>
-                    <li><uicontrol>Log</uicontrol>. <draft-comment author="Loretta">currently, no
-                            tab for this - no extra properties?</draft-comment></li>
-                    <li><uicontrol>JSON</uicontrol>. JSON properties for JSON paylods.</li>
-                    <li><uicontrol>CSV</uicontrol>. CSV properties for CSV payloads.</li>
-                </ul></p>
-        </context>
+        <context/>
+        <steps id="steps_f3x_nhw_yq">
+            <step>
+                <cmd>In the Properties panel, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_v4j_qhw_yq">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Properties</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>Consumer Group</entry>
+                                    <entry>Kakfa consumer group the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> represents.</entry>
+                                </row>
+                                <row>
+                                    <entry>Topic</entry>
+                                    <entry>Kafka topic to read.</entry>
+                                </row>
+                                <row>
+                                    <entry>ZooKeeper Connect String</entry>
+                                    <entry>Connection string for the ZooKeeper of the Kafka cluster.
+                                        To use more than one ZooKeeper, enter a comma-separated
+                                        list.</entry>
+                                </row>
+                                <row>
+                                    <entry>Max Batch Size</entry>
+                                    <entry>Maximum number of messages processed at one time.</entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Duration Time (secs)</entry>
+                                    <entry>Number of seconds the Kafka Consumer waits before sending
+                                        a partial or empty batch. </entry>
+                                </row>
+                                <row>
+                                    <entry>Payload Type</entry>
+                                    <entry>Type of data in the topic. Use one of the following
+                                            options:<ul id="ul_qgm_tjw_yq">
+                                            <li>Log</li>
+                                            <li>JSON</li>
+                                            <li>CSV</li>
+                                            <li>XML</li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>To configure additional Kafka properties, on the <uicontrol>Advanced
+                        Properties</uicontrol> tab, click <uicontrol>Add</uicontrol> and configure
+                    the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_dzq_blw_yq">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <thead>
+                                <row>
+                                    <entry>Advanced Configuration Property <xref
+                                            href="KConsumer_AdvancedProp.dita#concept_d5f_n2g_vq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                            /></xref>
+                                    </entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Name of the Kafka configuration property. Enter the exact
+                                        name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Value</entry>
+                                    <entry>Value for the configuration option. Enter the value as
+                                        expected by Kafka.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For JSON data, click the <uicontrol>JSON Data</uicontrol> tab and configure the
+                    following properties:</cmd>
+                <info>
+                    <table
+                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/table_JSONdata"
+                        id="table_a2t_ynw_yq">
+                        <tgroup cols="cols_afq_ynw_yq">
+                            <tbody>
+                                <row>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For CSV data, click the <uicontrol>CSV Data </uicontrol>tab and select the
+                        <uicontrol>CSV Format </uicontrol> for the data.</cmd>
+                <info>Use one of the following options:<ul
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
+                        id="ul_egq_q4w_yq">
+                        <li/>
+                    </ul></info>
+            </step>
+        </steps>
     </taskbody>
 </task>

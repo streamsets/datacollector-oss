@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The File Tail origin reads data as it is written to a log file. As long as the pipeline runs, File Tail captures data that is written to the log file. The File Tail origin does not read data already ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="File Tail"></meta><meta name="abstract" content="The File Tail origin reads data as it is written to a log file. As long as the pipeline runs, File Tail captures data that is written to the log file. The File Tail origin does not read data already in the file or data that is written to the file when the pipeline is not running."></meta><meta name="description" content="The File Tail origin reads data as it is written to a log file. As long as the pipeline runs, File Tail captures data that is written to the log file. The File Tail origin does not read data already in the file or data that is written to the file when the pipeline is not running."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n1y_qyp_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>File Tail</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The File Tail origin reads data as it is written to a log file. As long as the pipeline runs, File Tail captures log or JSON data that is written to a file. The File Tail origin does not read data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="File Tail"></meta><meta name="abstract" content="The File Tail origin reads data as it is written to a log file. As long as the pipeline runs, File Tail captures log or JSON data that is written to a file. The File Tail origin does not read data already in the file or data that is written to the file when the pipeline is not running."></meta><meta name="description" content="The File Tail origin reads data as it is written to a log file. As long as the pipeline runs, File Tail captures log or JSON data that is written to a file. The File Tail origin does not read data already in the file or data that is written to the file when the pipeline is not running."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n1y_qyp_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>File Tail</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,8 +15,8 @@
 
  
  <div class="body conbody"><p class="shortdesc">The File Tail origin reads data as it is written to a log file. As long as the pipeline
-  runs, File Tail captures data that is written to the log file. The File Tail origin does not read
-  data already in the file or data that is written to the file when the pipeline is not
+  runs, File Tail captures log or JSON data that is written to a file. The File Tail origin does not
+  read data already in the file or data that is written to the file when the pipeline is not
   running.</p>
 
   <p class="p">For example, you have a log file with 30 rows of data when you start the pipeline. The File
@@ -57,71 +57,87 @@
  </div>
 
 </div>
-<div class="topic concept nested1" id="concept_rvt_qfr_5q">
- <h2 class="title topictitle2">General Properties</h2>
+<div class="topic task nested1" id="task_unq_wdw_yq">
+    <h2 class="title topictitle2">Configuring a File Tail Origin</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">You can configure the following general properties for the File Tail origin:</p>
+    
+    <div class="body taskbody"><p class="shortdesc">Configure a File Tail origin to read data as it is written to a file. You can read
+        JSON or log data.</p>
 
-  <div class="p">
-   
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_rvt_qfr_5q__table_ld1_5fr_5q" class="table" frame="border" border="1" rules="all">
-     
-     
-     <thead class="thead" align="left">
-      <tr class="row">
-       <th class="entry" valign="top" width="28.985507246376812%" id="d3760e87">File Tail General Property</th>
+        <div class="section context"></div>
 
-       <th class="entry" valign="top" width="71.01449275362319%" id="d3760e90">Description</th>
+        <div class="li step p">
+                <span class="ph cmd">In the Properties panel, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__table_ld1_5fr_5q" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="28.985507246376812%" id="d3974e96">File Tail General Property</th>
 
-      </tr>
+                                    <th class="entry" valign="top" width="71.01449275362319%" id="d3974e99">Description</th>
 
-     </thead>
+                                </tr>
 
-     <tbody class="tbody">
-      <tr class="row">
-       <td class="entry" valign="top" width="28.985507246376812%" headers="d3760e87 ">Name</td>
+                            </thead>
 
-       <td class="entry" valign="top" width="71.01449275362319%" headers="d3760e90 ">Stage name.</td>
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3974e96 ">Name</td>
 
-      </tr>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3974e99 ">Stage name.</td>
 
-      <tr class="row">
-       <td class="entry" valign="top" width="28.985507246376812%" headers="d3760e87 ">Description</td>
+                                </tr>
 
-       <td class="entry" valign="top" width="71.01449275362319%" headers="d3760e90 ">Optional description.</td>
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3974e96 ">Description</td>
 
-      </tr>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3974e99 ">Optional description.</td>
 
-      <tr class="row">
-       <td class="entry" valign="top" width="28.985507246376812%" headers="d3760e87 ">Log File</td>
+                                </tr>
 
-       <td class="entry" valign="top" width="71.01449275362319%" headers="d3760e90 ">Log file name and directory.</td>
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3974e96 ">Data Format</td>
 
-      </tr>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3974e99 ">Format of data in the file. </td>
 
-      <tr class="row">
-       <td class="entry" valign="top" width="28.985507246376812%" headers="d3760e87 ">Batch Size (rows) <a class="xref" href="FileTail.html#concept_ypd_vgr_5q" title="For the File Tail origin, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that File Tail waits for additional data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains."> <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
+                                </tr>
 
-       <td class="entry" valign="top" width="71.01449275362319%" headers="d3760e90 ">Maximum number of rows included in a batch. </td>
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3974e96 ">File Path</td>
 
-      </tr>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3974e99 ">Directory and file name to read.</td>
 
-      <tr class="row">
-       <td class="entry" valign="top" width="28.985507246376812%" headers="d3760e87 ">Batch Wait Time (secs) <a class="xref" href="FileTail.html#concept_ypd_vgr_5q" title="For the File Tail origin, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that File Tail waits for additional data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains."><img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
+                                </tr>
 
-       <td class="entry" valign="top" width="71.01449275362319%" headers="d3760e90 ">Number of seconds to wait before sending a batch.</td>
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3974e96 ">Batch Size (records) <a class="xref" href="FileTail.html#concept_ypd_vgr_5q" title="For the File Tail origin, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that File Tail waits for additional data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains.">
+                                            <img class="image" id="task_unq_wdw_yq__image_obp_j2w_yq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
 
-      </tr>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3974e99 ">Maximum number of records to include in a batch. </td>
 
-     </tbody>
+                                </tr>
 
-    </table>
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3974e96 ">Batch Wait Time (secs) <a class="xref" href="FileTail.html#concept_ypd_vgr_5q" title="For the File Tail origin, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that File Tail waits for additional data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains.">
+                                        <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img>
+                                           </a> </td>
+
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3974e99 ">Number of seconds to wait before sending a batch.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
 </div>
 
-  </div>
+                </div>
+            </div>
 
- </div>
+    </div>
 
 </div>
 </div>

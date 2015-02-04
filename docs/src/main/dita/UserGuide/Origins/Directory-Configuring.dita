@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_gfj_ssv_yq">
+    <title>Configuring a Directory Origin</title>
+    <shortdesc>Configure a Directory origin to read data from files in a directory. When you
+        configure a Directory, you define general properties, including the data format to process.
+        Then, you define post-processing options and the properties specific to data
+        format</shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_tvn_b5v_yq">
+            <step>
+                <cmd>In the Properties panel, optionally enter a name and description for the stage.
+                </cmd>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Files</uicontrol> tab, configure the following
+                        properties:<draft-comment author="Loretta">review step above and table.
+                    </draft-comment></cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_tm4_vck_5q">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <thead>
+                                <row>
+                                    <entry>File Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>Data format for source files. Use one of the following
+                                            formats:<ul id="ul_y1t_wql_5q">
+                                            <li>Log data</li>
+                                            <li>JSON data</li>
+                                            <li>Delimited data</li>
+                                            <li>XML data</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Directory</entry>
+                                    <entry>A directory local to the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> where source files are stored.</entry>
+                                </row>
+                                <row>
+                                    <entry>File Name Pattern <xref
+                                            href="Directory_FNamePattern.dita#concept_bxt_ndl_5q">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                                id="image_c4p_p5v_yq"/></xref>
+                                    </entry>
+                                    <entry>Regular expression that describes the file names. For
+                                        example, *.log.</entry>
+                                </row>
+                                <row>
+                                    <entry>Max Files in Directory</entry>
+                                    <entry>
+                                        <p>The maximum number of files that match the file name
+                                            pattern that are allowed in the directory. When the
+                                            directory contains more files, the pipeline fails.</p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>First File to Process <xref
+                                            href="Directory_FirstFile.dita#concept_ltv_r3l_5q">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                                id="image_e4p_p5v_yq"/></xref>
+                                    </entry>
+                                    <entry>Name of the first file to process. Use a name that uses
+                                        the file name pattern. <p>When you enter a file name,
+                                            Directory reads the first file and other files in the
+                                            directory with ascending names.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>File Wait Timeout (secs) <xref
+                                            href="Directory_FileWaitTime.dita#concept_fqb_x1l_5q">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                                id="image_h4p_p5v_yq"/></xref>
+                                    </entry>
+                                    <entry>Number of seconds to wait for a new file. If a new file
+                                        does not arrive within the specified time, Directory sends
+                                        an empty batch to destinations.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Post Processing</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_sgn_dvv_yq">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <thead>
+                                <row>
+                                    <entry>Post Processing Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Error Directory</entry>
+                                    <entry>The directory for files that were not completely
+                                        processed due to data handling errors.</entry>
+                                </row>
+                                <row>
+                                    <entry>File Post-Processing</entry>
+                                    <entry>The action taken after processing a file: <ul
+                                            id="ul_wsr_h4l_5q">
+                                            <li><uicontrol>None</uicontrol> - Leaves the file
+                                                alone.</li>
+                                            <li><uicontrol>Archive</uicontrol> - Moves the file to
+                                                the archive directory.</li>
+                                            <li><uicontrol>Delete</uicontrol> - Deletes the
+                                                file.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Archive Directory</entry>
+                                    <entry>The directory for processed files. Available when you
+                                        select Archive for the File Post Processing
+                                        property.</entry>
+                                </row>
+                                <row>
+                                    <entry>Archive Retention Time (mins)</entry>
+                                    <entry>Number of minutes processed files are saved in the
+                                        archive directory. Use 0 to keep the archived files
+                                        indefinitely.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For log data, on the <uicontrol>Log Data</uicontrol> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_LogData">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <thead>
+                                <row>
+                                    <entry>Log Data Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Maximum Line Length</entry>
+                                    <entry>Maximum number of characters allowed for a line. Longer
+                                        lines are truncated.</entry>
+                                </row>
+                                <row>
+                                    <entry>Use Truncated Flag</entry>
+                                    <entry>Adds a boolean field to the record to indicate if a
+                                        record was truncated. The field name is Truncated. Possible
+                                        values are True for a truncated record and False for
+                                        untruncated values.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For JSON data, on the <uicontrol>JSON Data</uicontrol> tab configure the
+                    following properties:</cmd>
+                <info>
+                    <table
+                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/table_JSONdata"
+                        id="table_q1r_znw_yq">
+                        <tgroup cols="cols_vyq_znw_yq">
+                            <tbody>
+                                <row>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For Delimited data, on the <uicontrol>Delimited Data</uicontrol> tab, configure
+                    the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_DelimitedData">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <thead>
+                                <row>
+                                    <entry>Delimited Data Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>File Type</entry>
+                                    <entry>File type. Use one of the following options: <ul
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
+                                            id="ul_zf2_n4w_yq">
+                                            <li/>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Header Line</entry>
+                                    <entry>Indicates whether a file contains a header line.</entry>
+                                </row>
+                                <row>
+                                    <entry>Convert to Map</entry>
+                                    <entry>Converts a file to a map based on the fields in the
+                                        header. If no header exists, uses column numbers to map the
+                                        fields.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For XML data, on the <uicontrol>XML Data</uicontrol> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_b5x_nbw_yq">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <thead>
+                                <row>
+                                    <entry>XML Data Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Element Record Delimiter</entry>
+                                    <entry>XML element that acts as a record delimiter. </entry>
+                                </row>
+                                <row>
+                                    <entry>Maximum Record Length</entry>
+                                    <entry>Maximum length for a record. Longer records are
+                                        discarded.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

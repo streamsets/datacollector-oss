@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_unq_wdw_yq">
+    <title>Configuring a File Tail Origin</title>
+    <shortdesc>Configure a File Tail origin to read data as it is written to a file. You can read
+        JSON or log data.</shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_cfd_j2w_yq">
+            <step>
+                <cmd>In the Properties panel, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ld1_5fr_5q">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.45*"/>
+                            <thead>
+                                <row>
+                                    <entry>File Tail General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>Format of data in the file. </entry>
+                                </row>
+                                <row>
+                                    <entry>File Path</entry>
+                                    <entry>Directory and file name to read.</entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Size (records) <xref
+                                            href="FileTail_BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                                id="image_obp_j2w_yq"/></xref></entry>
+                                    <entry>Maximum number of records to include in a batch. </entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Wait Time (secs) <xref
+                                        href="FileTail_BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="12"/>
+                                           </xref> </entry>
+                                    <entry>Number of seconds to wait before sending a batch.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>
