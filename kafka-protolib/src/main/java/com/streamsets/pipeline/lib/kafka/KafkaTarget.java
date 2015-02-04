@@ -295,7 +295,7 @@ public class KafkaTarget extends BaseTarget {
           message = serializeRecord(r);
         } catch (StageException e) {
           LOG.warn(e.getMessage());
-          getContext().toError(r, e);
+          getContext().toError(r, e.getMessage());
           continue;
         }
         kafkaProducer.enqueueMessage(message, partitionKey);

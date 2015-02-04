@@ -216,7 +216,10 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   public int getOutputRecords() {
-    return outputRecords;
+    //The logic is
+    // targetOutputRecords = targetInputRecords - errorRecords
+    //Note that the assumption here is that that target will never drop records
+    return outputRecords - errorSink.size();
   }
 
   @Override

@@ -210,7 +210,7 @@ public class ObserverRunner {
           LOG.error("Error sending alert email, reason: {}", e.getMessage());
           //Log error and move on. This should not stop the pipeline.
         }
-      }  
+      }
     }
   }
 

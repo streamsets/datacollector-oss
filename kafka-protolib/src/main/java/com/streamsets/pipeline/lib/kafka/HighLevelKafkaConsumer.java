@@ -95,7 +95,7 @@ public class HighLevelKafkaConsumer {
     int batchSize = this.maxBatchSize > maxBatchSize ? maxBatchSize : this.maxBatchSize;
     int messageCount = 0;
     long startTime = System.currentTimeMillis();
-    int attemptNumber = 0;
+    //int attemptNumber = 0;
     //Keep trying to collect messages until the batch size is reached or the max wait time is reached
     while (messageCount < batchSize && (startTime + maxWaitTime) > System.currentTimeMillis()) {
       try {
@@ -118,9 +118,9 @@ public class HighLevelKafkaConsumer {
 
         //For now we keep a high value for consumer.timeout.ms and in case of ConsumerTimeoutException
         //we recreate consumer connections and stream.
-        attemptNumber++;
+        //attemptNumber++;
         //FIXME<Hari>:Figure out a way to detect lost connection
-        handleConnectionError(attemptNumber);
+        //git statushandleConnectionError(attemptNumber);
       }
     }
     return messageAndOffsetList;
