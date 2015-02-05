@@ -101,18 +101,9 @@
          tooltip-placement="bottom" tooltip="{{'home.header.refreshPreview' | translate}}"
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
-         ng-show="previewMode"
+         ng-if="!previewDataUpdated"
          ng-click="previewPipeline(true)">
         <span class="fa fa-refresh"></span>
-      </a>
-
-      <a type="button" class="btn btn-primary btn-sm"
-         tooltip-placement="bottom" tooltip="{{'global.form.revertChanges' | translate}}"
-         tooltip-popup-delay="500"
-         tooltip-append-to-body="true"
-         ng-click="revertChanges()"
-         ng-if="previewDataUpdated">
-        <span class="fa fa-undo"></span>
       </a>
 
       <a type="button" class="btn btn-primary btn-sm"
@@ -122,6 +113,15 @@
          ng-if="previewDataUpdated"
          ng-click="stepPreview(detailPaneConfig, stagePreviewData.input)">
         <span class="fa fa-refresh"></span> *
+      </a>
+
+      <a type="button" class="btn btn-primary btn-sm"
+         tooltip-placement="bottom" tooltip="{{'global.form.revertChanges' | translate}}"
+         tooltip-popup-delay="500"
+         tooltip-append-to-body="true"
+         ng-click="revertChanges()"
+         ng-if="previewDataUpdated">
+        <span class="fa fa-undo"></span>
       </a>
 
     </div>
