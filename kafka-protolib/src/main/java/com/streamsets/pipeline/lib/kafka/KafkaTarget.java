@@ -156,8 +156,8 @@ public class KafkaTarget extends BaseTarget {
   }
 
   public enum KafkaTargetConfigGroups implements Label {
-    KAFKA_CONNECTION_PROPERTIES("Kafka Connection Configuration"),
-    KAFKA_ADVANCED_CONFIGURATION("Kafka Advanced Configuration"),
+    KAFKA_CONNECTION_PROPERTIES("Connection Configuration"),
+    KAFKA_ADVANCED_CONFIGURATION("Advanced Configuration"),
     JSON_PROPERTIES("JSON Data Properties"),
     CSV_PROPERTIES("CSV Data Properties"),
     LOG_PROPERTIES("Log Data Properties");
