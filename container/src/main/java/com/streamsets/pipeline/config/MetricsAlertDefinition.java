@@ -20,6 +20,7 @@ public class MetricsAlertDefinition {
   private final MetricElement metricElement;
   private final String condition;
   private final boolean enabled;
+  private boolean valid = true;
 
   /*enable alert by email*/
   private final boolean sendEmail;
@@ -80,6 +81,14 @@ public class MetricsAlertDefinition {
 
   public List<String> getEmailIds() {
     return emailIds;
+  }
+
+  public boolean isValid() {
+    return valid;
+  }
+
+  public void setValid(boolean valid) {
+    this.valid = valid;
   }
 
   @Override

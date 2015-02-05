@@ -30,6 +30,15 @@ public class RuleDefinitionValidator {
 
   private static final String LABEL = "label";
   private static final String CONDITION = "condition";
+  private static final String VAL = "value()";
+  private static final String METRIC_ID = "metric id";
+  private static final String DEFAULT_VALUE = "10";
+  private static final String PROPERTY = "property";
+  private static final int MIN_PERCENTAGE = 0;
+  private static final int MAX_PERCENTAGE = 100;
+  private static final String THRESHOLD_VALUE = "Threshold Value";
+  private static final String EMAIL_IDS = "Email Ids";
+  private static final String SAMPLING_PERCENTAGE = "Sampling Percentage";
 
   private final ELEvaluator elEvaluator;
   private final ELEvaluator.Variables variables;
@@ -47,63 +56,114 @@ public class RuleDefinitionValidator {
 
     List<RuleIssue> ruleIssues = new ArrayList<>();
     for(DataRuleDefinition dataRuleDefinition : ruleDefinition.getDataRuleDefinitions()) {
+      //reset valid flag before validating
+      dataRuleDefinition.setValid(true);
       String ruleId = dataRuleDefinition.getId();
       if(dataRuleDefinition.getLabel() == null || dataRuleDefinition.getLabel().isEmpty()) {
-        ruleIssues.add(RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0040, LABEL));
+        RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0040, LABEL);
+        r.setAdditionalInfo(PROPERTY, LABEL);
+        ruleIssues.add(r);
+        dataRuleDefinition.setValid(false);
       }
       if(dataRuleDefinition.getCondition() == null || dataRuleDefinition.getCondition().isEmpty()) {
-        ruleIssues.add(RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0040, CONDITION));
+        RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0040, CONDITION);
+        r.setAdditionalInfo(PROPERTY, CONDITION);
+        ruleIssues.add(r);
+        dataRuleDefinition.setValid(false);
       } else {
         //validate the condition el expression
-        RuleIssue issue = validateExpressions(dataRuleDefinition.getCondition(), ruleId);
+        RuleIssue issue = validateDataRuleExpressions(dataRuleDefinition.getCondition(), ruleId);
         if(issue != null) {
+          issue.setAdditionalInfo(PROPERTY, CONDITION);
           ruleIssues.add(issue);
+          dataRuleDefinition.setValid(false);
         }
       }
-      if(dataRuleDefinition.getSamplingPercentage() < 0 || dataRuleDefinition.getSamplingPercentage() > 100) {
-        ruleIssues.add(RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0041));
+      if(dataRuleDefinition.getSamplingPercentage() < MIN_PERCENTAGE ||
+        dataRuleDefinition.getSamplingPercentage() > MAX_PERCENTAGE) {
+        RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0041);
+        r.setAdditionalInfo(PROPERTY, SAMPLING_PERCENTAGE);
+        ruleIssues.add(r);
+        dataRuleDefinition.setValid(false);
       }
       if(dataRuleDefinition.isSendEmail() &&
         (dataRuleDefinition.getEmailIds() == null || dataRuleDefinition.getEmailIds().isEmpty())) {
-        ruleIssues.add(RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0042));
+        RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0042);
+        r.setAdditionalInfo(PROPERTY, EMAIL_IDS);
+        ruleIssues.add(r);
+        dataRuleDefinition.setValid(false);
       }
       double threshold;
       try {
         threshold = Double.parseDouble(dataRuleDefinition.getThresholdValue());
         if(dataRuleDefinition.getThresholdType() == ThresholdType.PERCENTAGE) {
-          if(threshold < 0 || threshold > 100) {
-            ruleIssues.add(RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0044));
+          if(threshold < MIN_PERCENTAGE || threshold > MAX_PERCENTAGE) {
+            RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0044);
+            r.setAdditionalInfo(PROPERTY, THRESHOLD_VALUE);
+            ruleIssues.add(r);
+            dataRuleDefinition.setValid(false);
           }
         }
       } catch (NumberFormatException e) {
-        ruleIssues.add(RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0043));
+        RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0043);
+        r.setAdditionalInfo(PROPERTY, THRESHOLD_VALUE);
+        ruleIssues.add(r);
+        dataRuleDefinition.setValid(false);
       }
     }
 
     for(MetricsAlertDefinition metricsAlertDefinition : ruleDefinition.getMetricsAlertDefinitions()) {
       String ruleId = metricsAlertDefinition.getId();
+      //reset valid flag before validating
+      metricsAlertDefinition.setValid(true);
       if(metricsAlertDefinition.getLabel() == null || metricsAlertDefinition.getLabel().isEmpty()) {
-        ruleIssues.add(RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0050, LABEL));
+        RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0050, LABEL);
+        r.setAdditionalInfo(PROPERTY, LABEL);
+        ruleIssues.add(r);
+
+        metricsAlertDefinition.setValid(false);
       }
       if(metricsAlertDefinition.getMetricId() == null || metricsAlertDefinition.getMetricId().isEmpty()) {
-        ruleIssues.add(RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0050, "metric id"));
+        RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0050, METRIC_ID);
+        r.setAdditionalInfo(PROPERTY, METRIC_ID);
+        ruleIssues.add(r);
+
+        metricsAlertDefinition.setValid(false);
       }
       if(metricsAlertDefinition.getCondition() == null || metricsAlertDefinition.getCondition().isEmpty()) {
-        ruleIssues.add(RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0050, "condition"));
+        RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0050, CONDITION);
+        r.setAdditionalInfo(PROPERTY, CONDITION);
+        ruleIssues.add(r);
+        metricsAlertDefinition.setValid(false);
       } else {
         //validate the condition el expression
-        RuleIssue issue = validateExpressions(metricsAlertDefinition.getCondition(), ruleId);
+        RuleIssue issue = validateMetricAlertExpressions(metricsAlertDefinition.getCondition(), ruleId);
         if(issue != null) {
+          issue.setAdditionalInfo(PROPERTY, CONDITION);
           ruleIssues.add(issue);
+          metricsAlertDefinition.setValid(false);
         }
       }
     }
 
     ruleDefinition.setRuleIssues(ruleIssues);
-    return ruleIssues.size() == 0? true : false;
+    return ruleIssues.size() == 0 ? true : false;
   }
 
-  private RuleIssue validateExpressions(String condition, String ruleId){
+  private RuleIssue validateMetricAlertExpressions(String condition, String ruleId){
+    if(!condition.startsWith("${") || !condition.endsWith("}") || !condition.contains(VAL)) {
+      return RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0046);
+    }
+    String predicateWithValue = condition.replace(VAL, DEFAULT_VALUE);
+    try {
+      elEvaluator.eval(variables, predicateWithValue);
+    } catch (ELException ex) {
+      return RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0045, condition);
+    }
+    return null;
+  }
+
+  private RuleIssue validateDataRuleExpressions(String condition, String ruleId){
     Record record = new Record(){
       @Override
       public Header getHeader() {
@@ -225,7 +285,7 @@ public class RuleDefinitionValidator {
     try {
       elEvaluator.eval(variables, condition);
     } catch (ELException ex) {
-      RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0045, condition);
+      return RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0045, condition);
     }
     return null;
   }

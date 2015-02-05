@@ -14,6 +14,7 @@ import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.util.Configuration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class TestObserverRunner {
 
   @Before
   public void setUp() {
-    observerRunner = new ObserverRunner(metrics, null);
+    observerRunner = new ObserverRunner(metrics, null, new Configuration());
   }
 
   @Test

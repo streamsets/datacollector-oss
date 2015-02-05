@@ -303,9 +303,12 @@ public class TestFilePipelineStoreTask {
       MetricElement.HISTOGRAM_MEAN, "p", false, null, true));
 
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
-    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
-    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
-    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000,
+      true, false, null, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000,
+      true, false, null, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000,
+      true, false, null, true));
 
     ruleDefinition = new RuleDefinition(metricsAlertDefinitions, dataRuleDefinitions);
 

@@ -221,11 +221,9 @@ public class MetricAlertsChecker {
     //predicate String is of the form "val()<200" or "val() < 200 && val() > 100" etc
     //replace val() with the actual value, append dollar and curly braces and evaluate the resulting EL expression
     // string
-    StringBuilder stringBuilder = new StringBuilder();
     String predicateWithValue = metricsAlertDefinition.getCondition().replace(VAL, String.valueOf(value));
-    stringBuilder.append(predicateWithValue);
     try {
-      if (AlertsUtil.evaluateExpression(stringBuilder.toString(), variables, elEvaluator)) {
+      if (AlertsUtil.evaluateExpression(predicateWithValue, variables, elEvaluator)) {
         raiseAlert(value);
       }
     } catch (ObserverException e) {

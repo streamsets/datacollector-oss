@@ -24,6 +24,7 @@ import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.LaneResolver;
+import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ObserverException;
 import com.streamsets.pipeline.util.PipelineException;
 import org.slf4j.Logger;
@@ -51,11 +52,13 @@ public class ObserverRunner {
   private final ELEvaluator.Variables variables;
   private final Map<String, Object> alertResponse;
   private final EmailSender emailSender;
+  private final Configuration configuration;
 
-  public ObserverRunner(MetricRegistry metrics, EmailSender emailSender) {
+  public ObserverRunner(MetricRegistry metrics, EmailSender emailSender, Configuration configuration) {
     this.metrics = metrics;
     this.alertResponse = new HashMap<>();
     this.ruleToSampledRecordsMap = new HashMap<>();
+    this.configuration = configuration;
     elEvaluator = new ELEvaluator();
     variables = new ELEvaluator.Variables();
     ELBasicSupport.registerBasicFunctions(elEvaluator);
@@ -81,7 +84,9 @@ public class ObserverRunner {
             List<Record> sampleSet = sampleRecords.subList(0, numberOfRecords);
             EvictingQueue<Record> sampledRecords = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
             if (sampledRecords == null) {
-              sampledRecords = EvictingQueue.create(100);
+              sampledRecords = EvictingQueue.create(configuration.get(
+                com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_CACHE_SIZE_KEY,
+                com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_CACHE_SIZE_DEFAULT));
               ruleToSampledRecordsMap.put(dataRuleDefinition.getId(), sampledRecords);
             }
             sampledRecords.addAll(sampleSet);

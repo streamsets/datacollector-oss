@@ -34,6 +34,7 @@ public class DataRuleDefinition {
 
   /*is this rule definition enabled*/
   private final boolean enabled;
+  private boolean valid = true;
 
   @JsonCreator
   public DataRuleDefinition(@JsonProperty("id") String id,
@@ -120,5 +121,13 @@ public class DataRuleDefinition {
 
   public List<String> getEmailIds() {
     return emailIds;
+  }
+
+  public boolean isValid() {
+    return valid;
+  }
+
+  public void setValid(boolean valid) {
+    this.valid = valid;
   }
 }

@@ -256,7 +256,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return prodPipeline.getErrorMessages(instanceName);
   }
 
-  public List<PipelineState> getHistory(String pipelineName, String rev, boolean fromBeginning) throws PipelineManagerException {
+  public List<PipelineState> getHistory(String pipelineName, String rev, boolean fromBeginning)
+    throws PipelineManagerException {
     validatePipelineExistence(pipelineName);
     return stateTracker.getHistory(pipelineName, rev, fromBeginning);
   }
@@ -298,7 +299,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
       , PipelineRuntimeException, PipelineStoreException {
 
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(
-      configuration.get(Configuration.OBSERVER_QUEUE_SIZE_KEY, Configuration.OBSERVER_QUEUE_SIZE_DEFAULT), true /*FIFO*/);
+      configuration.get(Configuration.OBSERVER_QUEUE_SIZE_KEY, Configuration.OBSERVER_QUEUE_SIZE_DEFAULT),
+      true /*FIFO*/);
     ProductionObserver observer = new ProductionObserver(productionObserveRequests);
     createPipeline(name, rev, observer);
     //Shutdown object is shared between Observer and Pipeline Runner.
@@ -317,7 +319,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     executor.submit(configLoaderRunnable);
 
     observerRunnable = new ProductionObserverRunnable(this, productionObserveRequests, shutdownObject,
-      new EmailSender(configuration));
+      new EmailSender(configuration), configuration);
     executor.submit(observerRunnable);
 
     pipelineRunnable = new ProductionPipelineRunnable(this, prodPipeline, name, rev, shutdownObject);

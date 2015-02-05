@@ -71,8 +71,9 @@ public class TestMetricAlertsChecker {
     t.update(2000, TimeUnit.MILLISECONDS);
     t.update(3000, TimeUnit.MILLISECONDS);
 
-    MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerMatchDisabled", "testTimerMatchDisabled",
-      "testTimerMatchDisabled.timer", MetricType.TIMER, MetricElement.TIMER_COUNT, "${value()>2}", false, null, false);
+    MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerMatchDisabled",
+      "testTimerMatchDisabled", "testTimerMatchDisabled.timer", MetricType.TIMER, MetricElement.TIMER_COUNT,
+      "${value()>2}", false, null, false);
     MetricAlertsChecker metricAlertsChecker = new MetricAlertsChecker(metricsAlertDefinition, metrics, variables,
       elEvaluator, null);
     metricAlertsChecker.checkForAlerts();

@@ -21,6 +21,9 @@ public class Configuration {
   public static final int MAX_PIPELINE_ERRORS_DEFAULT = 100;
   public static final String OBSERVER_QUEUE_SIZE_KEY = "observer.queue.size";
   public static final int OBSERVER_QUEUE_SIZE_DEFAULT = 100;
+  public static final int SAMPLED_RECORDS_CACHE_SIZE_DEFAULT = 100;
+  public static final String SAMPLED_RECORDS_CACHE_SIZE_KEY = "sampled.records.cache.size";
+
 
   public static final String STOP_PIPELINE_MESSAGE = "Requested via REST API";
 

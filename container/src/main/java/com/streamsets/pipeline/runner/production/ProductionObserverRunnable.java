@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.ShutdownObject;
+import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,12 +31,13 @@ public class ProductionObserverRunnable implements Runnable {
 
   public ProductionObserverRunnable(ProductionPipelineManagerTask pipelineManager,
                                     BlockingQueue<Object> requestQueue, ShutdownObject shutdownObject,
-                                    EmailSender emailSender) {
+                                    EmailSender emailSender, Configuration configuration) {
     this.pipelineManager = pipelineManager;
     this.requestQueue = requestQueue;
     this.metrics = this.pipelineManager.getMetrics();
     this.shutdownObject = shutdownObject;
-    this.observerRunner = new ObserverRunner(metrics, emailSender);
+    this.observerRunner = new ObserverRunner(metrics, emailSender, configuration);
+
   }
 
   @Override
