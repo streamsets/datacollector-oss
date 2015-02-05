@@ -27,7 +27,6 @@ import java.util.Properties;
 public class HighLevelKafkaConsumer {
 
   public static final String CONSUMER_TIMEOUT_KEY = "consumer.timeout.ms";
-  private static final String CONSUMER_TIMEOUT_DEFAULT = "60000";
   private static final String SOCKET_TIMEOUT_KEY = "socket.timeout.ms";
   private static final String SOCKET_TIMEOUT_DEFAULT = "30000";
   public static final String AUTO_COMMIT_ENABLED_KEY = "auto.commit.enable";
@@ -42,8 +41,6 @@ public class HighLevelKafkaConsumer {
   private static final String ZK_SESSION_TIMEOUT_MS_KEY = "zookeeper.session.timeout.ms";
   private static final String ZK_CONNECTION_TIMEOUT_MS_DEFAULT = "6000";
   private static final String ZK_SESSION_TIMEOUT_MS_DEFAULT = "6000";
-  //Set the below option to "smallest" to get data from the beginning
-  private static final String AUTO_OFFSET_RESET = "auto.offset.reset";
 
   private static final Logger LOG = LoggerFactory.getLogger(HighLevelKafkaConsumer.class);
 
@@ -95,7 +92,6 @@ public class HighLevelKafkaConsumer {
     int batchSize = this.maxBatchSize > maxBatchSize ? maxBatchSize : this.maxBatchSize;
     int messageCount = 0;
     long startTime = System.currentTimeMillis();
-    //int attemptNumber = 0;
     //Keep trying to collect messages until the batch size is reached or the max wait time is reached
     while (messageCount < batchSize && (startTime + maxWaitTime) > System.currentTimeMillis()) {
       try {
@@ -112,49 +108,17 @@ public class HighLevelKafkaConsumer {
           messageCount++;
         }
       } catch (ConsumerTimeoutException e) {
-        //Another option here is to have a low consumer.timeout.ms value [less than batch duration time]
-        //This allows us to better tune latency and throughput.
-        //But in that case we may not be able to detect lost connections
-
-        //For now we keep a high value for consumer.timeout.ms and in case of ConsumerTimeoutException
-        //we recreate consumer connections and stream.
-        //attemptNumber++;
-        //FIXME<Hari>:Figure out a way to detect lost connection
-        //git statushandleConnectionError(attemptNumber);
+        /*For high level consumer the fetching logic is handled by a background
+          fetcher thread and is hidden from user, for either case of
+          1) broker down or
+          2) no message is available
+          the fetcher thread will keep retrying while the user thread will wait on the fetcher thread to put some
+          data into the buffer until timeout. So in a sentence the high-level consumer design is to
+          not let users worry about connect / reconnect issues.*/
       }
     }
     return messageAndOffsetList;
   }
-
-  private void handleConnectionError(int attemptNumber) throws StageException {
-    try {
-      destroy();
-      createConsumer();
-    } catch (StageException e) {
-      //raise alert and retry after a certain time.
-      LOG.warn("Error connecting to kafka broker, '{}", e.getMessage());
-      context.reportError(e);
-    }
-    try {
-      switch (attemptNumber) {
-        case 1:
-          Thread.sleep(30000);
-          break;
-        case 2:
-          Thread.sleep(60000);
-          break;
-        case 3:
-          Thread.sleep(120000);
-          break;
-        default:
-          Thread.sleep(300000);
-      }
-    } catch (InterruptedException e1) {
-      LOG.error(KafkaStageLibError.KFK_0311.getMessage(), e1.getMessage());
-      throw new StageException(KafkaStageLibError.KFK_0311, e1.getMessage(), e1);
-    }
-  }
-
 
   private void createConsumer() throws StageException {
     LOG.debug("Creating consumer with configuration {}", consumerConfig.props().props().toString());
@@ -167,7 +131,7 @@ public class HighLevelKafkaConsumer {
 
     Map<String, Integer> topicCountMap = new HashMap<>();
 
-    //FIXME<Hari>: Create threads equal to the number of partitions for this topic
+    //TODO: Create threads equal to the number of partitions for this topic
     // A known way to find number of partitions is by connecting to a known kafka broker which means the user has to
     // supply additional options - known broker host and port.
     //Another option is have the user specify the number of threads. If there are more threads than there are
@@ -196,7 +160,7 @@ public class HighLevelKafkaConsumer {
 
     /*Throw a timeout exception to the consumer if no message is available for consumption after the specified
     interval*/
-    props.put(CONSUMER_TIMEOUT_KEY, /*String.valueOf(maxWaitTime)*/ CONSUMER_TIMEOUT_DEFAULT);
+    props.put(CONSUMER_TIMEOUT_KEY, String.valueOf(maxWaitTime));
     /*The socket timeout for network requests.*/
     props.put(SOCKET_TIMEOUT_KEY, SOCKET_TIMEOUT_DEFAULT);
     /*The minimum amount of data the server should return for a fetch request. If insufficient data is available the
@@ -217,6 +181,7 @@ public class HighLevelKafkaConsumer {
       kafkaConsumerConfigs.remove(ZOOKEEPER_CONNECT_KEY);
       kafkaConsumerConfigs.remove(GROUP_ID_KEY);
       kafkaConsumerConfigs.remove(AUTO_COMMIT_ENABLED_KEY);
+      kafkaConsumerConfigs.remove(CONSUMER_TIMEOUT_KEY);
 
       for (Map.Entry<String, String> producerConfig : kafkaConsumerConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());

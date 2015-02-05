@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class ProductionObserverRunnable implements Runnable {
 
@@ -42,13 +43,15 @@ public class ProductionObserverRunnable implements Runnable {
     runningThread = Thread.currentThread();
     while(!shutdownObject.isStop()) {
       try {
-        Object request = requestQueue.take();
-        if(request instanceof ProductionObserveRequest) {
-          //data monitoring
-          observerRunner.handleObserverRequest((ProductionObserveRequest) request);
-        } else if (request instanceof RulesConfigurationChangeRequest) {
-          //configuration changes
-          observerRunner.handleConfigurationChangeRequest((RulesConfigurationChangeRequest) request);
+        Object request = requestQueue.poll(1000, TimeUnit.MILLISECONDS);
+        if(request != null) {
+          if (request instanceof ProductionObserveRequest) {
+            //data monitoring
+            observerRunner.handleObserverRequest((ProductionObserveRequest) request);
+          } else if (request instanceof RulesConfigurationChangeRequest) {
+            //configuration changes
+            observerRunner.handleConfigurationChangeRequest((RulesConfigurationChangeRequest) request);
+          }
         }
       } catch(InterruptedException e){
         LOG.error("Stopping the Pipeline Observer, Reason: {}", e.getMessage());
