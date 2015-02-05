@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.List;
+
 public class MetricsAlertDefinition {
 
   private final String id;
@@ -19,6 +21,10 @@ public class MetricsAlertDefinition {
   private final String condition;
   private final boolean enabled;
 
+  /*enable alert by email*/
+  private final boolean sendEmail;
+  private final List<String> emailIds;
+
   @JsonCreator
   public MetricsAlertDefinition(@JsonProperty("id") String id,
                                 @JsonProperty("label") String label,
@@ -26,6 +32,8 @@ public class MetricsAlertDefinition {
                                 @JsonProperty("metricType") MetricType metricType,
                                 @JsonProperty("metricElement") MetricElement metricElement,
                                 @JsonProperty("condition") String condition,
+                                @JsonProperty("sendMail") boolean sendEmail,
+                                @JsonProperty("emailIds") List<String> emailIds,
                                 @JsonProperty("enabled") boolean enabled) {
     this.id = id;
     this.label = label;
@@ -34,6 +42,8 @@ public class MetricsAlertDefinition {
     this.metricElement = metricElement;
     this.condition = condition;
     this.enabled = enabled;
+    this.sendEmail = sendEmail;
+    this.emailIds = emailIds;
   }
 
   public String getId() {
@@ -62,6 +72,14 @@ public class MetricsAlertDefinition {
 
   public MetricType getMetricType() {
     return metricType;
+  }
+
+  public boolean isSendEmail() {
+    return sendEmail;
+  }
+
+  public List<String> getEmailIds() {
+    return emailIds;
   }
 
   @Override

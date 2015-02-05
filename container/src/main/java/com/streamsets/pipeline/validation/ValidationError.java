@@ -59,6 +59,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0042("Email alert is enabled but no email is specified."),
   VALIDATION_0043("The value specified for configuration 'threshold' is not a number."),
   VALIDATION_0044("Configuration 'threshold' must have a value between 0 and 100."),
+  VALIDATION_0045("Condition '{}' set for Data Rule Definition is not valid."),
 
   VALIDATION_0050("Configuration '{}' must be set for Metric Alert Definition."),
   ;

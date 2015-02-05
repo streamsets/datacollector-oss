@@ -51,9 +51,9 @@ public class TestMetricAlertsChecker {
 
     MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerMatch", "testTimerMatch",
       "testTimerMatch.timer", MetricType.TIMER,
-      MetricElement.TIMER_COUNT, "${val()>2}", true);
+      MetricElement.TIMER_COUNT, "${value()>2}", false, null, true);
     MetricAlertsChecker metricAlertsChecker = new MetricAlertsChecker(metricsAlertDefinition, metrics, variables,
-      elEvaluator);
+      elEvaluator, null);
     metricAlertsChecker.checkForAlerts();
 
     //get alert gauge
@@ -72,9 +72,9 @@ public class TestMetricAlertsChecker {
     t.update(3000, TimeUnit.MILLISECONDS);
 
     MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerMatchDisabled", "testTimerMatchDisabled",
-      "testTimerMatchDisabled.timer", MetricType.TIMER, MetricElement.TIMER_COUNT, "${val()>2}", false);
+      "testTimerMatchDisabled.timer", MetricType.TIMER, MetricElement.TIMER_COUNT, "${value()>2}", false, null, false);
     MetricAlertsChecker metricAlertsChecker = new MetricAlertsChecker(metricsAlertDefinition, metrics, variables,
-      elEvaluator);
+      elEvaluator, null);
     metricAlertsChecker.checkForAlerts();
 
     //get alert gauge
@@ -93,9 +93,9 @@ public class TestMetricAlertsChecker {
 
     MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerNoMatch", "testTimerNoMatch",
       "testTimerNoMatch.timer", MetricType.TIMER,
-      MetricElement.TIMER_COUNT, "${val()>4}", true);
+      MetricElement.TIMER_COUNT, "${value()>4}", false, null, true);
     MetricAlertsChecker metricAlertsChecker = new MetricAlertsChecker(metricsAlertDefinition, metrics, variables,
-      elEvaluator);
+      elEvaluator, null);
     metricAlertsChecker.checkForAlerts();
 
     //get alert gauge

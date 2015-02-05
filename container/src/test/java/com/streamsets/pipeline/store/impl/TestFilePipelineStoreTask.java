@@ -294,11 +294,11 @@ public class TestFilePipelineStoreTask {
 
     List<MetricsAlertDefinition> metricsAlertDefinitions = new ArrayList<>();
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
-      MetricElement.COUNTER_COUNT, "p", true));
+      MetricElement.COUNTER_COUNT, "p", false, null, true));
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m2", "m2", "a", MetricType.TIMER,
-      MetricElement.TIMER_M15_RATE, "p", true));
+      MetricElement.TIMER_M15_RATE, "p", false, null, true));
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
-      MetricElement.HISTOGRAM_MEAN, "p", true));
+      MetricElement.HISTOGRAM_MEAN, "p", false, null, true));
 
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
     dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000, true, false, null, true));

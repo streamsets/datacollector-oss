@@ -41,6 +41,8 @@ public class ObserverRunner {
   private static final Logger LOG = LoggerFactory.getLogger(ObserverRunner.class);
 
   private static final String USER_PREFIX = "user.";
+  private static final String CURRENT_VALUE = "currentValue";
+  private static final String TIMESTAMP = "timestamp";
 
   private RulesConfigurationChangeRequest rulesConfigurationChangeRequest;
   private final Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap;
@@ -148,7 +150,7 @@ public class ObserverRunner {
     if(metricsAlertDefinitions != null) {
       for (MetricsAlertDefinition metricsAlertDefinition : metricsAlertDefinitions) {
         MetricAlertsChecker metricAlertsHelper = new MetricAlertsChecker(metricsAlertDefinition, metrics,
-          variables, elEvaluator);
+          variables, elEvaluator, emailSender);
         metricAlertsHelper.checkForAlerts();
       }
     }
@@ -180,14 +182,14 @@ public class ObserverRunner {
   }
 
   private void raiseAlert(Object value, DataRuleDefinition dataRuleDefinition) {
-    alertResponse.put("currentValue", value);
+    alertResponse.put(CURRENT_VALUE, value);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     if (gauge == null) {
-      alertResponse.put("timestamp", System.currentTimeMillis());
+      alertResponse.put(TIMESTAMP, System.currentTimeMillis());
     } else {
       //remove existing gauge
       MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
-      alertResponse.put("timestamp", ((Map<String, Object>)gauge.getValue()).get("timestamp"));
+      alertResponse.put(TIMESTAMP, ((Map<String, Object>)gauge.getValue()).get(TIMESTAMP));
     }
     Gauge<Object> alertResponseGauge = new Gauge<Object>() {
       @Override
@@ -199,7 +201,8 @@ public class ObserverRunner {
       alertResponseGauge);
     if(dataRuleDefinition.isSendEmail()) {
       StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append("currentValue =" + value).append(", timestamp = " + alertResponse.get("timestamp"));
+      stringBuilder.append(CURRENT_VALUE + " = " + value).append(", " + TIMESTAMP + " = " +
+        alertResponse.get(TIMESTAMP));
       if(emailSender == null) {
         LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
           dataRuleDefinition.getId(), stringBuilder.toString());

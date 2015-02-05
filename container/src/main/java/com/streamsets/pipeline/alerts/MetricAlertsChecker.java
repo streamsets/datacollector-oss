@@ -12,9 +12,11 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.util.ObserverException;
+import com.streamsets.pipeline.util.PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,21 +26,25 @@ import java.util.Map;
 public class MetricAlertsChecker {
 
   private static final Logger LOG = LoggerFactory.getLogger(MetricAlertsChecker.class);
-  private static final String VAL = "val()";
+  private static final String VAL = "value()";
+  private static final String CURRENT_VALUE = "currentValue";
+  private static final String TIMESTAMP = "timestamp";
 
   private final MetricsAlertDefinition metricsAlertDefinition;
   private final MetricRegistry metrics;
   private final ELEvaluator.Variables variables;
   private final ELEvaluator elEvaluator;
   private final Map<String, Object> alertResponse;
+  private final EmailSender emailSender;
 
   public MetricAlertsChecker(MetricsAlertDefinition metricsAlertDefinition, MetricRegistry metricRegistry,
-                             ELEvaluator.Variables variables, ELEvaluator elEvaluator) {
+                             ELEvaluator.Variables variables, ELEvaluator elEvaluator, EmailSender emailSender) {
     this.metricsAlertDefinition = metricsAlertDefinition;
     this.metrics = metricRegistry;
     this.variables = variables;
     this.elEvaluator = elEvaluator;
     alertResponse = new HashMap<>();
+    this.emailSender = emailSender;
   }
 
   public void checkForAlerts() {
@@ -231,15 +237,15 @@ public class MetricAlertsChecker {
   }
 
   private void raiseAlert(Object value) {
-    alertResponse.put("currentValue", value);
+    alertResponse.put(CURRENT_VALUE, value);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
     if (gauge == null) {
-      alertResponse.put("timestamp", System.currentTimeMillis());
+      alertResponse.put(TIMESTAMP, System.currentTimeMillis());
     } else {
       //remove existing gauge
       MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
-      alertResponse.put("timestamp", ((Map<String, Object>)gauge.getValue()).get("timestamp"));
+      alertResponse.put(TIMESTAMP, ((Map<String, Object>)gauge.getValue()).get(TIMESTAMP));
     }
     Gauge<Object> alertResponseGauge = new Gauge<Object>() {
       @Override
@@ -249,5 +255,23 @@ public class MetricAlertsChecker {
     };
     MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()),
       alertResponseGauge);
+
+    if(metricsAlertDefinition.isSendEmail()) {
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.append(CURRENT_VALUE + " = " + value).append(", " + TIMESTAMP + " = " +
+        alertResponse.get(TIMESTAMP));
+      if(emailSender == null) {
+        LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
+          metricsAlertDefinition.getId(), stringBuilder.toString());
+      } else {
+        try {
+          emailSender.send(metricsAlertDefinition.getEmailIds(), metricsAlertDefinition.getId(),
+            stringBuilder.toString());
+        } catch (PipelineException e) {
+          LOG.error("Error sending alert email, reason: {}", e.getMessage());
+          //Log error and move on. This should not stop the pipeline.
+        }
+      }
+    }
   }
 }
