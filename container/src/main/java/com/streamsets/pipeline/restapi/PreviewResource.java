@@ -5,20 +5,12 @@
  */
 package com.streamsets.pipeline.restapi;
 
-import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.RawSourcePreviewer;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.RawSourceDefinition;
-import com.streamsets.pipeline.config.StageConfiguration;
-import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.prodmanager.RawSourcePreviewHelper;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
-import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.preview.PreviewPipeline;
@@ -26,13 +18,9 @@ import com.streamsets.pipeline.runner.preview.PreviewPipelineBuilder;
 import com.streamsets.pipeline.runner.preview.PreviewPipelineOutput;
 import com.streamsets.pipeline.runner.preview.PreviewPipelineRunner;
 import com.streamsets.pipeline.runner.preview.PreviewSourceOffsetTracker;
-import com.streamsets.pipeline.runner.preview.PreviewStageRunner;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
-import org.apache.commons.io.IOUtils;
 import com.streamsets.pipeline.util.ContainerError;
-import org.apache.commons.io.input.BoundedInputStream;
-import org.apache.commons.io.input.ReaderInputStream;
 
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
@@ -49,12 +37,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,55 +61,6 @@ public class PreviewResource {
   }
 
   @Path("/{name}/preview")
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response preview(
-      @PathParam("name") String name,
-      @QueryParam("rev") String rev,
-      @QueryParam("sourceOffset") String sourceOffset,
-      @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize,
-      @QueryParam("batches") @DefaultValue("1") int batches,
-      @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets)
-      throws PipelineStoreException, PipelineRuntimeException, StageException {
-    int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
-    batchSize = Math.min(maxBatchSize, batchSize);
-    int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
-    batches = Math.min(maxBatches, batches);
-    PipelineConfiguration pipelineConf = store.load(name, rev);
-    SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(sourceOffset);
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize, batches, skipTargets);
-    try {
-      PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
-      PreviewPipelineOutput previewOutput = pipeline.run();
-      return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewOutput).build();
-    } catch (PipelineRuntimeException ex) {
-      if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
-        return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(ex.getIssues()).build();
-      } else {
-        throw ex;
-      }
-    }
-  }
-
-  @Path("/{name}/preview")
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @SuppressWarnings("unchecked")
-  public Response previewRunStage(
-      @PathParam("name") String name,
-      @QueryParam("rev") String rev,
-      @QueryParam("stageInstance") String stageInstance, List<RecordImpl> records)
-      throws PipelineStoreException, PipelineRuntimeException, StageException {
-    Preconditions.checkNotNull(stageInstance, "stageInstance cannot be null");
-    Preconditions.checkNotNull(records, "records (POST payload) cannot be null");
-    PipelineConfiguration pipelineConf = store.load(name, rev);
-    PreviewStageRunner runner = new PreviewStageRunner(stageInstance, (List<Record>) (List) records);
-    PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
-    PreviewPipelineOutput previewOutput = pipeline.run();
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewOutput).build();
-  }
-
-  @Path("/{name}/previewx")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response previewWithOverride(
