@@ -564,6 +564,13 @@ angular
         ignoreUpdate = true;
       }
 
+      if(!pipelineRules) {
+        pipelineRules = {
+          metricsAlertDefinitions: [],
+          dataRuleDefinitions: []
+        };
+      }
+
 
       //Force Validity Check - showErrors directive
       $scope.$broadcast('show-errors-check-validity');

@@ -47,6 +47,7 @@
         <a type="button" class="btn btn-primary btn-sm"
            tooltip-placement="bottom" tooltip="{{'global.form.previousStage' | translate}}"
            tooltip-popup-delay="500"
+           tooltip-append-to-body="true"
            data-toggle="dropdown">
           <span class="glyphicon glyphicon-arrow-left"></span>
         </a>
@@ -63,6 +64,7 @@
          ng-if="previousStageInstances.length <= 1"
          tooltip-placement="bottom" tooltip="{{'global.form.previousStage' | translate}}"
          tooltip-popup-delay="500"
+         tooltip-append-to-body="true"
          ng-click="previousStagePreview(previousStageInstances[0])"
          ng-disabled="previousStageInstances.length === 0">
         <span class="glyphicon glyphicon-arrow-left"></span>
@@ -72,6 +74,7 @@
         <a type="button" class="btn btn-primary btn-sm"
                 tooltip-placement="bottom" tooltip="{{'global.form.nextStage' | translate}}"
                 tooltip-popup-delay="500"
+                tooltip-append-to-body="true"
                 data-toggle="dropdown">
           <span class="glyphicon glyphicon-arrow-right"></span>
         </a>
@@ -88,6 +91,7 @@
          ng-if="nextStageInstances.length <= 1"
          tooltip-placement="bottom" tooltip="{{'global.form.nextStage' | translate}}"
          tooltip-popup-delay="500"
+         tooltip-append-to-body="true"
          ng-disabled="nextStageInstances.length === 0"
          ng-click="nextStagePreview(nextStageInstances[0], stagePreviewData.output)">
         <span class="glyphicon glyphicon-arrow-right"></span>
@@ -96,6 +100,7 @@
       <a type="button" class="btn btn-primary btn-sm"
          tooltip-placement="bottom" tooltip="{{'home.header.refreshPreview' | translate}}"
          tooltip-popup-delay="500"
+         tooltip-append-to-body="true"
          ng-show="previewMode"
          ng-click="previewPipeline(true)">
         <span class="fa fa-refresh"></span>
@@ -104,6 +109,7 @@
       <a type="button" class="btn btn-primary btn-sm"
          tooltip-placement="bottom" tooltip="{{'global.form.revertChanges' | translate}}"
          tooltip-popup-delay="500"
+         tooltip-append-to-body="true"
          ng-click="revertChanges()"
          ng-if="previewDataUpdated">
         <span class="fa fa-undo"></span>
@@ -112,6 +118,7 @@
       <a type="button" class="btn btn-primary btn-sm"
          tooltip-placement="bottom" tooltip="{{'global.form.step' | translate}}"
          tooltip-popup-delay="500"
+         tooltip-append-to-body="true"
          ng-if="previewDataUpdated"
          ng-click="stepPreview(detailPaneConfig, stagePreviewData.input)">
         <span class="fa fa-refresh"></span> *

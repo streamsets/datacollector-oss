@@ -50,11 +50,11 @@ angular
               metricGroup: '',
               metricType: 'METER',
               lane: edge.outputLane,
-              predicate: '',
+              condition: '',
               enabled: false
             };
 
-          $scope.pipelineRules.metricDefinitions.push(newMetricDefn);
+          $scope.pipelineRules.metricsAlertDefinitions.push(newMetricDefn);
         }
       },
 
@@ -87,7 +87,7 @@ angular
             newMetricAlertDefn = {
               id: id,
               label: '',
-              predicate: '',
+              condition: '',
               metricId: null,
               metricType: 'COUNTER',
               metricElement: null,

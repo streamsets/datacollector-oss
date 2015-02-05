@@ -272,8 +272,9 @@ angular.module('dataCollectorApp.common')
           '&batchSize=' + batchSize + '&rev=' + rev + '&skipTargets=' + skipTargets;
 
         return $http({
-          method: 'GET',
-          url: url
+          method: 'POST',
+          url: url,
+          data: []
         });
       },
 
@@ -299,7 +300,7 @@ angular.module('dataCollectorApp.common')
           batchSize = 10;
         }
 
-        url = apiBase + '/pipeline-library/' + name + '/previewx?sourceOffset=' + sourceOffset +
+        url = apiBase + '/pipeline-library/' + name + '/preview?sourceOffset=' + sourceOffset +
         '&batchSize=' + batchSize + '&rev=' + rev;
 
         return $http({
