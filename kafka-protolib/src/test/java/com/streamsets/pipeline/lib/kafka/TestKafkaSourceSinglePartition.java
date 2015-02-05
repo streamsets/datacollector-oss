@@ -132,7 +132,7 @@ public class TestKafkaSourceSinglePartition {
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable("testProduceStringRecordsFromEnd", 1, producer,
-      startProducing, DataType.LOG));
+      startProducing, DataType.LOG, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaSource.class)
       .addOutputLane("lane")

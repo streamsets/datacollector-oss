@@ -31,7 +31,8 @@ public class TestPublishToKafka {
     CountDownLatch startProducing = new CountDownLatch(1);
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(new ProducerRunnable(TOPIC, MULTIPLE_PARTITIONS, producer, startProducing, DataType.LOG));
+    executorService.submit(new ProducerRunnable(TOPIC, MULTIPLE_PARTITIONS, producer, startProducing, DataType.LOG,
+      null));
 
     startProducing.countDown();
 

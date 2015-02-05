@@ -82,7 +82,7 @@ public class TestHighLevelKafkaSource {
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceStringRecords", SINGLE_PARTITION,
-      producer, startLatch, DataType.LOG));
+      producer, startLatch, DataType.LOG, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(HighLevelKafkaSource.class)
       .addOutputLane("lane")
@@ -109,7 +109,7 @@ public class TestHighLevelKafkaSource {
     for(int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get().getValueAsString());
       Assert.assertTrue(!records.get(i).get().getValueAsString().isEmpty());
-      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.LOG), records.get(i).get().getValueAsString());
+      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.LOG, null), records.get(i).get().getValueAsString());
     }
 
     sourceRunner.runDestroy();
@@ -123,7 +123,7 @@ public class TestHighLevelKafkaSource {
       MULTIPLE_PARTITIONS, REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceStringRecordsMultiplePartitions",
-      MULTIPLE_PARTITIONS, producer, startProducing, DataType.LOG));
+      MULTIPLE_PARTITIONS, producer, startProducing, DataType.LOG, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(HighLevelKafkaSource.class)
       .addOutputLane("lane")
@@ -150,21 +150,21 @@ public class TestHighLevelKafkaSource {
     for(int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get().getValueAsString());
       Assert.assertTrue(!records.get(i).get().getValueAsString().isEmpty());
-      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.LOG), records.get(i).get().getValueAsString());
+      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.LOG, null), records.get(i).get().getValueAsString());
     }
 
     sourceRunner.runDestroy();
   }
 
   @Test
-  public void testProduceJsonRecords() throws StageException, IOException {
+  public void testProduceJsonRecordsMultipleObjects() throws StageException, IOException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
     KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceJsonRecords", SINGLE_PARTITION,
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceJsonRecords", SINGLE_PARTITION,
-      producer, startLatch, DataType.JSON));
+      producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(HighLevelKafkaSource.class)
       .addOutputLane("lane")
@@ -196,7 +196,55 @@ public class TestHighLevelKafkaSource {
       Assert.assertNotNull(records.get(i).get().getValueAsMap());
       Assert.assertTrue(!records.get(i).get().getValueAsMap().isEmpty());
       Assert.assertEquals(
-        jsonFieldCreator.createField(KafkaTestUtil.generateTestData(DataType.JSON).getBytes()).getValueAsMap(),
+        jsonFieldCreator.createField(KafkaTestUtil.generateTestData(
+          DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS).getBytes()).getValueAsMap(),
+        records.get(i).get().getValueAsMap());
+    }
+    sourceRunner.runDestroy();
+  }
+
+  @Test
+  public void testProduceJsonRecordsArrayObjects() throws StageException, IOException {
+
+    CountDownLatch startLatch = new CountDownLatch(1);
+    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceJsonRecords", SINGLE_PARTITION,
+      REPLICATION_FACTOR, TIME_OUT);
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    executorService.submit(new ProducerRunnable( "testProduceJsonRecords", SINGLE_PARTITION,
+      producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS));
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(HighLevelKafkaSource.class)
+      .addOutputLane("lane")
+      .addConfiguration("topic", "testProduceJsonRecords")
+      .addConfiguration("consumerGroup", CONSUMER_GROUP)
+      .addConfiguration("zookeeperConnect", zkConnect)
+      .addConfiguration("maxBatchSize", 9)
+      .addConfiguration("maxWaitTime", 5000)
+      .addConfiguration("consumerPayloadType", ConsumerPayloadType.JSON)
+      .addConfiguration("jsonContent", StreamingJsonParser.Mode.ARRAY_OBJECTS)
+      .addConfiguration("maxJsonObjectLen", 4096)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .build();
+
+    sourceRunner.runInit();
+
+    startLatch.countDown();
+    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    executorService.shutdown();
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(9, records.size());
+
+    JsonFieldCreator jsonFieldCreator = new JsonFieldCreator(StreamingJsonParser.Mode.ARRAY_OBJECTS, 4096);
+    for(int i = 0; i < records.size(); i++) {
+      Assert.assertNotNull(records.get(i).get().getValueAsMap());
+      Assert.assertTrue(!records.get(i).get().getValueAsMap().isEmpty());
+      Assert.assertEquals(
+        jsonFieldCreator.createField(KafkaTestUtil.generateTestData(
+          DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS).getBytes()).getValueAsMap(),
         records.get(i).get().getValueAsMap());
     }
     sourceRunner.runDestroy();
@@ -210,7 +258,7 @@ public class TestHighLevelKafkaSource {
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceXmlRecords", SINGLE_PARTITION,
-      producer, startLatch, DataType.XML));
+      producer, startLatch, DataType.XML, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(HighLevelKafkaSource.class)
       .addOutputLane("lane")
@@ -242,7 +290,7 @@ public class TestHighLevelKafkaSource {
       Assert.assertNotNull(records.get(i).get().getValueAsMap());
       Assert.assertTrue(!records.get(i).get().getValueAsMap().isEmpty());
       Assert.assertEquals(
-        xmlFieldCreator.createField(KafkaTestUtil.generateTestData(DataType.XML).getBytes()).getValueAsMap(),
+        xmlFieldCreator.createField(KafkaTestUtil.generateTestData(DataType.XML, null).getBytes()).getValueAsMap(),
         records.get(i).get().getValueAsMap());
     }
     sourceRunner.runDestroy();
@@ -256,7 +304,7 @@ public class TestHighLevelKafkaSource {
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceCsvRecords", SINGLE_PARTITION,
-      producer, startLatch, DataType.CSV));
+      producer, startLatch, DataType.CSV, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(HighLevelKafkaSource.class)
       .addOutputLane("lane")
@@ -286,7 +334,7 @@ public class TestHighLevelKafkaSource {
       Assert.assertNotNull(records.get(i).get().getValueAsMap());
       Assert.assertTrue(!records.get(i).get().getValueAsMap().isEmpty());
       Assert.assertEquals(
-        csvFieldCreator.createField(KafkaTestUtil.generateTestData(DataType.CSV).getBytes()).getValueAsMap(),
+        csvFieldCreator.createField(KafkaTestUtil.generateTestData(DataType.CSV, null).getBytes()).getValueAsMap(),
         records.get(i).get().getValueAsMap());
     }
     sourceRunner.runDestroy();
