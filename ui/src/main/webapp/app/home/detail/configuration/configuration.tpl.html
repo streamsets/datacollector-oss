@@ -14,7 +14,7 @@
 
 
     <tab ng-repeat="groupNameToLabelMap in configGroupTabs"
-         ng-show="isGroupVisible(detailPaneConfig, detailPaneConfigDefn.configDefinitions, groupNameToLabelMap.name)"
+         disabled="!isGroupVisible(detailPaneConfig, detailPaneConfigDefn.configDefinitions, groupNameToLabelMap.name)"
          active="groupNameToLabelMap.active">
       <tab-heading>
         <i class="fa fa-exclamation-triangle icon-danger"

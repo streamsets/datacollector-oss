@@ -433,6 +433,7 @@ angular
 
       } else {
         $scope.showGroups = false;
+        $scope.configGroupTabs = [];
       }
 
       if (options.type === pipelineConstant.STAGE_INSTANCE) {
