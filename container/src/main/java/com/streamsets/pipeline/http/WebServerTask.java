@@ -36,7 +36,7 @@ import java.util.Set;
 
 public class WebServerTask extends AbstractTask {
   private static final String PORT_NUMBER_KEY = "http.port";
-  private static final int PORT_NUMBER_DEFAULT = 8080;
+  private static final int PORT_NUMBER_DEFAULT = 18630;
 
   private static final String AUTHENTICATION_KEY = "http.authentication";
   private static final String AUTHENTICATION_DEFAULT = "form";
