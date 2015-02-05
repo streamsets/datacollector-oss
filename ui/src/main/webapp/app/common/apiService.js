@@ -254,14 +254,11 @@ angular.module('dataCollectorApp.common')
        * @param sourceOffset
        * @param batchSize
        * @param rev
+       * @param skipTargets
        * @returns {*}
        */
-      previewPipeline: function(name, sourceOffset, batchSize, rev) {
+      previewPipeline: function(name, sourceOffset, batchSize, rev, skipTargets) {
         var url;
-
-        if(!name) {
-          name = 'xyz';
-        }
 
         if(!sourceOffset) {
           sourceOffset = 0;
@@ -272,7 +269,7 @@ angular.module('dataCollectorApp.common')
         }
 
         url = apiBase + '/pipeline-library/' + name + '/preview?sourceOffset=' + sourceOffset +
-          '&batchSize=' + batchSize + '&rev=' + rev;
+          '&batchSize=' + batchSize + '&rev=' + rev + '&skipTargets=' + skipTargets;
 
         return $http({
           method: 'GET',
@@ -284,23 +281,31 @@ angular.module('dataCollectorApp.common')
        * Preview Stage by running with passed input records.
        *
        * @param name
-       * @param stageInstanceName
-       * @param inputRecords
+       * @param sourceOffset
+       * @param batchSize
+       * @param rev
+       * @param skipTargets
+       * @param stageOutputList
        * @returns {*}
        */
-      previewPipelineRunStage: function(name, stageInstanceName, inputRecords) {
+      previewPipelineRunStage: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList) {
         var url;
 
-        if(!name) {
-          name = 'xyz';
+        if(!sourceOffset) {
+          sourceOffset = 0;
         }
 
-        url = apiBase + '/pipeline-library/' + name + '/preview?stageInstance=' + stageInstanceName + '&rev=0';
+        if(!batchSize) {
+          batchSize = 10;
+        }
+
+        url = apiBase + '/pipeline-library/' + name + '/previewx?sourceOffset=' + sourceOffset +
+        '&batchSize=' + batchSize + '&rev=' + rev;
 
         return $http({
           method: 'POST',
           url: url,
-          data: inputRecords
+          data: stageOutputList
         });
       },
 

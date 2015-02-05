@@ -75,7 +75,7 @@
       "stageErrors": "Stage Errors",
       "state": "State",
       "status": "Status",
-      "step": "Re-run Stage",
+      "step": "Re-run Preview With Changes",
       "stream": "Stream",
       "target": "Destination",
       "targets": "Destinations",
@@ -249,6 +249,8 @@
       }
     },
     "previewPane": {
+      "batchSize": "Preview Batch Size",
+      "configTitle": "Preview Configuration",
       "previewStage": "Preview Stage",
       "previewSingleStage": "Preview Single Stage",
       "previewMultipleStages": "Preview Multiple Stages",
@@ -257,7 +259,8 @@
       "outputData": "Output Data",
       "noOutputWarning": "No output records produced.",
       "noRecords": "No Records to view.",
-      "stageErrorsWarning": "{{stageErrorsCount}} Stage Errors, check Errors tab for more detail."
+      "stageErrorsWarning": "{{stageErrorsCount}} Stage Errors, check Errors tab for more detail.",
+      "skipTargets": "Skip Targets"
     },
     "library": {
       "descriptionPlaceholder": "Pipeline Definition Description",

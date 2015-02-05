@@ -20,6 +20,7 @@ angular
       },
       previewDataUpdated: false,
       stepExecuted: false,
+      dirtyLanes: [],
 
       /**
        * Change to Preview Multiple Stages.
@@ -59,14 +60,14 @@ angular
        * @param inputRecords
        */
       nextStagePreview: function(stageInstance, inputRecords) {
-        if($scope.previewDataUpdated && stageInstance.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE) {
-          $scope.stepPreview(stageInstance, inputRecords);
-        } else {
+        //if($scope.previewDataUpdated && stageInstance.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE) {
+          //$scope.stepPreview(stageInstance, inputRecords);
+        //} else {
           $scope.changeStageSelection({
             selectedObject: stageInstance,
             type: pipelineConstant.STAGE_INSTANCE
           });
-        }
+        //}
       },
 
 
@@ -74,55 +75,64 @@ angular
        * Set dirty flag to true when record is updated in Preview Mode.
        *
        * @param recordUpdated
-       * @param fieldName
+       * @param recordValue
        * @param stageInstance
        */
       recordValueUpdated: function(recordUpdated, recordValue, stageInstance) {
         $scope.previewDataUpdated = true;
         recordUpdated.dirty = true;
         recordValue.dirty = true;
+
+        if(!_.contains($scope.dirtyLanes, recordUpdated.laneName)) {
+          $scope.dirtyLanes.push(recordUpdated.laneName);
+        }
       },
 
       /**
        * Run Preview with user updated records.
        *
        * @param stageInstance
-       * @param inputRecords
        */
-      stepPreview: function(stageInstance, inputRecords) {
-        var instanceName = stageInstance.instanceName,
-          records = _.map(inputRecords, _.clone);
+      stepPreview: function(stageInstance) {
+        var dirtyLanes = $scope.dirtyLanes,
+          previewBatchOutput = $scope.previewData.batchesOutput[0],
+          stageOutputs = [];
 
-        if(stageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
-          //In Case of Source just update flag and return.
+        angular.forEach(previewBatchOutput, function(stageOutput) {
+          var lanesList = _.keys(stageOutput.output),
+            intersection = _.intersection(dirtyLanes, lanesList);
 
-          $scope.stepExecuted = true;
-          return;
-        }
+          if(intersection && intersection.length) {
+            var stageOutputCopy = angular.copy(stageOutput);
+            stageOutputCopy.output = {};
 
-        _.each(records, function(record) {
-          delete record.dirty;
-          delete record.expand;
-          delete record.laneName;
-
-          _.each(record.value.value, function(key, value) {
-            delete value.dirty;
-          });
-
+            angular.forEach(intersection, function(laneName) {
+              stageOutputCopy.output[laneName] = stageOutput.output[laneName];
+            });
+            stageOutputs.push(stageOutputCopy);
+          }
         });
 
         $scope.showLoading = true;
 
-        api.pipelineAgent.previewPipelineRunStage($scope.activeConfigInfo.name, instanceName, records).
+        api.pipelineAgent.previewPipelineRunStage($scope.activeConfigInfo.name, $scope.previewSourceOffset,
+          $scope.pipelineConfig.uiInfo.previewConfig.batchSize, 0, $scope.pipelineConfig.uiInfo.previewConfig.skipTargets, stageOutputs).
           success(function (previewData) {
-            var targetInstanceData = previewData.batchesOutput[0][0];
+            var updatedPreviewBatchOutput = previewData.batchesOutput[0];
 
-            _.each($scope.previewData.batchesOutput[0], function(instanceRecords) {
-              if(instanceRecords.instanceName === targetInstanceData.instanceName) {
-                instanceRecords.output = targetInstanceData.output;
-                instanceRecords.errorRecords = targetInstanceData.errorRecords;
+            angular.forEach(updatedPreviewBatchOutput, function(stageOutput, index) {
+              var lanesList = _.keys(stageOutput.output),
+                intersection = _.intersection(dirtyLanes, lanesList),
+                changedStageOutput = previewBatchOutput[index];
+
+              if(intersection && intersection.length) {
+                angular.forEach(intersection, function(laneName) {
+                  stageOutput.output[laneName] = changedStageOutput.output[laneName];
+                });
               }
             });
+
+            $scope.previewData = previewData;
 
             $scope.changeStageSelection({
               selectedObject: stageInstance,
@@ -147,6 +157,7 @@ angular
         $scope.previewData = angular.copy(previewDataBackup);
         $scope.previewDataUpdated = false;
         $scope.stepExecuted = false;
+        $scope.dirtyLanes = [];
 
         var firstStageInstance = $scope.pipelineConfig.stages[0];
         $scope.changeStageSelection({
@@ -169,8 +180,11 @@ angular
         recordList.splice($index, 1);
         $scope.previewDataUpdated = true;
         previewService.removeRecordFromSource(batchData, stageInstance, record);
-      }
 
+        if(!_.contains($scope.dirtyLanes, record.laneName)) {
+          $scope.dirtyLanes.push(record.laneName);
+        }
+      }
 
     });
 
@@ -211,7 +225,8 @@ angular
       $scope.stepExecuted = false;
       $scope.showLoading = true;
 
-      api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset, $scope.previewBatchSize).
+      api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset,
+        $scope.pipelineConfig.uiInfo.previewConfig.batchSize, 0, $scope.pipelineConfig.uiInfo.previewConfig.skipTargets).
         success(function (previewData) {
           var firstStageInstance;
 
@@ -222,6 +237,7 @@ angular
 
           $scope.previewData = previewData;
           $scope.previewDataUpdated = false;
+          $scope.dirtyLanes = [];
 
           if(!$scope.previewMultipleStages) {
             firstStageInstance = $scope.pipelineConfig.stages[0];

@@ -14,6 +14,7 @@
         <li id="item1" draggable drag-data="stageLibrary"
             tooltip-placement="bottom" tooltip="{{stageLibrary.description}}"
             tooltip-append-to-body="true"
+            tooltip-popup-delay="500"
             ng-repeat="stageLibrary in stageLibraries | filter : libraryFilter | orderBy: 'label'"
             ng-init="icon=getStageIconURL(stageLibrary)">
           <a role="menuitem" tabindex="-1" href="#"

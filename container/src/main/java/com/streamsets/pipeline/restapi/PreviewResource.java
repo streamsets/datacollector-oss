@@ -135,7 +135,7 @@ public class PreviewResource {
       @QueryParam("sourceOffset") String sourceOffset,
       @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize,
       @QueryParam("batches") @DefaultValue("1") int batches,
-      @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets, List<StageOutput> records)
+      @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets, List<StageOutput> stageOutputsToOverride)
       throws PipelineStoreException, PipelineRuntimeException, StageException {
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
@@ -146,7 +146,7 @@ public class PreviewResource {
     PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize, batches, skipTargets);
     try {
       PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
-      PreviewPipelineOutput previewOutput = pipeline.run();
+      PreviewPipelineOutput previewOutput = pipeline.run(stageOutputsToOverride);
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewOutput).build();
     } catch (PipelineRuntimeException ex) {
       if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {

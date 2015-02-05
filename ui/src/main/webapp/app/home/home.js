@@ -572,6 +572,16 @@ angular
       $scope.activeConfigInfo = $rootScope.$storage.activeConfigInfo = pipelineConfig.info;
       $scope.pipelineRules = pipelineRules;
 
+
+      if(!$scope.pipelineConfig.uiInfo) {
+        $scope.pipelineConfig.uiInfo = {
+          previewConfig : {
+            batchSize: 10,
+            skipTargets: true
+          }
+        };
+      }
+
       //Update Pipeline Info list
       var index = _.indexOf($scope.pipelines, _.find($scope.pipelines, function(pipeline){
         return pipeline.name === pipelineConfig.info.name;
@@ -651,7 +661,7 @@ angular
           selectNode: ($scope.selectedType && $scope.selectedType === pipelineConstant.STAGE_INSTANCE) ? $scope.selectedObject : undefined,
           stageErrorCounts: stageErrorCounts,
           showEdgePreviewIcon: $scope.isPipelineRunning,
-          isReadOnly: $scope.isPipelineRunning
+          isReadOnly: $scope.isPipelineRunning || $scope.previewMode
         });
       });
 

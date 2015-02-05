@@ -136,13 +136,12 @@
       </div>
     </tab>
 
-    <!--tab>
-      <tab-heading>
-         {{ 'global.form.metrics' | translate }}
+    <tab>
+      <tab-heading tooltip-placement="right" tooltip="{{ 'home.previewPane.configTitle' | translate }}">
+        <i class="fa fa-gear fa-12x"></i>
       </tab-heading>
-      <div>
-      </div>
-    </tab-->
+      <ng-include src="'app/home/preview/configuration/previewConfig.tpl.html'"></ng-include>
+    </tab>
 
     <tab ng-if="stagePreviewData.stageErrors && stagePreviewData.stageErrors.length">
       <tab-heading tooltip-placement="right" tooltip="{{ 'global.form.errors' | translate }}">
