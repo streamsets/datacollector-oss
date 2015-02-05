@@ -27,8 +27,8 @@ import java.util.Set;
 @GenerateResourceBundle
 @StageDef(
     version="1.0.0",
-    label="Field Filter",
-    description="???",
+    label="Field Remover",
+    description="It removes fields from records",
     icon="filter.png"
 )
 @ConfigGroups(FieldFilterProcessor.Groups.class)
