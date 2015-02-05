@@ -290,7 +290,9 @@ public class TestFilePipelineStoreTask {
     store.init();
     RuleDefinition ruleDefinition = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
-    Assert.assertNull(ruleDefinition);
+    Assert.assertNotNull(ruleDefinition);
+    Assert.assertTrue(ruleDefinition.getDataRuleDefinitions().isEmpty());
+    Assert.assertTrue(ruleDefinition.getMetricsAlertDefinitions().isEmpty());
 
     List<MetricsAlertDefinition> metricsAlertDefinitions = new ArrayList<>();
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,

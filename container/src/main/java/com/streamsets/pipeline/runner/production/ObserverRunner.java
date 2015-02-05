@@ -71,8 +71,8 @@ public class ObserverRunner {
       String lane = entry.getKey();
       List<Record> allRecords = entry.getValue();
       List<DataRuleDefinition> dataRuleDefinitions = rulesConfigurationChangeRequest.getLaneToDataRuleMap().get(lane);
-      List<Record> sampleRecords = getSampleRecords(dataRuleDefinitions, allRecords);
       if(dataRuleDefinitions != null) {
+        List<Record> sampleRecords = getSampleRecords(dataRuleDefinitions, allRecords);
         for (DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
           if (dataRuleDefinition.isEnabled()) {
             int numberOfRecords = (int) Math.floor(allRecords.size() * dataRuleDefinition.getSamplingPercentage() / 100);
@@ -186,6 +186,23 @@ public class ObserverRunner {
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     if (gauge == null) {
       alertResponse.put(TIMESTAMP, System.currentTimeMillis());
+      //send email the first time alert is triggered
+      if(dataRuleDefinition.isSendEmail()) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(CURRENT_VALUE + " = " + value).append(", " + TIMESTAMP + " = " +
+          alertResponse.get(TIMESTAMP));
+        if(emailSender == null) {
+          LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
+            dataRuleDefinition.getId(), stringBuilder.toString());
+        } else {
+          try {
+            emailSender.send(dataRuleDefinition.getEmailIds(), dataRuleDefinition.getId(), stringBuilder.toString());
+          } catch (PipelineException e) {
+            LOG.error("Error sending alert email, reason: {}", e.getMessage());
+            //Log error and move on. This should not stop the pipeline.
+          }
+        }
+      }
     } else {
       //remove existing gauge
       MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -199,22 +216,6 @@ public class ObserverRunner {
     };
     MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()),
       alertResponseGauge);
-    if(dataRuleDefinition.isSendEmail()) {
-      StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(CURRENT_VALUE + " = " + value).append(", " + TIMESTAMP + " = " +
-        alertResponse.get(TIMESTAMP));
-      if(emailSender == null) {
-        LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
-          dataRuleDefinition.getId(), stringBuilder.toString());
-      } else {
-        try {
-          emailSender.send(dataRuleDefinition.getEmailIds(), dataRuleDefinition.getId(), stringBuilder.toString());
-        } catch (PipelineException e) {
-          LOG.error("Error sending alert email, reason: {}", e.getMessage());
-          //Log error and move on. This should not stop the pipeline.
-        }
-      }
-    }
   }
 
   private List<Record> getSampleRecords(List<DataRuleDefinition> dataRuleDefinitions, List<Record> allRecords) {

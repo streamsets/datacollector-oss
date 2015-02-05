@@ -242,6 +242,24 @@ public class MetricAlertsChecker {
       AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
     if (gauge == null) {
       alertResponse.put(TIMESTAMP, System.currentTimeMillis());
+      //send email the first time alert is triggered
+      if(metricsAlertDefinition.isSendEmail()) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(CURRENT_VALUE + " = " + value).append(", " + TIMESTAMP + " = " +
+          alertResponse.get(TIMESTAMP));
+        if(emailSender == null) {
+          LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
+            metricsAlertDefinition.getId(), stringBuilder.toString());
+        } else {
+          try {
+            emailSender.send(metricsAlertDefinition.getEmailIds(), metricsAlertDefinition.getId(),
+              stringBuilder.toString());
+          } catch (PipelineException e) {
+            LOG.error("Error sending alert email, reason: {}", e.getMessage());
+            //Log error and move on. This should not stop the pipeline.
+          }
+        }
+      }
     } else {
       //remove existing gauge
       MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
@@ -255,23 +273,5 @@ public class MetricAlertsChecker {
     };
     MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()),
       alertResponseGauge);
-
-    if(metricsAlertDefinition.isSendEmail()) {
-      StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(CURRENT_VALUE + " = " + value).append(", " + TIMESTAMP + " = " +
-        alertResponse.get(TIMESTAMP));
-      if(emailSender == null) {
-        LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
-          metricsAlertDefinition.getId(), stringBuilder.toString());
-      } else {
-        try {
-          emailSender.send(metricsAlertDefinition.getEmailIds(), metricsAlertDefinition.getId(),
-            stringBuilder.toString());
-        } catch (PipelineException e) {
-          LOG.error("Error sending alert email, reason: {}", e.getMessage());
-          //Log error and move on. This should not stop the pipeline.
-        }
-      }
-    }
   }
 }

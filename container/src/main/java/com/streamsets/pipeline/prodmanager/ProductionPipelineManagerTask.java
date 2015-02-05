@@ -311,7 +311,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     try {
       rulesConfigLoader.load(observer);
     } catch (InterruptedException e) {
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, e.getMessage(), e);
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.getMessage(), e);
     }
     configLoaderRunnable = new RulesConfigLoaderRunnable(shutdownObject, rulesConfigLoader, observer);
     executor.submit(configLoaderRunnable);

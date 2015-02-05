@@ -68,7 +68,8 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0400("Failed to evaluate expression '{}' for record '{}'. Reason: {}"),
   CONTAINER_0401("Failed to evaluate expression '{}'. Reason: {}"),
   CONTAINER_0402("Could not access alerts because pipeline is not running"),
-  CONTAINER_0403("Could not load rule definition from the store. Reason: {}"),
+  CONTAINER_0403("Could not load rule definition for pipeline '{}' from the store. Reason: {}"),
+  CONTAINER_0404("Could not store rule definition for pipeline '{}' into the store. Reason: {}"),
 
   CONTAINER_0500("EmailSender error: {}"),
   ;

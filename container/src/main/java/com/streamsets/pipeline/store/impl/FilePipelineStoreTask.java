@@ -10,7 +10,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.io.DataStore;
@@ -24,6 +26,8 @@ import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -37,6 +41,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class FilePipelineStoreTask extends AbstractTask implements PipelineStoreTask {
+
+  private static final Logger LOG = LoggerFactory.getLogger(FilePipelineStoreTask.class);
+
   public static final String CREATE_DEFAULT_PIPELINE_KEY = "create.default.pipeline";
   public static final boolean CREATE_DEFAULT_PIPELINE_DEFAULT = true;
   private static final String STAGE_PREFIX = "stage.";
@@ -274,11 +281,24 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     }
     synchronized (rulesMutex) {
-      if(pipelineToRuleDefinitionMap.containsKey(getPipelineKey(name, tagOrRev))) {
-        return pipelineToRuleDefinitionMap.get(getPipelineKey(name, tagOrRev));
-      } else {
-        return null;
+      if(!pipelineToRuleDefinitionMap.containsKey(getPipelineKey(name, tagOrRev))) {
+        //try loading from store, needed in cases like restart
+        RuleDefinition ruleDefinition;
+        try {
+          ruleDefinition = ObjectMapperFactory.get().readValue(
+            new DataStore(getRulesFile(name)).getInputStream(), RuleDefinition.class);
+        } catch (IOException ex) {
+          LOG.debug(ContainerError.CONTAINER_0403.getMessage(), name, ex.getMessage(),
+            ex);
+          ruleDefinition = null;
+        }
+        if(ruleDefinition == null) {
+          ruleDefinition = new RuleDefinition(
+            Collections.<MetricsAlertDefinition>emptyList(), Collections.<DataRuleDefinition>emptyList());
+        }
+        pipelineToRuleDefinitionMap.put(getPipelineKey(name, tagOrRev), ruleDefinition);
       }
+      return pipelineToRuleDefinitionMap.get(getPipelineKey(name, tagOrRev));
     }
   }
 
@@ -293,8 +313,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         ObjectMapperFactory.get().writeValue(new DataStore(getRulesFile(pipelineName)).getOutputStream(),
           ruleDefinition);
         pipelineToRuleDefinitionMap.put(getPipelineKey(pipelineName, tag), ruleDefinition);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
+      } catch (IOException ex) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0404, pipelineName, ex.getMessage(),
+          ex);
       }
     }
     return ruleDefinition;
