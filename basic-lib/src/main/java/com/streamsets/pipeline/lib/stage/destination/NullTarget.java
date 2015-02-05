@@ -12,10 +12,12 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 
 @GenerateResourceBundle
-@StageDef(version = "1.0.0",
+@StageDef(
+    version = "1.0.0",
     label = "Trash",
     description = "Discards all records",
-    icon="trash.png", outputStreams = StageDef.DefaultOutputStreams.class)
+    icon="trash.png"
+)
 public class NullTarget extends BaseTarget {
 
   @Override

@@ -8,9 +8,11 @@ package com.streamsets.pipeline.lib.stage.processor.fieldvaluereplacer;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -27,18 +29,71 @@ import java.util.List;
 import java.util.Locale;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Value Replacer", icon="replacer.svg")
-public class FieldValueReplacer extends SingleLaneRecordProcessor {
+@StageDef(
+    version="1.0.0",
+    label="Value Replacer",
+    description = "???",
+    icon="replacer.svg"
+)
+@ConfigGroups(FieldValueReplacerProcessor.Groups.class)
+public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
+  private static final Logger LOG = LoggerFactory.getLogger(FieldValueReplacerProcessor.class);
 
-  private static final Logger LOG = LoggerFactory.getLogger(FieldValueReplacer.class);
+  public enum Groups implements Label {
+    REPLACE;
 
-  @ConfigDef(label = "Fields to NULL", required = false, type = Type.MODEL, defaultValue="",
-    description="Replaces field values with null value.")
+    @Override
+    public String getLabel() {
+      return "Replace";
+    }
+
+  }
+
+  @ConfigDef(
+      required = false,
+      type = Type.MODEL,
+      defaultValue="",
+      label = "Fields to NULL",
+      description="Replaces field values with null value.",
+      displayPosition = 10,
+      group = "REPLACE"
+  )
   @FieldSelector
   public List<String> fieldsToNull;
 
-  @ConfigDef(label = "Replace Null values", required = false, type = Type.MODEL, defaultValue="",
-    description="Replaces the null values in a field with a specified value.")
+  public static class FieldValueReplacerConfig {
+
+    @ConfigDef(
+        required = true,
+        type = Type.MODEL,
+        defaultValue="",
+        label = "Fields to Replace",
+        description = "???",
+        displayPosition = 10
+    )
+    @FieldSelector
+    public List<String> fields;
+
+    @ConfigDef(
+        required = true,
+        type = Type.STRING,
+        defaultValue="",
+        label = "Replacement value",
+        description="Value to replace null values",
+        displayPosition = 20
+    )
+    public String newValue;
+
+  }
+
+  @ConfigDef(
+      required = false,
+      type = Type.MODEL, defaultValue="",
+      label = "Replace Null values",
+      description="Replaces the null values in a field with a specified value.",
+      displayPosition = 20,
+      group = "REPLACE"
+  )
   @ComplexField
   public List<FieldValueReplacerConfig> fieldsToReplaceIfNull;
 
@@ -126,15 +181,4 @@ public class FieldValueReplacer extends SingleLaneRecordProcessor {
     }
   }
 
-  public static class FieldValueReplacerConfig {
-
-    @ConfigDef(label = "Fields to Replace", required = true,type = Type.MODEL, defaultValue="")
-    @FieldSelector
-    public List<String> fields;
-
-    @ConfigDef(label = "Replacement value", required = true,type = Type.STRING, defaultValue="",
-      description="Value to replace null values")
-    public String newValue;
-
-  }
 }

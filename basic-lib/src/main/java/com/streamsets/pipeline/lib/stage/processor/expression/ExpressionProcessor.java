@@ -7,8 +7,10 @@ package com.streamsets.pipeline.lib.stage.processor.expression;
 
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -30,19 +32,71 @@ import java.util.Map;
 import java.util.Set;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Expression Processor", icon="expression.png")
+@StageDef(
+    version="1.0.0",
+    label="Expression Processor",
+    description="???",
+    icon="expression.png"
+)
+@ConfigGroups(ExpressionProcessor.Groups.class)
 public class ExpressionProcessor extends SingleLaneRecordProcessor {
-
   private static final Logger LOG = LoggerFactory.getLogger(ExpressionProcessor.class);
 
-  @ConfigDef(label = "Expression Configuration", required = false, type = ConfigDef.Type.MODEL, defaultValue="")
+  public enum Groups implements Label {
+    EXPRESSIONS;
+
+    @Override
+    public String getLabel() {
+      return "Expressions";
+    }
+
+  }
+
+  public static class ExpressionProcessorConfig {
+
+    @ConfigDef(
+        required = true,
+        type = ConfigDef.Type.STRING,
+        defaultValue = "",
+        label = "Field",
+        description = "Use an existing field or enter a new field name. " +
+                      "Using an existing field replaces the current value with the new value.",
+        displayPosition = 10
+    )
+    public String fieldToSet;
+
+    @ConfigDef(
+        required = true,
+        type = ConfigDef.Type.EL_OBJECT,
+        defaultValue = "",
+        label = "Expression",
+        description = "Expression to generate value for the field",
+        displayPosition = 20
+    )
+    public String expression;
+
+  }
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue="",
+      label = "Expressions",
+      description = "???",
+      displayPosition = 10,
+      group = "EXPRESSIONS"
+  )
   @ComplexField
   public List<ExpressionProcessorConfig> expressionProcessorConfigs;
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.MAP,
-    label = "Constants",
-    description = "Constants that can be used within the processor")
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MAP,
+      label = "Constants",
+      description = "Constants that can be used within all expressions",
+      displayPosition = 20,
+      group = "EXPRESSIONS"
+  )
   public Map<String, ?> constants;
 
   private ELEvaluator elEvaluator;
@@ -245,21 +299,4 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     return Field.Type.STRING;
   }
 
-  public static class ExpressionProcessorConfig {
-
-    @ConfigDef(label = "Field", required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      description = "Use an existing field or enter a new field name. " +
-        "Using an existing field replaces the current value with the new value.")
-    public String fieldToSet;
-
-    @ConfigDef(required = true,
-      type = ConfigDef.Type.EL_OBJECT,
-      label = "Expression",
-      description = "Expression to generate value for the field",
-      defaultValue = "")
-    public String expression;
-
-  }
 }

@@ -26,11 +26,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testNonExistingFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig nameReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig nameReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     nameReplacement.fields = ImmutableList.of("/nonExisting");
     nameReplacement.newValue = "StreamSets";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", ImmutableList.of("/nonExisting"))
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(nameReplacement))
       .addOutputLane("a").build();
@@ -57,7 +57,7 @@ public class TestFieldValueReplacer {
 
   @Test
   public void testNullConfiguration() throws StageException {
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", null)
       .addOutputLane("a").build();
@@ -84,7 +84,7 @@ public class TestFieldValueReplacer {
 
   @Test
   public void testEmptyConfiguration() throws StageException {
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", new ArrayList<>())
       .addConfiguration("fieldsToReplaceIfNull", new ArrayList<>())
       .addOutputLane("a").build();
@@ -111,7 +111,7 @@ public class TestFieldValueReplacer {
 
   @Test
   public void testFieldsToNull() throws StageException {
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", ImmutableList.of("/age"))
       .addConfiguration("fieldsToReplaceIfNull", null)
       .addOutputLane("a").build();
@@ -145,11 +145,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullStringFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/stringField");
     stringFieldReplacement.newValue = "StreamSets";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addOutputLane("a").build();
@@ -177,11 +177,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullIntegerFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/intField");
     stringFieldReplacement.newValue = "123";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addOutputLane("a").build();
@@ -209,11 +209,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullDoubleFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/doubleField");
     stringFieldReplacement.newValue = "12345.6789";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addOutputLane("a").build();
@@ -241,11 +241,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullLongFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/longField");
     stringFieldReplacement.newValue = "523456789345";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addOutputLane("a").build();
@@ -273,11 +273,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullShortFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/shortField");
     stringFieldReplacement.newValue = "32762";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addOutputLane("a").build();
@@ -305,11 +305,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullFloatFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/floatField");
     stringFieldReplacement.newValue = "10.345f";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addOutputLane("a").build();
@@ -337,11 +337,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullDecimalFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/decimalField");
     stringFieldReplacement.newValue = "12345678";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addOutputLane("a").build();
@@ -369,11 +369,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullByteFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/byteField");
     stringFieldReplacement.newValue = "123";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addOutputLane("a").build();
@@ -401,11 +401,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullByteArrayFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/byteArrayField");
     stringFieldReplacement.newValue = "streamsets";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addOutputLane("a").build();
@@ -433,11 +433,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullCharFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/charField");
     stringFieldReplacement.newValue = "c";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addOutputLane("a").build();
@@ -465,11 +465,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullBooleanFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/booleanField");
     stringFieldReplacement.newValue = "true";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addOutputLane("a").build();
@@ -529,15 +529,15 @@ public class TestFieldValueReplacer {
   @Test
   public void testFieldsToNullAndReplaceNulls() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig nameReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig nameReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     nameReplacement.fields = ImmutableList.of("/name");
     nameReplacement.newValue = "StreamSets";
 
-    FieldValueReplacer.FieldValueReplacerConfig addressReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig addressReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     addressReplacement.fields = ImmutableList.of("/streetAddress");
     addressReplacement.newValue = "Sansome Street";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", ImmutableList.of("/age"))
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(nameReplacement, addressReplacement))
       .addOutputLane("a").build();
@@ -571,11 +571,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testNonNullFields() throws StageException {
 
-    FieldValueReplacer.FieldValueReplacerConfig nameReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerProcessor.FieldValueReplacerConfig nameReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
     nameReplacement.fields = ImmutableList.of("/name");
     nameReplacement.newValue = "NewValue";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(nameReplacement))
       .addOutputLane("a").build();

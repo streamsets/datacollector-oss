@@ -35,9 +35,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @GenerateResourceBundle
-@StageDef(version = "1.0.0", label = "Record De-dup",
-    description = "De-duplicates identical records within time windows and/or a record count windows", icon="dedup.svg",
-    outputStreams = DeDupProcessor.OutputStreams.class)
+@StageDef(
+    version = "1.0.0",
+    label = "Record De-dup",
+    description = "De-duplicates identical records within time windows and/or a record count windows",
+    icon="dedup.svg",
+    outputStreams = DeDupProcessor.OutputStreams.class
+)
 @ConfigGroups(DeDupProcessor.Groups.class)
 public class DeDupProcessor extends RecordProcessor {
 
@@ -51,8 +55,8 @@ public class DeDupProcessor extends RecordProcessor {
       return "De-Duplication";
     }
 
-
   }
+
   public enum OutputStreams implements Label {
     UNIQUE("Unique Records"),
     DUPLICATE("Duplicate Records"),
@@ -70,42 +74,50 @@ public class DeDupProcessor extends RecordProcessor {
     }
   }
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.INTEGER,
-      label = "Max Record Count",
       defaultValue = "1000000",
+      label = "Max Records to Remember",
       description = "The maximum number of records to detect duplicates",
       displayPosition = 10,
-      group = "DE_DUP")
+      group = "DE_DUP"
+  )
   public int recordCountWindow;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.INTEGER,
-      label = "Time Window (Secs)",
       defaultValue = "0",
+      label = "Time Window to Remember (Secs)",
       description = "The time window to detect duplicate records (this is an early trigger for 'Max Record Count'), " +
                     "zero means no time window.",
       displayPosition = 20,
-      group = "DE_DUP")
+      group = "DE_DUP"
+  )
   public int timeWindowSecs;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Hash All Fields",
       defaultValue = "true",
+      label = "Hash All Fields",
       description = "If set, all fields of the record are used to compute its hash",
       displayPosition = 30,
-      group = "DE_DUP")
+      group = "DE_DUP"
+  )
   public boolean hashAllFields;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "Field-Paths to Hash",
       description = "List of record field-paths to use to compute its hash",
-      dependsOn = "hashAllFields",
-      triggeredByValue = "false",
       displayPosition = 40,
-      group = "DE_DUP")
+      group = "DE_DUP",
+      dependsOn = "hashAllFields",
+      triggeredByValue = "false"
+  )
   @FieldSelector
   public List<String> fieldsToHash;
 

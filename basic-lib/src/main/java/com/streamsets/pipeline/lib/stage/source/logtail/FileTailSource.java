@@ -8,7 +8,9 @@ package com.streamsets.pipeline.lib.stage.source.logtail;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
@@ -30,45 +32,69 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 @GenerateResourceBundle
-@StageDef(version="1.0.0",
-          label="File Tail",
-          description = "Reads lines from the specified file as they are written to it. It must be text file, " +
-                        "typically a log file.",
-          icon="fileTail.png")
+@StageDef(
+    version="1.0.0",
+    label="File Tail",
+    description = "Reads lines from the specified file as they are written to it. It must be text file, " +
+                  "typically a log file.",
+    icon="fileTail.png"
+)
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
+@ConfigGroups(FileTailSource.Groups.class)
 public class FileTailSource extends BaseSource implements OffsetCommitter {
-
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
 
-  @ConfigDef(required = true,
+  public enum Groups implements Label {
+    FILE;
+
+    @Override
+    public String getLabel() {
+      return "File";
+    }
+
+  }
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       description = "The data format in the files",
-      displayPosition = 10)
+      displayPosition = 10,
+      group = "FILE"
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileDataTypeChooserValues.class)
   public FileDataType fileDataType;
 
-  @ConfigDef(required = true,
-             type = ConfigDef.Type.STRING,
-             label = "File Path",
-             description = "Full file path of the file to tail",
-             displayPosition = 20)
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "File Path",
+      description = "Full file path of the file to tail",
+      displayPosition = 20,
+      group = "FILE"
+  )
   public String fileName;
 
-  @ConfigDef(required = true,
-             type = ConfigDef.Type.INTEGER,
-             label = "Maximum Lines per Batch",
-             description = "The maximum number of file lines that will be sent in a single batch",
-             defaultValue = "10",
-             displayPosition = 20)
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "10",
+      label = "Maximum Lines per Batch",
+      description = "The maximum number of file lines that will be sent in a single batch",
+      displayPosition = 30,
+      group = "FILE"
+  )
   public int batchSize;
 
-  @ConfigDef(required = true,
-             type = ConfigDef.Type.INTEGER,
-             label = "Batch Wait Time (secs)",
-             description = " Maximum amount of time to wait to fill a batch before sending it",
-             defaultValue = "5",
-             displayPosition = 30)
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "5",
+      label = "Batch Wait Time (secs)",
+      description = " Maximum amount of time to wait to fill a batch before sending it",
+      displayPosition = 40,
+      group = "FILE"
+  )
   public int maxWaitTimeSecs;
 
   private BlockingQueue<String> logLinesQueue;

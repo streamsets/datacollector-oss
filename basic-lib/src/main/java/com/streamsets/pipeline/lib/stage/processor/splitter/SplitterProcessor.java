@@ -7,9 +7,11 @@ package com.streamsets.pipeline.lib.stage.processor.splitter;
 
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -27,41 +29,75 @@ import java.util.List;
     version="1.0.0",
     label="Field Splitter",
     description = "Splits a string field into multiple strings based on the specified character separator",
-    icon="splitter.png")
+    icon="splitter.png"
+)
+@ConfigGroups(SplitterProcessor.Groups.class)
 public class SplitterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SplitterProcessor.class);
 
-  @ConfigDef(required = true,
+  public enum Groups implements Label {
+    FIELD_SPLITTER;
+
+    @Override
+    public String getLabel() {
+      return "Field Splitter";
+    }
+
+  }
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
-      label = "Field to Split",
       defaultValue = "",
-      description = "Record field path of the string value to split")
+      label = "Field to Split",
+      description = "Record field path of the string value to split",
+      displayPosition = 10,
+      group = "FIELD_SPLITTER"
+  )
   public String fieldPath;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.CHARACTER,
-      label = "Separator",
       defaultValue = " ",
-      description = "The value is split using this character (use '^' for space)")
+      label = "Separator",
+      description = "The value is split using this character (use '^' for space)",
+      displayPosition = 20,
+      group = "FIELD_SPLITTER"
+  )
   public char separator;
 
-  @ConfigDef(label = "Field-Paths for Splits", required = false, type = ConfigDef.Type.LIST,
-      description="The list of field-paths for the resulting splits, the last field will have the rest of the string")
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.LIST,
+      label = "Field-Paths for Splits",
+      description="The list of field-paths for the resulting splits, the last field will have the rest of the string",
+      displayPosition = 30,
+      group = "FIELD_SPLITTER"
+  )
   public List<String> fieldPathsForSplits;
 
-  @ConfigDef(label = "To Error If Not Enough Splits",
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "DISCARD",
-      description="If there are not enough splits in the string, send the record to error")
+      label = "On Error (not enough splits)",
+      description="What to do if there are not enough splits in the value",
+      displayPosition = 40,
+      group = "FIELD_SPLITTER"
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnNotEnoughSplitsChooserValues.class)
   public OnNotEnoughSplits onNotEnoughSplits;
 
-  @ConfigDef(label = "Remove Unsplit Value",
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
-      description="Removes the unsplit value from the record")
+      label = "Remove Unsplit Value",
+      description="Removes the unsplit value from the record",
+      displayPosition = 50,
+      group = "FIELD_SPLITTER"
+  )
   public boolean removeUnsplitValue;
 
   private String separatorStr;

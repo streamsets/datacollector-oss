@@ -7,8 +7,10 @@ package com.streamsets.pipeline.lib.stage.processor.jsonparser;
 
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -24,29 +26,53 @@ import org.slf4j.LoggerFactory;
     version="1.0.0",
     label="JSON Parser",
     description = "Parses a String field with JSON data into a Record",
-    icon="jsonparser.svg")
+    icon="jsonparser.svg"
+)
+@ConfigGroups(JsonParserProcessor.Groups.class)
 public class JsonParserProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(JsonParserProcessor.class);
 
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Field to Parse",
-      defaultValue = "",
-      description = "Record field path of the JSON string to parse")
-  public String fieldPathToParse;
+  public enum Groups implements Label {
+    JSON;
 
-  @ConfigDef(label = "Parsed JSON Field",
+    @Override
+    public String getLabel() {
+      return "Json Parsing";
+    }
+
+  }
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      description="Record field path to set the parsed JSON")
+      label = "Field to Parse",
+      description = "Record field path of the JSON string to parse",
+      displayPosition = 10,
+      group = "JSON"
+  )
+  public String fieldPathToParse;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Parsed JSON Field",
+      description="Record field path to set the parsed JSON",
+      displayPosition = 20,
+      group = "JSON"
+  )
   public String parsedFieldPath;
 
-  @ConfigDef(label = "To Error If Not Enough Splits",
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "DISCARD",
-      description="What to do with the record if there is a problem parsing the specified field")
+      label = "On Error",
+      description="What to do with the record if there is a problem parsing the specified field",
+      displayPosition = 30,
+      group = "JSON"
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnRecordProcessingErrorChooserValues.class)
   public OnRecordProcessingError onRecordProcessingError;
 

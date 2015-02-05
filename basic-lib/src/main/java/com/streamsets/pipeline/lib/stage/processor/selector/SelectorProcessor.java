@@ -8,8 +8,10 @@ package com.streamsets.pipeline.lib.stage.processor.selector;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.LanePredicateMapping;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
@@ -29,33 +31,60 @@ import java.util.Map;
 import java.util.Set;
 
 @GenerateResourceBundle
-@StageDef(version = "1.0.0", label = "Stream Selector",
-    description = "Stream Selector based on user defined conditions", icon="laneSelector.png",
-    outputStreams = StageDef.VariableOutputStreams.class, outputStreamsDrivenByConfig = "lanePredicates")
+@StageDef(
+    version = "1.0.0",
+    label = "Stream Selector",
+    description = "Stream Selector based on user defined conditions",
+    icon="laneSelector.png",
+    outputStreams = StageDef.VariableOutputStreams.class,
+    outputStreamsDrivenByConfig = "lanePredicates")
+@ConfigGroups(SelectorProcessor.Groups.class)
 public class SelectorProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SelectorProcessor.class);
 
-  @ConfigDef(required = true,
+  public enum Groups implements Label {
+    CONDITIONS;
+
+    @Override
+    public String getLabel() {
+      return "Conditions";
+    }
+
+  }
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "Stream/Record-condition mapping",
       description = "Associates output streams with a condition that records must match in order to go to the " +
-                    "associated stream")
+                    "associated stream",
+      displayPosition = 10,
+      group = "CONDITIONS"
+  )
   @LanePredicateMapping
   public List<Map<String, String>> lanePredicates;
 
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "On No Matching Condition",
-      description = "Action to take for records not matching any condition",
-      defaultValue = "DROP_RECORD")
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnNoPredicateMatchChooserValues.class)
-  public OnNoPredicateMatch onNoPredicateMatch;
-
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MAP,
       label = "Constants for Conditions",
-      description = "Defines constant values available in all conditions")
+      description = "Defines constant values available in all conditions",
+      displayPosition = 20,
+      group = "CONDITIONS"
+  )
   public Map<String, ?> constants;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "DROP_RECORD",
+      label = "On No Matching Condition",
+      description = "Action to take for records not matching any condition",
+      displayPosition = 30,
+      group = "CONDITIONS"
+  )
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnNoPredicateMatchChooserValues.class)
+  public OnNoPredicateMatch onNoPredicateMatch;
 
   private String[][] predicateLanes;
   private ELEvaluator elEvaluator;

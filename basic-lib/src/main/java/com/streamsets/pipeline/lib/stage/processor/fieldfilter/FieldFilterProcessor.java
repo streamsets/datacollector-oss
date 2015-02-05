@@ -8,8 +8,10 @@ package com.streamsets.pipeline.lib.stage.processor.fieldfilter;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -23,20 +25,64 @@ import java.util.List;
 import java.util.Set;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Field Filter", icon="filter.png")
+@StageDef(
+    version="1.0.0",
+    label="Field Filter",
+    description="???",
+    icon="filter.png"
+)
+@ConfigGroups(FieldFilterProcessor.Groups.class)
 public class FieldFilterProcessor extends SingleLaneRecordProcessor {
-
   private static final Logger LOG = LoggerFactory.getLogger(FieldFilterProcessor.class);
 
-  @ConfigDef(label = "Fields", required = true, type = Type.MODEL, defaultValue="",
-    displayPosition = 2)
-  @FieldSelector
-  public List<String> fields;
+  public enum Groups implements Label {
+    FILTER;
 
-  @ConfigDef(label = "Filter Operation", required = true,type = Type.MODEL, defaultValue="KEEP",
-    displayPosition = 1)
+    @Override
+    public String getLabel() {
+      return "Filter";
+    }
+
+  }
+
+  public enum FilterOperation {
+    KEEP("Keep Listed Fields"),
+    REMOVE("Remove Listed Fields");
+
+    private String label;
+
+    private FilterOperation(String label) {
+      this.label = label;
+    }
+
+    public String getLabel() {
+      return label;
+    }
+  }
+
+  @ConfigDef(
+      required = true,
+      type = Type.MODEL,
+      defaultValue="KEEP",
+      label = "Filter Operation",
+      description = "???",
+      displayPosition = 10,
+      group = "FILTER"
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FilterOperationValues.class)
   public FilterOperation filterOperation;
+
+  @ConfigDef(
+      required = true,
+      type = Type.MODEL,
+      defaultValue="",
+      label = "Fields",
+      description = "???",
+      displayPosition = 20,
+      group = "FILTER"
+  )
+  @FieldSelector
+  public List<String> fields;
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
@@ -53,21 +99,6 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
       record.delete(fieldToRemove);
     }
     batchMaker.addRecord(record);
-  }
-
-  enum FilterOperation {
-    KEEP("Keep Listed Fields"),
-    REMOVE("Remove Listed Fields");
-
-    private String label;
-
-    private FilterOperation(String label) {
-      this.label = label;
-    }
-
-    public String getLabel() {
-      return label;
-    }
   }
 
 }

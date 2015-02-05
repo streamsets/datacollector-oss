@@ -9,9 +9,11 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -23,18 +25,84 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Field Masker",
-  description = "Replaces the selected string fields with the corresponding masks.",
-  icon="mask.png")
+@StageDef(
+    version="1.0.0",
+    label="Field Masker",
+    description = "Replaces the selected string fields with the corresponding masks.",
+    icon="mask.png"
+)
+@ConfigGroups(FieldMaskProcessor.Groups.class)
 public class FieldMaskProcessor extends SingleLaneRecordProcessor {
-
   private static final Logger LOG = LoggerFactory.getLogger(FieldMaskProcessor.class);
+
+  public enum Groups implements Label {
+    MASKING;
+
+    @Override
+    public String getLabel() {
+      return "Masking";
+    }
+
+  }
 
   private static final String FIXED_LENGTH_MASK = "xxxxxxxxxx";
   private static final char NON_MASK_CHAR = '#';
   private static final char MASK_CHAR = 'x';
 
-  @ConfigDef(label = "Field Mask Configuration", required = false, type = ConfigDef.Type.MODEL, defaultValue="")
+  public enum Type {
+    FIXED_LENGTH,
+    VARIABLE_LENGTH,
+    CUSTOM
+  }
+
+  public static class FieldMaskConfig {
+    @ConfigDef(
+        required = true,
+        type = ConfigDef.Type.MODEL,
+        defaultValue="",
+        label = "Fields to Mask",
+        description="String field to be masked. Non-string fields cannot be masked.",
+        displayPosition = 10
+    )
+    @FieldSelector
+    public List<String> fields;
+
+    @ConfigDef(
+        required = true,
+        type = ConfigDef.Type.MODEL,
+        defaultValue="VARIABLE_LENGTH",
+        label = "Mask Type",
+        description="The mask that must be applied to the fields",
+        displayPosition = 20
+    )
+    @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = MaskTypeChooseValues.class)
+    public Type maskType;
+
+    @ConfigDef(
+        required = true,
+        type = ConfigDef.Type.STRING,
+        label = "Custom Mask",
+        description = "The custom mask string should be made up of 'x' and/or '#' and/or other characters. " +
+                      "Character x in the mask replaces the original character with character 'x' in the output " +
+                      "string. Character # retains the original character at that index in the output string. " +
+                      "Any other character from mask is retained in that position in the output string.",
+        displayPosition = 30,
+        dependsOn = "maskType",
+        triggeredByValue = "CUSTOM"
+    )
+    public String mask;
+
+  }
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue="",
+      label = "Field Mask Configuration",
+      description = "???",
+      displayPosition = 10,
+      group = "MASKING"
+  )
   @ComplexField
   public List<FieldMaskConfig> fieldMaskConfigs;
 
@@ -74,33 +142,6 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
     }
     //Should not happen
     return null;
-  }
-
-  public static class FieldMaskConfig {
-    @ConfigDef(label = "Fields to Mask", required = true, type = ConfigDef.Type.MODEL, defaultValue="",
-      description="String field to be masked. Non-string fields cannot be masked.")
-    @FieldSelector
-    public List<String> fields;
-
-    @ConfigDef(label = "Mask Type", required = true, type = ConfigDef.Type.MODEL, defaultValue="VARIABLE_LENGTH",
-      description="The mask that must be applied to the fields")
-    @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = MaskTypeChooseValues.class)
-    public Type maskType;
-
-    @ConfigDef(label = "Custom Mask", required = true, type = ConfigDef.Type.STRING, dependsOn = "maskType",
-      description = "The custom mask string should be made up of 'x' and/or '#' and/or other characters. " +
-      "Character x in the mask replaces the original character with character 'x' in the output string. " +
-      "Character # retains the original character at that index in the output string. " +
-      "Any other character from mask is retained in that position in the output string.",
-      triggeredByValue = {"CUSTOM"})
-    public String mask;
-
-  }
-
-  public enum Type {
-    FIXED_LENGTH,
-    VARIABLE_LENGTH,
-    CUSTOM
   }
 
   @VisibleForTesting

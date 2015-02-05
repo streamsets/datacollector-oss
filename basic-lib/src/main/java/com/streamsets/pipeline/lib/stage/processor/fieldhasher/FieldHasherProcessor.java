@@ -9,9 +9,11 @@ import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -26,13 +28,75 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @GenerateResourceBundle
-@StageDef( version="1.0.0", label="Field Hasher", icon="hash.png")
+@StageDef(
+    version="1.0.0",
+    label="Field Hasher",
+    description = "???",
+    icon="hash.png")
+@ConfigGroups(FieldHasherProcessor.Groups.class)
 public class FieldHasherProcessor extends SingleLaneRecordProcessor {
-
   private static final Logger LOG = LoggerFactory.getLogger(FieldHasherProcessor.class);
 
-  @ConfigDef(label = "Field Hasher Configuration", required = true, type = Type.MODEL, defaultValue="",
-    description="Field Hasher Configuration")
+  public enum Groups implements Label {
+    HASHING;
+
+    @Override
+    public String getLabel() {
+      return "Hashing";
+    }
+
+  }
+
+  public enum HashType {
+    MD5("MD5"),
+    SHA1("SHA-1"),
+    SHA2("SHA-256");
+
+    private String digest;
+
+    private HashType(String digest) {
+      this.digest = digest;
+    }
+
+    public String getDigest() {
+      return digest;
+    }
+  }
+
+  public static class FieldHasherConfig {
+
+    @ConfigDef(
+        required = true,
+        type = Type.MODEL, defaultValue="",
+        label = "Fields to Hash",
+        description = "The fields whose values must be replaced by their SHA values. Non string values will be " +
+                      "converted to String values for has computation. Fields with Map and List types will be ignored.",
+        displayPosition = 10
+    )
+    @FieldSelector
+    public List<String> fieldsToHash;
+
+    @ConfigDef(
+        required = true,
+        type = Type.MODEL,
+        defaultValue="MD5",
+        label = "Hash Type",
+        description="The hash algorithm that must be used to hash the fields.",
+        displayPosition = 20
+    )
+    @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = HashTypeChooserValue.class)
+    public HashType hashType;
+  }
+
+  @ConfigDef(
+      required = true,
+      type = Type.MODEL,
+      defaultValue="",
+      label = "Field Hasher Configuration",
+      description="Field Hasher Configuration",
+      displayPosition = 10,
+      group = "HASHING"
+  )
   @ComplexField
   public List<FieldHasherConfig> fieldHasherConfigs;
 
@@ -112,36 +176,6 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       return String.valueOf(field.getValueAsString());
     }
     return null;
-  }
-
-  public static class FieldHasherConfig {
-
-    @ConfigDef(label = "Fields to Hash", required = true, type = Type.MODEL, defaultValue="",
-      description="The fields whose values must be replaced by their SHA values. Non string values will be " +
-        "converted to String values for has computation. Fields with Map and List types will be ignored.")
-    @FieldSelector
-    public List<String> fieldsToHash;
-
-    @ConfigDef(label = "Hash Type", required = true, type = Type.MODEL, defaultValue="MD5",
-      description="The hash algorithm that must be used to hash the fields.")
-    @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = HashTypeChooserValue.class)
-    public HashType hashType;
-  }
-
-  public enum HashType {
-    MD5("MD5"),
-    SHA1("SHA-1"),
-    SHA2("SHA-256");
-
-    private String digest;
-
-    private HashType(String digest) {
-      this.digest = digest;
-    }
-
-    public String getDigest() {
-      return digest;
-    }
   }
 
 }

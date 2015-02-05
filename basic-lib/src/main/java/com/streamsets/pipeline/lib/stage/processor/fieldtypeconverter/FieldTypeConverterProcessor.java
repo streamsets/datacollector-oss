@@ -9,9 +9,11 @@ import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -29,12 +31,131 @@ import java.util.List;
 import java.util.Locale;
 
 @GenerateResourceBundle
-@StageDef(version="1.0.0", label="Field Converter", icon="converter.svg")
+@StageDef(
+    version="1.0.0",
+    label="Field Converter",
+    description = "???",
+    icon="converter.svg"
+)
+@ConfigGroups(FieldTypeConverterProcessor.Groups.class)
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
-
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
 
-  @ConfigDef(label = "Field Converter Configuration", required = false, type = Type.MODEL, defaultValue="")
+  public enum Groups implements Label {
+    TYPE_CONVERSION;
+
+    @Override
+    public String getLabel() {
+      return "Type Conversion";
+    }
+
+  }
+
+  public enum DataLocale {
+
+    ENGLISH(Locale.ENGLISH),
+    FRENCH(Locale.FRENCH),
+    GERMAN(Locale.GERMAN),
+    ITALIAN(Locale.ITALIAN),
+    JAPANESE(Locale.JAPANESE),
+    KOREAN(Locale.KOREAN),
+    CHINESE(Locale.CHINESE),
+    SIMPLIFIED_CHINESE(Locale.SIMPLIFIED_CHINESE),
+    TRADITIONAL_CHINESE(Locale.TRADITIONAL_CHINESE);
+
+    private Locale locale;
+
+    private DataLocale(Locale locale) {
+      this.locale = locale;
+    }
+
+    public Locale getLocale() {
+      return this.locale;
+    }
+  }
+
+  public enum StandardDateFormats {
+
+    YYYY_MM_DD("yyyy-MM-dd"),
+    DD_MM_YYYY("dd-MMM-YYYY"),
+    YYYY_MM_DD_HH_MM_SS("yyyy-MM-dd HH:mm:ss"),
+    YYYY_MM_DD_HH_MM_SS_SSS("yyyy-MM-dd HH:mm:ss.SSS"),
+    YYYY_MM_DD_HH_MM_SS_SSS_Z("yyyy-MM-dd HH:mm:ss.SSS Z"),
+    YYYY_MM_DD_T_HH_MM_Z("yyyy-MM-dd'T'HH:mm'Z'");
+
+    private String format;
+
+    private StandardDateFormats(String format) {
+      this.format = format;
+    }
+
+    public String getFormat() {
+      return format;
+    }
+  }
+
+  public static class FieldTypeConverterConfig {
+
+    @ConfigDef(
+        required = true,
+        type = Type.MODEL,
+        defaultValue="",
+        label = "Fields to Convert",
+        description = "???",
+        displayPosition = 10
+    )
+    @FieldSelector
+    public List<String> fields;
+
+    @ConfigDef(
+        required = true,
+        type = Type.MODEL,
+        defaultValue="INTEGER",
+        label = "Convert to Type",
+        description = "???",
+        displayPosition = 10
+    )
+    @ValueChooser(chooserValues = ConverterValuesProvider.class, type = ChooserMode.PROVIDED)
+    public Field.Type targetType;
+
+    @ConfigDef(
+        required = true,
+        type = Type.MODEL,
+        defaultValue = "ENGLISH",
+        label = "Data Locale",
+        description = "Affects the interpretation of locale sensitive data, such as using the comma as a decimal " +
+                      "separator",
+        displayPosition = 20,
+        dependsOn = "targetType",
+        triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT"}
+    )
+    @ValueChooser(chooserValues = LocaleValuesProvider.class, type = ChooserMode.PROVIDED)
+    public DataLocale dataLocale;
+
+    @ConfigDef(
+        required = true,
+        type = Type.MODEL,
+        defaultValue="yyyy-MM-dd",
+        label = "Date Format",
+        description="Select or Enter any valid date or datetime format.",
+        displayPosition = 30,
+        dependsOn = "targetType",
+        triggeredByValue = {"DATE", "DATETIME"}
+    )
+    @ValueChooser(chooserValues = DateFormatValuesProvider.class, type = ChooserMode.SUGGESTED)
+    public String dateFormat;
+
+  }
+
+  @ConfigDef(
+      required = false,
+      type = Type.MODEL,
+      defaultValue="",
+      label = "Field Converter Configuration",
+      description = "???",
+      displayPosition = 10,
+      group = "TYPE_CONVERSION"
+  )
   @ComplexField
   public List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
 
@@ -118,70 +239,4 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     }
   }
 
-  public static class FieldTypeConverterConfig {
-
-    @ConfigDef(label = "Fields to Convert", required = true,type = Type.MODEL, defaultValue="")
-    @FieldSelector
-    public List<String> fields;
-
-    @ConfigDef(label = "Convert to Type", required = true, type = Type.MODEL, defaultValue="INTEGER")
-    @ValueChooser(chooserValues = ConverterValuesProvider.class, type = ChooserMode.PROVIDED)
-    public Field.Type targetType;
-
-    @ConfigDef(label = "Data Locale", required = true, type = Type.MODEL, defaultValue="ENGLISH",
-      description="Affects the interpretation of locale sensitive data, such as using the comma as a decimal separator",
-      dependsOn = "targetType", triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT"})
-    @ValueChooser(chooserValues = LocaleValuesProvider.class, type = ChooserMode.PROVIDED)
-    public DataLocale dataLocale;
-
-    @ConfigDef(label = "Date Format", required = true, type = Type.MODEL, defaultValue="yyyy-MM-dd",
-      description="Select or Enter any valid date or datetime format.",
-      dependsOn = "targetType", triggeredByValue = {"DATE", "DATETIME"})
-    @ValueChooser(chooserValues = DateFormatValuesProvider.class, type = ChooserMode.SUGGESTED)
-    public String dateFormat;
-
-  }
-
-  public enum DataLocale {
-
-    ENGLISH(Locale.ENGLISH),
-    FRENCH(Locale.FRENCH),
-    GERMAN(Locale.GERMAN),
-    ITALIAN(Locale.ITALIAN),
-    JAPANESE(Locale.JAPANESE),
-    KOREAN(Locale.KOREAN),
-    CHINESE(Locale.CHINESE),
-    SIMPLIFIED_CHINESE(Locale.SIMPLIFIED_CHINESE),
-    TRADITIONAL_CHINESE(Locale.TRADITIONAL_CHINESE);
-
-    private Locale locale;
-
-    private DataLocale(Locale locale) {
-      this.locale = locale;
-    }
-
-    public Locale getLocale() {
-      return this.locale;
-    }
-  }
-
-  public enum StandardDateFormats {
-
-    YYYY_MM_DD("yyyy-MM-dd"),
-    DD_MM_YYYY("dd-MMM-YYYY"),
-    YYYY_MM_DD_HH_MM_SS("yyyy-MM-dd HH:mm:ss"),
-    YYYY_MM_DD_HH_MM_SS_SSS("yyyy-MM-dd HH:mm:ss.SSS"),
-    YYYY_MM_DD_HH_MM_SS_SSS_Z("yyyy-MM-dd HH:mm:ss.SSS Z"),
-    YYYY_MM_DD_T_HH_MM_Z("yyyy-MM-dd'T'HH:mm'Z'");
-
-    private String format;
-
-    private StandardDateFormats(String format) {
-      this.format = format;
-    }
-
-    public String getFormat() {
-      return format;
-    }
-  }
 }

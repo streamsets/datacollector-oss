@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
@@ -21,95 +22,130 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-@ConfigGroups(SpoolDirSourceConfigGroups.class)
+@ConfigGroups(BaseSpoolDirSource.Groups.class)
 public abstract class BaseSpoolDirSource extends BaseSource {
   private final static Logger LOG = LoggerFactory.getLogger(BaseSpoolDirSource.class);
-
   private static final String OFFSET_SEPARATOR = "::";
 
-  @ConfigDef(required = true,
+  public static enum Groups implements Label {
+    FILES("Files"),
+    POST_PROCESSING("Post Processing"),
+    ;
+
+    private final String label;
+
+    Groups(String label) {
+      this.label = label;
+    }
+
+    @Override
+    public String getLabel() {
+      return label;
+    }
+
+  }
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Directory",
       description = "The directory where to read the files from",
-      displayPosition = 5,
-      group = "FILES")
+      displayPosition = 10,
+      group = "FILES"
+  )
   public String spoolDir;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "File Name Pattern",
       description = "A glob or regular expression that defines the pattern of file names in the directory. " +
                     "File names must be created in naturally ascending order.",
-      displayPosition = 10,
-      group = "FILES")
+      displayPosition = 20,
+      group = "FILES"
+  )
   public String filePattern;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.INTEGER,
-      label = "Max Files in Directory",
       defaultValue = "10",
+      label = "Max Files in Directory",
       description =
           "Maximum number of files matching the pattern waiting to be processed. " +
           "Additional files in the directory causes the pipeline to fail",
-      displayPosition = 20,
-      group = "FILES")
+      displayPosition = 30,
+      group = "FILES"
+  )
   public int maxSpoolFiles;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.STRING,
+      defaultValue = "",
       label = "First File to Process",
       description = "When configured, the Data Collector does not process earlier (naturally ascending order) file names",
-      defaultValue = "",
       displayPosition = 30,
-      group = "FILES")
+      group = "FILES"
+  )
   public String initialFileToProcess;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.INTEGER,
+      defaultValue = "600",
       label = "File Wait Timeout (secs)",
       description = "Seconds to wait for new files before triggering an empty batch for processing",
-      defaultValue = "600",
-      displayPosition = 40,
-      group = "FILES")
+      displayPosition = 50,
+      group = "FILES"
+  )
   public long poolingTimeoutSecs;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.STRING,
       label = "Error Directory",
       description = "Directory for files that could not be fully processed",
-      displayPosition = 50,
-      group = "POST_PROCESSING")
+      displayPosition = 60,
+      group = "POST_PROCESSING"
+  )
   public String errorArchiveDir;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
+      defaultValue = "NONE",
       label = "File Post Processing",
       description = "Action to be taken after the file has been processed",
-      defaultValue = "NONE",
-      displayPosition = 60,
-      group = "POST_PROCESSING")
+      displayPosition = 70,
+      group = "POST_PROCESSING"
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PostProcessingOptionsChooserValues.class)
   public DirectorySpooler.FilePostProcessing postProcessing;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.STRING,
       label = "Archiving Directory",
       description = "Directory to archive files after they have been processed",
-      displayPosition = 70,
+      displayPosition = 80,
+      group = "POST_PROCESSING",
       dependsOn = "postProcessing",
-      triggeredByValue = "ARCHIVE",
-      group = "POST_PROCESSING")
+      triggeredByValue = "ARCHIVE"
+  )
   public String archiveDir;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.INTEGER,
+      defaultValue = "0",
       label = "Archive Retention Time (minutes)",
       description = "How long archived files should be kept before deleting, a value of zero means forever",
-      defaultValue = "0",
-      displayPosition = 80,
+      displayPosition = 90,
+      group = "POST_PROCESSING",
       dependsOn = "postProcessing",
-      triggeredByValue = "ARCHIVE",
-      group = "POST_PROCESSING")
+      triggeredByValue = "ARCHIVE"
+  )
   public long retentionTimeMins;
 
   private DirectorySpooler spooler;
