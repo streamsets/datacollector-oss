@@ -1,0 +1,48 @@
+{
+  "schema_version":     1,
+  "name":               "STREAMSETS",
+  "version":            "${dist.version}-sdc${project.version}",
+  "extraVersionInfo": {
+    "fullVersion":        "${dist.version}-sdc${project.version}-el6",
+    "baseVersion":        "sdc${dist.version}",
+    "patchCount":         "0"
+  },
+  
+  "depends":            "CDH (>= 5.2), CDH (<< 6.0)",
+
+  "setActiveSymlink":   true,
+
+  "scripts": {
+    "defines": "sdc_env.sh"
+  },
+
+  "packages": [
+    { "name":    "sdc",
+      "version": "${dist.version}+sdc${project.version}"
+    }
+  ],
+
+  "components": [
+    { "name":     "sdc",
+      "version":  "${dist.version}-sdc${project.version}",
+      "pkg_version":  "${dist.version}+sdc${project.version}"
+    }
+  ],
+
+  "provides": [
+	"streamsets"
+  ],
+
+  "users": {
+     "sdc": {
+       "longname"    : "StreamSets Data Collector",
+       "home"        : "/var/lib/sdc",
+       "shell"       : "/sbin/nologin",
+       "extra_groups" : [ ]
+     }
+  },
+
+  "groups": [
+     "sdc"
+  ]
+}

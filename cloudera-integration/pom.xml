@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ (c) 2014 StreamSets, Inc. All rights reserved. May not
+ be copied, modified, or distributed in whole or part without
+ written consent of StreamSets, Inc.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.streamsets</groupId>
+    <artifactId>streamsets-datacollector-root</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../root</relativePath>
+  </parent>
+  <groupId>com.streamsets</groupId>
+  <artifactId>streamsets-cloudera-integration</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <description>StreamSets Parcel and CSD</description>
+  <name>StreamSets Parcel and CSD for Cloudera Manager</name>
+  <packaging>pom</packaging>
+
+  <organization>
+    <name>StreamSets</name>
+    <url>http://www.streamsets.com</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>(c) 2014 StreamSets, Inc. All rights reserved.</name>
+      <comments>
+        (c) 2014 StreamSets, Inc. All rights reserved. May not be copied, modified,
+        or distributed in whole or part without written consent of StreamSets, Inc.
+      </comments>
+      <url>http://www.streamsets.com</url>
+    </license>
+  </licenses>
+
+  <modules>
+    <module>parcel</module>
+    <module>csd</module>
+  </modules>
+</project>

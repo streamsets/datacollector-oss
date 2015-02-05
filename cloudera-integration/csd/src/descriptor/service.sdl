@@ -1,0 +1,155 @@
+{
+  "name" : "STREAMSETS",
+  "label" : "StreamSets",
+  "description" : "The StreamSets Intelligent Ingest Platform.",
+  "version" : "1.0.0b1",
+
+  "compatibility" : {
+    "generation": 1,
+    "cdhVersion" : { "min" : "5", "max" : "5" }
+  },
+
+  "runAs" : {
+    "user" : "sdc",
+    "group" : "sdc"
+  },
+
+  "parcel" : {
+    "requiredTags" : [ "streamsets" ]
+  },
+
+  "icon" : "images/streamsets.png",
+
+  "roles" : [
+  {
+   "name" : "DATA_COLLECTOR",
+   "label" : "Data Collector",
+   "pluralLabel" : "Data Collectors",
+
+   "startRunner" : {
+     "program" : "scripts/control.sh",
+     "args" : [ "start" ],
+     "environmentVariables" : {
+      "SDC_LOG" : "${log_dir}",
+      "SDC_DATA" : "${data.directory}"
+     }
+    },
+
+    "logging" : {
+      "dir" : "/var/log/sdc",
+      "filename" : "sdc.log",
+      "isModifiable" : true,
+      "configName" : "sdc.log4j.dir",
+      "loggingType" : "log4j"
+    },
+
+    "externalLink" : {
+      "name" : "datacollector_web_ui",
+      "label" : "Data Collector Web UI",
+      "url" : "http://${host}:${http.port}"
+    },
+
+     "configWriter" : {
+      "generators" : [
+        {
+          "filename" : "sdc.properties",
+          "configFormat" : "properties",
+          "includeParams" :  [ "http.port", "production.maxBatchSize", "create.default.pipeline", "preview.maxBatchSize", "preview.maxBatches",
+          "production.maxErrorFileSize", "production.maxBackupIndex", "production.maxErrorsPerStage", "production.maxPipelineErrors",
+          "max.logtail.concurrent.requests" ]
+        }
+      ],
+      "auxConfigGenerators" : [
+        {
+          "filename" : "local-realm.properties",
+          "sourceFilename" : "aux/local-realm.properties"
+        },
+        {
+          "filename" : "shutdown-password.txt",
+          "sourceFilename" : "aux/shutdown-password.txt"
+        } 
+      ]
+    },
+
+     "parameters" : [
+        {
+          "name" : "http.port",
+          "label" : "Web UI Port",
+          "description" : "The port that will be used for the Data Collector Web UI.",
+          "type" : "port",
+          "default": 8080
+        },
+        {
+          "name" : "production.maxBatchSize",
+          "label" : "Max Batch Size (Running)",
+          "description" : "The maximum batch size while the pipeline is actively running.",
+          "type" : "long",
+          "default" : 1000
+        },
+        {
+          "name" : "preview.maxBatchSize",
+          "label" : "Max Batch Size (Preview)",
+          "description" : "The maximum batch size while the pipeline is in preview mode.",
+          "type" : "long",
+          "default" : 10
+        },
+        {
+          "name" : "preview.maxBatches",
+          "label" : "Max Batches (Preview)",
+          "description" : "The maximum number of batches that can be read in preview mode.",
+          "type" : "long",
+          "default" : 10
+        },
+        {
+          "name" : "production.maxErrorFileSize",
+          "label" : "Max Error File Size",
+          "description" : "The maximum size that the error output file is allowed to reach before being rolled over to backup files.",
+          "type" : "long",
+          "unit" : "bytes",
+          "default": 1073741824
+        },
+        {
+          "name" : "production.maxBackupIndex",
+          "label" : "Max Backup Index",
+          "description" : "The maximum numer of many backup files that are kept before the oldest is erased. If set to zero, then there will be no backup files and the log file will be truncated when it reaches the maximum allowed size for the error file.",
+          "type" : "long",
+          "default": 5
+        },
+        {
+          "name" : "production.maxErrorRecordsPerStage",
+          "label" : "Max Error Records Per Stage",
+          "description" : "The max number of error records, per stage, that will be retained in memory when the pipeline is running. If set to zero, error records will not be retained in memory. If the specified limit is reached the oldest records will be discarded to make room for the newest one.The maximum size that the error output file is allowed to reach before being rolled over to backup files.",
+          "type" : "long",
+          "default": 100 
+        },
+        {
+          "name" : "production.maxPipelineErrors",
+          "label" : "Max Error Records Per Stage",
+          "description" : "The max number of errors per pipeline that will be retained in memory when the pipeline is running. If set to zero, error records will not be retained in memory. If the specified limit is reached the oldest records will be discarded to make room for the newest one.The maximum size that the error output file is allowed to reach before being rolled over to backup files.",
+          "type" : "long",
+          "default": 100 
+        },
+        {
+          "name" : "max.logtail.concurrent.requests",
+          "label" : "Max Concurrent REST Requests for log endpoint",
+          "description" : "Max number of concurrent REST calls allowed for the /rest/v1/admin/log endpoint.",
+          "type" : "long",
+          "default": 5
+        },
+        {
+          "name" : "data.directory",
+          "label" : "Data directory",
+          "description" : "The directory where pipeline metadata will be stored.",
+          "type" : "path",
+          "default": "/var/run/sdc",
+          "pathType" : "localDataDir",
+          "required" : "true",
+          "minLength" : 1,
+          "maxLength" : 100,
+          "configurableInWizard" : true
+        }
+      ]
+    }
+  ]
+
+}

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ (c) 2014 StreamSets, Inc. All rights reserved. May not
+ be copied, modified, or distributed in whole or part without
+ written consent of StreamSets, Inc.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.streamsets</groupId>
+    <artifactId>streamsets-cloudera-integration</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>com.streamsets</groupId>
+  <artifactId>streamsets-parcel</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <description>StreamSets Parcel</description>
+  <name>StreamSets Parcel for Cloudera Manager</name>
+  <packaging>jar</packaging>
+
+  <properties>
+    <dist.version>0.0.1-SNAPSHOT</dist.version>
+    <!-- trick to avoid pulling files from 'ui', 'docs' & 'dummy-lib' if the profile is not active -->
+    <ui.dist-dir>${basedir}/../../dist/src/main/emptydir</ui.dist-dir>
+    <docs.dist-dir>${basedir}/../../dist/src/main/emptydir</docs.dist-dir>
+    <!-- trick to avoid pulling dev-lib files if the 'release' profile is active -->
+    <dev.dist-dir>${basedir}/../../dist/src/main/emptydir</dev.dist-dir>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-dist</artifactId>
+      <version>${dist.version}</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>dist</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>STREAMSETS-${dist.version}-sdc${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/cloudera-integration.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>!release</name>
+        </property>
+      </activation>
+      <properties>
+        <!-- trick to avoid pulling dev-lib files if the 'release' profile is active -->
+        <dev-lib.dist-dir>${basedir}/../../dev-lib/target/stage-libs</dev-lib.dist-dir>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-dev-lib</artifactId>
+          <scope>compile</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>ui</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <!-- trick to avoid pulling UI files if the 'ui' profile is not active -->
+        <ui.dist-dir>${basedir}/../../ui/target/dist</ui.dist-dir>
+
+        <!-- TODO: for now we copy committed generated docs  -->
+        <docs.dist-dir>${basedir}/../../docs/generated</docs.dist-dir>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-ui</artifactId>
+          <scope>compile</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>docs</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <docs.dist-dir>${basedir}/../../docs/target/dita/out</docs.dist-dir>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-docs</artifactId>
+          <scope>compile</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.10.1</version>
+            <executions>
+              <execution>
+                <id>javadoc</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>javadoc</goal>
+                </goals>
+                <configuration>
+                  <linksource>false</linksource>
+                  <quiet>true</quiet>
+                  <verbose>false</verbose>
+                  <charset>UTF-8</charset>
+
+                  <excludePackageNames>com.streamsets.pipeline.api.impl:com.streamsets.pipeline.sdk.annotationsprocessor</excludePackageNames>
+
+                  <groups>
+                    <group>
+                      <title>Pipeline API</title>
+                      <packages>
+                        com.streamsets.pipeline.api:com.streamsets.pipeline.api.base
+                      </packages>
+                    </group>
+                    <group>
+                      <title>Pipeline Stage SDK API</title>
+                      <packages>
+                        com.streamsets.pipeline.sdk
+                      </packages>
+                    </group>
+                  </groups>
+
+                  <includeDependencySources>true</includeDependencySources>
+                  <dependencySourceIncludes>
+                    <dependencySourceInclude>com.streamsets:streamsets-datacollector-api</dependencySourceInclude>
+                    <dependencySourceInclude>com.streamsets:streamsets-datacollector-sdk</dependencySourceInclude>
+                  </dependencySourceIncludes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

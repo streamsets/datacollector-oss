@@ -79,6 +79,9 @@
 
             <!--TODO check with Madhu on all this stuff -->
             <exclude>ui/**</exclude>
+
+            <!-- For Cloudera service descriptor -->
+            <exclude>csd/**</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -102,6 +105,15 @@
       </activation>
       <modules>
         <module>docs</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>cloudera</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>cloudera-integration</module>
       </modules>
     </profile>
     <profile>
