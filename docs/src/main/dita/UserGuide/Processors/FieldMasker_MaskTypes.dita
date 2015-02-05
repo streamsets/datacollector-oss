@@ -20,7 +20,7 @@ donKey
 022367snowfall</codeblock>
         </stentry>
         <stentry>
-         <codeblock><uicontrol>Password</uicontrol> (fixed-lenth mask)
+         <codeblock><uicontrol>Password</uicontrol> (fixed-length mask)
 asd302kd0
 2v03msO3d
 L92m1sN3q</codeblock>
@@ -42,7 +42,7 @@ donKey
 022367snowfall</codeblock>
         </stentry>
         <stentry>
-         <codeblock><uicontrol>Password</uicontrol> (variable-lenth mask)
+         <codeblock><uicontrol>Password</uicontrol> (variable-length mask)
 asd3
 2v03ms
 L92m1sN3q0jaOmE67Ws</codeblock>

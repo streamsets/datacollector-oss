@@ -18,7 +18,7 @@
                 <cmd id="AccessDC">To access the <ph>Data Collector</ph> window, enter the following
                     text in the address bar of your browser: </cmd>
                 <info>
-                    <codeblock>localhost:8080</codeblock>
+                    <codeblock>localhost:18630</codeblock>
                 </info>
                 <stepresult>The <wintitle>Login</wintitle> dialog box displays. <p><image
                             href="../Graphics/LoginDialog.png" scale="25" id="image_bzy_ftf_tq"

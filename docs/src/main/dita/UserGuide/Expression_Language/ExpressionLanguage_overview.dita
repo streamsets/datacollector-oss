@@ -17,9 +17,9 @@
     <dlentry>
      <dt>Calling Fields</dt>
      <dd>To use the values in a field in an expression, use the following
-      syntax:<codeblock>record:value{"/&lt;field_name>"}</codeblock><p>For example, to add the
-       sales of four quarters, you might use the following expression:
-       <codeblock>${record:value("/Q1_Sales") + record:value("/Q2_Sales") + record:value("/Q3_Sales") + record:value("/Q4_Sales")}</codeblock></p></dd> </dlentry>
+      syntax:<codeblock>record:value{"/&lt;field_name>"}</codeblock></dd>
+     <dd>For example, to add the sales of four quarters, you might use the following expression:
+      <codeblock>${record:value("/Q1_Sales") + record:value("/Q2_Sales") + record:value("/Q3_Sales") + record:value("/Q4_Sales")}</codeblock></dd> </dlentry>
     <dlentry>
      <dt>Literals</dt>
      <dd></dd>

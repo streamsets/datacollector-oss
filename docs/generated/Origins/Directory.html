@@ -2,14 +2,13 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Directory origin reads data from files in a directory. Directory reads the files in a directory with names that match a user-defined pattern. It can optionally begin processing with a specific ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Directory"></meta><meta name="abstract" content="The Directory origin reads data from files in a directory."></meta><meta name="description" content="The Directory origin reads data from files in a directory."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_qcq_54n_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Directory</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Directory origin reads data from files in a directory. Directory reads the files in a directory with names that match a user-defined pattern. It can optionally begin processing with a specific ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Directory"></meta><meta name="abstract" content="The Directory origin reads data from files in a directory."></meta><meta name="description" content="The Directory origin reads data from files in a directory."></meta><meta name="DC.Relation" scheme="URI" content="PreviewingRawSourceData.html#task_jp5_ql1_tq"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_qcq_54n_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Directory</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
 <body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></td><td><div class="navheader">
-<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div></td></tr></tbody></table>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"></td><td><div class="navheader"></div></td></tr></tbody></table>
 <div class="nested0" id="concept_qcq_54n_jq">
  <h1 class="title topictitle1">Directory</h1>
 
@@ -23,7 +22,10 @@
 
  </div>
 
-<div class="related-links"></div>
+    <div class="related-links"><div class="relinfo reltasks"><strong>Related tasks</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="PreviewingRawSourceData.html#task_jp5_ql1_tq" title="You can preview raw source data when you configure an origin. Preview raw source data when reviewing the data might help with origin configuration.">Previewing Raw Source Data</a></div>
+</div>
+</div>
 <div class="topic concept nested1" id="concept_gz5_dqw_yq">
  <h2 class="title topictitle2">Data Format</h2>
 
@@ -113,8 +115,8 @@
     the file directory.</p>
 
   <p class="p">When you start a pipeline, Directory starts processing with the file name that you enter and
-            continues processing files in lexicographic ascending order. If you did not configure a
-            file name, it starts with the file with the lowest file name. </p>
+         continues processing files in naturally ascending order. If you did not configure a file
+         name, it starts with the file with the lowest file name. </p>
 
   <p class="p">For example, the file directory includes the following files: File.log, File1.log, File2.log,
       File3.log. If you configure File1.log as the first file, Directory processes File1.log and
@@ -145,8 +147,8 @@
     
     <div class="body taskbody"><p class="shortdesc">Configure a Directory origin to read data from files in a directory. When you
         configure a Directory, you define general properties, including the data format to process.
-        Then, you define post-processing options and the properties specific to data
-        format</p>
+        Then, you define post-processing options and the properties specific to the data
+        format.</p>
 
         <div class="section context"></div>
 
@@ -164,9 +166,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.57142857142857%" id="d2868e223">File Property</th>
+                                    <th class="entry" valign="top" width="37.49999999999999%" id="d2270e226">File Property</th>
 
-                                    <th class="entry" valign="top" width="71.42857142857143%" id="d2868e226">Description</th>
+                                    <th class="entry" valign="top" width="62.5%" id="d2270e229">Description</th>
 
                                 </tr>
 
@@ -174,23 +176,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e223 ">Name</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e226 ">Name</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e226 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e223 ">Description</td>
-
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e226 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e229 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e223 ">Data Format</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e226 ">Description</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e226 ">Data format for source files. Use one of the following
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e229 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e226 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e229 ">Data format for source files. Use one of the following
                                             formats:<ul class="ul" id="task_gfj_ssv_yq__ul_y1t_wql_5q">
                                             <li class="li">Log data</li>
 
@@ -206,27 +208,27 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e223 ">Directory</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e226 ">Directory</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e226 ">A directory local to the <span class="ph">Data
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e229 ">A directory local to the <span class="ph">Data
                   Collector</span> where source files are stored.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e223 ">File Name Pattern <a class="xref" href="Directory.html#concept_bxt_ndl_5q" title="Use a regular expression to define the file name pattern. Directory reads files in the file directory that match the file name pattern.">
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e226 ">File Name Pattern <a class="xref" href="Directory.html#concept_bxt_ndl_5q" title="Use a regular expression to define the file name pattern. Directory reads files in the file directory that match the file name pattern.">
                                             <img class="image" id="task_gfj_ssv_yq__image_c4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e226 ">Regular expression that describes the file names. For
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e229 ">Regular expression that describes the file names. For
                                         example, *.log.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e223 ">Max Files in Directory</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e226 ">Max Files in Directory</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e226 ">
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e229 ">
                                         <p class="p">The maximum number of files that match the file name
                                             pattern that are allowed in the directory. When the
                                             directory contains more files, the pipeline fails.</p>
@@ -236,11 +238,11 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e223 ">First File to Process <a class="xref" href="Directory.html#concept_ltv_r3l_5q" title="Configure a first file for processing when you want Directory to ignore certain files in the file directory.">
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e226 ">First File to Process <a class="xref" href="Directory.html#concept_ltv_r3l_5q" title="Configure a first file for processing when you want Directory to ignore certain files in the file directory.">
                                             <img class="image" id="task_gfj_ssv_yq__image_e4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e226 ">Name of the first file to process. Use a name that uses
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e229 ">Name of the first file to process. Use a name that uses
                                         the file name pattern. <p class="p">When you enter a file name,
                                             Directory reads the first file and other files in the
                                             directory with ascending names.</p>
@@ -249,11 +251,11 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e223 ">File Wait Timeout (secs) <a class="xref" href="Directory.html#concept_fqb_x1l_5q" title="When the Directory origin completes processing for existing files, it can send empty batches to pipeline destinations at regular intervals until new files appear. Use the File Wait Time general property to define the number of seconds to wait for new files before sending an empty batch.">
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e226 ">File Wait Timeout (secs) <a class="xref" href="Directory.html#concept_fqb_x1l_5q" title="When the Directory origin completes processing for existing files, it can send empty batches to pipeline destinations at regular intervals until new files appear. Use the File Wait Time general property to define the number of seconds to wait for new files before sending an empty batch.">
                                             <img class="image" id="task_gfj_ssv_yq__image_h4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e226 ">Number of seconds to wait for a new file. If a new file
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e229 ">Number of seconds to wait for a new file. If a new file
                                         does not arrive within the specified time, Directory sends
                                         an empty batch to destinations.</td>
 
@@ -276,9 +278,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.57142857142857%" id="d2868e379">Post Processing Property</th>
+                                    <th class="entry" valign="top" width="37.49999999999999%" id="d2270e382">Post Processing Property</th>
 
-                                    <th class="entry" valign="top" width="71.42857142857143%" id="d2868e382">Description</th>
+                                    <th class="entry" valign="top" width="62.5%" id="d2270e385">Description</th>
 
                                 </tr>
 
@@ -286,17 +288,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e379 ">Error Directory</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e382 ">Error Directory</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e382 ">The directory for files that were not completely
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e385 ">The directory for files that were not completely
                                         processed due to data handling errors.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e379 ">File Post-Processing</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e382 ">File Post-Processing</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e382 ">The action taken after processing a file: <ul class="ul" id="task_gfj_ssv_yq__ul_wsr_h4l_5q">
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e385 ">The action taken after processing a file: <ul class="ul" id="task_gfj_ssv_yq__ul_wsr_h4l_5q">
                                             <li class="li"><span class="ph uicontrol">None</span> - Leaves the file
                                                 alone.</li>
 
@@ -312,18 +314,18 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e379 ">Archive Directory</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e382 ">Archive Directory</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e382 ">The directory for processed files. Available when you
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e385 ">The directory for processed files. Available when you
                                         select Archive for the File Post Processing
                                         property.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e379 ">Archive Retention Time (mins)</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e382 ">Archive Retention Time (mins)</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e382 ">Number of minutes processed files are saved in the
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e385 ">Number of minutes processed files are saved in the
                                         archive directory. Use 0 to keep the archived files
                                         indefinitely.</td>
 
@@ -346,9 +348,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.57142857142857%" id="d2868e469">Log Data Property</th>
+                                    <th class="entry" valign="top" width="37.49999999999999%" id="d2270e472">Log Data Property</th>
 
-                                    <th class="entry" valign="top" width="71.42857142857143%" id="d2868e472">Description</th>
+                                    <th class="entry" valign="top" width="62.5%" id="d2270e475">Description</th>
 
                                 </tr>
 
@@ -356,17 +358,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e469 ">Maximum Line Length</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e472 ">Maximum Line Length</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e472 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e475 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e469 ">Use Truncated Flag</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e472 ">Use Truncated Flag</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e472 ">Adds a boolean field to the record to indicate if a
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e475 ">Adds a boolean field to the record to indicate if a
                                         record was truncated. The field name is Truncated. Possible
                                         values are True for a truncated record and False for
                                         untruncated values.</td>
@@ -390,9 +392,9 @@
      
      <thead class="thead" align="left">
       <tr class="row">
-       <th class="entry" valign="top" width="28.57142857142857%" id="d2868e524">JSON Data Property</th>
+       <th class="entry" valign="top" width="37.49999999999999%" id="d2270e527">JSON Data Property</th>
 
-       <th class="entry" valign="top" width="71.42857142857143%" id="d2868e527">Description</th>
+       <th class="entry" valign="top" width="62.5%" id="d2270e530">Description</th>
 
       </tr>
 
@@ -400,9 +402,9 @@
 
      <tbody class="tbody">
       <tr class="row">
-       <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e524 ">JSON Content</td>
+       <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e527 ">JSON Content</td>
 
-       <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e527 ">Type of content in JSON files. Use one of the following options: <div class="p">
+       <td class="entry" valign="top" width="62.5%" headers="d2270e530 ">Type of content in JSON files. Use one of the following options: <div class="p">
          <ul class="ul" id="task_gfj_ssv_yq__d437e50">
           <li class="li">Array of Objects </li>
 
@@ -416,9 +418,9 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e524 ">Maximum Object Length</td>
+       <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e527 ">Maximum Object Length</td>
 
-       <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e527 ">Maximum length for a JSON object. Longer objects are discarded. </td>
+       <td class="entry" valign="top" width="62.5%" headers="d2270e530 ">Maximum length for a JSON object. Longer objects are discarded. </td>
 
       </tr>
 
@@ -439,9 +441,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.57142857142857%" id="d2868e593">Delimited Data Property</th>
+                                    <th class="entry" valign="top" width="37.49999999999999%" id="d2270e596">Delimited Data Property</th>
 
-                                    <th class="entry" valign="top" width="71.42857142857143%" id="d2868e596">Description</th>
+                                    <th class="entry" valign="top" width="62.5%" id="d2270e599">Description</th>
 
                                 </tr>
 
@@ -449,9 +451,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e593 ">File Type</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e596 ">File Type</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e596 ">File type. Use one of the following options: <ul class="ul" id="task_gfj_ssv_yq__ul_zf2_n4w_yq">
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e599 ">File type. Use one of the following options: <ul class="ul" id="task_gfj_ssv_yq__ul_zf2_n4w_yq">
                         <li class="li"><span class="ph uicontrol">Basic CSV</span> - File that includes comma-separated
                               values.</li>
 
@@ -472,16 +474,16 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e593 ">Header Line</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e596 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e596 ">Indicates whether a file contains a header line.</td>
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e599 ">Indicates whether a file contains a header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e593 ">Convert to Map</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e596 ">Convert to Map</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e596 ">Converts a file to a map based on the fields in the
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e599 ">Converts a file to a map based on the fields in the
                                         header. If no header exists, uses column numbers to map the
                                         fields.</td>
 
@@ -504,9 +506,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.57142857142857%" id="d2868e686">XML Data Property</th>
+                                    <th class="entry" valign="top" width="37.49999999999999%" id="d2270e689">XML Data Property</th>
 
-                                    <th class="entry" valign="top" width="71.42857142857143%" id="d2868e689">Description</th>
+                                    <th class="entry" valign="top" width="62.5%" id="d2270e692">Description</th>
 
                                 </tr>
 
@@ -514,16 +516,16 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e686 ">Element Record Delimiter</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e689 ">Element Record Delimiter</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e689 ">XML element that acts as a record delimiter. </td>
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e692 ">XML element that acts as a record delimiter. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d2868e686 ">Maximum Record Length</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d2270e689 ">Maximum Record Length</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d2868e689 ">Maximum length for a record. Longer records are
+                                    <td class="entry" valign="top" width="62.5%" headers="d2270e692 ">Maximum length for a record. Longer records are
                                         discarded.</td>
 
                                 </tr>
@@ -541,7 +543,6 @@
 
 </div>
 </div>
-<div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
+<div class="navfooter"><!----></div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
 </body>
 </html>

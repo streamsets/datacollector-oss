@@ -67,8 +67,11 @@
                 <cmd>Use the <uicontrol>Stage Library</uicontrol> button to add the next stage that
                     you want to use, connect the origin to the new stage, and configure the new
                     stage.</cmd>
-                <info> For configuration details about processors, see <xref
-                        href="../Processors/Processors_overview.dita#concept_hpr_twm_jq"/>.</info>
+                <info>For configuration details about processors, see <xref
+                        href="../Processors/Processors_overview.dita#concept_hpr_twm_jq"/>.<p>For
+                        configuration details about destinations, see <xref
+                            href="../Destinations/Destinations_overview.dita#concept_hpr_twm_jq"
+                        />.</p></info>
                 <info>For configuration details about destinations, see <xref
                         href="../Destinations/Destinations_overview.dita#concept_hpr_twm_jq"
                     />.</info>

@@ -14,4 +14,7 @@
   <p>The Kafka Consumer processes data from all partitions in the topic. It saves the offset with
    the ZooKeeper after passing data to destinations. </p>
  </conbody>
+ <related-links>
+  <link href="PreviewingRawSourceData.dita#task_jp5_ql1_tq"/>
+ </related-links>
 </concept>

@@ -28,6 +28,9 @@
   <topicref href="../Processors/FieldSplitter.dita" chunk="to-content">
    <topicref href="../Processors/FieldSplitter-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/JSONParser.dita">
+   <topicref href="../Processors/JSONParser-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/StreamSelector.dita" chunk="to-content">
    <topicref href="../Processors/StreamSelector_fallback.dita"/>
    <topicref href="../Processors/StreamSelector-Configuring.dita"/>

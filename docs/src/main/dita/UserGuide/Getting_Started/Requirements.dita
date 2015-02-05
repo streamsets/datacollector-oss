@@ -4,8 +4,8 @@
  <title>Installation Requirements</title>
  <shortdesc>Install the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on a machine
-    with the following minimum requirements:<draft-comment author="Loretta">What do we need in this
-      table? Do we want to skip the whole thing?</draft-comment></shortdesc>
+    with the following minimum requirements: <draft-comment author="Loretta">Checking with Natty and
+      Madhu</draft-comment></shortdesc>
  <conbody>
   <p>
    <simpletable frame="all" id="simpletable_rpp_y2p_kq">
@@ -15,7 +15,7 @@
     </sthead>
     <strow>
      <stentry>Operating Systems</stentry>
-     <stentry>Mac:<p>Linux: </p></stentry>
+     <stentry>Mac OS X<p>Linux CentOS 6 or 7 </p><p>RedHat Enterprise Linux 6 or 7</p></stentry>
     </strow>
     <strow>
      <stentry>Java </stentry>
@@ -25,7 +25,7 @@
     </strow>
         <strow>
           <stentry>Browser</stentry>
-          <stentry/>
+          <stentry>Chrome<p>Firefox</p><p>Safari</p></stentry>
         </strow>
    </simpletable>
   </p>

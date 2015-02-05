@@ -10,7 +10,7 @@
    <table frame="all" rowsep="1" colsep="1" id="table_JSONdata">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.2*"/>
-     <colspec colname="c2" colnum="2" colwidth="3*"/>
+     <colspec colname="c2" colnum="2" colwidth="2*"/>
      <thead>
       <row>
        <entry>JSON Data Property</entry>

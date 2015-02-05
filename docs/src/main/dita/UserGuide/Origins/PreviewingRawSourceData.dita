@@ -3,28 +3,31 @@
 <task id="task_jp5_ql1_tq">
     <title>Previewing Raw Source Data</title>
     <shortdesc>You can preview raw source data when you configure an origin. Preview raw source data
-        to verify the correct configuration for the origin.</shortdesc>
+        when reviewing the data might help with origin configuration.</shortdesc>
     <taskbody>
         <context>
-            <p>When you request a preview a file origin, you enter a directory and file name. You
-                can use the real directory and actual source file. Or when appropriate, you might
-                use a different file that is similar to the source. When you preview a Kafka
-                Consumer, you enter the connection information for the Kafka cluster.</p>
+            <p>When you preview file data, you can use the real directory and actual source file. Or
+                when appropriate, you might use a different file that is similar to the source. </p>
+            <p>When you preview Kafka data, you enter the connection information for the Kafka
+                cluster.</p>
             <p>The data used for the raw source preview in an origin stage is not used when
                 previewing data for the pipeline.</p>
         </context>
         <steps id="steps_k14_k41_tq">
             <step>
-                <cmd>In the origin stage, in the <wintitle>Raw Preview</wintitle> tab.</cmd>
+                <cmd>In the Properties panel for the origin stage, click the <wintitle>Raw
+                        Preview</wintitle> tab.</cmd>
             </step>
             <step>
-                <cmd>For file origins, enter a directory and file name. For the Kafka Consumer,
-                    enter the following information:</cmd>
+                <cmd>For a Directory or File Tail origin, enter a directory and file name.</cmd>
+            </step>
+            <step>
+                <cmd>For a Kafka Consumer, enter the following information:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_eh1_q2f_xq">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.53*"/>
                             <thead>
                                 <row>
                                     <entry>Kafka Raw Preview Property</entry>
@@ -34,26 +37,25 @@
                             <tbody>
                                 <row>
                                     <entry>Topic</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">get these from Kafka
-                                            properties</draft-comment>
-                                    </entry>
+                                    <entry>Kafka topic to read.</entry>
                                 </row>
                                 <row>
                                     <entry>Partition</entry>
-                                    <entry/>
+                                    <entry>Partition to read.</entry>
                                 </row>
                                 <row>
                                     <entry>Broker Host</entry>
-                                    <entry/>
+                                    <entry>Broker host name. Use any broker associated with the
+                                        partition.</entry>
                                 </row>
                                 <row>
                                     <entry>Broker Port</entry>
-                                    <entry/>
+                                    <entry>Broker port number.</entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Duration Time</entry>
-                                    <entry/>
+                                    <entry>Max Wait Time (secs)</entry>
+                                    <entry>Maximum amount of time the preview waits to receive data
+                                        from Kafka.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -65,7 +67,7 @@
             </step>
         </steps>
         <result>The Raw Source Preview area displays the preview.<p><image
-                    href="../Graphics/RawSourcePreview.png" id="image_ozk_lp1_tq" scale="50"
+                    href="../Graphics/RawSourcePreview.png" id="image_ozk_lp1_tq" scale="70"
             /></p></result>
     </taskbody>
 </task>

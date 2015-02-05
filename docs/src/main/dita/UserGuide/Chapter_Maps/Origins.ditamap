@@ -3,9 +3,8 @@
 <map>
  <title>Origins</title>
  <topicref href="../Origins/Origins_title.dita" >
-  <topicref href="../Origins/Origins_overview.dita" chunk="to-content">
-   <topicref href="../Origins/PreviewingRawSourceData.dita"/>
-  </topicref>
+  <topicref href="../Origins/Origins_overview.dita" chunk="to-content"/>
+  <topicref href="../Origins/PreviewingRawSourceData.dita"/>
   <topicref href="../Origins/Directory.dita" chunk="to-content">
    <topicref href="../Origins/Directory-DataFormat.dita"/>
    <topicref href="../Origins/Directory_FNamePattern.dita"/>

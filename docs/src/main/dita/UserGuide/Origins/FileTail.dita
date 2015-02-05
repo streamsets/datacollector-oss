@@ -14,4 +14,7 @@
    incoming data. It does not try to process any rows that were written to the log file while the
    pipeline was stopped. </p>
  </conbody>
+ <related-links>
+  <link href="PreviewingRawSourceData.dita#task_jp5_ql1_tq"/>
+ </related-links>
 </concept>

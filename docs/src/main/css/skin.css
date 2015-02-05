@@ -15,12 +15,9 @@
 ------------------------------------------------------- */
 body {
 	font-family: Verdana, Geneva, sans-serif;
-	font-size: 14px;
+	font-size: 13px;
 	line-height: 1.65em;
 	color: #555;
-}
-body.home {
-	background: url('/wp-content/uploads/2014/11/bg-water.jpg') no-repeat;
 }
 h1 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif;
@@ -91,7 +88,7 @@ p, .p {
 	font-size: 13px;
 	line-height: 1.65em;
 	color: #555;
-	margin: 0 0 25px 0;
+	margin: 0 0 15px 0;
 }
 
 
@@ -146,7 +143,7 @@ input[type="submit"]:hover {
 	padding: 0 5px 0 5px;
 }
 #header #customLogo {
-  background-image: url('/wp-content/uploads/2014/11/streamsets-logo-docs.png');
+  background-image: url('../img/streamsets-logo.png');
   background-size: contain;
   width: 200px;
   height: 70px;
@@ -313,10 +310,10 @@ span.topic {
 }
 
 #splitterContainer #tree ul>li ul>li span.hasSubMenuClosed, #splitterContainer #tree ul>li ul>li ul>li span.hasSubMenuClosed, #splitterContainer #tree ul>li ul>li ul>li ul>li span.hasSubMenuClosed, #splitterContainer #tree ul>li ul>li ul>li ul>li ul>li span.hasSubMenuClosed {
-	background: url('/ssdocs/ss-1.00-beta/oxygen-webhelp/resources/img/subsection_closed.png') no-repeat;
+	background: url('../img/subsection_closed.png') no-repeat;
 }
 #splitterContainer #tree ul>li ul>li span.hasSubMenuOpened, #splitterContainer #tree ul>li ul>li ul>li span.hasSubMenuOpened, #splitterContainer #tree ul>li ul>li ul>li ul>li span.hasSubMenuOpened, #splitterContainer #tree ul>li ul>li ul>li ul>li ul>li span.hasSubMenuOpened {
-	background: url('/ssdocs/ss-1.00-beta/oxygen-webhelp/resources/img/subsection_opened.png') no-repeat;
+	background: url('../img/subsection_opened.png') no-repeat;
 }
 #splitterContainer #tree ul>li ul>li span {
 	background-position: 5px!important;
@@ -381,7 +378,7 @@ span.topic {
   background-color: #eee;
 }
 .shortdesc {
-  margin: 15px 0;
+  margin: 0 0 15px 0;
   font-size: 13px;
   font-weight: normal;
   text-shadow: none;
@@ -389,7 +386,7 @@ span.topic {
 .image {
   max-width: 100%;
 }
-.importanttitle, div[class="important"]>h3, .attentiontitle, div[class="attention"]>h3, .noticetitle, div[class="notice"]>h3, .notetitle, div[class="note"]>h3 {
+.importanttitle, div[class="important"]>h3, .attentiontitle, div[class="attention"]>h3, .noticetitle, div[class="notice"]>h3, .notetitle, div[class="note"]>h3, .tiptitle, div[class="tip"]>h3 {
 	padding-left: 0;
 	background-image: none!important;
 }
@@ -441,9 +438,9 @@ table caption {
   margin: 0;
   padding: 0;
 }
-th.entry {
+th, th.entry {
   background: #e6e6e6;
-  border: none;
+  border: 1px solid #bbb;
   padding: 7px;
 }
 td.entry {
@@ -452,29 +449,58 @@ td.entry {
   border: 1px solid #bcbcbc;
   border-top: none;
 }
-
+td p, td .p {
+	margin: 0;
+}
+table .pre {
+	background: none;
+	padding: 0;
+}
+table.codetable, table.codetable tr, table.codetable th, table.codetable td {
+	border: none;
+}
+table.codetable th {
+	background: none;
+	padding: 7px;
+	text-transform: uppercase;
+	font-size: 11px;
+}
+table.codetable td {
+	padding: 5px 10px;
+}
+table.codetable td, table.codetable td p {
+	font-family: monospace;
+	font-size: 10pt;
+}
 
 /* LISTS
 ------------------------------------------------------- */
 ul, .ul, ol, .ol, dl, .dl {
   background: transparent;
-  margin: 5px 0 10px 0;
   font-size: 13px;
   line-height: 20px;
   font-weight: normal;
   font-style: normal;
-  list-style-type: disc;
   text-shadow: none;
 }
 ul, .ul, ol, .ol {
 	padding-left: 20px;
+	margin: 5px 0 10px 0;
 }
-ul>li
+ul, .ul, dl, .dl  {
+	list-style-type: disc;
+}
+.ul .li {
+	margin: 2px 0;
+}
+dl, .dl {
+	margin: 0;
+}
 .dt {
   background: transparent;
   font-weight: bold;
   font-size: 15px;
-  font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif;
+  margin: 20px 0 0 0;
 }
 .dd {
   background-color: transparent;
@@ -482,7 +508,7 @@ ul>li
   font-style: normal;
   font-size: 13px;
   font-variant: normal;
-  margin: 5px 15px 15px 0;
+  margin: 10px 0;
 }
 .dd p {
 	margin: 5px 0;
@@ -509,7 +535,9 @@ div.footer {
 
 
 
-
+.info {
+	margin: 5px 0 15px 0;
+}
 .q {
   background-color: transparent;
   font-size: 13px;
@@ -583,24 +611,9 @@ div.footer {
 #splitterContainer .splitbarV {
   background-color: rgb(230, 230, 230);
 }
-pre.screen {
-  background-color: rgb(221, 221, 221);
-  border-bottom-color: rgb(204, 204, 204);
-  border-right-color: rgb(204, 204, 204);
-  border-top-color: rgb(204, 204, 204);
-  border-left-color: rgb(204, 204, 204);
-  border-bottom-width: 0px;
-  border-top-style: solid;
-  border-right-style: solid;
-  border-left-style: solid;
-  border-top-width: 0px;
-  border-top-right-radius: 0px;
-  border-right-width: 0px;
-  border-left-width: 0px;
-  border-top-left-radius: 0px;
-  border-bottom-style: solid;
-  border-bottom-right-radius: 0px;
-  border-bottom-left-radius: 0px;
+pre {
+	padding: 3px 8px;
+	margin: 0;
 }
 
 
@@ -772,7 +785,6 @@ span.wintitle {
   color: rgb(50, 50, 50);
   font-weight: 400;
   font-style: normal;
-  font-size: 14px;
 }
 #undefined undefined {
   border-top-color: rgb(188, 188, 188);
@@ -781,20 +793,7 @@ span.wintitle {
 }
 
 
-.section.context {
-  color: rgb(0, 0, 0);
-  font-size: 14px;
-  font-weight: 400;
-  font-style: normal;
-  font-variant: normal;
-}
-.section.prereq {
-  color: rgb(34, 34, 34);
-  font-size: 14px;
-  font-weight: 400;
-  font-style: normal;
-  font-variant: normal;
-}
+
 #contentBlock ul>li ul {
   padding-left: 0;
 }

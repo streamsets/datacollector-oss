@@ -12,12 +12,13 @@
         <li>Field Converter - Converts the data type of a field.</li>
         <li>Field Hasher - Uses an algorithm to encode sensitive data.</li>
         <li>Field Masker - Masks sensitive data.</li>
-        <li>Field Remover.  Removes fields from a record.</li>
-        <li>Stream Selector.  Routes data to different streams based on conditions.</li>
-        <li>Value Replacer  Replaces null values or replaces values with NULLs.</li>
-        <li>Field Splitter. Splits the values in a field into different fields based on a separator
+        <li>Field Remover - Removes fields from a record.</li>
+        <li>Field Splitter - Splits the values in a field into different fields based on a separator
           character.</li>
-        <li>JSON Parser. Parses a JSON object that is embedded in a field</li>
+        <li>JSON Parser - Parses a JSON object that is embedded in a field.</li>
+        <li>Record Deduplicator - Removes duplicate records.</li>
+        <li>Stream Selector - Routes data to different streams based on conditions.</li>
+        <li>Value Replacer - Replaces null values or replaces values with NULLs.</li>
       </ul></p>
   </conbody>
 </concept>

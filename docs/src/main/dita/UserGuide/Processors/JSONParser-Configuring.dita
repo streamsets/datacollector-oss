@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_kwz_lg2_zq">
+    <title>Configuring a JSON Parser</title>
+    <shortdesc>Use a JSON Parser to parse a JSON object embedded in a Map field.</shortdesc>
+    <taskbody>
+        <context>
+            <p></p>
+        </context>
+        <steps id="steps_wc5_4g2_zq">
+            <step>
+                <cmd>In the Properties panel, </cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

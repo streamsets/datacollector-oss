@@ -4,8 +4,8 @@
     <title>Configuring a Directory Origin</title>
     <shortdesc>Configure a Directory origin to read data from files in a directory. When you
         configure a Directory, you define general properties, including the data format to process.
-        Then, you define post-processing options and the properties specific to data
-        format</shortdesc>
+        Then, you define post-processing options and the properties specific to the data
+        format.</shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_tvn_b5v_yq">
@@ -21,7 +21,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_tm4_vck_5q">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.2*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2*"/>
                             <thead>
                                 <row>
                                     <entry>File Property</entry>
@@ -103,7 +103,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_sgn_dvv_yq">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.2*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2*"/>
                             <thead>
                                 <row>
                                     <entry>Post Processing Property</entry>
@@ -152,7 +152,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_LogData">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.2*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2*"/>
                             <thead>
                                 <row>
                                     <entry>Log Data Property</entry>
@@ -201,7 +201,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_DelimitedData">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.2*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2*"/>
                             <thead>
                                 <row>
                                     <entry>Delimited Data Property</entry>
@@ -239,7 +239,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_b5x_nbw_yq">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.2*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2*"/>
                             <thead>
                                 <row>
                                     <entry>XML Data Property</entry>
