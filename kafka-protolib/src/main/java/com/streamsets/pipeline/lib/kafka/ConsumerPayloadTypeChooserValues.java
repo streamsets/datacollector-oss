@@ -5,34 +5,12 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.streamsets.pipeline.api.ChooserValues;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-import java.util.List;
+public class ConsumerPayloadTypeChooserValues extends BaseEnumChooserValues {
 
-public class ConsumerPayloadTypeChooserValues implements ChooserValues {
-
-  private static final List<String> VALUES;
-
-  static {
-    VALUES = ImmutableList.copyOf(Lists.transform(ImmutableList.copyOf(ConsumerPayloadType.values()),
-      new Function<ConsumerPayloadType, String>() {
-        @Override
-        public String apply(ConsumerPayloadType input) {
-          return input.toString();
-        }
-      }));
+  public ConsumerPayloadTypeChooserValues() {
+    super(ConsumerPayloadType.class);
   }
 
-  @Override
-  public List<String> getValues() {
-    return VALUES;
-  }
-
-  @Override
-  public List<String> getLabels() {
-    return VALUES;
-  }
 }

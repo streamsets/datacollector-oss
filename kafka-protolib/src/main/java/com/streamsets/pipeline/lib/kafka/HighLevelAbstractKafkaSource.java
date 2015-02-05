@@ -21,84 +21,97 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-@ConfigGroups(HighLevelAbstractKafkaSource.HighLevelKafkaSourceConfigGroups.class)
+@ConfigGroups(HighLevelAbstractKafkaSource.Groups.class)
 public abstract class HighLevelAbstractKafkaSource extends BaseSource implements OffsetCommitter {
-
   private static final Logger LOG = LoggerFactory.getLogger(HighLevelAbstractKafkaSource.class);
   private static final String DOT = ".";
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.STRING,
-    description = "The Consumer Group columnName",
-    label = "Consumer Group",
-    group = "KAFKA_CONNECTION_PROPERTIES",
-    defaultValue = "streamsetsDataCollector")
-  public String consumerGroup;
+  public enum Groups implements Label {
+    KAFKA
+    ;
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.STRING,
-    description = "The Kafka topic from which the messages must be read",
-    label = "Topic",
-    group = "KAFKA_CONNECTION_PROPERTIES",
-    defaultValue = "topicName")
-  public String topic;
+    public String getLabel() {
+      return "Kafka";
+    }
+  }
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.STRING,
-    description = "Comma separated zookeeper connect strings.",
-    label = "Zookeeper Connect String",
-    group = "KAFKA_CONNECTION_PROPERTIES",
-    defaultValue = "localhost:2181")
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "localhost:2181",
+      label = "Zookeeper Connection String",
+      description = "List of the Zookeeper HOST:PORT used by the Kafka brokers, comma separated",
+      displayPosition = 10,
+      group = "KAFKA"
+  )
   public String zookeeperConnect;
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.INTEGER,
-    description = "The maximum number of messages to be read from Kafka for one batch.",
-    label = "Max Batch Size",
-    group = "KAFKA_CONNECTION_PROPERTIES",
-    defaultValue = "1000")
-  public int maxBatchSize;
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "streamsetsDataCollector",
+      label = "Consumer Group",
+      description = "The Consumer Group columnName",
+      displayPosition = 20,
+      group = "KAFKA"
+  )
+  public String consumerGroup;
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.INTEGER,
-    description = "The maximum time in milli seconds for which the Kafka consumer waits to fill a batch.",
-    label = "Batch Duration Time",
-    group = "KAFKA_CONNECTION_PROPERTIES",
-    defaultValue = "1000")
-  public int maxWaitTime;
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "topicName",
+      label = "Topic",
+      description = "The Kafka topic from which the messages must be read",
+      displayPosition = 30,
+      group = "KAFKA"
+  )
+  public String topic;
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.MODEL,
-    description = "Type of data sent as kafka message payload",
-    label = "Payload Type",
-    group = "KAFKA_CONNECTION_PROPERTIES",
-    defaultValue = "LOG")
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Payload Type",
+      description = "Type of data sent as kafka message payload",
+      displayPosition = 40,
+      group = "KAFKA"
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ConsumerPayloadTypeChooserValues.class)
   public ConsumerPayloadType consumerPayloadType;
 
-  @ConfigDef(required = false,
-    type = ConfigDef.Type.MAP,
-    description = "Additional configuration properties which will be used by the underlying Kafka consumer.",
-    defaultValue = "",
-    group = "KAFKA_ADVANCED_CONFIGURATION",
-    label = "Advanced Configuration")
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "1000",
+      label = "Max Batch Size",
+      description = "The maximum number of messages to be read from Kafka in a batch.",
+      displayPosition = 50,
+      group = "KAFKA"
+  )
+  public int maxBatchSize;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "1000",
+      label = "Batch Duration Time (millisecs)",
+      description = "The maximum time to wait to fill a batch.",
+      displayPosition = 60,
+      group = "KAFKA"
+  )
+  public int maxWaitTime;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      defaultValue = "",
+      label = "Kafka Configuration",
+      description = "Additional configuration properties which will be used by the underlying Kafka consumer.",
+      displayPosition = 70,
+      group = "KAFKA"
+  )
   public Map<String, String> kafkaConsumerConfigs;
 
-
-  public enum HighLevelKafkaSourceConfigGroups implements Label {
-    KAFKA_CONNECTION_PROPERTIES("Connection Configuration"),
-    KAFKA_ADVANCED_CONFIGURATION("Advanced Configuration");
-
-    private final String label;
-
-    private HighLevelKafkaSourceConfigGroups(String label) {
-      this.label = label;
-    }
-
-    public String getLabel() {
-      return this.label;
-    }
-  }
 
   private HighLevelKafkaConsumer kafkaConsumer;
 

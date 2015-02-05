@@ -20,10 +20,12 @@ import java.util.Date;
 import java.util.Iterator;
 
 @GenerateResourceBundle
-@StageDef(version = "1.0.0",
+@StageDef(
+    version = "1.0.0",
     label = "Hadoop FS",
-    icon = "hdfs.svg",
-    description = "Writes records to files in a Hadoop FS")
+    description = "Writes records to files in a Hadoop FS",
+    icon = "hdfs.svg"
+)
 public class HdfsTarget extends BaseHdfsTarget {
     private Counter toHdfsRecordsCounter;
     private Meter toHdfsRecordsMeter;

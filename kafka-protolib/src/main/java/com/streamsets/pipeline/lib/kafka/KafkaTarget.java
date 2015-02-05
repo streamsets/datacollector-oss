@@ -23,7 +23,6 @@ import com.streamsets.pipeline.el.ELBasicSupport;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
-import com.streamsets.pipeline.el.ELUtils;
 import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.JsonRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.LogRecordToString;
@@ -40,137 +39,154 @@ import java.util.Map;
 import java.util.Set;
 
 @GenerateResourceBundle
-@StageDef(version="0.0.1",
-  label="Kafka Producer",
-  icon="kafka.png")
-@ConfigGroups(value = KafkaTarget.KafkaTargetConfigGroups.class)
+@StageDef(
+    version = "0.0.1",
+    label = "Kafka Producer",
+    description = "???",
+    icon = "kafka.png")
+@ConfigGroups(value = KafkaTarget.Groups.class)
 public class KafkaTarget extends BaseTarget {
-
   private static final Logger LOG = LoggerFactory.getLogger(KafkaTarget.class);
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.STRING,
-    description = "The Kafka topic from which the messages must be read",
-    label = "Topic",
-    defaultValue = "topicName",
-    group = "KAFKA_CONNECTION_PROPERTIES")
-  public String topic;
+  public enum Groups implements Label {
+    KAFKA("Kafka"),
+    CSV("CSV Data")
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.MODEL,
-    description = "Indicates the strategy to select a partition while writing a message." +
-      "This option is activated only if a negative integer is supplied as the value for partition.",
-    label = "Partition Strategy",
-    defaultValue = "ROUND_ROBIN",
-    group = "KAFKA_CONNECTION_PROPERTIES")
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PartitionStrategyChooserValues.class)
-  public PartitionStrategy partitionStrategy;
-
-  @ConfigDef(required = false,
-    type = ConfigDef.Type.EL_NUMBER,
-    description = "Expression that determines the partition of Kafka topic to which the messages must be written",
-    label = "Partition Expression",
-    defaultValue = "${0}",
-    dependsOn = "partitionStrategy",
-    triggeredByValue = {"EXPRESSION"},
-    group = "KAFKA_CONNECTION_PROPERTIES")
-  public String partition;
-
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.MAP,
-    label = "Constants for expressions",
-    description = "Defines constant values available to all expressions",
-    dependsOn = "partitionStrategy",
-    triggeredByValue = {"EXPRESSION"})
-  public Map<String, ?> constants;
-
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.STRING,
-    description = "This is for bootstrapping and the producer will only use it for getting metadata " +
-      "(topics, partitions and replicas). The socket connections for sending the actual data will be established " +
-      "based on the broker information returned in the metadata. The format is host1:port1,host2:port2, and the list " +
-      "can be a subset of brokers or a VIP pointing to a subset of brokers. " +
-      "Please specify more than one broker information if known.",
-    label = "Metadata Broker List",
-    defaultValue = "localhost:9092",
-  group = "KAFKA_CONNECTION_PROPERTIES")
-  public String metadataBrokerList;
-
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.MODEL,
-    description = "Type of data sent as kafka message payload",
-    label = "Payload Type",
-    defaultValue = "LOG",
-    group = "KAFKA_CONNECTION_PROPERTIES")
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ProducerPayloadTypeChooserValues.class)
-  public ProducerPayloadType payloadType;
-
-  @ConfigDef(required = false,
-    type = ConfigDef.Type.MAP,
-    description = "Additional configuration properties which will be used by the underlying Kafka Producer. " +
-     "The following options, if specified, are ignored : \"metadata.broker.list\", \"producer.type\", " +
-      "\"key.serializer.class\", \"partitioner.class\", \"serializer.class\".",
-    defaultValue = "",
-    label = "Kafka Producer Configuration Properties",
-   group = "KAFKA_ADVANCED_CONFIGURATION")
-  public Map<String, String> kafkaProducerConfigs;
-
-  /********  For CSV Content  ***********/
-
-  @ConfigDef(required = false,
-    type = ConfigDef.Type.MODEL,
-    label = "CSV Format",
-    description = "The specific CSV format of the files",
-    defaultValue = "CSV",
-    dependsOn = "payloadType", triggeredByValue = {"CSV"},
-    group = "CSV_PROPERTIES")
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
-  public CsvFileMode csvFileFormat;
-
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.MODEL,
-    description = "Field to columnName mapping configuration",
-    label = "Field to Name Mapping",
-    dependsOn = "payloadType",
-    triggeredByValue = {"CSV"},
-    defaultValue = "LOG",
-    group = "CSV_PROPERTIES")
-  @ComplexField
-  public List<FieldPathToNameMappingConfig> fieldPathToNameMappingConfigList;
-
-
-  public static class FieldPathToNameMappingConfig {
-
-    @ConfigDef(required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Field Path",
-      description = "The fields which must be written to the target")
-    @FieldSelector(singleValued = true)
-    public String fieldPath;
-
-    @ConfigDef(required = true,
-      type = ConfigDef.Type.STRING,
-      label = "CSV column columnName",
-      description = "The columnName which must be used for the fields in the target")
-    public String columnName;
-  }
-
-  public enum KafkaTargetConfigGroups implements Label {
-    KAFKA_CONNECTION_PROPERTIES("Connection Configuration"),
-    KAFKA_ADVANCED_CONFIGURATION("Advanced Configuration"),
-    JSON_PROPERTIES("JSON Data Properties"),
-    CSV_PROPERTIES("CSV Data Properties"),
-    LOG_PROPERTIES("Log Data Properties");
+    ;
 
     private final String label;
 
-    private KafkaTargetConfigGroups(String label) {
+    private Groups(String label) {
       this.label = label;
     }
 
     public String getLabel() {
       return this.label;
     }
+  }
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "localhost:9092",
+      label = "Brokers URIs",
+      description = "List of the known the Kafka brokers HOST:PORT, comma separated",
+      displayPosition = 10,
+      group = "KAFKA"
+  )
+  public String metadataBrokerList;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "topicName",
+      label = "Topic",
+      description = "The Kafka topic from which the messages must be read",
+      displayPosition = 20,
+      group = "KAFKA"
+  )
+  public String topic;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "ROUND_ROBIN",
+      label = "Partition Strategy",
+      description = "Indicates the strategy to select a partition while writing a message." +
+                    "This option is activated only if a negative integer is supplied as the value for partition.",
+      displayPosition = 30,
+      group = "KAFKA"
+  )
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PartitionStrategyChooserValues.class)
+  public PartitionStrategy partitionStrategy;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.EL_NUMBER,
+      defaultValue = "${0}",
+      label = "Partition Expression",
+      description = "Expression that determines the partition of Kafka topic to which the messages must be written",
+      displayPosition = 40,
+      group = "KAFKA",
+      dependsOn = "partitionStrategy",
+      triggeredByValue = "EXPRESSION"
+  )
+  public String partition;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Payload Type",
+      description = "Type of data sent as kafka message payload",
+      displayPosition = 50,
+      group = "KAFKA"
+  )
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ProducerPayloadTypeChooserValues.class)
+  public ProducerPayloadType payloadType;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      defaultValue = "",
+      label = "Kafka Configuration",
+      description = "Additional configuration properties which will be used by the underlying Kafka producer.",
+      displayPosition = 60,
+      group = "KAFKA"
+  )
+  public Map<String, String> kafkaProducerConfigs;
+
+  /********  For CSV Content  ***********/
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "CSV",
+      label = "CSV Format",
+      description = "The specific CSV format of the files",
+      displayPosition = 100,
+      group = "CSV",
+      dependsOn = "payloadType",
+      triggeredByValue = "CSV"
+  )
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
+  public CsvFileMode csvFileFormat;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "LOG",
+      label = "Field to Name Mapping",
+      description = "Field to columnName mapping configuration",
+      displayPosition = 110,
+      group = "CSV",
+      dependsOn = "payloadType",
+      triggeredByValue = "CSV"
+  )
+  @ComplexField
+  public List<FieldPathToNameMappingConfig> fieldPathToNameMappingConfigList;
+
+
+  public static class FieldPathToNameMappingConfig {
+
+    @ConfigDef(
+        required = true,
+        type = ConfigDef.Type.MODEL,
+        label = "Field Path",
+        description = "The fields which must be written to the target",
+        displayPosition = 10
+    )
+    @FieldSelector(singleValued = true
+    )
+    public String fieldPath;
+
+    @ConfigDef(
+        required = true,
+        type = ConfigDef.Type.STRING,
+        label = "CSV column columnName",
+        description = "The columnName which must be used for the fields in the target",
+        displayPosition = 20
+    )
+    public String columnName;
   }
 
   private KafkaProducer kafkaProducer;
@@ -186,7 +202,7 @@ public class KafkaTarget extends BaseTarget {
     kafkaProducer.init();
 
     if (partitionStrategy == PartitionStrategy.EXPRESSION) {
-      variables = ELUtils.parseConstants(constants);
+      variables = new ELEvaluator.Variables();
       elEvaluator = new ELEvaluator();
       ELBasicSupport.registerBasicFunctions(elEvaluator);
       ELRecordSupport.registerRecordFunctions(elEvaluator);

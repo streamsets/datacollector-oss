@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -44,256 +45,326 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-@ConfigGroups(HdfsConfigGroups.class)
+@ConfigGroups(BaseHdfsTarget.Groups.class)
 public abstract class BaseHdfsTarget extends BaseTarget {
   private final static Logger LOG = LoggerFactory.getLogger(BaseHdfsTarget.class);
 
-  @ConfigDef(required = true,
+  public static enum Groups implements Label {
+    HADOOP_FS("Hadoop FS"),
+    OUTPUT_FILES("Output Files"),
+    LATE_RECORDS("Late Records"),
+    CSV("CSV Data"),
+    TSV("Tab Separated Data"),
+    ;
+
+    private final String label;
+    Groups(String label) {
+      this.label = label;
+    }
+
+    @Override
+    public String getLabel() {
+      return label;
+    }
+  }
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
-      description = "The URI of the Hadoop FileSystem",
       label = "Hadoop FS URI",
+      description = "The URI of the Hadoop FileSystem",
       displayPosition = 10,
-      group = "HADOOP_FS")
+      group = "HADOOP_FS"
+  )
   public String hdfsUri;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
-      description = "Indicates if Hadoop FileSystem requires Kerberos authentication",
       label = "Kerberos Enabled",
       defaultValue = "false",
+      description = "Indicates if Hadoop FileSystem requires Kerberos authentication",
       displayPosition = 20,
-      group = "HADOOP_FS")
+      group = "HADOOP_FS"
+  )
   public boolean hdfsKerberos;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.STRING,
-      description = "Kerberos principal used to connect to Hadoop FileSystem",
       label = "Kerberos principal",
-      dependsOn = "hdfsKerberos", triggeredByValue = "true",
+      description = "Kerberos principal used to connect to Hadoop FileSystem",
       displayPosition = 30,
-      group = "HADOOP_FS")
+      group = "HADOOP_FS",
+      dependsOn = "hdfsKerberos",
+      triggeredByValue = "true"
+  )
   public String kerberosPrincipal;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
-      description = "The location of the Kerberos keytab file with credentials for the Kerberos principal",
       label = "Kerberos keytab",
-      dependsOn = "hdfsKerberos", triggeredByValue = "true",
+      description = "The location of the Kerberos keytab file with credentials for the Kerberos principal",
       displayPosition = 40,
-      group = "HADOOP_FS")
+      group = "HADOOP_FS",
+      dependsOn = "hdfsKerberos",
+      triggeredByValue = "true"
+  )
   public String kerberosKeytab;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.MAP,
+      label = "Hadoop FS configs",
       description = "Additional Hadoop FileSystem configuration to be used by the client (i.e. replication factor, " +
                     "rpc timeout, etc.)",
-      label = "Hadoop FS configs",
       displayPosition = 50,
-      group = "HADOOP_FS")
+      group = "HADOOP_FS"
+  )
   public Map<String, String> hdfsConfigs;
 
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Files Unique Prefix",
       description = "If using more than one Data Collector to write data to the same HDFS directories, each Data " +
                     "Collector must have a unique identifier. The identifier is used as file prefix for all the " +
                     "created by this Data Collector.",
-      label = "Files Unique Prefix",
-      group = "OUTPUT_FILES",
-      defaultValue = "",
-      displayPosition = 105)
+      displayPosition = 105,
+      group = "OUTPUT_FILES"
+  )
   public String uniquePrefix;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.EL_STRING,
+      defaultValue = "/tmp/out/${YYYY}-${MM}-${DD}-${hh}-${mm}-${ss}",
+      label = "Directory Path Template",
       description = "Directory path template for the HDFS files, the template supports the following time tokens: " +
                     "${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}, ${record:value(<field-path>)}. ",
-      label = "Directory Path Template",
-      defaultValue = "/tmp/out/${YYYY}-${MM}-${DD}-${hh}-${mm}-${ss}",
-      group = "OUTPUT_FILES",
-      displayPosition = 110)
+      displayPosition = 110,
+      group = "OUTPUT_FILES"
+  )
   public String dirPathTemplate;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
-      description = "Timezone code used to resolve directory paths",
-      label = "Timezone",
       defaultValue = "UTC",
-      group = "OUTPUT_FILES",
-      displayPosition = 120)
+      label = "Timezone",
+      description = "Timezone code used to resolve directory paths",
+      displayPosition = 120,
+      group = "OUTPUT_FILES"
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = TimeZoneChooserValues.class)
   public String timeZoneID;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.EL_DATE,
+      defaultValue = "${time:now()}",
+      label = "Time Driver",
       description = "Date expression that indicates where the time should be taken for a record. It can be the " +
                     "'time:now()' or a 'record:value(<filepath>)' that resolves to a date",
-      label = "Time Driver",
-      defaultValue = "${time:now()}",
-      group = "OUTPUT_FILES",
-      displayPosition = 130)
+      displayPosition = 130,
+      group = "OUTPUT_FILES"
+  )
   public String timeDriver;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.INTEGER,
-      description = "Maximum number of records that trigger a file rollover. 0 does not trigger a rollover.",
-      label = "Max records per File",
       defaultValue = "0",
-      group = "OUTPUT_FILES",
-      displayPosition = 140)
+      label = "Max records per File",
+      description = "Maximum number of records that trigger a file rollover. 0 does not trigger a rollover.",
+      displayPosition = 140,
+      group = "OUTPUT_FILES"
+  )
   public long maxRecordsPerFile;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.INTEGER,
-      description = "Maximum file size in Megabytes that trigger a file rollover. 0 does not trigger a rollover",
-      label = "Max file size (MBs)",
       defaultValue = "0",
-      group = "OUTPUT_FILES",
-      displayPosition = 150)
+      label = "Max file size (MBs)",
+      description = "Maximum file size in Megabytes that trigger a file rollover. 0 does not trigger a rollover",
+      displayPosition = 150,
+      group = "OUTPUT_FILES"
+  )
   public long maxFileSize;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
-      description = "Compression codec to use",
-      label = "Compression Codec",
       defaultValue = "NONE",
-      group = "OUTPUT_FILES",
-      displayPosition = 160)
+      label = "Compression Codec",
+      description = "Compression codec to use",
+      displayPosition = 160,
+      group = "OUTPUT_FILES"
+  )
   @ValueChooser(type = ChooserMode.SUGGESTED, chooserValues = CompressionChooserValues.class)
   public String compression;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
-      description = "Type of file type to create",
-      label = "File Type",
       defaultValue = "TEXT",
-      group = "OUTPUT_FILES",
-      displayPosition = 170)
+      label = "File Type",
+      description = "Type of file type to create",
+      displayPosition = 170,
+      group = "OUTPUT_FILES"
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileTypeChooserValues.class)
   public HdfsFileType fileType;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
+      defaultValue = "uuid()",
+      label = "Sequence File Key",
       description = "Record key when using Hadoop Sequence Files. Valid values are a record:value('<field-path>') or " +
                     "uuid()",
-      label = "Sequence File Key",
-      defaultValue = "uuid()",
-      group = "OUTPUT_FILES",
       displayPosition = 180,
+      group = "OUTPUT_FILES",
       dependsOn = "fileType",
-      triggeredByValue = "SEQUENCE_FILE")
+      triggeredByValue = "SEQUENCE_FILE"
+  )
   public String keyEl;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
-      description = "Specifies the compression type for Sequence Files if using a CompressionCodec",
-      label = "Compression Type",
       defaultValue = "BLOCK",
-      group = "OUTPUT_FILES",
+      label = "Compression Type",
+      description = "Specifies the compression type for Sequence Files if using a CompressionCodec",
       displayPosition = 190,
+      group = "OUTPUT_FILES",
       dependsOn = "fileType",
-      triggeredByValue = "SEQUENCE_FILE")
+      triggeredByValue = "SEQUENCE_FILE"
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = HdfsSequenceFileCompressionTypeChooserValues.class)
   public HdfsSequenceFileCompressionType seqFileCompressionType;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.EL_NUMBER,
+      defaultValue = "${1 * HOURS}",
+      label = "Late Records Time Limit (Secs)",
       description = "Time limit (in seconds) for a record to be written to the corresponding HDFS directory, if the " +
                     "limit is exceeded the record will be written to the current late records file. 0 means no limit. " +
                     "If a number is used it is considered seconds, it can be multiplied by 'MINUTES' or 'HOURS', ie: " +
                     "30 * MINUTES",
-      label = "Late Records Time Limit (Secs)",
-      defaultValue = "${1 * HOURS}",
-      group = "LATE_RECORDS",
-      displayPosition = 200)
+      displayPosition = 200,
+      group = "LATE_RECORDS"
+  )
   public String lateRecordsLimit;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
-      description = "Indicates what to do with late records",
-      label = "Late Records",
       defaultValue = "SEND_TO_ERROR",
-      group = "LATE_RECORDS",
-      displayPosition = 210)
+      label = "Late Records",
+      description = "Indicates what to do with late records",
+      displayPosition = 210,
+      group = "LATE_RECORDS"
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = LateRecordsActionChooserValues.class)
   public HdfsLateRecordsAction lateRecordsAction;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.EL_STRING,
+      defaultValue = "/tmp/late/${YYYY}-${MM}-${DD}",
+      label = "Late Records Directory Path Template",
       description = "Directory path template for the HDFS files for late records, the template supports the following " +
                     "time tokens: ${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}. IMPORTANT: Used only if " +
                     "'Late Records' is set to 'Send to late records file'.",
-      defaultValue = "/tmp/late/${YYYY}-${MM}-${DD}",
+      displayPosition = 220,
       group = "LATE_RECORDS",
-      label = "Late Records Directory Path Template",
       dependsOn = "lateRecordsAction",
-      triggeredByValue = "SEND_TO_LATE_RECORDS_FILE",
-      displayPosition = 220)
+      triggeredByValue = "SEND_TO_LATE_RECORDS_FILE"
+  )
   public String lateRecordsDirPathTemplate;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
-      description = "Data Format",
-      label = "Data Format",
       defaultValue = "JSON",
+      label = "Data Format",
+      description = "Data Format",
+      displayPosition = 100,
       group = "OUTPUT_FILES",
       dependsOn = "fileType",
-      triggeredByValue = { "TEXT", "SEQUENCE_FILE"},
-      displayPosition = 100)
+      triggeredByValue = { "TEXT", "SEQUENCE_FILE"}
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
   public HdfsDataFormat dataFormat; //TODO
 
 
   /********  For CSV Content  ***********/
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.MODEL,
+      defaultValue = "CSV",
       label = "CSV Format",
       description = "The specific CSV format of the files",
-      defaultValue = "CSV",
-      dependsOn = "dataFormat", triggeredByValue = "CSV",
+      displayPosition = 310,
       group = "CSV",
-      displayPosition = 310)
+      dependsOn = "dataFormat",
+      triggeredByValue = "CSV"
+  )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
-      description = "Field to name mapping configuration",
       label = "Field to Name Mapping",
-      dependsOn = "dataFormat",
-      triggeredByValue = "CSV",
+      description = "Field to name mapping configuration",
+      displayPosition = 320,
       group = "CSV",
-      displayPosition = 320)
+      dependsOn = "dataFormat",
+      triggeredByValue = "CSV"
+  )
   @ComplexField
   public List<FieldPathToNameMappingConfig> cvsFieldPathToNameMappingConfigList;
 
   /********  For TSV Content  ***********/
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
-      description = "Field to name mapping configuration",
       label = "Field to Name Mapping",
-      dependsOn = "dataFormat",
-      triggeredByValue = "TSV",
+      description = "Field to name mapping configuration",
+      displayPosition = 320,
       group = "TSV",
-      displayPosition = 320)
+      dependsOn = "dataFormat",
+      triggeredByValue = "TSV"
+  )
   @ComplexField
   public List<FieldPathToNameMappingConfig> tsvFieldPathToNameMappingConfigList;
 
   public static class FieldPathToNameMappingConfig {
 
-    @ConfigDef(required = true,
+    @ConfigDef(
+        required = true,
         type = ConfigDef.Type.MODEL,
         label = "Field Path",
-        description = "The fields which must be written to the target")
+        description = "The fields which must be written to the target",
+        displayPosition = 10
+    )
     @FieldSelector
     public List<String> fields;
 
     @ConfigDef(required = true,
         type = ConfigDef.Type.STRING,
         label = "Delimited Column Name",
-        description = "The name which must be used for the fields in the target")
+        description = "The name which must be used for the fields in the target",
+        displayPosition = 20
+    )
     public String name;
   }
 

@@ -88,7 +88,6 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", ProducerPayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.ROUND_ROBIN)
-      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -131,7 +130,6 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", ProducerPayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.RANDOM)
-      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -180,7 +178,6 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", ProducerPayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -225,7 +222,6 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", ProducerPayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -250,7 +246,6 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", ProducerPayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -276,7 +271,6 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", ProducerPayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -302,7 +296,6 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", ProducerPayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 

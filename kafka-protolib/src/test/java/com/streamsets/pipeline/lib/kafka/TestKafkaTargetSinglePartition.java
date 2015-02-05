@@ -88,7 +88,6 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", ProducerPayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -125,7 +124,6 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("payloadType", ProducerPayloadType.LOG)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -161,7 +159,6 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", ProducerPayloadType.JSON)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
@@ -224,7 +221,6 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", ProducerPayloadType.CSV)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", CsvFileMode.CSV)
       .addConfiguration("fieldPathToNameMappingConfigList", ImmutableList.of(yearMapping, cityMapping,city2Mapping, nonExistingmapping, city3Mapping))
       .build();

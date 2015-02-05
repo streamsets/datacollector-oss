@@ -7,10 +7,10 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class JsonFileModeChooserValues extends BaseEnumChooserValues {
+public class JsonEventModeChooserValues extends BaseEnumChooserValues {
 
-  public JsonFileModeChooserValues() {
-    super(JsonFileMode.class);
+  public JsonEventModeChooserValues() {
+    super(JsonEventMode.class);
   }
 
 }

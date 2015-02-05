@@ -22,7 +22,7 @@ public class KafkaSource extends AbstractKafkaSource {
     dependsOn = "consumerPayloadType",
     triggeredByValue = {"JSON"},
     group = "JSON_PROPERTIES")
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonEventModeChooserValues.class)
   public StreamingJsonParser.Mode jsonContent;
 
   @ConfigDef(required = true,

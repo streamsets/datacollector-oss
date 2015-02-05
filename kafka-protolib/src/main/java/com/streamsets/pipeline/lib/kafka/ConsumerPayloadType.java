@@ -5,9 +5,26 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
-public enum ConsumerPayloadType {
-  LOG,
-  JSON,
-  CSV,
-  XML
+import com.streamsets.pipeline.api.Label;
+
+public enum ConsumerPayloadType implements Label {
+  LOG("Log Lines"),
+  JSON("Json Data"),
+  CSV("Delimited Data (CSV, TSV)"),
+  XML("XML Data")
+
+  ;
+
+  private String label;
+
+  ConsumerPayloadType(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
+  }
+
+
 }
