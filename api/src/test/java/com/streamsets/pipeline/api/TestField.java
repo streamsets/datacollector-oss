@@ -210,7 +210,7 @@ public class TestField {
       .put(Type.INTEGER, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
                                           Type.FLOAT, Type.DOUBLE, Type.DECIMAL))
       .put(Type.LONG, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
-                                       Type.FLOAT, Type.DOUBLE, Type.DECIMAL))
+                                       Type.FLOAT, Type.DOUBLE, Type.DECIMAL, Type.DATE, Type.DATETIME))
       .put(Type.FLOAT, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
                                         Type.FLOAT, Type.DOUBLE, Type.DECIMAL))
       .put(Type.DOUBLE, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
@@ -222,8 +222,8 @@ public class TestField {
       .put(Type.BYTE_ARRAY, ImmutableList.of(Type.BYTE_ARRAY))
       .put(Type.MAP, ImmutableList.of(Type.MAP))
       .put(Type.LIST, ImmutableList.of(Type.LIST))
-      .put(Type.DATE, ImmutableList.of(Type.DATE, Type.DATETIME, Type.STRING))
-      .put(Type.DATETIME, ImmutableList.of(Type.DATE, Type.DATETIME, Type.STRING))
+      .put(Type.DATE, ImmutableList.of(Type.DATE, Type.DATETIME, Type.STRING, Type.LONG))
+      .put(Type.DATETIME, ImmutableList.of(Type.DATE, Type.DATETIME, Type.STRING, Type.LONG))
       .build();
 
   @Test

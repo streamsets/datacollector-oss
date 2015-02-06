@@ -1073,7 +1073,7 @@ public class TestFieldTypeConverterProcessor {
 
     try {
       Map<String, Field> map = new LinkedHashMap<>();
-      map.put("invalidConversion", Field.create(123456789234L));
+      map.put("invalidConversion", Field.create(1.0));
             Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 

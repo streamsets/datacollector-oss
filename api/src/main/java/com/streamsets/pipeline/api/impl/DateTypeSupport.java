@@ -25,6 +25,9 @@ public class DateTypeSupport extends TypeSupport<Date> {
         throw new IllegalArgumentException(Utils.format(BaseError.BASE_0007.getMessage(), value));
       }
     }
+    if (value instanceof Long) {
+      return new Date((long) value);
+    }
     throw new IllegalArgumentException(Utils.format(BaseError.BASE_0008.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }

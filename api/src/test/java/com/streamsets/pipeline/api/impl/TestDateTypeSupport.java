@@ -43,6 +43,7 @@ public class TestDateTypeSupport {
     Assert.assertEquals(d, support.convert(d));
     d = Utils.parse("2014-10-22T13:30Z");
     Assert.assertEquals(d, support.convert("2014-10-22T13:30Z"));
+    Assert.assertEquals(d, support.convert(d.getTime()));
   }
 
   @Test(expected = IllegalArgumentException.class)
