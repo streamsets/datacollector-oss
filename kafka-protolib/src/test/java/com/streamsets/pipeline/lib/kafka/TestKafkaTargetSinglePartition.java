@@ -86,7 +86,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.LOG)
+      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
@@ -122,9 +122,10 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("payloadType", ProducerPayloadType.LOG)
+      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
+      .addConfiguration("fieldPath", "/")
       .build();
 
     targetRunner.runInit();
@@ -146,6 +147,133 @@ public class TestKafkaTargetSinglePartition {
     for(int i = 0; i < logRecords.size(); i++) {
       Assert.assertEquals(logRecords.get(i).get().getValueAsString(), messages.get(i));
     }
+  }
+
+  @Test
+  public void testWriteStringRecordsFromJSON() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+
+    KafkaTarget kafkaTarget = new KafkaTarget();
+    TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
+      .addConfiguration("topic", TOPIC)
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("csvFileFormat", "DEFAULT")
+      .addConfiguration("fieldPath", "/name")
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createJsonRecords();
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    List<String> messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        String message = new String(it.next().message());
+        messages.add(message);
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(18, messages.size());
+    for(int i = 0; i < logRecords.size(); i++) {
+      Assert.assertEquals(logRecords.get(i).get().getValueAsMap().get("name").getValueAsString(), messages.get(i));
+    }
+  }
+
+  @Test
+  public void testWriteStringRecordsFromJSON2() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+
+    KafkaTarget kafkaTarget = new KafkaTarget();
+    TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
+      .addConfiguration("topic", TOPIC)
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("csvFileFormat", "DEFAULT")
+      .addConfiguration("fieldPath", "/lastStatusChange") //this is number field, should be converted to string
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createJsonRecords();
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    List<String> messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        String message = new String(it.next().message());
+        messages.add(message);
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(18, messages.size());
+    for(int i = 0; i < logRecords.size(); i++) {
+      Assert.assertEquals(logRecords.get(i).get().getValueAsMap().get("lastStatusChange").getValueAsString(),
+        messages.get(i));
+    }
+  }
+
+  @Test
+  public void testWriteStringRecordsFromJSON3() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+
+    KafkaTarget kafkaTarget = new KafkaTarget();
+    TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
+      .addConfiguration("topic", TOPIC)
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("csvFileFormat", "DEFAULT")
+      .addConfiguration("fieldPath", "/") //this is map field, should not be converted to string
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createJsonRecords();
+    targetRunner.runWrite(logRecords);
+    //All records must be sent to error
+    Assert.assertEquals(logRecords.size(), targetRunner.getErrorRecords().size());
+
+    targetRunner.runDestroy();
+
+    //Double check that there are no messages in kafka target topic
+    List<String> messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        String message = new String(it.next().message());
+        messages.add(message);
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    //Nothing should be written to the target topic
+    Assert.assertEquals(0, messages.size());
+
   }
 
   @Test

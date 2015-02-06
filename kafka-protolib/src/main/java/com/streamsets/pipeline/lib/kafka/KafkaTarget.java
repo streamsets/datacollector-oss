@@ -50,7 +50,8 @@ public class KafkaTarget extends BaseTarget {
 
   public enum Groups implements Label {
     KAFKA("Kafka"),
-    CSV("CSV Data")
+    CSV("CSV Data"),
+    TEXT("TEXT Data")
 
     ;
 
@@ -154,7 +155,7 @@ public class KafkaTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "LOG",
+      defaultValue = "TEXT",
       label = "Field to Name Mapping",
       description = "Field to columnName mapping configuration",
       displayPosition = 110,
@@ -165,6 +166,21 @@ public class KafkaTarget extends BaseTarget {
   @ComplexField
   public List<FieldPathToNameMappingConfig> fieldPathToNameMappingConfigList;
 
+  /********  For TEXT Content  ***********/
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "/",
+    label = "Field Path",
+    description = "The field which must be written to the target",
+    displayPosition = 120,
+    group = "TEXT",
+    dependsOn = "payloadType",
+    triggeredByValue = "TEXT"
+  )
+  @FieldSelector(singleValued = true)
+  public String fieldPath;
 
   public static class FieldPathToNameMappingConfig {
 
@@ -231,8 +247,8 @@ public class KafkaTarget extends BaseTarget {
       case CSV:
         recordToString = new CsvRecordToString(csvFileFormat.getFormat());
         break;
-      case LOG:
-        recordToString = new LogRecordToString();
+      case TEXT:
+        recordToString = new LogRecordToString(fieldPath);
         break;
     }
     recordToString.setFieldPathToNameMapping(fieldNameToPathMap);

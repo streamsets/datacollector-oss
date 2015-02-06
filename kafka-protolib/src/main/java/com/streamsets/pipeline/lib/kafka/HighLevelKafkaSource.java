@@ -23,7 +23,7 @@ import java.util.List;
 @StageDef(
     version = "0.0.1",
     label = "Kafka Consumer",
-    description = "Reads messages from Kafka brokers. Message data can be: LOG, CSV, TSV, XML or JSON",
+    description = "Reads messages from Kafka brokers. Message data can be: TEXT, CSV, TSV, XML or JSON",
     icon = "kafka.png"
 )
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "application/json")

@@ -113,7 +113,7 @@ public abstract class AbstractKafkaSource extends BaseSource {
     description = "Type of data sent as kafka message payload",
     label = "Payload Type",
     group = "KAFKA_PROPERTIES",
-    defaultValue = "LOG")
+    defaultValue = "TEXT")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ConsumerPayloadTypeChooserValues.class)
   public ConsumerPayloadType consumerPayloadType;
 

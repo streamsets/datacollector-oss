@@ -164,7 +164,7 @@ public class KafkaProducer {
   }
 
   private void configureSerializer(Properties props, ProducerPayloadType producerPayloadType) {
-    if(producerPayloadType == ProducerPayloadType.LOG) {
+    if(producerPayloadType == ProducerPayloadType.TEXT) {
       props.put(SERIALIZER_CLASS_KEY, DEFAULT_ENCODER_CLASS);
     }
   }

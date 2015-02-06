@@ -17,6 +17,12 @@ public class LogRecordToString implements RecordToString {
 
   private static final Logger LOG = LoggerFactory.getLogger(LogRecordToString.class);
 
+  private final String fieldPath;
+
+  public LogRecordToString(String fieldPath) {
+    this.fieldPath = fieldPath;
+  }
+
   @Override
   public void setFieldPathToNameMapping(Map<String, String> fieldPathToNameMap) {
 
@@ -25,7 +31,7 @@ public class LogRecordToString implements RecordToString {
   @Override
   public String toString(Record record) throws StageException {
     try {
-      return record.get().getValueAsString();
+      return record.get(fieldPath).getValueAsString();
     } catch (Exception e) {
       LOG.error(CommonError.CMN_0103.getMessage(), record.getHeader().getSourceId(), e.getMessage());
       throw new StageException(CommonError.CMN_0103, record.getHeader().getSourceId(), e.getMessage(), e);
