@@ -885,9 +885,10 @@ angular
       api.pipelineAgent.savePipelineRules($scope.activeConfigInfo.name, rules).
         success(function (res) {
           $rootScope.common.saveOperationInProgress = false;
-
+          ignoreUpdate = true;
           rules = $scope.pipelineRules;
           rules.ruleIssues = res.ruleIssues;
+          rules.uuid = res.uuid;
 
           angular.forEach(rules.metricsAlertDefinitions, function(rule, index) {
             var savedRule = _.find(res.metricsAlertDefinitions, function(savedRule) {

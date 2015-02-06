@@ -4,7 +4,7 @@
     <div class="col-sm-12 col-md-12 col-lg-12 triggered-alerts"
          ng-repeat="triggeredAlert in triggeredAlerts | filter: {type: 'METRIC_ALERT'}">
       <div class="alert alert-danger" role="alert">
-        <i class="fa fa-exclamation-triangle"></i> {{triggeredAlert.rule.label}} ({{triggeredAlert.gauge.value.currentValue}})
+        <i class="fa fa-exclamation-triangle"></i> {{triggeredAlert.rule.alertText}} ({{triggeredAlert.gauge.value.currentValue}})
 
         <div class="pull-right">
           <a href="#"

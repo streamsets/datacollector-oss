@@ -38,7 +38,7 @@
           </td>
 
           <td>
-            {{alertRule.label}}
+            {{alertRule.alertText}}
           </td>
 
           <td>
@@ -94,15 +94,6 @@
                 </span>
                 <span class="properties-value">
                   {{alertRule.sendEmail}}
-                </span>
-              </li>
-
-              <li ng-if="alertRule.sendEmail">
-                <span class="properties-label">
-                  {{'home.detailPane.rulesTab.emailIds' | translate}}:
-                </span>
-                <span class="properties-value">
-                  {{alertRule.emailIds}}
                 </span>
               </li>
 

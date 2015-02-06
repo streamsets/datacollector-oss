@@ -132,22 +132,12 @@
                 </span>
               </li>
 
-
               <li ng-if="dataRuleDefn.alertEnabled">
                 <span class="properties-label">
                   {{'home.detailPane.rulesTab.sendEmail' | translate}}:
                 </span>
                 <span class="properties-value">
                   {{dataRuleDefn.sendEmail}}
-                </span>
-              </li>
-
-              <li ng-if="dataRuleDefn.alertEnabled && dataRuleDefn.sendEmail">
-                <span class="properties-label">
-                  {{'home.detailPane.rulesTab.emailIds' | translate}}:
-                </span>
-                <span class="properties-value">
-                  {{dataRuleDefn.emailIds}}
                 </span>
               </li>
 

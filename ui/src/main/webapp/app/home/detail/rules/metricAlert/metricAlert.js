@@ -142,14 +142,13 @@ angular
       metricIDList: metricIDList,
       metricAlertRuleDefn: {
         id: edge.info.name + (new Date()).getTime(),
-        label: '',
+        alertText: '',
         condition: '${value() > 1000}',
         metricId: null,
         metricType: 'COUNTER',
         metricElement: null,
         enabled: false,
-        sendEmail: false,
-        emailIds: []
+        sendEmail: false
       },
 
       save : function () {

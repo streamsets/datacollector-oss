@@ -94,7 +94,6 @@ angular
         thresholdValue: '100',
         minVolume: 1000,
         sendEmail: false,
-        emailIds: [],
         meterEnabled: true,
         enabled: false
       },
