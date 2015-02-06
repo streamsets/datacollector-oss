@@ -60,11 +60,16 @@
       <artifactId>streamsets-datacollector-cdh5_2_1-lib</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!--<dependency>-->
-      <!--<groupId>com.streamsets</groupId>-->
-      <!--<artifactId>streamsets-datacollector-sdk</artifactId>-->
-      <!--<scope>compile</scope>-->
-    <!--</dependency>-->
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-apache-kafka_0_8_1_1-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-apache-kafka_0_8_2_0-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>

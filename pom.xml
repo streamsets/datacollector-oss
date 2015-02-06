@@ -47,6 +47,7 @@
     <module>cdh5_2_1-lib</module>
     <module>kafka-protolib</module>
     <module>apache-kafka_0_8_1_1-lib</module>
+    <module>apache-kafka_0_8_2_0-lib</module>
   </modules>
 
   <build>
