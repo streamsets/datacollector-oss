@@ -12,6 +12,7 @@ import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.util.ContainerError;
 
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
@@ -52,9 +53,17 @@ public class PipelineManagerResource {
       @QueryParam("name") String name,
       @QueryParam("rev") @DefaultValue("0") String rev)
       throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineManagerException {
-
-    PipelineState ps = pipelineManager.startPipeline(name, rev);
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ps).build();
+    try {
+      PipelineState ps = pipelineManager.startPipeline(name, rev);
+      return Response.ok().type(MediaType.APPLICATION_JSON).entity(ps).build();
+    } catch (PipelineRuntimeException ex) {
+      if (ex.getErrorCode() == ContainerError.CONTAINER_0158) {
+        return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(
+          ex.getIssues()).build();
+      } else {
+        throw ex;
+      }
+    }
   }
 
   @Path("/stop")
