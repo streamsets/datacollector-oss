@@ -104,6 +104,10 @@ public class StreamingJsonParser {
 
   private JsonToken nextToken;
 
+  protected Class getExpectedClass() {
+    return Object.class;
+  }
+
   @SuppressWarnings("unchecked")
   protected Object readObjectFromStream() throws IOException {
     Object value = null;
@@ -112,7 +116,7 @@ public class StreamingJsonParser {
       nextToken = jsonParser.nextToken();
     }
     if (nextToken != null) {
-      value = jsonParser.readValueAs(Object.class);
+      value = jsonParser.readValueAs(getExpectedClass());
       nextToken = jsonParser.nextToken();
       if (nextToken == null) {
         // if we reached the EOF Jackson JSON parser keeps the as getTokenLocation() the location of the last token,

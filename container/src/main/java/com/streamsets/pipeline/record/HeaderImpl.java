@@ -249,7 +249,34 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   public boolean equals(Object obj) {
     boolean eq = this == obj;
     if (!eq && obj != null && obj instanceof HeaderImpl) {
-      eq = map.equals(((HeaderImpl) obj).map);
+      Map<String, Object> otherMap = ((HeaderImpl) obj).map;
+      eq = map.size() == otherMap.size();
+      if (eq) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+          String key = entry.getKey();
+          Object value = entry.getValue();
+          Object otherValue = otherMap.get(key);
+          switch (key) {
+            case RAW_DATA_ATTR:
+              eq = value == otherValue;
+              if (!eq && value != null && otherValue != null) {
+                byte[] arr = (byte[]) value;
+                byte[] otherArr = (byte[]) otherValue;
+                eq = arr.length == otherArr.length;
+                for (int i = 0; eq && i < arr.length; i++) {
+                  eq = arr[i] == otherArr[i];
+                }
+              }
+              break;
+            default:
+              eq = (value == otherValue) || (value != null && value.equals(otherValue));
+              break;
+          }
+          if (!eq) {
+            break;
+          }
+        }
+      }
     }
     return eq;
   }

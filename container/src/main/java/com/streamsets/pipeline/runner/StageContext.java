@@ -9,6 +9,7 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ErrorCode;
@@ -16,6 +17,12 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.impl.ContextExt;
+import com.streamsets.pipeline.api.impl.JsonRecordParser;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.pipeline.lib.io.CountingReader;
+import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
+import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
@@ -24,9 +31,11 @@ import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.validation.StageIssue;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.List;
 
-public class StageContext implements Source.Context, Target.Context, Processor.Context {
+public class StageContext implements Source.Context, Target.Context, Processor.Context, ContextExt {
 
   private static final String CUSTOM_METRICS_PREFIX = "custom.";
 
@@ -72,6 +81,33 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
     args = (args != null) ? args.clone() : NULL_ONE_ARG;
     return new ConfigIssueImpl(instanceName, errorCode, args);
+  }
+
+  private static class RecordJsonParserImpl extends OverrunStreamingJsonParser implements JsonRecordParser {
+    public RecordJsonParserImpl(Reader reader, long initialPosition, int maxObjectLen) throws
+        IOException {
+      super(new CountingReader(reader), initialPosition, StreamingJsonParser.Mode.MULTIPLE_OBJECTS, maxObjectLen);
+    }
+    @Override
+    protected ObjectMapper getObjectMapper() {
+      return ObjectMapperFactory.get();
+    }
+
+    @Override
+    protected Class getExpectedClass() {
+      return RecordImpl.class;
+    }
+
+    @Override
+    public Record readRecord() throws IOException {
+      return (Record) read();
+    }
+  }
+
+  @Override
+  public JsonRecordParser createMultiObjectJsonRecordParser(Reader reader, long initialPosition,
+      int maxObjectLen) throws IOException {
+    return new RecordJsonParserImpl(reader, initialPosition, maxObjectLen);
   }
 
   @Override
