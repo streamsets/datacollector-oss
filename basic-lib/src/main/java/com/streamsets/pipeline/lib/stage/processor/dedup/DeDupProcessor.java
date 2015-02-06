@@ -14,6 +14,7 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.PrimitiveSink;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
@@ -21,9 +22,9 @@ import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.lib.queue.XEvictingQueue;
 import com.streamsets.pipeline.lib.util.StageLibError;
@@ -37,8 +38,8 @@ import java.util.concurrent.TimeUnit;
 @GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
-    label = "Record De-dup",
-    description = "De-duplicates identical records within time windows and/or a record count windows",
+    label = "Record Deduplicator",
+    description = "Separates unique and duplicate records based on field comparison",
     icon="dedup.svg",
     outputStreams = DeDupProcessor.OutputStreams.class
 )
@@ -52,7 +53,7 @@ public class DeDupProcessor extends RecordProcessor {
 
     @Override
     public String getLabel() {
-      return "De-Duplication";
+      return "Deduplication";
     }
 
   }
@@ -78,8 +79,7 @@ public class DeDupProcessor extends RecordProcessor {
       required = true,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "1000000",
-      label = "Max Records to Remember",
-      description = "The maximum number of records to detect duplicates",
+      label = "Max Records to Compare",
       displayPosition = 10,
       group = "DE_DUP"
   )
@@ -89,9 +89,8 @@ public class DeDupProcessor extends RecordProcessor {
       required = true,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "0",
-      label = "Time Window to Remember (Secs)",
-      description = "The time window to detect duplicate records (this is an early trigger for 'Max Record Count'), " +
-                    "zero means no time window.",
+      label = "Time to Compare (secs)",
+      description = "Creates a window of time for comparison. Takes precedence over Max Records. Use 0 for no time window.",
       displayPosition = 20,
       group = "DE_DUP"
   )
@@ -99,27 +98,26 @@ public class DeDupProcessor extends RecordProcessor {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Hash All Fields",
-      description = "If set, all fields of the record are used to compute its hash",
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "ALL_FIELDS",
+      label = "Compare",
       displayPosition = 30,
       group = "DE_DUP"
   )
-  public boolean hashAllFields;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CompareFieldsChooserValues.class)
+  public CompareFields compareFields;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Field-Paths to Hash",
-      description = "List of record field-paths to use to compute its hash",
+      label = "Fields to Compare",
       displayPosition = 40,
       group = "DE_DUP",
-      dependsOn = "hashAllFields",
-      triggeredByValue = "false"
+      dependsOn = "compareFields",
+      triggeredByValue = "SPECIFIED_FIELDS"
   )
   @FieldSelector
-  public List<String> fieldsToHash;
+  public List<String> fieldsToCompare;
 
   public static class RecordFunnel implements Funnel<Record> {
     private List<String> fieldsToHash;
@@ -218,7 +216,7 @@ public class DeDupProcessor extends RecordProcessor {
     if (timeWindowSecs < 0) {
       issues.add(getContext().createConfigIssue(StageLibError.LIB_0901, timeWindowSecs));
     }
-    if (!hashAllFields && fieldsToHash.isEmpty()) {
+    if (compareFields == CompareFields.SPECIFIED_FIELDS && fieldsToCompare.isEmpty()) {
       issues.add(getContext().createConfigIssue(StageLibError.LIB_0902));
     }
 
@@ -235,7 +233,7 @@ public class DeDupProcessor extends RecordProcessor {
   protected void init() throws StageException {
     super.init();
     hasher = Hashing.murmur3_128();
-    funnel = (hashAllFields) ? new RecordFunnel() : new RecordFunnel(fieldsToHash);
+    funnel = (compareFields == CompareFields.ALL_FIELDS) ? new RecordFunnel() : new RecordFunnel(fieldsToCompare);
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
     if (timeWindowSecs > 0) {
       cacheBuilder.expireAfterWrite(timeWindowSecs, TimeUnit.SECONDS);

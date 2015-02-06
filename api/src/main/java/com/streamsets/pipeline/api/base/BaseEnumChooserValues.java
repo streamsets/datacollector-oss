@@ -23,7 +23,7 @@ public abstract class BaseEnumChooserValues implements ChooserValues {
   private List<String> values;
   private List<String> labels;
 
-  protected BaseEnumChooserValues(Class<? extends Enum> klass) {
+  public BaseEnumChooserValues(Class<? extends Enum> klass) {
     Utils.checkNotNull(klass, "klass");
     if (!ENUM_LABELS_MAP.containsKey(klass)) {
       synchronized (BaseEnumChooserValues.class) {
