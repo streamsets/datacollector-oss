@@ -163,6 +163,7 @@
       </dependencies>
       <build>
         <plugins>
+          <!-- COMMENTING OUT JAVADOC GENERATION -->
           <!--<plugin>-->
             <!--<artifactId>maven-javadoc-plugin</artifactId>-->
             <!--<version>2.10.1</version>-->
