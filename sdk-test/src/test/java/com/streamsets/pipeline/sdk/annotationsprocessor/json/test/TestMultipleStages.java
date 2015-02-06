@@ -20,6 +20,7 @@ public class TestMultipleStages extends TestPipelineAnnotationProcessorBase {
     return Arrays.asList(
       "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterSource",
       "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterProcessor",
+      "com.streamsets.pipeline.sdk.annotationsprocessor.testData.ExtendedTwitterProcessor",
       "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterTarget",
       "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterError"
     );

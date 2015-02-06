@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.LanePredicateMapping;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
@@ -319,7 +320,18 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private List<ConfigDefinition> getConfigDefsFromTypeElement(TypeElement typeElement) {
     List<ConfigDefinition> configDefinitions = new ArrayList<>();
     List<VariableElement> variableElements = getAllFields(typeElement);
+
+    Set<String> configPropsToSkip = new HashSet<>();
+    HideConfig hideConfigAnnotation = typeElement.getAnnotation(HideConfig.class);
+    if(hideConfigAnnotation != null) {
+      for(String config : hideConfigAnnotation.value()) {
+        configPropsToSkip.add(config);
+      }
+    }
     for (VariableElement variableElement : variableElements) {
+      if(configPropsToSkip.contains(variableElement.getSimpleName().toString())) {
+        continue;
+      }
       ConfigDef configDefAnnot = variableElement.getAnnotation(ConfigDef.class);
       if(configDefAnnot != null) {
         //validate field with ConfigDef annotation

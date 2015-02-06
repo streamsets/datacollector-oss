@@ -125,6 +125,46 @@
   "icon" : "",
   "library" : null
 }, {
+  "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.ExtendedTwitterProcessor",
+  "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_ExtendedTwitterProcessor",
+  "version" : "1.0",
+  "label" : "extended_twitter_processor",
+  "description" : "processes twitter feeds",
+  "type" : "PROCESSOR",
+  "configDefinitions" : [ {
+                          "name" : "regEx",
+                          "type" : "MODEL",
+                          "label" : "regEx",
+                          "description" : "The regular expression used to parse the tweet",
+                          "required" : true,
+                          "group" : "",
+                          "fieldName" : "regEx",
+                          "model" : {
+                            "modelType" : "FIELD_VALUE_CHOOSER",
+                            "chooserMode" : "PROVIDED",
+                            "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TypesProvider",
+                            "values" : null,
+                            "labels" : null,
+                            "configDefinitions" : null
+                          },
+                          "dependsOn" : "",
+                          "triggeredByValues" : [ ],
+                          "displayPosition" : 0,
+                          "defaultValue" : "[a-z][A-Z][0-9]"
+                        } ],
+  "rawSourceDefinition" : null,
+  "icon" : "",
+  "configGroupDefinition" : {
+    "classNameToGroupsMap" : { },
+    "groupNameToLabelMapList" : [ ]
+  },
+  "variableOutputStreams" : false,
+  "outputStreams" : 1,
+  "outputStreamLabelProviderClass" : "com.streamsets.pipeline.api.StageDef$DefaultOutputStreams",
+  "library" : null,
+  "libraryLabel" : null,
+  "outputStreamLabels" : null
+}, {
     "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterTarget",
     "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_TwitterTarget",
     "version" : "1.3",
