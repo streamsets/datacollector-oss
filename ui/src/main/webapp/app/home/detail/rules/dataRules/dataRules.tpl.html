@@ -22,7 +22,6 @@
             </th>
             <th class="alert-text-col">{{'home.detailPane.rulesTab.label' | translate}}</th>
             <th class="condition-col">{{'home.detailPane.rulesTab.condition' | translate}}</th>
-            <th class="condition-col">{{'home.detailPane.rulesTab.samplingPercentage' | translate}}</th>
             <th class="condition-col">{{'home.detailPane.rulesTab.enableMeter' | translate}}</th>
             <th class="condition-col">{{'home.detailPane.rulesTab.enableAlert' | translate}}</th>
             <th class="enabled-col">{{'home.detailPane.rulesTab.enabled' | translate}}</th>
@@ -49,10 +48,6 @@
           </td>
 
           <td>
-            <span>{{dataRuleDefn.samplingPercentage}}</span>
-          </td>
-
-          <td>
             <span>{{dataRuleDefn.meterEnabled}}</span>
           </td>
 
@@ -67,10 +62,12 @@
                    ng-model="dataRuleDefn.enabled">
           </td>
 
-          <td ng-show="!dataRuleDefn.enabled">
-            <a href="javascript:;" ng-click="editDataRule(dataRuleDefn, $index)">Edit</a>
-            &nbsp;|&nbsp;
-            <a href="javascript:;" ng-click="removeRule(pipelineRules.dataRuleDefinitions, $index)">Delete</a>
+          <td>
+            <div ng-show="!dataRuleDefn.enabled">
+              <a href="javascript:;" ng-click="editDataRule(dataRuleDefn, $index)">Edit</a>
+              &nbsp;|&nbsp;
+              <a href="javascript:;" ng-click="removeRule(pipelineRules.dataRuleDefinitions, $index)">Delete</a>
+            </div>
           </td>
 
         </tr>
@@ -78,6 +75,15 @@
         <tr ng-repeat-end ng-if="isOpen || expandAll" class="expand-row" ng-class="dataRuleDefn.valid ? '' : 'invalid-rule'">
           <td colspan="8">
             <ul class="properties">
+
+              <li>
+                <span class="properties-label">
+                  {{'home.detailPane.rulesTab.samplingPercentage' | translate}}:
+                </span>
+                <span class="properties-value">
+                  {{dataRuleDefn.samplingPercentage}}
+                </span>
+              </li>
 
               <li>
                 <span class="properties-label">

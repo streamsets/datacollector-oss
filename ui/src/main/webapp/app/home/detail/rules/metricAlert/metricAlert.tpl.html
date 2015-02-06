@@ -14,17 +14,17 @@
 
       <table class="table">
         <thead>
-        <tr>
-          <th class="expand-col">
-            <span class="pointer toggler {{expandAll ? 'open' : ''}}"
-                    ng-click="expandAll = !expandAll"></span>
-          </th>
-          <th class="alert-text-col">{{'home.detailPane.rulesTab.alertText' | translate}}</th>
-          <th class="id-col">{{'home.detailPane.rulesTab.metricID' | translate}}</th>
-          <th class="condition-col">{{'home.detailPane.rulesTab.condition' | translate}}</th>
-          <th class="enabled-col">{{'home.detailPane.rulesTab.enabled' | translate}}</th>
-          <th class="actions-col">{{'global.form.actions' | translate}}</th>
-        </tr>
+          <tr>
+            <th class="expand-col">
+              <span class="pointer toggler {{expandAll ? 'open' : ''}}"
+                      ng-click="expandAll = !expandAll"></span>
+            </th>
+            <th class="alert-text-col">{{'home.detailPane.rulesTab.alertText' | translate}}</th>
+            <th class="id-col">{{'home.detailPane.rulesTab.metricID' | translate}}</th>
+            <th class="condition-col">{{'home.detailPane.rulesTab.condition' | translate}}</th>
+            <th class="enabled-col">{{'home.detailPane.rulesTab.enabled' | translate}}</th>
+            <th class="actions-col">{{'global.form.actions' | translate}}</th>
+          </tr>
         </thead>
         <tbody ng-hide="showLoading">
 
@@ -55,10 +55,12 @@
                    ng-model="alertRule.enabled">
           </td>
 
-          <td ng-show="!alertRule.enabled">
-            <a href="javascript:;" ng-click="editMetricAlertDataRule(alertRule, $index)">Edit</a>
-            &nbsp;|&nbsp;
-            <a href="javascript:;" ng-click="removeRule(pipelineRules.metricsAlertDefinitions, $index)">Delete</a>
+          <td>
+            <div ng-show="!alertRule.enabled">
+              <a href="javascript:;" ng-click="editMetricAlertDataRule(alertRule, $index)">Edit</a>
+              &nbsp;|&nbsp;
+              <a href="javascript:;" ng-click="removeRule(pipelineRules.metricsAlertDefinitions, $index)">Delete</a>
+            </div>
           </td>
 
         </tr>

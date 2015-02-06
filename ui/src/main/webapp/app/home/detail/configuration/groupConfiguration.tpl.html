@@ -79,6 +79,12 @@
           <ng-include src="'fieldSelectorMultiValuedConfigurationTemplate'"></ng-include>
         </div>
 
+        <div ng-switch-when="FIELD_SELECTOR_SINGLE_VALUED"
+             ng-click="onFieldSelectorFocus(detailPaneConfig)"
+             class="clearfix">
+          <ng-include src="'labelConfigurationTemplate'"></ng-include>
+          <ng-include src="'fieldSelectorSingleValuedConfigurationTemplate'"></ng-include>
+        </div>
 
         <div ng-switch-when="LANE_PREDICATE_MAPPING">
           <ng-include src="'labelConfigurationTemplate'"></ng-include>
@@ -190,6 +196,20 @@
                             {{fieldPath}}
                           </ui-select-choices>
                         </ui-select>
+                      </div>
+
+                      <div ng-switch-when="FIELD_SELECTOR_SINGLE_VALUED"
+                           ng-click="onFieldSelectorFocus(detailPaneConfig)"
+                           class="clearfix input-group">
+                        <input type="text" class="form-control" ng-model="customFieldValue[customFieldConfigDefinition.name]">
+                        <div class="input-group-btn">
+                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                          <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-repeat="fieldPath in fieldPaths.concat(customFieldValue[customFieldConfigDefinition.name])">
+                              <a href="#" ng-click="customFieldValue[customFieldConfigDefinition.name] = fieldPath">{{fieldPath}}</a>
+                            </li>
+                          </ul>
+                        </div>
                       </div>
 
                     </div>

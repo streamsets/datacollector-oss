@@ -172,7 +172,7 @@ angular
        */
       selectRulesTab: function(triggeredAlert) {
         angular.forEach($scope.detailPaneTabs, function(tab) {
-          if(tab.name === 'rules') {
+          if(tab.name === 'dataRules' || tab.name === 'metricAlertRules') {
             tab.active = true;
           }
         });
