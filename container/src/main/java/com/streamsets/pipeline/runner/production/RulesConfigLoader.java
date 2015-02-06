@@ -137,7 +137,7 @@ public class RulesConfigLoader {
       noChange &= areStringsSame(oldDataRuleDefinition.getCondition(), newDataRuleDefinition.getCondition());
       noChange &= areStringsSame(oldDataRuleDefinition.getThresholdValue(), newDataRuleDefinition.getThresholdValue());
       noChange &= areStringsSame(String.valueOf(oldDataRuleDefinition.getMinVolume()),
-        String.valueOf(newDataRuleDefinition.getCondition()));
+        String.valueOf(newDataRuleDefinition.getMinVolume()));
       noChange &= areStringsSame(String.valueOf(oldDataRuleDefinition.getSamplingPercentage()),
         String.valueOf(newDataRuleDefinition.getSamplingPercentage()));
       noChange &= areStringsSame(oldDataRuleDefinition.getThresholdType().name(),

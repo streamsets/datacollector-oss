@@ -51,7 +51,7 @@ public class ObserverRunner {
   private final MetricRegistry metrics;
   private final ELEvaluator elEvaluator;
   private final ELEvaluator.Variables variables;
-  private final Map<String, Object> alertResponse;
+  private final Map<String, Map<String, Object>> alertResponse;
   private final EmailSender emailSender;
   private final Configuration configuration;
 
@@ -189,16 +189,21 @@ public class ObserverRunner {
     }
   }
 
-  private void raiseAlert(Object value, DataRuleDefinition dataRuleDefinition, List<String> emailIds) {
-    alertResponse.put(CURRENT_VALUE, value);
+  private void raiseAlert(Object value, final DataRuleDefinition dataRuleDefinition, List<String> emailIds) {
+    Map<String, Object> response = alertResponse.get(dataRuleDefinition.getId());
+    if(response == null) {
+      response = new HashMap<>();
+      alertResponse.put(dataRuleDefinition.getId(), response);
+    }
+    response.put(CURRENT_VALUE, value);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     if (gauge == null) {
-      alertResponse.put(TIMESTAMP, System.currentTimeMillis());
+      response.put(TIMESTAMP, System.currentTimeMillis());
       //send email the first time alert is triggered
       if(dataRuleDefinition.isSendEmail()) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(CURRENT_VALUE + " = " + value).append(", " + TIMESTAMP + " = " +
-          alertResponse.get(TIMESTAMP));
+          response.get(TIMESTAMP));
         if(emailSender == null) {
           LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
             dataRuleDefinition.getId(), stringBuilder.toString());
@@ -215,12 +220,12 @@ public class ObserverRunner {
     } else {
       //remove existing gauge
       MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
-      alertResponse.put(TIMESTAMP, ((Map<String, Object>)gauge.getValue()).get(TIMESTAMP));
+      response.put(TIMESTAMP, ((Map<String, Object>)gauge.getValue()).get(TIMESTAMP));
     }
     Gauge<Object> alertResponseGauge = new Gauge<Object>() {
       @Override
       public Object getValue() {
-        return alertResponse;
+        return alertResponse.get(dataRuleDefinition.getId());
       }
     };
     MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()),
