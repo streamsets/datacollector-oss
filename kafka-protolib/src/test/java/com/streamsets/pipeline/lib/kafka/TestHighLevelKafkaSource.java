@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -93,6 +94,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
       .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("produceSingleRecord", false)
       .build();
 
     sourceRunner.runInit();
@@ -134,6 +136,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
       .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("produceSingleRecord", false)
       .build();
 
     sourceRunner.runInit();
@@ -157,24 +160,25 @@ public class TestHighLevelKafkaSource {
   }
 
   @Test
-  public void testProduceJsonRecordsMultipleObjects() throws StageException, IOException {
+  public void testProduceJsonRecordsMultipleObjectsSingleRecord() throws StageException, IOException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
-    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceJsonRecords", SINGLE_PARTITION,
-      REPLICATION_FACTOR, TIME_OUT);
+    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer),
+      "testProduceJsonRecordsMultipleObjectsSingleRecord", SINGLE_PARTITION, REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(new ProducerRunnable( "testProduceJsonRecords", SINGLE_PARTITION,
+    executorService.submit(new ProducerRunnable( "testProduceJsonRecordsMultipleObjectsSingleRecord", SINGLE_PARTITION,
       producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(HighLevelKafkaSource.class)
       .addOutputLane("lane")
-      .addConfiguration("topic", "testProduceJsonRecords")
+      .addConfiguration("topic", "testProduceJsonRecordsMultipleObjectsSingleRecord")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("consumerPayloadType", ConsumerPayloadType.JSON)
       .addConfiguration("jsonContent", StreamingJsonParser.Mode.MULTIPLE_OBJECTS)
+      .addConfiguration("produceSingleRecord", true)
       .addConfiguration("maxJsonObjectLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();
@@ -191,14 +195,77 @@ public class TestHighLevelKafkaSource {
     List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
-    JsonFieldCreator jsonFieldCreator = new JsonFieldCreator(StreamingJsonParser.Mode.MULTIPLE_OBJECTS, 4096);
+    JsonRecordCreator jsonFieldCreator = new JsonRecordCreator((Source.Context)sourceRunner.getContext(),
+      StreamingJsonParser.Mode.MULTIPLE_OBJECTS, 4096, true, "testProduceJsonRecordsMultipleObjectsSingleRecord");
     for(int i = 0; i < records.size(); i++) {
+      //Multiple json objects into one record generates a field of type list
+      Assert.assertNotNull(records.get(i).get().getValueAsList());
+      Assert.assertTrue(!records.get(i).get().getValueAsList().isEmpty());
+
+      MessageAndOffset messageAndOffset = new MessageAndOffset(KafkaTestUtil.generateTestData(
+        DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS).getBytes(), 10, 0);
+      List<Record> expectedRecords = jsonFieldCreator.createRecords(messageAndOffset, 5);
+      Assert.assertEquals(1, expectedRecords.size());
+
+      Assert.assertEquals(expectedRecords.get(0).get().getValueAsList().size(),
+        records.get(i).get().getValueAsList().size());
+      for(int j = 0; j< expectedRecords.get(0).get().getValueAsList().size(); j++) {
+        Assert.assertEquals(expectedRecords.get(0).get().getValueAsList().get(j).getValueAsMap(),
+          records.get(i).get().getValueAsList().get(j).getValueAsMap());
+      }
+    }
+    sourceRunner.runDestroy();
+  }
+
+  @Test
+  public void testProduceJsonRecordsMultipleObjectsMultipleRecord() throws StageException, IOException {
+
+    CountDownLatch startLatch = new CountDownLatch(1);
+    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceJsonRecordsMultipleObjectsMultipleRecord", SINGLE_PARTITION,
+      REPLICATION_FACTOR, TIME_OUT);
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    executorService.submit(new ProducerRunnable( "testProduceJsonRecordsMultipleObjectsMultipleRecord", SINGLE_PARTITION,
+      producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS));
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(HighLevelKafkaSource.class)
+      .addOutputLane("lane")
+      .addConfiguration("topic", "testProduceJsonRecordsMultipleObjectsMultipleRecord")
+      .addConfiguration("consumerGroup", CONSUMER_GROUP)
+      .addConfiguration("zookeeperConnect", zkConnect)
+      .addConfiguration("maxBatchSize", 9)
+      .addConfiguration("maxWaitTime", 5000)
+      .addConfiguration("consumerPayloadType", ConsumerPayloadType.JSON)
+      .addConfiguration("jsonContent", StreamingJsonParser.Mode.MULTIPLE_OBJECTS)
+      .addConfiguration("produceSingleRecord", false)
+      .addConfiguration("maxJsonObjectLen", 4096)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .build();
+
+    sourceRunner.runInit();
+
+    startLatch.countDown();
+    StageRunner.Output output = sourceRunner.runProduce(null, 12);
+    executorService.shutdown();
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(12, records.size());
+
+    JsonRecordCreator jsonFieldCreator = new JsonRecordCreator((Source.Context)sourceRunner.getContext(),
+      StreamingJsonParser.Mode.MULTIPLE_OBJECTS, 4096, false, "testProduceJsonRecordsMultipleObjectsMultipleRecord");
+    for(int i = 0; i < records.size(); i+=4) {
       Assert.assertNotNull(records.get(i).get().getValueAsMap());
       Assert.assertTrue(!records.get(i).get().getValueAsMap().isEmpty());
-      Assert.assertEquals(
-        jsonFieldCreator.createField(KafkaTestUtil.generateTestData(
-          DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS).getBytes()).getValueAsMap(),
-        records.get(i).get().getValueAsMap());
+      for(int j = 0; j < 3; j++) {
+        MessageAndOffset messageAndOffset = new MessageAndOffset(KafkaTestUtil.generateTestData(
+          DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS).getBytes(), 10, 0);
+        List<Record> expectedRecords = jsonFieldCreator.createRecords(messageAndOffset, 5);
+        Assert.assertEquals(4, expectedRecords.size());
+        Assert.assertEquals(expectedRecords.get(j).get().getValueAsMap(),
+          records.get(i+j).get().getValueAsMap());
+      }
     }
     sourceRunner.runDestroy();
   }
@@ -207,15 +274,15 @@ public class TestHighLevelKafkaSource {
   public void testProduceJsonRecordsArrayObjects() throws StageException, IOException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
-    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceJsonRecords", SINGLE_PARTITION,
+    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceJsonRecordsArrayObjects", SINGLE_PARTITION,
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(new ProducerRunnable( "testProduceJsonRecords", SINGLE_PARTITION,
+    executorService.submit(new ProducerRunnable( "testProduceJsonRecordsArrayObjects", SINGLE_PARTITION,
       producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(HighLevelKafkaSource.class)
       .addOutputLane("lane")
-      .addConfiguration("topic", "testProduceJsonRecords")
+      .addConfiguration("topic", "testProduceJsonRecordsArrayObjects")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -224,6 +291,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("jsonContent", StreamingJsonParser.Mode.ARRAY_OBJECTS)
       .addConfiguration("maxJsonObjectLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("produceSingleRecord", true)
       .build();
 
     sourceRunner.runInit();
@@ -238,14 +306,24 @@ public class TestHighLevelKafkaSource {
     List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
-    JsonFieldCreator jsonFieldCreator = new JsonFieldCreator(StreamingJsonParser.Mode.ARRAY_OBJECTS, 4096);
+    JsonRecordCreator jsonFieldCreator = new JsonRecordCreator((Source.Context)sourceRunner.getContext(),
+      StreamingJsonParser.Mode.ARRAY_OBJECTS, 4096, false, "testProduceJsonRecordsArrayObjects");
     for(int i = 0; i < records.size(); i++) {
-      Assert.assertNotNull(records.get(i).get().getValueAsMap());
-      Assert.assertTrue(!records.get(i).get().getValueAsMap().isEmpty());
-      Assert.assertEquals(
-        jsonFieldCreator.createField(KafkaTestUtil.generateTestData(
-          DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS).getBytes()).getValueAsMap(),
-        records.get(i).get().getValueAsMap());
+      //Array of json objects into one record generates a field of type list
+      Assert.assertNotNull(records.get(i).get().getValueAsList());
+      Assert.assertTrue(!records.get(i).get().getValueAsList().isEmpty());
+
+      MessageAndOffset messageAndOffset = new MessageAndOffset(KafkaTestUtil.generateTestData(
+        DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS).getBytes(), 10, 0);
+      List<Record> expectedRecords = jsonFieldCreator.createRecords(messageAndOffset, 5);
+      Assert.assertEquals(1, expectedRecords.size());
+
+      Assert.assertEquals(expectedRecords.get(0).get().getValueAsList().size(),
+        records.get(i).get().getValueAsList().size());
+      for(int j = 0; j< expectedRecords.get(0).get().getValueAsList().size(); j++) {
+        Assert.assertEquals(expectedRecords.get(0).get().getValueAsList().get(j).getValueAsMap(),
+          records.get(i).get().getValueAsList().get(j).getValueAsMap());
+      }
     }
     sourceRunner.runDestroy();
   }
@@ -271,6 +349,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("jsonContent", null)
       .addConfiguration("maxJsonObjectLen", null)
       .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("produceSingleRecord", true)
       .build();
 
     sourceRunner.runInit();
@@ -285,13 +364,14 @@ public class TestHighLevelKafkaSource {
     List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
-    XmlFieldCreator xmlFieldCreator = new XmlFieldCreator();
+    XmlRecordCreator xmlFieldCreator = new XmlRecordCreator((Source.Context)sourceRunner.getContext(),
+      "testProduceXmlRecords");
     for(int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get().getValueAsMap());
       Assert.assertTrue(!records.get(i).get().getValueAsMap().isEmpty());
-      Assert.assertEquals(
-        xmlFieldCreator.createField(KafkaTestUtil.generateTestData(DataType.XML, null).getBytes()).getValueAsMap(),
-        records.get(i).get().getValueAsMap());
+      List<Record> expectedRecords = xmlFieldCreator.createRecords(
+        new MessageAndOffset(KafkaTestUtil.generateTestData(DataType.XML, null).getBytes(), 10, 0), 0);
+      Assert.assertEquals(expectedRecords.get(0).get().getValueAsMap(), records.get(i).get().getValueAsMap());
     }
     sourceRunner.runDestroy();
 
@@ -316,6 +396,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("consumerPayloadType", ConsumerPayloadType.CSV)
       .addConfiguration("csvFileFormat", CsvFileMode.CSV)
       .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("produceSingleRecord", true)
       .build();
 
     sourceRunner.runInit();
@@ -329,13 +410,14 @@ public class TestHighLevelKafkaSource {
     List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
-    CsvFieldCreator csvFieldCreator = new CsvFieldCreator(CsvFileMode.CSV);
+    CsvRecordCreator csvFieldCreator = new CsvRecordCreator((Source.Context)sourceRunner.getContext(), CsvFileMode.CSV,
+      "testProduceCsvRecords");
     for (int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get().getValueAsMap());
       Assert.assertTrue(!records.get(i).get().getValueAsMap().isEmpty());
-      Assert.assertEquals(
-        csvFieldCreator.createField(KafkaTestUtil.generateTestData(DataType.CSV, null).getBytes()).getValueAsMap(),
-        records.get(i).get().getValueAsMap());
+      List<Record> expectedRecords = csvFieldCreator.createRecords(
+        new MessageAndOffset(KafkaTestUtil.generateTestData(DataType.CSV, null).getBytes(), 10, 0), 0);
+      Assert.assertEquals(expectedRecords.get(0).get().getValueAsMap(), records.get(i).get().getValueAsMap());
     }
     sourceRunner.runDestroy();
   }

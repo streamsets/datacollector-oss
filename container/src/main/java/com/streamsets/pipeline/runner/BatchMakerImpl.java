@@ -12,6 +12,8 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.record.RecordImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class BatchMakerImpl implements BatchMaker {
+
+  private static final Logger LOG = LoggerFactory.getLogger(BatchMakerImpl.class);
+
   private final StagePipe stagePipe;
   private final String instanceName;
   private final List<String> outputLanes;
@@ -61,7 +66,10 @@ public class BatchMakerImpl implements BatchMaker {
   @Override
   public void addRecord(Record record, String... lanes) {
     if (recordAllowance-- == 0) {
-      throw new IllegalStateException("The maximum number of records has been reached");
+      //Some origins like "Kafka source" translate one message into multiple records [think JSON multiple objects mode]
+      //the number of records may tip over the max batch size [both in preview and run].
+      //Allow this. Max batch size is more of a guideline.
+      LOG.warn("The maximum number of records per batch in the origin has been exceeded.");
     }
     Preconditions.checkNotNull(record, "record cannot be null");
     record = ((RecordImpl)record).clone();

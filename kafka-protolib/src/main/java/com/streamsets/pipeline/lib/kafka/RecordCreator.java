@@ -5,11 +5,13 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
-import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 
-public interface FieldCreator {
+import java.util.List;
 
-  public Field createField(byte[] bytes) throws StageException;
+public interface RecordCreator {
+
+  public List<Record> createRecords(MessageAndOffset message, int currentRecordCount) throws StageException;
 
 }

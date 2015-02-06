@@ -271,7 +271,8 @@ public class KafkaTestUtil {
           "}}\n";
 
       case ARRAY_OBJECTS:
-        return "[{“menu\": {\n" +
+        return "[\n" +
+          "{\"menu\": {\n" +
           "  \"id\": \"1\",\n" +
           "  \"value\": \"File\",\n" +
           "  \"popup\": {\n" +
@@ -281,7 +282,7 @@ public class KafkaTestUtil {
           "      {\"value\": \"Close\", \"onclick\": \"CloseDoc()\"}\n" +
           "    ]\n" +
           "  }\n" +
-          "}},\n" +
+          "}}," +
           "{\"menu\": {\n" +
           "  \"id\": \"2\",\n" +
           "  \"value\": \"File\",\n" +
@@ -292,7 +293,7 @@ public class KafkaTestUtil {
           "      {\"value\": \"Close\", \"onclick\": \"CloseDoc()\"}\n" +
           "    ]\n" +
           "  }\n" +
-          "}},\n" +
+          "}}," +
           "{\"menu\": {\n" +
           "  \"id\": \"3\",\n" +
           "  \"value\": \"File\",\n" +
@@ -303,7 +304,7 @@ public class KafkaTestUtil {
           "      {\"value\": \"Close\", \"onclick\": \"CloseDoc()\"}\n" +
           "    ]\n" +
           "  }\n" +
-          "}}\n" +
+          "}}," +
           "{\"menu\": {\n" +
           "  \"id\": \"4\",\n" +
           "  \"value\": \"File\",\n" +
@@ -314,7 +315,8 @@ public class KafkaTestUtil {
           "      {\"value\": \"Close\", \"onclick\": \"CloseDoc()\"}\n" +
           "    ]\n" +
           "  }\n" +
-          "}}]";
+          "}}" +
+          "]";
 
     }
     throw new IllegalArgumentException("Unsupported data type requested");

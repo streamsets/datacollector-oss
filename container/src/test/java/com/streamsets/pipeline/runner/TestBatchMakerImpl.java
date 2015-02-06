@@ -180,7 +180,7 @@ public class TestBatchMakerImpl {
     batchMaker.addRecord(record);
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test()
   @SuppressWarnings("unchecked")
   public void testMaxRecordsBeyondLimit() {
     StagePipe pipe = createStagePipe(ImmutableList.of("o"));
@@ -188,6 +188,8 @@ public class TestBatchMakerImpl {
     Record record = new RecordImpl("i", "source", null, null);
     batchMaker.addRecord(record);
     batchMaker.addRecord(record);
+    //This is changed to log warning and not throw IllegalArgumentException.
+    //Some sources could translate one event to multiple records and my go over the batch size.
   }
 
 }

@@ -9,7 +9,6 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -155,19 +154,18 @@ public abstract class AbstractKafkaSource extends BaseSource {
     for(MessageAndOffset partitionToPayloadMap : partitionToPayloadList) {
       //create record by parsing the message payload based on the pay load type configuration
       //As of now handle just String
-      if(recordCounter == maxBatchSize) {
+      if(recordCounter >= maxBatchSize) {
         //even though kafka has many messages, we need to cap the number of records to a value indicated by maxBatchSize.
         //return the offset of the previous record so that the next time we get start from this message which did not
         //make it to this batch.
         break;
       }
-      recordCounter++;
-      Record record = getContext().createRecord(topic + DOT + partition + DOT + System.currentTimeMillis() + DOT
-        + recordCounter);
-
+      List<Record> records = createRecords(partitionToPayloadMap, recordCounter);
+      recordCounter += records.size();
+      for(Record record : records) {
+        batchMaker.addRecord(record);
+      }
       offsetToReturn = String.valueOf(partitionToPayloadMap.getOffset());
-      record.set(createField(partitionToPayloadMap.getPayload()));
-      batchMaker.addRecord(record);
     }
     return offsetToReturn;
   }
@@ -178,6 +176,6 @@ public abstract class AbstractKafkaSource extends BaseSource {
     super.destroy();
   }
 
-  protected abstract Field createField(byte[] bytes) throws StageException;
+  protected abstract List<Record> createRecords(MessageAndOffset message, int currentRecordCount) throws StageException;
 
 }

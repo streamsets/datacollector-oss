@@ -98,6 +98,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
       .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("produceSingleRecord", true)
       .build();
 
     sourceRunner.runInit();
@@ -145,6 +146,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
       .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("produceSingleRecord", true)
       .build();
 
     sourceRunner.runInit();
@@ -196,6 +198,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("jsonContent", StreamingJsonParser.Mode.MULTIPLE_OBJECTS)
       .addConfiguration("maxJsonObjectLen", 4096)
       .addConfiguration("consumerPayloadType", ConsumerPayloadType.JSON)
+      .addConfiguration("produceSingleRecord", true)
       .build();
 
     sourceRunner.runInit();
@@ -242,6 +245,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("minBatchSize", 100)
       .addConfiguration("csvFileFormat", CsvFileMode.CSV)
       .addConfiguration("consumerPayloadType", ConsumerPayloadType.CSV)
+      .addConfiguration("produceSingleRecord", true)
       .build();
 
     sourceRunner.runInit();

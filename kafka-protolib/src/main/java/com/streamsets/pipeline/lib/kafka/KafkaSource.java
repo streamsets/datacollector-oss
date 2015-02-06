@@ -8,9 +8,12 @@ package com.streamsets.pipeline.lib.kafka;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+
+import java.util.List;
 
 public class KafkaSource extends AbstractKafkaSource {
 
@@ -24,6 +27,18 @@ public class KafkaSource extends AbstractKafkaSource {
     group = "JSON_PROPERTIES")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonEventModeChooserValues.class)
   public StreamingJsonParser.Mode jsonContent;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Produce Single Record",
+    description = "Indicates if multiple json objects must be accommodated in a single record.",
+    group = "JSON",
+    dependsOn = "jsonContent",
+    triggeredByValue = "MULTIPLE_OBJECTS"
+  )
+  public boolean produceSingleRecord;
 
   @ConfigDef(required = true,
     type = ConfigDef.Type.INTEGER,
@@ -47,27 +62,30 @@ public class KafkaSource extends AbstractKafkaSource {
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
 
-  private FieldCreator fieldCreator;
+  private RecordCreator recordCreator;
 
   @Override
   public void init() throws StageException {
     super.init();
     switch ((consumerPayloadType)) {
       case JSON:
-        fieldCreator = new JsonFieldCreator(jsonContent, maxJsonObjectLen);
+        recordCreator = new JsonRecordCreator(getContext(), jsonContent, maxJsonObjectLen, produceSingleRecord, topic);
         break;
       case LOG:
-        fieldCreator = new LogFieldCreator();
+        recordCreator = new LogRecordCreator(getContext(), topic);
         break;
       case CSV:
-        fieldCreator = new CsvFieldCreator(csvFileFormat);
+        recordCreator = new CsvRecordCreator(getContext(), csvFileFormat, topic);
+        break;
+      case XML:
+        recordCreator = new XmlRecordCreator(getContext(), topic);
         break;
       default :
     }
   }
 
   @Override
-  protected Field createField(byte[] bytes) throws StageException {
-    return fieldCreator.createField(bytes);
+  protected List<Record> createRecords(MessageAndOffset message , int currentRecordCount) throws StageException {
+    return recordCreator.createRecords(message, currentRecordCount);
   }
 }

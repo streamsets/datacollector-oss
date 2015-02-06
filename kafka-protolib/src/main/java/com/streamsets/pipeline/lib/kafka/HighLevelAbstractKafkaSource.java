@@ -9,7 +9,6 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
@@ -18,6 +17,7 @@ import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Map;
 
@@ -126,14 +126,18 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     LOG.debug("Reading messages from kafka.");
-    List<MessageAndOffset> messages = kafkaConsumer.read(maxBatchSize);
     int recordCounter = 0;
-    for(MessageAndOffset message : messages) {
-      recordCounter++;
-      Record record = getContext().createRecord(topic + DOT + message.getPartition() + DOT + System.currentTimeMillis()
-        + DOT + recordCounter);
-      record.set(createField(message.getPayload()));
-      batchMaker.addRecord(record);
+    int batchSize = this.maxBatchSize > maxBatchSize ? maxBatchSize : this.maxBatchSize;
+    long startTime = System.currentTimeMillis();
+    while(recordCounter < batchSize && (startTime + maxWaitTime) > System.currentTimeMillis()) {
+      MessageAndOffset message = kafkaConsumer.read();
+      if(message != null) {
+        List<Record> records = createRecords(message, recordCounter);
+        recordCounter += records.size();
+        for(Record record : records) {
+          batchMaker.addRecord(record);
+        }
+      }
     }
     LOG.info("Produced {} records in this batch.", recordCounter);
     return lastSourceOffset;
@@ -152,6 +156,6 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
     kafkaConsumer.commit();
   }
 
-  protected abstract Field createField(byte[] bytes) throws StageException;
+  protected abstract List<Record> createRecords(MessageAndOffset message, int currentRecordCount) throws StageException;
 
 }

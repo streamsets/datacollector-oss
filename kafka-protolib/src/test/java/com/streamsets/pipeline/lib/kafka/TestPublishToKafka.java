@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
+import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
 
@@ -15,13 +16,13 @@ import java.util.concurrent.Executors;
 
 public class TestPublishToKafka {
 
-  private static final String TOPIC = "testHA4";
-  private static final int MULTIPLE_PARTITIONS = 3;
+  private static final String TOPIC = "testTopic";
+  private static final int MULTIPLE_PARTITIONS = 1;
 
   public static void main(String[] args) {
 
     Properties props = new Properties();
-    props.put("metadata.broker.list", "localhost:9001,localhost:9002");
+    props.put("metadata.broker.list", "localhost:9001");
     props.put("serializer.class", "kafka.serializer.StringEncoder");
     props.put("request.required.acks", "1");
 
@@ -31,8 +32,8 @@ public class TestPublishToKafka {
     CountDownLatch startProducing = new CountDownLatch(1);
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(new ProducerRunnable(TOPIC, MULTIPLE_PARTITIONS, producer, startProducing, DataType.LOG,
-      null));
+    executorService.submit(new ProducerRunnable(TOPIC, MULTIPLE_PARTITIONS, producer, startProducing, DataType.JSON,
+      StreamingJsonParser.Mode.ARRAY_OBJECTS));
 
     startProducing.countDown();
 

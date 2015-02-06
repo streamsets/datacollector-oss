@@ -18,7 +18,6 @@ import kafka.message.MessageAndMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +78,11 @@ public class HighLevelKafkaConsumer {
 
   public void destroy() {
     if(consumer != null) {
-      consumer.shutdown();
+      try {
+        consumer.shutdown();
+      } catch (Exception e) {
+        LOG.error("Error shutting down Kafka Consumer, reason: {}", e.getMessage());
+      }
     }
   }
 
@@ -87,7 +90,7 @@ public class HighLevelKafkaConsumer {
     consumer.commitOffsets();
   }
 
-  public List<MessageAndOffset> read(int maxBatchSize) throws StageException {
+  /*public List<MessageAndOffset> read(int maxBatchSize) throws StageException {
     List<MessageAndOffset> messageAndOffsetList = new ArrayList<>();
     int batchSize = this.maxBatchSize > maxBatchSize ? maxBatchSize : this.maxBatchSize;
     int messageCount = 0;
@@ -108,16 +111,42 @@ public class HighLevelKafkaConsumer {
           messageCount++;
         }
       } catch (ConsumerTimeoutException e) {
-        /*For high level consumer the fetching logic is handled by a background
+        *//*For high level consumer the fetching logic is handled by a background
           fetcher thread and is hidden from user, for either case of
           1) broker down or
           2) no message is available
           the fetcher thread will keep retrying while the user thread will wait on the fetcher thread to put some
           data into the buffer until timeout. So in a sentence the high-level consumer design is to
-          not let users worry about connect / reconnect issues.*/
+          not let users worry about connect / reconnect issues.*//*
       }
     }
     return messageAndOffsetList;
+  }*/
+
+  public MessageAndOffset read() throws StageException {
+    try {
+      //has next blocks indefinitely if consumer.timeout.ms is set to -1
+      //But if consumer.timeout.ms is set to a value, like 6000, a ConsumerTimeoutException is thrown
+      //if no message is written to kafka topic in that time.
+      if(consumerIterator.hasNext()) {
+        MessageAndMetadata<byte[], byte[]> messageAndMetadata = consumerIterator.next();
+        byte[] message = messageAndMetadata.message();
+        long offset = messageAndMetadata.offset();
+        int partition = messageAndMetadata.partition();
+        MessageAndOffset partitionToPayloadMap = new MessageAndOffset(message, offset, partition);
+        return partitionToPayloadMap;
+      }
+      return null;
+    } catch (ConsumerTimeoutException e) {
+      /*For high level consumer the fetching logic is handled by a background
+        fetcher thread and is hidden from user, for either case of
+        1) broker down or
+        2) no message is available
+        the fetcher thread will keep retrying while the user thread will wait on the fetcher thread to put some
+        data into the buffer until timeout. So in a sentence the high-level consumer design is to
+        not let users worry about connect / reconnect issues.*/
+      return null;
+    }
   }
 
   private void createConsumer() throws StageException {
