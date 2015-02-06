@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface PipelineRunner {
 
+  public boolean isPreview();
+
   public MetricRegistry getMetrics();
 
   public void run(Pipe[] pipes)  throws StageException, PipelineRuntimeException;

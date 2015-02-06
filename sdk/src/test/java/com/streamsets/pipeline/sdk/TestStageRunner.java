@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import org.junit.Assert;
@@ -23,12 +22,13 @@ public class TestStageRunner {
 
   public static class DummyStageRunner extends StageRunner<DummyStage> {
 
-    DummyStageRunner(Class<DummyStage> stageClass, Map<String, Object> configuration, List<String> outputLanes) {
-      super(stageClass, configuration, outputLanes);
+    DummyStageRunner(Class<DummyStage> stageClass, Map<String, Object> configuration, List<String> outputLanes,
+        boolean isPreview) {
+      super(stageClass, configuration, outputLanes, isPreview);
     }
 
-    DummyStageRunner(DummyStage stage, Map<String, Object> configuration, List<String> outputLanes) {
-      super(stage, configuration, outputLanes);
+    DummyStageRunner(DummyStage stage, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview) {
+      super(stage, configuration, outputLanes, isPreview);
     }
 
     public static class Builder extends StageRunner.Builder<DummyStage, DummyStageRunner, Builder> {
@@ -44,8 +44,8 @@ public class TestStageRunner {
 
       @Override
       public DummyStageRunner build() {
-        return (stage != null) ? new DummyStageRunner(stage, configs, outputLanes)
-                               : new DummyStageRunner(stageClass, configs, outputLanes);
+        return (stage != null) ? new DummyStageRunner(stage, configs, outputLanes, isPreview)
+                               : new DummyStageRunner(stageClass, configs, outputLanes, isPreview);
       }
     }
   }
@@ -87,6 +87,23 @@ public class TestStageRunner {
     Assert.assertTrue(runner.getErrorRecords().isEmpty());
     Assert.assertTrue(runner.getErrors().isEmpty());
   }
+  @Test
+  public void testIsPreview() {
+    DummyStageRunner.Builder builder = new DummyStageRunner.Builder(DummyStage1.class);
+    DummyStageRunner runner = builder.build();
+    Assert.assertFalse(runner.getContext().isPreview());
+    builder.setPreview(true);
+    runner = builder.build();
+    Assert.assertTrue(runner.getContext().isPreview());
+
+    builder = new DummyStageRunner.Builder(new DummyStage1());
+    runner = builder.build();
+    Assert.assertFalse(runner.getContext().isPreview());
+    builder.setPreview(true);
+    runner = builder.build();
+    Assert.assertTrue(runner.getContext().isPreview());
+  }
+
 
   @Test
   public void testBuilderWithInstance() {

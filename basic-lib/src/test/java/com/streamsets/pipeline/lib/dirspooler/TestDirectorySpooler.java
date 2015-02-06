@@ -29,7 +29,7 @@ public class TestDirectorySpooler {
     File dir = new File("target", UUID.randomUUID().toString());
     spoolDir = new File(dir, "spool");
     archiveDir = new File(dir, "archive");
-    context = ContextInfoCreator.createSourceContext("s", ImmutableList.of("a"));
+    context = ContextInfoCreator.createSourceContext("s", false, ImmutableList.of("a"));
   }
 
   @Test(expected = IllegalStateException.class)

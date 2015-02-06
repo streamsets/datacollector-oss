@@ -18,13 +18,13 @@ import java.util.Map;
 public class TargetRunner extends StageRunner<Target> {
 
   @SuppressWarnings("unchecked")
-  public TargetRunner(Target source, Map<String, Object> configuration) {
-    super(source, configuration, Collections.EMPTY_LIST);
+  public TargetRunner(Target source, Map<String, Object> configuration, boolean isPreview) {
+    super(source, configuration, Collections.EMPTY_LIST, isPreview);
   }
 
   @SuppressWarnings("unchecked")
-  public TargetRunner(Class<Target> sourceClass, Map<String, Object> configuration) {
-    super(sourceClass, configuration, Collections.EMPTY_LIST);
+  public TargetRunner(Class<Target> sourceClass, Map<String, Object> configuration, boolean isPreview) {
+    super(sourceClass, configuration, Collections.EMPTY_LIST, isPreview);
   }
 
   public void runWrite(List<Record> inputRecords) throws StageException {
@@ -47,7 +47,8 @@ public class TargetRunner extends StageRunner<Target> {
     @Override
     public TargetRunner build() {
       Utils.checkState(outputLanes.isEmpty(), "A Target cannot have output streams");
-      return (stage != null) ? new TargetRunner(stage, configs) : new TargetRunner(stageClass, configs);
+      return (stage != null) ? new TargetRunner(stage, configs, isPreview)
+                             : new TargetRunner(stageClass, configs, isPreview);
     }
 
   }

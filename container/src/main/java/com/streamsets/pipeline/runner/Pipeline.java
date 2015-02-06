@@ -118,7 +118,7 @@ public class Pipeline {
       List<Stage.Info> infosUnmodifiable = Collections.unmodifiableList(infos);
       for (StageRuntime stage : stages) {
         infos.add(stage.getInfo());
-        stage.setContext(new StageContext(infosUnmodifiable, runner.getMetrics(), stage));
+        stage.setContext(new StageContext(infosUnmodifiable, runner.isPreview(), runner.getMetrics(), stage));
       }
     }
 

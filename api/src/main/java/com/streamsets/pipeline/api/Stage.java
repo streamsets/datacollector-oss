@@ -26,6 +26,8 @@ public interface Stage<C extends Stage.Context> {
 
   public interface Context {
 
+    public boolean isPreview();
+
     public ConfigIssue createConfigIssue(ErrorCode errorCode, Object... args);
 
     public List<Info> getPipelineInfo();

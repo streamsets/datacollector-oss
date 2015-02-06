@@ -31,22 +31,26 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private static final String CUSTOM_METRICS_PREFIX = "custom.";
 
   private final List<Stage.Info> pipelineInfo;
+  private final boolean isPreview;
   private final MetricRegistry metrics;
   private final String instanceName;
   private final List<String> outputLanes;
   private ErrorSink errorSink;
 
   //for SDK
-  public StageContext(String instanceName, List<String> outputLanes) {
+  public StageContext(String instanceName, boolean isPreview, List<String> outputLanes) {
     pipelineInfo = ImmutableList.of();
+    this.isPreview = isPreview;
     metrics = new MetricRegistry();
     this.instanceName = instanceName;
     this.outputLanes = ImmutableList.copyOf(outputLanes);
     errorSink = new ErrorSink();
   }
 
-  public StageContext(List<Stage.Info> pipelineInfo, MetricRegistry metrics, StageRuntime stageRuntime) {
+  public StageContext(List<Stage.Info> pipelineInfo, boolean isPreview, MetricRegistry metrics,
+      StageRuntime stageRuntime) {
     this.pipelineInfo = pipelineInfo;
+    this.isPreview = isPreview;
     this.metrics = metrics;
     this.instanceName = stageRuntime.getConfiguration().getInstanceName();
     this.outputLanes = ImmutableList.copyOf(stageRuntime.getConfiguration().getOutputLanes());
@@ -68,6 +72,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
     args = (args != null) ? args.clone() : NULL_ONE_ARG;
     return new ConfigIssueImpl(instanceName, errorCode, args);
+  }
+
+  @Override
+  public boolean isPreview() {
+    return isPreview;
   }
 
   @Override

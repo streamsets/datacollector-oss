@@ -51,6 +51,11 @@ public class PreviewPipelineRunner implements PipelineRunner {
   }
 
   @Override
+  public boolean isPreview() {
+    return true;
+  }
+
+  @Override
   public MetricRegistry getMetrics() {
     return metrics;
   }

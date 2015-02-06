@@ -117,6 +117,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   @Override
+  public boolean isPreview() {
+    return false;
+  }
+
+  @Override
   public MetricRegistry getMetrics() {
     return metrics;
   }

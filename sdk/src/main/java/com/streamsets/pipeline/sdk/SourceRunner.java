@@ -15,12 +15,13 @@ import java.util.Map;
 
 public class SourceRunner extends StageRunner<Source> {
 
-  public SourceRunner(Source source, Map<String, Object> configuration, List<String> outputLanes) {
-    super(source, configuration, outputLanes);
+  public SourceRunner(Source source, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview) {
+    super(source, configuration, outputLanes, isPreview);
   }
 
-  public SourceRunner(Class<Source> sourceClass, Map<String, Object> configuration, List<String> outputLanes) {
-    super(sourceClass, configuration, outputLanes);
+  public SourceRunner(Class<Source> sourceClass, Map<String, Object> configuration, List<String> outputLanes,
+      boolean isPreview) {
+    super(sourceClass, configuration, outputLanes, isPreview);
   }
 
   public Output runProduce(String lastOffset, int maxBatchSize) throws StageException {
@@ -44,8 +45,8 @@ public class SourceRunner extends StageRunner<Source> {
     @Override
     public SourceRunner build() {
       Utils.checkState(!outputLanes.isEmpty(), "A Source must have at least one output stream");
-      return  (stage != null) ? new SourceRunner(stage, configs, outputLanes)
-                              : new SourceRunner(stageClass, configs, outputLanes);
+      return  (stage != null) ? new SourceRunner(stage, configs, outputLanes, isPreview)
+                              : new SourceRunner(stageClass, configs, outputLanes, isPreview);
     }
 
   }

@@ -18,12 +18,14 @@ import java.util.Map;
 
 public class ProcessorRunner extends StageRunner<Processor> {
 
-  public ProcessorRunner(Processor processor, Map<String, Object> configuration, List<String> outputLanes) {
-    super(processor, configuration, outputLanes);
+  public ProcessorRunner(Processor processor, Map<String, Object> configuration, List<String> outputLanes,
+      boolean isPreview) {
+    super(processor, configuration, outputLanes, isPreview);
   }
 
-  public ProcessorRunner(Class<Processor> processorClass, Map<String, Object> configuration, List<String> outputLanes) {
-    super(processorClass, configuration, outputLanes);
+  public ProcessorRunner(Class<Processor> processorClass, Map<String, Object> configuration, List<String> outputLanes,
+      boolean isPreview) {
+    super(processorClass, configuration, outputLanes, isPreview);
   }
 
   public Output runProcess(List<Record> inputRecords) throws StageException {
@@ -48,8 +50,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
     @Override
     public ProcessorRunner build() {
       Utils.checkState(!outputLanes.isEmpty(), "A Processor must have at least one output stream");
-      return  (stage != null) ? new ProcessorRunner(stage, configs, outputLanes)
-                              : new ProcessorRunner(stageClass, configs, outputLanes);
+      return  (stage != null) ? new ProcessorRunner(stage, configs, outputLanes, isPreview)
+                              : new ProcessorRunner(stageClass, configs, outputLanes, isPreview);
     }
 
   }

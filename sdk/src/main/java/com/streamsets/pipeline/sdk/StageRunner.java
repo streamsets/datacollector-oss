@@ -157,11 +157,11 @@ public abstract class StageRunner<S extends Stage> {
   }
 
   @SuppressWarnings("unchecked")
-  StageRunner(Class<S> stageClass, Map<String, Object> configuration, List<String> outputLanes) {
-    this((S) getStage(Utils.checkNotNull(stageClass, "stageClass")), configuration, outputLanes);
+  StageRunner(Class<S> stageClass, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview) {
+    this((S) getStage(Utils.checkNotNull(stageClass, "stageClass")), configuration, outputLanes, isPreview);
   }
 
-  StageRunner(S stage, Map < String, Object > configuration, List< String > outputLanes) {
+  StageRunner(S stage, Map < String, Object > configuration, List< String > outputLanes, boolean isPreview) {
     Utils.checkNotNull(stage, "stage");
     Utils.checkNotNull(configuration, "configuration");
     Utils.checkNotNull(outputLanes, "outputLanes");
@@ -175,7 +175,7 @@ public abstract class StageRunner<S extends Stage> {
     String version = getVersion(stage.getClass());
     String instanceName = name + "_1";
     info = ContextInfoCreator.createInfo(name, version, instanceName);
-    context = new StageContext(instanceName, outputLanes);
+    context = new StageContext(instanceName, isPreview, outputLanes);
     status = Status.CREATED;
   }
 
@@ -259,6 +259,7 @@ public abstract class StageRunner<S extends Stage> {
     final Class<S> stageClass;
     final List<String> outputLanes;
     final Map<String, Object> configs;
+    boolean isPreview;
 
     private Builder(Class<S> stageClass, S stage) {
       this.stageClass =stageClass;
@@ -269,6 +270,11 @@ public abstract class StageRunner<S extends Stage> {
 
     protected Builder(S stage) {
       this(null, Utils.checkNotNull(stage, "stage"));
+    }
+
+    public B setPreview(boolean isPreview) {
+      this.isPreview = isPreview;
+      return (B) this;
     }
 
     protected Builder(Class<S> stageClass) {

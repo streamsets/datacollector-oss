@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
@@ -135,6 +136,25 @@ public class TestProductionPipeline {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
     pipeline.run();
     Assert.assertEquals("x", capture.offset);
+  }
+
+  public static class PreviewCheckSource extends BaseSource {
+    public boolean isPreview;
+
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      isPreview  = getContext().isPreview();
+      return null;
+    }
+  }
+
+  @Test
+  public void testIsPreview() throws Exception {
+    PreviewCheckSource capture = new PreviewCheckSource();
+    MockStages.setSourceCapture(capture);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    pipeline.run();
+    Assert.assertFalse(capture.isPreview);
   }
 
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee,

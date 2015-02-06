@@ -104,6 +104,33 @@ public class TestPreviewRun {
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).get().getValue());
   }
 
+  @Test
+  public void testIsPreview() throws Exception {
+    MockStages.setSourceCapture(new BaseSource() {
+
+      @Override
+      protected void init() throws StageException {
+        super.init();
+        Assert.assertTrue(getContext().isPreview());
+      }
+
+      @Override
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+        return "X";
+      }
+    });
+
+    SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, -1, 1, true);
+    PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
+    pipelineConfiguration.getStages().remove(2);
+
+    PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name",
+                                                          pipelineConfiguration).build(runner);
+    PreviewPipelineOutput previewOutput = pipeline.run();
+    Mockito.verify(tracker).setOffset(Mockito.eq("X"));
+  }
+
   @Test(expected = PipelineRuntimeException.class)
   public void testPreviewRunFailValidationConfigs() throws Exception {
 

@@ -35,21 +35,21 @@ public class ContextInfoCreator {
     };
   }
 
-  private static StageContext createContext(String instanceName, List<String> outputLanes) {
-    return new StageContext(instanceName, outputLanes);
+  private static StageContext createContext(String instanceName, boolean isPreview, List<String> outputLanes) {
+    return new StageContext(instanceName, isPreview, outputLanes);
   }
 
-  public static Source.Context createSourceContext(String instanceName, List<String> outputLanes) {
-    return createContext(instanceName, outputLanes);
+  public static Source.Context createSourceContext(String instanceName, boolean isPreview, List<String> outputLanes) {
+    return createContext(instanceName, isPreview, outputLanes);
   }
 
-  public static Processor.Context createProcessorContext(String instanceName, List<String> outputLanes) {
-    return createContext(instanceName, outputLanes);
+  public static Processor.Context createProcessorContext(String instanceName, boolean isPreview, List<String> outputLanes) {
+    return createContext(instanceName, isPreview, outputLanes);
   }
 
   @SuppressWarnings("unchecked")
-  public static Target.Context createTargetContext(String instanceName) {
-    return createContext(instanceName, Collections.EMPTY_LIST);
+  public static Target.Context createTargetContext(String instanceName, boolean isPreview) {
+    return createContext(instanceName, isPreview, Collections.EMPTY_LIST);
   }
 
 }
