@@ -163,48 +163,48 @@
       </dependencies>
       <build>
         <plugins>
-          <plugin>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.10.1</version>
-            <executions>
-              <execution>
-                <id>javadoc</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>javadoc</goal>
-                </goals>
-                <configuration>
-                  <linksource>false</linksource>
-                  <quiet>true</quiet>
-                  <verbose>false</verbose>
-                  <charset>UTF-8</charset>
+          <!--<plugin>-->
+            <!--<artifactId>maven-javadoc-plugin</artifactId>-->
+            <!--<version>2.10.1</version>-->
+            <!--<executions>-->
+              <!--<execution>-->
+                <!--<id>javadoc</id>-->
+                <!--<phase>prepare-package</phase>-->
+                <!--<goals>-->
+                  <!--<goal>javadoc</goal>-->
+                <!--</goals>-->
+                <!--<configuration>-->
+                  <!--<linksource>false</linksource>-->
+                  <!--<quiet>true</quiet>-->
+                  <!--<verbose>false</verbose>-->
+                  <!--<charset>UTF-8</charset>-->
 
-                  <excludePackageNames>com.streamsets.pipeline.api.impl:com.streamsets.pipeline.sdk.annotationsprocessor</excludePackageNames>
+                  <!--<excludePackageNames>com.streamsets.pipeline.api.impl:com.streamsets.pipeline.sdk.annotationsprocessor</excludePackageNames>-->
 
-                  <groups>
-                    <group>
-                      <title>Pipeline API</title>
-                      <packages>
-                        com.streamsets.pipeline.api:com.streamsets.pipeline.api.base
-                      </packages>
-                    </group>
-                    <group>
-                      <title>Pipeline Stage SDK API</title>
-                      <packages>
-                        com.streamsets.pipeline.sdk
-                      </packages>
-                    </group>
-                  </groups>
+                  <!--<groups>-->
+                    <!--<group>-->
+                      <!--<title>Pipeline API</title>-->
+                      <!--<packages>-->
+                        <!--com.streamsets.pipeline.api:com.streamsets.pipeline.api.base-->
+                      <!--</packages>-->
+                    <!--</group>-->
+                    <!--<group>-->
+                      <!--<title>Pipeline Stage SDK API</title>-->
+                      <!--<packages>-->
+                        <!--com.streamsets.pipeline.sdk-->
+                      <!--</packages>-->
+                    <!--</group>-->
+                  <!--</groups>-->
 
-                  <includeDependencySources>true</includeDependencySources>
-                  <dependencySourceIncludes>
-                    <dependencySourceInclude>com.streamsets:streamsets-datacollector-api</dependencySourceInclude>
-                    <dependencySourceInclude>com.streamsets:streamsets-datacollector-sdk</dependencySourceInclude>
-                  </dependencySourceIncludes>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
+                  <!--<includeDependencySources>true</includeDependencySources>-->
+                  <!--<dependencySourceIncludes>-->
+                    <!--<dependencySourceInclude>com.streamsets:streamsets-datacollector-api</dependencySourceInclude>-->
+                    <!--<dependencySourceInclude>com.streamsets:streamsets-datacollector-sdk</dependencySourceInclude>-->
+                  <!--</dependencySourceIncludes>-->
+                <!--</configuration>-->
+              <!--</execution>-->
+            <!--</executions>-->
+          <!--</plugin>-->
         </plugins>
       </build>
     </profile>
