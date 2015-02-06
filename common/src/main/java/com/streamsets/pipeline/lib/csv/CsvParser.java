@@ -114,7 +114,11 @@ public class CsvParser implements Closeable, AutoCloseable {
   }
 
   @Override
-  public void close() throws IOException {
-    parser.close();
+  public void close() {
+    try {
+      parser.close();
+    } catch (IOException ex) {
+      //NOP
+    }
   }
 }

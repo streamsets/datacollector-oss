@@ -37,6 +37,7 @@ public class JsonDataProducer implements DataProducer {
   private final StreamingJsonParser.Mode jsonContent;
   private final int maxJsonObjectLen;
   private final Counter jsonObjectsOverMaxLen;
+  private OverrunStreamingJsonParser parser;
 
   public JsonDataProducer(Source.Context context, JsonFileMode jsonMode, int maxJsonObjectLen) {
     this.context = context;
@@ -49,16 +50,37 @@ public class JsonDataProducer implements DataProducer {
   public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker)
       throws StageException, BadSpoolFileException {
     String sourceFile = file.getName();
-    OverrunStreamingJsonParser parser = null;
-    try (CountingReader reader = new CountingReader(new FileReader(file))) {
-      parser = new OverrunStreamingJsonParser(reader, offset, jsonContent, maxJsonObjectLen);
-      return produce(sourceFile, offset, parser, maxBatchSize, batchMaker);
+    CountingReader reader = null;
+    try {
+      if (parser == null) {
+        reader = new CountingReader(new FileReader(file));
+        parser = new OverrunStreamingJsonParser(reader, offset, jsonContent, maxJsonObjectLen);
+        reader = null;
+      }
+      offset = produce(sourceFile, offset, parser, maxBatchSize, batchMaker);
     } catch (OverrunException ex) {
+      offset = -1;
       throw new BadSpoolFileException(file.getAbsolutePath(), ex.getStreamOffset(), ex);
     } catch (IOException ex) {
+      offset = -1;
       long exOffset = (parser != null) ? parser.getReaderPosition() : -1;
       throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
+    } finally {
+      if (offset == -1) {
+        if (parser != null) {
+          parser.close();
+          parser = null;
+        }
+        if (reader != null) {
+          try {
+            reader.close();
+          } catch (IOException ex) {
+            //NOP
+          }
+        }
+      }
     }
+    return offset;
   }
 
   protected long produce(String sourceFile, long offset, OverrunStreamingJsonParser parser, int maxBatchSize,

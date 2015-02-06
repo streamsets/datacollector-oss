@@ -28,9 +28,9 @@ public class CsvDataProducer implements DataProducer {
   private final CSVFormat csvFormat;
   private final boolean hasHeaderLine;
   private final boolean convertToMap;
-  private File previousFile;
   private String[] headers;
   private List<Field> headerFields;
+  private OverrunCsvParser parser;
 
   public CsvDataProducer(Source.Context context, CsvFileMode csvMode, boolean hasHeaderLine, boolean convertToMap) {
     this.context = context;
@@ -42,13 +42,13 @@ public class CsvDataProducer implements DataProducer {
   @Override
   public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker)
       throws StageException, BadSpoolFileException {
-    OverrunCsvParser parser = null;
-    if (hasHeaderLine) {
-      if (previousFile == null || !previousFile.equals(file)) {
-        // first file to process or new file, if first to process we don't have the headers, if file is different
-        // from the previous produce() call we need to re-read the headers in case they are different.
-        try (Reader reader = new FileReader(file)) {
-          parser = new OverrunCsvParser(reader, csvFormat);
+    Reader reader = null;
+    try {
+      if (parser == null) {
+        reader = new FileReader(file);
+        parser = new OverrunCsvParser(reader, csvFormat, offset);
+        reader = null;
+        if (hasHeaderLine) {
           headers = parser.getHeaders();
           if (!convertToMap && headers != null) {
             // CSV is not been converted to a map (values keyed with the column name) but instead we keep the
@@ -59,20 +59,28 @@ public class CsvDataProducer implements DataProducer {
               headerFields.add(Field.create(header));
             }
           }
-          offset = parser.getReaderPosition();
-          previousFile = file;
-        } catch (IOException ex) {
-          throw new BadSpoolFileException(file.getAbsolutePath(), (parser == null) ? 0 : parser.getReaderPosition(),
-                                          ex);
+        }
+      }
+      offset = produce(file.getName(), offset, parser, maxBatchSize, batchMaker);
+    } catch (IOException ex) {
+      offset = -1;
+      throw new BadSpoolFileException(file.getAbsolutePath(), (parser == null) ? 0 : parser.getReaderPosition(), ex);
+    } finally {
+      if (offset == -1) {
+        if (parser != null) {
+          parser.close();
+          parser = null;
+        }
+        if (reader != null) {
+          try {
+            reader.close();
+          } catch (IOException ex) {
+            //NOP
+          }
         }
       }
     }
-    try (Reader reader = new FileReader(file)) {
-      parser = new OverrunCsvParser(reader, csvFormat, offset);
-      return produce(file.getName(), offset, parser, maxBatchSize, batchMaker);
-    } catch (IOException ex) {
-      throw new BadSpoolFileException(file.getAbsolutePath(), (parser == null) ? 0 : parser.getReaderPosition(), ex);
-    }
+    return offset;
   }
 
   protected long produce(String sourceFile, long offset, OverrunCsvParser parser, int maxBatchSize,

@@ -69,6 +69,17 @@ public abstract class BaseSpoolDirSource extends BaseSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.INTEGER,
+      label = "Batch Size",
+      defaultValue = "1000",
+      description = "Max number of records per batch",
+      displayPosition = 25,
+      group = "FILES"
+  )
+  public int batchSize;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
       defaultValue = "10",
       label = "Max Files in Directory",
       description =
@@ -241,6 +252,7 @@ public abstract class BaseSpoolDirSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    int batchSize = Math.min(this.batchSize, maxBatchSize);
     // if lastSourceOffset is NULL (beginning of source) it returns NULL
     String file = getFileFromSourceOffset(lastSourceOffset);
     // if lastSourceOffset is NULL (beginning of source) it returns 0
@@ -285,7 +297,7 @@ public abstract class BaseSpoolDirSource extends BaseSource {
       // we have a file to process (from before or new from spooler)
       try {
         // we ask for a batch from the currentFile starting at offset
-        offset = produce(currentFile, offset, maxBatchSize, batchMaker);
+        offset = produce(currentFile, offset, batchSize, batchMaker);
       } catch (BadSpoolFileException ex) {
         LOG.error(StageLibError.LIB_0101.getMessage(), ex.getFile(), ex.getPos(), ex.getMessage(), ex);
         getContext().reportError(StageLibError.LIB_0101, ex.getFile(), ex.getPos(), ex.getMessage());

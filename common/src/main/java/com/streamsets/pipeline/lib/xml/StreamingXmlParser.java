@@ -78,8 +78,12 @@ public class StreamingXmlParser {
     return reader;
   }
 
-  public void close() throws XMLStreamException {
-    xmlEventReader.close();
+  public void close() {
+    try {
+      xmlEventReader.close();
+    } catch (Exception ex) {
+      // NOP
+    }
   }
 
   public Field read() throws IOException, XMLStreamException {

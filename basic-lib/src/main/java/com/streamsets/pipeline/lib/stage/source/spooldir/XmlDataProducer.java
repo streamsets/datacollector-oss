@@ -31,6 +31,7 @@ public class XmlDataProducer implements DataProducer {
   private final String recordElement;
   private final int maxXmlObjectLen;
   private final Counter xmlObjectsOverMaxLen;
+  private OverrunStreamingXmlParser parser;
 
   public XmlDataProducer(Source.Context context, String recordElement, int maxXmlObjectLen) {
     this.context = context;
@@ -43,22 +44,44 @@ public class XmlDataProducer implements DataProducer {
   public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker)
       throws StageException, BadSpoolFileException {
     String sourceFile = file.getName();
-    OverrunStreamingXmlParser parser = null;
-    try (Reader reader = new FileReader(file)) {
-      parser = new OverrunStreamingXmlParser(reader, recordElement, offset, maxXmlObjectLen);
-      return produce(sourceFile, offset, parser, maxBatchSize, batchMaker);
+    Reader reader = null;
+    try {
+      if (parser == null) {
+        reader = new FileReader(file);
+        parser = new OverrunStreamingXmlParser(reader, recordElement, offset, maxXmlObjectLen);
+        reader = null;
+      }
+      offset =  produce(sourceFile, offset, parser, maxBatchSize, batchMaker);
     } catch (XMLStreamException ex) {
+      offset = -1;
       throw new BadSpoolFileException(file.getAbsolutePath(), ex.getLocation().getCharacterOffset(), ex);
     } catch (OverrunException ex) {
+      offset = -1;
       throw new BadSpoolFileException(file.getAbsolutePath(), ex.getStreamOffset(), ex);
     } catch (IOException ex) {
+      offset = -1;
       try {
         long exOffset = (parser != null) ? parser.getReaderPosition() : -1;
         throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
       } catch (XMLStreamException ex1) {
         throw new BadSpoolFileException(file.getAbsolutePath(), -1, ex);
       }
+    } finally {
+      if (offset == -1) {
+        if (parser != null) {
+          parser.close();
+          parser = null;
+        }
+        if (reader != null) {
+          try {
+            reader.close();
+          } catch (IOException ex) {
+            //NOP
+          }
+        }
+      }
     }
+    return offset;
   }
 
   protected long produce(String sourceFile, long offset, OverrunStreamingXmlParser parser, int maxBatchSize,

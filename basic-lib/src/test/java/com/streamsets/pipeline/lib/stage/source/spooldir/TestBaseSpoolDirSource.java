@@ -47,6 +47,7 @@ public class TestBaseSpoolDirSource {
     return new SourceRunner.Builder(source)
         .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
         .addConfiguration("filePattern", "file-[0-9].log")
+        .addConfiguration("batchSize", 10)
         .addConfiguration("maxSpoolFiles", 10)
         .addConfiguration("spoolDir", createTestDir())
         .addConfiguration("archiveDir", createTestDir())

@@ -7,11 +7,9 @@ package com.streamsets.pipeline.lib.stage.source.spooldir;
 
 import com.codahale.metrics.Counter;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunLineReader;
 import com.streamsets.pipeline.lib.util.LineToRecord;
@@ -23,8 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class LogDataProducer implements DataProducer {
   private final static Logger LOG = LoggerFactory.getLogger(LogDataProducer.class);
@@ -34,6 +30,7 @@ public class LogDataProducer implements DataProducer {
   private final StringBuilder line;
   private final Counter linesOverMaxLengthCounter;
   private final LineToRecord lineToRecord;
+  private OverrunLineReader lineReader;
 
   public LogDataProducer(Source.Context context, int maxLogLineLength, boolean setTruncated) {
     this.context = context;
@@ -46,13 +43,39 @@ public class LogDataProducer implements DataProducer {
   @Override
   public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     String sourceFile = file.getName();
-    try (CountingReader reader = new CountingReader(new FileReader(file))) {
-      IOUtils.skipFully(reader, offset);
-      OverrunLineReader lineReader = new OverrunLineReader(reader, maxLogLineLength);
-      return produce(sourceFile, offset, lineReader, maxBatchSize, batchMaker);
+    CountingReader reader = null;
+    try {
+      if (lineReader == null) {
+        reader = new CountingReader(new FileReader(file));
+        IOUtils.skipFully(reader, offset);
+        lineReader = new OverrunLineReader(reader, maxLogLineLength);
+        reader = null;
+      }
+      offset = produce(sourceFile, offset, lineReader, maxBatchSize, batchMaker);
     } catch (IOException ex) {
-      throw new StageException(StageLibError.LIB_0003, file, offset, ex.getMessage(), ex);
+      long lastOffset = offset;
+      offset = -1;
+      throw new StageException(StageLibError.LIB_0003, file, lastOffset, ex.getMessage(), ex);
+    } finally {
+      if (offset == -1) {
+        if (lineReader != null) {
+          try {
+            lineReader.close();
+          } catch (IOException ex) {
+            //NOP
+          }
+          lineReader = null;
+        }
+        if (reader != null) {
+          try {
+            reader.close();
+          } catch (IOException ex) {
+            //NOP
+          }
+        }
+      }
     }
+    return offset;
   }
 
   protected long produce(String sourceFile, long offset, OverrunLineReader lineReader, int maxBatchSize,

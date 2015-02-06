@@ -157,4 +157,12 @@ public class StreamingJsonParser {
     }
   }
 
+  public void close() {
+    try {
+      jsonParser.close();
+    } catch (IOException ex) {
+      //NOP
+    }
+  }
+
 }
