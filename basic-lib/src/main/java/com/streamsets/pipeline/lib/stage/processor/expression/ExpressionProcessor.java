@@ -34,7 +34,7 @@ import java.util.Set;
 @GenerateResourceBundle
 @StageDef(
     version="1.0.0",
-    label="Expression Processor",
+    label="Expression Evaluator",
     description="???",
     icon="expression.png"
 )
