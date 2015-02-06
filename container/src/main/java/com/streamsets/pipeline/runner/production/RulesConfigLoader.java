@@ -9,6 +9,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.runner.LaneResolver;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -63,7 +64,8 @@ public class RulesConfigLoader {
       List<DataRuleDefinition> dataRuleDefinitions = laneToDataRule.get(dataRuleDefinition.getLane());
       if (dataRuleDefinitions == null) {
         dataRuleDefinitions = new ArrayList<>();
-        laneToDataRule.put(dataRuleDefinition.getLane(), dataRuleDefinitions);
+        laneToDataRule.put(LaneResolver.getPostFixedLaneForObserver(dataRuleDefinition.getLane()),
+          dataRuleDefinitions);
       }
       dataRuleDefinitions.add(dataRuleDefinition);
     }
