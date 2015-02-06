@@ -201,12 +201,12 @@ public class TestUtil {
 
         //create a DataRuleDefinition for one of the stages
         DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "p", 20, 10,
-          "${record:value(\"/\")==2}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, null, true);
+          "${record:value(\"/\")==2}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, true);
         List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
         dataRuleDefinitions.add(dataRuleDefinition);
 
         RuleDefinition ruleDefinition = new RuleDefinition(Collections.<MetricsAlertDefinition>emptyList(),
-          dataRuleDefinitions);
+          dataRuleDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
         pipelineStoreTask.storeRules(MY_PIPELINE, PIPELINE_REV, ruleDefinition);
 
       } catch (PipelineStoreException e) {

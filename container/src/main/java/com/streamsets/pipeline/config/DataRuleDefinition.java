@@ -8,8 +8,6 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
 public class DataRuleDefinition {
 
   private final String id;
@@ -31,7 +29,6 @@ public class DataRuleDefinition {
 
   /*enable alert by email*/
   private final boolean sendEmail;
-  private final List<String> emailIds;
 
   /*is this rule definition enabled*/
   private final boolean enabled;
@@ -51,7 +48,6 @@ public class DataRuleDefinition {
                             @JsonProperty("minVolume") long minVolume,
                             @JsonProperty("meterEnabled") boolean meterEnabled,
                             @JsonProperty("sendEmail") boolean sendEmail,
-                            @JsonProperty("emailIds") List<String> emailIds,
                             @JsonProperty("enabled") boolean enabled) {
     this.id = id;
     this.label = label;
@@ -67,7 +63,6 @@ public class DataRuleDefinition {
     this.meterEnabled = meterEnabled;
     this.enabled = enabled;
     this.sendEmail = sendEmail;
-    this.emailIds = emailIds;
   }
 
   public String getId() {
@@ -124,10 +119,6 @@ public class DataRuleDefinition {
 
   public boolean isSendEmail() {
     return sendEmail;
-  }
-
-  public List<String> getEmailIds() {
-    return emailIds;
   }
 
   public boolean isValid() {

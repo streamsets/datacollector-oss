@@ -42,7 +42,7 @@ public class PipelineConfiguration {
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.configuration = configuration;
     this.uiInfo = uiInfo;
-    this.stages = (stages != null) ? stages : Collections.EMPTY_LIST;
+    this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();
     issues = new Issues();
   }
 

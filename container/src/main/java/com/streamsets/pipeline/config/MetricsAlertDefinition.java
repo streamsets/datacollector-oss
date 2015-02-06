@@ -9,12 +9,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
 
-import java.util.List;
-
 public class MetricsAlertDefinition {
 
   private final String id;
-  private final String label;
+  private final String alertText;
   private final String metricId;
   private final MetricType metricType;
   private final MetricElement metricElement;
@@ -24,35 +22,32 @@ public class MetricsAlertDefinition {
 
   /*enable alert by email*/
   private final boolean sendEmail;
-  private final List<String> emailIds;
 
   @JsonCreator
   public MetricsAlertDefinition(@JsonProperty("id") String id,
-                                @JsonProperty("label") String label,
+                                @JsonProperty("alertText") String alertText,
                                 @JsonProperty("metricId") String metricId,
                                 @JsonProperty("metricType") MetricType metricType,
                                 @JsonProperty("metricElement") MetricElement metricElement,
                                 @JsonProperty("condition") String condition,
                                 @JsonProperty("sendMail") boolean sendEmail,
-                                @JsonProperty("emailIds") List<String> emailIds,
                                 @JsonProperty("enabled") boolean enabled) {
     this.id = id;
-    this.label = label;
+    this.alertText = alertText;
     this.metricId = metricId;
     this.metricType = metricType;
     this.metricElement = metricElement;
     this.condition = condition;
     this.enabled = enabled;
     this.sendEmail = sendEmail;
-    this.emailIds = emailIds;
   }
 
   public String getId() {
     return id;
   }
 
-  public String getLabel() {
-    return label;
+  public String getAlertText() {
+    return alertText;
   }
 
   public String getMetricId() {
@@ -79,10 +74,6 @@ public class MetricsAlertDefinition {
     return sendEmail;
   }
 
-  public List<String> getEmailIds() {
-    return emailIds;
-  }
-
   public boolean isValid() {
     return valid;
   }
@@ -95,6 +86,6 @@ public class MetricsAlertDefinition {
   public String toString() {
     return Utils.format(
       "MetricsAlertDefinition[id='{}' label='{}' condition='{}' enabled='{}', metricType='{}', metricElement='{}']",
-      getId(), getLabel(), getCondition(), isEnabled(), getMetricType().name(), getMetricElement().name());
+      getId(), getAlertText(), getCondition(), isEnabled(), getMetricType().name(), getMetricElement().name());
   }
 }

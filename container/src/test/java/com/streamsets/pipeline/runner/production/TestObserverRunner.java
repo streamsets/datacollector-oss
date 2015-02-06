@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class TestObserverRunner {
 
@@ -87,8 +88,9 @@ public class TestObserverRunner {
   private RulesConfigurationChangeRequest createRulesConfigurationChangeRequest(boolean alert, boolean meter) {
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
     dataRuleDefinitions.add(new DataRuleDefinition("myId", "myRule", LANE + "::s", 100, 5,
-      "${record:value(\"/name\")==null}", alert, "alertText", ThresholdType.COUNT, "2", 5, meter, false, null, true));
-    RuleDefinition ruleDefinition = new RuleDefinition(null, dataRuleDefinitions);
+      "${record:value(\"/name\")==null}", alert, "alertText", ThresholdType.COUNT, "2", 5, meter, false, true));
+    RuleDefinition ruleDefinition = new RuleDefinition(null, dataRuleDefinitions, Collections.<String>emptyList(),
+      UUID.randomUUID());
     Map<String, List<DataRuleDefinition>> laneToRuleDefinition = new HashMap<>();
     laneToRuleDefinition.put(LANE + "::s", dataRuleDefinitions);
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =

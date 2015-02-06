@@ -89,6 +89,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("payloadType", ProducerPayloadType.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
+      .addConfiguration("fieldPath", "/")
       .build();
 
     targetRunner.runInit();

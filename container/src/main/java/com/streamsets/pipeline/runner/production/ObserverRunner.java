@@ -44,6 +44,7 @@ public class ObserverRunner {
   private static final String USER_PREFIX = "user.";
   private static final String CURRENT_VALUE = "currentValue";
   private static final String TIMESTAMP = "timestamp";
+  private static final String STREAMSETS_DATA_COLLECTOR_ALERT = "StreamsSets Data Collector Alert - ";
 
   private RulesConfigurationChangeRequest rulesConfigurationChangeRequest;
   private final Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap;
@@ -129,13 +130,15 @@ public class ObserverRunner {
                 switch (dataRuleDefinition.getThresholdType()) {
                   case COUNT:
                     if (matchingRecordCounter.getCount() > threshold) {
-                      raiseAlert(matchingRecordCounter.getCount(), dataRuleDefinition);
+                      raiseAlert(matchingRecordCounter.getCount(), dataRuleDefinition,
+                        rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
                     }
                     break;
                   case PERCENTAGE:
                     if ((matchingRecordCounter.getCount() * 100 / recordCounter.getCount()) > threshold
                       && recordCounter.getCount() >= dataRuleDefinition.getMinVolume()) {
-                      raiseAlert(matchingRecordCounter.getCount(), dataRuleDefinition);
+                      raiseAlert(matchingRecordCounter.getCount(), dataRuleDefinition,
+                        rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
                     }
                     break;
                 }
@@ -155,7 +158,7 @@ public class ObserverRunner {
     if(metricsAlertDefinitions != null) {
       for (MetricsAlertDefinition metricsAlertDefinition : metricsAlertDefinitions) {
         MetricAlertsChecker metricAlertsHelper = new MetricAlertsChecker(metricsAlertDefinition, metrics,
-          variables, elEvaluator, emailSender);
+          variables, elEvaluator, emailSender, rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
         metricAlertsHelper.checkForAlerts();
       }
     }
@@ -186,7 +189,7 @@ public class ObserverRunner {
     }
   }
 
-  private void raiseAlert(Object value, DataRuleDefinition dataRuleDefinition) {
+  private void raiseAlert(Object value, DataRuleDefinition dataRuleDefinition, List<String> emailIds) {
     alertResponse.put(CURRENT_VALUE, value);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     if (gauge == null) {
@@ -201,7 +204,8 @@ public class ObserverRunner {
             dataRuleDefinition.getId(), stringBuilder.toString());
         } else {
           try {
-            emailSender.send(dataRuleDefinition.getEmailIds(), dataRuleDefinition.getId(), stringBuilder.toString());
+            emailSender.send(emailIds, STREAMSETS_DATA_COLLECTOR_ALERT + dataRuleDefinition.getAlertText(),
+              stringBuilder.toString());
           } catch (PipelineException e) {
             LOG.error("Error sending alert email, reason: {}", e.getMessage());
             //Log error and move on. This should not stop the pipeline.

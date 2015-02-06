@@ -36,19 +36,10 @@ public class RulesConfigLoader {
 
   public RuleDefinition load(Observer observer) throws InterruptedException, PipelineStoreException {
     RuleDefinition newRuleDefinition = pipelineStoreTask.retrieveRules(pipelineName, revision);
-    if(newRuleDefinition != null) {
-      if (newRuleDefinition != previousRuleDefinition) {
-        RulesConfigurationChangeRequest rulesConfigurationChangeRequest = detectChanges(previousRuleDefinition,
-          newRuleDefinition);
-        observer.setConfiguration(rulesConfigurationChangeRequest);
-      }
-    } else {
-      if(previousRuleDefinition != null) {
-        //all rules have been deleted
-        RulesConfigurationChangeRequest rulesConfigurationChangeRequest = detectChanges(previousRuleDefinition,
-          new RuleDefinition(new ArrayList<MetricsAlertDefinition>(), new ArrayList<DataRuleDefinition>()));
-        observer.setConfiguration(rulesConfigurationChangeRequest);
-      }
+    if (newRuleDefinition != previousRuleDefinition) {
+      RulesConfigurationChangeRequest rulesConfigurationChangeRequest = detectChanges(previousRuleDefinition,
+        newRuleDefinition);
+      observer.setConfiguration(rulesConfigurationChangeRequest);
     }
     previousRuleDefinition = newRuleDefinition;
     return newRuleDefinition;

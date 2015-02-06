@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -74,15 +75,15 @@ public class TestRulesConfigLoader {
 
     //create a DataRuleDefinition for one of the stages
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "p", 20, 10,
-      "${record:value(\"/\")==4}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, null, true);
+      "${record:value(\"/\")==4}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, true);
     DataRuleDefinition dataRuleDefinition2 = new DataRuleDefinition("myID2", "myLabel", "p", 20, 10,
-      "${record:value(\"/\")==4}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, null, true);
+      "${record:value(\"/\")==4}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, true);
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
 
     dataRuleDefinitions.add(dataRuleDefinition);
     dataRuleDefinitions.add(dataRuleDefinition2);
     RuleDefinition prevRuleDef = new RuleDefinition(Collections.<MetricsAlertDefinition>emptyList(),
-      dataRuleDefinitions);
+      dataRuleDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
     //The latest rule definition has just one data rule definition.
     //The old one had 2
     //Also there is a change in the condition of the data rule definition

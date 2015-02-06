@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MetricAlertsChecker {
@@ -29,6 +30,7 @@ public class MetricAlertsChecker {
   private static final String VAL = "value()";
   private static final String CURRENT_VALUE = "currentValue";
   private static final String TIMESTAMP = "timestamp";
+  private static final String STREAMSETS_DATA_COLLECTOR_ALERT = "StreamsSets Data Collector Alert - ";
 
   private final MetricsAlertDefinition metricsAlertDefinition;
   private final MetricRegistry metrics;
@@ -36,15 +38,18 @@ public class MetricAlertsChecker {
   private final ELEvaluator elEvaluator;
   private final Map<String, Object> alertResponse;
   private final EmailSender emailSender;
+  private final List<String> emailIds;
 
   public MetricAlertsChecker(MetricsAlertDefinition metricsAlertDefinition, MetricRegistry metricRegistry,
-                             ELEvaluator.Variables variables, ELEvaluator elEvaluator, EmailSender emailSender) {
+                             ELEvaluator.Variables variables, ELEvaluator elEvaluator, EmailSender emailSender,
+                             List<String> emailIds) {
     this.metricsAlertDefinition = metricsAlertDefinition;
     this.metrics = metricRegistry;
     this.variables = variables;
     this.elEvaluator = elEvaluator;
     alertResponse = new HashMap<>();
     this.emailSender = emailSender;
+    this.emailIds = emailIds;
   }
 
   public void checkForAlerts() {
@@ -250,7 +255,7 @@ public class MetricAlertsChecker {
             metricsAlertDefinition.getId(), stringBuilder.toString());
         } else {
           try {
-            emailSender.send(metricsAlertDefinition.getEmailIds(), metricsAlertDefinition.getId(),
+            emailSender.send(emailIds, STREAMSETS_DATA_COLLECTOR_ALERT + metricsAlertDefinition.getAlertText(),
               stringBuilder.toString());
           } catch (PipelineException e) {
             LOG.error("Error sending alert email, reason: {}", e.getMessage());

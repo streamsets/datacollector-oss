@@ -21,6 +21,7 @@ import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
+import com.streamsets.pipeline.util.ContainerError;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import org.junit.Assert;
@@ -294,23 +295,21 @@ public class TestFilePipelineStoreTask {
     Assert.assertTrue(ruleDefinition.getDataRuleDefinitions().isEmpty());
     Assert.assertTrue(ruleDefinition.getMetricsAlertDefinitions().isEmpty());
 
-    List<MetricsAlertDefinition> metricsAlertDefinitions = new ArrayList<>();
+    List<MetricsAlertDefinition> metricsAlertDefinitions = ruleDefinition.getMetricsAlertDefinitions();
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
-      MetricElement.COUNTER_COUNT, "p", false, null, true));
+      MetricElement.COUNTER_COUNT, "p", false, true));
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m2", "m2", "a", MetricType.TIMER,
-      MetricElement.TIMER_M15_RATE, "p", false, null, true));
+      MetricElement.TIMER_M15_RATE, "p", false, true));
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
-      MetricElement.HISTOGRAM_MEAN, "p", false, null, true));
+      MetricElement.HISTOGRAM_MEAN, "p", false, true));
 
-    List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
-    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200", 1000,
-      true, false, null, true));
-    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200", 1000,
-      true, false, null, true));
-    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200", 1000,
-      true, false, null, true));
-
-    ruleDefinition = new RuleDefinition(metricsAlertDefinitions, dataRuleDefinitions);
+    List<DataRuleDefinition> dataRuleDefinitions = ruleDefinition.getDataRuleDefinitions();
+    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+      1000, true, false, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+      1000, true, false, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+      1000, true, false, true));
 
     store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinition);
 
@@ -318,6 +317,69 @@ public class TestFilePipelineStoreTask {
       FilePipelineStoreTask.REV);
 
     Assert.assertTrue(ruleDefinition == actualRuleDefinition);
+  }
+
+  @Test
+  public void testStoreMultipleCopies() throws PipelineStoreException {
+    /*This test case mimicks a use case where 2 users connect to the same data collector instance
+    * using different browsers and modify the same rule definition. The user who saves last runs into an exception.
+    * The user is forced to reload, reapply changes and save*/
+    ObjectGraph dagger = ObjectGraph.create(new Module(true));
+    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
+    store.init();
+    RuleDefinition ruleDefinition1 = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+      FilePipelineStoreTask.REV);
+
+    RuleDefinition tempRuleDef = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+      FilePipelineStoreTask.REV);
+    //Mimick two different clients [browsers] retrieving from the store
+    RuleDefinition ruleDefinition2 = new RuleDefinition(tempRuleDef.getMetricsAlertDefinitions(),
+      tempRuleDef.getDataRuleDefinitions(), tempRuleDef.getEmailIds(), tempRuleDef.getUuid());
+
+    List<MetricsAlertDefinition> metricsAlertDefinitions = ruleDefinition1.getMetricsAlertDefinitions();
+    metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
+      MetricElement.COUNTER_COUNT, "p", false, true));
+    metricsAlertDefinitions.add(new MetricsAlertDefinition("m2", "m2", "a", MetricType.TIMER,
+      MetricElement.TIMER_M15_RATE, "p", false, true));
+    metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
+      MetricElement.HISTOGRAM_MEAN, "p", false, true));
+
+    List<DataRuleDefinition> dataRuleDefinitions = ruleDefinition2.getDataRuleDefinitions();
+    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+      1000, true, false, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+      1000, true, false, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+      1000, true, false, true));
+
+    //store ruleDefinition1
+    store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinition1);
+
+    //attempt storing rule definition 2, should fail
+    try {
+      store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinition2);
+      Assert.fail("Expected PipelineStoreException as the rule definition being saved is not the latest copy.");
+    } catch (PipelineStoreException e) {
+      Assert.assertEquals(e.getErrorCode(), ContainerError.CONTAINER_0205);
+    }
+
+    //reload, modify and and then store
+    ruleDefinition2 = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+      FilePipelineStoreTask.REV);
+    dataRuleDefinitions = ruleDefinition2.getDataRuleDefinitions();
+    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+      1000, true, false, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+      1000, true, false, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+      1000, true, false, true));
+
+    store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinition2);
+
+    RuleDefinition actualRuleDefinition = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+      FilePipelineStoreTask.REV);
+
+    Assert.assertTrue(ruleDefinition2 == actualRuleDefinition);
   }
 
 }

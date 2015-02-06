@@ -87,7 +87,7 @@ public class RuleDefinitionValidator {
         dataRuleDefinition.setValid(false);
       }
       if(dataRuleDefinition.isSendEmail() &&
-        (dataRuleDefinition.getEmailIds() == null || dataRuleDefinition.getEmailIds().isEmpty())) {
+        (ruleDefinition.getEmailIds() == null || ruleDefinition.getEmailIds().isEmpty())) {
         RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0042);
         r.setAdditionalInfo(PROPERTY, EMAIL_IDS);
         ruleIssues.add(r);
@@ -116,7 +116,7 @@ public class RuleDefinitionValidator {
       String ruleId = metricsAlertDefinition.getId();
       //reset valid flag before validating
       metricsAlertDefinition.setValid(true);
-      if(metricsAlertDefinition.getLabel() == null || metricsAlertDefinition.getLabel().isEmpty()) {
+      if(metricsAlertDefinition.getAlertText() == null || metricsAlertDefinition.getAlertText().isEmpty()) {
         RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0050, LABEL);
         r.setAdditionalInfo(PROPERTY, LABEL);
         ruleIssues.add(r);

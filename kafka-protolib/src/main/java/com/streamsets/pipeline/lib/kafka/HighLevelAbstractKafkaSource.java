@@ -117,6 +117,10 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
 
   @Override
   public void init() throws StageException {
+    if(getContext().isPreview()) {
+      //set fixed batch duration time of 1 second for preview.
+      maxWaitTime = 1000;
+    }
     kafkaConsumer = new HighLevelKafkaConsumer(zookeeperConnect, topic, consumerGroup, maxBatchSize, maxWaitTime,
       kafkaConsumerConfigs, getContext());
     kafkaConsumer.init();

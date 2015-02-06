@@ -41,6 +41,7 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -127,21 +128,22 @@ public class TestPipelineStoreResource extends JerseyTest {
 
     List<MetricsAlertDefinition> metricsAlertDefinitions = new ArrayList<>();
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
-      MetricElement.COUNTER_COUNT, "p", false, null, true));
+      MetricElement.COUNTER_COUNT, "p", false, true));
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m2", "m2", "a", MetricType.TIMER,
-      MetricElement.TIMER_M15_RATE, "p", false, null, true));
+      MetricElement.TIMER_M15_RATE, "p", false, true));
     metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
-      MetricElement.HISTOGRAM_MEAN, "p", false, null, true));
+      MetricElement.HISTOGRAM_MEAN, "p", false, true));
 
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
-    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "a", ThresholdType.COUNT, "200", 1000,
-      true, false, null, true));
-    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "a", ThresholdType.COUNT, "200", 1000,
-      true, false, null, true));
-    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "a", ThresholdType.COUNT, "200", 1000,
-      true, false, null, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "a", ThresholdType.COUNT, "200",
+      1000, true, false, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "a", ThresholdType.COUNT, "200",
+      1000, true, false, true));
+    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "a", ThresholdType.COUNT, "200",
+      1000, true, false, true));
 
-    RuleDefinition ruleDefinition = new RuleDefinition(metricsAlertDefinitions, dataRuleDefinitions);
+    RuleDefinition ruleDefinition = new RuleDefinition(metricsAlertDefinitions, dataRuleDefinitions,
+      Collections.<String>emptyList(), UUID.randomUUID());
     Response r = target("/v1/pipeline-library/myPipeline/rules").queryParam("rev", "tag").request()
       .post(Entity.json(ruleDefinition));
     RuleDefinition result = r.readEntity(RuleDefinition.class);
@@ -216,21 +218,22 @@ public class TestPipelineStoreResource extends JerseyTest {
 
         List<MetricsAlertDefinition> metricsAlertDefinitions = new ArrayList<>();
         metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
-          MetricElement.COUNTER_COUNT, "p", false, null, true));
+          MetricElement.COUNTER_COUNT, "p", false, true));
         metricsAlertDefinitions.add(new MetricsAlertDefinition("m2", "m2", "a", MetricType.TIMER,
-          MetricElement.TIMER_M15_RATE, "p", false, null, true));
+          MetricElement.TIMER_M15_RATE, "p", false, true));
         metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
-          MetricElement.HISTOGRAM_MEAN, "p", false, null, true));
+          MetricElement.HISTOGRAM_MEAN, "p", false, true));
 
         List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
         dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-          1000, true, false, null, true));
+          1000, true, false,true));
         dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-          1000, true, false, null, true));
+          1000, true, false, true));
         dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-          1000, true, false, null, true));
+          1000, true, false, true));
 
-        RuleDefinition rules = new RuleDefinition(metricsAlertDefinitions, dataRuleDefinitions);
+        RuleDefinition rules = new RuleDefinition(metricsAlertDefinitions, dataRuleDefinitions,
+          Collections.<String>emptyList(), UUID.randomUUID());
         List<RuleIssue> ruleIssues = new ArrayList<>();
         ruleIssues.add(RuleIssue.createRuleIssue("a", ValidationError.VALIDATION_0000));
         ruleIssues.add(RuleIssue.createRuleIssue("b", ValidationError.VALIDATION_0000));

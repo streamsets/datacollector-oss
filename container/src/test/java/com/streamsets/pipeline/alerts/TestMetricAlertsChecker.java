@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -51,9 +52,9 @@ public class TestMetricAlertsChecker {
 
     MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerMatch", "testTimerMatch",
       "testTimerMatch.timer", MetricType.TIMER,
-      MetricElement.TIMER_COUNT, "${value()>2}", false, null, true);
+      MetricElement.TIMER_COUNT, "${value()>2}", false, true);
     MetricAlertsChecker metricAlertsChecker = new MetricAlertsChecker(metricsAlertDefinition, metrics, variables,
-      elEvaluator, null);
+      elEvaluator, null, Collections.<String>emptyList());
     metricAlertsChecker.checkForAlerts();
 
     //get alert gauge
@@ -73,9 +74,9 @@ public class TestMetricAlertsChecker {
 
     MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerMatchDisabled",
       "testTimerMatchDisabled", "testTimerMatchDisabled.timer", MetricType.TIMER, MetricElement.TIMER_COUNT,
-      "${value()>2}", false, null, false);
+      "${value()>2}", false, false);
     MetricAlertsChecker metricAlertsChecker = new MetricAlertsChecker(metricsAlertDefinition, metrics, variables,
-      elEvaluator, null);
+      elEvaluator, null, Collections.<String>emptyList());
     metricAlertsChecker.checkForAlerts();
 
     //get alert gauge
@@ -94,9 +95,9 @@ public class TestMetricAlertsChecker {
 
     MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerNoMatch", "testTimerNoMatch",
       "testTimerNoMatch.timer", MetricType.TIMER,
-      MetricElement.TIMER_COUNT, "${value()>4}", false, null, true);
+      MetricElement.TIMER_COUNT, "${value()>4}", false, true);
     MetricAlertsChecker metricAlertsChecker = new MetricAlertsChecker(metricsAlertDefinition, metrics, variables,
-      elEvaluator, null);
+      elEvaluator, null, Collections.<String>emptyList());
     metricAlertsChecker.checkForAlerts();
 
     //get alert gauge
