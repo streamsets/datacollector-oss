@@ -22,9 +22,13 @@ Maven Profiles (use -P<profile-name>):
               (if the 'ui' profile is active it will bundle UI in the distribution)
 * docs      : used in conjunction with the 'dist' profile to generate documentation
               as part of the build
-* release   : builds the data collector skipping all dev related modules (i.e. dummy-lib)
+
+Maven Properties (use -D<property-name>):
+
+* release : produces release tarballs for sdc and stage libraries under release/target/ directory.
 
 -------
+
 
 Code Coverage (using cobertura plugin):
 

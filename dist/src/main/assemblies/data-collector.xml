@@ -8,22 +8,10 @@
   <id>dist</id>
   <formats>
     <format>dir</format>
-    <format>tar.gz</format>
   </formats>
   <includeBaseDirectory>true</includeBaseDirectory>
 
   <fileSets>
-
-    <!-- License, Notice, etc -->
-    <fileSet>
-      <directory>${basedir}/../</directory>
-      <outputDirectory>/</outputDirectory>
-      <includes>
-        <include>LICENSE.txt</include>
-        <include>NOTICE.txt</include>
-        <include>README.txt</include>
-      </includes>
-    </fileSet>
 
     <!-- bin -->
     <!-- For now we are not exposing the SDC_HOME capabilities -->

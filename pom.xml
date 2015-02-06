@@ -125,6 +125,18 @@
         <module>dev-lib</module>
       </modules>
     </profile>
+    <profile>
+      <id>release</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>release</module>
+      </modules>
+    </profile>
   </profiles>
 
 </project>

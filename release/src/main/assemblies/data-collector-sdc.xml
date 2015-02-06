@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ (c) 2014 StreamSets, Inc. All rights reserved. May not
+ be copied, modified, or distributed in whole or part without
+ written consent of StreamSets, Inc.
+-->
+<assembly>
+  <id>sdc</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+
+    <!-- LICENSE, NOTICE, README, etc -->
+    <fileSet>
+      <directory>src/main/release-files</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+
+    <!-- SDC -->
+    <fileSet>
+      <directory>${basedir}/../dist/target/streamsets-datacollector-${project.version}</directory>
+      <outputDirectory>/</outputDirectory>
+      <excludes>
+        <exclude>streamsets-datacollector-${project.version}/stage-libs/**</exclude>
+      </excludes>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../dist/target/streamsets-datacollector-${project.version}</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>streamsets-datacollector-${project.version}/stage-libs/streamsets-datacollector-basic-lib/**</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+
+</assembly>
