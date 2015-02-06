@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_swx_lbf_zq">
+ <title>Comparison Window</title>
+ <shortdesc>The Deduplicator compares records up to a user-defined limit. It can also perform
+  comparisons within a window of time.</shortdesc>
+ <conbody>
+  <p>The Deduplicator compares records until it reaches the record limit. Then, it discards the
+   information kept in memory and starts fresh. You can configure a time limit to trigger a refresh
+   at regular time intervals.</p>
+  <p>When you stop the pipeline, the Deduplicator discards all information in memory.</p>
+ </conbody>
+</concept>

@@ -72,7 +72,12 @@
         <div class="section context"></div>
 
         <ol class="ol steps" id="task_npx_xgf_vq__steps_f3x_nhw_yq"><li class="li step stepexpand">
-                <span class="ph cmd">In the Properties panel, configure the following properties:</span>
+                <span class="ph cmd">In the Properties panel, optionally enter a name and description for the
+                    stage. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Kafka</span> tab, configure the following
+                    properties:</span>
                 <div class="itemgroup info">
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_v4j_qhw_yq" class="table" frame="border" border="1" rules="all">
@@ -80,9 +85,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.57142857142857%" id="d3653e110">General Properties</th>
+                                    <th class="entry" valign="top" width="28.57142857142857%" id="d3649e118">General Properties</th>
 
-                                    <th class="entry" valign="top" width="71.42857142857143%" id="d3653e113">Description</th>
+                                    <th class="entry" valign="top" width="71.42857142857143%" id="d3649e121">Description</th>
 
                                 </tr>
 
@@ -90,63 +95,33 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3653e110 ">Name</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3649e118 ">ZooKeeper Connection String</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3653e113 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3653e110 ">Description</td>
-
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3653e113 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3649e121 ">Connection string for the ZooKeeper of the Kafka cluster.
+                                        To use more than one ZooKeeper, enter a comma-separated
+                                        list.</td>
 
                                 </tr>
+  <tr class="row">
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3649e118 ">Consumer Group</td>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3653e110 ">Consumer Group</td>
-
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3653e113 ">Kakfa consumer group the <span class="ph">Data
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3649e121 ">Kakfa consumer group the <span class="ph">Data
                   Collector</span> represents.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3653e110 ">Topic</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3649e118 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3653e113 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3653e110 ">ZooKeeper Connect String</td>
-
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3653e113 ">Connection string for the ZooKeeper of the Kafka cluster.
-                                        To use more than one ZooKeeper, enter a comma-separated
-                                        list.</td>
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3649e121 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3653e110 ">Max Batch Size</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3649e118 ">Payload Type</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3653e113 ">Maximum number of messages processed at one time.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3653e110 ">Batch Duration Time (secs)</td>
-
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3653e113 ">Number of seconds the Kafka Consumer waits before sending
-                                        a partial or empty batch. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3653e110 ">Payload Type</td>
-
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3653e113 ">Type of data in the topic. Use one of the following
-                                            options:<ul class="ul" id="task_npx_xgf_vq__ul_qgm_tjw_yq">
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3649e121 ">Type of data in the topic. Use one of the following
+                                        options:<ul class="ul" id="task_npx_xgf_vq__ul_qgm_tjw_yq">
                                             <li class="li">Log</li>
 
                                             <li class="li">JSON</li>
@@ -160,51 +135,35 @@
 
                                 </tr>
 
-                            </tbody>
-
-                        </table>
-</div>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">To configure additional Kafka properties, on the <span class="ph uicontrol">Advanced
-                        Properties</span> tab, click <span class="ph uicontrol">Add</span> and configure
-                    the following properties:</span>
-                <div class="itemgroup info">
-                    
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_dzq_blw_yq" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.57142857142857%" id="d3653e240">Advanced Configuration Property <a class="xref" href="KConsumer.html#concept_d5f_n2g_vq" title="You can add custom properties to pass Kafka configuration properties that you want to use.">
-                                            <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a>
-                                    </th>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3649e118 ">Max Batch Size</td>
 
-                                    <th class="entry" valign="top" width="71.42857142857143%" id="d3653e251">Description</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3653e240 ">Name</td>
-
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3653e251 ">Name of the Kafka configuration property. Enter the exact
-                                        name.</td>
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3649e121 ">Maximum number of messages processed at one time.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3653e240 ">Value</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3649e118 ">Batch Duration Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3653e251 ">Value for the configuration option. Enter the value as
-                                        expected by Kafka.</td>
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3649e121 ">Number of seconds the Kafka Consumer waits before sending
+                                        a partial or empty batch. </td>
 
                                 </tr>
 
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d3649e118 ">Kafka Configuration  <a class="xref" href="KConsumer.html#concept_d5f_n2g_vq" title="You can add custom properties to pass Kafka configuration properties that you want to use.">
+                                            <img class="image" id="task_npx_xgf_vq__image_mwv_b52_zq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a>
+                                    </td>
+
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d3649e121 ">Additional Kafka configuration properties to use. To add
+                                        properties, click <span class="ph uicontrol">Add</span> and define the
+                                        Kafka property name and value. <p class="p">Use the property names and
+                                            values as expected by Kafka.</p>
+</td>
+
+                                </tr>
+
+    
                             </tbody>
 
                         </table>
@@ -222,9 +181,9 @@
      
      <thead class="thead" align="left">
       <tr class="row">
-       <th class="entry" valign="top" width="37.49999999999999%" id="d3653e303">JSON Data Property</th>
+       <th class="entry" valign="top" width="37.49999999999999%" id="d3649e249">JSON Data Property</th>
 
-       <th class="entry" valign="top" width="62.5%" id="d3653e306">Description</th>
+       <th class="entry" valign="top" width="62.5%" id="d3649e252">Description</th>
 
       </tr>
 
@@ -232,10 +191,10 @@
 
      <tbody class="tbody">
       <tr class="row">
-       <td class="entry" valign="top" width="37.49999999999999%" headers="d3653e303 ">JSON Content</td>
+       <td class="entry" valign="top" width="37.49999999999999%" headers="d3649e249 ">JSON Content</td>
 
-       <td class="entry" valign="top" width="62.5%" headers="d3653e306 ">Type of content in JSON files. Use one of the following options: <div class="p">
-         <ul class="ul" id="task_npx_xgf_vq__d437e50">
+       <td class="entry" valign="top" width="62.5%" headers="d3649e252 ">Type of content in JSON files. Use one of the following options: <div class="p">
+         <ul class="ul" id="task_npx_xgf_vq__d446e50">
           <li class="li">Array of Objects </li>
 
           <li class="li">Multiple Objects.</li>
@@ -248,9 +207,9 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="37.49999999999999%" headers="d3653e303 ">Maximum Object Length</td>
+       <td class="entry" valign="top" width="37.49999999999999%" headers="d3649e249 ">Maximum Object Length</td>
 
-       <td class="entry" valign="top" width="62.5%" headers="d3653e306 ">Maximum length for a JSON object. Longer objects are discarded. </td>
+       <td class="entry" valign="top" width="62.5%" headers="d3649e252 ">Maximum length for a JSON object. Longer objects are discarded. </td>
 
       </tr>
 

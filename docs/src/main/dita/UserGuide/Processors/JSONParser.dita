@@ -2,9 +2,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_bs1_4t3_yq">
  <title>JSON Parser</title>
- <shortdesc>The JSON parser parses a JSON object embedded in map field and produces the fields from
-  the JSON object.</shortdesc>
- <conbody>
-  <p></p>
- </conbody>
+ <shortdesc>The JSON Parser parses a JSON object embedded in String field and passes the resulting
+  data into the pipeline. Based on the contents of the JSON object, the resulting field is either a
+  string, a map or an array.</shortdesc>
 </concept>

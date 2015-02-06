@@ -58,6 +58,24 @@
                 <info>If it does not, select the pipeline that you want to stop from the Pipeline
                     library.</info>
             </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">The first step should used for all stage
+                        configuration. The 2nd step for everything but origins.</draft-comment>
+                </cmd>
+            </step>
+            <step id="Step_NameDesc">
+                <cmd>In the Properties panel, optionally enter a name and description for the
+                    stage. </cmd>
+            </step>
+            <step id="Step_ReqFields">
+                <cmd>For <uicontrol>Required Fields</uicontrol>, enter any fields that you want to
+                    require data. <xref
+                        href="../Processors/RequiredFieldsinProcessors.dita#concept_dnj_bkm_vq">
+                        <image href="../Graphics/icon_moreInfo.png" scale="11" id="image_h4p_p5v_yq"
+                        /></xref></cmd>
+                <info>You might include any field that the processor uses.</info>
+            </step>
         </steps>
     </taskbody>
 </task>

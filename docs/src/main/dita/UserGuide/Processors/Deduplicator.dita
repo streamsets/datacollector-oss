@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_z3m_v52_zq">
+ <title>Deduplicator</title>
+ <shortdesc>The Deduplicator discards records from the pipeline that include duplicate data.  The
+  Deduplicator routes data to two streams, one for unique records and one for duplicate records. Use
+  the Deduplicator to route or discard duplicate data.</shortdesc>
+ <conbody>
+  <p>The Deduplicator can compare entire records or a subset of fields. Use a subset of fields to
+   focus the comparison of duplicate data on the fields of particular concern. For example, to
+   discard duplicate purchase events, you might compare information about the purchaser, selected
+   items, and shipping address, but ignore the timestamp of the event.<draft-comment
+    author="Loretta">example from Natty. murmurhash3 128?</draft-comment></p>
+  <p>To enhance pipeline performance, the Deduplicator hashes the comparison fields and uses the
+   hashed values when evaluating for duplicates. </p>
+ </conbody>
+</concept>

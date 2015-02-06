@@ -9,10 +9,10 @@
     <taskbody>
         <context/>
         <steps id="steps_tvn_b5v_yq">
-            <step>
-                <cmd>In the Properties panel, optionally enter a name and description for the stage.
-                </cmd>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc">
+                <cmd/>
             </step>
+           
             <step>
                 <cmd>On the <uicontrol>Files</uicontrol> tab, configure the following
                         properties:<draft-comment author="Loretta">review step above and table.
@@ -84,8 +84,7 @@
                                 <row>
                                     <entry>File Wait Timeout (secs) <xref
                                             href="Directory_FileWaitTime.dita#concept_fqb_x1l_5q">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
-                                                id="image_h4p_p5v_yq"/></xref>
+                                            <image href="../Graphics/icon_moreInfo.png" scale="12" id="image_h4p_p5v_yq"/></xref>
                                     </entry>
                                     <entry>Number of seconds to wait for a new file. If a new file
                                         does not arrive within the specified time, Directory sends

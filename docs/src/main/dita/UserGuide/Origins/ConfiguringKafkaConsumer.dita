@@ -9,8 +9,11 @@
     <taskbody>
         <context/>
         <steps id="steps_f3x_nhw_yq">
-            <step>
-                <cmd>In the Properties panel, configure the following properties:</cmd>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc">
+                <cmd/>
+            </step><step>
+                <cmd>On the <uicontrol>Kafka</uicontrol> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_v4j_qhw_yq">
                         <tgroup cols="2">
@@ -24,14 +27,11 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Name</entry>
-                                    <entry>Stage name.</entry>
-                                </row>
-                                <row>
-                                    <entry>Description</entry>
-                                    <entry>Optional description.</entry>
-                                </row>
-                                <row>
+                                    <entry>ZooKeeper Connection String</entry>
+                                    <entry>Connection string for the ZooKeeper of the Kafka cluster.
+                                        To use more than one ZooKeeper, enter a comma-separated
+                                        list.</entry>
+                                </row>  <row>
                                     <entry>Consumer Group</entry>
                                     <entry>Kakfa consumer group the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -42,10 +42,14 @@
                                     <entry>Kafka topic to read.</entry>
                                 </row>
                                 <row>
-                                    <entry>ZooKeeper Connect String</entry>
-                                    <entry>Connection string for the ZooKeeper of the Kafka cluster.
-                                        To use more than one ZooKeeper, enter a comma-separated
-                                        list.</entry>
+                                    <entry>Payload Type</entry>
+                                    <entry>Type of data in the topic. Use one of the following
+                                        options:<ul id="ul_qgm_tjw_yq">
+                                            <li>Log</li>
+                                            <li>JSON</li>
+                                            <li>CSV</li>
+                                            <li>XML</li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Max Batch Size</entry>
@@ -57,50 +61,17 @@
                                         a partial or empty batch. </entry>
                                 </row>
                                 <row>
-                                    <entry>Payload Type</entry>
-                                    <entry>Type of data in the topic. Use one of the following
-                                            options:<ul id="ul_qgm_tjw_yq">
-                                            <li>Log</li>
-                                            <li>JSON</li>
-                                            <li>CSV</li>
-                                            <li>XML</li>
-                                        </ul></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>To configure additional Kafka properties, on the <uicontrol>Advanced
-                        Properties</uicontrol> tab, click <uicontrol>Add</uicontrol> and configure
-                    the following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_dzq_blw_yq">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3*"/>
-                            <thead>
-                                <row>
-                                    <entry>Advanced Configuration Property <xref
+                                    <entry>Kafka Configuration  <xref
                                             href="KConsumer_AdvancedProp.dita#concept_d5f_n2g_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="12"
-                                            /></xref>
+                                                id="image_mwv_b52_zq"/></xref>
                                     </entry>
-                                    <entry>Description</entry>
+                                    <entry>Additional Kafka configuration properties to use. To add
+                                        properties, click <uicontrol>Add</uicontrol> and define the
+                                        Kafka property name and value. <p>Use the property names and
+                                            values as expected by Kafka.</p></entry>
                                 </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Name</entry>
-                                    <entry>Name of the Kafka configuration property. Enter the exact
-                                        name.</entry>
-                                </row>
-                                <row>
-                                    <entry>Value</entry>
-                                    <entry>Value for the configuration option. Enter the value as
-                                        expected by Kafka.</entry>
-                                </row>
+    
                             </tbody>
                         </tgroup>
                     </table>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_ikr_c2f_zq">
+    <title>Configuring a Deduplicator</title>
+    <shortdesc>Use a Deduplicator to remove records with duplicate data. </shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_ojk_22f_zq">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Deduplication</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_mrg_m2f_zq">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.55*"/>
+                            <thead>
+                                <row>
+                                    <entry>Deduplication Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Max Records to Compare</entry>
+                                    <entry>The maximum number of records to compare. </entry>
+                                </row>
+                                <row>
+                                    <entry>Time to Compare</entry>
+                                    <entry>Amount of seconds to compare records. This property takes
+                                        precedence over the number of records. </entry>
+                                </row>
+                                <row>
+                                    <entry>Compare All Fields</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">See what we get
+                                            here.</draft-comment>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Fields to Compare</entry>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Use a JSON Parser to parse a JSON object embedded in a Map field. In the Properties panel,"></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Configuring a JSON Parser"></meta><meta name="abstract" content="Use a JSON Parser to parse a JSON object embedded in a Map field."></meta><meta name="description" content="Use a JSON Parser to parse a JSON object embedded in a Map field."></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_kwz_lg2_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Configuring a JSON Parser</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use a JSON Parser to parse a JSON object in a String field. When you configure a JSON Parser, specify the field to parse and the output field to use. In the Properties panel, optionally enter a name ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Configuring a JSON Parser"></meta><meta name="abstract" content="Use a JSON Parser to parse a JSON object in a String field."></meta><meta name="description" content="Use a JSON Parser to parse a JSON object in a String field."></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_kwz_lg2_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Configuring a JSON Parser</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -13,16 +13,81 @@
     <h1 class="title topictitle1">Configuring a JSON Parser</h1>
 
     
-    <div class="body taskbody"><p class="shortdesc">Use a JSON Parser to parse a JSON object embedded in a Map field.</p>
+    <div class="body taskbody"><p class="shortdesc">Use a JSON Parser to parse a JSON object in a String field. </p>
 
         <div class="section context">
-            <p class="p"></p>
+            <p class="p">When you configure a JSON Parser, specify the field to parse and the output field to
+                use.</p>
 
         </div>
 
-        <div class="li step p">
-                <span class="ph cmd">In the Properties panel, </span>
-            </div>
+        <ol class="ol steps" id="task_kwz_lg2_zq__steps_wc5_4g2_zq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, optionally enter a name and description for the
+                    stage. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
+                    require data. <a class="xref" href="Processors_overview.html#concept_dnj_bkm_vq" title="A required field must exist in a record to keep it in the pipeline. When a record does not include a required field, the processor discards the record. You can configure required fields for any processor or target stage.">
+                        <img class="image" id="task_kwz_lg2_zq__d1034e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></span>
+                <div class="itemgroup info">You might include any field that the processor uses.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">JSON Parsing</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kwz_lg2_zq__table_rmn_h52_zq" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="50%" id="d9096e69">JSON Parsing Property</th>
+
+                                    <th class="entry" valign="top" width="50%" id="d9096e72">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="50%" headers="d9096e69 ">Field to Parse</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d9096e72 ">Field that contains JSON objects.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="50%" headers="d9096e69 ">Parsed JSON Field</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d9096e72 ">Output field for the parsed JSON objects.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="50%" headers="d9096e69 ">On Error</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d9096e72 ">Action to take when an error occurs. Use one of the
+                                        following options:<ul class="ul" id="task_kwz_lg2_zq__ul_xtt_q52_zq">
+                                            <li class="li">Discard</li>
+
+                                            <li class="li">Send to Error</li>
+
+                                            <li class="li">Stop Pipeline</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
 
     </div>
 

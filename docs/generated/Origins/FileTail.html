@@ -68,8 +68,13 @@
 
         <div class="section context"></div>
 
-        <div class="li step p">
-                <span class="ph cmd">In the Properties panel, configure the following properties:</span>
+        <ol class="ol steps" id="task_unq_wdw_yq__steps_cfd_j2w_yq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, optionally enter a name and description for the
+                    stage. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">File</span> tab, configure the following
+                    properties:</span>
                 <div class="itemgroup info">
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__table_ld1_5fr_5q" class="table" frame="border" border="1" rules="all">
@@ -77,9 +82,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.985507246376812%" id="d3365e99">File Tail General Property</th>
+                                    <th class="entry" valign="top" width="28.985507246376812%" id="d3365e108">File Tail General Property</th>
 
-                                    <th class="entry" valign="top" width="71.01449275362319%" id="d3365e102">Description</th>
+                                    <th class="entry" valign="top" width="71.01449275362319%" id="d3365e111">Description</th>
 
                                 </tr>
 
@@ -87,47 +92,40 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3365e99 ">Name</td>
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3365e108 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3365e102 ">Stage name.</td>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3365e111 ">Format of data in the file. Use one of the following
+                                            options:<ul class="ul" id="task_unq_wdw_yq__ul_pwv_cr2_zq">
+                                            <li class="li">Log data</li>
 
-                                </tr>
+                                            <li class="li">JSON data</li>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3365e99 ">Description</td>
-
-                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3365e102 ">Optional description.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3365e99 ">Data Format</td>
-
-                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3365e102 ">Format of data in the file. </td>
+                                        </ul>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3365e99 ">File Path</td>
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3365e108 ">File Path</td>
 
-                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3365e102 ">Directory and file name to read.</td>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3365e111 ">Directory and file name to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3365e99 ">Batch Size (records) <a class="xref" href="FileTail.html#concept_ypd_vgr_5q" title="For the File Tail origin, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that File Tail waits for additional data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains.">
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3365e108 ">Batch Size (records) <a class="xref" href="FileTail.html#concept_ypd_vgr_5q" title="For the File Tail origin, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that File Tail waits for additional data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains.">
                                             <img class="image" id="task_unq_wdw_yq__image_obp_j2w_yq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
 
-                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3365e102 ">Maximum number of records to include in a batch. </td>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3365e111 ">Maximum number of records to include in a batch. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3365e99 ">Batch Wait Time (secs) <a class="xref" href="FileTail.html#concept_ypd_vgr_5q" title="For the File Tail origin, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that File Tail waits for additional data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains.">
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d3365e108 ">Batch Wait Time (secs) <a class="xref" href="FileTail.html#concept_ypd_vgr_5q" title="For the File Tail origin, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that File Tail waits for additional data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains.">
                                         <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img>
                                            </a> </td>
 
-                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3365e102 ">Number of seconds to wait before sending a batch.</td>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d3365e111 ">Number of seconds to wait before sending a batch.</td>
 
                                 </tr>
 
@@ -137,7 +135,8 @@
 </div>
 
                 </div>
-            </div>
+            </li>
+</ol>
 
     </div>
 

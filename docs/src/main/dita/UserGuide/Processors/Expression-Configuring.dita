@@ -5,9 +5,7 @@
     <shortdesc>Configure an Expression &lt;&lt;name>> to perform calculations on records on a
         row-by-row basis.</shortdesc>
     <taskbody>
-        <context>
-            <p/>
-        </context>
+        <context/>
         <steps id="steps_wxb_ky4_yq">
             <step>
                 <cmd>In the Properties panel, optionally enter a name and description for the
