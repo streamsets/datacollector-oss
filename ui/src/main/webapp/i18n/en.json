@@ -184,6 +184,7 @@
         "stageType": "Stage Type",
         "stageVersion": "Stage Version"
       },
+      "dataRules": "Data Rules",
       "dataSummaryTab": {
         "noRulesMessage": "No Rules added for this stream. Add Rules in Rules Tab for Inspecting Data.",
         "meterGraphPostFix": " (records/sec)"
@@ -195,6 +196,7 @@
       },
       "info": "Info",
       "inspectingData": "Inspecting Data",
+      "metricAlertRules": "Metric Rules",
       "monitoring": "Monitoring",
       "rawPreview": "Raw Preview",
       "rules": "Rules",
@@ -209,12 +211,14 @@
         "dataRule":"Data Rule",
         "dataRules": "Data Rules",
         "deleteRuleTooltip": "Delete Rule",
+        "emailIds": "Email IDs",
         "enableAlert": "Enable Alert",
         "enableMeter": "Enable Meter",
         "enabled": "Enabled",
         "group": "Group",
         "groupPlaceholder": "Group",
         "histogram": "Histogram",
+        "issues": "Issues",
         "label": "Label",
         "labelPlaceholder": "Rule Label",
         "meter": "Meter",

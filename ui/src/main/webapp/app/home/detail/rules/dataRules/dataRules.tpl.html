@@ -11,14 +11,14 @@
           ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
           name="{{detailPaneConfig.instanceName || 'pipeline'}}">
 
-
-
       <table class="table" ng-init="expandAll=false">
         <thead>
           <tr>
             <th class="expand-col">
               <span class="pointer toggler {{expandAll ? 'open' : ''}}"
-                    ng-click="expandAll = !expandAll"></span>
+                    ng-if="dataRuleDefinitions.length"
+                    ng-click="expandAll = !expandAll">
+              </span>
             </th>
             <th class="alert-text-col">{{'home.detailPane.rulesTab.label' | translate}}</th>
             <th class="condition-col">{{'home.detailPane.rulesTab.condition' | translate}}</th>
@@ -32,7 +32,8 @@
         <tbody ng-hide="showLoading">
 
         <tr ng-repeat-start="dataRuleDefn in dataRuleDefinitions = (pipelineRules.dataRuleDefinitions | filter: {lane: selectedObject.outputLane})"
-            ng-init="isOpen=false">
+            ng-init="isOpen=false;ruleIssues = (pipelineRules.ruleIssues | filter: {ruleId: alertRule.id})"
+            ng-class="dataRuleDefn.valid ? '' : 'invalid-rule'">
 
           <td>
             <span class="pointer toggler {{isOpen || expandAll ? 'open' : ''}}"
@@ -68,13 +69,13 @@
 
           <td>
             <a href="javascript:;" ng-click="editDataRule(dataRuleDefn, $index)">Edit</a>
-            &nbsp;&nbsp;|&nbsp;&nbsp;
+            &nbsp;|&nbsp;
             <a href="javascript:;" ng-click="removeRule(pipelineRules.dataRuleDefinitions, $index)">Delete</a>
           </td>
 
         </tr>
 
-        <tr ng-repeat-end ng-if="isOpen || expandAll">
+        <tr ng-repeat-end ng-if="isOpen || expandAll" class="expand-row" ng-class="dataRuleDefn.valid ? '' : 'invalid-rule'">
           <td colspan="8">
             <ul class="properties">
 
@@ -122,6 +123,34 @@
                 </span>
                 <span class="properties-value">
                   {{dataRuleDefn.minVolume}}
+                </span>
+              </li>
+
+
+              <li ng-if="dataRuleDefn.alertEnabled">
+                <span class="properties-label">
+                  {{'home.detailPane.rulesTab.sendEmail' | translate}}:
+                </span>
+                <span class="properties-value">
+                  {{dataRuleDefn.sendEmail}}
+                </span>
+              </li>
+
+              <li ng-if="dataRuleDefn.alertEnabled && dataRuleDefn.sendEmail">
+                <span class="properties-label">
+                  {{'home.detailPane.rulesTab.emailIds' | translate}}:
+                </span>
+                <span class="properties-value">
+                  {{dataRuleDefn.emailIds}}
+                </span>
+              </li>
+
+              <li ng-if="ruleIssues.length">
+                <span class="properties-label">
+                  {{'home.detailPane.rulesTab.issues' | translate}}:
+                </span>
+                <span class="properties-value">
+                  <span ng-repeat="ruleIssue in ruleIssues">{{ruleIssue.message}}</span>
                 </span>
               </li>
 

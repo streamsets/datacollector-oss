@@ -44,12 +44,12 @@ angular
         active: true
       },
       dataRulesTab = {
-        name:'rules',
+        name:'dataRules',
         template:'app/home/detail/rules/dataRules/dataRules.tpl.html',
         iconClass: 'fa fa-list'
       },
       metricAlertRulesTab = {
-        name:'rules',
+        name:'metricAlertRules',
         template:'app/home/detail/rules/metricAlert/metricAlert.tpl.html',
         iconClass: 'fa fa-list'
       };
@@ -188,6 +188,10 @@ angular
             tab.active = true;
           }
         });
+      }
+
+      if(options.type === pipelineConstant.LINK && !$scope.isPipelineRunning && $scope.detailPaneTabs.length > 1) {
+        $scope.detailPaneTabs[1].active = true;
       }
 
       //To fix NVD3 JS errors - https://github.com/novus/nvd3/pull/396

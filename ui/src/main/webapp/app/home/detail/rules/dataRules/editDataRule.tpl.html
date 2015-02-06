@@ -133,9 +133,24 @@
 
     <div class="form-group" ng-if="dataRuleDefn.alertEnabled" show-errors>
       <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.sendEmail">Send Email When Alert is triggered</label>
-      <div class="controls col-md-1">
+      <div class="controls col-md-1  form-horizontal-checkbox">
         <input type="checkbox" name="sendEmail"
                ng-model="dataRuleDefn.sendEmail">
+      </div>
+    </div>
+
+    <div class="form-group" ng-if="dataRuleDefn.alertEnabled && dataRuleDefn.sendEmail" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.emailIds">Email IDs</label>
+      <div class="controls col-lg-9 col-md-8 ">
+        <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+                   ng-model="dataRuleDefn.emailIds">
+          <ui-select-match>
+            {{$item}}
+          </ui-select-match>
+          <ui-select-choices repeat="emailId in dataRuleDefn.emailIds">
+            {{emailId}}
+          </ui-select-choices>
+        </ui-select>
       </div>
     </div>
 

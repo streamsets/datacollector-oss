@@ -1,4 +1,4 @@
-.data-rules-tab {
+.data-rules-tab, .metric-alert-rules-tab {
   .panel-heading {
     span {
       top: 5px;
@@ -51,7 +51,8 @@
       .properties-label {
         display: inline-block;
         opacity: 0.6;
-        min-width: 200px;
+        width: 200px;
+        color: #000000;
       }
 
       .properties-value {
@@ -59,13 +60,15 @@
       }
     }
 
-  }
-}
+    .invalid-rule {
+      color: @brand-danger;
+    }
 
+    .expand-row {
+      td {
+        border-top: 0;
+      }
+    }
 
-.create-data-rule-modal-form {
-  input[type=checkbox] {
-    margin-left: 0;
-    margin-top: 11px;
   }
 }

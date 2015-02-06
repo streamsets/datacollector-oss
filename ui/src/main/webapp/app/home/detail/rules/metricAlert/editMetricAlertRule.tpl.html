@@ -11,15 +11,15 @@
     <ng-include src="'errorAlertContent.html'"></ng-include>
 
     <div class="form-group" show-errors>
-      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.label">Label</label>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.alertText">Alert Text</label>
       <div class="controls col-lg-9 col-md-8">
         <input type="text"
            autofocus
            name="label"
            class="form-control"
            required="true"
-           title="{{'home.detailPane.rulesTab.labelPlaceholder' | translate}}"
-           placeholder="{{'home.detailPane.rulesTab.labelPlaceholder' | translate}}"
+           title="{{'home.detailPane.rulesTab.alertTextPlaceholder' | translate}}"
+           placeholder="{{'home.detailPane.rulesTab.alertTextPlaceholder' | translate}}"
            ng-model="metricAlertRuleDefn.label"
            focus-me="true">
       </div>
@@ -28,7 +28,7 @@
     <div class="form-group" show-errors>
       <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.metricType">Metric Type</label>
       <div class="controls col-lg-9 col-md-8">
-        <select class="form-control" name="metricType"
+        <select class="form-control" name="metricType" required="true"
                 ng-model="metricAlertRuleDefn.metricType">
           <option value="COUNTER">{{'home.detailPane.rulesTab.counter' | translate}}</option>
           <option value="HISTOGRAM">{{'home.detailPane.rulesTab.histogram' | translate}}</option>
@@ -41,7 +41,7 @@
     <div class="form-group" show-errors>
       <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.metricID">Metric ID</label>
       <div class="controls col-lg-9 col-md-8">
-        <select class="form-control" name="metricId"
+        <select class="form-control" name="metricId" required="true"
                 ng-model="metricAlertRuleDefn.metricId"
                 ng-options="obj.value as obj.label for obj in metricIDList[metricAlertRuleDefn.metricType]">
         </select>
@@ -51,7 +51,7 @@
     <div class="form-group" show-errors>
       <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.metricElement">Metric Element</label>
       <div class="controls col-lg-9 col-md-8">
-        <select class="form-control" name="metricElement"
+        <select class="form-control" name="metricElement" required="true"
                 ng-model="metricAlertRuleDefn.metricElement"
                 ng-options="obj.value as obj.label for obj in metricElementList[metricAlertRuleDefn.metricType]">
         </select>
@@ -70,6 +70,30 @@
           ng-model="metricAlertRuleDefn.condition">
       </div>
     </div>
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.sendEmail">Send Email When Alert is triggered</label>
+      <div class="controls col-md-1 form-horizontal-checkbox">
+        <input type="checkbox" name="sendEmail"
+               ng-model="metricAlertRuleDefn.sendEmail">
+      </div>
+    </div>
+
+    <div class="form-group" ng-if="metricAlertRuleDefn.sendEmail" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.emailIds">Email IDs</label>
+      <div class="controls col-lg-9 col-md-8 ">
+        <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+                   ng-model="metricAlertRuleDefn.emailIds">
+          <ui-select-match>
+            {{$item}}
+          </ui-select-match>
+          <ui-select-choices repeat="emailId in metricAlertRuleDefn.emailIds">
+            {{emailId}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+
 
   </div>
   <div class="modal-footer">
