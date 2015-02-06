@@ -564,21 +564,12 @@ angular
         ignoreUpdate = true;
       }
 
-      if(!pipelineRules) {
-        pipelineRules = {
-          metricsAlertDefinitions: [],
-          dataRuleDefinitions: []
-        };
-      }
-
-
       //Force Validity Check - showErrors directive
       $scope.$broadcast('show-errors-check-validity');
 
       $scope.pipelineConfig = pipelineConfig || {};
       $scope.activeConfigInfo = $rootScope.$storage.activeConfigInfo = pipelineConfig.info;
       $scope.pipelineRules = pipelineRules;
-
 
       if(!$scope.pipelineConfig.uiInfo) {
         $scope.pipelineConfig.uiInfo = {
@@ -874,7 +865,6 @@ angular
       }
     };
 
-
     /**
      * Save Rules Update
      * @param rules
@@ -884,20 +874,46 @@ angular
         return;
       }
 
+      rulesDirty = false;
+
       if (!rules) {
         rules = _.clone($scope.pipelineRules);
       }
 
-      rulesDirty = false;
-
       $rootScope.common.saveOperationInProgress = true;
+      console.log('Saving Rules...');
       api.pipelineAgent.savePipelineRules($scope.activeConfigInfo.name, rules).
         success(function (res) {
           $rootScope.common.saveOperationInProgress = false;
+
+          rules = $scope.pipelineRules;
+          rules.ruleIssues = res.ruleIssues;
+
+          angular.forEach(rules.metricsAlertDefinitions, function(rule, index) {
+            var savedRule = _.find(res.metricsAlertDefinitions, function(savedRule) {
+              return savedRule.id === rule.id;
+            });
+
+            if(savedRule) {
+              rule.valid = savedRule.valid;
+            }
+          });
+
+          angular.forEach(rules.dataRuleDefinitions, function(rule, index) {
+            var savedRule = _.find(res.dataRuleDefinitions, function(savedRule) {
+              return savedRule.id === rule.id;
+            });
+
+            if(savedRule) {
+              rule.valid = savedRule.valid;
+            }
+          });
+
           if (rulesDirty) {
-            rules = _.clone($scope.pipelineRules);
             saveRulesUpdate(rules);
           }
+
+          console.log(rules);
         }).
         error(function(data, status, headers, config) {
           $rootScope.common.errors = [data];
@@ -938,7 +954,7 @@ angular
         if (timeout) {
           $timeout.cancel(timeout);
         }
-        timeout = $timeout(saveRulesUpdate, 1000);
+        timeout = $timeout(saveRulesUpdate, 500);
       }
     }, true);
 

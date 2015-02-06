@@ -1,0 +1,83 @@
+<form class="create-metric-alert-rule-modal-form form-horizontal" role="form" ng-submit="save()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.detailPane.rulesTab.metricAlertRule">Metric Alert Rule</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'errorAlertContent.html'"></ng-include>
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.label">Label</label>
+      <div class="controls col-lg-9 col-md-8">
+        <input type="text"
+           autofocus
+           name="label"
+           class="form-control"
+           required="true"
+           title="{{'home.detailPane.rulesTab.labelPlaceholder' | translate}}"
+           placeholder="{{'home.detailPane.rulesTab.labelPlaceholder' | translate}}"
+           ng-model="metricAlertRuleDefn.label"
+           focus-me="true">
+      </div>
+    </div>
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.metricType">Metric Type</label>
+      <div class="controls col-lg-9 col-md-8">
+        <select class="form-control" name="metricType"
+                ng-model="metricAlertRuleDefn.metricType">
+          <option value="COUNTER">{{'home.detailPane.rulesTab.counter' | translate}}</option>
+          <option value="HISTOGRAM">{{'home.detailPane.rulesTab.histogram' | translate}}</option>
+          <option value="METER">{{'home.detailPane.rulesTab.meter' | translate}}</option>
+          <option value="TIMER">{{'home.detailPane.rulesTab.timer' | translate}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.metricID">Metric ID</label>
+      <div class="controls col-lg-9 col-md-8">
+        <select class="form-control" name="metricId"
+                ng-model="metricAlertRuleDefn.metricId"
+                ng-options="obj.value as obj.label for obj in metricIDList[metricAlertRuleDefn.metricType]">
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.metricElement">Metric Element</label>
+      <div class="controls col-lg-9 col-md-8">
+        <select class="form-control" name="metricElement"
+                ng-model="metricAlertRuleDefn.metricElement"
+                ng-options="obj.value as obj.label for obj in metricElementList[metricAlertRuleDefn.metricType]">
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.condition">Condition</label>
+      <div class="controls col-lg-9 col-md-8 expression-language">
+        <input type="text"
+          name="condition"
+          class="form-control"
+          required="true"
+          title="{{'home.detailPane.rulesTab.conditionPlaceholder' | translate}}"
+          placeholder="{{'home.detailPane.rulesTab.conditionPlaceholder' | translate}}"
+          ng-model="metricAlertRuleDefn.condition">
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.cancel">
+      Cancel
+    </button>
+    <button type="submit" class="btn btn-primary" translate="global.form.save">
+      Save
+    </button>
+  </div>
+</form>

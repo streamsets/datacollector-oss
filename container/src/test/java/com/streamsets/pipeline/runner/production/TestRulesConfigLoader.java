@@ -74,9 +74,9 @@ public class TestRulesConfigLoader {
 
     //create a DataRuleDefinition for one of the stages
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "p", 20, 10,
-      "${record:value(\"/\")==4}", true, ThresholdType.COUNT, "20", 100, true, false, null, true);
+      "${record:value(\"/\")==4}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, null, true);
     DataRuleDefinition dataRuleDefinition2 = new DataRuleDefinition("myID2", "myLabel", "p", 20, 10,
-      "${record:value(\"/\")==4}", true, ThresholdType.COUNT, "20", 100, true, false, null, true);
+      "${record:value(\"/\")==4}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, null, true);
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
 
     dataRuleDefinitions.add(dataRuleDefinition);

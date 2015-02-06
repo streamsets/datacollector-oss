@@ -1,6 +1,12 @@
-.rules-tab {
+.metric-alert-rules-tab {
+  .panel-heading {
+    span {
+      top: 5px;
+      position: relative;
+    }
+  }
 
-  .alert-tab, .sampling-tab, .metric-tab, .metric-alert-tab {
+  .panel-body {
     padding: @defaultPadding;
 
     .threshold-column {
@@ -31,10 +37,6 @@
       margin-right: @defaultPadding;
     }
 
-  }
-
-
-  .metric-alert-tab {
     .enabled-col {
       width: 40px;
     }
@@ -58,7 +60,5 @@
     .condition-col {
       min-width: 200px;
     }
-
   }
-
 }

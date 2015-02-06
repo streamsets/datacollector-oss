@@ -134,11 +134,11 @@ public class TestPipelineStoreResource extends JerseyTest {
       MetricElement.HISTOGRAM_MEAN, "p", false, null, true));
 
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
-    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000,
+    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "a", ThresholdType.COUNT, "200", 1000,
       true, false, null, true));
-    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000,
+    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "a", ThresholdType.COUNT, "200", 1000,
       true, false, null, true));
-    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, ThresholdType.COUNT, "200", 1000,
+    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "a", ThresholdType.COUNT, "200", 1000,
       true, false, null, true));
 
     RuleDefinition ruleDefinition = new RuleDefinition(metricsAlertDefinitions, dataRuleDefinitions);
@@ -223,11 +223,11 @@ public class TestPipelineStoreResource extends JerseyTest {
           MetricElement.HISTOGRAM_MEAN, "p", false, null, true));
 
         List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
-        dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, ThresholdType.COUNT, "200",
+        dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
           1000, true, false, null, true));
-        dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, ThresholdType.COUNT, "200",
+        dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
           1000, true, false, null, true));
-        dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, ThresholdType.COUNT, "200",
+        dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
           1000, true, false, null, true));
 
         RuleDefinition rules = new RuleDefinition(metricsAlertDefinitions, dataRuleDefinitions);

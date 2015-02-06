@@ -201,7 +201,7 @@ public class TestUtil {
 
         //create a DataRuleDefinition for one of the stages
         DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "p", 20, 10,
-          "${record:value(\"/\")==2}", true, ThresholdType.COUNT, "20", 100, true, false, null, true);
+          "${record:value(\"/\")==2}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, null, true);
         List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
         dataRuleDefinitions.add(dataRuleDefinition);
 

@@ -218,6 +218,7 @@
     <div class="pull-right field-selector-btn" ng-hide="isPipelineRunning">
       <button type="button" class="btn btn-link"
               translate="home.detailPane.configurationTab.requiredFieldsSelectionButton"
+              ng-disabled="!pipelineConfig.previewable"
               ng-click="showFieldSelectorModal(detailPaneConfig.configuration[configIndex])">
         Select Field Using Preview Data
       </button>

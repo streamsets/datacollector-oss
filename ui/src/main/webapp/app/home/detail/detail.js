@@ -43,14 +43,14 @@ angular
         iconClass: 'fa fa-bar-chart',
         active: true
       },
-      alertsTab = {
-        name:'alerts',
-        template:'app/home/detail/alerts/alerts.tpl.html',
-        iconClass: 'glyphicon glyphicon-exclamation-sign'
-      },
-      rulesTab = {
+      dataRulesTab = {
         name:'rules',
-        template:'app/home/detail/rules/rules.tpl.html',
+        template:'app/home/detail/rules/dataRules/dataRules.tpl.html',
+        iconClass: 'fa fa-list'
+      },
+      metricAlertRulesTab = {
+        name:'rules',
+        template:'app/home/detail/rules/metricAlert/metricAlert.tpl.html',
         iconClass: 'fa fa-list'
       };
 
@@ -66,9 +66,9 @@ angular
       switch(type) {
         case pipelineConstant.PIPELINE:
           if(isPipelineRunning) {
-            tabsList = [summaryTab, errorTab, infoTab, configurationTab, rulesTab, historyTab];
+            tabsList = [summaryTab, errorTab, infoTab, configurationTab, metricAlertRulesTab, historyTab];
           } else {
-            tabsList = [infoTab, configurationTab, rulesTab, historyTab];
+            tabsList = [infoTab, configurationTab, metricAlertRulesTab, historyTab];
           }
 
           return tabsList;
@@ -86,9 +86,9 @@ angular
           return tabsList;
         case pipelineConstant.LINK:
           if(isPipelineRunning) {
-            return [dataSummaryTab, rulesTab, infoTab];
+            return [dataSummaryTab, dataRulesTab, infoTab];
           } else {
-            return [infoTab, rulesTab];
+            return [infoTab, dataRulesTab];
           }
           break;
       }

@@ -21,6 +21,7 @@ public class DataRuleDefinition {
 
   /*alert related options*/
   private final boolean alertEnabled;
+  private final String alertText;
   private final ThresholdType thresholdType;
   private final String thresholdValue;
   private final long minVolume;
@@ -44,6 +45,7 @@ public class DataRuleDefinition {
                             @JsonProperty("samplingRecordsToRetain") int samplingRecordsToRetain,
                             @JsonProperty("condition") String condition,
                             @JsonProperty("alertEnabled") boolean alertEnabled,
+                            @JsonProperty("alertText") String alertText,
                             @JsonProperty("thresholdType") ThresholdType thresholdType,
                             @JsonProperty("thresholdValue") String thresholdValue,
                             @JsonProperty("minVolume") long minVolume,
@@ -58,6 +60,7 @@ public class DataRuleDefinition {
     this.samplingRecordsToRetain = samplingRecordsToRetain;
     this.condition = condition;
     this.alertEnabled = alertEnabled;
+    this.alertText = alertText;
     this.thresholdType = thresholdType;
     this.thresholdValue = thresholdValue;
     this.minVolume = minVolume;
@@ -93,6 +96,10 @@ public class DataRuleDefinition {
 
   public boolean isAlertEnabled() {
     return alertEnabled;
+  }
+
+  public String getAlertText() {
+    return alertText;
   }
 
   public ThresholdType getThresholdType() {

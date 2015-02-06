@@ -1,0 +1,151 @@
+<form class="create-data-rule-modal-form form-horizontal" role="form" ng-submit="save()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.detailPane.rulesTab.dataRule">Data Rule</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'errorAlertContent.html'"></ng-include>
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.label">Label</label>
+      <div class="controls col-lg-9 col-md-8">
+        <input type="text"
+           autofocus
+           name="label"
+           class="form-control"
+           required="true"
+           title="{{'home.detailPane.rulesTab.labelPlaceholder' | translate}}"
+           placeholder="{{'home.detailPane.rulesTab.labelPlaceholder' | translate}}"
+           ng-model="dataRuleDefn.label"
+           focus-me="true">
+      </div>
+    </div>
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.condition">Condition</label>
+      <div class="controls col-lg-9 col-md-8 expression-language">
+        <input type="text"
+          name="condition"
+          class="form-control"
+          required="true"
+          title="{{'home.detailPane.rulesTab.conditionPlaceholder' | translate}}"
+          placeholder="{{'home.detailPane.rulesTab.conditionPlaceholder' | translate}}"
+          ng-model="dataRuleDefn.condition">
+      </div>
+    </div>
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.samplingPercentage">Sampling Percentage</label>
+      <div class="controls col-lg-9 col-md-8">
+        <input type="number"
+                  name="samplingPercentage"
+                  class="form-control"
+                  required="true"
+                  title="{{'home.detailPane.rulesTab.samplingPercentagePlaceholder' | translate}}"
+                  placeholder="{{'home.detailPane.rulesTab.samplingPercentagePlaceholder' | translate}}"
+                  ng-model="dataRuleDefn.samplingPercentage">
+      </div>
+    </div>
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.samplingRecords">Sampling Records To Retain</label>
+      <div class="controls col-lg-9 col-md-8">
+        <input type="number"
+               name="samplingRecordsToRetain"
+               class="form-control"
+               required="true"
+               title="{{'home.detailPane.rulesTab.samplingRecordsPlaceholder' | translate}}"
+               placeholder="{{'home.detailPane.rulesTab.samplingRecordsPlaceholder' | translate}}"
+               ng-model="dataRuleDefn.samplingRecordsToRetain">
+      </div>
+    </div>
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.enableMeter">Enable Meter</label>
+      <div class="controls col-md-1">
+        <input type="checkbox" name="meterEnabled"
+               ng-model="dataRuleDefn.meterEnabled">
+      </div>
+    </div>
+
+
+    <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.enableAlert">Enable Alert</label>
+      <div class="controls col-md-1">
+        <input type="checkbox" name="alertEnabled"
+               ng-model="dataRuleDefn.alertEnabled">
+      </div>
+    </div>
+
+    <div class="form-group" ng-if="dataRuleDefn.alertEnabled" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.alertText">Alert Text</label>
+      <div class="controls col-lg-9 col-md-8">
+        <input type="text"
+               name="label"
+               class="form-control"
+               required="true"
+               title="{{'home.detailPane.rulesTab.alertTextPlaceholder' | translate}}"
+               placeholder="{{'home.detailPane.rulesTab.alertTextPlaceholder' | translate}}"
+               ng-model="dataRuleDefn.alertText">
+      </div>
+    </div>
+
+    <div class="form-group" ng-if="dataRuleDefn.alertEnabled" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.thresholdType">thresholdType</label>
+      <div class="controls col-lg-9 col-md-8">
+        <select class="form-control" name="thresholdType"
+                ng-model="dataRuleDefn.thresholdType">
+          <option value="COUNT">Count</option>
+          <option value="PERCENTAGE">Percentage</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" ng-if="dataRuleDefn.alertEnabled" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.thresholdValue">Threshold Value</label>
+      <div class="controls col-lg-9 col-md-8">
+        <input type="text"
+               name="thresholdValue"
+               class="form-control"
+               required="true"
+               title="{{'home.detailPane.rulesTab.thresholdValue' | translate}}"
+               placeholder="{{'home.detailPane.rulesTab.thresholdValue' | translate}}"
+               ng-model="dataRuleDefn.thresholdValue">
+      </div>
+    </div>
+
+    <div class="form-group" ng-if="dataRuleDefn.alertEnabled && dataRuleDefn.thresholdType === 'PERCENTAGE'" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.minVolumePlaceholder">Minimum Volume</label>
+      <div class="controls col-lg-9 col-md-8">
+        <input type="number"
+               name="minVolume"
+               class="form-control"
+               required="true"
+               title="{{'home.detailPane.rulesTab.minVolumePlaceholder' | translate}}"
+               placeholder="{{'home.detailPane.rulesTab.minVolumePlaceholder' | translate}}"
+               ng-model="dataRuleDefn.minVolume">
+      </div>
+    </div>
+
+    <div class="form-group" ng-if="dataRuleDefn.alertEnabled" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.sendEmail">Send Email When Alert is triggered</label>
+      <div class="controls col-md-1">
+        <input type="checkbox" name="sendEmail"
+               ng-model="dataRuleDefn.sendEmail">
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.cancel">
+      Cancel
+    </button>
+    <button type="submit" class="btn btn-primary" translate="global.form.save">
+      Save
+    </button>
+  </div>
+</form>

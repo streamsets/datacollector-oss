@@ -87,7 +87,7 @@ public class TestObserverRunner {
   private RulesConfigurationChangeRequest createRulesConfigurationChangeRequest(boolean alert, boolean meter) {
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
     dataRuleDefinitions.add(new DataRuleDefinition("myId", "myRule", LANE + "::s", 100, 5,
-      "${record:value(\"/name\")==null}", alert, ThresholdType.COUNT, "2", 5, meter, false, null, true));
+      "${record:value(\"/name\")==null}", alert, "alertText", ThresholdType.COUNT, "2", 5, meter, false, null, true));
     RuleDefinition ruleDefinition = new RuleDefinition(null, dataRuleDefinitions);
     Map<String, List<DataRuleDefinition>> laneToRuleDefinition = new HashMap<>();
     laneToRuleDefinition.put(LANE + "::s", dataRuleDefinitions);
