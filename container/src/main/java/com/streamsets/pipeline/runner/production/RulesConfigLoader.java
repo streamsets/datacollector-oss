@@ -61,11 +61,11 @@ public class RulesConfigLoader {
     }
     Map<String, List<DataRuleDefinition>> laneToDataRule = new HashMap<>();
     for (DataRuleDefinition dataRuleDefinition : newRuleDefinition.getDataRuleDefinitions()) {
-      List<DataRuleDefinition> dataRuleDefinitions = laneToDataRule.get(dataRuleDefinition.getLane());
+      String lane = LaneResolver.getPostFixedLaneForObserver(dataRuleDefinition.getLane());
+      List<DataRuleDefinition> dataRuleDefinitions = laneToDataRule.get(lane);
       if (dataRuleDefinitions == null) {
         dataRuleDefinitions = new ArrayList<>();
-        laneToDataRule.put(LaneResolver.getPostFixedLaneForObserver(dataRuleDefinition.getLane()),
-          dataRuleDefinitions);
+        laneToDataRule.put(lane, dataRuleDefinitions);
       }
       dataRuleDefinitions.add(dataRuleDefinition);
     }

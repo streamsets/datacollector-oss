@@ -90,7 +90,6 @@ public class ObserverRunner {
                 com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_CACHE_SIZE_DEFAULT));
               ruleToSampledRecordsMap.put(dataRuleDefinition.getId(), sampledRecords);
             }
-            sampledRecords.addAll(sampleSet);
 
             //Keep the counters and meters ready before execution
             //batch record counter - cummulative sum of records per batch
@@ -110,48 +109,52 @@ public class ObserverRunner {
             }
 
             //evaluate sample set of records for condition
+            int meterCount = 0;
             for (Record r : sampleSet) {
+              recordCounter.inc();
               //evaluate
               boolean success = evaluate(r, dataRuleDefinition.getCondition(), dataRuleDefinition.getId());
-              //is alert enabled for this rule?
-              if (dataRuleDefinition.isAlertEnabled()) {
-                recordCounter.inc();
-                if (success) {
-                  matchingRecordCounter.inc();
-                }
-                double threshold;
+              if (success) {
+                matchingRecordCounter.inc();
+                sampledRecords.add(r);
+                meterCount++;
+              }
+            }
+
+            if (dataRuleDefinition.isAlertEnabled()) {
+              double threshold;
+              try {
+                threshold = Double.parseDouble(dataRuleDefinition.getThresholdValue());
+              } catch (NumberFormatException e) {
                 //Soft error for now as we don't want this alert to stop other rules
-                try {
-                  threshold = Double.parseDouble(dataRuleDefinition.getThresholdValue());
-                } catch (NumberFormatException e) {
-                  LOG.error("Error interpreting threshold '{}' as a number", dataRuleDefinition.getThresholdValue());
-                  return;
-                }
-                switch (dataRuleDefinition.getThresholdType()) {
-                  case COUNT:
-                    if (matchingRecordCounter.getCount() > threshold) {
-                      raiseAlert(matchingRecordCounter.getCount(), dataRuleDefinition,
-                        rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
-                    }
-                    break;
-                  case PERCENTAGE:
-                    if ((matchingRecordCounter.getCount() * 100 / recordCounter.getCount()) > threshold
-                      && recordCounter.getCount() >= dataRuleDefinition.getMinVolume()) {
-                      raiseAlert(matchingRecordCounter.getCount(), dataRuleDefinition,
-                        rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
-                    }
-                    break;
-                }
+                LOG.error("Error interpreting threshold '{}' as a number", dataRuleDefinition.getThresholdValue());
+                return;
               }
-              //is meter enabled?
-              if (dataRuleDefinition.isMeterEnabled() && success) {
-                meter.mark();
+              switch (dataRuleDefinition.getThresholdType()) {
+                case COUNT:
+                  if (matchingRecordCounter.getCount() > threshold) {
+                    raiseAlert(matchingRecordCounter.getCount(), dataRuleDefinition,
+                      rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
+                  }
+                  break;
+                case PERCENTAGE:
+                  if ((matchingRecordCounter.getCount() * 100 / recordCounter.getCount()) > threshold
+                    && recordCounter.getCount() >= dataRuleDefinition.getMinVolume()) {
+                    raiseAlert(matchingRecordCounter.getCount(), dataRuleDefinition,
+                      rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
+                  }
+                  break;
               }
+            }
+
+            if (dataRuleDefinition.isMeterEnabled() && meterCount > 0) {
+              meter.mark(meterCount);
             }
           }
         }
       }
     }
+
     //pipeline metric alerts
     List<MetricsAlertDefinition> metricsAlertDefinitions =
       rulesConfigurationChangeRequest.getRuleDefinition().getMetricsAlertDefinitions();
