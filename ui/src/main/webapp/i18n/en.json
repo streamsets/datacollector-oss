@@ -68,6 +68,7 @@
       "refresh": "Refresh",
       "required": "Required",
       "revertChanges": "Revert Changes",
+      "sampleRecords": "Sample Records",
       "sampleValue": "Sample Value",
       "save": "Save",
       "source": "Origin",
@@ -187,7 +188,7 @@
       },
       "dataRules": "Data Rules",
       "dataSummaryTab": {
-        "noRulesMessage": "No Rules added for this stream. Add Rules in Rules Tab for Inspecting Data.",
+        "noRulesMessage": "No active Data Rules for this stream. Add Rules in Data Rules Tab for Inspecting Data.",
         "meterGraphPostFix": " (records/sec)"
       },
       "general": "General",

@@ -22,16 +22,16 @@ angular
     });
 
     function updateChartData() {
-      var metricRule = $scope.metricRule,
+      var dataRuleDefn = $scope.dataRuleDefn,
         pipelineMetrics = $rootScope.common.pipelineMetrics;
 
       if(pipelineMetrics && pipelineMetrics.meters) {
-        var meterData = pipelineMetrics.meters['user.' + metricRule.id + '.meter'];
+        var meterData = pipelineMetrics.meters['user.' + dataRuleDefn.id + '.meter'];
 
         if(meterData) {
           $scope.count = meterData.count;
           $scope.chartData = [{
-            key: metricRule.label,
+            key: dataRuleDefn.label,
             values: [
               ["1m" , meterData.m1_rate ],
               ["5m" , meterData.m5_rate ],
@@ -69,16 +69,16 @@ angular
     });
 
     function updateChartData() {
-      var metricRule = $scope.metricRule,
+      var dataRuleDefn = $scope.dataRuleDefn,
         pipelineMetrics = $rootScope.common.pipelineMetrics;
 
       if(pipelineMetrics && pipelineMetrics.histograms) {
-        var histogramData = pipelineMetrics.histograms['user.' + metricRule.id + '.histogramM5'];
+        var histogramData = pipelineMetrics.histograms['user.' + dataRuleDefn.id + '.histogramM5'];
 
         if(histogramData) {
           $scope.count = histogramData.count;
           $scope.chartData = [{
-            key: metricRule.label,
+            key: dataRuleDefn.label,
             values: [
               ["Mean" , histogramData.mean ],
               ["Std Dev" , histogramData.stddev ],
@@ -117,7 +117,7 @@ angular
 
     function updateSamplingRecords() {
       $scope.showRecordsLoading = true;
-      api.pipelineAgent.getSampledRecords($scope.samplingRule.id)
+      api.pipelineAgent.getSampledRecords($scope.dataRuleDefn.id)
         .success(function(res) {
           $scope.showRecordsLoading = false;
           if(res && res.length) {
