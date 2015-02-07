@@ -7,6 +7,7 @@
         "logout": "Logout"
       },
       "admin": {
+        "configuration": "Configuration",
         "jvmMetrics": "JVM Metrics",
         "logs": "Logs",
         "main": "Administration",
@@ -393,5 +394,8 @@
     "TIMER_M5_RATE" : "5 Minute Rate",
     "TIMER_M15_RATE" : "15 Minute Rate",
     "TIMER_MEAN_RATE" : "Mean Rate"
+  },
+  "sdcConfiguration": {
+    "title": "Data Collector Configuration"
   }
 }

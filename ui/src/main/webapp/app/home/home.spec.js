@@ -300,7 +300,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
       'ui.refresh.interval.ms': "2000"
     });
 
-    $httpBackend.expectGET('rest/v1/configuration/ui').respond({});
+    $httpBackend.expectGET('rest/v1/configuration/all').respond({});
 
     $httpBackend.expectGET('rest/v1/pipeline-library/xyz').respond({
       uuid: "cdf08ac9-2a97-4167-8a2c-ed48cfcf600e",

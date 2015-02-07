@@ -11,6 +11,7 @@ angular.module('dataCollectorApp', [
   'templates-common',
   'dataCollectorApp.common',
   'dataCollectorApp.home',
+  'dataCollectorApp.sdcConfiguration',
   'dataCollectorApp.jvmMetrics',
   'dataCollectorApp.logs',
   'ngStorage'

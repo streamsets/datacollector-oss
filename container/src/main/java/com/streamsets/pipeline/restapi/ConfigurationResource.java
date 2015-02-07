@@ -34,4 +34,12 @@ public class ConfigurationResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(config.getSubSetConfiguration(UI_PREFIX)).build();
   }
 
+
+  @GET
+  @Path("/all")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getConfiguration() throws PipelineStoreException {
+
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(config.getSubSetConfiguration("")).build();
+  }
 }

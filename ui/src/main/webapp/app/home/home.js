@@ -660,7 +660,8 @@ angular
           stageErrorCounts: stageErrorCounts,
           showEdgePreviewIcon: $scope.isPipelineRunning,
           isReadOnly: $scope.isPipelineRunning || $scope.previewMode,
-          pipelineRules: $scope.pipelineRules
+          pipelineRules: $scope.pipelineRules,
+          triggeredAlerts: $scope.triggeredAlerts
         });
       });
 

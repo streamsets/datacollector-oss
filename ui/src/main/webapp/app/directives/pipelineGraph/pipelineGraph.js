@@ -870,7 +870,16 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             });
 
             if(alertRules && alertRules.length) {
-              return 'fa fa-tachometer fa-2x pointer edge-preview active-alerts-defined';
+              var triggeredAlert = _.filter(graph.triggeredAlerts, function(triggered) {
+                return triggered.rule.lane === d.outputLane;
+              });
+
+              if(triggeredAlert && triggeredAlert.length) {
+                return 'fa fa-tachometer fa-2x pointer edge-preview alert-triggered';
+              } else {
+                return 'fa fa-tachometer fa-2x pointer edge-preview active-alerts-defined';
+              }
+
             } else {
               return 'fa fa-tachometer fa-2x pointer edge-preview';
             }
@@ -1075,6 +1084,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       graph.showEdgePreviewIcon = showEdgePreviewIcon;
       graph.isReadOnly = options.isReadOnly;
       graph.pipelineRules = options.pipelineRules;
+      graph.triggeredAlerts = options.triggeredAlerts;
       graph.updateGraph();
 
       if(selectNode) {

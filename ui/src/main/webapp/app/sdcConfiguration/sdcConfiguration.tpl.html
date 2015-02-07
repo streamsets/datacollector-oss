@@ -1,0 +1,24 @@
+<div class="panel panel-default page-panel sdc-configuration-page">
+
+  <div class="panel-heading clearfix">
+    <div class="panel-title">
+      <h3 translate="sdcConfiguration.title">Data Collector Configuration</h3>
+    </div>
+  </div>
+
+  <div class="panel-body"  ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
+    <form class="form-horizontal" role="form"
+          ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
+          name="sdcConfiguration">
+
+      <div class="form-group" ng-repeat="configKey in configKeys">
+        <label class="col-lg-3 col-md-4 control-label">{{configKey}}</label>
+        <div class="controls col-lg-5 col-md-6">
+          <input readonly type="text" class="form-control" name="{{}}"
+                 ng-model="sdcConfiguration[configKey]">
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>

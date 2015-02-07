@@ -3,7 +3,8 @@ angular.module('dataCollectorApp')
                    uiSelectConfig, $httpProvider){
     $locationProvider.html5Mode(true);
     $routeProvider.otherwise({
-      redirect: '/'
+      templateUrl: 'app/home/home.tpl.html',
+      controller: 'HomeController'
     });
 
     // Initialize angular-translate

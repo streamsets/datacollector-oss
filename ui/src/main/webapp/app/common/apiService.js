@@ -71,12 +71,12 @@ angular.module('dataCollectorApp.common')
 
     api.pipelineAgent = {
       /**
-       * Fetches UI Configuration from dist/src/main/etc/pipeline.properties
+       * Fetches Configuration from dist/src/main/etc/pipeline.properties
        *
        * @returns {*}
        */
       getConfiguration: function() {
-        var url = apiBase + '/configuration/ui';
+        var url = apiBase + '/configuration/all';
         return $http({
           method: 'GET',
           url: url

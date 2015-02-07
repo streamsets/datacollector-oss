@@ -12,7 +12,7 @@ angular
       }
     );
   }])
-  .controller('JVMMetricsController', function ($scope, $rootScope, $q, $timeout, api, configuration, visibilityBroadcaster) {
+  .controller('JVMMetricsController', function ($scope, $rootScope, $timeout, api, configuration, visibilityBroadcaster) {
     var jvmMetricsTimer,
       destroyed = false;
 
