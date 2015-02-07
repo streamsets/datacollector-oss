@@ -95,28 +95,19 @@
         <span ng-hide="iconOnly" translate="home.header.stageLibrary">Stage Library</span>
       </a>
 
-
-      <!--a type="button" class="btn btn-primary btn-sm"
-              tooltip-placement="bottom" tooltip="{{'home.header.refreshPreview' | translate}}"
-              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-              tooltip-popup-delay="500"
-              ng-show="previewMode"
-              ng-click="previewPipeline(true)">
-        <span class="glyphicon glyphicon-refresh fa-12x"></span>
-        <span ng-hide="iconOnly" translate="home.header.refreshPreview">Refresh Preview</span>
-      </a-->
-
       <div class="btn-group notifications-dropdown"
-           ng-show="triggeredAlerts.length > 0">
+           ng-show="isPipelineRunning">
         <button class="btn btn-link dropdown-toggle" type="button"
                 data-toggle="dropdown">
           <span class="fa fa-bell fa-12x"></span>
           <span ng-hide="iconOnly" translate="home.header.notifications">Notifications</span>
-          <span class="badge" ng-bind="triggeredAlerts.length"></span>
+          <span class="badge"
+                ng-if="triggeredAlerts.length > 0"
+                ng-bind="triggeredAlerts.length"></span>
         </button>
         <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 
-          <li role="presentation" class="dropdown-header"
+          <li role="presentation" class="dropdown-header" ng-if="triggeredAlerts.length > 0"
               translate="home.header.alerts">
             Alerts
           </li>
@@ -125,7 +116,13 @@
               ng-repeat="alert in triggeredAlerts">
             <a role="menuitem" tabindex="-1" href="#"
                ng-click="onNotificationClick(alert)"
-               ng-bind="alert.rule.label"></a>
+               ng-bind="alert.rule.alertText"></a>
+          </li>
+
+          <li role="presentation" class="dropdown-header"
+              translate="home.header.emptyAlerts"
+              ng-if="triggeredAlerts.length === 0">
+            It’s all good! You don’t have any new alerts.
           </li>
 
         </ul>

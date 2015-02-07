@@ -412,7 +412,7 @@ angular
       }
     };
 
-    $scope.$on('onSelectionChange', function(event, options) {
+    var initializeGroupInformation = function(options) {
       var groupDefn = $scope.detailPaneConfigDefn.configGroupDefinition;
 
       if(groupDefn && groupDefn.groupNameToLabelMapList) {
@@ -435,13 +435,19 @@ angular
         $scope.showGroups = false;
         $scope.configGroupTabs = [];
       }
+    };
 
+    $scope.$on('onSelectionChange', function(event, options) {
+      initializeGroupInformation(options);
       if (options.type === pipelineConstant.STAGE_INSTANCE) {
         fieldsPathList = undefined;
         $scope.fieldPaths = [];
       }
     });
 
+    if($scope.detailPaneConfigDefn) {
+      initializeGroupInformation({});
+    }
 
   }).
 

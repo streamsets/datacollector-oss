@@ -22,6 +22,7 @@
             <th class="alert-text-col">{{'home.detailPane.rulesTab.alertText' | translate}}</th>
             <th class="id-col">{{'home.detailPane.rulesTab.metricID' | translate}}</th>
             <th class="condition-col">{{'home.detailPane.rulesTab.condition' | translate}}</th>
+            <th class="condition-col">{{'home.detailPane.rulesTab.sendEmail' | translate}}</th>
             <th class="enabled-col">{{'home.detailPane.rulesTab.enabled' | translate}}</th>
             <th class="actions-col">{{'global.form.actions' | translate}}</th>
           </tr>
@@ -29,7 +30,6 @@
         <tbody ng-hide="showLoading">
 
         <tr ng-repeat-start="alertRule in metricsAlertDefinitions = (pipelineRules.metricsAlertDefinitions) track by $index"
-            ng-init="ruleIssues = (pipelineRules.ruleIssues | filter: {ruleId: alertRule.id})"
             ng-class="alertRule.valid ? '' : 'invalid-rule'">
 
           <td>
@@ -47,6 +47,12 @@
 
           <td class="expression-language">
             {{alertRule.condition}}
+          </td>
+
+          <td>
+            <input type="checkbox" name="sendEmail{{$index}}"
+                   ng-disabled="!alertRule.valid"
+                   ng-model="alertRule.sendEmail">
           </td>
 
           <td>
@@ -88,28 +94,20 @@
                 </span>
               </li>
 
-              <li>
-                <span class="properties-label">
-                  {{'home.detailPane.rulesTab.sendEmail' | translate}}:
-                </span>
-                <span class="properties-value">
-                  {{alertRule.sendEmail}}
-                </span>
-              </li>
-
-              <li ng-if="ruleIssues.length">
+              <li ng-show="ruleIssues.length">
                 <span class="properties-label">
                   {{'home.detailPane.rulesTab.issues' | translate}}:
                 </span>
                 <span class="properties-value">
-                  <span ng-repeat="ruleIssue in ruleIssues">{{ruleIssue.message}}</span>
+                  <span ng-repeat="ruleIssue in ruleIssues = (pipelineRules.ruleIssues | filter: {ruleId: alertRule.id})">
+                    {{ruleIssue.message}}
+                  </span>
                 </span>
               </li>
 
             </ul>
           </td>
         </tr>
-
 
         <tr ng-if="metricsAlertDefinitions.length === 0">
           <td colspan="3" class="no-records text-center"

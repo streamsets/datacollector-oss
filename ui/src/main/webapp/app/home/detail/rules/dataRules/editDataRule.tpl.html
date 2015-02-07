@@ -66,7 +66,7 @@
 
     <div class="form-group" show-errors>
       <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.enableMeter">Enable Meter</label>
-      <div class="controls col-md-1">
+      <div class="controls col-md-1 form-horizontal-checkbox">
         <input type="checkbox" name="meterEnabled"
                ng-model="dataRuleDefn.meterEnabled">
       </div>
@@ -75,7 +75,7 @@
 
     <div class="form-group" show-errors>
       <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.enableAlert">Enable Alert</label>
-      <div class="controls col-md-1">
+      <div class="controls col-md-1 form-horizontal-checkbox">
         <input type="checkbox" name="alertEnabled"
                ng-model="dataRuleDefn.alertEnabled">
       </div>
@@ -133,7 +133,7 @@
 
     <div class="form-group" ng-if="dataRuleDefn.alertEnabled" show-errors>
       <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.sendEmail">Send Email When Alert is triggered</label>
-      <div class="controls col-md-1  form-horizontal-checkbox">
+      <div class="controls col-md-1 form-horizontal-checkbox">
         <input type="checkbox" name="sendEmail"
                ng-model="dataRuleDefn.sendEmail">
       </div>

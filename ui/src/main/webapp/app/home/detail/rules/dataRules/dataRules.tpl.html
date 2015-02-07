@@ -16,7 +16,6 @@
           <tr>
             <th class="expand-col">
               <span class="pointer toggler {{expandAll ? 'open' : ''}}"
-                    ng-if="dataRuleDefinitions.length"
                     ng-click="expandAll = !expandAll">
               </span>
             </th>
@@ -24,6 +23,7 @@
             <th class="condition-col">{{'home.detailPane.rulesTab.condition' | translate}}</th>
             <th class="condition-col">{{'home.detailPane.rulesTab.enableMeter' | translate}}</th>
             <th class="condition-col">{{'home.detailPane.rulesTab.enableAlert' | translate}}</th>
+            <th class="sendEmail-col">{{'home.detailPane.rulesTab.sendEmail' | translate}}</th>
             <th class="enabled-col">{{'home.detailPane.rulesTab.enabled' | translate}}</th>
             <th class="actions-col">{{'global.form.actions' | translate}}</th>
           </tr>
@@ -31,7 +31,7 @@
         <tbody ng-hide="showLoading">
 
         <tr ng-repeat-start="dataRuleDefn in dataRuleDefinitions = (pipelineRules.dataRuleDefinitions | filter: {lane: selectedObject.outputLane})"
-            ng-init="isOpen=false;ruleIssues = (pipelineRules.ruleIssues | filter: {ruleId: alertRule.id})"
+            ng-init="isOpen=false;"
             ng-class="dataRuleDefn.valid ? '' : 'invalid-rule'">
 
           <td>
@@ -48,11 +48,25 @@
           </td>
 
           <td>
-            <span>{{dataRuleDefn.meterEnabled}}</span>
+            <input type="checkbox"
+                   name="meterEnabled{{$index}}"
+                   ng-disabled="dataRuleDefn.enabled"
+                   ng-model="dataRuleDefn.meterEnabled">
           </td>
 
           <td>
-            <span>{{dataRuleDefn.alertEnabled}}</span>
+            <input type="checkbox"
+                   name="alertEnabled{{$index}}"
+                   ng-disabled="dataRuleDefn.enabled"
+                   ng-model="dataRuleDefn.alertEnabled">
+          </td>
+
+          <td>
+            <input type="checkbox"
+                   name="sendEmail{{$index}}"
+                   ng-if="dataRuleDefn.alertEnabled"
+                   ng-disabled="dataRuleDefn.enabled"
+                   ng-model="dataRuleDefn.sendEmail">
           </td>
 
           <td>
@@ -132,21 +146,12 @@
                 </span>
               </li>
 
-              <li ng-if="dataRuleDefn.alertEnabled">
-                <span class="properties-label">
-                  {{'home.detailPane.rulesTab.sendEmail' | translate}}:
-                </span>
-                <span class="properties-value">
-                  {{dataRuleDefn.sendEmail}}
-                </span>
-              </li>
-
-              <li ng-if="ruleIssues.length">
+              <li ng-show="ruleIssues.length">
                 <span class="properties-label">
                   {{'home.detailPane.rulesTab.issues' | translate}}:
                 </span>
                 <span class="properties-value">
-                  <span ng-repeat="ruleIssue in ruleIssues">{{ruleIssue.message}}</span>
+                  <span ng-repeat="ruleIssue in ruleIssues = (pipelineRules.ruleIssues | filter: {ruleId: dataRuleDefn.id})">{{ruleIssue.message}}</span>
                 </span>
               </li>
 

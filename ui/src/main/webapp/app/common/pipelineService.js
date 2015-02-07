@@ -581,7 +581,7 @@ angular.module('dataCollectorApp.common')
         }
       });
 
-      angular.forEach(pipelineRules.alertDefinitions, function(rule) {
+      angular.forEach(pipelineRules.dataRuleDefinitions, function(rule) {
         var gaugeName = 'alert.' + rule.id + '.gauge';
         if(gauges[gaugeName]) {
           alerts.push({

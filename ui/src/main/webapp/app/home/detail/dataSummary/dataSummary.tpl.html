@@ -2,19 +2,24 @@
 
   <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 triggered-alerts"
+         ng-repeat="dataRuleDefn in dataRuleDefinitions = (pipelineRules.dataRuleDefinitions | filter: {lane: selectedObject.outputLane})">
+
+    </div>
+  </div>
+
+  <!--
+
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 triggered-alerts"
          ng-repeat="triggeredAlert in laneAlerts  = (triggeredAlerts | filter : {rule: {lane : selectedObject.outputLane}})">
       <div class="alert alert-danger clearfix" role="alert">
-        <i class="fa fa-exclamation-triangle"></i> {{triggeredAlert.rule.label}} ({{triggeredAlert.gauge.value.currentValue}})
-
-
+        <i class="fa fa-exclamation-triangle"></i> {{triggeredAlert.rule.alertText}} ({{triggeredAlert.gauge.value.currentValue}})
         <div class="pull-right">
           <a href="#"
              ng-click="deleteTriggeredAlert(triggeredAlert)">
             <span translate="global.form.delete">Delete</span>
           </a>
-
-          <span> | </span>
-
+          &nbsp;|&nbsp;
           <a href="#"
              ng-click="selectRulesTab(triggeredAlert)">
             <span translate="global.form.changeRule">Change Rule</span>
@@ -150,5 +155,6 @@
 
   </div>
 
+  -->
 
 </div>
