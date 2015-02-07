@@ -204,7 +204,7 @@
                         <input type="text" class="form-control" ng-model="customFieldValue[customFieldConfigDefinition.name]">
                         <div class="input-group-btn">
                           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                          <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                          <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li ng-repeat="fieldPath in fieldPaths.concat(customFieldValue[customFieldConfigDefinition.name])">
                               <a href="#" ng-click="customFieldValue[customFieldConfigDefinition.name] = fieldPath">{{fieldPath}}</a>
                             </li>
@@ -216,7 +216,6 @@
                   </div>
 
                 </td>
-
 
                 <td>
                   <div class="btn-group" role="group" aria-label="Default button group" ng-hide="isPipelineRunning">

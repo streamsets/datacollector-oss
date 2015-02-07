@@ -864,7 +864,17 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 26;
           })
           .append('xhtml:span')
-          .attr('class', 'fa fa-tachometer fa-2x pointer edge-preview');
+          .attr('class', function(d) {
+            var alertRules = _.filter(graph.pipelineRules.dataRuleDefinitions, function(ruleDefn) {
+              return ruleDefn.lane === d.outputLane && ruleDefn.enabled;
+            });
+
+            if(alertRules && alertRules.length) {
+              return 'fa fa-tachometer fa-2x pointer edge-preview active-alerts-defined';
+            } else {
+              return 'fa fa-tachometer fa-2x pointer edge-preview';
+            }
+          });
       }
 
       // remove old links
@@ -1064,6 +1074,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       graph.stageErrorCounts = stageErrorCounts;
       graph.showEdgePreviewIcon = showEdgePreviewIcon;
       graph.isReadOnly = options.isReadOnly;
+      graph.pipelineRules = options.pipelineRules;
       graph.updateGraph();
 
       if(selectNode) {
@@ -1164,6 +1175,33 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     $scope.$on('setGraphPreviewMode', function(event, flag) {
       if(graph) {
         graph.isPreviewMode = flag;
+      }
+    });
+
+
+    $scope.$on('updateEdgePreviewIconColor', function(event, pipelineRules, triggeredAlerts) {
+      if(graph) {
+        graph.paths.selectAll('span.edge-preview')
+          .attr('class', function(d) {
+            var alertRules = _.filter(pipelineRules.dataRuleDefinitions, function(ruleDefn) {
+              return ruleDefn.lane === d.outputLane && ruleDefn.enabled;
+            });
+
+            if(alertRules && alertRules.length) {
+              var triggeredAlert = _.filter(triggeredAlerts, function(triggered) {
+                return triggered.rule.lane === d.outputLane;
+              });
+
+              if(triggeredAlert && triggeredAlert.length) {
+                return 'fa fa-tachometer fa-2x pointer edge-preview alert-triggered';
+              } else {
+                return 'fa fa-tachometer fa-2x pointer edge-preview active-alerts-defined';
+              }
+
+            } else {
+              return 'fa fa-tachometer fa-2x pointer edge-preview';
+            }
+          });
       }
     });
 

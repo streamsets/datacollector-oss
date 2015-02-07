@@ -17,7 +17,7 @@
           <div class="col-md-12 col-lg-12 triggered-alerts"
                ng-repeat="triggeredAlert in laneAlerts  = (triggeredAlerts | filter : {rule: {id : dataRuleDefn.id}})">
             <div class="alert alert-danger clearfix" role="alert">
-              <i class="fa fa-exclamation-triangle"></i> {{triggeredAlert.rule.alertText}} ({{triggeredAlert.gauge.value.currentValue}})
+              <i class="fa fa-exclamation-triangle"></i> {{triggeredAlert.rule.alertText}}
               <div class="pull-right">
                 <a href="#"
                    ng-click="deleteTriggeredAlert(triggeredAlert)">
@@ -102,7 +102,6 @@
             </nvd3-discrete-bar-chart>
 
           </div>
-
 
         </div>
 

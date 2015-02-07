@@ -659,7 +659,8 @@ angular
           selectNode: ($scope.selectedType && $scope.selectedType === pipelineConstant.STAGE_INSTANCE) ? $scope.selectedObject : undefined,
           stageErrorCounts: stageErrorCounts,
           showEdgePreviewIcon: $scope.isPipelineRunning,
-          isReadOnly: $scope.isPipelineRunning || $scope.previewMode
+          isReadOnly: $scope.isPipelineRunning || $scope.previewMode,
+          pipelineRules: $scope.pipelineRules
         });
       });
 
@@ -1039,6 +1040,7 @@ angular
         $scope.$broadcast('updateErrorCount', getStageErrorCounts());
         $scope.triggeredAlerts = pipelineService.getTriggeredAlerts($scope.pipelineRules,
           $rootScope.common.pipelineMetrics);
+        $scope.$broadcast('updateEdgePreviewIconColor', $scope.pipelineRules, $scope.triggeredAlerts);
       } else {
         $scope.triggeredAlerts = [];
       }

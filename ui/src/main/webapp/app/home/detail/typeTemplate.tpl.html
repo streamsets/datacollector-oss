@@ -226,7 +226,16 @@
 </script>
 
 <script type="text/ng-template" id="fieldSelectorSingleValuedConfigurationTemplate">
-  <div class="controls col-lg-7 col-md-8">
+  <div class="controls col-lg-7 col-md-8 input-group">
+    <input type="text" class="form-control" ng-model="detailPaneConfig.configuration[configIndex].value">
+    <div class="input-group-btn">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+      <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <li ng-repeat="fieldPath in fieldPaths.concat(detailPaneConfig.configuration[configIndex].value)">
+          <a href="#" ng-click="detailPaneConfig.configuration[configIndex].value = fieldPath">{{fieldPath}}</a>
+        </li>
+      </ul>
+    </div>
 
   </div>
 </script>

@@ -54,7 +54,8 @@ angular
           });
 
           modalInstance.result.then(function (newDataRuleDefn) {
-            $scope.pipelineRules.dataRuleDefinitions[index] = newDataRuleDefn;
+            //$scope.pipelineRules.dataRuleDefinitions[index] = newDataRuleDefn;
+            angular.copy(newDataRuleDefn, dataRuleDefn);
           }, function () {
 
           });
