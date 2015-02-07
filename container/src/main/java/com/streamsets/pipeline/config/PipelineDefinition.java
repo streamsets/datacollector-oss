@@ -5,13 +5,16 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class PipelineDefinition {
@@ -38,11 +41,18 @@ public class PipelineDefinition {
   public PipelineDefinition() {
     configDefinitions = new ArrayList<>();
     configDefinitions.add(createDeliveryGuaranteeOption());
+    configDefinitions.addAll(createBadRecordsHandlingConfigs());
   }
 
   /*Need this API for Jackson to serialize*/
   public List<ConfigDefinition> getConfigDefinitions() {
     return configDefinitions;
+  }
+
+  public ConfigGroupDefinition getConfigGroupDefinition() {
+    List<Map<String, String>> groups = new ArrayList<>();
+    groups.add(ImmutableMap.of("name", "BAD_RECORDS", "label", "Bad Records"));
+    return new ConfigGroupDefinition(null, groups);
   }
 
   @Override
@@ -83,7 +93,7 @@ public class PipelineDefinition {
       DeliveryGuarantee.AT_LEAST_ONCE.name(),
       true,
       "",
-      "",
+      "deliveryGuarantee",
       gdModelDefinition,
       "",
       new String[] {},
@@ -91,4 +101,90 @@ public class PipelineDefinition {
 
     return dgConfigDef;
   }
+
+  private List<String> getValues(Class<? extends Enum> ee) {
+    List<String> list = new ArrayList<>();
+    for (Enum e : ee.getEnumConstants()) {
+      list.add(e.name());
+    }
+    return list;
+  }
+
+  private List<String> getLabels(Class<? extends Enum> ee) {
+    List<String> list = new ArrayList<>();
+    for (Enum e : ee.getEnumConstants()) {
+      if (e instanceof Label) {
+        list.add(((Label)e).getLabel());
+      } else {
+        list.add(e.name());
+      }
+    }
+    return list;
+  }
+
+  private List<ConfigDefinition> createBadRecordsHandlingConfigs() {
+    List<ConfigDefinition> configs = new ArrayList<>();
+
+    ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, ChooserMode.PROVIDED, "",
+                                                getValues(BadRecordsOptions.class), getLabels(BadRecordsOptions.class),
+                                                null);
+    ConfigDefinition config = new ConfigDefinition(
+        "badRecords",
+        ConfigDef.Type.MODEL,
+        "Bad Records",
+        "",
+        BadRecordsOptions.DISCARD.name(),
+        true,
+        "BAD_RECORDS",
+        "",
+        model,
+        "",
+        new String[] {},
+        10);
+    configs.add(config);
+    config = new ConfigDefinition(
+        "badRecordsDir",
+        ConfigDef.Type.STRING,
+        "Bad Records Directory",
+        "",
+        "",
+        true,
+        "BAD_RECORDS",
+        "",
+        null,
+        "badRecords",
+        new String[] { BadRecordsOptions.SAVE.name() },
+        20);
+    configs.add(config);
+    config = new ConfigDefinition(
+        "maxRecordsPerFile",
+        ConfigDef.Type.INTEGER,
+        "Max Bad Records per File",
+        "",
+        "100000",
+        true,
+        "BAD_RECORDS",
+        "",
+        null,
+        "badRecords",
+        new String[] { BadRecordsOptions.SAVE.name() },
+        30);
+    configs.add(config);
+    config = new ConfigDefinition(
+        "rollFileInterval",
+        ConfigDef.Type.EL_NUMBER,
+        "Roll Bad Records File every (secs)",
+        "",
+        "${1 * MINUTE}",
+        true,
+        "BAD_RECORDS",
+        "",
+        null,
+        "badRecords",
+        new String[] { BadRecordsOptions.SAVE.name() },
+        40);
+    configs.add(config);
+    return configs;
+  }
+
 }
