@@ -9,6 +9,5 @@
    payload type to use. You can add additional Kafka configuration properties as needed.</p>
   <p>The Kafka Producer passes data to partitions in the Kafka topic based on the partition strategy
    that you choose. </p>
-  <p>The K</p>
  </conbody>
 </concept>

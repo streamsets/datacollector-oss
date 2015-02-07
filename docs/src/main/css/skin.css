@@ -341,7 +341,7 @@ span.topic {
   text-shadow: none;
   border: none;
   margin-bottom: 10px;
-  font-size: 36px;
+  font-size: 32px;
   color: #003399;
   font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif;
   font-weight: 500;
@@ -357,6 +357,20 @@ span.topic {
 	margin: 0;
 	padding-top: 30px;
 	border-top: 1px solid #eee;	
+}
+.rel-info {
+	border: 1px solid #e1e1e1;
+	padding-top: 15px;
+}
+.related_link {
+	margin-top: -15px;
+}
+.related_link a.navheader_parent_path {
+	font-size: 13px;
+	color: #29b4e1;
+}
+.related_link a.navheader_parent_path:hover {
+	color: #0079c2;
 }
 .title.sectiontitle, .title.topictitle2 {
 	background: none;
@@ -499,7 +513,7 @@ dl, .dl {
 .dt {
   background: transparent;
   font-weight: bold;
-  font-size: 15px;
+  font-size: 14px;
   margin: 20px 0 0 0;
 }
 .dd {
@@ -533,9 +547,11 @@ div.footer {
 
 
 
-
-.info {
-	margin: 5px 0 15px 0;
+.step {
+	margin-bottom: 30px;
+}
+.stepresult, .stepresult p, .info, .info p {
+	margin: 5px 0 ;
 	font-size: 13px;
 }
 .q {

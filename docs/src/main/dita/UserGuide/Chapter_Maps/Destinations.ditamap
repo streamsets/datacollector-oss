@@ -5,12 +5,15 @@
  <topicref href="../Destinations/Destinations_title.dita">
   <topicref href="../Destinations/Destinations_overview.dita">
    <topicref href="../Destinations/RequiredFieldsInDestinations.dita"/>
-   <topicref href="../Destinations/Trash.dita">
-    <topicref href="../Destinations/Trash-Configuring.dita"/>
+   <topicref href="../Destinations/HadoopFS.dita">
+    <topicref href="../Destinations/HadoopFS-Configuring.dita"/>
    </topicref>
    <topicref href="../Destinations/KProducer.dita">
     <topicref href="../Destinations/KProducer-AdditionalKProperties.dita"/>
     <topicref href="../Destinations/KafkaProducer_BrokerList.dita"/>
+   </topicref>
+   <topicref href="../Destinations/Trash.dita">
+    <topicref href="../Destinations/Trash-Configuring.dita"/>
    </topicref>
   </topicref>
  </topicref>
