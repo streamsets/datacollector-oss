@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
-<map>
+<map collection-type="sequence">
  <title>Processors</title>
  <topicref href="../Processors/Processors_title.dita">
   <topicref href="../Processors/Processors_overview.dita" chunk="to-content">
@@ -8,11 +8,11 @@
    <topicref href="../Processors/RequiredFieldsinProcessors.dita"/>
    <topicref href="../Processors/SelectingFieldswithPreviewData.dita"/>
   </topicref>
-  <topicref href="../Processors/Expression.dita" chunk="to-content"> 
+  <topicref href="../Processors/Expression.dita" chunk="to-content">
    <topicref href="../Processors/Expression-OutputField.dita"/>
    <topicref href="../Processors/Expression-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/Deduplicator.dita">
+  <topicref href="../Processors/Deduplicator.dita" chunk="to-content">
    <topicref href="../Processors/Deduplicator-ComparisonWindow.dita"/>
    <topicref href="../Processors/Deduplicator-Configuring.dita"/>
   </topicref>
@@ -33,17 +33,20 @@
   <topicref href="../Processors/FieldSplitter.dita" chunk="to-content">
    <topicref href="../Processors/FieldSplitter-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/JSONParser.dita">
+  <topicref href="../Processors/JSONParser.dita" chunk="to-content">
    <topicref href="../Processors/JSONParser-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/StreamSelector.dita" chunk="to-content">
    <topicref href="../Processors/StreamSelector_fallback.dita"/>
    <topicref href="../Processors/StreamSelector-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/ValueReplacer.dita">
+  <topicref href="../Processors/ValueReplacer.dita" chunk="to-content">
    <topicref href="../Processors/ValueReplacer-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/ConfiguringExpressionsConditions.dita" chunk="to-content"><topicmeta><shortdesc/></topicmeta>
+  <topicref href="../Processors/ConfiguringExpressionsConditions.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Processors/BasicSyntax.dita"/>
    <topicref href="../Processors/UsingFieldNamesinExpressions.dita"/>
    <topicref href="../Processors/DefiningConstants.dita"/>

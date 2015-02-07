@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_ad4_qyl_zq">
+    <title>Configuring a Trash Destination</title>
+    <shortdesc>Use a Trash destination as a placeholder for testing or to gather statistics or
+        receive alerts about discarded records.</shortdesc>
+    <taskbody>
+        <context>
+            <p>You can configure required fields for the Trash destination. When a record does not
+                include data in the required fields, it is written to the error log. </p>
+        </context>
+        <steps id="steps_fsd_5yl_zq">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>For Required Fields, enter any fields that you want to require data. <xref
+                        href="../Processors/RequiredFieldsinProcessors.dita#concept_dnj_bkm_vq">
+                        <image href="../Graphics/icon_moreInfo.png" scale="11" id="image_h4p_p5v_yq"
+                        /></xref></cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

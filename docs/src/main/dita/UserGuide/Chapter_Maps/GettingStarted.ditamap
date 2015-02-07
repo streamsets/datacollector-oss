@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
-<map>
+<map collection-type="sequence">
  <title>Getting Started</title>
  <topicref href="../Getting_Started/GettingStarted_Title.dita">
   <topicref href="../Getting_Started/What_isa_DataCollector.dita" chunk="to-content">

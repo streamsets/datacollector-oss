@@ -6,9 +6,9 @@
     <taskbody>
         <context/>
         <steps id="steps_tsx_3gf_xq">
-            <step>
-                <cmd>In the Properties panel, optionally enter a name and description for the
-                    stage.</cmd>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+                <cmd/>
             </step>
             <step>
                 <cmd>Enter a condition for the first stream.</cmd>
@@ -41,11 +41,6 @@
             <step>
                 <cmd>To add additional constants, click <uicontrol>Add</uicontrol> and configure the
                     constant.</cmd>
-            </step>
-            <step>
-                <cmd>Optionally include <uicontrol>Required Fields</uicontrol> for the stage.</cmd>
-                <info>You might want to add any field that you use in condition as a required
-                    field.</info>
             </step>
         </steps>
     </taskbody>

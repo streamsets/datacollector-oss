@@ -7,9 +7,9 @@
  <conbody>
   <p>You can use the following types of destinations in a pipeline: <draft-comment author="Loretta"
         >list the target types. quick description.</draft-comment><ul id="ul_mxz_jxm_jq">
-        <li>Kafka Producer</li>
-        <li>HBase</li>
-        <li>Trash. Use to </li>
+        <li>Kafka Producer - Writes data to a Kakfa cluster.</li>
+        <li>Hadoop FS - Writes data to a file system on Hadoop.</li>
+        <li>Trash - Removes data from the pipeline.</li>
       </ul></p>
  </conbody>
 </concept>

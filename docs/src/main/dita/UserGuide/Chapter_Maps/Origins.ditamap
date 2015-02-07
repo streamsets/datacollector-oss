@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
-<map>
+<map collection-type="sequence">
  <title>Origins</title>
- <topicref href="../Origins/Origins_title.dita" >
+ <topicref href="../Origins/Origins_title.dita">
   <topicref href="../Origins/Origins_overview.dita" chunk="to-content"/>
   <topicref href="../Origins/PreviewingRawSourceData.dita"/>
   <topicref href="../Origins/Directory.dita" chunk="to-content">
@@ -17,8 +17,8 @@
    <topicref href="../Origins/FileTail-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/KConsumer.dita" chunk="to-content">
-   <topicref href="../Origins/KConsumer_AdvancedProp.dita"/>
-   <topicref href="../Origins/ConfiguringKafkaConsumer.dita"/>
+   <topicref href="../Origins/KConsumer_AdditionalKProp.dita"/>
+   <topicref href="../Origins/KConsumer-Configuring.dita"/>
   </topicref>
  </topicref>
 </map>

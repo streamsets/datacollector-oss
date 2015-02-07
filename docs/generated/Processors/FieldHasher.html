@@ -2,13 +2,14 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values. Use the Field Hasher to securely encode sensitive data that ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Hasher"></meta><meta name="abstract" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values."></meta><meta name="description" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values."></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ivv_c3k_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Hasher</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values. Use the Field Hasher to securely encode sensitive data that ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Hasher"></meta><meta name="abstract" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values."></meta><meta name="description" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ivv_c3k_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Hasher</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
 <body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"></td><td><div class="navheader"></div></td></tr></tbody></table>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_ivv_c3k_wq">
  <h1 class="title topictitle1">Field Hasher</h1>
 
@@ -25,6 +26,7 @@
 
  </div>
 
+<div class="related-links"></div>
 <div class="topic task nested1" id="task_xjd_dlk_wq">
     <h2 class="title topictitle2">Configuring a Field Hasher</h2>
 
@@ -35,7 +37,13 @@
 
         <ol class="ol steps" id="task_xjd_dlk_wq__steps_fsf_flk_wq"><li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, optionally enter a name and description for the
-                    stage.</span>
+                    stage. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
+                    require data. <a class="xref" href="Processors_overview.html#concept_dnj_bkm_vq" title="A required field must exist in a record to keep it in the pipeline. When a record does not include a required field, the processor discards the record. You can configure required fields for any processor or target stage.">
+                        <img class="image" id="task_xjd_dlk_wq__d1049e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
+                <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand" id="task_xjd_dlk_wq__SelectHashField">
                 <span class="ph cmd">To hash a field, configure the following properties:</span>
@@ -46,9 +54,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.44481605351171%" id="d7891e69">Field Hasher Configuration Property</th>
+                                    <th class="entry" valign="top" width="33.44481605351171%" id="d10329e96">Field Hasher Configuration Property</th>
 
-                                    <th class="entry" valign="top" width="66.5551839464883%" id="d7891e72">Description</th>
+                                    <th class="entry" valign="top" width="66.5551839464883%" id="d10329e99">Description</th>
 
                                 </tr>
 
@@ -56,16 +64,16 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d7891e69 ">Hash Field</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d10329e96 ">Hash Field</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d7891e72 ">Field to be hashed. </td>
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d10329e99 ">Field to be hashed. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d7891e69 ">Hash Type</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d10329e96 ">Hash Type</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d7891e72 ">Algorithm to use to hash field values. Select one of the
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d10329e99 ">Algorithm to use to hash field values. Select one of the
                                         following options:<ul class="ul" id="task_xjd_dlk_wq__ul_kmd_rnk_wq">
                                             <li class="li"><span class="ph uicontrol">MD5</span> - Produces a 128-bit
                                                 (16-byte) hash value, typically expressed in text
@@ -94,16 +102,13 @@
                 <span class="ph cmd">To hash another field, click <span class="ph uicontrol">Add</span> and then repeat the
                     previous step.</span>
             </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Optionally, configure <span class="ph uicontrol">Required Fields</span> for the stage. </span>
-                <div class="itemgroup info">You might want to include fields that you are hashing.</div>
-            </li>
 </ol>
 
     </div>
 
 </div>
 </div>
-<div class="navfooter"><!----></div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
 </body>
 </html>

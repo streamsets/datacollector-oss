@@ -8,5 +8,7 @@
   </topicref>
   <topicref href="../Pipeline_Monitoring/ViewingPipelineStageStatistics.dita"/>
   <topicref href="../Pipeline_Monitoring/ReviewingSnapshotData.dita"/>
+  <topicref href="../Pipeline_Monitoring/MetricAlerts.dita"/>
+  <topicref href="../Pipeline_Monitoring/DataAlerts.dita"/>
  </topicref>
 </map>

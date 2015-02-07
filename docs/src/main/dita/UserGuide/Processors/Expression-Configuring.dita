@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_x2h_tv4_yq">
-    <title>Configuring an Expression</title>
-    <shortdesc>Configure an Expression &lt;&lt;name>> to perform calculations on records on a
-        row-by-row basis.</shortdesc>
+    <title>Configuring an Expression Evaluator</title>
+    <shortdesc>Configure an Expression Evaluator to perform calculations on records on a row-by-row
+        basis.</shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_wxb_ky4_yq">
-            <step>
-                <cmd>In the Properties panel, optionally enter a name and description for the
-                    stage.</cmd>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+                <cmd/>
             </step>
             <step>
                 <cmd>To configure an expression, configure the following properties:</cmd>
@@ -20,7 +20,7 @@
                             <colspec colname="c2" colnum="2" colwidth="1.0*"/>
                             <thead>
                                 <row>
-                                    <entry>Expression Property</entry>
+                                    <entry>Expression Evaluator Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -30,7 +30,7 @@
                                     <entry>Name of the field to pass the results of the expression
                                         to the next stage. Enter the name of the new or existing
                                         field as follows: /&lt;field name><p>The Expression
-                                            &lt;&lt;name>> replaces values in existing field.
+                                            Evaluator replaces values in existing field.
                                         </p></entry>
                                 </row>
                                 <row>
@@ -47,10 +47,6 @@
                 <info>To define a constant, click <uicontrol>Add</uicontrol>, and then enter a
                         <uicontrol>Name</uicontrol> and <uicontrol>Value</uicontrol> for the
                     constant.</info>
-            </step>
-            <step>
-                <cmd>Optionally, configure <uicontrol>Required Fields</uicontrol> for the stage. </cmd>
-                <info>You might want to include fields that you use in expressions.</info>
             </step>
         </steps>
     </taskbody>

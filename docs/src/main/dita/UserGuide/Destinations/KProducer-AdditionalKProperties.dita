@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_tjp_v5l_zq">
+ <title>Additional Kafka Properties</title>
+ <shortdesc>You can add custom Kafka configuration properties to the Kafka Producer.</shortdesc>
+ <conbody>
+  <p>When you add the Kafka configuration property, enter the Kafka property name and the value. The
+   Kafka Consumer does not validate the property names or values.</p>
+  <note>
+   <p>The Kafka Producer uses the broker.host Kafka configuration property. The Kafka Consumer
+    ignores user-defined values for the broker.list property.</p>
+  </note>
+ </conbody>
+</concept>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_d5f_n2g_vq">
- <title>Advanced Properties</title>
- <shortdesc>You can add custom properties to pass Kafka configuration properties that you want to
-  use.</shortdesc>
+ <title>Additional Kafka Properties</title>
+ <shortdesc>You can add custom Kafka configuration properties to the Kafka Consumer.</shortdesc>
  <conbody>
   <p>When you add the Kafka configuration property, enter the Kafka property name and the value.
    The Kafka Consumer does not validate the property names or values.</p>

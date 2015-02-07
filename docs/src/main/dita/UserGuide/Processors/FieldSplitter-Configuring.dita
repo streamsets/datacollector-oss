@@ -8,9 +8,9 @@
     <taskbody>
         <context/>
         <steps id="steps_r4z_dh3_yq">
-            <step>
-                <cmd>In the Properties panel, optionally enter a name and description for the
-                    stage.</cmd>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+                <cmd/>
             </step>
             <step>
                 <cmd>To split a field, configure the following properties:</cmd>
@@ -64,11 +64,6 @@
                         </tgroup>
                     </table>
                 </info>
-            </step>
-            <step>
-                <cmd>Optionally, configure <uicontrol>Required Fields</uicontrol> for the stage. </cmd>
-                <info>You might want to include field that you are splitting as a required
-                    field.</info>
             </step>
         </steps>
     </taskbody>
