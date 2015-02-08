@@ -31,8 +31,11 @@ public class PreviewPipeline {
   public PreviewPipelineOutput run(List<StageOutput> stageOutputsToOverride)
       throws StageException, PipelineRuntimeException{
     pipeline.init();
-    pipeline.run(stageOutputsToOverride);
-    pipeline.destroy();
+    try {
+      pipeline.run(stageOutputsToOverride);
+    } finally {
+      pipeline.destroy();
+    }
     return new PreviewPipelineOutput(issues, pipeline.getRunner());
   }
 
