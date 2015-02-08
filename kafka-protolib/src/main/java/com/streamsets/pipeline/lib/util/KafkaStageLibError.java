@@ -35,6 +35,7 @@ public enum KafkaStageLibError implements ErrorCode {
   KFK_0355("Error converting the result of partition expression '{}' to a partition id for topic '{}'. Reason : {}"),
   KFK_0356("Partition expression resulted in invalid partition id '{}'. Topic '{}' has {} partitions"),
   KFK_0357("Failed to evaluate partition expression '{}', {}"),
+  KFK_0358("Topic '{}' does not exist."),
 
   ;
   private final String msg;

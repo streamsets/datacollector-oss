@@ -90,39 +90,6 @@ public class HighLevelKafkaConsumer {
     consumer.commitOffsets();
   }
 
-  /*public List<MessageAndOffset> read(int maxBatchSize) throws StageException {
-    List<MessageAndOffset> messageAndOffsetList = new ArrayList<>();
-    int batchSize = this.maxBatchSize > maxBatchSize ? maxBatchSize : this.maxBatchSize;
-    int messageCount = 0;
-    long startTime = System.currentTimeMillis();
-    //Keep trying to collect messages until the batch size is reached or the max wait time is reached
-    while (messageCount < batchSize && (startTime + maxWaitTime) > System.currentTimeMillis()) {
-      try {
-        //has next blocks indefinitely if consumer.timeout.ms is set to -1
-        //But if consumer.timeout.ms is set to a value, like 6000 in this case, a ConsumerTimeoutException is thrown
-        //if no message is written to kafka topic in that time.
-        if(consumerIterator.hasNext()) {
-          MessageAndMetadata<byte[], byte[]> messageAndMetadata = consumerIterator.next();
-          byte[] message = messageAndMetadata.message();
-          long offset = messageAndMetadata.offset();
-          int partition = messageAndMetadata.partition();
-          MessageAndOffset partitionToPayloadMap = new MessageAndOffset(message, offset, partition);
-          messageAndOffsetList.add(partitionToPayloadMap);
-          messageCount++;
-        }
-      } catch (ConsumerTimeoutException e) {
-        *//*For high level consumer the fetching logic is handled by a background
-          fetcher thread and is hidden from user, for either case of
-          1) broker down or
-          2) no message is available
-          the fetcher thread will keep retrying while the user thread will wait on the fetcher thread to put some
-          data into the buffer until timeout. So in a sentence the high-level consumer design is to
-          not let users worry about connect / reconnect issues.*//*
-      }
-    }
-    return messageAndOffsetList;
-  }*/
-
   public MessageAndOffset read() throws StageException {
     try {
       //has next blocks indefinitely if consumer.timeout.ms is set to -1
