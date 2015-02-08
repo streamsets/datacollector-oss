@@ -13,7 +13,8 @@ angular
     );
   }])
   .controller('HomeController', function ($scope, $rootScope, $timeout, api, configuration, _, $q, $modal,
-                                          $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster, $translate) {
+                                          $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster,
+                                          $translate, contextHelpService) {
     var timeout,
       dirty = false,
       rulesDirty = false,
@@ -390,6 +391,13 @@ angular
             type: pipelineConstant.PIPELINE
           });
         }
+      },
+
+      /**
+       * Launch Contextual Help
+       */
+      launchHelp: function(helpId) {
+        contextHelpService.launchHelp(helpId);
       }
     });
 

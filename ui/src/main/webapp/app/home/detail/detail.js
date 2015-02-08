@@ -5,7 +5,7 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant, api) {
+  .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant, api, contextHelpService) {
     var infoTab =  {
         name:'info',
         template:'app/home/detail/info/info.tpl.html',
@@ -30,7 +30,8 @@ angular
         name:'summary',
         template:'app/home/detail/summary/summary.tpl.html',
         iconClass: 'fa fa-bar-chart',
-        active: true
+        active: true,
+        helpId: 'monitoring'
       },
       errorTab = {
         name:'errors',
@@ -41,17 +42,20 @@ angular
         name:'summary',
         template:'app/home/detail/dataSummary/dataSummary.tpl.html',
         iconClass: 'fa fa-bar-chart',
-        active: true
+        active: true,
+        helpId: 'monitoring'
       },
       dataRulesTab = {
         name:'dataRules',
         template:'app/home/detail/rules/dataRules/dataRules.tpl.html',
-        iconClass: 'fa fa-list'
+        iconClass: 'fa fa-list',
+        helpId: 'dataRules'
       },
       metricAlertRulesTab = {
         name:'metricAlertRules',
         template:'app/home/detail/rules/metricAlert/metricAlert.tpl.html',
-        iconClass: 'fa fa-list'
+        iconClass: 'fa fa-list',
+        helpId: 'metricAlerts'
       },
       emailIdsTab = {
         name:'emailIDs',
@@ -181,6 +185,35 @@ angular
             tab.active = true;
           }
         });
+      },
+
+      /**
+       * Launch Contextual Help
+       */
+      launchHelp: function() {
+        var helpId = '',
+          selectedObject = $scope.selectedObject,
+          activeTab = _.find($scope.detailPaneTabs, function(tab) {
+            return tab.active;
+          });
+
+        switch($scope.selectedType) {
+          case pipelineConstant.PIPELINE:
+            if(activeTab.helpId) {
+              helpId = activeTab.helpId;
+            } else {
+              helpId = 'pipelineConfiguration';
+            }
+            break;
+          case pipelineConstant.STAGE_INSTANCE:
+            helpId = selectedObject.library + '-' + selectedObject.stageName;
+            break;
+          case pipelineConstant.LINK:
+            helpId = activeTab.helpId;
+        }
+
+        contextHelpService.launchHelp(helpId);
+
       }
     });
 
