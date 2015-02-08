@@ -1,0 +1,20 @@
+<form class="form-horizontal"
+      ng-class="{'form-group-sm': $storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT}"
+      role="form" name="emailIDsForm">
+
+  <div class="form-group">
+    <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.emailIds">Email IDs</label>
+    <div class="controls col-lg-7 col-md-8">
+      <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+                 ng-model="pipelineRules.emailIds">
+        <ui-select-match>
+          {{$item}}
+        </ui-select-match>
+        <ui-select-choices repeat="emailId in pipelineRules.emailIds">
+          {{emailId}}
+        </ui-select-choices>
+      </ui-select>
+    </div>
+  </div>
+
+</form>

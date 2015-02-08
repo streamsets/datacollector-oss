@@ -2,7 +2,7 @@
 
   <tab>
     <tab-heading>
-      {{'home.detailPane.badRecords' | translate}} <span class="badge alert-danger">{{ errorRecordsCount.count | number:0}}</span>
+      {{'home.detailPane.badRecords' | translate}} <span class="badge alert-danger">{{ errorRecordsCount.count | abbreviateNumber}}</span>
     </tab-heading>
     <div class="tabs-content">
       <div class="row">
@@ -90,7 +90,7 @@
 
   <tab>
     <tab-heading>
-      {{'global.form.stageErrors' | translate}} <span class="badge alert-danger">{{errorMessagesCount.count | number:0}}</span>
+      {{'global.form.stageErrors' | translate}} <span class="badge alert-danger">{{errorMessagesCount.count | abbreviateNumber}}</span>
     </tab-heading>
 
     <div class="tabs-content">
