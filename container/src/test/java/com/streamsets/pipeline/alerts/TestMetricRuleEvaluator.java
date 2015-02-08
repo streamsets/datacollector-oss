@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class TestMetricAlertsChecker {
+public class TestMetricRuleEvaluator {
 
   private static final String LANE = "lane";
 
@@ -53,9 +53,9 @@ public class TestMetricAlertsChecker {
     MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerMatch", "testTimerMatch",
       "testTimerMatch.timer", MetricType.TIMER,
       MetricElement.TIMER_COUNT, "${value()>2}", false, true);
-    MetricAlertsChecker metricAlertsChecker = new MetricAlertsChecker(metricsAlertDefinition, metrics, variables,
+    MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsAlertDefinition, metrics, variables,
       elEvaluator, null, Collections.<String>emptyList());
-    metricAlertsChecker.checkForAlerts();
+    metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
@@ -75,9 +75,9 @@ public class TestMetricAlertsChecker {
     MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerMatchDisabled",
       "testTimerMatchDisabled", "testTimerMatchDisabled.timer", MetricType.TIMER, MetricElement.TIMER_COUNT,
       "${value()>2}", false, false);
-    MetricAlertsChecker metricAlertsChecker = new MetricAlertsChecker(metricsAlertDefinition, metrics, variables,
+    MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsAlertDefinition, metrics, variables,
       elEvaluator, null, Collections.<String>emptyList());
-    metricAlertsChecker.checkForAlerts();
+    metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
@@ -96,9 +96,9 @@ public class TestMetricAlertsChecker {
     MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerNoMatch", "testTimerNoMatch",
       "testTimerNoMatch.timer", MetricType.TIMER,
       MetricElement.TIMER_COUNT, "${value()>4}", false, true);
-    MetricAlertsChecker metricAlertsChecker = new MetricAlertsChecker(metricsAlertDefinition, metrics, variables,
+    MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsAlertDefinition, metrics, variables,
       elEvaluator, null, Collections.<String>emptyList());
-    metricAlertsChecker.checkForAlerts();
+    metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,

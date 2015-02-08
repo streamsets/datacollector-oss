@@ -5,14 +5,11 @@
  */
 package com.streamsets.pipeline.runner.production;
 
-import com.codahale.metrics.Counter;
-import com.codahale.metrics.Gauge;
-import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.EvictingQueue;
-import com.streamsets.pipeline.alerts.AlertsUtil;
-import com.streamsets.pipeline.alerts.MetricAlertsChecker;
+import com.streamsets.pipeline.alerts.DataRuleEvaluator;
+import com.streamsets.pipeline.alerts.MetricRuleEvaluator;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
@@ -23,10 +20,7 @@ import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
-import com.streamsets.pipeline.runner.LaneResolver;
 import com.streamsets.pipeline.util.Configuration;
-import com.streamsets.pipeline.util.ObserverException;
-import com.streamsets.pipeline.util.PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,11 +34,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ObserverRunner {
 
   private static final Logger LOG = LoggerFactory.getLogger(ObserverRunner.class);
-
-  private static final String USER_PREFIX = "user.";
-  private static final String CURRENT_VALUE = "currentValue";
-  private static final String TIMESTAMP = "timestamp";
-  private static final String STREAMSETS_DATA_COLLECTOR_ALERT = "StreamsSets Data Collector Alert - ";
 
   private RulesConfigurationChangeRequest rulesConfigurationChangeRequest;
   private final Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap;
@@ -78,79 +67,9 @@ public class ObserverRunner {
       if(dataRuleDefinitions != null) {
         List<Record> sampleRecords = getSampleRecords(dataRuleDefinitions, allRecords);
         for (DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
-          if (dataRuleDefinition.isEnabled()) {
-            int numberOfRecords = (int) Math.floor(allRecords.size() * dataRuleDefinition.getSamplingPercentage() / 100);
-
-            //cache all sampled records for this data rule definition in an evicting queue
-            List<Record> sampleSet = sampleRecords.subList(0, numberOfRecords);
-            EvictingQueue<Record> sampledRecords = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
-            if (sampledRecords == null) {
-              sampledRecords = EvictingQueue.create(configuration.get(
-                com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_CACHE_SIZE_KEY,
-                com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_CACHE_SIZE_DEFAULT));
-              ruleToSampledRecordsMap.put(dataRuleDefinition.getId(), sampledRecords);
-            }
-
-            //Keep the counters and meters ready before execution
-            //batch record counter - cummulative sum of records per batch
-            Counter recordCounter = MetricsConfigurator.getCounter(metrics, LaneResolver.getPostFixedLaneForObserver(lane));
-            if (recordCounter == null) {
-              recordCounter = MetricsConfigurator.createCounter(metrics, LaneResolver.getPostFixedLaneForObserver(lane));
-            }
-            //counter for the matching records - cummulative sum of records that match criteria
-            Counter matchingRecordCounter = MetricsConfigurator.getCounter(metrics, dataRuleDefinition.getId());
-            if (matchingRecordCounter == null) {
-              matchingRecordCounter = MetricsConfigurator.createCounter(metrics, dataRuleDefinition.getId());
-            }
-            //Meter
-            Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + dataRuleDefinition.getId());
-            if (meter == null) {
-              meter = MetricsConfigurator.createMeter(metrics, USER_PREFIX + dataRuleDefinition.getId());
-            }
-
-            //evaluate sample set of records for condition
-            int meterCount = 0;
-            for (Record r : sampleSet) {
-              recordCounter.inc();
-              //evaluate
-              boolean success = evaluate(r, dataRuleDefinition.getCondition(), dataRuleDefinition.getId());
-              if (success) {
-                matchingRecordCounter.inc();
-                sampledRecords.add(r);
-                meterCount++;
-              }
-            }
-
-            if (dataRuleDefinition.isAlertEnabled()) {
-              double threshold;
-              try {
-                threshold = Double.parseDouble(dataRuleDefinition.getThresholdValue());
-              } catch (NumberFormatException e) {
-                //Soft error for now as we don't want this alert to stop other rules
-                LOG.error("Error interpreting threshold '{}' as a number", dataRuleDefinition.getThresholdValue());
-                return;
-              }
-              switch (dataRuleDefinition.getThresholdType()) {
-                case COUNT:
-                  if (matchingRecordCounter.getCount() > threshold) {
-                    raiseAlert(matchingRecordCounter.getCount(), dataRuleDefinition,
-                      rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
-                  }
-                  break;
-                case PERCENTAGE:
-                  if ((matchingRecordCounter.getCount() * 100 / recordCounter.getCount()) > threshold
-                    && recordCounter.getCount() >= dataRuleDefinition.getMinVolume()) {
-                    raiseAlert(matchingRecordCounter.getCount(), dataRuleDefinition,
-                      rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
-                  }
-                  break;
-              }
-            }
-
-            if (dataRuleDefinition.isMeterEnabled() && meterCount > 0) {
-              meter.mark(meterCount);
-            }
-          }
+          DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator, emailSender,
+            rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds(), dataRuleDefinition, configuration);
+          dataRuleEvaluator.evaluateRule(allRecords, sampleRecords, lane, ruleToSampledRecordsMap);
         }
       }
     }
@@ -160,7 +79,7 @@ public class ObserverRunner {
       rulesConfigurationChangeRequest.getRuleDefinition().getMetricsAlertDefinitions();
     if(metricsAlertDefinitions != null) {
       for (MetricsAlertDefinition metricsAlertDefinition : metricsAlertDefinitions) {
-        MetricAlertsChecker metricAlertsHelper = new MetricAlertsChecker(metricsAlertDefinition, metrics,
+        MetricRuleEvaluator metricAlertsHelper = new MetricRuleEvaluator(metricsAlertDefinition, metrics,
           variables, elEvaluator, emailSender, rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
         metricAlertsHelper.checkForAlerts();
       }
@@ -179,60 +98,6 @@ public class ObserverRunner {
     for(String alertId : rulesConfigurationChangeRequest.getMetricAlertsToRemove()) {
       MetricsConfigurator.removeGauge(metrics, alertId);
     }
-  }
-
-  private boolean evaluate(Record record, String condition, String id) {
-    try {
-      return AlertsUtil.evaluateRecord(record, condition, variables, elEvaluator);
-    } catch (ObserverException e) {
-      //A faulty condition should not take down rest of the alerts with it.
-      //Log and it and continue for now
-      LOG.error("Error processing metric definition '{}', reason: {}", id, e.getMessage());
-      return false;
-    }
-  }
-
-  private void raiseAlert(Object value, final DataRuleDefinition dataRuleDefinition, List<String> emailIds) {
-    Map<String, Object> response = alertResponse.get(dataRuleDefinition.getId());
-    if(response == null) {
-      response = new HashMap<>();
-      alertResponse.put(dataRuleDefinition.getId(), response);
-    }
-    response.put(CURRENT_VALUE, value);
-    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
-    if (gauge == null) {
-      response.put(TIMESTAMP, System.currentTimeMillis());
-      //send email the first time alert is triggered
-      if(dataRuleDefinition.isSendEmail()) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(CURRENT_VALUE + " = " + value).append(", " + TIMESTAMP + " = " +
-          response.get(TIMESTAMP));
-        if(emailSender == null) {
-          LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
-            dataRuleDefinition.getId(), stringBuilder.toString());
-        } else {
-          try {
-            emailSender.send(emailIds, STREAMSETS_DATA_COLLECTOR_ALERT + dataRuleDefinition.getAlertText(),
-              stringBuilder.toString());
-          } catch (PipelineException e) {
-            LOG.error("Error sending alert email, reason: {}", e.getMessage());
-            //Log error and move on. This should not stop the pipeline.
-          }
-        }
-      }
-    } else {
-      //remove existing gauge
-      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
-      response.put(TIMESTAMP, ((Map<String, Object>)gauge.getValue()).get(TIMESTAMP));
-    }
-    Gauge<Object> alertResponseGauge = new Gauge<Object>() {
-      @Override
-      public Object getValue() {
-        return alertResponse.get(dataRuleDefinition.getId());
-      }
-    };
-    MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()),
-      alertResponseGauge);
   }
 
   private List<Record> getSampleRecords(List<DataRuleDefinition> dataRuleDefinitions, List<Record> allRecords) {
