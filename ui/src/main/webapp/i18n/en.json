@@ -155,7 +155,7 @@
     },
     "detailPane": {
       "alerts": "Alerts",
-      "emailIds": "Email IDs",
+      "emailIDs": "Email IDs",
       "errors": "Errors",
       "badRecords": "Bad Records",
       "badRecordsTab": {

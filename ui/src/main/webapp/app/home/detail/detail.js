@@ -54,8 +54,8 @@ angular
         iconClass: 'fa fa-list'
       },
       emailIdsTab = {
-        name:'emailIds',
-        template:'app/home/detail/rules/emailIds/emailIds.tpl.html',
+        name:'emailIDs',
+        template:'app/home/detail/rules/emailIDs/emailIDs.tpl.html',
         iconClass: 'fa fa-envelope-o'
       };
 
