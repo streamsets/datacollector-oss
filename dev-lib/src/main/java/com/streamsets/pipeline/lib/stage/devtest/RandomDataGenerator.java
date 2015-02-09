@@ -18,6 +18,7 @@ import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class RandomDataGenerator extends BaseSource {
       case BOOLEAN :
         return random.nextBoolean();
       case DATE:
-        return new Date(random.nextLong());
+        return getRandomDate();
       case DOUBLE:
         return random.nextDouble();
       case FLOAT:
@@ -93,6 +94,19 @@ public class RandomDataGenerator extends BaseSource {
         return UUID.randomUUID().toString();
     }
     return null;
+  }
+
+  public Date getRandomDate() {
+    GregorianCalendar gc = new GregorianCalendar();
+    int year = randBetween(1990, 2010);
+    gc.set(gc.YEAR, year);
+    int dayOfYear = randBetween(1, gc.getActualMaximum(gc.DAY_OF_YEAR));
+    gc.set(gc.DAY_OF_YEAR, dayOfYear);
+    return gc.getTime();
+  }
+
+  public static int randBetween(int start, int end) {
+    return start + (int)Math.round(Math.random() * (end - start));
   }
 
   public static class DataGeneratorConfig {

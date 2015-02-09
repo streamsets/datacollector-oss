@@ -5,7 +5,8 @@ angular.module('dataCollectorApp.common')
   .service('configuration', function($rootScope, api, $q) {
     var self = this,
       REFRESH_INTERVAL = 'ui.refresh.interval.ms',
-      JVM_METRICS_REFRESH_INTERVAL = 'ui.jvmMetrics.refresh.interval.ms';
+      JVM_METRICS_REFRESH_INTERVAL = 'ui.jvmMetrics.refresh.interval.ms',
+      UI_HELP_BASE_URL = 'ui.help.base.url';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -22,6 +23,18 @@ angular.module('dataCollectorApp.common')
       return self.initializeDefer.promise;
     };
 
+    /**
+     * Returns Configuration Properties
+     * @returns {Object}
+     */
+
+    this.getConfiguration = function() {
+      if(self.config) {
+        return self.config;
+      }
+
+      return undefined;
+    };
 
     /**
      * Returns refresh interval in milliseconds
@@ -48,16 +61,15 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
-     * Returns Configuration Properties
-     * @returns {Object}
+     * Returns UI Help Base URL
+     *
+     * @returns string
      */
-
-    this.getConfiguration = function() {
+    this.getUIHelpBaseURL = function() {
       if(self.config) {
-        return self.config;
+        return self.config[UI_HELP_BASE_URL];
       }
-
-      return undefined;
+      return '/docs';
     };
 
 

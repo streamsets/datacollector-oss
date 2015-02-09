@@ -12,6 +12,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
     mockedApi = api;
 
     $httpBackend.expectGET('i18n/en.json').respond({});
+    $httpBackend.expectGET('rest/v1/configuration/all').respond({});
     $httpBackend.expectGET('rest/v1/definitions').respond({
       pipeline: [
         {
@@ -299,8 +300,6 @@ describe('Controller: modules/home/HomeCtrl', function () {
       'ui.help.base.url': "/help",
       'ui.refresh.interval.ms': "2000"
     });
-
-    $httpBackend.expectGET('rest/v1/configuration/all').respond({});
 
     $httpBackend.expectGET('rest/v1/pipeline-library/xyz').respond({
       uuid: "cdf08ac9-2a97-4167-8a2c-ed48cfcf600e",

@@ -27,6 +27,16 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
          */
         recordValueUpdated: function(recordUpdated, recordValue) {
           scope.$emit('recordUpdated', recordUpdated, recordValue);
+        },
+
+
+        recordDateValueUpdated: function(recordUpdated, recordValue, dateRecordValue) {
+          recordValue.value = dateRecordValue.getTime();
+          scope.$emit('recordUpdated', recordUpdated, recordValue);
+        },
+
+        getDate: function(milliSeconds) {
+          return new Date(milliSeconds);
         }
       });
 

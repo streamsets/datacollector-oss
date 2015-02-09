@@ -2,9 +2,8 @@
  * Service for providing access to the Configuration from dist/src/main/etc/pipeline.properties.
  */
 angular.module('dataCollectorApp.common')
-  .service('contextHelpService', function($rootScope, api, $q) {
+  .service('contextHelpService', function($q, configuration) {
     var self = this,
-      localDocsBaseURL = '/docs/',
       helpIds = {
         'pipelineConfiguration' :   'index.html#Pipeline_Configuration/ConfiguringAPipeline.html',
         'metricAlerts' : 'index.html#Pipeline_Monitoring/MetricAlerts.html',
@@ -30,11 +29,15 @@ angular.module('dataCollectorApp.common')
         'streamsets-datacollector-cdh5_3_0-lib-com_streamsets_pipeline_hdfs_HdfsTarget' : 'index.html#Destinations/HadoopFS-Configuring.html'
       };
 
+    this.configInitPromise = configuration.init();
 
     this.launchHelp = function(helpId) {
-      var relativeURL = helpIds[helpId],
-        helpURL = localDocsBaseURL + (relativeURL || 'index.html');
-      window.open(helpURL);
+      this.configInitPromise.then(function() {
+        var relativeURL = helpIds[helpId],
+          uiHelpBaseURL = configuration.getUIHelpBaseURL(),
+          helpURL = uiHelpBaseURL + '/' + (relativeURL || 'index.html');
+        window.open(helpURL);
+      });
     };
 
   });

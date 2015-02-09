@@ -18,7 +18,8 @@ angular
     'ngSanitize',
     'ui.select',
     'showLoadingDirectives',
-    'recordTreeDirectives'
+    'recordTreeDirectives',
+    'ui.bootstrap.datetimepicker'
   ])
   .constant('amTimeAgoConfig', {
     withoutSuffix: true

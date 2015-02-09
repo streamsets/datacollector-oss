@@ -89,14 +89,16 @@ module.exports = function(grunt) {
         'bower_components/nvd3/nv.d3.js',
         'bower_components/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js',
         'bower_components/angular-ui-select/dist/select.js',
-        'bower_components/ngstorage/ngStorage.js'
+        'bower_components/ngstorage/ngStorage.js',
+        'bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js'
       ],
       css: [
         'bower_components/bootstrap/dist/css/bootstrap.min.css',
         'bower_components/json-formatter/dist/json-formatter.min.css.css',
         'bower_components/fontawesome/css/font-awesome.css',
         'bower_components/nvd3/nv.d3.css',
-        'bower_components/angular-ui-select/dist/select.css'
+        'bower_components/angular-ui-select/dist/select.css',
+        'bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css'
       ],
       assets: [
       ],

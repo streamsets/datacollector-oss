@@ -17,7 +17,7 @@
         <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="record.dirty && isRoot"></span>
       </label>
 
-      <div ng-switch on="recordValue.type">
+      <div ng-switch="recordValue.type">
 
         <div ng-switch-when="MAP">
           <span class="field-type"> Map  </span>
@@ -54,6 +54,44 @@
 
         </div>
 
+        <div ng-switch-when="DATE">
+          <span class="field-value pull-left"
+                ng-class="recordValue.type">{{recordValue.value + '' | date:'medium'}} </span>
+
+          <div class="dropdown pull-left"
+               ng-if="editable === true"
+               ng-init="dateRecordValue = recordValue.value">
+            <a class="record-date-toggle dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">
+              <i class="fa fa-calendar"></i>
+            </a>
+            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+              <datetimepicker data-ng-model="dateRecordValue"
+                              data-on-set-time="recordDateValueUpdated(record, recordValue, dateRecordValue)"
+                              data-datetimepicker-config="{ dropdownSelector: '.record-date-toggle' }"></datetimepicker>
+            </ul>
+          </div>
+        </div>
+
+
+        <div ng-switch-when="DATETIME">
+          <span class="field-value pull-left"
+                ng-class="recordValue.type">{{recordValue.value + '' | date:'medium'}} </span>
+
+          <div class="dropdown pull-left"
+               ng-if="editable === true"
+               ng-init="dateRecordValue = recordValue.value">
+            <a class="record-date-toggle dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">
+              <i class="fa fa-calendar"></i>
+            </a>
+            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+              <datetimepicker data-ng-model="dateRecordValue"
+                              data-on-set-time="recordDateValueUpdated(record, recordValue, dateRecordValue)"
+                              data-datetimepicker-config="{ dropdownSelector: '.record-date-toggle' }"></datetimepicker>
+            </ul>
+          </div>
+        </div>
+
+
         <div ng-switch-default>
           <span ng-if="editable !== true"
                 class="field-value"
@@ -69,7 +107,6 @@
 
       </div>
     </div>
-
 
   </li>
 </ul>
