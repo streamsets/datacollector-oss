@@ -100,15 +100,22 @@ public class StagePipe extends Pipe {
     inputRecordsMeter.mark(batchImpl.getSize());
     inputRecordsHistogram.update(batchImpl.getSize());
 
-    outputRecordsCounter.inc(batchMaker.getSize());
-    outputRecordsMeter.mark(batchMaker.getSize());
-    outputRecordsHistogram.update(batchMaker.getSize());
-
     int stageErrorRecordCount = errorSink.getErrorRecords(getStage().getInfo().getInstanceName()).size() +
                                 predicateSink.size();
     errorRecordsCounter.inc(stageErrorRecordCount);
     errorRecordsMeter.mark(stageErrorRecordCount);
     errorRecordsHistogram.update(stageErrorRecordCount);
+
+    int outputRecordsCount = batchMaker.getSize();
+    if (getStage().getDefinition().getType() == StageType.TARGET) {
+      //Assumption is that the target will not drop any record.
+      //Records are sent to destination or to the error sink.
+      outputRecordsCount = batchImpl.getSize() - stageErrorRecordCount;
+    }
+    outputRecordsCounter.inc(outputRecordsCount);
+    outputRecordsMeter.mark(outputRecordsCount);
+    outputRecordsHistogram.update(outputRecordsCount);
+
 
     int stageErrorsCount = errorSink.getStageErrors(getStage().getInfo().getInstanceName()).size();
     stageErrorCounter.inc(stageErrorsCount);

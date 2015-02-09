@@ -77,7 +77,7 @@ public class FullPipeBatch implements PipeBatch {
   public BatchMakerImpl startStage(StagePipe pipe) {
     String stageName = pipe.getStage().getInfo().getInstanceName();
     Preconditions.checkState(!processedStages.contains(stageName), Utils.format(
-        "The stage '{}' has been processed already", stageName));
+      "The stage '{}' has been processed already", stageName));
     processedStages.add(stageName);
     for (String output : pipe.getOutputLanes()) {
       fullPayload.put(output, null);
@@ -216,10 +216,7 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   public int getOutputRecords() {
-    //The logic is
-    // targetOutputRecords = targetInputRecords - errorRecords
-    //Note that the assumption here is that that target will never drop records
-    return outputRecords - errorSink.size();
+    return outputRecords;
   }
 
   @Override

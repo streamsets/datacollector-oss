@@ -223,11 +223,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
     batchProcessingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     batchCountMeter.mark();
     batchInputRecordsHistogram.update(pipeBatch.getInputRecords());
-    batchOutputRecordsHistogram.update(pipeBatch.getOutputRecords());
+    batchOutputRecordsHistogram.update(pipeBatch.getOutputRecords()-pipeBatch.getErrorRecords());
     batchErrorRecordsHistogram.update(pipeBatch.getErrorRecords());
     batchErrorsHistogram.update(pipeBatch.getErrorMessages());
     batchInputRecordsMeter.mark(pipeBatch.getInputRecords());
-    batchOutputRecordsMeter.mark(pipeBatch.getOutputRecords());
+    batchOutputRecordsMeter.mark(pipeBatch.getOutputRecords()-pipeBatch.getErrorRecords());
     batchErrorRecordsMeter.mark(pipeBatch.getErrorRecords());
     batchErrorMessagesMeter.mark(pipeBatch.getErrorMessages());
 
