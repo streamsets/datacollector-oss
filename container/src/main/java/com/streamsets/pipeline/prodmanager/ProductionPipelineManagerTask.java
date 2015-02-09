@@ -23,8 +23,6 @@ import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.observerstore.SamplingStore;
-import com.streamsets.pipeline.observerstore.impl.FileSamplingStore;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionObserver;
 import com.streamsets.pipeline.runner.production.ProductionObserverRunnable;
@@ -83,7 +81,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private final StageLibraryTask stageLibrary;
   private final SnapshotStore snapshotStore;
   private final ErrorRecordStore errorRecordStore;
-  private final SamplingStore samplingStore;
 
   /*References the thread that is executing the pipeline currently */
   private ProductionPipelineRunnable pipelineRunnable;
@@ -111,7 +108,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     this.stageLibrary = stageLibrary;
     snapshotStore = new FileSnapshotStore(runtimeInfo);
     errorRecordStore = new FileErrorRecordStore(runtimeInfo, configuration);
-    samplingStore = new FileSamplingStore(runtimeInfo, configuration);
   }
 
 
@@ -370,7 +366,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     createPipelineDirIfNotExist(name);
     //register the pipeline with the error record store
     errorRecordStore.register(name, rev);
-    samplingStore.register(name, rev);
     stateTracker.register(name, rev);
 
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
@@ -448,10 +443,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
       throw new PipelineManagerException(ContainerError.CONTAINER_0111, pipelineName);
     }
     stateTracker.deleteHistory(pipelineName, rev);
-  }
-
-  public SamplingStore getSamplingStore() {
-    return samplingStore;
   }
 
   public boolean deleteAlert(String alertId) throws PipelineManagerException {
