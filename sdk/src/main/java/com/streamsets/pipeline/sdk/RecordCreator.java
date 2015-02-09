@@ -8,6 +8,7 @@ package com.streamsets.pipeline.sdk;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.record.RecordImpl;
 
+import java.util.Collections;
 import java.util.List;
 
 public class RecordCreator {
@@ -22,7 +23,7 @@ public class RecordCreator {
   }
 
   public static Record create(String stageCreator, String recordSourceId) {
-    return create(stageCreator, recordSourceId, null, null, null);
+    return create(stageCreator, recordSourceId, Collections.EMPTY_LIST, null, null);
   }
 
   public static Record create(String stageCreator, String recordSourceId, List<String> stagesPath) {
@@ -33,7 +34,7 @@ public class RecordCreator {
     return create(stageCreator, recordSourceId, null, raw, rawMimeType);
   }
 
-    public static Record create(String stageCreator, String recordSourceId, List<String> stagesPath, byte[] raw,
+  public static Record create(String stageCreator, String recordSourceId, List<String> stagesPath, byte[] raw,
       String rawMimeType) {
     RecordImpl record = new RecordImpl(stageCreator, recordSourceId, raw, rawMimeType);
     if (stagesPath != null) {
@@ -45,6 +46,7 @@ public class RecordCreator {
       }
       record.getHeader().setStagesPath(sb.toString());
     }
+    record.getHeader().setTrackingId("tid");
     return record;
   }
 

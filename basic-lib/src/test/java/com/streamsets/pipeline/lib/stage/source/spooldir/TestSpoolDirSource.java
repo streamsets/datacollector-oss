@@ -17,7 +17,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.UUID;
 
-public class TestBaseSpoolDirSource {
+public class TestSpoolDirSource {
 
   private String createTestDir() {
     File f = new File("target", UUID.randomUUID().toString());
@@ -25,7 +25,7 @@ public class TestBaseSpoolDirSource {
     return f.getAbsolutePath();
   }
 
-  public static class TSpoolDirSource extends BaseSpoolDirSource {
+  public static class TSpoolDirSource extends SpoolDirSource {
     File file;
     long offset;
     int maxBatchSize;
@@ -33,7 +33,7 @@ public class TestBaseSpoolDirSource {
     boolean produceCalled;
 
     @Override
-    protected long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
       produceCalled = true;
       Assert.assertEquals(this.file, file);
       Assert.assertEquals(this.offset, offset);
@@ -43,8 +43,11 @@ public class TestBaseSpoolDirSource {
     }
   }
 
-  private SourceRunner createSourceRunner(BaseSpoolDirSource source, String initialFile) {
+  private SourceRunner createSourceRunner(SpoolDirSource source, String initialFile) {
     return new SourceRunner.Builder(source)
+        .addConfiguration("fileDataType", FileDataType.LOG_DATA)
+        .addConfiguration("maxLogLineLength", 1024)
+        .addConfiguration("setTruncated", false)
         .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
         .addConfiguration("filePattern", "file-[0-9].log")
         .addConfiguration("batchSize", 10)
