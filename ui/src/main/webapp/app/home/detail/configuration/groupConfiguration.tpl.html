@@ -171,13 +171,17 @@
                           </option>
                         </select>
 
-                        <input type="text"
-                               name="{{customFieldConfigDefinition.name + $index}}"
-                               ng-switch-when="SUGGESTED"
-                               ng-readonly="isPipelineRunning"
-                               ng-model="customFieldValue[customFieldConfigDefinition.name]"
-                               typeahead="listValue for listValue in customFieldConfigDefinition.model.values"
-                               class="form-control">
+                        <div ng-switch-when="SUGGESTED" class="input-group">
+                          <input type="text" class="form-control" ng-model="customFieldValue[customFieldConfigDefinition.name]">
+                          <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                            <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                              <li ng-repeat="listValue in customFieldConfigDefinition.model.values">
+                                <a href="#" ng-click="customFieldValue[customFieldConfigDefinition.name] = listValue">{{listValue}}</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
 
                       </div>
 
