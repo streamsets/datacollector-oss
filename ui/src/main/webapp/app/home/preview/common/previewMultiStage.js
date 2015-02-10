@@ -79,8 +79,6 @@ angular
       $scope.updateStartAndEndStageInstance(fromStage, toStage);
     };
 
-
-
     if(stages && stages.length) {
       $scope.fromStage = stages[0];
       $scope.toStageList = previewService.getStageChildren($scope.fromStage, $scope.pipelineConfig);
@@ -93,7 +91,7 @@ angular
     }
 
     $scope.$watch('previewData', function() {
-      if($scope.previewMode && $scope.previewMultipleStages) {
+      if(($scope.previewMode || $scope.snapshotMode) && $scope.previewMultipleStages) {
         updatePreviewData($scope.fromStage, $scope.toStage);
       }
     });
