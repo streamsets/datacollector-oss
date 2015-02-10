@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_t41_gzh_1r">
+ <title>Writing Text to Kafka</title>
+ <shortdesc>When the Kafka Producer writes text to Kafka, it writes data from a single field.
+  Configure the pipeline to merge all data that you want to write to Kafka into a single field. </shortdesc>
+ <conbody>
+  <p></p>
+ </conbody>
+</concept>

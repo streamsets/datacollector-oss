@@ -3,7 +3,7 @@
 <concept id="concept_oq2_5jl_zq">
  <title>Kafka Producer</title>
  <shortdesc>The Kafka Producer passes data to a Kafka cluster. The Kakfa Producer can pass data to
-  Kafka as delimited, log, or JSON data.</shortdesc>
+  Kafka as delimited, text, or JSON data.</shortdesc>
  <conbody>
   <p>When you configure a Kafka Producer, you configure the brokers, topic, partition strategy, and
    payload type to use. You can add additional Kafka configuration properties as needed.</p>

@@ -1,6 +1,5 @@
 
 // Auto generated index for searching.
-w["periodically"]="27*0";
 w["permanent"]="40*51,44*0";
 w["phone"]="58*1";
 w["pipe"]="23*0";
