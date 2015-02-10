@@ -42,7 +42,7 @@ angular
 
           modalInstance.result.then(function (metricAlertRuleDefn) {
 
-            $scope.pipelineRules.metricsAlertDefinitions.push(metricAlertRuleDefn);
+            $scope.pipelineRules.metricsRuleDefinitions.push(metricAlertRuleDefn);
           }, function () {
 
           });
@@ -74,7 +74,7 @@ angular
           });
 
           modalInstance.result.then(function (newDataRuleDefn) {
-            $scope.pipelineRules.metricsAlertDefinitions[index] = newDataRuleDefn;
+            $scope.pipelineRules.metricsRuleDefinitions[index] = newDataRuleDefn;
           }, function () {
 
           });

@@ -7,13 +7,13 @@ package com.streamsets.pipeline.store.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.config.ConfigConfiguration;
-import com.streamsets.pipeline.config.DataAlertDefinition;
+import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
-import com.streamsets.pipeline.config.MetricsAlertDefinition;
+import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -289,34 +289,34 @@ public class TestFilePipelineStoreTask {
     ObjectGraph dagger = ObjectGraph.create(new Module(true));
     PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
-    RuleDefinition ruleDefinition = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    RuleDefinitions ruleDefinitions = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
-    Assert.assertNotNull(ruleDefinition);
-    Assert.assertTrue(ruleDefinition.getDataAlertDefinitions().isEmpty());
-    Assert.assertTrue(ruleDefinition.getMetricsAlertDefinitions().isEmpty());
+    Assert.assertNotNull(ruleDefinitions);
+    Assert.assertTrue(ruleDefinitions.getDataRuleDefinitions().isEmpty());
+    Assert.assertTrue(ruleDefinitions.getMetricsRuleDefinitions().isEmpty());
 
-    List<MetricsAlertDefinition> metricsAlertDefinitions = ruleDefinition.getMetricsAlertDefinitions();
-    metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
+    List<MetricsRuleDefinition> metricsRuleDefinitions = ruleDefinitions.getMetricsRuleDefinitions();
+    metricsRuleDefinitions.add(new MetricsRuleDefinition("m1", "m1", "a", MetricType.COUNTER,
       MetricElement.COUNTER_COUNT, "p", false, true));
-    metricsAlertDefinitions.add(new MetricsAlertDefinition("m2", "m2", "a", MetricType.TIMER,
+    metricsRuleDefinitions.add(new MetricsRuleDefinition("m2", "m2", "a", MetricType.TIMER,
       MetricElement.TIMER_M15_RATE, "p", false, true));
-    metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
+    metricsRuleDefinitions.add(new MetricsRuleDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
       MetricElement.HISTOGRAM_MEAN, "p", false, true));
 
-    List<DataAlertDefinition> dataAlertDefinitions = ruleDefinition.getDataAlertDefinitions();
-    dataAlertDefinitions.add(new DataAlertDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+    List<DataRuleDefinition> dataRuleDefinitions = ruleDefinitions.getDataRuleDefinitions();
+    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true));
-    dataAlertDefinitions.add(new DataAlertDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true));
-    dataAlertDefinitions.add(new DataAlertDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true));
 
-    store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinition);
+    store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions);
 
-    RuleDefinition actualRuleDefinition = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    RuleDefinitions actualRuleDefinitions = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
 
-    Assert.assertTrue(ruleDefinition == actualRuleDefinition);
+    Assert.assertTrue(ruleDefinitions == actualRuleDefinitions);
   }
 
   @Test
@@ -327,59 +327,59 @@ public class TestFilePipelineStoreTask {
     ObjectGraph dagger = ObjectGraph.create(new Module(true));
     PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
-    RuleDefinition ruleDefinition1 = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    RuleDefinitions ruleDefinitions1 = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
 
-    RuleDefinition tempRuleDef = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    RuleDefinitions tempRuleDef = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
     //Mimick two different clients [browsers] retrieving from the store
-    RuleDefinition ruleDefinition2 = new RuleDefinition(tempRuleDef.getMetricsAlertDefinitions(),
-      tempRuleDef.getDataAlertDefinitions(), tempRuleDef.getEmailIds(), tempRuleDef.getUuid());
+    RuleDefinitions ruleDefinitions2 = new RuleDefinitions(tempRuleDef.getMetricsRuleDefinitions(),
+      tempRuleDef.getDataRuleDefinitions(), tempRuleDef.getEmailIds(), tempRuleDef.getUuid());
 
-    List<MetricsAlertDefinition> metricsAlertDefinitions = ruleDefinition1.getMetricsAlertDefinitions();
-    metricsAlertDefinitions.add(new MetricsAlertDefinition("m1", "m1", "a", MetricType.COUNTER,
+    List<MetricsRuleDefinition> metricsRuleDefinitions = ruleDefinitions1.getMetricsRuleDefinitions();
+    metricsRuleDefinitions.add(new MetricsRuleDefinition("m1", "m1", "a", MetricType.COUNTER,
       MetricElement.COUNTER_COUNT, "p", false, true));
-    metricsAlertDefinitions.add(new MetricsAlertDefinition("m2", "m2", "a", MetricType.TIMER,
+    metricsRuleDefinitions.add(new MetricsRuleDefinition("m2", "m2", "a", MetricType.TIMER,
       MetricElement.TIMER_M15_RATE, "p", false, true));
-    metricsAlertDefinitions.add(new MetricsAlertDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
+    metricsRuleDefinitions.add(new MetricsRuleDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
       MetricElement.HISTOGRAM_MEAN, "p", false, true));
 
-    List<DataAlertDefinition> dataAlertDefinitions = ruleDefinition2.getDataAlertDefinitions();
-    dataAlertDefinitions.add(new DataAlertDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+    List<DataRuleDefinition> dataRuleDefinitions = ruleDefinitions2.getDataRuleDefinitions();
+    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true));
-    dataAlertDefinitions.add(new DataAlertDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true));
-    dataAlertDefinitions.add(new DataAlertDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true));
 
     //store ruleDefinition1
-    store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinition1);
+    store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions1);
 
     //attempt storing rule definition 2, should fail
     try {
-      store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinition2);
+      store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions2);
       Assert.fail("Expected PipelineStoreException as the rule definition being saved is not the latest copy.");
     } catch (PipelineStoreException e) {
       Assert.assertEquals(e.getErrorCode(), ContainerError.CONTAINER_0205);
     }
 
     //reload, modify and and then store
-    ruleDefinition2 = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    ruleDefinitions2 = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
-    dataAlertDefinitions = ruleDefinition2.getDataAlertDefinitions();
-    dataAlertDefinitions.add(new DataAlertDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+    dataRuleDefinitions = ruleDefinitions2.getDataRuleDefinitions();
+    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true));
-    dataAlertDefinitions.add(new DataAlertDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true));
-    dataAlertDefinitions.add(new DataAlertDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true));
 
-    store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinition2);
+    store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions2);
 
-    RuleDefinition actualRuleDefinition = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    RuleDefinitions actualRuleDefinitions = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
 
-    Assert.assertTrue(ruleDefinition2 == actualRuleDefinition);
+    Assert.assertTrue(ruleDefinitions2 == actualRuleDefinitions);
   }
 
 }

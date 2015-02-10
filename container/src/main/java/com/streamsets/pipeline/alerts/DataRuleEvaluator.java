@@ -10,7 +10,7 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.EvictingQueue;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.config.DataAlertDefinition;
+import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.LaneResolver;
@@ -32,17 +32,17 @@ public class DataRuleEvaluator {
   private final ELEvaluator elEvaluator;
   private final List<String> emailIds;
   private final Configuration configuration;
-  private final DataAlertDefinition dataAlertDefinition;
+  private final DataRuleDefinition dataRuleDefinition;
   private final AlertManager alertManager;
 
   public DataRuleEvaluator(MetricRegistry metrics, ELEvaluator.Variables variables, ELEvaluator elEvaluator,
-                           AlertManager alertManager, List<String> emailIds, DataAlertDefinition dataAlertDefinition,
+                           AlertManager alertManager, List<String> emailIds, DataRuleDefinition dataRuleDefinition,
                            Configuration configuration) {
     this.metrics = metrics;
     this.variables = variables;
     this.elEvaluator = elEvaluator;
     this.emailIds = emailIds;
-    this.dataAlertDefinition = dataAlertDefinition;
+    this.dataRuleDefinition = dataRuleDefinition;
     this.configuration = configuration;
     this.alertManager = alertManager;
   }
@@ -50,17 +50,17 @@ public class DataRuleEvaluator {
   public void evaluateRule(List<Record> records, List<Record> sampleRecords, String lane,
                            Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap) {
 
-    if (dataAlertDefinition.isEnabled()) {
-      int numberOfRecords = (int) Math.floor(records.size() * dataAlertDefinition.getSamplingPercentage() / 100);
+    if (dataRuleDefinition.isEnabled()) {
+      int numberOfRecords = (int) Math.floor(records.size() * dataRuleDefinition.getSamplingPercentage() / 100);
 
       //cache all sampled records for this data rule definition in an evicting queue
       List<Record> sampleSet = sampleRecords.subList(0, numberOfRecords);
-      EvictingQueue<Record> sampledRecords = ruleToSampledRecordsMap.get(dataAlertDefinition.getId());
+      EvictingQueue<Record> sampledRecords = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
       if (sampledRecords == null) {
         sampledRecords = EvictingQueue.create(configuration.get(
           com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_CACHE_SIZE_KEY,
           com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_CACHE_SIZE_DEFAULT));
-        ruleToSampledRecordsMap.put(dataAlertDefinition.getId(), sampledRecords);
+        ruleToSampledRecordsMap.put(dataRuleDefinition.getId(), sampledRecords);
       }
       //Meter
       //evaluate sample set of records for condition
@@ -69,14 +69,14 @@ public class DataRuleEvaluator {
       for (Record r : sampleSet) {
         evaluatedRecordCount++;
         //evaluate
-        boolean success = evaluate(r, dataAlertDefinition.getCondition(), dataAlertDefinition.getId());
+        boolean success = evaluate(r, dataRuleDefinition.getCondition(), dataRuleDefinition.getId());
         if (success) {
           sampledRecords.add(r);
           matchingRecordCount++;
         }
       }
 
-      if (dataAlertDefinition.isAlertEnabled()) {
+      if (dataRuleDefinition.isAlertEnabled()) {
         //Keep the counters and meters ready before execution
         //batch record counter - cummulative sum of records per batch
         Counter evaluatedRecordCounter = MetricsConfigurator.getCounter(metrics, LaneResolver.getPostFixedLaneForObserver(lane));
@@ -84,9 +84,9 @@ public class DataRuleEvaluator {
           evaluatedRecordCounter = MetricsConfigurator.createCounter(metrics, LaneResolver.getPostFixedLaneForObserver(lane));
         }
         //counter for the matching records - cummulative sum of records that match criteria
-        Counter matchingRecordCounter = MetricsConfigurator.getCounter(metrics, dataAlertDefinition.getId());
+        Counter matchingRecordCounter = MetricsConfigurator.getCounter(metrics, dataRuleDefinition.getId());
         if (matchingRecordCounter == null) {
-          matchingRecordCounter = MetricsConfigurator.createCounter(metrics, dataAlertDefinition.getId());
+          matchingRecordCounter = MetricsConfigurator.createCounter(metrics, dataRuleDefinition.getId());
         }
 
         evaluatedRecordCounter.inc(evaluatedRecordCount);
@@ -94,31 +94,31 @@ public class DataRuleEvaluator {
 
         double threshold;
         try {
-          threshold = Double.parseDouble(dataAlertDefinition.getThresholdValue());
+          threshold = Double.parseDouble(dataRuleDefinition.getThresholdValue());
         } catch (NumberFormatException e) {
           //Soft error for now as we don't want this alert to stop other rules
-          LOG.error("Error interpreting threshold '{}' as a number", dataAlertDefinition.getThresholdValue());
+          LOG.error("Error interpreting threshold '{}' as a number", dataRuleDefinition.getThresholdValue());
           return;
         }
-        switch (dataAlertDefinition.getThresholdType()) {
+        switch (dataRuleDefinition.getThresholdType()) {
           case COUNT:
             if (matchingRecordCounter.getCount() > threshold) {
-              alertManager.alert(matchingRecordCounter.getCount(), emailIds, dataAlertDefinition);
+              alertManager.alert(matchingRecordCounter.getCount(), emailIds, dataRuleDefinition);
             }
             break;
           case PERCENTAGE:
             if ((matchingRecordCounter.getCount() * 100 / evaluatedRecordCounter.getCount()) > threshold
-              && evaluatedRecordCounter.getCount() >= dataAlertDefinition.getMinVolume()) {
-              alertManager.alert(matchingRecordCounter.getCount(), emailIds, dataAlertDefinition);
+              && evaluatedRecordCounter.getCount() >= dataRuleDefinition.getMinVolume()) {
+              alertManager.alert(matchingRecordCounter.getCount(), emailIds, dataRuleDefinition);
             }
             break;
         }
       }
 
-      if (dataAlertDefinition.isMeterEnabled() && matchingRecordCount > 0) {
-        Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + dataAlertDefinition.getId());
+      if (dataRuleDefinition.isMeterEnabled() && matchingRecordCount > 0) {
+        Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + dataRuleDefinition.getId());
         if (meter == null) {
-          meter = MetricsConfigurator.createMeter(metrics, USER_PREFIX + dataAlertDefinition.getId());
+          meter = MetricsConfigurator.createMeter(metrics, USER_PREFIX + dataRuleDefinition.getId());
         }
         meter.mark(matchingRecordCount);
       }

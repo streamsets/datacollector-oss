@@ -12,8 +12,8 @@ import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.DataRuleEvaluator;
 import com.streamsets.pipeline.alerts.MetricRuleEvaluator;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.config.DataAlertDefinition;
-import com.streamsets.pipeline.config.MetricsAlertDefinition;
+import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.el.ELBasicSupport;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
@@ -64,24 +64,24 @@ public class ObserverRunner {
     for(Map.Entry<String, List<Record>> entry : snapshot.entrySet()) {
       String lane = entry.getKey();
       List<Record> allRecords = entry.getValue();
-      List<DataAlertDefinition> dataAlertDefinitions = rulesConfigurationChangeRequest.getLaneToDataRuleMap().get(lane);
-      if(dataAlertDefinitions != null) {
-        List<Record> sampleRecords = getSampleRecords(dataAlertDefinitions, allRecords);
-        for (DataAlertDefinition dataAlertDefinition : dataAlertDefinitions) {
+      List<DataRuleDefinition> dataRuleDefinitions = rulesConfigurationChangeRequest.getLaneToDataRuleMap().get(lane);
+      if(dataRuleDefinitions != null) {
+        List<Record> sampleRecords = getSampleRecords(dataRuleDefinitions, allRecords);
+        for (DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
           DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator, alertManager,
-            rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds(), dataAlertDefinition, configuration);
+            rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(), dataRuleDefinition, configuration);
           dataRuleEvaluator.evaluateRule(allRecords, sampleRecords, lane, ruleToSampledRecordsMap);
         }
       }
     }
 
     //pipeline metric alerts
-    List<MetricsAlertDefinition> metricsAlertDefinitions =
-      rulesConfigurationChangeRequest.getRuleDefinition().getMetricsAlertDefinitions();
-    if(metricsAlertDefinitions != null) {
-      for (MetricsAlertDefinition metricsAlertDefinition : metricsAlertDefinitions) {
-        MetricRuleEvaluator metricAlertsHelper = new MetricRuleEvaluator(metricsAlertDefinition, metrics,
-          variables, elEvaluator, alertManager, rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
+    List<MetricsRuleDefinition> metricsRuleDefinitions =
+      rulesConfigurationChangeRequest.getRuleDefinitions().getMetricsRuleDefinitions();
+    if(metricsRuleDefinitions != null) {
+      for (MetricsRuleDefinition metricsRuleDefinition : metricsRuleDefinitions) {
+        MetricRuleEvaluator metricAlertsHelper = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
+          variables, elEvaluator, alertManager, rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds());
         metricAlertsHelper.checkForAlerts();
       }
     }
@@ -101,11 +101,11 @@ public class ObserverRunner {
     }
   }
 
-  private List<Record> getSampleRecords(List<DataAlertDefinition> dataAlertDefinitions, List<Record> allRecords) {
+  private List<Record> getSampleRecords(List<DataRuleDefinition> dataRuleDefinitions, List<Record> allRecords) {
     double percentage = 0;
-    for(DataAlertDefinition dataAlertDefinition : dataAlertDefinitions) {
-      if(dataAlertDefinition.getSamplingPercentage() > percentage) {
-        percentage = dataAlertDefinition.getSamplingPercentage();
+    for(DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
+      if(dataRuleDefinition.getSamplingPercentage() > percentage) {
+        percentage = dataRuleDefinition.getSamplingPercentage();
       }
     }
     Collections.shuffle(allRecords);

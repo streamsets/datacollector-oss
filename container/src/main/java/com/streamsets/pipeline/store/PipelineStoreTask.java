@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.store;
 
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.task.Task;
 
 import java.util.List;
@@ -31,9 +31,9 @@ public interface PipelineStoreTask extends Task {
 
   public boolean hasPipeline(String name);
 
-  public RuleDefinition retrieveRules(String name, String tagOrRev) throws PipelineStoreException;
+  public RuleDefinitions retrieveRules(String name, String tagOrRev) throws PipelineStoreException;
 
-  public RuleDefinition storeRules(String pipelineName, String tag, RuleDefinition ruleDefinition)
+  public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions)
     throws PipelineStoreException;
 
   public boolean deleteRules(String name) throws PipelineStoreException;

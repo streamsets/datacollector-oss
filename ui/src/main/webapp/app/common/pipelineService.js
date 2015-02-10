@@ -570,7 +570,7 @@ angular.module('dataCollectorApp.common')
       var gauges = pipelineMetrics.gauges,
         alerts = [];
 
-      angular.forEach(pipelineRules.metricsAlertDefinitions, function(rule) {
+      angular.forEach(pipelineRules.metricsRuleDefinitions, function(rule) {
         var gaugeName = 'alert.' + rule.id + '.gauge';
         if(gauges[gaugeName]) {
           alerts.push({

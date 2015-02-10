@@ -29,7 +29,7 @@
         </thead>
         <tbody ng-hide="showLoading">
 
-        <tr ng-repeat-start="alertRule in metricsAlertDefinitions = (pipelineRules.metricsAlertDefinitions) track by $index"
+        <tr ng-repeat-start="alertRule in metricsRuleDefinitions = (pipelineRules.metricsRuleDefinitions) track by $index"
             ng-class="alertRule.valid ? '' : 'invalid-rule'">
 
           <td>
@@ -65,7 +65,7 @@
             <div ng-show="!alertRule.enabled">
               <a href="javascript:;" ng-click="editMetricAlertDataRule(alertRule, $index)">Edit</a>
               &nbsp;|&nbsp;
-              <a href="javascript:;" ng-click="removeRule(pipelineRules.metricsAlertDefinitions, $index)">Delete</a>
+              <a href="javascript:;" ng-click="removeRule(pipelineRules.metricsRuleDefinitions, $index)">Delete</a>
             </div>
           </td>
 
@@ -109,7 +109,7 @@
           </td>
         </tr>
 
-        <tr ng-if="metricsAlertDefinitions.length === 0">
+        <tr ng-if="metricsRuleDefinitions.length === 0">
           <td colspan="3" class="no-records text-center"
               translate="home.detailPane.rulesTab.noMetricAlertRules">No Metric Alert Rules to view.</td>
         </tr>

@@ -10,7 +10,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
-import com.streamsets.pipeline.config.MetricsAlertDefinition;
+import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.el.ELBasicSupport;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
@@ -52,16 +52,16 @@ public class TestMetricRuleEvaluator {
     t.update(2000, TimeUnit.MILLISECONDS);
     t.update(3000, TimeUnit.MILLISECONDS);
 
-    MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerMatch", "testTimerMatch",
+    MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testTimerMatch", "testTimerMatch",
       "testTimerMatch.timer", MetricType.TIMER,
       MetricElement.TIMER_COUNT, "${value()>2}", false, true);
-    MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsAlertDefinition, metrics, variables,
+    MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics, variables,
       elEvaluator, new AlertManager(PIPELINE_NAME, REVISION, null, metrics), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
-      AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
+      AlertsUtil.getAlertGaugeName(metricsRuleDefinition.getId()));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long)3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
   }
@@ -74,16 +74,16 @@ public class TestMetricRuleEvaluator {
     t.update(2000, TimeUnit.MILLISECONDS);
     t.update(3000, TimeUnit.MILLISECONDS);
 
-    MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerMatchDisabled",
+    MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testTimerMatchDisabled",
       "testTimerMatchDisabled", "testTimerMatchDisabled.timer", MetricType.TIMER, MetricElement.TIMER_COUNT,
       "${value()>2}", false, false);
-    MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsAlertDefinition, metrics, variables,
+    MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics, variables,
       elEvaluator, new AlertManager(PIPELINE_NAME, REVISION, null, metrics), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
-      AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
+      AlertsUtil.getAlertGaugeName(metricsRuleDefinition.getId()));
     Assert.assertNull(gauge);
   }
 
@@ -95,16 +95,16 @@ public class TestMetricRuleEvaluator {
     t.update(2000, TimeUnit.MILLISECONDS);
     t.update(3000, TimeUnit.MILLISECONDS);
 
-    MetricsAlertDefinition metricsAlertDefinition = new MetricsAlertDefinition("testTimerNoMatch", "testTimerNoMatch",
+    MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testTimerNoMatch", "testTimerNoMatch",
       "testTimerNoMatch.timer", MetricType.TIMER,
       MetricElement.TIMER_COUNT, "${value()>4}", false, true);
-    MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsAlertDefinition, metrics, variables,
+    MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics, variables,
       elEvaluator, new AlertManager(PIPELINE_NAME, REVISION, null, metrics), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
-      AlertsUtil.getAlertGaugeName(metricsAlertDefinition.getId()));
+      AlertsUtil.getAlertGaugeName(metricsRuleDefinition.getId()));
     Assert.assertNull(gauge);
   }
 }

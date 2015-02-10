@@ -7,57 +7,54 @@ package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.streamsets.pipeline.validation.RuleIssue;
-
-import java.util.List;
-import java.util.UUID;
 
 public class RuleDefinition {
 
-  private final List<MetricsAlertDefinition> metricsAlertDefinitions;
-  private final List<DataAlertDefinition> dataAlertDefinitions;
-  private final List<String> emailIds;
-  private List<RuleIssue> ruleIssues;
-  private UUID uuid = null;
+  private final String id;
+  private final String alertText;
+  private final String condition;
+  private final boolean sendEmail;
+  private final boolean enabled;
+  private boolean valid = true;
 
   @JsonCreator
-  public RuleDefinition(
-    @JsonProperty("metricsAlertDefinitions") List<MetricsAlertDefinition> metricsAlertDefinitions,
-    @JsonProperty("dataRuleDefinitions") List<DataAlertDefinition> dataAlertDefinitions,
-    @JsonProperty("emailIds") List<String> emailIds,
-    @JsonProperty("uuid") UUID uuid) {
-    this.metricsAlertDefinitions = metricsAlertDefinitions;
-    this.dataAlertDefinitions = dataAlertDefinitions;
-    this.emailIds = emailIds;
-    this.uuid = uuid;
+  public RuleDefinition(@JsonProperty("id") String id,
+                        @JsonProperty("condition") String condition,
+                        @JsonProperty("alertText") String alertText,
+                        @JsonProperty("sendEmail") boolean sendEmail,
+                        @JsonProperty("enabled") boolean enabled) {
+    this.id = id;
+    this.alertText = alertText;
+    this.condition = condition;
+    this.sendEmail = sendEmail;
+    this.enabled = enabled;
   }
 
-  public List<MetricsAlertDefinition> getMetricsAlertDefinitions() {
-    return metricsAlertDefinitions;
+  public String getId() {
+    return id;
   }
 
-  public List<DataAlertDefinition> getDataAlertDefinitions() {
-    return dataAlertDefinitions;
+  public String getAlertText() {
+    return alertText;
   }
 
-  public List<String> getEmailIds() {
-    return emailIds;
+  public String getCondition() {
+    return condition;
   }
 
-  public List<RuleIssue> getRuleIssues() {
-    return ruleIssues;
+  public boolean isSendEmail() {
+    return sendEmail;
   }
 
-  public void setRuleIssues(List<RuleIssue> ruleIssues) {
-    this.ruleIssues = ruleIssues;
+  public boolean isEnabled() {
+    return enabled;
   }
 
-  public void setUuid(UUID uuid) {
-    this.uuid = uuid;
+  public boolean isValid() {
+    return valid;
   }
 
-  public UUID getUuid() {
-    return uuid;
+  public void setValid(boolean valid) {
+    this.valid = valid;
   }
-
 }

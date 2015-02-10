@@ -11,11 +11,11 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.BadRecordsOptions;
 import com.streamsets.pipeline.config.ConfigConfiguration;
-import com.streamsets.pipeline.config.DataAlertDefinition;
+import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
-import com.streamsets.pipeline.config.MetricsAlertDefinition;
+import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -74,7 +74,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   //rules can be modified while the pipeline is running
   //runner will look up the rule definition before running each batch, we need synchronization
   private final Object rulesMutex;
-  private HashMap<String, RuleDefinition> pipelineToRuleDefinitionMap;
+  private HashMap<String, RuleDefinitions> pipelineToRuleDefinitionMap;
 
   @Inject
   public FilePipelineStoreTask(RuntimeInfo runtimeInfo, Configuration conf) {
@@ -280,38 +280,38 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  public RuleDefinition retrieveRules(String name, String tagOrRev) throws PipelineStoreException {
+  public RuleDefinitions retrieveRules(String name, String tagOrRev) throws PipelineStoreException {
     if (!hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     }
     synchronized (rulesMutex) {
       if(!pipelineToRuleDefinitionMap.containsKey(getPipelineKey(name, tagOrRev))) {
         //try loading from store, needed in cases like restart
-        RuleDefinition ruleDefinition = null;
+        RuleDefinitions ruleDefinitions = null;
         File rulesFile = getRulesFile(name);
         if(rulesFile.exists()) {
           try {
-            ruleDefinition = ObjectMapperFactory.get().readValue(
-              new DataStore(rulesFile).getInputStream(), RuleDefinition.class);
+            ruleDefinitions = ObjectMapperFactory.get().readValue(
+              new DataStore(rulesFile).getInputStream(), RuleDefinitions.class);
           } catch (IOException ex) {
             //File does not exist
             LOG.debug(ContainerError.CONTAINER_0403.getMessage(), name, ex.getMessage(),
               ex);
-            ruleDefinition = null;
+            ruleDefinitions = null;
           }
         }
-        if(ruleDefinition == null) {
-          ruleDefinition = new RuleDefinition(new ArrayList<MetricsAlertDefinition>(),
-            new ArrayList<DataAlertDefinition>(), new ArrayList<String>(), UUID.randomUUID());
+        if(ruleDefinitions == null) {
+          ruleDefinitions = new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
+            new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID());
         }
-        pipelineToRuleDefinitionMap.put(getPipelineKey(name, tagOrRev), ruleDefinition);
+        pipelineToRuleDefinitionMap.put(getPipelineKey(name, tagOrRev), ruleDefinitions);
       }
       return pipelineToRuleDefinitionMap.get(getPipelineKey(name, tagOrRev));
     }
   }
 
   @Override
-  public RuleDefinition storeRules(String pipelineName, String tag, RuleDefinition ruleDefinition)
+  public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions)
     throws PipelineStoreException {
     if (!hasPipeline(pipelineName)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, pipelineName);
@@ -321,23 +321,23 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       //two browsers could modify the same rule definition
       if(pipelineToRuleDefinitionMap.get(getPipelineKey(pipelineName, tag)) != null) {
         UUID savedUuid = pipelineToRuleDefinitionMap.get(getPipelineKey(pipelineName, tag)).getUuid();
-        if (!savedUuid.equals(ruleDefinition.getUuid())) {
+        if (!savedUuid.equals(ruleDefinitions.getUuid())) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0205, pipelineName);
         }
       }
 
       UUID uuid = UUID.randomUUID();
-      ruleDefinition.setUuid(uuid);
+      ruleDefinitions.setUuid(uuid);
       try {
         ObjectMapperFactory.get().writeValue(new DataStore(getRulesFile(pipelineName)).getOutputStream(),
-          ruleDefinition);
-        pipelineToRuleDefinitionMap.put(getPipelineKey(pipelineName, tag), ruleDefinition);
+          ruleDefinitions);
+        pipelineToRuleDefinitionMap.put(getPipelineKey(pipelineName, tag), ruleDefinitions);
       } catch (IOException ex) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0404, pipelineName, ex.getMessage(),
           ex);
       }
     }
-    return ruleDefinition;
+    return ruleDefinitions;
   }
 
   @Override

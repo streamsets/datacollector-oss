@@ -9,7 +9,7 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import com.streamsets.pipeline.config.MetricsAlertDefinition;
+import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
 import com.streamsets.pipeline.util.ObserverException;
@@ -23,17 +23,17 @@ public class MetricRuleEvaluator {
   private static final Logger LOG = LoggerFactory.getLogger(MetricRuleEvaluator.class);
   private static final String VAL = "value()";
 
-  private final MetricsAlertDefinition metricsAlertDefinition;
+  private final MetricsRuleDefinition metricsRuleDefinition;
   private final MetricRegistry metrics;
   private final ELEvaluator.Variables variables;
   private final ELEvaluator elEvaluator;
   private final List<String> emailIds;
   private final AlertManager alertManager;
 
-  public MetricRuleEvaluator(MetricsAlertDefinition metricsAlertDefinition, MetricRegistry metricRegistry,
+  public MetricRuleEvaluator(MetricsRuleDefinition metricsRuleDefinition, MetricRegistry metricRegistry,
                              ELEvaluator.Variables variables, ELEvaluator elEvaluator, AlertManager alertManager,
                              List<String> emailIds) {
-    this.metricsAlertDefinition = metricsAlertDefinition;
+    this.metricsRuleDefinition = metricsRuleDefinition;
     this.metrics = metricRegistry;
     this.variables = variables;
     this.elEvaluator = elEvaluator;
@@ -42,8 +42,8 @@ public class MetricRuleEvaluator {
   }
 
   public void checkForAlerts() {
-    if(metricsAlertDefinition.isEnabled()) {
-      switch(metricsAlertDefinition.getMetricType()) {
+    if(metricsRuleDefinition.isEnabled()) {
+      switch(metricsRuleDefinition.getMetricType()) {
         case HISTOGRAM:
           checkForHistogramAlerts();
           break;
@@ -61,10 +61,10 @@ public class MetricRuleEvaluator {
   }
 
   private void checkForTimerAlerts() {
-    Timer t = metrics.getTimers().get(metricsAlertDefinition.getMetricId());
+    Timer t = metrics.getTimers().get(metricsRuleDefinition.getMetricId());
     if(t != null) {
       Object value = null;
-      switch (metricsAlertDefinition.getMetricElement()) {
+      switch (metricsRuleDefinition.getMetricElement()) {
         case TIMER_COUNT:
           value = t.getCount();
           break;
@@ -116,10 +116,10 @@ public class MetricRuleEvaluator {
   }
 
   private void checkForCounterAlerts() {
-    Counter c = metrics.getCounters().get(metricsAlertDefinition.getMetricId());
+    Counter c = metrics.getCounters().get(metricsRuleDefinition.getMetricId());
     if(c !=null) {
       Object value = null;
-      switch (metricsAlertDefinition.getMetricElement()) {
+      switch (metricsRuleDefinition.getMetricElement()) {
         case COUNTER_COUNT:
           value = c.getCount();
           break;
@@ -129,10 +129,10 @@ public class MetricRuleEvaluator {
   }
 
   private void checkForMeterAlerts() {
-    ExtendedMeter m = (ExtendedMeter) metrics.getMeters().get(metricsAlertDefinition.getMetricId());
+    ExtendedMeter m = (ExtendedMeter) metrics.getMeters().get(metricsRuleDefinition.getMetricId());
     if(m != null) {
       Object value = null;
-      switch (metricsAlertDefinition.getMetricElement()) {
+      switch (metricsRuleDefinition.getMetricElement()) {
         case METER_COUNT:
           value = m.getCount();
           break;
@@ -169,10 +169,10 @@ public class MetricRuleEvaluator {
   }
 
   private void checkForHistogramAlerts() {
-    Histogram h = metrics.getHistograms().get(metricsAlertDefinition.getMetricId());
+    Histogram h = metrics.getHistograms().get(metricsRuleDefinition.getMetricId());
     if (h != null) {
       Object value = null;
-      switch (metricsAlertDefinition.getMetricElement()) {
+      switch (metricsRuleDefinition.getMetricElement()) {
         case HISTOGRAM_COUNT:
           value = h.getCount();
           break;
@@ -215,15 +215,15 @@ public class MetricRuleEvaluator {
     //predicate String is of the form "val()<200" or "val() < 200 && val() > 100" etc
     //replace val() with the actual value, append dollar and curly braces and evaluate the resulting EL expression
     // string
-    String predicateWithValue = metricsAlertDefinition.getCondition().replace(VAL, String.valueOf(value));
+    String predicateWithValue = metricsRuleDefinition.getCondition().replace(VAL, String.valueOf(value));
     try {
       if (AlertsUtil.evaluateExpression(predicateWithValue, variables, elEvaluator)) {
-        alertManager.alert(value, emailIds, metricsAlertDefinition);
+        alertManager.alert(value, emailIds, metricsRuleDefinition);
       }
     } catch (ObserverException e) {
       //A faulty condition should not take down rest of the alerts with it.
       //Log and it and continue for now
-      LOG.error("Error processing metric definition alert '{}', reason: {}", metricsAlertDefinition.getId(),
+      LOG.error("Error processing metric definition alert '{}', reason: {}", metricsRuleDefinition.getId(),
         e.getMessage());
     }
   }

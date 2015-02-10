@@ -5,8 +5,8 @@
  */
 package com.streamsets.pipeline.runner.production;
 
-import com.streamsets.pipeline.config.DataAlertDefinition;
-import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.RuleDefinitions;
 
 import java.util.List;
 import java.util.Map;
@@ -14,22 +14,22 @@ import java.util.Set;
 
 public class RulesConfigurationChangeRequest {
 
-  private final RuleDefinition ruleDefinition;
-  private final Map<String, List<DataAlertDefinition>> laneToDataRuleMap;
+  private final RuleDefinitions ruleDefinitions;
+  private final Map<String, List<DataRuleDefinition>> laneToDataRuleMap;
   private final Set<String> metricAlertsToRemove;
   private final Set<String> rulesToRemove;
 
-  public RulesConfigurationChangeRequest(RuleDefinition ruleDefinition, Set<String> rulesToRemove,
+  public RulesConfigurationChangeRequest(RuleDefinitions ruleDefinitions, Set<String> rulesToRemove,
                                          Set<String> metricAlertsToRemove,
-                                         Map<String, List<DataAlertDefinition>> laneToDataRuleMap) {
-    this.ruleDefinition = ruleDefinition;
+                                         Map<String, List<DataRuleDefinition>> laneToDataRuleMap) {
+    this.ruleDefinitions = ruleDefinitions;
     this.rulesToRemove = rulesToRemove;
     this.metricAlertsToRemove = metricAlertsToRemove;
     this.laneToDataRuleMap = laneToDataRuleMap;
   }
 
-  public RuleDefinition getRuleDefinition() {
-    return ruleDefinition;
+  public RuleDefinitions getRuleDefinitions() {
+    return ruleDefinitions;
   }
 
   public Set<String> getRulesToRemove() {
@@ -40,7 +40,7 @@ public class RulesConfigurationChangeRequest {
     return metricAlertsToRemove;
   }
 
-  public Map<String, List<DataAlertDefinition>> getLaneToDataRuleMap() {
+  public Map<String, List<DataRuleDefinition>> getLaneToDataRuleMap() {
     return laneToDataRuleMap;
   }
 }

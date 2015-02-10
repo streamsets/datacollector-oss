@@ -908,8 +908,8 @@ angular
           rules.ruleIssues = res.ruleIssues;
           rules.uuid = res.uuid;
 
-          angular.forEach(rules.metricsAlertDefinitions, function(rule, index) {
-            var savedRule = _.find(res.metricsAlertDefinitions, function(savedRule) {
+          angular.forEach(rules.metricsRuleDefinitions, function(rule, index) {
+            var savedRule = _.find(res.metricsRuleDefinitions, function(savedRule) {
               return savedRule.id === rule.id;
             });
 

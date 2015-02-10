@@ -14,10 +14,10 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.pipeline.config.DataAlertDefinition;
-import com.streamsets.pipeline.config.MetricsAlertDefinition;
+import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
@@ -200,14 +200,14 @@ public class TestUtil {
           , pipelineConf);
 
         //create a DataRuleDefinition for one of the stages
-        DataAlertDefinition dataAlertDefinition = new DataAlertDefinition("myID", "myLabel", "p", 20, 10,
+        DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "p", 20, 10,
           "${record:value(\"/\")==2}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, true);
-        List<DataAlertDefinition> dataAlertDefinitions = new ArrayList<>();
-        dataAlertDefinitions.add(dataAlertDefinition);
+        List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
+        dataRuleDefinitions.add(dataRuleDefinition);
 
-        RuleDefinition ruleDefinition = new RuleDefinition(Collections.<MetricsAlertDefinition>emptyList(),
-          dataAlertDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
-        pipelineStoreTask.storeRules(MY_PIPELINE, PIPELINE_REV, ruleDefinition);
+        RuleDefinitions ruleDefinitions = new RuleDefinitions(Collections.<MetricsRuleDefinition>emptyList(),
+          dataRuleDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
+        pipelineStoreTask.storeRules(MY_PIPELINE, PIPELINE_REV, ruleDefinitions);
 
       } catch (PipelineStoreException e) {
         throw new RuntimeException(e);

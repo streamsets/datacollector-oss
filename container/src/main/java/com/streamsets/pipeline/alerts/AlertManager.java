@@ -7,7 +7,7 @@ package com.streamsets.pipeline.alerts;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.pipeline.config.AlertDefinition;
+import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.util.PipelineException;
@@ -52,31 +52,31 @@ public class AlertManager {
     this.metrics = metrics;
   }
 
-  public void alert(Object value, List<String> emailIds, AlertDefinition alertDefinition) {
+  public void alert(Object value, List<String> emailIds, RuleDefinition ruleDefinition) {
     final Map<String, Object> alertResponse = new HashMap<>();
     alertResponse.put(CURRENT_VALUE, value);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
-      AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
+      AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
     if (gauge == null) {
       alertResponse.put(TIMESTAMP, System.currentTimeMillis());
       //send email the first time alert is triggered
-      if(alertDefinition.isSendEmail()) {
+      if(ruleDefinition.isSendEmail()) {
 
         String emailBody = new String(EMAIL_TEMPLATE);
         emailBody.replace(ALERT_VALUE_KEY, String.valueOf(value));
         java.text.DateFormat dateTimeFormat = new SimpleDateFormat(DATE_MASK, Locale.ENGLISH);
         emailBody.replace(TIME_KEY, dateTimeFormat.format(new Date((long)alertResponse.get(TIMESTAMP))));
         emailBody.replace(PIPELINE_NAME_KEY, pipelineName);
-        emailBody.replace(CONDITION_KEY, alertDefinition.getCondition());
+        emailBody.replace(CONDITION_KEY, ruleDefinition.getCondition());
         String url = "http://localhost:18630";
         emailBody.replace(URL_KEY, url);
 
         if(emailSender == null) {
           LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
-            alertDefinition.getId(), emailBody);
+            ruleDefinition.getId(), emailBody);
         } else {
           try {
-            emailSender.send(emailIds, STREAMSETS_DATA_COLLECTOR_ALERT + alertDefinition.getAlertText(), emailBody);
+            emailSender.send(emailIds, STREAMSETS_DATA_COLLECTOR_ALERT + ruleDefinition.getAlertText(), emailBody);
           } catch (PipelineException e) {
             LOG.error("Error sending alert email, reason: {}", e.getMessage());
             //Log error and move on. This should not stop the pipeline.
@@ -85,7 +85,7 @@ public class AlertManager {
       }
     } else {
       //remove existing gauge
-      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()));
+      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
       alertResponse.put(TIMESTAMP, ((Map<String, Object>)gauge.getValue()).get(TIMESTAMP));
     }
     Gauge<Object> alertResponseGauge = new Gauge<Object>() {
@@ -94,7 +94,7 @@ public class AlertManager {
         return alertResponse;
       }
     };
-    MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGaugeName(alertDefinition.getId()),
+    MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()),
       alertResponseGauge);
   }
 }

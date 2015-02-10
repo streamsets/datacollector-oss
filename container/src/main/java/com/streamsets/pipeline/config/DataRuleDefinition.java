@@ -8,7 +8,7 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DataAlertDefinition extends AlertDefinition {
+public class DataRuleDefinition extends RuleDefinition {
 
   private final String label;
   private final String lane;
@@ -25,20 +25,20 @@ public class DataAlertDefinition extends AlertDefinition {
   private final boolean meterEnabled;
 
   @JsonCreator
-  public DataAlertDefinition(@JsonProperty("id") String id,
-                             @JsonProperty("label") String label,
-                             @JsonProperty("lane") String lane,
-                             @JsonProperty("samplingPercentage") double samplingPercentage,
-                             @JsonProperty("samplingRecordsToRetain") int samplingRecordsToRetain,
-                             @JsonProperty("condition") String condition,
-                             @JsonProperty("alertEnabled") boolean alertEnabled,
-                             @JsonProperty("alertText") String alertText,
-                             @JsonProperty("thresholdType") ThresholdType thresholdType,
-                             @JsonProperty("thresholdValue") String thresholdValue,
-                             @JsonProperty("minVolume") long minVolume,
-                             @JsonProperty("meterEnabled") boolean meterEnabled,
-                             @JsonProperty("sendEmail") boolean sendEmail,
-                             @JsonProperty("enabled") boolean enabled) {
+  public DataRuleDefinition(@JsonProperty("id") String id,
+                            @JsonProperty("label") String label,
+                            @JsonProperty("lane") String lane,
+                            @JsonProperty("samplingPercentage") double samplingPercentage,
+                            @JsonProperty("samplingRecordsToRetain") int samplingRecordsToRetain,
+                            @JsonProperty("condition") String condition,
+                            @JsonProperty("alertEnabled") boolean alertEnabled,
+                            @JsonProperty("alertText") String alertText,
+                            @JsonProperty("thresholdType") ThresholdType thresholdType,
+                            @JsonProperty("thresholdValue") String thresholdValue,
+                            @JsonProperty("minVolume") long minVolume,
+                            @JsonProperty("meterEnabled") boolean meterEnabled,
+                            @JsonProperty("sendEmail") boolean sendEmail,
+                            @JsonProperty("enabled") boolean enabled) {
     super(id, condition, alertText, sendEmail, enabled);
     this.label = label;
     this.lane = lane;

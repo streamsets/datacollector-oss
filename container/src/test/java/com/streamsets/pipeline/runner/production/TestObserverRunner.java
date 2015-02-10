@@ -11,8 +11,8 @@ import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.AlertsUtil;
 import com.streamsets.pipeline.alerts.TestUtil;
-import com.streamsets.pipeline.config.DataAlertDefinition;
-import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.util.Configuration;
@@ -90,15 +90,15 @@ public class TestObserverRunner {
   }
 
   private RulesConfigurationChangeRequest createRulesConfigurationChangeRequest(boolean alert, boolean meter) {
-    List<DataAlertDefinition> dataAlertDefinitions = new ArrayList<>();
-    dataAlertDefinitions.add(new DataAlertDefinition("myId", "myRule", LANE + "::s", 100, 5,
+    List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
+    dataRuleDefinitions.add(new DataRuleDefinition("myId", "myRule", LANE + "::s", 100, 5,
       "${record:value(\"/name\")==null}", alert, "alertText", ThresholdType.COUNT, "2", 5, meter, false, true));
-    RuleDefinition ruleDefinition = new RuleDefinition(null, dataAlertDefinitions, Collections.<String>emptyList(),
+    RuleDefinitions ruleDefinitions = new RuleDefinitions(null, dataRuleDefinitions, Collections.<String>emptyList(),
       UUID.randomUUID());
-    Map<String, List<DataAlertDefinition>> laneToRuleDefinition = new HashMap<>();
-    laneToRuleDefinition.put(LANE + "::s", dataAlertDefinitions);
+    Map<String, List<DataRuleDefinition>> laneToRuleDefinition = new HashMap<>();
+    laneToRuleDefinition.put(LANE + "::s", dataRuleDefinitions);
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =
-      new RulesConfigurationChangeRequest(ruleDefinition, Collections.<String>emptySet(),
+      new RulesConfigurationChangeRequest(ruleDefinitions, Collections.<String>emptySet(),
         Collections.<String>emptySet(), laneToRuleDefinition);
     return rulesConfigurationChangeRequest;
   }

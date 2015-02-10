@@ -43,9 +43,9 @@ public class ProductionObserver implements Observer {
   @Override
   public boolean isObserving(List<String> lanes) {
     if(currentConfig != null && currentConfig.getLaneToDataRuleMap() != null) {
-      if(currentConfig.getRuleDefinition() != null ||
-        currentConfig.getRuleDefinition().getMetricsAlertDefinitions() != null ||
-        !currentConfig.getRuleDefinition().getMetricsAlertDefinitions().isEmpty()) {
+      if(currentConfig.getRuleDefinitions() != null ||
+        currentConfig.getRuleDefinitions().getMetricsRuleDefinitions() != null ||
+        !currentConfig.getRuleDefinitions().getMetricsRuleDefinitions().isEmpty()) {
         return true;
       }
       for (String lane : lanes) {

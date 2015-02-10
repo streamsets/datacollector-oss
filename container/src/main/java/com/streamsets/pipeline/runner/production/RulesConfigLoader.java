@@ -6,9 +6,9 @@
 package com.streamsets.pipeline.runner.production;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.config.DataAlertDefinition;
-import com.streamsets.pipeline.config.MetricsAlertDefinition;
-import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.MetricsRuleDefinition;
+import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.runner.LaneResolver;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.store.PipelineStoreException;
@@ -26,7 +26,7 @@ public class RulesConfigLoader {
   private final PipelineStoreTask pipelineStoreTask;
   private final String pipelineName;
   private final String revision;
-  private RuleDefinition previousRuleDefinition;
+  private RuleDefinitions previousRuleDefinitions;
 
 
   public RulesConfigLoader(String pipelineName, String revision, PipelineStoreTask pipelineStoreTask) {
@@ -35,55 +35,55 @@ public class RulesConfigLoader {
     this.revision = revision;
   }
 
-  public RuleDefinition load(Observer observer) throws InterruptedException, PipelineStoreException {
-    RuleDefinition newRuleDefinition = pipelineStoreTask.retrieveRules(pipelineName, revision);
-    if (newRuleDefinition != previousRuleDefinition) {
-      RulesConfigurationChangeRequest rulesConfigurationChangeRequest = detectChanges(previousRuleDefinition,
-        newRuleDefinition);
+  public RuleDefinitions load(Observer observer) throws InterruptedException, PipelineStoreException {
+    RuleDefinitions newRuleDefinitions = pipelineStoreTask.retrieveRules(pipelineName, revision);
+    if (newRuleDefinitions != previousRuleDefinitions) {
+      RulesConfigurationChangeRequest rulesConfigurationChangeRequest = detectChanges(previousRuleDefinitions,
+        newRuleDefinitions);
       observer.setConfiguration(rulesConfigurationChangeRequest);
     }
-    previousRuleDefinition = newRuleDefinition;
-    return newRuleDefinition;
+    previousRuleDefinitions = newRuleDefinitions;
+    return newRuleDefinitions;
   }
 
   @VisibleForTesting
-  RulesConfigurationChangeRequest detectChanges(RuleDefinition previousRuleDefinition,
-                                                        RuleDefinition newRuleDefinition)
+  RulesConfigurationChangeRequest detectChanges(RuleDefinitions previousRuleDefinitions,
+                                                        RuleDefinitions newRuleDefinitions)
     throws InterruptedException {
     //TODO: compute, detect changes etc and upload
     Set<String> rulesToRemove = new HashSet<>();
     Set<String> pipelineAlertsToRemove = new HashSet<>();
-    if (previousRuleDefinition != null) {
-      rulesToRemove.addAll(detectRulesToRemove(previousRuleDefinition.getDataAlertDefinitions(),
-        newRuleDefinition.getDataAlertDefinitions()));
-      pipelineAlertsToRemove.addAll(detectAlertsToRemove(previousRuleDefinition.getMetricsAlertDefinitions(),
-        newRuleDefinition.getMetricsAlertDefinitions()));
+    if (previousRuleDefinitions != null) {
+      rulesToRemove.addAll(detectRulesToRemove(previousRuleDefinitions.getDataRuleDefinitions(),
+        newRuleDefinitions.getDataRuleDefinitions()));
+      pipelineAlertsToRemove.addAll(detectAlertsToRemove(previousRuleDefinitions.getMetricsRuleDefinitions(),
+        newRuleDefinitions.getMetricsRuleDefinitions()));
     }
-    Map<String, List<DataAlertDefinition>> laneToDataRule = new HashMap<>();
-    for (DataAlertDefinition dataAlertDefinition : newRuleDefinition.getDataAlertDefinitions()) {
-      String lane = LaneResolver.getPostFixedLaneForObserver(dataAlertDefinition.getLane());
-      List<DataAlertDefinition> dataAlertDefinitions = laneToDataRule.get(lane);
-      if (dataAlertDefinitions == null) {
-        dataAlertDefinitions = new ArrayList<>();
-        laneToDataRule.put(lane, dataAlertDefinitions);
+    Map<String, List<DataRuleDefinition>> laneToDataRule = new HashMap<>();
+    for (DataRuleDefinition dataRuleDefinition : newRuleDefinitions.getDataRuleDefinitions()) {
+      String lane = LaneResolver.getPostFixedLaneForObserver(dataRuleDefinition.getLane());
+      List<DataRuleDefinition> dataRuleDefinitions = laneToDataRule.get(lane);
+      if (dataRuleDefinitions == null) {
+        dataRuleDefinitions = new ArrayList<>();
+        laneToDataRule.put(lane, dataRuleDefinitions);
       }
-      dataAlertDefinitions.add(dataAlertDefinition);
+      dataRuleDefinitions.add(dataRuleDefinition);
     }
 
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =
-      new RulesConfigurationChangeRequest(newRuleDefinition, rulesToRemove, pipelineAlertsToRemove,
+      new RulesConfigurationChangeRequest(newRuleDefinitions, rulesToRemove, pipelineAlertsToRemove,
         laneToDataRule);
 
     return rulesConfigurationChangeRequest;
   }
 
-  private Set<String> detectAlertsToRemove(List<MetricsAlertDefinition> oldMetricsAlertDefinitions,
-                                   List<MetricsAlertDefinition> newMetricsAlertDefinitions) {
+  private Set<String> detectAlertsToRemove(List<MetricsRuleDefinition> oldMetricsRuleDefinitions,
+                                   List<MetricsRuleDefinition> newMetricsRuleDefinitions) {
     Set<String> alertsToRemove = new HashSet<>();
-    if(newMetricsAlertDefinitions != null && oldMetricsAlertDefinitions != null) {
-      for(MetricsAlertDefinition oldMetricAlertDefinition : oldMetricsAlertDefinitions) {
+    if(newMetricsRuleDefinitions != null && oldMetricsRuleDefinitions != null) {
+      for(MetricsRuleDefinition oldMetricAlertDefinition : oldMetricsRuleDefinitions) {
         boolean found = false;
-        for(MetricsAlertDefinition newMetricAlertDefinition : newMetricsAlertDefinitions) {
+        for(MetricsRuleDefinition newMetricAlertDefinition : newMetricsRuleDefinitions) {
           if(oldMetricAlertDefinition.getId().equals(newMetricAlertDefinition.getId())) {
             found = true;
             if(oldMetricAlertDefinition.isEnabled() && !newMetricAlertDefinition.isEnabled()) {
@@ -102,13 +102,13 @@ public class RulesConfigLoader {
     return alertsToRemove;
   }
 
-  private Set<String> detectRulesToRemove(List<DataAlertDefinition> oldMetricDefinitions,
-                                  List<DataAlertDefinition> newMetricDefinitions) {
+  private Set<String> detectRulesToRemove(List<DataRuleDefinition> oldMetricDefinitions,
+                                  List<DataRuleDefinition> newMetricDefinitions) {
     Set<String> rulesToRemove = new HashSet<>();
     if(newMetricDefinitions != null && oldMetricDefinitions != null) {
-      for(DataAlertDefinition oldMetricDefinition : oldMetricDefinitions) {
+      for(DataRuleDefinition oldMetricDefinition : oldMetricDefinitions) {
         boolean found = false;
-        for(DataAlertDefinition newMetricDefinition : newMetricDefinitions) {
+        for(DataRuleDefinition newMetricDefinition : newMetricDefinitions) {
           if(oldMetricDefinition.getId().equals(newMetricDefinition.getId())) {
             found = true;
             if(oldMetricDefinition.isEnabled() && !newMetricDefinition.isEnabled()) {
@@ -129,35 +129,35 @@ public class RulesConfigLoader {
     return rulesToRemove;
   }
 
-  private boolean hasRuleChanged(DataAlertDefinition oldDataAlertDefinition,
-                         DataAlertDefinition newDataAlertDefinition) {
+  private boolean hasRuleChanged(DataRuleDefinition oldDataRuleDefinition,
+                         DataRuleDefinition newDataRuleDefinition) {
     boolean noChange = true;
-    if(newDataAlertDefinition.isEnabled()) {
-      noChange &= areStringsSame(oldDataAlertDefinition.getLane(), newDataAlertDefinition.getLane());
-      noChange &= areStringsSame(oldDataAlertDefinition.getCondition(), newDataAlertDefinition.getCondition());
-      noChange &= areStringsSame(oldDataAlertDefinition.getThresholdValue(), newDataAlertDefinition.getThresholdValue());
-      noChange &= areStringsSame(String.valueOf(oldDataAlertDefinition.getMinVolume()),
-        String.valueOf(newDataAlertDefinition.getMinVolume()));
-      noChange &= areStringsSame(String.valueOf(oldDataAlertDefinition.getSamplingPercentage()),
-        String.valueOf(newDataAlertDefinition.getSamplingPercentage()));
-      noChange &= areStringsSame(oldDataAlertDefinition.getThresholdType().name(),
-        newDataAlertDefinition.getThresholdType().name());
-      noChange &= (oldDataAlertDefinition.isEnabled() && newDataAlertDefinition.isEnabled());
+    if(newDataRuleDefinition.isEnabled()) {
+      noChange &= areStringsSame(oldDataRuleDefinition.getLane(), newDataRuleDefinition.getLane());
+      noChange &= areStringsSame(oldDataRuleDefinition.getCondition(), newDataRuleDefinition.getCondition());
+      noChange &= areStringsSame(oldDataRuleDefinition.getThresholdValue(), newDataRuleDefinition.getThresholdValue());
+      noChange &= areStringsSame(String.valueOf(oldDataRuleDefinition.getMinVolume()),
+        String.valueOf(newDataRuleDefinition.getMinVolume()));
+      noChange &= areStringsSame(String.valueOf(oldDataRuleDefinition.getSamplingPercentage()),
+        String.valueOf(newDataRuleDefinition.getSamplingPercentage()));
+      noChange &= areStringsSame(oldDataRuleDefinition.getThresholdType().name(),
+        newDataRuleDefinition.getThresholdType().name());
+      noChange &= (oldDataRuleDefinition.isEnabled() && newDataRuleDefinition.isEnabled());
     }
     return !noChange;
   }
 
-  private boolean hasAlertChanged(MetricsAlertDefinition oldMetricsAlertDefinition,
-                          MetricsAlertDefinition newMetricsAlertDefinition) {
+  private boolean hasAlertChanged(MetricsRuleDefinition oldMetricsRuleDefinition,
+                          MetricsRuleDefinition newMetricsRuleDefinition) {
     boolean noChange = true;
-    if(newMetricsAlertDefinition.isEnabled()) {
-      noChange &= areStringsSame(oldMetricsAlertDefinition.getMetricId(), newMetricsAlertDefinition.getMetricId());
-      noChange &= areStringsSame(oldMetricsAlertDefinition.getCondition(), newMetricsAlertDefinition.getCondition());
-      noChange &= areStringsSame(oldMetricsAlertDefinition.getMetricType().name(),
-        newMetricsAlertDefinition.getMetricType().name());
-      noChange &= areStringsSame(oldMetricsAlertDefinition.getMetricElement().name(),
-        newMetricsAlertDefinition.getMetricElement().name());
-      noChange &= (oldMetricsAlertDefinition.isEnabled() && newMetricsAlertDefinition.isEnabled());
+    if(newMetricsRuleDefinition.isEnabled()) {
+      noChange &= areStringsSame(oldMetricsRuleDefinition.getMetricId(), newMetricsRuleDefinition.getMetricId());
+      noChange &= areStringsSame(oldMetricsRuleDefinition.getCondition(), newMetricsRuleDefinition.getCondition());
+      noChange &= areStringsSame(oldMetricsRuleDefinition.getMetricType().name(),
+        newMetricsRuleDefinition.getMetricType().name());
+      noChange &= areStringsSame(oldMetricsRuleDefinition.getMetricElement().name(),
+        newMetricsRuleDefinition.getMetricElement().name());
+      noChange &= (oldMetricsRuleDefinition.isEnabled() && newMetricsRuleDefinition.isEnabled());
     }
     return !noChange;
   }
@@ -172,7 +172,7 @@ public class RulesConfigLoader {
     return lhs.equals(rhs);
   }
 
-  void setPreviousRuleDefinition(RuleDefinition previousRuleDefinition) {
-    this.previousRuleDefinition = previousRuleDefinition;
+  void setPreviousRuleDefinitions(RuleDefinitions previousRuleDefinitions) {
+    this.previousRuleDefinitions = previousRuleDefinitions;
   }
 }

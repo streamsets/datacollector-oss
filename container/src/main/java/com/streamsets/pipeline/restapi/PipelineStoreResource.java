@@ -7,7 +7,7 @@ package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -134,12 +134,12 @@ public class PipelineStoreResource {
   public Response getRules(
     @PathParam("name") String name,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
-    RuleDefinition ruleDefinition = store.retrieveRules(name, rev);
-    if(ruleDefinition != null) {
+    RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
+    if(ruleDefinitions != null) {
       RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
-      ruleDefinitionValidator.validateRuleDefinition(ruleDefinition);
+      ruleDefinitionValidator.validateRuleDefinition(ruleDefinitions);
     }
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ruleDefinition).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ruleDefinitions).build();
   }
 
   @Path("/{name}/rules")
@@ -148,11 +148,11 @@ public class PipelineStoreResource {
   public Response saveRules(
     @PathParam("name") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    RuleDefinition ruleDefinition) throws PipelineStoreException {
+    RuleDefinitions ruleDefinitions) throws PipelineStoreException {
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
-    ruleDefinitionValidator.validateRuleDefinition(ruleDefinition);
-    ruleDefinition = store.storeRules(name, rev, ruleDefinition);
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ruleDefinition).build();
+    ruleDefinitionValidator.validateRuleDefinition(ruleDefinitions);
+    ruleDefinitions = store.storeRules(name, rev, ruleDefinitions);
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ruleDefinitions).build();
   }
 
 }
