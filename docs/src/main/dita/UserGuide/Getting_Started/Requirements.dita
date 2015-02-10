@@ -4,30 +4,42 @@
  <title>Installation Requirements</title>
  <shortdesc>Install the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on a machine
-    with the following minimum requirements: <draft-comment author="Loretta">Checking with Natty and
-      Madhu</draft-comment></shortdesc>
+    with the following minimum requirements: </shortdesc>
  <conbody>
-  <p>
-   <simpletable frame="all" id="simpletable_rpp_y2p_kq">
-    <sthead>
-     <stentry>Requirement</stentry>
-     <stentry>Description</stentry>
-    </sthead>
-    <strow>
-     <stentry>Operating Systems</stentry>
-     <stentry>Mac OS X<p>Linux CentOS 6 or 7 </p><p>RedHat Enterprise Linux 6 or 7</p></stentry>
-    </strow>
-    <strow>
-     <stentry>Java </stentry>
-     <stentry>JDK 7<draft-comment author="Loretta">Verify name - is it Java SE? Include link to
-              download?
-              http://www.oracle.com/technetwork/java/javase/downloads/index.html</draft-comment></stentry>
-    </strow>
-        <strow>
-          <stentry>Browser</stentry>
-          <stentry>Chrome<p>Firefox</p><p>Safari</p></stentry>
-        </strow>
-   </simpletable>
-  </p>
+    <table frame="all" rowsep="1" colsep="1" id="table_hkk_qw4_1r">
+      <tgroup cols="2">
+        <colspec colname="c1" colnum="1" colwidth="1*"/>
+        <colspec colname="c2" colnum="2" colwidth="2.51*"/>
+        <thead>
+          <row>
+            <entry>Requirement</entry>
+            <entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>Operating Systems</entry>
+            <entry>Use one of the following operating systems and versions:<ul id="ul_cjh_sw4_1r">
+                <li>Mac OS X</li>
+                <li>Linux CentOS 6 or 7</li>
+                <li>RedHat Enterprise Linux 6 or 7</li>
+                <li>Ubuntu 14.04</li>
+              </ul></entry>
+          </row>
+          <row>
+            <entry>Java</entry>
+            <entry>Java SE 7</entry>
+          </row>
+          <row>
+            <entry>Browser</entry>
+            <entry>Use the latest version of one of the following:<ul id="ul_cvr_bx4_1r">
+                <li>Chrome</li>
+                <li>Firefox</li>
+                <li>Safari</li>
+              </ul></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
  </conbody>
 </concept>

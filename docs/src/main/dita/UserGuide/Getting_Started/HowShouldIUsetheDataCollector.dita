@@ -14,9 +14,9 @@
     <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s to solve
    your ingest dilemmas.</p>
   <p>For example, you might install a single <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to stream log
-   file data from a web server to HDFS. Or, you might install an array of <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s to stream log
-   file data from each web server in your enterprise to a Hadoop data store. </p>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to stream
+      log file data from a web server to HDFS. Or, you might install an array of <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s to stream
+      data from discrete files into a Kafka cluster. </p>
  </conbody>
 </concept>

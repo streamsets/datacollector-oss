@@ -28,7 +28,8 @@
                     the pipeline properties. </stepresult>
             </step>
             <step id="pipeProperties">
-                <cmd>Configure the following pipeline properties:</cmd>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                        <uicontrol>Delivery Guarantee</uicontrol> property:</cmd>
                 <info>
                     <simpletable frame="all" relcolwidth="1.0* 3.17*" id="simpletable_m1s_q1m_sq">
                         <sthead>
@@ -55,6 +56,54 @@
                                 once</uicontrol>.</p></stentry>
                         </strow>
                     </simpletable>
+                </info>
+            </step>
+            <step>
+                <cmd>Click the <wintitle>Bad Records</wintitle> tab and configure the following
+                    error handling options:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_gy3_1y4_1r">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.99*"/>
+                            <thead>
+                                <row>
+                                    <entry>Bad Records Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Bad Records</entry>
+                                    <entry>Determines how to handle records that cannot be processed
+                                        as expected. Use one of the following options:<ul
+                                            id="ul_jg1_dy4_1r">
+                                            <li>Save - Saves bad records to a directory.</li>
+                                            <li>Discard - Discards bad records.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Bad Records Directory</entry>
+                                    <entry>Local directory for bad record files. </entry>
+                                </row>
+                                <row>
+                                    <entry>Max Bad Records/File</entry>
+                                    <entry>Number of records to be written to a bad record file.
+                                        Additional records are written to a new bad record file.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Roll Bad Records File every (secs)</entry>
+                                    <entry>Number of seconds the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> writes to a bad record file. After that time, it creates
+                                        a new bad record file. <p>You can enter a number of seconds
+                                            or use the default expression to enter the time in
+                                            minutes. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
                 </info>
             </step>
             <step>
