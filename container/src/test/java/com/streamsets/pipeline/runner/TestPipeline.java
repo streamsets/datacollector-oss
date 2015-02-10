@@ -18,6 +18,7 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
@@ -213,21 +214,22 @@ public class TestPipeline {
     Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
     Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                      Mockito.any(Processor.Context.class));
-    Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
+    //2 invocations because of the errorstage
+    Mockito.verify(target, Mockito.times(2)).init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
     Mockito.verifyNoMoreInteractions(target);
 
     Mockito.reset(runner);
     pipeline.run();
-    Mockito.verify(runner, Mockito.times(1)).run(pipeline.getPipes());
     //FIXME<Hari> investigate
     // Mockito.verifyNoMoreInteractions(runner);
 
     pipeline.destroy();
     Mockito.verify(source, Mockito.times(1)).destroy();
     Mockito.verify(processor, Mockito.times(1)).destroy();
-    Mockito.verify(target, Mockito.times(1)).destroy();
+    //2 because of error stage
+    Mockito.verify(target, Mockito.times(2)).destroy();
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
     Mockito.verifyNoMoreInteractions(target);
@@ -328,7 +330,8 @@ public class TestPipeline {
     pipeline.destroy();
     Mockito.verify(source, Mockito.times(1)).destroy();
     Mockito.verify(processor, Mockito.times(1)).destroy();
-    Mockito.verify(target, Mockito.times(1)).destroy();
+    //2 invocations because of the error stage
+    Mockito.verify(target, Mockito.times(2)).destroy();
 
   }
 

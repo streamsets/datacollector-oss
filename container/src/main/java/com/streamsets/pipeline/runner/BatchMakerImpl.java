@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.record.RecordImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,14 +73,19 @@ public class BatchMakerImpl implements BatchMaker {
       LOG.warn("The maximum number of records per batch in the origin has been exceeded.");
     }
     Preconditions.checkNotNull(record, "record cannot be null");
-    record = ((RecordImpl)record).clone();
-    ((RecordImpl)record).addStageToStagePath(instanceName);
-    ((RecordImpl)record).createTrackingId();
+    RecordImpl recordCopy = ((RecordImpl)record).clone();
+    recordCopy.addStageToStagePath(instanceName);
+    recordCopy.createTrackingId();
+
+    if (getStagePipe().getStage().getDefinition().getType() == StageType.SOURCE) {
+      RecordImpl recordSource = recordCopy.clone();
+      recordCopy.getHeader().setSourceRecord(recordSource);
+    }
 
     if (lanes.length == 0) {
       Preconditions.checkArgument(outputLanes.size() == 1, Utils.format(
           "No stream has been specified and the stage '{}' has multiple output streams '{}'", instanceName, outputLanes));
-      stageOutput.get(singleOutputLane).add(record);
+      stageOutput.get(singleOutputLane).add(recordCopy);
     } else {
       if (lanes.length > 1) {
         Set<String> laneSet = ImmutableSet.copyOf(lanes);
@@ -89,16 +95,16 @@ public class BatchMakerImpl implements BatchMaker {
       for (String lane : lanes) {
         Preconditions.checkArgument(outputLanes.contains(lane), Utils.format(
             "Invalid output stream '{}' for stage '{}', available streams '{}'", lane, instanceName, outputLanes));
-        stageOutput.get(lane).add(record);
+        stageOutput.get(lane).add(recordCopy);
       }
     }
     if (stageOutputSnapshot != null) {
-      record = ((RecordImpl)record).clone();
+      recordCopy = recordCopy.clone();
       if (lanes.length == 0) {
-        stageOutputSnapshot.get(singleOutputLane).add(record);
+        stageOutputSnapshot.get(singleOutputLane).add(recordCopy);
       } else {
         for (String lane : lanes) {
-          stageOutputSnapshot.get(lane).add(record);
+          stageOutputSnapshot.get(lane).add(recordCopy);
         }
       }
     }

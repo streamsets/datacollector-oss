@@ -21,6 +21,7 @@ import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.runner.StagePipe;
+import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,12 +63,12 @@ public class PreviewPipelineRunner implements PipelineRunner {
 
   @Override
   @SuppressWarnings("unchecked")
-  public void run(Pipe[] pipes) throws StageException, PipelineRuntimeException {
-    run(pipes, Collections.EMPTY_LIST);
+  public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws StageException, PipelineRuntimeException {
+    run(pipes, badRecordsHandler, Collections.EMPTY_LIST);
   }
 
   @Override
-  public void run(Pipe[] pipes, List<StageOutput> stageOutputsToOverride)
+  public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler, List<StageOutput> stageOutputsToOverride)
       throws StageException, PipelineRuntimeException {
     Map<String, StageOutput> stagesToSkip = new HashMap<>();
     for (StageOutput stageOutput : stageOutputsToOverride) {
@@ -90,6 +91,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
         }
       }
       offsetTracker.commitOffset();
+      //TODO badRecordsHandler HANDLE ERRORS
       processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
       newSourceOffset = offsetTracker.getOffset();
       batchesOutput.add(pipeBatch.getSnapshotsOfAllStagesOutput());

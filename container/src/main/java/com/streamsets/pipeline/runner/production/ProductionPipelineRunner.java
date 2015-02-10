@@ -18,6 +18,8 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.runner.ErrorSink;
 import com.streamsets.pipeline.runner.FullPipeBatch;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipe;
@@ -28,7 +30,6 @@ import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,14 +132,14 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   @Override
-  public void run(Pipe[] pipes) throws StageException, PipelineRuntimeException {
+  public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws StageException, PipelineRuntimeException {
     while(!offsetTracker.isFinished() && !stop) {
-      runBatch(pipes);
+      runBatch(pipes, badRecordsHandler);
     }
   }
 
   @Override
-  public void run(Pipe[] pipes, List<StageOutput> stageOutputsToOverride)
+  public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler, List<StageOutput> stageOutputsToOverride)
       throws StageException, PipelineRuntimeException {
     throw new UnsupportedOperationException();
   }
@@ -187,7 +188,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   }
 
-  private void runBatch(Pipe[] pipes) throws PipelineRuntimeException, StageException {
+  private void runBatch(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws PipelineRuntimeException, StageException {
     boolean committed = false;
     /*value true indicates that this batch is captured */
     boolean batchCaptured = false;
@@ -216,6 +217,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
       }
       pipe.process(pipeBatch);
     }
+    badRecordsHandler.handle(newSourceOffset, getBadRecords(pipeBatch.getErrorSink()));
     if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
       offsetTracker.commitOffset();
     }
@@ -251,6 +253,20 @@ public class ProductionPipelineRunner implements PipelineRunner {
     errorRecordStore.storeErrorMessages(pipelineName, revision, errorMessages);
     //Retain X number of error records per stage
     retainErrorsInMemory(errorRecords, errorMessages);
+  }
+
+  private Record getSourceRecord(Record record) {
+    return ((RecordImpl)record).getHeader().getSourceRecord();
+  }
+
+  private List<Record> getBadRecords(ErrorSink errorSink) throws PipelineRuntimeException {
+    List<Record> badRecords = new ArrayList<>();
+    for (Map.Entry<String, List<Record>> entry : errorSink.getErrorRecords().entrySet()) {
+      for (Record record : entry.getValue()) {
+          badRecords.add(getSourceRecord(record));
+      }
+    }
+    return badRecords;
   }
 
   public SourceOffsetTracker getOffSetTracker() {

@@ -10,7 +10,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.record.RecordImpl;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,6 +32,8 @@ public class TestBatchMakerImpl {
                                                                    Collections.EMPTY_MAP,
                                                                    ImmutableList.of("i"),
                                                                    outputs);
+    StageDefinition stageDef = Mockito.mock(StageDefinition.class);
+    Mockito.when(stageDef.getType()).thenReturn(StageType.SOURCE);
     StageRuntime stageRuntime = Mockito.mock(StageRuntime.class);
     Stage.Info stageInfo = Mockito.mock(Stage.Info.class);
     Mockito.when(stageInfo.getInstanceName()).thenReturn("i");
@@ -36,6 +41,7 @@ public class TestBatchMakerImpl {
     Mockito.when(stageInfo.getVersion()).thenReturn("1");
     Mockito.when(stageRuntime.getInfo()).thenReturn(stageInfo);
     Mockito.when(stageRuntime.getConfiguration()).thenReturn(stageConfiguration);
+    Mockito.when(stageRuntime.getDefinition()).thenReturn(stageDef);
     List<String> pipeInput = LaneResolver.getPostFixed(ImmutableList.of("a"), LaneResolver.COMBINER_OUT);
     List<String> pipeOutputs = new ArrayList<String>();
     for (String output : outputs) {

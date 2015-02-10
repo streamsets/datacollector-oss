@@ -35,6 +35,7 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   private static final String ERROR_MESSAGE_ATTR = RESERVED_PREFIX + "errorMessage";
   private static final String ERROR_STAGE_ATTR = RESERVED_PREFIX + "errorStage";
   private static final String ERROR_TIMESTAMP_ATTR = RESERVED_PREFIX + "errorTimestamp";
+  private static final String SOURCE_RECORD_ATTR = RESERVED_PREFIX + "sourceRecord";
 
   private final Map<String, Object> map;
 
@@ -236,6 +237,16 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
     map.put(ERROR_CODE_ATTR, errorCode);
     map.put(ERROR_MESSAGE_ATTR, errorMessage);
     map.put(ERROR_TIMESTAMP_ATTR, errorTimestamp);
+  }
+
+  @JsonIgnore
+  public void setSourceRecord(Record record) {
+    map.put(SOURCE_RECORD_ATTR, record);
+  }
+
+  @JsonIgnore
+  public Record getSourceRecord() {
+    return (Record) map.get(SOURCE_RECORD_ATTR);
   }
 
   // Object methods

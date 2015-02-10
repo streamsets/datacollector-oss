@@ -193,17 +193,28 @@ public class StageRuntime {
       try {
         StageRuntime[] runtimes = new StageRuntime[pipelineConf.getStages().size()];
         for (int i = 0; i < pipelineConf.getStages().size(); i++) {
-          StageConfiguration conf = pipelineConf.getStages().get(i);
-          StageDefinition def = stageLib.getStage(conf.getLibrary(), conf.getStageName(), conf.getStageVersion());
-          Class klass = def.getStageClassLoader().loadClass(def.getClassName());
-          Stage stage = (Stage) klass.newInstance();
-          configureStage(def, conf, klass, stage);
-          runtimes[i] = new StageRuntime(def, conf, requiredFields, stage);
+          runtimes[i] =  buildStage(pipelineConf.getStages().get(i));
         }
         return runtimes;
       } catch (PipelineRuntimeException ex) {
         throw ex;
         } catch (Exception ex) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0151, ex.getMessage(), ex);
+      }
+    }
+
+    public StageRuntime buildErrorStage() throws PipelineRuntimeException {
+      return buildStage(pipelineConf.getErrorStage());
+    }
+
+    private StageRuntime buildStage(StageConfiguration conf) throws PipelineRuntimeException {
+      try {
+        StageDefinition def = stageLib.getStage(conf.getLibrary(), conf.getStageName(), conf.getStageVersion());
+        Class klass = def.getStageClassLoader().loadClass(def.getClassName());
+        Stage stage = (Stage) klass.newInstance();
+        configureStage(def, conf, klass, stage);
+        return new StageRuntime(def, conf, requiredFields, stage);
+      } catch (Exception ex) {
         throw new PipelineRuntimeException(ContainerError.CONTAINER_0151, ex.getMessage(), ex);
       }
     }

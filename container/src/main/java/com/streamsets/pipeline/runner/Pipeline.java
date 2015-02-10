@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.validation.StageIssue;
 
@@ -24,10 +25,12 @@ public class Pipeline {
   private final Pipe[] pipes;
   private final PipelineRunner runner;
   private final Observer observer;
+  private final BadRecordsHandler badRecordsHandler;
 
-  private Pipeline(Pipe[] pipes, Observer observer, PipelineRunner runner) {
+  private Pipeline(Pipe[] pipes, Observer observer, BadRecordsHandler badRecordsHandler, PipelineRunner runner) {
     this.pipes = pipes;
     this.observer = observer;
+    this.badRecordsHandler = badRecordsHandler;
     this.runner = runner;
   }
 
@@ -59,6 +62,7 @@ public class Pipeline {
       for (; idx < pipes.length; idx++) {
         pipes[idx].init();
       }
+      badRecordsHandler.init();
     } catch (StageException|RuntimeException ex) {
       destroy(idx);
       throw ex;
@@ -66,6 +70,9 @@ public class Pipeline {
   }
 
   private void destroy(int idx) {
+    if (idx == pipes.length) {
+      badRecordsHandler.destroy();
+    }
     for (idx--; idx >=0; idx--) {
       try {
         pipes[idx].destroy();
@@ -81,12 +88,12 @@ public class Pipeline {
 
   public void run() throws StageException, PipelineRuntimeException {
     runner.setObserver(observer);
-    runner.run(pipes);
+    runner.run(pipes, badRecordsHandler);
   }
 
   public void run(List<StageOutput> stageOutputsToOverride) throws StageException, PipelineRuntimeException {
     runner.setObserver(observer);
-    runner.run(pipes, stageOutputsToOverride);
+    runner.run(pipes, badRecordsHandler, stageOutputsToOverride);
   }
 
   public static class Builder {
@@ -107,19 +114,23 @@ public class Pipeline {
     }
 
     public Pipeline build(PipelineRunner runner) throws PipelineRuntimeException {
-      StageRuntime[] stages = new StageRuntime.Builder(stageLib, name, pipelineConf).build();
-      setStagesContext(stages, runner);
+      StageRuntime.Builder builder = new StageRuntime.Builder(stageLib, name, pipelineConf);
+      StageRuntime[] stages = builder.build();
+      StageRuntime errorStage = builder.buildErrorStage();
+      setStagesContext(stages, errorStage, runner);
       Pipe[] pipes = createPipes(stages);
-      return new Pipeline(pipes, observer, runner);
+      BadRecordsHandler badRecordsHandler = new BadRecordsHandler(errorStage);
+      return new Pipeline(pipes, observer, badRecordsHandler, runner);
     }
 
-    private void setStagesContext(StageRuntime[] stages, PipelineRunner runner) {
+    private void setStagesContext(StageRuntime[] stages, StageRuntime errorStage, PipelineRunner runner) {
       List<Stage.Info> infos = new ArrayList<>(stages.length);
       List<Stage.Info> infosUnmodifiable = Collections.unmodifiableList(infos);
       for (StageRuntime stage : stages) {
         infos.add(stage.getInfo());
         stage.setContext(new StageContext(infosUnmodifiable, runner.isPreview(), runner.getMetrics(), stage));
       }
+      errorStage.setContext(new StageContext(infosUnmodifiable, runner.isPreview(), runner.getMetrics(), errorStage));
     }
 
     private Pipe[] createPipes(StageRuntime[] stages) throws PipelineRuntimeException {
