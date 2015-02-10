@@ -171,4 +171,14 @@ public class ELEvaluator {
     return EVALUATOR.parseExpressionString(expressionString);
   }
 
+  private static final String CONST_HOURS = "HOURS";
+  private static final String CONST_MINUTES = "MINUTES";
+
+  public static long evaluateHoursMinutesToSecondsExpr(String expr) throws ELException {
+    ELEvaluator elEval = new ELEvaluator();
+    elEval.registerConstant(CONST_MINUTES, 60);
+    elEval.registerConstant(CONST_HOURS, 60 * 60);
+    return (long) elEval.eval(new ELEvaluator.Variables(null, null), expr);
+  }
+
 }

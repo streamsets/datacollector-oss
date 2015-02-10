@@ -368,9 +368,6 @@ public abstract class BaseHdfsTarget extends BaseTarget {
     public String name;
   }
 
-  private static final String CONST_HOURS = "HOURS";
-  private static final String CONST_MINUTES = "MINUTES";
-
   private Configuration hdfsConfiguration;
   private UserGroupInformation ugi;
   private ELEvaluator timeDriverElEval;
@@ -489,10 +486,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
 
   long getLateRecordLimitSecs() throws StageException {
     try {
-      ELEvaluator elEval = new ELEvaluator();
-      elEval.registerConstant(CONST_MINUTES, 60);
-      elEval.registerConstant(CONST_HOURS, 60 * 60);
-      return (long) elEval.eval(new ELEvaluator.Variables(null, null), lateRecordsLimit);
+      return ELEvaluator.evaluateHoursMinutesToSecondsExpr(lateRecordsLimit);
     } catch (Exception ex) {
       throw new StageException(HdfsLibError.HDFS_0008, lateRecordsLimit, ex.getMessage(), ex);
     }
