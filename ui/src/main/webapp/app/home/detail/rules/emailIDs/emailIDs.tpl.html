@@ -12,8 +12,8 @@
            ng-repeat="val in pipelineRules.emailIds track by $index">
 
         <div class="col-md-7">
-          <input type="text" class="form-control input-sm"
-                 ng-required="true"
+          <input type="email" class="form-control input-sm"
+                 required
                  name="{{'emailId' + $index}}"
                  ng-model="pipelineRules.emailIds[$index]"/>
         </div>
@@ -32,7 +32,7 @@
 
       </div>
 
-      <div ng-if="detailPaneConfig.configuration[configIndex].value.length === 0" class="row">
+      <div ng-if="pipelineRules.emailIds.length === 0" class="row">
         <div class="col-md-2 btn-group" role="group">
           <button type="button" class="btn btn-default btn-sm"
                   ng-click="addToList(pipelineRules.emailIds)">
