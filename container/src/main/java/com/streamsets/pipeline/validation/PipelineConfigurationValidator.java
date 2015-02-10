@@ -90,6 +90,7 @@ public class PipelineConfigurationValidator {
       canPreview &= checkIfPipelineIsEmpty();
       canPreview &= validatePipelineConfiguration();
       canPreview &= validatePipelineLanes();
+      canPreview &= validateErrorStage();
       if (LOG.isTraceEnabled() && issues.hasIssues()) {
         for (Issue issue : issues.getPipelineIssues()) {
           LOG.trace("Pipeline '{}', {}", name, issue);
@@ -530,6 +531,17 @@ public class PipelineConfigurationValidator {
         issue.setAdditionalInfo("openStreams", openOutputs);
         issues.add(issue);
       }
+    }
+    return preview;
+  }
+
+  @VisibleForTesting
+  boolean validateErrorStage() {
+    boolean preview = true;
+    if (pipelineConfiguration.getErrorStage() == null) {
+      issues.addP(new Issue(ValidationError.VALIDATION_0060));
+    } else {
+
     }
     return preview;
   }

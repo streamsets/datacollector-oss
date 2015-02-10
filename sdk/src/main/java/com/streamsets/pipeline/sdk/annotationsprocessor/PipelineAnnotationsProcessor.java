@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -245,6 +246,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    */
   private StageDefinition createStageConfig(TypeElement typeElement) {
     StageDef stageDefAnnotation = typeElement.getAnnotation(StageDef.class);
+
+    boolean errorStage = typeElement.getAnnotation(ErrorStage.class) != null;
+
     //Process all fields with ConfigDef annotation
     List< ConfigDefinition> configDefinitions = getConfigDefsFromTypeElement(typeElement);
 
@@ -260,6 +264,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       int outputStreams = getOutputStreams(typeElement, stageDefAnnotation);
       String outputStreamsLabelProviderClass = getOutputStreamLabelsProviderClass(stageDefAnnotation);
 
+      StageType stageType = StageType.valueOf(getStageTypeFromElement(typeElement));
+      boolean requiredFields = stageType != StageType.SOURCE && stageDefAnnotation.requiredFields();
       String stageName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
       stageDefinition = new StageDefinition(
           typeElement.getQualifiedName().toString(),
@@ -267,7 +273,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           stageDefAnnotation.version(),
           stageDefAnnotation.label(),
           stageDefAnnotation.description(),
-          StageType.valueOf(getStageTypeFromElement(typeElement)),
+          stageType,
+          errorStage,
+          requiredFields,
           configDefinitions,
           rawSourceDefinition,
           stageDefAnnotation.icon(),

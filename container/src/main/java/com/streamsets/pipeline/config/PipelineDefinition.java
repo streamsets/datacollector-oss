@@ -7,10 +7,13 @@ package com.streamsets.pipeline.config;
 
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ChooserMode;
+import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +34,12 @@ public class PipelineDefinition {
   private final static String DELIVERY_GUARANTEE_AT_MOST_ONCE_KEY = "config.deliveryGuarantee.AT_MOST_ONCE";
   private final static String DELIVERY_GUARANTEE_AT_MOST_ONCE_DEFAULT = "At Most Once";
 
-
-
-
-
+  private StageLibraryTask stageLibrary;
   /*The config definitions of the pipeline*/
   private List<ConfigDefinition> configDefinitions;
 
-  public PipelineDefinition() {
+  public PipelineDefinition(StageLibraryTask stageLibrary) {
+    this.stageLibrary = stageLibrary;
     configDefinitions = new ArrayList<>();
     configDefinitions.add(createDeliveryGuaranteeOption());
     configDefinitions.addAll(createBadRecordsHandlingConfigs());
@@ -102,38 +103,38 @@ public class PipelineDefinition {
     return dgConfigDef;
   }
 
-  private List<String> getValues(Class<? extends Enum> ee) {
+  private List<String> getErrorHandlingOptions(boolean value) {
     List<String> list = new ArrayList<>();
-    for (Enum e : ee.getEnumConstants()) {
-      list.add(e.name());
-    }
-    return list;
-  }
-
-  private List<String> getLabels(Class<? extends Enum> ee) {
-    List<String> list = new ArrayList<>();
-    for (Enum e : ee.getEnumConstants()) {
-      if (e instanceof Label) {
-        list.add(((Label)e).getLabel());
-      } else {
-        list.add(e.name());
+    for (StageDefinition def : stageLibrary.getStages()) {
+      if (def.getType() == StageType.TARGET && def.isErrorStage()) {
+        if (value) {
+          list.add(def.getLibrary() + "::" + def.getName() + "::" + def.getVersion());
+        } else {
+          list.add(def.getLabel() + " - " + def.getLibraryLabel());
+        }
       }
     }
     return list;
   }
 
+  private List<String> getErrorHandlingValues() {
+    return getErrorHandlingOptions(true);
+  }
+
+  private List<String> getErrorHandlingLabels() {
+    return getErrorHandlingOptions(false);
+  }
+
   private List<ConfigDefinition> createBadRecordsHandlingConfigs() {
     List<ConfigDefinition> configs = new ArrayList<>();
-
     ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, ChooserMode.PROVIDED, "",
-                                                getValues(BadRecordsOptions.class), getLabels(BadRecordsOptions.class),
-                                                null);
+                                                getErrorHandlingValues(), getErrorHandlingLabels(), null);
     ConfigDefinition config = new ConfigDefinition(
-        "badRecords",
+        "badRecordsHandling",
         ConfigDef.Type.MODEL,
-        "Bad Records",
+        "Bad Records Handling",
         "",
-        BadRecordsOptions.DISCARD.name(),
+        "",
         true,
         "BAD_RECORDS",
         "",
@@ -142,48 +143,7 @@ public class PipelineDefinition {
         new String[] {},
         10);
     configs.add(config);
-    config = new ConfigDefinition(
-        "badRecordsDir",
-        ConfigDef.Type.STRING,
-        "Bad Records Directory",
-        "",
-        "",
-        true,
-        "BAD_RECORDS",
-        "",
-        null,
-        "badRecords",
-        new String[] { BadRecordsOptions.SAVE.name() },
-        20);
-    configs.add(config);
-    config = new ConfigDefinition(
-        "maxRecordsPerFile",
-        ConfigDef.Type.INTEGER,
-        "Max Bad Records per File",
-        "",
-        "100000",
-        true,
-        "BAD_RECORDS",
-        "",
-        null,
-        "badRecords",
-        new String[] { BadRecordsOptions.SAVE.name() },
-        30);
-    configs.add(config);
-    config = new ConfigDefinition(
-        "rollFileInterval",
-        ConfigDef.Type.EL_NUMBER,
-        "Roll Bad Records File every (secs)",
-        "",
-        "${1 * MINUTE}",
-        true,
-        "BAD_RECORDS",
-        "",
-        null,
-        "badRecords",
-        new String[] { BadRecordsOptions.SAVE.name() },
-        40);
-    configs.add(config);
+
     return configs;
   }
 

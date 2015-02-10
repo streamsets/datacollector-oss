@@ -28,6 +28,7 @@ public class PipelineConfiguration {
   private List<ConfigConfiguration> configuration;
   private final Map<String, Object> uiInfo;
   private List<StageConfiguration> stages;
+  private StageConfiguration errorStage;
   private Issues issues;
   private boolean previewable;
 
@@ -37,12 +38,14 @@ public class PipelineConfiguration {
       @JsonProperty("uuid") UUID uuid,
       @JsonProperty("configuration") List<ConfigConfiguration> configuration,
       @JsonProperty("uiInfo") Map<String, Object> uiInfo,
-      @JsonProperty("stages") List<StageConfiguration> stages) {
+      @JsonProperty("stages") List<StageConfiguration> stages,
+      @JsonProperty("errorStage") StageConfiguration errorStage) {
     this.schemaVersion = schemaVersion;
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.configuration = configuration;
     this.uiInfo = uiInfo;
     this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();
+    this.errorStage = errorStage;
     issues = new Issues();
   }
 
@@ -77,6 +80,14 @@ public class PipelineConfiguration {
 
   public void setStages(List<StageConfiguration> stages) {
     this.stages = stages;
+  }
+
+  public void setErrorStage(StageConfiguration errorStage) {
+    this.errorStage = errorStage;
+  }
+
+  public StageConfiguration getErrorStage() {
+    return this.errorStage;
   }
 
   public void setUuid(UUID uuid) {

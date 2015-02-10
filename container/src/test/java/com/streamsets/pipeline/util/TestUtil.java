@@ -196,6 +196,7 @@ public class TestUtil {
         PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_PIPELINE, PIPELINE_REV);
         PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
         pipelineConf.setStages(mockPipelineConf.getStages());
+        pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
         pipelineStoreTask.save(MY_PIPELINE, "admin", "tag", "description"
           , pipelineConf);
 

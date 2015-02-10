@@ -49,7 +49,7 @@ public class StageLibraryResource {
 
     //Populate the definitions with the PipelineDefinition
     List<Object> pipeline = new ArrayList<>(1);
-    pipeline.add(new PipelineDefinition());
+    pipeline.add(new PipelineDefinition(stageLibrary));
     definitions.put("pipeline", pipeline);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();
   }

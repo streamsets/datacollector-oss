@@ -49,7 +49,7 @@ public class TestPipeline {
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
-      pipelineConfigs, null, stageDefs);
+      pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
@@ -138,8 +138,7 @@ public class TestPipeline {
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
-       pipelineConfigs, null,
-      stageDefs);
+       pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
@@ -186,7 +185,7 @@ public class TestPipeline {
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
-       pipelineConfigs, null, stageDefs);
+       pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
@@ -248,7 +247,7 @@ public class TestPipeline {
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
-       pipelineConfigs, null, stageDefs);
+       pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, "name", pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);

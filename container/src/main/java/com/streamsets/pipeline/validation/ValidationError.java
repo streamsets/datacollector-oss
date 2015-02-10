@@ -63,6 +63,10 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0046("Condition must be of the form '${value()<op><number>}'."),
 
   VALIDATION_0050("Configuration '{}' must be set for Metric Alert Definition."),
+
+
+  VALIDATION_0060("Bad records handling must be specified"),
+
   ;
 
   private final String msg;

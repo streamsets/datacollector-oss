@@ -54,4 +54,6 @@ public @interface StageDef {
 
   Class<? extends Label> outputStreams() default DefaultOutputStreams.class;
 
+  boolean requiredFields() default true;
+
 }

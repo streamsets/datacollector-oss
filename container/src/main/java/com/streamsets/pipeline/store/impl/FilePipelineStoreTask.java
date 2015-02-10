@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.BadRecordsOptions;
+import com.streamsets.pipeline.config.ErrorRecordsOptions;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
@@ -151,12 +151,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
     List<ConfigConfiguration> configuration = new ArrayList<>(2);
     configuration.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
-    configuration.add(new ConfigConfiguration("badRecords", BadRecordsOptions.DISCARD));
-    configuration.add(new ConfigConfiguration("badRecordsDir", ""));
-    configuration.add(new ConfigConfiguration("maxRecordsPerFile", 10000));
-    configuration.add(new ConfigConfiguration("rollFileInterval", "${1 * MINUTE}"));
     PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, configuration, null,
-      null);
+      null, null);
     pipeline.setDescription(description);
     try {
       json.writeValue(getInfoFile(name), info);

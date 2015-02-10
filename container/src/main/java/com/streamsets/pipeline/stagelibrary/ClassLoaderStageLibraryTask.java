@@ -133,7 +133,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       new String[] {}, Integer.MAX_VALUE);
 
   private void addSystemConfigurations(StageDefinition stage) {
-    if (stage.getType() != StageType.SOURCE) {
+    if (stage.isRequiredFields()) {
       stage.addConfiguration(REQUIRED_FIELDS_CONFIG);
     }
   }
