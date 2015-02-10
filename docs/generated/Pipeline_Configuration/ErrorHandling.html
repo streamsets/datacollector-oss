@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Each stage in the pipeline includes built-in resilience. Some stages also include configurable error handling. When the Data Collector encounters an unexpected error, it stops the pipeline. When a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Error Handling"></meta><meta name="abstract" content="Each stage in the pipeline includes built-in resilience. Some stages also include configurable error handling. When the Data Collector encounters an unexpected error, it stops the pipeline."></meta><meta name="description" content="Each stage in the pipeline includes built-in resilience. Some stages also include configurable error handling. When the Data Collector encounters an unexpected error, it stops the pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pm4_txm_vq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Error Handling</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can configure the default error handling for a pipeline. Some stages include error handling properties that override the default. When a Data Collector encounters an unexpected error, it stops the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Error Handling"></meta><meta name="abstract" content="You can configure the default error handling for a pipeline. Some stages include error handling properties that override the default. When a Data Collector encounters an unexpected error, it stops the pipeline."></meta><meta name="description" content="You can configure the default error handling for a pipeline. Some stages include error handling properties that override the default. When a Data Collector encounters an unexpected error, it stops the pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/ReprocessingBadRecords.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pm4_txm_vq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Error Handling</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,35 +14,37 @@
  <h1 class="title topictitle1">Error Handling</h1>
 
  
- <div class="body conbody"><p class="shortdesc">Each stage in the pipeline includes built-in resilience. Some stages also include
-  configurable error handling. When the <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc">You can configure the default error handling for a pipeline. Some stages include error
+  handling properties that override the default. When a <span class="ph">Data
                   Collector</span> encounters an
-  unexpected error, it stops the pipeline.</p>
+  unexpected error, it stops the pipeline. </p>
 
-  <p class="p">When a stage encounters a record that it does not expect, it discards the record. For example,
-   you have a Directory origin configured to read JSON objects with a maximum length of 1000. When
-   the Directory origin encounters a JSON object with a length of 1001 or longer, it drops the
-   object and continues with the next JSON object. As another example, if you configure a processor
-   stage to require an ID field, it drops any record that does not include the field.</p>
+  <p class="p">You can configure a pipeline to discard bad records or to save bad records. When you save bad
+   records, you define the directory to use and when to create additional files. </p>
 
-  <div class="p">Several processors, including the Field Splitter, JSON Parser, and Stream Selector, include the
-   following logic for records that do not match configured conditions: <ul class="ul" id="concept_pm4_txm_vq__ul_is5_zhh_yq">
-    <li class="li">Discard the record</li>
+  <p class="p">Each stage in the pipeline includes built-in resilience. Some stages also include configurable
+   error handling. When a stage without error handling options encounters a bad record, the <span class="ph">Data
+                  Collector</span> uses the
+   pipeline default error handling. </p>
 
-    <li class="li">Writes the record to an error log</li>
+  <p class="p">For example, if you configure a Kafka Consumer origin stage to read JSON data with a maximum
+   object length of 4096 characters and the stage encounters an object with 5000 characters, the
+   stage discards or saves the object based on the pipeline configuration. </p>
 
-    <li class="li">Stop the pipeline</li>
-
-   </ul>
-</div>
-
-  <p class="p">
-   
-  </p>
+  <p class="p">When a stage includes an error handling property, the stage configuration overrides the
+   pipeline configuration. For example, you have a Field Splitter configured to split field values
+   into three parts and to discard records that cannot be split. Even if the pipeline is configured
+   to save bad records, the Field Splitter stage discards records that cannot be split as
+   configured. </p>
 
  </div>
 
-<div class="related-links"></div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="../Pipeline_Configuration/ReprocessingBadRecords.html">Reprocessing Bad Records</a></strong><br></br>
+</li>
+</ul>
+</div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
 </body>
