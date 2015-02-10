@@ -59,6 +59,7 @@ public class MockStages {
   private static Source sourceCapture;
   private static Processor processorCapture;
   private static Target targetCapture;
+  private static Target errorCapture;
 
   // it must be called after the pipeline is built
   public static void setSourceCapture(Source s) {
@@ -73,6 +74,11 @@ public class MockStages {
   // it must be called after the pipeline is built
   public static void setTargetCapture(Target t) {
     targetCapture = t;
+  }
+
+  // it must be called after the pipeline is built
+  public static void setErrorStageCapture(Target t) {
+    errorCapture = t;
   }
 
   private static class MockStageLibraryTask implements StageLibraryTask {
@@ -187,6 +193,39 @@ public class MockStages {
       }
     }
 
+    public static class ETarget implements Target {
+
+      @Override
+      public List<ConfigIssue> validateConfigs(Info info, Target.Context context) {
+        if (errorCapture != null) {
+          return errorCapture.validateConfigs(info, context);
+        } else {
+          return Collections.emptyList();
+        }
+      }
+
+      @Override
+      public void init(Info info, Context context) throws StageException {
+        if (errorCapture != null) {
+          errorCapture.init(info, context);
+        }
+      }
+
+      @Override
+      public void destroy() {
+        if (errorCapture != null) {
+          errorCapture.destroy();
+        }
+      }
+
+      @Override
+      public void write(Batch batch) throws StageException {
+        if (errorCapture != null) {
+          errorCapture.write(batch);
+        }
+      }
+    }
+
     private List<StageDefinition> stages;
 
     @SuppressWarnings("unchecked")
@@ -215,6 +254,12 @@ public class MockStages {
       );
       tDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
+      StageDefinition eDef = new StageDefinition(
+          ETarget.class.getName(), "errorTarget", "1.0.0", "errorTarget",
+          "Error Target", StageType.TARGET, false, true, Collections.EMPTY_LIST, null/*raw source definition*/, "", null, false, 0, null
+      );
+      eDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+
       ConfigDefinition depConfDef = new ConfigDefinition(
           "dependencyConfName", ConfigDef.Type.INTEGER, "dependencyConfLabel", "dependencyConfDesc", "", true,
           "groupName", "dependencyConfFieldName", null, "", null, 0);
@@ -227,7 +272,7 @@ public class MockStages {
           null/*raw source definition*/,"", null, false, 1, null);
       swcDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
-      stages = ImmutableList.of(sDef, socDef, pDef, tDef, swcDef);
+      stages = ImmutableList.of(sDef, socDef, pDef, tDef, swcDef, eDef);
     }
 
     @Override
@@ -289,7 +334,7 @@ public class MockStages {
 
   @SuppressWarnings("unchecked")
   public static StageConfiguration getErrorStageConfig() {
-    return new StageConfiguration("errorStage", "default", "targetName", "1.0.0",
+    return new StageConfiguration("errorStage", "default", "errorTarget", "1.0.0",
                                   Collections.EMPTY_LIST, null, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
   }
 

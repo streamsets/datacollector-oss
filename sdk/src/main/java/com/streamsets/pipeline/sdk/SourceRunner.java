@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.StageType;
 
 import java.util.List;
 import java.util.Map;
@@ -16,12 +17,12 @@ import java.util.Map;
 public class SourceRunner extends StageRunner<Source> {
 
   public SourceRunner(Source source, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview) {
-    super(source, configuration, outputLanes, isPreview);
+    super(source, StageType.SOURCE, configuration, outputLanes, isPreview);
   }
 
   public SourceRunner(Class<Source> sourceClass, Map<String, Object> configuration, List<String> outputLanes,
       boolean isPreview) {
-    super(sourceClass, configuration, outputLanes, isPreview);
+    super(sourceClass, StageType.SOURCE, configuration, outputLanes, isPreview);
   }
 
   public Output runProduce(String lastOffset, int maxBatchSize) throws StageException {

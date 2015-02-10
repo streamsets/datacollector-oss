@@ -17,7 +17,9 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.record.HeaderImpl;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.ErrorSink;
 import com.streamsets.pipeline.runner.FullPipeBatch;
@@ -45,6 +47,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunner.class);
 
+  private final RuntimeInfo runtimeInfo;
   private final MetricRegistry metrics;
   private SourceOffsetTracker offsetTracker;
   private final SnapshotStore snapshotStore;
@@ -87,9 +90,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   private Object errorRecordsMutex;
 
-  public ProductionPipelineRunner(SnapshotStore snapshotStore, ErrorRecordStore errorRecordStore,
-                                  int batchSize, int maxErrorRecordsPerStage, int maxPipelineErrors,
+  public ProductionPipelineRunner(RuntimeInfo runtimeInfo, SnapshotStore snapshotStore,
+      ErrorRecordStore errorRecordStore, int batchSize, int maxErrorRecordsPerStage, int maxPipelineErrors,
       DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision, PipelineStoreTask pipelineStore) {
+    this.runtimeInfo = runtimeInfo;
     this.metrics = new MetricRegistry();
     this.batchSize = batchSize;
     this.maxErrorRecordsPerStage = maxErrorRecordsPerStage;
@@ -255,15 +259,23 @@ public class ProductionPipelineRunner implements PipelineRunner {
     retainErrorsInMemory(errorRecords, errorMessages);
   }
 
-  private Record getSourceRecord(Record record) {
-    return ((RecordImpl)record).getHeader().getSourceRecord();
+  private RecordImpl getSourceRecord(Record record) {
+    return (RecordImpl) ((RecordImpl)record).getHeader().getSourceRecord();
+  }
+
+  private void injectErrorInfo(RecordImpl sourceRecord, Record record) {
+    HeaderImpl header = sourceRecord.getHeader();
+    header.copyErrorFrom(record);
+    header.setErrorContext(runtimeInfo.getId(), pipelineName);
   }
 
   private List<Record> getBadRecords(ErrorSink errorSink) throws PipelineRuntimeException {
     List<Record> badRecords = new ArrayList<>();
     for (Map.Entry<String, List<Record>> entry : errorSink.getErrorRecords().entrySet()) {
       for (Record record : entry.getValue()) {
-          badRecords.add(getSourceRecord(record));
+        RecordImpl sourceRecord = getSourceRecord(record);
+        injectErrorInfo(sourceRecord, record);
+        badRecords.add(sourceRecord);
       }
     }
     return badRecords;

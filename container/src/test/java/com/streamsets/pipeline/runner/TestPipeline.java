@@ -214,8 +214,7 @@ public class TestPipeline {
     Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
     Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                      Mockito.any(Processor.Context.class));
-    //2 invocations because of the errorstage
-    Mockito.verify(target, Mockito.times(2)).init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
+    Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
     Mockito.verifyNoMoreInteractions(target);
@@ -228,8 +227,7 @@ public class TestPipeline {
     pipeline.destroy();
     Mockito.verify(source, Mockito.times(1)).destroy();
     Mockito.verify(processor, Mockito.times(1)).destroy();
-    //2 because of error stage
-    Mockito.verify(target, Mockito.times(2)).destroy();
+    Mockito.verify(target, Mockito.times(1)).destroy();
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
     Mockito.verifyNoMoreInteractions(target);
@@ -330,8 +328,7 @@ public class TestPipeline {
     pipeline.destroy();
     Mockito.verify(source, Mockito.times(1)).destroy();
     Mockito.verify(processor, Mockito.times(1)).destroy();
-    //2 invocations because of the error stage
-    Mockito.verify(target, Mockito.times(2)).destroy();
+    Mockito.verify(target, Mockito.times(1)).destroy();
 
   }
 

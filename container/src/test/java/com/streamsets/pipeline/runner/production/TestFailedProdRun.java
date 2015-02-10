@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
@@ -34,6 +35,8 @@ public class TestFailedProdRun {
 
   @Test(expected = PipelineRuntimeException.class)
   public void testPipelineOpenLanes() throws PipelineRuntimeException {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn("id");
     MockStages.setSourceCapture(new BaseSource() {
       @Override
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
@@ -51,7 +54,7 @@ public class TestFailedProdRun {
       }
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(Mockito.mock(FileSnapshotStore.class),
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, Mockito.mock(FileSnapshotStore.class),
         Mockito.mock(FileErrorRecordStore.class), 5, 10, 10, DeliveryGuarantee.AT_MOST_ONCE, PIPELINE_NAME, REVISION, null);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);

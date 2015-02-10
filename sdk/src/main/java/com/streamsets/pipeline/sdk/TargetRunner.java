@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.runner.BatchImpl;
 
 import java.util.Collections;
@@ -19,12 +20,12 @@ public class TargetRunner extends StageRunner<Target> {
 
   @SuppressWarnings("unchecked")
   public TargetRunner(Target source, Map<String, Object> configuration, boolean isPreview) {
-    super(source, configuration, Collections.EMPTY_LIST, isPreview);
+    super(source, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview);
   }
 
   @SuppressWarnings("unchecked")
   public TargetRunner(Class<Target> sourceClass, Map<String, Object> configuration, boolean isPreview) {
-    super(sourceClass, configuration, Collections.EMPTY_LIST, isPreview);
+    super(sourceClass, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview);
   }
 
   public void runWrite(List<Record> inputRecords) throws StageException {

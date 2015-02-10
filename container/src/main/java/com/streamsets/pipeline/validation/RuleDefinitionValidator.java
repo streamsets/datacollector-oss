@@ -224,6 +224,16 @@ public class RuleDefinitionValidator {
           }
 
           @Override
+          public String getErrorDataCollectorId() {
+            return null;
+          }
+
+          @Override
+          public String getErrorPipelineName() {
+            return null;
+          }
+
+          @Override
           public String getErrorCode() {
             return null;
           }

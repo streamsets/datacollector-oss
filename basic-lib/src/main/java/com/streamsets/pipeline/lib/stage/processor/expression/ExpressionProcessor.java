@@ -175,6 +175,16 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
           }
 
           @Override
+          public String getErrorDataCollectorId() {
+            return null;
+          }
+
+          @Override
+          public String getErrorPipelineName() {
+            return null;
+          }
+
+          @Override
           public String getErrorCode() {
             return null;
           }

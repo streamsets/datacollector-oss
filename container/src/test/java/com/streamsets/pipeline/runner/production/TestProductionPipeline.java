@@ -5,11 +5,17 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
@@ -25,12 +31,13 @@ import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.TestUtil;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class TestProductionPipeline {
@@ -160,12 +167,14 @@ public class TestProductionPipeline {
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee,
                                                       boolean capturenextBatch, boolean sourceOffsetCommitter)
       throws PipelineRuntimeException {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn("id");
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
     FileErrorRecordStore fileErrorRecordStore = Mockito.mock(FileErrorRecordStore.class);
 
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, fileErrorRecordStore, 5
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, fileErrorRecordStore, 5
       , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION,
       new FilePipelineStoreTask(new RuntimeInfo(Arrays.asList(getClass().getClassLoader())), new Configuration()) {
       });
@@ -218,4 +227,82 @@ public class TestProductionPipeline {
     pipeline.run();
   }
 
+  public enum TestErrors implements ErrorCode {
+    ERROR_S, ERROR_P;
+
+    @Override
+    public String getCode() {
+      return name();
+    }
+
+    @Override
+    public String getMessage() {
+      return "ERROR";
+    }
+  }
+
+  private static class ErrorProducerSourceCapture extends BaseSource {
+    public int count;
+    public String offset;
+
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      Record record = getContext().createRecord("e" + count);
+      record.set(Field.create("E" + count));
+      getContext().toError(record, TestErrors.ERROR_S);
+      record.set(Field.create("OK" + count));
+      batchMaker.addRecord(record);
+      return (++count < 2) ? "o::" + count : null;
+    }
+
+  }
+
+  private static class ErrorStageTarget extends BaseTarget {
+    public List<Record> records = new ArrayList<>();
+
+    @Override
+    public void write(Batch batch) throws StageException {
+      Iterator<Record> it = batch.getRecords();
+      while (it.hasNext()) {
+        records.add(it.next());
+      }
+    }
+  }
+
+  private static class ErrorProducerProcessorCapture extends BaseProcessor {
+    @Override
+    public void process(Batch batch, BatchMaker batchMaker) throws StageException {
+      Iterator<Record> it = batch.getRecords();
+      while (it.hasNext()) {
+        getContext().toError(it.next(), TestErrors.ERROR_P);
+      }
+    }
+  }
+
+  @Test
+  public void testErrorStage() throws Exception {
+    Source source = new ErrorProducerSourceCapture();
+    MockStages.setSourceCapture(source);
+    ErrorProducerProcessorCapture processor = new ErrorProducerProcessorCapture();
+    MockStages.setProcessorCapture(processor);
+    ErrorStageTarget errorStage = new ErrorStageTarget();
+    MockStages.setErrorStageCapture(errorStage);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    pipeline.run();
+    Assert.assertEquals(4, errorStage.records.size());
+    assertErrorRecord(errorStage.records.get(0), "id", PIPELINE_NAME, Field.create("E0"), TestErrors.ERROR_S.name(), "s");
+    assertErrorRecord(errorStage.records.get(1), "id", PIPELINE_NAME, Field.create("OK0"), TestErrors.ERROR_P.name(), "p");
+    assertErrorRecord(errorStage.records.get(2), "id", PIPELINE_NAME, Field.create("E1"), TestErrors.ERROR_S.name(), "s");
+    assertErrorRecord(errorStage.records.get(3), "id", PIPELINE_NAME, Field.create("OK1"), TestErrors.ERROR_P.name(), "p");
+  }
+
+  private void assertErrorRecord(Record record, String sdcId, String pipelineName, Field field, String errorCode, String errorStage) {
+    Assert.assertEquals(sdcId, record.getHeader().getErrorDataCollectorId());
+    Assert.assertEquals(pipelineName, record.getHeader().getErrorPipelineName());
+    Assert.assertEquals(field, record.get());
+    Assert.assertEquals(errorCode, record.getHeader().getErrorCode());
+    Assert.assertEquals(errorStage, record.getHeader().getErrorStage());
+    Assert.assertNotNull(record.getHeader().getErrorMessage());
+    Assert.assertNotEquals(0, record.getHeader().getErrorTimestamp());
+  }
 }

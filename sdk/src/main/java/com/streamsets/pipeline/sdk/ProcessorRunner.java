@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.runner.BatchImpl;
 
 import java.util.List;
@@ -20,12 +21,12 @@ public class ProcessorRunner extends StageRunner<Processor> {
 
   public ProcessorRunner(Processor processor, Map<String, Object> configuration, List<String> outputLanes,
       boolean isPreview) {
-    super(processor, configuration, outputLanes, isPreview);
+    super(processor, StageType.PROCESSOR, configuration, outputLanes, isPreview);
   }
 
   public ProcessorRunner(Class<Processor> processorClass, Map<String, Object> configuration, List<String> outputLanes,
       boolean isPreview) {
-    super(processorClass, configuration, outputLanes, isPreview);
+    super(processorClass, StageType.PROCESSOR, configuration, outputLanes, isPreview);
   }
 
   public Output runProcess(List<Record> inputRecords) throws StageException {

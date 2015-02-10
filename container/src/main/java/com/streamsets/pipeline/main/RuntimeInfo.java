@@ -21,12 +21,21 @@ public class RuntimeInfo {
 
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
+  private String id;
   private final Map<String, Object> attributes;
   private Runnable shutdownRunnable;
 
   public RuntimeInfo(List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
     this.attributes = new HashMap<>();
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getId() {
+    return id;
   }
 
   public String getRuntimeDir() {

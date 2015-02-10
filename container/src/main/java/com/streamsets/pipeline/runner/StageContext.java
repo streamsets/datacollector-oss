@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.ContextExt;
 import com.streamsets.pipeline.api.impl.JsonRecordParser;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
@@ -40,6 +41,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private static final String CUSTOM_METRICS_PREFIX = "custom.";
 
   private final List<Stage.Info> pipelineInfo;
+  private final StageType stageType;
   private final boolean isPreview;
   private final MetricRegistry metrics;
   private final String instanceName;
@@ -47,8 +49,9 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private ErrorSink errorSink;
 
   //for SDK
-  public StageContext(String instanceName, boolean isPreview, List<String> outputLanes) {
+  public StageContext(String instanceName, StageType stageType, boolean isPreview, List<String> outputLanes) {
     pipelineInfo = ImmutableList.of();
+    this.stageType = stageType;
     this.isPreview = isPreview;
     metrics = new MetricRegistry();
     this.instanceName = instanceName;
@@ -56,9 +59,10 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     errorSink = new ErrorSink();
   }
 
-  public StageContext(List<Stage.Info> pipelineInfo, boolean isPreview, MetricRegistry metrics,
+  public StageContext(List<Stage.Info> pipelineInfo, StageType stageType, boolean isPreview, MetricRegistry metrics,
       StageRuntime stageRuntime) {
     this.pipelineInfo = pipelineInfo;
+    this.stageType = stageType;
     this.isPreview = isPreview;
     this.metrics = metrics;
     this.instanceName = stageRuntime.getConfiguration().getInstanceName();
@@ -172,30 +176,31 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, Exception ex) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(ex, "exception cannot be null");
-    RecordImpl recordImpl = ((RecordImpl) record).clone();
-    recordImpl.getHeader().setError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0001, instanceName,
-                                                                   ex.getMessage()));
-    errorSink.addRecord(instanceName, recordImpl);
+    toError(record, new ErrorMessage(ContainerError.CONTAINER_0001, instanceName, ex.getMessage()));
   }
 
   @Override
   public void toError(Record record, String errorMessage) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    RecordImpl recordImpl = ((RecordImpl) record).clone();
-    recordImpl.getHeader().setError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
-    errorSink.addRecord(instanceName, recordImpl);
+    toError(record, new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
   }
 
   @Override
   public void toError(Record record, ErrorCode errorCode, Object... args) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorCode, "errorId cannot be null");
-    RecordImpl recordImpl = ((RecordImpl) record).clone();
-    recordImpl.getHeader().setError(instanceName, new ErrorMessage(errorCode, args));
-    errorSink.addRecord(instanceName, recordImpl);
+    toError(record, new ErrorMessage(errorCode, args));
   }
 
+  private void toError(Record record, ErrorMessage errorMessage) {
+    RecordImpl recordImpl = ((RecordImpl) record).clone();
+    if (stageType == StageType.SOURCE) {
+      recordImpl.getHeader().setSourceRecord(recordImpl);
+    }
+    recordImpl.getHeader().setError(instanceName, errorMessage);
+    errorSink.addRecord(instanceName, recordImpl);
+  }
   @Override
   public List<String> getOutputLanes() {
     return outputLanes;

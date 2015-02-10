@@ -83,6 +83,10 @@ public interface Record {
 
     public void deleteAttribute(String name);
 
+    public String getErrorDataCollectorId();
+
+    public String getErrorPipelineName();
+
     public String getErrorCode();
 
     public String getErrorMessage();

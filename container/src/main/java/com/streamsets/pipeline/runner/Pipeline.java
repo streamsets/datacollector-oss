@@ -128,9 +128,11 @@ public class Pipeline {
       List<Stage.Info> infosUnmodifiable = Collections.unmodifiableList(infos);
       for (StageRuntime stage : stages) {
         infos.add(stage.getInfo());
-        stage.setContext(new StageContext(infosUnmodifiable, runner.isPreview(), runner.getMetrics(), stage));
+        stage.setContext(new StageContext(infosUnmodifiable, stage.getDefinition().getType(), runner.isPreview(),
+                                          runner.getMetrics(), stage));
       }
-      errorStage.setContext(new StageContext(infosUnmodifiable, runner.isPreview(), runner.getMetrics(), errorStage));
+      errorStage.setContext(new StageContext(infosUnmodifiable, errorStage.getDefinition().getType(), runner.isPreview(),
+                                             runner.getMetrics(), errorStage));
     }
 
     private Pipe[] createPipes(StageRuntime[] stages) throws PipelineRuntimeException {

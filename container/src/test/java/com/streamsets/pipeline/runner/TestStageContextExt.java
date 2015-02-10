@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.ContextExt;
 import com.streamsets.pipeline.api.impl.JsonRecordParser;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.record.RecordImpl;
 import org.junit.Assert;
@@ -28,7 +29,7 @@ public class TestStageContextExt {
 
   @Test
   public void testRecordJsonSerDe() throws Exception {
-    Stage.Context context = new StageContext("stage", false, Collections.EMPTY_LIST);
+    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, Collections.EMPTY_LIST);
     RecordImpl record = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mime");
     record.getHeader().setStagesPath("stagePath");
     record.getHeader().setTrackingId("trackingId");
@@ -48,7 +49,7 @@ public class TestStageContextExt {
 
   @Test
   public void testRecordsJsonSerDe() throws Exception {
-    Stage.Context context = new StageContext("stage", false, Collections.EMPTY_LIST);
+    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, Collections.EMPTY_LIST);
     RecordImpl record1 = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mime");
     record1.getHeader().setStagesPath("stagePath");
     record1.getHeader().setTrackingId("trackingId");

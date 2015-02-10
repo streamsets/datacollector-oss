@@ -15,6 +15,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.sdk.annotationsprocessor.StageHelper;
 import com.streamsets.pipeline.util.ContainerError;
@@ -157,11 +158,13 @@ public abstract class StageRunner<S extends Stage> {
   }
 
   @SuppressWarnings("unchecked")
-  StageRunner(Class<S> stageClass, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview) {
-    this((S) getStage(Utils.checkNotNull(stageClass, "stageClass")), configuration, outputLanes, isPreview);
+  StageRunner(Class<S> stageClass, StageType stageType, Map<String, Object> configuration, List<String> outputLanes,
+      boolean isPreview) {
+    this((S) getStage(Utils.checkNotNull(stageClass, "stageClass")), stageType, configuration, outputLanes, isPreview);
   }
 
-  StageRunner(S stage, Map < String, Object > configuration, List< String > outputLanes, boolean isPreview) {
+  StageRunner(S stage, StageType stageType, Map < String, Object > configuration, List< String > outputLanes,
+      boolean isPreview) {
     Utils.checkNotNull(stage, "stage");
     Utils.checkNotNull(configuration, "configuration");
     Utils.checkNotNull(outputLanes, "outputLanes");
@@ -175,7 +178,7 @@ public abstract class StageRunner<S extends Stage> {
     String version = getVersion(stage.getClass());
     String instanceName = name + "_1";
     info = ContextInfoCreator.createInfo(name, version, instanceName);
-    context = new StageContext(instanceName, isPreview, outputLanes);
+    context = new StageContext(instanceName, stageType ,isPreview, outputLanes);
     status = Status.CREATED;
   }
 

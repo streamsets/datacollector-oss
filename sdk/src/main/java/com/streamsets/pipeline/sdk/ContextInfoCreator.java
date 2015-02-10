@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.runner.StageContext;
 
 import java.util.Collections;
@@ -36,7 +37,7 @@ public class ContextInfoCreator {
   }
 
   private static StageContext createContext(String instanceName, boolean isPreview, List<String> outputLanes) {
-    return new StageContext(instanceName, isPreview, outputLanes);
+    return new StageContext(instanceName, StageType.SOURCE, isPreview, outputLanes);
   }
 
   public static Source.Context createSourceContext(String instanceName, boolean isPreview, List<String> outputLanes) {

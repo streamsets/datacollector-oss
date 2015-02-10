@@ -36,6 +36,8 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   private static final String ERROR_STAGE_ATTR = RESERVED_PREFIX + "errorStage";
   private static final String ERROR_TIMESTAMP_ATTR = RESERVED_PREFIX + "errorTimestamp";
   private static final String SOURCE_RECORD_ATTR = RESERVED_PREFIX + "sourceRecord";
+  private static final String ERROR_DATACOLLECTOR_ID_ATTR = RESERVED_PREFIX + "dataCollectorId";
+  private static final String ERROR_PIPELINE_NAME_ATTR = RESERVED_PREFIX + "pipelineName";
 
   private final Map<String, Object> map;
 
@@ -91,6 +93,16 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   @Override
   public String getRawMimeType() {
     return (String) map.get(RAW_MIME_TYPE_ATTR);
+  }
+
+  @Override
+  public String getErrorDataCollectorId() {
+    return (String) map.get(ERROR_DATACOLLECTOR_ID_ATTR);
+  }
+
+  @Override
+  public String getErrorPipelineName() {
+    return (String) map.get(ERROR_PIPELINE_NAME_ATTR);
   }
 
   @Override
@@ -165,6 +177,8 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
       @JsonProperty("previousTrackingId") String previousTrackingId,
       @JsonProperty("raw") byte[] raw,
       @JsonProperty("rawMimeType") String rawMimeType,
+      @JsonProperty("errorDataCollectorId") String errorDataCollectorId,
+      @JsonProperty("errorPipelineName") String errorPipelineName,
       @JsonProperty("errorStage") String errorStageInstance,
       @JsonProperty("errorCode") String errorCode,
       @JsonProperty("errorMessage") String errorMessage,
@@ -175,6 +189,9 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
     setSourceId(sourceId);
     setStagesPath(stagesPath);
     setTrackingId(trackingId);
+    if (errorDataCollectorId != null && errorPipelineName != null) {
+      setErrorContext(errorDataCollectorId, errorPipelineName);
+    }
     if (errorCode != null) {
       setError(errorStageInstance, errorCode, errorMessage, errorTimestamp);
     }
@@ -226,12 +243,19 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
 
   public void setError(String errorStage, ErrorMessage errorMessage) {
     Preconditions.checkNotNull(errorMessage, "errorCode cannot be null");
-    map.put(ERROR_STAGE_ATTR, errorStage);
-    map.put(ERROR_CODE_ATTR, errorMessage.getErrorCode());
-    map.put(ERROR_MESSAGE_ATTR, errorMessage);
-    map.put(ERROR_TIMESTAMP_ATTR, System.currentTimeMillis());
+    setError(errorStage, errorMessage.getErrorCode(), errorMessage.getNonLocalized(), System.currentTimeMillis());
   }
 
+  public void copyErrorFrom(Record record) {
+    Record.Header header = record.getHeader();
+    setError(header.getErrorStage(), header.getErrorCode(), header.getErrorMessage(), header.getErrorTimestamp());
+  }
+
+  public void setErrorContext(String datacollector, String pipelineName) {
+    map.put(ERROR_DATACOLLECTOR_ID_ATTR, datacollector);
+    map.put(ERROR_PIPELINE_NAME_ATTR, pipelineName);
+
+  }
   private void setError(String errorStage, String errorCode, String errorMessage, long errorTimestamp) {
     map.put(ERROR_STAGE_ATTR, errorStage);
     map.put(ERROR_CODE_ATTR, errorCode);

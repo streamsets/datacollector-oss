@@ -373,7 +373,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     stateTracker.register(name, rev);
 
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(snapshotStore, errorRecordStore,
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, errorRecordStore,
         maxBatchSize, maxErrorRecordsPerStage, maxPipelineErrors, deliveryGuarantee, name, rev, pipelineStore);
 
     ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, pipelineConfiguration);
