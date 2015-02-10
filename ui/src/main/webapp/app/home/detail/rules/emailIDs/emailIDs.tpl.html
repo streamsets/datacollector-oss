@@ -1,19 +1,46 @@
-<form class="form-horizontal"
+<form class="form-horizontal email-IDs-tab"
+      ng-controller="EmailIDsController"
       ng-class="{'form-group-sm': $storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT}"
       role="form" name="emailIDsForm">
 
   <div class="form-group">
     <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.emailIds">Email IDs</label>
     <div class="controls col-lg-7 col-md-8">
-      <ui-select multiple tagging tagging-label="false" reset-search-input="true"
-                 ng-model="pipelineRules.emailIds">
-        <ui-select-match>
-          {{$item}}
-        </ui-select-match>
-        <ui-select-choices repeat="emailId in pipelineRules.emailIds">
-          {{emailId}}
-        </ui-select-choices>
-      </ui-select>
+
+
+      <div class="row map-list-type"
+           ng-repeat="val in pipelineRules.emailIds track by $index">
+
+        <div class="col-md-7">
+          <input type="text" class="form-control input-sm"
+                 ng-required="true"
+                 name="{{'emailId' + $index}}"
+                 ng-model="pipelineRules.emailIds[$index]"/>
+        </div>
+
+        <div class="col-md-4 btn-group" role="group" aria-label="Default button group">
+          <button type="button" class="btn btn-default btn-sm"
+                  ng-click="removeFromList(pipelineRules.emailIds, $index)">
+            <i class="fa fa-minus pointer"></i>
+          </button>
+          <button type="button" class="btn btn-default btn-sm"
+                  ng-show="$last"
+                  ng-click="addToList(pipelineRules.emailIds)">
+            <i class="fa fa-plus pointer"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <div ng-if="detailPaneConfig.configuration[configIndex].value.length === 0" class="row">
+        <div class="col-md-2 btn-group" role="group">
+          <button type="button" class="btn btn-default btn-sm"
+                  ng-click="addToList(pipelineRules.emailIds)">
+            <i class="fa fa-plus pointer"></i>
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
