@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.runner.production;
 
-import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.DataAlertDefinition;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.config.ThresholdType;
@@ -74,16 +74,16 @@ public class TestRulesConfigLoader {
       pipelineStoreTask);
 
     //create a DataRuleDefinition for one of the stages
-    DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "p", 20, 10,
+    DataAlertDefinition dataAlertDefinition = new DataAlertDefinition("myID", "myLabel", "p", 20, 10,
       "${record:value(\"/\")==4}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, true);
-    DataRuleDefinition dataRuleDefinition2 = new DataRuleDefinition("myID2", "myLabel", "p", 20, 10,
+    DataAlertDefinition dataAlertDefinition2 = new DataAlertDefinition("myID2", "myLabel", "p", 20, 10,
       "${record:value(\"/\")==4}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, true);
-    List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
+    List<DataAlertDefinition> dataAlertDefinitions = new ArrayList<>();
 
-    dataRuleDefinitions.add(dataRuleDefinition);
-    dataRuleDefinitions.add(dataRuleDefinition2);
+    dataAlertDefinitions.add(dataAlertDefinition);
+    dataAlertDefinitions.add(dataAlertDefinition2);
     RuleDefinition prevRuleDef = new RuleDefinition(Collections.<MetricsAlertDefinition>emptyList(),
-      dataRuleDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
+      dataAlertDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
     //The latest rule definition has just one data rule definition.
     //The old one had 2
     //Also there is a change in the condition of the data rule definition

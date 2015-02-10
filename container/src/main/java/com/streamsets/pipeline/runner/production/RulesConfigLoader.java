@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.runner.production;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.DataAlertDefinition;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.runner.LaneResolver;
@@ -54,20 +54,20 @@ public class RulesConfigLoader {
     Set<String> rulesToRemove = new HashSet<>();
     Set<String> pipelineAlertsToRemove = new HashSet<>();
     if (previousRuleDefinition != null) {
-      rulesToRemove.addAll(detectRulesToRemove(previousRuleDefinition.getDataRuleDefinitions(),
-        newRuleDefinition.getDataRuleDefinitions()));
+      rulesToRemove.addAll(detectRulesToRemove(previousRuleDefinition.getDataAlertDefinitions(),
+        newRuleDefinition.getDataAlertDefinitions()));
       pipelineAlertsToRemove.addAll(detectAlertsToRemove(previousRuleDefinition.getMetricsAlertDefinitions(),
         newRuleDefinition.getMetricsAlertDefinitions()));
     }
-    Map<String, List<DataRuleDefinition>> laneToDataRule = new HashMap<>();
-    for (DataRuleDefinition dataRuleDefinition : newRuleDefinition.getDataRuleDefinitions()) {
-      String lane = LaneResolver.getPostFixedLaneForObserver(dataRuleDefinition.getLane());
-      List<DataRuleDefinition> dataRuleDefinitions = laneToDataRule.get(lane);
-      if (dataRuleDefinitions == null) {
-        dataRuleDefinitions = new ArrayList<>();
-        laneToDataRule.put(lane, dataRuleDefinitions);
+    Map<String, List<DataAlertDefinition>> laneToDataRule = new HashMap<>();
+    for (DataAlertDefinition dataAlertDefinition : newRuleDefinition.getDataAlertDefinitions()) {
+      String lane = LaneResolver.getPostFixedLaneForObserver(dataAlertDefinition.getLane());
+      List<DataAlertDefinition> dataAlertDefinitions = laneToDataRule.get(lane);
+      if (dataAlertDefinitions == null) {
+        dataAlertDefinitions = new ArrayList<>();
+        laneToDataRule.put(lane, dataAlertDefinitions);
       }
-      dataRuleDefinitions.add(dataRuleDefinition);
+      dataAlertDefinitions.add(dataAlertDefinition);
     }
 
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =
@@ -102,13 +102,13 @@ public class RulesConfigLoader {
     return alertsToRemove;
   }
 
-  private Set<String> detectRulesToRemove(List<DataRuleDefinition> oldMetricDefinitions,
-                                  List<DataRuleDefinition> newMetricDefinitions) {
+  private Set<String> detectRulesToRemove(List<DataAlertDefinition> oldMetricDefinitions,
+                                  List<DataAlertDefinition> newMetricDefinitions) {
     Set<String> rulesToRemove = new HashSet<>();
     if(newMetricDefinitions != null && oldMetricDefinitions != null) {
-      for(DataRuleDefinition oldMetricDefinition : oldMetricDefinitions) {
+      for(DataAlertDefinition oldMetricDefinition : oldMetricDefinitions) {
         boolean found = false;
-        for(DataRuleDefinition newMetricDefinition : newMetricDefinitions) {
+        for(DataAlertDefinition newMetricDefinition : newMetricDefinitions) {
           if(oldMetricDefinition.getId().equals(newMetricDefinition.getId())) {
             found = true;
             if(oldMetricDefinition.isEnabled() && !newMetricDefinition.isEnabled()) {
@@ -129,20 +129,20 @@ public class RulesConfigLoader {
     return rulesToRemove;
   }
 
-  private boolean hasRuleChanged(DataRuleDefinition oldDataRuleDefinition,
-                         DataRuleDefinition newDataRuleDefinition) {
+  private boolean hasRuleChanged(DataAlertDefinition oldDataAlertDefinition,
+                         DataAlertDefinition newDataAlertDefinition) {
     boolean noChange = true;
-    if(newDataRuleDefinition.isEnabled()) {
-      noChange &= areStringsSame(oldDataRuleDefinition.getLane(), newDataRuleDefinition.getLane());
-      noChange &= areStringsSame(oldDataRuleDefinition.getCondition(), newDataRuleDefinition.getCondition());
-      noChange &= areStringsSame(oldDataRuleDefinition.getThresholdValue(), newDataRuleDefinition.getThresholdValue());
-      noChange &= areStringsSame(String.valueOf(oldDataRuleDefinition.getMinVolume()),
-        String.valueOf(newDataRuleDefinition.getMinVolume()));
-      noChange &= areStringsSame(String.valueOf(oldDataRuleDefinition.getSamplingPercentage()),
-        String.valueOf(newDataRuleDefinition.getSamplingPercentage()));
-      noChange &= areStringsSame(oldDataRuleDefinition.getThresholdType().name(),
-        newDataRuleDefinition.getThresholdType().name());
-      noChange &= (oldDataRuleDefinition.isEnabled() && newDataRuleDefinition.isEnabled());
+    if(newDataAlertDefinition.isEnabled()) {
+      noChange &= areStringsSame(oldDataAlertDefinition.getLane(), newDataAlertDefinition.getLane());
+      noChange &= areStringsSame(oldDataAlertDefinition.getCondition(), newDataAlertDefinition.getCondition());
+      noChange &= areStringsSame(oldDataAlertDefinition.getThresholdValue(), newDataAlertDefinition.getThresholdValue());
+      noChange &= areStringsSame(String.valueOf(oldDataAlertDefinition.getMinVolume()),
+        String.valueOf(newDataAlertDefinition.getMinVolume()));
+      noChange &= areStringsSame(String.valueOf(oldDataAlertDefinition.getSamplingPercentage()),
+        String.valueOf(newDataAlertDefinition.getSamplingPercentage()));
+      noChange &= areStringsSame(oldDataAlertDefinition.getThresholdType().name(),
+        newDataAlertDefinition.getThresholdType().name());
+      noChange &= (oldDataAlertDefinition.isEnabled() && newDataAlertDefinition.isEnabled());
     }
     return !noChange;
   }

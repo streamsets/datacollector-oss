@@ -11,7 +11,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
 import com.streamsets.pipeline.util.ObserverException;
 import org.slf4j.Logger;
@@ -32,14 +31,14 @@ public class MetricRuleEvaluator {
   private final AlertManager alertManager;
 
   public MetricRuleEvaluator(MetricsAlertDefinition metricsAlertDefinition, MetricRegistry metricRegistry,
-                             ELEvaluator.Variables variables, ELEvaluator elEvaluator, EmailSender emailSender,
+                             ELEvaluator.Variables variables, ELEvaluator elEvaluator, AlertManager alertManager,
                              List<String> emailIds) {
     this.metricsAlertDefinition = metricsAlertDefinition;
     this.metrics = metricRegistry;
     this.variables = variables;
     this.elEvaluator = elEvaluator;
     this.emailIds = emailIds;
-    this.alertManager = new AlertManager(emailSender, metrics);
+    this.alertManager = alertManager;
   }
 
   public void checkForAlerts() {
@@ -219,8 +218,7 @@ public class MetricRuleEvaluator {
     String predicateWithValue = metricsAlertDefinition.getCondition().replace(VAL, String.valueOf(value));
     try {
       if (AlertsUtil.evaluateExpression(predicateWithValue, variables, elEvaluator)) {
-        alertManager.alert(value, metricsAlertDefinition.isSendEmail(), emailIds, metricsAlertDefinition.getId(),
-          metricsAlertDefinition.getAlertText());
+        alertManager.alert(value, emailIds, metricsAlertDefinition);
       }
     } catch (ObserverException e) {
       //A faulty condition should not take down rest of the alerts with it.

@@ -7,21 +7,12 @@ package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.streamsets.pipeline.api.impl.Utils;
 
-public class MetricsAlertDefinition {
+public class MetricsAlertDefinition extends AlertDefinition {
 
-  private final String id;
-  private final String alertText;
   private final String metricId;
   private final MetricType metricType;
   private final MetricElement metricElement;
-  private final String condition;
-  private final boolean enabled;
-  private boolean valid = true;
-
-  /*enable alert by email*/
-  private final boolean sendEmail;
 
   @JsonCreator
   public MetricsAlertDefinition(@JsonProperty("id") String id,
@@ -32,22 +23,11 @@ public class MetricsAlertDefinition {
                                 @JsonProperty("condition") String condition,
                                 @JsonProperty("sendMail") boolean sendEmail,
                                 @JsonProperty("enabled") boolean enabled) {
-    this.id = id;
-    this.alertText = alertText;
+    super(id, condition, alertText, sendEmail, enabled);
     this.metricId = metricId;
     this.metricType = metricType;
     this.metricElement = metricElement;
-    this.condition = condition;
-    this.enabled = enabled;
-    this.sendEmail = sendEmail;
-  }
 
-  public String getId() {
-    return id;
-  }
-
-  public String getAlertText() {
-    return alertText;
   }
 
   public String getMetricId() {
@@ -58,34 +38,8 @@ public class MetricsAlertDefinition {
     return metricElement;
   }
 
-  public String getCondition() {
-    return condition;
-  }
-
-  public boolean isEnabled() {
-    return enabled;
-  }
-
   public MetricType getMetricType() {
     return metricType;
   }
 
-  public boolean isSendEmail() {
-    return sendEmail;
-  }
-
-  public boolean isValid() {
-    return valid;
-  }
-
-  public void setValid(boolean valid) {
-    this.valid = valid;
-  }
-
-  @Override
-  public String toString() {
-    return Utils.format(
-      "MetricsAlertDefinition[id='{}' label='{}' condition='{}' enabled='{}', metricType='{}', metricElement='{}']",
-      getId(), getAlertText(), getCondition(), isEnabled(), getMetricType().name(), getMetricElement().name());
-  }
 }

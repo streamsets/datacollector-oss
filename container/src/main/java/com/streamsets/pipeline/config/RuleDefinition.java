@@ -15,7 +15,7 @@ import java.util.UUID;
 public class RuleDefinition {
 
   private final List<MetricsAlertDefinition> metricsAlertDefinitions;
-  private final List<DataRuleDefinition> dataRuleDefinitions;
+  private final List<DataAlertDefinition> dataAlertDefinitions;
   private final List<String> emailIds;
   private List<RuleIssue> ruleIssues;
   private UUID uuid = null;
@@ -23,11 +23,11 @@ public class RuleDefinition {
   @JsonCreator
   public RuleDefinition(
     @JsonProperty("metricsAlertDefinitions") List<MetricsAlertDefinition> metricsAlertDefinitions,
-    @JsonProperty("dataRuleDefinitions") List<DataRuleDefinition> dataRuleDefinitions,
+    @JsonProperty("dataRuleDefinitions") List<DataAlertDefinition> dataAlertDefinitions,
     @JsonProperty("emailIds") List<String> emailIds,
     @JsonProperty("uuid") UUID uuid) {
     this.metricsAlertDefinitions = metricsAlertDefinitions;
-    this.dataRuleDefinitions = dataRuleDefinitions;
+    this.dataAlertDefinitions = dataAlertDefinitions;
     this.emailIds = emailIds;
     this.uuid = uuid;
   }
@@ -36,8 +36,8 @@ public class RuleDefinition {
     return metricsAlertDefinitions;
   }
 
-  public List<DataRuleDefinition> getDataRuleDefinitions() {
-    return dataRuleDefinitions;
+  public List<DataAlertDefinition> getDataAlertDefinitions() {
+    return dataAlertDefinitions;
   }
 
   public List<String> getEmailIds() {

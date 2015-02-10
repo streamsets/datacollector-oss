@@ -8,9 +8,10 @@ package com.streamsets.pipeline.runner.production;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.AlertsUtil;
 import com.streamsets.pipeline.alerts.TestUtil;
-import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.DataAlertDefinition;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
@@ -29,12 +30,15 @@ import java.util.UUID;
 public class TestObserverRunner {
 
   private static final String LANE = "lane";
+  private static final String PIPELINE_NAME = "myPipeline";
+  private static final String REVISION = "1.0";
   private ObserverRunner observerRunner;
   private MetricRegistry metrics = new MetricRegistry();
 
   @Before
   public void setUp() {
-    observerRunner = new ObserverRunner(metrics, null, new Configuration());
+    observerRunner = new ObserverRunner(metrics, new AlertManager(PIPELINE_NAME, REVISION, null, metrics),
+      new Configuration());
   }
 
   @Test
@@ -86,13 +90,13 @@ public class TestObserverRunner {
   }
 
   private RulesConfigurationChangeRequest createRulesConfigurationChangeRequest(boolean alert, boolean meter) {
-    List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
-    dataRuleDefinitions.add(new DataRuleDefinition("myId", "myRule", LANE + "::s", 100, 5,
+    List<DataAlertDefinition> dataAlertDefinitions = new ArrayList<>();
+    dataAlertDefinitions.add(new DataAlertDefinition("myId", "myRule", LANE + "::s", 100, 5,
       "${record:value(\"/name\")==null}", alert, "alertText", ThresholdType.COUNT, "2", 5, meter, false, true));
-    RuleDefinition ruleDefinition = new RuleDefinition(null, dataRuleDefinitions, Collections.<String>emptyList(),
+    RuleDefinition ruleDefinition = new RuleDefinition(null, dataAlertDefinitions, Collections.<String>emptyList(),
       UUID.randomUUID());
-    Map<String, List<DataRuleDefinition>> laneToRuleDefinition = new HashMap<>();
-    laneToRuleDefinition.put(LANE + "::s", dataRuleDefinitions);
+    Map<String, List<DataAlertDefinition>> laneToRuleDefinition = new HashMap<>();
+    laneToRuleDefinition.put(LANE + "::s", dataAlertDefinitions);
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =
       new RulesConfigurationChangeRequest(ruleDefinition, Collections.<String>emptySet(),
         Collections.<String>emptySet(), laneToRuleDefinition);

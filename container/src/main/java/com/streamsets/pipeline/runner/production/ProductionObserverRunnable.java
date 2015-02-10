@@ -6,8 +6,8 @@
 package com.streamsets.pipeline.runner.production;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.ShutdownObject;
 import com.streamsets.pipeline.util.Configuration;
@@ -31,12 +31,13 @@ public class ProductionObserverRunnable implements Runnable {
 
   public ProductionObserverRunnable(ProductionPipelineManagerTask pipelineManager,
                                     BlockingQueue<Object> requestQueue, ShutdownObject shutdownObject,
-                                    EmailSender emailSender, Configuration configuration) {
+                                    AlertManager alertManager, Configuration configuration) {
     this.pipelineManager = pipelineManager;
     this.requestQueue = requestQueue;
     this.metrics = this.pipelineManager.getMetrics();
     this.shutdownObject = shutdownObject;
-    this.observerRunner = new ObserverRunner(metrics, emailSender, configuration);
+
+    this.observerRunner = new ObserverRunner(metrics, alertManager, configuration);
 
   }
 

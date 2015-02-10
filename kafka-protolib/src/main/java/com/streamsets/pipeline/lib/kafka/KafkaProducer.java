@@ -35,27 +35,19 @@ public class KafkaProducer {
   private static final String RANDOM_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.kafka.RandomPartitioner";
   private static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.kafka.RoundRobinPartitioner";
   private static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.kafka.ExpressionPartitioner";
-  private static final String COLON = ":";
-
+  private static final String METADATA_READER_CLIENT = "metadataReaderClient";
   private static final int METADATA_READER_TIME_OUT = 10000;
   private static final int BUFFER_SIZE = 64 * 1024;
-  private static final String METADATA_READER_CLIENT = "metadataReaderClient";
-  private static final int MAX_RECONNECT_ATTEMPTS = 4;
-
 
   /*Topic to readData from*/
   private final String topic;
   /*Host on which the seed broker is running*/
   private final String metadataBrokerList;
-
   private final Map<String, String> kafkaProducerConfigs;
-
   private final ProducerPayloadType producerPayloadType;
   private final PartitionStrategy partitionStrategy;
-
   private List<KeyedMessage<String, byte[]>> messageList;
   private Producer<String, byte[]> producer;
-
   private int numberOfPartitions;
 
   public KafkaProducer(String topic, String metadataBrokerList, ProducerPayloadType producerPayloadType,
@@ -103,64 +95,19 @@ public class KafkaProducer {
   }
 
   public void write() throws StageException {
-    int attemptNumber = 0;
-    while(true) {
-      try {
-        attemptNumber++;
-        producer.send(messageList);
-        //break on successful send
-        break;
-      } catch (Exception e) {
-        reconnect(attemptNumber, e);
-      }
+    try {
+      producer.send(messageList);
+      messageList.clear();
+    } catch (Exception e) {
+      //Producer internally refreshes metadata and retries if there is any recoverable exception.
+      //If retry fails, a FailedToSendMessageException is thrown.
+      LOG.error(KafkaStageLibError.KFK_0350.getMessage(), e.getMessage(), e);
+      throw new StageException(KafkaStageLibError.KFK_0350, e.getMessage(), e);
     }
-    messageList.clear();
   }
 
   public int getNumberOfPartitions() {
     return numberOfPartitions;
-  }
-
-  private void reconnect(int attemptNumber, Exception cause) throws StageException {
-    //reconnect and resend
-    LOG.warn("Attempting reconnection to kafka broker.");
-    if (attemptNumber == MAX_RECONNECT_ATTEMPTS) {
-      LOG.error("Reached max reconnect attempts {}. ", MAX_RECONNECT_ATTEMPTS);
-      throw new StageException(KafkaStageLibError.KFK_0350, cause.getMessage(), cause);
-    }
-    try {
-      waitBeforeReconnect(attemptNumber);
-    } catch (InterruptedException e) {
-      LOG.error(KafkaStageLibError.KFK_0350.getMessage(), e.getMessage(), e);
-      throw new StageException(KafkaStageLibError.KFK_0350, e.getMessage(), e);
-    }
-    try {
-      destroy();
-      init();
-    } catch (Exception e) {
-      //error connecting
-      //no-op. Caller of this function will try again
-    }
-  }
-
-  private void waitBeforeReconnect(int attemptNumber) throws InterruptedException {
-    long timeToWait = 60000;
-    switch (attemptNumber) {
-      case 1:
-        //1 minute
-        timeToWait = 60000;
-        break;
-      case 2:
-        //5 minutes
-        timeToWait = 300000;
-        break;
-      case 3:
-        //10 minutes
-        timeToWait = 600000;
-        break;
-    }
-    LOG.debug("Reconnection attempt {}, waiting {} milli seconds before reconnecting.", attemptNumber, timeToWait);
-    Thread.sleep(timeToWait);
   }
 
   private void configureSerializer(Properties props, ProducerPayloadType producerPayloadType) {

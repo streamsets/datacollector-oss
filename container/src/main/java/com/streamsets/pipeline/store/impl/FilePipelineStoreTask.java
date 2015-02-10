@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.BadRecordsOptions;
 import com.streamsets.pipeline.config.ConfigConfiguration;
-import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.DataAlertDefinition;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -302,7 +302,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         }
         if(ruleDefinition == null) {
           ruleDefinition = new RuleDefinition(new ArrayList<MetricsAlertDefinition>(),
-            new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID());
+            new ArrayList<DataAlertDefinition>(), new ArrayList<String>(), UUID.randomUUID());
         }
         pipelineToRuleDefinitionMap.put(getPipelineKey(name, tagOrRev), ruleDefinition);
       }

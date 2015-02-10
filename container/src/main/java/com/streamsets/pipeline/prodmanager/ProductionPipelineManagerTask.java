@@ -10,6 +10,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.AlertsUtil;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -314,8 +315,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     configLoaderRunnable = new RulesConfigLoaderRunnable(shutdownObject, rulesConfigLoader, observer);
     executor.submit(configLoaderRunnable);
 
-    observerRunnable = new ProductionObserverRunnable(this, productionObserveRequests, shutdownObject,
-      new EmailSender(configuration), configuration);
+    AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics());
+
+    observerRunnable = new ProductionObserverRunnable(this, productionObserveRequests, shutdownObject, alertManager,
+      configuration);
     executor.submit(observerRunnable);
 
     pipelineRunnable = new ProductionPipelineRunnable(this, prodPipeline, name, rev, shutdownObject);

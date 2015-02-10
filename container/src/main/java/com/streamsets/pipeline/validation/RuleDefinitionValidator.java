@@ -8,7 +8,7 @@ package com.streamsets.pipeline.validation;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.DataAlertDefinition;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.config.ThresholdType;
@@ -55,60 +55,60 @@ public class RuleDefinitionValidator {
     Preconditions.checkNotNull(ruleDefinition);
 
     List<RuleIssue> ruleIssues = new ArrayList<>();
-    for(DataRuleDefinition dataRuleDefinition : ruleDefinition.getDataRuleDefinitions()) {
+    for(DataAlertDefinition dataAlertDefinition : ruleDefinition.getDataAlertDefinitions()) {
       //reset valid flag before validating
-      dataRuleDefinition.setValid(true);
-      String ruleId = dataRuleDefinition.getId();
-      if(dataRuleDefinition.getLabel() == null || dataRuleDefinition.getLabel().isEmpty()) {
+      dataAlertDefinition.setValid(true);
+      String ruleId = dataAlertDefinition.getId();
+      if(dataAlertDefinition.getLabel() == null || dataAlertDefinition.getLabel().isEmpty()) {
         RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0040, LABEL);
         r.setAdditionalInfo(PROPERTY, LABEL);
         ruleIssues.add(r);
-        dataRuleDefinition.setValid(false);
+        dataAlertDefinition.setValid(false);
       }
-      if(dataRuleDefinition.getCondition() == null || dataRuleDefinition.getCondition().isEmpty()) {
+      if(dataAlertDefinition.getCondition() == null || dataAlertDefinition.getCondition().isEmpty()) {
         RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0040, CONDITION);
         r.setAdditionalInfo(PROPERTY, CONDITION);
         ruleIssues.add(r);
-        dataRuleDefinition.setValid(false);
+        dataAlertDefinition.setValid(false);
       } else {
         //validate the condition el expression
-        RuleIssue issue = validateDataRuleExpressions(dataRuleDefinition.getCondition(), ruleId);
+        RuleIssue issue = validateDataRuleExpressions(dataAlertDefinition.getCondition(), ruleId);
         if(issue != null) {
           issue.setAdditionalInfo(PROPERTY, CONDITION);
           ruleIssues.add(issue);
-          dataRuleDefinition.setValid(false);
+          dataAlertDefinition.setValid(false);
         }
       }
-      if(dataRuleDefinition.getSamplingPercentage() < MIN_PERCENTAGE ||
-        dataRuleDefinition.getSamplingPercentage() > MAX_PERCENTAGE) {
+      if(dataAlertDefinition.getSamplingPercentage() < MIN_PERCENTAGE ||
+        dataAlertDefinition.getSamplingPercentage() > MAX_PERCENTAGE) {
         RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0041);
         r.setAdditionalInfo(PROPERTY, SAMPLING_PERCENTAGE);
         ruleIssues.add(r);
-        dataRuleDefinition.setValid(false);
+        dataAlertDefinition.setValid(false);
       }
-      if(dataRuleDefinition.isSendEmail() &&
+      if(dataAlertDefinition.isSendEmail() &&
         (ruleDefinition.getEmailIds() == null || ruleDefinition.getEmailIds().isEmpty())) {
         RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0042);
         r.setAdditionalInfo(PROPERTY, EMAIL_IDS);
         ruleIssues.add(r);
-        dataRuleDefinition.setValid(false);
+        dataAlertDefinition.setValid(false);
       }
       double threshold;
       try {
-        threshold = Double.parseDouble(dataRuleDefinition.getThresholdValue());
-        if(dataRuleDefinition.getThresholdType() == ThresholdType.PERCENTAGE) {
+        threshold = Double.parseDouble(dataAlertDefinition.getThresholdValue());
+        if(dataAlertDefinition.getThresholdType() == ThresholdType.PERCENTAGE) {
           if(threshold < MIN_PERCENTAGE || threshold > MAX_PERCENTAGE) {
             RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0044);
             r.setAdditionalInfo(PROPERTY, THRESHOLD_VALUE);
             ruleIssues.add(r);
-            dataRuleDefinition.setValid(false);
+            dataAlertDefinition.setValid(false);
           }
         }
       } catch (NumberFormatException e) {
         RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0043);
         r.setAdditionalInfo(PROPERTY, THRESHOLD_VALUE);
         ruleIssues.add(r);
-        dataRuleDefinition.setValid(false);
+        dataAlertDefinition.setValid(false);
       }
     }
 

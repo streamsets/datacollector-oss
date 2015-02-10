@@ -27,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 public class TestMetricRuleEvaluator {
 
   private static final String LANE = "lane";
+  private static final String PIPELINE_NAME = "myPipeline";
+  private static final String REVISION = "1.0";
 
   private static MetricRegistry metrics;
   private static ELEvaluator elEvaluator;
@@ -54,7 +56,7 @@ public class TestMetricRuleEvaluator {
       "testTimerMatch.timer", MetricType.TIMER,
       MetricElement.TIMER_COUNT, "${value()>2}", false, true);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsAlertDefinition, metrics, variables,
-      elEvaluator, null, Collections.<String>emptyList());
+      elEvaluator, new AlertManager(PIPELINE_NAME, REVISION, null, metrics), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -76,7 +78,7 @@ public class TestMetricRuleEvaluator {
       "testTimerMatchDisabled", "testTimerMatchDisabled.timer", MetricType.TIMER, MetricElement.TIMER_COUNT,
       "${value()>2}", false, false);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsAlertDefinition, metrics, variables,
-      elEvaluator, null, Collections.<String>emptyList());
+      elEvaluator, new AlertManager(PIPELINE_NAME, REVISION, null, metrics), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -97,7 +99,7 @@ public class TestMetricRuleEvaluator {
       "testTimerNoMatch.timer", MetricType.TIMER,
       MetricElement.TIMER_COUNT, "${value()>4}", false, true);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsAlertDefinition, metrics, variables,
-      elEvaluator, null, Collections.<String>emptyList());
+      elEvaluator, new AlertManager(PIPELINE_NAME, REVISION, null, metrics), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge

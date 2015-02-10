@@ -8,16 +8,16 @@ package com.streamsets.pipeline.runner.production;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.EvictingQueue;
+import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.DataRuleEvaluator;
 import com.streamsets.pipeline.alerts.MetricRuleEvaluator;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.DataAlertDefinition;
 import com.streamsets.pipeline.config.MetricsAlertDefinition;
 import com.streamsets.pipeline.el.ELBasicSupport;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
-import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.util.Configuration;
@@ -41,10 +41,11 @@ public class ObserverRunner {
   private final ELEvaluator elEvaluator;
   private final ELEvaluator.Variables variables;
   private final Map<String, Map<String, Object>> alertResponse;
-  private final EmailSender emailSender;
+  private final AlertManager alertManager;
   private final Configuration configuration;
 
-  public ObserverRunner(MetricRegistry metrics, EmailSender emailSender, Configuration configuration) {
+  public ObserverRunner(MetricRegistry metrics, AlertManager alertManager,
+                        Configuration configuration) {
     this.metrics = metrics;
     this.alertResponse = new HashMap<>();
     this.ruleToSampledRecordsMap = new HashMap<>();
@@ -54,7 +55,7 @@ public class ObserverRunner {
     ELBasicSupport.registerBasicFunctions(elEvaluator);
     ELRecordSupport.registerRecordFunctions(elEvaluator);
     ELStringSupport.registerStringFunctions(elEvaluator);
-    this.emailSender = emailSender;
+    this.alertManager = alertManager;
   }
 
   public void handleObserverRequest(ProductionObserveRequest productionObserveRequest) {
@@ -63,12 +64,12 @@ public class ObserverRunner {
     for(Map.Entry<String, List<Record>> entry : snapshot.entrySet()) {
       String lane = entry.getKey();
       List<Record> allRecords = entry.getValue();
-      List<DataRuleDefinition> dataRuleDefinitions = rulesConfigurationChangeRequest.getLaneToDataRuleMap().get(lane);
-      if(dataRuleDefinitions != null) {
-        List<Record> sampleRecords = getSampleRecords(dataRuleDefinitions, allRecords);
-        for (DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
-          DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator, emailSender,
-            rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds(), dataRuleDefinition, configuration);
+      List<DataAlertDefinition> dataAlertDefinitions = rulesConfigurationChangeRequest.getLaneToDataRuleMap().get(lane);
+      if(dataAlertDefinitions != null) {
+        List<Record> sampleRecords = getSampleRecords(dataAlertDefinitions, allRecords);
+        for (DataAlertDefinition dataAlertDefinition : dataAlertDefinitions) {
+          DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator, alertManager,
+            rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds(), dataAlertDefinition, configuration);
           dataRuleEvaluator.evaluateRule(allRecords, sampleRecords, lane, ruleToSampledRecordsMap);
         }
       }
@@ -80,7 +81,7 @@ public class ObserverRunner {
     if(metricsAlertDefinitions != null) {
       for (MetricsAlertDefinition metricsAlertDefinition : metricsAlertDefinitions) {
         MetricRuleEvaluator metricAlertsHelper = new MetricRuleEvaluator(metricsAlertDefinition, metrics,
-          variables, elEvaluator, emailSender, rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
+          variables, elEvaluator, alertManager, rulesConfigurationChangeRequest.getRuleDefinition().getEmailIds());
         metricAlertsHelper.checkForAlerts();
       }
     }
@@ -100,11 +101,11 @@ public class ObserverRunner {
     }
   }
 
-  private List<Record> getSampleRecords(List<DataRuleDefinition> dataRuleDefinitions, List<Record> allRecords) {
+  private List<Record> getSampleRecords(List<DataAlertDefinition> dataAlertDefinitions, List<Record> allRecords) {
     double percentage = 0;
-    for(DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
-      if(dataRuleDefinition.getSamplingPercentage() > percentage) {
-        percentage = dataRuleDefinition.getSamplingPercentage();
+    for(DataAlertDefinition dataAlertDefinition : dataAlertDefinitions) {
+      if(dataAlertDefinition.getSamplingPercentage() > percentage) {
+        percentage = dataAlertDefinition.getSamplingPercentage();
       }
     }
     Collections.shuffle(allRecords);

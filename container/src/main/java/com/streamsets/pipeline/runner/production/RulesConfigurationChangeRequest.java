@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.runner.production;
 
-import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.DataAlertDefinition;
 import com.streamsets.pipeline.config.RuleDefinition;
 
 import java.util.List;
@@ -15,13 +15,13 @@ import java.util.Set;
 public class RulesConfigurationChangeRequest {
 
   private final RuleDefinition ruleDefinition;
-  private final Map<String, List<DataRuleDefinition>> laneToDataRuleMap;
+  private final Map<String, List<DataAlertDefinition>> laneToDataRuleMap;
   private final Set<String> metricAlertsToRemove;
   private final Set<String> rulesToRemove;
 
   public RulesConfigurationChangeRequest(RuleDefinition ruleDefinition, Set<String> rulesToRemove,
                                          Set<String> metricAlertsToRemove,
-                                         Map<String, List<DataRuleDefinition>> laneToDataRuleMap) {
+                                         Map<String, List<DataAlertDefinition>> laneToDataRuleMap) {
     this.ruleDefinition = ruleDefinition;
     this.rulesToRemove = rulesToRemove;
     this.metricAlertsToRemove = metricAlertsToRemove;
@@ -40,7 +40,7 @@ public class RulesConfigurationChangeRequest {
     return metricAlertsToRemove;
   }
 
-  public Map<String, List<DataRuleDefinition>> getLaneToDataRuleMap() {
+  public Map<String, List<DataAlertDefinition>> getLaneToDataRuleMap() {
     return laneToDataRuleMap;
   }
 }
