@@ -25,7 +25,6 @@ import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.runner.production.ProductionObserver;
 import com.streamsets.pipeline.runner.production.ProductionObserverRunnable;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;

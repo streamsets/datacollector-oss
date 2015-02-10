@@ -57,7 +57,7 @@ public class TestErrorRecordSpoolDirSource {
         .addConfiguration("retentionTimeMins", 10)
         .addConfiguration("poolingTimeoutSecs", 0)
         .addConfiguration("errorArchiveDir", null)
-        .addConfiguration("fileDataType", FileDataType.ERROR_RECORDS)
+        .addConfiguration("fileDataType", FileDataType.SDC_RECORDS)
         .addOutputLane("lane")
         .build();
     runner.runInit();

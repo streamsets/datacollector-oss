@@ -340,8 +340,8 @@ public class SpoolDirSource extends BaseSource {
         break;
       case XML_DATA:
         dataProducer = new XmlDataProducer(getContext(), xmlRecordElement, maxXmlObjectLen);
-      case ERROR_RECORDS:
-        filePattern = "errorrecords-????.json";
+      case SDC_RECORDS:
+        filePattern = "records-??????.json";
         initialFileToProcess = "";
         maxSpoolFiles = 10000;
         dataProducer = new RecordJsonDataProducer(getContext());

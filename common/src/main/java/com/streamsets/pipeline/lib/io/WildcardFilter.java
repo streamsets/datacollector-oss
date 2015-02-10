@@ -14,8 +14,16 @@ import java.nio.file.PathMatcher;
 public class WildcardFilter implements DirectoryStream.Filter<Path> {
   private PathMatcher fileMatcher;
 
-  public WildcardFilter(String globPattern) {
-    fileMatcher = FileSystems.getDefault().getPathMatcher("glob:" + globPattern);
+  private WildcardFilter(String pattern) {
+    fileMatcher = FileSystems.getDefault().getPathMatcher(pattern);
+  }
+
+  public static DirectoryStream.Filter<Path> createGlob(String glob) {
+    return new WildcardFilter("glob:" + glob);
+  }
+
+  public static DirectoryStream.Filter<Path> createRegex(String regex) {
+    return new WildcardFilter("regex:" + regex);
   }
 
   @Override

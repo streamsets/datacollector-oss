@@ -12,7 +12,7 @@ public enum FileDataType implements Label {
   JSON_DATA("JSON Data"),
   DELIMITED_DATA("Delimited Data"),
   XML_DATA("XML Data"),
-  ERROR_RECORDS("Error Records"),
+  SDC_RECORDS("DataCollector Records"),
 
   ;
 

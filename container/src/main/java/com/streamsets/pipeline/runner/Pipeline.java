@@ -49,6 +49,7 @@ public class Pipeline {
 
   public List<StageIssue> validateConfigs() {
     List<StageIssue> configIssues = new ArrayList<>();
+    configIssues.addAll(badRecordsHandler.validate());
     for (Pipe pipe : pipes) {
       configIssues.addAll(pipe.validateConfigs());
     }

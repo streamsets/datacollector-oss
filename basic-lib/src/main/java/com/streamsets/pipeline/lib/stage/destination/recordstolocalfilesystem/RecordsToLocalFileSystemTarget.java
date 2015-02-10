@@ -55,6 +55,34 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       return "Files";
     }
   }
+
+  public enum Error implements ErrorCode {
+    RECORD_LOCAL_FS_001("Directory '{}' does not exist"),
+    RECORD_LOCAL_FS_002("Path '{}' is not a directory"),
+    RECORD_LOCAL_FS_003("Rotation interval '{}' must be greater than zero, it is '{}'"),
+    RECORD_LOCAL_FS_004("Rotation interval '{}' is not a valid expression"),
+    RECORD_LOCAL_FS_005("Could not write record to file '{}', error: {}"),
+    RECORD_LOCAL_FS_006("Could not rotate file '{}', error: {}"),
+    RECORD_LOCAL_FS_007("Could not rotate file '{}', error: {}"),
+    ;
+
+    private final String msg;
+    Error(String msg) {
+      this.msg = msg;
+    }
+
+    @Override
+    public String getCode() {
+      return name();
+    }
+
+    @Override
+    public String getMessage() {
+      return msg;
+    }
+
+  }
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
@@ -69,7 +97,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.EL_NUMBER,
-      defaultValue = "${1 * HOUR}",
+      defaultValue = "${1 * HOURS}",
       label = "Rotation Interval",
       description = "Bad records file rotation interval",
       displayPosition = 20,
@@ -112,7 +140,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     super.init();
     jsonWriter = new ObjectMapper().writer();
     activeFile = new File(dir, "_tmp_records.json").getAbsoluteFile();
-    fileFilter = new WildcardFilter("records-??????.json");
+    fileFilter = WildcardFilter.createRegex("records-[0-9][0-9][0-9][0-9][0-9][0-9].json");
     rotate(true);
   }
 
@@ -136,7 +164,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     return System.currentTimeMillis() - lastRotation > rotationMillis;
   }
 
-  private File findFinalName() throws IOException {
+  private File findFinalName() throws StageException, IOException {
     String latest = null;
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir.toPath(), fileFilter)) {
       for (Path file : stream) {
@@ -152,9 +180,13 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     if (latest == null) {
       latest = "records-000000.json";
     } else {
-      String countStr = latest.substring("records-".length() + 1, "records-".length() + 1 + 6);
-      int count = Integer.parseInt(countStr) + 1;
-      latest = String.format("records-%06d.json", count);
+      String countStr = latest.substring("records-".length(), "records-".length() + 6);
+      try {
+        int count = Integer.parseInt(countStr) + 1;
+        latest = String.format("records-%06d.json", count);
+      } catch (NumberFormatException ex) {
+        throw new StageException(Error.RECORD_LOCAL_FS_007, latest, ex.getMessage(), ex);
+      }
     }
     return new File(dir, latest).getAbsoluteFile();
   }
@@ -195,32 +227,6 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       LOG.warn("Could not do rotation on destroy: {}", ex.getMessage(), ex);
     }
     super.destroy();
-  }
-
-  public enum Error implements ErrorCode {
-    RECORD_LOCAL_FS_001("Directory '{}' does not exist"),
-    RECORD_LOCAL_FS_002("Path '{}' is not a directory"),
-    RECORD_LOCAL_FS_003("Rotation interval '{}' must be greater than zero, it is '{}'"),
-    RECORD_LOCAL_FS_004("Rotation interval '{}' is not a valid expression"),
-    RECORD_LOCAL_FS_005("Could not write record to file '{}', error: {}"),
-    RECORD_LOCAL_FS_006("Could not rotate file '{}', error: {}"),
-    ;
-
-    private final String msg;
-    Error(String msg) {
-      this.msg = msg;
-    }
-
-    @Override
-    public String getCode() {
-      return name();
-    }
-
-    @Override
-    public String getMessage() {
-      return msg;
-    }
-
   }
 
 }
