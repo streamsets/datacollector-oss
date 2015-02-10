@@ -12,9 +12,7 @@
         <context/>
         <steps id="steps_g53_l3p_kq">
             <step>
-                <cmd>Download the <ph>Data Collector</ph> TAR file from the following
-                        location:<draft-comment author="Loretta">Add link to website? How else are
-                        they getting it?</draft-comment></cmd>
+                <cmd> Download StreamSets SDC tarball and extract it to desired location.</cmd>
             </step>
             <step>
                 <cmd>At a command line, navigate to the location of the TAR file. </cmd>
