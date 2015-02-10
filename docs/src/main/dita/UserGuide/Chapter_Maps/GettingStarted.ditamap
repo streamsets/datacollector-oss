@@ -5,6 +5,7 @@
  <topicref href="../Getting_Started/GettingStarted_Title.dita">
   <topicref href="../Getting_Started/What_isa_DataCollector.dita" chunk="to-content">
    <topicref href="../Getting_Started/HowShouldIUsetheDataCollector.dita"/>
+   <topicref href="../Getting_Started/HowDoesItWork.dita"/>
   </topicref>
   <topicref href="../Getting_Started/Requirements.dita"/>
   <topicref href="../Getting_Started/Installing_the_DC.dita"/>
