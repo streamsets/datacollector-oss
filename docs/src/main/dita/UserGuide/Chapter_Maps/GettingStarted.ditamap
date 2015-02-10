@@ -9,6 +9,8 @@
   </topicref>
   <topicref href="../Getting_Started/Requirements.dita"/>
   <topicref href="../Getting_Started/Installing_the_DC.dita"/>
+  <topicref href="../Getting_Started/Installing_the_DC-Service.dita"/>
+  <topicref href="../Getting_Started/CreatingAdditionalUsers.dita"/>
   <topicref href="../Getting_Started/LoggingIn_CreatingPipeline.dita"/>
   <topicref href="../Getting_Started/DCollector_Window.dita"/>
  </topicref>

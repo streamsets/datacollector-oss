@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_pnf_344_1r">
+    <title>Installing and Launching the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        (Service)</title>
+    <shortdesc>Install the <ph id="pName-long">Data Collector</ph> on the machine that you want to
+        run a pipeline. After installation, you can launch the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        />.</shortdesc>
+    <taskbody>
+        <context><p>Installing the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> as a service requires sudo privileges on the root directory.</p>This procedure
+            walks through setting the default directories, but you can alternatively use the
+            libexec/sdcd-env.sh script.</context>
+        <steps id="steps_wnx_444_1r">
+            <step>
+                <cmd> Download StreamSets SDC tarball and extract it to desired location.</cmd>
+            </step>
+            <step>
+                <cmd>Copy initd/_sdcinitd_prototype to the /etc/init.d/ directory as sdc.</cmd>
+            </step>
+            <step>
+                <cmd>Edit the sdc file and set the SDC_DIST environment variable to the location
+                    where you extracted the SDC tarball.</cmd>
+            </step>
+            <step>
+                <cmd>Use the following command to make the sdc file executable:</cmd>
+                <info>
+                    <codeblock> sudo chmod 644 /etc/init.d/sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Create a system user and group to run the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />. </cmd>
+                <info>The default user and group are sdc/sdc.</info>
+            </step>
+            <step>
+                <cmd>Create the /etc/sdc directory and copy all files from etc into this
+                    directory.</cmd>
+            </step>
+            <step>
+                <cmd>Create the SDC log directory at /var/log/sdc and change the owner to
+                    sdc:sdc.</cmd>
+            </step>
+            <step>
+                <cmd>Create the SDC data directory at /var/run/sdc and change the owner to
+                    sdc:sdc.</cmd>
+            </step>
+            <step>
+                <cmd>To launch the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />, use the following command: </cmd>
+                <info>
+                    <codeblock>/etc/init.d/sdc start</codeblock>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>
