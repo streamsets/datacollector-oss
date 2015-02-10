@@ -19,6 +19,7 @@ import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
@@ -151,6 +152,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
     List<ConfigConfiguration> configuration = new ArrayList<>(2);
     configuration.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
+    configuration.add(new ConfigConfiguration("badRecordsHandling", ""));
+
     PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, configuration, null,
       null, null);
     pipeline.setDescription(description);

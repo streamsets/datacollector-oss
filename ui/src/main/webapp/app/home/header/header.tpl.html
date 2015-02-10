@@ -61,15 +61,15 @@
         <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 
           <li role="presentation" class="dropdown-header"
-              translate="home.header.pipelineIssues"
-              ng-repeat-start="issue in pipelineConfig.issues.pipelineIssues">
+              ng-if="pipelineConfig.issues.pipelineIssues.length"
+              translate="home.header.pipelineIssues">
             Pipeline Issues
           </li>
-          <li role="presentation">
+          <li role="presentation" ng-repeat="issue in pipelineConfig.issues.pipelineIssues">
             <a role="menuitem" tabindex="-1" href="#"
                ng-click="onIssueClick(issue)">{{issue.message}}</a>
           </li>
-          <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+          <li role="presentation" class="divider" ng-if="pipelineConfig.issues.pipelineIssues.length"></li>
 
           <li role="presentation" class="dropdown-header"
               ng-repeat-start="(instanceName, issues) in pipelineConfig.issues.stageIssues"

@@ -1,255 +1,247 @@
-  <form class="form-horizontal" role="form"
-        ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
-        name="{{detailPaneConfig.instanceName || 'pipeline'}}">
-    <div class="form-group"
-         ng-switch="configDefinition.type"
-         ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: groupNameToLabelMap.name} | orderBy: 'displayPosition'"
-         ng-if="(!configDefinition.dependsOn || verifyDependsOn(detailPaneConfig, configDefinition)) && configDefinition.group === groupNameToLabelMap.name"
-         ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)"
-         show-errors>
+<div ng-switch="configDefinition.type">
+  <div ng-switch-when="BOOLEAN">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'booleanConfigurationTemplate'"></ng-include>
+  </div>
 
-      <div ng-switch-when="BOOLEAN">
-        <ng-include src="'labelConfigurationTemplate'"></ng-include>
-        <ng-include src="'booleanConfigurationTemplate'"></ng-include>
-      </div>
+  <div ng-switch-when="INTEGER">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'integerConfigurationTemplate'"></ng-include>
+  </div>
 
-      <div ng-switch-when="INTEGER">
-        <ng-include src="'labelConfigurationTemplate'"></ng-include>
-        <ng-include src="'integerConfigurationTemplate'"></ng-include>
-      </div>
+  <div ng-switch-when="STRING">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'stringConfigurationTemplate'"></ng-include>
+  </div>
 
-      <div ng-switch-when="STRING">
-        <ng-include src="'labelConfigurationTemplate'"></ng-include>
-        <ng-include src="'stringConfigurationTemplate'"></ng-include>
-      </div>
+  <div ng-switch-when="CHARACTER">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'characterConfigurationTemplate'"></ng-include>
+  </div>
 
-      <div ng-switch-when="CHARACTER">
-        <ng-include src="'labelConfigurationTemplate'"></ng-include>
-        <ng-include src="'characterConfigurationTemplate'"></ng-include>
-      </div>
+  <div ng-switch-when="EL_STRING" class="expression-language">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'elStringConfigurationTemplate'"></ng-include>
+  </div>
 
-      <div ng-switch-when="EL_STRING" class="expression-language">
-        <ng-include src="'labelConfigurationTemplate'"></ng-include>
-        <ng-include src="'elStringConfigurationTemplate'"></ng-include>
-      </div>
+  <div ng-switch-when="EL_NUMBER" class="expression-language">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'elStringConfigurationTemplate'"></ng-include>
+  </div>
 
-      <div ng-switch-when="EL_NUMBER" class="expression-language">
-        <ng-include src="'labelConfigurationTemplate'"></ng-include>
-        <ng-include src="'elStringConfigurationTemplate'"></ng-include>
-      </div>
+  <div ng-switch-when="EL_DATE" class="expression-language">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'elStringConfigurationTemplate'"></ng-include>
+  </div>
 
-      <div ng-switch-when="EL_DATE" class="expression-language">
-        <ng-include src="'labelConfigurationTemplate'"></ng-include>
-        <ng-include src="'elStringConfigurationTemplate'"></ng-include>
-      </div>
+  <div ng-switch-when="EL_BOOLEAN" class="expression-language">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'elStringConfigurationTemplate'"></ng-include>
+  </div>
 
-      <div ng-switch-when="EL_BOOLEAN" class="expression-language">
-        <ng-include src="'labelConfigurationTemplate'"></ng-include>
-        <ng-include src="'elStringConfigurationTemplate'"></ng-include>
-      </div>
+  <div ng-switch-when="EL_OBJECT" class="expression-language">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'elStringConfigurationTemplate'"></ng-include>
+  </div>
 
-      <div ng-switch-when="EL_OBJECT" class="expression-language">
-        <ng-include src="'labelConfigurationTemplate'"></ng-include>
-        <ng-include src="'elStringConfigurationTemplate'"></ng-include>
-      </div>
+  <div ng-switch-when="LIST">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'listConfigurationTemplate'"></ng-include>
+  </div>
 
-      <div ng-switch-when="LIST">
-        <ng-include src="'labelConfigurationTemplate'"></ng-include>
-        <ng-include src="'listConfigurationTemplate'"></ng-include>
-      </div>
+  <div ng-switch-when="MAP">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'mapConfigurationTemplate'"></ng-include>
+  </div>
 
-      <div ng-switch-when="MAP">
-        <ng-include src="'labelConfigurationTemplate'"></ng-include>
-        <ng-include src="'mapConfigurationTemplate'"></ng-include>
-      </div>
+  <div ng-switch-when="MODEL"
+       ng-switch="configDefinition.model.modelType">
 
-      <div ng-switch-when="MODEL"
-           ng-switch="configDefinition.model.modelType">
-
-        <div ng-switch-when="VALUE_CHOOSER">
-          <ng-include src="'labelConfigurationTemplate'"></ng-include>
-          <ng-include src="'valueChooserConfigurationTemplate'"></ng-include>
-        </div>
-
-
-        <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUED"
-             ng-click="onFieldSelectorFocus(detailPaneConfig)"
-             class="clearfix">
-          <ng-include src="'labelConfigurationTemplate'"></ng-include>
-          <ng-include src="'fieldSelectorMultiValuedConfigurationTemplate'"></ng-include>
-        </div>
-
-        <div ng-switch-when="FIELD_SELECTOR_SINGLE_VALUED"
-             ng-click="onFieldSelectorFocus(detailPaneConfig)"
-             class="clearfix">
-          <ng-include src="'labelConfigurationTemplate'"></ng-include>
-          <ng-include src="'fieldSelectorSingleValuedConfigurationTemplate'"></ng-include>
-        </div>
-
-        <div ng-switch-when="LANE_PREDICATE_MAPPING">
-          <ng-include src="'labelConfigurationTemplate'"></ng-include>
-          <ng-include src="'lanePredicateMappingConfigurationTemplate'"></ng-include>
-        </div>
-
-
-        <div ng-switch-when="COMPLEX_FIELD" class="clearfix">
-          <ng-include src="'labelConfigurationTemplate'"></ng-include>
-
-          <div class="controls col-md-7">
-            <table class="table">
-              <thead>
-              <tr>
-                <th class="col-md-5 custom-field-property"
-                    ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions">
-                  <span>{{customeFieldConfigDefintion.label}}</span>
-                  <i class="fa fa-info-circle help-icon"
-                     ng-if="customeFieldConfigDefintion.description"
-                     tooltip-placement="right"
-                     tooltip-append-to-body="false"
-                     tooltip="{{customeFieldConfigDefintion.description}}"
-                     tooltip-trigger="mouseenter"></i>
-                </th>
-                <th class="custom-field-buttons"></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="customFieldValue in customeFieldValueList = detailPaneConfig.configuration[configIndex].value track by $index">
-
-                <td class="col-md-5"
-                    ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions">
-
-                  <div ng-if="(!customFieldConfigDefinition.dependsOn || verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))"
-                       ng-switch="customFieldConfigDefinition.type">
-                    <div ng-switch-when="INTEGER">
-                      <input type="number" class="form-control"
-                             name="{{customFieldConfigDefinition.name + $index}}"
-                             placeholder="{{customFieldConfigDefinition.label}}"
-                             ng-readonly="isPipelineRunning"
-                             ng-model="customFieldValue[customFieldConfigDefinition.name]"
-                             ng-required="customFieldConfigDefinition.required">
-                    </div>
-
-                    <div ng-switch-when="STRING">
-                      <ng-include src="'stringComplexConfigurationTemplate'"></ng-include>
-                    </div>
-
-                    <div ng-switch-when="EL_STRING" class="expression-language">
-                      <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
-                    </div>
-
-                    <div ng-switch-when="EL_NUMBER" class="expression-language">
-                      <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
-                    </div>
-
-                    <div ng-switch-when="EL_DATE" class="expression-language">
-                      <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
-                    </div>
-
-                    <div ng-switch-when="EL_BOOLEAN" class="expression-language">
-                      <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
-                    </div>
-
-                    <div ng-switch-when="EL_OBJECT" class="expression-language">
-                      <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
-                    </div>
-
-                    <div ng-switch-when="MODEL"
-                         ng-switch="customFieldConfigDefinition.model.modelType">
-
-                      <div ng-switch-when="VALUE_CHOOSER"
-                           ng-switch="customFieldConfigDefinition.model.chooserMode">
-
-                        <select class="form-control"
-                                ng-switch-when="PROVIDED"
-                                name="{{customFieldConfigDefinition.name + $index}}"
-                                ng-disabled="isPipelineRunning"
-                                ng-model="customFieldValue[customFieldConfigDefinition.name]">
-                          <option ng-repeat="listValue in customFieldConfigDefinition.model.values"
-                                  value="{{listValue}}"
-                                  ng-selected="listValue === customFieldValue[customFieldConfigDefinition.name]">
-                            {{customFieldConfigDefinition.model.labels[$index]}}
-                          </option>
-                        </select>
-
-                        <div ng-switch-when="SUGGESTED" class="input-group">
-                          <input type="text" class="form-control" ng-model="customFieldValue[customFieldConfigDefinition.name]">
-                          <div class="input-group-btn">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                            <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
-                              <li ng-repeat="listValue in customFieldConfigDefinition.model.values">
-                                <a href="#" ng-click="customFieldValue[customFieldConfigDefinition.name] = listValue">{{listValue}}</a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-
-                      </div>
-
-
-                      <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUED"
-                           ng-click="onFieldSelectorFocus(detailPaneConfig)"
-                           class="clearfix">
-                        <ui-select multiple tagging tagging-label="false" reset-search-input="true"
-                                   ng-disabled="isPipelineRunning"
-                                   ng-model="customFieldValue[customFieldConfigDefinition.name]">
-                          <ui-select-match
-                            placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
-                            {{$item}}
-                          </ui-select-match>
-                          <ui-select-choices repeat="fieldPath in fieldPaths.concat(customFieldValue[customFieldConfigDefinition.name]) | filter:$select.search">
-                            {{fieldPath}}
-                          </ui-select-choices>
-                        </ui-select>
-                      </div>
-
-                      <div ng-switch-when="FIELD_SELECTOR_SINGLE_VALUED"
-                           ng-click="onFieldSelectorFocus(detailPaneConfig)"
-                           class="clearfix input-group">
-                        <input type="text" class="form-control" ng-model="customFieldValue[customFieldConfigDefinition.name]">
-                        <div class="input-group-btn">
-                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                          <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li ng-repeat="fieldPath in fieldPaths.concat(customFieldValue[customFieldConfigDefinition.name])">
-                              <a href="#" ng-click="customFieldValue[customFieldConfigDefinition.name] = fieldPath">{{fieldPath}}</a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-
-                </td>
-
-                <td>
-                  <div class="btn-group" role="group" aria-label="Default button group" ng-hide="isPipelineRunning">
-                    <button type="button" class="btn btn-default btn-sm"
-                            ng-click="removeFromCustomField(detailPaneConfig, customeFieldValueList, $index)">
-                      <i class="fa fa-minus pointer"></i>
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm"
-                            ng-show="$last"
-                            ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, configDefinition.model.configDefinitions)">
-                      <i class="fa fa-plus pointer"></i>
-                    </button>
-                  </div>
-                </td>
-
-              </tr>
-              </tbody>
-            </table>
-
-            <button type="button" class="btn btn-default btn-sm pull-right"
-                    ng-if="customeFieldValueList.length === 0"
-                    ng-hide="isPipelineRunning"
-                    ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, configDefinition.model.configDefinitions)">
-              <i class="fa fa-plus pointer"></i>
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
+    <div ng-switch-when="VALUE_CHOOSER">
+      <ng-include src="'labelConfigurationTemplate'"></ng-include>
+      <ng-include src="'valueChooserConfigurationTemplate'"></ng-include>
     </div>
-  </form>
+
+
+    <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUED"
+         ng-click="onFieldSelectorFocus(detailPaneConfig)"
+         class="clearfix">
+      <ng-include src="'labelConfigurationTemplate'"></ng-include>
+      <ng-include src="'fieldSelectorMultiValuedConfigurationTemplate'"></ng-include>
+    </div>
+
+    <div ng-switch-when="FIELD_SELECTOR_SINGLE_VALUED"
+         ng-click="onFieldSelectorFocus(detailPaneConfig)"
+         class="clearfix">
+      <ng-include src="'labelConfigurationTemplate'"></ng-include>
+      <ng-include src="'fieldSelectorSingleValuedConfigurationTemplate'"></ng-include>
+    </div>
+
+    <div ng-switch-when="LANE_PREDICATE_MAPPING">
+      <ng-include src="'labelConfigurationTemplate'"></ng-include>
+      <ng-include src="'lanePredicateMappingConfigurationTemplate'"></ng-include>
+    </div>
+
+
+    <div ng-switch-when="COMPLEX_FIELD" class="clearfix">
+      <ng-include src="'labelConfigurationTemplate'"></ng-include>
+
+      <div class="controls col-md-7">
+        <table class="table">
+          <thead>
+          <tr>
+            <th class="col-md-5 custom-field-property"
+                ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions">
+              <span>{{customeFieldConfigDefintion.label}}</span>
+              <i class="fa fa-info-circle help-icon"
+                 ng-if="customeFieldConfigDefintion.description"
+                 tooltip-placement="right"
+                 tooltip-append-to-body="false"
+                 tooltip="{{customeFieldConfigDefintion.description}}"
+                 tooltip-trigger="mouseenter"></i>
+            </th>
+            <th class="custom-field-buttons"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="customFieldValue in customeFieldValueList = detailPaneConfig.configuration[configIndex].value track by $index">
+
+            <td class="col-md-5"
+                ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions">
+
+              <div ng-if="(!customFieldConfigDefinition.dependsOn || verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))"
+                   ng-switch="customFieldConfigDefinition.type">
+                <div ng-switch-when="INTEGER">
+                  <input type="number" class="form-control"
+                         name="{{customFieldConfigDefinition.name + $index}}"
+                         placeholder="{{customFieldConfigDefinition.label}}"
+                         ng-readonly="isPipelineRunning"
+                         ng-model="customFieldValue[customFieldConfigDefinition.name]"
+                         ng-required="customFieldConfigDefinition.required">
+                </div>
+
+                <div ng-switch-when="STRING">
+                  <ng-include src="'stringComplexConfigurationTemplate'"></ng-include>
+                </div>
+
+                <div ng-switch-when="EL_STRING" class="expression-language">
+                  <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+                </div>
+
+                <div ng-switch-when="EL_NUMBER" class="expression-language">
+                  <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+                </div>
+
+                <div ng-switch-when="EL_DATE" class="expression-language">
+                  <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+                </div>
+
+                <div ng-switch-when="EL_BOOLEAN" class="expression-language">
+                  <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+                </div>
+
+                <div ng-switch-when="EL_OBJECT" class="expression-language">
+                  <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+                </div>
+
+                <div ng-switch-when="MODEL"
+                     ng-switch="customFieldConfigDefinition.model.modelType">
+
+                  <div ng-switch-when="VALUE_CHOOSER"
+                       ng-switch="customFieldConfigDefinition.model.chooserMode">
+
+                    <select class="form-control"
+                            ng-switch-when="PROVIDED"
+                            name="{{customFieldConfigDefinition.name + $index}}"
+                            ng-disabled="isPipelineRunning"
+                            ng-model="customFieldValue[customFieldConfigDefinition.name]">
+                      <option ng-repeat="listValue in customFieldConfigDefinition.model.values"
+                              value="{{listValue}}"
+                              ng-selected="listValue === customFieldValue[customFieldConfigDefinition.name]">
+                        {{customFieldConfigDefinition.model.labels[$index]}}
+                      </option>
+                    </select>
+
+                    <div ng-switch-when="SUGGESTED" class="input-group">
+                      <input type="text" class="form-control" ng-model="customFieldValue[customFieldConfigDefinition.name]">
+                      <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                        <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                          <li ng-repeat="listValue in customFieldConfigDefinition.model.values">
+                            <a href="#" ng-click="customFieldValue[customFieldConfigDefinition.name] = listValue">{{listValue}}</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                  </div>
+
+
+                  <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUED"
+                       ng-click="onFieldSelectorFocus(detailPaneConfig)"
+                       class="clearfix">
+                    <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+                               ng-disabled="isPipelineRunning"
+                               ng-model="customFieldValue[customFieldConfigDefinition.name]">
+                      <ui-select-match
+                        placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
+                        {{$item}}
+                      </ui-select-match>
+                      <ui-select-choices repeat="fieldPath in fieldPaths.concat(customFieldValue[customFieldConfigDefinition.name]) | filter:$select.search">
+                        {{fieldPath}}
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
+
+                  <div ng-switch-when="FIELD_SELECTOR_SINGLE_VALUED"
+                       ng-click="onFieldSelectorFocus(detailPaneConfig)"
+                       class="clearfix input-group">
+                    <input type="text" class="form-control" ng-model="customFieldValue[customFieldConfigDefinition.name]">
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                      <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li ng-repeat="fieldPath in fieldPaths.concat(customFieldValue[customFieldConfigDefinition.name])">
+                          <a href="#" ng-click="customFieldValue[customFieldConfigDefinition.name] = fieldPath">{{fieldPath}}</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </td>
+
+            <td>
+              <div class="btn-group" role="group" aria-label="Default button group" ng-hide="isPipelineRunning">
+                <button type="button" class="btn btn-default btn-sm"
+                        ng-click="removeFromCustomField(detailPaneConfig, customeFieldValueList, $index)">
+                  <i class="fa fa-minus pointer"></i>
+                </button>
+                <button type="button" class="btn btn-default btn-sm"
+                        ng-show="$last"
+                        ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, configDefinition.model.configDefinitions)">
+                  <i class="fa fa-plus pointer"></i>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+          </tbody>
+        </table>
+
+        <button type="button" class="btn btn-default btn-sm pull-right"
+                ng-if="customeFieldValueList.length === 0"
+                ng-hide="isPipelineRunning"
+                ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, configDefinition.model.configDefinitions)">
+          <i class="fa fa-plus pointer"></i>
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+</div>

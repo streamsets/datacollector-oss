@@ -545,6 +545,7 @@ angular
             res.configuration = config.configuration;
             res.uiInfo = config.uiInfo;
             res.stages = config.stages;
+            res.errorStage = config.errorStage;
 
             saveUpdates(config);
           }
@@ -579,6 +580,7 @@ angular
       $scope.activeConfigInfo = $rootScope.$storage.activeConfigInfo = pipelineConfig.info;
       $scope.pipelineRules = pipelineRules;
 
+      //Initialize the pipeline config
       if(!$scope.pipelineConfig.uiInfo) {
         $scope.pipelineConfig.uiInfo = {
           previewConfig : {
@@ -659,6 +661,21 @@ angular
         }
       }
 
+      if ($scope.selectedType === pipelineConstant.PIPELINE) {
+        var errorStage = $scope.pipelineConfig.errorStage;
+        if(errorStage && errorStage.configuration && errorStage.configuration.length) {
+          $scope.errorStageConfig = errorStage;
+          $scope.errorStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === errorStage.library &&
+              stageLibrary.name === errorStage.stageName &&
+              stageLibrary.version === errorStage.stageVersion;
+          });
+        } else {
+          $scope.errorStageConfig = undefined;
+          $scope.errorStageConfigDefn = undefined;
+        }
+      }
+
       $timeout(function() {
         $scope.$broadcast('updateGraph', {
           nodes: $scope.pipelineConfig.stages,
@@ -682,9 +699,13 @@ angular
      */
     var updateDetailPane = function(options) {
       var selectedObject = options.selectedObject,
-        type = options.type;
+        type = options.type,
+        errorStage = $scope.pipelineConfig.errorStage;
 
       $scope.selectedType = type;
+      $scope.errorStageConfig = undefined;
+      $scope.errorStageConfigDefn = undefined;
+
 
       if(type === pipelineConstant.STAGE_INSTANCE) {
         $scope.stageSelected = true;
@@ -699,6 +720,17 @@ angular
         $scope.stageSelected = false;
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
         $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
+
+
+        if(errorStage && errorStage.configuration && errorStage.configuration.length) {
+          $scope.errorStageConfig = errorStage;
+          $scope.errorStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === errorStage.library &&
+            stageLibrary.name === errorStage.stageName &&
+            stageLibrary.version === errorStage.stageVersion;
+          });
+        }
+
       } else if(type === pipelineConstant.LINK) {
         $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
       }
@@ -793,9 +825,9 @@ angular
             stageInstance.stageName === stage.name &&
             stageInstance.stageVersion === stage.version;
         }),
-        configDefinition = _.find(stageDefinition.configDefinitions, function (configDefinition) {
+        configDefinition = stageDefinition ? _.find(stageDefinition.configDefinitions, function (configDefinition) {
           return configDefinition.name === configName;
-        });
+        }) : undefined;
 
       return configDefinition ? configDefinition.label : configName;
     };
@@ -954,6 +986,34 @@ angular
       }
       if (!angular.equals(newValue, oldValue)) {
         dirty = true;
+
+
+        //badRecordsHandling check
+        var badRecordHandlingConfig = _.find(newValue.configuration, function(c) {
+              return c.name === 'badRecordsHandling';
+            }),
+            badRecordHandlingConfigArr = (badRecordHandlingConfig && badRecordHandlingConfig.value) ?
+              (badRecordHandlingConfig.value).split('::') : undefined,
+            errorStageInst = newValue.errorStage;
+
+        if((badRecordHandlingConfigArr && badRecordHandlingConfigArr.length === 3) &&
+            (!errorStageInst || errorStageInst.library !== badRecordHandlingConfigArr[0] ||
+            errorStageInst.stageName !== badRecordHandlingConfigArr[1] ||
+            errorStageInst.stageVersion !== badRecordHandlingConfigArr[2])) {
+
+          var badRecordsStage = _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === badRecordHandlingConfigArr[0] &&
+              stageLibrary.name === badRecordHandlingConfigArr[1] &&
+              stageLibrary.version === badRecordHandlingConfigArr[2];
+          });
+
+          newValue.errorStage = pipelineService.getNewStageInstance({
+            stage: badRecordsStage,
+            pipelineConfig: $scope.pipelineConfig
+          });
+        }
+
+
         if (timeout) {
           $timeout.cancel(timeout);
         }
