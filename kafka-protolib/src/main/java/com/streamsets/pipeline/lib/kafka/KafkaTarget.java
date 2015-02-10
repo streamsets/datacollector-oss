@@ -361,6 +361,10 @@ public class KafkaTarget extends BaseTarget {
 
   private byte[] serializeRecord(Record r) throws StageException {
     LOG.debug("Serializing record {}", r.getHeader().getSourceId());
-    return recordToString.toString(r).getBytes();
+    String recordString = recordToString.toString(r);
+    if(recordString != null) {
+      return recordString.getBytes();
+    }
+    return null;
   }
 }

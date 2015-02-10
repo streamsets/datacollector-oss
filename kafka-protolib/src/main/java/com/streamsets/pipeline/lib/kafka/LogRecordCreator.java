@@ -28,7 +28,14 @@ public class LogRecordCreator implements RecordCreator {
   public List<Record> createRecords(MessageAndOffset message, int currentRecordCount) throws StageException {
     Record record = context.createRecord(topic + DOT + message.getPartition() + DOT + System.currentTimeMillis()
       + DOT + currentRecordCount++);
-    record.set(Field.create(new String(message.getPayload())));
+    byte[] payload = message.getPayload();
+    Field field;
+    if(payload == null) {
+      field = Field.create(Field.Type.STRING, payload);
+    } else {
+      field = Field.create(new String(payload));
+    }
+    record.set(field);
     return ImmutableList.of(record);
   }
 }
