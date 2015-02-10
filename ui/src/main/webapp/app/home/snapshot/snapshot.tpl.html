@@ -4,7 +4,7 @@
 
   <div class="panel-heading clearfix">
 
-    <div class="btn-group pull-left detail-name-dropdown">
+    <!--div class="btn-group pull-left detail-name-dropdown">
       <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
         <span>{{'home.header.snapshot' | translate}}:</span>
         <span class="caret"></span>
@@ -20,10 +20,13 @@
              ng-click="changeToPreviewSingleStage()">Single Stage</a>
         </li>
       </ul>
-    </div>
+    </div-->
 
+    <h3 class="panel-title pull-left">
+      <span>{{'home.header.snapshot' | translate}}: </span>
+      <span ng-if="!previewMultipleStages">{{detailPaneConfig.uiInfo.label}}</span>
+    </h3>
 
-    <h3 class="panel-title pull-left" ng-if="!previewMultipleStages"> {{detailPaneConfig.uiInfo.label}} </h3>
 
     <div class="pull-right size-toolbar">
       <span class="fa fa-question-circle fa-14x pointer"
@@ -38,14 +41,16 @@
             ng-click="onMaximizeDetailPane()"></span>
     </div>
 
-    <div class="pull-right preview-toolbar">
+    <div class="pull-right preview-toolbar btn-group" ng-if="!showLoading">
 
-      <div ng-if="previousStageInstances.length > 1" class="dropdown pull-left">
-        <button type="button" class="btn btn-primary btn-sm"
+      <div ng-if="!previewMultipleStages && previousStageInstances.length > 1" class="dropdown pull-left btn-group">
+        <a role="button" class="btn btn-primary btn-sm"
+                tooltip-placement="bottom" tooltip="{{'global.form.previousStage' | translate}}"
+                tooltip-popup-delay="500"
+                tooltip-append-to-body="true"
                 data-toggle="dropdown">
           <span class="glyphicon glyphicon-arrow-left"></span>
-          <span translate="global.form.previousStage">Previous Stage</span>
-        </button>
+        </a>
         <ul class="dropdown-menu" role="menu" class="pull-left">
           <li ng-repeat="previousStageInstance in previousStageInstances">
             <a href="#" ng-click="previousStagePreview(previousStageInstance)">
@@ -55,21 +60,25 @@
         </ul>
       </div>
 
-      <div ng-if="previousStageInstances.length <= 1" class="pull-left">
-        <button type="button" class="btn btn-primary btn-sm"
-                ng-click="previousStagePreview(previousStageInstances[0])"
-                ng-disabled="previousStageInstances.length === 0">
-          <span class="glyphicon glyphicon-arrow-left"></span>
-          <span translate="global.form.previousStage">Previous Stage</span>
-        </button>
-      </div>
+      <a role="button" class="btn btn-primary btn-sm"
+         ng-if="!previewMultipleStages && previousStageInstances.length <= 1"
+         tooltip-placement="bottom" tooltip="{{'global.form.previousStage' | translate}}"
+              tooltip-popup-delay="500"
+              tooltip-append-to-body="true"
+              ng-click="previousStagePreview(previousStageInstances[0])"
+              ng-disabled="previousStageInstances.length === 0">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+      </a>
 
-      <div ng-if="nextStageInstances.length > 1" class="dropdown pull-right">
-        <button type="button" class="btn btn-primary btn-sm"
-                data-toggle="dropdown">
-          <span translate="global.form.nextStage">Next Stage</span>
+
+      <div ng-if="!previewMultipleStages && nextStageInstances.length > 1" class="dropdown pull-left btn-group">
+        <a role="button" class="btn btn-primary btn-sm"
+           tooltip-placement="bottom" tooltip="{{'global.form.nextStage' | translate}}"
+           tooltip-popup-delay="500"
+           tooltip-append-to-body="true"
+           data-toggle="dropdown">
           <span class="glyphicon glyphicon-arrow-right"></span>
-        </button>
+        </a>
         <ul class="dropdown-menu" role="menu">
           <li ng-repeat="nextStageInstance in nextStageInstances">
             <a href="#" ng-click="nextStagePreview(nextStageInstance, stagePreviewData.output)">
@@ -79,15 +88,30 @@
         </ul>
       </div>
 
-      <div ng-if="nextStageInstances.length <= 1" class="pull-right">
-        <button type="button" class="btn btn-primary btn-sm"
-                ng-disabled="nextStageInstances.length === 0"
-                ng-click="nextStagePreview(nextStageInstances[0], stagePreviewData.output)">
-          <span translate="global.form.nextStage">Next Stage</span>
-          <span class="glyphicon glyphicon-arrow-right"></span>
-        </button>
-      </div>
+      <a role="button" class="btn btn-primary btn-sm"
+         ng-if="!previewMultipleStages && nextStageInstances.length <= 1"
+         tooltip-placement="bottom" tooltip="{{'global.form.nextStage' | translate}}"
+         tooltip-popup-delay="500"
+         tooltip-append-to-body="true"
+         ng-disabled="nextStageInstances.length === 0"
+         ng-click="nextStagePreview(nextStageInstances[0], stagePreviewData.output)">
+        <span class="glyphicon glyphicon-arrow-right"></span>
+      </a>
 
+
+      <a type="button" class="btn btn-primary btn-sm"
+         tooltip-placement="bottom" tooltip="{{'home.header.refreshSnapshot' | translate}}"
+         tooltip-popup-delay="500"
+         tooltip-append-to-body="true"
+         ng-click="refreshSnapshot(true)">
+        <span class="fa fa-refresh"></span>
+      </a>
+
+    </div>
+
+    <div class="pull-right btn-group toggle-toolbar" ng-show="!showLoading">
+      <label class="btn btn-default btn-sm" ng-model="previewMultipleStages" btn-radio="false">Single</label>
+      <label class="btn btn-default btn-sm" ng-model="previewMultipleStages" btn-radio="true">Multiple</label>
     </div>
 
 

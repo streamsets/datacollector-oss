@@ -131,6 +131,7 @@
       "preview": "Preview",
       "processors": "Processors",
       "refreshPreview": "Refresh Preview",
+      "refreshSnapshot": "Refresh Snapshot",
       "selectorProcessors": "Selectors",
       "settings": "Settings",
       "snapshot": "Snapshot",

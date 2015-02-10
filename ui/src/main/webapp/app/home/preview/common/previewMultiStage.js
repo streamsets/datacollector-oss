@@ -22,7 +22,7 @@ angular
         $timeout(function() {
           $scope.toStageList = previewService.getStageChildren($scope.fromStage, $scope.pipelineConfig);
           if($scope.toStageList && $scope.toStageList.length) {
-            $scope.toStage = $scope.toStageList[0];
+            $scope.toStage = $scope.toStageList[$scope.toStageList.length - 1];
           }
           updatePreviewData($scope.fromStage, $scope.toStage);
         });
@@ -86,7 +86,7 @@ angular
       $scope.toStageList = previewService.getStageChildren($scope.fromStage, $scope.pipelineConfig);
 
       if($scope.toStageList && $scope.toStageList.length) {
-        $scope.toStage = $scope.toStageList[0];
+        $scope.toStage = $scope.toStageList[$scope.toStageList.length - 1];
       }
 
       updatePreviewData($scope.fromStage, $scope.toStage);

@@ -21,26 +21,6 @@ angular
       },
 
       /**
-       * Change to Preview Multiple Stages.
-       */
-      changeToPreviewMultipleStages : function() {
-        $scope.previewMultipleStages = true;
-        $scope.moveGraphToCenter();
-      },
-
-      /**
-       * Change to Preview Single Stage at a time.
-       */
-      changeToPreviewSingleStage: function() {
-        $scope.previewMultipleStages = false;
-        $scope.clearStartAndEndStageInstance();
-        $scope.changeStageSelection({
-          selectedObject: $scope.pipelineConfig.stages[0],
-          type: pipelineConstant.STAGE_INSTANCE
-        });
-      },
-
-      /**
        * Preview Data for previous stage instance.
        *
        * @param stageInstance
@@ -66,6 +46,13 @@ angular
             type: pipelineConstant.STAGE_INSTANCE
           });
         }
+      },
+
+      /**
+       * Refresh Snapshot
+       */
+      refreshSnapshot: function() {
+        snapshotPipeline();
       }
     });
 
@@ -178,6 +165,20 @@ angular
             input: {},
             output: {}
           };
+        }
+      }
+    });
+
+    $scope.$watch('previewMultipleStages', function(newValue) {
+      if($scope.previewData.snapshot) {
+        if(newValue === true) {
+          $scope.moveGraphToCenter();
+        } else {
+          $scope.clearStartAndEndStageInstance();
+          $scope.changeStageSelection({
+            selectedObject: $scope.pipelineConfig.stages[0],
+            type: pipelineConstant.STAGE_INSTANCE
+          });
         }
       }
     });

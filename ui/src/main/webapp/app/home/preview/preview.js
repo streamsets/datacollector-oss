@@ -23,26 +23,6 @@ angular
       dirtyLanes: [],
 
       /**
-       * Change to Preview Multiple Stages.
-       */
-      changeToPreviewMultipleStages : function() {
-        $scope.previewMultipleStages = true;
-        $scope.moveGraphToCenter();
-      },
-
-      /**
-       * Change to Preview Single Stage at a time.
-       */
-      changeToPreviewSingleStage: function() {
-        $scope.previewMultipleStages = false;
-        $scope.clearStartAndEndStageInstance();
-        $scope.changeStageSelection({
-          selectedObject: $scope.pipelineConfig.stages[0],
-          type: pipelineConstant.STAGE_INSTANCE
-        });
-      },
-
-      /**
        * Preview Data for previous stage instance.
        *
        * @param stageInstance
@@ -134,10 +114,12 @@ angular
 
             $scope.previewData = previewData;
 
-            $scope.changeStageSelection({
-              selectedObject: stageInstance,
-              type: pipelineConstant.STAGE_INSTANCE
-            });
+            if(!$scope.previewMultipleStages) {
+              $scope.changeStageSelection({
+                selectedObject: stageInstance,
+                type: pipelineConstant.STAGE_INSTANCE
+              });
+            }
 
             $scope.stepExecuted = true;
             $scope.showLoading = false;
@@ -159,11 +141,13 @@ angular
         $scope.stepExecuted = false;
         $scope.dirtyLanes = [];
 
-        var firstStageInstance = $scope.pipelineConfig.stages[0];
-        $scope.changeStageSelection({
-          selectedObject: firstStageInstance,
-          type: pipelineConstant.STAGE_INSTANCE
-        });
+        if(!$scope.previewMultipleStages) {
+          var firstStageInstance = $scope.pipelineConfig.stages[0];
+          $scope.changeStageSelection({
+            selectedObject: firstStageInstance,
+            type: pipelineConstant.STAGE_INSTANCE
+          });
+        }
 
       },
 
@@ -273,6 +257,21 @@ angular
             input: {},
             output: {}
           };
+        }
+      }
+    });
+
+
+    $scope.$watch('previewMultipleStages', function(newValue) {
+      if($scope.previewData.batchesOutput) {
+        if(newValue === true) {
+          $scope.moveGraphToCenter();
+        } else {
+          $scope.clearStartAndEndStageInstance();
+          $scope.changeStageSelection({
+            selectedObject: $scope.pipelineConfig.stages[0],
+            type: pipelineConstant.STAGE_INSTANCE
+          });
         }
       }
     });
