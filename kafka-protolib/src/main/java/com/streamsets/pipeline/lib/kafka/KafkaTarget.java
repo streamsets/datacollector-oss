@@ -7,7 +7,6 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ChooserMode;
-import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
@@ -156,15 +155,15 @@ public class KafkaTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "TEXT",
-      label = "Field to Name Mapping",
-      description = "Field to columnName mapping configuration",
+      label = "Field Paths",
+      description = "Fields which must be written to the destination",
       displayPosition = 110,
       group = "CSV",
       dependsOn = "payloadType",
       triggeredByValue = "CSV"
   )
-  @ComplexField
-  public List<FieldPathToNameMappingConfig> fieldPathToNameMappingConfigList;
+  @FieldSelector
+  public List<String> fieldPaths;
 
   /********  For TEXT Content  ***********/
 
@@ -173,7 +172,7 @@ public class KafkaTarget extends BaseTarget {
     type = ConfigDef.Type.MODEL,
     defaultValue = "/",
     label = "Field Path",
-    description = "The field which must be written to the target",
+    description = "The field which must be written to the destination",
     displayPosition = 120,
     group = "TEXT",
     dependsOn = "payloadType",
@@ -181,29 +180,6 @@ public class KafkaTarget extends BaseTarget {
   )
   @FieldSelector(singleValued = true)
   public String fieldPath;
-
-  public static class FieldPathToNameMappingConfig {
-
-    @ConfigDef(
-        required = true,
-        type = ConfigDef.Type.MODEL,
-        label = "Field Path",
-        description = "The fields which must be written to the target",
-        displayPosition = 10
-    )
-    @FieldSelector(singleValued = true
-    )
-    public String fieldPath;
-
-    @ConfigDef(
-        required = true,
-        type = ConfigDef.Type.STRING,
-        label = "CSV column columnName",
-        description = "The columnName which must be used for the fields in the target",
-        displayPosition = 20
-    )
-    public String columnName;
-  }
 
   private KafkaProducer kafkaProducer;
   private long recordCounter = 0;
@@ -231,9 +207,9 @@ public class KafkaTarget extends BaseTarget {
 
   private Map<String, String> getFieldPathToNameMapping() {
     Map<String, String> fieldPathToNameMapping = new LinkedHashMap<>();
-    if(fieldPathToNameMappingConfigList != null && !fieldPathToNameMappingConfigList.isEmpty()) {
-      for (FieldPathToNameMappingConfig fieldPathToNameMappingConfig : fieldPathToNameMappingConfigList) {
-        fieldPathToNameMapping.put(fieldPathToNameMappingConfig.fieldPath, fieldPathToNameMappingConfig.columnName);
+    if(fieldPaths != null && !fieldPaths.isEmpty()) {
+      for (String fieldPath : fieldPaths) {
+        fieldPathToNameMapping.put(fieldPath, null);
       }
     }
     return fieldPathToNameMapping;

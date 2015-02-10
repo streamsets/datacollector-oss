@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
@@ -317,30 +316,12 @@ public class TestKafkaTargetSinglePartition {
   public void testWriteCsvRecords() throws InterruptedException, StageException, IOException {
 
     //Test CSV is - "2010,NLDS1,PHI,NL,CIN,NL,3,0,0"
-    KafkaTarget.FieldPathToNameMappingConfig yearMapping =
-      new KafkaTarget.FieldPathToNameMappingConfig();
-    yearMapping.fieldPath = "/values[0]";
-    yearMapping.columnName = "Year";
-
-    KafkaTarget.FieldPathToNameMappingConfig cityMapping =
-      new KafkaTarget.FieldPathToNameMappingConfig();
-    cityMapping.fieldPath = "/values[2]";
-    cityMapping.columnName = "City1";
-
-    KafkaTarget.FieldPathToNameMappingConfig city2Mapping =
-      new KafkaTarget.FieldPathToNameMappingConfig();
-    city2Mapping.fieldPath = "/values[3]";
-    city2Mapping.columnName = "City2";
-
-    KafkaTarget.FieldPathToNameMappingConfig nonExistingmapping =
-      new KafkaTarget.FieldPathToNameMappingConfig();
-    nonExistingmapping.fieldPath = "/values[20]";
-    nonExistingmapping.columnName = "NonExistingCity";
-
-    KafkaTarget.FieldPathToNameMappingConfig city3Mapping =
-      new KafkaTarget.FieldPathToNameMappingConfig();
-    city3Mapping.fieldPath = "/values[4]";
-    city3Mapping.columnName = "City3";
+    List<String> fieldPaths = new ArrayList<>();
+    fieldPaths.add("/values[0]");
+    fieldPaths.add("/values[2]");
+    fieldPaths.add("/values[3]");
+    fieldPaths.add("/values[20]");
+    fieldPaths.add("/values[4]");
 
     KafkaTarget kafkaTarget = new KafkaTarget();
     TargetRunner targetRunner = new TargetRunner.Builder(kafkaTarget)
@@ -351,7 +332,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("payloadType", ProducerPayloadType.CSV)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", CsvFileMode.CSV)
-      .addConfiguration("fieldPathToNameMappingConfigList", ImmutableList.of(yearMapping, cityMapping,city2Mapping, nonExistingmapping, city3Mapping))
+      .addConfiguration("fieldPaths", fieldPaths)
       .build();
 
     targetRunner.runInit();
@@ -373,11 +354,11 @@ public class TestKafkaTargetSinglePartition {
 
     RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT);
     Map<String, String> fieldPathToName = new LinkedHashMap<>();
-    fieldPathToName.put("/values[0]", "Year");
-    fieldPathToName.put("/values[2]", "City1");
-    fieldPathToName.put("/values[3]", "City2");
-    fieldPathToName.put("/values[20]", "NonExistingCity");
-    fieldPathToName.put("/values[4]", "City3");
+    fieldPathToName.put("/values[0]", null);
+    fieldPathToName.put("/values[2]", null);
+    fieldPathToName.put("/values[3]", null);
+    fieldPathToName.put("/values[20]", null);
+    fieldPathToName.put("/values[4]", null);
     recordToString.setFieldPathToNameMapping(fieldPathToName);
 
     for (int i = 0; i < logRecords.size(); i++) {
