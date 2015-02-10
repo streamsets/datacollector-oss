@@ -28,6 +28,11 @@ angular
     });
 
     $scope.$on('summaryDataUpdated', function() {
+      if(!$scope.summaryMeters.inputRecords || !$scope.summaryMeters.outputRecords ||
+        !$scope.summaryMeters.errorRecords) {
+        return;
+      }
+
       var stageInstance = $scope.detailPaneConfig,
         pipelineMetrics = $rootScope.common.pipelineMetrics,
         input = {

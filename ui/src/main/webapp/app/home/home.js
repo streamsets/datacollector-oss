@@ -164,7 +164,7 @@ angular
         $scope.previewMode = false;
         $scope.setGraphReadOnly(false);
         $scope.setGraphPreviewMode(false);
-        $scope.moveGraphToCenter();
+        //$scope.moveGraphToCenter();
       },
 
       /**
@@ -806,10 +806,18 @@ angular
 
       if(pipelineMetrics && pipelineMetrics.meters) {
         angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
-          stageInstanceErrorCounts[stageInstance.instanceName] = Math.round(
-            pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'].count +
-            pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.stageErrors.meter'].count
-          );
+          var errorRecordsMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'],
+            stageErrorsMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.stageErrors.meter'];
+
+          if(errorRecordsMeter && stageErrorsMeter) {
+            stageInstanceErrorCounts[stageInstance.instanceName] = Math.round(
+              errorRecordsMeter.count +
+              stageErrorsMeter.count
+            );
+          } else {
+            $rootScope.common.errors = ['Failed to fetch pipeline metrics'];
+          }
+
         });
       }
 

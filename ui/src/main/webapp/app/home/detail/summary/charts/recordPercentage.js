@@ -41,16 +41,19 @@ angular
     });
 
     $scope.$on('summaryDataUpdated', function() {
-      $scope.pieChartData = [
-        {
-          key: "goodRecords",
-          value: $scope.summaryMeters.outputRecords.count
-        },
-        {
-          key: "badRecords",
-          value: $scope.summaryMeters.errorRecords.count
-        }
-      ];
+      if($scope.summaryMeters.outputRecords && $scope.summaryMeters.errorRecords) {
+        $scope.pieChartData = [
+          {
+            key: "goodRecords",
+            value: $scope.summaryMeters.outputRecords.count
+          },
+          {
+            key: "badRecords",
+            value: $scope.summaryMeters.errorRecords.count
+          }
+        ];
+      }
+
     });
 
   });

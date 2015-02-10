@@ -31,19 +31,26 @@ angular
     $scope.$on('summaryDataUpdated', function() {
       var stageInstance = $scope.detailPaneConfig,
         pipelineMetrics = $rootScope.common.pipelineMetrics,
-        valueList = [];
+        valueList = [],
+        inputRecordsMeter = $scope.summaryMeters.inputRecords,
+        outputRecordsMeter = $scope.summaryMeters.outputRecords,
+        errorRecordsMeter = $scope.summaryMeters.errorRecords;
+
+      if(!inputRecordsMeter || !outputRecordsMeter || !errorRecordsMeter) {
+        return;
+      }
 
       if($scope.stageSelected) {
         switch(stageInstance.uiInfo.stageType) {
           case pipelineConstant.SOURCE_STAGE_TYPE:
-            valueList.push(["Output" , $scope.summaryMeters.outputRecords.count ]);
-            valueList.push(["Bad" , $scope.summaryMeters.errorRecords.count ]);
+            valueList.push(["Output" , outputRecordsMeter.count ]);
+            valueList.push(["Bad" , errorRecordsMeter.count ]);
             break;
           case pipelineConstant.PROCESSOR_STAGE_TYPE:
-            valueList.push(["Input" , $scope.summaryMeters.inputRecords.count ]);
+            valueList.push(["Input" , inputRecordsMeter.count ]);
 
             if(stageInstance.outputLanes.length < 2) {
-              valueList.push(["Output" , $scope.summaryMeters.outputRecords.count ]);
+              valueList.push(["Output" , outputRecordsMeter.count ]);
             } else {
               //Lane Selector
               angular.forEach(stageInstance.outputLanes, function(outputLane, index) {
@@ -54,17 +61,17 @@ angular
               });
             }
 
-            valueList.push(["Bad" , $scope.summaryMeters.errorRecords.count ]);
+            valueList.push(["Bad" , errorRecordsMeter.count ]);
             break;
           case pipelineConstant.TARGET_STAGE_TYPE:
-            valueList.push(["Input" , $scope.summaryMeters.inputRecords.count ]);
-            valueList.push(["Bad" , $scope.summaryMeters.errorRecords.count ]);
+            valueList.push(["Input" , inputRecordsMeter.count ]);
+            valueList.push(["Bad" , errorRecordsMeter.count ]);
             break;
         }
       } else {
-        valueList.push(["Input" , $scope.summaryMeters.inputRecords.count ]);
-        valueList.push(["Output" , $scope.summaryMeters.outputRecords.count ]);
-        valueList.push(["Bad" , $scope.summaryMeters.errorRecords.count ]);
+        valueList.push(["Input" , inputRecordsMeter.count ]);
+        valueList.push(["Output" , outputRecordsMeter.count ]);
+        valueList.push(["Bad" , errorRecordsMeter.count ]);
       }
 
       $scope.barChartData = [

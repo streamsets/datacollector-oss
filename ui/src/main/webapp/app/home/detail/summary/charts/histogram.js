@@ -54,20 +54,22 @@ angular
 
       angular.forEach($scope.histogramList, function(recordType) {
         var data = $scope.summaryHistograms[recordType];
-        list.push({
-          key: label[recordType],
-          values: [
-            ["Mean" , data.mean ],
-            ["Std Dev" , data.stddev ],
-            ["99.9%" , data.p999 ],
-            ["99%" , data.p99 ],
-            ["98%" , data.p98 ],
-            ["95%" , data.p95 ],
-            ["75%" , data.p75 ],
-            ["50%" , data.p50 ]
-          ],
-          color: color[recordType]
-        });
+        if(data) {
+          list.push({
+            key: label[recordType],
+            values: [
+              ["Mean" , data.mean ],
+              ["Std Dev" , data.stddev ],
+              ["99.9%" , data.p999 ],
+              ["99%" , data.p99 ],
+              ["98%" , data.p98 ],
+              ["95%" , data.p95 ],
+              ["75%" , data.p75 ],
+              ["50%" , data.p50 ]
+            ],
+            color: color[recordType]
+          });
+        }
       });
 
       $scope.timerData = list;

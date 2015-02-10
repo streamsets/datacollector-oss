@@ -138,13 +138,18 @@ angular
         } else {
 
           angular.forEach(stages, function(stage) {
-            badRecordsArr.push([stage.uiInfo.label,
-              pipelineMetrics.meters['stage.' + stage.instanceName + '.errorRecords.meter'].count
-            ]);
+            var errorRecordsMeter = pipelineMetrics.meters['stage.' + stage.instanceName + '.errorRecords.meter'],
+              stageErrorsMeter = pipelineMetrics.meters['stage.' + stage.instanceName + '.stageErrors.meter'];
 
-            errorMessagesArr.push([stage.uiInfo.label,
-              pipelineMetrics.meters['stage.' + stage.instanceName + '.stageErrors.meter'].count
-            ]);
+            if(errorRecordsMeter && stageErrorsMeter) {
+              badRecordsArr.push([stage.uiInfo.label,
+                errorRecordsMeter.count
+              ]);
+
+              errorMessagesArr.push([stage.uiInfo.label,
+                stageErrorsMeter.count
+              ]);
+            }
           });
 
           $scope.badRecordsChartData = [{
@@ -161,39 +166,44 @@ angular
           errorsHistogram = pipelineMetrics.histograms['pipeline.errorsPerBatch.histogramM5'];
         }
 
-        $scope.errorRecordsPercentilesData = [
-          {
-            key: 'Error Records',
-            values: [
-              ["Mean" , errorRecordsHistogram.mean ],
-              ["Std Dev" , errorRecordsHistogram.stddev ],
-              ["99.9%" , errorRecordsHistogram.p999 ],
-              ["99%" , errorRecordsHistogram.p99 ],
-              ["98%" , errorRecordsHistogram.p98 ],
-              ["95%" , errorRecordsHistogram.p95 ],
-              ["75%" , errorRecordsHistogram.p75 ],
-              ["50%" , errorRecordsHistogram.p50 ]
-            ],
-            color: '#FF3333'
-          }
-        ];
+        if(errorRecordsHistogram) {
+          $scope.errorRecordsPercentilesData = [
+            {
+              key: 'Error Records',
+              values: [
+                ["Mean" , errorRecordsHistogram.mean ],
+                ["Std Dev" , errorRecordsHistogram.stddev ],
+                ["99.9%" , errorRecordsHistogram.p999 ],
+                ["99%" , errorRecordsHistogram.p99 ],
+                ["98%" , errorRecordsHistogram.p98 ],
+                ["95%" , errorRecordsHistogram.p95 ],
+                ["75%" , errorRecordsHistogram.p75 ],
+                ["50%" , errorRecordsHistogram.p50 ]
+              ],
+              color: '#FF3333'
+            }
+          ];
+        }
 
-        $scope.errorsPercentilesData = [
-          {
-            key: 'Stage Errors',
-            values: [
-              ["Mean" , errorsHistogram.mean ],
-              ["Std Dev" , errorsHistogram.stddev ],
-              ["99.9%" , errorsHistogram.p999 ],
-              ["99%" , errorsHistogram.p99 ],
-              ["98%" , errorsHistogram.p98 ],
-              ["95%" , errorsHistogram.p95 ],
-              ["75%" , errorsHistogram.p75 ],
-              ["50%" , errorsHistogram.p50 ]
-            ],
-            color: '#d62728'
-          }
-        ];
+
+        if(errorsHistogram) {
+          $scope.errorsPercentilesData = [
+            {
+              key: 'Stage Errors',
+              values: [
+                ["Mean" , errorsHistogram.mean ],
+                ["Std Dev" , errorsHistogram.stddev ],
+                ["99.9%" , errorsHistogram.p999 ],
+                ["99%" , errorsHistogram.p99 ],
+                ["98%" , errorsHistogram.p98 ],
+                ["95%" , errorsHistogram.p95 ],
+                ["75%" , errorsHistogram.p75 ],
+                ["50%" , errorsHistogram.p50 ]
+              ],
+              color: '#d62728'
+            }
+          ];
+        }
 
       }
     });

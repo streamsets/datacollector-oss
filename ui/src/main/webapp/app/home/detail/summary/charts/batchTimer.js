@@ -35,6 +35,9 @@ angular
     });
 
     $scope.$on('summaryDataUpdated', function() {
+      if(!$scope.summaryTimer) {
+        return;
+      }
 
       $scope.frequencyData = [
         {
