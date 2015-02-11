@@ -66,6 +66,7 @@ public enum ValidationError implements ErrorCode {
 
 
   VALIDATION_0060("Bad records handling must be specified"),
+  VALIDATION_0061("Configuration 'Directory' must be set for Bad Record handling."),
 
   ;
 

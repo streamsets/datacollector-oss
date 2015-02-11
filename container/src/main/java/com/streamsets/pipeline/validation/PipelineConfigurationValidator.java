@@ -30,6 +30,9 @@ import java.util.Set;
 
 public class PipelineConfigurationValidator {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigurationValidator.class);
+  private static final String RECORDS_TO_LOCAL_FILESYSTEM_STAGE_NAME =
+    "com_streamsets_pipeline_lib_stage_destination_recordstolocalfilesystem_RecordsToLocalFileSystemTarget";
+  private static final String RECORDS_TO_LOCAL_FILESYSTEM_DIRECTORY_CONFIG = "directory";
 
   private final StageLibraryTask stageLibrary;
   private final String name;
@@ -540,8 +543,17 @@ public class PipelineConfigurationValidator {
     boolean preview = true;
     if (pipelineConfiguration.getErrorStage() == null) {
       issues.addP(new Issue(ValidationError.VALIDATION_0060));
+      preview = false;
     } else {
-
+      StageConfiguration errorStage = pipelineConfiguration.getErrorStage();
+      if(errorStage.getStageName().equals(RECORDS_TO_LOCAL_FILESYSTEM_STAGE_NAME)) {
+        //make sure the directory is set
+        ConfigConfiguration directory = errorStage.getConfig(RECORDS_TO_LOCAL_FILESYSTEM_DIRECTORY_CONFIG);
+        if(directory.getValue() == null || String.valueOf(directory.getValue()).isEmpty()) {
+          issues.addP(new Issue(ValidationError.VALIDATION_0061));
+          preview = false;
+        }
+      }
     }
     return preview;
   }
