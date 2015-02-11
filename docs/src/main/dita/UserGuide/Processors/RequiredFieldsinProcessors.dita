@@ -6,10 +6,9 @@
   not include a required field, the processor discards the record. You can configure required fields
   for any processor or target stage.</shortdesc>
  <conbody>
-  <p>To minimize processing errors, define any field that a processor actively uses as a required
-   field. </p>
-  <p>For example, the following Expression processor concatenates the first and last name fields. To
-   avoid processing errors, both fields are configured as required fields.<draft-comment
-    author="Loretta">create screenshot with dev source</draft-comment></p>
+  <p>Configure required fields to minimize processing errors or according to your business
+   requirements. </p>
+  <p>For example, a Field Hasher encodes social security data in the /SS field. To ensure processing
+   only records with social security values, make /SS a required field. </p>
  </conbody>
 </concept>

@@ -45,7 +45,7 @@
 
      <dd class="dd">The following example uses a fixed-length masks to hide passwords:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_zyf_5cj_yq" border="0" class="simpletable"><tr class="strow">
         <td valign="top" class="stentry" width="50%">
-         <pre class="pre codeblock"><span class="ph uicontrol">Password</span> (original)
+         <pre class="pre codeblock"><span class="ph uicontrol">Original Password</span> 
 1234
 donKey
 022367snowfall</pre>
@@ -53,7 +53,7 @@ donKey
         </td>
 
         <td valign="top" class="stentry" width="50%">
-         <pre class="pre codeblock"><span class="ph uicontrol">Password</span> (fixed-length mask)
+         <pre class="pre codeblock"><span class="ph uicontrol">Fixed-Length Mask</span>
 asd302kd0
 2v03msO3d
 L92m1sN3q</pre>
@@ -68,12 +68,12 @@ L92m1sN3q</pre>
     
      <dt class="dt dlterm">Variable-length</dt>
 
-     <dd class="dd">Replaces values with a variable-length mask. Use when you want to reveal the different
-      lengths of the original data. </dd>
+     <dd class="dd">Replaces values with a variable-length mask. Use when you want to reveal the lengths of the
+      original data. </dd>
 
      <dd class="dd">The following example uses a variable length mask to hide the same passwords:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_jfq_bdj_yq" border="0" class="simpletable"><tr class="strow">
         <td valign="top" class="stentry" width="50%">
-         <pre class="pre codeblock"><span class="ph uicontrol">Password</span> (original)
+         <pre class="pre codeblock"><span class="ph uicontrol">Original Password</span> (original)
 1234
 donKey
 022367snowfall</pre>
@@ -81,7 +81,7 @@ donKey
         </td>
 
         <td valign="top" class="stentry" width="50%">
-         <pre class="pre codeblock"><span class="ph uicontrol">Password</span> (variable-length mask)
+         <pre class="pre codeblock"><span class="ph uicontrol">Variable-Length Mask</span>
 asd3
 2v03ms
 L92m1sN3q0jaOmE67Ws</pre>
@@ -128,7 +128,7 @@ L92m1sN3q0jaOmE67Ws</pre>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
                     require data. <a class="xref" href="Processors_overview.html#concept_dnj_bkm_vq" title="A required field must exist in a record to keep it in the pipeline. When a record does not include a required field, the processor discards the record. You can configure required fields for any processor or target stage.">
-                        <img class="image" id="task_vgg_z44_wq__d1179e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
+                        <img class="image" id="task_vgg_z44_wq__d1162e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand" id="task_vgg_z44_wq__SelectHashField">
@@ -140,9 +140,9 @@ L92m1sN3q0jaOmE67Ws</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="50%" id="d11311e200">Field Masker Configuration Property</th>
+                                    <th class="entry" valign="top" width="50%" id="d11225e200">Field Masker Configuration Property</th>
 
-                                    <th class="entry" valign="top" width="50%" id="d11311e203">Description</th>
+                                    <th class="entry" valign="top" width="50%" id="d11225e203">Description</th>
 
                                 </tr>
 
@@ -150,18 +150,18 @@ L92m1sN3q0jaOmE67Ws</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d11311e200 ">Mask Field</td>
+                                    <td class="entry" valign="top" width="50%" headers="d11225e200 ">Mask Field</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d11311e203 ">String field to be masked. </td>
+                                    <td class="entry" valign="top" width="50%" headers="d11225e203 ">String field to be masked. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d11311e200 ">Mask Type <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                    <td class="entry" valign="top" width="50%" headers="d11225e200 ">Mask Type <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
 
                                         <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d11311e203 ">Mask type to hide field values. Select one of the
+                                    <td class="entry" valign="top" width="50%" headers="d11225e203 ">Mask type to hide field values. Select one of the
                                         following options:<ul class="ul" id="task_vgg_z44_wq__ul_kmd_rnk_wq">
                                             <li class="li">Fixed-length - Replaces values with a fixed-length
                                                 mask.</li>
@@ -178,10 +178,10 @@ L92m1sN3q0jaOmE67Ws</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d11311e200 ">Custom Pattern <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                    <td class="entry" valign="top" width="50%" headers="d11225e200 ">Custom Pattern <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
                                             <img class="image" id="task_vgg_z44_wq__image_rx1_l1q_wq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d11311e203 ">Mask pattern for a custom mask. Enter the pattern that
+                                    <td class="entry" valign="top" width="50%" headers="d11225e203 ">Mask pattern for a custom mask. Enter the pattern that
                                         you want to use.<p class="p">You can use the hash mark (#) to display
                                             characters in the specified location. For example,
                                             ###xxx reveals the first three characters of a string

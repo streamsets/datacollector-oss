@@ -8,12 +8,11 @@
  <conbody>
   <p>For example, if a field contains an error code and error message separated by a dash, you can
    use the dash to separate the error code and error message information into different fields.</p>
-  <p>The Field Splitter separates values into new fields based on the separator characters in the
-   record. When splitting a record would result in more fields than expected, the Field Splitter can
-   either include the remaining data as part of the last field or discard it.</p>
-  <p>When splitting a record would result in fewer fields than expected, the Field Splitter can
-   either pass data without the additional fields, discard the record, write the record to an error
-   file, or stop the pipeline.</p>
+  <p>When a field includes additional data and separator characters after the Field Splitter splits
+   the data as requested, it includes the remaining data in the last split field. </p>
+  <p>You can include data from the original field in the record, or discard it. <draft-comment
+    author="Loretta">revamp or delete this example after confirmation of the
+    behavior.</draft-comment></p>
   <section>
    <title>Example</title>
    <p>Say that a Field Splitter uses a comma to separate data into two fields and to discard records

@@ -24,16 +24,15 @@
 
         <li class="li">Field Converter - Converts the data type of a field.</li>
 
-        <li class="li">Field Hasher - Uses an algorithm to encode sensitive data.</li>
+        <li class="li">Field Hasher - Uses an algorithm to encode sensitive string data.</li>
 
-        <li class="li">Field Masker - Masks sensitive data.</li>
+        <li class="li">Field Masker - Masks sensitive string data.</li>
 
         <li class="li">Field Remover - Removes fields from a record.</li>
 
-        <li class="li">Field Splitter - Splits the values in a field into different fields based on a separator
-          character.</li>
+        <li class="li">Field Splitter - Splits the string values in a field into different fields.</li>
 
-        <li class="li">JSON Parser - Parses a JSON object that is embedded in a field.</li>
+        <li class="li">JSON Parser - Parses a JSON object embedded in a string field.</li>
 
         <li class="li">Record Deduplicator - Removes duplicate records.</li>
 
@@ -74,11 +73,11 @@
   not include a required field, the processor discards the record. You can configure required fields
   for any processor or target stage.</p>
 
-  <p class="p">To minimize processing errors, define any field that a processor actively uses as a required
-   field. </p>
+  <p class="p">Configure required fields to minimize processing errors or according to your business
+   requirements. </p>
 
-  <p class="p">For example, the following Expression processor concatenates the first and last name fields. To
-   avoid processing errors, both fields are configured as required fields.</p>
+  <p class="p">For example, a Field Hasher encodes social security data in the /SS field. To ensure processing
+   only records with social security values, make /SS a required field. </p>
 
  </div>
 
@@ -87,12 +86,19 @@
  <h2 class="title topictitle2">Selecting Fields with Preview Data</h2>
 
  
- <div class="body conbody"><p class="shortdesc"></p>
+ <div class="body conbody"><p class="shortdesc">At various points in a pipeline, you can use preview data to help select fields. Preview
+  data displays when a pipeline is configured to a point where you can to perform a data
+  preview.</p>
 
-  <p class="p"></p>
+  <p class="p">If preview data for field selection does not display, continue configuring the pipeline and try
+   again. </p>
 
  </div>
 
+ <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="../Data_Preview/DataPreview.html#concept_jtn_s3m_lq" title="You can preview data to help build or fine-tune a pipeline. When you preview data, the Data Collector reads records from the origin and passes it through the pipeline. You can examine the data at each stage to verify how the pipeline processes data.">Data Preview</a></div>
+</div>
+</div>
 </div>
 </div>
 <div class="navfooter"><!---->

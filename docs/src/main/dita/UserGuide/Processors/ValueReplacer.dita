@@ -6,6 +6,6 @@
   can also replace existing values in a field with null values. </shortdesc>
  <conbody>
   <note type="tip">To use an expression instead of a constant to replace null values, use an
-   Expression processor.</note>
+   Expression Evaluator.</note>
  </conbody>
 </concept>

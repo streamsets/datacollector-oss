@@ -25,7 +25,7 @@
   <p class="p">Each stage in the pipeline includes built-in resilience. Some stages also include configurable
    error handling. When a stage without error handling options encounters a bad record, the <span class="ph">Data
                   Collector</span> uses the
-   pipeline default error handling. </p>
+   default error handling for the pipeline.</p>
 
   <p class="p">For example, if you configure a Kafka Consumer origin stage to read JSON data with a maximum
    object length of 4096 characters and the stage encounters an object with 5000 characters, the
@@ -34,8 +34,7 @@
   <p class="p">When a stage includes an error handling property, the stage configuration overrides the
    pipeline configuration. For example, you have a Field Splitter configured to split field values
    into three parts and to discard records that cannot be split. Even if the pipeline is configured
-   to save bad records, the Field Splitter stage discards records that cannot be split as
-   configured. </p>
+   to save bad records, the Field Splitter stage discards records that cannot be split as requested. </p>
 
  </div>
 

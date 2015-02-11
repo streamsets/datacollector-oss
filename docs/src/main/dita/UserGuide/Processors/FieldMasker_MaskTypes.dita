@@ -14,13 +14,13 @@
        relcolwidth="1.0* 1.0*" id="simpletable_zyf_5cj_yq">
        <strow>
         <stentry>
-         <codeblock><uicontrol>Password</uicontrol> (original)
+         <codeblock><uicontrol>Original Password</uicontrol> 
 1234
 donKey
 022367snowfall</codeblock>
         </stentry>
         <stentry>
-         <codeblock><uicontrol>Password</uicontrol> (fixed-length mask)
+         <codeblock><uicontrol>Fixed-Length Mask</uicontrol>
 asd302kd0
 2v03msO3d
 L92m1sN3q</codeblock>
@@ -30,19 +30,19 @@ L92m1sN3q</codeblock>
     </dlentry>
     <dlentry>
      <dt>Variable-length</dt>
-     <dd>Replaces values with a variable-length mask. Use when you want to reveal the different
-      lengths of the original data. </dd>
+     <dd>Replaces values with a variable-length mask. Use when you want to reveal the lengths of the
+      original data. </dd>
      <dd>The following example uses a variable length mask to hide the same passwords:<simpletable
        frame="none" relcolwidth="1.0* 1.0*" id="simpletable_jfq_bdj_yq">
        <strow>
         <stentry>
-         <codeblock><uicontrol>Password</uicontrol> (original)
+         <codeblock><uicontrol>Original Password</uicontrol> (original)
 1234
 donKey
 022367snowfall</codeblock>
         </stentry>
         <stentry>
-         <codeblock><uicontrol>Password</uicontrol> (variable-length mask)
+         <codeblock><uicontrol>Variable-Length Mask</uicontrol>
 asd3
 2v03ms
 L92m1sN3q0jaOmE67Ws</codeblock>

@@ -21,21 +21,23 @@
     <dlentry>
      <dt>Create a default stream</dt>
      <dd>You can create a default stream to capture records that do not match other conditions. When
-      you create a default stream, you connect the output to a branch in the pipeline. </dd>
+      you create a default stream, you connect the stage output to a branch in the pipeline. </dd>
      <dd>You can configure the branch to perform additional processing or write it directly to a
-      destination. You might write the data to a real destination to be reviewed at a later time.
-      Or, you might use the Trash destination. </dd>
-     <dd>When you use the Trash destination the pipeline discards the records. But unlike the
+      destination. You might write the data to a real destination to be reviewed later, or you might
+      use the Trash destination. </dd>
+     <dd>When you use the Trash destination, the pipeline discards the records. But unlike the
       discard fallback action, you can view the number of records being discarded when you monitor
       the pipeline, and you can create alerts around this metric. </dd>
     </dlentry>
    </dl>
   </p>
-  <p>In the following example, Stream 1 passes data with no locale information to a stream that
-   replaces the nulls before writing to the Kafka destination. Stream 2 passes data with the English
-   locale directly to the same Kafka destination. Stream 3 uses the default condition to capture
-   data from other locales and stream it to a different destination.<draft-comment author="Loretta"
-    >Show a pipeline with a pipeline and </draft-comment></p>
+  <p>
+   <draft-comment author="Loretta">Post beta, add an example. drafted something earlier: In the
+    following example, Stream 1 passes data with no locale information to a stream that replaces the
+    nulls before writing to the Kafka destination. Stream 2 passes data with the English locale
+    directly to the same Kafka destination. Stream 3 uses the default condition to capture data from
+    other locales and stream it to a different destination.</draft-comment>
+  </p>
   <p> </p>
  </conbody>
 </concept>

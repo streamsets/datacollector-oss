@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Stream Selector passes data to streams based on conditions. When you configure a condition, the Stream Selector creates an output location for the stream that you connect to downstream stage. The ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Stream Selector"></meta><meta name="abstract" content="The Stream Selector passes data to streams based on conditions."></meta><meta name="description" content="The Stream Selector passes data to streams based on conditions."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_tqv_t5r_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Stream Selector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Stream Selector passes data to streams based on conditions. When you configure a condition, the Stream Selector creates an output location for the stage that you connect to a downstream stage. The ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Stream Selector"></meta><meta name="abstract" content="The Stream Selector passes data to streams based on conditions."></meta><meta name="description" content="The Stream Selector passes data to streams based on conditions."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_tqv_t5r_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Stream Selector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -16,11 +16,9 @@
  
  <div class="body conbody"><p class="shortdesc">The Stream Selector passes data to streams based on conditions. </p>
 
-  <p class="p">When you configure a condition, the Stream Selector creates an output location for the stream
-   that you connect to downstream stage. The Stream Selector passes a record to all streams where
+  <p class="p">When you configure a condition, the Stream Selector creates an output location for the stage
+   that you connect to a downstream stage. The Stream Selector passes a record to all streams where
    the record matches the condition. </p>
-
-  <p class="p"></p>
 
  </div>
 
@@ -55,13 +53,13 @@
      <dt class="dt dlterm">Create a default stream</dt>
 
      <dd class="dd">You can create a default stream to capture records that do not match other conditions. When
-      you create a default stream, you connect the output to a branch in the pipeline. </dd>
+      you create a default stream, you connect the stage output to a branch in the pipeline. </dd>
 
      <dd class="dd">You can configure the branch to perform additional processing or write it directly to a
-      destination. You might write the data to a real destination to be reviewed at a later time.
-      Or, you might use the Trash destination. </dd>
+      destination. You might write the data to a real destination to be reviewed later, or you might
+      use the Trash destination. </dd>
 
-     <dd class="dd">When you use the Trash destination the pipeline discards the records. But unlike the
+     <dd class="dd">When you use the Trash destination, the pipeline discards the records. But unlike the
       discard fallback action, you can view the number of records being discarded when you monitor
       the pipeline, and you can create alerts around this metric. </dd>
 
@@ -70,10 +68,9 @@
 
   </div>
 
-  <p class="p">In the following example, Stream 1 passes data with no locale information to a stream that
-   replaces the nulls before writing to the Kafka destination. Stream 2 passes data with the English
-   locale directly to the same Kafka destination. Stream 3 uses the default condition to capture
-   data from other locales and stream it to a different destination.</p>
+  <p class="p">
+   
+  </p>
 
   <p class="p"> </p>
 
@@ -95,7 +92,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
                     require data. <a class="xref" href="Processors_overview.html#concept_dnj_bkm_vq" title="A required field must exist in a record to keep it in the pipeline. When a record does not include a required field, the processor discards the record. You can configure required fields for any processor or target stage.">
-                        <img class="image" id="task_iss_2zx_wq__d1179e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
+                        <img class="image" id="task_iss_2zx_wq__d1162e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand">
@@ -139,7 +136,7 @@
     </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
-<div class="related_link"><a class="navheader_parent_path" href="ConfiguringExpressionsConditions.html#concept_ofb_1cm_xq" title="Use the expression language to configure expressions and conditions. You can configure expressions in the Expression processor. You can configure conditions in the Stream Selector processor.">Configuring Expressions and Conditions</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="ConfiguringExpressionsConditions.html#concept_ofb_1cm_xq" title="Use the expression language to configure expressions and conditions. You can configure expressions in the Expression Evaluator. You can configure conditions in the Stream Selector.">Configuring Expressions and Conditions</a></div>
 <div class="related_link"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The expression language enables you to create expressions that evaluate or modify data. Use the expression language to create expressions in the Expression processor and conditions in the Stream Selector processor.">Expression Language</a></div>
 </div>
 </div>

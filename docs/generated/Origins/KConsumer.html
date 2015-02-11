@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Kafka Consumer reads data from a Kafka cluster and processes the data based on the type of data stored in Kafka. You can use the Kafka Consumer to read log, delimited, and JSON, data from a Kafka ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kafka Consumer"></meta><meta name="abstract" content="The Kafka Consumer reads data from a Kafka cluster and processes the data based on the type of data stored in Kafka. You can use the Kafka Consumer to read log, delimited, and JSON, data from a Kafka cluster."></meta><meta name="description" content="The Kafka Consumer reads data from a Kafka cluster and processes the data based on the type of data stored in Kafka. You can use the Kafka Consumer to read log, delimited, and JSON, data from a Kafka cluster."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_msz_wnr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Consumer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Kafka Consumer reads data from a Kafka cluster and processes the data based on the type of data stored in Kafka. You can use the Kafka Consumer to read log, delimited, JSON, and XML data from a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kafka Consumer"></meta><meta name="abstract" content="The Kafka Consumer reads data from a Kafka cluster and processes the data based on the type of data stored in Kafka. You can use the Kafka Consumer to read log, delimited, JSON, and XML data from a Kafka cluster."></meta><meta name="description" content="The Kafka Consumer reads data from a Kafka cluster and processes the data based on the type of data stored in Kafka. You can use the Kafka Consumer to read log, delimited, JSON, and XML data from a Kafka cluster."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_msz_wnr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Consumer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,7 +15,7 @@
 
  
  <div class="body conbody"><p class="shortdesc">The Kafka Consumer reads data from a Kafka cluster and processes the data based on the
-  type of data stored in Kafka. You can use the Kafka Consumer to read log, delimited, and JSON,
+  type of data stored in Kafka. You can use the Kafka Consumer to read log, delimited, JSON, and XML
   data from a Kafka cluster. </p>
 
   <p class="p">When you configure a Kafka Consumer, you configure the consumer group name, topic, and
@@ -61,10 +61,10 @@
     <h2 class="title topictitle2">Configuring a Kafka Consumer</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">Configure a Kafka Consumer to read log, JSON, CSV, or XML data from a Kafka cluster.
-        When you configure the Kafka Consumer, you configure the general properties, including Kafka
-        and ZooKeeper details. For JSON and CSV data, configure additional related properties. You
-        can optionally add custom advanced properties. </p>
+    <div class="body taskbody"><p class="shortdesc">Configure a Kafka Consumer to read log, delimited, JSON, or XML data from a Kafka
+        cluster. When you configure the Kafka Consumer, you configure the general properties,
+        including Kafka and ZooKeeper details. For delimited and JSON data, configure additional
+        related properties. You can optionally add custom Kafka properties. </p>
 
         <div class="section context"></div>
 
@@ -82,9 +82,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.57142857142857%" id="d5574e115">General Properties</th>
+                                    <th class="entry" valign="top" width="28.57142857142857%" id="d5598e115">General Properties</th>
 
-                                    <th class="entry" valign="top" width="71.42857142857143%" id="d5574e118">Description</th>
+                                    <th class="entry" valign="top" width="71.42857142857143%" id="d5598e118">Description</th>
 
                                 </tr>
 
@@ -92,40 +92,40 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5574e115 ">ZooKeeper Connection String</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5598e115 ">ZooKeeper Connection String</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5574e118 ">Connection string for the ZooKeeper of the Kafka cluster.
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5598e118 ">Connection string for the ZooKeeper of the Kafka cluster.
                                         To use more than one ZooKeeper, enter a comma-separated
                                         list.</td>
 
                                 </tr>
   <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5574e115 ">Consumer Group</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5598e115 ">Consumer Group</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5574e118 ">Kakfa consumer group the <span class="ph">Data
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5598e118 ">Kakfa consumer group the <span class="ph">Data
                   Collector</span> represents.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5574e115 ">Topic</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5598e115 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5574e118 ">Kafka topic to read.</td>
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5598e118 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5574e115 ">Payload Type</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5598e115 ">Payload Type</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5574e118 ">Type of data in the topic. Use one of the following
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5598e118 ">Type of data in the topic. Use one of the following
                                         options:<ul class="ul" id="task_npx_xgf_vq__ul_qgm_tjw_yq">
-                                            <li class="li">Log</li>
+                                            <li class="li">Log lines</li>
 
-                                            <li class="li">JSON</li>
+                                            <li class="li">JSON data</li>
 
-                                            <li class="li">CSV</li>
+                                            <li class="li">Delimited data</li>
 
-                                            <li class="li">XML</li>
+                                            <li class="li">XML data</li>
 
                                         </ul>
 </td>
@@ -133,26 +133,26 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5574e115 ">Max Batch Size</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5598e115 ">Max Batch Size</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5574e118 ">Maximum number of messages processed at one time.</td>
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5598e118 ">Maximum number of messages processed at one time.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5574e115 ">Batch Duration Time (secs)</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5598e115 ">Batch Duration Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5574e118 ">Number of seconds the Kafka Consumer waits before sending
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5598e118 ">Number of seconds the Kafka Consumer waits before sending
                                         a partial or empty batch. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5574e115 ">Kafka Configuration  <a class="xref" href="KConsumer_AdvancedProp.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Consumer.">
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d5598e115 ">Kafka Configuration  <a class="xref" href="KConsumer_AdvancedProp.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Consumer.">
                                             <img class="image" id="task_npx_xgf_vq__image_mwv_b52_zq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5574e118 ">Additional Kafka configuration properties to use. To add
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d5598e118 ">Additional Kafka configuration properties to use. To add
                                         properties, click <span class="ph uicontrol">Add</span> and define the
                                         Kafka property name and value. <p class="p">Use the property names and
                                             values as expected by Kafka.</p>
@@ -173,46 +173,55 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_a2t_ynw_yq" class="table" frame="border" border="1" rules="all">
-     
-     
-     <thead class="thead" align="left">
-      <tr class="row">
-       <th class="entry" valign="top" width="37.49999999999999%" id="d5574e246">JSON Data Property</th>
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_wsk_ccp_1r" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="31.948881789137378%" id="d5598e246">JSON Property</th>
 
-       <th class="entry" valign="top" width="62.5%" id="d5574e249">Description</th>
+                                    <th class="entry" valign="top" width="68.05111821086261%" id="d5598e249">Description</th>
 
-      </tr>
+                                </tr>
 
-     </thead>
+                            </thead>
 
-     <tbody class="tbody">
-      <tr class="row">
-       <td class="entry" valign="top" width="37.49999999999999%" headers="d5574e246 ">JSON Content</td>
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="31.948881789137378%" headers="d5598e246 ">JSON Content</td>
 
-       <td class="entry" valign="top" width="62.5%" headers="d5574e249 ">Type of content in JSON files. Use one of the following options: <div class="p">
-         <ul class="ul" id="task_npx_xgf_vq__d583e50">
-          <li class="li">Array of Objects </li>
+                                    <td class="entry" valign="top" width="68.05111821086261%" headers="d5598e249 ">Type of content in JSON files. Use one of the following
+                                            options:<ul class="ul" id="task_npx_xgf_vq__ul_xgm_2cp_1r">
+                                            <li class="li">Array of Objects</li>
 
-          <li class="li">Multiple Objects.</li>
+                                            <li class="li">Multiple Objects</li>
 
-         </ul>
-
-        </div>
+                                        </ul>
 </td>
 
-      </tr>
+                                </tr>
 
-      <tr class="row">
-       <td class="entry" valign="top" width="37.49999999999999%" headers="d5574e246 ">Maximum Object Length</td>
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="31.948881789137378%" headers="d5598e246 ">Produce Single Record</td>
 
-       <td class="entry" valign="top" width="62.5%" headers="d5574e249 ">Maximum length for a JSON object. Longer objects are discarded. </td>
+                                    <td class="entry" valign="top" width="68.05111821086261%" headers="d5598e249 ">Generates a single record for multiple JSON objects. Not
+                                        available for JSON arrays.</td>
 
-      </tr>
+                                </tr>
 
-     </tbody>
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="31.948881789137378%" headers="d5598e246 ">Max Object Length (chars) </td>
 
-    </table>
+                                    <td class="entry" valign="top" width="68.05111821086261%" headers="d5598e249 ">The maximum length of a JSON object.<p class="p">Longer objects are
+                                            skipped and handled based on the pipeline error handling
+                                            configuration. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
 </div>
 
                 </div>

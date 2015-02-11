@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ikr_c2f_zq">
-    <title>Configuring a Deduplicator</title>
-    <shortdesc>Use a Deduplicator to remove records with duplicate data. </shortdesc>
+    <title>Configuring a Record Deduplicator</title>
+    <shortdesc>Use a Record Deduplicator to remove records with duplicate data. </shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_ojk_22f_zq">
@@ -35,15 +35,18 @@
                                         precedence over the number of records. </entry>
                                 </row>
                                 <row>
-                                    <entry>Compare All Fields</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">See what we get
-                                            here.</draft-comment>
-                                    </entry>
+                                    <entry>Compare</entry>
+                                    <entry>Specifies the fields to compare. Use one of the following
+                                            options:<ul id="ul_ahq_dtp_1r">
+                                            <li>All Fields - Compares all fields in the record.</li>
+                                            <li>Specified Fields - Compares the specified fields.
+                                            </li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Fields to Compare</entry>
-                                    <entry/>
+                                    <entry>Subset of fields that you want to compare for duplicate
+                                        data. </entry>
                                 </row>
                             </tbody>
                         </tgroup>

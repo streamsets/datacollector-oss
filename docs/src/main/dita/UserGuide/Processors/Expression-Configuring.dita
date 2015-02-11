@@ -12,7 +12,8 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>To configure an expression, configure the following properties:</cmd>
+                <cmd>To configure an expression, click the <wintitle>Expressions</wintitle> tab and
+                    configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_zfp_zy4_yq">
                         <tgroup cols="2">

@@ -19,8 +19,8 @@
     <li>Decimal</li>
     <li>String</li>
     <li>List</li>
-    <li>Byte_Array<draft-comment author="Loretta">Descriptions? change to table? move to appendix?
-      Add specific info about what can be converted to what? </draft-comment></li>
+    <li>Byte_Array<draft-comment author="Loretta">Waiting for valid conversions from
+      Hari</draft-comment></li>
    </ul>
   </p>
  </conbody>

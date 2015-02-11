@@ -21,13 +21,10 @@
   <p class="p">For example, if a field contains an error code and error message separated by a dash, you can
    use the dash to separate the error code and error message information into different fields.</p>
 
-  <p class="p">The Field Splitter separates values into new fields based on the separator characters in the
-   record. When splitting a record would result in more fields than expected, the Field Splitter can
-   either include the remaining data as part of the last field or discard it.</p>
+  <p class="p">When a field includes additional data and separator characters after the Field Splitter splits
+   the data as requested, it includes the remaining data in the last split field. </p>
 
-  <p class="p">When splitting a record would result in fewer fields than expected, the Field Splitter can
-   either pass data without the additional fields, discard the record, write the record to an error
-   file, or stop the pipeline.</p>
+  <p class="p">You can include data from the original field in the record, or discard it. </p>
 
   <div class="section"><h2 class="title sectiontitle">Example</h2>
    
@@ -115,7 +112,7 @@ message about this error,"additional information from the server"</pre>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
                     require data. <a class="xref" href="Processors_overview.html#concept_dnj_bkm_vq" title="A required field must exist in a record to keep it in the pipeline. When a record does not include a required field, the processor discards the record. You can configure required fields for any processor or target stage.">
-                        <img class="image" id="task_av1_5g3_yq__d1179e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
+                        <img class="image" id="task_av1_5g3_yq__d1162e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand">
@@ -127,9 +124,9 @@ message about this error,"additional information from the server"</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="50%" id="d11974e176">Field Splitter Property</th>
+                                    <th class="entry" valign="top" width="50%" id="d11888e178">Field Splitter Property</th>
 
-                                    <th class="entry" valign="top" width="50%" id="d11974e179">Description</th>
+                                    <th class="entry" valign="top" width="50%" id="d11888e181">Description</th>
 
                                 </tr>
 
@@ -137,31 +134,31 @@ message about this error,"additional information from the server"</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d11974e176 ">Field to Split</td>
+                                    <td class="entry" valign="top" width="50%" headers="d11888e178 ">Field to Split</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d11974e179 ">The field containing data that you want to split.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d11974e176 ">Separator</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d11974e179 ">Character to trigger a split.</td>
+                                    <td class="entry" valign="top" width="50%" headers="d11888e181 ">The field containing data that you want to split.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d11974e176 ">Field-Paths for Splits</td>
+                                    <td class="entry" valign="top" width="50%" headers="d11888e178 ">Separator</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d11974e179 ">Names of the fields to create for the split data. Precede
+                                    <td class="entry" valign="top" width="50%" headers="d11888e181 ">Character to trigger a split.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="50%" headers="d11888e178 ">Field-Paths for Splits</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d11888e181 ">Names of the fields to create for the split data. Precede
                                         the name with a slash as follows: /NewField.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d11974e176 ">Action for Insufficient Data</td>
+                                    <td class="entry" valign="top" width="50%" headers="d11888e178 ">Action for Insufficient Data</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d11974e179 ">Action for records that cannot be split to the configured
+                                    <td class="entry" valign="top" width="50%" headers="d11888e181 ">Action for records that cannot be split to the configured
                                             fields:<ul class="ul" id="task_av1_5g3_yq__ul_n5d_xn3_yq">
                                             <li class="li"><span class="ph uicontrol">Continue</span> - Passes the record
                                                 split as much as possible.</li>
@@ -181,9 +178,9 @@ message about this error,"additional information from the server"</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d11974e176 ">Remove Unsplit Value</td>
+                                    <td class="entry" valign="top" width="50%" headers="d11888e178 ">Remove Unsplit Value</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d11974e179 ">
+                                    <td class="entry" valign="top" width="50%" headers="d11888e181 ">
                                         
                                     </td>
 

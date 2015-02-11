@@ -2,8 +2,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ywv_smf_zq">
  <title>Selecting Fields with Preview Data</title>
- <shortdesc></shortdesc>
+ <shortdesc>At various points in a pipeline, you can use preview data to help select fields. Preview
+  data displays when a pipeline is configured to a point where you can to perform a data
+  preview.</shortdesc>
  <conbody>
-  <p></p>
+  <p>If preview data for field selection does not display, continue configuring the pipeline and try
+   again. </p>
  </conbody>
+ <related-links>
+  <link href="../Data_Preview/DataPreview.dita#concept_jtn_s3m_lq"/>
+ </related-links>
 </concept>

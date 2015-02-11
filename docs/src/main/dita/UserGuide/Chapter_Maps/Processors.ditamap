@@ -12,10 +12,6 @@
    <topicref href="../Processors/Expression-OutputField.dita"/>
    <topicref href="../Processors/Expression-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/Deduplicator.dita" chunk="to-content">
-   <topicref href="../Processors/Deduplicator-ComparisonWindow.dita"/>
-   <topicref href="../Processors/Deduplicator-Configuring.dita"/>
-  </topicref>
   <topicref href="../Processors/FieldHasher.dita" chunk="to-content">
    <topicref href="../Processors/FieldHasher-Configuring.dita"/>
   </topicref>
@@ -39,6 +35,10 @@
   <topicref href="../Processors/StreamSelector.dita" chunk="to-content">
    <topicref href="../Processors/StreamSelector_fallback.dita"/>
    <topicref href="../Processors/StreamSelector-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Processors/RDeduplicator.dita">
+   <topicref href="../Processors/RDeduplicator-ComparisonWindow.dita"/>
+   <topicref href="../Processors/RDeduplicator-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/ValueReplacer.dita" chunk="to-content">
    <topicref href="../Processors/ValueReplacer-Configuring.dita"/>

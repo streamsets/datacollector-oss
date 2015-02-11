@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Field Converter converts the datatype of a field to a compatible datatype. You might use the Field Converter to convert the data type of a field before performing calculations. Before you convert ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Converter"></meta><meta name="abstract" content="The Field Converter converts the datatype of a field to a compatible datatype. You might use the Field Converter to convert the data type of a field before performing calculations."></meta><meta name="description" content="The Field Converter converts the datatype of a field to a compatible datatype. You might use the Field Converter to convert the data type of a field before performing calculations."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_is3_zkp_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Converter</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Field Converter converts the datatype of a field to a compatible datatype. You might use the Field Converter to convert the data type of a field before performing calculations. When you convert a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Converter"></meta><meta name="abstract" content="The Field Converter converts the datatype of a field to a compatible datatype. You might use the Field Converter to convert the data type of a field before performing calculations."></meta><meta name="description" content="The Field Converter converts the datatype of a field to a compatible datatype. You might use the Field Converter to convert the data type of a field before performing calculations."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_is3_zkp_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Converter</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -17,11 +17,13 @@
  <div class="body conbody"><p class="shortdesc">The Field Converter converts the datatype of a field to a compatible datatype. You might
   use the Field Converter to convert the data type of a field before performing calculations. </p>
 
-  <p class="p">Before you convert a field, configure the conversion for an appropriate, compatible datatype.
+  <p class="p">When you convert a field, configure the conversion for an appropriate, compatible datatype.
    Consider the actual data in the field as well, since even valid conversions can cause truncation
-   of data. For example, converting a field from Integer to Decimal is valid. Converting a field
-   from Decimal to Integer is also valid, but the conversion can cause truncation of any decimal
-   values in the data.</p>
+   of data. </p>
+
+  <p class="p">For example, converting a field from Integer to Decimal is valid. Converting a field from
+   Decimal to Integer is also valid, but the conversion can cause truncation of any decimal values
+   in the data.</p>
 
   <div class="p"><div class="note tip"><span class="tiptitle">Tip:</span> You can use data preview to verify the data in the fields.
    </div>
@@ -89,7 +91,7 @@ When you convert a String field to Date or Datetime, you specify the date or dat
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
                     require data. <a class="xref" href="Processors_overview.html#concept_dnj_bkm_vq" title="A required field must exist in a record to keep it in the pipeline. When a record does not include a required field, the processor discards the record. You can configure required fields for any processor or target stage.">
-                        <img class="image" id="task_g23_2tq_wq__d1179e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
+                        <img class="image" id="task_g23_2tq_wq__d1162e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand">
@@ -101,9 +103,9 @@ When you convert a String field to Date or Datetime, you specify the date or dat
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.44481605351171%" id="d10695e162">Field Converter Configuration Property</th>
+                                    <th class="entry" valign="top" width="33.44481605351171%" id="d10605e165">Field Converter Configuration Property</th>
 
-                                    <th class="entry" valign="top" width="66.5551839464883%" id="d10695e165">Description</th>
+                                    <th class="entry" valign="top" width="66.5551839464883%" id="d10605e168">Description</th>
 
                                 </tr>
 
@@ -111,31 +113,31 @@ When you convert a String field to Date or Datetime, you specify the date or dat
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d10695e162 ">Convert Field</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d10605e165 ">Convert Field</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d10695e165 ">Field to be converted. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d10695e162 ">Target Type</td>
-
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d10695e165 ">Data type to convert to. </td>
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d10605e168 ">Field to be converted. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d10695e162 ">Data Locale</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d10605e165 ">Target Type</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d10695e165 ">Locale of the data in the field. Can determine how the
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d10605e168 ">Data type to convert to. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d10605e165 ">Data Locale</td>
+
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d10605e168 ">Locale of the data in the field. Can determine how the
                                         Field Converter formats converted data.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d10695e162 ">Date Format</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d10605e165 ">Date Format</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d10695e165 ">Format for a Date or Datetime field. Use any valid
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d10605e168 ">Format for a Date or Datetime field. Use any valid
                                         format. </td>
 
                                 </tr>

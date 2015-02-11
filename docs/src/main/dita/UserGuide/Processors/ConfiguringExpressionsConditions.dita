@@ -3,8 +3,8 @@
 <concept id="concept_ofb_1cm_xq">
  <title>Configuring Expressions and Conditions</title>
  <shortdesc>Use the expression language to configure expressions and conditions. You can configure
-  expressions in the Expression processor. You can configure conditions in the Stream Selector
-  processor.</shortdesc>
+    expressions in the Expression Evaluator. You can configure conditions in the Stream
+    Selector.</shortdesc>
  <conbody>
   <p>You can use the following elements in an expression or condition:<ul id="ul_wrf_fjm_xq">
     <li>Field names</li>
