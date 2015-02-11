@@ -104,7 +104,7 @@
          tooltip-placement="bottom" tooltip="{{'home.header.refreshPreview' | translate}}"
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
-         ng-if="!previewDataUpdated"
+         ng-disabled="previewDataUpdated"
          ng-click="previewPipeline(true)">
         <span class="fa fa-refresh"></span>
       </a>
@@ -113,7 +113,7 @@
          tooltip-placement="bottom" tooltip="{{'global.form.step' | translate}}"
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
-         ng-if="previewDataUpdated"
+         ng-disabled="!previewDataUpdated"
          ng-click="stepPreview(detailPaneConfig, stagePreviewData.input)">
         <span class="fa fa-refresh"></span> *
       </a>
@@ -123,7 +123,7 @@
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
          ng-click="revertChanges()"
-         ng-if="previewDataUpdated">
+         ng-disabled="!previewDataUpdated">
         <span class="fa fa-undo"></span>
       </a>
 

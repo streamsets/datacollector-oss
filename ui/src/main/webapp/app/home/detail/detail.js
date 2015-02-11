@@ -36,7 +36,8 @@ angular
       errorTab = {
         name:'errors',
         template:'app/home/detail/badRecords/badRecords.tpl.html',
-        iconClass: 'fa fa-exclamation-triangle'
+        iconClass: 'fa fa-exclamation-triangle',
+        helpId: 'errors'
       },
       dataSummaryTab = {
         name:'summary',
