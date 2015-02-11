@@ -178,9 +178,9 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
                 record.set(fieldToConvert, convertStringToTargetType(field, fieldTypeConverterConfig.targetType,
                   fieldTypeConverterConfig.dataLocale.getLocale(), fieldTypeConverterConfig.dateFormat));
               } catch (ParseException | NumberFormatException e) {
-                LOG.warn(StageLibError.LIB_0400.getMessage(), field.getValueAsString(),
+                LOG.warn(StageLibError.LIB_0400.getMessage(), fieldToConvert, field.getValueAsString(),
                   fieldTypeConverterConfig.targetType.name(), e.getMessage());
-                getContext().toError(record, StageLibError.LIB_0400, field.getValueAsString(),
+                getContext().toError(record, StageLibError.LIB_0400, fieldToConvert, field.getValueAsString(),
                   fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
                 return;
               }
@@ -190,9 +190,9 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
               //use the built in type conversion provided by TypeSupport
               record.set(fieldToConvert, Field.create(fieldTypeConverterConfig.targetType, field.getValue()));
             } catch (IllegalArgumentException e) {
-              LOG.warn(StageLibError.LIB_0400.getMessage(), field.getValueAsString(),
+              LOG.warn(StageLibError.LIB_0400.getMessage(), fieldToConvert, field.getValueAsString(),
                 fieldTypeConverterConfig.targetType.name(), e.getMessage());
-              getContext().toError(record, StageLibError.LIB_0400, field.getValueAsString(),
+              getContext().toError(record, StageLibError.LIB_0400, fieldToConvert, field.getValueAsString(),
                 fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
               return;
             }

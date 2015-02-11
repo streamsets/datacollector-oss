@@ -40,7 +40,7 @@ public enum StageLibError implements ErrorCode {
   LIB_0300("Discarding Xml Object, it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
 
   //Field Type Converter Processor
-  LIB_0400("Failed to convert value '{}' to type '{}', {}."),
+  LIB_0400("Failed to convert field '{}' with value '{}' to type '{}', {}."),
 
   //Field Hasher Processor
   LIB_0500("Error creating message digest for {}, {}."),
