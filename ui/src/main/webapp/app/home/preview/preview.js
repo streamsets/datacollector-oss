@@ -84,11 +84,11 @@ angular
 
           if(intersection && intersection.length) {
             var stageOutputCopy = angular.copy(stageOutput);
-            stageOutputCopy.output = {};
+            /*stageOutputCopy.output = {};
 
             angular.forEach(intersection, function(laneName) {
               stageOutputCopy.output[laneName] = stageOutput.output[laneName];
-            });
+            });*/
             stageOutputs.push(stageOutputCopy);
           }
         });
