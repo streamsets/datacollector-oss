@@ -18,11 +18,11 @@ public class TestBaseEnumChooserValues {
   public enum EnumTest { A, B}
 
   public enum EnumWithLabelTest implements Label {
-    X;
+    X, Y;
 
     @Override
     public String getLabel() {
-      return "x";
+      return name().toLowerCase();
     }
 
   }
@@ -56,6 +56,20 @@ public class TestBaseEnumChooserValues {
   @Test
   public void testEnumWithLabel() {
     ChooserValues cv = new EnumWithLabelTestChooserValues();
+    Assert.assertEquals(Arrays.asList("X", "Y"), cv.getValues());
+    Assert.assertEquals(Arrays.asList("x", "y"), cv.getLabels());
+  }
+
+  @Test
+  public void testEnumSubSet() {
+    ChooserValues cv = new BaseEnumChooserValues<EnumTest>(EnumTest.A){};
+    Assert.assertEquals(Arrays.asList("A"), cv.getValues());
+    Assert.assertEquals(Arrays.asList("A"), cv.getLabels());
+  }
+
+  @Test
+  public void testEnumWithLabelSubSet() {
+    ChooserValues cv = new BaseEnumChooserValues<EnumWithLabelTest>(EnumWithLabelTest.X){};
     Assert.assertEquals(Arrays.asList("X"), cv.getValues());
     Assert.assertEquals(Arrays.asList("x"), cv.getLabels());
   }
