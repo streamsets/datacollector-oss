@@ -13,11 +13,24 @@ import java.util.Collections;
 import java.util.List;
 
 public class LaneResolver {
+  static final int POSTFIX_LEN = 3;
   static final String STAGE_OUT       = "::s";
   static final String OBSERVER_OUT    = "::o";
   static final String MULTIPLEXER_OUT = "::m";
   static final String COMBINER_OUT    = "::c";
   private static final String ROUTING_SEPARATOR = "--";
+
+  private static void validatePostFix(String postFix) {
+    Utils.checkState(postFix.length() == POSTFIX_LEN, Utils.format("'{}' invalid length, it should be '{}'", postFix,
+                                                                   POSTFIX_LEN));
+  }
+
+  static {
+    validatePostFix(STAGE_OUT);
+    validatePostFix(OBSERVER_OUT);
+    validatePostFix(MULTIPLEXER_OUT);
+    validatePostFix(COMBINER_OUT);
+  }
 
   static List<String> getPostFixed(List<String> lanes, String postfix) {
     List<String> postFixed = new ArrayList<>(lanes.size());
@@ -115,6 +128,10 @@ public class LaneResolver {
 
   public static String getPostFixedLaneForObserver(String laneName) {
     return laneName + STAGE_OUT;
+  }
+
+  public static String removePostFixFromLane(String laneName) {
+    return laneName.substring(0, laneName.length() - POSTFIX_LEN);
   }
 
 }

@@ -79,9 +79,11 @@ public class DataRuleEvaluator {
       if (dataRuleDefinition.isAlertEnabled()) {
         //Keep the counters and meters ready before execution
         //batch record counter - cummulative sum of records per batch
-        Counter evaluatedRecordCounter = MetricsConfigurator.getCounter(metrics, LaneResolver.getPostFixedLaneForObserver(lane));
+        Counter evaluatedRecordCounter = MetricsConfigurator.getCounter(metrics, LaneResolver.getPostFixedLaneForObserver(
+            lane));
         if (evaluatedRecordCounter == null) {
-          evaluatedRecordCounter = MetricsConfigurator.createCounter(metrics, LaneResolver.getPostFixedLaneForObserver(lane));
+          evaluatedRecordCounter = MetricsConfigurator.createCounter(metrics, LaneResolver.getPostFixedLaneForObserver(
+              lane));
         }
         //counter for the matching records - cummulative sum of records that match criteria
         Counter matchingRecordCounter = MetricsConfigurator.getCounter(metrics, dataRuleDefinition.getId());

@@ -147,10 +147,8 @@ public class FullPipeBatch implements PipeBatch {
   @SuppressWarnings("unchecked")
   public void overrideStageOutput(StagePipe pipe, StageOutput stageOutput) {
     startStage(pipe);
-    List<String> stageLaneNames = new ArrayList<>(stageOutput.getOutput().keySet());
-    for (int i = 0; i < stageLaneNames.size() ; i++) {
-      String stageLaneName = stageLaneNames.get(i);
-      String pipeLaneName = pipe.getOutputLanes().get(i);
+    for (String pipeLaneName : pipe.getOutputLanes()) {
+      String stageLaneName = LaneResolver.removePostFixFromLane(pipeLaneName);
       fullPayload.put(pipeLaneName, stageOutput.getOutput().get(stageLaneName));
     }
     if (stageOutputSnapshot != null) {

@@ -73,7 +73,7 @@ public class RecordImpl implements Record {
 
   public void createTrackingId() {
     String currentTrackingId = header.getTrackingId();
-    String newTrackingId = UUID.randomUUID().toString();
+    String newTrackingId = getHeader().getSourceId() + "::" + getHeader().getStagesPath();
     if (currentTrackingId != null) {
       header.setPreviousTrackingId(currentTrackingId);
     }
