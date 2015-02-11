@@ -2,9 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lhz_pyp_1r">
  <title>Functions</title>
- <shortdesc></shortdesc>
+ <shortdesc>The expression language provides the following types of functions:</shortdesc>
  <conbody>
-  <p></p>
   <ul id="ul_dxr_wyp_1r">
    <li>Record functions</li>
    <li>Error functions</li>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_imm_vpq_1r">
+ <title>Output Directory Generation</title>
+ <shortdesc>Hadoop FS creates directories based on a time-based template that you define and the
+  time basis you choose. It writes records to the resulting directories based on the values of the
+  record. </shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Defining the Directory Template</dt>
+     <dd>When you define the output directory template, you can use values in the field and datetime
+      values as part of the path. </dd>
+     <dd>To include values in a field, use ${record:value("/&lt;/Field>")}. To include datetime
+      values, you can use the following variables: <ul id="ul_s2x_5qq_1r">
+       <li>${YYYY} - four digit year</li>
+       <li>${YY} - two digit year</li>
+       <li>${MM} - two digit month</li>
+       <li>${DD}</li>
+       <li>${hh} - two digit hour</li>
+       <li>${mm} - two digit minute</li>
+       <li>${ss} - two digit second.</li>
+      </ul></dd>
+     <dd>Hadoop FS creates directories based on the smallest unit of measure that you use. </dd>
+     <dd>For example, to create output directories for event data based on the state and timestamp
+      of a record, you might define the following output directory template:
+      /outputfiles/${record:value("/State")}/${YY}-${MM}-${hh}.</dd>
+     <dd>Since the smallest unit of measurement is the hour, Hadoop FS creates a new output
+      directory every hour for every state included in output data. </dd>
+    </dlentry>
+    <dlentry>
+     <dt>Time Basis</dt>
+     <dd>The time basis for output files can be based on the time of processing or the time
+      associated with the record. To use the processing time as the time basis, use the following
+      default expression: <codeph>${time:now()}</codeph>. </dd>
+     <dd>To use a datetime value associated with the record, use an expression that calls a field
+      and resolves to a datetime value. Be sure to define the time zone for the data as well. </dd>
+     <dd>For example, to use the record as a time basis for the event data described above, you
+      might use the following expression to call the Timestamp field:
+      ${record:value("/Timestamp")}.</dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

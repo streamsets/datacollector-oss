@@ -2,7 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_awl_4km_zq">
  <title>Hadoop FS</title>
- <shortdesc></shortdesc>
+ <shortdesc>The Hadoop FS destination writes data to a Hadoop file system. You can write delimited
+  or JSON data to flat files or Hadoop sequence files. </shortdesc>
  <conbody>
   <p></p>
  </conbody>

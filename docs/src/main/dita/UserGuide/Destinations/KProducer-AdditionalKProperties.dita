@@ -6,9 +6,7 @@
  <conbody>
   <p>When you add the Kafka configuration property, enter the Kafka property name and the value. The
    Kafka Consumer does not validate the property names or values.</p>
-  <note>
-   <p>The Kafka Producer uses the broker.host Kafka configuration property. The Kafka Consumer
-    ignores user-defined values for the broker.list property.</p>
-  </note>
+  <note>The Kafka Producer uses the broker.host Kafka configuration property. The Kafka Consumer
+   ignores user-defined values for the broker.list property.</note>
  </conbody>
 </concept>

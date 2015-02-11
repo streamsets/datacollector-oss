@@ -18,57 +18,22 @@
   Use the expression language to create expressions in the Expression processor and conditions in
   the Stream Selector processor.</p>
 
-  <div class="p">
-   <dl class="dl">
-    
-     <dt class="dt dlterm">Basic Syntax</dt>
+  <p class="p">You can also use the expression language when you configure data rules, the Hadoop FS output
+   file options, and Kafka Producer partitions.</p>
 
-     <dd class="dd">Precede all expressions with a dollar sign and enclose them with curly brackets, as
-      follows:<pre class="pre codeblock">${&lt;expression&gt;}</pre>
-</dd>
+  <div class="p">You can use the following elements in an expression or condition:<ul class="ul" id="concept_p54_4kl_vq__ul_wrf_fjm_xq">
+    <li class="li">Field names - Use the appropriate format to call a field name. </li>
 
-     <dd class="dd">For example, to add 2 +2, use the following syntax:<samp class="ph codeph">${2+2}</samp>.</dd>
+    <li class="li">Constants</li>
 
-    
-    
-     <dt class="dt dlterm">Calling Fields</dt>
+    <li class="li">Literals</li>
 
-     <dd class="dd">To use the values in a field in an expression, use the following
-      syntax:<pre class="pre codeblock">record:value{"/&lt;field_name&gt;"}</pre>
-</dd>
+    <li class="li">Operators</li>
 
-     <dd class="dd">For example, to add the sales of four quarters, you might use the following expression:
-      <pre class="pre codeblock">${record:value("/Q1_Sales") + record:value("/Q2_Sales") + record:value("/Q3_Sales") + record:value("/Q4_Sales")}</pre>
-</dd>
- 
-    
-     <dt class="dt dlterm">Literals</dt>
+    <li class="li">Functions</li>
 
-     <dd class="dd"></dd>
-
-    
-    
-     <dt class="dt dlterm">Operators</dt>
-
-     <dd class="dd">You can use  operators in expressions. </dd>
-
-    
-    
-     <dt class="dt dlterm">Constants</dt>
-
-     <dd class="dd">You can use constants in expressions. You can also define a constant variable. You can use
-      the variable to represent a constant for any expression in the processor.</dd>
-
-    
-    
-     <dt class="dt dlterm">Functions</dt>
-
-     <dd class="dd"></dd>
-
-    
-   </dl>
-
-  </div>
+   </ul>
+</div>
 
  </div>
 

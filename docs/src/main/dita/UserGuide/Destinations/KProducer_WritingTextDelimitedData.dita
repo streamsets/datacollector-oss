@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_byn_tnq_1r">
+ <title>Writing Text and Delimited Data</title>
+ <shortdesc>When you write delimited data to Kafka, you define the fields to pass data to the
+  cluster. When you write text data, you define a single field to pass the data. </shortdesc>
+ <conbody>
+  <p>When necessary, use an Expression Evaluator to merge data into the fields that you want to use. </p>
+ </conbody>
+</concept>
