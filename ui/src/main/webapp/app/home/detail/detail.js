@@ -31,32 +31,32 @@ angular
         template:'app/home/detail/summary/summary.tpl.html',
         iconClass: 'fa fa-bar-chart',
         active: true,
-        helpId: 'monitoring'
+        helpId: 'pipeline-monitoring'
       },
       errorTab = {
         name:'errors',
         template:'app/home/detail/badRecords/badRecords.tpl.html',
         iconClass: 'fa fa-exclamation-triangle',
-        helpId: 'errors'
+        helpId: 'errors-tab'
       },
       dataSummaryTab = {
         name:'summary',
         template:'app/home/detail/dataSummary/dataSummary.tpl.html',
         iconClass: 'fa fa-bar-chart',
         active: true,
-        helpId: 'monitoring'
+        helpId: 'pipeline-monitoring'
       },
       dataRulesTab = {
         name:'dataRules',
         template:'app/home/detail/rules/dataRules/dataRules.tpl.html',
         iconClass: 'fa fa-list',
-        helpId: 'dataRules'
+        helpId: 'data-rules-tab'
       },
       metricAlertRulesTab = {
         name:'metricAlertRules',
         template:'app/home/detail/rules/metricAlert/metricAlert.tpl.html',
         iconClass: 'fa fa-list',
-        helpId: 'metricAlerts'
+        helpId: 'metric-rules-tab'
       },
       emailIdsTab = {
         name:'emailIDs',
@@ -203,11 +203,11 @@ angular
             if(activeTab.helpId) {
               helpId = activeTab.helpId;
             } else {
-              helpId = 'pipelineConfiguration';
+              helpId = 'pipeline-configuration';
             }
             break;
           case pipelineConstant.STAGE_INSTANCE:
-            helpId = selectedObject.library + '-' + selectedObject.stageName;
+            helpId = selectedObject.library + '@' + selectedObject.stageName + '@' + selectedObject.stageVersion;
             break;
           case pipelineConstant.LINK:
             helpId = activeTab.helpId;

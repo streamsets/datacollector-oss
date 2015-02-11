@@ -447,7 +447,7 @@ angular.module('dataCollectorApp.common')
             },
             {
               value: 'pipeline.errorRecordsPerBatch.histogramM5',
-              label: 'Pipeline Error Records Per Batch Histogram M5'
+              label: 'Pipeline Bad Records Per Batch Histogram M5'
             },
             {
               value: 'pipeline.errorsPerBatch.histogramM5',
@@ -469,7 +469,7 @@ angular.module('dataCollectorApp.common')
             },
             {
               value: 'pipeline.batchErrorRecords.meter',
-              label: 'Pipeline Batch Error Records Meter'
+              label: 'Pipeline Batch Bad Records Meter'
             },
             {
               value: 'pipeline.batchErrorMessages.meter',
@@ -500,7 +500,7 @@ angular.module('dataCollectorApp.common')
           },
           {
             value: 'stage.' + instanceName + '.errorRecords.counter',
-            label: label + ' Error Records Counter'
+            label: label + ' Bad Records Counter'
           },
           {
             value: 'stage.' + instanceName + '.stageErrors.counter',

@@ -12,6 +12,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
     mockedApi = api;
 
     $httpBackend.expectGET('i18n/en.json').respond({});
+    $httpBackend.expectGET('rest/v1/helpref').respond({});
     $httpBackend.expectGET('rest/v1/configuration/all').respond({});
     $httpBackend.expectGET('rest/v1/definitions').respond({
       pipeline: [

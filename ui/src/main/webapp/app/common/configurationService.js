@@ -6,7 +6,8 @@ angular.module('dataCollectorApp.common')
     var self = this,
       REFRESH_INTERVAL = 'ui.refresh.interval.ms',
       JVM_METRICS_REFRESH_INTERVAL = 'ui.jvmMetrics.refresh.interval.ms',
-      UI_HELP_BASE_URL = 'ui.help.base.url';
+      UI_LOCAL_HELP_BASE_URL = 'ui.local.help.base.url',
+      UI_ONLINE_HELP_BASE_URL = 'ui.online.help.base.url';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -61,16 +62,27 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
-     * Returns UI Help Base URL
+     * Returns UI Local Help Base URL
      *
      * @returns string
      */
-    this.getUIHelpBaseURL = function() {
+    this.getUILocalHelpBaseURL = function() {
       if(self.config) {
-        return self.config[UI_HELP_BASE_URL];
+        return self.config[UI_LOCAL_HELP_BASE_URL];
       }
       return '/docs';
     };
 
+    /**
+     * Returns UI Local Help Base URL
+     *
+     * @returns string
+     */
+    this.getUIOnlineHelpBaseURL = function() {
+      if(self.config) {
+        return self.config[UI_ONLINE_HELP_BASE_URL];
+      }
+      return '/docs';
+    };
 
   });

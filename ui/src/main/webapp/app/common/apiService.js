@@ -10,6 +10,17 @@ angular.module('dataCollectorApp.common')
     api.admin = {
 
       /**
+       * Fetch Help IDs
+       */
+      getHelpRef: function() {
+        var url = apiBase + '/helpref';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Fetches JVM Metrics
        * @returns {*}
        */
