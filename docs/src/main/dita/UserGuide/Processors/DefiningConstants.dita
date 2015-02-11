@@ -12,8 +12,8 @@
                 for employees using .01 as a bonus percentage, as
                 follows:<codeblock>${(record:value("/SALARY")) + (record:value("/SALARY")*.01)}</codeblock></p>
             <p>However, the bonus percentage changes regularly. So instead of using .01 directly in
-                the expression, you can create a Bonus constant and set it to .01 as shown:<image
-                    href="../Graphics/ExpressionStageConfig.png" id="image_qsg_pyp_yq" scale="60"
+                the expression, you can create a Bonus constant and set it to .01 as shown:</p>
+            <p><image href="../Graphics/ExpressionStageConfig.png" id="image_qsg_pyp_yq" scale="60"
                 /></p>
             <p>Then you can use the Bonus constant in an expression as follows:</p>
             <p>

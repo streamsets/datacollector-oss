@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_wwv_5xp_1r">
+ <title>Reserved Words</title>
+ <shortdesc>The following words are reserved for the expression language and should not be used as
+  identifiers:</shortdesc>
+ <conbody>
+  <pre>and   eq   gt   true   instanceof
+or    ne   le   false  empty
+not   lt   ge   null   div   mod</pre>
+  <p>Though many of these words are not in the language now, but they might be in the future, so you
+   should avoid using them.</p>
+ </conbody>
+</concept>

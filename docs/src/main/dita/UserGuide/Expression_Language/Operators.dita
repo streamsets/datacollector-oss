@@ -18,28 +18,56 @@
      <tbody>
       <row>
        <entry>Arithmetic</entry>
-       <entry>You can use the following arithmetic operators:<ul id="ul_ef5_nnj_wq">
+       <entry>
+        <ul id="ul_ef5_nnj_wq">
          <li>+ </li>
          <li>-</li>
          <li>*</li>
          <li>/ or "div"</li>
          <li>% or "mod"</li>
-        </ul></entry>
+        </ul>
+       </entry>
       </row>
       <row>
        <entry>Logical</entry>
-       <entry>You can use the following arithmetic operators:<ul id="ul_mmb_2rj_wq">
+       <entry>
+        <ul id="ul_mmb_2rj_wq">
          <li>and</li>
          <li>&amp;&amp;</li>
          <li>or</li>
          <li>||</li>
          <li>not</li>
          <li>!</li>
+        </ul>
+       </entry>
+      </row>
+      <row>
+       <entry>Relational</entry>
+       <entry>You can use the following operators to compare against other values, or against
+        boolean, string, integer, or floating point literals. <ul id="ul_h1c_fwp_1r">
+         <li> ==</li>
+         <li>eq</li>
+         <li>!=</li>
+         <li>ne</li>
+         <li>&lt;</li>
+         <li>lt</li>
+         <li>></li>
+         <li>gt</li>
+         <li>&lt;=</li>
+         <li>ge</li>
+         <li>>=</li>
+         <li>le </li>
         </ul></entry>
       </row>
       <row>
-       <entry/>
-       <entry/>
+       <entry>Empty</entry>
+       <entry>The empty operator is a prefix operation that can be used to determine whether a value
+        is null or empty.</entry>
+      </row>
+      <row>
+       <entry>Conditional</entry>
+       <entry> ?<p>For example, <codeph>A ? B : C</codeph> evaluates B or C depending on the result
+         of the evaluation of A. </p></entry>
       </row>
      </tbody>
     </tgroup>

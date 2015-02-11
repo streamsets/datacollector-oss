@@ -6,13 +6,13 @@
  <conbody>
   <ul id="ul_e3m_jpm_xq">
    <li>Boolean literals - "true" and "false"</li>
-   <li>Integers</li>
-   <li>Floating point</li>
+   <li>Integers - as in Java</li>
+   <li>Floating point - as in Java</li>
    <li>Strings with single or double quotation marks. </li>
    <li>Escape characters for strings: \ for both quotation marks and  \\ for \<draft-comment
      author="Loretta">verify this translation. original: " is escaped as \", ' is escaped as \', and
      \ is escaped as \\.</draft-comment></li>
+   <li>Null - null</li>
   </ul>
-  <p></p>
  </conbody>
 </concept>

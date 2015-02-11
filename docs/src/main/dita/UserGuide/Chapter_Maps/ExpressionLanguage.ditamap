@@ -7,5 +7,12 @@
   <topicref href="../Expression_Language/ExpressionLanguage_overview.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta>
   </topicref>
+  <topicref href="../Processors/BasicSyntax.dita"/>
+  <topicref href="../Processors/UsingFieldNamesinExpressions.dita"/>
+  <topicref href="../Expression_Language/Literals.dita"/>
+  <topicref href="../Expression_Language/Operators.dita">
+   <topicref href="../Expression_Language/OperatorPrecedence.dita"/>
+  </topicref>
+  <topicref href="../Expression_Language/ReservedWords.dita"/>
  </topicref>
 </map>

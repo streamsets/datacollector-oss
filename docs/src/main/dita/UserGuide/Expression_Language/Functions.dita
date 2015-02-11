@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_lhz_pyp_1r">
+ <title>Functions</title>
+ <shortdesc></shortdesc>
+ <conbody>
+  <p></p>
+  <ul id="ul_dxr_wyp_1r">
+   <li>Record functions</li>
+   <li>Error functions</li>
+   <li>String functions</li>
+   <li>Basic &lt;&lt;??>></li>
+  </ul>
+ </conbody>
+</concept>

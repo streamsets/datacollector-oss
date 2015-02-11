@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_dbm_nxp_1r">
+ <title>Operator Precedence </title>
+ <shortdesc>The precedence of operators highest to lowest, left to right is as follows:</shortdesc>
+ <conbody>
+  <p>
+   <ul id="ul_kvt_wwp_1r">
+    <li>[ ] </li>
+    <li>( ) - Used to change the precedence of operators</li>
+    <li>- (unary) <codeph>not ! empty</codeph></li>
+    <li>* / div % mod</li>
+    <li>+ - (binary)</li>
+    <li>&lt;  >  &lt;=  >=  lt gt le ge</li>
+    <li>==  !=  eq ne</li>
+    <li>&amp;&amp; and</li>
+    <li>|| or</li>
+    <li>? :</li>
+   </ul>
+  </p>
+ </conbody>
+</concept>
