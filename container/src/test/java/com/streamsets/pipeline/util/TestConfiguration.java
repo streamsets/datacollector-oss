@@ -183,4 +183,38 @@ public class TestConfiguration {
     conf.set("a", "@hello.txt@");
   }
 
+  @Test
+  public void testUnresolvedConfigs() throws IOException {
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    Configuration.setFileRefsBaseDir(dir);
+
+    Writer writer = new FileWriter(new File(dir, "hello.txt"));
+    IOUtils.write("secret", writer);
+    writer.close();
+    Configuration conf = new Configuration();
+
+    conf.set("a", "@hello.txt@");
+    conf.set("x", "X");
+    Assert.assertEquals("secret", conf.get("a", null));
+    Assert.assertEquals("X", conf.get("x", null));
+
+    Configuration uconf = conf.getUnresolvedConfiguration();
+    Assert.assertEquals("@hello.txt@", uconf.get("a", null));
+    Assert.assertEquals("X", uconf.get("x", null));
+
+    writer = new FileWriter(new File(dir, "config.properties"));
+    conf.save(writer);
+    writer.close();
+
+    conf = new Configuration();
+    Reader reader = new FileReader(new File(dir, "config.properties"));
+    conf.load(reader);
+    reader.close();
+
+    uconf = conf.getUnresolvedConfiguration();
+    Assert.assertEquals("@hello.txt@", uconf.get("a", null));
+    Assert.assertEquals("X", uconf.get("x", null));
+  }
+
 }

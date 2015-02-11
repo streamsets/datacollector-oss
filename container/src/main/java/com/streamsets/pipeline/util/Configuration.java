@@ -30,6 +30,7 @@ public class Configuration {
 
   private interface Ref {
     public String getValue();
+    public String getUnresolvedValue();
   }
 
   private static class StringRef implements Ref {
@@ -42,6 +43,11 @@ public class Configuration {
     @Override
     public String getValue() {
       return value;
+    }
+
+    @Override
+    public String getUnresolvedValue() {
+      return getValue();
     }
 
     @Override
@@ -72,6 +78,11 @@ public class Configuration {
     }
 
     @Override
+    public String getUnresolvedValue() {
+      return "@" + getFile() + "@";
+    }
+
+    @Override
     public String toString() {
       return Utils.format("FileRef '{}'", file);
     }
@@ -86,6 +97,14 @@ public class Configuration {
 
   private Configuration(Map<String, Ref> map) {
     this.map = map;
+  }
+
+  public Configuration getUnresolvedConfiguration() {
+    Map<String, Ref> subSetMap = new LinkedHashMap<>();
+    for (Map.Entry<String, Ref> entry : map.entrySet()) {
+        subSetMap.put(entry.getKey(), new StringRef(entry.getValue().getUnresolvedValue()));
+    }
+    return new Configuration(subSetMap);
   }
 
   public Configuration getSubSetConfiguration(String namePrefix) {

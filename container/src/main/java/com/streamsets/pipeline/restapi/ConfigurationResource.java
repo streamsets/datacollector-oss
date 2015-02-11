@@ -40,6 +40,6 @@ public class ConfigurationResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getConfiguration() throws PipelineStoreException {
 
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(config.getSubSetConfiguration("")).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(config.getUnresolvedConfiguration()).build();
   }
 }
