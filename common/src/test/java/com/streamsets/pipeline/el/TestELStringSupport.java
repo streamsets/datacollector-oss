@@ -112,6 +112,39 @@ public class TestELStringSupport {
   }
 
   @Test
+  public void testContains() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertTrue((boolean) eval.eval(variables, "${str:contains(\"The Streamsets Inc\", \"Inc\")}"));
+    Assert.assertFalse((boolean) eval.eval(variables, "${str:contains(\"The Streamsets Inc\", \"Incorporated\")}"));
+  }
+
+  @Test
+  public void testStartsWith() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertTrue((boolean) eval.eval(variables, "${str:startsWith(\"The Streamsets Inc\", \"The Streamsets\")}"));
+    Assert.assertFalse((boolean) eval.eval(variables, "${str:startsWith(\"The Streamsets Inc\", \"Streamsets Inc\")}"));
+  }
+
+  @Test
+  public void testEndsWith() throws Exception {
+    ELEvaluator eval = new ELEvaluator();
+    ELStringSupport.registerStringFunctions(eval);
+
+    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+
+    Assert.assertFalse((boolean) eval.eval(variables, "${str:endsWith(\"The Streamsets Inc\", \"The Streamsets\")}"));
+    Assert.assertTrue((boolean) eval.eval(variables, "${str:endsWith(\"The Streamsets Inc\", \"Streamsets Inc\")}"));
+  }
+
+  @Test
   public void testTruncate() throws Exception {
     ELEvaluator eval = new ELEvaluator();
     ELStringSupport.registerStringFunctions(eval);

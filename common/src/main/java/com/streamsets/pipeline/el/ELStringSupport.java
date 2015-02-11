@@ -65,6 +65,18 @@ public class ELStringSupport {
     return null;
   }
 
+  public static boolean contains(String s1, String s2) {
+    return s1.contains(s2);
+  }
+
+  public static boolean startsWith(String s1, String s2) {
+    return s1.startsWith(s2);
+  }
+
+  public static boolean endsWith(String s1, String s2) {
+    return s1.endsWith(s2);
+  }
+
   private static final Method SUBSTRING;
   private static final Method TRIM;
   private static final Method TO_UPPER;
@@ -73,6 +85,9 @@ public class ELStringSupport {
   private static final Method REPLACE_ALL;
   private static final Method TRUNCATE;
   private static final Method REGEX_CAPTURE;
+  private static final Method CONTAINS;
+  private static final Method STARTS_WITH;
+  private static final Method ENDS_WITH;
 
   static {
     try {
@@ -84,6 +99,9 @@ public class ELStringSupport {
       REPLACE_ALL = ELStringSupport.class.getMethod("replaceAll", String.class, String.class, String.class);
       TRUNCATE = ELStringSupport.class.getMethod("truncate", String.class, int.class);
       REGEX_CAPTURE = ELStringSupport.class.getMethod("regExCapture", String.class, String.class, int.class);
+      CONTAINS = ELStringSupport.class.getMethod("contains", String.class, String.class);
+      STARTS_WITH = ELStringSupport.class.getMethod("startsWith", String.class, String.class);
+      ENDS_WITH = ELStringSupport.class.getMethod("endsWith", String.class, String.class);
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
@@ -99,6 +117,9 @@ public class ELStringSupport {
     elEvaluator.registerFunction(STRING_CONTEXT_VAR, "replaceAll", REPLACE_ALL);
     elEvaluator.registerFunction(STRING_CONTEXT_VAR, "truncate", TRUNCATE);
     elEvaluator.registerFunction(STRING_CONTEXT_VAR, "regExCapture", REGEX_CAPTURE);
+    elEvaluator.registerFunction(STRING_CONTEXT_VAR, "contains", CONTAINS);
+    elEvaluator.registerFunction(STRING_CONTEXT_VAR, "startsWith", STARTS_WITH);
+    elEvaluator.registerFunction(STRING_CONTEXT_VAR, "endsWith", ENDS_WITH);
   }
 
 }
