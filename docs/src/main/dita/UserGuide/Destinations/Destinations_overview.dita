@@ -9,6 +9,7 @@
         >list the target types. quick description.</draft-comment><ul id="ul_mxz_jxm_jq">
         <li>Kafka Producer - Writes data to a Kakfa cluster.</li>
         <li>Hadoop FS - Writes data to a file system on Hadoop.</li>
+        <li>Local File System - Writes records to a local file system.</li>
         <li>Trash - Removes data from the pipeline.</li>
       </ul></p>
  </conbody>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_e33_3v5_1r">
+    <title>Configuring a Local File System Destination</title>
+    <shortdesc>Configure the Local File System destination to write records to a local file system. </shortdesc>
+    <taskbody>
+        <context>
+            <p></p>
+        </context>
+        <steps id="steps_fvm_m1v_1r">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>Click the <wintitle>Files</wintitle> tab and configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_alc_1cv_1r">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.67*"/>
+                            <thead>
+                                <row>
+                                    <entry>Local File System Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Directory</entry>
+                                    <entry>Local directory for the output files.</entry>
+                                </row>
+                                <row>
+                                    <entry>File Wait Time</entry>
+                                    <entry>Amount of time to wait for records. After the configured
+                                        time, Local File System creates a new output file. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

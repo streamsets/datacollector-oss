@@ -3,21 +3,23 @@
 <map>
  <title>Destinations</title>
  <topicref href="../Destinations/Destinations_title.dita">
-  <topicref href="../Destinations/Destinations_overview.dita">
-   <topicref href="../Reusable_Content/RequiredFields.dita"/>
-   <topicref href="../Destinations/HadoopFS.dita">
-    <topicref href="../Destinations/HadoopFS_OutputFileDirs.dita"/>
-    <topicref href="../Destinations/HadoopFS-Configuring.dita"/>
-   </topicref>
-   <topicref href="../Destinations/KProducer.dita">
-    <topicref href="../Destinations/KProducer_WritingTextDelimitedData.dita"/>
-    <topicref href="../Destinations/KafkaProducer_BrokerList.dita"/>
-    <topicref href="../Destinations/KProducer-AdditionalKProperties.dita"/>
-    <topicref href="../Destinations/KProducer-Configuring.dita"/>
-   </topicref>
-   <topicref href="../Destinations/Trash.dita">
-    <topicref href="../Destinations/Trash-Configuring.dita"/>
-   </topicref>
+  <topicref href="../Destinations/Destinations_overview.dita" chunk="to-content"/>
+  <topicref href="../Reusable_Content/RequiredFields.dita"/>
+  <topicref href="../Destinations/HadoopFS.dita" chunk="to-content">
+   <topicref href="../Destinations/HadoopFS_OutputFileDirs.dita"/>
+   <topicref href="../Destinations/HadoopFS-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Destinations/KProducer.dita" chunk="to-content">
+   <topicref href="../Destinations/KProducer_WritingTextDelimitedData.dita"/>
+   <topicref href="../Destinations/KafkaProducer_BrokerList.dita"/>
+   <topicref href="../Destinations/KProducer-AdditionalKProperties.dita"/>
+   <topicref href="../Destinations/KProducer-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Destinations/LocalFS.dita" chunk="to-content">
+   <topicref href="../Destinations/LocalFS-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Destinations/Trash.dita" chunk="to-content">
+   <topicref href="../Destinations/Trash-Configuring.dita"/>
   </topicref>
  </topicref>
 </map>

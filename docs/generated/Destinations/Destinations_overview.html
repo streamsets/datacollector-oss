@@ -2,15 +2,15 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="A destination stage represents the target data for the pipeline. You can use one or more destinations in a pipeline. You can use the following types of destinations in a pipeline: Kafka Producer - ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Destinations"></meta><meta name="abstract" content="A destination stage represents the target data for the pipeline. You can use one or more destinations in a pipeline."></meta><meta name="description" content="A destination stage represents the target data for the pipeline. You can use one or more destinations in a pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Reusable_Content/RequiredFields.html"></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/HadoopFS.html"></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/KProducer.html"></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Trash.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hpr_twm_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Destinations</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="A destination stage represents the target data for the pipeline. You can use one or more destinations in a pipeline. You can use the following types of destinations in a pipeline: Kafka Producer - ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Destinations"></meta><meta name="abstract" content="A destination stage represents the target data for the pipeline. You can use one or more destinations in a pipeline."></meta><meta name="description" content="A destination stage represents the target data for the pipeline. You can use one or more destinations in a pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hpr_twm_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Destinations</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
-<body onload="highlightSearchTerm()" class="frmBody" id="concept_hpr_twm_jq">
+<body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations_title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Destinations/Destinations_title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
-
+<div class="nested0" id="concept_hpr_twm_jq">
  <h1 class="title topictitle1">Destinations</h1>
 
  
@@ -22,6 +22,8 @@
 
         <li class="li">Hadoop FS - Writes data to a file system on Hadoop.</li>
 
+        <li class="li">Local File System - Writes bad records to a local file system</li>
+
         <li class="li">Trash - Removes data from the pipeline.</li>
 
       </ul>
@@ -29,17 +31,7 @@
 
  </div>
 
-<div class="related-links">
-<ul class="ullinks">
-<li class="link ulchildlink"><strong><a href="../Reusable_Content/RequiredFields.html">Required Fields</a></strong><br></br>
-You can configure required fields for any processor or target stage. A required field   must exist in a record to keep it in the pipeline. </li>
-<li class="link ulchildlink"><strong><a href="../Destinations/HadoopFS.html">Hadoop FS</a></strong><br></br>
-The Hadoop FS destination writes data to a Hadoop file system. You can write delimited   or JSON data to flat files or Hadoop sequence files. </li>
-<li class="link ulchildlink"><strong><a href="../Destinations/KProducer.html">Kafka Producer</a></strong><br></br>
-The Kafka Producer passes data to a Kafka cluster. The Kakfa Producer can pass data to   Kafka as delimited, text, or JSON data.</li>
-<li class="link ulchildlink"><strong><a href="../Destinations/Trash.html">Trash</a></strong><br></br>
-The Trash destination discards all records. Use the Trash destination as a visual   representation of records dropped from the pipeline. Or, use the Trash destination during   development as a placeholder for another destination. </li>
-</ul>
+<div class="related-links"></div>
 </div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Destinations/Destinations_title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>

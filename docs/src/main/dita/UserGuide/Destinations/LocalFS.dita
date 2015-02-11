@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_zvc_bv5_1r">
+ <title>Local File System</title>
+ <shortdesc>Use the Local File System destination to write records to files in a local file system.
+   <draft-comment author="Loretta">You can review the files and create a new pipeline to process the
+   bad record files. </draft-comment></shortdesc>
+ <conbody>
+  <p></p>
+ </conbody>
+</concept>
