@@ -253,6 +253,8 @@
       "summaryTab": {
         "alertsTitle": "Alerts",
         "batchThroughput": "Batch Throughput (batches/sec)",
+        "chartsLabel": "Charts",
+        "chartsPlaceholder": "Select Chart",
         "recordsProcessed": "Records Processed (since last startup)",
         "recordCountBarChartTitle": "Record Count (since last startup)",
         "recordThroughput": "Record Throughput (records/sec)",
@@ -265,7 +267,8 @@
           "outputRecords": "Output",
           "errorRecords": "Error",
           "errors": "Stage Error"
-        }
+        },
+        "settingsTitle": "Monitoring Settings"
       }
     },
     "previewPane": {

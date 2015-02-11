@@ -1,0 +1,33 @@
+<form class="summary-settings-modal-form form" role="form" ng-submit="save()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.detailPane.summaryTab.settingsTitle">Monitoring Settings</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'errorAlertContent.html'"></ng-include>
+
+    <div class="form-group">
+      <label class="control-label" translate="home.detailPane.summaryTab.chartsLabel">Charts</label>
+      <ui-select multiple
+          ng-model="selectedCharts.selected">
+        <ui-select-match placeholder="{{'home.detailPane.summaryTab.chartsPlaceholder' | translate}}">{{$item.label | translate}}</ui-select-match>
+        <ui-select-choices repeat="chart in availableCharts track by chart.label |  filter: {label: $select.search}">
+          {{chart.label | translate}}
+        </ui-select-choices>
+      </ui-select>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.cancel">
+      Cancel
+    </button>
+    <button type="submit" class="btn btn-primary" translate="global.form.save">
+      Save
+    </button>
+  </div>
+</form>

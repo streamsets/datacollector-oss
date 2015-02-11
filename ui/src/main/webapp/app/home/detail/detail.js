@@ -214,6 +214,13 @@ angular
 
         contextHelpService.launchHelp(helpId);
 
+      },
+
+      /**
+       * Launch Settings for Summary Tab
+       */
+      launchSettings: function() {
+        $scope.$broadcast('launchSummarySettings');
       }
     });
 

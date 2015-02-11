@@ -23,159 +23,202 @@
   </div>
 
   <div class="row">
-
-    <div class="col-sm-4"
-         ng-if="selectedType === pipelineConstant.STAGE_INSTANCE"
-         ng-controller="RecordPercentagePieChartController">
-      <div class="panel panel-default">
-        <div class="panel-heading" translate="home.detailPane.summaryTab.recordsProcessed">Records Processed</div>
-        <div class="panel-body">
-          <nvd3-pie-chart
-            data="pieChartData"
-            id="RecordProcessedPieChartID"
-            height="250"
-            x="getLabel()"
-            y="getValue()"
-            color="getColor()"
-            legendColor="getColor()"
-            showLabels="true"
-            showLegend="true"
-            tooltips="true"
-            tooltipcontent="getTooltipContent()"
-            labelType="percent"
-            donut="true"
-            donutRatio=".25"
-            donutLabelsOutside="true"
-            margin="{left:20,top:20,bottom:20,right:20}">
-            <svg></svg>
-          </nvd3-pie-chart>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-4" ng-controller="RecordCountBarChartController">
-      <div class="panel panel-default">
-        <div class="panel-heading"
-             translate="home.detailPane.summaryTab.recordCountBarChartTitle">Record Count (since last startup)</div>
-        <div class="panel-body">
-          <nvd3-discrete-bar-chart
-            data="barChartData"
-            id="RecordProcessedBarChartID"
-            height="250"
-            color="getColor()"
-            showXAxis="true"
-            showYAxis="true"
-            showValues="true"
-            showLegend="true"
-            staggerLabels="true"
-            yAxisTickFormat="getYAxisLabel()"
-            valueformat="valueFormatFunction()"
-            margin="{left:20,top:20,bottom:40,right:20}">
-          </nvd3-discrete-bar-chart>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="col-sm-4" ng-controller="MeterBarChartController">
-      <div class="panel panel-default">
-        <div class="panel-heading" translate="home.detailPane.summaryTab.recordThroughput">Record Throughput</div>
-        <div class="panel-body">
-          <nvd3-multi-bar-chart
-            data="chartData"
-            id="MeterBarChartId"
-            height="250"
-            color="getColor()"
-            legendColor="getColor()"
-            yAxisTickFormat="valueFormatFunction()"
-            valueformat="valueFormatFunction()"
-            margin="{left:50,top:20,bottom:40,right:20}"
-            staggerLabels="true"
-            showLegend="true"
-            showXAxis="true"
-            showYAxis="true"
-            tooltips="true"
-            tooltipcontent="getTooltipContent()">
-            <svg></svg>
-          </nvd3-multi-bar-chart>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="col-sm-4"
-         ng-if="!detailPaneConfig.instanceName"
-         ng-controller="BatchCountBarChartController">
-      <div class="panel panel-default">
-        <div class="panel-heading" translate="home.detailPane.summaryTab.batchThroughput">Batch Throughput</div>
-        <div class="panel-body">
-          <nvd3-discrete-bar-chart
-            data="chartData"
-            id="BatchCountBarChartID"
-            height="250"
-            staggerLabels="true"
-            showXAxis="true"
-            showYAxis="true"
-            showValues="false"
-            showLegend="true"
-            tooltips="true"
-            tooltipcontent="getTooltipContent()"
-            margin="{left:40,top:20,bottom:40,right:20}">
-          </nvd3-discrete-bar-chart>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="panel panel-default">
-        <div class="panel-heading" translate="global.form.histogram">Record Histogram (5 minutes decay)</div>
-        <div class="panel-body">
-          <div ng-controller="HistogramChartController">
-            <nvd3-multi-bar-horizontal-chart
-              data="timerData"
-              id="histogramMixChartID"
-              height="250"
-              color="getColor()"
-              legendColor="getColor()"
-              showLegend="true"
-              showXAxis="true"
-              showYAxis="true"
-              showValues="false"
-              tooltips="true"
-              tooltipcontent="getTooltipContent()"
-              margin="{left:65,top:70,bottom:20,right:20}">
-              <svg></svg>
-            </nvd3-multi-bar-horizontal-chart>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-4"
-         ng-controller="BatchTimerChartController">
-      <div class="panel panel-default">
-        <div class="panel-heading"
-             translate="home.detailPane.summaryTab.batchProcessingTimer">Batch Processing Timer (in seconds)</div>
-        <div class="panel-body">
-          <nvd3-multi-bar-horizontal-chart
-            data="timerData"
-            id="timerDataBatchTimerChartID"
-            height="250"
-            color="getColor()"
-            legendColor="getColor()"
-            showLegend="true"
-            showXAxis="true"
-            showValues="true"
-            margin="{left:50,top:70,bottom:20,right:20}">
-            <svg></svg>
-          </nvd3-multi-bar-horizontal-chart>
-        </div>
-
-      </div>
-    </div>
+    <ng-include ng-repeat="(chartIndex, chart) in $storage.summaryChartList" src="chart.templateId">
+    </ng-include>
   </div>
 
 </div>
+
+
+<script type="text/ng-template" id="summaryRecordPercentagePieChartTemplate">
+  <div class="col-sm-4"
+       ng-if="selectedType === pipelineConstant.STAGE_INSTANCE"
+       ng-controller="RecordPercentagePieChartController">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span translate="home.detailPane.summaryTab.recordsProcessed">Records Processed</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <nvd3-pie-chart
+          data="pieChartData"
+          id="RecordProcessedPieChartID"
+          height="250"
+          x="getLabel()"
+          y="getValue()"
+          color="getColor()"
+          legendColor="getColor()"
+          showLabels="true"
+          showLegend="true"
+          tooltips="true"
+          tooltipcontent="getTooltipContent()"
+          labelType="percent"
+          donut="true"
+          donutRatio=".25"
+          donutLabelsOutside="true"
+          margin="{left:20,top:20,bottom:20,right:20}">
+          <svg></svg>
+        </nvd3-pie-chart>
+      </div>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="summaryRecordCountBarChartTemplate">
+  <div class="col-sm-4" ng-controller="RecordCountBarChartController">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span translate="home.detailPane.summaryTab.recordCountBarChartTitle">Record Count (since last startup)</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <nvd3-discrete-bar-chart
+          data="barChartData"
+          id="RecordProcessedBarChartID"
+          height="250"
+          color="getColor()"
+          showXAxis="true"
+          showYAxis="true"
+          showValues="true"
+          showLegend="true"
+          staggerLabels="true"
+          yAxisTickFormat="getYAxisLabel()"
+          valueformat="valueFormatFunction()"
+          margin="{left:20,top:20,bottom:40,right:20}">
+        </nvd3-discrete-bar-chart>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="summaryRecordsThroughputMeterBarChartTemplate">
+  <div class="col-sm-4" ng-controller="MeterBarChartController">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span translate="home.detailPane.summaryTab.recordThroughput">Record Throughput</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <nvd3-multi-bar-chart
+          data="chartData"
+          id="MeterBarChartId"
+          height="250"
+          color="getColor()"
+          legendColor="getColor()"
+          yAxisTickFormat="valueFormatFunction()"
+          valueformat="valueFormatFunction()"
+          margin="{left:50,top:20,bottom:40,right:20}"
+          staggerLabels="true"
+          showLegend="true"
+          showXAxis="true"
+          showYAxis="true"
+          tooltips="true"
+          tooltipcontent="getTooltipContent()">
+          <svg></svg>
+        </nvd3-multi-bar-chart>
+      </div>
+    </div>
+  </div>
+
+</script>
+
+
+<script type="text/ng-template" id="summaryBatchThroughputBarChartTemplate">
+  <div class="col-sm-4"
+       ng-if="!detailPaneConfig.instanceName"
+       ng-controller="BatchCountBarChartController">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span translate="home.detailPane.summaryTab.batchThroughput">Batch Throughput</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <nvd3-discrete-bar-chart
+          data="chartData"
+          id="BatchCountBarChartID"
+          height="250"
+          staggerLabels="true"
+          showXAxis="true"
+          showYAxis="true"
+          showValues="false"
+          showLegend="true"
+          tooltips="true"
+          tooltipcontent="getTooltipContent()"
+          margin="{left:40,top:20,bottom:40,right:20}">
+        </nvd3-discrete-bar-chart>
+      </div>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="summaryRecordHistogramTemplate">
+  <div class="col-sm-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span translate="global.form.histogram">Record Histogram (5 minutes decay)</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <div ng-controller="HistogramChartController">
+          <nvd3-multi-bar-horizontal-chart
+            data="timerData"
+            id="histogramMixChartID"
+            height="250"
+            color="getColor()"
+            legendColor="getColor()"
+            showLegend="true"
+            showXAxis="true"
+            showYAxis="true"
+            showValues="false"
+            tooltips="true"
+            tooltipcontent="getTooltipContent()"
+            margin="{left:65,top:70,bottom:20,right:20}">
+            <svg></svg>
+          </nvd3-multi-bar-horizontal-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="summaryRecordsProcessedTemplate">
+  <div class="col-sm-4"
+       ng-controller="BatchTimerChartController">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span translate="home.detailPane.summaryTab.batchProcessingTimer">Batch Processing Timer (in seconds)</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <nvd3-multi-bar-horizontal-chart
+          data="timerData"
+          id="timerDataBatchTimerChartID"
+          height="250"
+          color="getColor()"
+          legendColor="getColor()"
+          showLegend="true"
+          showXAxis="true"
+          showValues="true"
+          margin="{left:50,top:70,bottom:20,right:20}">
+          <svg></svg>
+        </nvd3-multi-bar-horizontal-chart>
+      </div>
+
+    </div>
+  </div>
+</script>

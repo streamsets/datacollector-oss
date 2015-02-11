@@ -5,7 +5,33 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('SummaryController', function ($scope, $rootScope, pipelineConstant) {
+  .controller('SummaryController', function ($scope, $rootScope, $modal, pipelineConstant) {
+    var chartList = [
+      {
+        label: 'home.detailPane.summaryTab.recordsProcessed',
+        templateId: 'summaryRecordPercentagePieChartTemplate'
+      },
+      {
+        label: 'home.detailPane.summaryTab.recordCountBarChartTitle',
+        templateId: 'summaryRecordCountBarChartTemplate'
+      },
+      {
+        label: 'home.detailPane.summaryTab.recordThroughput',
+        templateId: 'summaryRecordsThroughputMeterBarChartTemplate'
+      },
+      {
+        label: 'home.detailPane.summaryTab.batchThroughput',
+        templateId: 'summaryBatchThroughputBarChartTemplate'
+      },
+      {
+        label: 'global.form.histogram',
+        templateId: 'summaryRecordHistogramTemplate'
+      },
+      {
+        label: 'home.detailPane.summaryTab.batchProcessingTimer',
+        templateId: 'summaryRecordsProcessedTemplate'
+      }
+    ];
 
     angular.extend($scope, {
       summaryCounters: {},
@@ -46,8 +72,17 @@ angular
             return '1 day';
         }
         return key;
+      },
+
+      removeChart: function(chart, $index) {
+        $rootScope.$storage.summaryChartList.splice($index, 1);
       }
     });
+
+
+    if(!$rootScope.$storage.summaryChartList) {
+      $rootScope.$storage.summaryChartList = chartList;
+    }
 
     /**
      * Update Summary Tab Data
@@ -175,5 +210,54 @@ angular
       }
     });
 
+    $scope.$on('launchSummarySettings', function() {
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/detail/summary/settings/settingsModal.tpl.html',
+        controller: 'SummarySettingsModalInstanceController',
+        backdrop: 'static',
+        resolve: {
+          availableCharts: function () {
+            return chartList;
+          },
+          selectedCharts: function() {
+            var selectedChartList = $rootScope.$storage.summaryChartList;
+            return _.filter(chartList, function(chart) {
+              return _.find(selectedChartList, function(sChart) {
+                return sChart.label === chart.label;
+              });
+            });
+          }
+        }
+      });
+
+      modalInstance.result.then(function (selectedCharts) {
+        $rootScope.$storage.summaryChartList = selectedCharts;
+      }, function () {
+
+      });
+    });
+
+  })
+
+  .controller('SummarySettingsModalInstanceController', function ($scope, $modalInstance, availableCharts, selectedCharts) {
+    angular.extend($scope, {
+      showLoading: false,
+      common: {
+        errors: []
+      },
+      availableCharts: availableCharts,
+      selectedCharts: {
+        selected : selectedCharts
+      },
+
+      save : function () {
+        $modalInstance.close($scope.selectedCharts.selected);
+      },
+      cancel : function () {
+        $modalInstance.dismiss('cancel');
+      }
+    });
+
+    $scope.$broadcast('show-errors-check-validity');
   });
 

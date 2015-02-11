@@ -41,6 +41,9 @@
     <div class="pull-right size-toolbar">
       <span class="fa fa-question-circle fa-14x pointer"
             ng-click="launchHelp()"></span>
+      <span class="fa fa-gear fa-14x pointer"
+            ng-if="detailPaneTabs[0].name === 'summary' && detailPaneTabs[0].active"
+            ng-click="launchSettings()"></span>
       <span class="glyphicon pointer"
             ng-hide="$storage.maximizeDetailPane"
             ng-class="{'glyphicon-minus' : !$storage.minimizeDetailPane , 'glyphicon-resize-full': $storage.minimizeDetailPane}"
