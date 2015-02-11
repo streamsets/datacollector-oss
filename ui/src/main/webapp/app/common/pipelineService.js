@@ -18,7 +18,7 @@ angular.module('dataCollectorApp.common')
       var maxYPos = 0;
 
       if(firstOpenLane) {
-        maxYPos = firstOpenLane.stageInstance.uiInfo.yPos - 130;
+        maxYPos = firstOpenLane.stageInstance.uiInfo.yPos - 150;
       }
 
       angular.forEach(pipelineConfig.stages, function(stage) {
@@ -27,7 +27,7 @@ angular.module('dataCollectorApp.common')
         }
       });
 
-      return maxYPos ? maxYPos + 130 : 50;
+      return maxYPos ? maxYPos + 150 : 50;
     };
 
     /**
