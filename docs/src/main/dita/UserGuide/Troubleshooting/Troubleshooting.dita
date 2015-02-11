@@ -44,6 +44,12 @@
      <dd>You can start a pipeline when it is valid. Use the Issues icon to review the list of issues
       in your pipeline. When you resolve the issues, the Start icon becomes enabled.</dd>
     </dlentry>
+    <dlentry>
+     <dt>Why doesn't the Select Fields with Preview Data option work? No preview data displays.</dt>
+     <dd>Select Fields with Preview Data can provide preview data when the pipeline configuration
+      allows for data preview. Make sure all stages are connected. You might also need to enter
+      temporary values for stage properties to enable data preview.</dd>
+    </dlentry>
 
    </dl>
   </p>

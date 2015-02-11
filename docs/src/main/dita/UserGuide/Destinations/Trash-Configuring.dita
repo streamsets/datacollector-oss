@@ -15,9 +15,10 @@
             </step>
             <step>
                 <cmd>For Required Fields, enter any fields that you want to require data. <xref
-                        href="../Processors/RequiredFieldsinProcessors.dita#concept_dnj_bkm_vq">
+                    href="../Reusable_Content/RequiredFields.dita#concept_dnj_bkm_vq">
                         <image href="../Graphics/icon_moreInfo.png" scale="11" id="image_h4p_p5v_yq"
-                        /></xref></cmd>
+                        /></xref><xref
+                        href="../Reusable_Content/RequiredFields.dita#concept_dnj_bkm_vq"/></cmd>
             </step>
         </steps>
     </taskbody>
