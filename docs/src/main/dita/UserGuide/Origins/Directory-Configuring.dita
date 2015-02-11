@@ -119,8 +119,8 @@
                                     <entry>File Post-Processing</entry>
                                     <entry>The action taken after processing a file: <ul
                                             id="ul_wsr_h4l_5q">
-                                            <li><uicontrol>None</uicontrol> - Leaves the file
-                                                alone.</li>
+                                            <li><uicontrol>None</uicontrol> - Keeps the file in
+                                                place.</li>
                                             <li><uicontrol>Archive</uicontrol> - Moves the file to
                                                 the archive directory.</li>
                                             <li><uicontrol>Delete</uicontrol> - Deletes the
@@ -136,7 +136,7 @@
                                 <row>
                                     <entry>Archive Retention Time (mins)</entry>
                                     <entry>Number of minutes processed files are saved in the
-                                        archive directory. Use 0 to keep the archived files
+                                        archive directory. Use 0 to keep archived files
                                         indefinitely.</entry>
                                 </row>
                             </tbody>

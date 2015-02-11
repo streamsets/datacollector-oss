@@ -13,8 +13,6 @@
       slows, a remaining batch contains a few rows, gaining an extra row periodically. 240 seconds
       after creating the batch, File Tail sends the partially-full batch through the pipeline. It
       immediately creates a new batch and starts a new countdown.</p>
-  <p>Configure the batch size based on the expected volume of data and the capabilities of the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> machine. </p>
   <p>Configure the batch wait time based on your processing needs. You might reduce the batch wait
    time to ensure all data is processed within a specified time frame or to make regular contact
    with pipeline destinations. Use the default or increase the wait time if you prefer not to

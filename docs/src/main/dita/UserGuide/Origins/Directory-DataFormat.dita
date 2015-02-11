@@ -18,8 +18,10 @@
     <dd>Generates a record for each JSON object. </dd>
     <dd>You can use JSON files that include multiple JSON objects or a JSON array.</dd>
     <dd>When you configure the JSON data properties, you define the maximum length of the JSON
-     object. When an object exceeds the maximum length, Directory discards the object and continues
-     processing with the next object.</dd>
+          object. When an object exceeds the maximum length, Directory skips the object and
+          continues processing with the next object. </dd>
+        <dd>The skipped object is either discarded or written to error based on the default error
+          handling for the pipeline. </dd>
    </dlentry>
    <dlentry>
     <dt>Delimited</dt>
@@ -37,9 +39,10 @@
    <dlentry>
     <dt>XML</dt>
     <dd>Generates records based on the location of the record separator XML element.</dd>
-    <dd>When you configure the XML data properties, you define the maximum length of the XML record.
-     When a record exceeds the maximum length, Directory discards the record and continues
-     processing with the next record.</dd>
+    <dd>When you configure the XML data properties, you define the maximum length of the XML record. </dd>
+        <dd>When a record exceeds the maximum length, Directory skips the record and continues
+          processing with the next record. The skipped record is either discarded or written to
+          error based on the default error handling for the pipeline. </dd>
    </dlentry>
   </dl>
  </conbody>

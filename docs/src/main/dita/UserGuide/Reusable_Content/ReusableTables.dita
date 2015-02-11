@@ -4,8 +4,8 @@
  <title>Reusable Tables of Information</title>
  <shortdesc></shortdesc>
  <conbody>
-  <p>The following table is used in "Configuring a Directory" and "Configuring a Kafka
-   Consumer":</p>
+  <p>The following table is used in "Configuring a Directory" and "Configuring a Kafka Consumer"--
+   no longer used by Kafka Consumer:</p>
   <p>
    <table frame="all" rowsep="1" colsep="1" id="table_JSONdata">
     <tgroup cols="2">
@@ -30,7 +30,8 @@
       </row>
       <row>
        <entry>Maximum Object Length</entry>
-       <entry>Maximum length for a JSON object. Longer objects are discarded. </entry>
+       <entry>Maximum length for a JSON object. Longer objects are skipped and handled based on the
+        pipeline error handling configuration. </entry>
       </row>
      </tbody>
     </tgroup>
