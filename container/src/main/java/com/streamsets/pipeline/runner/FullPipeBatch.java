@@ -106,6 +106,9 @@ public class FullPipeBatch implements PipeBatch {
       String instanceName = pipe.getStage().getInfo().getInstanceName();
       stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink));
     }
+    if (pipe.getStage().getDefinition().getType() == StageType.TARGET) {
+      outputRecords -= errorSink.getErrorRecords(pipe.getStage().getInfo().getInstanceName()).size();
+    }
   }
 
   @Override
