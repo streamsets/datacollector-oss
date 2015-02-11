@@ -159,6 +159,7 @@
     },
     "detailPane": {
       "alerts": "Alerts",
+      "batchesPerSecond": "( batches / sec)",
       "emailIDs": "Email IDs",
       "errors": "Errors",
       "badRecords": "Bad Records",
@@ -209,6 +210,7 @@
       "monitoringJSONData": "Monitoring Raw JSON Data",
       "pipelineConfigJSONData": "Pipeline Configuration Raw JSON Data",
       "rawPreview": "Raw Preview",
+      "recordsPerSecond": "(records / sec)",
       "rules": "Rules",
       "rulesTab": {
         "action": "Action",
@@ -257,12 +259,12 @@
       "summary": "Summary",
       "summaryTab": {
         "alertsTitle": "Alerts",
-        "batchThroughput": "Batch Throughput (batches/sec)",
+        "batchThroughput": "Batch Throughput",
         "chartsLabel": "Charts",
         "chartsPlaceholder": "Select Chart",
         "recordsProcessed": "Records Processed (since last startup)",
         "recordCountBarChartTitle": "Record Count (since last startup)",
-        "recordThroughput": "Record Throughput (records/sec)",
+        "recordThroughput": "Record Throughput",
         "batchProcessingTimer": "Batch Processing Timer (in seconds)",
         "frequency": "Frequency (batches/sec)",
         "duration": "Duration (Seconds)",

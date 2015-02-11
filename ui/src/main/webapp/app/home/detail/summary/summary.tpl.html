@@ -112,6 +112,8 @@
           height="250"
           color="getColor()"
           legendColor="getColor()"
+          yaxislabel="{{'home.detailPane.recordsPerSecond' | translate}}"
+          yaxislabeldistance="40"
           yAxisTickFormat="valueFormatFunction()"
           valueformat="valueFormatFunction()"
           margin="{left:50,top:20,bottom:40,right:20}"
@@ -146,6 +148,8 @@
           data="chartData"
           id="BatchCountBarChartID"
           height="250"
+          yaxislabel="{{'home.detailPane.batchesPerSecond' | translate}}"
+          yaxislabeldistance="40"
           staggerLabels="true"
           showXAxis="true"
           showYAxis="true"
@@ -153,7 +157,7 @@
           showLegend="true"
           tooltips="true"
           tooltipcontent="getTooltipContent()"
-          margin="{left:40,top:20,bottom:40,right:20}">
+          margin="{left:50,top:20,bottom:40,right:20}">
         </nvd3-discrete-bar-chart>
       </div>
     </div>
