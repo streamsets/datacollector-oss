@@ -96,6 +96,17 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
+  ContextConfigurator provideLoginServlet() {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        ServletHolder holderEvents = new ServletHolder(new LoginServlet());
+        context.addServlet(holderEvents, "/login");
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
   ContextConfigurator provideLogServlet(final Configuration configuration, final RuntimeInfo runtimeInfo) {
     return new ContextConfigurator() {
       @Override

@@ -595,4 +595,32 @@ angular.module('dataCollectorApp.common')
       return alerts;
     };
 
+
+    this.getPredefinedMetricAlertRules = function(pipelineName) {
+      return [
+        {
+          id: pipelineName + 'badRecords' + (new Date()).getTime(),
+          alertText: "High incidence of Bad Records",
+          metricId: "pipeline.batchErrorRecords.meter",
+          metricType: "METER",
+          metricElement: "METER_COUNT",
+          condition: "${value() > 100}",
+          enabled: false,
+          sendEmail: false,
+          valid: true
+        },
+        {
+          id: pipelineName + 'stageErrors' + (new Date()).getTime(),
+          alertText: "High incidence of Error Messages",
+          metricId: "pipeline.batchErrorMessages.meter",
+          metricType: "METER",
+          metricElement: "METER_COUNT",
+          condition: "${value() > 100}",
+          enabled: false,
+          sendEmail: false,
+          valid: true
+        }
+      ];
+    };
+
   });

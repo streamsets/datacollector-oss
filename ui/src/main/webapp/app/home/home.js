@@ -536,7 +536,6 @@ angular
       api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.name, config).
         success(function (res) {
           $rootScope.common.saveOperationInProgress = false;
-
           if (dirty) {
             config = _.clone($scope.pipelineConfig);
             config.uuid = res.uuid;
@@ -549,6 +548,7 @@ angular
 
             saveUpdates(config);
           }
+
           updateGraph(res, $scope.pipelineRules);
         }).
         error(function(data, status, headers, config) {
@@ -588,6 +588,14 @@ angular
             skipTargets: true
           }
         };
+
+        //Load Metric Rules
+
+        if(!pipelineRules.metricsRuleDefinitions || pipelineRules.metricsRuleDefinitions.length === 0) {
+          pipelineRules.metricsRuleDefinitions = pipelineService.getPredefinedMetricAlertRules();
+          saveRulesUpdate(pipelineRules);
+        }
+
       }
 
       //Update Pipeline Info list
@@ -763,6 +771,12 @@ angular
         function() {
           api.pipelineAgent.getPipelineStatus()
             .success(function(data) {
+              if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
+                //Session invalidated
+                window.location.reload();
+                return;
+              }
+
               $rootScope.common.pipelineStatus = data;
               refreshPipelineStatus();
             })
@@ -797,6 +811,12 @@ angular
         function() {
           api.pipelineAgent.getPipelineMetrics()
             .success(function(data) {
+              if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
+                //Session invalidated
+                window.location.reload();
+                return;
+              }
+
               if(!$scope.monitoringPaused) {
                 $rootScope.common.pipelineMetrics = data;
               }
@@ -847,7 +867,9 @@ angular
               stageErrorsMeter.count
             );
           } else {
-            $rootScope.common.errors = ['Failed to fetch pipeline metrics'];
+            // Failed to fetch metrics
+            // $rootScope.common.errors = ['Failed to fetch pipeline metrics'];
+            console.log('Failed to fetch stage meter metrics');
           }
 
         });
@@ -920,9 +942,9 @@ angular
      * @param rules
      */
     var saveRulesUpdate = function (rules) {
-      if ($rootScope.common.saveOperationInProgress) {
-        return;
-      }
+      //if ($rootScope.common.saveOperationInProgress) {
+        //return;
+      //}
 
       rulesDirty = false;
 

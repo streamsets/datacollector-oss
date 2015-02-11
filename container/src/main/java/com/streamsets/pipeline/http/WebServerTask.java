@@ -186,7 +186,13 @@ public class WebServerTask extends AbstractTask {
     noAuthConstraint.setAuthenticate(false);
     noAuthConstraint.setRoles(new String[] { "user"});
 
+
     ConstraintMapping resourceMapping = new ConstraintMapping();
+    resourceMapping.setPathSpec("/login");
+    resourceMapping.setConstraint(noAuthConstraint);
+    securityHandler.addConstraintMapping(resourceMapping);
+
+    resourceMapping = new ConstraintMapping();
     resourceMapping.setPathSpec("/app/*");
     resourceMapping.setConstraint(noAuthConstraint);
     securityHandler.addConstraintMapping(resourceMapping);
