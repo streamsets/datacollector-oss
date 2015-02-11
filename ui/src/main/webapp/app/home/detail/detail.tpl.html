@@ -39,19 +39,48 @@
 
 
     <div class="pull-right size-toolbar">
-      <span class="fa fa-question-circle fa-14x pointer"
-            ng-click="launchHelp()"></span>
-      <span class="fa fa-gear fa-14x pointer"
-            ng-if="detailPaneTabs[0].name === 'summary' && detailPaneTabs[0].active"
-            ng-click="launchSettings()"></span>
+
+      <div class="btn-group pull-left detail-settings-dropdown">
+        <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
+          <span class="fa fa-gear fa-14x pointer"></span>
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+
+          <li role="presentation" ng-if="isPipelineRunning">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="launchSettings()">{{'global.form.settings' | translate}}</a>
+          </li>
+
+
+          <li role="presentation" ng-if="isPipelineRunning">
+            <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline/metrics" target="_blank">{{'home.detailPane.monitoringJSONData' | translate}}</a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline-library/{{pipelineConfig.info.name}}" target="_blank">{{'home.detailPane.pipelineConfigJSONData' | translate}}</a>
+          </li>
+
+          <li role="presentation" class="divider"></li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="launchHelp()">{{'global.form.help' | translate}}</a>
+          </li>
+        </ul>
+      </div>
+
       <span class="glyphicon pointer"
             ng-hide="$storage.maximizeDetailPane"
             ng-class="{'glyphicon-minus' : !$storage.minimizeDetailPane , 'glyphicon-resize-full': $storage.minimizeDetailPane}"
             ng-click="onMinimizeDetailPane()"></span>
+
       <span class="glyphicon pointer"
-            ng-hide="$storage.minimizeDetailPane"
-            ng-class="{'glyphicon-fullscreen' : !$storage.maximizeDetailPane , 'glyphicon-resize-small': $storage.maximizeDetailPane}"
-            ng-click="onMaximizeDetailPane()"></span>
+           ng-hide="$storage.minimizeDetailPane"
+           ng-class="{'glyphicon-fullscreen' : !$storage.maximizeDetailPane , 'glyphicon-resize-small': $storage.maximizeDetailPane}"
+           ng-click="onMaximizeDetailPane()"></span>
+
+
+
     </div>
 
   </div>

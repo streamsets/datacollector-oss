@@ -39,6 +39,7 @@ angular
                   .then(function(res) {
                     var newPipelineObject = res.data;
                     newPipelineObject.configuration = jsonConfigObj.configuration;
+                    newPipelineObject.errorStage = jsonConfigObj.errorStage;
                     newPipelineObject.uiInfo = jsonConfigObj.uiInfo;
                     newPipelineObject.stages = jsonConfigObj.stages;
                     return api.pipelineAgent.savePipelineConfig(jsonConfigObj.info.name, newPipelineObject);
