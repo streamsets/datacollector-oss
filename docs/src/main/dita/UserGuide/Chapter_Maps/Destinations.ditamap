@@ -13,6 +13,7 @@
     <topicref href="../Destinations/KProducer_WritingTextDelimitedData.dita"/>
     <topicref href="../Destinations/KafkaProducer_BrokerList.dita"/>
     <topicref href="../Destinations/KProducer-AdditionalKProperties.dita"/>
+    <topicref href="../Destinations/KProducer-Configuring.dita"/>
    </topicref>
    <topicref href="../Destinations/Trash.dita">
     <topicref href="../Destinations/Trash-Configuring.dita"/>
