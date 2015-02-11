@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
@@ -56,19 +57,20 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
 
     @ConfigDef(
         required = true,
-        type = ConfigDef.Type.STRING,
-        defaultValue = "",
+        type = ConfigDef.Type.MODEL,
+        defaultValue = "/",
         label = "Field",
         description = "Use an existing field or enter a new field name. " +
                       "Using an existing field replaces the current value with the new value.",
         displayPosition = 10
     )
+    @FieldSelector(singleValued = true)
     public String fieldToSet;
 
     @ConfigDef(
         required = true,
         type = ConfigDef.Type.EL_OBJECT,
-        defaultValue = "",
+        defaultValue = "${record:value('/')}",
         label = "Expression",
         description = "Expression to generate value for the field",
         displayPosition = 20
@@ -257,6 +259,10 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     ELRecordSupport.setRecordInContext(variables, record);
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
+      String fieldToSet = expressionProcessorConfig.fieldToSet;
+      if(fieldToSet == null || fieldToSet.isEmpty()) {
+        continue;
+      }
       Object result;
       try {
         result = elEvaluator.eval(variables, expressionProcessorConfig.expression);
@@ -270,6 +276,8 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
         record.set(expressionProcessorConfig.fieldToSet, newField);
       } else {
         LOG.debug("Creating new field '{}' with value '{}'", expressionProcessorConfig.fieldToSet, result);
+        //A new field will be created only if the parent field exists and supports creation of a new child field.
+        //For a new field can be created in the parent field which is a map or if the parent field is an array.
         record.set(expressionProcessorConfig.fieldToSet, newField);
       }
     }
