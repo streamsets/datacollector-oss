@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.el.ELBasicSupport;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
+import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,6 +135,7 @@ public class SelectorProcessor extends RecordProcessor {
     elEvaluator = new ELEvaluator();
     ELBasicSupport.registerBasicFunctions(elEvaluator);
     ELRecordSupport.registerRecordFunctions(elEvaluator);
+    ELStringSupport.registerStringFunctions(elEvaluator);
     validateELs();
     LOG.debug("All conditions validated");
   }
