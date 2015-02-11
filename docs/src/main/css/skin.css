@@ -364,12 +364,13 @@ span.topic {
 	padding-top: 30px;
 	border-top: 1px solid #eee;	
 }
-.rel-info {
-	border: 1px solid #e1e1e1;
+.relinfo {
 	padding-top: 15px;
+	border-top: 1px solid #e1e1e1;
+	margin-top: 30px;
 }
-.related_link {
-	margin-top: -15px;
+.relinfo br {
+	display: none;
 }
 .related_link a.navheader_parent_path {
 	font-size: 13px;
@@ -542,7 +543,7 @@ dl, .dl {
 
 /* FOOTER
 ------------------------------------------------------- */
-div.footer {
+div.footer, .footer_separator {
 	display: none;
 }
 
@@ -554,7 +555,7 @@ div.footer {
 
 
 .step {
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 }
 .stepresult, .stepresult p, .info, .info p {
 	margin: 5px 0 ;

@@ -4,49 +4,58 @@
  <title>Processors</title>
  <topicref href="../Processors/Processors_title.dita">
   <topicref href="../Processors/Processors_overview.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/ReferencingFieldNames.dita"/>
    <topicref href="../Reusable_Content/RequiredFields.dita"/>
    <topicref href="../Processors/SelectingFieldswithPreviewData.dita"/>
   </topicref>
   <topicref href="../Processors/Expression.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/Expression-OutputField.dita"/>
    <topicref href="../Processors/Expression-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/FieldHasher.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldHasher-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/FieldMasker.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldMasker_MaskTypes.dita"/>
    <topicref href="../Processors/FieldMasker-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/FieldConverter.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldConverter_Datatypes.dita"/>
    <topicref href="../Processors/FieldConverter-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/FieldRemover.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldRemover-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/FieldSplitter.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldSplitter-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/JSONParser.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/JSONParser-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/StreamSelector.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/StreamSelector_fallback.dita"/>
    <topicref href="../Processors/StreamSelector-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/RDeduplicator.dita">
+  <topicref href="../Processors/RDeduplicator.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/RDeduplicator-ComparisonWindow.dita"/>
    <topicref href="../Processors/RDeduplicator-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/ValueReplacer.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/ValueReplacer-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/ConfiguringExpressionsConditions.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/BasicSyntax.dita"/>
    <topicref href="../Processors/UsingFieldNamesinExpressions.dita"/>
    <topicref href="../Processors/DefiningConstants.dita"/>

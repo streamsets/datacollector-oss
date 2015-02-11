@@ -2,11 +2,9 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Expression Language</title>
- <topicref href="../Expression_Language/ExpressionLanguage_title.dita">
-  <topicmeta><shortdesc></shortdesc></topicmeta>
+ <topicref href="../Expression_Language/ExpressionLanguage_title.dita"/>
   <topicref href="../Expression_Language/ExpressionLanguage_overview.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-  </topicref>
   <topicref href="../Processors/BasicSyntax.dita"/>
   <topicref href="../Processors/UsingFieldNamesinExpressions.dita"/>
   <topicref href="../Expression_Language/Literals.dita"/>
@@ -14,5 +12,10 @@
    <topicref href="../Expression_Language/OperatorPrecedence.dita"/>
   </topicref>
   <topicref href="../Expression_Language/ReservedWords.dita"/>
+  <topicref href="../Expression_Language/Functions.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Expression_Language/RecordFunctions.dita"/>
+   <topicref href="../Expression_Language/ErrorFunctions.dita"/>
+  </topicref>
  </topicref>
 </map>

@@ -6,19 +6,18 @@
   passes the separated data to new fields. Use the Field Splitter to split compound string values
   into individual components. </shortdesc>
  <conbody>
-  <p>For example, if a field contains an error code and error message separated by a dash, you can
-   use the dash to separate the error code and error message information into different fields.</p>
+  <p>For example, if a field contains an error code and error message separated by a comma, you can
+   use the comma to separate the error code and error message information into different fields.</p>
   <p>When a field includes additional data and separator characters after the Field Splitter splits
    the data as requested, it includes the remaining data in the last split field. </p>
-  <p>You can include data from the original field in the record, or discard it. <draft-comment
-    author="Loretta">revamp or delete this example after confirmation of the
-    behavior.</draft-comment></p>
+  <p>If a field cannot be split as requested, the Field Splitter can pass the record split as much as
+   possible, discard the record, write the record to error, or stop the pipeline. </p>
+  <p>You can include data from the original field in the record, or discard it. </p>
   <section>
    <title>Example</title>
-   <p>Say that a Field Splitter uses a comma to separate data into two fields and to discard records
+   <p>Say that a Field Splitter uses a comma to split data into two fields and to discard records
     that cannot be split as requested. When it encounters a single comma, it passes the data before
-    the comma to ErrorCode field and the data after the comma to the ErrorMessage field. If it
-    encounters a second comma, it can either discard the extra data or include it in the last field. </p>
+    the comma to ErrorCode field and the data after the comma to the ErrorMessage field.  </p>
    <p>When the Field Splitter processes the following records:<simpletable frame="none"
      relcolwidth="1.0*" id="simpletable_dqy_dd3_yq">
      <strow>
@@ -29,24 +28,8 @@ IMD-03234</codeblock>
       </stentry>
      </strow>
     </simpletable></p>
-   <p>If you discard the extra data, the Field Splitter produces the following records:<simpletable
-     frame="none" relcolwidth="1.0* 4.1*" id="simpletable_kxh_fd3_yq">
-     <strow>
-      <stentry>
-       <codeblock><uicontrol>ErrorCode</uicontrol>
-GM-302 
-ME-3042</codeblock>
-      </stentry>
-      <stentry>
-       <codeblock><uicontrol>Message</uicontrol>
-information that you might need
-message about this error</codeblock>
-      </stentry>
-     </strow>
-    </simpletable></p>
-   <p>If you keep the extra data, the Field Splitter produces the following records:</p>
-   <p>
-    <simpletable frame="none" relcolwidth="1.0* 4.85*" id="simpletable_mlt_p23_yq">
+   <p>The Field Splitter produces the following records:<simpletable frame="none"
+     relcolwidth="1.0* 4.1*" id="simpletable_kxh_fd3_yq">
      <strow>
       <stentry>
        <codeblock><uicontrol>ErrorCode</uicontrol>
@@ -59,10 +42,9 @@ information that you might need
 message about this error,"additional information from the server"</codeblock>
       </stentry>
      </strow>
-    </simpletable>
-   </p>
-   <p>Note that in both cases, the Field Splitter drops IMD-03234 because the record does not
-    include enough data to be split.</p>
+    </simpletable></p>
+   <p>The Field Splitter discards IMD-03234 because the record does not include enough data to be
+    split.</p>
   </section>
  </conbody>
 </concept>

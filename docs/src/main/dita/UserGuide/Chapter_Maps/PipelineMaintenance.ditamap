@@ -4,12 +4,35 @@
  <title>Pipeline Maintenance</title>
  <topicref href="../Pipeline_Maintenance/PipelineMaintenance_title.dita">
   <topicref href="../Pipeline_Maintenance/StartingAPipeline.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Maintenance/ResettingTheOrigin.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Maintenance/StoppingAPipeline.dita"/>
-  <topicref href="../Pipeline_Maintenance/ImportingAPipeline.dita"/>
-  <topicref href="../Pipeline_Maintenance/ExportingAPipeline.dita"/>
-  <topicref href="../Pipeline_Maintenance/DuplicatingAPipeline.dita"/>
-  <topicref href="../Pipeline_Maintenance/DeletingAPipeline.dita"/>
+ <topicref href="../Pipeline_Maintenance/StoppingAPipeline.dita">
+  <topicmeta>
+  <shortdesc/>
+ </topicmeta>
  </topicref>
+  <topicref href="../Pipeline_Maintenance/ImportingAPipeline.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+ <topicref href="../Pipeline_Maintenance/ExportingAPipeline.dita">
+  <topicmeta>
+  <shortdesc/>
+ </topicmeta>
+ </topicref>
+  <topicref href="../Pipeline_Maintenance/DuplicatingAPipeline.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Maintenance/DeletingAPipeline.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+ </topicref> 
 </map>

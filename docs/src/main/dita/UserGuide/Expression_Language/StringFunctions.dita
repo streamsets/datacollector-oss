@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ahp_f4v_1r">
+ <title>String Functions</title>
+ <shortdesc>Use string functions to transform string data. The expression language provides the
+  following string functions:</shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>${str:substring(STRING, OFFSET, LEN)}</dt>
+     <dd>
+      <draft-comment author="Loretta">returns a subset of the string - offset by x characters from
+       the left, of the specified length?</draft-comment>
+     </dd>
+    </dlentry>
+    <dlentry>
+     <dt>${str:trim(STRING)} </dt>
+     <dd>
+      <draft-comment author="Loretta">trims leading and trailing spaces from the
+       string?</draft-comment>
+     </dd>
+    </dlentry>
+    <dlentry>
+     <dt>${str:toUpper(STRING)} </dt>
+     <dd>Converts string data to all capital letters.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>${str:toLower(STRING)} </dt>
+     <dd>Converts string data to all lowercase letters.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>${str:replaceChar(STRING, CHAR old, CHAR new)} </dt>
+     <dd>Replaces the character in a string with a new character.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>${str:replaceString(STRING, STRING old, STRING new)} </dt>
+     <dd>Replaces a set of characters in a string with a new set of characters.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>${str:truncate(STRING, INT len)}</dt>
+     <dd>Trucates the string to the specified length. Use an integer to specify the length.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>${str:regexCapture(STRING, STRING pattern, INT group)}</dt>
+     <dd>
+      <draft-comment author="Loretta">??</draft-comment>
+     </dd>
+    </dlentry>
+    <dlentry>
+     <dt>${str:contains(STRING full, STRING subset)} </dt>
+     <dd>
+      <draft-comment author="Loretta">returns boolean? what's the full/subset?</draft-comment>
+     </dd>
+    </dlentry>
+    <dlentry>
+     <dt>${str:startsWith(STRING full, STRING subset)} </dt>
+     <dd>
+      <draft-comment author="Loretta">returns boolean? what's full/subset</draft-comment>
+     </dd>
+    </dlentry>
+    <dlentry>
+     <dt>${str:endWith(STRING full, STRING subset)} </dt>
+     <dd>
+      <draft-comment author="Loretta">returns boolean? what's full/subset</draft-comment>
+     </dd>
+    </dlentry>
+    <dlentry>
+     <dt>${isIn(STRING full, STRING element)}</dt>
+     <dd>assumes 'full' is a list of comma separated values, looks for the element 'value'</dd>
+    </dlentry>
+    <dlentry>
+     <dt>${notIn(STRING full, STRING element)}</dt>
+     <dd>assumes 'full' is a list of comma separated values, looks for the element 'value' to being
+       in<draft-comment author="Loretta">huh?</draft-comment></dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

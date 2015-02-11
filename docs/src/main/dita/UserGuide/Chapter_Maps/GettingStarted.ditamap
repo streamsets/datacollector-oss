@@ -4,14 +4,30 @@
  <title>Getting Started</title>
  <topicref href="../Getting_Started/GettingStarted_Title.dita">
   <topicref href="../Getting_Started/What_isa_DataCollector.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Getting_Started/HowShouldIUsetheDataCollector.dita"/>
    <topicref href="../Getting_Started/HowDoesItWork.dita"/>
   </topicref>
-  <topicref href="../Getting_Started/Requirements.dita"/>
-  <topicref href="../Getting_Started/Installing_the_DC.dita"/>
-  <topicref href="../Getting_Started/Installing_the_DC-Service.dita"/>
-  <topicref href="../Getting_Started/CreatingAdditionalUsers.dita"/>
-  <topicref href="../Getting_Started/LoggingIn_CreatingPipeline.dita"/>
-  <topicref href="../Getting_Started/DCollector_Window.dita"/>
- </topicref>
+  <topicref href="../Getting_Started/InstallationAndConfig.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref> <topicref href="../Getting_Started/Requirements.dita"/> 
+   <topicref href="../Getting_Started/Installing_the_DC.dita"/>
+   <topicref href="../Getting_Started/Installing_the_DC-Service.dita"/>
+   <topicref href="../Getting_Started/CreatingAdditionalUsers.dita"/>
+  </topicref>
+  <topicref href="../Getting_Started/LoggingIn_CreatingPipeline.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Getting_Started/DCollector_Window.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+ <topicref href="../Getting_Started/LocalandHostedHelp.dita"/>
 </map>
