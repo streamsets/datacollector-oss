@@ -1185,6 +1185,9 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     $scope.$on('setGraphPreviewMode', function(event, flag) {
       if(graph) {
         graph.isPreviewMode = flag;
+        if(!flag) {
+          graph.clearStartAndEndNode();
+        }
       }
     });
 
