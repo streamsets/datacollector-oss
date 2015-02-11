@@ -98,6 +98,10 @@ angular.module('dataCollectorApp')
        */
       getLogMessages: function() {
         return logMessages.join('\n');
+      },
+
+      clearLocalStorage: function() {
+        $localStorage.$reset();
       }
     };
 

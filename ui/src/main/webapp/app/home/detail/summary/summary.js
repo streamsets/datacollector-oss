@@ -74,11 +74,10 @@ angular
         return key;
       },
 
-      removeChart: function(chart, $index) {
-        $rootScope.$storage.summaryChartList.splice($index, 1);
+      removeChart: function(chart, index) {
+        $rootScope.$storage.summaryChartList.splice(index, 1);
       }
     });
-
 
     if(!$rootScope.$storage.summaryChartList) {
       $rootScope.$storage.summaryChartList = chartList;

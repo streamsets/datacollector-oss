@@ -42,15 +42,9 @@
 
       <div class="btn-group pull-left detail-settings-dropdown">
         <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
-          <span class="fa fa-gear fa-14x pointer"></span>
+          <span class="fa fa-ellipsis-h fa-14x pointer"></span>
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
-
-          <li role="presentation" ng-if="isPipelineRunning">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="launchSettings()">{{'global.form.settings' | translate}}</a>
-          </li>
-
 
           <li role="presentation" ng-if="isPipelineRunning">
             <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline/metrics" target="_blank">{{'home.detailPane.monitoringJSONData' | translate}}</a>
@@ -60,14 +54,18 @@
             <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline-library/{{pipelineConfig.info.name}}" target="_blank">{{'home.detailPane.pipelineConfigJSONData' | translate}}</a>
           </li>
 
-          <li role="presentation" class="divider"></li>
+          <li role="presentation" ng-if="isPipelineRunning" class="divider"></li>
 
-          <li role="presentation">
+          <li role="presentation" ng-if="isPipelineRunning">
             <a role="menuitem" tabindex="-1" href="#"
-               ng-click="launchHelp()">{{'global.form.help' | translate}}</a>
+               ng-click="launchSettings()">{{'global.form.settings' | translate}}</a>
           </li>
+
         </ul>
       </div>
+
+      <span class="fa fa-question-circle fa-14x pointer"
+            ng-click="launchHelp()"></span>
 
       <span class="glyphicon pointer"
             ng-hide="$storage.maximizeDetailPane"

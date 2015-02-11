@@ -12,9 +12,10 @@ angular
       }
     );
   }])
-  .controller('JVMMetricsController', function ($scope, $rootScope, $timeout, api, configuration, visibilityBroadcaster) {
+  .controller('JVMMetricsController', function ($scope, $rootScope, $timeout, api, configuration, visibilityBroadcaster, $modal) {
     var jvmMetricsTimer,
       destroyed = false;
+
 
     angular.extend($scope, {
       metrics: {},
@@ -46,6 +47,42 @@ angular
         } else {
           return d;
         }
+      },
+
+      removeChart: function(chart) {
+        var index = _.indexOf($rootScope.$storage.jvmMetricsChartList, chart.name);
+
+        if(index !== -1) {
+          $rootScope.$storage.jvmMetricsChartList.splice(index, 1);
+        }
+      },
+
+      filterChart: function(chart) {
+        return _.contains($rootScope.$storage.jvmMetricsChartList, chart.name);
+      },
+
+      launchSettings: function() {
+        var modalInstance = $modal.open({
+          templateUrl: 'app/jvmMetrics/settings/settingsModal.tpl.html',
+          controller: 'JVMMetricsSettingsModalInstanceController',
+          backdrop: 'static',
+          resolve: {
+            availableCharts: function () {
+              return $scope.chartList;
+            },
+            selectedCharts: function() {
+              return _.filter($scope.chartList, function(chart) {
+                return _.contains($rootScope.$storage.jvmMetricsChartList, chart.name);
+              });
+            }
+          }
+        });
+
+        modalInstance.result.then(function (selectedCharts) {
+          $rootScope.$storage.jvmMetricsChartList = _.pluck(selectedCharts, 'name');
+        }, function () {
+
+        });
       }
     });
 
@@ -300,6 +337,9 @@ angular
       }
     ];
 
+    if(!$rootScope.$storage.jvmMetricsChartList) {
+      $rootScope.$storage.jvmMetricsChartList = _.pluck($scope.chartList, 'name');
+    }
 
     /**
      * Fetch the JVM Metrics every Refresh Interval time.
@@ -392,14 +432,34 @@ angular
 
     $scope.$on('visibilityChange', function(event, isHidden) {
       if (isHidden) {
-        console.log('hidden');
         $timeout.cancel(jvmMetricsTimer);
         destroyed = true;
       } else {
         refreshPipelineJMX();
         destroyed = false;
-        console.log('hidden');
       }
     });
 
+  })
+
+  .controller('JVMMetricsSettingsModalInstanceController', function ($scope, $modalInstance, availableCharts, selectedCharts) {
+    angular.extend($scope, {
+      showLoading: false,
+      common: {
+        errors: []
+      },
+      availableCharts: availableCharts,
+      selectedCharts: {
+        selected : selectedCharts
+      },
+
+      save : function () {
+        $modalInstance.close($scope.selectedCharts.selected);
+      },
+      cancel : function () {
+        $modalInstance.dismiss('cancel');
+      }
+    });
+
+    $scope.$broadcast('show-errors-check-validity');
   });

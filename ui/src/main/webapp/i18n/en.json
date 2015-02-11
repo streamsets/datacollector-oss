@@ -11,6 +11,7 @@
         "jvmMetrics": "JVM Metrics",
         "logs": "Logs",
         "main": "Administration",
+        "resetLocalStorage": "Reset Browser Local Storage",
         "shutdown": "Shutdown"
       },
       "help": {
@@ -323,6 +324,7 @@
   },
   "jvmMetrics": {
     "title": "JVM Metrics",
+    "settingsTitle": "JVM Metrics Settings",
     "memory": {
       "title": "Memory",
       "total": "Total Memory",

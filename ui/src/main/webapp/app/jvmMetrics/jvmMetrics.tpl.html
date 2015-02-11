@@ -2,15 +2,26 @@
 
   <div class="panel-heading clearfix">
     <div class="panel-title">
-      <h3 translate="jvmMetrics.title">JVM Metrics</h3>
+      <h3 class="pull-left" translate="jvmMetrics.title">JVM Metrics</h3>
+
+      <div class="pull-right size-toolbar">
+        <span class="fa fa-gear fa-12x pointer"
+              ng-click="launchSettings()"></span>
+      </div>
+
     </div>
   </div>
 
   <div class="panel-body"  ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
     <div class="row">
-      <div class="col-sm-4" ng-repeat="chart in chartList">
+      <div class="col-sm-4" ng-repeat="chart in chartList | filter: filterChart">
         <div class="panel panel-default">
-          <div class="panel-heading">{{chart.label}}</div>
+          <div class="panel-heading">
+            <span>{{chart.label}}</span>
+            <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
           <div class="panel-body">
             <nvd3-line-chart
               objectequality="true"
