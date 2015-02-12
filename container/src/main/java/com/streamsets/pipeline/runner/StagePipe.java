@@ -100,8 +100,7 @@ public class StagePipe extends Pipe {
     inputRecordsMeter.mark(batchImpl.getSize());
     inputRecordsHistogram.update(batchImpl.getSize());
 
-    int stageErrorRecordCount = errorSink.getErrorRecords(getStage().getInfo().getInstanceName()).size() +
-                                predicateSink.size();
+    int stageErrorRecordCount = errorSink.getErrorRecords(getStage().getInfo().getInstanceName()).size();
     errorRecordsCounter.inc(stageErrorRecordCount);
     errorRecordsMeter.mark(stageErrorRecordCount);
     errorRecordsHistogram.update(stageErrorRecordCount);
