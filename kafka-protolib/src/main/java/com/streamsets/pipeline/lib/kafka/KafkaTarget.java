@@ -39,7 +39,7 @@ import java.util.Set;
 
 @GenerateResourceBundle
 @StageDef(
-    version = "0.0.1",
+    version = "1.0.0",
     label = "Kafka Producer",
     description = "???",
     icon = "kafka.png")

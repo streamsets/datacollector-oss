@@ -21,7 +21,7 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = "0.0.1",
+    version = "1.0.0",
     label = "Kafka Consumer",
     description = "Reads messages from Kafka brokers. Message data can be: TEXT, CSV, TSV, XML or JSON",
     icon = "kafka.png"
