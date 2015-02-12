@@ -37,11 +37,14 @@ angular.module('dataCollectorApp')
     });
 
   })
-  .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage) {
+  .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService) {
     var defaultTitle = 'StreamSets Data Collector';
 
     $rootScope.pipelineConstant = pipelineConstant;
-    $rootScope.$storage = $localStorage;
+    $rootScope.$storage = $localStorage.$default({
+      displayDensity: pipelineConstant.DENSITY_COMFORTABLE,
+      helpLocation: pipelineConstant.LOCAL_HELP
+    });
 
     $rootScope.common = $rootScope.common || {
       title : defaultTitle,
@@ -81,6 +84,14 @@ angular.module('dataCollectorApp')
       },
 
       /**
+       * Launch Local or Online Help based on settings.
+       *
+       */
+      launchHelpContents: function() {
+        contextHelpService.launchHelpContents();
+      },
+
+      /**
        * Open the About Modal Dialog
        */
       showAbout: function() {
@@ -100,6 +111,9 @@ angular.module('dataCollectorApp')
         return logMessages.join('\n');
       },
 
+      /**
+       * Clear Local Storage Contents
+       */
       clearLocalStorage: function() {
         $localStorage.$reset();
       }

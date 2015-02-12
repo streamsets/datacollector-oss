@@ -113,9 +113,9 @@
           <ul class="dropdown-menu">
 
             <li>
-              <a href="/docs/index.html" target="_blank">
+              <a href="javascript:;" ng-click="common.launchHelpContents()">
                 <span class="fa fa-book"></span>
-                <span translate="global.menu.help.onlineHelp">Online Help</span>
+                <span translate="global.menu.help.helpContents">Help Contents</span>
               </a>
             </li>
 
@@ -125,6 +125,27 @@
                 <span translate="global.menu.help.about">About</span>
               </a>
             </li>
+
+            <li role="presentation" class="divider"></li>
+
+            <li role="presentation" class="dropdown-header"
+                translate="global.menu.help.useHelp">Help :</li>
+
+            <li role="presentation">
+              <a href="#" ng-click="$storage.helpLocation = pipelineConstant.LOCAL_HELP">
+                <i class="fa fa-check density-check-icon" ng-if="$storage.helpLocation === pipelineConstant.LOCAL_HELP"></i>
+                <span>{{'global.menu.help.localHelp' | translate}}</span>
+              </a>
+            </li>
+
+            <li role="presentation">
+              <a href="#" ng-click="$storage.helpLocation = pipelineConstant.ONLINE_HELP">
+                <i class="fa fa-check density-check-icon" ng-if="$storage.helpLocation === pipelineConstant.ONLINE_HELP"></i>
+                <span>{{'global.menu.help.onlineHelp' | translate}}</span>
+              </a>
+            </li>
+
+
 
             <li role="presentation" class="divider"></li>
 
@@ -151,6 +172,7 @@
                 <span>{{'home.header.compact' | translate}}</span>
               </a>
             </li>
+
 
 
           </ul>

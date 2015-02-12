@@ -17,6 +17,9 @@
       "help": {
         "about": "About",
         "main": "Help",
+        "helpContents": "Help Contents",
+        "useHelp": "Help:",
+        "localHelp": "Local Help",
         "onlineHelp": "Online Help"
       },
       "home": "Home",

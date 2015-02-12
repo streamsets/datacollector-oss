@@ -1,8 +1,8 @@
 /**
- * Service for providing access to the Configuration from dist/src/main/etc/pipeline.properties.
+ * Service for launching Contextual Help.
  */
 angular.module('dataCollectorApp.common')
-  .service('contextHelpService', function($q, configuration, api) {
+  .service('contextHelpService', function($rootScope, $q, configuration, api, pipelineConstant) {
 
     var helpIds = {};
 
@@ -12,9 +12,30 @@ angular.module('dataCollectorApp.common')
 
     this.launchHelp = function(helpId) {
       this.configInitPromise.then(function() {
-        var relativeURL = helpIds[helpId],
-          uiHelpBaseURL = configuration.getUILocalHelpBaseURL(),
-          helpURL = uiHelpBaseURL + '/' + (relativeURL || 'index.html');
+        var uiHelpBaseURL, helpURL,
+          relativeURL = helpIds[helpId];
+
+        if ($rootScope.$storage.helpLocation === pipelineConstant.ONLINE_HELP) {
+          uiHelpBaseURL = configuration.getUIOnlineHelpBaseURL();
+        } else {
+          uiHelpBaseURL = configuration.getUILocalHelpBaseURL();
+        }
+
+        helpURL = uiHelpBaseURL + '/' + (relativeURL || 'index.html');
+        window.open(helpURL);
+      });
+    };
+
+    this.launchHelpContents = function() {
+      this.configInitPromise.then(function() {
+        var uiHelpBaseURL, helpURL;
+        if ($rootScope.$storage.helpLocation === pipelineConstant.ONLINE_HELP) {
+          uiHelpBaseURL = configuration.getUIOnlineHelpBaseURL();
+        } else {
+          uiHelpBaseURL = configuration.getUILocalHelpBaseURL();
+        }
+
+        helpURL = uiHelpBaseURL + '/index.html';
         window.open(helpURL);
       });
     };

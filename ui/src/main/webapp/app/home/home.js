@@ -401,11 +401,6 @@ angular
       }
     });
 
-
-    if(!$rootScope.$storage.displayDensity) {
-      $rootScope.$storage.displayDensity = pipelineConstant.DENSITY_COMFORTABLE;
-    }
-
     /**
      * Fetch definitions for Pipeline and Stages, fetch all pipeline configuration info, status and metric.
      */
