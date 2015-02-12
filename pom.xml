@@ -149,6 +149,15 @@
         <module>release</module>
       </modules>
     </profile>
+    <profile>
+      <id>template-lib</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>template-lib</module>
+      </modules>
+    </profile>
   </profiles>
 
 </project>

@@ -55,3 +55,28 @@ Use 'mvn package' to run tests. This triggers the shading of the SDK dependencie
 is required for libraries like hdfs-lib/cdh5_3_0-lib/cdh5_2_1-lib not to fail when running
 their test cases.
 
+-------
+
+Preparing a Release:
+
+* Update POM versions in master:
+
+  $ mvn versions:set -Pdist,ui,docs,template-lib,cloudera -DnewVersion=<RELEASE_VERSION>-SNAPSHOT
+
+* Cut a release branch in GIT and tag master branch
+
+* Update POM versions in master branch
+
+  $ mvn versions:set -Pdist,ui,docs,template-lib,cloudera -DnewVersion=<NEW_DEV_VERSION>-SNAPSHOT
+
+* Stabilize the release branch
+
+* Update POM version in release branch with final version
+
+  $ mvn versions:set -Pdist,ui,docs,template-lib,cloudera -DnewVersion=<RELEASE_VERSION>
+
+* Tag release branch
+
+Doing patches/minor releases
+
+* Same procedure as above but using starting release branch instead master branch

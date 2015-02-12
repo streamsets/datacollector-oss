@@ -15,10 +15,10 @@
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-######NAME########-lib</artifactId>
+  <artifactId>streamsets-datacollector-NAME-lib</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <description>StreamSets Data Collector #####NAME######### Lib</description>
-  <name>StreamSets Data Collector #####NAME######### Lib</name>
+  <description>StreamSets Data Collector NAME Lib</description>
+  <name>StreamSets Data Collector NAME Lib</name>
   <packaging>jar</packaging>
 
   <properties>
