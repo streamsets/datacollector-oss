@@ -3,6 +3,10 @@
 <map>
  <title>Troubleshooting</title>
  <topicref href="../Troubleshooting/Troubleshooting_title.dita">
-  <topicref href="../Troubleshooting/Troubleshooting.dita"/>
+  <topicref href="../Troubleshooting/Troubleshooting.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
  </topicref>
 </map>

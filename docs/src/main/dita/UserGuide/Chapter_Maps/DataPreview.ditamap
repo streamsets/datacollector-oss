@@ -4,10 +4,21 @@
  <title>Data Preview</title>
  <topicref href="../Data_Preview/DataPreview_Title.dita">
   <topicref href="../Data_Preview/DataPreview.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita"/>
    <topicref href="../Data_Preview/Colors_Asterisks.dita"/>
   </topicref>
-  <topicref href="../Data_Preview/PreviewingaSingleStage.dita" chunk="to-content"/>
-  <topicref href="../Data_Preview/PreviewingMultipleStages.dita"/>
+  <topicref href="../Data_Preview/PreviewingaSingleStage.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Data_Preview/PreviewingMultipleStages.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
  </topicref>
 </map>

@@ -30,6 +30,9 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Getting_Started/LocalandHostedHelp.dita"/>
+  <topicref href="../Getting_Started/LocalandHostedHelp.dita"><topicmeta>
+   <shortdesc/>
+  </topicmeta>
+  </topicref>
   </topicref>
 </map>

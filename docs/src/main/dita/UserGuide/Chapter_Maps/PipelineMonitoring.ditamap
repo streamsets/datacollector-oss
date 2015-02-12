@@ -4,16 +4,38 @@
  <title>Pipeline Monitoring</title>
  <topicref href="../Pipeline_Monitoring/PipelineMonitoring_title.dita">
   <topicref href="../Pipeline_Monitoring/PipelineMonitoring.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Monitoring/DataCollectorWindow-Monitor.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/ReviewingSnapshotData.dita"/>
+  <topicref href="../Pipeline_Monitoring/ReviewingSnapshotData.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   <topicref href="../Pipeline_Monitoring/ViewingPipelineStageStatistics.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Monitoring/Monitoring_SummaryTab.dita"/>
    <topicref href="../Pipeline_Monitoring/Monitoring_ErrorTab.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/MetricAlerts.dita"/>
-  <topicref href="../Pipeline_Monitoring/MetricTypes.dita"/>
-  <topicref href="../Pipeline_Monitoring/DataAlerts.dita"/>
-  <topicref href="../Pipeline_Monitoring/EmailforAlerts-Configuring.dita"/>
+  <topicref href="../Pipeline_Monitoring/MetricAlerts.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Monitoring/MetricTypes.dita"/>
+  </topicref>
+  <topicref href="../Pipeline_Monitoring/DataAlerts.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Monitoring/EmailforAlerts-Configuring.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
  </topicref>
 </map>

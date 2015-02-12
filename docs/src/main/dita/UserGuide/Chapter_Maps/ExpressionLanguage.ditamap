@@ -7,14 +7,25 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Processors/BasicSyntax.dita"/>
+   <topicref href="../Processors/UsingFieldNamesinExpressions.dita"/>
   </topicref>
-  <topicref href="../Processors/BasicSyntax.dita"/>
-  <topicref href="../Processors/UsingFieldNamesinExpressions.dita"/>
-  <topicref href="../Expression_Language/Literals.dita"/>
-  <topicref href="../Expression_Language/Operators.dita">
+  <topicref href="../Expression_Language/Literals.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Expression_Language/Operators.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Expression_Language/OperatorPrecedence.dita"/>
   </topicref>
-  <topicref href="../Expression_Language/ReservedWords.dita"/>
+  <topicref href="../Expression_Language/ReservedWords.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   <topicref href="../Expression_Language/Functions.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

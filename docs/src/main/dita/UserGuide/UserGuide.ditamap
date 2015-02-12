@@ -6,7 +6,7 @@
     </booktitle>
     <bookmeta>
         <critdates>
-            <created date="2014-10-31" golive="2015-1-31"/>
+            <created date="2014-10-31" golive="2015-02-17"/>
         </critdates>
         <prodinfo>
             <prodname>Data Collector</prodname>
@@ -15,7 +15,7 @@
             </vrmlist>
         </prodinfo>
         <bookid>
-            <bookpartno>IIP-UG-000-0000-001B</bookpartno>
+            <bookpartno>SDC-UG-000-0000-001B</bookpartno>
         </bookid>
         <bookrights>
             <bookowner>

@@ -364,6 +364,12 @@ span.topic {
 	padding-top: 30px;
 	border-top: 1px solid #eee;	
 }
+.related-links .ulchildlink {
+	margin-bottom: 20px;
+}
+.related-links .ulchildlink br {
+	display: none;
+}
 .relinfo {
 	padding-top: 15px;
 	border-top: 1px solid #e1e1e1;

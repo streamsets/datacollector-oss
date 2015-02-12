@@ -3,6 +3,10 @@
 <map>
  <title>Administration</title>
  <topicref href="../Administration/Administration_title.dita">
-  <topicref href="../Administration/DataCollectorAdministration.dita"/>
+  <topicref href="../Administration/DataCollectorAdministration.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
  </topicref>
 </map>
