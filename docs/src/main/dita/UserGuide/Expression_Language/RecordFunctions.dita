@@ -2,13 +2,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_p1z_ggv_1r">
  <title>Record Functions</title>
- <shortdesc>Use record functions to get information about a record. The expression language provides
-  the following record functions:</shortdesc>
+ <shortdesc>Use record functions to get information about a record, such as the record ID or the
+  stages that the record passed through. </shortdesc>
  <conbody>
-  <p/>
+  <p><indexterm>functions<indexterm>record</indexterm></indexterm>The expression language provides
+   the following record functions:</p>
   <dl>
    <dlentry>
-    <dt>Type. Syntax: ${record:type("&lt;field-path>')}</dt>
+    <dt>Syntax: ${record:type("&lt;field-path>')}</dt>
     <dd>Returns the data type of a field. </dd>
     <dd>Possible return values are: <ul id="ul_lmr_2hv_1r">
       <li>Boolean</li>

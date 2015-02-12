@@ -21,7 +21,7 @@
                 <info>
                     <codeblock> &lt;username>: &lt;password>[,&lt;rolename> …]</codeblock>
                 </info>
-                <info> Currently, only the ‘user' role is supported.</info>
+                <info> Currently, only the user role is supported.</info>
             </step>
             <step>
                 <cmd>To use a password that is not stored in plain text, use the following format

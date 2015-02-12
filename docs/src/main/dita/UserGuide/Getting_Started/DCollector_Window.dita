@@ -2,12 +2,13 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_yth_5n5_jq">
  <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-    Window</title>
+    Console</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-  /> window provides a user interface to configure pipelines, preview data, and monitor pipelines. </shortdesc>
+    /> console provides a user interface to configure pipelines, preview data, monitor pipelines,
+    and view a snapshot. </shortdesc>
  <conbody>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-   window includes the following general areas and icons:</p>
+      console includes the following general areas and icons:</p>
   <p><image href="../Graphics/DCWindow.png" id="image_k5j_5pz_sq" scale="45"/></p>
   <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 5.23* 9.44*">
       <sthead>

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The expression language provides the following types of functions: Record functions Error functions String functions Basic &lt;&lt;??&gt;&gt; Use record functions to get information about a record. The expression ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Functions"></meta><meta name="abstract" content="The expression language provides the following types of functions:"></meta><meta name="description" content="The expression language provides the following types of functions:"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lhz_pyp_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Functions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The expression language provides the following types of functions: Record functions Error functions String functions Basic &lt;&lt;??&gt;&gt; Use record functions to get information about a record, such as the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Functions"></meta><meta name="abstract" content="The expression language provides the following types of functions:"></meta><meta name="description" content="The expression language provides the following types of functions:"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lhz_pyp_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Functions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -34,14 +34,15 @@
  <h2 class="title topictitle2">Record Functions</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Use record functions to get information about a record. The expression language provides
-  the following record functions:</p>
+ <div class="body conbody"><p class="shortdesc">Use record functions to get information about a record, such as the record ID or the
+  stages that the record passed through. </p>
 
-  <p class="p"></p>
+  <p class="p">The expression language provides
+   the following record functions:</p>
 
   <dl class="dl">
    
-    <dt class="dt dlterm">Type. Syntax: ${record:type("&lt;field-path&gt;')}</dt>
+    <dt class="dt dlterm">Syntax: ${record:type("&lt;field-path&gt;')}</dt>
 
     <dd class="dd">Returns the data type of a field. </dd>
 
@@ -117,15 +118,16 @@
  <h2 class="title topictitle2">Error Functions</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Error functions provide information about bad records. The expression language provides
-  the following error functions:</p>
+ <div class="body conbody"><p class="shortdesc">Error functions provide information about error records. Use error functions to
+  reprocess error records. The expression language provides the following error
+  functions:</p>
 
   <div class="p">
    <dl class="dl">
     
      <dt class="dt dlterm">${error:stage()}</dt>
 
-     <dd class="dd">Returns the name of the stage that sent the record to error. </dd>
+     <dd class="dd">Returns the instance name of the stage that sent the record to error. </dd>
 
     
     
@@ -145,7 +147,14 @@
 
      <dd class="dd">Returns the ID of the <span class="ph">Data
                   Collector</span> that sent
-      the record to error. Returns the format &lt;hostname&gt;:&lt;port&gt;.</dd>
+      the record to error. </dd>
+
+     <dd class="dd">By default, the Data Collector ID uses the format &lt;hostname&gt;:&lt;port&gt;. You can verify
+      the <span class="ph">Data
+                  Collector</span> ID,
+      in the <span class="ph">Data
+                  Collector</span>
+      console: Administration &gt; Configuration. </dd>
 
     
     
@@ -171,10 +180,12 @@
  <h2 class="title topictitle2">String Functions</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Use string functions to transform string data. In string functions, you can replace
-  &lt;String&gt; with a value or call a field to use values in a field. </p>
+ <div class="body conbody"><p class="shortdesc">Use string functions to transform string data. </p>
 
-  <p class="p">For example, </p>
+  <p class="p">In string functions, you can
+   replace &lt;String&gt; with a string value, a call a string field, or any expression that evaluates
+   to a string. Similarly, you can replace parameters with expressions that evaluate to the
+   appropriate value. Indexes start with 0. </p>
 
   <p class="p">The expression language provides the following string functions:</p>
 
@@ -187,16 +198,16 @@
       before the endIndex character. </dd>
 
      <dd class="dd">Uses the following parameters:<ul class="ul" id="concept_ahp_f4v_1r__ul_pcx_4yw_1r">
-       <li class="li">beginIndex - An integer that represents the beginning position of the returned
-        substring.</li>
+       <li class="li">beginIndex - An integer that represents the beginning position of the returned substring,
+        where 0 is the first character.</li>
 
-       <li class="li">endIndex - An integer that represents one character past end position of the substring.
-       </li>
+       <li class="li">endIndex - An integer that represents one character past end position of the substring,
+        equivalent to the number of characters to return. </li>
 
       </ul>
 </dd>
 
-     <dd class="dd">For example, ${str:substring("Chewing Gum", 1, 5)} evaluates to Chew.</dd>
+     <dd class="dd">For example, ${str:substring("Chewing Gum", 1, 4)} evaluates to Chew.</dd>
 
     
     

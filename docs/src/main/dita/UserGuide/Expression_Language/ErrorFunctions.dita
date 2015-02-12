@@ -2,14 +2,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ndj_43v_1r">
  <title>Error Functions</title>
- <shortdesc>Error functions provide information about bad records. The expression language provides
-  the following error functions:</shortdesc>
+ <shortdesc>Error functions provide information about error records. Use error functions to
+  reprocess error records. The expression language provides the following error
+  functions:</shortdesc>
  <conbody>
   <p>
    <dl>
     <dlentry>
      <dt>${error:stage()}</dt>
-     <dd>Returns the name of the stage that sent the record to error. </dd>
+     <dd>Returns the instance name of the stage that sent the record to error. </dd>
     </dlentry>
     <dlentry>
      <dt>${error:code()}</dt>
@@ -23,7 +24,11 @@
      <dt>${error:collectorId()}</dt>
      <dd>Returns the ID of the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> that sent
-      the record to error. Returns the format &lt;hostname>:&lt;port>.</dd>
+      the record to error. </dd>
+     <dd>By default, the Data Collector ID uses the format &lt;hostname>:&lt;port>. You can verify
+      the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> ID,
+      in the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      console: Administration > Configuration. </dd>
     </dlentry>
     <dlentry>
      <dt>${error:pipeline()}</dt>

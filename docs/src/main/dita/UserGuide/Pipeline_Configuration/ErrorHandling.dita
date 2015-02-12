@@ -3,22 +3,25 @@
 <concept id="concept_pm4_txm_vq">
  <title>Error Handling</title>
  <shortdesc>You can configure the default error handling for a pipeline. Some stages include error
-  handling properties that override the default. When a <ph
+  handling properties that override the pipeline default. When a <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> encounters an
   unexpected error, it stops the pipeline. </shortdesc>
  <conbody>
-  <p>You can configure a pipeline to discard bad records or to save bad records. When you save bad
-   records, you define the directory to use and when to create additional files. </p>
+  <p>You can configure a pipeline to discard error records or to save error records. When you save
+   error records, you define the directory to use and when to create additional files. Error files
+   are written to the directory with the following naming convention: records-&lt;file
+   number>.json.</p>
   <p>Each stage in the pipeline includes built-in resilience. Some stages also include configurable
-   error handling. When a stage without error handling options encounters a bad record, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
-   default error handling for the pipeline.</p>
-  <p>For example, if you configure a Kafka Consumer origin stage to read JSON data with a maximum
-   object length of 4096 characters and the stage encounters an object with 5000 characters, the
-   stage discards or saves the object based on the pipeline configuration. </p>
-  <p>When a stage includes an error handling property, the stage configuration overrides the
-   pipeline configuration. For example, you have a Field Splitter configured to split field values
-   into three parts and to discard records that cannot be split. Even if the pipeline is configured
-   to save bad records, the Field Splitter stage discards records that cannot be split as requested. </p>
+   error handling. When a stage without explicit error handling options encounters an error record,
+   the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
+   the default error handling for the pipeline.</p>
+  <p>For example, when a Kafka Consumer origin stage reads JSON data with a maximum object length of
+   4096 characters and the stage encounters an object with 5000 characters, the stage discards or
+   saves the object based on the pipeline error handling configuration. </p>
+  <p>When a stage includes an error handling option, the stage configuration overrides the pipeline
+   configuration. </p>
+  <p>For example, a Field Splitter splits field values into three parts and discards records that
+   cannot be split. Even if the pipeline is configured to save error records, the Field Splitter
+   stage discards any record that cannot be split as requested. </p>
  </conbody>
 </concept>

@@ -2,11 +2,13 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ahp_f4v_1r">
  <title>String Functions</title>
- <shortdesc>Use string functions to transform string data. In string functions, you can replace
-  &lt;String> with a value or call a field to use values in a field. <draft-comment author="Loretta"
-   >Can any parameter can be a field? </draft-comment></shortdesc>
+ <shortdesc>Use string functions to transform string data. <draft-comment author="Loretta">Can any
+   parameter can be a field? </draft-comment></shortdesc>
  <conbody>
-  <p>For example, </p>
+  <p><indexterm>functions<indexterm>string</indexterm></indexterm>In string functions, you can
+   replace &lt;String> with a string value, a call a string field, or any expression that evaluates
+   to a string. Similarly, you can replace parameters with expressions that evaluate to the
+   appropriate value. Indexes start with 0. </p>
   <p>The expression language provides the following string functions:</p>
   <p>
    <dl>
@@ -15,12 +17,12 @@
      <dd>Returns a subset of the string value that starts with the beginIndex character and ends
       before the endIndex character. </dd>
      <dd>Uses the following parameters:<ul id="ul_pcx_4yw_1r">
-       <li>beginIndex - An integer that represents the beginning position of the returned
-        substring.</li>
-       <li>endIndex - An integer that represents one character past end position of the substring.
-       </li>
+       <li>beginIndex - An integer that represents the beginning position of the returned substring,
+        where 0 is the first character.</li>
+       <li>endIndex - An integer that represents one character past end position of the substring,
+        equivalent to the number of characters to return. </li>
       </ul></dd>
-     <dd>For example, ${str:substring("Chewing Gum", 1, 5)} evaluates to Chew.</dd>
+     <dd>For example, ${str:substring("Chewing Gum", 1, 4)} evaluates to Chew.</dd>
     </dlentry>
     <dlentry>
      <dt>${str:trim("&lt;String>")} </dt>

@@ -3,7 +3,7 @@
 <task id="task_gfj_ssv_yq">
     <title>Configuring a Directory Origin</title>
     <shortdesc>Configure a Directory origin to read data from files in a directory. When you
-        configure a Directory, you define general properties, including the data format to process.
+        configure a Directory, you define file properties, including the data format to process.
         Then, you define post-processing options and the properties specific to the data
         format.</shortdesc>
     <taskbody>
@@ -30,21 +30,14 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Name</entry>
-                                    <entry>Stage name.</entry>
-                                </row>
-                                <row>
-                                    <entry>Description</entry>
-                                    <entry>Optional description.</entry>
-                                </row>
-                                <row>
                                     <entry>Data Format</entry>
                                     <entry>Data format for source files. Use one of the following
                                             formats:<ul id="ul_y1t_wql_5q">
-                                            <li>Log data</li>
-                                            <li>JSON data</li>
-                                            <li>Delimited data</li>
-                                            <li>XML data</li>
+                                            <li>Log</li>
+                                            <li>JSON</li>
+                                            <li>Delimited</li>
+                                            <li>XML</li>
+                                            <li>Data Collector Error Records</li>
                                         </ul></entry>
                                 </row>
                                 <row>

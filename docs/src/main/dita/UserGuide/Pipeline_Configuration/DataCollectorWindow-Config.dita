@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_izr_f2p_rq">
- <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Window
-    - Configuration Mode</title>
+ <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    Console - Edit Mode</title>
  <conbody>
-  <p>The following image shows the the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window
+  <p>The following image shows the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       when you configure a pipeline:</p>
   <p><image href="../Graphics/DCWindow_Config.png" id="image_n4b_m4z_sq" scale="30"/></p>
     <table frame="all" rowsep="1" colsep="1" id="table_qwf_byk_sq">
@@ -42,9 +42,7 @@
             <entry><image href="../Graphics/icon_AddStage.png" id="image_kgj_44z_sq" scale="60"
               /></entry>
             <entry>Add Stage button</entry>
-            <entry>Displays a list of <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-              stages. Use to add stages to the pipeline.</entry>
+            <entry>Displays a list of stages. Use to add stages to the pipeline.</entry>
           </row>
           <row>
             <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" scale="60"

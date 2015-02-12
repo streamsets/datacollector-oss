@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_bt1_zcp_kq">
-    <title>Installing and Launching the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        (Tarball)</title>
+    <title>Tarball Installation and Launch</title>
     <shortdesc>Install the <ph id="pName-long">Data Collector</ph> on the machine that you want to
         run a pipeline. After installation, you can launch the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         />.</shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>installation<indexterm>tarball</indexterm></indexterm><indexterm>launch<indexterm>tarball</indexterm></indexterm></context>
         <steps id="steps_g53_l3p_kq">
             <step>
                 <cmd> Download StreamSets SDC tarball and extract it to desired location.</cmd>

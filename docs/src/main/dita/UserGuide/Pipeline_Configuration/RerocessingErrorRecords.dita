@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_skc_j54_1r">
+    <title>Reprocessing Error Records</title>
+    <shortdesc>After you review error record files, you can create a pipeline to reprocess error
+        records. </shortdesc>
+    <taskbody>
+        <context>
+            <p><indexterm>error records<indexterm>reprocessing</indexterm></indexterm>In the error
+                pipeline, include the Directory origin and configure it to use the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> error record data format. Configure the rest of the pipeline as necessary.
+                    <draft-comment author="Loretta">Add anything else? Check data format
+                    name.</draft-comment></p>
+            <p/>
+        </context>
+    </taskbody>
+</task>

@@ -11,23 +11,23 @@
         properties file. </shortdesc>
     <taskbody>
         <context>
-            <p>You can configure the <ph
+            <p>Use the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> properties file to configure properties such as the host name and port number,
-                and SMTP information for sending email alerts. Use a text editor to edit the file.
-                After you edit the file, restart the <ph
+                /> properties file to define properties such as the host name and port number, and
+                SMTP information for sending email alerts. Use a text editor to edit the file. After
+                you edit the file, restart the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to enable the changes. </p>
             <p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                />  properties file, <codeph>sdc.properties</codeph>, is located in the following
+                /> properties file, sdc.properties, is located in the following
                 directory:<codeblock>&lt;DataCollector installdir>/etc/sdc.properties</codeblock></p>
             <p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                />  properties file includes the following general configurable properties:<table
-                    frame="all" rowsep="1" colsep="1" id="table_eyq_gkw_1r">
+                /> properties file includes the following general properties:<table frame="all"
+                    rowsep="1" colsep="1" id="table_eyq_gkw_1r">
                     <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth="1*"/>
+                        <colspec colname="c1" colnum="1" colwidth=".75*"/>
                         <colspec colname="c2" colnum="2" colwidth="1.63*"/>
                         <thead>
                             <row>
@@ -77,7 +77,8 @@
                                     the error file count exceeds this number, older files are
                                     removed. <p>Enter a positive integer. If you enter 0, no
                                         additional files are created and the error file is truncated
-                                        when it reaches the maximum size. </p></entry>
+                                        when it reaches the maximum size. </p><p>Default is
+                                    5.</p></entry>
                             </row>
                             <row>
                                 <entry>production.maxErrorRecordsPerStage</entry>
