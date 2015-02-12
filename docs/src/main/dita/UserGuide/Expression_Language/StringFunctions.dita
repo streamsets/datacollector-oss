@@ -2,77 +2,84 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ahp_f4v_1r">
  <title>String Functions</title>
- <shortdesc>Use string functions to transform string data. The expression language provides the
-  following string functions:</shortdesc>
+ <shortdesc>Use string functions to transform string data. In string functions, you can replace
+  &lt;String> with a value or call a field to use values in a field. <draft-comment author="Loretta"
+   >Can any parameter can be a field? </draft-comment></shortdesc>
  <conbody>
+  <p>For example, </p>
+  <p>The expression language provides the following string functions:</p>
   <p>
    <dl>
     <dlentry>
-     <dt>${str:substring(STRING, OFFSET, LEN)}</dt>
-     <dd>
-      <draft-comment author="Loretta">returns a subset of the string - offset by x characters from
-       the left, of the specified length?</draft-comment>
-     </dd>
+     <dt>${str:substring("&lt;String>", &lt;beginIndex>, &lt;endIndex>)}</dt>
+     <dd>Returns a subset of the string value that starts with the beginIndex character and ends
+      before the endIndex character. </dd>
+     <dd>Uses the following parameters:<ul id="ul_pcx_4yw_1r">
+       <li>beginIndex - An integer that represents the beginning position of the returned
+        substring.</li>
+       <li>endIndex - An integer that represents one character past end position of the substring.
+       </li>
+      </ul></dd>
+     <dd>For example, ${str:substring("Chewing Gum", 1, 5)} evaluates to Chew.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:trim(STRING)} </dt>
-     <dd>
-      <draft-comment author="Loretta">trims leading and trailing spaces from the
-       string?</draft-comment>
-     </dd>
+     <dt>${str:trim("&lt;String>")} </dt>
+     <dd>Trims leading and trailing white space characters from the string, including spaces and
+      return characters.</dd>
+     <dd>For example, ${str:trim("record:value("/Address")} trims leading and trailing white space
+      characters from the /Address field.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:toUpper(STRING)} </dt>
+     <dt>${str:toUpper("&lt;String>")} </dt>
      <dd>Converts string data to all capital letters.</dd>
+     <dd>For example, ${str:toUpper("true")} evaluates to TRUE.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:toLower(STRING)} </dt>
+     <dt>${str:toLower("&lt;String>")} </dt>
      <dd>Converts string data to all lowercase letters.</dd>
+     <dd>For example, ${str:toLower("&lt;FALSE>")} evaluates to false.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:replaceChar(STRING, CHAR old, CHAR new)} </dt>
-     <dd>Replaces the character in a string with a new character.</dd>
+     <dt>${str:replaceChar("&lt;String>", &lt;oldChar>, &lt;newChar>)} </dt>
+     <dd>Replaces all instances of a specified character in a string with a new character.</dd>
+     <dd>For example, ${str:replaceChar("lecucereche", e, a)} evaluates to lacucaracha.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:replaceString(STRING, STRING old, STRING new)} </dt>
+     <dt>${str:replaceString("&lt;String>", &lt;oldString>, STRING new)} </dt>
      <dd>Replaces a set of characters in a string with a new set of characters.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:truncate(STRING, INT len)}</dt>
-     <dd>Trucates the string to the specified length. Use an integer to specify the length.</dd>
+     <dt>${str:truncate("&lt;String>", &lt;length>)}</dt>
+     <dd>Returns a string truncated to the specified length. Use an integer to specify the length. </dd>
+     <dd>For example, ${str:truncate("vacation", 4)} returns vaca. </dd>
     </dlentry>
     <dlentry>
-     <dt>${str:regexCapture(STRING, STRING pattern, INT group)}</dt>
-     <dd>
-      <draft-comment author="Loretta">??</draft-comment>
-     </dd>
+     <dt>${str:regexCapture("&lt;String>", &lt;regex pattern>, &lt;group>}</dt>
+     <dd>Parses a complex string into groups based on a Java regex pattern and returns the specified
+      group.</dd>
+     <dd>Uses the following parameters:<ul id="ul_fy1_qbx_1r">
+       <li>regex pattern - The Java regex pattern to parse the string into groups</li>
+       <li>group - The number of the group to return, where 1 represents the first group, 2
+        represents the second group, etc. 0 returns the entire string.</li>
+      </ul></dd>
     </dlentry>
     <dlentry>
-     <dt>${str:contains(STRING full, STRING subset)} </dt>
-     <dd>
-      <draft-comment author="Loretta">returns boolean? what's the full/subset?</draft-comment>
-     </dd>
+     <dt>${str:contains("&lt;String>", "&lt;Subset>")} </dt>
+     <dd>Returns a true or false based on whether the string contains the configured subset of
+      characters.</dd>
+     <dd>For example, ${str:contains("Jane", "boo")} returns false.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:startsWith(STRING full, STRING subset)} </dt>
-     <dd>
-      <draft-comment author="Loretta">returns boolean? what's full/subset</draft-comment>
-     </dd>
+     <dt>${str:startsWith("&lt;String>", "&lt;Subset>")} </dt>
+     <dd>Returns true or false based on whether the string starts with the configured subset of
+      characters.</dd>
+     <dd>For example, ${str:startsWith("Data Collector", "Data")} returns true.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:endWith(STRING full, STRING subset)} </dt>
-     <dd>
-      <draft-comment author="Loretta">returns boolean? what's full/subset</draft-comment>
-     </dd>
-    </dlentry>
-    <dlentry>
-     <dt>${isIn(STRING full, STRING element)}</dt>
-     <dd>assumes 'full' is a list of comma separated values, looks for the element 'value'</dd>
-    </dlentry>
-    <dlentry>
-     <dt>${notIn(STRING full, STRING element)}</dt>
-     <dd>assumes 'full' is a list of comma separated values, looks for the element 'value' to being
-       in<draft-comment author="Loretta">huh?</draft-comment></dd>
+     <dt>${str:endWith("&lt;String>", "&lt;Subset>")} </dt>
+     <dd>Returns true or false based on whether the string ends with the configured subset of
+      characters.</dd>
+     <dd>For example, ${str:endWith("32403-1001", "1001")} returns true.</dd>
     </dlentry>
    </dl>
   </p>

@@ -12,6 +12,8 @@
    <topicref href="../Pipeline_Monitoring/Monitoring_ErrorTab.dita"/>
   </topicref>
   <topicref href="../Pipeline_Monitoring/MetricAlerts.dita"/>
+  <topicref href="../Pipeline_Monitoring/MetricTypes.dita"/>
   <topicref href="../Pipeline_Monitoring/DataAlerts.dita"/>
+  <topicref href="../Pipeline_Monitoring/EmailforAlerts-Configuring.dita"/>
  </topicref>
 </map>

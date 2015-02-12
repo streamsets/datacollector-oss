@@ -36,8 +36,8 @@
     <strow>
      <stentry>Record count histogram </stentry>
      <stentry>Histogram that shows the number of records processed in five minute intervals.
-      Includes input, output, and error records. To view the exact number of records, hover over the
-      a bar in the histogram.</stentry>
+            Includes input, output, and error records. To view the exact number of records, hover
+            over a bar in the histogram.</stentry>
     </strow>
     <strow>
      <stentry>Batch processing timer</stentry>

@@ -14,8 +14,10 @@
             <p>You can configure the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> properties file to configure properties such as the host name and port number,
-                and SMTP information for sending email alerts. Use a text editor to edit the
-                file.</p>
+                and SMTP information for sending email alerts. Use a text editor to edit the file.
+                After you edit the file, restart the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> to enable the changes. </p>
             <p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />  properties file, <codeph>sdc.properties</codeph>, is located in the following
@@ -100,10 +102,13 @@
                             </row>
                             <row>
                                 <entry>ui.help.base.url</entry>
-                                <entry>
-                                    <draft-comment author="Loretta">look for
-                                        addition/changes.</draft-comment>
-                                </entry>
+                                <entry>Base URL for the local help project. <p>Do not change this
+                                        value.</p></entry>
+                            </row>
+                            <row>
+                                <entry>ui.online.help.base.url</entry>
+                                <entry>Base URL for the help project hosted at the StreamSets
+                                    website. <p>Do not change this value.</p></entry>
                             </row>
                             <row>
                                 <entry>ui.refresh.interval.ms</entry>
@@ -137,7 +142,7 @@
                         <tbody>
                             <row>
                                 <entry>mail.transport.protocol</entry>
-                                <entry>Use smtp or smtps. <p>Default is smtp</p></entry>
+                                <entry>Use smtp or smtps. <p>Default is smtp.</p></entry>
                             </row>
                             <row>
                                 <entry>mail.smtp.host</entry>

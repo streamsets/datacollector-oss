@@ -171,100 +171,123 @@
  <h2 class="title topictitle2">String Functions</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Use string functions to transform string data. The expression language provides the
-  following string functions:</p>
+ <div class="body conbody"><p class="shortdesc">Use string functions to transform string data. In string functions, you can replace
+  &lt;String&gt; with a value or call a field to use values in a field. </p>
+
+  <p class="p">For example, </p>
+
+  <p class="p">The expression language provides the following string functions:</p>
 
   <div class="p">
    <dl class="dl">
     
-     <dt class="dt dlterm">${str:substring(STRING, OFFSET, LEN)}</dt>
+     <dt class="dt dlterm">${str:substring("&lt;String&gt;", &lt;beginIndex&gt;, &lt;endIndex&gt;)}</dt>
 
-     <dd class="dd">
-      
-     </dd>
+     <dd class="dd">Returns a subset of the string value that starts with the beginIndex character and ends
+      before the endIndex character. </dd>
+
+     <dd class="dd">Uses the following parameters:<ul class="ul" id="concept_ahp_f4v_1r__ul_pcx_4yw_1r">
+       <li class="li">beginIndex - An integer that represents the beginning position of the returned
+        substring.</li>
+
+       <li class="li">endIndex - An integer that represents one character past end position of the substring.
+       </li>
+
+      </ul>
+</dd>
+
+     <dd class="dd">For example, ${str:substring("Chewing Gum", 1, 5)} evaluates to Chew.</dd>
 
     
     
-     <dt class="dt dlterm">${str:trim(STRING)} </dt>
+     <dt class="dt dlterm">${str:trim("&lt;String&gt;")} </dt>
 
-     <dd class="dd">
-      
-     </dd>
+     <dd class="dd">Trims leading and trailing white space characters from the string, including spaces and
+      return characters.</dd>
+
+     <dd class="dd">For example, ${str:trim("record:value("/Address")} trims leading and trailing white space
+      characters from the /Address field.</dd>
 
     
     
-     <dt class="dt dlterm">${str:toUpper(STRING)} </dt>
+     <dt class="dt dlterm">${str:toUpper("&lt;String&gt;")} </dt>
 
      <dd class="dd">Converts string data to all capital letters.</dd>
 
+     <dd class="dd">For example, ${str:toUpper("true")} evaluates to TRUE.</dd>
+
     
     
-     <dt class="dt dlterm">${str:toLower(STRING)} </dt>
+     <dt class="dt dlterm">${str:toLower("&lt;String&gt;")} </dt>
 
      <dd class="dd">Converts string data to all lowercase letters.</dd>
 
-    
-    
-     <dt class="dt dlterm">${str:replaceChar(STRING, CHAR old, CHAR new)} </dt>
-
-     <dd class="dd">Replaces the character in a string with a new character.</dd>
+     <dd class="dd">For example, ${str:toLower("&lt;FALSE&gt;")} evaluates to false.</dd>
 
     
     
-     <dt class="dt dlterm">${str:replaceString(STRING, STRING old, STRING new)} </dt>
+     <dt class="dt dlterm">${str:replaceChar("&lt;String&gt;", &lt;oldChar&gt;, &lt;newChar&gt;)} </dt>
+
+     <dd class="dd">Replaces all instances of a specified character in a string with a new character.</dd>
+
+     <dd class="dd">For example, ${str:replaceChar("lecucereche", e, a)} evaluates to lacucaracha.</dd>
+
+    
+    
+     <dt class="dt dlterm">${str:replaceString("&lt;String&gt;", &lt;oldString&gt;, STRING new)} </dt>
 
      <dd class="dd">Replaces a set of characters in a string with a new set of characters.</dd>
 
     
     
-     <dt class="dt dlterm">${str:truncate(STRING, INT len)}</dt>
+     <dt class="dt dlterm">${str:truncate("&lt;String&gt;", &lt;length&gt;)}</dt>
 
-     <dd class="dd">Trucates the string to the specified length. Use an integer to specify the length.</dd>
+     <dd class="dd">Returns a string truncated to the specified length. Use an integer to specify the length. </dd>
 
-    
-    
-     <dt class="dt dlterm">${str:regexCapture(STRING, STRING pattern, INT group)}</dt>
-
-     <dd class="dd">
-      
-     </dd>
+     <dd class="dd">For example, ${str:truncate("vacation", 4)} returns vaca. </dd>
 
     
     
-     <dt class="dt dlterm">${str:contains(STRING full, STRING subset)} </dt>
+     <dt class="dt dlterm">${str:regexCapture("&lt;String&gt;", &lt;regex pattern&gt;, &lt;group&gt;}</dt>
 
-     <dd class="dd">
-      
-     </dd>
+     <dd class="dd">Parses a complex string into groups based on a Java regex pattern and returns the specified
+      group.</dd>
 
-    
-    
-     <dt class="dt dlterm">${str:startsWith(STRING full, STRING subset)} </dt>
+     <dd class="dd">Uses the following parameters:<ul class="ul" id="concept_ahp_f4v_1r__ul_fy1_qbx_1r">
+       <li class="li">regex pattern - The Java regex pattern to parse the string into groups</li>
 
-     <dd class="dd">
-      
-     </dd>
+       <li class="li">group - The number of the group to return, where 1 represents the first group, 2
+        represents the second group, etc. 0 returns the entire string.</li>
 
-    
-    
-     <dt class="dt dlterm">${str:endWith(STRING full, STRING subset)} </dt>
-
-     <dd class="dd">
-      
-     </dd>
+      </ul>
+</dd>
 
     
     
-     <dt class="dt dlterm">${isIn(STRING full, STRING element)}</dt>
+     <dt class="dt dlterm">${str:contains("&lt;String&gt;", "&lt;Subset&gt;")} </dt>
 
-     <dd class="dd">assumes 'full' is a list of comma separated values, looks for the element 'value'</dd>
+     <dd class="dd">Returns a true or false based on whether the string contains the configured subset of
+      characters.</dd>
+
+     <dd class="dd">For example, ${str:contains("Jane", "boo")} returns false.</dd>
 
     
     
-     <dt class="dt dlterm">${notIn(STRING full, STRING element)}</dt>
+     <dt class="dt dlterm">${str:startsWith("&lt;String&gt;", "&lt;Subset&gt;")} </dt>
 
-     <dd class="dd">assumes 'full' is a list of comma separated values, looks for the element 'value' to being
-       in</dd>
+     <dd class="dd">Returns true or false based on whether the string starts with the configured subset of
+      characters.</dd>
+
+     <dd class="dd">For example, ${str:startsWith("Data Collector", "Data")} returns true.</dd>
+
+    
+    
+     <dt class="dt dlterm">${str:endWith("&lt;String&gt;", "&lt;Subset&gt;")} </dt>
+
+     <dd class="dd">Returns true or false based on whether the string ends with the configured subset of
+      characters.</dd>
+
+     <dd class="dd">For example, ${str:endWith("32403-1001", "1001")} returns true.</dd>
 
     
    </dl>

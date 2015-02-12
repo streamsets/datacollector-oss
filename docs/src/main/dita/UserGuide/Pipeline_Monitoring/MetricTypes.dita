@@ -10,17 +10,23 @@
   <p>Metric alerts include the following metric types:<dl>
     <dlentry>
      <dt>Counter</dt>
-     <dd>Provides metric alerts based on a count for any stage in the pipeline. You can create
-      alerts for the following count types:<ul id="ul_dmg_5dw_1r">
-       <li>Input records</li>
-       <li>Output records</li>
-       <li>Bad records</li>
-       <li>Stage errors</li>
-      </ul></dd>
+     <dd>Provides metric alerts based on a count of different record types and of stage errors  for
+      any stage in the pipeline.</dd>
     </dlentry>
     <dlentry>
      <dt>Histogram</dt>
-     <dd/>
+     <dd>Provides metric alerts based on a histogram of different record types and stage errors for
+      any stage. You can also use batch-based histograms. </dd>
+    </dlentry>
+    <dlentry>
+     <dt>Meter</dt>
+     <dd>Provides metric alerts based on a rates of different record types and stage errors for any
+      stage. You can also use batch-based meters.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Timer</dt>
+     <dd>Provides metric alerts based on batch processing timers for the pipeline or any stage in
+      the pipeline.</dd>
     </dlentry>
    </dl></p>
  </conbody>
