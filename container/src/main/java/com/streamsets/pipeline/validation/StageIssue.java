@@ -18,7 +18,7 @@ public class StageIssue extends Issue {
 
   protected StageIssue(boolean errorStage, String instanceName, String configGroup, String configName,
       ErrorCode error, Object... args) {
-    super(error, args, configName, configGroup);
+    super(configName, configGroup, error, args);
     this.errorStage = errorStage;
     this.instanceName = instanceName;
   }
