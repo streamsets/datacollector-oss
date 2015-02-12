@@ -191,6 +191,7 @@ public class DeDupProcessor extends RecordProcessor {
         } else {
           sink.putBoolean(true);
         }
+        sink.putByte((byte)0);
       }
 
     }
