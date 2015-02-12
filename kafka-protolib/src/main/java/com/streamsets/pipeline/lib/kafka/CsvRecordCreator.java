@@ -49,8 +49,7 @@ public class CsvRecordCreator implements RecordCreator {
         values.add(Field.create(column));
       }
       map.put("values", Field.create(values));
-      Record record = context.createRecord(topic + DOT + message.getPartition() + DOT + System.currentTimeMillis()
-        + DOT + currentRecordCount++);
+      Record record = RecordCreatorUtil.createRecord(context, topic, message.getPartition(), currentRecordCount++);
       record.set(Field.create(map));
       return ImmutableList.of(record);
     }catch (Exception e) {

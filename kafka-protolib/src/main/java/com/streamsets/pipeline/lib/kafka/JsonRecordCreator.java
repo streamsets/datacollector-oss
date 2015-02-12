@@ -57,8 +57,7 @@ public class JsonRecordCreator implements RecordCreator {
 
       if(jsonContent == StreamingJsonParser.Mode.ARRAY_OBJECTS) {
         //A single kafka message has an array of json objects
-        Record record = context.createRecord(topic + DOT + message.getPartition() + DOT + System.currentTimeMillis()
-          + DOT + currentRecordCount++);
+        Record record = RecordCreatorUtil.createRecord(context, topic, message.getPartition(), currentRecordCount++);
         record.set(JsonUtil.jsonToField(objects));
         return ImmutableList.of(record);
       } else {
@@ -67,8 +66,7 @@ public class JsonRecordCreator implements RecordCreator {
         if(produceSingleRecord) {
           //create one record out of all objects, in which case this record will contain
           // a list of json objects
-          Record record = context.createRecord(topic + DOT + message.getPartition() + DOT + System.currentTimeMillis()
-            + DOT + currentRecordCount++);
+          Record record = RecordCreatorUtil.createRecord(context, topic, message.getPartition(), currentRecordCount++);
           if(objects.size() == 1) {
             record.set(JsonUtil.jsonToField(objects.get(0)));
             return ImmutableList.of(record);
@@ -83,8 +81,8 @@ public class JsonRecordCreator implements RecordCreator {
           //create one record per json object, A single kafka message translates to multiple records.
           List<Record> records = new ArrayList<>(objects.size());
           for(Object object : objects) {
-            Record record = context.createRecord(topic + DOT + message.getPartition() + DOT + System.currentTimeMillis()
-              + DOT + currentRecordCount++);
+            Record record = RecordCreatorUtil.createRecord(context, topic, message.getPartition(),
+              currentRecordCount++);
             record.set(JsonUtil.jsonToField(object));
             records.add(record);
           }

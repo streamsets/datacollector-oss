@@ -20,8 +20,6 @@ import java.util.List;
 
 public class XmlRecordCreator implements RecordCreator {
 
-  private static final String DOT = ".";
-
   private final Source.Context context;
   private final String topic;
 
@@ -32,8 +30,7 @@ public class XmlRecordCreator implements RecordCreator {
 
   @Override
   public List<Record> createRecords(MessageAndOffset message, int currentRecordCount) throws StageException {
-    Record record = context.createRecord(topic + DOT + message.getPartition() + DOT + System.currentTimeMillis()
-      + DOT + currentRecordCount++);
+    Record record = RecordCreatorUtil.createRecord(context, topic, message.getPartition(), currentRecordCount++);
     try (CountingReader reader =
            new CountingReader(new BufferedReader(new InputStreamReader(
              new ByteArrayInputStream(message.getPayload()))))) {

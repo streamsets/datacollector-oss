@@ -26,8 +26,7 @@ public class LogRecordCreator implements RecordCreator {
 
   @Override
   public List<Record> createRecords(MessageAndOffset message, int currentRecordCount) throws StageException {
-    Record record = context.createRecord(topic + DOT + message.getPartition() + DOT + System.currentTimeMillis()
-      + DOT + currentRecordCount++);
+    Record record = RecordCreatorUtil.createRecord(context, topic, message.getPartition(), currentRecordCount++);
     byte[] payload = message.getPayload();
     Field field;
     if(payload == null) {
