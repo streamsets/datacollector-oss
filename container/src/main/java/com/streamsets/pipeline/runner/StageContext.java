@@ -73,7 +73,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private static class ConfigIssueImpl extends StageIssue implements Stage.ConfigIssue {
 
     public ConfigIssueImpl(String instanceName, ErrorCode errorCode, Object... args) {
-      super(instanceName, errorCode, args);
+      super(false, instanceName, errorCode, args); //TODO we should use errorStage bit here
     }
 
   }

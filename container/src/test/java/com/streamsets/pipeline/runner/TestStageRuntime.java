@@ -100,6 +100,7 @@ public class TestStageRuntime {
     targetDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"))).thenReturn(targetDef);
+    Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("errorTarget"), Mockito.eq("1.0.0"))).thenReturn(targetDef);
     return lib;
   }
 
@@ -127,8 +128,13 @@ public class TestStageRuntime {
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
+    StageConfiguration errorStage = new StageConfiguration(
+        "errorStrage", "library", "errorTarget", "1.0.0",
+        Collections.EMPTY_LIST, null, Collections.EMPTY_LIST,
+        Collections.EMPTY_LIST);
+
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), pipelineConfigs, null,
-      stages, MockStages.getErrorStageConfig());
+      stages, errorStage);
   }
 
   @Test

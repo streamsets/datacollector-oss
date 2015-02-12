@@ -256,7 +256,7 @@ public class MockStages {
 
       StageDefinition eDef = new StageDefinition(
           ETarget.class.getName(), "errorTarget", "1.0.0", "errorTarget",
-          "Error Target", StageType.TARGET, false, true, Collections.EMPTY_LIST, null/*raw source definition*/, "", null, false, 0, null
+          "Error Target", StageType.TARGET, true, false, Collections.EMPTY_LIST, null/*raw source definition*/, "", null, false, 0, null
       );
       eDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 

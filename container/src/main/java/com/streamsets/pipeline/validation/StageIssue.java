@@ -12,22 +12,16 @@ public class StageIssue extends Issue {
   private final String instanceName;
   private final String configGroup;
   private final String configName;
+  private final boolean errorStage;
 
-  public static StageIssue createStageIssue(String instanceName, ValidationError error, Object... args) {
-    return new StageIssue(instanceName, null, null, error, args);
+  protected StageIssue(boolean errorStage, String instanceName, ErrorCode error, Object... args) {
+    this(errorStage, instanceName, null, null, error, args);
   }
 
-  public static StageIssue createConfigIssue(String instanceName, String configGroup, String configName,
-      ValidationError error, Object... args) {
-    return new StageIssue(instanceName, configGroup, configName, error, args);
-  }
-
-  protected StageIssue(String instanceName, ErrorCode error, Object... args) {
-    this(instanceName, null, null, error, args);
-  }
-
-  private StageIssue(String instanceName, String configGroup, String configName, ErrorCode error, Object... args) {
+  protected StageIssue(boolean errorStage, String instanceName, String configGroup, String configName,
+      ErrorCode error, Object... args) {
     super(error, args);
+    this.errorStage = errorStage;
     this.instanceName = instanceName;
     this.configGroup = configGroup;
     this.configName = configName;
@@ -35,6 +29,10 @@ public class StageIssue extends Issue {
 
   public String getInstanceName() {
     return instanceName;
+  }
+
+  public boolean isErrorStage() {
+    return errorStage;
   }
 
   public String getConfigGroup() {
@@ -51,7 +49,8 @@ public class StageIssue extends Issue {
 
   public String toString() {
     return (configName == null)
-           ? Utils.format("Instance '{}': {}", getInstanceName(), super.toString())
-           : Utils.format("Instance '{}' config '{}': {}", getInstanceName(), getConfigName(), super.toString());
+           ? Utils.format("Instance '{}' errorStage '{}': {}", getInstanceName(), isErrorStage(), super.toString())
+           : Utils.format("Instance '{}' errorStage '{}' config '{}': {}", getInstanceName(), isErrorStage(),
+                          getConfigName(), super.toString());
   }
 }

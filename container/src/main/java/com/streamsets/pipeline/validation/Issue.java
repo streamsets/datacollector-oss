@@ -21,7 +21,7 @@ public class Issue {
     message = new ErrorMessage(error, args);
   }
 
-  public Issue(ValidationError error, Object... args) {
+  protected Issue(ValidationError error, Object... args) {
     this((ErrorCode) error, args);
   }
 
