@@ -326,12 +326,19 @@ angular
        * @returns {*|string}
        */
       getStageInstanceLabel: function (stageInstanceName) {
-        var instance;
+        var instance,
+          errorStage = $scope.pipelineConfig.errorStage;
+
         angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
           if (stageInstance.instanceName === stageInstanceName) {
             instance = stageInstance;
           }
         });
+
+        if(!instance && errorStage && errorStage.instanceName === stageInstanceName) {
+          instance = errorStage;
+        }
+
         return (instance && instance.uiInfo) ? instance.uiInfo.label : undefined;
       },
 
@@ -375,20 +382,36 @@ angular
             return stage.instanceName === instanceName;
           });
 
-          $scope.changeStageSelection({
-            selectedObject: stageInstance,
-            type: pipelineConstant.STAGE_INSTANCE,
-            detailTabName: 'configuration',
-            configGroup: issue.configGroup,
-            configName: issue.configName
-          });
+          if(stageInstance) {
+            $scope.changeStageSelection({
+              selectedObject: stageInstance,
+              type: pipelineConstant.STAGE_INSTANCE,
+              detailTabName: 'configuration',
+              configGroup: issue.configGroup,
+              configName: issue.configName
+            });
+          } else if(pipelineConfig.errorStage && pipelineConfig.errorStage.instanceName === instanceName){
+            //Error Stage Configuration Issue
+            $scope.$broadcast('selectNode');
+            $scope.changeStageSelection({
+              selectedObject: undefined,
+              type: pipelineConstant.PIPELINE,
+              detailTabName: 'configuration',
+              configGroup: issue.configGroup,
+              configName: issue.configName,
+              errorStage: true
+            });
+          }
 
         } else {
           //Select Pipeline Config
           $scope.$broadcast('selectNode');
           $scope.changeStageSelection({
             selectedObject: undefined,
-            type: pipelineConstant.PIPELINE
+            type: pipelineConstant.PIPELINE,
+            detailTabName: 'configuration',
+            configGroup: issue.configGroup,
+            configName: issue.configName
           });
         }
       },
@@ -590,7 +613,6 @@ angular
           pipelineRules.metricsRuleDefinitions = pipelineService.getPredefinedMetricAlertRules();
           saveRulesUpdate(pipelineRules);
         }
-
       }
 
       //Update Pipeline Info list
@@ -1026,10 +1048,10 @@ angular
 
           newValue.errorStage = pipelineService.getNewStageInstance({
             stage: badRecordsStage,
-            pipelineConfig: $scope.pipelineConfig
+            pipelineConfig: $scope.pipelineConfig,
+            errorStage: true
           });
         }
-
 
         if (timeout) {
           $timeout.cancel(timeout);

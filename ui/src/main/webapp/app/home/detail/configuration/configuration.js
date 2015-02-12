@@ -356,7 +356,7 @@ angular
       },
 
 
-      showConfigurationWarning: function(stageInstance, groupName) {
+      showConfigurationWarning: function(stageInstance, groupName, errorStage) {
         var config = $scope.pipelineConfig,
           issues;
 
@@ -369,9 +369,13 @@ angular
           }
         }
 
-        return _.find(issues, function(issue) {
-          return issue.level === 'STAGE_CONFIG' && issue.configGroup === groupName;
-        });
+        if(errorStage) {
+          return issues && issues.length;
+        } else {
+          return _.find(issues, function(issue) {
+            return issue.configGroup === groupName;
+          });
+        }
       }
     });
 
@@ -434,6 +438,12 @@ angular
       } else {
         $scope.showGroups = false;
         $scope.configGroupTabs = [];
+      }
+
+      if(options.errorStage) {
+        $scope.errorStageConfigActive = true;
+      } else {
+        $scope.errorStageConfigActive = false;
       }
     };
 

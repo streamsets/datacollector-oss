@@ -40,6 +40,7 @@ angular.module('dataCollectorApp.common')
      *  relativeXPos [Optional]
      *  relativeYPos [Optional]
      *  configuration [Optional]
+     *  errorStage [optional]
      * @returns {{instanceName: *, library: (*|stageInstance.library|library|e.library), stageName: *, stageVersion: *, configuration: Array, uiInfo: {label: *, description: string, xPos: *, yPos: number, stageType: *}, inputLanes: Array, outputLanes: Array}}
      */
     this.getNewStageInstance = function (options) {
@@ -52,7 +53,7 @@ angular.module('dataCollectorApp.common')
         configuration = options.configuration,
         xPos = relativeXPos || getXPos(pipelineConfig, firstOpenLane),
         yPos = relativeYPos || getYPos(pipelineConfig, firstOpenLane, xPos),
-        stageLabel = self.getStageLabel(stage, pipelineConfig),
+        stageLabel = self.getStageLabel(stage, pipelineConfig, options),
         stageInstance = {
           instanceName: stage.name + (new Date()).getTime() + (labelSuffix ? labelSuffix : ''),
           library: stage.library,
@@ -128,15 +129,21 @@ angular.module('dataCollectorApp.common')
      *
      * @param stage
      * @param pipelineConfig
+     * @param options
      * @returns {*}
      */
-    this.getStageLabel = function(stage, pipelineConfig) {
-      var label = stage.label,
-        similarStageInstances = _.filter(pipelineConfig.stages, function(stageInstance) {
+    this.getStageLabel = function(stage, pipelineConfig, options) {
+      var label = stage.label;
+
+      if(options.errorStage) {
+        return 'Bad Records - ' + label;
+      } else {
+        var similarStageInstances = _.filter(pipelineConfig.stages, function(stageInstance) {
           return stageInstance.uiInfo.label.indexOf(label) !== -1;
         });
 
-      return label + (similarStageInstances.length + 1);
+        return label + (similarStageInstances.length + 1);
+      }
     };
 
 

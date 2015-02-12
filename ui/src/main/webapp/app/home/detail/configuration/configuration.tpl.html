@@ -39,8 +39,10 @@
       </div>
     </tab>
 
-    <tab ng-if="errorStageConfig" ng-controller="ErrorConfigurationController">
+    <tab ng-if="errorStageConfig" ng-controller="ErrorConfigurationController" active="errorStageConfigActive">
       <tab-heading>
+        <i class="fa fa-exclamation-triangle icon-danger"
+           ng-show="showConfigurationWarning(detailPaneConfig, undefined, true)"></i>
         {{'home.detailPane.badRecords' | translate}} - {{errorStageConfigDefn.label}}
       </tab-heading>
       <div class="tabs-content">

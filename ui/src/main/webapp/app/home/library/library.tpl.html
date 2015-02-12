@@ -24,7 +24,8 @@
           <!--p class="list-group-item-text">{{pipeline.description}}</p-->
         </div>
 
-        <div class="action-menu pull-right" dropdown>
+        <div class="action-menu pull-right" dropdown
+             ng-if="pipeline.name === activeConfigInfo.name">
           <span class="dropdown-toggle" dropdown-toggle aria-expanded="true" ng-click="$event.stopPropagation();">
             <i class="fa fa-ellipsis-v"></i>
           </span>
