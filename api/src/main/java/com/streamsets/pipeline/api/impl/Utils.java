@@ -10,8 +10,12 @@ import org.slf4j.helpers.MessageFormatter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class Utils {
 
@@ -37,8 +41,40 @@ public final class Utils {
     }
   }
 
+  // we cache a splitted version of the templates to speed up formatting
+  private static final Map<String, String[]> TEMPLATES = new ConcurrentHashMap<>();
+
+  private static final String TOKEN = "{}";
+
+  static String[] prepareTemplate(String template) {
+    List<String> list = new ArrayList<>();
+    int pos = 0;
+    int nextToken = template.indexOf(TOKEN, pos);
+    while (nextToken > -1 && pos < template.length()) {
+      list.add(template.substring(pos, nextToken));
+      pos = nextToken + TOKEN.length();
+      nextToken = template.indexOf(TOKEN, pos);
+    }
+    list.add(template.substring(pos));
+    return list.toArray(new String[list.size()]);
+  }
+
+  // fast version of SLF4J MessageFormat.format(), uses {} tokens, no escaping is supported, no array content printing either.
   public static String format(String template, Object... args) {
-    return MessageFormatter.arrayFormat(template, args).getMessage();
+    String[] templateArr = TEMPLATES.get(template);
+    if (templateArr == null) {
+      // we may have a race condition here but the end result is idempotent
+      templateArr = prepareTemplate(template);
+      TEMPLATES.put(template, templateArr);
+    }
+    StringBuilder sb = new StringBuilder(template.length() * 2);
+    for (int i = 0; i < templateArr.length; i++) {
+      sb.append(templateArr[i]);
+      if (i < templateArr.length - 1) {
+        sb.append((i < args.length) ? args[i] : TOKEN);
+      }
+    }
+    return sb.toString();
   }
 
   private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
