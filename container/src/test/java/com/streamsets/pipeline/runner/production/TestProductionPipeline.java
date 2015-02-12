@@ -18,7 +18,6 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -171,10 +170,9 @@ public class TestProductionPipeline {
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
-    FileErrorRecordStore fileErrorRecordStore = Mockito.mock(FileErrorRecordStore.class);
 
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, fileErrorRecordStore, 5
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, 5
       , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION,
       new FilePipelineStoreTask(new RuntimeInfo(Arrays.asList(getClass().getClassLoader())), new Configuration()) {
       });

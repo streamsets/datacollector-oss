@@ -228,19 +228,6 @@ public class TestUtil {
       }
 
       Mockito.doNothing().when(pipelineManager).deleteSnapshot(PIPELINE_NAME, PIPELINE_REV);
-      try {
-        Mockito.doNothing().when(pipelineManager).deleteErrors(PIPELINE_NAME, "1");
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      try {
-        Mockito.when(pipelineManager.getErrors(PIPELINE_NAME, "0"))
-          .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
-          .thenReturn(null);
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
 
       Record r = new RecordImpl("a", "b", "c".getBytes(), "d");
       try {

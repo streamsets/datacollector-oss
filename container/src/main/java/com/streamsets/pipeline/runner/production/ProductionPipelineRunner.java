@@ -16,7 +16,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.HeaderImpl;
@@ -51,7 +50,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private final MetricRegistry metrics;
   private SourceOffsetTracker offsetTracker;
   private final SnapshotStore snapshotStore;
-  private final ErrorRecordStore errorRecordStore;
   private final PipelineStoreTask pipelineStore;
   private final int maxErrorRecordsPerStage;
   private final int maxPipelineErrors;
@@ -90,8 +88,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   private Object errorRecordsMutex;
 
-  public ProductionPipelineRunner(RuntimeInfo runtimeInfo, SnapshotStore snapshotStore,
-      ErrorRecordStore errorRecordStore, int batchSize, int maxErrorRecordsPerStage, int maxPipelineErrors,
+  public ProductionPipelineRunner(RuntimeInfo runtimeInfo, SnapshotStore snapshotStore, int batchSize,
+                                  int maxErrorRecordsPerStage, int maxPipelineErrors,
       DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision, PipelineStoreTask pipelineStore) {
     this.runtimeInfo = runtimeInfo;
     this.metrics = new MetricRegistry();
@@ -114,7 +112,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.snapshotStore = snapshotStore;
     this.pipelineName = pipelineName;
     this.revision = revision;
-    this.errorRecordStore = errorRecordStore;
     this.pipelineStore = pipelineStore;
     this.stageToErrorRecordsMap = new HashMap<>();
     this.stageToErrorMessagesMap = new HashMap<>();
@@ -250,12 +247,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
       snapshotBatchSize = 0;
     }
 
-    //dump all error records to store
+    //Retain X number of error records per stage
     Map<String, List<Record>> errorRecords = pipeBatch.getErrorSink().getErrorRecords();
     Map<String, List<ErrorMessage>> errorMessages = pipeBatch.getErrorSink().getStageErrors();
-    errorRecordStore.storeErrorRecords(pipelineName, revision, errorRecords);
-    errorRecordStore.storeErrorMessages(pipelineName, revision, errorMessages);
-    //Retain X number of error records per stage
     retainErrorsInMemory(errorRecords, errorMessages);
   }
 

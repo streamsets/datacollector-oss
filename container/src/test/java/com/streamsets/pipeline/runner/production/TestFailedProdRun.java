@@ -13,7 +13,6 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -55,7 +54,7 @@ public class TestFailedProdRun {
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, Mockito.mock(FileSnapshotStore.class),
-        Mockito.mock(FileErrorRecordStore.class), 5, 10, 10, DeliveryGuarantee.AT_MOST_ONCE, PIPELINE_NAME, REVISION, null);
+        5, 10, 10, DeliveryGuarantee.AT_MOST_ONCE, PIPELINE_NAME, REVISION, null);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
 

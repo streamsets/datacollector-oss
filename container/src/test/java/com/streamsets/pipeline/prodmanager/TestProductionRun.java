@@ -222,16 +222,6 @@ public class TestProductionRun {
 
     manager.stopPipeline(false);
     waitForPipelineToStop();
-
-    InputStream erStream = manager.getErrors(MY_PIPELINE, PIPELINE_REV);
-    Assert.assertNotNull(erStream);
-    //TODO: read the input error records into String format and Use Record de-serializer when ready
-
-    //delete the error record file
-    manager.deleteErrors(MY_PIPELINE, PIPELINE_REV);
-
-    erStream = manager.getErrors(MY_PIPELINE, PIPELINE_REV);
-    Assert.assertEquals(0, erStream.available());
   }
 
   @Test
@@ -248,16 +238,6 @@ public class TestProductionRun {
 
     manager.stopPipeline(false);
     waitForPipelineToStop();
-
-    //check there are error records
-    InputStream erStream = manager.getErrors(MY_PIPELINE, PIPELINE_REV);
-    Assert.assertNotNull(erStream);
-
-    manager.deleteErrors(MY_PIPELINE, PIPELINE_REV);
-
-    erStream = manager.getErrors(MY_PIPELINE, PIPELINE_REV);
-    //verify there are no records
-    Assert.assertEquals(0, erStream.available());
   }
 
   @Test
@@ -308,16 +288,6 @@ public class TestProductionRun {
 
     manager.stopPipeline(false);
     waitForPipelineToStop();
-
-    InputStream erStream = manager.getErrors(MY_PIPELINE, PIPELINE_REV);
-    Assert.assertNotNull(erStream);
-    //TODO: read the input error records into String format and Use Record de-serializer when ready
-
-    //delete the error record file
-    manager.deleteErrors(MY_PIPELINE, PIPELINE_REV);
-
-    erStream = manager.getErrors(MY_PIPELINE, PIPELINE_REV);
-    Assert.assertEquals(0, erStream.available());
   }
 
   //TODO:

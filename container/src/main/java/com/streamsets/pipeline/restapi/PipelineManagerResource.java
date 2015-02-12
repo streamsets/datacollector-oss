@@ -152,25 +152,6 @@ public class PipelineManagerResource {
     return Response.ok().build();
   }
 
-  @Path("/errors/{pipelineName}")
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getErrors(
-      @PathParam("pipelineName") String pipelineName,
-      @QueryParam("rev") @DefaultValue("0") String revs) throws PipelineManagerException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getErrors(pipelineName, revs)).build();
-  }
-
-  @Path("/errors/{pipelineName}")
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response deleteErrorRecords(
-      @PathParam("pipelineName") String pipelineName,
-      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException {
-    pipelineManager.deleteErrors(pipelineName, rev);
-    return Response.ok().build();
-  }
-
   @Path("/errorRecords")
   @GET
   @Produces(MediaType.APPLICATION_JSON)

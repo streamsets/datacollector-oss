@@ -20,8 +20,6 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.email.EmailSender;
-import com.streamsets.pipeline.errorrecordstore.ErrorRecordStore;
-import com.streamsets.pipeline.errorrecordstore.impl.FileErrorRecordStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -81,7 +79,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private final PipelineStoreTask pipelineStore;
   private final StageLibraryTask stageLibrary;
   private final SnapshotStore snapshotStore;
-  private final ErrorRecordStore errorRecordStore;
 
   /*References the thread that is executing the pipeline currently */
   private ProductionPipelineRunnable pipelineRunnable;
@@ -108,7 +105,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     this.pipelineStore = pipelineStore;
     this.stageLibrary = stageLibrary;
     snapshotStore = new FileSnapshotStore(runtimeInfo);
-    errorRecordStore = new FileErrorRecordStore(runtimeInfo, configuration);
   }
 
 
@@ -230,11 +226,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public InputStream getSnapshot(String pipelineName, String rev) throws PipelineManagerException {
     validatePipelineExistence(pipelineName);
     return snapshotStore.getSnapshot(pipelineName, rev);
-  }
-
-  public InputStream getErrors(String pipelineName, String rev) throws PipelineManagerException {
-    validatePipelineExistence(pipelineName);
-    return errorRecordStore.getErrors(pipelineName, rev);
   }
 
   public List<Record> getErrorRecords(String instanceName, int size) throws PipelineManagerException {
@@ -367,13 +358,11 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     //This helps avoid race conditions when different stores attempt to create directories
     //Creating directory eagerly also avoids the need of synchronization
     createPipelineDirIfNotExist(name);
-    //register the pipeline with the error record store
-    errorRecordStore.register(name, rev);
     stateTracker.register(name, rev);
 
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, errorRecordStore,
-        maxBatchSize, maxErrorRecordsPerStage, maxPipelineErrors, deliveryGuarantee, name, rev, pipelineStore);
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, maxBatchSize,
+      maxErrorRecordsPerStage, maxPipelineErrors, deliveryGuarantee, name, rev, pipelineStore);
 
     ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, pipelineConfiguration);
     return builder.build(runner, offsetTracker, observer);
@@ -422,18 +411,6 @@ public class ProductionPipelineManagerTask extends AbstractTask {
           Utils.format("'{}' mkdir failed", pipelineDir));
       }
     }
-  }
-
-  public void deleteErrors(String pipelineName, String rev) throws PipelineManagerException {
-    LOG.debug("Deleting errors for pipeline {}", pipelineName);
-    PipelineState pState = getPipelineState();
-    if(pState == null) {
-      return;
-    }
-    if(pState.getName().equals(pipelineName) && pState.getState() == State.RUNNING) {
-      throw new PipelineManagerException(ContainerError.CONTAINER_0111, pipelineName);
-    }
-    errorRecordStore.deleteErrors(pipelineName, rev);
   }
 
   public void deleteHistory(String pipelineName, String rev) throws PipelineManagerException {
