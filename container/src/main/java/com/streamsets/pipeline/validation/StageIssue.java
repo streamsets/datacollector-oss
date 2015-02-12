@@ -10,8 +10,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 public class StageIssue extends Issue {
   private final String instanceName;
-  private final String configGroup;
-  private final String configName;
   private final boolean errorStage;
 
   protected StageIssue(boolean errorStage, String instanceName, ErrorCode error, Object... args) {
@@ -20,11 +18,9 @@ public class StageIssue extends Issue {
 
   protected StageIssue(boolean errorStage, String instanceName, String configGroup, String configName,
       ErrorCode error, Object... args) {
-    super(error, args);
+    super(error, args, configName, configGroup);
     this.errorStage = errorStage;
     this.instanceName = instanceName;
-    this.configGroup = configGroup;
-    this.configName = configName;
   }
 
   public String getInstanceName() {
@@ -35,20 +31,12 @@ public class StageIssue extends Issue {
     return errorStage;
   }
 
-  public String getConfigGroup() {
-    return configGroup;
-  }
-
-  public String getConfigName() {
-    return configName;
-  }
-
   public String getLevel() {
-    return (configName == null) ? "STAGE" : "STAGE_CONFIG";
+    return (getConfigName() == null) ? "STAGE" : "STAGE_CONFIG";
   }
 
   public String toString() {
-    return (configName == null)
+    return (getConfigName() == null)
            ? Utils.format("Instance '{}' errorStage '{}': {}", getInstanceName(), isErrorStage(), super.toString())
            : Utils.format("Instance '{}' errorStage '{}' config '{}': {}", getInstanceName(), isErrorStage(),
                           getConfigName(), super.toString());

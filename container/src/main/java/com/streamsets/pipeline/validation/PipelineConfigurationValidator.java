@@ -11,6 +11,7 @@ import com.google.common.collect.Sets;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
@@ -550,7 +551,8 @@ public class PipelineConfigurationValidator {
   boolean validateErrorStage() {
     boolean preview = true;
     if (pipelineConfiguration.getErrorStage() == null) {
-      issues.addP(new Issue(ValidationError.VALIDATION_0060));
+      issues.addP(new Issue(PipelineDefinition.BAD_RECORDS_HANDLING_FIELD, PipelineDefinition.BAD_RECORDS_GROUP,
+                            ValidationError.VALIDATION_0060));
       preview = false;
     } else {
       StageConfiguration errorStage = pipelineConfiguration.getErrorStage();

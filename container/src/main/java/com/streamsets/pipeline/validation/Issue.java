@@ -14,11 +14,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Issue {
+  protected final String configGroup;
+  protected final String configName;
   private final LocalizableString message;
   private Map<String, Object> additionalInfo;
 
-  protected Issue(ErrorCode error, Object... args) {
+  protected Issue(String configName, String configGroup, ErrorCode error, Object... args) {
     message = new ErrorMessage(error, args);
+    this.configName = configName;
+    this.configGroup = configGroup;
+  }
+
+  protected Issue(ErrorCode error, Object... args) {
+    this(null, null, error, args);
   }
 
   protected Issue(ValidationError error, Object... args) {
@@ -38,6 +46,14 @@ public class Issue {
 
   public String getMessage() {
     return message.getLocalized();
+  }
+
+  public String getConfigGroup() {
+    return configGroup;
+  }
+
+  public String getConfigName() {
+    return configName;
   }
 
   public String toString() {

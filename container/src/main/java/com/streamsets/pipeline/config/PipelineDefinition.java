@@ -7,10 +7,7 @@ package com.streamsets.pipeline.config;
 
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ChooserMode;
-import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -33,6 +30,9 @@ public class PipelineDefinition {
   private final static String DELIVERY_GUARANTEE_AT_LEAST_ONCE_DEFAULT = "At Least Once";
   private final static String DELIVERY_GUARANTEE_AT_MOST_ONCE_KEY = "config.deliveryGuarantee.AT_MOST_ONCE";
   private final static String DELIVERY_GUARANTEE_AT_MOST_ONCE_DEFAULT = "At Most Once";
+
+  public static final String BAD_RECORDS_HANDLING_FIELD = "badRecordsHandling";
+  public static final String BAD_RECORDS_GROUP = "BAD_RECORDS";
 
   private StageLibraryTask stageLibrary;
   /*The config definitions of the pipeline*/
@@ -130,13 +130,13 @@ public class PipelineDefinition {
     ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, ChooserMode.PROVIDED, "",
                                                 getErrorHandlingValues(), getErrorHandlingLabels(), null);
     ConfigDefinition config = new ConfigDefinition(
-        "badRecordsHandling",
+        BAD_RECORDS_HANDLING_FIELD,
         ConfigDef.Type.MODEL,
         "Bad Records Handling",
         "",
         "",
         true,
-        "BAD_RECORDS",
+        BAD_RECORDS_GROUP,
         "",
         model,
         "",
