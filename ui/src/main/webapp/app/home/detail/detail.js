@@ -129,7 +129,7 @@ angular
       /**
        * Checks if configuration has any issue.
        *
-       * @param {Object} configObject - The Pipeline Configuration/Stage Configuration Object.
+       * @param {Object} stageInstance - The Pipeline Configuration/Stage Configuration Object.
        * @returns {Boolean} - Returns true if configuration has any issue otherwise false.
        */
       hasConfigurationIssues: function(stageInstance) {
@@ -138,15 +138,19 @@ angular
 
         if(config && config.issues) {
           if(stageInstance.instanceName && config.issues.stageIssues &&
-            config.issues.stageIssues && config.issues.stageIssues[stageInstance.instanceName]) {
+            config.issues.stageIssues[stageInstance.instanceName]) {
             issues = config.issues.stageIssues[stageInstance.instanceName];
           } else if(config.issues.pipelineIssues){
-            issues = config.issues.pipelineIssues;
+            issues = angular.copy(config.issues.pipelineIssues);
+
+            if(config.errorStage && config.issues.stageIssues && config.issues.stageIssues[config.errorStage.instanceName]) {
+              issues.push.apply(issues, config.issues.stageIssues[config.errorStage.instanceName]);
+            }
           }
         }
 
         return _.find(issues, function(issue) {
-          return issue.level === 'STAGE_CONFIG';
+          return issue.configName;
         });
       },
 

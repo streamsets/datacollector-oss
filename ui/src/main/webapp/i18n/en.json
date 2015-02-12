@@ -192,6 +192,7 @@
         "stageInformation": "Stage Information",
         "stageDescription": "Stage Description",
         "stageName": "Stage Name",
+        "stageInstanceName": "Stage Instance Name",
         "stageLibrary": "Stage Library",
         "stageType": "Stage Type",
         "stageVersion": "Stage Version"
