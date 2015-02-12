@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.impl.Utils;
 
 public class JsonLineToRecord implements ToRecord {
   private ObjectMapper objectMapper;
@@ -32,7 +31,7 @@ public class JsonLineToRecord implements ToRecord {
   public Record createRecord(Source.Context context, String sourceFile, long offset, String line, boolean truncated)
       throws ToRecordException {
     try {
-      Record record = context.createRecord(Utils.format("{}::{}", sourceFile, offset));
+      Record record = context.createRecord(sourceFile + "::" + offset);
       record.set(parse(line));
       return record;
     } catch (Exception ex) {

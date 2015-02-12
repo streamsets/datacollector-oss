@@ -106,7 +106,7 @@ public class JsonDataProducer implements DataProducer {
   }
 
   protected Record createRecord(String sourceFile, long offset, Object json) throws IOException {
-    Record record = context.createRecord(Utils.format("file={} offset={}", sourceFile, offset));
+    Record record = context.createRecord(sourceFile + "::" + offset);
     record.set(jsonToField(json));
     return record;
   }

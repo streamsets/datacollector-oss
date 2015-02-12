@@ -14,7 +14,6 @@ import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -191,7 +190,7 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
       batchMaker.addRecord(record);
       recordCount++;
     }
-    return String.format("%s::%d", getFileOffset(), getRecordCount());
+    return getFileOffset() + "::" + getRecordCount();
   }
 
   @Override

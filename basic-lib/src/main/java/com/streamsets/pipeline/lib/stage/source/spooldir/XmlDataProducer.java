@@ -11,7 +11,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.util.StageLibError;
 import com.streamsets.pipeline.lib.xml.OverrunStreamingXmlParser;
@@ -107,7 +106,7 @@ public class XmlDataProducer implements DataProducer {
   }
 
   protected Record createRecord(String sourceFile, long offset, Field field) throws IOException {
-    Record record = context.createRecord(Utils.format("file={} offset={}", sourceFile, offset));
+    Record record = context.createRecord(sourceFile + "::" + offset);
     record.set(field);
     return record;
   }

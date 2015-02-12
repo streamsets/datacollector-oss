@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import org.apache.commons.csv.CSVFormat;
 
@@ -104,7 +103,7 @@ public class CsvDataProducer implements DataProducer {
   }
 
   protected Record createRecord(String sourceFile, long offset, int offsetIndex, String[] columns) throws IOException {
-    Record record = context.createRecord(Utils.format("file={} offset={} idx={}", sourceFile, offset, offsetIndex));
+    Record record = context.createRecord(sourceFile + "::" + offset + "::" + offsetIndex);
     Map<String, Field> map = new LinkedHashMap<>();
     if (convertToMap) {
       for (int i = 0; i < columns.length; i++) {

@@ -8,7 +8,6 @@ package com.streamsets.pipeline.lib.util;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,7 +24,7 @@ public class LineToRecord implements ToRecord {
 
   @Override
   public Record createRecord(Source.Context context, String sourceFile, long offset, String line, boolean truncated) {
-    Record record = context.createRecord(Utils.format("{}::{}", sourceFile, offset));
+    Record record = context.createRecord(sourceFile + "::" + offset);
     Map<String, Field> map = new LinkedHashMap<>();
     map.put(LINE, Field.create(line));
     if (setTruncated) {
