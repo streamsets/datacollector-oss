@@ -19,6 +19,7 @@ import java.util.List;
 @Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class})
 public class RuntimeModule {
   public static final String DATA_COLLECTOR_ID = "sdc.id";
+  public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
 
   private static List<ClassLoader> stageLibraryClassLoaders = ImmutableList.of(RuntimeModule.class.getClassLoader());
 
@@ -44,8 +45,8 @@ public class RuntimeModule {
     if (configFile.exists()) {
       try {
         conf.load(new FileReader(configFile));
-        runtimeInfo.setId(conf.get(DATA_COLLECTOR_ID,
-                                   System.getProperty("sdc.hostname") + ":" + System.getProperty("http.port")));
+        runtimeInfo.setId(conf.get(DATA_COLLECTOR_ID, runtimeInfo.getId()));
+        runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

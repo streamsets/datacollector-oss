@@ -22,16 +22,27 @@ public class RuntimeInfo {
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
   private String id;
+  private String httpUrl;
   private final Map<String, Object> attributes;
   private Runnable shutdownRunnable;
 
   public RuntimeInfo(List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
+    id = System.getProperty("sdc.hostname") + ":16830"; //TODO fix how we resolve the default port
+    httpUrl = "http://" + System.getProperty("sdc.hostname") + ":16830";
     this.attributes = new HashMap<>();
   }
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public void setBaseHttpUrl(String url) {
+    this.httpUrl = url;
+  }
+
+  public String getBaseHttpUrl() {
+    return httpUrl;
   }
 
   public String getId() {

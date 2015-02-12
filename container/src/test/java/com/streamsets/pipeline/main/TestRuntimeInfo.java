@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.main;
 
+import com.streamsets.pipeline.util.Configuration;
+import dagger.ObjectGraph;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,10 +14,16 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
 
 public class TestRuntimeInfo {
 
@@ -26,6 +34,8 @@ public class TestRuntimeInfo {
     System.getProperties().remove(RuntimeInfo.LOG_DIR);
     System.getProperties().remove(RuntimeInfo.DATA_DIR);
     System.getProperties().remove(RuntimeInfo.STATIC_WEB_DIR);
+    System.getProperties().remove(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL);
+    System.getProperties().remove(RuntimeModule.DATA_COLLECTOR_ID);
   }
 
   @Test
@@ -69,6 +79,34 @@ public class TestRuntimeInfo {
     Assert.assertEquals(1, info.getAttribute("a"));
     info.removeAttribute("a");
     Assert.assertFalse(info.hasAttribute("a"));
+  }
+
+  @Test
+  public void testDefaultIdAndBaseHttpUrl() {
+    System.setProperty("sdc.hostname", "FOO");
+
+    ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
+    RuntimeInfo info = og.get(RuntimeInfo.class);
+    Assert.assertEquals("FOO:16830", info.getId());
+    Assert.assertEquals("http://FOO:16830", info.getBaseHttpUrl());
+  }
+
+  @Test
+  public void testConfigIdAndBaseHttpUrl() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    System.setProperty(RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
+    Properties props = new Properties();
+    props.setProperty(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
+    props.setProperty(RuntimeModule.DATA_COLLECTOR_ID, "ID");
+    Writer writer = new FileWriter(new File(dir, "sdc.properties"));
+    props.store(writer, "");
+    writer.close();
+    ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
+    og.get(Configuration.class);
+    RuntimeInfo info = og.get(RuntimeInfo.class);
+    Assert.assertEquals("ID", info.getId());
+    Assert.assertEquals("HTTP", info.getBaseHttpUrl());
   }
 
 }
