@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ynz_stc_br">
+ <title>Stage Paths</title>
+ <shortdesc>Some record functions and error functions return stage paths. You might also want to use
+  stage paths in expressions or conditions in error pipelines. </shortdesc>
+ <conbody>
+  <p><indexterm>stage paths<indexterm>format</indexterm></indexterm>Stage paths use the following
+   format:<codeblock>&lt;origin instance name>:&lt;next stage instance name>:&lt;next stage instance name>:...</codeblock></p>
+ </conbody>
+</concept>

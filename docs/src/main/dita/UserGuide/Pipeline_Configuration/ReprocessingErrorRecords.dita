@@ -9,9 +9,8 @@
             <p><indexterm>error records<indexterm>reprocessing</indexterm></indexterm>In the error
                 pipeline, include the Directory origin and configure it to use the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> error record data format. Configure the rest of the pipeline as necessary.
-                    <draft-comment author="Loretta">Add anything else? Check data format
-                    name.</draft-comment></p>
+                /> error record data format. When you reprocess error records, <draft-comment
+                    author="Loretta">Add anything else? Check data format name.</draft-comment></p>
             <p/>
         </context>
     </taskbody>

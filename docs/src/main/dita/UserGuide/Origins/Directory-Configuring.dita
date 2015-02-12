@@ -37,7 +37,9 @@
                                             <li>JSON</li>
                                             <li>Delimited</li>
                                             <li>XML</li>
-                                            <li>Data Collector Error Records</li>
+                                            <li><ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> Error Records</li>
                                         </ul></entry>
                                 </row>
                                 <row>

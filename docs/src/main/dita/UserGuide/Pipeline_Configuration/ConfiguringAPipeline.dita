@@ -87,19 +87,19 @@
                                     <entry>Local directory for bad record files. </entry>
                                 </row>
                                 <row>
-                                    <entry>Max Bad Records/File</entry>
-                                    <entry>Number of records to be written to a bad record file.
-                                        Additional records are written to a new bad record file.
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry>Roll Bad Records File every (secs)</entry>
+                                    <entry>Rotation Interval (secs)</entry>
                                     <entry>Number of seconds the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> writes to a bad record file. After that time, it creates
                                         a new bad record file. <p>You can enter a number of seconds
                                             or use the default expression to enter the time in
                                             minutes. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Max File Size (MB)</entry>
+                                    <entry>Maximum size for error files. Exceeding this size creates
+                                        a new error file. <p>Use 0 to write to a single error file.
+                                        </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

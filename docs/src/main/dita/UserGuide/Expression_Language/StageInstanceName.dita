@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_e1r_5vc_br">
+ <title>Stage Instance Name</title>
+ <shortdesc>Some record and error functions include stage instance names in their return values. You
+  might also need to use the stage instance name in expressions or conditions when you configure an
+  error pipeline. You can find the instance name for a stage on the General tab of the stage
+  properties. </shortdesc>
+ <conbody>
+  <p><indexterm>stage instance name<indexterm>format</indexterm></indexterm>Stage instances names
+   use the following format: </p>
+  <p>
+   <codeblock>&lt;internal information>_&lt;internal stage name>&lt;ID></codeblock>
+  </p>
+  <p>For example,
+   <codeblock>com_streamsets_pipeline_lib_stage_processor_splitter_SplitterProcessor1423694184108</codeblock></p>
+ </conbody>
+</concept>

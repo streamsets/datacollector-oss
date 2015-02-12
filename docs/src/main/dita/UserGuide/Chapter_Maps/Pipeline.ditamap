@@ -11,7 +11,7 @@
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../Pipeline_Configuration/ErrorHandling.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Pipeline_Configuration/RerocessingErrorRecords.dita"/>
+   <topicref href="../Pipeline_Configuration/ReprocessingErrorRecords.dita"/>
   </topicref>
   <topicref href="../Pipeline_Configuration/DeliveryGuarantee.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>

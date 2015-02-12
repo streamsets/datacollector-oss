@@ -3,22 +3,26 @@
 <concept id="concept_ndj_43v_1r">
  <title>Error Functions</title>
  <shortdesc>Error functions provide information about error records. Use error functions to
-  reprocess error records. The expression language provides the following error
-  functions:</shortdesc>
+  reprocess error records.</shortdesc>
  <conbody>
+  <p><indexterm>functions<indexterm>error</indexterm></indexterm>For example, you might use error
+   functions in a Stream Selector to pass data to different error handling pipelines based on the
+   type of error that occurred. </p>
+  <p>The expression language provides the following error functions:</p>
   <p>
    <dl>
     <dlentry>
      <dt>${error:stage()}</dt>
      <dd>Returns the instance name of the stage that sent the record to error. </dd>
+     <dd>You can find the instance name on the General tab of the stage. </dd>
     </dlentry>
     <dlentry>
      <dt>${error:code()}</dt>
-     <dd>Returns the error code for the bad record.</dd>
+     <dd>Returns the error code for the error record.</dd>
     </dlentry>
     <dlentry>
      <dt>${error:message()}</dt>
-     <dd>Returns the error message for the bad record.</dd>
+     <dd>Returns the error message for the error record.</dd>
     </dlentry>
     <dlentry>
      <dt>${error:collectorId()}</dt>
