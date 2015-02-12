@@ -10,10 +10,12 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.AlertsUtil;
+import com.streamsets.pipeline.alerts.TestDataRuleEvaluator;
 import com.streamsets.pipeline.alerts.TestUtil;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.ThresholdType;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.util.Configuration;
 import org.junit.Assert;
@@ -21,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -34,10 +37,12 @@ public class TestObserverRunner {
   private static final String REVISION = "1.0";
   private ObserverRunner observerRunner;
   private MetricRegistry metrics = new MetricRegistry();
+  private static RuntimeInfo runtimeInfo;
 
   @Before
   public void setUp() {
-    observerRunner = new ObserverRunner(metrics, new AlertManager(PIPELINE_NAME, REVISION, null, metrics),
+    runtimeInfo = new RuntimeInfo(Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
+    observerRunner = new ObserverRunner(metrics, new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo),
       new Configuration());
   }
 

@@ -9,6 +9,7 @@ import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.email.EmailSender;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.util.PipelineException;
 import org.slf4j.Logger;
@@ -44,12 +45,15 @@ public class AlertManager {
   private final String revision;
   private final EmailSender emailSender;
   private final MetricRegistry metrics;
+  private final RuntimeInfo runtimeInfo;
 
-  public AlertManager(String pipelineName, String revision, EmailSender emailSender, MetricRegistry metrics) {
+  public AlertManager(String pipelineName, String revision, EmailSender emailSender, MetricRegistry metrics,
+                      RuntimeInfo runtimeInfo) {
     this.pipelineName = pipelineName;
     this.revision = revision;
     this.emailSender = emailSender;
     this.metrics = metrics;
+    this.runtimeInfo = runtimeInfo;
   }
 
   public void alert(Object value, List<String> emailIds, RuleDefinition ruleDefinition) {
@@ -68,8 +72,7 @@ public class AlertManager {
         emailBody.replace(TIME_KEY, dateTimeFormat.format(new Date((long)alertResponse.get(TIMESTAMP))));
         emailBody.replace(PIPELINE_NAME_KEY, pipelineName);
         emailBody.replace(CONDITION_KEY, ruleDefinition.getCondition());
-        String url = "http://localhost:18630";
-        emailBody.replace(URL_KEY, url);
+        emailBody.replace(URL_KEY, runtimeInfo.getBaseHttpUrl());
 
         if(emailSender == null) {
           LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",

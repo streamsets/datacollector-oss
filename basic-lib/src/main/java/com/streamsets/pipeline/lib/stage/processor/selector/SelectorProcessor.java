@@ -18,7 +18,6 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.RecordProcessor;
-import com.streamsets.pipeline.el.ELBasicSupport;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
@@ -133,7 +132,6 @@ public class SelectorProcessor extends RecordProcessor {
     predicateLanes = parsePredicateLanes(lanePredicates);
     variables = parseConstants(constants);
     elEvaluator = new ELEvaluator();
-    ELBasicSupport.registerBasicFunctions(elEvaluator);
     ELRecordSupport.registerRecordFunctions(elEvaluator);
     ELStringSupport.registerStringFunctions(elEvaluator);
     validateELs();

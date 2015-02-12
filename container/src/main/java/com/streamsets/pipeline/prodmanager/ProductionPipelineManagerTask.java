@@ -306,7 +306,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     configLoaderRunnable = new RulesConfigLoaderRunnable(shutdownObject, rulesConfigLoader, observer);
     executor.submit(configLoaderRunnable);
 
-    AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics());
+    AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo);
 
     observerRunnable = new ProductionObserverRunnable(this, productionObserveRequests, shutdownObject, alertManager,
       configuration);

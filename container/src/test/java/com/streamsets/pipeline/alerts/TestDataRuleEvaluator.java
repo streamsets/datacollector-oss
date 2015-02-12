@@ -12,10 +12,10 @@ import com.google.common.collect.EvictingQueue;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.ThresholdType;
-import com.streamsets.pipeline.el.ELBasicSupport;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.LaneResolver;
 import com.streamsets.pipeline.util.Configuration;
@@ -23,6 +23,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,15 +36,16 @@ public class TestDataRuleEvaluator {
   private static MetricRegistry metrics;
   private static ELEvaluator elEvaluator;
   private static ELEvaluator.Variables variables;
+  private static RuntimeInfo runtimeInfo;
 
   @BeforeClass
   public static void setUp() {
     metrics = new MetricRegistry();
     variables = new ELEvaluator.Variables();
     elEvaluator = new ELEvaluator();
-    ELBasicSupport.registerBasicFunctions(elEvaluator);
     ELRecordSupport.registerRecordFunctions(elEvaluator);
     ELStringSupport.registerStringFunctions(elEvaluator);
+    runtimeInfo = new RuntimeInfo(Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
   }
 
   @Test
@@ -53,7 +55,7 @@ public class TestDataRuleEvaluator {
       "testAlertEnabledMeterEnabled", lane, 100, 10, "${record:value(\"/name\")==null}", true,
       "testAlertEnabledMeterEnabled", ThresholdType.COUNT, "2", 5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics), null,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
     dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
       TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
@@ -77,7 +79,7 @@ public class TestDataRuleEvaluator {
       100, 10, "${record:value(\"/name\")==null}", false, null, ThresholdType.COUNT, "2", 5, true,
       false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics), null,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
     dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
       TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
@@ -99,7 +101,7 @@ public class TestDataRuleEvaluator {
       100, 10, "${record:value(\"/name\")==null}", true, "testAlertEnabledMeterDisabled", ThresholdType.COUNT, "2",
       5, false, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics), null,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
     dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
       TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
@@ -122,7 +124,7 @@ public class TestDataRuleEvaluator {
       100, 10, "${record:value(\"/name\")==null}", true, "testAlertRaisedCountRuleDisabled", ThresholdType.COUNT, "2",
       5, true, false, false);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics), null,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
     dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
       TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
@@ -141,7 +143,7 @@ public class TestDataRuleEvaluator {
       100, 10, "${record:value(\"/name\")==null", true, "testNoExceptionInvalidExpression", ThresholdType.COUNT, "2",
       5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics), null,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
     dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
       TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
@@ -159,7 +161,7 @@ public class TestDataRuleEvaluator {
       lane, 100, 10, "${record:value(\"/name\")==null}", true, "testNoAlertRaisedCount", ThresholdType.COUNT, "3",
       5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics), null,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
     dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
       TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
@@ -177,7 +179,7 @@ public class TestDataRuleEvaluator {
       100, 10, "${record:value(\"/name\")==null}", true, "testAlertRaisedPercentage", ThresholdType.PERCENTAGE, "40",
       5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics), null,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
     dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
       TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
@@ -212,7 +214,7 @@ public class TestDataRuleEvaluator {
       100, 10, "${record:value(\"/name\")==null}", true, "testGaugeChange", ThresholdType.COUNT, "2", 5, true,
       false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics), null,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
 
     dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
@@ -240,7 +242,7 @@ public class TestDataRuleEvaluator {
       "nameNotNull", lane, 100, 10, "${record:value(\"/name\")==null}", true,
       "nameNotNull", ThresholdType.COUNT, "2", 5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics), null,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       nameNotNull, new Configuration());
 
     dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
@@ -256,7 +258,7 @@ public class TestDataRuleEvaluator {
       "nameEqualsStreamSets", lane, 100, 10, "${record:value(\"/zip\")==94101}", true,
       "nameEqualsStreamSets", ThresholdType.COUNT, "1", 5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator2 = new DataRuleEvaluator(metrics, variables, elEvaluator,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics), null,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       nameEqualsStreamSets, new Configuration());
 
     dataRuleEvaluator2.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),

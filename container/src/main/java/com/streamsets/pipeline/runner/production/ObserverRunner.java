@@ -14,7 +14,6 @@ import com.streamsets.pipeline.alerts.MetricRuleEvaluator;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
-import com.streamsets.pipeline.el.ELBasicSupport;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
@@ -52,7 +51,6 @@ public class ObserverRunner {
     this.configuration = configuration;
     elEvaluator = new ELEvaluator();
     variables = new ELEvaluator.Variables();
-    ELBasicSupport.registerBasicFunctions(elEvaluator);
     ELRecordSupport.registerRecordFunctions(elEvaluator);
     ELStringSupport.registerStringFunctions(elEvaluator);
     this.alertManager = alertManager;
