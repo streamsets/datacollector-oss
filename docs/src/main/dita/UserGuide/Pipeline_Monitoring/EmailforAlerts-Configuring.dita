@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_f3v_1hw_1r">
+    <title>Configuring Email for Alerts</title>
+    <shortdesc>You can configure the email addresses to receive metric and data alerts. When an
+        alert triggers and email, the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> sends
+        an email to every email address in the list. </shortdesc>
+    <taskbody>
+        <prereq>To send email alerts, create an email account to send the alerts and define the SMTP
+            properties in the sdc.properties file. </prereq>
+        <context/>
+    </taskbody>
+</task>

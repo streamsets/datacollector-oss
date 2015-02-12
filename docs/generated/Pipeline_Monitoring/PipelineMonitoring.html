@@ -30,7 +30,12 @@
         tasks:<ul class="ul" id="concept_hsp_tnt_lq__ul_c4s_w13_tq">
         <li class="li">View statistics for the pipeline and stages in the pipeline</li>
 
-        <li class="li">Inspect a sampling of data as it passes between two stages and configure alerts</li>
+        <li class="li">Create metric alerts based on pipeline and stage statistics</li>
+
+        <li class="li">Create data rules that can generate graphs and alerts based on a sampling of data
+          passing between stages</li>
+
+        <li class="li">Define the email addresses to receive email alerts</li>
 
         <li class="li">Review how a snapshot of data moves through the pipeline</li>
 
@@ -57,30 +62,30 @@
     <p class="p"><img class="image" id="concept_t1c_mf4_tq__image_d3x_tf4_tq" src="../Graphics/CanvasMonitor.png" height="263" width="454"></img></p>
 
   <table cellpadding="4" cellspacing="0" summary="" id="concept_t1c_mf4_tq__simpletable_jb5_1k4_tq" border="1" class="simpletable"><tr class="sthead">
-    <th valign="bottom" align="left" id="d10225e85" class="stentry" width="16.33986928104575%">Area / Icon</th>
+    <th valign="bottom" align="left" id="d10235e91" class="stentry" width="16.33986928104575%">Area / Icon</th>
 
-    <th valign="bottom" align="left" id="d10225e88" class="stentry" width="23.856209150326794%">Name</th>
+    <th valign="bottom" align="left" id="d10235e94" class="stentry" width="23.856209150326794%">Name</th>
 
-    <th valign="bottom" align="left" id="d10225e91" class="stentry" width="59.80392156862745%">Description</th>
+    <th valign="bottom" align="left" id="d10235e97" class="stentry" width="59.80392156862745%">Description</th>
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d10225e85" class="stentry">1</td>
+    <td valign="top" headers="d10235e91" class="stentry">1</td>
 
-    <td valign="top" headers="d10225e88" class="stentry">Pipeline canvas</td>
+    <td valign="top" headers="d10235e94" class="stentry">Pipeline canvas</td>
 
-    <td valign="top" headers="d10225e91" class="stentry">Displays the pipeline that the <span class="ph">Data
+    <td valign="top" headers="d10235e97" class="stentry">Displays the pipeline that the <span class="ph">Data
                   Collector</span> is running.
      You can click a stage to view statistics about the stage. Click an empty part of the canvas to
      view pipeline statistics.</td>
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d10225e85" class="stentry">2</td>
+    <td valign="top" headers="d10235e91" class="stentry">2</td>
 
-    <td valign="top" headers="d10225e88" class="stentry">Monitor Panel</td>
+    <td valign="top" headers="d10235e94" class="stentry">Monitor Panel</td>
 
-    <td valign="top" headers="d10225e91" class="stentry">Displays statistics for the pipeline or selected stage. <p class="p">When you click an Inspect
+    <td valign="top" headers="d10235e97" class="stentry">Displays statistics for the pipeline or selected stage. <p class="p">When you click an Inspect
       Data icon, &lt;come back to this&gt;. </p>
 <p class="p">When you click the Snapshot button, displays a snapshot of data
       that moved through the pipeline.</p>
@@ -88,41 +93,119 @@
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d10225e85" class="stentry">3</td>
+    <td valign="top" headers="d10235e91" class="stentry">3</td>
 
-    <td valign="top" headers="d10225e88" class="stentry">Pipeline-Stage list</td>
+    <td valign="top" headers="d10235e94" class="stentry">Pipeline-Stage list</td>
 
-    <td valign="top" headers="d10225e91" class="stentry">Lists the pipeline and stages in the pipeline. Use to select the information that you
+    <td valign="top" headers="d10235e97" class="stentry">Lists the pipeline and stages in the pipeline. Use to select the information that you
      want to view.</td>
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d10225e85" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_gz1_rk4_tq" src="../Graphics/icon_MonInspect.png" height="21" width="25"></img></td>
+    <td valign="top" headers="d10235e91" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_gz1_rk4_tq" src="../Graphics/icon_MonInspect.png" height="21" width="25"></img></td>
 
-    <td valign="top" headers="d10225e88" class="stentry">Inspect Data icon</td>
+    <td valign="top" headers="d10235e94" class="stentry">Inspect Data icon</td>
 
-    <td valign="top" headers="d10225e91" class="stentry">Displays data inspection information. </td>
+    <td valign="top" headers="d10235e97" class="stentry">Displays data inspection information. </td>
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d10225e85" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_w1q_zl4_tq" src="../Graphics/icon_MonSnapshot.png" height="21" width="58"></img></td>
+    <td valign="top" headers="d10235e91" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_w1q_zl4_tq" src="../Graphics/icon_MonSnapshot.png" height="21" width="58"></img></td>
 
-    <td valign="top" headers="d10225e88" class="stentry">Snapshot button</td>
+    <td valign="top" headers="d10235e94" class="stentry">Snapshot button</td>
 
-    <td valign="top" headers="d10225e91" class="stentry">Captures a snapshot of data passing through the pipeline so you can review the details
+    <td valign="top" headers="d10235e97" class="stentry">Captures a snapshot of data passing through the pipeline so you can review the details
      of the data, like data preview.</td>
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d10225e85" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_klq_1m4_tq" src="../Graphics/icon_MonStop.png" height="21" width="38"></img>
+    <td valign="top" headers="d10235e91" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_klq_1m4_tq" src="../Graphics/icon_MonStop.png" height="21" width="38"></img>
     </td>
 
-    <td valign="top" headers="d10225e88" class="stentry">Stop button</td>
+    <td valign="top" headers="d10235e94" class="stentry">Stop button</td>
 
-    <td valign="top" headers="d10225e91" class="stentry">Stops the pipeline.</td>
+    <td valign="top" headers="d10235e97" class="stentry">Stops the pipeline.</td>
 
    </tr>
 </table>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_hzq_skv_4q">
+ <h2 class="title topictitle2">Summary Tab</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you monitor a pipeline, the Summary tab displays record count for the pipeline,
+  record and batch throughput for the pipeline or individual stages, batch processing statistics for
+  the pipeline or individual stages.</p>
+
+  <div class="p">The Monitoring panel displays charts and graphs for the following information:<table cellpadding="4" cellspacing="0" summary="" id="concept_hzq_skv_4q__simpletable_dsp_vl4_mq" border="1" class="simpletable"><tr class="sthead">
+     <th valign="bottom" align="left" id="d10235e207" class="stentry">Information</th>
+
+     <th valign="bottom" align="left" id="d10235e210" class="stentry">Description</th>
+
+    </tr>
+<tr class="strow">
+     <td valign="top" headers="d10235e207" class="stentry">Record count</td>
+
+     <td valign="top" headers="d10235e210" class="stentry">Graph of the number of records passed through the pipeline since it started. Includes
+      input, output, and error records.</td>
+
+    </tr>
+<tr class="strow">
+     <td valign="top" headers="d10235e207" class="stentry">Records processed</td>
+
+     <td valign="top" headers="d10235e210" class="stentry">Diagram of the percentage and number of good and dropped records processed by each
+      stage. To view the current number of records for each type, hover over that section of the
+      diagram.</td>
+
+    </tr>
+<tr class="strow">
+     <td valign="top" headers="d10235e207" class="stentry">Record throughput</td>
+
+     <td valign="top" headers="d10235e210" class="stentry">Graph of the number of input, output, and dropped records. To view an exact number of
+      records, hover over a section of the graph.</td>
+
+    </tr>
+<tr class="strow">
+     <td valign="top" headers="d10235e207" class="stentry">Batch throughput</td>
+
+     <td valign="top" headers="d10235e210" class="stentry">Graph of the number of batches processed by the pipeline at different time intervals.
+      To view the exact number of batches for an interval, hover over the interval.</td>
+
+    </tr>
+<tr class="strow">
+     <td valign="top" headers="d10235e207" class="stentry">Record count histogram </td>
+
+     <td valign="top" headers="d10235e210" class="stentry">Histogram that shows the number of records processed in five minute intervals.
+      Includes input, output, and error records. To view the exact number of records, hover over the
+      a bar in the histogram.</td>
+
+    </tr>
+<tr class="strow">
+     <td valign="top" headers="d10235e207" class="stentry">Batch processing timer</td>
+
+     <td valign="top" headers="d10235e210" class="stentry">Graph of the number of seconds used to process batches, displayed in
+      percentages.</td>
+
+    </tr>
+</table>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_e2p_5yv_4q">
+ <h2 class="title topictitle2">Error Tab</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you monitor a pipeline, the Error tab displays the number of error records
+  encountered by the pipeline and individual stages.</p>
+
+  <p class="p">
+   
+  </p>
 
  </div>
 

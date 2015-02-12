@@ -6,8 +6,11 @@
   <topicref href="../Pipeline_Monitoring/PipelineMonitoring.dita" chunk="to-content">
    <topicref href="../Pipeline_Monitoring/DataCollectorWindow-Monitor.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/ViewingPipelineStageStatistics.dita"/>
   <topicref href="../Pipeline_Monitoring/ReviewingSnapshotData.dita"/>
+  <topicref href="../Pipeline_Monitoring/ViewingPipelineStageStatistics.dita">
+   <topicref href="../Pipeline_Monitoring/Monitoring_SummaryTab.dita"/>
+   <topicref href="../Pipeline_Monitoring/Monitoring_ErrorTab.dita"/>
+  </topicref>
   <topicref href="../Pipeline_Monitoring/MetricAlerts.dita"/>
   <topicref href="../Pipeline_Monitoring/DataAlerts.dita"/>
  </topicref>

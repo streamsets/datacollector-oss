@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content=""></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Installation and Configuration"></meta><meta name="abstract" content=""></meta><meta name="description" content=""></meta><meta name="DC.Relation" scheme="URI" content="../Getting_Started/GettingStarted_Title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_gbn_4lv_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Installation and Configuration</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Install the Data Collector on a machine with the following minimum requirements: Requirement Description Operating Systems Use one of the following operating systems and versions: Mac OS X Linux ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Installation and Configuration"></meta><meta name="abstract" content=""></meta><meta name="description" content=""></meta><meta name="DC.Relation" scheme="URI" content="../Getting_Started/GettingStarted_Title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_gbn_4lv_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Installation and Configuration</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -21,6 +21,241 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_vzg_n2p_kq">
+ <h2 class="title topictitle2">Installation Requirements</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Install the <span class="ph">Data
+                  Collector</span> on a machine
+    with the following minimum requirements: </p>
+
+    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_vzg_n2p_kq__table_hkk_qw4_1r" class="table" frame="border" border="1" rules="all">
+        
+        
+        <thead class="thead" align="left">
+          <tr class="row">
+            <th class="entry" valign="top" width="28.49002849002849%" id="d3835e57">Requirement</th>
+
+            <th class="entry" valign="top" width="71.5099715099715%" id="d3835e60">Description</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody class="tbody">
+          <tr class="row">
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d3835e57 ">Operating Systems</td>
+
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d3835e60 ">Use one of the following operating systems and versions:<ul class="ul" id="concept_vzg_n2p_kq__ul_cjh_sw4_1r">
+                <li class="li">Mac OS X</li>
+
+                <li class="li">Linux CentOS 6 or 7</li>
+
+                <li class="li">RedHat Enterprise Linux 6 or 7</li>
+
+                <li class="li">Ubuntu 14.04</li>
+
+              </ul>
+</td>
+
+          </tr>
+
+          <tr class="row">
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d3835e57 ">Java</td>
+
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d3835e60 ">Java SE 7</td>
+
+          </tr>
+
+          <tr class="row">
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d3835e57 ">Browser</td>
+
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d3835e60 ">Use the latest version of one of the following:<ul class="ul" id="concept_vzg_n2p_kq__ul_cvr_bx4_1r">
+                <li class="li">Chrome</li>
+
+                <li class="li">Firefox</li>
+
+                <li class="li">Safari</li>
+
+              </ul>
+</td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_bt1_zcp_kq">
+    <h2 class="title topictitle2">Installing and Launching the <span class="ph">Data
+                  Collector</span>
+        (Tarball)</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Install the <span class="ph" id="pName-long">Data Collector</span> on the machine that you want to
+        run a pipeline. After installation, you can launch the <span class="ph">Data
+                  Collector</span>.</p>
+
+        <div class="section context"></div>
+
+        <ol class="ol steps" id="task_bt1_zcp_kq__steps_g53_l3p_kq"><li class="li step stepexpand">
+                <span class="ph cmd"> Download StreamSets SDC tarball and extract it to desired location.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Optionally,  set environment variables to point to appropriate
+                    directories:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_bt1_zcp_kq__ul_vbv_b44_1r">
+                        <li class="li">SDC_CONF - SDC configuration directory.</li>
+
+                        <li class="li">SDC_DATA - SDC data directory, where pipeline state and configuration
+                            are stored.</li>
+
+                        <li class="li">SDC_LOG - SDC logging directory.</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to launch the <span class="ph">Data Collector</span> and run it in
+                    the background:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">$SDC_HOME/bin/sdc &amp;</pre>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_pnf_344_1r">
+    <h2 class="title topictitle2">Installing and Launching the <span class="ph">Data
+                  Collector</span>
+        (Service)</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Install the <span class="ph" id="pName-long">Data Collector</span> on the machine that you want to
+        run a pipeline. After installation, you can launch the <span class="ph">Data
+                  Collector</span>.</p>
+
+        <div class="section context"><p class="p">Installing the <span class="ph">Data
+                  Collector</span> as a service requires sudo privileges on the root directory.</p>
+This procedure
+            walks through setting the default directories, but you can alternatively use the
+            libexec/sdcd-env.sh script.</div>
+
+        <ol class="ol steps" id="task_pnf_344_1r__steps_wnx_444_1r"><li class="li step stepexpand">
+                <span class="ph cmd"> Download StreamSets SDC tarball and extract it to desired location.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Copy initd/_sdcinitd_prototype to the /etc/init.d/ directory as sdc.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Edit the sdc file and set the SDC_DIST environment variable to the location
+                    where you extracted the SDC tarball.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to make the sdc file executable:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"> sudo chmod 644 /etc/init.d/sdc</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create a system user and group to run the <span class="ph">Data
+                  Collector</span>. </span>
+                <div class="itemgroup info">The default user and group are sdc/sdc.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create the /etc/sdc directory and copy all files from etc into this
+                    directory.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create the SDC log directory at /var/log/sdc and change the owner to
+                    sdc:sdc.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create the SDC data directory at /var/run/sdc and change the owner to
+                    sdc:sdc.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To launch the <span class="ph">Data
+                  Collector</span>, use the following command: </span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">/etc/init.d/sdc start</pre>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_nsz_lp4_1r">
+    <h2 class="title topictitle2">Creating Additional Users</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">The <span class="ph">Data
+                  Collector</span>
+        includes a default login, admin/admin. You can create additional users for increased
+        security.</p>
+
+        <div class="section context">
+            <p class="p">You can use md5 to encrypt login information.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_nsz_lp4_1r__steps_ody_3q4_1r"><li class="li step stepexpand">
+                <span class="ph cmd">Modify the local-realm.properties file located in the etc directory.</span>
+                <div class="itemgroup info"> When installed as a service, the location is
+                    /etc/sdc/local-realm.properties.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For each new user, add a line using the following format:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"> &lt;username&gt;: &lt;password&gt;[,&lt;rolename&gt; …]</pre>
+
+                </div>
+                <div class="itemgroup info"> Currently, only the ‘user' role is supported.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use a password that is not stored in plain text, use the following format
+                    for the password: </span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">MD5:&lt;password-hash&gt;</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">You can generate the hash by running an md5 program, such as md5 on Mac OS X or
+                    md5sum on Linux program. </span>
+                <div class="itemgroup info"></div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For example:  <samp class="ph codeph">echo -n "&lt;password&gt;" | md5sum</samp>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use digest authentication, hash the combination of
+                    &lt;username&gt;:&lt;realm&gt;:&lt;password&gt;. </span>
+                <div class="itemgroup info">For example: <samp class="ph codeph">echo -n "&lt;username&gt;:&lt;realm&gt;:&lt;password&gt;" |
+                        md5sum</samp>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Restart the <span class="ph">Data
+                  Collector</span> to make the new users available.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
 </div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Getting_Started/GettingStarted_Title.html" title="Getting Started"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Getting Started</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>

@@ -15,9 +15,12 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window
       displays the pipeline in Monitoring mode. In Monitoring mode, you can perform the following
         tasks:<ul id="ul_c4s_w13_tq">
+        <li>View how a snapshot of data moves through the pipeline</li>
         <li>View statistics for the pipeline and stages in the pipeline</li>
-        <li>Inspect a sampling of data as it passes between two stages and configure alerts</li>
-        <li>Review how a snapshot of data moves through the pipeline</li>
+        <li>Create metric alerts based on pipeline and stage statistics</li>
+        <li>Create data rules that can generate graphs and alerts based on a sampling of data
+          passing between stages</li>
+        <li>Define the email addresses to receive email alerts</li>
       </ul></p>
   </conbody>
 </concept>

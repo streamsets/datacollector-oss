@@ -2,14 +2,14 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The expression language provides the following types of functions: Record functions Error functions String functions Basic &lt;&lt;??&gt;&gt; Use record functions to get information about a record. The expression ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Functions"></meta><meta name="abstract" content="The expression language provides the following types of functions:"></meta><meta name="description" content="The expression language provides the following types of functions:"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_overview.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lhz_pyp_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Functions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The expression language provides the following types of functions: Record functions Error functions String functions Basic &lt;&lt;??&gt;&gt; Use record functions to get information about a record. The expression ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Functions"></meta><meta name="abstract" content="The expression language provides the following types of functions:"></meta><meta name="description" content="The expression language provides the following types of functions:"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lhz_pyp_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Functions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
 <body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_overview.html" title="Expression Language">Expression Language</a></td><td><div class="navheader">
-<span class="navparent"><a class="link" href="../Expression_Language/ExpressionLanguage_overview.html" title="Expression Language"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Expression Language</span></a></span>  </div></td></tr></tbody></table>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_title.html" title="Expression Language">Expression Language</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Expression_Language/ExpressionLanguage_title.html" title="Expression Language"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Expression Language</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_lhz_pyp_1r">
  <h1 class="title topictitle1">Functions</h1>
 
@@ -34,9 +34,10 @@
  <h2 class="title topictitle2">Record Functions</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Use record functions to get information about a record. </p>
+ <div class="body conbody"><p class="shortdesc">Use record functions to get information about a record. The expression language provides
+  the following record functions:</p>
 
-  <p class="p">The expression language provides the following record functions:</p>
+  <p class="p"></p>
 
   <dl class="dl">
    
@@ -116,41 +117,165 @@
  <h2 class="title topictitle2">Error Functions</h2>
 
  
- <div class="body conbody"><p class="shortdesc"></p>
+ <div class="body conbody"><p class="shortdesc">Error functions provide information about bad records. The expression language provides
+  the following error functions:</p>
 
-  <p class="p"></p>
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">${error:stage()}</dt>
 
-  <p class="p">${error:stage()} The stage name that sent the record to error. </p>
+     <dd class="dd">Returns the name of the stage that sent the record to error. </dd>
 
-  <p class="p">${error:code()} The error code used when sending the record to error. </p>
+    
+    
+     <dt class="dt dlterm">${error:code()}</dt>
 
-  <p class="p">${error:message()} the error message of the record </p>
+     <dd class="dd">Returns the error code for the bad record.</dd>
 
-  <p class="p">${error:collectorId()} The data collector ID that send the record to error (default value is
-   hostname:port) ${error:pipeline()} The pipeline that sent the record to error </p>
+    
+    
+     <dt class="dt dlterm">${error:message()}</dt>
 
-  <p class="p">${error:time()} The time the record was sent to error</p>
+     <dd class="dd">Returns the error message for the bad record.</dd>
+
+    
+    
+     <dt class="dt dlterm">${error:collectorId()}</dt>
+
+     <dd class="dd">Returns the ID of the <span class="ph">Data
+                  Collector</span> that sent
+      the record to error. Returns the format &lt;hostname&gt;:&lt;port&gt;.</dd>
+
+    
+    
+     <dt class="dt dlterm">${error:pipeline()}</dt>
+
+     <dd class="dd">The name of pipeline that sent the record to error.</dd>
+
+    
+    
+     <dt class="dt dlterm">${error:time()}</dt>
+
+     <dd class="dd"> The time the record was sent to error.</dd>
+
+    
+   </dl>
+
+  </div>
 
  </div>
 
 </div>
-<div class="topic concept nested1" id="concept_p5w_bgv_1r">
- <h2 class="title topictitle2">Basic Functions</h2>
+<div class="topic concept nested1" id="concept_ahp_f4v_1r">
+ <h2 class="title topictitle2">String Functions</h2>
 
  
- <div class="body conbody"><p class="shortdesc"></p>
+ <div class="body conbody"><p class="shortdesc">Use string functions to transform string data. The expression language provides the
+  following string functions:</p>
 
-  <p class="p">${isIn(STRING full, STRING element)}: assumes 'full' is a list of comma separated values, looks
-   for the element 'value'</p>
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">${str:substring(STRING, OFFSET, LEN)}</dt>
 
-  <p class="p">${notIn(STRING full, STRING element)}: assumes 'full' is a list of comma separated values,
-   looks for the element 'value' to being in<img class="image" id="concept_p5w_bgv_1r__image_nlb_cgv_1r" src="https://ssl.gstatic.com/ui/v1/icons/mail/images/cleardot.gif"></img></p>
+     <dd class="dd">
+      
+     </dd>
+
+    
+    
+     <dt class="dt dlterm">${str:trim(STRING)} </dt>
+
+     <dd class="dd">
+      
+     </dd>
+
+    
+    
+     <dt class="dt dlterm">${str:toUpper(STRING)} </dt>
+
+     <dd class="dd">Converts string data to all capital letters.</dd>
+
+    
+    
+     <dt class="dt dlterm">${str:toLower(STRING)} </dt>
+
+     <dd class="dd">Converts string data to all lowercase letters.</dd>
+
+    
+    
+     <dt class="dt dlterm">${str:replaceChar(STRING, CHAR old, CHAR new)} </dt>
+
+     <dd class="dd">Replaces the character in a string with a new character.</dd>
+
+    
+    
+     <dt class="dt dlterm">${str:replaceString(STRING, STRING old, STRING new)} </dt>
+
+     <dd class="dd">Replaces a set of characters in a string with a new set of characters.</dd>
+
+    
+    
+     <dt class="dt dlterm">${str:truncate(STRING, INT len)}</dt>
+
+     <dd class="dd">Trucates the string to the specified length. Use an integer to specify the length.</dd>
+
+    
+    
+     <dt class="dt dlterm">${str:regexCapture(STRING, STRING pattern, INT group)}</dt>
+
+     <dd class="dd">
+      
+     </dd>
+
+    
+    
+     <dt class="dt dlterm">${str:contains(STRING full, STRING subset)} </dt>
+
+     <dd class="dd">
+      
+     </dd>
+
+    
+    
+     <dt class="dt dlterm">${str:startsWith(STRING full, STRING subset)} </dt>
+
+     <dd class="dd">
+      
+     </dd>
+
+    
+    
+     <dt class="dt dlterm">${str:endWith(STRING full, STRING subset)} </dt>
+
+     <dd class="dd">
+      
+     </dd>
+
+    
+    
+     <dt class="dt dlterm">${isIn(STRING full, STRING element)}</dt>
+
+     <dd class="dd">assumes 'full' is a list of comma separated values, looks for the element 'value'</dd>
+
+    
+    
+     <dt class="dt dlterm">${notIn(STRING full, STRING element)}</dt>
+
+     <dd class="dd">assumes 'full' is a list of comma separated values, looks for the element 'value' to being
+       in</dd>
+
+    
+   </dl>
+
+  </div>
 
  </div>
 
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Expression_Language/ExpressionLanguage_overview.html" title="Expression Language"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Expression Language</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
+<span class="navparent"><a class="link" href="../Expression_Language/ExpressionLanguage_title.html" title="Expression Language"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Expression Language</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
 </body>
 </html>
