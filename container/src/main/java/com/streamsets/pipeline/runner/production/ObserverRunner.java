@@ -56,9 +56,9 @@ public class ObserverRunner {
     this.alertManager = alertManager;
   }
 
-  public void handleObserverRequest(ProductionObserveRequest productionObserveRequest) {
+  public void handleDataRulesEvaluationRequest(DataRulesEvaluationRequest dataRulesEvaluationRequest) {
 
-    Map<String, List<Record>> snapshot = productionObserveRequest.getSnapshot();
+    Map<String, List<Record>> snapshot = dataRulesEvaluationRequest.getSnapshot();
     for(Map.Entry<String, List<Record>> entry : snapshot.entrySet()) {
       String lane = entry.getKey();
       List<Record> allRecords = entry.getValue();
@@ -72,7 +72,9 @@ public class ObserverRunner {
         }
       }
     }
+  }
 
+  public void handleMetricRulesEvaluationRequest(MetricRulesEvaluationRequest metricRulesEvaluationRequest) {
     //pipeline metric alerts
     List<MetricsRuleDefinition> metricsRuleDefinitions =
       rulesConfigurationChangeRequest.getRuleDefinitions().getMetricsRuleDefinitions();

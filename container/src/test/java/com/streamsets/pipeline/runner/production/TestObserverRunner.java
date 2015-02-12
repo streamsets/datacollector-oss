@@ -57,7 +57,7 @@ public class TestObserverRunner {
   public void testHandleObserverRequestAlert() {
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest = createRulesConfigurationChangeRequest(true, false);
     observerRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
-    observerRunner.handleObserverRequest(createProductionObserverRequest());
+    observerRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName("myId"));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
@@ -68,7 +68,7 @@ public class TestObserverRunner {
   public void testHandleObserverRequestMeter() {
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest = createRulesConfigurationChangeRequest(false, true);
     observerRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
-    observerRunner.handleObserverRequest(createProductionObserverRequest());
+    observerRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
     Meter meter = MetricsConfigurator.getMeter(metrics, AlertsUtil.getUserMeterName("myId"));
     Assert.assertNotNull(meter);
     Assert.assertEquals(3, meter.getCount());
@@ -78,7 +78,7 @@ public class TestObserverRunner {
   public void testHandleObserverRequestAlertAndMeter() {
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest = createRulesConfigurationChangeRequest(true, true);
     observerRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
-    observerRunner.handleObserverRequest(createProductionObserverRequest());
+    observerRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName("myId"));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
@@ -89,8 +89,8 @@ public class TestObserverRunner {
     Assert.assertEquals(3, meter.getCount());
   }
 
-  private ProductionObserveRequest createProductionObserverRequest() {
-    ProductionObserveRequest request = new ProductionObserveRequest(TestUtil.createSnapshot(LANE));
+  private DataRulesEvaluationRequest createProductionObserverRequest() {
+    DataRulesEvaluationRequest request = new DataRulesEvaluationRequest(TestUtil.createSnapshot(LANE));
     return request;
   }
 

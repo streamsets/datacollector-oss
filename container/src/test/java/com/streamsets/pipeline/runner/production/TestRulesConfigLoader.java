@@ -12,6 +12,7 @@ import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.TestUtil;
 import dagger.ObjectGraph;
 import org.apache.commons.io.FileUtils;
@@ -55,7 +56,7 @@ public class TestRulesConfigLoader {
   @Before
   public void setUp() {
     productionObserveRequests = new ArrayBlockingQueue<>(10, true /*FIFO*/);
-    observer = new ProductionObserver(productionObserveRequests);
+    observer = new ProductionObserver(productionObserveRequests, new Configuration());
   }
 
   @Test

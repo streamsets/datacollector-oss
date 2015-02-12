@@ -41,19 +41,19 @@ public class ProductionPipelineRunnable implements Runnable {
       runningThread = Thread.currentThread();
       pipeline.run();
     } catch (Exception e) {
-      LOG.error(Utils.format("An exception occurred while running the pipeline, {}", e.getMessage()), e);
+      LOG.error("An exception occurred while running the pipeline, {}", e.getMessage(), e);
       try {
         pipelineManager.setState(name, rev, State.ERROR, e.getMessage());
       } catch (PipelineManagerException ex) {
-        LOG.error(Utils.format("An exception occurred while committing the state, {}", ex.getMessage()), e);
+        LOG.error("An exception occurred while committing the state, {}", ex.getMessage(), e);
       }
       exception = true;
     } catch (Error e) {
-      LOG.error(Utils.format("A JVM error occurred while running the pipeline, {}", e.getMessage()), e);
+      LOG.error("A JVM error occurred while running the pipeline, {}", e.getMessage(), e);
       try {
         pipelineManager.setState(name, rev, State.ERROR, e.getMessage());
       } catch (PipelineManagerException ex) {
-        LOG.error(Utils.format("An exception occurred while committing the state, {}", ex.getMessage()), e);
+        LOG.error("An exception occurred while committing the state, {}", ex.getMessage(), e);
       }
       throw e;
     } finally {
@@ -77,7 +77,7 @@ public class ProductionPipelineRunnable implements Runnable {
               , pipeline.getCommittedOffset()));
         }
       } catch (PipelineManagerException e) {
-        LOG.error(Utils.format("An exception occurred while stopping the pipeline, {}", e.getMessage()), e);
+        LOG.error("An exception occurred while stopping the pipeline, {}", e.getMessage(), e);
       }
     } else if(exception) {
       //Pipeline stopped because of exception
@@ -88,7 +88,7 @@ public class ProductionPipelineRunnable implements Runnable {
         pipelineManager.validateStateTransition(name, rev, State.FINISHED);
         pipelineManager.setState(name, rev, State.FINISHED, "Completed successfully.");
       } catch (PipelineManagerException e) {
-        LOG.error(Utils.format("An exception occurred while finishing the pipeline, {}", e.getMessage()), e);
+        LOG.error("An exception occurred while finishing the pipeline, {}", e.getMessage(), e);
       }
     }
   }

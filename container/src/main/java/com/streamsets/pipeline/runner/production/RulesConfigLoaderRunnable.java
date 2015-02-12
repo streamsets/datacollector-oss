@@ -33,11 +33,11 @@ public class RulesConfigLoaderRunnable implements Runnable {
       try {
         rulesConfigLoader.load(observer);
       } catch(InterruptedException e) {
-        LOG.error("Stopping the Rules Config Loader, Reason: {}", e.getMessage());
+        LOG.error("Stopping the Rules Config Loader, Reason: {}", e.getMessage(), e);
         runningThread = null;
         return;
       } catch (Exception e) {
-        LOG.error("Stopping the Rules Config Loader, Reason: {}", e.getMessage());
+        LOG.error("Stopping the Rules Config Loader, Reason: {}", e.getMessage(), e);
         e.printStackTrace();
         return;
       }

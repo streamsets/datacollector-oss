@@ -100,7 +100,7 @@ public class StateTracker {
     try {
       return ObjectMapperFactory.get().readValue(new DataStore(getStateFile()).getInputStream(), PipelineState.class);
     } catch (IOException e) {
-      LOG.error(ContainerError.CONTAINER_0101.getMessage(), e.getMessage());
+      LOG.error(ContainerError.CONTAINER_0101.getMessage(), e.getMessage(), e);
       throw new PipelineManagerException(ContainerError.CONTAINER_0101, e.getMessage(), e);
     }
   }
@@ -116,7 +116,7 @@ public class StateTracker {
         ObjectMapperFactory.get().writeValueAsString(pipelineState));
 
     } catch (IOException e) {
-      LOG.error(ContainerError.CONTAINER_0100.getMessage(), e.getMessage());
+      LOG.error(ContainerError.CONTAINER_0100.getMessage(), e.getMessage(), e);
       throw new PipelineManagerException(ContainerError.CONTAINER_0100, e.getMessage(), e);
     }
   }

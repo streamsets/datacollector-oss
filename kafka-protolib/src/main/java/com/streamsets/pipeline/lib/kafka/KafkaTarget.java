@@ -275,7 +275,7 @@ public class KafkaTarget extends BaseTarget {
     try {
       elEvaluator.eval(variables, partition);
     } catch (ELException ex) {
-      LOG.error(KafkaStageLibError.KFK_0357.getMessage(), partition, ex.getMessage());
+      LOG.error(KafkaStageLibError.KFK_0357.getMessage(), partition, ex.getMessage(), ex);
       throw new StageException(KafkaStageLibError.KFK_0357, partition, ex.getMessage(), ex);
     }
   }

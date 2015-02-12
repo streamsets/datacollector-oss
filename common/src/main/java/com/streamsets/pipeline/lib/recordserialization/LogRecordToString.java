@@ -33,7 +33,7 @@ public class LogRecordToString implements RecordToString {
     try {
       return record.get(fieldPath).getValueAsString();
     } catch (Exception e) {
-      LOG.error(CommonError.CMN_0103.getMessage(), record.getHeader().getSourceId(), e.getMessage());
+      LOG.error(CommonError.CMN_0103.getMessage(), record.getHeader().getSourceId(), e.getMessage(), e);
       throw new StageException(CommonError.CMN_0103, record.getHeader().getSourceId(), e.getMessage(), e);
     }
   }

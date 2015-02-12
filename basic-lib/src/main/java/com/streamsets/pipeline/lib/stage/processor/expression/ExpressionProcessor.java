@@ -247,7 +247,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       try {
         elEvaluator.eval(variables, expressionProcessorConfig.expression);
       } catch (ELException ex) {
-        LOG.error(StageLibError.LIB_0600.getMessage(), expressionProcessorConfig.expression, ex.getMessage());
+        LOG.error(StageLibError.LIB_0600.getMessage(), expressionProcessorConfig.expression, ex.getMessage(), ex);
         throw new StageException(StageLibError.LIB_0600, expressionProcessorConfig.expression, ex.getMessage(), ex);
       }
     }
@@ -265,7 +265,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       try {
         result = elEvaluator.eval(variables, expressionProcessorConfig.expression);
       } catch (ELException e) {
-        LOG.error(StageLibError.LIB_0600.getMessage(), expressionProcessorConfig.expression, e.getMessage());
+        LOG.error(StageLibError.LIB_0600.getMessage(), expressionProcessorConfig.expression, e.getMessage(), e);
         throw new StageException(StageLibError.LIB_0600, expressionProcessorConfig.expression, e.getMessage(), e);
       }
       Field newField = Field.create(getTypeFromObject(result), result);

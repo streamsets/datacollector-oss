@@ -147,11 +147,11 @@ public class ProductionPipelineManagerTask extends AbstractTask {
             BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(
               configuration.get(Configuration.OBSERVER_QUEUE_SIZE_KEY, Configuration.OBSERVER_QUEUE_SIZE_DEFAULT),
               true /*FIFO*/);
-            ProductionObserver observer = new ProductionObserver(productionObserveRequests);
-            createPipeline(ps.getName(), ps.getRev(), observer);
+            ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
+            createPipeline(ps.getName(), ps.getRev(), observer, productionObserveRequests);
           } catch (Exception e) {
             //log error and shutdown again
-            LOG.error(ContainerError.CONTAINER_0108.getMessage(), e.getMessage());
+            LOG.error(ContainerError.CONTAINER_0108.getMessage(), e.getMessage(), e);
           }
       }
     }
@@ -289,8 +289,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(
       configuration.get(Configuration.OBSERVER_QUEUE_SIZE_KEY, Configuration.OBSERVER_QUEUE_SIZE_DEFAULT),
       true /*FIFO*/);
-    ProductionObserver observer = new ProductionObserver(productionObserveRequests);
-    createPipeline(name, rev, observer);
+    ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
+    createPipeline(name, rev, observer, productionObserveRequests);
     //Shutdown object is shared between Observer and Pipeline Runner.
     //When pipeline runner stops because of an exception or because of finishing work normally, it signals
     //the observer thread to stop using this object
@@ -338,15 +338,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   ProductionPipeline createProductionPipeline(String name, String rev,
                                               com.streamsets.pipeline.util.Configuration configuration,
                                               StageLibraryTask stageLibrary, ProductionObserver observer,
-                                              PipelineConfiguration pipelineConfiguration)
+                                              PipelineConfiguration pipelineConfiguration,
+                                              BlockingQueue<Object> observeRequests)
     throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineManagerException {
-
-    //retrieve pipeline properties from the pipeline configuration
-    int maxBatchSize = configuration.get(Configuration.MAX_BATCH_SIZE_KEY, Configuration.MAX_BATCH_SIZE_DEFAULT);
-    int maxErrorRecordsPerStage = configuration.get(Configuration.MAX_ERROR_RECORDS_PER_STAGE_KEY,
-      Configuration.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT);
-    int maxPipelineErrors = configuration.get(Configuration.MAX_PIPELINE_ERRORS_KEY,
-      Configuration.MAX_PIPELINE_ERRORS_DEFAULT);
 
     DeliveryGuarantee deliveryGuarantee = DeliveryGuarantee.AT_LEAST_ONCE;
     for(ConfigConfiguration config : pipelineConfiguration.getConfiguration()) {
@@ -361,18 +355,18 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     stateTracker.register(name, rev);
 
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, maxBatchSize,
-      maxErrorRecordsPerStage, maxPipelineErrors, deliveryGuarantee, name, rev, pipelineStore);
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, deliveryGuarantee,
+      name, rev, pipelineStore, observeRequests, configuration);
 
     ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, pipelineConfiguration);
     return builder.build(runner, offsetTracker, observer);
   }
 
-  void createPipeline(String name, String rev, ProductionObserver observer)
+  void createPipeline(String name, String rev, ProductionObserver observer, BlockingQueue<Object> observeRequests)
     throws PipelineStoreException, PipelineManagerException, StageException, PipelineRuntimeException {
     PipelineConfiguration pipelineConfiguration = pipelineStore.load(name, rev);
     prodPipeline = createProductionPipeline(name, rev, configuration, stageLibrary,
-      observer, pipelineConfiguration);
+      observer, pipelineConfiguration, observeRequests);
   }
 
   @VisibleForTesting

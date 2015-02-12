@@ -9,12 +9,11 @@ import com.streamsets.pipeline.api.Record;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class ProductionObserveRequest {
+public class DataRulesEvaluationRequest {
 
   private final Map<String, List<Record>> snapshot;
-  public ProductionObserveRequest(Map<String, List<Record>> snapshot) {
+  public DataRulesEvaluationRequest(Map<String, List<Record>> snapshot) {
     this.snapshot = snapshot;
   }
 

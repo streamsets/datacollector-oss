@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.runner.production;
 
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -93,7 +92,7 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
       ObjectMapperFactory.get().writeValue((new DataStore(getPipelineOffsetFile(pipelineName, rev)).getOutputStream()),
         s);
     } catch (IOException e) {
-      LOG.error(Utils.format("Failed to save offset value {}. Reason {}", s.getOffset(), e.getMessage()));
+      LOG.error("Failed to save offset value {}. Reason {}", s.getOffset(), e.getMessage(), e);
       throw new RuntimeException(e);
     }
   }

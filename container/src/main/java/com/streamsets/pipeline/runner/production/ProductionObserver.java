@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.prodmanager.Configuration;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipe;
 import org.slf4j.Logger;
@@ -20,12 +21,15 @@ public class ProductionObserver implements Observer {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionObserver.class);
 
+  private final com.streamsets.pipeline.util.Configuration configuration;
   private BlockingQueue<Object> observeRequests;
   private RulesConfigurationChangeRequest currentConfig;
   private volatile RulesConfigurationChangeRequest newConfig;
 
-  public ProductionObserver(BlockingQueue<Object> observeRequests) {
+  public ProductionObserver(BlockingQueue<Object> observeRequests,
+                            com.streamsets.pipeline.util.Configuration configuration) {
     this.observeRequests = observeRequests;
+    this.configuration = configuration;
   }
 
   @Override
@@ -61,7 +65,9 @@ public class ProductionObserver implements Observer {
   public void observe(Pipe pipe, Map<String, List<Record>> snapshot) {
     boolean offered;
     try {
-      offered = observeRequests.offer(new ProductionObserveRequest(snapshot), 1000, TimeUnit.MILLISECONDS);
+      offered = observeRequests.offer(new DataRulesEvaluationRequest(snapshot),
+        configuration.get(Configuration.MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_KEY,
+        Configuration.MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_DEFAULT), TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       offered = false;
     }

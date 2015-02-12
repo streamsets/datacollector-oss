@@ -22,11 +22,15 @@ public class ErrorSink {
   private final Map<String, List<ErrorMessage>> stageErrors;
   private final Map<String, List<Record>> errorRecords;
   private int size;
+  private int totalErrorRecords;
+  private int totalErrorMessages;
 
   public ErrorSink() {
     stageErrors = new HashMap<>();
     errorRecords = new HashMap<>();
     size = 0;
+    totalErrorMessages = 0;
+    totalErrorRecords = 0;
   }
 
   // for SDK
@@ -37,10 +41,12 @@ public class ErrorSink {
 
   public void addError(String stage, ErrorMessage errorMessage) {
     addError(stageErrors, stage, errorMessage);
+    totalErrorMessages++;
   }
 
   public void addRecord(String stage, Record errorRecord) {
     addError(errorRecords, stage, errorRecord);
+    totalErrorRecords++;
   }
 
   public Map<String, List<ErrorMessage>> getStageErrors() {
@@ -86,4 +92,11 @@ public class ErrorSink {
     return Utils.format("ErrorSink[reportingInstances='{}' size='{}']", stages, size());
   }
 
+  public int getTotalErrorRecords() {
+    return totalErrorRecords;
+  }
+
+  public int getTotalErrorMessages() {
+    return totalErrorMessages;
+  }
 }

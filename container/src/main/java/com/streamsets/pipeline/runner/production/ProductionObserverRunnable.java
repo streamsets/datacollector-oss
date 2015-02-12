@@ -48,16 +48,18 @@ public class ProductionObserverRunnable implements Runnable {
       try {
         Object request = requestQueue.poll(1000, TimeUnit.MILLISECONDS);
         if(request != null) {
-          if (request instanceof ProductionObserveRequest) {
+          if (request instanceof DataRulesEvaluationRequest) {
             //data monitoring
-            observerRunner.handleObserverRequest((ProductionObserveRequest) request);
+            observerRunner.handleDataRulesEvaluationRequest((DataRulesEvaluationRequest) request);
+          } else if (request instanceof MetricRulesEvaluationRequest) {
+            observerRunner.handleMetricRulesEvaluationRequest((MetricRulesEvaluationRequest) request);
           } else if (request instanceof RulesConfigurationChangeRequest) {
             //configuration changes
             observerRunner.handleConfigurationChangeRequest((RulesConfigurationChangeRequest) request);
           }
         }
       } catch(InterruptedException e){
-        LOG.error("Stopping the Pipeline Observer, Reason: {}", e.getMessage());
+        LOG.error("Stopping the Pipeline Observer, Reason: {}", e.getMessage(), e);
         runningThread = null;
         return;
       }

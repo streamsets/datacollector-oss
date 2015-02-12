@@ -222,12 +222,12 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   public int getErrorRecords() {
-    return errorSink.size();
+    return errorSink.getTotalErrorRecords();
   }
 
   @Override
   public int getErrorMessages() {
-    return errorSink.getStageErrors().size();
+    return errorSink.getTotalErrorMessages();
   }
 
   @Override

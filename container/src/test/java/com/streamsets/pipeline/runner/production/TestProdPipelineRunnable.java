@@ -35,6 +35,8 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 
 public class TestProdPipelineRunnable {
@@ -174,8 +176,10 @@ public class TestProdPipelineRunnable {
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, 5
-        , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION, new FilePipelineStoreTask(info, new Configuration()));
+    BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, deliveryGuarantee,
+      PIPELINE_NAME, REVISION, new FilePipelineStoreTask(info, new Configuration()), productionObserveRequests,
+      new Configuration());
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
         MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner, tracker, null);
     manager.getStateTracker().register(PIPELINE_NAME, REVISION);

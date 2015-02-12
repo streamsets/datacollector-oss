@@ -99,7 +99,7 @@ public class DataRuleEvaluator {
           threshold = Double.parseDouble(dataRuleDefinition.getThresholdValue());
         } catch (NumberFormatException e) {
           //Soft error for now as we don't want this alert to stop other rules
-          LOG.error("Error interpreting threshold '{}' as a number", dataRuleDefinition.getThresholdValue());
+          LOG.error("Error interpreting threshold '{}' as a number", dataRuleDefinition.getThresholdValue(), e);
           return;
         }
         switch (dataRuleDefinition.getThresholdType()) {
@@ -133,7 +133,7 @@ public class DataRuleEvaluator {
     } catch (ObserverException e) {
       //A faulty condition should not take down rest of the alerts with it.
       //Log and it and continue for now
-      LOG.error("Error processing metric definition '{}', reason: {}", id, e.getMessage());
+      LOG.error("Error processing metric definition '{}', reason: {}", id, e.getMessage(), e);
       return false;
     }
   }

@@ -133,7 +133,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
     try {
       messageDigest = MessageDigest.getInstance(hashType.getDigest());
     } catch (NoSuchAlgorithmException e) {
-      LOG.error(StageLibError.LIB_0500.getMessage(), hashType.getDigest(), e.getMessage());
+      LOG.error(StageLibError.LIB_0500.getMessage(), hashType.getDigest(), e.getMessage(), e);
       throw new StageException(StageLibError.LIB_0500, hashType.getDigest(), e.getMessage(), e);
     }
     messageDigest.update(valueAsString.getBytes());

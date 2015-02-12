@@ -180,7 +180,7 @@ public class KafkaConsumer {
       long[] offsets = response.offsets(topic, partition);
       return offsets[0];
     } catch (Exception e) {
-      LOG.error(KafkaStageLibError.KFK_0310.getMessage());
+      LOG.error(KafkaStageLibError.KFK_0310.getMessage(), e);
       throw new StageException(KafkaStageLibError.KFK_0310, e.getMessage(), e);
     }
   }
@@ -235,7 +235,7 @@ public class KafkaConsumer {
         }
       } catch (Exception e) {
         LOG.error(KafkaStageLibError.KFK_0305.getMessage(), broker.getHost() + ":" + broker.getPort(), topic, partition,
-          e.getMessage());
+          e.getMessage(), e);
       } finally {
         if (simpleConsumer != null) {
           simpleConsumer.close();

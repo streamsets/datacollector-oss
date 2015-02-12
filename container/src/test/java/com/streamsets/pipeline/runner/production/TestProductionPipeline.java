@@ -38,6 +38,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class TestProductionPipeline {
 
@@ -164,7 +166,7 @@ public class TestProductionPipeline {
   }
 
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee,
-                                                      boolean capturenextBatch, boolean sourceOffsetCommitter)
+                                                      boolean captureNextBatch, boolean sourceOffsetCommitter)
       throws PipelineRuntimeException {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -172,10 +174,11 @@ public class TestProductionPipeline {
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, 5
-      , 10, 10, deliveryGuarantee, PIPELINE_NAME, REVISION,
-      new FilePipelineStoreTask(new RuntimeInfo(Arrays.asList(getClass().getClassLoader())), new Configuration()) {
-      });
+    BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
+    Configuration config = new Configuration();
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore,  deliveryGuarantee, PIPELINE_NAME, REVISION,
+      new FilePipelineStoreTask(new RuntimeInfo(Arrays.asList(getClass().getClassLoader())), config) {
+      }, productionObserveRequests, config);
 
     PipelineConfiguration pConf = (sourceOffsetCommitter)
         ? MockStages.createPipelineConfigurationSourceOffsetCommitterProcessorTarget()
@@ -184,7 +187,7 @@ public class TestProductionPipeline {
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name", pConf)
         .build(runner, tracker, null);
 
-    if(capturenextBatch) {
+    if(captureNextBatch) {
       runner.captureNextBatch(1);
     }
 

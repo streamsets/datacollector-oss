@@ -81,7 +81,7 @@ public class HighLevelKafkaConsumer {
       try {
         consumer.shutdown();
       } catch (Exception e) {
-        LOG.error("Error shutting down Kafka Consumer, reason: {}", e.getMessage());
+        LOG.error("Error shutting down Kafka Consumer, reason: {}", e.getMessage(), e);
       }
     }
   }
@@ -121,7 +121,7 @@ public class HighLevelKafkaConsumer {
     try {
       consumer = Consumer.createJavaConsumerConnector(consumerConfig);
     } catch (Exception e) {
-      LOG.error(KafkaStageLibError.KFK_0311.getMessage(), e.getMessage());
+      LOG.error(KafkaStageLibError.KFK_0311.getMessage(), e.getMessage(), e);
       throw new StageException(KafkaStageLibError.KFK_0311, e.getMessage(), e);
     }
 
@@ -141,7 +141,7 @@ public class HighLevelKafkaConsumer {
     try {
       consumerIterator = stream.iterator();
     } catch (Exception e) {
-      LOG.error(KafkaStageLibError.KFK_0312.getMessage(), e.getMessage());
+      LOG.error(KafkaStageLibError.KFK_0312.getMessage(), e.getMessage(), e);
       throw new StageException(KafkaStageLibError.KFK_0312, e.getMessage(), e);
     }
   }
