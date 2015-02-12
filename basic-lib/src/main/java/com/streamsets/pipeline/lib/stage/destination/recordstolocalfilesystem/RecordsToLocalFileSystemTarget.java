@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.stage.destination.recordstolocalfilesystem;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.common.io.CountingOutputStream;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -25,8 +26,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -37,8 +40,8 @@ import java.util.List;
 @GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
-    label = "Local FileSystem",
-    description = "Writes Data Collector records to the local FileSystem",
+    label = "Records to File",
+    description = "Writes Data Collector records to the local File System",
     icon="localfilesystem.png",
     requiredFields = false
 )
@@ -64,6 +67,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     RECORD_LOCAL_FS_005("Could not write record to file '{}', error: {}"),
     RECORD_LOCAL_FS_006("Could not rotate file '{}', error: {}"),
     RECORD_LOCAL_FS_007("Could not rotate file '{}', error: {}"),
+    RECORD_LOCAL_FS_008("Max file size '{}' must be zero or greater"),
     ;
 
     private final String msg;
@@ -88,7 +92,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Directory",
-      description = "Directory to write bad records",
+      description = "Directory to write records",
       displayPosition = 10,
       group = "FILES"
   )
@@ -98,19 +102,32 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.EL_NUMBER,
       defaultValue = "${1 * HOURS}",
-      label = "Rotation Interval",
-      description = "Bad records file rotation interval",
+      label = "Rotation Interval (Secs)",
+      description = "Records file rotation interval",
       displayPosition = 20,
       group = "FILES"
   )
   public String rotationIntervalSecs;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "512",
+      label = "Max File Size (MBs)",
+      description = "File size that triggers a rotation. Zero means no maximum size.",
+      displayPosition = 30,
+      group = "FILES"
+  )
+  public int maxFileSizeMbs;
+
   private ObjectWriter jsonWriter;
   private File dir;
   private long rotationMillis;
+  private int maxFileSizeBytes;
   private long lastRotation;
   private DirectoryStream.Filter<Path> fileFilter;
   private File activeFile;
+  private CountingOutputStream countingOutputStream;
   private Writer writer;
 
   @Override
@@ -132,6 +149,10 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     } catch (ELException ex) {
       issues.add(getContext().createConfigIssue(Error.RECORD_LOCAL_FS_004, rotationIntervalSecs));
     }
+    if (maxFileSizeMbs < 0) {
+      issues.add(getContext().createConfigIssue(Error.RECORD_LOCAL_FS_008, maxFileSizeMbs));
+    }
+    maxFileSizeBytes = maxFileSizeMbs * 1024 * 1024;
     return issues;
   }
 
@@ -141,27 +162,37 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     jsonWriter = new ObjectMapper().writer();
     activeFile = new File(dir, "_tmp_records.json").getAbsoluteFile();
     fileFilter = WildcardFilter.createRegex("records-[0-9][0-9][0-9][0-9][0-9][0-9].json");
-    rotate(true);
+    // if we had non graceful shutdown we may have a _tmp file around. new file is not created.
+    rotate(false);
   }
 
   @Override
   public void write(Batch batch) throws StageException {
-    if (hasToRotate()) {
-      rotate(true);
-    }
     Iterator<Record> it = batch.getRecords();
     try {
       while (it.hasNext()) {
+        if (writer == null || hasToRotate()) {
+          //rotating file because of rotation interval or size limit. creates new file as we need to write records
+          //or we don't have a writer and need to create one
+          rotate(true);
+        }
         writer.write(jsonWriter.writeValueAsString(it.next()));
       }
-      writer.flush();
+      if (writer != null) {
+        writer.flush();
+      }
+      if (hasToRotate()) {
+        // rotating file because of rotation interval in case of empty batches. new file is not created.
+        rotate(false);
+      }
     } catch (IOException ex) {
       throw new StageException(Error.RECORD_LOCAL_FS_005, activeFile, ex.getMessage(), ex);
     }
   }
 
   private boolean hasToRotate() {
-    return System.currentTimeMillis() - lastRotation > rotationMillis;
+    return System.currentTimeMillis() - lastRotation > rotationMillis ||
+           (countingOutputStream != null && countingOutputStream.getCount() > maxFileSizeBytes);
   }
 
   private File findFinalName() throws StageException, IOException {
@@ -204,7 +235,12 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       }
       if (createNewFile) {
         LOG.debug("Creating new '{}'", activeFile);
-        writer = new FileWriter(activeFile);
+        OutputStream outputStream = new FileOutputStream(activeFile);
+        if (maxFileSizeBytes > 0) {
+          countingOutputStream = new CountingOutputStream(outputStream);
+          outputStream = countingOutputStream;
+        }
+        writer = new OutputStreamWriter(outputStream);
       }
       lastRotation = System.currentTimeMillis();
     } catch (IOException ex) {
@@ -222,6 +258,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   @Override
   public void destroy() {
     try {
+      //closing file and rotating.
       rotate(false);
     } catch (StageException ex) {
       LOG.warn("Could not do rotation on destroy: {}", ex.getMessage(), ex);
