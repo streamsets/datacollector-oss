@@ -25,7 +25,7 @@ public class LoginServlet extends HttpServlet {
     HttpSession session = req.getSession();
     String redirectURL = (String)session.getAttribute(FormAuthenticator.__J_URI);
     if(redirectURL != null && redirectURL.contains("rest/v1/")) {
-      req.getSession().setAttribute(FormAuthenticator.__J_URI, "/");
+      session.setAttribute(FormAuthenticator.__J_URI, "/");
     }
 
     resp.sendRedirect("j_security_check?j_username="+user+"&j_password="+pass);

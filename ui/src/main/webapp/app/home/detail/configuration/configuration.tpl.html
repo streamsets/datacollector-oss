@@ -39,7 +39,7 @@
       </div>
     </tab>
 
-    <tab ng-if="errorStageConfig">
+    <tab ng-if="errorStageConfig" ng-controller="ErrorConfigurationController">
       <tab-heading>
         {{'home.detailPane.badRecords' | translate}} - {{errorStageConfigDefn.label}}
       </tab-heading>
@@ -48,9 +48,9 @@
               ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
               name="badRecordsForm">
           <div class="form-group"
-               ng-repeat="configDefinition in errorStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
+               ng-repeat="configDefinition in errorStageConfigDefn.configDefinitions track by $index | orderBy: 'displayPosition'"
                ng-if="(!configDefinition.dependsOn || verifyDependsOn(errorStageConfig, configDefinition))"
-               ng-init="configIndex = getConfigIndex(errorStageConfig, configDefinition); detailPaneConfig = errorStageConfig; "
+               ng-init="configIndex = getConfigIndex(errorStageConfig, configDefinition);"
                show-errors>
 
             <ng-include ng-if="selectedType !== pipelineConstant.LINK"
