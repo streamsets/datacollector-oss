@@ -142,6 +142,13 @@ public class RuleDefinitionValidator {
           metricsRuleDefinition.setValid(false);
         }
       }
+      if(metricsRuleDefinition.isSendEmail() &&
+        (ruleDefinitions.getEmailIds() == null || ruleDefinitions.getEmailIds().isEmpty())) {
+        RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0042);
+        r.setAdditionalInfo(PROPERTY, EMAIL_IDS);
+        ruleIssues.add(r);
+        metricsRuleDefinition.setValid(false);
+      }
     }
 
     ruleDefinitions.setRuleIssues(ruleIssues);
