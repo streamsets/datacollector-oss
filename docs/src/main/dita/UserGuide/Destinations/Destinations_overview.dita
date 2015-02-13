@@ -8,7 +8,9 @@
   <p>You can use the following types of destinations in a pipeline: <ul id="ul_mxz_jxm_jq">
         <li>Hadoop FS - Writes data to a file system on Hadoop.</li>
         <li>Kafka Producer - Writes data to a Kakfa cluster.</li>
-        <li>Records to File - Writes records to a local file system.</li>
+        <li>SDC Record Files - Writes <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          records to a local file system.</li>
         <li>Trash - Removes data from the pipeline.</li>
       </ul></p>
  </conbody>

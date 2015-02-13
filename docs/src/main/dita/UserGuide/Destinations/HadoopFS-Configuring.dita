@@ -110,9 +110,8 @@
                                 </row>
                                 <row>
                                     <entry>Time Basis <xref
-                                        href="HadoopFS-TimeBasis.dita#concept_xgm_g4d_br"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="11" id="image_agk_j12_br"/></xref></entry>
+                                            href="HadoopFS-TimeBasis.dita#concept_gkz_smd_br"
+                                        /></entry>
                                     <entry>Time basis to use for creating output directories and
                                         writing records to the directories. Use one of the following
                                             expressions:<ul id="ul_ggs_43g_br">

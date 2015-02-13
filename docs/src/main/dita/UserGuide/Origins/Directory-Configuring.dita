@@ -49,18 +49,18 @@
                                         /> where source files are stored.</entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Size (recs)<xref
+                                    <entry>Batch Size (recs)   <xref
                                             href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
                                             <image href="../Graphics/icon_moreInfo.png" scale="11"
-                                                id="image_obp_j2w_yq"/></xref></entry>
+                                                id="image_kgv_zq3_br"/></xref></entry>
                                     <entry>Number of records to pass through the pipeline at one
                                         time. </entry>
                                 </row>
                                 <row>
                                     <entry>Batch Wait Time (secs) <xref
                                             href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="11"/>
-                                        </xref></entry>
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                                id="image_mgp_2q3_br"/></xref></entry>
                                     <entry>Number of seconds to wait before sending a batch.</entry>
                                 </row>
                                 <row>

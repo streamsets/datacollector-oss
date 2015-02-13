@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_zvc_bv5_1r">
+ <title>SDC Record Files</title>
+ <shortdesc>Use the SDC Record Files destination to write <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> records to a
+  local file system. <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> records are
+  JSON files of a specific format. </shortdesc>
+ <conbody>
+  <p>Use SDC Record Files to create <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> record files,
+   such as error record files, that you want to easily reprocess. You can use the Directory origin
+   with the Data Collector Records data format to process records written by SDC Record Files.</p>
+  <p> You can also use SDC Record Files when you want to write output records in JSON format to a
+   local file system. </p>
+ </conbody>
+</concept>

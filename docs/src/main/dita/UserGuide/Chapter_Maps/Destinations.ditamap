@@ -2,7 +2,7 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Destinations</title>
- <topicref href="../Destinations/Destinations_title.dita">
+ <topicref href="../Destinations/Destinations-title.dita">
   <topicref href="../Destinations/Destinations_overview.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -28,11 +28,11 @@
    <topicref href="../Destinations/KProducer-AdditionalKProperties.dita"/>
    <topicref href="../Destinations/KProducer-Configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/LocalFS.dita" chunk="to-content">
+  <topicref href="../Destinations/SDCRecordFiles.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Destinations/LocalFS-Configuring.dita"/>
+   <topicref href="../Destinations/SDCRecordFiles-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Trash.dita" chunk="to-content">
    <topicmeta>
