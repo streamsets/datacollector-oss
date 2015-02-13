@@ -33,6 +33,7 @@ public class PipelineDefinition {
 
   public static final String BAD_RECORDS_HANDLING_FIELD = "badRecordsHandling";
   public static final String BAD_RECORDS_GROUP = "BAD_RECORDS";
+  public static final String BAD_RECORDS_GROUP_LABEL = "Error Records";
 
   private StageLibraryTask stageLibrary;
   /*The config definitions of the pipeline*/
@@ -52,7 +53,7 @@ public class PipelineDefinition {
 
   public ConfigGroupDefinition getConfigGroupDefinition() {
     List<Map<String, String>> groups = new ArrayList<>();
-    groups.add(ImmutableMap.of("name", "BAD_RECORDS", "label", "Error Records"));
+    groups.add(ImmutableMap.of("name", BAD_RECORDS_GROUP, "label", BAD_RECORDS_GROUP_LABEL));
     return new ConfigGroupDefinition(null, groups);
   }
 
