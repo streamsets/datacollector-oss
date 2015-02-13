@@ -9,9 +9,7 @@
     <taskbody>
         <prereq>To send email alerts, create an email account to send the alerts and define the SMTP
             properties in the sdc.properties file. </prereq>
-        <context>
-            <p/>
-        </context>
+        <context/>
         <steps id="steps_rl5_tsw_1r">
             <step>
                 <cmd>To view pipeline configuration options, click an empty section of the pipeline
@@ -30,4 +28,7 @@
             </step>
         </steps>
     </taskbody>
+    <related-links>
+        <link href="../Getting_Started/CustomizingDataCollector.dita#task_lxk_kjw_1r"/>
+    </related-links>
 </task>

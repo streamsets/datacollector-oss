@@ -6,13 +6,11 @@
         permanent. If you think you might want to archive a pipeline, you might export the pipeline
         before you delete it.</shortdesc>
     <taskbody>
-        <context>
-            <p/>
-        </context>
+        <context/>
         <steps id="steps_wdt_twr_5q">
             <step>
-                <cmd>In the Pipeline library, click the <uicontrol>Actions</uicontrol> icon for the
-                    pipeline that you want to delete.</cmd>
+                <cmd>In the <wintitle>Pipeline</wintitle> library, click the
+                        <uicontrol>Actions</uicontrol> icon for the pipeline.</cmd>
             </step>
             <step>
                 <cmd>Click <uicontrol>Delete</uicontrol>.</cmd>

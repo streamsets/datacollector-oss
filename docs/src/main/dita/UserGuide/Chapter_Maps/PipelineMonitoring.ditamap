@@ -18,19 +18,19 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Pipeline_Monitoring/Monitoring_SummaryTab.dita"/>
-   <topicref href="../Pipeline_Monitoring/Monitoring_ErrorTab.dita"/>
   </topicref>
   <topicref href="../Pipeline_Monitoring/MetricAlerts.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Pipeline_Monitoring/MetricTypes.dita"/>
+   <topicref href="../Pipeline_Monitoring/ConfiguringMetricAlerts.dita"/>
   </topicref>
   <topicref href="../Pipeline_Monitoring/DataAlerts.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Pipeline_Monitoring/ConfiguringDataAlerts.dita"/>
   </topicref>
   <topicref href="../Pipeline_Monitoring/EmailforAlerts-Configuring.dita">
    <topicmeta>

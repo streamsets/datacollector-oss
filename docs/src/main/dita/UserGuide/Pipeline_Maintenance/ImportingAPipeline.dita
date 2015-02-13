@@ -12,8 +12,8 @@
             />.</context>
         <steps id="steps_slv_nrr_5q">
             <step>
-                <cmd>In the Pipeline library, click <uicontrol>Create New
-                    Pipeline</uicontrol>.</cmd>
+                <cmd>In the <wintitle>Pipeline</wintitle> library, click <uicontrol>Create New
+                        Pipeline</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>In the <wintitle>New Pipeline</wintitle> dialog box, enter a pipeline name and
@@ -21,12 +21,9 @@
             </step>
             <step>
                 <cmd>In the Pipeline library, click the <uicontrol>Actions</uicontrol> icon of the
-                    new pipeline.</cmd>
+                    new pipeline, and then click <uicontrol>Import</uicontrol>.</cmd>
                 <info><image href="../Graphics/Pipeline_import.png" id="image_avf_jsr_5q" scale="60"
                     /></info>
-            </step>
-            <step>
-                <cmd>Click <uicontrol>Import</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>In the <wintitle>Import Pipeline</wintitle> window, browse to locate the

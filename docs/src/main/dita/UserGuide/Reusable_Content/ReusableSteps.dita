@@ -21,8 +21,7 @@
                 <stepresult>The Preview panel highlights the origin stage and displays preview
                     records in the Output Data column. Since this is the origin of the pipeline, no
                     input data displays. <p>You can drill down to view the details of a record.
-                            </p><p><image href="../Graphics/PreviewDrill.png" id="image_jwc_b5n_tq"
-                            scale="40"/></p></stepresult>
+                    </p></stepresult>
             </step>
             <step id="DeletePreviewRecord">
                 <cmd>To delete a record that you do not want to use, click the
@@ -60,8 +59,8 @@
                 </cmd>
             </step>
             <step id="NextStage">
-                <cmd>To view data for the next stage, click <uicontrol>Next Stage</uicontrol>. Or,
-                    to view data for a different stage, select the stage in the pipeline
+                <cmd>To view data for the next stage, click the <uicontrol>Next Stage</uicontrol>
+                    icon. Or, to view data for a different stage, select the stage in the pipeline
                     canvas.</cmd>
             </step>
             <step>
@@ -73,8 +72,8 @@
             </step>
             <step id="PickPipeline">
                 <cmd>Verify that the pipeline that you want to stop appears in the pipeline canvas. </cmd>
-                <info>If it does not, select the pipeline that you want to stop from the Pipeline
-                    library.</info>
+                <info>If it does not, select the pipeline that you want to stop from the
+                        <wintitle>Pipeline</wintitle> library.</info>
             </step>
             <step>
                 <cmd>

@@ -9,8 +9,15 @@
    </topicmeta>
    <topicref href="../Data_Preview/DataPreviewAvailability.dita"/>
   </topicref>
-  <topicref href="../Data_Preview/EditingPreviewData.dita"/>
-  <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita">
+  <topicref href="../Data_Preview/EditingPreviewData.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Data_Preview/PreviewCodes.dita"/>
   </topicref>
   <topicref href="../Data_Preview/PreviewingaSingleStage.dita" chunk="to-content">
@@ -18,7 +25,7 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Data_Preview/PreviewingMultipleStages.dita">
+  <topicref href="../Data_Preview/PreviewingMultipleStages.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

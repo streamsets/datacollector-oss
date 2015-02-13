@@ -2,24 +2,20 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_hdg_j1s_5q">
     <title>Resetting the Origin</title>
-    <shortdesc>For certain origin types, you can reset the origin when you want the <ph
+    <shortdesc>You can reset the origin when you want the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        process all available data.</shortdesc>
+        process all available data. You can reset the origin for the Directory and Kafka Consumer
+        origins.</shortdesc>
     <taskbody>
         <context>
-            <p>For certain origin types, when you stop a pipeline, the <ph
+            <p>For Directory and Kafka Consumer, when you stop a pipeline, the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> notes where it stopped processing data. When you restart the pipeline, it
-                continues from where it left off by default, for those origins. </p>
+                continues from where it left off by default. </p>
             <p>When you want the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to process all available data instead of continuing from where it stopped, reset
                 the origin.</p>
-            <p>You can reset the origin for the following origin types:<ul
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_saveOffset"
-                    id="ul_ucw_vpw_yq">
-                    <li/>
-                </ul></p>
         </context>
         <steps id="steps_hvb_y1s_5q">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/PickPipeline">

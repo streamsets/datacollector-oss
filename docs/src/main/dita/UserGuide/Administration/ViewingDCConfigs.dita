@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_jyk_vgk_br">
+    <title>Viewing <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        Configuration Properties</title>
+    <shortdesc>You can view the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        configuration properties. </shortdesc>
+    <taskbody>
+        <context>
+            <p>To view <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> configuration properties, click <menucascade>
+                    <uicontrol>Administration</uicontrol>
+                    <uicontrol>Configuration</uicontrol>
+                </menucascade>.</p>
+            <p>For details about the configuration properties or to edit the properties file, see
+                    <xref href="../Getting_Started/CustomizingDataCollector.dita#task_lxk_kjw_1r"
+                />.</p>
+        </context>
+    </taskbody>
+</task>

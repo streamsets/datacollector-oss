@@ -11,8 +11,8 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
       Preview mode:</p>
   <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="50"/><draft-comment
-        author="Loretta">Retake screenshot with sample data</draft-comment><table frame="all"
-        rowsep="1" colsep="1" id="table_nrm_fvt_sq">
+        author="Loretta">Retake screenshot with sample data, update table
+        below</draft-comment><table frame="all" rowsep="1" colsep="1" id="table_nrm_fvt_sq">
         <tgroup cols="3">
           <colspec colname="c1" colnum="1" colwidth="1.11*"/>
           <colspec colname="c2" colnum="2" colwidth="1*"/>
@@ -58,7 +58,8 @@
               <entry><image href="../Graphics/icon_PrevStep.png" id="image_gv3_2yn_tq" scale="90"
                 /></entry>
               <entry>Re-run Stage icon</entry>
-              <entry>Use to run edited input data through the stage so you can review the results. </entry>
+              <entry>Use to run edited input data through the stage so you can review the results.
+              </entry>
             </row>
             <row>
               <entry><image href="../Graphics/icon_MonDelete.png" id="image_kt2_m2p_tq"/></entry>

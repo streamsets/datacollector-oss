@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tpm_rsk_zq">
- <title>Data Alerts</title>
- <shortdesc></shortdesc>
+ <title>Data Rules and Alerts</title>
+ <shortdesc>Data rules define the information that you want to see about the data moving between
+  stages. You can create data rules based on any link in the pipeline. You can also create alerts
+  based on the data rules.</shortdesc>
  <conbody>
-  <p></p>
+  <p>When you click a link between two stages while monitoring a pipeline, the Monitoring panel
+   displays summary statistics, data rules, and information about the stream of data that the link
+   represents. The summary statistics that display are based on the data rules that you create. </p>
+  <p>To create a data rule, you need familiarity with the data being processed. You might monitor
+   the pipeline or view a snapshot of data to help determine how to configure a data rule. </p>
  </conbody>
 </concept>

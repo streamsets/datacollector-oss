@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_utt_p2k_br">
+    <title>Configuring a Data Rule</title>
+    <shortdesc>Create a data rule to view summary statistics and generate alerts based on the rule. </shortdesc>
+    <taskbody>
+        <context>
+            <p></p>
+        </context>
+        <steps id="steps_mvl_w2k_br">
+            <step>
+                <cmd>In the Monitoring panel, click the <uicontrol>Data Rules</uicontrol> tab, and
+                    then click the <uicontrol>Add</uicontrol> icon.</cmd>
+            </step>
+            <step>
+                <cmd>In the <wintitle>Data Rule</wintitle> dialog box, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_blr_cfk_br">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.92*"/>
+                            <thead>
+                                <row>
+                                    <entry>Data Rule Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Label</entry>
+                                    <entry>Define the label to display for the data rule. </entry>
+                                </row>
+                                <row>
+                                    <entry>Condition</entry>
+                                    <entry>Condition that defines the data rule.</entry>
+                                </row>
+                                <row>
+                                    <entry>Sampling Percentage</entry>
+                                    <entry>Percentage of records to sample to generate information
+                                        for the data rule. A higher percentage can provide greater
+                                        accuracy, but use more resources on the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> machine.</entry>
+                                </row>
+                                <row>
+                                    <entry>Sampling Records to Retain</entry>
+                                    <entry>Number of sampled records to keep in memory for
+                                        display.</entry>
+                                </row>
+                                <row>
+                                    <entry>Enable Meter</entry>
+                                    <entry>Enables the data rule.</entry>
+                                </row>
+                                <row>
+                                    <entry>Enable Alert</entry>
+                                    <entry>Enables an alert based on the data rule.</entry>
+                                </row>
+                                <row>
+                                    <entry>Alert Text</entry>
+                                    <entry>Text to display when the alert is triggered. <p>Enter
+                                            text that explains the reason for the alert. For
+                                            example, "Over 100 missing phone numbers."</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Threshold Type</entry>
+                                    <entry>Type of threshold that defines when the alert becomes
+                                            active:<ul id="ul_mj5_2gk_br">
+                                            <li>Count - A specified number of records</li>
+                                            <li>Percentage - A specified percentage of records</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Threshold Value</entry>
+                                    <entry>Value that defines the threshold at which the alert
+                                        becomes active. </entry>
+                                </row>
+                                <row>
+                                    <entry>Min Volume</entry>
+                                    <entry>Minimum number of records to process before evaluating a
+                                        percentage threshhold type. </entry>
+                                </row>
+                                <row>
+                                    <entry>Send Email</entry>
+                                    <entry>Sends an email when the alert is triggered. <p>To send an
+                                            email, add email addresses for alerts and configure the
+                                                <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> email properties.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

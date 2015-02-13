@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_t1c_mf4_tq">
- <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Window
-  - Monitor Mode</title>
+ <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    Console - Monitor Mode</title>
  <shortdesc>In Monitor mode, you can use the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window to view
-  data as it passes through the pipeline.</shortdesc>
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console to
+    view data as it passes through the pipeline.</shortdesc>
  <conbody>
   <p>The following image shows the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window in
-   Monitor mode:</p>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
+      Monitor mode:<draft-comment author="Loretta">Retake screenshot, update table below - add extra
+        crap</draft-comment></p>
     <p><image href="../Graphics/CanvasMonitor.png" id="image_d3x_tf4_tq" scale="50"/></p>
   <simpletable frame="all" relcolwidth="1.0* 1.46* 3.66*" id="simpletable_jb5_1k4_tq">
    <sthead>
@@ -29,9 +30,9 @@
     <stentry>2</stentry>
     <stentry>Monitor Panel</stentry>
     <stentry>Displays statistics for the pipeline or selected stage. <p>When you click an Inspect
-      Data icon, &lt;come back to this>. <draft-comment author="Loretta">come back to
-       this.</draft-comment></p><p>When you click the Snapshot button, displays a snapshot of data
-      that moved through the pipeline.</p></stentry>
+            Data icon... <draft-comment author="Loretta">come back to
+            this.</draft-comment></p><p>When you click the Snapshot button, displays a snapshot of
+            data that moved through the pipeline.</p></stentry>
    </strow>
    <strow>
     <stentry>3</stentry>
@@ -58,6 +59,35 @@
     <stentry>Stop button</stentry>
     <stentry>Stops the pipeline.</stentry>
    </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_MonSummary.png" id="image_wjj_lh3_tq"/></stentry>
+        <stentry>Summary</stentry>
+        <stentry>
+          <p>Displays the record count for the pipeline, record and batch throughput for the
+            pipeline or individual stages, and batch processing statistics for the pipeline or
+            individual stages.</p>
+          <note outputclass="" type="tip">You can hover over different parts of the charts to view
+            exact numbers.</note>
+        </stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_MonError.png" id="image_mb1_nj3_tq"/></stentry>
+        <stentry>Error</stentry>
+        <stentry>For a pipeline, displays histograms for the number of error records by five minute
+          decay and the number of error records by stage since the pipeline started. <p>For a stage,
+            displays the number of error records and the number of stage errors. </p></stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_MonConfig.png" id="image_tsh_1m3_tq"/></stentry>
+        <stentry>Configuration</stentry>
+        <stentry>Displays configuration information for the pipeline or selected stage. You cannot
+          configure the pipeline when it is running.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_MonPipeHistory.png" id="image_jf2_km3_tq"/></stentry>
+        <stentry>History</stentry>
+        <stentry>Displays the status and history of the pipeline.</stentry>
+      </strow>
   </simpletable>
  </conbody>
 </concept>

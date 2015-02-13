@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_hcf_11k_br">
+    <title>Configuring a Metric Alert</title>
+    <shortdesc>Create a metric alert to receive monitoring or email alerts based on metric rules.
+        You can configure metric alerts when you configure or monitor a pipeline.</shortdesc>
+    <taskbody>
+        <context>
+            <p>You can edit or delete alerts when they are not active. </p>
+        </context>
+        <steps id="steps_jzm_f1k_br">
+            <step>
+                <cmd>In the Properties panel or Monitoring panel, click the <uicontrol>Metric
+                        Rules</uicontrol> tab, and click the <uicontrol>Add</uicontrol> icon.</cmd>
+            </step>
+            <step>
+                <cmd>In the <wintitle>Metric Alert Rule</wintitle> dialog box, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_lcs_4bk_br">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.03*"/>
+                            <thead>
+                                <row>
+                                    <entry>Metric Alert Rule Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Alert Text</entry>
+                                    <entry>Text to display when the alert is triggered. <p>Enter
+                                            text that explains the reason for the alert. For
+                                            example, "Over 1000 pipeline error records."</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Metric Type <xref
+                                        href="MetricTypes.dita#concept_y4d_tcw_1r"><image href="../Graphics/icon_moreInfo.png" scale="11"></image></xref></entry>
+                                    <entry>Type of metric information the alert is based on:<ul
+                                            id="ul_fwn_zbk_br">
+                                            <li>Counter</li>
+                                            <li>Histogram</li>
+                                            <li>Meter</li>
+                                            <li>Timer</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Metric ID</entry>
+                                    <entry>Metric to use. Provides a list of available metrics based
+                                        on the metric type. </entry>
+                                </row>
+                                <row>
+                                    <entry>Metric Element</entry>
+                                    <entry>Metric element to use. Provides a list of available
+                                        elements based on the metric ID.</entry>
+                                </row>
+                                <row>
+                                    <entry>Condition</entry>
+                                    <entry>Condition to trigger the alert. Use the expression
+                                        language to configure the condition. </entry>
+                                </row>
+                                <row>
+                                    <entry>Send Email</entry>
+                                    <entry>Sends an email when the alert is triggered. <p>To send an
+                                            email, add email addresses for alerts and configure the
+                                                <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> email properties.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
+                <info>The new alert displays in the list. </info>
+            </step>
+            <step>
+                <cmd>To activate the alert, select <uicontrol>Active</uicontrol> for the
+                    alert.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>
