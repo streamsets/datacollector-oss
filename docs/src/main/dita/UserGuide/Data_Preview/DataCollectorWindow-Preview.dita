@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_l4q_pbl_sq">
- <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Window
-    - Preview Mode</title>
+ <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    Console - Preview Mode</title>
  <shortdesc>In Preview mode, you can use the <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window to
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console to
     view how data passes through the pipeline.</shortdesc>
  <conbody>
   <p>The following image shows the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window in
-   Preview mode:</p>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
+      Preview mode:</p>
   <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="50"/><draft-comment
         author="Loretta">Retake screenshot with sample data</draft-comment><table frame="all"
         rowsep="1" colsep="1" id="table_nrm_fvt_sq">

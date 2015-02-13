@@ -7,8 +7,11 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita"/>
-   <topicref href="../Data_Preview/Colors_Asterisks.dita"/>
+   <topicref href="../Data_Preview/DataPreviewAvailability.dita"/>
+  </topicref>
+  <topicref href="../Data_Preview/EditingPreviewData.dita"/>
+  <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita">
+   <topicref href="../Data_Preview/PreviewCodes.dita"/>
   </topicref>
   <topicref href="../Data_Preview/PreviewingaSingleStage.dita" chunk="to-content">
    <topicmeta>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ksb_hjj_br">
+ <title>Data Preview Availability</title>
+ <shortdesc>You can access data preview for complete and incomplete pipelines. The Data Preview icon
+  becomes active when data preview is available.</shortdesc>
+ <conbody>
+  <p>You can view preview data under the following conditions:<ul id="ul_flp_4jj_br">
+    <li>All stages in the pipeline are connected</li>
+    <li>All required properties are defined</li>
+   </ul></p>
+  <p>
+   <note outputclass="" type="tip">Stage configuration does not have to be accurate or complete to
+    preview data. After you connect all stages, enter any valid value for required properties to
+    enable data preview.</note>
+  </p>
+ </conbody>
+</concept>

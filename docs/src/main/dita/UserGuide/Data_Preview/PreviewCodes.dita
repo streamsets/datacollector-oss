@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qqc_s3h_tq">
- <title>Preview Colors and Asterisks</title>
+ <title>Preview Codes</title>
  <shortdesc>When you preview data, the Preview panel uses different colors to represent different
-  types of data. The Preview panel also uses colors and asterisks to highlight the field values and
-  records that you have changed for testing.</shortdesc>
+  types of data. The Preview panel also uses colors, italics, and asterisks to highlight the field
+  values and records that you have changed for testing.</shortdesc>
  <conbody>
   <p>The following table describes the color and asterisk coding:<simpletable frame="all" id="simpletable_ryj_wjh_tq">
     <sthead>
@@ -28,12 +28,16 @@
      <stentry>Boolean data</stentry>
     </strow>
     <strow>
-     <stentry>Red field labels</stentry>
-     <stentry>Fields that contain changed data</stentry>
+     <stentry>Asterisk</stentry>
+     <stentry>Records that include edited field values</stentry>
     </strow>
     <strow>
-     <stentry>Asterisk</stentry>
-     <stentry>Records that include changed field values</stentry>
+     <stentry>Red italic field labels</stentry>
+     <stentry>Fields that contain edited data</stentry>
+    </strow>
+    <strow>
+     <stentry>Italic values</stentry>
+     <stentry>Edited data</stentry>
     </strow>
     <strow>
      <stentry>Green stage</stentry>
