@@ -20,7 +20,10 @@ import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.SessionManager;
 import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.session.HashSessionManager;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.security.Constraint;
 import org.slf4j.Logger;
@@ -43,6 +46,8 @@ public class WebServerTask extends AbstractTask {
 
   private static final String DIGEST_REALM_KEY = "http.digest.realm";
   private static final String DIGEST_REALM_DEFAULT = "local-realm";
+
+  private static final String JSESSIONID_COOKIE = "JSESSIONID_";
 
   private static final Set<String> AUTHENTICATION_MODES = ImmutableSet.of("none", "digest");
 
@@ -73,6 +78,11 @@ public class WebServerTask extends AbstractTask {
 
   private Handler configureAppContext() {
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+
+    SessionManager sm = new HashSessionManager();
+    ((HashSessionManager)sm).setSessionCookie(JSESSIONID_COOKIE + port);
+    context.setSessionHandler(new SessionHandler(sm));
+
     context.setContextPath("/");
     for (ContextConfigurator cc : contextConfigurators) {
       cc.init(context);
