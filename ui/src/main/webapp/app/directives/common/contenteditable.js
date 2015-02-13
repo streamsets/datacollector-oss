@@ -10,7 +10,13 @@ angular.module('dataCollectorApp.commonDirectives')
       link: function(scope, element, attrs, ngModel) {
 
         function read() {
-          ngModel.$setViewValue(element.text());
+          var value = element.text();
+
+          if(value === 'null') {
+            ngModel.$setViewValue(null);
+          } else {
+            ngModel.$setViewValue(value);
+          }
         }
 
         ngModel.$render = function() {
