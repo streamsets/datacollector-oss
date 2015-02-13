@@ -18,11 +18,13 @@
   Hasher can use MD5, SHA1 or SHA2 to hash field values. </p>
 
   <p class="p">Use the Field Hasher to securely encode sensitive data that you might want to decode at a later
-      date. For example, you might use the Field Hasher to encode social security
-        numbers.</p>
+      date. For example, you might use the Field Hasher to encode social security numbers.</p>
 
   <p class="p">When you configure the Field Hasher, you select the field that you want to encode and the
    algorithm that you want to use. </p>
+
+        <div class="note tip"><span class="tiptitle">Tip:</span> To hash non-string data, you might use the Field Type Converter processor
+            to convert non-string data to String, then stream the data to the Field Hasher. </div>
 
  </div>
 
@@ -42,7 +44,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
                     require data. <a class="xref" href="../Destinations/Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep it in the pipeline.">
-                        <img class="image" id="task_xjd_dlk_wq__d1393e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
+                        <img class="image" id="task_xjd_dlk_wq__d1437e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand" id="task_xjd_dlk_wq__SelectHashField">
@@ -54,9 +56,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.44481605351171%" id="d13215e96">Field Hasher Configuration Property</th>
+                                    <th class="entry" valign="top" width="33.44481605351171%" id="d14487e97">Field Hasher Configuration Property</th>
 
-                                    <th class="entry" valign="top" width="66.5551839464883%" id="d13215e99">Description</th>
+                                    <th class="entry" valign="top" width="66.5551839464883%" id="d14487e100">Description</th>
 
                                 </tr>
 
@@ -64,16 +66,16 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d13215e96 ">Hash Field</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14487e97 ">Hash Field</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d13215e99 ">Field to be hashed. </td>
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14487e100 ">Field to be hashed. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d13215e96 ">Hash Type</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14487e97 ">Hash Type</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d13215e99 ">Algorithm to use to hash field values. Select one of the
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14487e100 ">Algorithm to use to hash field values. Select one of the
                                         following options:<ul class="ul" id="task_xjd_dlk_wq__ul_kmd_rnk_wq">
                                             <li class="li"><span class="ph uicontrol">MD5</span> - Produces a 128-bit
                                                 (16-byte) hash value, typically expressed in text

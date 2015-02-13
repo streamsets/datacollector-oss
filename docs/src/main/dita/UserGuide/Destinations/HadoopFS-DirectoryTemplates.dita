@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_cvc_skd_br">
+ <title>Directory Templates</title>
+ <shortdesc>The Hadoop FS destination uses directory templates to create output and error
+  directories. Hadoop FS writes records to the directories based on the time </shortdesc>
+ <conbody>
+  <p><indexterm>Hadoop FS<indexterm>directory templates</indexterm></indexterm><indexterm>directory
+     templates<indexterm>Hadoop FS</indexterm></indexterm>You can use the following elements in a
+   directory template:<dl>
+    <dlentry>
+     <dt>Constants</dt>
+     <dd>You can use any constant, such as "output" or "error."</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Field Values</dt>
+     <dd>You can call a field in an expression: ${record:value("/&lt;/Field>")}.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Datetime Variables</dt>
+     <dd>Hadoop FS creates directories based on the smallest datetime variable that you use. For
+      example, if the smallest variable is hours, then the directories are created for every hour of
+      the day. </dd>
+     <dd>You can use any combination of the following datetime variables:<ul id="ul_s2x_5qq_1r">
+       <li>${YYYY} - four digit year</li>
+       <li>${YY} - two digit year</li>
+       <li>${MM} - two digit month</li>
+       <li>${DD} - two digit date</li>
+       <li>${hh} - two digit hour</li>
+       <li>${mm} - two digit minute</li>
+       <li>${ss} - two digit second</li>
+      </ul></dd>
+    </dlentry>
+   </dl></p>
+  <p>For example, to create output directories for event data based on the state and timestamp of a
+   record, you might define the following output directory template:
+   /outputfiles/${record:value("/State")}/${YY}-${MM}-${hh}.</p>
+  <p>Since the smallest unit of measurement is the hour, Hadoop FS creates a new output directory
+   every hour for every state included in output data. </p>
+ </conbody>
+</concept>

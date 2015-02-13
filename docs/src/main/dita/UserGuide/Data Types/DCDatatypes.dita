@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_af2_w3d_br">
+ <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Data
+  Types</title>
+ <shortdesc></shortdesc>
+ <conbody>
+  <p>
+   <ul>
+    <li>Boolean</li>
+    <li>Char</li>
+    <li>Byte</li>
+    <li>Short</li>
+    <li>Integer</li>
+    <li>Long</li>
+    <li>Float</li>
+    <li>Double</li>
+    <li>Date</li>
+    <li>Datetime</li>
+    <li>Decimal</li>
+    <li>String</li>
+    <li>List</li>
+    <li>Byte_Array</li>
+   </ul>
+  </p>
+ </conbody>
+</concept>

@@ -2,10 +2,175 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_m2m_skm_zq">
     <title>Configuring a Hadoop FS Destination</title>
-    <shortdesc/>
+    <shortdesc>Configure a Hadoop FS destination to write data to a Hadoop file system.</shortdesc>
     <taskbody>
         <context>
             <p></p>
         </context>
+        <steps id="steps_ljw_44d_br">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Hadoop FS</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_rst_t4d_br">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.85*"/>
+                            <thead>
+                                <row>
+                                    <entry>Hadoop FS Properties</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Hadoop FS URI</entry>
+                                    <entry>URI of the Hadoop file system.</entry>
+                                </row>
+                                <row>
+                                    <entry>Kerberos Enabled </entry>
+                                    <entry>Indicates that the Hadoop file system uses Kerberos
+                                        authentication.</entry>
+                                </row>
+                                <row>
+                                    <entry>Kerberos Principal</entry>
+                                    <entry>Kerberos principal used to connect to the Hadoop file
+                                        system.</entry>
+                                </row>
+                                <row>
+                                    <entry>Kerberos Keytab</entry>
+                                    <entry>Location for the keytab file that contains the
+                                        credentials for the Kerberos principal.</entry>
+                                </row>
+                                <row>
+                                    <entry>Hadoop FS Configs</entry>
+                                    <entry>Additional Hadoop configuration properties to use. <p>To
+                                            add properties, click <uicontrol>Add</uicontrol> and
+                                            define the Hadoop property name and value. Use the
+                                            property names and values as expected by
+                                        Hadoop.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the Output Files tab, configure the following options:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_byd_xpd_br">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.89*"/>
+                            <thead>
+                                <row>
+                                    <entry>Output Files Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>Format of data to be written. Use one of the following
+                                            options:<ul id="ul_un2_cqd_br">
+                                            <li>JSON</li>
+                                            <li>Comma-separated</li>
+                                            <li>Tab-separated</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>File Name Unique Prefix</entry>
+                                    <entry>Prefix to use for output files. Use when writing to a
+                                        directory that receives files from other sources.</entry>
+                                </row>
+                                <row>
+                                    <entry>Directory Template <xref
+                                            href="HadoopFS-DirectoryTemplates.dita#concept_cvc_skd_br"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="11" id="image_c4p_p5v_yq"/></xref></entry>
+                                    <entry>Template for creating output directories. You can use
+                                        constants, field values, and datetime variables. Output
+                                        directories are created based on the smallest datetime
+                                        variable in the template.</entry>
+                                </row>
+                                <row>
+                                    <entry>Time Zone</entry>
+                                    <entry>Time zone to use to create directories and evaluate where
+                                        records are written.</entry>
+                                </row>
+                                <row>
+                                    <entry>Time Basis <xref
+                                        href="HadoopFS-TimeBasis.dita#concept_xgm_g4d_br"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="11" id="image_agk_j12_br"/></xref></entry>
+                                    <entry>Time basis to use for creating output directories and
+                                        writing records to the directories.</entry>
+                                </row>
+                                <row>
+                                    <entry>
+                                        <draft-comment author="Loretta">finish these. check
+                                            names</draft-comment>
+                                    </entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry/>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Late Records </wintitle>tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wv3_xzd_br">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.77*"/>
+                            <thead>
+                                <row>
+                                    <entry/>
+                                    <entry/>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry/>
+                                    <entry>Time limit for output directories to accept data.</entry>
+                                </row>
+                                <row>
+                                    <entry>Late Record Handling</entry>
+                                    <entry>How to handle late records. Use one of the following
+                                            options:<ul id="ul_gx4_c12_br">
+                                            <li>Send to error - Sends the record for pipeline error
+                                                handling. </li>
+                                            <li>Send to late records file - Sends the record to a
+                                                late records file.</li>
+                                            <li>Discard - Discards the record.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Late Records Directory Template <xref
+                                            href="HadoopFS-DirectoryTemplates.dita#concept_cvc_skd_br"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="11" id="image_f41_j12_br"/></xref></entry>
+                                    <entry>Template for creating late records directories. You can
+                                        use constants, field values, and datetime variables. Output
+                                        directories are created based on the smallest datetime
+                                        variable in the template.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
     </taskbody>
 </task>

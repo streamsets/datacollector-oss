@@ -5,6 +5,9 @@
  <shortdesc>The Hadoop FS destination writes data to a Hadoop file system. You can write delimited
   or JSON data to flat files or Hadoop sequence files. </shortdesc>
  <conbody>
-  <p></p>
+  <p>When you configure a Hadoop FS destination, you define the output directory template. Hadoop FS
+   creates output directories based the template and writes records to the directories based on the
+   specified time basis - the time that a record is processed or the time associated with the
+   record. </p>
  </conbody>
 </concept>

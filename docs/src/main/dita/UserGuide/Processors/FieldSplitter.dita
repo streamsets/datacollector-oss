@@ -3,7 +3,7 @@
 <concept id="concept_vlj_vph_yq">
  <title>Field Splitter</title>
  <shortdesc>The Field Splitter splits string data in a field based on a separator character and
-  passes the separated data to new fields. Use the Field Splitter to split compound string values
+  passes the separated data to new fields. Use the Field Splitter to split complex string values
   into individual components. </shortdesc>
  <conbody>
   <p>For example, if a field contains an error code and error message separated by a comma, you can
@@ -15,9 +15,9 @@
   <p>You can include data from the original field in the record, or discard it. </p>
   <section>
    <title>Example</title>
-   <p>Say that a Field Splitter uses a comma to split data into two fields and to discard records
-    that cannot be split as requested. When it encounters a single comma, it passes the data before
-    the comma to ErrorCode field and the data after the comma to the ErrorMessage field.  </p>
+   <p>A Field Splitter uses a comma to split data into two fields and to discard records that cannot
+    be split as requested. When it encounters a single comma, it passes the data before the comma to
+    ErrorCode field and the data after the comma to the ErrorMessage field. </p>
    <p>When the Field Splitter processes the following records:<simpletable frame="none"
      relcolwidth="1.0*" id="simpletable_dqy_dd3_yq">
      <strow>

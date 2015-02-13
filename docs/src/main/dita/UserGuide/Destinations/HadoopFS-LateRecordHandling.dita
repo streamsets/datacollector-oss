@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xgm_g4d_br">
+ <title>Late Records and Late Record Handling </title>
+ <shortdesc>You can define a time limit for records to be written to the appropriate output
+  directory and treat all records past the limit as late. This limit is appropriate when you use the
+  datetime of a record as the time basis. </shortdesc>
+ <conbody>
+  <p>For example, a Hadoop FS destination writes event data to hourly output directories based on
+   the timestamp of the event, and has a time limit of one day. Any records that arrive more than a
+   day after the hourly output directory window are considered late and are handled based on the
+   late record handling properties.</p>
+  <p>You can send late records to a late records file, for pipeline error handling, or discard the
+   records. To send records to a late records file, you define an late records directory template. </p>
+ </conbody>
+</concept>

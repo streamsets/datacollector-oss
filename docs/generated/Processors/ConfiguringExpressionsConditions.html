@@ -71,6 +71,44 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_e1r_5vc_br">
+ <h2 class="title topictitle2">Stage Instance Name</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Some record and error functions include stage instance names in their return values. You
+  might also need to use the stage instance name in expressions or conditions when you configure an
+  error pipeline. You can find the instance name for a stage on the General tab of the stage
+  properties. </p>
+
+  <p class="p">Stage instances names
+   use the following format: </p>
+
+  <div class="p">
+   <pre class="pre codeblock">&lt;internal information&gt;_&lt;internal stage name&gt;&lt;ID&gt;</pre>
+
+  </div>
+
+  <div class="p">For example,
+   <pre class="pre codeblock">com_streamsets_pipeline_lib_stage_processor_splitter_SplitterProcessor1423694184108</pre>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ynz_stc_br">
+ <h2 class="title topictitle2">Stage Paths</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Some record functions and error functions return stage paths. You might also want to use
+  stage paths in expressions or conditions in error pipelines. </p>
+
+  <div class="p">Stage paths use the following
+   format:<pre class="pre codeblock">&lt;origin instance name&gt;:&lt;next stage instance name&gt;:&lt;next stage instance name&gt;:...</pre>
+</div>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_ogd_zj3_wq">
     <h2 class="title topictitle2">Defining Constants</h2>
 

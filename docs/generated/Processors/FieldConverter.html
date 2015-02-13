@@ -34,40 +34,117 @@ When you convert a String field to Date or Datetime, you specify the date or dat
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_ixz_s5q_wq">
- <h2 class="title topictitle2">Conversion Data Types</h2>
+ <h2 class="title topictitle2">Valid Field Conversions</h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can convert fields to the following data types:</p>
+ <div class="body conbody"><p class="shortdesc">The following table lists the data types that can be converted to another data type.
+  Byte Array, List, and Map data types cannot be converted.</p>
+
+  <div class="p">
+   
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ixz_s5q_wq__table_wgg_wgd_br" class="table" frame="border" border="1" rules="all">
+     
+     
+     <thead class="thead" align="left">
+      <tr class="row">
+       <th class="entry" valign="top" width="24.509803921568626%" id="d13951e66">Target Data Type</th>
+
+       <th class="entry" valign="top" width="75.49019607843137%" id="d13951e69">Source </th>
+
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d13951e66 ">Boolean</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d13951e69 ">Byte, Decimal, Double, Float, Integer, Long, Short, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d13951e66 ">Byte</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d13951e69 ">Decimal, Double, Float, Integer, Long, Short,  String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d13951e66 ">Character</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d13951e69 ">String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d13951e66 ">Date</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d13951e69 ">Long, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d13951e66 ">Decimal</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d13951e69 ">Byte, Double, Float,  Integer, Long, Short, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d13951e66 ">Double</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d13951e69 ">Byte, Decimal, Integer, Float, Long, Short, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d13951e66 ">Float</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d13951e69 ">Byte, Decimal, Double, Integer, Long, Short, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d13951e66 ">Integer</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d13951e69 ">Byte, Decimal, Double, Float, Long, Short, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d13951e66 ">Long</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d13951e69 ">Byte, Decimal, Double, Float, Integer, Short, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d13951e66 ">Short</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d13951e69 ">Byte, Decimal, Double, Float, Integer, Long, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d13951e66 ">String</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d13951e69 ">All supported data types.</td>
+
+      </tr>
+
+     </tbody>
+
+    </table>
+</div>
+
+  </div>
 
   <div class="p">
    <ul class="ul" id="concept_ixz_s5q_wq__ul_ryh_y5q_wq">
-    <li class="li">Boolean</li>
-
-    <li class="li">Char</li>
-
-    <li class="li">Byte</li>
-
-    <li class="li">Short</li>
-
-    <li class="li">Integer</li>
-
-    <li class="li">Long</li>
-
-    <li class="li">Float</li>
-
-    <li class="li">Double</li>
-
-    <li class="li">Date</li>
-
-    <li class="li">Datetime</li>
-
-    <li class="li">Decimal</li>
-
-    <li class="li">String</li>
-
-    <li class="li">List</li>
-
-    <li class="li">Byte_Array</li>
+    <li class="li">
+     
+    </li>
 
    </ul>
 
@@ -91,7 +168,7 @@ When you convert a String field to Date or Datetime, you specify the date or dat
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
                     require data. <a class="xref" href="../Destinations/Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep it in the pipeline.">
-                        <img class="image" id="task_g23_2tq_wq__d1393e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
+                        <img class="image" id="task_g23_2tq_wq__d1437e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand">
@@ -103,9 +180,9 @@ When you convert a String field to Date or Datetime, you specify the date or dat
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.44481605351171%" id="d12857e165">Field Converter Configuration Property</th>
+                                    <th class="entry" valign="top" width="33.44481605351171%" id="d13951e253">Field Converter Configuration Property</th>
 
-                                    <th class="entry" valign="top" width="66.5551839464883%" id="d12857e168">Description</th>
+                                    <th class="entry" valign="top" width="66.5551839464883%" id="d13951e256">Description</th>
 
                                 </tr>
 
@@ -113,31 +190,31 @@ When you convert a String field to Date or Datetime, you specify the date or dat
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d12857e165 ">Convert Field</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d13951e253 ">Convert Field</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d12857e168 ">Field to be converted. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d12857e165 ">Target Type</td>
-
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d12857e168 ">Data type to convert to. </td>
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d13951e256 ">Field to be converted. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d12857e165 ">Data Locale</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d13951e253 ">Target Type</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d12857e168 ">Locale of the data in the field. Can determine how the
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d13951e256 ">Data type to convert to. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d13951e253 ">Data Locale</td>
+
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d13951e256 ">Locale of the data in the field. Can determine how the
                                         Field Converter formats converted data.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d12857e165 ">Date Format</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d13951e253 ">Date Format</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d12857e168 ">Format for a Date or Datetime field. Use any valid
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d13951e256 ">Format for a Date or Datetime field. Use any valid
                                         format. </td>
 
                                 </tr>

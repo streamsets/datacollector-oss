@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xh5_y4d_br">
+ <title>Additional Hadoop Properties</title>
+ <shortdesc>You can add custom Hadoop configuration properties to the Hadoop FS destination. </shortdesc>
+ <conbody>
+  <p><indexterm>Hadoop FS<indexterm>additional properties</indexterm></indexterm>When you add the
+   Hadoop configuration property, enter the Hadoop property name and the value. The Hadoop FS
+   destination does not validate the property names or values. </p>
+ </conbody>
+</concept>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_gkz_smd_br">
+ <title>Time Basis</title>
+ <shortdesc>The time basis helps determine the output directory to use when writing an output
+  record. The time basis can be based on the time of processing or the time associated with the
+  record. </shortdesc>
+ <conbody>
+  <p><indexterm>Hadoop FS<indexterm>time basis</indexterm></indexterm><indexterm>time
+     basis<indexterm>Hadoop FS</indexterm></indexterm>To use the processing time as the time basis,
+   use the following default expression: ${time:now()}. </p>
+  <p>To use a datetime value associated with the record, use an expression that calls a field and
+   resolves to a datetime value. When you use the time associated with a record, be sure to define
+   the time zone for the data as well. </p>
+  <p>For example, to use the record as a time basis for the event data described above, you might
+   use the following expression to call the Timestamp field: ${record:value("/Timestamp")}. Hadoop
+   FS writes a record to an output directory based on the timestamp of the record. </p>
+ </conbody>
+</concept>

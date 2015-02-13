@@ -51,7 +51,7 @@
                                 <row>
                                     <entry>File Name Pattern <xref
                                             href="Directory_FNamePattern.dita#concept_bxt_ndl_5q">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
                                                 id="image_c4p_p5v_yq"/></xref>
                                     </entry>
                                     <entry>Regular expression that describes the file names. For
@@ -68,7 +68,7 @@
                                 <row>
                                     <entry>First File to Process <xref
                                             href="Directory_FirstFile.dita#concept_ltv_r3l_5q">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
                                                 id="image_e4p_p5v_yq"/></xref>
                                     </entry>
                                     <entry>Name of the first file to process. Use a name that uses
@@ -79,7 +79,7 @@
                                 <row>
                                     <entry>File Wait Timeout (secs) <xref
                                             href="Directory_FileWaitTime.dita#concept_fqb_x1l_5q">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="12" id="image_h4p_p5v_yq"/></xref>
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11" id="image_h4p_p5v_yq"/></xref>
                                     </entry>
                                     <entry>Number of seconds to wait for a new file. If a new file
                                         does not arrive within the specified time, Directory sends

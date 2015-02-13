@@ -2,10 +2,54 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_q4d_4yl_zq">
     <title>Configuring a Kafka Producer</title>
-    <shortdesc/>
+    <shortdesc>Configure a Kafka Producer to write text, delimited, or JSON text to a Kafka cluster. </shortdesc>
     <taskbody>
         <context>
-            <p></p>
+            <p/>
         </context>
+        <steps id="steps_upj_std_br">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the Kafka tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wp4_xtd_br">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.17*"/>
+                            <thead>
+                                <row>
+                                    <entry>Kafka Properties</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>
+                                        <draft-comment author="Loretta">finish these.
+                                        </draft-comment>
+                                    </entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry/>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry/>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry/>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
     </taskbody>
 </task>
