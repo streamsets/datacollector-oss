@@ -29,6 +29,29 @@
     </h3>
 
     <div class="pull-right size-toolbar">
+
+      <div class="btn-group pull-left detail-settings-dropdown">
+        <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
+          <span class="fa fa-ellipsis-h fa-14x pointer"></span>
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+
+          <li role="presentation" class="dropdown-header" translate="home.detailPane.restURL">REST URL</li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline-library/{{pipelineConfig.info.name}}/preview" target="_blank">{{'home.detailPane.pipelinePreviewJSONData' | translate}}</a>
+          </li>
+
+          <li role="presentation" ng-if="isPipelineRunning" class="divider"></li>
+
+          <li role="presentation" ng-if="isPipelineRunning">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="launchSettings()">{{'global.form.settings' | translate}}</a>
+          </li>
+
+        </ul>
+      </div>
+
       <span class="fa fa-question-circle fa-14x pointer"
             ng-click="launchHelp('pipeline-preview')"></span>
       <span class="glyphicon pointer"

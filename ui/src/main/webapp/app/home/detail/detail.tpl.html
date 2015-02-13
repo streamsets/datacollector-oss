@@ -46,12 +46,18 @@
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
 
+          <li role="presentation" class="dropdown-header" translate="home.detailPane.restURL">REST URL</li>
+
           <li role="presentation" ng-if="isPipelineRunning">
             <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline/metrics" target="_blank">{{'home.detailPane.monitoringJSONData' | translate}}</a>
           </li>
 
           <li role="presentation">
             <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline-library/{{pipelineConfig.info.name}}" target="_blank">{{'home.detailPane.pipelineConfigJSONData' | translate}}</a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline-library/{{pipelineConfig.info.name}}/rules" target="_blank">{{'home.detailPane.pipelineRulesJSONData' | translate}}</a>
           </li>
 
           <li role="presentation">
@@ -80,9 +86,6 @@
            ng-hide="$storage.minimizeDetailPane"
            ng-class="{'glyphicon-fullscreen' : !$storage.maximizeDetailPane , 'glyphicon-resize-small': $storage.maximizeDetailPane}"
            ng-click="onMaximizeDetailPane()"></span>
-
-
-
     </div>
 
   </div>

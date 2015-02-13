@@ -36,7 +36,7 @@ public class RuleDefinitionValidator {
   private static final int MIN_PERCENTAGE = 0;
   private static final int MAX_PERCENTAGE = 100;
   private static final String THRESHOLD_VALUE = "Threshold Value";
-  private static final String EMAIL_IDS = "Email Ids";
+  private static final String EMAIL_IDS = "emailIds";
   private static final String SAMPLING_PERCENTAGE = "Sampling Percentage";
 
   private final ELEvaluator elEvaluator;

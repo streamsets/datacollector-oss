@@ -202,7 +202,7 @@
         "noRulesMessage": "No active Data Rules for this stream. Add Rules in Data Rules Tab for Inspecting Data.",
         "meterGraphPostFix": " (records/sec)"
       },
-      "definitionsJSONData": "Definitions Raw JSON data",
+      "definitionsJSONData": "Definitions",
       "general": "General",
       "history": "History",
       "historyTab": {
@@ -212,10 +212,13 @@
       "inspectingData": "Inspecting Data",
       "metricAlertRules": "Metric Rules",
       "monitoring": "Monitoring",
-      "monitoringJSONData": "Monitoring Raw JSON Data",
-      "pipelineConfigJSONData": "Pipeline Configuration Raw JSON Data",
+      "monitoringJSONData": "Pipeline Monitoring",
+      "pipelineConfigJSONData": "Pipeline Configuration",
+      "pipelinePreviewJSONData": "Pipeline Preview",
+      "pipelineRulesJSONData": "Pipeline Rules",
       "rawPreview": "Raw Preview",
       "recordsPerSecond": "(records / sec)",
+      "restURL": "REST Interface",
       "rules": "Rules",
       "rulesTab": {
         "action": "Action",
@@ -229,6 +232,7 @@
         "dataRules": "Data Rules",
         "deleteRuleTooltip": "Delete Rule",
         "emailIds": "Email IDs",
+        "enterEmailIdMsg": "Enter Email IDs in Pipeline Configuration > Email IDs tab",
         "enableAlert": "Enable Alert",
         "enableMeter": "Enable Meter",
         "enabled": "Active",

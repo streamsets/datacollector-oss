@@ -38,6 +38,7 @@ import javax.ws.rs.core.UriInfo;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +59,20 @@ public class PreviewResource {
     this.configuration = configuration;
     this.stageLibrary = stageLibrary;
     this.store = store;
+  }
+
+  @Path("/{name}/preview")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response preview(
+    @PathParam("name") String name,
+    @QueryParam("rev") String rev,
+    @QueryParam("sourceOffset") String sourceOffset,
+    @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize,
+    @QueryParam("batches") @DefaultValue("1") int batches,
+    @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets)
+    throws PipelineStoreException, PipelineRuntimeException, StageException {
+    return previewWithOverride(name, rev, sourceOffset, batchSize, batches, skipTargets, Collections.EMPTY_LIST);
   }
 
   @Path("/{name}/preview")

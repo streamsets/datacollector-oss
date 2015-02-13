@@ -51,13 +51,13 @@
 
           <td>
             <input type="checkbox" name="sendEmail{{$index}}"
-                   ng-disabled="!alertRule.valid"
+                   ng-disabled="alertRule.enabled"
                    ng-model="alertRule.sendEmail">
           </td>
 
           <td>
             <input type="checkbox" name="enabled{{$index}}"
-                   ng-disabled="!alertRule.valid"
+                   ng-disabled="!alertRule.valid && alertRule.enabled === false"
                    ng-model="alertRule.enabled">
           </td>
 
@@ -74,7 +74,7 @@
 
         <tr ng-repeat-end ng-if="isOpen || expandAll" class="expand-row" ng-class="alertRule.valid ? '' : 'invalid-rule'">
           <td colspan="8">
-            <ul class="properties">
+            <ul class="table-properties">
 
               <li>
                 <span class="properties-label">
@@ -100,7 +100,8 @@
                 </span>
                 <span class="properties-value">
                   <span ng-repeat="ruleIssue in ruleIssues = (pipelineRules.ruleIssues | filter: {ruleId: alertRule.id})">
-                    {{ruleIssue.message}}
+                    <span>{{ruleIssue.message}}</span>
+                    <span ng-if="ruleIssue.additionalInfo.property === 'emailIds'">{{'home.detailPane.rulesTab.enterEmailIdMsg' | translate}}</span>
                   </span>
                 </span>
               </li>
