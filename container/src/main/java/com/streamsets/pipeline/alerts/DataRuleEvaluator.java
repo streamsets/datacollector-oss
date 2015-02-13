@@ -47,11 +47,11 @@ public class DataRuleEvaluator {
     this.alertManager = alertManager;
   }
 
-  public void evaluateRule(List<Record> records, List<Record> sampleRecords, String lane,
+  public void evaluateRule(int allRecordsSize, List<Record> sampleRecords, String lane,
                            Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap) {
 
     if (dataRuleDefinition.isEnabled()) {
-      int numberOfRecords = (int) Math.floor(records.size() * dataRuleDefinition.getSamplingPercentage() / 100);
+      int numberOfRecords = (int) Math.floor(allRecordsSize * dataRuleDefinition.getSamplingPercentage() / 100);
 
       //cache all sampled records for this data rule definition in an evicting queue
       List<Record> sampleSet = sampleRecords.subList(0, numberOfRecords);

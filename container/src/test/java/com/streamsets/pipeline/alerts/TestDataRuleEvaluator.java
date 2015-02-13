@@ -57,9 +57,7 @@ public class TestDataRuleEvaluator {
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
-    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNotNull(gauge);
@@ -81,9 +79,7 @@ public class TestDataRuleEvaluator {
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
-    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNull(gauge);
@@ -103,9 +99,7 @@ public class TestDataRuleEvaluator {
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
-    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNotNull(gauge);
@@ -126,9 +120,7 @@ public class TestDataRuleEvaluator {
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
-    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNull(gauge);
@@ -145,9 +137,7 @@ public class TestDataRuleEvaluator {
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
-    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNull(gauge);
@@ -163,9 +153,7 @@ public class TestDataRuleEvaluator {
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
-    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNull(gauge);
@@ -181,9 +169,7 @@ public class TestDataRuleEvaluator {
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
-    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNotNull(gauge);
@@ -199,9 +185,7 @@ public class TestDataRuleEvaluator {
       "testNoAlertRaisedPercentage", ThresholdType.PERCENTAGE, "60", 5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator, null, null,
       dataRuleDefinition, new Configuration());
-    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNull(gauge);
@@ -217,17 +201,15 @@ public class TestDataRuleEvaluator {
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       dataRuleDefinition, new Configuration());
 
-    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator, lane);
+
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
 
-    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator, lane);
+
     gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 6, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
@@ -245,9 +227,8 @@ public class TestDataRuleEvaluator {
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       nameNotNull, new Configuration());
 
-    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator, lane);
+
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(nameNotNull.getId()));
     Assert.assertNotNull(gauge);
@@ -261,15 +242,21 @@ public class TestDataRuleEvaluator {
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo), null,
       nameEqualsStreamSets, new Configuration());
 
-    dataRuleEvaluator2.evaluateRule(TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    evaluateRule(dataRuleEvaluator2, lane);
+
     Gauge<Object> gauge2 = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(nameEqualsStreamSets.getId()));
     Assert.assertNotNull(gauge2);
     Assert.assertEquals((long) 2, ((Map<String, Object>) gauge2.getValue()).get("currentValue"));
     Assert.assertNotNull(((Map<String, Object>) gauge2.getValue()).get("timestamp"));
 
+  }
+
+  private void evaluateRule(DataRuleEvaluator dataRuleEvaluator, String lane) {
+    dataRuleEvaluator.evaluateRule(TestUtil.createLaneToRecordSizeMap(lane).get(
+        LaneResolver.getPostFixedLaneForObserver(lane)),
+      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
+        EvictingQueue<Record>>());
   }
 
 }

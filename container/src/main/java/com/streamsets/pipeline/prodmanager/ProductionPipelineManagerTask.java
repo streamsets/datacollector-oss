@@ -303,7 +303,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     } catch (InterruptedException e) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.getMessage(), e);
     }
-    configLoaderRunnable = new RulesConfigLoaderRunnable(shutdownObject, rulesConfigLoader, observer);
+    configLoaderRunnable = new RulesConfigLoaderRunnable(shutdownObject, rulesConfigLoader, observer, configuration);
     executor.submit(configLoaderRunnable);
 
     AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo);

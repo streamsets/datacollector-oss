@@ -25,9 +25,10 @@ public class Configuration {
   public static final String SAMPLED_RECORDS_CACHE_SIZE_KEY = "sampled.records.cache.size";
   public static final String MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_KEY = "max.observerRequest.offer.wait.time.ms";
   public static final int MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_DEFAULT = 1000;
-
-
+  public static final String RULES_CONFIG_LOADER_SLEEP_TIME_MS_KEY = "rulesConfigLoader.sleep.time.ms";
+  public static final int RULES_CONFIG_LOADER_SLEEP_TIME_DEFAULT = 2000;
 
   public static final String STOP_PIPELINE_MESSAGE = "Requested via REST API";
+
 
 }

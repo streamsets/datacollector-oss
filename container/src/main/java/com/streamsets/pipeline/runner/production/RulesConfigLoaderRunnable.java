@@ -7,6 +7,7 @@ package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.prodmanager.ShutdownObject;
 import com.streamsets.pipeline.runner.Observer;
+import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,12 +19,14 @@ public class RulesConfigLoaderRunnable implements Runnable {
   private final ShutdownObject shutdownObject;
   private final RulesConfigLoader rulesConfigLoader;
   private final Observer observer;
+  private final Configuration configuration;
 
   public RulesConfigLoaderRunnable(ShutdownObject shutdownObject, RulesConfigLoader rulesConfigLoader,
-                                   Observer observer) {
+                                   Observer observer, Configuration configuration) {
     this.shutdownObject = shutdownObject;
     this.rulesConfigLoader = rulesConfigLoader;
     this.observer = observer;
+    this.configuration = configuration;
   }
 
   @Override
@@ -32,6 +35,10 @@ public class RulesConfigLoaderRunnable implements Runnable {
     while (!shutdownObject.isStop()) {
       try {
         rulesConfigLoader.load(observer);
+        //sleep between loads, configurable sleep time
+        Thread.sleep(configuration.get(
+          com.streamsets.pipeline.prodmanager.Configuration.RULES_CONFIG_LOADER_SLEEP_TIME_MS_KEY,
+          com.streamsets.pipeline.prodmanager.Configuration.RULES_CONFIG_LOADER_SLEEP_TIME_DEFAULT));
       } catch(InterruptedException e) {
         LOG.error("Stopping the Rules Config Loader, Reason: {}", e.getMessage(), e);
         runningThread = null;

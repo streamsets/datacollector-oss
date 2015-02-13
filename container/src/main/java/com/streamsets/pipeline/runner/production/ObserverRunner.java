@@ -18,12 +18,10 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -58,17 +56,19 @@ public class ObserverRunner {
 
   public void handleDataRulesEvaluationRequest(DataRulesEvaluationRequest dataRulesEvaluationRequest) {
 
+    //This is the map of lane vs sampled records
     Map<String, List<Record>> snapshot = dataRulesEvaluationRequest.getSnapshot();
     for(Map.Entry<String, List<Record>> entry : snapshot.entrySet()) {
       String lane = entry.getKey();
-      List<Record> allRecords = entry.getValue();
+      List<Record> sampleRecords = entry.getValue();
+
       List<DataRuleDefinition> dataRuleDefinitions = rulesConfigurationChangeRequest.getLaneToDataRuleMap().get(lane);
       if(dataRuleDefinitions != null) {
-        List<Record> sampleRecords = getSampleRecords(dataRuleDefinitions, allRecords);
         for (DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
           DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator, alertManager,
             rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(), dataRuleDefinition, configuration);
-          dataRuleEvaluator.evaluateRule(allRecords, sampleRecords, lane, ruleToSampledRecordsMap);
+          dataRuleEvaluator.evaluateRule(dataRulesEvaluationRequest.getLaneToRecordsSize().get(lane), sampleRecords,
+            lane, ruleToSampledRecordsMap);
         }
       }
     }
@@ -99,22 +99,6 @@ public class ObserverRunner {
     for(String alertId : rulesConfigurationChangeRequest.getMetricAlertsToRemove()) {
       MetricsConfigurator.removeGauge(metrics, alertId);
     }
-  }
-
-  private List<Record> getSampleRecords(List<DataRuleDefinition> dataRuleDefinitions, List<Record> allRecords) {
-    double percentage = 0;
-    for(DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
-      if(dataRuleDefinition.getSamplingPercentage() > percentage) {
-        percentage = dataRuleDefinition.getSamplingPercentage();
-      }
-    }
-    Collections.shuffle(allRecords);
-    double numberOfRecordsToSample = Math.floor(allRecords.size() * percentage / 100);
-    List<Record> sampleRecords = new ArrayList<>((int)numberOfRecordsToSample);
-    for(int i = 0; i < numberOfRecordsToSample; i++) {
-      sampleRecords.add(((RecordImpl) allRecords.get(i)).clone());
-    }
-    return sampleRecords;
   }
 
   public List<Record> getSampledRecords(String ruleId, int size) {

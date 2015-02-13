@@ -71,4 +71,10 @@ public class TestUtil {
 
     return snapshot;
   }
+
+  public static Map<String, Integer> createLaneToRecordSizeMap(String lane) {
+    Map<String, Integer> map = new HashMap<>();
+    map.put(lane + "::s", 6);
+    return map;
+  }
 }

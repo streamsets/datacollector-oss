@@ -90,7 +90,8 @@ public class TestObserverRunner {
   }
 
   private DataRulesEvaluationRequest createProductionObserverRequest() {
-    DataRulesEvaluationRequest request = new DataRulesEvaluationRequest(TestUtil.createSnapshot(LANE));
+    DataRulesEvaluationRequest request = new DataRulesEvaluationRequest(TestUtil.createSnapshot(LANE),
+      TestUtil.createLaneToRecordSizeMap(LANE));
     return request;
   }
 

@@ -50,7 +50,7 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "MULTIPLE_OBJECTS",
+      defaultValue = "ARRAY_OBJECTS",
       label = "JSON Content",
       description = "",
       displayPosition = 100,
