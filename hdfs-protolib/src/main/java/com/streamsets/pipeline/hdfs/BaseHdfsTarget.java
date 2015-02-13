@@ -528,7 +528,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
     RecordToString recordToString;
     switch(dataFormat) {
       case JSON:
-        recordToString = new JsonRecordToString();
+        recordToString = new JsonRecordToString(getContext());
         break;
       case CSV:
         recordToString = new CsvRecordToString(csvFileFormat.getFormat());

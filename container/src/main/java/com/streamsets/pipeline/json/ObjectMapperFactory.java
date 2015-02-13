@@ -19,9 +19,10 @@ import java.util.concurrent.TimeUnit;
 
 public class ObjectMapperFactory {
 
-  private static final ObjectMapper OBJECT_MAPPER = create();
+  private static final ObjectMapper OBJECT_MAPPER = create(true);
+  private static final ObjectMapper OBJECT_MAPPER_ONE_LINE = create(false);
 
-  private static ObjectMapper create() {
+  private static ObjectMapper create(boolean indent) {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new MetricsModule(TimeUnit.SECONDS, TimeUnit.SECONDS, false, MetricFilter.ALL));
     SimpleModule module = new SimpleModule();
@@ -29,12 +30,18 @@ public class ObjectMapperFactory {
     module.addSerializer(ExtendedMeter.class, new ExtendedMeterSerializer(TimeUnit.SECONDS));
     module.addDeserializer(ErrorMessage.class, new ErrorMessageDeserializer());
     objectMapper.registerModule(module);
-    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    if (indent) {
+      objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    }
     return objectMapper;
   }
 
   public static ObjectMapper get() {
     return OBJECT_MAPPER;
+  }
+
+  public static ObjectMapper getOneLine() {
+    return OBJECT_MAPPER_ONE_LINE;
   }
 
 }

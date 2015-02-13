@@ -41,8 +41,8 @@ import java.util.List;
 @GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
-    label = "Records to File",
-    description = "Writes Data Collector records to the local File System",
+    label = "SDC Records Files",
+    description = "Writes records to the local File System using 'SDC Record (JSON)' format",
     icon="localfilesystem.png",
     requiredFields = false
 )

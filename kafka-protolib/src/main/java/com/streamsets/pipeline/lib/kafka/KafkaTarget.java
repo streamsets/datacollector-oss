@@ -115,6 +115,7 @@ public class KafkaTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
+      defaultValue = "SDC_RECORDS",
       label = "Data Format",
       description = "",
       displayPosition = 50,
@@ -215,8 +216,8 @@ public class KafkaTarget extends BaseTarget {
 
   private void createRecordToStringInstance(Map<String, String> fieldNameToPathMap) {
     switch(payloadType) {
-      case JSON:
-        recordToString = new JsonRecordToString();
+      case SDC_RECORDS:
+        recordToString = new JsonRecordToString(getContext());
         break;
       case CSV:
         recordToString = new CsvRecordToString(csvFileFormat.getFormat());

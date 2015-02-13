@@ -122,7 +122,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
     public JsonRecordWriterImpl(Writer writer) throws IOException {
       this.writer = writer;
-      generator = ObjectMapperFactory.get().getFactory().createGenerator(writer);
+      generator = ObjectMapperFactory.getOneLine().getFactory().createGenerator(writer);
     }
 
     @Override

@@ -6,10 +6,14 @@
 package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
+import com.streamsets.pipeline.api.ext.JsonRecordReader;
 import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
 import com.streamsets.pipeline.lib.util.JsonUtil;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.admin.AdminUtils;
 import kafka.consumer.ConsumerIterator;
@@ -29,6 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -184,7 +189,7 @@ public class TestKafkaTargetSinglePartition {
     } catch (kafka.consumer.ConsumerTimeoutException e) {
       //no-op
     }
-    Assert.assertEquals(18, messages.size());
+    Assert.assertEquals(20, messages.size());
     for(int i = 0; i < logRecords.size(); i++) {
       Assert.assertEquals(logRecords.get(i).get().getValueAsMap().get("name").getValueAsString(), messages.get(i));
     }
@@ -225,7 +230,7 @@ public class TestKafkaTargetSinglePartition {
     } catch (kafka.consumer.ConsumerTimeoutException e) {
       //no-op
     }
-    Assert.assertEquals(18, messages.size());
+    Assert.assertEquals(20, messages.size());
     for(int i = 0; i < logRecords.size(); i++) {
       Assert.assertEquals(logRecords.get(i).get().getValueAsMap().get("lastStatusChange").getValueAsString(),
         messages.get(i));
@@ -285,7 +290,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.JSON)
+      .addConfiguration("payloadType", ProducerPayloadType.SDC_RECORDS)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
@@ -306,9 +311,13 @@ public class TestKafkaTargetSinglePartition {
       //no-op
     }
 
-    Assert.assertEquals(18, messages.size());
+    Assert.assertEquals(20, messages.size());
+
+    ContextExtensions ctx = (ContextExtensions) ContextInfoCreator.createTargetContext("", false);
     for(int i = 0; i < logRecords.size(); i++) {
-      Assert.assertEquals(JsonUtil.jsonRecordToString(logRecords.get(i)), messages.get(i));
+      JsonRecordReader rr = ctx.createJsonRecordReader(new StringReader(messages.get(i)), 0, Integer.MAX_VALUE);
+      Assert.assertEquals(logRecords.get(i), rr.readRecord());
+      rr.close();
     }
   }
 

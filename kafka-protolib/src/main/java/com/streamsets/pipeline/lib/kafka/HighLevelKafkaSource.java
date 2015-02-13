@@ -119,6 +119,9 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
       case XML:
         recordCreator = new XmlRecordCreator(getContext(), topic);
         break;
+      case SDC_RECORDS:
+        recordCreator = new SDCRecordCreator(getContext());
+        break;
       default :
     }
   }

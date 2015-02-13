@@ -9,8 +9,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
+import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.lib.util.JsonUtil;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import kafka.admin.AdminUtils;
 import kafka.consumer.Consumer;
@@ -106,16 +109,28 @@ public class KafkaTestUtil {
     return messages;
   }
 
-  public static List<KeyedMessage<String, String>> produceJsonMessages(String topic, String partition) throws IOException {
-    TypeReference<List<HashMap<String, Object>>> typeRef
-      = new TypeReference<List<HashMap<String, Object>>>() {
-    };
-    List<Map<String, String>> listOfJson = new ObjectMapper().readValue(KafkaTestUtil.class.getClassLoader()
-      .getResourceAsStream("testKafkaTarget.json"), typeRef);
+  public static List<Record> produce20Records() throws IOException {
+    List<Record> list = new ArrayList<>();
+    for (int i = 0; i < 20; i++) {
+      Record record = RecordCreator.create();
+      Map<String, Field> map = new HashMap<>();
+      map.put("name", Field.create("NAME" + i));
+      map.put("lastStatusChange", Field.create(i));
+      record.set(Field.create(map));
+      list.add(record);
+    }
+    return list;
+  }
 
+  public static List<KeyedMessage<String, String>> produceJsonMessages(String topic, String partition) throws IOException {
+    ContextExtensions ctx = (ContextExtensions) ContextInfoCreator.createTargetContext("", false);
     List<KeyedMessage<String, String>> messages = new ArrayList<>();
-    for (Map<String, String> map : listOfJson) {
-      messages.add(new KeyedMessage<>(topic, partition, new ObjectMapper().writeValueAsString(map)));
+    for (Record record : produce20Records()) {
+      StringWriter writer = new StringWriter();
+      JsonRecordWriter rw = ctx.createJsonRecordWriter(writer);
+      rw.write(record);
+      rw.close();
+      messages.add(new KeyedMessage<>(topic, partition, writer.toString()));
     }
     return messages;
   }
@@ -155,19 +170,7 @@ public class KafkaTestUtil {
   }
 
   public static List<Record> createJsonRecords() throws IOException {
-
-    TypeReference<List<HashMap<String, Object>>> typeRef
-      = new TypeReference<List<HashMap<String, Object>>>() {
-    };
-    List<Map<String, String>> o = new ObjectMapper().readValue(KafkaTestUtil.class.getClassLoader()
-      .getResourceAsStream("testKafkaTarget.json"), typeRef);
-    List<Record> records = new ArrayList<>();
-    for (Map<String, String> map : o) {
-      Record r = RecordCreator.create("s", "s:1", null, null);
-      r.set(JsonUtil.jsonToField(map));
-      records.add(r);
-    }
-    return records;
+    return produce20Records();
   }
 
   public static List<Record> createCsvRecords() throws IOException {

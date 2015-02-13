@@ -39,6 +39,7 @@
     <module>common</module>
     <module>container</module>
     <module>bootstrap</module>
+    <module>commonlib</module>
     <module>basic-lib</module>
     <module>sdk</module>
     <module>sdk-test</module>

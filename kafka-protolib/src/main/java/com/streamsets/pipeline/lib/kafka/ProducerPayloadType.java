@@ -9,8 +9,8 @@ import com.streamsets.pipeline.api.Label;
 
 public enum ProducerPayloadType implements Label {
   TEXT("Text"),
-  JSON("JSON"),
   CSV("Delimited"),
+  SDC_RECORDS("SDC Records (JSON)"),
 
   ;
   private final String label;

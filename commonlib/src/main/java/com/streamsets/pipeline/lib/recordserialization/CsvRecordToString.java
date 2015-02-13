@@ -8,7 +8,6 @@ package com.streamsets.pipeline.lib.recordserialization;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.util.CommonError;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -37,7 +36,7 @@ public class CsvRecordToString implements RecordToString {
   @Override
   public String toString(Record record) throws StageException {
     if(fieldPathToNameMap == null || fieldPathToNameMap.isEmpty()) {
-      throw new StageException(CommonError.CMN_0102);
+      throw new StageException(CommonLibErrors.COMMONLIB_0102);
     }
     try {
       StringWriter stringWriter = new StringWriter();
@@ -47,7 +46,7 @@ public class CsvRecordToString implements RecordToString {
       csvPrinter.close();
       return stringWriter.toString();
     } catch (IOException e) {
-      throw new StageException(CommonError.CMN_0101, e.getMessage(), e);
+      throw new StageException(CommonLibErrors.COMMONLIB_0101, e.getMessage(), e);
     }
   }
 
@@ -72,7 +71,7 @@ public class CsvRecordToString implements RecordToString {
     } else if(field.getType()== Field.Type.BYTE) {
       return String.valueOf(field.getValueAsByte());
     } else if(field.getType()== Field.Type.BYTE_ARRAY) {
-      return String.valueOf(field.getValueAsByteArray());
+      return String.valueOf(field.getValueAsByteArray()); //TODO base64
     } else if(field.getType()== Field.Type.CHAR) {
       return String.valueOf(field.getValueAsChar());
     } else if(field.getType()== Field.Type.DATE) {
@@ -94,7 +93,7 @@ public class CsvRecordToString implements RecordToString {
     } else if(field.getType()== Field.Type.STRING) {
       return String.valueOf(field.getValueAsString());
     } else {
-      throw new StageException(CommonError.CMN_0100, field.getType(),field.getValue(),
+      throw new StageException(CommonLibErrors.COMMONLIB_0100, field.getType(),field.getValue(),
         record.getHeader().getSourceId());
     }
   }
