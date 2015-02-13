@@ -54,7 +54,7 @@ public class TestHdfsTarget {
         .addConfiguration("lateRecordsLimit", "${30 * MINUTES}")
         .addConfiguration("lateRecordsAction", HdfsLateRecordsAction.DISCARD)
         .addConfiguration("lateRecordsDirPathTemplate", "")
-        .addConfiguration("dataFormat", HdfsDataFormat.JSON)
+        .addConfiguration("dataFormat", HdfsDataFormat.RECORD)
         .addConfiguration("csvFileFormat", null)
         .addConfiguration("cvsFieldPathToNameMappingConfigList", new ArrayList<>())
         .build();

@@ -6,35 +6,26 @@
 package com.streamsets.pipeline.lib.recordserialization;
 
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonRecordWriter;
+import com.streamsets.pipeline.lib.util.JsonUtil;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Map;
 
 public class JsonRecordToString implements RecordToString {
-  private final Stage.Context context;
-
-  public JsonRecordToString(Stage.Context context) {
-    this.context = context;
-  }
 
   @Override
   public void setFieldPathToNameMapping(Map<String, String> fieldPathToNameMap) {
+    //Throwing an exception here can cause trouble.
+    //For example if the user selects CSV and enters a big list of field path to column name mapping
+    //and then switches to JSON, the UI does not clear the previous information. What if the user changed from CSV
+    //to JSON by mistake? We should not expect everything to be reentered.
+
+    //In this case it is good to ignore options that are not relevant. UI hides non relevant option anyways.
   }
 
   @Override
   public String toString(Record record) throws StageException {
-    StringWriter writer = new StringWriter();
-    try (JsonRecordWriter rw = ((ContextExtensions)context).createJsonRecordWriter(writer)) {
-      rw.write(record);
-    } catch (IOException ex) {
-      throw new StageException(CommonLibErrors.COMMONLIB_0104, record.getHeader().getSourceId(), ex.getMessage(), ex);
-    }
-    return writer.toString();
+    return JsonUtil.jsonRecordToString(record);
   }
 
 }

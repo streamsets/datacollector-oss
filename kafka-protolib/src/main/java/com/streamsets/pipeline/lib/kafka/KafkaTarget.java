@@ -22,6 +22,7 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
+import com.streamsets.pipeline.lib.recordserialization.DataCollectorRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.JsonRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.LogRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
@@ -217,13 +218,16 @@ public class KafkaTarget extends BaseTarget {
   private void createRecordToStringInstance(Map<String, String> fieldNameToPathMap) {
     switch(payloadType) {
       case SDC_RECORDS:
-        recordToString = new JsonRecordToString(getContext());
+        recordToString = new DataCollectorRecordToString(getContext());
         break;
       case CSV:
         recordToString = new CsvRecordToString(csvFileFormat.getFormat());
         break;
       case TEXT:
         recordToString = new LogRecordToString(fieldPath);
+        break;
+      case JSON:
+        recordToString = new JsonRecordToString();
         break;
     }
     recordToString.setFieldPathToNameMapping(fieldNameToPathMap);

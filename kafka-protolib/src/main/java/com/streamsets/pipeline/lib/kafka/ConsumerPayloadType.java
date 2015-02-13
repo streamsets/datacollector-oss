@@ -12,7 +12,7 @@ public enum ConsumerPayloadType implements Label {
   JSON("JSON"),
   CSV("Delimited"),
   XML("XML"),
-  SDC_RECORDS("SDC Records (JSON)"),
+  SDC_RECORDS("SDC Record"),
 
   ;
 

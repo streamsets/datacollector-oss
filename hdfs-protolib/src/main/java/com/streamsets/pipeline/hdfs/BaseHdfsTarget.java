@@ -22,6 +22,7 @@ import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.hdfs.writer.RecordWriterManager;
 import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
+import com.streamsets.pipeline.lib.recordserialization.DataCollectorRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.JsonRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
 import org.apache.hadoop.conf.Configuration;
@@ -288,7 +289,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "JSON",
+      defaultValue = "RECORD",
       label = "Data Format",
       description = "Data Format",
       displayPosition = 100,
@@ -297,7 +298,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       triggeredByValue = { "TEXT", "SEQUENCE_FILE"}
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
-  public HdfsDataFormat dataFormat; //TODO
+  public HdfsDataFormat dataFormat;
 
 
   /********  For CSV Content  ***********/
@@ -328,21 +329,6 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   )
   @ComplexField
   public List<FieldPathToNameMappingConfig> cvsFieldPathToNameMappingConfigList;
-
-  /********  For TSV Content  ***********/
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Field Mapping",
-      description = "",
-      displayPosition = 320,
-      group = "TSV",
-      dependsOn = "dataFormat",
-      triggeredByValue = "TSV"
-  )
-  @ComplexField
-  public List<FieldPathToNameMappingConfig> tsvFieldPathToNameMappingConfigList;
 
   public static class FieldPathToNameMappingConfig {
 
@@ -527,16 +513,15 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   private RecordToString createRecordToStringInstance() {
     RecordToString recordToString;
     switch(dataFormat) {
+      case RECORD:
+        recordToString = new DataCollectorRecordToString(getContext());
+        break;
       case JSON:
-        recordToString = new JsonRecordToString(getContext());
+        recordToString = new JsonRecordToString();
         break;
       case CSV:
         recordToString = new CsvRecordToString(csvFileFormat.getFormat());
         recordToString.setFieldPathToNameMapping(getFieldPathToNameMapping(cvsFieldPathToNameMappingConfigList));
-        break;
-      case TSV:
-        recordToString = new CsvRecordToString(csvFileFormat.getFormat());
-        recordToString.setFieldPathToNameMapping(getFieldPathToNameMapping(tsvFieldPathToNameMappingConfigList));
         break;
       default:
         throw new IllegalStateException(Utils.format("Invalid data format '{}'", dataFormat));

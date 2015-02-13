@@ -8,9 +8,10 @@ package com.streamsets.pipeline.lib.kafka;
 import com.streamsets.pipeline.api.Label;
 
 public enum ProducerPayloadType implements Label {
-  TEXT("Text"),
+  SDC_RECORDS("SDC Record"),
+  JSON("JSON"),
   CSV("Delimited"),
-  SDC_RECORDS("SDC Records (JSON)"),
+  TEXT("Text"),
 
   ;
   private final String label;

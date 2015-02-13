@@ -8,19 +8,20 @@ package com.streamsets.pipeline.hdfs;
 import com.streamsets.pipeline.api.Label;
 
 public enum HdfsDataFormat implements Label {
-    JSON("SDC Records (JSON)"),
-    CSV("Delimited"),
-    TSV("Tab Separated"),
-    ;
+  RECORD("SDC Record"),
+  JSON("JSON"),
+  CSV("Delimited"),
+  ;
 
-    private String label;
+  private String label;
 
-    HdfsDataFormat(String label) {
-        this.label = label;
-    }
-    @Override
-    public String getLabel() {
-        return label;
-    }
+  HdfsDataFormat(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
+  }
 
 }

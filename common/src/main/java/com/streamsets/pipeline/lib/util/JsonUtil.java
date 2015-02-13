@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.lib.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -119,4 +121,12 @@ public class JsonUtil {
     return obj;
   }
 
+  public static String jsonRecordToString(Record r) throws StageException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      return objectMapper.writeValueAsString(JsonUtil.fieldToJsonObject(r, r.get()));
+    } catch (JsonProcessingException e) {
+      throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.getMessage(), e);
+    }
+  }
 }
