@@ -28,7 +28,7 @@ import java.util.List;
 @StageDef(
     version="1.0.0",
     label="Field Masker",
-    description = "Replaces the selected string fields with the corresponding masks.",
+    description = "Masks field values",
     icon="mask.png"
 )
 @ConfigGroups(FieldMaskProcessor.Groups.class)
@@ -40,7 +40,7 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
 
     @Override
     public String getLabel() {
-      return "Masking";
+      return "Mask";
     }
 
   }
@@ -49,10 +49,25 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   private static final char NON_MASK_CHAR = '#';
   private static final char MASK_CHAR = 'x';
 
-  public enum Type {
-    FIXED_LENGTH,
-    VARIABLE_LENGTH,
-    CUSTOM
+  public enum Type implements Label {
+    FIXED_LENGTH("Fixed length"),
+    VARIABLE_LENGTH("Variable length"),
+    CUSTOM("Custom"),
+
+    ;
+
+    private final String label;
+
+    Type(String label) {
+      this.label = label;
+    }
+
+    @Override
+    public String getLabel() {
+      return label;
+    }
+
+
   }
 
   public static class FieldMaskConfig {
@@ -61,7 +76,7 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
         type = ConfigDef.Type.MODEL,
         defaultValue="",
         label = "Fields to Mask",
-        description="String field to be masked. Non-string fields cannot be masked.",
+        description="Mask string fields. You can enter multiple fields for the same mask type.",
         displayPosition = 10
     )
     @FieldSelector
@@ -72,7 +87,7 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
         type = ConfigDef.Type.MODEL,
         defaultValue="VARIABLE_LENGTH",
         label = "Mask Type",
-        description="The mask that must be applied to the fields",
+        description="",
         displayPosition = 20
     )
     @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = MaskTypeChooseValues.class)
@@ -82,10 +97,7 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
         required = true,
         type = ConfigDef.Type.STRING,
         label = "Custom Mask",
-        description = "The custom mask string should be made up of 'x' and/or '#' and/or other characters. " +
-                      "Character x in the mask replaces the original character with character 'x' in the output " +
-                      "string. Character # retains the original character at that index in the output string. " +
-                      "Any other character from mask is retained in that position in the output string.",
+        description = "Use # to reveal field values. Other characters replace field values.",
         displayPosition = 30,
         dependsOn = "maskType",
         triggeredByValue = "CUSTOM"
@@ -98,8 +110,8 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
       required = false,
       type = ConfigDef.Type.MODEL,
       defaultValue="",
-      label = "Field Mask Configuration",
-      description = "???",
+      label = "",
+      description = "",
       displayPosition = 10,
       group = "MASKING"
   )

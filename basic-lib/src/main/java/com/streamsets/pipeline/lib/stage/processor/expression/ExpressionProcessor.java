@@ -35,7 +35,7 @@ import java.util.Set;
 @StageDef(
     version="1.0.0",
     label="Expression Evaluator",
-    description="???",
+    description="Performs calculations on a field-by-field basis",
     icon="expression.png"
 )
 @ConfigGroups(ExpressionProcessor.Groups.class)
@@ -58,9 +58,9 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
         required = true,
         type = ConfigDef.Type.MODEL,
         defaultValue = "/",
-        label = "Field",
-        description = "Use an existing field or enter a new field name. " +
-                      "Using an existing field replaces the current value with the new value.",
+        label = "Output Field",
+        description = "Use an existing field or enter a new field. Using an existing field overwrites the " +
+                      "original value.",
         displayPosition = 10
     )
     @FieldSelector(singleValued = true)
@@ -71,7 +71,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
         type = ConfigDef.Type.EL_OBJECT,
         defaultValue = "${record:value('/')}",
         label = "Expression",
-        description = "Expression to generate value for the field",
+        description = "Use the expression language to modify values in a field.",
         displayPosition = 20
     )
     public String expression;
@@ -83,7 +83,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       type = ConfigDef.Type.MODEL,
       defaultValue="",
       label = "Expressions",
-      description = "???",
+      description = "",
       displayPosition = 10,
       group = "EXPRESSIONS"
   )
@@ -94,7 +94,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       required = true,
       type = ConfigDef.Type.MAP,
       label = "Constants",
-      description = "Constants that can be used within all expressions",
+      description = "Can be used in any expression in the processor.",
       displayPosition = 20,
       group = "EXPRESSIONS"
   )

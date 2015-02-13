@@ -19,36 +19,54 @@ public class KafkaRawSourcePreviewer implements RawSourcePreviewer {
 
   private String mimeType;
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.STRING,
-    label = "Topic",
-    defaultValue = "myTopic")
-  public String topic;
-
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.INTEGER,
-    label = "Partition",
-    defaultValue = "0")
-  public int partition;
-
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.STRING,
-    description = "A known kafka broker. Does not have to be the leader of the partition",
-    label = "Broker Host",
-    defaultValue = "localhost")
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "localhost",
+      label = "Broker Host",
+      description = "",
+      displayPosition = 10
+  )
   public String brokerHost;
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.INTEGER,
-    label = "Broker Port",
-    defaultValue = "9092")
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "9092",
+      label = "Broker Port",
+      description = "",
+      displayPosition = 20
+  )
   public int brokerPort;
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.INTEGER,
-    description = "The maximum wait time in seconds before the kafka fetch request returns if no message is available.",
-    label = "Max Wait Time",
-    defaultValue = "1000")
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "myTopic",
+      label = "Topic",
+      description = "",
+      displayPosition = 30
+  )
+  public String topic;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "0",
+      label = "Partition",
+      description = "",
+      displayPosition = 40
+  )
+  public int partition;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "1000",
+      label = "Max Wait Time (millisecs)",
+      description = "Max time to wait for data from Kafka",
+      displayPosition = 50
+  )
   public int maxWaitTime;
 
   @Override

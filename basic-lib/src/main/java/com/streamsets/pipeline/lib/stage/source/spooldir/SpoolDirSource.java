@@ -30,8 +30,7 @@ import java.util.concurrent.TimeUnit;
 @StageDef(
     version = "1.0.0",
     label = "Directory",
-    description = "Reads files from the specified directory. Files data can be: LOG, CSV, TSV, XML, JSON or " +
-                  "Data Collector Error Records",
+    description = "Reads files from a directory",
     icon="spoolDirSource.png"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
@@ -43,10 +42,10 @@ public class SpoolDirSource extends BaseSource {
   public static enum Groups implements Label {
     FILES("Files"),
     POST_PROCESSING("Post Processing"),
-    LOG_DATA("Log Data"),
-    JSON_DATA("JSON Data"),
-    DELIMITED_DATA("Delimited Data"),
-    XML_DATA("XML Data"),
+    LOG_DATA("Text"),
+    JSON_DATA("JSON"),
+    DELIMITED_DATA("Delimited"),
+    XML_DATA("XML"),
     ;
 
     private final String label;
@@ -66,7 +65,7 @@ public class SpoolDirSource extends BaseSource {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
-      description = "The data format in the files",
+      description = "Format of data in the files",
       displayPosition = 0,
       group = "FILES"
   )
@@ -76,8 +75,8 @@ public class SpoolDirSource extends BaseSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Directory",
-      description = "The directory where to read the files from",
+      label = "Files Directory",
+      description = "Use a local directory",
       displayPosition = 10,
       group = "FILES"
   )
@@ -86,7 +85,7 @@ public class SpoolDirSource extends BaseSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.INTEGER,
-      label = "Batch Size",
+      label = "Batch Size (recs)",
       defaultValue = "1000",
       description = "Max number of records per batch",
       displayPosition = 20,
@@ -98,8 +97,8 @@ public class SpoolDirSource extends BaseSource {
       required = false,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "600",
-      label = "File Wait Timeout (secs)",
-      description = "Seconds to wait for new files before triggering an empty batch for processing",
+      label = "Batch Wait Time (secs)",
+      description = "Max time to wait for new files before sending an empty batch",
       displayPosition = 30,
       group = "FILES"
   )
@@ -109,8 +108,8 @@ public class SpoolDirSource extends BaseSource {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "File Name Pattern",
-      description = "A glob or regular expression that defines the pattern of file names in the directory. " +
-                    "File names must be created in naturally ascending order.",
+      description = "A glob or regular expression that defines the pattern of the file names in the directory. " +
+                    "Files are processed in naturally ascending order.",
       displayPosition = 40,
       group = "FILES",
       dependsOn = "fileDataType",
@@ -123,10 +122,9 @@ public class SpoolDirSource extends BaseSource {
       type = ConfigDef.Type.INTEGER,
       defaultValue = "10",
       label = "Max Files in Directory",
-      description =
-          "Maximum number of files matching the pattern waiting to be processed. " +
-          "Additional files in the directory causes the pipeline to fail",
-      displayPosition = 50,
+      description = "Max number of files in the directory waiting to be processed. Additional files cause the " +
+                    "pipeline to fail.",
+      displayPosition = 60,
       group = "FILES",
       dependsOn = "fileDataType",
       triggeredByValue = { "LOG_DATA", "JSON_DATA", "XML_DATA", "DELIMITED_DATA"}
@@ -139,7 +137,7 @@ public class SpoolDirSource extends BaseSource {
       defaultValue = "",
       label = "First File to Process",
       description = "When configured, the Data Collector does not process earlier (naturally ascending order) file names",
-      displayPosition = 60,
+      displayPosition = 50,
       group = "FILES",
       dependsOn = "fileDataType",
       triggeredByValue = { "LOG_DATA", "JSON_DATA", "XML_DATA", "DELIMITED_DATA"}
@@ -161,7 +159,7 @@ public class SpoolDirSource extends BaseSource {
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
       label = "File Post Processing",
-      description = "Action to be taken after the file has been processed",
+      description = "Action to take after processing a file",
       displayPosition = 110,
       group = "POST_PROCESSING"
   )
@@ -200,7 +198,7 @@ public class SpoolDirSource extends BaseSource {
       type = ConfigDef.Type.MODEL,
       defaultValue = "CSV",
       label = "File Type",
-      description = "The specific Delimited File format",
+      description = "",
       displayPosition = 300,
       group = "DELIMITED_DATA",
       dependsOn = "fileDataType",
@@ -214,7 +212,7 @@ public class SpoolDirSource extends BaseSource {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "TRUE",
       label = "Header Line",
-      description = "If the files start with a header line",
+      description = "",
       displayPosition = 310,
       group = "DELIMITED_DATA",
       dependsOn = "fileDataType",
@@ -241,8 +239,8 @@ public class SpoolDirSource extends BaseSource {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "ARRAY_OBJECTS",
-      label = "Content",
-      description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects",
+      label = "JSON Content",
+      description = "",
       displayPosition = 400,
       group = "JSON_DATA",
       dependsOn = "fileDataType",
@@ -255,7 +253,7 @@ public class SpoolDirSource extends BaseSource {
       required = true,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "4096",
-      label = "Maximum Object Length",
+      label = "Max Object Length (chars)",
       description = "Larger objects are not processed",
       displayPosition = 410,
       group = "JSON_DATA",
@@ -270,7 +268,7 @@ public class SpoolDirSource extends BaseSource {
       required = true,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "1024",
-      label = "Maximum Line Length",
+      label = "Max Line Length",
       description = "Longer lines are truncated",
       displayPosition = 500,
       group = "LOG_DATA",
@@ -283,8 +281,8 @@ public class SpoolDirSource extends BaseSource {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "Use truncated flag",
-      description = "Set '/truncated' to TRUE or FALSE indicating that the line has been truncated or not",
+      label = "Add Truncated Flag",
+      description = "Adds a boolean /truncated field to the record to indicate if the record has been truncated",
       displayPosition = 510,
       group = "LOG_DATA",
       dependsOn = "fileDataType",
@@ -298,8 +296,8 @@ public class SpoolDirSource extends BaseSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Element Record Delimiter",
-      description = "XML element name that acts as record delimiter",
+      label = "Delimiter Element",
+      description = "XML element that acts as a record delimiter",
       displayPosition = 600,
       group = "XML_DATA",
       dependsOn = "fileDataType",
@@ -311,7 +309,7 @@ public class SpoolDirSource extends BaseSource {
       required = true,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "4096",
-      label = "Maximum Record Length",
+      label = "Max Record Length (chars)",
       description = "Larger records are not processed",
       displayPosition = 610,
       group = "XML_DATA",

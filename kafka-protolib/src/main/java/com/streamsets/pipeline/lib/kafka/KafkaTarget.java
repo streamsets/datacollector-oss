@@ -40,7 +40,7 @@ import java.util.Set;
 @StageDef(
     version = "1.0.0",
     label = "Kafka Producer",
-    description = "???",
+    description = "Writes data to Kafka",
     icon = "kafka.png")
 @ConfigGroups(value = KafkaTarget.Groups.class)
 public class KafkaTarget extends BaseTarget {
@@ -48,8 +48,8 @@ public class KafkaTarget extends BaseTarget {
 
   public enum Groups implements Label {
     KAFKA("Kafka"),
-    CSV("CSV Data"),
-    TEXT("TEXT Data")
+    CSV("Delimited"),
+    TEXT("Text")
 
     ;
 
@@ -68,8 +68,9 @@ public class KafkaTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "localhost:9092",
-      label = "Brokers URIs",
-      description = "List of the known the Kafka brokers HOST:PORT, comma separated",
+      label = "Broker URIs",
+      description = "Comma-separated list of URIs for brokers that write to the topic.  Use the format " +
+                    "<HOST>:<PORT>. To ensure a connection, enter as many as possible.",
       displayPosition = 10,
       group = "KAFKA"
   )
@@ -80,7 +81,7 @@ public class KafkaTarget extends BaseTarget {
       type = ConfigDef.Type.STRING,
       defaultValue = "topicName",
       label = "Topic",
-      description = "The Kafka topic from which the messages must be read",
+      description = "",
       displayPosition = 20,
       group = "KAFKA"
   )
@@ -91,8 +92,7 @@ public class KafkaTarget extends BaseTarget {
       type = ConfigDef.Type.MODEL,
       defaultValue = "ROUND_ROBIN",
       label = "Partition Strategy",
-      description = "Indicates the strategy to select a partition while writing a message." +
-                    "This option is activated only if a negative integer is supplied as the value for partition.",
+      description = "Strategy to select a partition to write to",
       displayPosition = 30,
       group = "KAFKA"
   )
@@ -104,7 +104,7 @@ public class KafkaTarget extends BaseTarget {
       type = ConfigDef.Type.EL_NUMBER,
       defaultValue = "${0}",
       label = "Partition Expression",
-      description = "Expression that determines the partition of Kafka topic to which the messages must be written",
+      description = "Expression that determines the partition to write to",
       displayPosition = 40,
       group = "KAFKA",
       dependsOn = "partitionStrategy",
@@ -115,8 +115,8 @@ public class KafkaTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Payload Type",
-      description = "Type of data sent as kafka message payload",
+      label = "Data Format",
+      description = "",
       displayPosition = 50,
       group = "KAFKA"
   )
@@ -128,7 +128,7 @@ public class KafkaTarget extends BaseTarget {
       type = ConfigDef.Type.MAP,
       defaultValue = "",
       label = "Kafka Configuration",
-      description = "Additional configuration properties which will be used by the underlying Kafka producer.",
+      description = "Additional Kafka properties to pass to the underlying Kafka producer",
       displayPosition = 60,
       group = "KAFKA"
   )
@@ -140,8 +140,8 @@ public class KafkaTarget extends BaseTarget {
       required = false,
       type = ConfigDef.Type.MODEL,
       defaultValue = "CSV",
-      label = "CSV Format",
-      description = "The specific CSV format of the files",
+      label = "Delimiter Format",
+      description = "",
       displayPosition = 100,
       group = "CSV",
       dependsOn = "payloadType",
@@ -154,8 +154,8 @@ public class KafkaTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "TEXT",
-      label = "Field Paths",
-      description = "Fields which must be written to the destination",
+      label = "Fields",
+      description = "Fields to write to Kafka",
       displayPosition = 110,
       group = "CSV",
       dependsOn = "payloadType",
@@ -170,8 +170,8 @@ public class KafkaTarget extends BaseTarget {
     required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue = "/",
-    label = "Field Path",
-    description = "The field which must be written to the destination",
+    label = "Field",
+    description = "Field to write data to Kafka",
     displayPosition = 120,
     group = "TEXT",
     dependsOn = "payloadType",

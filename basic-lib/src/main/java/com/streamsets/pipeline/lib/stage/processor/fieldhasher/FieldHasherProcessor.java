@@ -31,7 +31,7 @@ import java.util.List;
 @StageDef(
     version="1.0.0",
     label="Field Hasher",
-    description = "???",
+    description = "Uses an algorithm to hash field values",
     icon="hash.png")
 @ConfigGroups(FieldHasherProcessor.Groups.class)
 public class FieldHasherProcessor extends SingleLaneRecordProcessor {
@@ -42,7 +42,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
 
     @Override
     public String getLabel() {
-      return "Hashing";
+      return "Hash";
     }
 
   }
@@ -69,8 +69,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
         required = true,
         type = Type.MODEL, defaultValue="",
         label = "Fields to Hash",
-        description = "The fields whose values must be replaced by their SHA values. Non string values will be " +
-                      "converted to String values for has computation. Fields with Map and List types will be ignored.",
+        description = "Hash string fields. You can enter multiple fields for the same hash type.",
         displayPosition = 10
     )
     @FieldSelector
@@ -81,7 +80,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
         type = Type.MODEL,
         defaultValue="MD5",
         label = "Hash Type",
-        description="The hash algorithm that must be used to hash the fields.",
+        description="",
         displayPosition = 20
     )
     @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = HashTypeChooserValue.class)
@@ -92,8 +91,8 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       required = true,
       type = Type.MODEL,
       defaultValue="",
-      label = "Field Hasher Configuration",
-      description="Field Hasher Configuration",
+      label = "",
+      description="",
       displayPosition = 10,
       group = "HASHING"
   )

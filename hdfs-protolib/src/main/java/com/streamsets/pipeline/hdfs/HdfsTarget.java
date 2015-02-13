@@ -23,7 +23,7 @@ import java.util.Iterator;
 @StageDef(
     version = "1.0.0",
     label = "Hadoop FS",
-    description = "Writes records to files in a Hadoop FS",
+    description = "Writes to a Hadoop file system",
     icon = "hdfs.svg"
 )
 public class HdfsTarget extends BaseHdfsTarget {

@@ -8,9 +8,9 @@ package com.streamsets.pipeline.hdfs;
 import com.streamsets.pipeline.api.Label;
 
 public enum HdfsDataFormat implements Label {
-    JSON("JSON Object"),
-    CSV("Comma Separated Values"),
-    TSV("Tab Separated Values"),
+    JSON("JSON"),
+    CSV("Delimited"),
+    TSV("Tab Separated"),
     ;
 
     private String label;

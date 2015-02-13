@@ -3,18 +3,18 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.stage.source.logtail;
+package com.streamsets.pipeline.lib.stage.processor.splitter;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum FileDataType implements Label {
-  LOG_DATA("Text"),
-  JSON_DATA("JSON"),
+public enum OriginalFieldAction implements Label {
+  REMOVE("Remove"),
+  KEEP("Keep"),
   ;
 
   private final String label;
 
-  FileDataType(String label) {
+  OriginalFieldAction(String label) {
     this.label = label;
   }
 

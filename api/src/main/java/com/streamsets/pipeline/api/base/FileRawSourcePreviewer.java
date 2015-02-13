@@ -16,8 +16,13 @@ public class FileRawSourcePreviewer implements RawSourcePreviewer {
 
   private String mimeType;
 
-  @ConfigDef(defaultValue = "", description = "The name of the file to preview", label = "File Name",
-      required = true, type = ConfigDef.Type.STRING)
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "File Path",
+      description = "The full path of the file"
+  )
   public String fileName;
 
   @Override

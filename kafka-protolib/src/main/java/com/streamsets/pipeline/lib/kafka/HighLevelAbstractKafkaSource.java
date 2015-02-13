@@ -39,8 +39,8 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "localhost:2181",
-      label = "Zookeeper Connection String",
-      description = "List of the Zookeeper HOST:PORT used by the Kafka brokers, comma separated",
+      label = "ZooKeeper Connection String",
+      description = "Comma-separated ist of the Zookeeper <HOST>:<PORT> used by the Kafka brokers",
       displayPosition = 10,
       group = "KAFKA"
   )
@@ -51,7 +51,7 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
       type = ConfigDef.Type.STRING,
       defaultValue = "streamsetsDataCollector",
       label = "Consumer Group",
-      description = "The Consumer Group columnName",
+      description = "Pipeline consumer group",
       displayPosition = 20,
       group = "KAFKA"
   )
@@ -62,7 +62,7 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
       type = ConfigDef.Type.STRING,
       defaultValue = "topicName",
       label = "Topic",
-      description = "The Kafka topic from which the messages must be read",
+      description = "",
       displayPosition = 30,
       group = "KAFKA"
   )
@@ -71,8 +71,8 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Payload Type",
-      description = "Type of data sent as kafka message payload",
+      label = "Data Format",
+      description = "",
       displayPosition = 40,
       group = "KAFKA"
   )
@@ -83,8 +83,8 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
       required = true,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "1000",
-      label = "Max Batch Size",
-      description = "The maximum number of messages to be read from Kafka in a batch.",
+      label = "Max Batch Size (messages)",
+      description = "",
       displayPosition = 50,
       group = "KAFKA"
   )
@@ -94,8 +94,8 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
       required = true,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "1000",
-      label = "Batch Duration Time (millisecs)",
-      description = "The maximum time to wait to fill a batch.",
+      label = "Batch Wait Time (millisecs)",
+      description = "Max time to wait for data before sending a batch",
       displayPosition = 60,
       group = "KAFKA"
   )
@@ -106,7 +106,7 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
       type = ConfigDef.Type.MAP,
       defaultValue = "",
       label = "Kafka Configuration",
-      description = "Additional configuration properties which will be used by the underlying Kafka consumer.",
+      description = "Additional Kafka properties to pass to the underlying Kafka consumer",
       displayPosition = 70,
       group = "KAFKA"
   )

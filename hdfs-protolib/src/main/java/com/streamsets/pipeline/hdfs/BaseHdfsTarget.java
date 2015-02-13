@@ -53,8 +53,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
     HADOOP_FS("Hadoop FS"),
     OUTPUT_FILES("Output Files"),
     LATE_RECORDS("Late Records"),
-    CSV("CSV Data"),
-    TSV("Tab Separated Data"),
+    CSV("Delimited"),
+    TSV("Tab Separated"),
     ;
 
     private final String label;
@@ -72,7 +72,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Hadoop FS URI",
-      description = "The URI of the Hadoop FileSystem",
+      description = "",
       displayPosition = 10,
       group = "HADOOP_FS"
   )
@@ -81,9 +81,9 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Kerberos Enabled",
+      label = "Kerberos Authentication",
       defaultValue = "false",
-      description = "Indicates if Hadoop FileSystem requires Kerberos authentication",
+      description = "",
       displayPosition = 20,
       group = "HADOOP_FS"
   )
@@ -93,7 +93,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Kerberos principal",
-      description = "Kerberos principal used to connect to Hadoop FileSystem",
+      description = "",
       displayPosition = 30,
       group = "HADOOP_FS",
       dependsOn = "hdfsKerberos",
@@ -104,7 +104,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
       label = "Kerberos keytab",
-      description = "The location of the Kerberos keytab file with credentials for the Kerberos principal",
+      description = "Keytab file path",
       displayPosition = 40,
       group = "HADOOP_FS",
       dependsOn = "hdfsKerberos",
@@ -115,9 +115,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
-      label = "Hadoop FS configs",
-      description = "Additional Hadoop FileSystem configuration to be used by the client (i.e. replication factor, " +
-                    "rpc timeout, etc.)",
+      label = "Hadoop FS Configuration",
+      description = "Additional Hadoop properties to pass to the underlying Hadoop FileSystem",
       displayPosition = 50,
       group = "HADOOP_FS"
   )
@@ -128,10 +127,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "Files Unique Prefix",
-      description = "If using more than one Data Collector to write data to the same HDFS directories, each Data " +
-                    "Collector must have a unique identifier. The identifier is used as file prefix for all the " +
-                    "created by this Data Collector.",
+      label = "Files Prefix",
+      description = "File name prefix",
       displayPosition = 105,
       group = "OUTPUT_FILES"
   )
@@ -141,9 +138,10 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.EL_STRING,
       defaultValue = "/tmp/out/${YYYY}-${MM}-${DD}-${hh}-${mm}-${ss}",
-      label = "Directory Path Template",
-      description = "Directory path template for the HDFS files, the template supports the following time tokens: " +
-                    "${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}, ${record:value(<field-path>)}. ",
+      label = "Directory Template",
+      description = "Template for the creation of output directories. Valid variables are ${YYYY}, ${MM}, ${DD}, " +
+                    "${hh}, ${mm}, ${ss} and {record:value(“/field”)} for values in a field. Directories are " +
+                    "created based on the smallest time unit variable used.",
       displayPosition = 110,
       group = "OUTPUT_FILES"
   )
@@ -153,8 +151,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "UTC",
-      label = "Timezone",
-      description = "Timezone code used to resolve directory paths",
+      label = "Data Time Zone",
+      description = "Time zone to use to resolve directory paths",
       displayPosition = 120,
       group = "OUTPUT_FILES"
   )
@@ -165,9 +163,9 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.EL_DATE,
       defaultValue = "${time:now()}",
-      label = "Time Driver",
-      description = "Date expression that indicates where the time should be taken for a record. It can be the " +
-                    "'time:now()' or a 'record:value(<filepath>)' that resolves to a date",
+      label = "Time Basis",
+      description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
+                    "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
       displayPosition = 130,
       group = "OUTPUT_FILES"
   )
@@ -177,8 +175,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "0",
-      label = "Max records per File",
-      description = "Maximum number of records that trigger a file rollover. 0 does not trigger a rollover.",
+      label = "Max records in a File",
+      description = "Number of records that triggers the creation of a new file. Use 0 to opt out.",
       displayPosition = 140,
       group = "OUTPUT_FILES"
   )
@@ -188,8 +186,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "0",
-      label = "Max file size (MBs)",
-      description = "Maximum file size in Megabytes that trigger a file rollover. 0 does not trigger a rollover",
+      label = "Max file size (MB)",
+      description = "Exceeding this size triggers the creation of a new file. Use 0 to opt out.",
       displayPosition = 150,
       group = "OUTPUT_FILES"
   )
@@ -200,7 +198,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
       label = "Compression Codec",
-      description = "Compression codec to use",
+      description = "",
       displayPosition = 160,
       group = "OUTPUT_FILES"
   )
@@ -212,8 +210,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       type = ConfigDef.Type.MODEL,
       defaultValue = "TEXT",
       label = "File Type",
-      description = "Type of file type to create",
-      displayPosition = 170,
+      description = "",
+      displayPosition = 105,
       group = "OUTPUT_FILES"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileTypeChooserValues.class)
@@ -222,10 +220,10 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "uuid()",
+      defaultValue = "${uuid()}",
       label = "Sequence File Key",
-      description = "Record key when using Hadoop Sequence Files. Valid values are a record:value('<field-path>') or " +
-                    "uuid()",
+      description = "Record key for creating Hadoop sequence files. Valid options are " +
+                    "'${record:value(\"<field-path>\")}' or '${uuid()}'",
       displayPosition = 180,
       group = "OUTPUT_FILES",
       dependsOn = "fileType",
@@ -238,7 +236,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       type = ConfigDef.Type.MODEL,
       defaultValue = "BLOCK",
       label = "Compression Type",
-      description = "Specifies the compression type for Sequence Files if using a CompressionCodec",
+      description = "Compression type if using a CompressionCodec",
       displayPosition = 190,
       group = "OUTPUT_FILES",
       dependsOn = "fileType",
@@ -251,11 +249,11 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.EL_NUMBER,
       defaultValue = "${1 * HOURS}",
-      label = "Late Records Time Limit (Secs)",
+      label = "Late Records Time Limit (secs)",
       description = "Time limit (in seconds) for a record to be written to the corresponding HDFS directory, if the " +
                     "limit is exceeded the record will be written to the current late records file. 0 means no limit. " +
                     "If a number is used it is considered seconds, it can be multiplied by 'MINUTES' or 'HOURS', ie: " +
-                    "30 * MINUTES",
+                    "'${30 * MINUTES}'",
       displayPosition = 200,
       group = "LATE_RECORDS"
   )
@@ -265,8 +263,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "SEND_TO_ERROR",
-      label = "Late Records",
-      description = "Indicates what to do with late records",
+      label = "Late Records Handling",
+      description = "Action for records considered late.",
       displayPosition = 210,
       group = "LATE_RECORDS"
   )
@@ -277,10 +275,9 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       required = false,
       type = ConfigDef.Type.EL_STRING,
       defaultValue = "/tmp/late/${YYYY}-${MM}-${DD}",
-      label = "Late Records Directory Path Template",
-      description = "Directory path template for the HDFS files for late records, the template supports the following " +
-                    "time tokens: ${YY}, ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}. IMPORTANT: Used only if " +
-                    "'Late Records' is set to 'Send to late records file'.",
+      label = "Late Record Directory Template",
+      description = "Template for the creation of late record directories. Valid variables are ${YYYY}, ${MM}, " +
+                    "${DD}, ${hh}, ${mm}, ${ss}.",
       displayPosition = 220,
       group = "LATE_RECORDS",
       dependsOn = "lateRecordsAction",
@@ -310,7 +307,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       type = ConfigDef.Type.MODEL,
       defaultValue = "CSV",
       label = "CSV Format",
-      description = "The specific CSV format of the files",
+      description = "",
       displayPosition = 310,
       group = "CSV",
       dependsOn = "dataFormat",
@@ -322,8 +319,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Field to Name Mapping",
-      description = "Field to name mapping configuration",
+      label = "Field Mapping",
+      description = "",
       displayPosition = 320,
       group = "CSV",
       dependsOn = "dataFormat",
@@ -337,8 +334,8 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Field to Name Mapping",
-      description = "Field to name mapping configuration",
+      label = "Field Mapping",
+      description = "",
       displayPosition = 320,
       group = "TSV",
       dependsOn = "dataFormat",

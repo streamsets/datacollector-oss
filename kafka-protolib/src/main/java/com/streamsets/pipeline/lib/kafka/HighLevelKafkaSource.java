@@ -23,7 +23,7 @@ import java.util.List;
 @StageDef(
     version = "1.0.0",
     label = "Kafka Consumer",
-    description = "Reads messages from Kafka brokers. Message data can be: TEXT, CSV, TSV, XML or JSON",
+    description = "Reads data from Kafka",
     icon = "kafka.png"
 )
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "application/json")
@@ -31,8 +31,8 @@ import java.util.List;
 public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
 
   public enum Groups implements Label {
-    JSON("JSON Data"),
-    CSV("CSV Data")
+    JSON("JSON"),
+    CSV("Delimited")
 
     ;
 
@@ -52,7 +52,7 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
       type = ConfigDef.Type.MODEL,
       defaultValue = "MULTIPLE_OBJECTS",
       label = "JSON Content",
-      description = "Indicates if the JSON files have a single JSON array object or multiple JSON objects",
+      description = "",
       displayPosition = 100,
       group = "JSON",
       dependsOn = "consumerPayloadType",
@@ -66,7 +66,7 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
     label = "Produce Single Record",
-    description = "Indicates if multiple json objects must be accommodated in a single record.",
+    description = "Generates a single record for multiple JSON objects",
     displayPosition = 103,
     group = "JSON",
     dependsOn = "jsonContent",
@@ -78,9 +78,8 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
       required = true,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "4096",
-      label = "Maximum JSON Object Length",
-      description = "The maximum length for a JSON Object being converted to a record, if greater the full JSON " +
-                    "object is discarded and processing continues with the next JSON object",
+      label = "Max Object Length (chars)",
+      description = "Longer objects are skipped",
       displayPosition = 110,
       group = "JSON",
       dependsOn = "consumerPayloadType",
@@ -92,8 +91,8 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "CSV",
-      label = "CSV Format",
-      description = "The specific CSV format of the files",
+      label = "Delimiter Format Type",
+      description = "",
       displayPosition = 200,
       group = "CSV",
       dependsOn = "consumerPayloadType",

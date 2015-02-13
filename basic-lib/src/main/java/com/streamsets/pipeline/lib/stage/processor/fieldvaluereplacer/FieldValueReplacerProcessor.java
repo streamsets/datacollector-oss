@@ -32,7 +32,7 @@ import java.util.Locale;
 @StageDef(
     version="1.0.0",
     label="Value Replacer",
-    description = "???",
+    description = "Replaces null values with a constant and replaces values with NULL",
     icon="replacer.svg"
 )
 @ConfigGroups(FieldValueReplacerProcessor.Groups.class)
@@ -53,8 +53,8 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
       required = false,
       type = Type.MODEL,
       defaultValue="",
-      label = "Fields to NULL",
-      description="Replaces field values with null value.",
+      label = "Fields to Null",
+      description="Replaces existing values with null values",
       displayPosition = 10,
       group = "REPLACE"
   )
@@ -68,7 +68,7 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
         type = Type.MODEL,
         defaultValue="",
         label = "Fields to Replace",
-        description = "???",
+        description = "You can enter multiple fields to replace with the same value",
         displayPosition = 10
     )
     @FieldSelector
@@ -78,8 +78,8 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
         required = true,
         type = Type.STRING,
         defaultValue="",
-        label = "Replacement value",
-        description="Value to replace null values",
+        label = "Replacement Value",
+        description="Value to replace nulls",
         displayPosition = 20
     )
     public String newValue;
@@ -89,7 +89,7 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
   @ConfigDef(
       required = false,
       type = Type.MODEL, defaultValue="",
-      label = "Replace Null values",
+      label = "Replace Null Values",
       description="Replaces the null values in a field with a specified value.",
       displayPosition = 20,
       group = "REPLACE"

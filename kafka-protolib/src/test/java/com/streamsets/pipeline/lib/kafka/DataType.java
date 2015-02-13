@@ -5,9 +5,24 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
-public enum DataType {
-  LOG,
-  JSON,
-  CSV,
-  XML
+import com.streamsets.pipeline.api.Label;
+
+public enum DataType implements Label {
+  LOG("Text"),
+  JSON("JSON"),
+  CSV("Delimited"),
+  XML("XML"),
+
+  ;
+
+  private final String label;
+
+  DataType(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
+  }
 }

@@ -8,11 +8,11 @@ package com.streamsets.pipeline.lib.stage.source.spooldir;
 import com.streamsets.pipeline.api.Label;
 
 public enum FileDataType implements Label {
-  LOG_DATA("Log Data"),
-  JSON_DATA("JSON Data"),
-  DELIMITED_DATA("Delimited Data"),
-  XML_DATA("XML Data"),
-  SDC_RECORDS("DataCollector Records"),
+  LOG_DATA("Text"),
+  JSON_DATA("JSON"),
+  DELIMITED_DATA("Delimited"),
+  XML_DATA("XML"),
+  SDC_RECORDS("Data Collector Records"),
 
   ;
 

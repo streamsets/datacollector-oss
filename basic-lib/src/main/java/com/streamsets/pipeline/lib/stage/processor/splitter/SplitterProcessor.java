@@ -28,7 +28,7 @@ import java.util.List;
 @StageDef(
     version="1.0.0",
     label="Field Splitter",
-    description = "Splits a string field into multiple strings based on the specified character separator",
+    description = "Splits a string field based on a separator character",
     icon="splitter.png"
 )
 @ConfigGroups(SplitterProcessor.Groups.class)
@@ -40,7 +40,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
 
     @Override
     public String getLabel() {
-      return "Field Splitter";
+      return "Split";
     }
 
   }
@@ -50,7 +50,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Field to Split",
-      description = "Record field path of the string value to split",
+      description = "Split string fields. You can enter multiple fields to split with the same separator.",
       displayPosition = 10,
       group = "FIELD_SPLITTER"
   )
@@ -61,7 +61,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
       type = ConfigDef.Type.CHARACTER,
       defaultValue = " ",
       label = "Separator",
-      description = "The value is split using this character (use '^' for space)",
+      description = "A single character. Use ^ for space.",
       displayPosition = 20,
       group = "FIELD_SPLITTER"
   )
@@ -70,8 +70,8 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.LIST,
-      label = "Field-Paths for Splits",
-      description="The list of field-paths for the resulting splits, the last field will have the rest of the string",
+      label = "New Split Fields",
+      description="New fields to pass split data. The last field includes any remaining unsplit data.",
       displayPosition = 30,
       group = "FIELD_SPLITTER"
   )
@@ -81,8 +81,8 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "DISCARD",
-      label = "On Error (not enough splits)",
-      description="What to do if there are not enough splits in the value",
+      label = "Not Enough Splits ",
+      description="Action for data that cannot be split as configured",
       displayPosition = 40,
       group = "FIELD_SPLITTER"
   )
@@ -91,14 +91,17 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Remove Unsplit Value",
-      description="Removes the unsplit value from the record",
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "REMOVE",
+      label = "Original Field",
+      description="Action for the original field being split",
       displayPosition = 50,
       group = "FIELD_SPLITTER"
   )
-  public boolean removeUnsplitValue;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OriginalFieldActionChooserValues.class)
+  public OriginalFieldAction originalFieldAction;
+
+  private boolean removeUnsplitValue;
 
   private String separatorStr;
   private String[] fieldPaths;
@@ -119,6 +122,8 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
     }
 
     fieldPaths = fieldPathsForSplits.toArray(new String[fieldPathsForSplits.size()]);
+
+    removeUnsplitValue = originalFieldAction == OriginalFieldAction.REMOVE;
   }
 
   @Override

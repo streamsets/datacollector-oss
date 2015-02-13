@@ -34,7 +34,7 @@ import java.util.Set;
 @StageDef(
     version = "1.0.0",
     label = "Stream Selector",
-    description = "Stream Selector based on user defined conditions",
+    description = "Passes records to streams based on conditions",
     icon="laneSelector.png",
     outputStreams = StageDef.VariableOutputStreams.class,
     outputStreamsDrivenByConfig = "lanePredicates")
@@ -55,9 +55,8 @@ public class SelectorProcessor extends RecordProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Stream/Record-condition mapping",
-      description = "Associates output streams with a condition that records must match in order to go to the " +
-                    "associated stream",
+      label = "Condition",
+      description = "Records that match the condition pass to the stream",
       displayPosition = 10,
       group = "CONDITIONS"
   )
@@ -67,8 +66,8 @@ public class SelectorProcessor extends RecordProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MAP,
-      label = "Constants for Conditions",
-      description = "Defines constant values available in all conditions",
+      label = "Constants",
+      description = "Can be used in any expression in the processor",
       displayPosition = 20,
       group = "CONDITIONS"
   )
@@ -78,8 +77,8 @@ public class SelectorProcessor extends RecordProcessor {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "DROP_RECORD",
-      label = "On No Matching Condition",
-      description = "Action to take for records not matching any condition",
+      label = "Unmatched Record Handling",
+      description = "Action for records without matching conditions",
       displayPosition = 30,
       group = "CONDITIONS"
   )

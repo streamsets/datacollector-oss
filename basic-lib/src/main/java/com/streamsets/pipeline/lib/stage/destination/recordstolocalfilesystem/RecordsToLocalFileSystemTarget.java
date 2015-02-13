@@ -102,8 +102,10 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.EL_NUMBER,
       defaultValue = "${1 * HOURS}",
-      label = "Rotation Interval (Secs)",
-      description = "Records file rotation interval",
+      label = "File Wait Time (secs)",
+      description = "Max time to wait for error records before creating a new error file. \n" +
+                    "Enter the time in seconds or use the default expression to enter the time limit in minutes. " +
+                    "You can also use HOURS in the expression to enter the limit in hours.",
       displayPosition = 20,
       group = "FILES"
   )
@@ -113,8 +115,8 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.INTEGER,
       defaultValue = "512",
-      label = "Max File Size (MBs)",
-      description = "File size that triggers a rotation. Zero means no maximum size.",
+      label = "Max File Size (MB)",
+      description = "Max file size to trigger the creation of a new file. Use 0 to opt out.",
       displayPosition = 30,
       group = "FILES"
   )

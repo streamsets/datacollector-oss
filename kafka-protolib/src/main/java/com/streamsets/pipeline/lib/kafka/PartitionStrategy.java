@@ -5,8 +5,25 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
-public enum PartitionStrategy {
-  RANDOM,
-  ROUND_ROBIN,
-  EXPRESSION
+import com.streamsets.pipeline.api.Label;
+
+public enum PartitionStrategy implements Label {
+  RANDOM("Random"),
+  ROUND_ROBIN("Round Robin"),
+  EXPRESSION("Expression"),
+
+  ;
+
+  private final String label;
+
+  PartitionStrategy(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
+  }
+
+
 }

@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 @StageDef(
     version="1.0.0",
     label="JSON Parser",
-    description = "Parses a String field with JSON data into a Record",
+    description = "Parses a string field with JSON data",
     icon="jsonparser.svg"
 )
 @ConfigGroups(JsonParserProcessor.Groups.class)
@@ -37,7 +37,7 @@ public class JsonParserProcessor extends SingleLaneRecordProcessor {
 
     @Override
     public String getLabel() {
-      return "Json Parsing";
+      return "Parse";
     }
 
   }
@@ -47,7 +47,7 @@ public class JsonParserProcessor extends SingleLaneRecordProcessor {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Field to Parse",
-      description = "Record field path of the JSON string to parse",
+      description = "String field that contains a JSON object",
       displayPosition = 10,
       group = "JSON"
   )
@@ -57,8 +57,8 @@ public class JsonParserProcessor extends SingleLaneRecordProcessor {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "Parsed JSON Field",
-      description="Record field path to set the parsed JSON",
+      label = "New Parsed Field",
+      description="Name of the new field to set the parsed JSON data",
       displayPosition = 20,
       group = "JSON"
   )
@@ -68,8 +68,8 @@ public class JsonParserProcessor extends SingleLaneRecordProcessor {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "DISCARD",
-      label = "On Error",
-      description="What to do with the record if there is a problem parsing the specified field",
+      label = "Error Record",
+      description="Action when parsing errors occur",
       displayPosition = 30,
       group = "JSON"
   )

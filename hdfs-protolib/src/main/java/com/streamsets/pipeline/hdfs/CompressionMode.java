@@ -5,29 +5,33 @@
  */
 package com.streamsets.pipeline.hdfs;
 
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.StageException;
 import org.apache.hadoop.io.compress.BZip2Codec;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.GzipCodec;
 import org.apache.hadoop.io.compress.SnappyCodec;
 
-public enum CompressionMode {
-  NONE(null),
-  GZIP(GzipCodec.class),
-  BZIP2(BZip2Codec.class),
-  SNAPPY(SnappyCodec.class),
+public enum CompressionMode implements Label {
+  NONE("None", null),
+  GZIP("Gzip", GzipCodec.class),
+  BZIP2("Bzip2", BZip2Codec.class),
+  SNAPPY("Snappy", SnappyCodec.class),
 
   ;
 
+  private final String label;
   private final Class<? extends CompressionCodec> codec;
 
-  CompressionMode(Class<? extends CompressionCodec> codec) {
+  CompressionMode(String label, Class<? extends CompressionCodec> codec) {
+    this.label = label;
     this.codec = codec;
   }
 
   public  Class<? extends CompressionCodec> getCodec() {
     return codec;
   }
+
 
   @SuppressWarnings("unchecked")
   public static Class<? extends CompressionCodec> getCodec(String codecName) throws StageException {
@@ -48,4 +52,8 @@ public enum CompressionMode {
   }
 
 
+  @Override
+  public String getLabel() {
+    return label;
+  }
 }

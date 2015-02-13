@@ -24,7 +24,7 @@ public class PipelineDefinition {
   private final static String DELIVERY_GUARANTEE_LABEL_VALUE = "Delivery Guarantee";
 
   private final static String DELIVERY_GUARANTEE_DESCRIPTION_KEY = "config.deliveryGuarantee.description";
-  private final static String DELIVERY_GUARANTEE_DESCRIPTION_DEFAULT = "This is the option for the delivery guarantee";
+  private final static String DELIVERY_GUARANTEE_DESCRIPTION_DEFAULT = "Data processing in case of unexpected errors";
 
   private final static String DELIVERY_GUARANTEE_AT_LEAST_ONCE_KEY = "config.deliveryGuarantee.AT_LEAST_ONCE";
   private final static String DELIVERY_GUARANTEE_AT_LEAST_ONCE_DEFAULT = "At Least Once";
@@ -52,7 +52,7 @@ public class PipelineDefinition {
 
   public ConfigGroupDefinition getConfigGroupDefinition() {
     List<Map<String, String>> groups = new ArrayList<>();
-    groups.add(ImmutableMap.of("name", "BAD_RECORDS", "label", "Bad Records"));
+    groups.add(ImmutableMap.of("name", "BAD_RECORDS", "label", "Error Records"));
     return new ConfigGroupDefinition(null, groups);
   }
 
@@ -132,7 +132,7 @@ public class PipelineDefinition {
     ConfigDefinition config = new ConfigDefinition(
         BAD_RECORDS_HANDLING_FIELD,
         ConfigDef.Type.MODEL,
-        "Bad Records Handling",
+        "Error Records Handling",
         "",
         "",
         true,

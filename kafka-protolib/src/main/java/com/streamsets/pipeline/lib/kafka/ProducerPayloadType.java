@@ -5,8 +5,23 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
-public enum ProducerPayloadType {
-  TEXT,
-  JSON,
-  CSV
+import com.streamsets.pipeline.api.Label;
+
+public enum ProducerPayloadType implements Label {
+  TEXT("Text"),
+  JSON("JSON"),
+  CSV("Delimited"),
+
+  ;
+  private final String label;
+
+  ProducerPayloadType(String label) {
+    this.label = label;
+  }
+
+
+  @Override
+  public String getLabel() {
+    return label;
+  }
 }

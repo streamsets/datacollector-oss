@@ -8,10 +8,10 @@ package com.streamsets.pipeline.lib.kafka;
 import com.streamsets.pipeline.api.Label;
 
 public enum ConsumerPayloadType implements Label {
-  LOG("Log Lines"),
-  JSON("Json Data"),
-  CSV("Delimited Data (CSV, TSV)"),
-  XML("XML Data")
+  LOG("Text"),
+  JSON("JSON"),
+  CSV("Delimited"),
+  XML("XML")
 
   ;
 

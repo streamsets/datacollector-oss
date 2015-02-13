@@ -34,7 +34,7 @@ import java.util.Locale;
 @StageDef(
     version="1.0.0",
     label="Field Converter",
-    description = "???",
+    description = "Converts the data type of a field",
     icon="converter.svg"
 )
 @ConfigGroups(FieldTypeConverterProcessor.Groups.class)
@@ -46,7 +46,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
     @Override
     public String getLabel() {
-      return "Type Conversion";
+      return "Conversions";
     }
 
   }
@@ -101,7 +101,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
         type = Type.MODEL,
         defaultValue="",
         label = "Fields to Convert",
-        description = "???",
+        description = "You can convert multiple fields to the same type",
         displayPosition = 10
     )
     @FieldSelector
@@ -112,7 +112,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
         type = Type.MODEL,
         defaultValue="INTEGER",
         label = "Convert to Type",
-        description = "???",
+        description = "Select a compatible data type",
         displayPosition = 10
     )
     @ValueChooser(chooserValues = ConverterValuesProvider.class, type = ChooserMode.PROVIDED)
@@ -137,7 +137,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
         type = Type.MODEL,
         defaultValue="yyyy-MM-dd",
         label = "Date Format",
-        description="Select or Enter any valid date or datetime format.",
+        description="Select or enter any valid date or datetime format",
         displayPosition = 30,
         dependsOn = "targetType",
         triggeredByValue = {"DATE", "DATETIME"}
@@ -151,8 +151,8 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       required = false,
       type = Type.MODEL,
       defaultValue="",
-      label = "Field Converter Configuration",
-      description = "???",
+      label = "",
+      description = "",
       displayPosition = 10,
       group = "TYPE_CONVERSION"
   )

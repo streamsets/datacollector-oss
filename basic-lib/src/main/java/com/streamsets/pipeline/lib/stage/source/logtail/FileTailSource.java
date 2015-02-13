@@ -34,8 +34,7 @@ import java.util.concurrent.BlockingQueue;
 @StageDef(
     version="1.0.0",
     label="File Tail",
-    description = "Reads lines from the specified file as they are written to it. It must be text file, " +
-                  "typically a log file.",
+    description = "Reads log or JSON data as it is written to a file",
     icon="fileTail.png"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)

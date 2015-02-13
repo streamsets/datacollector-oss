@@ -28,7 +28,7 @@ import java.util.Set;
 @StageDef(
     version="1.0.0",
     label="Field Remover",
-    description="It removes fields from records",
+    description="Removes fields from a record",
     icon="filter.png"
 )
 @ConfigGroups(FieldFilterProcessor.Groups.class)
@@ -40,12 +40,12 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
 
     @Override
     public String getLabel() {
-      return "Filter";
+      return "Remove";
     }
 
   }
 
-  public enum FilterOperation {
+  public enum FilterOperation implements Label {
     KEEP("Keep Listed Fields"),
     REMOVE("Remove Listed Fields");
 
@@ -55,6 +55,7 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
       this.label = label;
     }
 
+    @Override
     public String getLabel() {
       return label;
     }
@@ -64,8 +65,8 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
       required = true,
       type = Type.MODEL,
       defaultValue="KEEP",
-      label = "Filter Operation",
-      description = "???",
+      label = "Action",
+      description = "",
       displayPosition = 10,
       group = "FILTER"
   )
@@ -77,7 +78,7 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
       type = Type.MODEL,
       defaultValue="",
       label = "Fields",
-      description = "???",
+      description = "",
       displayPosition = 20,
       group = "FILTER"
   )

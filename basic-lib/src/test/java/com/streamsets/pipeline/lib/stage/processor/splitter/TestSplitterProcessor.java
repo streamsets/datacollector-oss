@@ -36,7 +36,7 @@ public class TestSplitterProcessor {
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.CONTINUE)
-        .addConfiguration("removeUnsplitValue", false)
+        .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
         .addOutputLane("out")
         .build();
     runner.runInit();
@@ -75,7 +75,7 @@ public class TestSplitterProcessor {
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.DISCARD)
-        .addConfiguration("removeUnsplitValue", false)
+        .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
         .addOutputLane("out")
         .build();
     runner.runInit();
@@ -109,7 +109,7 @@ public class TestSplitterProcessor {
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.TO_ERROR)
-        .addConfiguration("removeUnsplitValue", false)
+        .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
         .addOutputLane("out")
         .build();
     runner.runInit();
@@ -144,7 +144,7 @@ public class TestSplitterProcessor {
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.STOP_PIPELINE)
-        .addConfiguration("removeUnsplitValue", false)
+        .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
         .addOutputLane("out")
         .build();
     runner.runInit();
@@ -171,7 +171,7 @@ public class TestSplitterProcessor {
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.STOP_PIPELINE)
-        .addConfiguration("removeUnsplitValue", false)
+        .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
         .addOutputLane("out")
         .build();
     runner.runInit();
@@ -196,7 +196,7 @@ public class TestSplitterProcessor {
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.STOP_PIPELINE)
-        .addConfiguration("removeUnsplitValue", true)
+        .addConfiguration("originalFieldAction", OriginalFieldAction.REMOVE)
         .addOutputLane("out")
         .build();
     runner.runInit();
