@@ -5,18 +5,17 @@
  <topicref href="../Origins/Origins_title.dita">
   <topicref href="../Origins/Origins_overview.dita" chunk="to-content">
     <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/FileTail_BatchSizeWaitTime.dita"/>
   <topicref href="../Origins/PreviewingRawSourceData.dita"/></topicref>
   <topicref href="../Origins/Directory.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Directory-DataFormat.dita"/>
    <topicref href="../Origins/Directory_FNamePattern.dita"/>
    <topicref href="../Origins/Directory_FirstFile.dita"/>
-   <topicref href="../Origins/Directory_FileWaitTime.dita"/>
    <topicref href="../Origins/Directory-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/FileTail.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/FileTail_BatchSizeWaitTime.dita"/>
    <topicref href="../Origins/FileTail-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/KConsumer.dita" chunk="to-content">

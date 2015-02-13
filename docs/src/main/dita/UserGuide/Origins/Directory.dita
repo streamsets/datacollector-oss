@@ -3,13 +3,13 @@
 <concept id="concept_qcq_54n_jq">
  <title>Directory</title>
  <shortdesc>The Directory origin reads data from files in a directory. Use the Directory origin to
-        read log, JSON, delimited, and XML files. You can also use Directory to read <ph
+        read text, JSON, delimited, and XML files. You can also use Directory to read <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> error
         record files.</shortdesc>
  <conbody>
   <p>Directory reads the files in a directory with names that match a user-defined pattern. It can
-      optionally begin processing with a specific file name. Then, it reads files with similar names
-      in lexicographic ascending order. After processing a file, Directory can keep, archive, or
-      delete the file. </p>
+            optionally begin processing with a specific file name. Then, it reads files with similar
+            names in naturally ascending order. After processing a file, Directory can keep,
+            archive, or delete the file. </p>
  </conbody>
 </concept>

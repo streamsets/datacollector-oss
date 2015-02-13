@@ -2,7 +2,7 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_npx_xgf_vq">
     <title>Configuring a Kafka Consumer</title>
-    <shortdesc>Configure a Kafka Consumer to read log, delimited, JSON, or XML data from a Kafka
+    <shortdesc>Configure a Kafka Consumer to read text, delimited, JSON, or XML data from a Kafka
         cluster. When you configure the Kafka Consumer, you configure the general properties,
         including Kafka and ZooKeeper details. For delimited and JSON data, configure additional
         related properties. You can optionally add custom Kafka properties. </shortdesc>
@@ -42,13 +42,13 @@
                                     <entry>Kafka topic to read.</entry>
                                 </row>
                                 <row>
-                                    <entry>Payload Type</entry>
+                                    <entry>Data Format</entry>
                                     <entry>Type of data in the topic. Use one of the following
                                         options:<ul id="ul_qgm_tjw_yq">
-                                            <li>Log lines</li>
-                                            <li>JSON data</li>
-                                            <li>Delimited data</li>
-                                            <li>XML data</li>
+                                            <li>Text</li>
+                                            <li>JSON</li>
+                                            <li>Delimited</li>
+                                            <li>XML</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -78,7 +78,7 @@
                 </info>
             </step>
             <step>
-                <cmd>For JSON data, click the <uicontrol>JSON Data</uicontrol> tab and configure the
+                <cmd>For JSON data, click the <uicontrol>JSON</uicontrol> tab and configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_wsk_ccp_1r">
@@ -96,8 +96,8 @@
                                     <entry>JSON Content</entry>
                                     <entry>Type of content in JSON files. Use one of the following
                                             options:<ul id="ul_xgm_2cp_1r">
-                                            <li>Array of Objects</li>
-                                            <li>Multiple Objects</li>
+                                            <li>An event has an JSON array of objects</li>
+                                            <li>An event has one or multiple JSON objects</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -107,9 +107,9 @@
                                 </row>
                                 <row>
                                     <entry>Max Object Length (chars) </entry>
-                                    <entry>The maximum length of a JSON object.<p>Longer objects are
-                                            skipped and handled based on the pipeline error handling
-                                            configuration. </p></entry>
+                                    <entry>The maximum number of characters in a JSON
+                                            object.<p>Longer objects are passed to the pipeline for
+                                            error handling. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -117,13 +117,39 @@
                 </info>
             </step>
             <step>
-                <cmd>For CSV data, click the <uicontrol>CSV Data </uicontrol>tab and select the
-                        <uicontrol>CSV Format </uicontrol> for the data.</cmd>
-                <info>Use one of the following options:<ul
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
-                        id="ul_egq_q4w_yq">
-                        <li/>
-                    </ul></info>
+                <cmd>For delimited data, click the <uicontrol>Delimited</uicontrol>tab and configure
+                    the following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_p3s_l42_br">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.13*"/>
+                            <thead>
+                                <row>
+                                    <entry>Delimited Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Delimiter Format Type</entry>
+                                    <entry>Format for delimited data. Use one of the following
+                                            options:<ul id="ul_delFileTypes">
+                                            <li>Basic CSV - File that includes comma-separated
+                                                values.</li>
+                                            <li>MS Excel CSV - Microsoft Excel comma-separated
+                                                file.</li>
+                                            <li>MySQL CSV - MySQL comma separated file.</li>
+                                            <li>RFC4180 CSV - Comma-separated file that strictly
+                                                follows RFC4180 guidelines.</li>
+                                            <li>Tab-Separated Values - File that includes
+                                                tab-separated values.</li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>

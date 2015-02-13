@@ -48,16 +48,16 @@
                         <span class="ph uicontrol">Delivery Guarantee</span> property:</span>
                 <div class="itemgroup info">
                     <table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__simpletable_m1s_q1m_sq" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d9344e87" class="stentry" width="23.980815347721823%">Pipeline Property</th>
+                            <th valign="bottom" align="left" id="d9368e87" class="stentry" width="23.980815347721823%">Pipeline Property</th>
 
-                            <th valign="bottom" align="left" id="d9344e90" class="stentry" width="76.01918465227817%">Description</th>
+                            <th valign="bottom" align="left" id="d9368e90" class="stentry" width="76.01918465227817%">Description</th>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d9344e87" class="stentry">Delivery Guarantee <a class="xref" href="DeliveryGuarantee.html#concept_ffz_hhw_kq" title="When you configure a pipeline, you define how you want data to be treated: Do you want to prevent the loss of data, or do you want to prevent the duplication of data?">
+                            <td valign="top" headers="d9368e87" class="stentry">Delivery Guarantee <a class="xref" href="DeliveryGuarantee.html#concept_ffz_hhw_kq" title="When you configure a pipeline, you define how you want data to be treated: Do you want to prevent the loss of data, or do you want to prevent the duplication of data?">
                                     <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15" alt="more info"></img></a></td>
 
-                            <td valign="top" headers="d9344e90" class="stentry">Determines how the <span class="ph">Data
+                            <td valign="top" headers="d9368e90" class="stentry">Determines how the <span class="ph">Data
                   Collector</span> handles data after an unexpected event causes the pipeline to
                                 stop running. Select one of the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_b4v_51m_sq">
                                     <li class="li"><span class="ph uicontrol">At least once</span>. Ensures all data is
@@ -79,18 +79,18 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Click the <span class="keyword wintitle">Bad Records</span> tab and configure the following
-                    error handling options:</span>
+                <span class="ph cmd">Click the <span class="keyword wintitle">Error Records</span> tab and configure the following
+                    error handling option:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_gy3_1y4_1r" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_ghf_x22_br" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.44481605351171%" id="d9344e155">Bad Records Property</th>
+                                    <th class="entry" valign="top" width="25.97402597402597%" id="d9368e155">Error Records Property</th>
 
-                                    <th class="entry" valign="top" width="66.5551839464883%" id="d9344e158">Description</th>
+                                    <th class="entry" valign="top" width="74.02597402597402%" id="d9368e158">Description</th>
 
                                 </tr>
 
@@ -98,32 +98,60 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d9344e155 ">Bad Records</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d9368e155 ">Error Record Handling</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d9344e158 ">Determines how to handle records that cannot be processed
-                                        as expected. Use one of the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_jg1_dy4_1r">
-                                            <li class="li">Save - Saves bad records to a directory.</li>
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d9368e158 ">Determines how to handle records that cannot be processed
+                                        as expected. Use one of the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_ayr_y22_br">
+                                            <li class="li"><span class="ph uicontrol">Trash</span> - Saves error records
+                                                to a file.</li>
 
-                                            <li class="li">Discard - Discards bad records.</li>
+                                            <li class="li"><span class="ph uicontrol">Records to File</span> - Discards
+                                                error records.</li>
 
                                         </ul>
 </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d9344e155 ">Bad Records Directory</td>
+                            </tbody>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d9344e158 ">Local directory for bad record files. </td>
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Bad Records - Records to File</span> tab, configure error
+                    file properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_gy3_1y4_1r" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="24.096385542168672%" id="d9368e213">Error File Property</th>
+
+                                    <th class="entry" valign="top" width="75.90361445783131%" id="d9368e216">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.096385542168672%" headers="d9368e213 ">Directory</td>
+
+                                    <td class="entry" valign="top" width="75.90361445783131%" headers="d9368e216 ">Local directory for error record files. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d9344e155 ">Rotation Interval (secs)</td>
+                                    <td class="entry" valign="top" width="24.096385542168672%" headers="d9368e213 ">File Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d9344e158 ">Number of seconds the <span class="ph">Data
-                  Collector</span> writes to a bad record file. After that time, it creates
-                                        a new bad record file. <p class="p">You can enter a number of seconds
+                                    <td class="entry" valign="top" width="75.90361445783131%" headers="d9368e216 ">Number of seconds the <span class="ph">Data
+                  Collector</span> waits for error records. After that time, it creates a
+                                        new error record file. <p class="p">You can enter a number of seconds
                                             or use the default expression to enter the time in
                                             minutes. </p>
 </td>
@@ -131,11 +159,11 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d9344e155 ">Max File Size (MB)</td>
+                                    <td class="entry" valign="top" width="24.096385542168672%" headers="d9368e213 ">Max File Size (MB)</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d9344e158 ">Maximum size for error files. Exceeding this size creates
-                                        a new error file. <p class="p">Use 0 to write to a single error file.
-                                        </p>
+                                    <td class="entry" valign="top" width="75.90361445783131%" headers="d9368e216 ">Maximum size for error files. Exceeding this size creates
+                                        a new error file. <p class="p">Use 0 to write to avoid using this
+                                            property.</p>
 </td>
 
                                 </tr>

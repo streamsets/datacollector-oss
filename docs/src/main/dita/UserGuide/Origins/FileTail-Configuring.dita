@@ -3,7 +3,7 @@
 <task id="task_unq_wdw_yq">
     <title>Configuring a File Tail Origin</title>
     <shortdesc>Configure a File Tail origin to read data as it is written to a file. You can read
-        JSON or log data.</shortdesc>
+        text or JSON data.</shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_cfd_j2w_yq">
@@ -29,25 +29,25 @@
                                     <entry>Data Format</entry>
                                     <entry>Format of data in the file. Use one of the following
                                             options:<ul id="ul_pwv_cr2_zq">
-                                            <li>Log data</li>
-                                            <li>JSON data</li>
+                                            <li>Text</li>
+                                            <li>JSON</li>
                                         </ul></entry>
                                 </row>
                                 <row>
                                     <entry>File Path</entry>
-                                    <entry>Directory and file name to read.</entry>
+                                    <entry>Directory and name of the file to read.</entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Size (records) <xref
-                                            href="FileTail_BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                    <entry>Maximum Lines per Batch (records) <xref
+                                            href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
                                                 id="image_obp_j2w_yq"/></xref></entry>
                                     <entry>Maximum number of records to include in a batch. </entry>
                                 </row>
                                 <row>
                                     <entry>Batch Wait Time (secs) <xref
-                                        href="FileTail_BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
-                                        <image href="../Graphics/icon_moreInfo.png" scale="12"/>
+                                        href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="11"/>
                                            </xref> </entry>
                                     <entry>Number of seconds to wait before sending a batch.</entry>
                                 </row>

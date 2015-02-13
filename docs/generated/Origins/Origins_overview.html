@@ -30,6 +30,31 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ypd_vgr_5q">
+ <h2 class="title topictitle2">Batch Size and Wait Time</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">For origin stages, the batch size determines the maximum number of rows sent through the
+        pipeline at one time. The batch wait time determines the time that the origin waits for data
+        before sending a batch. At the end of the wait time, it sends the batch regardless of how
+        many rows the batch contains. </p>
+
+  <p class="p">For example, a File Tail origin is configured for a batch size of 20 rows and a batch wait time
+            of 240 seconds. When data arrives quickly, File Tail fills a batch with 20 rows and
+            sends it through the pipeline immediately, creating a new batch and sending it again as
+            soon as it is full. As incoming data slows, a remaining batch contains a few rows,
+            gaining an extra row periodically. 240 seconds after creating the batch, File Tail sends
+            the partially-full batch through the pipeline. It immediately creates a new batch and
+            starts a new countdown.</p>
+
+  <p class="p">Configure the batch wait time based on your processing needs. You might reduce the batch wait
+   time to ensure all data is processed within a specified time frame or to make regular contact
+   with pipeline destinations. Use the default or increase the wait time if you prefer not to
+   process partial or empty batches.</p>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_jp5_ql1_tq">
     <h2 class="title topictitle2">Previewing Raw Source Data</h2>
 
@@ -65,9 +90,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="39.525691699604735%" id="d8944e105">Kafka Raw Preview Property</th>
+                                    <th class="entry" valign="top" width="39.525691699604735%" id="d8942e125">Kafka Raw Preview Property</th>
 
-                                    <th class="entry" valign="top" width="60.47430830039525%" id="d8944e108">Description</th>
+                                    <th class="entry" valign="top" width="60.47430830039525%" id="d8942e128">Description</th>
 
                                 </tr>
 
@@ -75,38 +100,38 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d8944e105 ">Topic</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d8942e125 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d8944e108 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d8944e105 ">Partition</td>
-
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d8944e108 ">Partition to read.</td>
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d8942e128 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d8944e105 ">Broker Host</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d8942e125 ">Partition</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d8944e108 ">Broker host name. Use any broker associated with the
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d8942e128 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d8942e125 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d8942e128 ">Broker host name. Use any broker associated with the
                                         partition.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d8944e105 ">Broker Port</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d8942e125 ">Broker Port</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d8944e108 ">Broker port number.</td>
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d8942e128 ">Broker port number.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d8944e105 ">Max Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d8942e125 ">Max Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d8944e108 ">Maximum amount of time the preview waits to receive data
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d8942e128 ">Maximum amount of time the preview waits to receive data
                                         from Kafka.</td>
 
                                 </tr>

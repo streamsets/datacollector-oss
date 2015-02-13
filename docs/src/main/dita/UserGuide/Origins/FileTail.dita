@@ -3,7 +3,7 @@
 <concept id="concept_n1y_qyp_5q">
  <title>File Tail</title>
  <shortdesc>The File Tail origin reads data as it is written to a file. As long as the pipeline
-  runs, File Tail captures log or JSON data that is written to the file. The File Tail origin does
+  runs, File Tail captures text or JSON data that is written to the file. The File Tail origin does
   not read data already in the file or data that is written to the file when the pipeline is not
   running.</shortdesc>
  <conbody>

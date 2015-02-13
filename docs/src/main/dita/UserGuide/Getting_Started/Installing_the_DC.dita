@@ -7,10 +7,11 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         />.</shortdesc>
     <taskbody>
-        <context><indexterm>installation<indexterm>tarball</indexterm></indexterm><indexterm>launch<indexterm>tarball</indexterm></indexterm></context>
+        <context/>
         <steps id="steps_g53_l3p_kq">
             <step>
-                <cmd> Download StreamSets SDC tarball and extract it to desired location.</cmd>
+                <cmd><indexterm>installation<indexterm>tarball</indexterm></indexterm><indexterm>launch<indexterm>tarball</indexterm></indexterm>
+                    Download StreamSets SDC tarball and extract it to desired location.</cmd>
             </step>
             <step>
                 <cmd>Optionally,  set environment variables to point to appropriate

@@ -3,8 +3,8 @@
 <concept id="concept_msz_wnr_5q">
  <title>Kafka Consumer</title>
  <shortdesc>The Kafka Consumer reads data from a Kafka cluster and processes the data based on the
-  type of data stored in Kafka. You can use the Kafka Consumer to read log, delimited, JSON, and XML
-  data from a Kafka cluster. </shortdesc>
+  type of data stored in Kafka. You can use the Kafka Consumer to read text, delimited, JSON, and
+  XML data from a Kafka cluster. </shortdesc>
  <conbody>
   <p>When you configure a Kafka Consumer, you configure the consumer group name, topic, and
    ZooKeeper connection information. You can add additional Kafka configuration properties as

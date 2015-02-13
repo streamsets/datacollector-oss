@@ -59,47 +59,69 @@
                 </info>
             </step>
             <step>
-                <cmd>Click the <wintitle>Bad Records</wintitle> tab and configure the following
-                    error handling options:</cmd>
+                <cmd>Click the <wintitle>Error Records</wintitle> tab and configure the following
+                    error handling option:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_gy3_1y4_1r">
+                    <table frame="all" rowsep="1" colsep="1" id="table_ghf_x22_br">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.99*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.85*"/>
                             <thead>
                                 <row>
-                                    <entry>Bad Records Property</entry>
+                                    <entry>Error Records Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Bad Records</entry>
+                                    <entry>Error Record Handling</entry>
                                     <entry>Determines how to handle records that cannot be processed
                                         as expected. Use one of the following options:<ul
-                                            id="ul_jg1_dy4_1r">
-                                            <li>Save - Saves bad records to a directory.</li>
-                                            <li>Discard - Discards bad records.</li>
+                                            id="ul_ayr_y22_br">
+                                            <li><uicontrol>Trash</uicontrol> - Saves error records
+                                                to a file.</li>
+                                            <li><uicontrol>Records to File</uicontrol> - Discards
+                                                error records.</li>
                                         </ul></entry>
                                 </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Bad Records - Records to File</wintitle> tab, configure error
+                    file properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_gy3_1y4_1r">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.15*"/>
+                            <thead>
                                 <row>
-                                    <entry>Bad Records Directory</entry>
-                                    <entry>Local directory for bad record files. </entry>
+                                    <entry>Error File Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Directory</entry>
+                                    <entry>Local directory for error record files. </entry>
                                 </row>
                                 <row>
-                                    <entry>Rotation Interval (secs)</entry>
+                                    <entry>File Wait Time (secs)</entry>
                                     <entry>Number of seconds the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> writes to a bad record file. After that time, it creates
-                                        a new bad record file. <p>You can enter a number of seconds
+                                        /> waits for error records. After that time, it creates a
+                                        new error record file. <p>You can enter a number of seconds
                                             or use the default expression to enter the time in
                                             minutes. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Max File Size (MB)</entry>
                                     <entry>Maximum size for error files. Exceeding this size creates
-                                        a new error file. <p>Use 0 to write to a single error file.
-                                        </p></entry>
+                                        a new error file. <p>Use 0 to write to avoid using this
+                                            property.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

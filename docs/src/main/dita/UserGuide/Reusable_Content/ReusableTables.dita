@@ -9,8 +9,8 @@
   <p>
    <table frame="all" rowsep="1" colsep="1" id="table_JSONdata">
     <tgroup cols="2">
-     <colspec colname="c1" colnum="1" colwidth="1.2*"/>
-     <colspec colname="c2" colnum="2" colwidth="2*"/>
+     <colspec colname="c1" colnum="1" colwidth="1*"/>
+     <colspec colname="c2" colnum="2" colwidth="4.16*"/>
      <thead>
       <row>
        <entry>JSON Data Property</entry>
@@ -29,9 +29,9 @@
         </p></entry>
       </row>
       <row>
-       <entry>Maximum Object Length</entry>
-       <entry>Maximum length for a JSON object. Longer objects are skipped and handled based on the
-        pipeline error handling configuration. </entry>
+       <entry>Maximum Object Length (chars)</entry>
+       <entry>Maximum number of characters in a JSON object. Longer objects are passed to the
+        pipeline for error handling. </entry>
       </row>
      </tbody>
     </tgroup>
