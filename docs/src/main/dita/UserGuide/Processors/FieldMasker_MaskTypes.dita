@@ -54,11 +54,11 @@ L92m1sN3q0jaOmE67Ws</codeblock>
      <dt>Custom</dt>
      <dd>Replaces values with a mask based on a user-defined pattern. </dd>
      <dd>When you define the pattern for the mask, you can use a hash mark (#) to reveal the
-      character in that location of the hash mark.  All other characters are used as constants in
-      the mask. For example, the following mask pattern reveals the area code of a phone number and
+      character in that location of the hash mark. All other characters are used as constants in the
+      mask. For example, the following mask pattern reveals the area code of a phone number and
       replaces all other digits in the phone number with an x: <codeph>###-xxx-xxxx</codeph>.<note
-       type="tip">To avoid confusing masking characters for real data, use a single masking
-       character.</note></dd>
+       type="tip">To avoid confusing masking characters for real data, use one masking character
+       instead of a mix of masking characters.</note></dd>
     </dlentry>
    </dl>
   </p>

@@ -11,7 +11,9 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>To convert a field, configure the following properties:</cmd>
+                <cmd><indexterm>Field Converter<indexterm>configuring</indexterm></indexterm>On the
+                        <wintitle>Conversions</wintitle> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ozv_nnk_wq">
                         <tgroup cols="2">
@@ -25,22 +27,24 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Convert Field</entry>
-                                    <entry>Field to be converted. </entry>
+                                    <entry>Fields to Convert</entry>
+                                    <entry>One or more field to convert to the same data
+                                        type.</entry>
                                 </row>
                                 <row>
-                                    <entry>Target Type</entry>
-                                    <entry>Data type to convert to. </entry>
+                                    <entry>Convert to Type</entry>
+                                    <entry>Data type for conversion. </entry>
                                 </row>
                                 <row>
                                     <entry>Data Locale</entry>
                                     <entry>Locale of the data in the field. Can determine how the
-                                        Field Converter formats converted data.</entry>
+                                        Field Converter formats converted data, such as a comma or
+                                        period as a decimal separator. </entry>
                                 </row>
                                 <row>
                                     <entry>Date Format</entry>
-                                    <entry>Format for a Date or Datetime field. Use any valid
-                                        format. </entry>
+                                    <entry>Format for a Date or Datetime field. Select or enter any
+                                        valid format. </entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -48,8 +52,8 @@
                 </info>
             </step>
             <step>
-                <cmd>To convert another field, click <uicontrol>Add</uicontrol> and then repeat the
-                    previous step.</cmd>
+                <cmd>To convert another field, click the <uicontrol>Add</uicontrol> icon and then
+                    repeat the previous step.</cmd>
             </step>
         </steps>
     </taskbody>

@@ -2,10 +2,13 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ynz_stc_br">
  <title>Stage Paths</title>
- <shortdesc>Some record functions and error functions return stage paths. You might also want to use
-  stage paths in expressions or conditions in error pipelines. </shortdesc>
+ <shortdesc>Stage paths appear in error records. They indicate the path that a record took through
+  the pipeline before becoming an error record. </shortdesc>
  <conbody>
-  <p><indexterm>stage paths<indexterm>format</indexterm></indexterm>Stage paths use the following
+  <p><indexterm>stage paths<indexterm>format</indexterm></indexterm>You can use record functions and
+   error functions to return stage paths. You might use a stage path in expressions or conditions in
+   error pipelines. </p>
+  <p>Stage paths use the following
    format:<codeblock>&lt;origin instance name>:&lt;next stage instance name>:&lt;next stage instance name>:...</codeblock></p>
  </conbody>
 </concept>

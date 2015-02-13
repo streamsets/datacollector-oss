@@ -11,7 +11,7 @@
                 <cmd/>
             </step>
             <step id="SelectHashField">
-                <cmd>To hash a field, configure the following properties:</cmd>
+                <cmd>On the <wintitle>Hash</wintitle> tab, configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ozv_nnk_wq">
                         <tgroup cols="2">
@@ -25,21 +25,20 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Hash Field</entry>
-                                    <entry>Field to be hashed. </entry>
+                                    <entry>Fields to Hash</entry>
+                                    <entry>One or more String fields to hash with the same
+                                        algorithm.</entry>
                                 </row>
                                 <row>
                                     <entry>Hash Type</entry>
-                                    <entry>Algorithm to use to hash field values. Select one of the
+                                    <entry>Algorithm to use to hash field values. Use one of the
                                         following options:<ul id="ul_kmd_rnk_wq">
-                                            <li><uicontrol>MD5</uicontrol> - Produces a 128-bit
-                                                (16-byte) hash value, typically expressed in text
-                                                format as a 32 digit hexadecimal number.</li>
-                                            <li><uicontrol>SHA1</uicontrol> - Produces a 160-bit
-                                                (20-byte) hash value.</li>
-                                            <li><uicontrol>SHA2</uicontrol> - Based on SHA1, but
-                                                based on a set of four hash functions: 224, 256,
-                                                384, or 512 bits.</li>
+                                            <li>MD5 - Produces a 128-bit (16-byte) hash value,
+                                                typically expressed in text format as a 32 digit
+                                                hexadecimal number.</li>
+                                            <li>SHA1 - Produces a 160-bit (20-byte) hash value.</li>
+                                            <li>SHA2 - Based on SHA1, but uses a set of four hash
+                                                functions: 224, 256, 384, or 512 bits.</li>
                                         </ul></entry>
                                 </row>
                             </tbody>
@@ -48,8 +47,8 @@
                 </info>
             </step>
             <step>
-                <cmd>To hash another field, click <uicontrol>Add</uicontrol> and then repeat the
-                    previous step.</cmd>
+                <cmd>To hash another field, click the <uicontrol>Add</uicontrol> icon and then
+                    repeat the previous step.</cmd>
             </step>
         </steps>
     </taskbody>

@@ -2,7 +2,8 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ihq_ymf_zq">
     <title>Configuring a Value Replacer</title>
-    <shortdesc>Use a Value Replacer to replace null values in a field or to set fields to NULL. </shortdesc>
+    <shortdesc>Use a Value Replacer to replace null values in a field or to replace values in a
+        field with Nulls. </shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_as1_cnf_zq">
@@ -26,18 +27,17 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Fields to NULL</entry>
-                                    <entry>Fields to replace with null values.</entry>
+                                    <entry>Fields to Null</entry>
+                                    <entry>One or more fields to replace with null values.</entry>
                                 </row>
                                 <row>
                                     <entry>Replace Null Values</entry>
                                     <entry>Replaces null values with constants. Click
                                             <uicontrol>Add</uicontrol> to include more fields.
                                         Configure the following properties:<ul id="ul_sq3_fcg_zq">
-                                            <li><uicontrol>Fields to Replace</uicontrol>. Name of
-                                                the field to use.</li>
-                                            <li><uicontrol>Replacement Value</uicontrol>. Constant
-                                                value to use when replacing nulls. </li>
+                                            <li>Fields to Replace - Name of the field to use.</li>
+                                            <li>Replacement Value - Constant to replace null values
+                                                in the field. </li>
                                         </ul></entry>
                                 </row>
                             </tbody>

@@ -3,14 +3,14 @@
 <concept id="concept_hjc_t4k_wq">
  <title>Field Masker</title>
  <shortdesc>The Field Masker processor masks string values based on the selected mask type. You can
-  use variable-length, fixed-length, or custom masks. You can create custom masks that reveal part
-  of the string value.</shortdesc>
+  use variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string
+  value.</shortdesc>
  <conbody>
-  <p>Use the Field Masker to mask string data. For example, you might use a custom mask to mask the
-   last four digits of a phone number.</p>
+  <p>Use the Field Masker to mask sensitive string data. For example, you might use a custom mask to
+   mask the last four digits of a phone number.</p>
   <p>
-   <note type="tip">To mask non-string data, you might use the Field Type Converter processor to
-    convert non-string data to String, then stream the data to the Field Masker. </note>
+   <note type="tip">To mask non-string data, you might use the Field Converter processor to convert
+    non-string data to String, then pass the data to the Field Masker. </note>
   </p>
  </conbody>
 </concept>

@@ -4,21 +4,22 @@
  <title>Field Splitter</title>
  <shortdesc>The Field Splitter splits string data in a field based on a separator character and
   passes the separated data to new fields. Use the Field Splitter to split complex string values
-  into individual components. </shortdesc>
+  into logical components. </shortdesc>
  <conbody>
   <p>For example, if a field contains an error code and error message separated by a comma, you can
-   use the comma to separate the error code and error message information into different fields.</p>
-  <p>When a field includes additional data and separator characters after the Field Splitter splits
-   the data as requested, it includes the remaining data in the last split field. </p>
-  <p>If a field cannot be split as requested, the Field Splitter can pass the record split as much as
-   possible, discard the record, write the record to error, or stop the pipeline. </p>
-  <p>You can include data from the original field in the record, or discard it. </p>
+   use the comma to separate the code and message into different fields.</p>
+  <p>When a field includes additional data and separator characters, the Field Splitter includes the
+   remaining data in the last split field. </p>
+  <p>If a field cannot be split as requested, the Field Splitter can pass the record split as much
+   as possible, discard the record, pass the error to the pipeline for error handling, or stop the
+   pipeline. </p>
+  <p>You can keep data from the original field in the record or discard it. </p>
   <section>
    <title>Example</title>
    <p>A Field Splitter uses a comma to split data into two fields and to discard records that cannot
     be split as requested. When it encounters a single comma, it passes the data before the comma to
     ErrorCode field and the data after the comma to the ErrorMessage field. </p>
-   <p>When the Field Splitter processes the following records:<simpletable frame="none"
+   <p>When this Field Splitter processes the following records:<simpletable frame="none"
      relcolwidth="1.0*" id="simpletable_dqy_dd3_yq">
      <strow>
       <stentry>
@@ -44,7 +45,7 @@ message about this error,"additional information from the server"</codeblock>
      </strow>
     </simpletable></p>
    <p>The Field Splitter discards IMD-03234 because the record does not include enough data to be
-    split.</p>
+    split, and the processor is configured to discard such records. </p>
   </section>
  </conbody>
 </concept>

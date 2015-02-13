@@ -11,7 +11,8 @@
                 <cmd/>
             </step>
             <step id="SelectHashField">
-                <cmd>To mask a field, configure the following properties:</cmd>
+                <cmd>On the <uicontrol>Mask</uicontrol> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ozv_nnk_wq">
                         <tgroup cols="2">
@@ -25,8 +26,9 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Mask Field</entry>
-                                    <entry>String field to be masked. </entry>
+                                    <entry>Fields to Mask</entry>
+                                    <entry>One or more String fields to mask with the same mask
+                                        type.</entry>
                                 </row>
                                 <row>
                                     <entry>Mask Type <xref
@@ -44,15 +46,14 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Custom Pattern <xref
+                                    <entry>Custom Mask <xref
                                             href="FieldMasker_MaskTypes.dita#concept_vwp_gh4_wq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="12"
                                                 id="image_rx1_l1q_wq"/></xref></entry>
                                     <entry>Mask pattern for a custom mask. Enter the pattern that
-                                        you want to use.<p>You can use the hash mark (#) to display
-                                            characters in the specified location. For example,
-                                            ###xxx reveals the first three characters of a string
-                                            and masks the last three characters with x.</p></entry>
+                                        you want to use.<p>Use the hash mark (#) to display
+                                            characters in the specified location. Use any other
+                                            character as a masking character.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -60,8 +61,8 @@
                 </info>
             </step>
             <step>
-                <cmd>To mask another field, click <uicontrol>Add</uicontrol>, and then repeat the
-                    previous step.</cmd>
+                <cmd>To mask another field, click the <uicontrol>Add</uicontrol> icon, and then
+                    repeat the previous step.</cmd>
             </step>
         </steps>
     </taskbody>

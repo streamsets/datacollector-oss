@@ -13,12 +13,13 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>To split a field, configure the following properties:</cmd>
+                <cmd>On the <wintitle>Split</wintitle> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_j4l_w33_yq">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.28*"/>
                             <thead>
                                 <row>
                                     <entry>Field Splitter Property</entry>
@@ -28,37 +29,40 @@
                             <tbody>
                                 <row>
                                     <entry>Field to Split</entry>
-                                    <entry>The field containing data that you want to split.</entry>
+                                    <entry>The String field to be split.</entry>
                                 </row>
                                 <row>
                                     <entry>Separator</entry>
-                                    <entry>Character to trigger a split.</entry>
+                                    <entry>A single character to trigger a split. Use ^ to represent
+                                        a space. </entry>
                                 </row>
                                 <row>
-                                    <entry>Field-Paths for Splits</entry>
-                                    <entry>Names of the fields to create for the split data. Precede
-                                        the name with a slash as follows: /NewField.</entry>
+                                    <entry>New Split Fields</entry>
+                                    <entry>Names of the new fields to pass the split data. Precede
+                                        each field name with a slash as follows: /NewField.</entry>
                                 </row>
                                 <row>
-                                    <entry>Action for Insufficient Data</entry>
-                                    <entry>Action for records that cannot be split to the configured
-                                            fields:<ul id="ul_n5d_xn3_yq">
+                                    <entry>Not Enough Splits</entry>
+                                    <entry>Determines how to handle records that cannot be split as
+                                            requested:<ul id="ul_n5d_xn3_yq">
                                             <li><uicontrol>Continue</uicontrol> - Passes the record
-                                                split as much as possible.</li>
+                                                split as much as possible with null values in unused
+                                                split fields. </li>
                                             <li><uicontrol>Discard</uicontrol> - Discards the
                                                 record.</li>
-                                            <li><uicontrol>Send to Error</uicontrol> - Writes the
-                                                record to the error log.</li>
+                                            <li><uicontrol>Send to Error</uicontrol> - Sends the
+                                                record to the pipeline for error handling. </li>
                                             <li><uicontrol>Stop Pipeline</uicontrol> - Stops the
                                                 pipeline.</li>
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Remove Unsplit Value</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">come back to
-                                            this.</draft-comment>
-                                    </entry>
+                                    <entry>Original Field</entry>
+                                    <entry>Determines how to handle the original field being
+                                            split:<ul id="ul_rdk_ltf_br">
+                                            <li>Remove</li>
+                                            <li>Keep</li>
+                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values. Use the Field Hasher to securely encode sensitive data that ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Hasher"></meta><meta name="abstract" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values."></meta><meta name="description" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ivv_c3k_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Hasher</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values. Use the Field Hasher to securely encode highly-sensitive data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Hasher"></meta><meta name="abstract" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values."></meta><meta name="description" content="The Field Hasher processor uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ivv_c3k_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Hasher</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -17,14 +17,15 @@
  <div class="body conbody"><p class="shortdesc">The Field Hasher processor uses an algorithm to encode values in a field. The Field
   Hasher can use MD5, SHA1 or SHA2 to hash field values. </p>
 
-  <p class="p">Use the Field Hasher to securely encode sensitive data that you might want to decode at a later
-      date. For example, you might use the Field Hasher to encode social security numbers.</p>
+  <p class="p">Use the Field Hasher to securely encode highly-sensitive data or data that you might want to
+            decode at a later date. For example, you might use the Field Hasher to encode social
+            security numbers.</p>
 
   <p class="p">When you configure the Field Hasher, you select the field that you want to encode and the
    algorithm that you want to use. </p>
 
-        <div class="note tip"><span class="tiptitle">Tip:</span> To hash non-string data, you might use the Field Type Converter processor
-            to convert non-string data to String, then stream the data to the Field Hasher. </div>
+        <div class="note tip"><span class="tiptitle">Tip:</span> To hash non-string data, you might use the Field Converter to convert
+            non-string data to String, then pass the data to the Field Hasher. </div>
 
  </div>
 
@@ -43,12 +44,12 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="../Destinations/Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep it in the pipeline.">
+                    require data. <a class="xref" href="../Destinations/Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep it in the pipeline. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
                         <img class="image" id="task_xjd_dlk_wq__d1421e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand" id="task_xjd_dlk_wq__SelectHashField">
-                <span class="ph cmd">To hash a field, configure the following properties:</span>
+                <span class="ph cmd">On the <span class="keyword wintitle">Hash</span> tab, configure the following properties:</span>
                 <div class="itemgroup info">
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xjd_dlk_wq__table_ozv_nnk_wq" class="table" frame="border" border="1" rules="all">
@@ -56,9 +57,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.44481605351171%" id="d14657e97">Field Hasher Configuration Property</th>
+                                    <th class="entry" valign="top" width="33.44481605351171%" id="d14673e100">Field Hasher Configuration Property</th>
 
-                                    <th class="entry" valign="top" width="66.5551839464883%" id="d14657e100">Description</th>
+                                    <th class="entry" valign="top" width="66.5551839464883%" id="d14673e103">Description</th>
 
                                 </tr>
 
@@ -66,27 +67,26 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14657e97 ">Hash Field</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14673e100 ">Fields to Hash</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14657e100 ">Field to be hashed. </td>
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14673e103 ">One or more String fields to hash with the same
+                                        algorithm.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14657e97 ">Hash Type</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14673e100 ">Hash Type</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14657e100 ">Algorithm to use to hash field values. Select one of the
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14673e103 ">Algorithm to use to hash field values. Use one of the
                                         following options:<ul class="ul" id="task_xjd_dlk_wq__ul_kmd_rnk_wq">
-                                            <li class="li"><span class="ph uicontrol">MD5</span> - Produces a 128-bit
-                                                (16-byte) hash value, typically expressed in text
-                                                format as a 32 digit hexadecimal number.</li>
+                                            <li class="li">MD5 - Produces a 128-bit (16-byte) hash value,
+                                                typically expressed in text format as a 32 digit
+                                                hexadecimal number.</li>
 
-                                            <li class="li"><span class="ph uicontrol">SHA1</span> - Produces a 160-bit
-                                                (20-byte) hash value.</li>
+                                            <li class="li">SHA1 - Produces a 160-bit (20-byte) hash value.</li>
 
-                                            <li class="li"><span class="ph uicontrol">SHA2</span> - Based on SHA1, but
-                                                based on a set of four hash functions: 224, 256,
-                                                384, or 512 bits.</li>
+                                            <li class="li">SHA2 - Based on SHA1, but uses a set of four hash
+                                                functions: 224, 256, 384, or 512 bits.</li>
 
                                         </ul>
 </td>
@@ -101,8 +101,8 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To hash another field, click <span class="ph uicontrol">Add</span> and then repeat the
-                    previous step.</span>
+                <span class="ph cmd">To hash another field, click the <span class="ph uicontrol">Add</span> icon and then
+                    repeat the previous step.</span>
             </li>
 </ol>
 

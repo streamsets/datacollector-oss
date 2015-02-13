@@ -2,32 +2,33 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_sn5_5kx_wq">
  <title>Handling Non-Matching Records</title>
- <shortdesc>When a record does not match any condition, the Stream Selector can use the configured
-  fallback action or you can configure a default stream that accepts the remaining
+ <shortdesc>When a record does not match any condition, the Stream Selector can use the error
+  handling for unmatched records or you can configure a default stream that accepts the unmatched
   records:</shortdesc>
  <conbody>
   <p>
    <dl>
     <dlentry>
-     <dt>Use the fallback action</dt>
-     <dd>The Fallback Action property determines how the Stream Selector handles records that do not
-      match any conditions. The Stream Selector can perform one of the following fallback
+     <dt>Error handling for unmatched records</dt>
+     <dd>The Unmatched Record Handling property determines how the Stream Selector handles records
+      that do not match any conditions. The Stream Selector can perform one of the following
        actions:<ul id="ul_jhg_fkx_wq">
        <li>Discard the record.</li>
-       <li>Write the record to the error log. </li>
+       <li>Send the error to the pipeline for error handling.</li>
        <li>Stop the pipeline.</li>
       </ul></dd>
     </dlentry>
     <dlentry>
      <dt>Create a default stream</dt>
      <dd>You can create a default stream to capture records that do not match other conditions. When
-      you create a default stream, you connect the stage output to a branch in the pipeline. </dd>
+      you create a default stream, you connect the output to a branch in the pipeline. </dd>
      <dd>You can configure the branch to perform additional processing or write it directly to a
-      destination. You might write the data to a real destination to be reviewed later, or you might
-      use the Trash destination. </dd>
-     <dd>When you use the Trash destination, the pipeline discards the records. But unlike the
-      discard fallback action, you can view the number of records being discarded when you monitor
-      the pipeline, and you can create alerts around this metric. </dd>
+      destination. You might write the data to a real destination or use the Trash destination. </dd>
+     <dd>When you use the Trash destination, the pipeline discards the records. But unlike
+      discarding the record as part of error handling, the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> keeps
+      metrics for the Trash destination so you can view the number of records being discarded and
+      you can create alerts around this metric. </dd>
     </dlentry>
    </dl>
   </p>

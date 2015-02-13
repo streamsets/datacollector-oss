@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ixz_s5q_wq">
- <title>Valid Field Conversions</title>
+ <title>Valid Type Conversions</title>
  <shortdesc>The following table lists the data types that can be converted to another data type.
   Byte Array, List, and Map data types cannot be converted.</shortdesc>
  <conbody>
@@ -13,7 +13,7 @@
      <thead>
       <row>
        <entry>Target Data Type</entry>
-       <entry>Source </entry>
+       <entry>Source Data Type</entry>
       </row>
      </thead>
      <tbody>
@@ -59,18 +59,12 @@
       </row>
       <row>
        <entry>String</entry>
-       <entry>All supported data types.</entry>
+       <entry>All supported data types.<draft-comment author="Loretta">Did we verify if we do byte
+         array?</draft-comment></entry>
       </row>
      </tbody>
     </tgroup>
    </table>
-  </p>
-  <p>
-   <ul id="ul_ryh_y5q_wq">
-    <li>
-     <draft-comment author="Loretta">Waiting for valid conversions from Hari</draft-comment>
-    </li>
-   </ul>
   </p>
  </conbody>
 </concept>

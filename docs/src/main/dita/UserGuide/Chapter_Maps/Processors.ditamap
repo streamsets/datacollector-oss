@@ -14,6 +14,13 @@
    <topicref href="../Processors/Expression-OutputField.dita"/>
    <topicref href="../Processors/Expression-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/FieldConverter.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Processors/FieldConverter_Datatypes.dita"/>
+   <topicref href="../Processors/FieldConverter-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/FieldHasher.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldHasher-Configuring.dita"/>
@@ -22,11 +29,6 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldMasker_MaskTypes.dita"/>
    <topicref href="../Processors/FieldMasker-Configuring.dita"/>
-  </topicref>
-  <topicref href="../Processors/FieldConverter.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Processors/FieldConverter_Datatypes.dita"/>
-   <topicref href="../Processors/FieldConverter-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/FieldRemover.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
@@ -40,15 +42,17 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/JSONParser-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/RDeduplicator.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Processors/RDeduplicator-ComparisonWindow.dita"/>
+   <topicref href="../Processors/RDeduplicator-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/StreamSelector.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/StreamSelector_fallback.dita"/>
    <topicref href="../Processors/StreamSelector-Configuring.dita"/>
-  </topicref>
-  <topicref href="../Processors/RDeduplicator.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Processors/RDeduplicator-ComparisonWindow.dita"/>
-   <topicref href="../Processors/RDeduplicator-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/ValueReplacer.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>

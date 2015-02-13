@@ -17,9 +17,9 @@
  <div class="body conbody"><p class="shortdesc">The Field Converter converts the datatype of a field to a compatible datatype. You might
   use the Field Converter to convert the data type of a field before performing calculations. </p>
 
-  <p class="p">When you convert a field, configure the conversion for an appropriate, compatible datatype.
-   Consider the actual data in the field as well, since even valid conversions can cause truncation
-   of data. </p>
+  <p class="p">When you convert a field,
+   configure the conversion for an appropriate, compatible datatype. Consider the actual data in the
+   field as well, since even valid conversions can cause truncation of data. </p>
 
   <p class="p">For example, converting a field from Integer to Decimal is valid. Converting a field from
    Decimal to Integer is also valid, but the conversion can cause truncation of any decimal values
@@ -34,7 +34,7 @@ When you convert a String field to Date or Datetime, you specify the date or dat
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_ixz_s5q_wq">
- <h2 class="title topictitle2">Valid Field Conversions</h2>
+ <h2 class="title topictitle2">Valid Type Conversions</h2>
 
  
  <div class="body conbody"><p class="shortdesc">The following table lists the data types that can be converted to another data type.
@@ -47,9 +47,9 @@ When you convert a String field to Date or Datetime, you specify the date or dat
      
      <thead class="thead" align="left">
       <tr class="row">
-       <th class="entry" valign="top" width="24.509803921568626%" id="d14121e66">Target Data Type</th>
+       <th class="entry" valign="top" width="24.509803921568626%" id="d14144e70">Target Data Type</th>
 
-       <th class="entry" valign="top" width="75.49019607843137%" id="d14121e69">Source </th>
+       <th class="entry" valign="top" width="75.49019607843137%" id="d14144e73">Source Data Type</th>
 
       </tr>
 
@@ -57,79 +57,79 @@ When you convert a String field to Date or Datetime, you specify the date or dat
 
      <tbody class="tbody">
       <tr class="row">
-       <td class="entry" valign="top" width="24.509803921568626%" headers="d14121e66 ">Boolean</td>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d14144e70 ">Boolean</td>
 
-       <td class="entry" valign="top" width="75.49019607843137%" headers="d14121e69 ">Byte, Decimal, Double, Float, Integer, Long, Short, String</td>
-
-      </tr>
-
-      <tr class="row">
-       <td class="entry" valign="top" width="24.509803921568626%" headers="d14121e66 ">Byte</td>
-
-       <td class="entry" valign="top" width="75.49019607843137%" headers="d14121e69 ">Decimal, Double, Float, Integer, Long, Short,  String</td>
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d14144e73 ">Byte, Decimal, Double, Float, Integer, Long, Short, String</td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="24.509803921568626%" headers="d14121e66 ">Character</td>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d14144e70 ">Byte</td>
 
-       <td class="entry" valign="top" width="75.49019607843137%" headers="d14121e69 ">String</td>
-
-      </tr>
-
-      <tr class="row">
-       <td class="entry" valign="top" width="24.509803921568626%" headers="d14121e66 ">Date</td>
-
-       <td class="entry" valign="top" width="75.49019607843137%" headers="d14121e69 ">Long, String</td>
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d14144e73 ">Decimal, Double, Float, Integer, Long, Short,  String</td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="24.509803921568626%" headers="d14121e66 ">Decimal</td>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d14144e70 ">Character</td>
 
-       <td class="entry" valign="top" width="75.49019607843137%" headers="d14121e69 ">Byte, Double, Float,  Integer, Long, Short, String</td>
-
-      </tr>
-
-      <tr class="row">
-       <td class="entry" valign="top" width="24.509803921568626%" headers="d14121e66 ">Double</td>
-
-       <td class="entry" valign="top" width="75.49019607843137%" headers="d14121e69 ">Byte, Decimal, Integer, Float, Long, Short, String</td>
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d14144e73 ">String</td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="24.509803921568626%" headers="d14121e66 ">Float</td>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d14144e70 ">Date</td>
 
-       <td class="entry" valign="top" width="75.49019607843137%" headers="d14121e69 ">Byte, Decimal, Double, Integer, Long, Short, String</td>
-
-      </tr>
-
-      <tr class="row">
-       <td class="entry" valign="top" width="24.509803921568626%" headers="d14121e66 ">Integer</td>
-
-       <td class="entry" valign="top" width="75.49019607843137%" headers="d14121e69 ">Byte, Decimal, Double, Float, Long, Short, String</td>
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d14144e73 ">Long, String</td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="24.509803921568626%" headers="d14121e66 ">Long</td>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d14144e70 ">Decimal</td>
 
-       <td class="entry" valign="top" width="75.49019607843137%" headers="d14121e69 ">Byte, Decimal, Double, Float, Integer, Short, String</td>
-
-      </tr>
-
-      <tr class="row">
-       <td class="entry" valign="top" width="24.509803921568626%" headers="d14121e66 ">Short</td>
-
-       <td class="entry" valign="top" width="75.49019607843137%" headers="d14121e69 ">Byte, Decimal, Double, Float, Integer, Long, String</td>
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d14144e73 ">Byte, Double, Float,  Integer, Long, Short, String</td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="24.509803921568626%" headers="d14121e66 ">String</td>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d14144e70 ">Double</td>
 
-       <td class="entry" valign="top" width="75.49019607843137%" headers="d14121e69 ">All supported data types.</td>
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d14144e73 ">Byte, Decimal, Integer, Float, Long, Short, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d14144e70 ">Float</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d14144e73 ">Byte, Decimal, Double, Integer, Long, Short, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d14144e70 ">Integer</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d14144e73 ">Byte, Decimal, Double, Float, Long, Short, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d14144e70 ">Long</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d14144e73 ">Byte, Decimal, Double, Float, Integer, Short, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d14144e70 ">Short</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d14144e73 ">Byte, Decimal, Double, Float, Integer, Long, String</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d14144e70 ">String</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d14144e73 ">All supported data types.</td>
 
       </tr>
 
@@ -137,16 +137,6 @@ When you convert a String field to Date or Datetime, you specify the date or dat
 
     </table>
 </div>
-
-  </div>
-
-  <div class="p">
-   <ul class="ul" id="concept_ixz_s5q_wq__ul_ryh_y5q_wq">
-    <li class="li">
-     
-    </li>
-
-   </ul>
 
   </div>
 
@@ -167,12 +157,14 @@ When you convert a String field to Date or Datetime, you specify the date or dat
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="../Destinations/Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep it in the pipeline.">
+                    require data. <a class="xref" href="../Destinations/Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep it in the pipeline. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
                         <img class="image" id="task_g23_2tq_wq__d1421e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To convert a field, configure the following properties:</span>
+                <span class="ph cmd">On the
+                        <span class="keyword wintitle">Conversions</span> tab, configure the following
+                    properties:</span>
                 <div class="itemgroup info">
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_g23_2tq_wq__table_ozv_nnk_wq" class="table" frame="border" border="1" rules="all">
@@ -180,9 +172,9 @@ When you convert a String field to Date or Datetime, you specify the date or dat
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.44481605351171%" id="d14121e253">Field Converter Configuration Property</th>
+                                    <th class="entry" valign="top" width="33.44481605351171%" id="d14144e254">Field Converter Configuration Property</th>
 
-                                    <th class="entry" valign="top" width="66.5551839464883%" id="d14121e256">Description</th>
+                                    <th class="entry" valign="top" width="66.5551839464883%" id="d14144e257">Description</th>
 
                                 </tr>
 
@@ -190,32 +182,34 @@ When you convert a String field to Date or Datetime, you specify the date or dat
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14121e253 ">Convert Field</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14144e254 ">Fields to Convert</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14121e256 ">Field to be converted. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14121e253 ">Target Type</td>
-
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14121e256 ">Data type to convert to. </td>
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14144e257 ">One or more field to convert to the same data
+                                        type.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14121e253 ">Data Locale</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14144e254 ">Convert to Type</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14121e256 ">Locale of the data in the field. Can determine how the
-                                        Field Converter formats converted data.</td>
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14144e257 ">Data type for conversion. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14121e253 ">Date Format</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14144e254 ">Data Locale</td>
 
-                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14121e256 ">Format for a Date or Datetime field. Use any valid
-                                        format. </td>
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14144e257 ">Locale of the data in the field. Can determine how the
+                                        Field Converter formats converted data, such as a comma or
+                                        period as a decimal separator. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d14144e254 ">Date Format</td>
+
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d14144e257 ">Format for a Date or Datetime field. Select or enter any
+                                        valid format. </td>
 
                                 </tr>
 
@@ -227,8 +221,8 @@ When you convert a String field to Date or Datetime, you specify the date or dat
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To convert another field, click <span class="ph uicontrol">Add</span> and then repeat the
-                    previous step.</span>
+                <span class="ph cmd">To convert another field, click the <span class="ph uicontrol">Add</span> icon and then
+                    repeat the previous step.</span>
             </li>
 </ol>
 

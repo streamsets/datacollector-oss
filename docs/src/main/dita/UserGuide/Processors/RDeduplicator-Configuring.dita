@@ -2,7 +2,7 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ikr_c2f_zq">
     <title>Configuring a Record Deduplicator</title>
-    <shortdesc>Use a Record Deduplicator to remove records with duplicate data. </shortdesc>
+    <shortdesc>Use a Record Deduplicator to route or remove records with duplicate data. </shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_ojk_22f_zq">
@@ -27,12 +27,14 @@
                             <tbody>
                                 <row>
                                     <entry>Max Records to Compare</entry>
-                                    <entry>The maximum number of records to compare. </entry>
+                                    <entry>The maximum number of records to compare. Upon reaching
+                                        this number, the Record Deduplicator clears its
+                                        cache.</entry>
                                 </row>
                                 <row>
                                     <entry>Time to Compare</entry>
                                     <entry>Amount of seconds to compare records. This property takes
-                                        precedence over the number of records. </entry>
+                                        precedence over the Max Records to Compare. </entry>
                                 </row>
                                 <row>
                                     <entry>Compare</entry>
@@ -45,8 +47,7 @@
                                 </row>
                                 <row>
                                     <entry>Fields to Compare</entry>
-                                    <entry>Subset of fields that you want to compare for duplicate
-                                        data. </entry>
+                                    <entry>Subset of fields to compare for duplicate data. </entry>
                                 </row>
                             </tbody>
                         </tgroup>

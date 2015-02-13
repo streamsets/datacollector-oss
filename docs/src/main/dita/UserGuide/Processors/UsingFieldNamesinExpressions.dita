@@ -10,7 +10,7 @@
   <p>For example, the following expression concatenates the values from the DATE field with values
    from the TIME field:</p>
   <p>
-   <codeblock>${record:value("/DATE")||record:value("/TIME")}</codeblock>
+   <codeblock>${record:value("/DATE")||${record:value("/TIME")}</codeblock>
   </p>
  </conbody>
 </concept>

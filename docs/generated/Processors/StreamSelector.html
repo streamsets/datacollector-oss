@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Stream Selector passes data to streams based on conditions. When you configure a condition, the Stream Selector creates an output location for the stage that you connect to a downstream stage. The ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Stream Selector"></meta><meta name="abstract" content="The Stream Selector passes data to streams based on conditions."></meta><meta name="description" content="The Stream Selector passes data to streams based on conditions."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_tqv_t5r_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Stream Selector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Stream Selector passes data to streams based on conditions. When you configure a condition, the Stream Selector creates an output for the stage that you connect to a downstream stage. The Stream ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Stream Selector"></meta><meta name="abstract" content="The Stream Selector passes data to streams based on conditions."></meta><meta name="description" content="The Stream Selector passes data to streams based on conditions."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_tqv_t5r_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Stream Selector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -16,9 +16,16 @@
  
  <div class="body conbody"><p class="shortdesc">The Stream Selector passes data to streams based on conditions. </p>
 
-  <p class="p">When you configure a condition, the Stream Selector creates an output location for the stage
-   that you connect to a downstream stage. The Stream Selector passes a record to all streams where
-   the record matches the condition. </p>
+  <p class="p">When you configure a condition, the Stream Selector creates an output for the stage that you
+      connect to a downstream stage. The Stream Selector passes a record to all streams where the
+      record matches the condition. </p>
+
+    <div class="p">For example, you create the following conditions:
+      <pre class="pre codeblock">${record:value("/ID")==null}
+${record:value("/State")==CA}</pre>
+</div>
+
+    <p class="p">A record with a missing ID from California is sent to both streams. </p>
 
  </div>
 
@@ -27,21 +34,21 @@
  <h2 class="title topictitle2">Handling Non-Matching Records</h2>
 
  
- <div class="body conbody"><p class="shortdesc">When a record does not match any condition, the Stream Selector can use the configured
-  fallback action or you can configure a default stream that accepts the remaining
+ <div class="body conbody"><p class="shortdesc">When a record does not match any condition, the Stream Selector can use the error
+  handling for unmatched records or you can configure a default stream that accepts the unmatched
   records:</p>
 
   <div class="p">
    <dl class="dl">
     
-     <dt class="dt dlterm">Use the fallback action</dt>
+     <dt class="dt dlterm">Error handling for unmatched records</dt>
 
-     <dd class="dd">The Fallback Action property determines how the Stream Selector handles records that do not
-      match any conditions. The Stream Selector can perform one of the following fallback
+     <dd class="dd">The Unmatched Record Handling property determines how the Stream Selector handles records
+      that do not match any conditions. The Stream Selector can perform one of the following
        actions:<ul class="ul" id="concept_sn5_5kx_wq__ul_jhg_fkx_wq">
        <li class="li">Discard the record.</li>
 
-       <li class="li">Write the record to the error log. </li>
+       <li class="li">Send the error to the pipeline for error handling.</li>
 
        <li class="li">Stop the pipeline.</li>
 
@@ -53,15 +60,16 @@
      <dt class="dt dlterm">Create a default stream</dt>
 
      <dd class="dd">You can create a default stream to capture records that do not match other conditions. When
-      you create a default stream, you connect the stage output to a branch in the pipeline. </dd>
+      you create a default stream, you connect the output to a branch in the pipeline. </dd>
 
      <dd class="dd">You can configure the branch to perform additional processing or write it directly to a
-      destination. You might write the data to a real destination to be reviewed later, or you might
-      use the Trash destination. </dd>
+      destination. You might write the data to a real destination or use the Trash destination. </dd>
 
-     <dd class="dd">When you use the Trash destination, the pipeline discards the records. But unlike the
-      discard fallback action, you can view the number of records being discarded when you monitor
-      the pipeline, and you can create alerts around this metric. </dd>
+     <dd class="dd">When you use the Trash destination, the pipeline discards the records. But unlike
+      discarding the record as part of error handling, the <span class="ph">Data
+                  Collector</span> keeps
+      metrics for the Trash destination so you can view the number of records being discarded and
+      you can create alerts around this metric. </dd>
 
     
    </dl>
@@ -81,7 +89,8 @@
     <h2 class="title topictitle2">Configuring the Stream Selector</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">Use a Stream Selector to route data to different streams. </p>
+    <div class="body taskbody"><p class="shortdesc">Use a Stream Selector to route data to different streams based on
+        conditions</p>
 
         <div class="section context"></div>
 
@@ -91,45 +100,80 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="../Destinations/Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep it in the pipeline.">
+                    require data. <a class="xref" href="../Destinations/Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep it in the pipeline. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
                         <img class="image" id="task_iss_2zx_wq__d1421e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Enter a condition for the first stream.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">To create another stream, click the <span class="ph uicontrol">Add</span> icon and then
-                    enter the condition for the second stream.</span>
-                <div class="itemgroup info">Repeat this step to configure the number of streams that you need. </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">To use a default stream to capture any records that do not match the other
-                    conditions, click the <span class="ph uicontrol">Add</span> icon and then enter the
-                    following condition: <samp class="ph codeph">${default}</samp>.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd"> For <span class="ph uicontrol">Fallback Action</span>, select the action to take for
-                    records that do not match the conditions:</span>
+                <span class="ph cmd">On the <span class="ph uicontrol">Conditions</span> tab, configure the following
+                    properties:</span>
                 <div class="itemgroup info">
-                    <ul class="ul" id="task_iss_2zx_wq__ul_uxy_r3f_xq">
-                        <li class="li">Drop record. Drops the record from the pipeline. </li>
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_iss_2zx_wq__table_ecr_dwf_br" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="28.011204481792717%" id="d16930e169">Stream Selector Property</th>
 
-                        <li class="li">Record to error. Writes the record to the error log.</li>
+                                    <th class="entry" valign="top" width="71.98879551820728%" id="d16930e172">Description</th>
 
-                        <li class="li">Fail pipeline. Stops the pipeline.</li>
+                                </tr>
 
-                    </ul>
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d16930e169 ">Condition</td>
+
+                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d16930e172 ">Condition to stream data to this output. Click the
+                                            <span class="ph uicontrol">Add</span> icon to create additional
+                                        conditions and corresponding output locations. <p class="p">To define
+                                            a default stream to capture unmatched records, add a
+                                            condition with the following expression:
+                                        ${default}.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d16930e169 ">Constants <a class="xref" href="ConfiguringExpressionsConditions.html#task_ogd_zj3_wq" title="You can define constants that you can reuse within a processor. Define a constant when you have a value that you want use more than once in the processor or that you want to be able to update easily. You can define constants in the Expression Evaluator and Stream Selector processors.">
+                                            <img class="image" id="task_iss_2zx_wq__image_c4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
+
+                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d16930e172 ">Represents a constant in conditions. Define a constant to
+                                        easily reuse it in the stage or to easily update the
+                                        constant value. <p class="p">To define a constant, click the
+                                                <span class="ph uicontrol">Add</span> icon, and then enter a
+                                                <span class="ph uicontrol">Name</span> and
+                                                <span class="ph uicontrol">Value</span> for the constant.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d16930e169 ">Unmatched Record Handling</td>
+
+                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d16930e172 ">Determines how to handle records that do not match any
+                                        condition: <ul class="ul" id="task_iss_2zx_wq__ul_uxy_r3f_xq">
+                                            <li class="li">Drop Record - Drops the record from the pipeline. </li>
+
+                                            <li class="li">Record to Error - Sends the record to the pipeline
+                                                for error handling. </li>
+
+                                            <li class="li">Fail Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
 
                 </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">To define a constant for use in conditions, enter the name and value for the
-                    constant. </span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">To add additional constants, click <span class="ph uicontrol">Add</span> and configure the
-                    constant.</span>
             </li>
 </ol>
 

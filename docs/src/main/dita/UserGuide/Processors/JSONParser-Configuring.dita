@@ -4,23 +4,20 @@
     <title>Configuring a JSON Parser</title>
     <shortdesc>Use a JSON Parser to parse a JSON object in a String field. </shortdesc>
     <taskbody>
-        <context>
-            <p>When you configure a JSON Parser, specify the field to parse and the output field to
-                use.</p>
-        </context>
+        <context/>
         <steps id="steps_wc5_4g2_zq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <uicontrol>JSON Parsing</uicontrol> tab, configure the following
+                <cmd>On the <uicontrol>Parse</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_rmn_h52_zq">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
                             <thead>
                                 <row>
                                     <entry>JSON Parsing Property</entry>
@@ -30,19 +27,20 @@
                             <tbody>
                                 <row>
                                     <entry>Field to Parse</entry>
-                                    <entry>Field that contains JSON objects.</entry>
+                                    <entry>Field that contains the JSON object.</entry>
                                 </row>
                                 <row>
-                                    <entry>Parsed JSON Field</entry>
-                                    <entry>Output field for the parsed JSON objects.</entry>
+                                    <entry>New Parsed Field</entry>
+                                    <entry>Output field for the parsed JSON object.</entry>
                                 </row>
                                 <row>
-                                    <entry>On Error</entry>
-                                    <entry>Action to take when an error occurs. Use one of the
-                                        following options:<ul id="ul_xtt_q52_zq">
-                                            <li>Discard</li>
-                                            <li>Send to Error</li>
-                                            <li>Stop Pipeline</li>
+                                    <entry>Error Record</entry>
+                                    <entry>Determines what to do with error records:<ul
+                                            id="ul_xtt_q52_zq">
+                                            <li>Discard - Discards the record. </li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling. </li>
+                                            <li>Stop Pipeline - Stops the pipeline. </li>
                                         </ul></entry>
                                 </row>
                             </tbody>

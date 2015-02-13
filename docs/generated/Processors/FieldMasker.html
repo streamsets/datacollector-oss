@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Field Masker processor masks string values based on the selected mask type. You can use variable-length, fixed-length, or custom masks. You can create custom masks that reveal part of the string ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Masker"></meta><meta name="abstract" content="The Field Masker processor masks string values based on the selected mask type. You can use variable-length, fixed-length, or custom masks. You can create custom masks that reveal part of the string value."></meta><meta name="description" content="The Field Masker processor masks string values based on the selected mask type. You can use variable-length, fixed-length, or custom masks. You can create custom masks that reveal part of the string value."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hjc_t4k_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Masker</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Field Masker processor masks string values based on the selected mask type. You can use variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string value. Use the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Masker"></meta><meta name="abstract" content="The Field Masker processor masks string values based on the selected mask type. You can use variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string value."></meta><meta name="description" content="The Field Masker processor masks string values based on the selected mask type. You can use variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string value."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hjc_t4k_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Masker</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,15 +15,15 @@
 
  
  <div class="body conbody"><p class="shortdesc">The Field Masker processor masks string values based on the selected mask type. You can
-  use variable-length, fixed-length, or custom masks. You can create custom masks that reveal part
-  of the string value.</p>
+  use variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string
+  value.</p>
 
-  <p class="p">Use the Field Masker to mask string data. For example, you might use a custom mask to mask the
-   last four digits of a phone number.</p>
+  <p class="p">Use the Field Masker to mask sensitive string data. For example, you might use a custom mask to
+   mask the last four digits of a phone number.</p>
 
   <div class="p">
-   <div class="note tip"><span class="tiptitle">Tip:</span> To mask non-string data, you might use the Field Type Converter processor to
-    convert non-string data to String, then stream the data to the Field Masker. </div>
+   <div class="note tip"><span class="tiptitle">Tip:</span> To mask non-string data, you might use the Field Converter processor to convert
+    non-string data to String, then pass the data to the Field Masker. </div>
 
   </div>
 
@@ -100,10 +100,10 @@ L92m1sN3q0jaOmE67Ws</pre>
      <dd class="dd">Replaces values with a mask based on a user-defined pattern. </dd>
 
      <dd class="dd">When you define the pattern for the mask, you can use a hash mark (#) to reveal the
-      character in that location of the hash mark.  All other characters are used as constants in
-      the mask. For example, the following mask pattern reveals the area code of a phone number and
-      replaces all other digits in the phone number with an x: <samp class="ph codeph">###-xxx-xxxx</samp>.<div class="note tip"><span class="tiptitle">Tip:</span> To avoid confusing masking characters for real data, use a single masking
-       character.</div>
+      character in that location of the hash mark. All other characters are used as constants in the
+      mask. For example, the following mask pattern reveals the area code of a phone number and
+      replaces all other digits in the phone number with an x: <samp class="ph codeph">###-xxx-xxxx</samp>.<div class="note tip"><span class="tiptitle">Tip:</span> To avoid confusing masking characters for real data, use one masking character
+       instead of a mix of masking characters.</div>
 </dd>
 
     
@@ -128,12 +128,13 @@ L92m1sN3q0jaOmE67Ws</pre>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="../Destinations/Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep it in the pipeline.">
+                    require data. <a class="xref" href="../Destinations/Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep it in the pipeline. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
                         <img class="image" id="task_vgg_z44_wq__d1421e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand" id="task_vgg_z44_wq__SelectHashField">
-                <span class="ph cmd">To mask a field, configure the following properties:</span>
+                <span class="ph cmd">On the <span class="ph uicontrol">Mask</span> tab, configure the following
+                    properties:</span>
                 <div class="itemgroup info">
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vgg_z44_wq__table_ozv_nnk_wq" class="table" frame="border" border="1" rules="all">
@@ -141,9 +142,9 @@ L92m1sN3q0jaOmE67Ws</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="50%" id="d14924e200">Field Masker Configuration Property</th>
+                                    <th class="entry" valign="top" width="50%" id="d14930e203">Field Masker Configuration Property</th>
 
-                                    <th class="entry" valign="top" width="50%" id="d14924e203">Description</th>
+                                    <th class="entry" valign="top" width="50%" id="d14930e206">Description</th>
 
                                 </tr>
 
@@ -151,18 +152,19 @@ L92m1sN3q0jaOmE67Ws</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d14924e200 ">Mask Field</td>
+                                    <td class="entry" valign="top" width="50%" headers="d14930e203 ">Fields to Mask</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d14924e203 ">String field to be masked. </td>
+                                    <td class="entry" valign="top" width="50%" headers="d14930e206 ">One or more String fields to mask with the same mask
+                                        type.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d14924e200 ">Mask Type <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                    <td class="entry" valign="top" width="50%" headers="d14930e203 ">Mask Type <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
 
                                         <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d14924e203 ">Mask type to hide field values. Select one of the
+                                    <td class="entry" valign="top" width="50%" headers="d14930e206 ">Mask type to hide field values. Select one of the
                                         following options:<ul class="ul" id="task_vgg_z44_wq__ul_kmd_rnk_wq">
                                             <li class="li">Fixed-length - Replaces values with a fixed-length
                                                 mask.</li>
@@ -179,14 +181,13 @@ L92m1sN3q0jaOmE67Ws</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d14924e200 ">Custom Pattern <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                    <td class="entry" valign="top" width="50%" headers="d14930e203 ">Custom Mask <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
                                             <img class="image" id="task_vgg_z44_wq__image_rx1_l1q_wq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d14924e203 ">Mask pattern for a custom mask. Enter the pattern that
-                                        you want to use.<p class="p">You can use the hash mark (#) to display
-                                            characters in the specified location. For example,
-                                            ###xxx reveals the first three characters of a string
-                                            and masks the last three characters with x.</p>
+                                    <td class="entry" valign="top" width="50%" headers="d14930e206 ">Mask pattern for a custom mask. Enter the pattern that
+                                        you want to use.<p class="p">Use the hash mark (#) to display
+                                            characters in the specified location. Use any other
+                                            character as a masking character.</p>
 </td>
 
                                 </tr>
@@ -199,8 +200,8 @@ L92m1sN3q0jaOmE67Ws</pre>
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To mask another field, click <span class="ph uicontrol">Add</span>, and then repeat the
-                    previous step.</span>
+                <span class="ph cmd">To mask another field, click the <span class="ph uicontrol">Add</span> icon, and then
+                    repeat the previous step.</span>
             </li>
 </ol>
 

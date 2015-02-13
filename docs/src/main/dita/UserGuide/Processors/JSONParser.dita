@@ -4,5 +4,9 @@
  <title>JSON Parser</title>
  <shortdesc>The JSON Parser parses a JSON object embedded in String field and passes the resulting
   data into the pipeline. Based on the contents of the JSON object, the resulting field is either a
-  string, a map or an array.</shortdesc>
+  string, a map, or an array.</shortdesc>
+ <conbody>
+  <p>When you configure a JSON Parser, you specify the field to parse and the output field to
+   use.</p>
+ </conbody>
 </concept>

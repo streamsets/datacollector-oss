@@ -17,8 +17,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_zfp_zy4_yq">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.45*"/>
                             <thead>
                                 <row>
                                     <entry>Expression Evaluator Property</entry>
@@ -27,27 +27,38 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Field</entry>
-                                    <entry>Name of the field to pass the results of the expression
-                                        to the next stage. Enter the name of the new or existing
-                                        field as follows: /&lt;field name><p>The Expression
-                                            Evaluator replaces values in existing field.
-                                        </p></entry>
+                                    <entry>Expressions</entry>
+                                    <entry>
+                                        <p>Performs calculations within a row and passes the values
+                                            to an output field. Click the <uicontrol>Add</uicontrol>
+                                            icon to add additional expressions. </p>
+                                        <ul id="ul_hhv_kzf_br">
+                                            <li>Output Field - The field to pass the results of the
+                                                expression to the next stage. Enter the name of a
+                                                new or existing field as follows: /&lt;field
+                                                  name>.<p>The Expression Evaluator replaces values
+                                                  in existing field. </p></li>
+                                            <li>Expression - Expression to evaluate.</li>
+                                        </ul>
+                                    </entry>
                                 </row>
                                 <row>
-                                    <entry>Expression</entry>
-                                    <entry>Expression to evaluate.</entry>
+                                    <entry>Constants <xref
+                                        href="DefiningConstants.dita#task_ogd_zj3_wq"> 
+                                        <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                            id="image_c4p_p5v_yq"/></xref></entry>
+                                    <entry>Represents a constant in expressions. Define a constant
+                                        to easily reuse it in the stage or to easily update the
+                                        constant value. <p>To define a constant, click the
+                                                <uicontrol>Add</uicontrol> icon, and then enter a
+                                                <uicontrol>Name</uicontrol> and
+                                                <uicontrol>Value</uicontrol> for the constant.
+                                        </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
                     </table>
                 </info>
-            </step>
-            <step>
-                <cmd>Optionally define constants that you want to use within the processor. </cmd>
-                <info>To define a constant, click <uicontrol>Add</uicontrol>, and then enter a
-                        <uicontrol>Name</uicontrol> and <uicontrol>Value</uicontrol> for the
-                    constant.</info>
             </step>
         </steps>
     </taskbody>

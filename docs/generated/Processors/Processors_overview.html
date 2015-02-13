@@ -53,14 +53,15 @@
  <div class="body conbody"><p class="shortdesc">Stages display a field name with a preceding slash as follows: <samp class="ph codeph">/&lt;field
    name&gt;</samp>. For example, a field named CITY displays as /CITY. </p>
 
-  <p class="p">Generally, you can select fields from a list. When a list is not available, use a preceding
-   slash when you reference a field name. </p>
+  <p class="p">After you preview data or select fields using preview data, you can generally select fields
+      from a list. When a list is not available or when you want to define a new field name, type in
+      the field name with a preceding slash.</p>
 
-  <p class="p">For example, the following Expression processor replaces values in the "first" field. The
-   Expression Configuration Field property requires you to enter the field name manually with the
-   preceding slash. The Required Fields property provides a list of fields to select from. </p>
+  <p class="p">For example, when you define an output field for an Expression Evaluator, you can select from a
+      list of fields passed from the previous stage. But to create a new field for the results of
+      the expression, you enter a field name, such as /Code. </p>
 
-  <p class="p"><img class="image" id="concept_hjk_b4l_vq__image_gxw_d2m_xq" src="../Graphics/FieldName-referencing.png" height="177" width="426"></img></p>
+  <p class="p"><img class="image" id="concept_hjk_b4l_vq__image_gxw_d2m_xq" src="../Graphics/FieldName-referencing.png" height="107" width="337"></img></p>
 
  </div>
 
@@ -70,16 +71,14 @@
 
  
  <div class="body conbody"><p class="shortdesc">You can configure required fields for any processor and most target stages. A required
-  field must exist in a record to keep it in the pipeline. </p>
-
-  <p class="p">When a record does not include a required field, the stage either discards the record or writes
-   it to error based on the default pipeline error handling.</p>
+  field must exist in a record to keep it in the pipeline. When a record does not include a required
+  field, the stage passes the field to the pipeline for error handling. </p>
 
   <p class="p">Configure required fields based on your business requirements or in order to minimize
    processing errors.</p>
 
   <p class="p">For example, a Field Hasher encodes social security data in the /SS field. To ensure processing
-   only records with social security numbers, make /SS a required field. </p>
+   only records that include social security numbers, make /SS a required field. </p>
 
  </div>
 
