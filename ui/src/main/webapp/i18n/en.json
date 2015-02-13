@@ -202,6 +202,7 @@
         "noRulesMessage": "No active Data Rules for this stream. Add Rules in Data Rules Tab for Inspecting Data.",
         "meterGraphPostFix": " (records/sec)"
       },
+      "definitionsJSONData": "Definitions Raw JSON data",
       "general": "General",
       "history": "History",
       "historyTab": {

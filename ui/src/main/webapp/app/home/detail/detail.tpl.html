@@ -54,6 +54,10 @@
             <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline-library/{{pipelineConfig.info.name}}" target="_blank">{{'home.detailPane.pipelineConfigJSONData' | translate}}</a>
           </li>
 
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="/rest/v1/definitions" target="_blank">{{'home.detailPane.definitionsJSONData' | translate}}</a>
+          </li>
+
           <li role="presentation" ng-if="isPipelineRunning" class="divider"></li>
 
           <li role="presentation" ng-if="isPipelineRunning">

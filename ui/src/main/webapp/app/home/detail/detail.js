@@ -140,7 +140,7 @@ angular
           if(stageInstance.instanceName && config.issues.stageIssues &&
             config.issues.stageIssues[stageInstance.instanceName]) {
             issues = config.issues.stageIssues[stageInstance.instanceName];
-          } else if(config.issues.pipelineIssues){
+          } else if(!stageInstance.instanceName && config.issues.pipelineIssues){
             issues.push.apply(issues, config.issues.pipelineIssues);
 
             if(config.errorStage && config.issues.stageIssues && config.issues.stageIssues[config.errorStage.instanceName]) {
