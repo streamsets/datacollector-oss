@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_gbm_s3k_br">
+    <title>Viewing <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        Logs</title>
+    <shortdesc>You can view log data for the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        />.</shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_udd_v3k_br">
+            <step>
+                <cmd>Click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol>Logs</uicontrol>
+                    </menucascade>.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

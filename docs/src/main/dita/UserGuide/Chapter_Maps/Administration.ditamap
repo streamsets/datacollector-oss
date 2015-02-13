@@ -3,11 +3,30 @@
 <map>
  <title>Administration</title>
  <topicref href="../Administration/Administration_title.dita">
-  <topicref href="../Administration/DataCollectorAdministration.dita">
+  <topicref href="../Administration/DataCollectorAdministration.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Administration/ViewingDCConfigs.dita"/>
+  <topicref href="../Administration/ViewingDCConfigs.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Administration/ViewingJVMMetrics.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Administration/ViewingLogData.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Administration/ShuttingDown.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
  </topicref>
 </map>

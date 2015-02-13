@@ -6,9 +6,8 @@
   can also verify the stage instance name on the General tab for the stage. </shortdesc>
  <conbody>
   <p><indexterm>stage instance name<indexterm>format</indexterm></indexterm>You can use an error
-   function to return the stage instance name for the stage that sent the record to the error record
-   file. You might use stage instance names in expressions or conditions when you configure an error
-   pipeline. </p>
+   function to return the stage instance name that sent the record to the error record file. You
+   might use stage instance names in expressions or conditions when you configure an error pipeline. </p>
   <p>Stage instances names use the following format: </p>
   <p>
    <codeblock>&lt;internal information>_&lt;internal stage name>&lt;ID></codeblock>

@@ -1,0 +1,133 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="Create a metric alert to receive monitoring or email alerts based on metric rules. You can configure metric alerts when you configure or monitor a pipeline. You can edit or delete alerts when they are ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Configuring a Metric Alert"></meta><meta name="abstract" content="Create a metric alert to receive monitoring or email alerts based on metric rules. You can configure metric alerts when you configure or monitor a pipeline."></meta><meta name="description" content="Create a metric alert to receive monitoring or email alerts based on metric rules. You can configure metric alerts when you configure or monitor a pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Monitoring/MetricAlerts.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_hcf_11k_br"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Configuring a Metric Alert</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody" id="task_hcf_11k_br">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Pipeline_Monitoring/../Pipeline_Monitoring/PipelineMonitoring_title.html" title="Pipeline Monitoring">Pipeline Monitoring</a> / <a class="navheader_parent_path" href="../Pipeline_Monitoring/MetricAlerts.html" title="Metric Alerts">Metric Alerts</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Pipeline_Monitoring/MetricAlerts.html" title="Metric Alerts"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Metric Alerts</span></a></span>  </div></td></tr></tbody></table>
+
+    <h1 class="title topictitle1">Configuring a Metric Alert</h1>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Create a metric alert to receive monitoring or email alerts based on metric rules.
+        You can configure metric alerts when you configure or monitor a pipeline.</p>
+
+        <div class="section context">
+            <p class="p">You can edit or delete alerts when they are not active. </p>
+
+        </div>
+
+        <ol class="ol steps" id="task_hcf_11k_br__steps_jzm_f1k_br"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel or Monitoring panel, click the <span class="ph uicontrol">Metric
+                        Rules</span> tab, and click the <span class="ph uicontrol">Add</span> icon.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="keyword wintitle">Metric Alert Rule</span> dialog box, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hcf_11k_br__table_lcs_4bk_br" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.003300330033%" id="d13719e57">Metric Alert Rule Property</th>
+
+                                    <th class="entry" valign="top" width="66.996699669967%" id="d13719e60">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.003300330033%" headers="d13719e57 ">Alert Text</td>
+
+                                    <td class="entry" valign="top" width="66.996699669967%" headers="d13719e60 ">Text to display when the alert is triggered. <p class="p">Enter
+                                            text that explains the reason for the alert. For
+                                            example, "Over 1000 pipeline error records."</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.003300330033%" headers="d13719e57 ">Metric Type <a class="xref" href="MetricTypes.html#concept_y4d_tcw_1r" title="Metric alerts provide different types of alerts based on the metric type that you select."><img class="image" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.996699669967%" headers="d13719e60 ">Type of metric information the alert is based on:<ul class="ul" id="task_hcf_11k_br__ul_fwn_zbk_br">
+                                            <li class="li">Counter</li>
+
+                                            <li class="li">Histogram</li>
+
+                                            <li class="li">Meter</li>
+
+                                            <li class="li">Timer</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.003300330033%" headers="d13719e57 ">Metric ID</td>
+
+                                    <td class="entry" valign="top" width="66.996699669967%" headers="d13719e60 ">Metric to use. Provides a list of available metrics based
+                                        on the metric type. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.003300330033%" headers="d13719e57 ">Metric Element</td>
+
+                                    <td class="entry" valign="top" width="66.996699669967%" headers="d13719e60 ">Metric element to use. Provides a list of available
+                                        elements based on the metric ID.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.003300330033%" headers="d13719e57 ">Condition</td>
+
+                                    <td class="entry" valign="top" width="66.996699669967%" headers="d13719e60 ">Condition to trigger the alert. Use the expression
+                                        language to configure the condition. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.003300330033%" headers="d13719e57 ">Send Email</td>
+
+                                    <td class="entry" valign="top" width="66.996699669967%" headers="d13719e60 ">Sends an email when the alert is triggered. <p class="p">To send an
+                                            email, add email addresses for alerts and configure the
+                                                <span class="ph">Data
+                  Collector</span> email properties.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Save</span>.</span>
+                <div class="itemgroup info">The new alert displays in the list. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To activate the alert, select <span class="ph uicontrol">Active</span> for the
+                    alert.</span>
+            </li>
+</ol>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Pipeline_Monitoring/MetricAlerts.html" title="Metric Alerts"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Metric Alerts</span></a></span>  </div><div class="footer">WebHelp output generated by<a href="http://www.oxygenxml.com" target="_blank"><span class="oXygenLogo"><img src="../oxygen-webhelp/resources/img/LogoOxygen100x22.png" alt="Oxygen"></img></span><span class="xmlauthor">XML Author</span></a></div>
+</body>
+</html>

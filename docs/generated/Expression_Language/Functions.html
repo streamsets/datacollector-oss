@@ -142,7 +142,7 @@
 
      <dd class="dd">Returns the instance name of the stage that sent the record to error. </dd>
 
-     <dd class="dd">You can find the instance name on the General tab of the stage. </dd>
+     <dd class="dd">You can verify the instance name on the General tab of the stage. </dd>
 
     
     
@@ -166,10 +166,10 @@
 
      <dd class="dd">By default, the Data Collector ID uses the format &lt;hostname&gt;:&lt;port&gt;. You can verify
       the <span class="ph">Data
-                  Collector</span> ID,
+                  Collector</span> ID
       in the <span class="ph">Data
                   Collector</span>
-      console: Administration &gt; Configuration. </dd>
+      Configuration page.</dd>
 
     
     
@@ -197,22 +197,23 @@
  
  <div class="body conbody"><p class="shortdesc">Use string functions to transform string data. </p>
 
-  <p class="p">In string functions, you can
-   replace &lt;String&gt; with a string value, a call a string field, or any expression that evaluates
-   to a string. Similarly, you can replace parameters with expressions that evaluate to the
-   appropriate value. Indexes start with 0. </p>
+  <p class="p">You can replace any argument with
+   a constant, or a field or expression that evaluates to an appropriate constant. Strings should be
+   enclosed in quotes. Indexes start at 0. </p>
 
   <p class="p">The expression language provides the following string functions:</p>
 
   <div class="p">
    <dl class="dl">
     
-     <dt class="dt dlterm">${str:substring("&lt;String&gt;", &lt;beginIndex&gt;, &lt;endIndex&gt;)}</dt>
+     <dt class="dt dlterm">${str:substring("&lt;string&gt;", &lt;beginIndex&gt;, &lt;endIndex&gt;)}</dt>
 
      <dd class="dd">Returns a subset of the string value that starts with the beginIndex character and ends
       before the endIndex character. </dd>
 
-     <dd class="dd">Uses the following parameters:<ul class="ul" id="concept_ahp_f4v_1r__ul_pcx_4yw_1r">
+     <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_pcx_4yw_1r">
+       <li class="li">string - The string that contains the return substring that you want.</li>
+
        <li class="li">beginIndex - An integer that represents the beginning position of the returned substring,
         where 0 is the first character.</li>
 
@@ -222,65 +223,115 @@
       </ul>
 </dd>
 
-     <dd class="dd">For example, ${str:substring("Chewing Gum", 1, 4)} evaluates to Chew.</dd>
+     <dd class="dd">For example, ${str:substring("Chewing Gum", 1, 4)} returns: Chew.</dd>
 
     
     
-     <dt class="dt dlterm">${str:trim("&lt;String&gt;")} </dt>
+     <dt class="dt dlterm">${str:trim("&lt;string&gt;")} </dt>
 
-     <dd class="dd">Trims leading and trailing white space characters from the string, including spaces and
-      return characters.</dd>
+     <dd class="dd">Trims leading and trailing white space characters from a string, including spaces and
+      return characters. </dd>
+
+     <dd class="dd">Uses the following argument:<ul class="ul" id="concept_ahp_f4v_1r__ul_cpm_fnk_br">
+       <li class="li">string - The string to return without additional white space characters.</li>
+
+      </ul>
+</dd>
 
      <dd class="dd">For example, ${str:trim("record:value("/Address")} trims leading and trailing white space
       characters from the /Address field.</dd>
 
     
     
-     <dt class="dt dlterm">${str:toUpper("&lt;String&gt;")} </dt>
+     <dt class="dt dlterm">${str:toUpper("string&gt;")} </dt>
 
-     <dd class="dd">Converts string data to all capital letters.</dd>
+     <dd class="dd">Converts string data to all capital letters. </dd>
 
-     <dd class="dd">For example, ${str:toUpper("true")} evaluates to TRUE.</dd>
+     <dd class="dd">Uses the following argument:<ul class="ul" id="concept_ahp_f4v_1r__ul_std_jnk_br">
+       <li class="li">string - The string to capitalize.</li>
+
+      </ul>
+</dd>
+
+     <dd class="dd">For example, ${str:toUpper("true")} returns: TRUE.</dd>
 
     
     
-     <dt class="dt dlterm">${str:toLower("&lt;String&gt;")} </dt>
+     <dt class="dt dlterm">${str:toLower("&lt;string&gt;")} </dt>
 
      <dd class="dd">Converts string data to all lowercase letters.</dd>
 
-     <dd class="dd">For example, ${str:toLower("&lt;FALSE&gt;")} evaluates to false.</dd>
+     <dd class="dd">Uses the following argument:<ul class="ul" id="concept_ahp_f4v_1r__ul_il3_nnk_br">
+       <li class="li">string - The string to lower case.</li>
+
+      </ul>
+</dd>
+
+     <dd class="dd">For example, ${str:toLower("&lt;FALSE&gt;")} returns: false.</dd>
 
     
     
-     <dt class="dt dlterm">${str:replaceChar("&lt;String&gt;", &lt;oldChar&gt;, &lt;newChar&gt;)} </dt>
+     <dt class="dt dlterm">${str:replaceChar("&lt;string&gt;", "&lt;oldChar&gt;", "&lt;newChar&gt;")} </dt>
 
-     <dd class="dd">Replaces all instances of a specified character in a string with a new character.</dd>
+     <dd class="dd">Replaces all instances of a specified character in a string with a new character. </dd>
 
-     <dd class="dd">For example, ${str:replaceChar("lecucereche", e, a)} evaluates to lacucaracha.</dd>
+     <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_ryc_pnk_br">
+       <li class="li">string - The string for character replacement. </li>
+
+       <li class="li">oldChar - Character to replace.</li>
+
+       <li class="li">newChar - Character to use for replacement.</li>
+
+      </ul>
+</dd>
+
+     <dd class="dd">For example, ${str:replaceChar("lecucereche", e, a)} returns: lacucaracha.</dd>
 
     
     
-     <dt class="dt dlterm">${str:replaceString("&lt;String&gt;", &lt;oldString&gt;, STRING new)} </dt>
+     <dt class="dt dlterm">${str:replaceString("&lt;string&gt;", "&lt;oldString&gt;", "&lt;newString&gt;")} </dt>
 
      <dd class="dd">Replaces a set of characters in a string with a new set of characters.</dd>
 
+     <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_eqg_tnk_br">
+       <li class="li">string - The string for the replacement of a group of characters.</li>
+
+       <li class="li">oldString - The set of characters to replace.</li>
+
+       <li class="li">newString - The set of characters to use for replacement.</li>
+
+      </ul>
+<p class="p">For example, ${str:replaceString("my shoes", "&lt;my&gt;", "&lt;your&gt;")} returns: your
+       shoes.</p>
+</dd>
+
     
     
-     <dt class="dt dlterm">${str:truncate("&lt;String&gt;", &lt;length&gt;)}</dt>
+     <dt class="dt dlterm">${str:truncate("&lt;string&gt;", &lt;length&gt;)}</dt>
 
      <dd class="dd">Returns a string truncated to the specified length. Use an integer to specify the length. </dd>
 
-     <dd class="dd">For example, ${str:truncate("vacation", 4)} returns vaca. </dd>
+     <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_yqx_c4k_br">
+       <li class="li">string - The string to truncate. </li>
+
+       <li class="li">length - An integer that represents the number of characters to keep. </li>
+
+      </ul>
+</dd>
+
+     <dd class="dd">For example, ${str:truncate("vacation", 4)} returns: vaca. </dd>
 
     
     
-     <dt class="dt dlterm">${str:regexCapture("&lt;String&gt;", &lt;regex pattern&gt;, &lt;group&gt;}</dt>
+     <dt class="dt dlterm">${str:regexCapture("&lt;string&gt;", &lt;regex pattern&gt;, &lt;group&gt;}</dt>
 
      <dd class="dd">Parses a complex string into groups based on a Java regex pattern and returns the specified
       group.</dd>
 
      <dd class="dd">Uses the following parameters:<ul class="ul" id="concept_ahp_f4v_1r__ul_fy1_qbx_1r">
-       <li class="li">regex pattern - The Java regex pattern to parse the string into groups</li>
+       <li class="li">string - The string that contains a pattern of characters.</li>
+
+       <li class="li">regex pattern - The Java regex pattern to parse the string into groups.</li>
 
        <li class="li">group - The number of the group to return, where 1 represents the first group, 2
         represents the second group, etc. 0 returns the entire string.</li>
@@ -290,30 +341,54 @@
 
     
     
-     <dt class="dt dlterm">${str:contains("&lt;String&gt;", "&lt;Subset&gt;")} </dt>
+     <dt class="dt dlterm">${str:contains("&lt;string&gt;", "&lt;subset&gt;")} </dt>
 
      <dd class="dd">Returns a true or false based on whether the string contains the configured subset of
       characters.</dd>
 
-     <dd class="dd">For example, ${str:contains("Jane", "boo")} returns false.</dd>
+     <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_fwp_p4k_br">
+       <li class="li">string - The string to evaluate.</li>
+
+       <li class="li">subset - The subset of characters to look for. </li>
+
+      </ul>
+</dd>
+
+     <dd class="dd">For example, ${str:contains("Jane", "boo")} returns: false.</dd>
 
     
     
-     <dt class="dt dlterm">${str:startsWith("&lt;String&gt;", "&lt;Subset&gt;")} </dt>
+     <dt class="dt dlterm">${str:startsWith("&lt;string&gt;", "&lt;subset&gt;")} </dt>
 
      <dd class="dd">Returns true or false based on whether the string starts with the configured subset of
       characters.</dd>
 
-     <dd class="dd">For example, ${str:startsWith("Data Collector", "Data")} returns true.</dd>
+     <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_bgv_54k_br">
+       <li class="li">string - The string to evaluate.</li>
+
+       <li class="li">subset - The subset of characters to look for.</li>
+
+      </ul>
+</dd>
+
+     <dd class="dd">For example, ${str:startsWith("Data Collector", "Data")} returns: true.</dd>
 
     
     
-     <dt class="dt dlterm">${str:endWith("&lt;String&gt;", "&lt;Subset&gt;")} </dt>
+     <dt class="dt dlterm">${str:endWith("&lt;string&gt;", "&lt;subset&gt;")} </dt>
 
      <dd class="dd">Returns true or false based on whether the string ends with the configured subset of
       characters.</dd>
 
-     <dd class="dd">For example, ${str:endWith("32403-1001", "1001")} returns true.</dd>
+     <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_tf5_y4k_br">
+       <li class="li">string - The string to evaluate.</li>
+
+       <li class="li">subset - The subset of characters to look for.</li>
+
+      </ul>
+</dd>
+
+     <dd class="dd">For example, ${str:endWith("32403-1001", "1001")} returns: true.</dd>
 
     
    </dl>

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can start a pipeline when it is valid. When you start a pipeline, the Data Collector runs the pipeline until you stop the pipeline or shut down the Data Collector . Depending on the type of origin ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Starting a Pipeline"></meta><meta name="abstract" content="You can start a pipeline when it is valid. When you start a pipeline, the Data Collector runs the pipeline until you stop the pipeline or shut down the Data Collector."></meta><meta name="description" content="You can start a pipeline when it is valid. When you start a pipeline, the Data Collector runs the pipeline until you stop the pipeline or shut down the Data Collector."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Maintenance/PipelineMaintenance_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_wpy_1xr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Starting a Pipeline</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can start a pipeline when it is valid. When you start a pipeline, the Data Collector runs the pipeline until you stop the pipeline or shut down the Data Collector . For tne Directory and Kafka ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Starting a Pipeline"></meta><meta name="abstract" content="You can start a pipeline when it is valid. When you start a pipeline, the Data Collector runs the pipeline until you stop the pipeline or shut down the Data Collector."></meta><meta name="description" content="You can start a pipeline when it is valid. When you start a pipeline, the Data Collector runs the pipeline until you stop the pipeline or shut down the Data Collector."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Maintenance/PipelineMaintenance_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_wpy_1xr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Starting a Pipeline</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -20,27 +20,16 @@
                   Collector</span>.</p>
 
         <div class="section context">
-            <p class="p">Depending on the type of origin in the pipeline, when you restart a pipeline, the <span class="ph">Data
-                  Collector</span> starts the pipeline from where it last stopped.</p>
-
-            <div class="p">The <span class="ph">Data
-                  Collector</span> starts from the last stopping point for the following origin types:<ul class="ul" id="task_wpy_1xr_5q__ul_vsh_xpw_yq">
-                        <li class="li">Directory</li>
-
-                        <li class="li">Kafka Consumer</li>
-
-                  </ul>
-</div>
-
-            <p class="p">For these origin types, you can configure a pipeline to forget the last stopping
-                point and read all available data.</p>
+            <p class="p">For tne Directory and Kafka Consumer origins, when you restart a pipeline, the <span class="ph">Data
+                  Collector</span> starts the pipeline from where it last stopped by default. You can configure a
+                pipeline to forget the last stopping point and read all available data.</p>
 
         </div>
 
         <ol class="ol steps" id="task_wpy_1xr_5q__steps_f5j_mzr_5q"><li class="li step stepexpand">
                 <span class="ph cmd">Verify that the pipeline that you want to stop appears in the pipeline canvas. </span>
-                <div class="itemgroup info">If it does not, select the pipeline that you want to stop from the Pipeline
-                    library.</div>
+                <div class="itemgroup info">If it does not, select the pipeline that you want to stop from the
+                        <span class="keyword wintitle">Pipeline</span> library.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To start the pipeline, in the pipeline canvas, click the
@@ -57,33 +46,26 @@
     <h2 class="title topictitle2">Resetting the Origin</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">For certain origin types, you can reset the origin when you want the <span class="ph">Data
+    <div class="body taskbody"><p class="shortdesc">You can reset the origin when you want the <span class="ph">Data
                   Collector</span> to
-        process all available data.</p>
+        process all available data. You can reset the origin for the Directory and Kafka Consumer
+        origins.</p>
 
         <div class="section context">
-            <p class="p">For certain origin types, when you stop a pipeline, the <span class="ph">Data
+            <p class="p">For Directory and Kafka Consumer, when you stop a pipeline, the <span class="ph">Data
                   Collector</span> notes where it stopped processing data. When you restart the pipeline, it
-                continues from where it left off by default, for those origins. </p>
+                continues from where it left off by default. </p>
 
             <p class="p">When you want the <span class="ph">Data
                   Collector</span> to process all available data instead of continuing from where it stopped, reset
                 the origin.</p>
 
-            <div class="p">You can reset the origin for the following origin types:<ul class="ul" id="task_hdg_j1s_5q__ul_ucw_vpw_yq">
-                        <li class="li">Directory</li>
-
-                        <li class="li">Kafka Consumer</li>
-
-                  </ul>
-</div>
-
         </div>
 
         <ol class="ol steps" id="task_hdg_j1s_5q__steps_hvb_y1s_5q"><li class="li step stepexpand">
                 <span class="ph cmd">Verify that the pipeline that you want to stop appears in the pipeline canvas. </span>
-                <div class="itemgroup info">If it does not, select the pipeline that you want to stop from the Pipeline
-                    library.</div>
+                <div class="itemgroup info">If it does not, select the pipeline that you want to stop from the
+                        <span class="keyword wintitle">Pipeline</span> library.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To reset the origin, from the pipeline canvas, click the

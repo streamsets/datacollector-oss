@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_uvg_bjk_br">
+    <title>Shutting Down the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        /></title>
+    <shortdesc>Shut down and restart the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+        apply changes to the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        properties file or user logins. </shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_hqp_kjk_br">
+            <step>
+                <cmd>Click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol>Shut Down</uicontrol>
+                    </menucascade>.</cmd>
+            </step>
+            <step>
+                <cmd>When a confirmation dialog box appears, click <uicontrol>Yes</uicontrol>.
+                </cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

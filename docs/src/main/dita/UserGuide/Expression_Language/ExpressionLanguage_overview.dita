@@ -9,43 +9,11 @@
   <p>You can also use the expression language when you configure data rules, the Hadoop FS output
    file options, and Kafka Producer partitions.</p>
   <p>You can use the following elements in an expression or condition:<ul id="ul_wrf_fjm_xq">
-    <li>Field names - Use the appropriate format to call a field name. </li>
+    <li>Field names</li>
     <li>Constants</li>
     <li>Literals</li>
     <li>Operators</li>
     <li>Functions</li>
-   </ul><draft-comment author="Loretta">hiding all this for now. <dl>
-     <dlentry>
-      <dt>Basic Syntax</dt>
-      <dd>Precede all expressions with a dollar sign and enclose them with curly brackets, as
-       follows:<codeblock>${&lt;expression>}</codeblock></dd>
-      <dd>For example, to add 2 +2, use the following syntax:<codeph>${2+2}</codeph>.</dd>
-     </dlentry>
-     <dlentry>
-      <dt>Calling Fields</dt>
-      <dd>To use the values in a field in an expression, use the following
-       syntax:<codeblock>record:value{"/&lt;field_name>"}</codeblock></dd>
-      <dd>For example, to add the sales of four quarters, you might use the following expression:
-       <codeblock>${record:value("/Q1_Sales") + record:value("/Q2_Sales") + record:value("/Q3_Sales") + record:value("/Q4_Sales")}</codeblock></dd>
-     </dlentry>
-     <dlentry>
-      <dt>Literals</dt>
-      <dd/>
-     </dlentry>
-     <dlentry>
-      <dt>Operators</dt>
-      <dd>You can use operators in expressions. <draft-comment author="Loretta">what type of
-        operators?</draft-comment></dd>
-     </dlentry>
-     <dlentry>
-      <dt>Constants</dt>
-      <dd>You can use constants in expressions. You can also define a constant variable. You can use
-       the variable to represent a constant for any expression in the processor.</dd>
-     </dlentry>
-     <dlentry>
-      <dt>Functions</dt>
-      <dd/>
-     </dlentry>
-    </dl></draft-comment></p>
+   </ul></p>
  </conbody>
 </concept>

@@ -2,86 +2,122 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ahp_f4v_1r">
  <title>String Functions</title>
- <shortdesc>Use string functions to transform string data. <draft-comment author="Loretta">Can any
-   parameter can be a field? </draft-comment></shortdesc>
+ <shortdesc>Use string functions to transform string data. </shortdesc>
  <conbody>
-  <p><indexterm>functions<indexterm>string</indexterm></indexterm>In string functions, you can
-   replace &lt;String> with a string value, a call a string field, or any expression that evaluates
-   to a string. Similarly, you can replace parameters with expressions that evaluate to the
-   appropriate value. Indexes start with 0. </p>
+  <p><indexterm>functions<indexterm>string</indexterm></indexterm>You can replace any argument with
+   a constant, or a field or expression that evaluates to an appropriate constant. Strings should be
+   enclosed in quotes. Indexes start at 0. </p>
   <p>The expression language provides the following string functions:</p>
   <p>
    <dl>
     <dlentry>
-     <dt>${str:substring("&lt;String>", &lt;beginIndex>, &lt;endIndex>)}</dt>
+     <dt>${str:substring("&lt;string>", &lt;beginIndex>, &lt;endIndex>)}</dt>
      <dd>Returns a subset of the string value that starts with the beginIndex character and ends
       before the endIndex character. </dd>
-     <dd>Uses the following parameters:<ul id="ul_pcx_4yw_1r">
+     <dd>Uses the following arguments:<ul id="ul_pcx_4yw_1r">
+       <li>string - The string that contains the return substring that you want.</li>
        <li>beginIndex - An integer that represents the beginning position of the returned substring,
         where 0 is the first character.</li>
        <li>endIndex - An integer that represents one character past end position of the substring,
         equivalent to the number of characters to return. </li>
       </ul></dd>
-     <dd>For example, ${str:substring("Chewing Gum", 1, 4)} evaluates to Chew.</dd>
+     <dd>For example, ${str:substring("Chewing Gum", 1, 4)} returns: Chew.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:trim("&lt;String>")} </dt>
-     <dd>Trims leading and trailing white space characters from the string, including spaces and
-      return characters.</dd>
+     <dt>${str:trim("&lt;string>")} </dt>
+     <dd>Trims leading and trailing white space characters from a string, including spaces and
+      return characters. </dd>
+     <dd>Uses the following argument:<ul id="ul_cpm_fnk_br">
+       <li>string - The string to return without additional white space characters.</li>
+      </ul></dd>
      <dd>For example, ${str:trim("record:value("/Address")} trims leading and trailing white space
       characters from the /Address field.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:toUpper("&lt;String>")} </dt>
-     <dd>Converts string data to all capital letters.</dd>
-     <dd>For example, ${str:toUpper("true")} evaluates to TRUE.</dd>
+     <dt>${str:toUpper("string>")} </dt>
+     <dd>Converts string data to all capital letters. </dd>
+     <dd>Uses the following argument:<ul id="ul_std_jnk_br">
+       <li>string - The string to capitalize.</li>
+      </ul></dd>
+     <dd>For example, ${str:toUpper("true")} returns: TRUE.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:toLower("&lt;String>")} </dt>
+     <dt>${str:toLower("&lt;string>")} </dt>
      <dd>Converts string data to all lowercase letters.</dd>
-     <dd>For example, ${str:toLower("&lt;FALSE>")} evaluates to false.</dd>
+     <dd>Uses the following argument:<ul id="ul_il3_nnk_br">
+       <li>string - The string to lower case.</li>
+      </ul></dd>
+     <dd>For example, ${str:toLower("&lt;FALSE>")} returns: false.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:replaceChar("&lt;String>", &lt;oldChar>, &lt;newChar>)} </dt>
-     <dd>Replaces all instances of a specified character in a string with a new character.</dd>
-     <dd>For example, ${str:replaceChar("lecucereche", e, a)} evaluates to lacucaracha.</dd>
+     <dt>${str:replaceChar("&lt;string>", "&lt;oldChar>", "&lt;newChar>")} </dt>
+     <dd>Replaces all instances of a specified character in a string with a new character. </dd>
+     <dd>Uses the following arguments:<ul id="ul_ryc_pnk_br">
+       <li>string - The string for character replacement. </li>
+       <li>oldChar - Character to replace.</li>
+       <li>newChar - Character to use for replacement.</li>
+      </ul></dd>
+     <dd>For example, ${str:replaceChar("lecucereche", e, a)} returns: lacucaracha.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:replaceString("&lt;String>", &lt;oldString>, STRING new)} </dt>
+     <dt>${str:replaceString("&lt;string>", "&lt;oldString>", "&lt;newString>")} </dt>
      <dd>Replaces a set of characters in a string with a new set of characters.</dd>
+     <dd>Uses the following arguments:<ul id="ul_eqg_tnk_br">
+       <li>string - The string for the replacement of a group of characters.</li>
+       <li>oldString - The set of characters to replace.</li>
+       <li>newString - The set of characters to use for replacement.</li>
+      </ul><p>For example, ${str:replaceString("my shoes", "&lt;my>", "&lt;your>")} returns: your
+       shoes.</p></dd>
     </dlentry>
     <dlentry>
-     <dt>${str:truncate("&lt;String>", &lt;length>)}</dt>
+     <dt>${str:truncate("&lt;string>", &lt;length>)}</dt>
      <dd>Returns a string truncated to the specified length. Use an integer to specify the length. </dd>
-     <dd>For example, ${str:truncate("vacation", 4)} returns vaca. </dd>
+     <dd>Uses the following arguments:<ul id="ul_yqx_c4k_br">
+       <li>string - The string to truncate. </li>
+       <li>length - An integer that represents the number of characters to keep. </li>
+      </ul></dd>
+     <dd>For example, ${str:truncate("vacation", 4)} returns: vaca. </dd>
     </dlentry>
     <dlentry>
-     <dt>${str:regexCapture("&lt;String>", &lt;regex pattern>, &lt;group>}</dt>
+     <dt>${str:regexCapture("&lt;string>", &lt;regex pattern>, &lt;group>}</dt>
      <dd>Parses a complex string into groups based on a Java regex pattern and returns the specified
       group.</dd>
      <dd>Uses the following parameters:<ul id="ul_fy1_qbx_1r">
-       <li>regex pattern - The Java regex pattern to parse the string into groups</li>
+       <li>string - The string that contains a pattern of characters.</li>
+       <li>regex pattern - The Java regex pattern to parse the string into groups.</li>
        <li>group - The number of the group to return, where 1 represents the first group, 2
         represents the second group, etc. 0 returns the entire string.</li>
       </ul></dd>
     </dlentry>
     <dlentry>
-     <dt>${str:contains("&lt;String>", "&lt;Subset>")} </dt>
+     <dt>${str:contains("&lt;string>", "&lt;subset>")} </dt>
      <dd>Returns a true or false based on whether the string contains the configured subset of
       characters.</dd>
-     <dd>For example, ${str:contains("Jane", "boo")} returns false.</dd>
+     <dd>Uses the following arguments:<ul id="ul_fwp_p4k_br">
+       <li>string - The string to evaluate.</li>
+       <li>subset - The subset of characters to look for. </li>
+      </ul></dd>
+     <dd>For example, ${str:contains("Jane", "boo")} returns: false.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:startsWith("&lt;String>", "&lt;Subset>")} </dt>
+     <dt>${str:startsWith("&lt;string>", "&lt;subset>")} </dt>
      <dd>Returns true or false based on whether the string starts with the configured subset of
       characters.</dd>
-     <dd>For example, ${str:startsWith("Data Collector", "Data")} returns true.</dd>
+     <dd>Uses the following arguments:<ul id="ul_bgv_54k_br">
+       <li>string - The string to evaluate.</li>
+       <li>subset - The subset of characters to look for.</li>
+      </ul></dd>
+     <dd>For example, ${str:startsWith("Data Collector", "Data")} returns: true.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:endWith("&lt;String>", "&lt;Subset>")} </dt>
+     <dt>${str:endWith("&lt;string>", "&lt;subset>")} </dt>
      <dd>Returns true or false based on whether the string ends with the configured subset of
       characters.</dd>
-     <dd>For example, ${str:endWith("32403-1001", "1001")} returns true.</dd>
+     <dd>Uses the following arguments:<ul id="ul_tf5_y4k_br">
+       <li>string - The string to evaluate.</li>
+       <li>subset - The subset of characters to look for.</li>
+      </ul></dd>
+     <dd>For example, ${str:endWith("32403-1001", "1001")} returns: true.</dd>
     </dlentry>
    </dl>
   </p>

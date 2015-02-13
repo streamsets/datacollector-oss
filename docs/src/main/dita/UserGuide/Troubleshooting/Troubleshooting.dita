@@ -2,8 +2,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vxd_tsm_tq">
  <title>Troubleshooting</title>
- <shortdesc>We hope the following troubleshooting tips might help you with any issues you might be
-  having. If you have suggestions for additional troubleshooting items, please send them to
+ <shortdesc>We hope the following tips might help you with using the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. If you have
+  suggestions for additional troubleshooting items, please send them to
   docs@streamsets.com.</shortdesc>
  <conbody>
   <p>
@@ -31,9 +32,7 @@
     </dlentry>
     <dlentry>
      <dt>Why can't I edit preview data?</dt>
-     <dd>You can edit preview data when you preview a single stage. Editing data is not enabled when
-      you preview multiple stages.</dd>
-     <dd>When you edit a single stage, you can edit preview data in the following locations: <ul
+     <dd>When you can edit preview data in the following locations: <ul
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_EditPreview"
        id="ul_ojz_yhn_tq">
        <li/>
@@ -46,9 +45,9 @@
     </dlentry>
     <dlentry>
      <dt>Why doesn't the Select Fields with Preview Data option work? No preview data displays.</dt>
-     <dd>Select Fields with Preview Data can provide preview data when the pipeline configuration
-      allows for data preview. Make sure all stages are connected. You might also need to enter
-      temporary values for stage properties to enable data preview.</dd>
+     <dd>Select Fields with Preview Data can provide preview data when the pipeline is valud for
+      data preview. Make sure all stages are connected. You might also need to enter temporary
+      values for required properties to enable data preview.</dd>
     </dlentry>
 
    </dl>

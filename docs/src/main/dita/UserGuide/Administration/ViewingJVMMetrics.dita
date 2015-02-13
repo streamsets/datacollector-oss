@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_wvx_4hk_br">
+    <title>Viewing JVM Metrics</title>
+    <shortdesc>The <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        provides JVM metrics for the Data Collector. </shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_dmf_l3k_br">
+            <step>
+                <cmd>To view JVM metrics, click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol>JVM Metrics</uicontrol>
+                    </menucascade>.</cmd>
+                <info>The <wintitle>JVM Metrics </wintitle>page displays all JVM metrics by default.
+                </info>
+            </step>
+            <step>
+                <cmd>Use the <uicontrol>Configuration</uicontrol> icon to define the metrics that
+                    display on the page and click <uicontrol>Save</uicontrol>.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

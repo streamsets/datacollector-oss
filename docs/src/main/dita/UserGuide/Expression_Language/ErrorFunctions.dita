@@ -14,7 +14,7 @@
     <dlentry>
      <dt>${error:stage()}</dt>
      <dd>Returns the instance name of the stage that sent the record to error. </dd>
-     <dd>You can find the instance name on the General tab of the stage. </dd>
+     <dd>You can verify the instance name on the General tab of the stage. </dd>
     </dlentry>
     <dlentry>
      <dt>${error:code()}</dt>
@@ -30,9 +30,9 @@
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> that sent
       the record to error. </dd>
      <dd>By default, the Data Collector ID uses the format &lt;hostname>:&lt;port>. You can verify
-      the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> ID,
+      the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> ID
       in the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      console: Administration > Configuration. </dd>
+      Configuration page.</dd>
     </dlentry>
     <dlentry>
      <dt>${error:pipeline()}</dt>

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="When the Data Collector runs a pipeline, you can view real-time statistics about the pipeline and examine a sampling of the data being processed. Monitor a pipeline to verify that the pipeline ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Pipeline Monitoring"></meta><meta name="abstract" content="When the Data Collector runs a pipeline, you can view real-time statistics about the pipeline and examine a sampling of the data being processed. Monitor a pipeline to verify that the pipeline processes data as expected, to view a sample of the current data, or to create alerts."></meta><meta name="description" content="When the Data Collector runs a pipeline, you can view real-time statistics about the pipeline and examine a sampling of the data being processed. Monitor a pipeline to verify that the pipeline processes data as expected, to view a sample of the current data, or to create alerts."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Monitoring/PipelineMonitoring_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hsp_tnt_lq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pipeline Monitoring</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="When the Data Collector runs a pipeline, you can view real-time statistics about the pipeline, examine a sampling of the data being processed, and create rules and alerts. When you access the Data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Pipeline Monitoring"></meta><meta name="abstract" content="When the Data Collector runs a pipeline, you can view real-time statistics about the pipeline, examine a sampling of the data being processed, and create rules and alerts."></meta><meta name="description" content="When the Data Collector runs a pipeline, you can view real-time statistics about the pipeline, examine a sampling of the data being processed, and create rules and alerts."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Monitoring/PipelineMonitoring_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hsp_tnt_lq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pipeline Monitoring</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -16,18 +16,15 @@
   
   <div class="body conbody"><p class="shortdesc">When the <span class="ph">Data
                   Collector</span> runs a
-    pipeline, you can view real-time statistics about the pipeline and examine a sampling of the
-    data being processed. Monitor a pipeline to verify that the pipeline processes data as expected,
-    to view a sample of the current data, or to create alerts.</p>
+    pipeline, you can view real-time statistics about the pipeline, examine a sampling of the data
+    being processed,  and create rules and alerts. </p>
 
     <div class="p">When you access the <span class="ph">Data
-                  Collector</span> window as
+                  Collector</span> console as
       the <span class="ph">Data
                   Collector</span> runs
-      a pipeline, the <span class="ph">Data
-                  Collector</span> window
-      displays the pipeline in Monitoring mode. In Monitoring mode, you can perform the following
-        tasks:<ul class="ul" id="concept_hsp_tnt_lq__ul_c4s_w13_tq">
+      a pipeline, the console displays the pipeline in Monitoring mode. In Monitoring mode, you can
+      perform the following tasks:<ul class="ul" id="concept_hsp_tnt_lq__ul_c4s_w13_tq">
         <li class="li">View how a snapshot of data moves through the pipeline</li>
 
         <li class="li">View statistics for the pipeline and stages in the pipeline</li>
@@ -39,6 +36,8 @@
 
         <li class="li">Define the email addresses to receive email alerts</li>
 
+        <li class="li">View the pipeline history.</li>
+
       </ul>
 </div>
 
@@ -47,86 +46,130 @@
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_t1c_mf4_tq">
  <h2 class="title topictitle2"><span class="ph">Data
-                  Collector</span> Window
-  - Monitor Mode</h2>
+                  Collector</span>
+    Console - Monitor Mode</h2>
 
  
  <div class="body conbody"><p class="shortdesc">In Monitor mode, you can use the <span class="ph">Data
-                  Collector</span> window to view
-  data as it passes through the pipeline.</p>
+                  Collector</span> console to
+    view data as it passes through the pipeline.</p>
 
   <p class="p">The following image shows the <span class="ph">Data
-                  Collector</span> window in
-   Monitor mode:</p>
+                  Collector</span> console in
+      Monitor mode:</p>
 
     <p class="p"><img class="image" id="concept_t1c_mf4_tq__image_d3x_tf4_tq" src="../Graphics/CanvasMonitor.png" height="263" width="454"></img></p>
 
   <table cellpadding="4" cellspacing="0" summary="" id="concept_t1c_mf4_tq__simpletable_jb5_1k4_tq" border="1" class="simpletable"><tr class="sthead">
-    <th valign="bottom" align="left" id="d13360e91" class="stentry" width="16.33986928104575%">Area / Icon</th>
+    <th valign="bottom" align="left" id="d14481e94" class="stentry" width="16.33986928104575%">Area / Icon</th>
 
-    <th valign="bottom" align="left" id="d13360e94" class="stentry" width="23.856209150326794%">Name</th>
+    <th valign="bottom" align="left" id="d14481e97" class="stentry" width="23.856209150326794%">Name</th>
 
-    <th valign="bottom" align="left" id="d13360e97" class="stentry" width="59.80392156862745%">Description</th>
+    <th valign="bottom" align="left" id="d14481e100" class="stentry" width="59.80392156862745%">Description</th>
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d13360e91" class="stentry">1</td>
+    <td valign="top" headers="d14481e94" class="stentry">1</td>
 
-    <td valign="top" headers="d13360e94" class="stentry">Pipeline canvas</td>
+    <td valign="top" headers="d14481e97" class="stentry">Pipeline canvas</td>
 
-    <td valign="top" headers="d13360e97" class="stentry">Displays the pipeline that the <span class="ph">Data
+    <td valign="top" headers="d14481e100" class="stentry">Displays the pipeline that the <span class="ph">Data
                   Collector</span> is running.
      You can click a stage to view statistics about the stage. Click an empty part of the canvas to
      view pipeline statistics.</td>
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d13360e91" class="stentry">2</td>
+    <td valign="top" headers="d14481e94" class="stentry">2</td>
 
-    <td valign="top" headers="d13360e94" class="stentry">Monitor Panel</td>
+    <td valign="top" headers="d14481e97" class="stentry">Monitor Panel</td>
 
-    <td valign="top" headers="d13360e97" class="stentry">Displays statistics for the pipeline or selected stage. <p class="p">When you click an Inspect
-      Data icon, &lt;come back to this&gt;. </p>
-<p class="p">When you click the Snapshot button, displays a snapshot of data
-      that moved through the pipeline.</p>
+    <td valign="top" headers="d14481e100" class="stentry">Displays statistics for the pipeline or selected stage. <p class="p">When you click an Inspect
+            Data icon... </p>
+<p class="p">When you click the Snapshot button, displays a snapshot of
+            data that moved through the pipeline.</p>
 </td>
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d13360e91" class="stentry">3</td>
+    <td valign="top" headers="d14481e94" class="stentry">3</td>
 
-    <td valign="top" headers="d13360e94" class="stentry">Pipeline-Stage list</td>
+    <td valign="top" headers="d14481e97" class="stentry">Pipeline-Stage list</td>
 
-    <td valign="top" headers="d13360e97" class="stentry">Lists the pipeline and stages in the pipeline. Use to select the information that you
+    <td valign="top" headers="d14481e100" class="stentry">Lists the pipeline and stages in the pipeline. Use to select the information that you
      want to view.</td>
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d13360e91" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_gz1_rk4_tq" src="../Graphics/icon_MonInspect.png" height="21" width="25"></img></td>
+    <td valign="top" headers="d14481e94" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_gz1_rk4_tq" src="../Graphics/icon_MonInspect.png" height="21" width="25"></img></td>
 
-    <td valign="top" headers="d13360e94" class="stentry">Inspect Data icon</td>
+    <td valign="top" headers="d14481e97" class="stentry">Inspect Data icon</td>
 
-    <td valign="top" headers="d13360e97" class="stentry">Displays data inspection information. </td>
+    <td valign="top" headers="d14481e100" class="stentry">Displays data inspection information. </td>
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d13360e91" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_w1q_zl4_tq" src="../Graphics/icon_MonSnapshot.png" height="21" width="58"></img></td>
+    <td valign="top" headers="d14481e94" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_w1q_zl4_tq" src="../Graphics/icon_MonSnapshot.png" height="21" width="58"></img></td>
 
-    <td valign="top" headers="d13360e94" class="stentry">Snapshot button</td>
+    <td valign="top" headers="d14481e97" class="stentry">Snapshot button</td>
 
-    <td valign="top" headers="d13360e97" class="stentry">Captures a snapshot of data passing through the pipeline so you can review the details
+    <td valign="top" headers="d14481e100" class="stentry">Captures a snapshot of data passing through the pipeline so you can review the details
      of the data, like data preview.</td>
 
    </tr>
 <tr class="strow">
-    <td valign="top" headers="d13360e91" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_klq_1m4_tq" src="../Graphics/icon_MonStop.png" height="21" width="38"></img>
+    <td valign="top" headers="d14481e94" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_klq_1m4_tq" src="../Graphics/icon_MonStop.png" height="21" width="38"></img>
     </td>
 
-    <td valign="top" headers="d13360e94" class="stentry">Stop button</td>
+    <td valign="top" headers="d14481e97" class="stentry">Stop button</td>
 
-    <td valign="top" headers="d13360e97" class="stentry">Stops the pipeline.</td>
+    <td valign="top" headers="d14481e100" class="stentry">Stops the pipeline.</td>
 
    </tr>
+<tr class="strow">
+        <td valign="top" headers="d14481e94" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_wjj_lh3_tq" src="../Graphics/icon_MonSummary.png"></img></td>
+
+        <td valign="top" headers="d14481e97" class="stentry">Summary</td>
+
+        <td valign="top" headers="d14481e100" class="stentry">
+          <p class="p">Displays the record count for the pipeline, record and batch throughput for the
+            pipeline or individual stages, and batch processing statistics for the pipeline or
+            individual stages.</p>
+
+          <div class="note tip"><span class="tiptitle">Tip:</span> You can hover over different parts of the charts to view
+            exact numbers.</div>
+
+        </td>
+
+      </tr>
+<tr class="strow">
+        <td valign="top" headers="d14481e94" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_mb1_nj3_tq" src="../Graphics/icon_MonError.png"></img></td>
+
+        <td valign="top" headers="d14481e97" class="stentry">Error</td>
+
+        <td valign="top" headers="d14481e100" class="stentry">For a pipeline, displays histograms for the number of error records by five minute
+          decay and the number of error records by stage since the pipeline started. <p class="p">For a stage,
+            displays the number of error records and the number of stage errors. </p>
+</td>
+
+      </tr>
+<tr class="strow">
+        <td valign="top" headers="d14481e94" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_tsh_1m3_tq" src="../Graphics/icon_MonConfig.png"></img></td>
+
+        <td valign="top" headers="d14481e97" class="stentry">Configuration</td>
+
+        <td valign="top" headers="d14481e100" class="stentry">Displays configuration information for the pipeline or selected stage. You cannot
+          configure the pipeline when it is running.</td>
+
+      </tr>
+<tr class="strow">
+        <td valign="top" headers="d14481e94" class="stentry"><img class="image" id="concept_t1c_mf4_tq__image_jf2_km3_tq" src="../Graphics/icon_MonPipeHistory.png"></img></td>
+
+        <td valign="top" headers="d14481e97" class="stentry">History</td>
+
+        <td valign="top" headers="d14481e100" class="stentry">Displays the status and history of the pipeline.</td>
+
+      </tr>
 </table>
 
  </div>

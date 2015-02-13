@@ -4,12 +4,21 @@
  <title>Glossary of Terms</title>
  <conbody>
   <dl>
+      <dlentry>
+        <dt>data alerts</dt>
+        <dd>Monitoring or email alerts based on rules that gather information about data moving
+          between two stages.</dd>
+      </dlentry>
    <dlentry>
     <dt>destination</dt>
     <dd>A stage type used in a pipeline to represent where the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> writes
      processed data.</dd>
    </dlentry>
+      <dlentry>
+        <dt>metric alerts</dt>
+        <dd>Monitoring or email alerts based stage or pipeline metrics. </dd>
+      </dlentry>
    <dlentry>
     <dt>origin</dt>
     <dd>A stage type used in a pipeline to represent the source of data in a pipeline.</dd>
@@ -19,6 +28,15 @@
     <dd>A representation of a stream of data that is processed by the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</dd>
    </dlentry>
+      <dlentry>
+        <dt>processors</dt>
+        <dd>A stage type that performs specific processing on pipeline data.</dd>
+      </dlentry>
+      <dlentry>
+        <dt>snapshot</dt>
+        <dd>A snapshot of data that has been processed by the pipeline. You can step through the
+          snapshot like data preview.</dd>
+      </dlentry>
   </dl>
  </conbody>
 </concept>
