@@ -4,38 +4,30 @@
 
   <div class="panel-heading clearfix">
 
-    <!--div class="btn-group pull-left detail-name-dropdown">
-      <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
-        <span>{{'home.header.snapshot' | translate}}:</span>
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-        <li role="presentation" ng-if="!previewMultipleStages">
-          <a role="menuitem" tabindex="-1" href="#"
-             ng-click="changeToPreviewMultipleStages()">Between Multiple Stages</a>
-        </li>
-
-        <li role="presentation" ng-if="previewMultipleStages">
-          <a role="menuitem" tabindex="-1" href="#"
-             ng-click="changeToPreviewSingleStage()">Single Stage</a>
-        </li>
-      </ul>
-    </div-->
-
     <h3 class="panel-title pull-left">
       <span>{{'home.header.snapshot' | translate}}: </span>
       <span ng-if="!previewMultipleStages">{{detailPaneConfig.uiInfo.label}}</span>
     </h3>
 
-
     <div class="pull-right size-toolbar">
       <span class="fa fa-question-circle fa-14x pointer"
+            tooltip-placement="top"
+            tooltip="{{'global.form.help' | translate}}"
+            tooltip-popup-delay="500"
             ng-click="launchHelp('pipeline-snapshot')"></span>
+
       <span class="glyphicon pointer"
+            tooltip-placement="top"
+            tooltip="{{!$storage.minimizeDetailPane ? 'global.form.minimizePane' : 'global.form.maximizePane' | translate}}"
+            tooltip-popup-delay="1000"
             ng-hide="$storage.maximizeDetailPane"
             ng-class="{'glyphicon-minus' : !$storage.minimizeDetailPane , 'glyphicon-resize-full': $storage.minimizeDetailPane}"
             ng-click="onMinimizeDetailPane()"></span>
+
       <span class="glyphicon pointer"
+            tooltip-placement="top"
+            tooltip="{{!$storage.maximizeDetailPane ? 'global.form.maximizePane' : 'global.form.minimizePane' | translate}}"
+            tooltip-popup-delay="1000"
             ng-hide="$storage.minimizeDetailPane"
             ng-class="{'glyphicon-fullscreen' : !$storage.maximizeDetailPane , 'glyphicon-resize-small': $storage.maximizeDetailPane}"
             ng-click="onMaximizeDetailPane()"></span>

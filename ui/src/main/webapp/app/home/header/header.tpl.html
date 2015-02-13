@@ -51,13 +51,17 @@
         </div>
       </div>
 
-      <div class="btn-group issues-dropdown" ng-show="pipelineConfig && pipelineConfig.issues.issueCount > 0">
-        <button class="btn btn-link dropdown-toggle" type="button"
-                data-toggle="dropdown">
+      <div class="btn-group issues-dropdown"
+           ng-show="pipelineConfig && pipelineConfig.issues.issueCount > 0">
+        <a class="btn btn-link dropdown-toggle" data-toggle="dropdown"
+           tooltip-placement="top"
+           tooltip="{{'home.header.issues' | translate}}"
+           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+           tooltip-popup-delay="500">
           <span class="fa fa-exclamation-triangle fa-12x"></span>
           <span ng-hide="iconOnly" translate="home.header.issues">Issues</span>
           <span class="badge" ng-bind="pipelineConfig.issues.issueCount"></span>
-        </button>
+        </a>
         <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 
           <li role="presentation" class="dropdown-header"
@@ -97,14 +101,18 @@
 
       <div class="btn-group notifications-dropdown"
            ng-show="isPipelineRunning">
-        <button class="btn btn-link dropdown-toggle" type="button"
-                data-toggle="dropdown">
+        <a class="btn btn-link dropdown-toggle"
+                data-toggle="dropdown"
+                tooltip-placement="top"
+                tooltip="{{'home.header.notifications' | translate}}"
+                tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+                tooltip-popup-delay="500">
           <span class="fa fa-bell fa-12x"></span>
           <span ng-hide="iconOnly" translate="home.header.notifications">Notifications</span>
           <span class="badge"
                 ng-if="triggeredAlerts.length > 0"
                 ng-bind="triggeredAlerts.length"></span>
-        </button>
+        </a>
         <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 
           <li role="presentation" class="dropdown-header" ng-if="triggeredAlerts.length > 0"

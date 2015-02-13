@@ -1,12 +1,32 @@
 <div class="panel panel-default page-panel jvm-metrics-page">
 
   <div class="panel-heading clearfix">
-    <div class="panel-title">
+    <div class="panel-title size-toolbar">
       <h3 class="pull-left" translate="jvmMetrics.title">JVM Metrics</h3>
 
-      <div class="pull-right size-toolbar">
-        <span class="fa fa-gear fa-12x pointer"
-              ng-click="launchSettings()"></span>
+      <div class="btn-group pull-right jvm-metrics-settings-dropdown">
+        <a class="btn btn-link dropdown-toggle" data-toggle="dropdown"
+           tooltip-placement="top"
+           tooltip="{{'home.header.more' | translate}}"
+           tooltip-popup-delay="500">
+          <span class="fa fa-gear fa-14x pointer"></span>
+        </a>
+        <ul class="dropdown-menu pull-right" role="menu">
+
+          <li role="presentation" class="dropdown-header" translate="home.detailPane.restURL">REST URL</li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="/jmx" target="_blank">{{'jvmMetrics.title' | translate}}</a>
+          </li>
+
+          <li role="presentation" class="divider"></li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="launchSettings()">{{'global.form.settings' | translate}}</a>
+          </li>
+
+        </ul>
       </div>
 
     </div>
