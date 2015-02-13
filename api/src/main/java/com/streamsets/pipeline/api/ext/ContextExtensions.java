@@ -3,13 +3,13 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.api.impl;
+package com.streamsets.pipeline.api.ext;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
-public interface ContextExt {
+public interface ContextExtensions {
 
   public JsonRecordReader createJsonRecordReader(Reader reader, long initialPosition, int maxObjectLen)
       throws IOException;

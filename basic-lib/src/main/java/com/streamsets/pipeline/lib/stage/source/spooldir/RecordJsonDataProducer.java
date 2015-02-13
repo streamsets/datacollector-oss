@@ -10,8 +10,8 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.ContextExt;
-import com.streamsets.pipeline.api.impl.JsonRecordReader;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
+import com.streamsets.pipeline.api.ext.JsonRecordReader;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
 import com.streamsets.pipeline.lib.util.StageLibError;
@@ -45,7 +45,7 @@ public class RecordJsonDataProducer implements DataProducer {
     try {
       if (parser == null) {
         reader = new FileReader(file);
-        parser = ((ContextExt) context).createJsonRecordReader(reader, offset, maxJsonObjectLen);
+        parser = ((ContextExtensions) context).createJsonRecordReader(reader, offset, maxJsonObjectLen);
         reader = null;
       }
       offset = produce(sourceFile, offset, parser, maxBatchSize, batchMaker);

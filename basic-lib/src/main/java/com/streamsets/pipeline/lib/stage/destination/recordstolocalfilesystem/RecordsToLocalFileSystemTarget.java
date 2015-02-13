@@ -19,8 +19,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.impl.ContextExt;
-import com.streamsets.pipeline.api.impl.JsonRecordWriter;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
+import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.lib.io.WildcardFilter;
 import org.slf4j.Logger;
@@ -243,7 +243,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
           countingOutputStream = new CountingOutputStream(outputStream);
           outputStream = countingOutputStream;
         }
-        writer = ((ContextExt)getContext()).createJsonRecordWriter(new OutputStreamWriter(outputStream));
+        writer = ((ContextExtensions)getContext()).createJsonRecordWriter(new OutputStreamWriter(outputStream));
       }
       lastRotation = System.currentTimeMillis();
     } catch (IOException ex) {

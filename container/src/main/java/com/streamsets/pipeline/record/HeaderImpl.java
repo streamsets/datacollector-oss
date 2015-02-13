@@ -42,7 +42,8 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   private final Map<String, Object> map;
 
   public HeaderImpl() {
-    this.map = new HashMap<>();
+    map = new HashMap<>();
+    map.put(SOURCE_RECORD_ATTR, null);
   }
 
   // for clone() purposes
@@ -202,6 +203,7 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
       setRaw(raw);
       setRawMimeType(rawMimeType);
     }
+    map.put(SOURCE_RECORD_ATTR, null);
   }
 
   // HeaderImpl setter methods
@@ -292,6 +294,8 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
           Object value = entry.getValue();
           Object otherValue = otherMap.get(key);
           switch (key) {
+            case SOURCE_RECORD_ATTR:
+              break;
             case RAW_DATA_ATTR:
               eq = value == otherValue;
               if (!eq && value != null && otherValue != null) {
@@ -323,7 +327,7 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
 
   @Override
   public String toString() {
-    return Utils.format("HeaderImpl[{}]", map);
+    return Utils.format("HeaderImpl[{}]", getSourceId());
   }
 
 }

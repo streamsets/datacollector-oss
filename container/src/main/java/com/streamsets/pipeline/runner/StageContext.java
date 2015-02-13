@@ -9,6 +9,7 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -17,9 +18,9 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.impl.ContextExt;
-import com.streamsets.pipeline.api.impl.JsonRecordReader;
-import com.streamsets.pipeline.api.impl.JsonRecordWriter;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
+import com.streamsets.pipeline.api.ext.JsonRecordReader;
+import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.io.CountingReader;
@@ -38,7 +39,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
 
-public class StageContext implements Source.Context, Target.Context, Processor.Context, ContextExt {
+public class StageContext implements Source.Context, Target.Context, Processor.Context, ContextExtensions {
 
   private static final String CUSTOM_METRICS_PREFIX = "custom.";
 
@@ -117,14 +118,16 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   private static class JsonRecordWriterImpl implements JsonRecordWriter {
     private Writer writer;
+    private JsonGenerator generator;
 
-    public JsonRecordWriterImpl(Writer writer) {
+    public JsonRecordWriterImpl(Writer writer) throws IOException {
       this.writer = writer;
+      generator = ObjectMapperFactory.get().getFactory().createGenerator(writer);
     }
 
     @Override
     public void write(Record record) throws IOException {
-      writer.write(ObjectMapperFactory.get().writeValueAsString(record));
+      generator.writeObject(record);
     }
 
     @Override
