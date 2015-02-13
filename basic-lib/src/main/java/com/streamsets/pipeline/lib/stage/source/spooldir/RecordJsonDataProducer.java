@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ContextExt;
-import com.streamsets.pipeline.api.impl.JsonRecordParser;
+import com.streamsets.pipeline.api.impl.JsonRecordReader;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
 import com.streamsets.pipeline.lib.util.StageLibError;
@@ -29,7 +29,7 @@ public class RecordJsonDataProducer implements DataProducer {
   private final Source.Context context;
   private final int maxJsonObjectLen;
   private final Counter jsonObjectsOverMaxLen;
-  private JsonRecordParser parser;
+  private JsonRecordReader parser;
 
   public RecordJsonDataProducer(Source.Context context) {
     this.context = context;
@@ -45,7 +45,7 @@ public class RecordJsonDataProducer implements DataProducer {
     try {
       if (parser == null) {
         reader = new FileReader(file);
-        parser = ((ContextExt) context).createMultiObjectJsonRecordParser(reader, offset, maxJsonObjectLen);
+        parser = ((ContextExt) context).createJsonRecordReader(reader, offset, maxJsonObjectLen);
         reader = null;
       }
       offset = produce(sourceFile, offset, parser, maxBatchSize, batchMaker);
@@ -54,7 +54,7 @@ public class RecordJsonDataProducer implements DataProducer {
       throw new BadSpoolFileException(file.getAbsolutePath(), ex.getStreamOffset(), ex);
     } catch (IOException ex) {
       offset = -1;
-      long exOffset = (parser != null) ? parser.getReaderPosition() : -1;
+      long exOffset = (parser != null) ? parser.getPosition() : -1;
       throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
     } finally {
       if (offset == -1) {
@@ -74,14 +74,14 @@ public class RecordJsonDataProducer implements DataProducer {
     return offset;
   }
 
-  protected long produce(String sourceFile, long offset, JsonRecordParser parser, int maxBatchSize,
+  protected long produce(String sourceFile, long offset, JsonRecordReader parser, int maxBatchSize,
       BatchMaker batchMaker) throws IOException {
     for (int i = 0; i < maxBatchSize; i++) {
       try {
         Record record = parser.readRecord();
         if (record != null) {
           batchMaker.addRecord(record);
-          offset = parser.getReaderPosition();
+          offset = parser.getPosition();
         } else {
           offset = -1;
           break;

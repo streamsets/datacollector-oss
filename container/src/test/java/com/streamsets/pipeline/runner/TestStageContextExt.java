@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.ContextExt;
-import com.streamsets.pipeline.api.impl.JsonRecordParser;
+import com.streamsets.pipeline.api.impl.JsonRecordReader;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.record.RecordImpl;
@@ -40,7 +40,7 @@ public class TestStageContextExt {
     om.writeValue(writer, record);
     writer.close();
     StringReader reader = new StringReader(writer.toString());
-    JsonRecordParser parser = ((ContextExt)context).createMultiObjectJsonRecordParser(reader, 0, 100000);
+    JsonRecordReader parser = ((ContextExt)context).createJsonRecordReader(reader, 0, 100000);
     Record newRecord = parser.readRecord();
     Assert.assertNull(parser.readRecord());
     parser.close();
@@ -68,7 +68,7 @@ public class TestStageContextExt {
     writer.close();
 
     StringReader reader = new StringReader(writer.toString());
-    JsonRecordParser parser = ((ContextExt)context).createMultiObjectJsonRecordParser(reader, 0, 100000);
+    JsonRecordReader parser = ((ContextExt)context).createJsonRecordReader(reader, 0, 100000);
 
     Record newRecord1 = parser.readRecord();
     Record newRecord2 = parser.readRecord();

@@ -19,6 +19,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.impl.ContextExt;
+import com.streamsets.pipeline.api.impl.JsonRecordWriter;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.lib.io.WildcardFilter;
 import org.slf4j.Logger;
@@ -30,7 +32,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -130,7 +131,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private DirectoryStream.Filter<Path> fileFilter;
   private File activeFile;
   private CountingOutputStream countingOutputStream;
-  private Writer writer;
+  private JsonRecordWriter writer;
 
   @Override
   protected List<ConfigIssue> validateConfigs() {
@@ -178,7 +179,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
           //or we don't have a writer and need to create one
           rotate(true);
         }
-        writer.write(jsonWriter.writeValueAsString(it.next()));
+        writer.write(it.next());
       }
       if (writer != null) {
         writer.flush();
@@ -242,16 +243,12 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
           countingOutputStream = new CountingOutputStream(outputStream);
           outputStream = countingOutputStream;
         }
-        writer = new OutputStreamWriter(outputStream);
+        writer = ((ContextExt)getContext()).createJsonRecordWriter(new OutputStreamWriter(outputStream));
       }
       lastRotation = System.currentTimeMillis();
     } catch (IOException ex) {
       if (writer != null) {
-        try {
-          writer.close();
-        } catch (IOException ex1) {
-          LOG.warn("Could not close '{}' properly: {}", activeFile, ex1.getMessage(), ex1);
-        }
+        writer.close();
       }
       throw new StageException(Error.RECORD_LOCAL_FS_006, activeFile, ex.getMessage(), ex);
     }

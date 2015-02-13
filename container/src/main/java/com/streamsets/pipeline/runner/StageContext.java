@@ -18,7 +18,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.ContextExt;
-import com.streamsets.pipeline.api.impl.JsonRecordParser;
+import com.streamsets.pipeline.api.impl.JsonRecordReader;
+import com.streamsets.pipeline.api.impl.JsonRecordWriter;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.io.CountingReader;
@@ -34,6 +35,7 @@ import com.streamsets.pipeline.validation.StageIssue;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.List;
 
 public class StageContext implements Source.Context, Target.Context, Processor.Context, ContextExt {
@@ -87,8 +89,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     return new ConfigIssueImpl(instanceName, errorCode, args);
   }
 
-  private static class RecordJsonParserImpl extends OverrunStreamingJsonParser implements JsonRecordParser {
-    public RecordJsonParserImpl(Reader reader, long initialPosition, int maxObjectLen) throws
+  private static class RecordJsonReaderImpl extends OverrunStreamingJsonParser implements JsonRecordReader {
+    public RecordJsonReaderImpl(Reader reader, long initialPosition, int maxObjectLen) throws
         IOException {
       super(new CountingReader(reader), initialPosition, StreamingJsonParser.Mode.MULTIPLE_OBJECTS, maxObjectLen);
     }
@@ -103,15 +105,52 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     }
 
     @Override
+    public long getPosition() {
+      return getReaderPosition();
+    }
+
+    @Override
     public Record readRecord() throws IOException {
       return (Record) read();
     }
   }
 
+  private static class JsonRecordWriterImpl implements JsonRecordWriter {
+    private Writer writer;
+
+    public JsonRecordWriterImpl(Writer writer) {
+      this.writer = writer;
+    }
+
+    @Override
+    public void write(Record record) throws IOException {
+      writer.write(ObjectMapperFactory.get().writeValueAsString(record));
+    }
+
+    @Override
+    public void flush() throws IOException {
+      writer.flush();
+    }
+
+    @Override
+    public void close() {
+      try {
+        writer.close();
+      } catch (IOException ex) {
+        //NOP
+      }
+    }
+  }
+
   @Override
-  public JsonRecordParser createMultiObjectJsonRecordParser(Reader reader, long initialPosition,
+  public JsonRecordReader createJsonRecordReader(Reader reader, long initialPosition,
       int maxObjectLen) throws IOException {
-    return new RecordJsonParserImpl(reader, initialPosition, maxObjectLen);
+    return new RecordJsonReaderImpl(reader, initialPosition, maxObjectLen);
+  }
+
+  @Override
+  public JsonRecordWriter createJsonRecordWriter(Writer writer) throws IOException {
+    return new JsonRecordWriterImpl(writer);
   }
 
   @Override

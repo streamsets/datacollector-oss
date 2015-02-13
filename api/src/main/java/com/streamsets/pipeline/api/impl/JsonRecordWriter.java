@@ -9,11 +9,11 @@ import com.streamsets.pipeline.api.Record;
 
 import java.io.IOException;
 
-public interface JsonRecordParser {
+public interface JsonRecordWriter {
 
-  public long getReaderPosition();
+  public void write(Record record) throws IOException;
 
-  public Record readRecord() throws IOException;
+  public void flush() throws IOException;
 
   public void close();
 

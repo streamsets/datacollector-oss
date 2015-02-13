@@ -7,10 +7,13 @@ package com.streamsets.pipeline.api.impl;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 
 public interface ContextExt {
 
-  public JsonRecordParser createMultiObjectJsonRecordParser(Reader reader, long initialPosition, int maxObjectLen)
+  public JsonRecordReader createJsonRecordReader(Reader reader, long initialPosition, int maxObjectLen)
       throws IOException;
+
+  public JsonRecordWriter createJsonRecordWriter(Writer writer) throws IOException;
 
 }
