@@ -55,7 +55,6 @@ public abstract class BaseHdfsTarget extends BaseTarget {
     OUTPUT_FILES("Output Files"),
     LATE_RECORDS("Late Records"),
     CSV("Delimited"),
-    TSV("Tab Separated"),
     ;
 
     private final String label;
