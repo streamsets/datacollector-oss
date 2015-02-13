@@ -18,9 +18,14 @@
   or JSON data to flat files or Hadoop sequence files. </p>
 
   <p class="p">When you configure a Hadoop FS destination, you define the output directory template. Hadoop FS
-   creates output directories based the template and writes records to the directories based on the
-   specified time basis - the time that a record is processed or the time associated with the
-   record. </p>
+   creates output directories based the template and the time basis. Hadoop FS writes records to the
+   directories based on the time basis as well.</p>
+
+  <p class="p">You can determine how long a record can be written to a directory, and define what happens to
+   late records. </p>
+
+  <p class="p">To write delimited data to Hadoop, you map fields from output records to delimited column names
+   for the output files. </p>
 
  </div>
 
@@ -29,31 +34,32 @@
  <h2 class="title topictitle2">Directory Templates</h2>
 
  
- <div class="body conbody"><p class="shortdesc">The Hadoop FS destination uses directory templates to create output and error
-  directories. Hadoop FS writes records to the directories based on the time </p>
+ <div class="body conbody"><p class="shortdesc">The Hadoop FS destination uses directory templates to create output and late record
+  directories. Hadoop FS writes records to the directories based on the configured time
+  basis.</p>
 
   <div class="p">You can use the following elements in a
    directory template:<dl class="dl">
     
      <dt class="dt dlterm">Constants</dt>
 
-     <dd class="dd">You can use any constant, such as "output" or "error."</dd>
+     <dd class="dd">You can use any constant, such as "output" or "lateRecords."</dd>
 
     
     
      <dt class="dt dlterm">Field Values</dt>
 
-     <dd class="dd">You can call a field in an expression: ${record:value("/&lt;/Field&gt;")}.</dd>
+     <dd class="dd">You can call a field in an expression: ${record:value("/&lt;/fieldname&gt;")}.</dd>
 
     
     
      <dt class="dt dlterm">Datetime Variables</dt>
 
-     <dd class="dd">Hadoop FS creates directories based on the smallest datetime variable that you use. For
-      example, if the smallest variable is hours, then the directories are created for every hour of
-      the day. </dd>
+     <dd class="dd">Hadoop FS creates directories as needed, based on the smallest datetime variable that you
+      use. For example, if the smallest variable is hours, then the directories are created for
+      every hour of the day that receives output records.</dd>
 
-     <dd class="dd">You can use any combination of the following datetime variables:<ul class="ul" id="concept_cvc_skd_br__ul_s2x_5qq_1r">
+     <dd class="dd">You can use any combination of the following datetime variables in a directory template:<ul class="ul" id="concept_cvc_skd_br__ul_s2x_5qq_1r">
        <li class="li">${YYYY} - four digit year</li>
 
        <li class="li">${YY} - two digit year</li>
@@ -79,8 +85,8 @@
    record, you might define the following output directory template:
    /outputfiles/${record:value("/State")}/${YY}-${MM}-${hh}.</p>
 
-  <p class="p">Since the smallest unit of measurement is the hour, Hadoop FS creates a new output directory
-   every hour for every state included in output data. </p>
+  <p class="p">Since the smallest unit of measurement is the hour, Hadoop FS can create a new output directory
+   every hour for every state included in the output records. </p>
 
  </div>
 
@@ -89,20 +95,45 @@
  <h2 class="title topictitle2">Time Basis</h2>
 
  
- <div class="body conbody"><p class="shortdesc">The time basis helps determine the output directory to use when writing an output
-  record. The time basis can be based on the time of processing or the time associated with the
-  record. </p>
+ <div class="body conbody"><p class="shortdesc">The time basis helps determine when directories are created and which directory Hadoop
+  FS uses to write an output record. You can use the following times as the time basis: </p>
 
-  <p class="p">To use the processing time as the time basis,
-   use the following default expression: ${time:now()}. </p>
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">Time of processing</dt>
 
-  <p class="p">To use a datetime value associated with the record, use an expression that calls a field and
-   resolves to a datetime value. When you use the time associated with a record, be sure to define
-   the time zone for the data as well. </p>
+     <dd class="dd">When you use processing time as the time
+      basis, Hadoop FS creates directories based on the processing time and the directory template,
+      and writes records to the directories based on when they are processed.</dd>
 
-  <p class="p">For example, to use the record as a time basis for the event data described above, you might
-   use the following expression to call the Timestamp field: ${record:value("/Timestamp")}. Hadoop
-   FS writes a record to an output directory based on the timestamp of the record. </p>
+     <dd class="dd">For example, say a directory template creates directories every minute and the time basis
+      is the time of processing. Then, directories are created for every minute that Hadoop FS
+      passes output records. And the output records are written to the directory for that minute of
+      processing. </dd>
+
+     <dd class="dd">To use the processing time as the time basis, use the following expression to define the
+      time basis: ${time:now()}. This is the default time basis. </dd>
+
+    
+    
+     <dt class="dt dlterm">Time of the record</dt>
+
+     <dd class="dd">When you use the time associated with a record, you specify a Date field in the record.
+      Hadoop FS creates directories based on the datetimes associated with the records and writes
+      the records to the appropriate directories. </dd>
+
+     <dd class="dd">For example, say a directory template creates directories every hour and the time basis is
+      based on the record. Then, directories are created for every hour associated with output
+      records and Hadoop FS writes the records to the related output directory. </dd>
+
+     <dd class="dd">To use a time associated with the record, use an expression that calls a field and resolves
+      to a datetime value, such as ${record:value("/Timestamp")}. </dd>
+
+    
+   </dl>
+
+  </div>
 
  </div>
 
@@ -111,17 +142,17 @@
  <h2 class="title topictitle2">Late Records and Late Record Handling </h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can define a time limit for records to be written to the appropriate output
-  directory and treat all records past the limit as late. This limit is appropriate when you use the
-  datetime of a record as the time basis. </p>
+ <div class="body conbody"><p class="shortdesc">You can define a time limit for records to be written to the associated output directory
+  and treat all records past the limit as late. This limit is appropriate when you use the time of
+  the record as the time basis. </p>
 
   <p class="p">For example, a Hadoop FS destination writes event data to hourly output directories based on
    the timestamp of the event, and has a time limit of one day. Any records that arrive more than a
-   day after the hourly output directory window are considered late and are handled based on the
-   late record handling properties.</p>
+   day later that the hourly output directory window are considered late. </p>
 
-  <p class="p">You can send late records to a late records file, for pipeline error handling, or discard the
-   records. To send records to a late records file, you define an late records directory template. </p>
+  <p class="p">You can send late records to a late records file, to the pipeline for error handling, or
+   discard the records. To send records to a late records file, you define a late records directory
+   template. </p>
 
  </div>
 
@@ -145,20 +176,16 @@
     
     <div class="body taskbody"><p class="shortdesc">Configure a Hadoop FS destination to write data to a Hadoop file system.</p>
 
-        <div class="section context">
-            <p class="p"></p>
-
-        </div>
+        <div class="section context"></div>
 
         <ol class="ol steps" id="task_m2m_skm_zq__steps_ljw_44d_br"><li class="li step stepexpand">
-                <span class="ph cmd">In the Properties panel, optionally enter a name and description for the
-                    stage. </span>
+                <span class="ph cmd">In the Properties panel, optionally enter a name and description for the stage.
+                </span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep it in the pipeline. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
-                        <img class="image" id="task_m2m_skm_zq__d176e136" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
-                <div class="itemgroup info">You might include any field that the processor uses.</div>
+                    require data. <a class="xref" href="Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep the record in the pipeline. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
+                        <img class="image" id="task_m2m_skm_zq__d176e166" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="keyword wintitle">Hadoop FS</span> tab, configure the following
@@ -170,9 +197,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.97402597402597%" id="d1502e257">Hadoop FS Properties</th>
+                                    <th class="entry" valign="top" width="25.97402597402597%" id="d1502e284">Hadoop FS Properties</th>
 
-                                    <th class="entry" valign="top" width="74.02597402597402%" id="d1502e260">Description</th>
+                                    <th class="entry" valign="top" width="74.02597402597402%" id="d1502e287">Description</th>
 
                                 </tr>
 
@@ -180,40 +207,40 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d1502e257 ">Hadoop FS URI</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d1502e284 ">Hadoop FS URI</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d1502e260 ">URI of the Hadoop file system.</td>
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d1502e287 ">URI of the Hadoop file system.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d1502e257 ">Kerberos Enabled </td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d1502e284 ">Kerberos Authentication</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d1502e260 ">Indicates that the Hadoop file system uses Kerberos
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d1502e287 ">Indicates that the Hadoop file system uses Kerberos
                                         authentication.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d1502e257 ">Kerberos Principal</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d1502e284 ">Kerberos Principal</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d1502e260 ">Kerberos principal used to connect to the Hadoop file
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d1502e287 ">Kerberos principal used to connect to the Hadoop file
                                         system.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d1502e257 ">Kerberos Keytab</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d1502e284 ">Kerberos Keytab</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d1502e260 ">Location for the keytab file that contains the
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d1502e287 ">Location for the keytab file that contains the
                                         credentials for the Kerberos principal.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d1502e257 ">Hadoop FS Configs</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d1502e284 ">Hadoop FS Configuration</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d1502e260 ">Additional Hadoop configuration properties to use. <p class="p">To
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d1502e287 ">Additional Hadoop configuration properties to use. <p class="p">To
                                             add properties, click <span class="ph uicontrol">Add</span> and
                                             define the Hadoop property name and value. Use the
                                             property names and values as expected by
@@ -230,7 +257,8 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">On the Output Files tab, configure the following options:</span>
+                <span class="ph cmd">On the <span class="keyword wintitle">Output Files</span> tab, configure the following
+                    options:</span>
                 <div class="itemgroup info">
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__table_byd_xpd_br" class="table" frame="border" border="1" rules="all">
@@ -238,9 +266,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.70694087403599%" id="d1502e341">Output Files Property</th>
+                                    <th class="entry" valign="top" width="25.70694087403599%" id="d1502e371">Output Files Property</th>
 
-                                    <th class="entry" valign="top" width="74.293059125964%" id="d1502e344">Description</th>
+                                    <th class="entry" valign="top" width="74.293059125964%" id="d1502e374">Description</th>
 
                                 </tr>
 
@@ -248,13 +276,13 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e341 ">Data Format</td>
+                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e371 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e344 ">Format of data to be written. Use one of the following
+                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e374 ">Format of data to be written. Use one of the following
                                             options:<ul class="ul" id="task_m2m_skm_zq__ul_un2_cqd_br">
                                             <li class="li">JSON</li>
 
-                                            <li class="li">Comma-separated</li>
+                                            <li class="li">Delimited</li>
 
                                             <li class="li">Tab-separated</li>
 
@@ -264,52 +292,122 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e341 ">File Name Unique Prefix</td>
+                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e371 ">Files Prefix</td>
 
-                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e344 ">Prefix to use for output files. Use when writing to a
+                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e374 ">Prefix to use for output files. Use when writing to a
                                         directory that receives files from other sources.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e341 ">Directory Template <a class="xref" href="HadoopFS.html#concept_cvc_skd_br" title="The Hadoop FS destination uses directory templates to create output and error directories. Hadoop FS writes records to the directories based on the time"><img class="image" id="task_m2m_skm_zq__image_c4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
+                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e371 ">File Type</td>
 
-                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e344 ">Template for creating output directories. You can use
-                                        constants, field values, and datetime variables. Output
-                                        directories are created based on the smallest datetime
-                                        variable in the template.</td>
+                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e374 ">Output file type:<ul class="ul" id="task_m2m_skm_zq__ul_lgf_j3g_br">
+                                            <li class="li">Text files</li>
+
+                                            <li class="li">Sequence files</li>
+
+                                        </ul>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e341 ">Time Zone</td>
+                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e371 ">Directory Template <a class="xref" href="HadoopFS.html#concept_cvc_skd_br" title="The Hadoop FS destination uses directory templates to create output and late record directories. Hadoop FS writes records to the directories based on the configured time basis."><img class="image" id="task_m2m_skm_zq__image_c4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
 
-                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e344 ">Time zone to use to create directories and evaluate where
+                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e374 ">Template for creating output directories. You can use
+                                        constants, field values, and datetime variables. <p class="p">Output
+                                            directories are created based on the smallest datetime
+                                            variable in the template.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e371 ">Data Time Zone</td>
+
+                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e374 ">Time zone to use to create directories and evaluate where
                                         records are written.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e341 ">Time Basis <a class="xref" href="HadoopFS.html#concept_xgm_g4d_br" title="You can define a time limit for records to be written to the appropriate output directory and treat all records past the limit as late. This limit is appropriate when you use the datetime of a record as the time basis."><img class="image" id="task_m2m_skm_zq__image_agk_j12_br" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
+                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e371 ">Time Basis <a class="xref" href="HadoopFS.html#concept_xgm_g4d_br" title="You can define a time limit for records to be written to the associated output directory and treat all records past the limit as late. This limit is appropriate when you use the time of the record as the time basis."><img class="image" id="task_m2m_skm_zq__image_agk_j12_br" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
 
-                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e344 ">Time basis to use for creating output directories and
-                                        writing records to the directories.</td>
+                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e374 ">Time basis to use for creating output directories and
+                                        writing records to the directories. Use one of the following
+                                            expressions:<ul class="ul" id="task_m2m_skm_zq__ul_ggs_43g_br">
+                                            <li class="li">${time:now()}</li>
 
-                                </tr>
+                                            <li class="li">${record:value("/&lt;Date Field&gt;")</li>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e341 ">
-                                        
-                                    </td>
-
-                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e344 "> </td>
+                                        </ul>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e341 "> </td>
+                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e371 ">Max Records in a File</td>
 
-                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e344 "> </td>
+                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e374 ">Maximum number of records to be written to an output
+                                        file. Additional records are written to a new file. <p class="p">Use 0
+                                            to opt out of using this property.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e371 ">Max File Size (MB)</td>
+
+                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e374 ">Maximum size of an output file. Additional records are
+                                        written to a new file. <p class="p">Use 0 to opt out of using this
+                                            property.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e371 ">Compression Codec</td>
+
+                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e374 ">Program to use to compress output files:<ul class="ul" id="task_m2m_skm_zq__ul_ltx_djg_br">
+                                            <li class="li">None </li>
+
+                                            <li class="li">gzip</li>
+
+                                            <li class="li">bzip2</li>
+
+                                            <li class="li">Snappy</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e371 ">Sequence File Key</td>
+
+                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e374 ">Record key for creating Hadoop sequence files. Use one of
+                                        the following options:<ul class="ul" id="task_m2m_skm_zq__ul_xzr_vkg_br">
+                                            <li class="li">${record:value("/&lt;field name&gt;")}</li>
+
+                                            <li class="li">${uuid()}</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.70694087403599%" headers="d1502e371 ">Compression Type</td>
+
+                                    <td class="entry" valign="top" width="74.293059125964%" headers="d1502e374 ">Compression type for sequence files when using a
+                                        compression codec:<ul class="ul" id="task_m2m_skm_zq__ul_etm_1lg_br">
+                                            <li class="li">Block Compression</li>
+
+                                            <li class="li">Record Compression</li>
+
+                                        </ul>
+</td>
 
                                 </tr>
 
@@ -324,15 +422,18 @@
                 <span class="ph cmd">On the <span class="keyword wintitle">Late Records </span>tab, configure the following
                     properties:</span>
                 <div class="itemgroup info">
+                    <div class="note note"><span class="notetitle">Note:</span> These properties are relevant for a time basis based on the time of a
+                        record.</div>
+
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__table_wv3_xzd_br" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="26.525198938992045%" id="d1502e465"> </th>
+                                    <th class="entry" valign="top" width="26.525198938992045%" id="d1502e586">Late Records Property</th>
 
-                                    <th class="entry" valign="top" width="73.47480106100795%" id="d1502e467"> </th>
+                                    <th class="entry" valign="top" width="73.47480106100795%" id="d1502e589">Description</th>
 
                                 </tr>
 
@@ -340,19 +441,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d1502e465 "> </td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d1502e586 ">Late Records Time Limit (secs)</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d1502e467 ">Time limit for output directories to accept data.</td>
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d1502e589 ">Time limit for output directories to accept data. <p class="p">You
+                                            can enter a time in seconds, or use the expression to
+                                            enter a time in hours. You can also use MINUTES in the
+                                            default expression to define the time in minutes.
+                                        </p>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d1502e465 ">Late Record Handling</td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d1502e586 ">Late Records Handling</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d1502e467 ">How to handle late records. Use one of the following
-                                            options:<ul class="ul" id="task_m2m_skm_zq__ul_gx4_c12_br">
-                                            <li class="li">Send to error - Sends the record for pipeline error
-                                                handling. </li>
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d1502e589 ">Determines how to handle late records:<ul class="ul" id="task_m2m_skm_zq__ul_gx4_c12_br">
+                                            <li class="li">Send to error - Sends the record to the pipeline for
+                                                error handling. </li>
 
                                             <li class="li">Send to late records file - Sends the record to a
                                                 late records file.</li>
@@ -365,12 +470,114 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d1502e465 ">Late Records Directory Template <a class="xref" href="HadoopFS.html#concept_cvc_skd_br" title="The Hadoop FS destination uses directory templates to create output and error directories. Hadoop FS writes records to the directories based on the time"><img class="image" id="task_m2m_skm_zq__image_f41_j12_br" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d1502e586 ">Late Record Directory Template <a class="xref" href="HadoopFS.html#concept_cvc_skd_br" title="The Hadoop FS destination uses directory templates to create output and late record directories. Hadoop FS writes records to the directories based on the configured time basis."><img class="image" id="task_m2m_skm_zq__image_f41_j12_br" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d1502e467 ">Template for creating late records directories. You can
-                                        use constants, field values, and datetime variables. Output
-                                        directories are created based on the smallest datetime
-                                        variable in the template.</td>
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d1502e589 ">Template for creating late record directories. You can
+                                        use constants, field values, and datetime variables.
+                                            <p class="p">Output directories are created based on the smallest
+                                            datetime variable in the template.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For CSV data, on the <span class="keyword wintitle">Delimited</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__table_wb3_2kg_br" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="28.328611898016998%" id="d1502e671">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="71.671388101983%" id="d1502e674">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.328611898016998%" headers="d1502e671 ">CSV Format</td>
+
+                                    <td class="entry" valign="top" width="71.671388101983%" headers="d1502e674 ">Format for delimited data:<ul class="ul" id="task_m2m_skm_zq__ul_yxk_lkg_br">
+                                            <li class="li">Basic CSV</li>
+
+                                            <li class="li">MS Excel CSV</li>
+
+                                            <li class="li">MySQL CSV</li>
+
+                                            <li class="li">RFC4180</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.328611898016998%" headers="d1502e671 ">Field Mapping</td>
+
+                                    <td class="entry" valign="top" width="71.671388101983%" headers="d1502e674 ">Map output fields to column names for the output file.
+                                        Click the Add icon to add additional field mappings. <ul class="ul" id="task_m2m_skm_zq__ul_zgf_plg_br">
+                                            <li class="li">Field Path - Field name of the record. Use a leading
+                                                slash as follows: /FirstField.</li>
+
+                                            <li class="li">Delimited Column Name - Name for the corresponding
+                                                column in the output file. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For tab-separated data, on the <span class="keyword wintitle">Tab Separated</span> tab,
+                    configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__table_x3t_zlg_br" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="28.328611898016998%" id="d1502e749">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="71.671388101983%" id="d1502e752">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.328611898016998%" headers="d1502e749 ">Field Mapping</td>
+
+                                    <td class="entry" valign="top" width="71.671388101983%" headers="d1502e752 ">Map output fields to column names for the output file.
+                                        Click the Add icon to add additional field mappings. <ul class="ul" id="task_m2m_skm_zq__ul_mjt_zlg_br">
+                                            <li class="li">Field Path - Field name of the record. Use a leading
+                                                slash as follows: /FirstField.</li>
+
+                                            <li class="li">Delimited Column Name - Name for the corresponding
+                                                column in the output file. </li>
+
+                                        </ul>
+</td>
 
                                 </tr>
 

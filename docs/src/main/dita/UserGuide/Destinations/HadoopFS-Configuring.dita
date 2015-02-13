@@ -4,12 +4,10 @@
     <title>Configuring a Hadoop FS Destination</title>
     <shortdesc>Configure a Hadoop FS destination to write data to a Hadoop file system.</shortdesc>
     <taskbody>
-        <context>
-            <p></p>
-        </context>
+        <context/>
         <steps id="steps_ljw_44d_br">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
-                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step1"
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step2">
                 <cmd/>
             </step>
             <step>
@@ -32,7 +30,7 @@
                                     <entry>URI of the Hadoop file system.</entry>
                                 </row>
                                 <row>
-                                    <entry>Kerberos Enabled </entry>
+                                    <entry>Kerberos Authentication</entry>
                                     <entry>Indicates that the Hadoop file system uses Kerberos
                                         authentication.</entry>
                                 </row>
@@ -47,7 +45,7 @@
                                         credentials for the Kerberos principal.</entry>
                                 </row>
                                 <row>
-                                    <entry>Hadoop FS Configs</entry>
+                                    <entry>Hadoop FS Configuration</entry>
                                     <entry>Additional Hadoop configuration properties to use. <p>To
                                             add properties, click <uicontrol>Add</uicontrol> and
                                             define the Hadoop property name and value. Use the
@@ -60,7 +58,8 @@
                 </info>
             </step>
             <step>
-                <cmd>On the Output Files tab, configure the following options:</cmd>
+                <cmd>On the <wintitle>Output Files</wintitle> tab, configure the following
+                    options:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_byd_xpd_br">
                         <tgroup cols="2">
@@ -78,14 +77,21 @@
                                     <entry>Format of data to be written. Use one of the following
                                             options:<ul id="ul_un2_cqd_br">
                                             <li>JSON</li>
-                                            <li>Comma-separated</li>
+                                            <li>Delimited</li>
                                             <li>Tab-separated</li>
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>File Name Unique Prefix</entry>
+                                    <entry>Files Prefix</entry>
                                     <entry>Prefix to use for output files. Use when writing to a
                                         directory that receives files from other sources.</entry>
+                                </row>
+                                <row>
+                                    <entry>File Type</entry>
+                                    <entry>Output file type:<ul id="ul_lgf_j3g_br">
+                                            <li>Text files</li>
+                                            <li>Sequence files</li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Directory Template <xref
@@ -93,12 +99,12 @@
                                                 ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="11" id="image_c4p_p5v_yq"/></xref></entry>
                                     <entry>Template for creating output directories. You can use
-                                        constants, field values, and datetime variables. Output
-                                        directories are created based on the smallest datetime
-                                        variable in the template.</entry>
+                                        constants, field values, and datetime variables. <p>Output
+                                            directories are created based on the smallest datetime
+                                            variable in the template.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Time Zone</entry>
+                                    <entry>Data Time Zone</entry>
                                     <entry>Time zone to use to create directories and evaluate where
                                         records are written.</entry>
                                 </row>
@@ -108,18 +114,49 @@
                                                 ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="11" id="image_agk_j12_br"/></xref></entry>
                                     <entry>Time basis to use for creating output directories and
-                                        writing records to the directories.</entry>
+                                        writing records to the directories. Use one of the following
+                                            expressions:<ul id="ul_ggs_43g_br">
+                                            <li>${time:now()}</li>
+                                            <li>${record:value("/&lt;Date Field>")</li>
+                                        </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>
-                                        <draft-comment author="Loretta">finish these. check
-                                            names</draft-comment>
-                                    </entry>
-                                    <entry/>
+                                    <entry>Max Records in a File</entry>
+                                    <entry>Maximum number of records to be written to an output
+                                        file. Additional records are written to a new file. <p>Use 0
+                                            to opt out of using this property.</p></entry>
                                 </row>
                                 <row>
-                                    <entry/>
-                                    <entry/>
+                                    <entry>Max File Size (MB)</entry>
+                                    <entry>Maximum size of an output file. Additional records are
+                                        written to a new file. <p>Use 0 to opt out of using this
+                                            property.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Compression Codec</entry>
+                                    <entry>Program to use to compress output files:<ul
+                                            id="ul_ltx_djg_br">
+                                            <li>None </li>
+                                            <li>gzip</li>
+                                            <li>bzip2</li>
+                                            <li>Snappy</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Sequence File Key</entry>
+                                    <entry>Record key for creating Hadoop sequence files. Use one of
+                                        the following options:<ul id="ul_xzr_vkg_br">
+                                            <li>${record:value("/&lt;field name>")}</li>
+                                            <li>${uuid()}</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Compression Type</entry>
+                                    <entry>Compression type for sequence files when using a
+                                        compression codec:<ul id="ul_etm_1lg_br">
+                                            <li>Block Compression</li>
+                                            <li>Record Compression</li>
+                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -130,41 +167,118 @@
                 <cmd>On the <wintitle>Late Records </wintitle>tab, configure the following
                     properties:</cmd>
                 <info>
+                    <note>These properties are relevant for a time basis based on the time of a
+                        record.</note>
                     <table frame="all" rowsep="1" colsep="1" id="table_wv3_xzd_br">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
                             <colspec colname="c2" colnum="2" colwidth="2.77*"/>
                             <thead>
                                 <row>
-                                    <entry/>
-                                    <entry/>
+                                    <entry>Late Records Property</entry>
+                                    <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry/>
-                                    <entry>Time limit for output directories to accept data.</entry>
+                                    <entry>Late Records Time Limit (secs)</entry>
+                                    <entry>Time limit for output directories to accept data. <p>You
+                                            can enter a time in seconds, or use the expression to
+                                            enter a time in hours. You can also use MINUTES in the
+                                            default expression to define the time in minutes.
+                                        </p></entry>
                                 </row>
                                 <row>
-                                    <entry>Late Record Handling</entry>
-                                    <entry>How to handle late records. Use one of the following
-                                            options:<ul id="ul_gx4_c12_br">
-                                            <li>Send to error - Sends the record for pipeline error
-                                                handling. </li>
+                                    <entry>Late Records Handling</entry>
+                                    <entry>Determines how to handle late records:<ul
+                                            id="ul_gx4_c12_br">
+                                            <li>Send to error - Sends the record to the pipeline for
+                                                error handling. </li>
                                             <li>Send to late records file - Sends the record to a
                                                 late records file.</li>
                                             <li>Discard - Discards the record.</li>
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Late Records Directory Template <xref
+                                    <entry>Late Record Directory Template <xref
                                             href="HadoopFS-DirectoryTemplates.dita#concept_cvc_skd_br"
                                                 ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="11" id="image_f41_j12_br"/></xref></entry>
-                                    <entry>Template for creating late records directories. You can
-                                        use constants, field values, and datetime variables. Output
-                                        directories are created based on the smallest datetime
-                                        variable in the template.</entry>
+                                    <entry>Template for creating late record directories. You can
+                                        use constants, field values, and datetime variables.
+                                            <p>Output directories are created based on the smallest
+                                            datetime variable in the template.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For CSV data, on the <wintitle>Delimited</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.53*"/>
+                            <thead>
+                                <row>
+                                    <entry>Delimited Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>CSV Format</entry>
+                                    <entry>Format for delimited data:<ul id="ul_yxk_lkg_br">
+                                            <li>Basic CSV</li>
+                                            <li>MS Excel CSV</li>
+                                            <li>MySQL CSV</li>
+                                            <li>RFC4180</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Field Mapping</entry>
+                                    <entry>Map output fields to column names for the output file.
+                                        Click the Add icon to add additional field mappings. <ul
+                                            id="ul_zgf_plg_br">
+                                            <li>Field Path - Field name of the record. Use a leading
+                                                slash as follows: /FirstField.</li>
+                                            <li>Delimited Column Name - Name for the corresponding
+                                                column in the output file. </li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For tab-separated data, on the <wintitle>Tab Separated</wintitle> tab,
+                    configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_x3t_zlg_br">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.53*"/>
+                            <thead>
+                                <row>
+                                    <entry>Delimited Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Field Mapping</entry>
+                                    <entry>Map output fields to column names for the output file.
+                                        Click the Add icon to add additional field mappings. <ul
+                                            id="ul_mjt_zlg_br">
+                                            <li>Field Path - Field name of the record. Use a leading
+                                                slash as follows: /FirstField.</li>
+                                            <li>Delimited Column Name - Name for the corresponding
+                                                column in the output file. </li>
+                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>

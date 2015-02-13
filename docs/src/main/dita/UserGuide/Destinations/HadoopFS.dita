@@ -6,8 +6,11 @@
   or JSON data to flat files or Hadoop sequence files. </shortdesc>
  <conbody>
   <p>When you configure a Hadoop FS destination, you define the output directory template. Hadoop FS
-   creates output directories based the template and writes records to the directories based on the
-   specified time basis - the time that a record is processed or the time associated with the
-   record. </p>
+   creates output directories based the template and the time basis. Hadoop FS writes records to the
+   directories based on the time basis as well.</p>
+  <p>You can determine how long a record can be written to a directory, and define what happens to
+   late records. </p>
+  <p>To write delimited data to Hadoop, you map fields from output records to delimited column names
+   for the output files. </p>
  </conbody>
 </concept>

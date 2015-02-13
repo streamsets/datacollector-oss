@@ -5,11 +5,10 @@
  <shortdesc>A destination stage represents the target data for the pipeline. You can use one or more
     destinations in a pipeline.</shortdesc>
  <conbody>
-  <p>You can use the following types of destinations in a pipeline: <draft-comment author="Loretta"
-        >list the target types. quick description.</draft-comment><ul id="ul_mxz_jxm_jq">
-        <li>Kafka Producer - Writes data to a Kakfa cluster.</li>
+  <p>You can use the following types of destinations in a pipeline: <ul id="ul_mxz_jxm_jq">
         <li>Hadoop FS - Writes data to a file system on Hadoop.</li>
-        <li>Local File System - Writes records to a local file system.</li>
+        <li>Kafka Producer - Writes data to a Kakfa cluster.</li>
+        <li>Records to File - Writes records to a local file system.</li>
         <li>Trash - Removes data from the pipeline.</li>
       </ul></p>
  </conbody>

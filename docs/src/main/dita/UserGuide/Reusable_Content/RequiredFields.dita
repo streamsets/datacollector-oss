@@ -3,8 +3,8 @@
 <concept id="concept_dnj_bkm_vq">
  <title>Required Fields</title>
  <shortdesc>You can configure required fields for any processor and most target stages. A required
-  field must exist in a record to keep it in the pipeline. When a record does not include a required
-  field, the stage passes the field to the pipeline for error handling. </shortdesc>
+  field must exist in a record to keep the record in the pipeline. When a record does not include a
+  required field, the stage passes the field to the pipeline for error handling. </shortdesc>
  <conbody>
   <p>Configure required fields based on your business requirements or in order to minimize
    processing errors.</p>

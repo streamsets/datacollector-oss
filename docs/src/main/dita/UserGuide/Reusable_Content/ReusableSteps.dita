@@ -60,8 +60,8 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">The first step should used for all stage
-                        configuration. The 2nd step for everything but origins.</draft-comment>
+                    <draft-comment author="Loretta">The first step should used for origins. Use the
+                        first &amp; 2nd steps for processors.</draft-comment>
                 </cmd>
             </step>
             <step id="Step_NameDesc">
@@ -75,6 +75,23 @@
                         <image href="../Graphics/icon_moreInfo.png" scale="11" id="image_h4p_p5v_yq"
                         /></xref></cmd>
                 <info>You might include any field that the processor uses.</info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">Use these two steps for destination
+                        tasks.</draft-comment>
+                </cmd>
+            </step>
+            <step id="Dest-Step1">
+                <cmd>In the Properties panel, optionally enter a name and description for the stage.
+                </cmd>
+            </step>
+            <step id="Dest-Step2">
+                <cmd>For <uicontrol>Required Fields</uicontrol>, enter any fields that you want to
+                    require data. <xref
+                        href="../Reusable_Content/RequiredFields.dita#concept_dnj_bkm_vq">
+                        <image href="../Graphics/icon_moreInfo.png" scale="11" id="image_wct_vhg_br"
+                        /></xref></cmd>
             </step>
         </steps>
     </taskbody>
