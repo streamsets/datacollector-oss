@@ -4,7 +4,8 @@
 angular.module('dataCollectorApp.common')
   .service('contextHelpService', function($rootScope, $q, configuration, api, pipelineConstant) {
 
-    var helpIds = {};
+    var helpIds = {},
+      helpWindow;
 
     this.configInitPromise = $q.all([api.admin.getHelpRef(), configuration.init()]).then(function(results) {
       helpIds = results[0].data;
@@ -22,7 +23,14 @@ angular.module('dataCollectorApp.common')
         }
 
         helpURL = uiHelpBaseURL + '/' + (relativeURL || 'index.html');
-        window.open(helpURL);
+
+        if(typeof(helpWindow) == 'undefined' || helpWindow.closed) {
+          helpWindow = window.open(helpURL);
+        } else {
+          helpWindow.location.href = helpURL;
+          helpWindow.focus();
+        }
+
       });
     };
 
@@ -36,7 +44,14 @@ angular.module('dataCollectorApp.common')
         }
 
         helpURL = uiHelpBaseURL + '/index.html';
-        window.open(helpURL);
+
+        if(typeof(helpWindow) == 'undefined' || helpWindow.closed) {
+          helpWindow = window.open(helpURL);
+        } else {
+          helpWindow.location.href = helpURL;
+          helpWindow.focus();
+        }
+
       });
     };
 
