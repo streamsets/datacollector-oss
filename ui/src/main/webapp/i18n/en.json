@@ -169,8 +169,8 @@
       "badRecordsTab": {
         "mostRecentBadRecords": "Most Recent Bad Records",
         "mostRecentErrorMessages": "Most Recent Error Messages",
-        "totalNumberOfBadRecords": "Total Number of Bad Records",
-        "totalNumberOfErrors": "Total Number of Errors",
+        "totalNumberOfBadRecords": "Total Number of Bad Records: ",
+        "totalNumberOfErrors": "Total Number of Errors: ",
         "badRecordsCounts": "Records in Error (since last startup)",
         "badRecordsHistogram": "Records in Error Histogram (5 minutes decay)",
         "errorsCount": "Stage Errors Count (since last startup)",

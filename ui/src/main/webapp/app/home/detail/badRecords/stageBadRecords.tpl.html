@@ -7,67 +7,68 @@
     <div class="tabs-content">
       <div class="row">
         <div class="col-sm-8" ng-if="stageBadRecords && stageBadRecords.length > 0">
-          <table class="table">
-            <caption>
-              <label translate="home.detailPane.badRecordsTab.mostRecentBadRecords">Most Recent Bad Records</label>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <span translate="home.detailPane.badRecordsTab.mostRecentBadRecords">Most Recent Bad Records</span>
               <i class="fa fa-refresh pointer icon-button"
                  ng-click="refreshBadRecordsData()"
                  tooltip-placement="right"
                  tooltip="{{'global.form.refresh' | translate}}"></i>
-            </caption>
-            <thead>
-            <tr>
-              <th class="col-md-4">
-                <!--span class="glyphicon glyphicon-expand pointer"
-                  ng-if="!expandAllErrorData"
-                  ng-click="onExpandAllErrorData()"></span>
-                <span class="glyphicon glyphicon-collapse-down pointer"
-                  ng-if="expandAllErrorData"
-                  ng-click="onCollapseAllErrorData()"></span-->
-                <span translate="home.detailPane.badRecords">Bad Records</span>
-              </th>
-              <th class="col-md-3" translate="global.form.timestamp">Timestamp</th>
-              <th class="col-md-5" translate="global.form.errorMessage"> Error Message</th>
-            </tr>
-            </thead>
-            <tbody ng-hide="showBadRecordsLoading">
-            <tr ng-repeat="errorRecord in stageBadRecords">
-              <td>
-                <record-tree
-                  record="errorRecord"
-                  record-value="errorRecord.value"
-                  field-name="('global.form.record' | translate)+($index+1)"
-                  is-root="true"
-                  editable="false">
-                </record-tree>
-              </td>
-              <td>{{errorRecord.header.errorTimestamp | date:'medium'}}</td>
-              <td ng-bind="errorRecord.header.errorMessage"></td>
-            </tr>
+            </div>
+            <div class="panel-body">
+              <table class="table">
+                <thead>
+                <tr>
+                  <th class="col-md-4">
+                    <!--span class="glyphicon glyphicon-expand pointer"
+                      ng-if="!expandAllErrorData"
+                      ng-click="onExpandAllErrorData()"></span>
+                    <span class="glyphicon glyphicon-collapse-down pointer"
+                      ng-if="expandAllErrorData"
+                      ng-click="onCollapseAllErrorData()"></span-->
+                    <span translate="home.detailPane.badRecords">Bad Records</span>
+                  </th>
+                  <th class="col-md-3" translate="global.form.timestamp">Timestamp</th>
+                  <th class="col-md-5" translate="global.form.errorMessage"> Error Message</th>
+                </tr>
+                </thead>
+                <tbody ng-hide="showBadRecordsLoading">
+                <tr ng-repeat="errorRecord in stageBadRecords">
+                  <td>
+                    <record-tree
+                      record="errorRecord"
+                      record-value="errorRecord.value"
+                      field-name="('global.form.record' | translate)+($index+1)"
+                      is-root="true"
+                      editable="false">
+                    </record-tree>
+                  </td>
+                  <td>{{errorRecord.header.errorTimestamp | date:'medium'}}</td>
+                  <td ng-bind="errorRecord.header.errorMessage"></td>
+                </tr>
 
-            </tbody>
+                </tbody>
 
-          </table>
-          <div show-loading="showBadRecordsLoading"></div>
+              </table>
+              <div show-loading="showBadRecordsLoading"></div>
+            </div>
+          </div>
         </div>
 
 
         <div class="col-sm-4">
-
-          <form class="form-horizontal" role="form">
-            <div class="form-group">
-              <label class="col-sm-8 bad-record-count-label"
-                     translate="home.detailPane.badRecordsTab.totalNumberOfBadRecords">Total Number of Bad Records</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control input-sm"
-                       ng-model="errorRecordsCount.count" readonly>
-              </div>
-            </div>
-          </form>
-
           <div class="panel panel-default">
             <div class="panel-heading" translate="home.detailPane.badRecordsTab.badRecordsHistogram">Bad Records Histogram</div>
             <div class="panel-body">
+
+              <ul class="properties">
+                <li>
+                  <span class="properties-label" translate="home.detailPane.badRecordsTab.totalNumberOfBadRecords">Total Number of Bad Records</span>
+                  <span class="properties-value">{{errorRecordsCount.count}}</span>
+                </li>
+              </ul>
+
               <nvd3-multi-bar-horizontal-chart
                 data="errorRecordsPercentilesData"
                 id="stageErrorRecordsPercentilesDataID"
@@ -98,49 +99,53 @@
       <div class="row">
 
         <div class="col-sm-8" ng-if="errorMessages && errorMessages.length > 0">
-          <table class="table table-hover">
-            <caption>
-              <label translate="home.detailPane.badRecordsTab.mostRecentErrorMessages">Most Recent Error Messages</label>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <span translate="home.detailPane.badRecordsTab.mostRecentErrorMessages">Most Recent Error Messages</span>
               <i class="fa fa-refresh pointer icon-button"
                  ng-click="refreshErrorMessagesData()"
                  tooltip-placement="right"
                  tooltip="{{'global.form.refresh' | translate}}"></i>
-            </caption>
-            <thead>
-            <tr>
-              <th class="col-md-3" translate="global.form.timestamp">Timestamp</th>
-              <th class="col-md-2" translate="global.form.errorCode">Error Code</th>
-              <th class="col-md-7" translate="global.form.errorMessage"> Error Message</th>
-            </tr>
-            </thead>
-            <tbody ng-hide="showErrorMessagesLoading">
-            <tr ng-repeat="errorMessage in errorMessages">
-              <td>{{errorMessage.timestamp | date:'medium'}}</td>
-              <td ng-bind="errorMessage.errorCode"> </td>
-              <td ng-bind="errorMessage.localized"> </td>
-            </tr>
-            </tbody>
-          </table>
+            </div>
+            <div class="panel-body">
+              <table class="table table-hover">
+                <thead>
+                <tr>
+                  <th class="col-md-3" translate="global.form.timestamp">Timestamp</th>
+                  <th class="col-md-2" translate="global.form.errorCode">Error Code</th>
+                  <th class="col-md-7" translate="global.form.errorMessage"> Error Message</th>
+                </tr>
+                </thead>
+                <tbody ng-hide="showErrorMessagesLoading">
+                <tr ng-repeat="errorMessage in errorMessages">
+                  <td>{{errorMessage.timestamp | date:'medium'}}</td>
+                  <td ng-bind="errorMessage.errorCode"> </td>
+                  <td ng-bind="errorMessage.localized"> </td>
+                </tr>
+                </tbody>
+              </table>
 
-          <div show-loading="showErrorMessagesLoading"></div>
+              <div show-loading="showErrorMessagesLoading"></div>
+            </div>
+          </div>
 
         </div>
 
 
         <div class="col-sm-4">
-          <form class="form-horizontal" role="form">
-            <div class="form-group">
-              <label class="col-sm-8 bad-record-count-label" translate="home.detailPane.badRecordsTab.totalNumberOfErrors">Total Number of Errors</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control input-sm"
-                       ng-model="errorMessagesCount.count" readonly>
-              </div>
-            </div>
-          </form>
 
           <div class="panel panel-default">
             <div class="panel-heading" translate="home.detailPane.badRecordsTab.errorsHistogram">Errors Histogram</div>
             <div class="panel-body">
+
+              <ul class="properties">
+                <li>
+                  <span class="properties-label" translate="home.detailPane.badRecordsTab.totalNumberOfErrors">Total Number of Errors</span>
+                  <span class="properties-value">{{errorMessagesCount.count}}</span>
+                </li>
+              </ul>
+
               <nvd3-multi-bar-horizontal-chart
                 data="errorsPercentilesData"
                 id="stageErrorsPercentilesDataID"

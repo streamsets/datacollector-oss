@@ -252,12 +252,16 @@ angular
     });
 
     $scope.$watch('isPipelineRunning', function(newValue) {
-      $scope.detailPaneTabs = getDetailTabsList($scope.selectedType, newValue);
+      var tabs = $scope.detailPaneTabs = getDetailTabsList($scope.selectedType, newValue);
 
       if(newValue || $scope.detailPaneTabs.length < 2 ) {
-        $scope.detailPaneTabs[0].active = true;
+        angular.forEach(tabs, function(tab) {
+          tab.active = (tab.name === 'summary');
+        });
       } else if($scope.detailPaneTabs.length > 1) {
-        $scope.detailPaneTabs[1].active = true;
+        angular.forEach(tabs, function(tab) {
+          tab.active = (tab.name === 'configuration');
+        });
       }
 
     });
