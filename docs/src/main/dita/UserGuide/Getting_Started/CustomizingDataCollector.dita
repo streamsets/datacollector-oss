@@ -27,8 +27,8 @@
                 /> properties file includes the following general properties:<table frame="all"
                     rowsep="1" colsep="1" id="table_eyq_gkw_1r">
                     <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth=".75*"/>
-                        <colspec colname="c2" colnum="2" colwidth="1.63*"/>
+                        <colspec colname="c1" colnum="1" colwidth="1*"/>
+                        <colspec colname="c2" colnum="2" colwidth="1.39*"/>
                         <thead>
                             <row>
                                 <entry>General Property</entry>

@@ -78,7 +78,10 @@
                                             options:<ul id="ul_un2_cqd_br">
                                             <li>JSON</li>
                                             <li>Delimited</li>
-                                            <li>SDC Records</li>
+                                            <li>SDC Record <xref
+                                                  href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="11" id="image_wjh_ycl_br"/></xref></li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -96,8 +99,9 @@
                                 <row>
                                     <entry>Directory Template <xref
                                             href="HadoopFS-DirectoryTemplates.dita#concept_cvc_skd_br"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="11" id="image_c4p_p5v_yq"/></xref></entry>
+                                                >
+                                        <image href="../Graphics/icon_moreInfo.png"
+                                        scale="11" id="image_c4p_p5v_yq"/></xref></entry>
                                     <entry>Template for creating output directories. You can use
                                         constants, field values, and datetime variables. <p>Output
                                             directories are created based on the smallest datetime
@@ -109,9 +113,10 @@
                                         records are written.</entry>
                                 </row>
                                 <row>
-                                    <entry>Time Basis <xref
-                                            href="HadoopFS-TimeBasis.dita#concept_gkz_smd_br"
-                                        /></entry>
+                                    <entry>Time Basis <xref href="HadoopFS-TimeBasis.dita#concept_gkz_smd_br"
+                                        >
+                                        <image href="../Graphics/icon_moreInfo.png"
+                                            scale="11"/></xref></entry>
                                     <entry>Time basis to use for creating output directories and
                                         writing records to the directories. Use one of the following
                                             expressions:<ul id="ul_ggs_43g_br">
@@ -174,7 +179,10 @@
                             <colspec colname="c2" colnum="2" colwidth="2.77*"/>
                             <thead>
                                 <row>
-                                    <entry>Late Records Property</entry>
+                                    <entry>Late Records Property <xref
+                                            href="HadoopFS-LateRecordHandling.dita#concept_xgm_g4d_br"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="11" id="image_uv1_cdl_br"/></xref></entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>

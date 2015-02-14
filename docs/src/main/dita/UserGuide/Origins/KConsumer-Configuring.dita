@@ -49,8 +49,10 @@
                                             <li>JSON</li>
                                             <li>Delimited</li>
                                             <li>XML</li>
-                                            <li>SDC Records - Use to process output or error files
-                                                from another pipeline.</li>
+                                            <li>SDC Record <xref
+                                                  href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="11" id="image_wjh_ycl_br"/></xref></li>
                                         </ul></entry>
                                 </row>
                                 <row>

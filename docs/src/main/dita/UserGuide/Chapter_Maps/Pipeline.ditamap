@@ -9,6 +9,7 @@
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../Pipeline_Configuration/MergingStreams.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+  <topicref href="../Pipeline_Configuration/ReplicatingStreams.dita"/>
   <topicref href="../Pipeline_Configuration/ErrorHandling.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Pipeline_Configuration/SendToError.dita"/>

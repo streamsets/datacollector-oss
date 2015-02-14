@@ -33,7 +33,7 @@
         <dd>A stage type that performs specific processing on pipeline data.</dd>
       </dlentry>
       <dlentry>
-        <dt>SDC Records </dt>
+        <dt>SDC Record data format</dt>
         <dd>A data format used for <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> error
           records and an optional format to use for output records. </dd>

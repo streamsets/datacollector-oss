@@ -4,7 +4,7 @@
  <title>Hadoop FS</title>
  <shortdesc>The Hadoop FS destination writes data to a Hadoop file system. You can write delimited
   or JSON data to flat files or Hadoop sequence files. You can also use Hadoop FS to create files
-  using the SDC records format.</shortdesc>
+  using the SDC Record data format.</shortdesc>
  <conbody>
   <p>When you configure a Hadoop FS destination, you define the output directory template. Hadoop FS
    creates output directories based the template and the time basis. Hadoop FS writes records to the

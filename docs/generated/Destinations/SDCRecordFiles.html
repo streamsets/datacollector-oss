@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Use the SDC Record Files destination to write Data Collector records to a local file system. Data Collector records are JSON files of a specific format. Use SDC Record Files to create Data Collector ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="SDC Record Files"></meta><meta name="abstract" content="Use the SDC Record Files destination to write Data Collector records to a local file system. Data Collector records are JSON files of a specific format."></meta><meta name="description" content="Use the SDC Record Files destination to write Data Collector records to a local file system. Data Collector records are JSON files of a specific format."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zvc_bv5_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>SDC Record Files</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use the SDC Record Files destination to write files that use the SDC Record data format to a local file system. SDC Records are JSON files of a specific format. Use SDC Record Files to create output ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="SDC Record Files"></meta><meta name="abstract" content="Use the SDC Record Files destination to write files that use the SDC Record data format to a local file system. SDC Records are JSON files of a specific format."></meta><meta name="description" content="Use the SDC Record Files destination to write files that use the SDC Record data format to a local file system. SDC Records are JSON files of a specific format."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/SDCRecordFormat.html#concept_qkk_mwk_br"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zvc_bv5_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>SDC Record Files</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,23 +14,20 @@
  <h1 class="title topictitle1">SDC Record Files</h1>
 
  
- <div class="body conbody"><p class="shortdesc">Use the SDC Record Files destination to write <span class="ph">Data
-                  Collector</span> records to a
-  local file system. <span class="ph">Data
-                  Collector</span> records are
-  JSON files of a specific format. </p>
+ <div class="body conbody"><p class="shortdesc">Use the SDC Record Files destination to write files that use the SDC Record data format
+    to a local file system. SDC Records are JSON files of a specific format. </p>
 
-  <p class="p">Use SDC Record Files to create <span class="ph">Data
-                  Collector</span> record files,
-   such as error record files, that you want to easily reprocess. You can use the Directory origin
-   with the Data Collector Records data format to process records written by SDC Record Files.</p>
-
-  <p class="p"> You can also use SDC Record Files when you want to write output records in JSON format to a
-   local file system. </p>
+  <p class="p">Use SDC Record Files to create output files that can be easily reprocessed by another <span class="ph">Data
+                  Collector</span> pipeline.
+      You can use the Directory origin with the SDC Record data format to process records written by
+      SDC Record Files. </p>
 
  </div>
 
-<div class="related-links"></div>
+  <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a data format used by the Data Collector to generate output and error files for the pipeline.">SDC Record Data Format</a></div>
+</div>
+</div>
 <div class="topic task nested1" id="task_e33_3v5_1r">
     <h2 class="title topictitle2">Configuring an SDC Record Files Destination</h2>
 
@@ -55,9 +52,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="34.129692832764505%" id="d3927e91">Local File System Property</th>
+                                    <th class="entry" valign="top" width="34.129692832764505%" id="d3890e94">Local File System Property</th>
 
-                                    <th class="entry" valign="top" width="65.8703071672355%" id="d3927e94">Description</th>
+                                    <th class="entry" valign="top" width="65.8703071672355%" id="d3890e97">Description</th>
 
                                 </tr>
 
@@ -65,24 +62,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.129692832764505%" headers="d3927e91 ">Directory</td>
+                                    <td class="entry" valign="top" width="34.129692832764505%" headers="d3890e94 ">Directory</td>
 
-                                    <td class="entry" valign="top" width="65.8703071672355%" headers="d3927e94 ">Local directory for the output files.</td>
+                                    <td class="entry" valign="top" width="65.8703071672355%" headers="d3890e97 ">Local directory for the output files.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.129692832764505%" headers="d3927e91 ">File Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="34.129692832764505%" headers="d3890e94 ">File Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="65.8703071672355%" headers="d3927e94 ">Amount of time to wait for records. After the configured
+                                    <td class="entry" valign="top" width="65.8703071672355%" headers="d3890e97 ">Amount of time to wait for records. After the configured
                                         time, SDC Record Files creates a new output file. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.129692832764505%" headers="d3927e91 ">Max File Size (MB)</td>
+                                    <td class="entry" valign="top" width="34.129692832764505%" headers="d3890e94 ">Max File Size (MB)</td>
 
-                                    <td class="entry" valign="top" width="65.8703071672355%" headers="d3927e94 ">Maximum size for output files. Upon reaching the limit,
+                                    <td class="entry" valign="top" width="65.8703071672355%" headers="d3890e97 ">Maximum size for output files. Upon reaching the limit,
                                         SDC Record Files creates a new output file. Use 0 to avoid
                                         using this property. </td>
 

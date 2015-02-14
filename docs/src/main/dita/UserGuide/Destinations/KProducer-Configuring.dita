@@ -58,7 +58,10 @@
                                             <li>Text</li>
                                             <li>JSON</li>
                                             <li>Delimited</li>
-                                            <li>SDC Records</li>
+                                            <li>SDC Record <xref
+                                                  href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br"
+                                                >
+                                                <image href="../Graphics/icon_moreInfo.png" scale="11"/></xref></li>
                                         </ul></entry>
                                 </row>
                                 <row>
