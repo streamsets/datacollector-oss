@@ -37,6 +37,28 @@ public class TestCsvRecordToString {
     Assert.assertEquals("2010,,PHI\r\n", result);
   }
 
+  @Test
+  public void testCsvRecordToStringByteArrayField() throws IOException, StageException {
+    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT);
+    Map<String, String> fieldPathToName = new LinkedHashMap<>();
+    fieldPathToName.put("/id", "ID");
+    recordToString.setFieldPathToNameMapping(fieldPathToName);
+    String result = recordToString.toString(createRecordWithByteArrayField(
+      Field.create(Field.Type.BYTE_ARRAY, "Streamsets Inc".getBytes())));
+    Assert.assertEquals("U3RyZWFtc2V0cyBJbmM=\r\n", result);
+  }
+
+  @Test
+  public void testCsvRecordToStringByteArrayFieldNull() throws IOException, StageException {
+    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT);
+    Map<String, String> fieldPathToName = new LinkedHashMap<>();
+    fieldPathToName.put("/id", "ID");
+    recordToString.setFieldPathToNameMapping(fieldPathToName);
+    String result = recordToString.toString(createRecordWithByteArrayField(
+      Field.create(Field.Type.BYTE_ARRAY, null)));
+    Assert.assertEquals("\"\"\r\n", result);
+  }
+
   private static Record createCsvRecord() throws IOException {
     String line;
     BufferedReader bufferedReader = new BufferedReader(new FileReader(TestCsvRecordToString.class.getClassLoader()
@@ -55,6 +77,12 @@ public class TestCsvRecordToString {
     Mockito.when(record.get("/values[0]")).thenReturn(map.get("values").getValueAsList().get(0));
     Mockito.when(record.get("/values[2]")).thenReturn(map.get("values").getValueAsList().get(2));
     Mockito.when(record.get("/values[10]")).thenReturn(null);
+    return record;
+  }
+
+  private static Record createRecordWithByteArrayField(Field f) throws IOException {
+    Record record = Mockito.mock(Record.class);
+    Mockito.when(record.get("/id")).thenReturn(f);
     return record;
   }
 }

@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -164,6 +165,42 @@ public class TestStageContextExt {
     rr.close();
     Assert.assertEquals(record1, newRecord1);
     Assert.assertEquals(record2, newRecord2);
+  }
+
+  @Test
+  public void testJsonWriterReaderRecordsWithByteArray() throws Exception {
+    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, Collections.EMPTY_LIST);
+    RecordImpl record1 = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mime");
+    record1.getHeader().setStagesPath("stagePath");
+    record1.getHeader().setTrackingId("trackingId");
+    record1.getHeader().setAttribute("attr", "ATTR");
+    record1.getHeader().setSourceRecord(record1);
+    RecordImpl record2 = record1.clone();
+    Map<String, Field> map = new HashMap<>();
+    map.put("a", Field.create("Streamsets Inc, San Francisco".getBytes()));
+    map.put("b", Field.create(Field.Type.BYTE_ARRAY, null));
+    record2.set(Field.create(map));
+
+    StringWriter writer = new StringWriter();
+    JsonRecordWriter rw = ((ContextExtensions)context).createJsonRecordWriter(writer);
+
+    rw.write(record1);
+    rw.flush();
+    rw.write(record2);
+    rw.close();
+
+    JsonRecordReader rr = ((ContextExtensions)context).createJsonRecordReader(new StringReader(writer.toString()), 0 ,0);
+    Record newRecord1 = rr.readRecord();
+    Assert.assertNotNull(newRecord1);
+    Record newRecord2 = rr.readRecord();
+    Assert.assertNotNull(newRecord2);
+    Assert.assertNull(rr.readRecord());
+    rr.close();
+    Assert.assertEquals(record1, newRecord1);
+    //Comparing records using equals does not work for byte[] fields, there is a JIRA to fix this -SDC 171
+
+    Assert.assertTrue(Arrays.equals(record2.get("/a").getValueAsByteArray(), newRecord2.get("/a").getValueAsByteArray()));
+    Assert.assertNull(newRecord2.get("/b").getValueAsByteArray());
   }
 
 }
