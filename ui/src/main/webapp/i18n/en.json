@@ -86,7 +86,7 @@
       "stageErrors": "Stage Errors",
       "state": "State",
       "status": "Status",
-      "step": "Re-run Preview With Changes",
+      "step": "Run Preview With Changes",
       "stream": "Stream",
       "target": "Destination",
       "targets": "Destinations",

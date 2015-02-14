@@ -6,12 +6,8 @@ angular.module('abbreviateNumberFilter', [])
   .filter('abbreviateNumber', function() {
     return function (value) {
       var newValue = value;
-
-      if(value) {
-        newValue = value = Math.ceil(value);
-      }
-
       if (value >= 1000) {
+        value = Math.ceil(value);
         var suffixes = ["", "k", "m", "b","t"];
         var suffixNum = Math.floor( (""+value).length/3 );
         var shortValue = '';
@@ -27,6 +23,8 @@ angular.module('abbreviateNumberFilter', [])
         }
 
         newValue = shortValue+suffixes[suffixNum];
+      } else if(newValue) {
+        newValue = newValue.toFixed(2);
       }
       return newValue;
     };
