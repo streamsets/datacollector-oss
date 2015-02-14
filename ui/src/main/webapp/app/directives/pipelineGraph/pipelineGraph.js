@@ -698,7 +698,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
                 'cx': consts.rectWidth,
                 'cy': y,
                 'r': 10,
-                'class': 'graph-bootstrap-tooltip',
+                'class': 'graph-bootstrap-tooltip ' + lane,
                 'title': lanePredicate ? lanePredicate.predicate : ''
               }).on('mousedown', function(d){
                 thisGraph.state.shiftNodeDrag = true;
@@ -1015,6 +1015,20 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       thisGraph.rects.classed(thisGraph.consts.endNodeClass, false);
     };
 
+    GraphCreator.prototype.clearDirtyNodeClass = function() {
+      var thisGraph = this;
+      thisGraph.rects.selectAll('circle')
+        .attr('class', function(d) {
+          var currentClass = d3.select(this).attr('class');
+
+          if(currentClass && currentClass.indexOf('dirty') !== -1) {
+            currentClass = currentClass.replace(/dirty/g, '');
+          }
+
+          return currentClass;
+        });
+    };
+
     GraphCreator.prototype.updateStartAndEndNode = function(startNode, endNode) {
       var thisGraph = this;
 
@@ -1149,6 +1163,31 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       }
     });
 
+    $scope.$on('updateDirtyLaneConnector', function(event, dirtyLanes) {
+      if(graph) {
+        graph.rects.selectAll('circle')
+          .attr('class', function(d) {
+            var currentClass = d3.select(this).attr('class');
+            if(currentClass) {
+              var currentClasArr = currentClass.split(' '),
+                intersection = _.intersection(dirtyLanes, currentClasArr);
+
+              if(intersection && intersection.length) {
+                return currentClass + ' dirty';
+              }
+            }
+
+            return currentClass;
+          });
+      }
+    });
+
+    $scope.$on('clearDirtyLaneConnector', function() {
+      if(graph) {
+        graph.clearDirtyNodeClass();
+      }
+    });
+
     $scope.$on('moveGraphToCenter', function() {
       if(graph) {
         if (graph.state.selectedNode) {
@@ -1160,6 +1199,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         }
 
         graph.clearStartAndEndNode();
+        graph.clearDirtyNodeClass();
         graph.moveGraphToCenter();
       }
     });
@@ -1187,6 +1227,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         graph.isPreviewMode = flag;
         if(!flag) {
           graph.clearStartAndEndNode();
+          graph.clearDirtyNodeClass();
         }
       }
     });

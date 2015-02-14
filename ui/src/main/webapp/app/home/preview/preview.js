@@ -40,16 +40,11 @@ angular
        * @param inputRecords
        */
       nextStagePreview: function(stageInstance, inputRecords) {
-        //if($scope.previewDataUpdated && stageInstance.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE) {
-          //$scope.stepPreview(stageInstance, inputRecords);
-        //} else {
-          $scope.changeStageSelection({
-            selectedObject: stageInstance,
-            type: pipelineConstant.STAGE_INSTANCE
-          });
-        //}
+        $scope.changeStageSelection({
+          selectedObject: stageInstance,
+          type: pipelineConstant.STAGE_INSTANCE
+        });
       },
-
 
       /**
        * Set dirty flag to true when record is updated in Preview Mode.
@@ -65,6 +60,7 @@ angular
 
         if(!_.contains($scope.dirtyLanes, recordUpdated.laneName)) {
           $scope.dirtyLanes.push(recordUpdated.laneName);
+          $rootScope.$broadcast('updateDirtyLaneConnector', $scope.dirtyLanes);
         }
       },
 
@@ -84,11 +80,6 @@ angular
 
           if(intersection && intersection.length) {
             var stageOutputCopy = angular.copy(stageOutput);
-            /*stageOutputCopy.output = {};
-
-            angular.forEach(intersection, function(laneName) {
-              stageOutputCopy.output[laneName] = stageOutput.output[laneName];
-            });*/
             stageOutputs.push(stageOutputCopy);
           }
         });
@@ -141,6 +132,8 @@ angular
         $scope.stepExecuted = false;
         $scope.dirtyLanes = [];
 
+        $rootScope.$broadcast('clearDirtyLaneConnector');
+
         if(!$scope.previewMultipleStages) {
           var firstStageInstance = $scope.pipelineConfig.stages[0];
           $scope.changeStageSelection({
@@ -167,6 +160,7 @@ angular
 
         if(!_.contains($scope.dirtyLanes, record.laneName)) {
           $scope.dirtyLanes.push(record.laneName);
+          $rootScope.$broadcast('updateDirtyLaneConnector', $scope.dirtyLanes);
         }
       }
 
@@ -231,6 +225,7 @@ angular
             });
           }
 
+          $rootScope.$broadcast('clearDirtyLaneConnector');
           $scope.showLoading = false;
         }).
         error(function(data) {
@@ -260,7 +255,6 @@ angular
         }
       }
     });
-
 
     $scope.$watch('previewMultipleStages', function(newValue) {
       if($scope.previewData.batchesOutput) {

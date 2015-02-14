@@ -64,6 +64,11 @@ pipeline-graph {
         fill: #ffffff;
         stroke: @default-pipeline-graph-stroke-color;
         stroke-width: 2px;
+
+        &.dirty {
+          fill: @brand-danger;
+          stroke: @brand-danger;
+        }
       }
 
       &:hover {
@@ -75,6 +80,10 @@ pipeline-graph {
 
         circle {
           stroke: @default-pipeline-graph-selection-color;
+          &.dirty {
+            fill: @brand-danger;
+            stroke: @brand-danger;
+          }
         }
 
         text {
@@ -103,6 +112,11 @@ pipeline-graph {
 
       circle {
         stroke: @default-pipeline-graph-selection-color;
+
+        &.dirty {
+          fill: @brand-danger;
+          stroke: @brand-danger;
+        }
       }
 
       text {
