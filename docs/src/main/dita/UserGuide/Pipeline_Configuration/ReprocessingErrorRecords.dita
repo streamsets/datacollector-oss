@@ -8,10 +8,9 @@
     <taskbody>
         <context>
             <p><indexterm>error records<indexterm>reprocessing</indexterm></indexterm>In the error
-                pipeline, include the Directory origin and configure it to use the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> error record data format. The error record data format provides the following
-                    data:<ul id="ul_fxk_mbd_br">
+                pipeline, include the Directory origin and configure it to use the SDC Records data
+                format. The SDC Records data format provides the following information:<ul
+                    id="ul_fxk_mbd_br">
                     <li>The original source record, as read by the pipeline that generated the
                         error.</li>
                     <li>The path the record took through the pipeline, including the stage that

@@ -30,16 +30,17 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format</entry>
+                                    <entry>Data Format 
+                              <xref href="Directory-DataFormat.dita#concept_gz5_dqw_yq">
+                                  <image href="../Graphics/icon_moreInfo.png" scale="11"/>
+                                      </xref></entry>
                                     <entry>Data format for source files. Use one of the following
                                             formats:<ul id="ul_y1t_wql_5q">
                                             <li>Text</li>
                                             <li>JSON</li>
                                             <li>Delimited</li>
                                             <li>XML</li>
-                                            <li><ph
-                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                                /> Records</li>
+                                            <li>SDC Records</li>
                                         </ul></entry>
                                 </row>
                                 <row>

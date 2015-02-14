@@ -16,6 +16,7 @@
   </topicref>
   <topicref href="../Pipeline_Configuration/DeliveryGuarantee.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+  <topicref href="../Pipeline_Configuration/SDCRecordFormat.dita"/>
   <topicref href="../Pipeline_Configuration/ConfiguringAPipeline.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
  </topicref>

@@ -19,11 +19,16 @@
                     following text in the address bar of your browser: </cmd>
                 <info>
                     <codeblock>localhost:18630</codeblock>
+                    <p>If you customized the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />, use the following format:
+                        <codeblock>&lt;host name>:&lt;port no></codeblock></p>
                 </info>
             </step>
             <step id="LoginDC">
                 <cmd>In the <wintitle>Login</wintitle> dialog box, use the following credentials to
                     log in: <codeph>admin</codeph> / <codeph>admin</codeph>.</cmd>
+                <info>If you created a custom login, feel free to use it.</info>
             </step>
             <step>
                 <cmd>On the <wintitle>Get Started</wintitle> page, click <uicontrol>Create

@@ -2,12 +2,11 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_z2w_5d2_br">
  <title>Send to Error Stage Option</title>
- <shortdesc>Any stage with an error handling property include the <uicontrol>Send to
-   Error</uicontrol> option. The Send to Error option passes the error record to the pipeline for
-  error handling. </shortdesc>
+ <shortdesc>Any stage with an error handling property includes the <uicontrol>Send to
+      Error</uicontrol> option. The Send to Error option passes the error record to the pipeline for
+    error handling. </shortdesc>
  <conbody>
   <p><indexterm>Send to Error<indexterm>error handling option</indexterm></indexterm>The record is
-   either discarded or saved to an error record file based on the pipeline error handling
-   configuration. </p>
+      either discarded or saved to an error record file based on how the pipeline is configured. </p>
  </conbody>
 </concept>

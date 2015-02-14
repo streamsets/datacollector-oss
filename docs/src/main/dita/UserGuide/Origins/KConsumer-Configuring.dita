@@ -49,6 +49,8 @@
                                             <li>JSON</li>
                                             <li>Delimited</li>
                                             <li>XML</li>
+                                            <li>SDC Records - Use to process output or error files
+                                                from another pipeline.</li>
                                         </ul></entry>
                                 </row>
                                 <row>

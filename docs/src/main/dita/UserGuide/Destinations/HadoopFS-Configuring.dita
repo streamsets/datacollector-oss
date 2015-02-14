@@ -78,7 +78,7 @@
                                             options:<ul id="ul_un2_cqd_br">
                                             <li>JSON</li>
                                             <li>Delimited</li>
-                                            <li>Tab-separated</li>
+                                            <li>SDC Records</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -163,7 +163,7 @@
                 </info>
             </step>
             <step>
-                <cmd>On the <wintitle>Late Records </wintitle>tab, configure the following
+                <cmd>On the <wintitle>Late Records</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
                     <note>These properties are relevant for a time basis based on the time of a
@@ -214,7 +214,7 @@
                 </info>
             </step>
             <step>
-                <cmd>For CSV data, on the <wintitle>Delimited</wintitle> tab, configure the
+                <cmd>For delimited data, on the <wintitle>Delimited</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
@@ -242,37 +242,6 @@
                                     <entry>Map output fields to column names for the output file.
                                         Click the Add icon to add additional field mappings. <ul
                                             id="ul_zgf_plg_br">
-                                            <li>Field Path - Field name of the record. Use a leading
-                                                slash as follows: /FirstField.</li>
-                                            <li>Delimited Column Name - Name for the corresponding
-                                                column in the output file. </li>
-                                        </ul></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>For tab-separated data, on the <wintitle>Tab Separated</wintitle> tab,
-                    configure the following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_x3t_zlg_br">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.53*"/>
-                            <thead>
-                                <row>
-                                    <entry>Delimited Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Field Mapping</entry>
-                                    <entry>Map output fields to column names for the output file.
-                                        Click the Add icon to add additional field mappings. <ul
-                                            id="ul_mjt_zlg_br">
                                             <li>Field Path - Field name of the record. Use a leading
                                                 slash as follows: /FirstField.</li>
                                             <li>Delimited Column Name - Name for the corresponding

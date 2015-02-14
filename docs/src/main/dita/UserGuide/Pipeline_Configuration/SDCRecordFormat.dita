@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_qkk_mwk_br">
+ <title>SDC Records Data Format</title>
+ <shortdesc>SDC Records is a file data format used by the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to generate
+  error files for the pipeline. It is also a data format option for output files. </shortdesc>
+ <conbody>
+  <p><indexterm>SDC Records<indexterm>data format</indexterm></indexterm>Use the SDC Records format
+   to process files produced by another <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> pipeline, or
+   to produce files that you might pass to another  <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> pipeline.</p>
+  <p>The SDC Record Files destination writes all records using the SDC Records format. You can also
+   use Hadoop FS and the Kafka Producer to write SDC Records files.</p>
+  <p>The Directory and Kafka Consumer origins both process SDC Records files. </p>
+ </conbody>
+</concept>
