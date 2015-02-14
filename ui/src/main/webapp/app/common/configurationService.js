@@ -7,7 +7,7 @@ angular.module('dataCollectorApp.common')
       REFRESH_INTERVAL = 'ui.refresh.interval.ms',
       JVM_METRICS_REFRESH_INTERVAL = 'ui.jvmMetrics.refresh.interval.ms',
       UI_LOCAL_HELP_BASE_URL = 'ui.local.help.base.url',
-      UI_ONLINE_HELP_BASE_URL = 'ui.online.help.base.url';
+      UI_HOSTED_HELP_BASE_URL = 'ui.hosted.help.base.url';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -78,9 +78,9 @@ angular.module('dataCollectorApp.common')
      *
      * @returns string
      */
-    this.getUIOnlineHelpBaseURL = function() {
+    this.getUIHostedHelpBaseURL = function() {
       if(self.config) {
-        return self.config[UI_ONLINE_HELP_BASE_URL];
+        return self.config[UI_HOSTED_HELP_BASE_URL];
       }
       return '/docs';
     };

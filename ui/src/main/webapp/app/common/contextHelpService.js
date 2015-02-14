@@ -16,8 +16,8 @@ angular.module('dataCollectorApp.common')
         var uiHelpBaseURL, helpURL,
           relativeURL = helpIds[helpId];
 
-        if ($rootScope.$storage.helpLocation === pipelineConstant.ONLINE_HELP) {
-          uiHelpBaseURL = configuration.getUIOnlineHelpBaseURL();
+        if ($rootScope.$storage.helpLocation === pipelineConstant.HOSTED_HELP) {
+          uiHelpBaseURL = configuration.getUIHostedHelpBaseURL();
         } else {
           uiHelpBaseURL = configuration.getUILocalHelpBaseURL();
         }
@@ -37,8 +37,8 @@ angular.module('dataCollectorApp.common')
     this.launchHelpContents = function() {
       this.configInitPromise.then(function() {
         var uiHelpBaseURL, helpURL;
-        if ($rootScope.$storage.helpLocation === pipelineConstant.ONLINE_HELP) {
-          uiHelpBaseURL = configuration.getUIOnlineHelpBaseURL();
+        if ($rootScope.$storage.helpLocation === pipelineConstant.HOSTED_HELP) {
+          uiHelpBaseURL = configuration.getUIHostedHelpBaseURL();
         } else {
           uiHelpBaseURL = configuration.getUILocalHelpBaseURL();
         }

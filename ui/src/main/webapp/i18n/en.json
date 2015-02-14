@@ -20,7 +20,7 @@
         "helpContents": "Help Contents",
         "useHelp": "Help:",
         "localHelp": "Local Help",
-        "onlineHelp": "Online Help"
+        "hostedHelp": "Hosted Help"
       },
       "home": "Home",
       "toggleNavigation": "Toggle navigation"

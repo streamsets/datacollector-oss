@@ -14,5 +14,5 @@ angular.module('dataCollectorApp.common')
     DENSITY_COZY: 'COZY',
     DENSITY_COMPACT: 'COMPACT',
     LOCAL_HELP: 'LOCAL_HELP',
-    ONLINE_HELP: 'ONLINE_HELP'
+    HOSTED_HELP: 'HOSTED_HELP'
   });
