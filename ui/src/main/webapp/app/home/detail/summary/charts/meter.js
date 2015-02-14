@@ -4,7 +4,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('MeterBarChartController', function($scope, $rootScope, pipelineConstant) {
+  .controller('MeterBarChartController', function($scope, $rootScope, pipelineConstant, $filter) {
     var color = $scope.recordsColor;
 
     angular.extend($scope, {
@@ -23,6 +23,17 @@ angular
       getTooltipContent: function() {
         return function(key, x, y, e, graph) {
           return '<p>' + key + ' Records </p><p>' + $scope.getDurationLabel(x) + ' throughput: ' + e.value.toFixed(2) + '</p>';
+        };
+      },
+
+      /**
+       * Value format function for D3 NVD3 charts.
+       *
+       * @returns {Function}
+       */
+      valueFormatFunction: function() {
+        return function(d) {
+          return $filter('abbreviateNumber')(d);
         };
       }
     });
