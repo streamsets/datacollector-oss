@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.ErrorRecordsOptions;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
@@ -19,7 +18,6 @@ import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
@@ -280,11 +278,11 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Override
   public RuleDefinitions retrieveRules(String name, String tagOrRev) throws PipelineStoreException {
-    if (!hasPipeline(name)) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
-    }
     synchronized (rulesMutex) {
       if(!pipelineToRuleDefinitionMap.containsKey(getPipelineKey(name, tagOrRev))) {
+        if (!hasPipeline(name)) {
+          throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
+        }
         //try loading from store, needed in cases like restart
         RuleDefinitions ruleDefinitions = null;
         File rulesFile = getRulesFile(name);
