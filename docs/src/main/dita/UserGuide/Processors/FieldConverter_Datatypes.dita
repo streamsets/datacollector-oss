@@ -59,8 +59,7 @@
       </row>
       <row>
        <entry>String</entry>
-       <entry>All supported data types.<draft-comment author="Loretta">Did we verify if we do byte
-         array?</draft-comment></entry>
+       <entry>All supported data types except for Byte Array, List, and Map.</entry>
       </row>
      </tbody>
     </tgroup>

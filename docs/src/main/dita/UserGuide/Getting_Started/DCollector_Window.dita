@@ -9,7 +9,7 @@
  <conbody>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       console includes the following general areas and icons:</p>
-  <p><image href="../Graphics/DCWindow.png" id="image_k5j_5pz_sq" scale="45"/></p>
+  <p><image href="../Graphics/DCConsole.png" id="image_k5j_5pz_sq" scale="45"/></p>
   <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 5.23* 9.44*">
       <sthead>
         <stentry>No</stentry>
@@ -23,7 +23,7 @@
       </strow>
       <strow>
         <stentry>2</stentry>
-        <stentry>Properties panel / Preview panel / Monitor panel</stentry>
+        <stentry>Properties panel / Preview panel / Monitor panel </stentry>
         <stentry>When you configure a pipeline, the Properties panel displays the properties of the
           pipeline or selected stage.<p>When you preview data, the Preview panel displays the input
             and output data for the selected stage. </p>When you monitor a running pipeline, the
@@ -44,16 +44,16 @@
         <stentry>Icon to display or hide the library.</stentry>
       </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_AddPipeline.png" id="image_b2q_t4q_rq" scale="40"
-          /></stentry>
-        <stentry>Add Pipeline icon</stentry>
-        <stentry>Creates a new pipeline. </stentry>
-      </strow>
-      <strow>
         <stentry><image href="../Graphics/icon_PipelineOptions.png" id="image_vd2_jpq_rq" scale="40"
           /></stentry>
         <stentry>Pipeline Options icon</stentry>
         <stentry>Allows you to import, export, dupliate, or delete the selected pipeline.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_CHelp.png" id="image_w3f_spl_br" scale="80"
+          /></stentry>
+        <stentry>Context-Sensitive Help icon</stentry>
+        <stentry>Provides context-sensitive help based on the information in the panel. </stentry>
       </strow>
     </simpletable>
   <p>For information about pipeline configuration options, see <xref
