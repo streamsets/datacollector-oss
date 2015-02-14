@@ -120,8 +120,10 @@
                                     <entry>Time basis to use for creating output directories and
                                         writing records to the directories. Use one of the following
                                             expressions:<ul id="ul_ggs_43g_br">
-                                            <li>${time:now()}</li>
-                                            <li>${record:value("/&lt;Date Field>")</li>
+                                            <li>${time:now()} - Uses the processing time as the time
+                                                basis. </li>
+                                            <li>${record:value("/&lt;date field>") - Uses the time
+                                                associated with the record as the time basis.</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -133,7 +135,7 @@
                                 <row>
                                     <entry>Max File Size (MB)</entry>
                                     <entry>Maximum size of an output file. Additional records are
-                                        written to a new file. <p>Use 0 to opt out of using this
+                                        written to a new file. <p>Use 0 to opt out of this
                                             property.</p></entry>
                                 </row>
                                 <row>
@@ -179,10 +181,12 @@
                             <colspec colname="c2" colnum="2" colwidth="2.77*"/>
                             <thead>
                                 <row>
-                                    <entry>Late Records Property <xref
-                                            href="HadoopFS-LateRecordHandling.dita#concept_xgm_g4d_br"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="11" id="image_uv1_cdl_br"/></xref></entry>
+                                    <entry>Late Records Property 
+                                        <xref                                           href="HadoopFS-LateRecordHandling.dita#concept_xgm_g4d_br">
+                                            <image href="../Graphics/icon_moreInfo.png"
+                                                scale="11"/>
+                                    </xref>
+                                    </entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -207,10 +211,10 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Late Record Directory Template <xref
-                                            href="HadoopFS-DirectoryTemplates.dita#concept_cvc_skd_br"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="11" id="image_f41_j12_br"/></xref></entry>
+                                    <entry>Late Record Directory Template 
+                                        <xref href="HadoopFS-DirectoryTemplates.dita#concept_cvc_skd_br">
+                                        <image href="../Graphics/icon_moreInfo.png"
+                                            scale="11"/></xref></entry>
                                     <entry>Template for creating late record directories. You can
                                         use constants, field values, and datetime variables.
                                             <p>Output directories are created based on the smallest
@@ -251,7 +255,7 @@
                                         Click the Add icon to add additional field mappings. <ul
                                             id="ul_zgf_plg_br">
                                             <li>Field Path - Field name of the record. Use a leading
-                                                slash as follows: /FirstField.</li>
+                                                slash as follows: /&lt;FirstField>.</li>
                                             <li>Delimited Column Name - Name for the corresponding
                                                 column in the output file. </li>
                                         </ul></entry>

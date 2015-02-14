@@ -5,7 +5,7 @@
  <shortdesc>You can add custom Hadoop configuration properties to the Hadoop FS destination. </shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS<indexterm>additional properties</indexterm></indexterm>When you add the
-   Hadoop configuration property, enter the Hadoop property name and the value. The Hadoop FS
-   destination does not validate the property names or values. </p>
+      Hadoop configuration property, enter the exact property name and the value. The Hadoop FS
+      destination does not validate the property names or values. </p>
  </conbody>
 </concept>

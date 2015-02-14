@@ -6,137 +6,145 @@
     <taskbody>
         <context/>
         <steps id="steps_upj_std_br">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
-                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step1"
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step2">
                 <cmd/>
             </step>
             <step>
                 <cmd>On the <wintitle>Kafka</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_wp4_xtd_br">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.17*"/>
-                            <thead>
-                                <row>
-                                    <entry>Kafka Properties</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Broker URIs</entry>
-                                    <entry>A comma-separated list of URIs for Kafka brokers that
-                                        write to the topic. Use the format &lt;host>:&lt;port>.<p>To
-                                            ensure a connection, enter as many broker URIs as
-                                            possible.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Topic</entry>
-                                    <entry>Kafka topic to use.</entry>
-                                </row>
-                                <row>
-                                    <entry>Partition Strategy</entry>
-                                    <entry>Strategy to use to write to partitions:<ul
-                                            id="ul_tq2_yr3_br">
-                                            <li>Round Robin - Takes turns writing to different
-                                                partitions.</li>
-                                            <li>Random - Writes to partitions randomly.</li>
-                                            <li>Expression - Uses an expression to evalulate when to
-                                                write to different partitinos. </li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Expression</entry>
-                                    <entry>Expression to use to write to parititons with an
-                                        expression.</entry>
-                                </row>
-                                <row>
-                                    <entry>Data Format</entry>
-                                    <entry>Data format for output messages:<ul id="ul_wlj_353_br">
-                                            <li>Text</li>
-                                            <li>JSON</li>
-                                            <li>Delimited</li>
-                                            <li>SDC Record <xref
-                                                  href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br"
-                                                >
-                                                <image href="../Graphics/icon_moreInfo.png" scale="11"/></xref></li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Kafka Configuration</entry>
-                                    <entry>Additional Kafka properties to use. Click the
-                                            <uicontrol>Add</uicontrol> icon and define the Kafka
-                                        property name and value. <p>Use the property names and
-                                            values as expected by Kafka. Do not use the broker.list
-                                            property.</p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
+                    <p>
+                        <table frame="all" rowsep="1" colsep="1" id="table_wp4_xtd_br">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.17*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Kafka Properties</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>Broker URIs</entry>
+                                        <entry>A comma-separated list of URIs for Kafka brokers that
+                                            write to the topic. Use the format
+                                                &lt;host>:&lt;port>.<p>To ensure a connection, enter
+                                                as many broker URIs as possible.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Topic</entry>
+                                        <entry>Kafka topic to use.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>Partition Strategy</entry>
+                                        <entry>Strategy to use to write to partitions:<ul
+                                                id="ul_tq2_yr3_br">
+                                                <li>Round Robin - Takes turns writing to different
+                                                  partitions.</li>
+                                                <li>Random - Writes to partitions randomly.</li>
+                                                <li>Expression - Uses an expression to evalulate
+                                                  when to write to different partitinos. </li>
+                                            </ul></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Expression</entry>
+                                        <entry>Expression to use to write to parititons with an
+                                            expression.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>Data Format</entry>
+                                        <entry>Data format for output messages:<ul
+                                                id="ul_wlj_353_br">
+                                                <li>Text</li>
+                                                <li>JSON</li>
+                                                <li>Delimited</li>
+                                                <li>SDC Record <xref
+                                                  href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="11" id="image_ucp_chr_br"/></xref></li>
+                                            </ul></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Kafka Configuration</entry>
+                                        <entry>Additional Kafka properties to use. Click the
+                                                <uicontrol>Add</uicontrol> icon and define the Kafka
+                                            property name and value. <p>Use the property names and
+                                                values as expected by Kafka. Do not use the
+                                                broker.list property.</p></entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </p>
                 </info>
             </step>
             <step>
                 <cmd>For delimited data, click the <wintitle>Delimited</wintitle> tab and configure
                     the following properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_ebf_s53_br">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.77*"/>
-                            <thead>
-                                <row>
-                                    <entry>Delimited Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Delimiter Format</entry>
-                                    <entry>Format to use for delimited data:<ul id="ul_gfs_553_br">
-                                            <li>Basic CSV - File that includes comma-separated
-                                                values. </li>
-                                            <li>MS Excel CSV - Microsoft Excel comma-separated
-                                                file.</li>
-                                            <li>MySQL CSV - MySQL comma separated file. </li>
-                                            <li>RFC4180 CSV - Comma-separated file that strictly
-                                                follows RFC4180 guidelines. </li>
-                                            <li>Tab-Separated Values - File that includes
-                                                tab-separated values.</li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Fields</entry>
-                                    <entry>Fields to include in the record.</entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
+                    <p>
+                        <table frame="all" rowsep="1" colsep="1" id="table_ebf_s53_br">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1*"/>
+                                <colspec colname="c2" colnum="2" colwidth="2.77*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Delimited Property</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>Delimiter Format</entry>
+                                        <entry>Format to use for delimited data:<ul
+                                                id="ul_gfs_553_br">
+                                                <li>Basic CSV - File that includes comma-separated
+                                                  values. </li>
+                                                <li>MS Excel CSV - Microsoft Excel comma-separated
+                                                  file.</li>
+                                                <li>MySQL CSV - MySQL comma separated file. </li>
+                                                <li>RFC4180 CSV - Comma-separated file that strictly
+                                                  follows RFC4180 guidelines. </li>
+                                                <li>Tab-Separated Values - File that includes
+                                                  tab-separated values.</li>
+                                            </ul></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Fields</entry>
+                                        <entry>Fields to include in the record.</entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </p>
                 </info>
             </step>
             <step>
                 <cmd>For log or text data, click the <wintitle>Text</wintitle> tab and configure the
                     following property:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_qgh_dv3_br">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.17*"/>
-                            <thead>
-                                <row>
-                                    <entry>Text Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Field</entry>
-                                    <entry>Single field to write data to Kafka. </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
+                    <p>
+                        <table frame="all" rowsep="1" colsep="1" id="table_qgh_dv3_br">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.17*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Text Property</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>Field</entry>
+                                        <entry>Single field to write data to Kafka. </entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </p>
                 </info>
             </step>
         </steps>

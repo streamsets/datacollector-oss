@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Kafka Producer passes data to a Kafka cluster. The Kakfa Producer can pass data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to create files using the SDC records ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kafka Producer"></meta><meta name="abstract" content="The Kafka Producer passes data to a Kafka cluster. The Kakfa Producer can pass data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to create files using the SDC records format."></meta><meta name="description" content="The Kafka Producer passes data to a Kafka cluster. The Kakfa Producer can pass data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to create files using the SDC records format."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_oq2_5jl_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Producer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using the SDC records ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kafka Producer"></meta><meta name="abstract" content="The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using the SDC records format."></meta><meta name="description" content="The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using the SDC records format."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_oq2_5jl_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Producer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,8 +14,8 @@
  <h1 class="title topictitle1">Kafka Producer</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The Kafka Producer passes data to a Kafka cluster. The Kakfa Producer can pass data to
-  Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to create files using
+ <div class="body conbody"><p class="shortdesc">The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to
+  Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using
   the SDC records format.</p>
 
   <p class="p">When you configure a Kafka Producer, you configure the brokers, topic, partition strategy, and
@@ -58,7 +58,7 @@
  
  <div class="body conbody"><p class="shortdesc">You can add custom Kafka configuration properties to the Kafka Producer.</p>
 
-  <p class="p">When you add the Kafka configuration property, enter the Kafka property name and the value. The
+  <p class="p">When you add the Kafka configuration property, enter the exact property name and the value. The
    Kafka Consumer does not validate the property names or values.</p>
 
   <div class="note note"><span class="notetitle">Note:</span> The Kafka Producer uses the broker.host Kafka configuration property. The Kafka Consumer
@@ -81,106 +81,108 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="Destinations_overview.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep the record in the pipeline. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
-                        <img class="image" id="task_q4d_4yl_zq__d301e167" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
-                <div class="itemgroup info">You might include any field that the processor uses.</div>
+                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep the record in the pipeline. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
+                        <img class="image" id="task_q4d_4yl_zq__d301e198" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="keyword wintitle">Kafka</span> tab, configure the following
                     properties:</span>
                 <div class="itemgroup info">
-                    
+                    <div class="p">
+                        
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__table_wp4_xtd_br" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="23.980815347721823%" id="d3292e151">Kafka Properties</th>
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr class="row">
+                                        <th class="entry" valign="top" width="23.980815347721823%" id="d3266e150">Kafka Properties</th>
 
-                                    <th class="entry" valign="top" width="76.01918465227818%" id="d3292e154">Description</th>
+                                        <th class="entry" valign="top" width="76.01918465227818%" id="d3266e153">Description</th>
 
-                                </tr>
+                                    </tr>
 
-                            </thead>
+                                </thead>
 
-                            <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d3292e151 ">Broker URIs</td>
+                                <tbody class="tbody">
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3266e150 ">Broker URIs</td>
 
-                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d3292e154 ">A comma-separated list of URIs for Kafka brokers that
-                                        write to the topic. Use the format &lt;host&gt;:&lt;port&gt;.<p class="p">To
-                                            ensure a connection, enter as many broker URIs as
-                                            possible.</p>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3266e153 ">A comma-separated list of URIs for Kafka brokers that
+                                            write to the topic. Use the format
+                                                &lt;host&gt;:&lt;port&gt;.<p class="p">To ensure a connection, enter
+                                                as many broker URIs as possible.</p>
 </td>
 
-                                </tr>
+                                    </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d3292e151 ">Topic</td>
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3266e150 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d3292e154 ">Kafka topic to use.</td>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3266e153 ">Kafka topic to use.</td>
 
-                                </tr>
+                                    </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d3292e151 ">Partition Strategy</td>
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3266e150 ">Partition Strategy</td>
 
-                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d3292e154 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__ul_tq2_yr3_br">
-                                            <li class="li">Round Robin - Takes turns writing to different
-                                                partitions.</li>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3266e153 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__ul_tq2_yr3_br">
+                                                <li class="li">Round Robin - Takes turns writing to different
+                                                  partitions.</li>
 
-                                            <li class="li">Random - Writes to partitions randomly.</li>
+                                                <li class="li">Random - Writes to partitions randomly.</li>
 
-                                            <li class="li">Expression - Uses an expression to evalulate when to
-                                                write to different partitinos. </li>
+                                                <li class="li">Expression - Uses an expression to evalulate
+                                                  when to write to different partitinos. </li>
 
-                                        </ul>
+                                            </ul>
 </td>
 
-                                </tr>
+                                    </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d3292e151 ">Expression</td>
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3266e150 ">Expression</td>
 
-                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d3292e154 ">Expression to use to write to parititons with an
-                                        expression.</td>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3266e153 ">Expression to use to write to parititons with an
+                                            expression.</td>
 
-                                </tr>
+                                    </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d3292e151 ">Data Format</td>
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3266e150 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d3292e154 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__ul_wlj_353_br">
-                                            <li class="li">Text</li>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3266e153 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__ul_wlj_353_br">
+                                                <li class="li">Text</li>
 
-                                            <li class="li">JSON</li>
+                                                <li class="li">JSON</li>
 
-                                            <li class="li">Delimited</li>
+                                                <li class="li">Delimited</li>
 
-                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Configuration/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a data format used by the Data Collector to generate output and error files for the pipeline.">
-                                                <img class="image" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></li>
+                                                <li class="li">SDC Record <a class="xref" href="../Pipeline_Configuration/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a data format used by the Data Collector to generate error record files for the pipeline. The Data Collector can also use the SDC Record format to generate output files.">
+                                                  <img class="image" id="task_q4d_4yl_zq__image_ucp_chr_br" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></li>
 
-                                        </ul>
+                                            </ul>
 </td>
 
-                                </tr>
+                                    </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d3292e151 ">Kafka Configuration</td>
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3266e150 ">Kafka Configuration</td>
 
-                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d3292e154 ">Additional Kafka properties to use. Click the
-                                            <span class="ph uicontrol">Add</span> icon and define the Kafka
-                                        property name and value. <p class="p">Use the property names and
-                                            values as expected by Kafka. Do not use the broker.list
-                                            property.</p>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3266e153 ">Additional Kafka properties to use. Click the
+                                                <span class="ph uicontrol">Add</span> icon and define the Kafka
+                                            property name and value. <p class="p">Use the property names and
+                                                values as expected by Kafka. Do not use the
+                                                broker.list property.</p>
 </td>
 
-                                </tr>
+                                    </tr>
 
-                            </tbody>
+                                </tbody>
 
-                        </table>
+                            </table>
 </div>
+
+                    </div>
 
                 </div>
             </li>
@@ -188,55 +190,58 @@
                 <span class="ph cmd">For delimited data, click the <span class="keyword wintitle">Delimited</span> tab and configure
                     the following properties:</span>
                 <div class="itemgroup info">
-                    
+                    <div class="p">
+                        
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__table_ebf_s53_br" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="26.525198938992045%" id="d3292e285">Delimited Property</th>
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr class="row">
+                                        <th class="entry" valign="top" width="26.525198938992045%" id="d3266e290">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="73.47480106100795%" id="d3292e288">Description</th>
+                                        <th class="entry" valign="top" width="73.47480106100795%" id="d3266e293">Description</th>
 
-                                </tr>
+                                    </tr>
 
-                            </thead>
+                                </thead>
 
-                            <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d3292e285 ">Delimiter Format</td>
+                                <tbody class="tbody">
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="26.525198938992045%" headers="d3266e290 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d3292e288 ">Format to use for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_gfs_553_br">
-                                            <li class="li">Basic CSV - File that includes comma-separated
-                                                values. </li>
+                                        <td class="entry" valign="top" width="73.47480106100795%" headers="d3266e293 ">Format to use for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_gfs_553_br">
+                                                <li class="li">Basic CSV - File that includes comma-separated
+                                                  values. </li>
 
-                                            <li class="li">MS Excel CSV - Microsoft Excel comma-separated
-                                                file.</li>
+                                                <li class="li">MS Excel CSV - Microsoft Excel comma-separated
+                                                  file.</li>
 
-                                            <li class="li">MySQL CSV - MySQL comma separated file. </li>
+                                                <li class="li">MySQL CSV - MySQL comma separated file. </li>
 
-                                            <li class="li">RFC4180 CSV - Comma-separated file that strictly
-                                                follows RFC4180 guidelines. </li>
+                                                <li class="li">RFC4180 CSV - Comma-separated file that strictly
+                                                  follows RFC4180 guidelines. </li>
 
-                                            <li class="li">Tab-Separated Values - File that includes
-                                                tab-separated values.</li>
+                                                <li class="li">Tab-Separated Values - File that includes
+                                                  tab-separated values.</li>
 
-                                        </ul>
+                                            </ul>
 </td>
 
-                                </tr>
+                                    </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d3292e285 ">Fields</td>
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="26.525198938992045%" headers="d3266e290 ">Fields</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d3292e288 ">Fields to include in the record.</td>
+                                        <td class="entry" valign="top" width="73.47480106100795%" headers="d3266e293 ">Fields to include in the record.</td>
 
-                                </tr>
+                                    </tr>
 
-                            </tbody>
+                                </tbody>
 
-                        </table>
+                            </table>
 </div>
+
+                    </div>
 
                 </div>
             </li>
@@ -244,32 +249,35 @@
                 <span class="ph cmd">For log or text data, click the <span class="keyword wintitle">Text</span> tab and configure the
                     following property:</span>
                 <div class="itemgroup info">
-                    
+                    <div class="p">
+                        
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__table_qgh_dv3_br" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="23.980815347721823%" id="d3292e357">Text Property</th>
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr class="row">
+                                        <th class="entry" valign="top" width="23.980815347721823%" id="d3266e365">Text Property</th>
 
-                                    <th class="entry" valign="top" width="76.01918465227818%" id="d3292e360">Description</th>
+                                        <th class="entry" valign="top" width="76.01918465227818%" id="d3266e368">Description</th>
 
-                                </tr>
+                                    </tr>
 
-                            </thead>
+                                </thead>
 
-                            <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d3292e357 ">Field</td>
+                                <tbody class="tbody">
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3266e365 ">Field</td>
 
-                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d3292e360 ">Single field to write data to Kafka. </td>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3266e368 ">Single field to write data to Kafka. </td>
 
-                                </tr>
+                                    </tr>
 
-                            </tbody>
+                                </tbody>
 
-                        </table>
+                            </table>
 </div>
+
+                    </div>
 
                 </div>
             </li>

@@ -11,7 +11,7 @@
    directories based on the time basis as well.</p>
   <p>You can determine how long a record can be written to a directory, and define what happens to
    late records. </p>
-  <p>To write delimited data to Hadoop, you map fields from output records to delimited column names
-   for the output files. </p>
+  <p>To write delimited data to Hadoop, you map fields from output records to column names for the
+   output files. </p>
  </conbody>
 </concept>

@@ -7,7 +7,6 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Reusable_Content/RequiredFields.dita"/>
   </topicref>
   <topicref href="../Destinations/HadoopFS.dita" chunk="to-content">
    <topicmeta>
@@ -38,7 +37,6 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Destinations/Trash-Configuring.dita"/>
   </topicref>
  </topicref>
 </map>

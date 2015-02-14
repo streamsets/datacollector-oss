@@ -4,7 +4,9 @@
  <title>SDC Record Data Format</title>
  <shortdesc>SDC Record is a data format used by the <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to generate
-  output and error files for the pipeline.  </shortdesc>
+  error record files for the pipeline. The  <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>  can also use
+  the SDC Record format to generate output files.</shortdesc>
  <conbody>
   <p><indexterm>SDC Records<indexterm>data format</indexterm></indexterm>Use the SDC Record format
    to process files produced by another <ph

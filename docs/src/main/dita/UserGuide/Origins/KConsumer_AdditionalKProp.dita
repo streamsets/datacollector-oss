@@ -4,8 +4,8 @@
  <title>Additional Kafka Properties</title>
  <shortdesc>You can add custom Kafka configuration properties to the Kafka Consumer.</shortdesc>
  <conbody>
-  <p>When you add the Kafka configuration property, enter the Kafka property name and the value.
-   The Kafka Consumer does not validate the property names or values.</p>
+  <p>When you add the Kafka configuration property, enter the exact property name and the value. The
+   Kafka Consumer does not validate the property names or values.</p>
   <p>
    <note>The Kafka Consumer uses the following Kafka configuration properties. The Kafka Consumer
     ignores user-defined values for these properties:<ul id="ul_ajb_c3g_vq">

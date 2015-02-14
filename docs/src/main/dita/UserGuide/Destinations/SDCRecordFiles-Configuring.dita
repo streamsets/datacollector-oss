@@ -2,9 +2,8 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_e33_3v5_1r">
     <title>Configuring an SDC Record Files Destination</title>
-    <shortdesc>Configure the SDC Record File destination to write <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> JSON
-        records to a local file system. </shortdesc>
+    <shortdesc>Configure the SDC Record File destination to write SDC Record files to a local file
+        system.</shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_fvm_m1v_1r">
@@ -38,8 +37,8 @@
                                 <row>
                                     <entry>Max File Size (MB)</entry>
                                     <entry>Maximum size for output files. Upon reaching the limit,
-                                        SDC Record Files creates a new output file. Use 0 to avoid
-                                        using this property. </entry>
+                                        SDC Record Files creates a new output file. Use 0 to opt out
+                                        of this property. </entry>
                                 </row>
                             </tbody>
                         </tgroup>

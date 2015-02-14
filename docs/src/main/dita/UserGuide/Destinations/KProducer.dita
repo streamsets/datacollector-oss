@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_oq2_5jl_zq">
  <title>Kafka Producer</title>
- <shortdesc>The Kafka Producer passes data to a Kafka cluster. The Kakfa Producer can pass data to
-  Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to create files using
+ <shortdesc>The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to
+  Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using
   the SDC records format.</shortdesc>
  <conbody>
   <p>When you configure a Kafka Producer, you configure the brokers, topic, partition strategy, and

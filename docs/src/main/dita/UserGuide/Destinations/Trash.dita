@@ -13,7 +13,9 @@
   <p>
    <image href="../Graphics/TrashPipeline.png" id="image_djp_2fj_wq" scale="50"/></p>
   <p>When you use a Trash destination, you can use data preview to view the data routed to the
-   destination, monitoring provides statistics for the destination, and you can configure alerts for
-   the stage and the incoming stream.</p>
+   destination, monitor statistics for the destination, and configure alerts for the destination and
+   the incoming stream.</p>
+  <p>The Trash destination has no configuration options. To use the Trash destination in a pipeline,
+   simply add the stage and connect it to the pipeline. </p>
  </conbody>
 </concept>

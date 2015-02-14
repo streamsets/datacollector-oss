@@ -40,8 +40,8 @@
  
  <div class="body conbody"><p class="shortdesc">You can add custom Kafka configuration properties to the Kafka Consumer.</p>
 
-  <p class="p">When you add the Kafka configuration property, enter the Kafka property name and the value.
-   The Kafka Consumer does not validate the property names or values.</p>
+  <p class="p">When you add the Kafka configuration property, enter the exact property name and the value. The
+   Kafka Consumer does not validate the property names or values.</p>
 
   <div class="p">
    <div class="note note"><span class="notetitle">Note:</span> The Kafka Consumer uses the following Kafka configuration properties. The Kafka Consumer
@@ -85,9 +85,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.57142857142857%" id="d9710e118">General Properties</th>
+                                    <th class="entry" valign="top" width="28.57142857142857%" id="d9691e118">General Properties</th>
 
-                                    <th class="entry" valign="top" width="71.42857142857143%" id="d9710e121">Description</th>
+                                    <th class="entry" valign="top" width="71.42857142857143%" id="d9691e121">Description</th>
 
                                 </tr>
 
@@ -95,32 +95,32 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9710e118 ">ZooKeeper Connection String</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9691e118 ">ZooKeeper Connection String</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9710e121 ">Connection string for the ZooKeeper of the Kafka cluster.
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9691e121 ">Connection string for the ZooKeeper of the Kafka cluster.
                                         To use more than one ZooKeeper, enter a comma-separated
                                         list.</td>
 
                                 </tr>
   <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9710e118 ">Consumer Group</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9691e118 ">Consumer Group</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9710e121 ">Kakfa consumer group the <span class="ph">Data
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9691e121 ">Kakfa consumer group the <span class="ph">Data
                   Collector</span> represents.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9710e118 ">Topic</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9691e118 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9710e121 ">Kafka topic to read.</td>
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9691e121 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9710e118 ">Data Format</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9691e118 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9710e121 ">Type of data in the topic. Use one of the following
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9691e121 ">Type of data in the topic. Use one of the following
                                         options:<ul class="ul" id="task_npx_xgf_vq__ul_qgm_tjw_yq">
                                             <li class="li">Text</li>
 
@@ -130,7 +130,7 @@
 
                                             <li class="li">XML</li>
 
-                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Configuration/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a data format used by the Data Collector to generate output and error files for the pipeline.">
+                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Configuration/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a data format used by the Data Collector to generate error record files for the pipeline. The Data Collector can also use the SDC Record format to generate output files.">
                                                   <img class="image" id="task_npx_xgf_vq__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></li>
 
                                         </ul>
@@ -139,26 +139,26 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9710e118 ">Max Batch Size</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9691e118 ">Max Batch Size</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9710e121 ">Maximum number of messages processed at one time.</td>
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9691e121 ">Maximum number of messages processed at one time.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9710e118 ">Batch Duration Time (secs)</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9691e118 ">Batch Duration Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9710e121 ">Number of seconds the Kafka Consumer waits before sending
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9691e121 ">Number of seconds the Kafka Consumer waits before sending
                                         a partial or empty batch. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9710e118 ">Kafka Configuration  <a class="xref" href="KConsumer.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Consumer.">
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d9691e118 ">Kafka Configuration  <a class="xref" href="KConsumer.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Consumer.">
                                             <img class="image" id="task_npx_xgf_vq__image_mwv_b52_zq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9710e121 ">Additional Kafka configuration properties to use. To add
+                                    <td class="entry" valign="top" width="71.42857142857143%" headers="d9691e121 ">Additional Kafka configuration properties to use. To add
                                         properties, click <span class="ph uicontrol">Add</span> and define the
                                         Kafka property name and value. <p class="p">Use the property names and
                                             values as expected by Kafka.</p>
@@ -184,9 +184,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="31.948881789137378%" id="d9710e262">JSON Property</th>
+                                    <th class="entry" valign="top" width="31.948881789137378%" id="d9691e265">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="68.05111821086261%" id="d9710e265">Description</th>
+                                    <th class="entry" valign="top" width="68.05111821086261%" id="d9691e268">Description</th>
 
                                 </tr>
 
@@ -194,9 +194,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.948881789137378%" headers="d9710e262 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="31.948881789137378%" headers="d9691e265 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="68.05111821086261%" headers="d9710e265 ">Type of content in JSON files. Use one of the following
+                                    <td class="entry" valign="top" width="68.05111821086261%" headers="d9691e268 ">Type of content in JSON files. Use one of the following
                                             options:<ul class="ul" id="task_npx_xgf_vq__ul_xgm_2cp_1r">
                                             <li class="li">An event has an JSON array of objects</li>
 
@@ -208,17 +208,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.948881789137378%" headers="d9710e262 ">Produce Single Record</td>
+                                    <td class="entry" valign="top" width="31.948881789137378%" headers="d9691e265 ">Produce Single Record</td>
 
-                                    <td class="entry" valign="top" width="68.05111821086261%" headers="d9710e265 ">Generates a single record for multiple JSON objects. Not
+                                    <td class="entry" valign="top" width="68.05111821086261%" headers="d9691e268 ">Generates a single record for multiple JSON objects. Not
                                         available for JSON arrays.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.948881789137378%" headers="d9710e262 ">Max Object Length (chars) </td>
+                                    <td class="entry" valign="top" width="31.948881789137378%" headers="d9691e265 ">Max Object Length (chars) </td>
 
-                                    <td class="entry" valign="top" width="68.05111821086261%" headers="d9710e265 ">The maximum number of characters in a JSON
+                                    <td class="entry" valign="top" width="68.05111821086261%" headers="d9691e268 ">The maximum number of characters in a JSON
                                             object.<p class="p">Longer objects are passed to the pipeline for
                                             error handling. </p>
 </td>
@@ -242,9 +242,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="31.948881789137378%" id="d9710e336">Delimited Property</th>
+                                    <th class="entry" valign="top" width="31.948881789137378%" id="d9691e339">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="68.05111821086261%" id="d9710e339">Description</th>
+                                    <th class="entry" valign="top" width="68.05111821086261%" id="d9691e342">Description</th>
 
                                 </tr>
 
@@ -252,9 +252,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.948881789137378%" headers="d9710e336 ">Delimiter Format Type</td>
+                                    <td class="entry" valign="top" width="31.948881789137378%" headers="d9691e339 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="68.05111821086261%" headers="d9710e339 ">Format for delimited data. Use one of the following
+                                    <td class="entry" valign="top" width="68.05111821086261%" headers="d9691e342 ">Format for delimited data. Use one of the following
                                             options:<ul class="ul" id="task_npx_xgf_vq__ul_delFileTypes">
                                             <li class="li">Basic CSV - File that includes comma-separated
                                                 values.</li>

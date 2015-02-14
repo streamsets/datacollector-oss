@@ -142,10 +142,7 @@
                         href="../Processors/Processors_overview.dita#concept_hpr_twm_jq"/>.<p>For
                         configuration details about destinations, see <xref
                             href="../Destinations/Destinations_overview.dita#concept_hpr_twm_jq"
-                        />.</p></info>
-                <info>For configuration details about destinations, see <xref
-                        href="../Destinations/Destinations_overview.dita#concept_hpr_twm_jq"
-                    />.</info>
+                        />..</p></info>
             </step>
             <step>
                 <cmd>Set additional stages as necessary.</cmd>

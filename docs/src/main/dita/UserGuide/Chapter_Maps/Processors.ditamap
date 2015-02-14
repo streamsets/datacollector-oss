@@ -6,7 +6,6 @@
   <topicref href="../Processors/Processors_overview.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/ReferencingFieldNames.dita"/>
-   <topicref href="../Reusable_Content/RequiredFields.dita"/>
    <topicref href="../Processors/SelectingFieldswithPreviewData.dita"/>
   </topicref>
   <topicref href="../Processors/Expression.dita" chunk="to-content">

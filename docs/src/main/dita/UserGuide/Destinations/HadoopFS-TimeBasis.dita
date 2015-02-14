@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_gkz_smd_br">
  <title>Time Basis</title>
- <shortdesc>The time basis helps determine when directories are created and which directory Hadoop
-  FS uses to write an output record. You can use the following times as the time basis: </shortdesc>
+ <shortdesc>The time basis helps determine when directories are created and the directory where
+  Hadoop FS writes an output record. You can use the following times as the time basis: </shortdesc>
  <conbody>
   <p>
    <dl>
@@ -15,16 +15,16 @@
       and writes records to the directories based on when they are processed.</dd>
      <dd>For example, say a directory template creates directories every minute and the time basis
       is the time of processing. Then, directories are created for every minute that Hadoop FS
-      passes output records. And the output records are written to the directory for that minute of
+      writes output records. And the output records are written to the directory for that minute of
       processing. </dd>
-     <dd>To use the processing time as the time basis, use the following expression to define the
-      time basis: ${time:now()}. This is the default time basis. </dd>
+     <dd>To use the processing time as the time basis, use the following expression: ${time:now()}.
+      This is the default time basis. </dd>
     </dlentry>
     <dlentry>
      <dt>Time of the record</dt>
-     <dd>When you use the time associated with a record, you specify a Date field in the record.
-      Hadoop FS creates directories based on the datetimes associated with the records and writes
-      the records to the appropriate directories. </dd>
+     <dd>When you use the time associated with a record as the time basis, you specify a Date field
+      in the record. Hadoop FS creates directories based on the datetimes associated with the
+      records and writes the records to the appropriate directories. </dd>
      <dd>For example, say a directory template creates directories every hour and the time basis is
       based on the record. Then, directories are created for every hour associated with output
       records and Hadoop FS writes the records to the related output directory. </dd>
