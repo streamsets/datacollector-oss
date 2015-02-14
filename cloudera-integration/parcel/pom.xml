@@ -11,17 +11,17 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-cloudera-integration</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0b1-SNAPSHOT</version>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-parcel</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0b1-SNAPSHOT</version>
   <description>StreamSets Parcel</description>
   <name>StreamSets Parcel for Cloudera Manager</name>
   <packaging>jar</packaging>
 
   <properties>
-    <dist.version>0.0.1-SNAPSHOT</dist.version>
+    <dist.version>${project.version}</dist.version>
     <!-- trick to avoid pulling files from 'ui', 'docs' & 'dummy-lib' if the profile is not active -->
     <ui.dist-dir>${basedir}/../../dist/src/main/emptydir</ui.dist-dir>
     <docs.dist-dir>${basedir}/../../dist/src/main/emptydir</docs.dist-dir>
