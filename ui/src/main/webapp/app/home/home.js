@@ -970,7 +970,6 @@ angular
       }
 
       $rootScope.common.saveOperationInProgress = true;
-      console.log('Saving Rules...');
       api.pipelineAgent.savePipelineRules($scope.activeConfigInfo.name, rules).
         success(function (res) {
           $rootScope.common.saveOperationInProgress = false;
@@ -1002,8 +1001,6 @@ angular
           if (rulesDirty) {
             saveRulesUpdate(rules);
           }
-
-          console.log(rules);
         }).
         error(function(data, status, headers, config) {
           $rootScope.common.errors = [data];
