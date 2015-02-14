@@ -72,6 +72,8 @@ public class RandomDataGenerator extends BaseSource {
         return Field.Type.INTEGER;
       case FLOAT:
         return Field.Type.FLOAT;
+      case BYTE_ARRAY:
+        return Field.Type.BYTE_ARRAY;
     }
     return Field.Type.STRING;
   }
@@ -92,6 +94,8 @@ public class RandomDataGenerator extends BaseSource {
         return random.nextLong();
       case STRING:
         return UUID.randomUUID().toString();
+      case BYTE_ARRAY:
+        return "StreamSets Inc, San Francisco".getBytes();
     }
     return null;
   }
@@ -130,6 +134,7 @@ public class RandomDataGenerator extends BaseSource {
     DOUBLE,
     DATE,
     BOOLEAN,
+    BYTE_ARRAY
   }
 
 }

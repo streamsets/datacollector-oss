@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.recordserialization;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -71,7 +72,7 @@ public class CsvRecordToString implements RecordToString {
     } else if(field.getType()== Field.Type.BYTE) {
       return String.valueOf(field.getValueAsByte());
     } else if(field.getType()== Field.Type.BYTE_ARRAY) {
-      return String.valueOf(field.getValueAsByteArray()); //TODO base64
+      return Base64.encodeBase64String(field.getValueAsByteArray());
     } else if(field.getType()== Field.Type.CHAR) {
       return String.valueOf(field.getValueAsChar());
     } else if(field.getType()== Field.Type.DATE) {

@@ -26,6 +26,7 @@ public enum BaseError implements ErrorCode {
   Base_0016("Cannot convert {} '{}' to a Map"),
   Base_0017("Cannot convert Map to other type, {}"),
   BASE_0018("Cannot convert {} '{}' to a short"),
+  Base_0019("Cannot convert Map, List or byte[] to String"),
 
 
 ;

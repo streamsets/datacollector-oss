@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.streamsets.pipeline.api.Field;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +47,9 @@ public class FieldDeserializer extends JsonDeserializer<Field> {
             }
             value = fList;
             break;
+          case BYTE_ARRAY:
+            byte[] bytes = Base64.decodeBase64((String) value);
+            value = bytes;
           default:
             break;
         }
