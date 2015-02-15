@@ -23,7 +23,7 @@ angular.module('abbreviateNumberFilter', [])
         }
 
         newValue = shortValue+suffixes[suffixNum];
-      } else if(newValue) {
+      } else if(newValue && (newValue % 1) !== 0) {
         newValue = newValue.toFixed(2);
       }
       return newValue;

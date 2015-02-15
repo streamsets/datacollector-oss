@@ -66,7 +66,7 @@
   > .active a {
     &, &:hover, &:focus {
       border-color: #ddd transparent #ddd #ddd;
-      *border-right-color: #fff;
+      border-right-color: #fff;
       box-shadow: -2px 2px 3px rgba(0,0,0,0.05);
       border-radius: 3px 0 0 3px;
 
@@ -79,6 +79,27 @@
         content: "";
         background-color: @streamsets-color;
         border-radius: 3px 0 0 3px;
+      }
+
+    }
+  }
+}
+
+.tabs-top >.nav-tabs {
+  > .active a {
+    &, &:hover, &:focus {
+      border-bottom-color: #fff;
+      border-radius: 3px 3px 0 0;
+
+      &:before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        content: "";
+        background-color: @streamsets-color;
+        border-radius: 3px 3px 0 0;
       }
 
     }
