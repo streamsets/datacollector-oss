@@ -11,8 +11,9 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>Click the <wintitle>Files</wintitle> tab and configure the following
-                    properties:</cmd>
+                <cmd><indexterm>SDC Record Files
+                        destination<indexterm>configuring</indexterm></indexterm>Click the
+                        <wintitle>Files</wintitle> tab and configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_alc_1cv_1r">
                         <tgroup cols="2">

@@ -6,12 +6,13 @@
         streams -  one for unique records and one for duplicate records. Use the Record Deduplicator
         to discard duplicate data or route duplicate data through different processing logic. </shortdesc>
  <conbody>
-  <p><indexterm>Record
-     Deduplicator<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Record
-     Deduplicator</indexterm></indexterm>The Record Deduplicator can compare entire records or a
-   subset of fields. Use a subset of fields to focus the comparison on fields of concern. For
-   example, to discard purchases that are accidentally resent, you might compare information about
-   the purchaser, selected items, and shipping address, but ignore the timestamp of the event. </p>
+  <p><indexterm>Record Deduplicator
+          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Record
+          Deduplicator</indexterm></indexterm>The Record Deduplicator can compare entire records or
+      a subset of fields. Use a subset of fields to focus the comparison on fields of concern. For
+      example, to discard purchases that are accidentally resent, you might compare information
+      about the purchaser, selected items, and shipping address, but ignore the timestamp of the
+      event. </p>
   <p>To enhance pipeline performance, the Record Deduplicator hashes the comparison fields and uses
             the hashed values when evaluating for duplicates. </p>
  </conbody>

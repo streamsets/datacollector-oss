@@ -6,9 +6,9 @@
   directories. Hadoop FS writes records to the directories based on the configured time
   basis.</shortdesc>
  <conbody>
-  <p><indexterm>Hadoop FS<indexterm>directory templates</indexterm></indexterm><indexterm>directory
-     templates<indexterm>Hadoop FS</indexterm></indexterm>You can use the following elements in a
-   directory template:<dl>
+  <p><indexterm>Hadoop FS destination<indexterm>directory
+    templates</indexterm></indexterm><indexterm>directory templates<indexterm>Hadoop
+    FS</indexterm></indexterm>You can use the following elements in a directory template:<dl>
     <dlentry>
      <dt>Constants</dt>
      <dd>You can use any constant, such as "output" or "lateRecords."</dd>

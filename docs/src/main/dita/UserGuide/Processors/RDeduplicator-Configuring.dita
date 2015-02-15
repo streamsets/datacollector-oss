@@ -4,8 +4,8 @@
     <title>Configuring a Record Deduplicator</title>
     <shortdesc>Use a Record Deduplicator to route or remove records with duplicate data. </shortdesc>
     <taskbody>
-        <context><indexterm>Record
-            Deduplicator<indexterm>configuring</indexterm></indexterm></context>
+        <context><indexterm>Record Deduplicator
+                processors<indexterm>configuring</indexterm></indexterm></context>
         <steps id="steps_ojk_22f_zq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">

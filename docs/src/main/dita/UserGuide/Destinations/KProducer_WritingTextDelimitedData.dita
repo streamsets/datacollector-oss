@@ -5,7 +5,8 @@
  <shortdesc>When you write delimited data to Kafka, you define the fields to pass data to the
   cluster. When you write text data, you define a single field to pass the data. </shortdesc>
  <conbody>
-  <p><indexterm>Kafka Producer<indexterm>writing text or delimited data</indexterm></indexterm>When
-   necessary, use an Expression Evaluator to merge data into the fields that you want to use. </p>
+  <p><indexterm>Kafka Producer destination<indexterm>writing text or delimited
+    data</indexterm></indexterm>When necessary, use an Expression Evaluator to merge data into the
+   fields that you want to use. </p>
  </conbody>
 </concept>

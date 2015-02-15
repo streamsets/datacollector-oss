@@ -6,7 +6,9 @@
  <conbody>
   <p>
    <ul id="ul_kvt_wwp_1r">
-    <li>[ ] </li>
+    <li><indexterm>expression language<indexterm>operator
+       precedence</indexterm></indexterm><indexterm>operators<indexterm>precedence</indexterm></indexterm>[
+     ] </li>
     <li>( ) - Used to change the precedence of operators</li>
     <li>- (unary) <codeph>not ! empty</codeph></li>
     <li>* / div % mod</li>

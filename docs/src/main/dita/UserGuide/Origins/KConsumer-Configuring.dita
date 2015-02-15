@@ -7,7 +7,8 @@
         including Kafka and ZooKeeper details. For delimited and JSON data, configure additional
         related properties. You can optionally add custom Kafka properties. </shortdesc>
     <taskbody>
-        <context><indexterm>Kafka Consumer<indexterm>configuring</indexterm></indexterm></context>
+        <context><indexterm>Kafka Consumer
+            origin<indexterm>configuring</indexterm></indexterm></context>
         <steps id="steps_f3x_nhw_yq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc">
                 <cmd/>
@@ -29,13 +30,13 @@
                                 <row>
                                     <entry>ZooKeeper Connection String</entry>
                                     <entry>Connection string for the ZooKeeper of the Kafka cluster.
-                                        To use more than one ZooKeeper, enter a comma-separated
+                                        To use a ZooKeeper quorum, enter a comma-separated
                                         list.</entry>
                                 </row>  <row>
                                     <entry>Consumer Group</entry>
-                                    <entry>Kakfa consumer group the <ph
+                                    <entry>Kakfa consumer group that the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> represents.</entry>
+                                        /> is a member of.</entry>
                                 </row>
                                 <row>
                                     <entry>Topic</entry>

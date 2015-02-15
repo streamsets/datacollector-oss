@@ -5,8 +5,9 @@
  <shortdesc>Use record functions to get information about a record, such as the data type of a field
   or the stage instance name for an error record. </shortdesc>
  <conbody>
-  <p><indexterm>functions<indexterm>record</indexterm></indexterm>The expression language provides
-   the following record functions:</p>
+  <p><indexterm>functions<indexterm>record functions</indexterm></indexterm><indexterm>record
+     functions<indexterm>in the expression language</indexterm></indexterm>The expression language
+   provides the following record functions:</p>
   <dl>
    <dlentry>
     <dt>${record:type("&lt;field-path>')}</dt>

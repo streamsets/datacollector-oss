@@ -5,7 +5,7 @@
     <shortdesc>Configure a File Tail origin to read data as it is written to a file. You can read
         text or JSON data.</shortdesc>
     <taskbody>
-        <context><indexterm>File Tail<indexterm>configuring</indexterm></indexterm></context>
+        <context><indexterm>File Tail origin<indexterm>configuring</indexterm></indexterm></context>
         <steps id="steps_cfd_j2w_yq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc">
                 <cmd/>

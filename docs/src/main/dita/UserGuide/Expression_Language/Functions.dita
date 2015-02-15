@@ -5,7 +5,9 @@
  <shortdesc>The expression language provides the following types of functions:</shortdesc>
  <conbody>
   <ul id="ul_dxr_wyp_1r">
-   <li>Record functions</li>
+   <li><indexterm>expression
+      language<indexterm>functions</indexterm></indexterm><indexterm>functions<indexterm>in the
+      expression language</indexterm></indexterm>Record functions</li>
    <li>Error functions</li>
    <li>String functions</li>
   </ul>

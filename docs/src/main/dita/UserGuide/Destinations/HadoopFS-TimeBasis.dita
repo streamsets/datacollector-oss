@@ -9,10 +9,11 @@
    <dl>
     <dlentry>
      <dt>Time of processing</dt>
-     <dd><indexterm>Hadoop FS<indexterm>time basis</indexterm></indexterm><indexterm>time
-        basis<indexterm>Hadoop FS</indexterm></indexterm>When you use processing time as the time
-      basis, Hadoop FS creates directories based on the processing time and the directory template,
-      and writes records to the directories based on when they are processed.</dd>
+     <dd><indexterm>Hadoop FS destination<indexterm>time
+       basis</indexterm></indexterm><indexterm>time basis<indexterm>Hadoop
+       FS</indexterm></indexterm>When you use processing time as the time basis, Hadoop FS creates
+      directories based on the processing time and the directory template, and writes records to the
+      directories based on when they are processed.</dd>
      <dd>For example, say a directory template creates directories every minute and the time basis
       is the time of processing. Then, directories are created for every minute that Hadoop FS
       writes output records. And the output records are written to the directory for that minute of

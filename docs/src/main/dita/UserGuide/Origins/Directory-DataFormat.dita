@@ -8,9 +8,9 @@
   <dl>
    <dlentry>
     <dt>Text</dt>
-    <dd><indexterm>data formats<indexterm>for
-              Directory</indexterm></indexterm><indexterm>Directory<indexterm>data
-              formats</indexterm></indexterm>Generates a record for each line in the file. </dd>
+    <dd><indexterm>data formats<indexterm>for Directory</indexterm></indexterm><indexterm>Directory
+              origin<indexterm>data formats</indexterm></indexterm>Generates a record for each line
+          in the file. </dd>
     <dd>When you configure text data properties, you define the maximum number of characters for a
           line. When a line exceeds the configured number of characters, Directory truncates the
           line.</dd>

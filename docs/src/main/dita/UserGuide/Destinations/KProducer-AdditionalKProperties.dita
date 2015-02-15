@@ -4,11 +4,11 @@
  <title>Additional Kafka Properties</title>
  <shortdesc>You can add custom Kafka configuration properties to the Kafka Producer.</shortdesc>
  <conbody>
-  <p><indexterm>Kafka Producer<indexterm>additional
-    properties</indexterm></indexterm><indexterm>custom properties<indexterm>Kafka
-     Producer</indexterm></indexterm>When you add the Kafka configuration property, enter the exact
-   property name and the value. The Kafka Consumer does not validate the property names or
-   values.</p>
+  <p><indexterm>Kafka Producer destination<indexterm>additional
+        properties</indexterm></indexterm><indexterm>custom properties<indexterm>Kafka
+          Producer</indexterm></indexterm>When you add the Kafka configuration property, enter the
+      exact property name and the value. The Kafka Consumer does not validate the property names or
+      values.</p>
   <note>The Kafka Producer uses the broker.host Kafka configuration property. The Kafka Consumer
    ignores user-defined values for the broker.list property.</note>
  </conbody>

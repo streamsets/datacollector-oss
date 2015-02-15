@@ -8,12 +8,11 @@
   unexpected error, it stops the pipeline. </shortdesc>
  <conbody>
   <p><indexterm>error
-     handling<indexterm>overview</indexterm></indexterm><indexterm>pipeline<indexterm>error
-     handling</indexterm></indexterm><indexterm>stage<indexterm>error
-    handling</indexterm></indexterm>You can configure a pipeline to discard error records or to save
-   error records. When you save error records, you define the directory to use and when to create
-   additional files. Error files are written to the directory with the following naming convention:
-   records-&lt;file number>.json.</p>
+     handling<indexterm>overview</indexterm></indexterm><indexterm>pipelines<indexterm>error
+     handling</indexterm></indexterm>You can configure a pipeline to discard error records or to
+   save error records. When you save error records, you define the directory to use and when to
+   create additional files. Error files are written to the directory with the following naming
+   convention: records-&lt;file number>.json.</p>
   <p>Each stage in the pipeline includes built-in resilience. Some stages also include configurable
    error handling. When a stage without explicit error handling options encounters an error record,
    the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses

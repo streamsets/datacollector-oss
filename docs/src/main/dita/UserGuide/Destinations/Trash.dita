@@ -6,7 +6,8 @@
   representation of records discarded from the pipeline. Or you might use the Trash destination
   during development as a placeholder for a different destination. </shortdesc>
  <conbody>
-  <p><indexterm>Trash<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Trash</indexterm></indexterm>For
+  <p><indexterm>Trash
+     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Trash</indexterm></indexterm>For
    example, the following pipeline uses the Stream Selector to route data to the Kafka Producer and
    Hadoop FS targets based on different conditions. The Stream Selector routes all records that are
    not included in either of the other conditions to the Trash destination. <draft-comment

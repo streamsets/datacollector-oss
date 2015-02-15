@@ -5,8 +5,8 @@
  <shortdesc>The Field Hasher processor uses an algorithm to encode values in a field. The Field
   Hasher can use MD5, SHA1 or SHA2 to hash field values. </shortdesc>
  <conbody>
-  <p><indexterm>Field
-     Hasher<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
+  <p><indexterm>Field Hasher
+     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
      Hasher</indexterm></indexterm>Use the Field Hasher to securely encode highly-sensitive data or
    data that you might want to decode at a later date. For example, you might use the Field Hasher
    to encode social security numbers.</p>

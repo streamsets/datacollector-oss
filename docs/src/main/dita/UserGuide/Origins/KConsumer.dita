@@ -8,8 +8,8 @@
   other <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
   pipelines.</shortdesc>
  <conbody>
-  <p><indexterm>Kafka
-     Consumer<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Kafka
+  <p><indexterm>Kafka Consumer
+     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Kafka
      Consumer</indexterm></indexterm>When you configure a Kafka Consumer, you configure the consumer
    group name, topic, and ZooKeeper connection information. You can add additional Kafka
    configuration properties as needed.</p>

@@ -4,8 +4,10 @@
  <title>Operators</title>
  <shortdesc>The following table lists the operators that you can use:</shortdesc>
  <conbody>
-  <p>
-   <table frame="all" rowsep="1" colsep="1" id="table_lyt_xmj_wq">
+  <p><indexterm>expression
+     language<indexterm>operators</indexterm></indexterm><indexterm>operators<indexterm>in the
+     expression language</indexterm></indexterm><table frame="all" rowsep="1" colsep="1"
+    id="table_lyt_xmj_wq">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1*"/>
      <colspec colname="c2" colnum="2" colwidth="2.92*"/>
@@ -71,7 +73,6 @@
       </row>
      </tbody>
     </tgroup>
-   </table>
-  </p>
+   </table></p>
  </conbody>
 </concept>

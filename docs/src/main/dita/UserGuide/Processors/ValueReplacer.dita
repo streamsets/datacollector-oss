@@ -5,9 +5,9 @@
  <shortdesc>The Value Replacer replaces null values in a field with a constant. The Value Replacer
   can also replace existing values in a field with null values. </shortdesc>
  <conbody>
-  <note type="tip"><indexterm>Value
-     Replacer<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Value
-     Replacer</indexterm></indexterm>To use an expression instead of a constant to replace null
-   values, use an Expression Evaluator.</note>
+  <note type="tip"><indexterm>Value Replacer
+          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Value
+          Replacer</indexterm></indexterm>To use an expression instead of a constant to replace null
+      values, use an Expression Evaluator.</note>
  </conbody>
 </concept>

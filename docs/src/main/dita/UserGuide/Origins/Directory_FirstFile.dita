@@ -6,7 +6,7 @@
     the file directory.</shortdesc>
  <conbody>
   <p><indexterm>First File for Processing<indexterm>Directory
-               property</indexterm></indexterm><indexterm>Directory<indexterm>First File for
+            property</indexterm></indexterm><indexterm>Directory origin<indexterm>First File for
                Processing</indexterm></indexterm>When you start a pipeline, Directory starts
          processing with the file name that you enter and continues processing files in naturally
          ascending order. If you did not configure a file name, it starts with the file with the

@@ -6,13 +6,13 @@
   or JSON data to flat files or Hadoop sequence files. You can also use Hadoop FS to create files
   using the SDC Record data format.</shortdesc>
  <conbody>
-  <p><indexterm>Hadoop
-     FS<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Hadoop
+  <p><indexterm>Hadoop FS
+     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Hadoop
      FS</indexterm></indexterm>When you configure a Hadoop FS destination, you define the output
    directory template. Hadoop FS creates output directories based the template and the time basis.
    Hadoop FS writes records to the directories based on the time basis as well.</p>
-  <p>You can determine how long a record can be written to a directory, and define what happens to
-   late records. </p>
+  <p>You can determine the amount of time that a record can be written to its associated time-based
+   directory, and define what happens to late records. </p>
   <p>To write delimited data to Hadoop, you map fields from output records to column names for the
    output files. </p>
  </conbody>

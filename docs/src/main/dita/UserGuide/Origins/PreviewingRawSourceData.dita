@@ -6,7 +6,10 @@
         when reviewing the data might help with origin configuration.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>preview<indexterm>raw source data</indexterm></indexterm><indexterm>raw
+            <p><indexterm>Directory origin<indexterm>raw source
+                    preview</indexterm></indexterm><indexterm>File Tail origin<indexterm>raw source
+                        preview</indexterm></indexterm><indexterm>Kafka Consumer
+                        origin<indexterm>raw source preview</indexterm></indexterm><indexterm>raw
                     source
                         data<indexterm>preview</indexterm></indexterm><indexterm>origins<indexterm>previewing
                         raw source data</indexterm></indexterm>When you preview file data, you can

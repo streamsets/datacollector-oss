@@ -6,8 +6,8 @@
   use variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string
   value.</shortdesc>
  <conbody>
-  <p><indexterm>Field
-     Masker<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
+  <p><indexterm>Field Masker
+     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
      Masker</indexterm></indexterm>Use the Field Masker to mask sensitive string data. For example,
    you might use a custom mask to mask the last four digits of a phone number.</p>
   <p>

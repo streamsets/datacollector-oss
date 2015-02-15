@@ -6,7 +6,8 @@
         You can split data from a single field. To split additional fields, add another Field
         Splitter to the pipeline.</shortdesc>
     <taskbody>
-        <context><indexterm>Field Splitter<indexterm>configuring</indexterm></indexterm></context>
+        <context><indexterm>Field Splitter
+            processor<indexterm>configuring</indexterm></indexterm></context>
         <steps id="steps_r4z_dh3_yq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">

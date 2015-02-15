@@ -41,10 +41,16 @@
               stage, select the stage from the list. Or, click the stage in the pipeline.</entry>
           </row>
           <row>
+            <entry>4</entry>
+            <entry>Stage and Pipeline list</entry>
+            <entry>Lists the stages in the pipeline. Use to select stage to edit. You can also
+              select the pipeline.</entry>
+          </row>
+          <row>
             <entry><image href="../Graphics/icon_AddStage.png" id="image_kgj_44z_sq" scale="60"
               /></entry>
             <entry>Add Stage button</entry>
-            <entry>Displays a list of stages. Use to add stages to the pipeline.</entry>
+            <entry>Lists of available stages. Use to add stages to the pipeline.</entry>
           </row>
           <row>
             <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" scale="60"

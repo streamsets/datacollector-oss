@@ -16,22 +16,23 @@
  
  <div class="body conbody"><p class="shortdesc">The Stream Selector passes data to streams based on conditions. </p>
 
-  <p class="p">When you configure a condition, the Stream Selector
+    <p class="p">When you configure a condition, the Stream Selector
       creates an output for the stage that you connect to a downstream stage. The Stream Selector
       passes a record to all streams where the record matches the condition. </p>
 
     <div class="p">For example, you create the following conditions:
-      <pre class="pre codeblock">${record:value("/ID")==null}
-${record:value("/State")==CA}</pre>
+      <pre class="pre codeblock">${record:value("/State")==CA}
+${record:value("/ID")==null}</pre>
 </div>
 
-    <p class="p">A record with a missing ID from California is sent to both streams. </p>
+    <p class="p">When you run the pipeline, records from California pass to Stream 1, records with missing IDs
+      pass to Stream 2 and any record from California with a missing ID passes to both streams. </p>
 
- </div>
+  </div>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_sn5_5kx_wq">
- <h2 class="title topictitle2">Handling Non-Matching Records</h2>
+ <h2 class="title topictitle2">Unmatching Record Handling</h2>
 
  
  <div class="body conbody"><p class="shortdesc">When a record does not match any condition, the Stream Selector can use the error
@@ -43,9 +44,9 @@ ${record:value("/State")==CA}</pre>
     
      <dt class="dt dlterm">Error handling for unmatched records</dt>
 
-     <dd class="dd">The Unmatched Record Handling property determines how the Stream Selector handles records
-      that do not match any conditions. The Stream Selector can perform one of the following
-       actions:<ul class="ul" id="concept_sn5_5kx_wq__ul_jhg_fkx_wq">
+     <dd class="dd">The Unmatched Record Handling property determines how the
+      Stream Selector handles records that do not match any conditions. The Stream Selector can
+      perform one of the following actions:<ul class="ul" id="concept_sn5_5kx_wq__ul_jhg_fkx_wq">
        <li class="li">Discard the record.</li>
 
        <li class="li">Send the error to the pipeline for error handling.</li>
@@ -100,12 +101,13 @@ ${record:value("/State")==CA}</pre>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most target stages. A required field must exist in a record to keep the record in the pipeline. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
+                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to keep the record in the pipeline. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
                         <img class="image" id="task_iss_2zx_wq__d1574e167" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">On the <span class="ph uicontrol">Conditions</span> tab, configure the following
+                <span class="ph cmd">On the
+                        <span class="ph uicontrol">Conditions</span> tab, configure the following
                     properties:</span>
                 <div class="itemgroup info">
                     
@@ -114,9 +116,9 @@ ${record:value("/State")==CA}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.011204481792717%" id="d18898e177">Stream Selector Property</th>
+                                    <th class="entry" valign="top" width="28.011204481792717%" id="d19012e189">Stream Selector Property</th>
 
-                                    <th class="entry" valign="top" width="71.98879551820728%" id="d18898e180">Description</th>
+                                    <th class="entry" valign="top" width="71.98879551820728%" id="d19012e192">Description</th>
 
                                 </tr>
 
@@ -124,9 +126,9 @@ ${record:value("/State")==CA}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d18898e177 ">Condition</td>
+                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d19012e189 ">Condition</td>
 
-                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d18898e180 ">Condition to stream data to this output. Click the
+                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d19012e192 ">Condition to stream data to this output. Click the
                                             <span class="ph uicontrol">Add</span> icon to create additional
                                         conditions and corresponding output locations. <p class="p">To define
                                             a default stream to capture unmatched records, add a
@@ -137,10 +139,10 @@ ${record:value("/State")==CA}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d18898e177 ">Constants <a class="xref" href="ConfiguringExpressionsConditions.html#task_ogd_zj3_wq" title="You can define constants that you can reuse within a processor. Define a constant when you have a value that you want use more than once in the processor or that you want to be able to update easily. You can define constants in the Expression Evaluator and Stream Selector processors.">
+                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d19012e189 ">Constants <a class="xref" href="ConfiguringExpressionsConditions.html#task_ogd_zj3_wq" title="You can define constants that you can reuse within a processor. Define a constant when you have a value that you want use more than once in the processor or that you want to be able to update easily. You can define constants in the Expression Evaluator and Stream Selector processors.">
                                             <img class="image" id="task_iss_2zx_wq__image_c4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
 
-                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d18898e180 ">Represents a constant in conditions. Define a constant to
+                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d19012e192 ">Represents a constant in conditions. Define a constant to
                                         easily reuse it in the stage or to easily update the
                                         constant value. <p class="p">To define a constant, click the
                                                 <span class="ph uicontrol">Add</span> icon, and then enter a
@@ -152,9 +154,9 @@ ${record:value("/State")==CA}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d18898e177 ">Unmatched Record Handling</td>
+                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d19012e189 ">Unmatched Record Handling</td>
 
-                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d18898e180 ">Determines how to handle records that do not match any
+                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d19012e192 ">Determines how to handle records that do not match any
                                         condition: <ul class="ul" id="task_iss_2zx_wq__ul_uxy_r3f_xq">
                                             <li class="li">Drop Record - Drops the record from the pipeline. </li>
 

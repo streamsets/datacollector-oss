@@ -25,9 +25,13 @@
    from the TIME field:</p>
 
   <div class="p">
-   <pre class="pre codeblock">${record:value("/DATE")||${record:value("/TIME")}</pre>
+   <pre class="pre codeblock">${record:value("/DATE")|| record:value("/TIME")}</pre>
 
   </div>
+
+  <div class="p">To reference a nested field, as with a field in a JSON object, use the path to the field as
+   follows:<pre class="pre codeblock">record:value("/nestedobject/nestedfield)</pre>
+</div>
 
  </div>
 

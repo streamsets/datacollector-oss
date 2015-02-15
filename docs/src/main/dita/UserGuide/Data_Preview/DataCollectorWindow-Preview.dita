@@ -3,14 +3,14 @@
 <concept id="concept_l4q_pbl_sq">
  <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
     Console - Preview Mode</title>
- <shortdesc>In Preview mode, you can use the <ph
+ <shortdesc>You can use the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console to
     view how data passes through the pipeline.</shortdesc>
  <conbody>
-  <p><indexterm>Data Collector console<indexterm>Preview mode</indexterm></indexterm>The following
+  <p><indexterm>Data Collector console<indexterm>preview mode</indexterm></indexterm>The following
       image shows the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
-      Preview mode:</p>
+      during data preview mode:</p>
   <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="45"/><table
         frame="all" rowsep="1" colsep="1" id="table_nrm_fvt_sq">
         <tgroup cols="3">

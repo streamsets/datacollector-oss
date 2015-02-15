@@ -6,11 +6,11 @@
   Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using
   the SDC records format.</shortdesc>
  <conbody>
-  <p><indexterm>Kafka
-     Producer<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kafka
-     Producer</indexterm></indexterm>When you configure a Kafka Producer, you configure the brokers,
-   topic, partition strategy, and data format to use. You can add additional Kafka configuration
-   properties as needed.</p>
+  <p><indexterm>Kafka Producer
+          destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kafka
+          Producer</indexterm></indexterm>When you configure a Kafka Producer, you configure the
+      brokers, topic, partition strategy, and data format to use. You can add additional Kafka
+      configuration properties as needed.</p>
   <p>The Kafka Producer passes data to partitions in the Kafka topic based on the partition strategy
    that you choose. </p>
  </conbody>

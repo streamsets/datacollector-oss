@@ -5,8 +5,8 @@
  <shortdesc>The Field Remover removes fields from the pipeline. Use the Field Remover to discard
   data that you do not need in the pipeline. </shortdesc>
  <conbody>
-  <p><indexterm>Field
-     Remover<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
+  <p><indexterm>Field Remover
+     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
      Remover</indexterm></indexterm></p>
   <p>When you configure the Field Remover, you can list the fields that you want to keep so the
    Field Remover removes the remaining fields. Or, you can list the fields that you want to remove.

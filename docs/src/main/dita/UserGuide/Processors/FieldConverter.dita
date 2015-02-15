@@ -5,8 +5,8 @@
  <shortdesc>The Field Converter converts the data type of a field to a compatible data type. You might
   use the Field Converter to convert the data type of a field before performing calculations. </shortdesc>
  <conbody>
-  <p><indexterm>Field
-     Converter<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Field
+  <p><indexterm>Field Converter
+     processor<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Field
      Converter</indexterm></indexterm>When you convert a field, configure the conversion for an
    appropriate, compatible data type. Consider the actual data in the field as well, since even
    valid conversions can cause truncation of data. </p>

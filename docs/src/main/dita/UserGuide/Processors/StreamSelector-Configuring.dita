@@ -12,7 +12,9 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <uicontrol>Conditions</uicontrol> tab, configure the following
+                <cmd><indexterm>Stream Selector
+                        processor<indexterm>configuring</indexterm></indexterm>On the
+                        <uicontrol>Conditions</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ecr_dwf_br">

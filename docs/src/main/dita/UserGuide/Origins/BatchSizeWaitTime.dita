@@ -8,14 +8,19 @@
         many rows the batch contains. </shortdesc>
  <conbody>
   <p><indexterm>batch size and wait
-          time<indexterm>origins</indexterm></indexterm><indexterm>origins<indexterm>batch size and
-          wait time</indexterm></indexterm>For example, a File Tail origin is configured for a batch
-      size of 20 rows and a batch wait time of 240 seconds. When data arrives quickly, File Tail
-      fills a batch with 20 rows and sends it through the pipeline immediately, creating a new batch
-      and sending it again as soon as it is full. As incoming data slows, a remaining batch contains
-      a few rows, gaining an extra row periodically. 240 seconds after creating the batch, File Tail
-      sends the partially-full batch through the pipeline. It immediately creates a new batch and
-      starts a new countdown.</p>
+                time<indexterm>origins</indexterm></indexterm><indexterm>Directory
+                    origin<indexterm>batch size and wait time</indexterm></indexterm><indexterm>File
+                Tail origin<indexterm>batch size and wait
+                time</indexterm></indexterm><indexterm>Kafka Consumer origin<indexterm>batch size
+                    and wait time</indexterm></indexterm><indexterm>origins<indexterm>batch size and
+                    wait time</indexterm></indexterm>For example, a File Tail origin is configured
+            for a batch size of 20 rows and a batch wait time of 240 seconds. When data arrives
+            quickly, File Tail fills a batch with 20 rows and sends it through the pipeline
+            immediately, creating a new batch and sending it again as soon as it is full. As
+            incoming data slows, a remaining batch contains a few rows, gaining an extra row
+            periodically. 240 seconds after creating the batch, File Tail sends the partially-full
+            batch through the pipeline. It immediately creates a new batch and starts a new
+            countdown.</p>
   <p>Configure the batch wait time based on your processing needs. You might reduce the batch wait
    time to ensure all data is processed within a specified time frame or to make regular contact
    with pipeline destinations. Use the default or increase the wait time if you prefer not to

@@ -4,9 +4,10 @@
  <title>String Functions</title>
  <shortdesc>Use string functions to transform string data. </shortdesc>
  <conbody>
-  <p><indexterm>functions<indexterm>string</indexterm></indexterm>You can replace any argument with
-   a constant, or a field or expression that evaluates to an appropriate constant. Strings should be
-   enclosed in quotes. Indexes start at 0. </p>
+  <p><indexterm>functions<indexterm>string functions</indexterm></indexterm><indexterm>string
+     functions<indexterm>in the expression language</indexterm></indexterm>You can replace any
+   argument with a constant, or a field or expression that evaluates to an appropriate constant.
+   Strings should be enclosed in quotes. Indexes start at 0. </p>
   <p>The expression language provides the following string functions:</p>
   <p>
    <dl>

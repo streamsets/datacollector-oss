@@ -66,9 +66,13 @@
    from the TIME field:</p>
 
   <div class="p">
-   <pre class="pre codeblock">${record:value("/DATE")||${record:value("/TIME")}</pre>
+   <pre class="pre codeblock">${record:value("/DATE")|| record:value("/TIME")}</pre>
 
   </div>
+
+  <div class="p">To reference a nested field, as with a field in a JSON object, use the path to the field as
+   follows:<pre class="pre codeblock">record:value("/nestedobject/nestedfield)</pre>
+</div>
 
  </div>
 
@@ -125,9 +129,9 @@
         Selector processors.</p>
 
         <div class="section context">
-            <div class="p">For
-                example, you might have an Expression Evaluator processor that calculates the total
-                income for employees using .01 as a bonus percentage, as
+            <div class="p">For example, you might have an Expression
+                Evaluator processor that calculates the total income for employees using .01 as a
+                bonus percentage, as
                 follows:<pre class="pre codeblock">${(record:value("/SALARY")) + (record:value("/SALARY")*.01)}</pre>
 </div>
 

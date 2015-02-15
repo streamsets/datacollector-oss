@@ -8,9 +8,11 @@
         Selector processors.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>constants<indexterm>defining in processors</indexterm></indexterm>For
-                example, you might have an Expression Evaluator processor that calculates the total
-                income for employees using .01 as a bonus percentage, as
+            <p><indexterm>constants<indexterm>defining in
+                        processors</indexterm></indexterm><indexterm>processors<indexterm>defining
+                        constants</indexterm></indexterm>For example, you might have an Expression
+                Evaluator processor that calculates the total income for employees using .01 as a
+                bonus percentage, as
                 follows:<codeblock>${(record:value("/SALARY")) + (record:value("/SALARY")*.01)}</codeblock></p>
             <p>However, the bonus percentage changes regularly. So instead of using .01 directly in
                 the expression, you can create a Bonus constant and set it to .01 as

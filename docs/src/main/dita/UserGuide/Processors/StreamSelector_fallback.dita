@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_sn5_5kx_wq">
- <title>Handling Non-Matching Records</title>
+ <title>Unmatching Record Handling</title>
  <shortdesc>When a record does not match any condition, the Stream Selector can use the error
   handling for unmatched records or you can configure a default stream that accepts the unmatched
   records:</shortdesc>
@@ -10,9 +10,11 @@
    <dl>
     <dlentry>
      <dt>Error handling for unmatched records</dt>
-     <dd>The Unmatched Record Handling property determines how the Stream Selector handles records
-      that do not match any conditions. The Stream Selector can perform one of the following
-       actions:<ul id="ul_jhg_fkx_wq">
+     <dd><indexterm>Stream Selector processor<indexterm>unmatched record
+       handling</indexterm></indexterm><indexterm>unmatched record handling<indexterm>Stream
+        Selector</indexterm></indexterm>The Unmatched Record Handling property determines how the
+      Stream Selector handles records that do not match any conditions. The Stream Selector can
+      perform one of the following actions:<ul id="ul_jhg_fkx_wq">
        <li>Discard the record.</li>
        <li>Send the error to the pipeline for error handling.</li>
        <li>Stop the pipeline.</li>
