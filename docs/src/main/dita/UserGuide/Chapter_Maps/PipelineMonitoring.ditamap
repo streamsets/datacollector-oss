@@ -7,8 +7,8 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Pipeline_Monitoring/DataCollectorWindow-Monitor.dita"/>
   </topicref>
+  <topicref href="../Pipeline_Monitoring/DataCollectorWindow-Monitor.dita"/>
   <topicref href="../Pipeline_Monitoring/ReviewingSnapshotData.dita">
    <topicmeta>
     <shortdesc/>
