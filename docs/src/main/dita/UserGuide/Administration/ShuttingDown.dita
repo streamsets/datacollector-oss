@@ -10,7 +10,7 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         properties file or user logins. </shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>Data Collector<indexterm>shutting down</indexterm></indexterm></context>
         <steps id="steps_hqp_kjk_br">
             <step>
                 <cmd>Click <menucascade>

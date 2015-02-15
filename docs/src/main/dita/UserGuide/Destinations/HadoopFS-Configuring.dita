@@ -4,7 +4,7 @@
     <title>Configuring a Hadoop FS Destination</title>
     <shortdesc>Configure a Hadoop FS destination to write data to a Hadoop file system.</shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>Hadoop FS<indexterm>configuring</indexterm></indexterm></context>
         <steps id="steps_ljw_44d_br">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step1"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step2">

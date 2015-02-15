@@ -5,9 +5,11 @@
  <shortdesc>The Expression Evaluator performs calculations on incoming data on a row-by-row basis.
   It writes the results of the calculations to the expression output field. </shortdesc>
  <conbody>
-  <p>To create an expression, you define the name of the field to receive the results of the
-   expression and the expression that you want to use. Use the expression language to define the
-   calculations that you want to use. </p>
+  <p><indexterm>processors<indexterm>Expression
+    Evaluator</indexterm></indexterm><indexterm>Expression
+    Evaluator<indexterm>overview</indexterm></indexterm>To create an expression, you define the name
+   of the field to receive the results of the expression and the expression that you want to use.
+   Use the expression language to define the calculations that you want to use. </p>
   <p>You can define constants that you can use in any expression in the processor. Define a constant
    when you have a constant value that you use in more than one expression or that you want to
    change easily. </p>

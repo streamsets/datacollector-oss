@@ -7,11 +7,11 @@
         stop processing data for the pipeline.</shortdesc>
     <taskbody>
         <context>
-            <p>When the <ph
+            <p><indexterm>pipelines<indexterm>stopping</indexterm></indexterm>When the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> runs a pipeline, it displays in the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> window in Monitor mode by default. </p>
+                /> console in Monitor mode by default. </p>
         </context>
         <steps id="steps_zjh_4bs_5q">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/PickPipeline">
@@ -20,7 +20,7 @@
             <step>
                 <cmd>To stop the pipeline, from the pipeline canvas, click the
                         <uicontrol>Stop</uicontrol> icon.</cmd>
-                <info>The <wintitle>Stop Pipeline Confirmation</wintitle>  window appears.</info>
+                <info>The <wintitle>Stop Pipeline Confirmation</wintitle> dialog box appears.</info>
             </step>
             <step>
                 <cmd> To stop the pipeline, click <uicontrol>Yes</uicontrol>.</cmd>

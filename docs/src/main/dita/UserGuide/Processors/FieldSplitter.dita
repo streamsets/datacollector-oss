@@ -6,8 +6,11 @@
   passes the separated data to new fields. Use the Field Splitter to split complex string values
   into logical components. </shortdesc>
  <conbody>
-  <p>For example, if a field contains an error code and error message separated by a comma, you can
-   use the comma to separate the code and message into different fields.</p>
+  <p><indexterm>Field
+     Splitter<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
+     Splitter</indexterm></indexterm>For example, if a field contains an error code and error
+   message separated by a comma, you can use the comma to separate the code and message into
+   different fields.</p>
   <p>When a field includes additional data and separator characters, the Field Splitter includes the
    remaining data in the last split field. </p>
   <p>If a field cannot be split as requested, the Field Splitter can pass the record split as much

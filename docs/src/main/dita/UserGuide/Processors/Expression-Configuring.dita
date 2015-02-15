@@ -5,7 +5,8 @@
     <shortdesc>Configure an Expression Evaluator to perform calculations on records on a row-by-row
         basis.</shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>Expression
+            Evaluator<indexterm>configuring</indexterm></indexterm></context>
         <steps id="steps_wxb_ky4_yq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">

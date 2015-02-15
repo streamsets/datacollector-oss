@@ -7,13 +7,13 @@
     records from the origin and passes it through the pipeline. You can examine input and output
     data for one stage at a time or for a group of stages. </shortdesc>
  <conbody>
-    <p>When you preview data for a single stage, the Preview panel displays the input and output
-      data for the selected stage. You can select any stage to view the input and output data for
-      the stage. </p>
+    <p><indexterm>data preview<indexterm>overview</indexterm></indexterm><indexterm>previewing
+          data<index-see>data preview</index-see></indexterm>When you preview data for a single
+      stage, the Preview panel displays the input and output data for the selected stage. You can
+      select any stage to view the input and output data for the stage. </p>
     <p>You can also preview data for a group of stages to verify how the group processes data.</p>
-    <p>When you preview data, you can edit the data and pass it through the pipeline to review the
-      results of the changes throughout the pipeline. </p>
-    <p>You can also refresh preview to review the pipeline with a new set of data from the
-      origin.</p>
+    <p>When you preview data, you can edit the data and pass it through the pipeline, and then
+      examine the results. </p>
+    <p>You can also refresh the preview to use a new set of data from the origin.</p>
   </conbody>
 </concept>

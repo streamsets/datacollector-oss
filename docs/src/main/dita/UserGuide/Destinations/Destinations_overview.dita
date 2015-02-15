@@ -5,7 +5,8 @@
  <shortdesc>A destination stage represents the target system for a pipeline. You can use one or more
     destinations in a pipeline.</shortdesc>
  <conbody>
-  <p>You can use the following types of destinations in a pipeline: <ul id="ul_mxz_jxm_jq">
+  <p><indexterm>destinations<indexterm>overview</indexterm></indexterm>You can use the following
+      types of destinations in a pipeline: <ul id="ul_mxz_jxm_jq">
         <li>Hadoop FS - Writes data to a file system on Hadoop.</li>
         <li>Kafka Producer - Writes data to a Kakfa cluster.</li>
         <li>SDC Record Files - Writes <ph

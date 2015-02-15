@@ -7,9 +7,12 @@
   not read data already in the file or data that is written to the file when the pipeline is not
   running.</shortdesc>
  <conbody>
-  <p>For example, you have a log file with 30 rows of data when you start the pipeline. The File
-   Tail origin ignores the existing data and begins processing with the 31st row of data when it
-   arrives. It continues capturing incoming data until you stop the pipeline. </p>
+  <p><indexterm>File
+     Tail<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>File
+     Tail</indexterm></indexterm>For example, you have a log file with 30 rows of data when you
+   start the pipeline. The File Tail origin ignores the existing data and begins processing with the
+   31st row of data when it arrives. It continues capturing incoming data until you stop the
+   pipeline. </p>
   <p>When you restart the pipeline, the File Tail origin begins processing with the next row of
    incoming data. It does not try to process any rows that were written to the log file while the
    pipeline was stopped. </p>

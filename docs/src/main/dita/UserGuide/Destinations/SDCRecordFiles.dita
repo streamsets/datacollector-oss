@@ -5,7 +5,10 @@
  <shortdesc>Use the SDC Record Files destination to use the SDC Record data format to write files to
     a local file system. </shortdesc>
  <conbody>
-  <p>Use SDC Record Files to create output files that can be easily reprocessed by another <ph
+  <p><indexterm>SDC Record
+          Files<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>SDC
+          Record Files</indexterm></indexterm>Use SDC Record Files to create output files that can
+      be easily reprocessed by another <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> pipeline.
       You can use the Directory and Kafka Consumer origins to process records written by SDC Record
       Files. </p>

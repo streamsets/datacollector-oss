@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_cxd_p25_qq">
-    <title>Previewing and Tuning a Single Stage</title>
-    <shortdesc>You can preview data for a single stage. Preview data to verify that the stage
-        processes data as expected. <draft-comment author="Loretta">Need new screenshots
-            here.</draft-comment></shortdesc>
+    <title>Previewing a Single Stage</title>
+    <shortdesc>You can preview data for a single stage. You can also edit the preview data to see
+        how the stage processes your changes. Preview data to verify that the stage processes data
+        as expected. <draft-comment author="Loretta">Need new screenshots
+        here.</draft-comment></shortdesc>
     <taskbody>
         <context>
-            <p>In the Preview panel, you can drill down to review the values for each record to
-                determine if the stage transforms data as expected.</p>
+            <p><indexterm>data preview<indexterm>previewing a stage</indexterm></indexterm>In the
+                Preview panel, you can drill down to review the values for each record to determine
+                if the stage transforms data as expected.</p>
         </context>
         <steps id="steps_gqh_zf5_qq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/StartPreview">

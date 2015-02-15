@@ -5,7 +5,10 @@
  <shortdesc>Use a regular expression to define the file name pattern. Directory reads files in the
   file directory that match the file name pattern.</shortdesc>
  <conbody>
-  <p>For example, if you use *.json, Directory reads all files with the .json extension.
-    <draft-comment author="Loretta">do we need a more complex example than this?</draft-comment></p>
+  <p><indexterm>File Name Pattern<indexterm>Directory
+     property</indexterm></indexterm><indexterm>Directory<indexterm>File Name
+    Pattern</indexterm></indexterm>For example, if you use *.json, Directory reads all files with
+   the .json extension. <draft-comment author="Loretta">do we need a more complex example than
+    this?</draft-comment></p>
  </conbody>
 </concept>

@@ -8,10 +8,11 @@
         origins.</shortdesc>
     <taskbody>
         <context>
-            <p>For Directory and Kafka Consumer, when you stop a pipeline, the <ph
+            <p><indexterm>pipelines<indexterm>resetting the origin</indexterm></indexterm>For
+                Directory and Kafka Consumer, the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> notes where it stopped processing data. When you restart the pipeline, it
-                continues from where it left off by default. </p>
+                /> notes where it stopped processing data when you stop a pipeline. When you restart
+                the pipeline, it continues from where it left off by default. </p>
             <p>When you want the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to process all available data instead of continuing from where it stopped, reset
@@ -23,7 +24,7 @@
             </step>
             <step>
                 <cmd>To reset the origin, from the pipeline canvas, click the
-                        <uicontrol>Settings</uicontrol> icon.</cmd>
+                        <uicontrol>More</uicontrol> icon.</cmd>
             </step>
             <step>
                 <cmd>Click <uicontrol>Reset Origin</uicontrol>.</cmd>

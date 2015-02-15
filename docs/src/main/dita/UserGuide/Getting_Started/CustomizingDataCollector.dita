@@ -11,7 +11,9 @@
         properties file. </shortdesc>
     <taskbody>
         <context>
-            <p>Use the <ph
+            <p><indexterm>Data
+                    Collector<indexterm>customizing</indexterm></indexterm><indexterm>sdc.properties
+                        file<indexterm>configuring</indexterm></indexterm>Use the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> properties file to define properties such as the host name and port number, and
                 SMTP information for sending email alerts. Use a text editor to edit the file. After
@@ -40,7 +42,7 @@
                                 <entry>http.port</entry>
                                 <entry>Port number to use for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> window.<p>Default is 18630.</p></entry>
+                                    /> console.<p>Default is 18630.</p></entry>
                             </row>
                             <row>
                                 <entry>http.authentication</entry>
@@ -117,12 +119,12 @@
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> waits before refreshing the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> window.<p>Default is 2000.</p></entry>
+                                    /> console.<p>Default is 2000.</p></entry>
                             </row>
                             <row>
                                 <entry>ui.jvmMetrics.refresh.interval.ms</entry>
                                 <entry>Interval in milliseconds that the JVM metrics are
-                                        refereshed.<p>Default is 4000.</p></entry>
+                                        refreshed.<p>Default is 4000.</p></entry>
                             </row>
                         </tbody>
                     </tgroup>

@@ -9,9 +9,10 @@
         through a set of stages, like data preview.</shortdesc>
     <taskbody>
         <context>
-            <p>Review a snapshot of data to verify how the pipeline processes data. In the Monitor
-                panel, you can drill down to review the values of each record to determine if the
-                stage or stages transforms data as expected.</p>
+            <p><indexterm>snapshot<indexterm>overview</indexterm></indexterm>Review a snapshot of
+                data to verify how the pipeline processes data. In the Monitor panel, you can drill
+                down to review the values of each record to determine if the stage or stages
+                transforms data as expected.</p>
         </context>
         <steps id="steps_esy_44p_tq">
             <step>

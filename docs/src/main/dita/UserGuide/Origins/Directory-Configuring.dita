@@ -7,7 +7,7 @@
         Then, you define post-processing options and the properties specific to the data
         format.</shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>Directory<indexterm>configuring</indexterm></indexterm></context>
         <steps id="steps_tvn_b5v_yq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc">
                 <cmd/>
@@ -155,7 +155,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.52*"/>
                             <thead>
                                 <row>
-                                    <entry>Log Data Property</entry>
+                                    <entry>Text Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -204,7 +204,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.85*"/>
                             <thead>
                                 <row>
-                                    <entry>Delimited Data Property</entry>
+                                    <entry>Delimited Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -245,7 +245,7 @@
                             <colspec colname="c2" colnum="2" colwidth="2*"/>
                             <thead>
                                 <row>
-                                    <entry>XML Data Property</entry>
+                                    <entry>XML Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>

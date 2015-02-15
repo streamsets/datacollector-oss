@@ -6,8 +6,9 @@
   <dl>
       <dlentry>
         <dt>data alerts</dt>
-        <dd>Monitoring or email alerts based on rules that gather information about data moving
-          between two stages.</dd>
+        <dd><indexterm>glossary<indexterm>Data Collector terms</indexterm></indexterm>Monitoring or
+          email alerts based on rules that gather information about data moving between two
+          stages.</dd>
       </dlentry>
    <dlentry>
     <dt>destination</dt>

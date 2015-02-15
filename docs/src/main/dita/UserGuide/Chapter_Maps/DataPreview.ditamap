@@ -8,11 +8,11 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Data_Preview/DataPreviewAvailability.dita"/>
-  </topicref>
-  <topicref href="../Data_Preview/EditingPreviewData.dita">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
+   <topicref href="../Data_Preview/EditingPreviewData.dita">
+    <topicmeta>
+     <shortdesc/>
+    </topicmeta>
+   </topicref>
   </topicref>
   <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita" chunk="to-content">
    <topicmeta>

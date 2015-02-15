@@ -8,7 +8,8 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         pipelines.</shortdesc>
  <conbody>
-  <p>Directory reads the files in a directory with names that match a user-defined pattern. It can
+  <p><indexterm>Directory<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Directory</indexterm></indexterm>Directory
+            reads the files in a directory with names that match a user-defined pattern. It can
             optionally begin processing with a specific file name. Then, it reads files with similar
             names in naturally ascending order. After processing a file, Directory can keep,
             archive, or delete the file. </p>

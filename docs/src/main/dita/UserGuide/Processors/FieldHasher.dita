@@ -5,9 +5,11 @@
  <shortdesc>The Field Hasher processor uses an algorithm to encode values in a field. The Field
   Hasher can use MD5, SHA1 or SHA2 to hash field values. </shortdesc>
  <conbody>
-  <p>Use the Field Hasher to securely encode highly-sensitive data or data that you might want to
-            decode at a later date. For example, you might use the Field Hasher to encode social
-            security numbers.</p>
+  <p><indexterm>Field
+     Hasher<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
+     Hasher</indexterm></indexterm>Use the Field Hasher to securely encode highly-sensitive data or
+   data that you might want to decode at a later date. For example, you might use the Field Hasher
+   to encode social security numbers.</p>
   <p>When you configure the Field Hasher, you select the field that you want to encode and the
    algorithm that you want to use. </p>
         <note type="tip">To hash non-string data, you might use the Field Converter to convert

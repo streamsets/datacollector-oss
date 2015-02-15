@@ -33,7 +33,7 @@
                 <info>You can edit values for any input data. </info>
             </step>
             <step id="EditingPData2">
-                <cmd>To process changed data, click the <uicontrol>Re-Run Preview With
+                <cmd>To process changed data, click the <uicontrol>Run Preview With
                         Changes</uicontrol> icon.</cmd>
                 <stepresult>In the Input Data column, records with changed values display with an
                     asterisk and the changed values are highlighted. The Output Data column displays

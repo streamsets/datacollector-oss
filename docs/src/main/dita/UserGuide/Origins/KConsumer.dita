@@ -8,9 +8,11 @@
   other <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
   pipelines.</shortdesc>
  <conbody>
-  <p>When you configure a Kafka Consumer, you configure the consumer group name, topic, and
-   ZooKeeper connection information. You can add additional Kafka configuration properties as
-   needed.</p>
+  <p><indexterm>Kafka
+     Consumer<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Kafka
+     Consumer</indexterm></indexterm>When you configure a Kafka Consumer, you configure the consumer
+   group name, topic, and ZooKeeper connection information. You can add additional Kafka
+   configuration properties as needed.</p>
   <p>When you start a pipeline, the Kafka Consumer becomes a new consumer group for the topic and
    starts reading data from the topic based on the offset provided by the ZooKeeper.</p>
   <p>The Kafka Consumer processes data from all partitions in the topic. It saves the offset with

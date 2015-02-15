@@ -4,7 +4,7 @@
     <title>Configuring a JSON Parser</title>
     <shortdesc>Use a JSON Parser to parse a JSON object in a String field. </shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>JSON Parser<indexterm>configuring</indexterm></indexterm></context>
         <steps id="steps_wc5_4g2_zq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">

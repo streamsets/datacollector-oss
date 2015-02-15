@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_gz5_dqw_yq">
- <title>Data Format</title>
+ <title>Data Formats</title>
  <shortdesc>The Directory origin processes data differently based on the type of data in the file.
   Directory can process the following types of data:</shortdesc>
  <conbody>
   <dl>
    <dlentry>
     <dt>Text</dt>
-    <dd>Generates a record for each line in the file. </dd>
+    <dd><indexterm>data formats<indexterm>for
+              Directory</indexterm></indexterm><indexterm>Directory<indexterm>data
+              formats</indexterm></indexterm>Generates a record for each line in the file. </dd>
     <dd>When you configure text data properties, you define the maximum number of characters for a
           line. When a line exceeds the configured number of characters, Directory truncates the
           line.</dd>

@@ -5,8 +5,10 @@
  <shortdesc>When you configure a pipeline, you define how you want data to be treated: Do you want
     to prevent the loss of data, or do you want to prevent the duplication of data?</shortdesc>
  <conbody>
-  <p><indexterm>delivery guarantee<indexterm>pipeline property</indexterm></indexterm>The Delivery
-      Guarantee pipeline property offers the following choices:<dl>
+  <p><indexterm>delivery guarantee<indexterm>pipeline
+          property</indexterm></indexterm><indexterm>pipelines<indexterm>delivery
+          guarantee</indexterm></indexterm>The Delivery Guarantee pipeline property offers the
+      following choices:<dl>
         <dlentry>
           <dt>At least once</dt>
           <dd>The <ph

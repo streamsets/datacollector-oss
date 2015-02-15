@@ -8,8 +8,9 @@
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>  can also use
   the SDC Record format to generate output files.</shortdesc>
  <conbody>
-  <p><indexterm>SDC Records<indexterm>data format</indexterm></indexterm>Use the SDC Record format
-   to process files produced by another <ph
+  <p><indexterm>SDC Records<indexterm>data format</indexterm></indexterm><indexterm>Data
+     Collector<indexterm>data format</indexterm></indexterm>Use the SDC Record format to process
+   files produced by another <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> pipeline, or
    to produce files that you might pass to another <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> pipeline.</p>

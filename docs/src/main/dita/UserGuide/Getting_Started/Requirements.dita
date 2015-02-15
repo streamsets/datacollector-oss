@@ -12,7 +12,7 @@
         <colspec colname="c2" colnum="2" colwidth="2.51*"/>
         <thead>
           <row>
-            <entry>Requirement</entry>
+            <entry><indexterm>installation<indexterm>requirements</indexterm></indexterm>Requirement</entry>
             <entry>Description</entry>
           </row>
         </thead>

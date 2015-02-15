@@ -6,8 +6,8 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. When
         you import a pipeline, you create a pipeline and then import the pipeline. </shortdesc>
     <taskbody>
-        <context>Import a pipeline from a pipeline file. Pipeline files are JSON files exported from
-            another <ph
+        <context><indexterm>pipelines<indexterm>importing</indexterm></indexterm>Import a pipeline
+            from a pipeline file. Pipeline files are JSON files exported from another <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</context>
         <steps id="steps_slv_nrr_5q">

@@ -9,7 +9,8 @@
         />.</shortdesc>
     <taskbody>
         <context>
-            <p>For tne Directory and Kafka Consumer origins, when you restart a pipeline, the <ph
+            <p><indexterm>pipelines<indexterm>starting</indexterm></indexterm>For the Directory and
+                Kafka Consumer origins, when you restart a pipeline, the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> starts the pipeline from where it last stopped by default. You can configure a
                 pipeline to forget the last stopping point and read all available data.</p>

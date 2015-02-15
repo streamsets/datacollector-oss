@@ -6,6 +6,9 @@
     <taskbody>
         <context/>
         <steps id="steps_ekd_cp4_wq">
+            <step>
+                <cmd><indexterm>Field Masker<indexterm>configuring</indexterm></indexterm></cmd>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
                 <cmd/>

@@ -7,7 +7,8 @@
         might also export pipelines to keep a backup.</shortdesc>
     <taskbody>
         <context>
-            <p>When you export a pipeline, the <ph
+            <p><indexterm>pipelines<indexterm>exporting</indexterm></indexterm>When you export a
+                pipeline, the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> generates a JSON file named after the pipeline as follows: &lt;pipeline
                 name>.json. </p>
@@ -22,7 +23,7 @@
                 <cmd>Click <uicontrol>Export</uicontrol>.</cmd>
                 <stepresult>The <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> window generates the JSON file and saves it to your default downloads
+                    /> console generates the JSON file and saves it to your default downloads
                     directory.</stepresult>
             </step>
         </steps>

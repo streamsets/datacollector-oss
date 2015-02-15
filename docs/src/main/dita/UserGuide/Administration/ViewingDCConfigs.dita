@@ -9,7 +9,8 @@
         configuration properties. </shortdesc>
     <taskbody>
         <context>
-            <p>To view <ph
+            <p><indexterm>Data Collector<indexterm>viewing configuration
+                    properties</indexterm></indexterm>To view <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration properties, click <menucascade>
                     <uicontrol>Administration</uicontrol>

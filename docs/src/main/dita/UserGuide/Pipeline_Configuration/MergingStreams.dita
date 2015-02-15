@@ -7,8 +7,10 @@
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> channels the
   data from all streams to the same stage, but does not perform a join of records in the stream. </shortdesc>
  <conbody>
-  <p>For example, in the following pipeline, the Routes Data Stream Selector sends data with null
-   values to Replaces Null Values Value Replacer. </p>
+  <p><indexterm>pipelines<indexterm>merging
+     streams</indexterm></indexterm><indexterm>merging<indexterm>streams in a
+    pipeline</indexterm></indexterm>For example, in the following pipeline, the Routes Data Stream
+   Selector sends data with null values to Replaces Null Values Value Replacer. </p>
   <p>The data from stream 2 of  Routes Data and all data from Replaces Null Values pass to
    Field-Level Expressions for further processing, but in no particular order and with no record
    merging.</p>

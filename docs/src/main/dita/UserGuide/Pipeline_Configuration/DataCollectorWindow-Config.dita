@@ -4,10 +4,12 @@
  <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
     Console - Edit Mode</title>
  <conbody>
-  <p>The following image shows the <ph
+  <p><indexterm>Data Collector console<indexterm>edit mode</indexterm></indexterm>The following
+      image shows the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       when you configure a pipeline:</p>
-  <p><image href="../Graphics/DCConsole_Config.png" id="image_n4b_m4z_sq" scale="45"/></p>
+   <p>
+      <image href="../Graphics/DCConsole_Config.png" id="image_n4b_m4z_sq" scale="55"/></p>
     <table frame="all" rowsep="1" colsep="1" id="table_qwf_byk_sq">
       <tgroup cols="3">
         <colspec colname="c1" colnum="1" colwidth=".5*"/>

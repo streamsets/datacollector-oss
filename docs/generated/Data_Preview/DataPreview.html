@@ -20,29 +20,29 @@
     records from the origin and passes it through the pipeline. You can examine input and output
     data for one stage at a time or for a group of stages. </p>
 
-    <p class="p">When you preview data for a single stage, the Preview panel displays the input and output
-      data for the selected stage. You can select any stage to view the input and output data for
-      the stage. </p>
+    <p class="p">When you preview data for a single
+      stage, the Preview panel displays the input and output data for the selected stage. You can
+      select any stage to view the input and output data for the stage. </p>
 
     <p class="p">You can also preview data for a group of stages to verify how the group processes data.</p>
 
-    <p class="p">When you preview data, you can edit the data and pass it through the pipeline to review the
-      results of the changes throughout the pipeline. </p>
+    <p class="p">When you preview data, you can edit the data and pass it through the pipeline, and then
+      examine the results. </p>
 
-    <p class="p">You can also refresh preview to review the pipeline with a new set of data from the
-      origin.</p>
+    <p class="p">You can also refresh the preview to use a new set of data from the origin.</p>
 
   </div>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_ksb_hjj_br">
- <h2 class="title topictitle2">Data Preview Availability</h2>
+ <h2 class="title topictitle2">Availability</h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can access data preview for complete and incomplete pipelines. The Data Preview icon
-  becomes active when data preview is available.</p>
+ <div class="body conbody"><p class="shortdesc">You can preview complete and incomplete pipelines. The Data Preview icon becomes active
+  when data preview is available.</p>
 
-  <div class="p">You can view preview data under the following conditions:<ul class="ul" id="concept_ksb_hjj_br__ul_flp_4jj_br">
+  <div class="p">You can preview data
+   under the following conditions:<ul class="ul" id="concept_ksb_hjj_br__ul_flp_4jj_br">
     <li class="li">All stages in the pipeline are connected</li>
 
     <li class="li">All required properties are defined</li>
@@ -52,10 +52,37 @@
 
   <div class="p">
    <div class="note tip"><span class="tiptitle">Tip:</span> Stage configuration does not have to be accurate or complete to
-    preview data. After you connect all stages, enter any valid value for required properties to
-    enable data preview.</div>
+    preview data. After you connect all stages, you can enable data preview by entering any valid
+    value for required properties.</div>
 
   </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_d24_1rj_br">
+ <h2 class="title topictitle2">Editing Preview Data</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can edit preview data to view how a stage or group of stages processes the changed
+  data. Use this functionality to fine-tune pipeline configuration. </p>
+
+  <p class="p">For example, when the
+   stage filters integer data based on an expression, you might change the input data to test
+   positive and negative integer values, as well as zero. </p>
+
+  <p class="p"><img class="image" id="concept_d24_1rj_br__image_fzk_rkn_tq" src="../Graphics/PreviewEditingField.png" height="176" width="317"></img></p>
+
+  <div class="p">You can change values in the following locations: <ul class="ul" id="concept_d24_1rj_br__ul_rg5_xhn_tq">
+                  <li class="li">The output data column for an origin stage.</li>
+
+                  <li class="li">The input data column for all other stages.</li>
+
+            </ul>
+</div>
+
+  <p class="p">When you edit preview data, you can pass the changed data through the pipeline, or you can
+      revert your changes to return to the original data.</p>
 
  </div>
 

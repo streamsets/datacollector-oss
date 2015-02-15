@@ -5,12 +5,11 @@
     <shortdesc>Create a metric alert to receive monitoring or email alerts based on metric rules.
         You can configure metric alerts when you configure or monitor a pipeline.</shortdesc>
     <taskbody>
-        <context>
-            <p>You can edit or delete alerts when they are not active. </p>
-        </context>
+        <context><indexterm>metric alerts<indexterm>configuring</indexterm></indexterm><p>You can
+                edit or delete alerts when they are not active. </p></context>
         <steps id="steps_jzm_f1k_br">
             <step>
-                <cmd>In the Properties panel or Monitoring panel, click the <uicontrol>Metric
+                <cmd>In the Properties panel or Monitor panel, click the <uicontrol>Metric
                         Rules</uicontrol> tab, and click the <uicontrol>Add</uicontrol> icon.</cmd>
             </step>
             <step>

@@ -6,7 +6,9 @@
   data into the pipeline. Based on the contents of the JSON object, the resulting field is either a
   string, a map, or an array.</shortdesc>
  <conbody>
-  <p>When you configure a JSON Parser, you specify the field to parse and the output field to
-   use.</p>
+  <p><indexterm>JSON
+     Parser<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>JSON
+     Parser</indexterm></indexterm>When you configure a JSON Parser, you specify the field to parse
+   and the output field to use.</p>
  </conbody>
 </concept>

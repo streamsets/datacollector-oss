@@ -2,12 +2,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_is3_zkp_wq">
  <title>Field Converter</title>
- <shortdesc>The Field Converter converts the datatype of a field to a compatible datatype. You might
+ <shortdesc>The Field Converter converts the data type of a field to a compatible data type. You might
   use the Field Converter to convert the data type of a field before performing calculations. </shortdesc>
  <conbody>
-  <p><indexterm>Field Converter<indexterm>overview</indexterm></indexterm>When you convert a field,
-   configure the conversion for an appropriate, compatible datatype. Consider the actual data in the
-   field as well, since even valid conversions can cause truncation of data. </p>
+  <p><indexterm>Field
+     Converter<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Field
+     Converter</indexterm></indexterm>When you convert a field, configure the conversion for an
+   appropriate, compatible data type. Consider the actual data in the field as well, since even
+   valid conversions can cause truncation of data. </p>
   <p>For example, converting a field from Integer to Decimal is valid. Converting a field from
    Decimal to Integer is also valid, but the conversion can cause truncation of any decimal values
    in the data.</p>

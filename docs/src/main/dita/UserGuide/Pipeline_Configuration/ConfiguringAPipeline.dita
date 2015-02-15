@@ -6,7 +6,8 @@
         you can start the pipeline. </shortdesc>
     <taskbody>
         <context>
-            <p>A pipeline can include the following components:<ul id="ul_eyy_b2w_kq">
+            <p><indexterm>pipelines<indexterm>configuring</indexterm></indexterm>A pipeline can
+                include the following components:<ul id="ul_eyy_b2w_kq">
                     <li>A single origin stage</li>
                     <li>Multiple processor stages</li>
                     <li>Multiple destination stages</li>

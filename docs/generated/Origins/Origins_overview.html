@@ -17,7 +17,8 @@
  <div class="body conbody"><p class="shortdesc">An origin stage represents the data that you want the pipeline to process. You can use a
     single origin stage in a pipeline.</p>
 
-  <div class="p">You can use the following types of origins in a pipeline: <ul class="ul" id="concept_hpr_twm_jq__ul_mxz_jxm_jq">
+  <div class="p">You can use the following types of
+      origins in a pipeline: <ul class="ul" id="concept_hpr_twm_jq__ul_mxz_jxm_jq">
         <li class="li">Directory - Reads files from a directory.</li>
 
         <li class="li">File Tail - Reads data as it is written to a file. </li>
@@ -39,13 +40,13 @@
         before sending a batch. At the end of the wait time, it sends the batch regardless of how
         many rows the batch contains. </p>
 
-  <p class="p">For example, a File Tail origin is configured for a batch size of 20 rows and a batch wait time
-            of 240 seconds. When data arrives quickly, File Tail fills a batch with 20 rows and
-            sends it through the pipeline immediately, creating a new batch and sending it again as
-            soon as it is full. As incoming data slows, a remaining batch contains a few rows,
-            gaining an extra row periodically. 240 seconds after creating the batch, File Tail sends
-            the partially-full batch through the pipeline. It immediately creates a new batch and
-            starts a new countdown.</p>
+  <p class="p">For example, a File Tail origin is configured for a batch
+      size of 20 rows and a batch wait time of 240 seconds. When data arrives quickly, File Tail
+      fills a batch with 20 rows and sends it through the pipeline immediately, creating a new batch
+      and sending it again as soon as it is full. As incoming data slows, a remaining batch contains
+      a few rows, gaining an extra row periodically. 240 seconds after creating the batch, File Tail
+      sends the partially-full batch through the pipeline. It immediately creates a new batch and
+      starts a new countdown.</p>
 
   <p class="p">Configure the batch wait time based on your processing needs. You might reduce the batch wait
    time to ensure all data is processed within a specified time frame or to make regular contact
@@ -63,8 +64,9 @@
         when reviewing the data might help with origin configuration.</p>
 
         <div class="section context">
-            <p class="p">When you preview file data, you can use the real directory and actual source file. Or
-                when appropriate, you might use a different file that is similar to the source. </p>
+            <p class="p">When you preview file data, you can
+                use the real directory and actual source file. Or when appropriate, you might use a
+                different file that is similar to the source. </p>
 
             <p class="p">When you preview Kafka data, you enter the connection information for the Kafka
                 cluster.</p>
@@ -90,9 +92,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="39.525691699604735%" id="d10309e123">Kafka Raw Preview Property</th>
+                                    <th class="entry" valign="top" width="39.525691699604735%" id="d10275e147">Kafka Raw Preview Property</th>
 
-                                    <th class="entry" valign="top" width="60.47430830039525%" id="d10309e126">Description</th>
+                                    <th class="entry" valign="top" width="60.47430830039525%" id="d10275e150">Description</th>
 
                                 </tr>
 
@@ -100,38 +102,38 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d10309e123 ">Topic</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d10275e147 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d10309e126 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d10309e123 ">Partition</td>
-
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d10309e126 ">Partition to read.</td>
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d10275e150 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d10309e123 ">Broker Host</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d10275e147 ">Partition</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d10309e126 ">Broker host name. Use any broker associated with the
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d10275e150 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d10275e147 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d10275e150 ">Broker host name. Use any broker associated with the
                                         partition.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d10309e123 ">Broker Port</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d10275e147 ">Broker Port</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d10309e126 ">Broker port number.</td>
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d10275e150 ">Broker port number.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d10309e123 ">Max Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d10275e147 ">Max Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d10309e126 ">Maximum amount of time the preview waits to receive data
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d10275e150 ">Maximum amount of time the preview waits to receive data
                                         from Kafka.</td>
 
                                 </tr>

@@ -5,9 +5,11 @@
  <shortdesc>Stages display a field name with a preceding slash as follows: <codeph>/&lt;field
    name></codeph>. For example, a field named CITY displays as /CITY. </shortdesc>
  <conbody>
-  <p>After you preview data or select fields using preview data, you can generally select fields
-      from a list. When a list is not available or when you want to define a new field name, type in
-      the field name with a preceding slash.</p>
+  <p><indexterm>processors<indexterm>referencing field names</indexterm></indexterm><indexterm>field
+                    names<indexterm>referencing</indexterm></indexterm>After you preview data or
+            select fields using preview data, you can generally select fields from a list. When a
+            list is not available or when you want to define a new field name, type in the field
+            name with a preceding slash.</p>
   <p>For example, when you define an output field for an Expression Evaluator, you can select from a
       list of fields passed from the previous stage. But to create a new field for the results of
       the expression, you enter a field name, such as /Code. </p>

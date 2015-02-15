@@ -6,8 +6,10 @@
   use variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string
   value.</shortdesc>
  <conbody>
-  <p>Use the Field Masker to mask sensitive string data. For example, you might use a custom mask to
-   mask the last four digits of a phone number.</p>
+  <p><indexterm>Field
+     Masker<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
+     Masker</indexterm></indexterm>Use the Field Masker to mask sensitive string data. For example,
+   you might use a custom mask to mask the last four digits of a phone number.</p>
   <p>
    <note type="tip">To mask non-string data, you might use the Field Converter processor to convert
     non-string data to String, then pass the data to the Field Masker. </note>

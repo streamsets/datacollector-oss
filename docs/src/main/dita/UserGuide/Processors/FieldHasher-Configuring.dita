@@ -4,7 +4,7 @@
     <title>Configuring a Field Hasher</title>
     <shortdesc>Configure a Field Hasher to encode sensitive data.</shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>Field Hasher<indexterm>configuring</indexterm></indexterm></context>
         <steps id="steps_fsf_flk_wq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">

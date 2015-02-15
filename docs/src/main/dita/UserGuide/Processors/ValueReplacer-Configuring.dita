@@ -5,7 +5,7 @@
     <shortdesc>Use a Value Replacer to replace null values in a field or to replace values in a
         field with Nulls. </shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>Value Replacer<indexterm>configuring</indexterm></indexterm></context>
         <steps id="steps_as1_cnf_zq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">

@@ -11,7 +11,7 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
       Monitor mode:<draft-comment author="Loretta">Retake screenshot, update table below - add extra
         crap</draft-comment></p>
-    <p><image href="../Graphics/CanvasMonitor.png" id="image_d3x_tf4_tq" scale="50"/></p>
+    <p><image href="../Graphics/DCConsole_Monitor.png" id="image_d3x_tf4_tq" scale="50"/></p>
   <simpletable frame="all" relcolwidth="1.0* 1.46* 3.66*" id="simpletable_jb5_1k4_tq">
    <sthead>
     <stentry>Area / Icon</stentry>
@@ -29,10 +29,8 @@
    <strow>
     <stentry>2</stentry>
     <stentry>Monitor Panel</stentry>
-    <stentry>Displays statistics for the pipeline or selected stage. <p>When you click an Inspect
-            Data icon... <draft-comment author="Loretta">come back to
-            this.</draft-comment></p><p>When you click the Snapshot button, displays a snapshot of
-            data that moved through the pipeline.</p></stentry>
+    <stentry>Displays statistics for the pipeline or selected stage. Can display information about
+          the pipeline or configuration details.<p>When you</p></stentry>
    </strow>
    <strow>
     <stentry>3</stentry>
@@ -40,53 +38,37 @@
     <stentry>Lists the pipeline and stages in the pipeline. Use to select the information that you
      want to view.</stentry>
    </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_MonDataAlert.png" id="image_twl_st5_br" scale="70"
+          /></stentry>
+        <stentry>Monitoring Stream</stentry>
+        <stentry>Select to create a data rule or alert.</stentry>
+      </strow>
    <strow>
     <stentry><image href="../Graphics/icon_MonInspect.png" id="image_gz1_rk4_tq" scale="80"
      /></stentry>
     <stentry>Inspect Data icon</stentry>
-    <stentry>Displays data inspection information. <draft-comment author="Loretta">come back to
-      this. </draft-comment></stentry>
+    <stentry>Indicates when alerts are configured on the stream:<ul id="ul_is1_tq5_br">
+            <li>Green indicates an active data alert.</li>
+            <li>Red indicates an alert has been triggered</li>
+          </ul><draft-comment author="Loretta">check on other colors</draft-comment></stentry>
    </strow>
    <strow>
     <stentry><image href="../Graphics/icon_MonSnapshot.png" id="image_w1q_zl4_tq" scale="80"/></stentry>
-    <stentry>Snapshot button</stentry>
-    <stentry>Captures a snapshot of data passing through the pipeline so you can review the details
-     of the data, like data preview.</stentry>
+    <stentry>Snapshot icon</stentry>
+    <stentry>Captures a snapshot of data passing through the pipeline so you can review the data,
+          like data preview.</stentry>
    </strow>
    <strow>
     <stentry><image href="../Graphics/icon_MonStop.png" id="image_klq_1m4_tq" scale="80"/>
     </stentry>
-    <stentry>Stop button</stentry>
+    <stentry>Stop icon</stentry>
     <stentry>Stops the pipeline.</stentry>
    </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_MonSummary.png" id="image_wjj_lh3_tq"/></stentry>
-        <stentry>Summary</stentry>
-        <stentry>
-          <p>Displays the record count for the pipeline, record and batch throughput for the
-            pipeline or individual stages, and batch processing statistics for the pipeline or
-            individual stages.</p>
-          <note outputclass="" type="tip">You can hover over different parts of the charts to view
-            exact numbers.</note>
-        </stentry>
-      </strow>
-      <strow>
-        <stentry><image href="../Graphics/icon_MonError.png" id="image_mb1_nj3_tq"/></stentry>
-        <stentry>Error</stentry>
-        <stentry>For a pipeline, displays histograms for the number of error records by five minute
-          decay and the number of error records by stage since the pipeline started. <p>For a stage,
-            displays the number of error records and the number of stage errors. </p></stentry>
-      </strow>
-      <strow>
-        <stentry><image href="../Graphics/icon_MonConfig.png" id="image_tsh_1m3_tq"/></stentry>
-        <stentry>Configuration</stentry>
-        <stentry>Displays configuration information for the pipeline or selected stage. You cannot
-          configure the pipeline when it is running.</stentry>
-      </strow>
-      <strow>
-        <stentry><image href="../Graphics/icon_MonPipeHistory.png" id="image_jf2_km3_tq"/></stentry>
-        <stentry>History</stentry>
-        <stentry>Displays the status and history of the pipeline.</stentry>
+        <stentry><image href="../Graphics/icon_MonAlert.png" id="image_kjm_xn5_br"/></stentry>
+        <stentry>Alert icon</stentry>
+        <stentry>Indicates a data alert has been triggered.</stentry>
       </strow>
   </simpletable>
  </conbody>

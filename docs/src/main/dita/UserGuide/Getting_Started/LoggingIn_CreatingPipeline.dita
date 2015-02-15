@@ -9,7 +9,10 @@
         console and create your first pipeline.</shortdesc>
     <taskbody>
         <context>
-            <p>You can customize the address and login that you use to access the <ph
+            <p><indexterm>Data Collector<indexterm>logging in and creating a
+                    pipeline</indexterm></indexterm><indexterm>logging in<indexterm>Data
+                        Collector</indexterm></indexterm>You can customize the address and login
+                that you use to access the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />. This procedure uses the default settings.</p>
         </context>

@@ -4,13 +4,13 @@
     <title>Configuring a Data Rule</title>
     <shortdesc>Create a data rule to view summary statistics and generate alerts based on the rule. </shortdesc>
     <taskbody>
-        <context>
-            <p></p>
-        </context>
+        <context><indexterm>data rules and
+            alerts<indexterm>configuring</indexterm></indexterm></context>
         <steps id="steps_mvl_w2k_br">
             <step>
-                <cmd>In the Monitoring panel, click the <uicontrol>Data Rules</uicontrol> tab, and
-                    then click the <uicontrol>Add</uicontrol> icon.</cmd>
+                <cmd>In the Properties panel or Monitor panel, click the <uicontrol>Data
+                        Rules</uicontrol> tab, and then click the <uicontrol>Add</uicontrol>
+                    icon.</cmd>
             </step>
             <step>
                 <cmd>In the <wintitle>Data Rule</wintitle> dialog box, configure the following
@@ -78,7 +78,7 @@
                                 <row>
                                     <entry>Min Volume</entry>
                                     <entry>Minimum number of records to process before evaluating a
-                                        percentage threshhold type. </entry>
+                                        percentage threshold type. </entry>
                                 </row>
                                 <row>
                                     <entry>Send Email</entry>

@@ -8,7 +8,9 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         />.</shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>Data Collector<indexterm>viewing
+                    logs</indexterm></indexterm><indexterm>logs<indexterm>Data
+                Collector</indexterm></indexterm></context>
         <steps id="steps_udd_v3k_br">
             <step>
                 <cmd>Click <menucascade>

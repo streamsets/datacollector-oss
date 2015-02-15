@@ -8,8 +8,9 @@
    <dl>
     <dlentry>
      <dt>Fixed-length</dt>
-     <dd>Replaces values with a fixed-length mask. Use when you want to mask any variability in
-      length in the data. </dd>
+     <dd><indexterm>Field Masker<indexterm>mask types</indexterm></indexterm><indexterm>mask
+        types<indexterm>Field Masker</indexterm></indexterm>Replaces values with a fixed-length
+      mask. Use when you want to mask any variability in length in the data. </dd>
      <dd>The following example uses a fixed-length masks to hide passwords:<simpletable frame="none"
        relcolwidth="1.0* 1.0*" id="simpletable_zyf_5cj_yq">
        <strow>

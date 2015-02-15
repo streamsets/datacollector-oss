@@ -5,6 +5,7 @@
  <shortdesc>Precede all expressions with a dollar sign and enclose them with curly brackets, as
   follows: <codeph>${&lt;expression>}</codeph>.</shortdesc>
  <conbody>
-  <p>For example, to add 2 +2, use the following syntax: ${2+2}.</p>
+  <p><indexterm>basic syntax<indexterm>for expressions</indexterm></indexterm>For example, to add 2
+   +2, use the following syntax: ${2+2}.</p>
  </conbody>
 </concept>

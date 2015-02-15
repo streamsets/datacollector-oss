@@ -5,8 +5,11 @@
  <shortdesc>The Record Deduplicator caches record information for comparison until it reaches a
   specified number of records. Then, it discards the information in the cache and starts over. </shortdesc>
  <conbody>
-  <p>You can configure a time limit to trigger a cache refresh at regular time intervals. When you
-   configure a time limit, the time limit takes precedence over the record limit.</p>
+  <p><indexterm>Record Deduplicator<indexterm>comparison
+    window</indexterm></indexterm><indexterm>comparison window<indexterm>Record
+     Deduplicator</indexterm></indexterm>You can configure a time limit to trigger a cache refresh
+   at regular time intervals. When you configure a time limit, the time limit takes precedence over
+   the record limit.</p>
   <p>When you stop the pipeline, the Record Deduplicator discards all information in memory.</p>
  </conbody>
 </concept>

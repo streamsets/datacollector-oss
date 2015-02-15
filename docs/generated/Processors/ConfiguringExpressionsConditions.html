@@ -18,18 +18,19 @@
     expressions in the Expression Evaluator. You can configure conditions in the Stream
     Selector.</p>
 
-  <div class="p">You can use the following elements in an expression or condition:<ul class="ul" id="concept_ofb_1cm_xq__ul_wrf_fjm_xq">
-    <li class="li">Field names</li>
+  <div class="p">You can use the following elements in an expression or
+        condition:<ul class="ul" id="concept_ofb_1cm_xq__ul_wrf_fjm_xq">
+        <li class="li">Field names</li>
 
-    <li class="li">Constants</li>
+        <li class="li">Constants</li>
 
-    <li class="li">Literals</li>
+        <li class="li">Literals</li>
 
-    <li class="li">Operators</li>
+        <li class="li">Operators</li>
 
-    <li class="li">Functions</li>
+        <li class="li">Functions</li>
 
-   </ul>
+      </ul>
 </div>
 
   <p class="p">For details about literals, operators, functions, and reserved words, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The expression language enables you to create expressions that evaluate or modify data. Use the expression language to create expressions in the Expression processor and conditions in the Stream Selector processor.">Expression Language</a>.</p>
@@ -44,7 +45,8 @@
  <div class="body conbody"><p class="shortdesc">Precede all expressions with a dollar sign and enclose them with curly brackets, as
   follows: <samp class="ph codeph">${&lt;expression&gt;}</samp>.</p>
 
-  <p class="p">For example, to add 2 +2, use the following syntax: ${2+2}.</p>
+  <p class="p">For example, to add 2
+   +2, use the following syntax: ${2+2}.</p>
 
  </div>
 
@@ -123,8 +125,9 @@
         Selector processors.</p>
 
         <div class="section context">
-            <div class="p">For example, you might have an Expression Evaluator processor that calculates the
-                total income for employees using .01 as a bonus percentage, as
+            <div class="p">For
+                example, you might have an Expression Evaluator processor that calculates the total
+                income for employees using .01 as a bonus percentage, as
                 follows:<pre class="pre codeblock">${(record:value("/SALARY")) + (record:value("/SALARY")*.01)}</pre>
 </div>
 

@@ -5,10 +5,11 @@
  <shortdesc>A pipeline describes the flow of data for the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
  <conbody>
-  <p>Configure a pipeline on the <term>pipeline canvas</term>. To configure a pipeline, you add and
-      configure an origin stage to represent source data, processor stages to perform processing and
-      routing, and one or more destination stages to represent target data. Connect the stages to
-      create the flow of data from origin to destinations. </p>
+  <p><indexterm>pipelines<indexterm>overview</indexterm></indexterm>Configure a pipeline on the
+        <term>pipeline canvas</term>. To configure a pipeline, you add and configure an origin stage
+      to represent source data, processor stages to perform processing and routing, and one or more
+      destination stages to represent target data. Connect the stages to create the flow of data
+      from origin to destinations. </p>
     <p>The canvas automatically saves and validates your work. The pipeline canvas provides warnings
       for parts of the pipeline that are not yet complete or valid. You can view a full list of
       issues to help you configure the pipeline. </p>

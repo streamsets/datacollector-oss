@@ -18,7 +18,9 @@
      </thead>
      <tbody>
       <row>
-       <entry>Boolean</entry>
+       <entry><indexterm>data type
+         conversions<indexterm>valid</indexterm></indexterm><indexterm>valid data type
+          conversions<indexterm>list</indexterm></indexterm>Boolean</entry>
        <entry>Byte, Decimal, Double, Float, Integer, Long, Short, String</entry>
       </row>
       <row>

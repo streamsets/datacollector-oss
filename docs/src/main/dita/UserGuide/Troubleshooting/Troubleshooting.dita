@@ -11,11 +11,14 @@
    <dl>
     <dlentry>
      <dt>When I go to the<ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> window, I
-      get a "Webpage not available" error message.</dt>
-     <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      is not running. Start the <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</dd>
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            console, I get a "Webpage not available" error message.</dt>
+     <dd><indexterm>Data
+                Collector<indexterm>troubleshooting</indexterm></indexterm><indexterm>troubleshooting<indexterm>issues</indexterm></indexterm>The
+              <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            is not running. Start the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />.</dd>
     </dlentry>
     <dlentry>
      <dt>Why isn't the Data Preview icon enabled.</dt>
@@ -45,7 +48,7 @@
     </dlentry>
     <dlentry>
      <dt>Why doesn't the Select Fields with Preview Data option work? No preview data displays.</dt>
-     <dd>Select Fields with Preview Data can provide preview data when the pipeline is valud for
+     <dd>Select Fields with Preview Data can provide preview data when the pipeline is valid for
       data preview. Make sure all stages are connected. You might also need to enter temporary
       values for required properties to enable data preview.</dd>
     </dlentry>

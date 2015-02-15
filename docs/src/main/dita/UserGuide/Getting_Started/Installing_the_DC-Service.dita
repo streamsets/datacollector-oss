@@ -7,7 +7,7 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         />.</shortdesc>
     <taskbody>
-        <context><p><indexterm>installation<indexterm>service</indexterm></indexterm><indexterm>launch<indexterm>launch</indexterm></indexterm>Installing
+        <context><p><indexterm>installation<indexterm>service</indexterm></indexterm><indexterm>launch<indexterm>service</indexterm></indexterm>Installing
                 the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> as a service requires sudo privileges on the root directory.</p>This procedure

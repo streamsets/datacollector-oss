@@ -5,7 +5,9 @@
  <shortdesc>The expression language includes the following literals:</shortdesc>
  <conbody>
   <ul id="ul_e3m_jpm_xq">
-   <li>Boolean literals - "true" and "false"</li>
+   <li><indexterm>expression
+      language<indexterm>literals</indexterm></indexterm><indexterm>literals<indexterm>in the
+      expression language</indexterm></indexterm>Boolean literals - "true" and "false"</li>
    <li>Integers - as in Java</li>
    <li>Floating point - as in Java</li>
    <li>Strings with single or double quotation marks</li>

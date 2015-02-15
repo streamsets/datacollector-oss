@@ -2,14 +2,16 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_svd_dvz_sq">
     <title>Previewing Multiple Stages</title>
-    <shortdesc>You can preview data for a group of linked stages within a pipeline. Preview multiple
-        stages to verify that the group of stages processes data as expected. </shortdesc>
+    <shortdesc>You can preview data for a group of linked stages within a pipeline. You can also
+        edit the preview data to see how the group processes your changes. Preview multiple stages
+        to verify that the group processes data as expected. </shortdesc>
     <taskbody>
         <context>
-            <p>When you preview multiple stages, you select the first stage and the last stage in
-                the group. The Preview panel then displays the input data and the output data for
-                the group. The input data is the data that enters the first stage. The output data
-                is the data that passes from the last stage. </p>
+            <p><indexterm>data preview<indexterm>previewing multiple
+                stages</indexterm></indexterm>When you preview multiple stages, you select the first
+                stage and the last stage in the group. The Preview panel then displays the input
+                data and the output data for the group. The input data is the data that enters the
+                first stage. The output data is the data that passes from the last stage. </p>
             <p>In the Preview panel, you can drill down to review the values for each record to
                 determine if the group of stages transforms data as expected.</p>
         </context>

@@ -8,12 +8,14 @@
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to route and
   process data in your data streams. </shortdesc>
  <conbody>
-  <p>To define the flow of data for the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you configure
-   a <term>pipeline</term>. A pipeline consists of stages that represent the origin and destination
-   of the pipeline, and any additional processing that you want to perform. After you configure the
-   pipeline, you click Start, and the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> goes to work. </p>
+  <p><indexterm>Data Collector<indexterm>description</indexterm></indexterm>To define the flow of
+      data for the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
+      configure a <term>pipeline</term>. A pipeline consists of stages that represent the origin and
+      destination of the pipeline, and any additional processing that you want to perform. After you
+      configure the pipeline, you click Start, and the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> goes to
+      work. </p>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       processes data when it arrives at the origin and waits quietly when not needed. You can view
       real-time statistics about your data, inspect data as it passes through the pipeline, or take

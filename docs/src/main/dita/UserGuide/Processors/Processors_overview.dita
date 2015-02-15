@@ -5,8 +5,9 @@
   <shortdesc>A processor stage represents a type of data processing that you want to perform within
     the pipeline. You can use as many processors in a pipeline as you need.</shortdesc>
   <conbody>
-    <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      provides the following processors:<ul id="ul_mxz_jxm_jq">
+    <p><indexterm>processors<indexterm>overview</indexterm></indexterm>The <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
+      the following processors:<ul id="ul_mxz_jxm_jq">
         <li>Expression Evaluator - Performs calculations on a row-by-row basis.</li>
         <li>Field Converter - Converts the data type of a field.</li>
         <li>Field Hasher - Uses an algorithm to encode sensitive string data.</li>

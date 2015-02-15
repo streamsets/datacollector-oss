@@ -6,8 +6,10 @@
   data displays when a pipeline is configured to a point where you can to perform a data
   preview.</shortdesc>
  <conbody>
-  <p>If preview data for field selection does not display, continue configuring the pipeline and try
-   again. </p>
+  <p><indexterm>fields<indexterm>selecting with preview
+    data</indexterm></indexterm><indexterm>Selecting Fields with Preview
+     Data<indexterm>description</indexterm></indexterm>If preview data for field selection does not
+   display, continue configuring the pipeline and try again. </p>
  </conbody>
  <related-links>
   <link href="../Data_Preview/DataPreview.dita#concept_jtn_s3m_lq"/>

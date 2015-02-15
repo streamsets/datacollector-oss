@@ -6,6 +6,7 @@
   specify. To ensure a connection in case a specified broker goes down, list as many brokers as
   possible.</shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>Kafka Producer<indexterm>broker list</indexterm></indexterm><indexterm>broker
+     list<indexterm>Kafka Producer</indexterm></indexterm></p>
  </conbody>
 </concept>

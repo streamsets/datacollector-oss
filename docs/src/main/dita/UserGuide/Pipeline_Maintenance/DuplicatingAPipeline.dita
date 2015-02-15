@@ -7,7 +7,8 @@
         pipeline. </shortdesc>
     <taskbody>
         <context>
-            <p>When you duplicate a pipeline, you can rename the pipeline. </p>
+            <p><indexterm>pipelines<indexterm>duplicating</indexterm></indexterm>When you duplicate
+                a pipeline, you can rename the pipeline. </p>
         </context>
         <steps id="steps_lgz_fvr_5q">
             <step>

@@ -6,8 +6,11 @@
   Use the expression language to create expressions in the Expression processor and conditions in
   the Stream Selector processor.</shortdesc>
  <conbody>
-  <p>You can also use the expression language when you configure data rules, the Hadoop FS output
-   file options, and Kafka Producer partitions.</p>
+  <p><indexterm>Data Collector<indexterm>expression
+        language</indexterm></indexterm><indexterm>expression
+          language<indexterm>overview</indexterm></indexterm>You can also use the expression
+      language when you configure data rules, the Hadoop FS output file options, and Kafka Producer
+      partitions.</p>
   <p>You can use the following elements in an expression or condition:<ul id="ul_wrf_fjm_xq">
     <li>Field names</li>
     <li>Constants</li>

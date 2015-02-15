@@ -8,7 +8,8 @@
         security.</shortdesc>
     <taskbody>
         <context>
-            <p>You can use md5 to encrypt login information.</p>
+            <p><indexterm>users<indexterm>creating additional</indexterm></indexterm>You can use md5
+                to encrypt login information.</p>
         </context>
         <steps id="steps_ody_3q4_1r">
             <step>

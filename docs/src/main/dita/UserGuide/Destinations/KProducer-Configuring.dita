@@ -6,6 +6,9 @@
     <taskbody>
         <context/>
         <steps id="steps_upj_std_br">
+            <step>
+                <cmd><indexterm>Kafka Producer<indexterm>configuring</indexterm></indexterm></cmd>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step1"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step2">
                 <cmd/>
@@ -44,13 +47,13 @@
                                                 <li>Round Robin - Takes turns writing to different
                                                   partitions.</li>
                                                 <li>Random - Writes to partitions randomly.</li>
-                                                <li>Expression - Uses an expression to evalulate
-                                                  when to write to different partitinos. </li>
+                                                <li>Expression - Uses an expression to evaluate
+                                                  when to write to different partitions. </li>
                                             </ul></entry>
                                     </row>
                                     <row>
                                         <entry>Expression</entry>
-                                        <entry>Expression to use to write to parititons with an
+                                        <entry>Expression to use to write to partitions with an
                                             expression.</entry>
                                     </row>
                                     <row>

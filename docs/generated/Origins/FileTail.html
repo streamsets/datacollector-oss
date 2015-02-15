@@ -19,9 +19,10 @@
   not read data already in the file or data that is written to the file when the pipeline is not
   running.</p>
 
-  <p class="p">For example, you have a log file with 30 rows of data when you start the pipeline. The File
-   Tail origin ignores the existing data and begins processing with the 31st row of data when it
-   arrives. It continues capturing incoming data until you stop the pipeline. </p>
+  <p class="p">For example, you have a log file with 30 rows of data when you
+   start the pipeline. The File Tail origin ignores the existing data and begins processing with the
+   31st row of data when it arrives. It continues capturing incoming data until you stop the
+   pipeline. </p>
 
   <p class="p">When you restart the pipeline, the File Tail origin begins processing with the next row of
    incoming data. It does not try to process any rows that were written to the log file while the
@@ -53,9 +54,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.985507246376812%" id="d9415e79">File Tail General Property</th>
+                                    <th class="entry" valign="top" width="28.985507246376812%" id="d9381e91">File Property</th>
 
-                                    <th class="entry" valign="top" width="71.01449275362319%" id="d9415e82">Description</th>
+                                    <th class="entry" valign="top" width="71.01449275362319%" id="d9381e94">Description</th>
 
                                 </tr>
 
@@ -63,9 +64,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d9415e79 ">Data Format</td>
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d9381e91 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d9415e82 ">Format of data in the file. Use one of the following
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d9381e94 ">Format of data in the file. Use one of the following
                                             options:<ul class="ul" id="task_unq_wdw_yq__ul_pwv_cr2_zq">
                                             <li class="li">Text</li>
 
@@ -77,26 +78,26 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d9415e79 ">File Path</td>
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d9381e91 ">File Path</td>
 
-                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d9415e82 ">Directory and name of the file to read.</td>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d9381e94 ">Directory and name of the file to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d9415e79 ">Maximum Lines per Batch (records) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains.">
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d9381e91 ">Maximum Lines per Batch (records) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains.">
                                             <img class="image" id="task_unq_wdw_yq__image_obp_j2w_yq" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
 
-                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d9415e82 ">Maximum number of records to include in a batch. </td>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d9381e94 ">Maximum number of records to include in a batch. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d9415e79 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains.">
+                                    <td class="entry" valign="top" width="28.985507246376812%" headers="d9381e91 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of rows sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many rows the batch contains.">
                                         <img class="image" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img>
                                            </a> </td>
 
-                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d9415e82 ">Number of seconds to wait before sending a batch.</td>
+                                    <td class="entry" valign="top" width="71.01449275362319%" headers="d9381e94 ">Number of seconds to wait before sending a batch.</td>
 
                                 </tr>
 

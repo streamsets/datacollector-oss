@@ -5,7 +5,7 @@
  <shortdesc>When you use a field name in an expression, use the following syntax:</shortdesc>
  <conbody>
   <p>
-   <codeblock>record:value("/&lt;field name>")</codeblock>
+   <codeblock><indexterm>field names<indexterm>in expressions</indexterm></indexterm><indexterm>expression language<indexterm>using field names</indexterm></indexterm>record:value("/&lt;field name>")</codeblock>
   </p>
   <p>For example, the following expression concatenates the values from the DATE field with values
    from the TIME field:</p>
