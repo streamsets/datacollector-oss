@@ -5,6 +5,11 @@ describe('StreamSets Data Collector App', function() {
     browser.manage().timeouts().pageLoadTimeout(10000);
   });
 
+  afterEach(function() {
+    browser.executeScript('window.sessionStorage.clear();');
+    browser.executeScript('window.localStorage.clear();');
+  });
+
   browser.get('/');
 
   it('should automatically redirect to / when location fragment is empty', function() {
@@ -50,7 +55,6 @@ describe('StreamSets Data Collector App', function() {
         element(by.css('button[type="submit"]')).click();
 
         browser.sleep(500);
-
 
         //Toggle Library Pane
         element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
@@ -99,9 +103,6 @@ describe('StreamSets Data Collector App', function() {
 
         pipelines[0].element(by.css('[ng-click="duplicatePipelineConfig(pipeline, $event)"]')).click();
 
-
-        element(by.model('newConfig.name')).sendKeys(' Duplicate Copy');
-        element(by.model('newConfig.description')).sendKeys('pipeline description');
         element(by.css('button[type="submit"]')).click();
 
         browser.sleep(500);
@@ -109,7 +110,7 @@ describe('StreamSets Data Collector App', function() {
         //Test pipeline creation by checking list of pipelines
         element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
           expect(pipelines.length).toEqual(3);
-          expect(pipelines[1].element(by.binding('pipeline.name')).getText()).toEqual('Sample Pipelinecopy Duplicate Copy');
+          expect(pipelines[1].element(by.binding('pipeline.name')).getText()).toEqual('Sample Pipelinecopy');
         });
 
       });
@@ -157,9 +158,14 @@ describe('StreamSets Data Collector App', function() {
       element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
 
       element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
-
-
+        //Select 1 pipeline
+        pipelines[0].click();
+        element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
       });
+
+      element(by.css('[ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel"]')).click();
+      expect(element(by.model('$storage.stageFilterGroup')).getAttribute('value')).toEqual('SOURCE');
+
     });
 
 

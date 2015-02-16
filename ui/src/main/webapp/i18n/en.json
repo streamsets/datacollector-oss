@@ -51,7 +51,7 @@
       "fromStageLane": "From Stage Stream",
       "fromStageLanePredicate": "From Stage Stream Condition",
       "help": "Help",
-      "histogram": "Record Count Histogram (5 minutes decay)",
+      "histogram": "Records Per Batch Histogram (5 minutes decay)",
       "import": "Import",
       "label": "Label",
       "lastModifiedBy": "Last Modified By",
