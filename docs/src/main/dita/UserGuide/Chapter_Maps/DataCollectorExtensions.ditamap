@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Extending the Data Collector</title>
+ <topicref href="../Data%20Collector%20Extensions/DataCollectorExtensions-title.dita">
+  <topicref href="../Data%20Collector%20Extensions/AdditionalStages.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Data%20Collector%20Extensions/InstallStage-DownloadUntar.dita"/>
+   <topicref href="../Data%20Collector%20Extensions/InstallStage-UntarCopy.dita"/>
+  </topicref>
+ </topicref>
+</map>

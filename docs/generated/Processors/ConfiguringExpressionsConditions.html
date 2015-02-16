@@ -66,54 +66,12 @@
    from the TIME field:</p>
 
   <div class="p">
-   <pre class="pre codeblock">${record:value("/DATE")|| record:value("/TIME")}</pre>
+   <pre class="pre codeblock">${record:value("/DATE")} {record:value("/TIME")}</pre>
 
   </div>
 
   <div class="p">To reference a nested field, as with a field in a JSON object, use the path to the field as
    follows:<pre class="pre codeblock">record:value("/&lt;path to field&gt;/&lt;field name&gt;")</pre>
-</div>
-
- </div>
-
-</div>
-<div class="topic concept nested1" id="concept_e1r_5vc_br">
- <h2 class="title topictitle2">Stage Instance Name</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">The stage instance name is the name used for a stage within an error record file. You
-  can also verify the stage instance name on the General tab for the stage. </p>
-
-  <p class="p">You can use an error
-   function to return the stage instance name that sent the record to the error record file. You
-   might use stage instance names in expressions or conditions when you configure an error pipeline. </p>
-
-  <p class="p">Stage instances names use the following format: </p>
-
-  <div class="p">
-   <pre class="pre codeblock">&lt;internal information&gt;_&lt;internal stage name&gt;&lt;ID&gt;</pre>
-
-  </div>
-
-  <p class="p">For example:
-   com_streamsets_pipeline_lib_stage_processor_splitter_SplitterProcessor1423694184108.</p>
-
- </div>
-
-</div>
-<div class="topic concept nested1" id="concept_ynz_stc_br">
- <h2 class="title topictitle2">Stage Paths</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">Stage paths appear in error records. They indicate the path that a record took through
-  the pipeline before becoming an error record. </p>
-
-  <p class="p">You can use record functions and
-   error functions to return stage paths. You might use a stage path in expressions or conditions in
-   error pipelines. </p>
-
-  <div class="p">Stage paths use the following
-   format:<pre class="pre codeblock">&lt;origin instance name&gt;:&lt;next stage instance name&gt;:&lt;next stage instance name&gt;:...</pre>
 </div>
 
  </div>
@@ -139,7 +97,7 @@
                 the expression, you can create a Bonus constant and set it to .01 as
                     shown:</p>
 
-            <p class="p"><img class="image" id="task_ogd_zj3_wq__image_qsg_pyp_yq" src="../Graphics/ExpressionStageConfig.png" height="306" width="796"></img></p>
+            <p class="p"><img class="image" id="task_ogd_zj3_wq__image_qsg_pyp_yq" src="../Graphics/ExpressionStageConfig.png" height="204" width="531"></img></p>
 
             <p class="p">Then you can use the Bonus constant in an expression as follows:</p>
 

@@ -10,7 +10,7 @@
   <p>For example, the following expression concatenates the values from the DATE field with values
    from the TIME field:</p>
   <p>
-   <codeblock>${record:value("/DATE")|| record:value("/TIME")}</codeblock>
+   <codeblock>${record:value("/DATE")} {record:value("/TIME")}</codeblock>
   </p>
   <p>To reference a nested field, as with a field in a JSON object, use the path to the field as
    follows:<codeblock>record:value("/&lt;path to field>/&lt;field name>")</codeblock></p>

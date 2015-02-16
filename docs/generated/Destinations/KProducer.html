@@ -84,8 +84,8 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to keep the record in the pipeline. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
-                        <img class="image" id="task_q4d_4yl_zq__d301e198" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
+                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
+                        <img class="image" id="task_q4d_4yl_zq__d360e198" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">On the
@@ -98,9 +98,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="23.980815347721823%" id="d3262e182">Kafka Properties</th>
+                                        <th class="entry" valign="top" width="23.980815347721823%" id="d3762e182">Kafka Properties</th>
 
-                                        <th class="entry" valign="top" width="76.01918465227818%" id="d3262e185">Description</th>
+                                        <th class="entry" valign="top" width="76.01918465227818%" id="d3762e185">Description</th>
 
                                     </tr>
 
@@ -108,9 +108,9 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3262e182 ">Broker URIs</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3762e182 ">Broker URIs</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3262e185 ">A comma-separated list of URIs for Kafka brokers that
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3762e185 ">A comma-separated list of URIs for Kafka brokers that
                                             write to the topic. Use the format
                                                 &lt;host&gt;:&lt;port&gt;.<p class="p">To ensure a connection, enter
                                                 as many broker URIs as possible.</p>
@@ -119,16 +119,16 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3262e182 ">Topic</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3762e182 ">Topic</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3262e185 ">Kafka topic to use.</td>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3762e185 ">Kafka topic to use.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3262e182 ">Partition Strategy</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3762e182 ">Partition Strategy</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3262e185 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__ul_tq2_yr3_br">
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3762e185 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__ul_tq2_yr3_br">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -143,17 +143,17 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3262e182 ">Expression</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3762e182 ">Expression</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3262e185 ">Expression to use to write to partitions with an
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3762e185 ">Expression to use to write to partitions with an
                                             expression.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3262e182 ">Data Format</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3762e182 ">Data Format</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3262e185 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__ul_wlj_353_br">
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3762e185 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__ul_wlj_353_br">
                                                 <li class="li">Text</li>
 
                                                 <li class="li">JSON</li>
@@ -169,9 +169,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3262e182 ">Kafka Configuration</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3762e182 ">Kafka Configuration</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3262e185 ">Additional Kafka properties to use. Click the
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3762e185 ">Additional Kafka properties to use. Click the
                                                 <span class="ph uicontrol">Add</span> icon and define the Kafka
                                             property name and value. <p class="p">Use the property names and
                                                 values as expected by Kafka. Do not use the
@@ -200,9 +200,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="26.525198938992045%" id="d3262e322">Delimited Property</th>
+                                        <th class="entry" valign="top" width="26.525198938992045%" id="d3762e322">Delimited Property</th>
 
-                                        <th class="entry" valign="top" width="73.47480106100795%" id="d3262e325">Description</th>
+                                        <th class="entry" valign="top" width="73.47480106100795%" id="d3762e325">Description</th>
 
                                     </tr>
 
@@ -210,9 +210,9 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="26.525198938992045%" headers="d3262e322 ">Delimiter Format</td>
+                                        <td class="entry" valign="top" width="26.525198938992045%" headers="d3762e322 ">Delimiter Format</td>
 
-                                        <td class="entry" valign="top" width="73.47480106100795%" headers="d3262e325 ">Format to use for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_gfs_553_br">
+                                        <td class="entry" valign="top" width="73.47480106100795%" headers="d3762e325 ">Format to use for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_gfs_553_br">
                                                 <li class="li">Basic CSV - File that includes comma-separated
                                                   values. </li>
 
@@ -233,9 +233,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="26.525198938992045%" headers="d3262e322 ">Fields</td>
+                                        <td class="entry" valign="top" width="26.525198938992045%" headers="d3762e322 ">Fields</td>
 
-                                        <td class="entry" valign="top" width="73.47480106100795%" headers="d3262e325 ">Fields to include in the record.</td>
+                                        <td class="entry" valign="top" width="73.47480106100795%" headers="d3762e325 ">Fields to include in the record.</td>
 
                                     </tr>
 
@@ -259,9 +259,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="23.980815347721823%" id="d3262e397">Text Property</th>
+                                        <th class="entry" valign="top" width="23.980815347721823%" id="d3762e397">Text Property</th>
 
-                                        <th class="entry" valign="top" width="76.01918465227818%" id="d3262e400">Description</th>
+                                        <th class="entry" valign="top" width="76.01918465227818%" id="d3762e400">Description</th>
 
                                     </tr>
 
@@ -269,9 +269,9 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3262e397 ">Field</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3762e397 ">Field</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3262e400 ">Single field to write data to Kafka. </td>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3762e400 ">Single field to write data to Kafka. </td>
 
                                     </tr>
 

@@ -3,12 +3,14 @@
 <concept id="concept_dnj_bkm_vq">
  <title>Required Fields</title>
  <shortdesc>You can configure required fields for any processor and most destination stages. A
-    required field must exist in a record to keep the record in the pipeline. When a record does not
-    include a required field, the stage passes the field to the pipeline for error handling. </shortdesc>
+      required field must exist in a record to allow the record to enter the stage for processing.
+      When a record does not include a required field, the stage passes the field to the pipeline
+      for error handling. </shortdesc>
  <conbody>
   <p><indexterm>pipelines<indexterm>required fields</indexterm></indexterm><indexterm>required
-     fields<indexterm>overview</indexterm></indexterm>Configure required fields based on your
-   business requirements or in order to minimize processing errors.</p>
+               fields<indexterm>overview</indexterm></indexterm>You can configure different required
+         fields in different stages. Configure required fields based on your business requirements
+         or in order to minimize processing errors. </p>
   <p>For example, a Field Hasher encodes social security data in the /SSN field. To ensure
       processing only records that include social security numbers, make /SSN a required field. </p>
  </conbody>

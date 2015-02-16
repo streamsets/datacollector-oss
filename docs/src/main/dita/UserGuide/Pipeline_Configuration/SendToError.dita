@@ -7,6 +7,8 @@
     error handling. </shortdesc>
  <conbody>
   <p><indexterm>Send to Error<indexterm>error handling option</indexterm></indexterm>The record is
-      either discarded or saved to an error record file based on how the pipeline is configured. </p>
+      either discarded or saved to an error record file based on how the pipeline is configured.
+        <draft-comment author="Loretta">come back and reword this when we have additional ways to
+        save error records.</draft-comment></p>
  </conbody>
 </concept>

@@ -3,7 +3,8 @@
 <concept id="concept_gbn_4lv_1r">
  <title>Installation and Configuration</title>
  <shortdesc>You can install the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a tarball or
-  service. After installation, you can create additional users and customize the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</shortdesc>
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to be run
+    manually or as a service. After installation, you can create additional users and customize the
+      <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+    />.</shortdesc>
 </concept>

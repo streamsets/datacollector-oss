@@ -5,15 +5,16 @@
  <shortdesc>To understand references to fields, think of the record as a root directory, and a
     reference to a field as the path to the field. </shortdesc>
  <conbody>
-  <p><indexterm>processors<indexterm>referencing field names</indexterm></indexterm><indexterm>field
-          names<indexterm>referencing</indexterm></indexterm></p>
-    <p>When a record is a line of text, the fields are one level of subdirectories. A reference to a
-      field in a text record is simply: <codeph>/&lt;field name></codeph>. So a field named CITY
-      displays as /CITY. </p>
+    <p><indexterm>processors<indexterm>referencing field
+        names</indexterm></indexterm><indexterm>field
+        names<indexterm>referencing</indexterm></indexterm>When a record is a line of text, the
+      fields are one level of subdirectories. A reference to a field in a text record is simply:
+        <codeph>/&lt;field name></codeph>. </p>
+    <p>So a field named CITY displays as /CITY. </p>
     <p>When a record is complex, like a JSON object, the root object might incude many additional
-      objects. A reference to a field, in this case, is the path to the field: <codeph>/&lt;path to
-        field>/&lt;field name></codeph>. For example, a field in a JSON tweet might display as
-      /users/followers_count. </p>
+      objects.  In this case, a reference to a field is the path to the field: <codeph>/&lt;path to
+        field>/&lt;field name></codeph>. </p>
+    <p>For example, a field in a JSON tweet might display as /users/followers_count. </p>
     <p>After you preview data or select fields using preview data, you can generally select fields
       from a list. When a list is not available or when defining a new field name, use the
       appropriate format to define reference the field. </p>

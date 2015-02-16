@@ -14,8 +14,8 @@
             <p>The following bullets are used in "Previewing a Single Stage" and
                   "Troubleshooting":</p>
        <ul id="ul_EditPreview">
-                  <li>The output data column for an origin stage.</li>
-                  <li>The input data column for all other stages.</li>
+                  <li>The output data column for an origin.</li>
+                  <li>The input data column for processors.</li>
             </ul>
             <p>The following bullets are the types of origins that can be reset / that remember
                   where you left off. These are used currently in "Starting a Pipeline" and

@@ -8,15 +8,16 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you access
    the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
    console, log in, and create your first pipeline. </p>
-  <p>What do you want it to do? Let's say you want to read CSV files from a directory and remove the
-   newline characters before writing it to Hive. To do this, you start with a Directory origin stage
-   and configure it to point to your source files. (You can also have the stage archive processed
-   files and write files that were not fully processed to a separate directory for review.)</p>
+  <p>What do you want it to do? Let's say you want to read XML files from a directory and remove the
+   newline characters before moving it into Hive. To do this, you start with a Directory origin
+   stage and configure it to point to your source files. (You can also have the stage archive
+   processed files and write files that were not fully processed to a separate directory for
+   review.)</p>
   <p>To remove the newline characters, connect Directory to an Expression Evaluator processor and
    configure it to remove the newline character from the last field in the record.</p>
-  <p>To write to Hive, you connect the Expression Evaluator to a Hadoop FS destination stage. You
-   might configure the stage to write the data as a JSON object (though you can write it as
-   delimited data as well). </p>
+  <p>To make the data available to Hive, you connect the Expression Evaluator to a Hadoop FS
+   destination stage. You might configure the stage to write the data as a JSON object (though you
+   can write it as delimited data as well). </p>
   <p>You preview data to view source data move through the pipeline and notice that some fields have
    missing data. So you add a Value Replacer to replace null values in those fields. </p>
   <p>Now that the data flow is done, you configure the pipeline to save records that cannot be

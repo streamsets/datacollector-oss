@@ -4,7 +4,7 @@
     <title>Customizing the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         /></title>
-    <shortdesc>You can customize the <ph
+    <shortdesc>You can optionally customize the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> by
         configuring the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
@@ -13,17 +13,19 @@
         <context>
             <p><indexterm>Data
                     Collector<indexterm>customizing</indexterm></indexterm><indexterm>sdc.properties
-                        file<indexterm>configuring</indexterm></indexterm>Use the <ph
+                        file<indexterm>configuring</indexterm></indexterm><indexterm>email<indexterm>Data
+                        Collector configuration</indexterm></indexterm>You can use the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> properties file to define properties such as the host name and port number, and
-                SMTP information for sending email alerts. Use a text editor to edit the file. After
-                you edit the file, restart the <ph
+                /> properties file to change the defaults for properties such as the host name and
+                port number. To send email alerts, define the SMTP properties and email account
+                information. </p>
+            <p>Use a text editor to edit the file. After you edit the file, restart the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to enable the changes. </p>
             <p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> properties file, sdc.properties, is located in the following
-                directory:<codeblock>&lt;install-dir>/etc/sdc.properties</codeblock></p>
+                directory:<codeblock>&lt;installdir>/etc/sdc.properties</codeblock></p>
             <p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> properties file includes the following general properties:<table frame="all"
@@ -109,7 +111,7 @@
                                         value.</p></entry>
                             </row>
                             <row>
-                                <entry>ui.online.help.base.url</entry>
+                                <entry>ui.hosted.help.base.url</entry>
                                 <entry>Base URL for the help project hosted at the StreamSets
                                     website. <p>Do not change this value.</p></entry>
                             </row>
@@ -131,7 +133,7 @@
                 </table></p>
             <p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                />  properties file also includes the following properties for sending email
+                /> properties file also includes the following properties for sending email
                     alerts:<table frame="all" rowsep="1" colsep="1" id="table_ulz_3pw_1r">
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1*"/>

@@ -4,8 +4,8 @@
     <title>Creating Additional Users</title>
     <shortdesc>The <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        includes a default login, admin/admin. You can create additional users for increased
-        security.</shortdesc>
+        includes a default login, admin/admin. You can create additional Data Collector users for
+        increased security.</shortdesc>
     <taskbody>
         <context>
             <p><indexterm>users<indexterm>creating additional</indexterm></indexterm>You can use md5
@@ -34,13 +34,13 @@
             <step>
                 <cmd>You can generate the hash by running an md5 program, such as md5 on Mac OS X or
                     md5sum on Linux program. </cmd>
-                <info>For example: <codeblock>echo -n "&lt;password>" | md5sum</codeblock></info>
+                <info>For example: <codeblock>echo -n "&lt;password>" | md5</codeblock></info>
             </step>
             <step>
                 <cmd>To use digest authentication, hash the combination of
                     &lt;username>:&lt;realm>:&lt;password>. </cmd>
                 <info>For example:
-                    <codeblock>echo -n "&lt;username>:&lt;realm>:&lt;password>" | md5sum</codeblock></info>
+                    <codeblock>echo -n "&lt;username>:&lt;realm>:&lt;password>" | md5</codeblock></info>
             </step>
             <step>
                 <cmd>Restart the <ph

@@ -4,8 +4,8 @@
   <title>Pipeline Monitoring</title>
   <shortdesc>When the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs a
-    pipeline, you can view real-time statistics about the pipeline, examine a sampling of the data
-    being processed,  and create rules and alerts. </shortdesc>
+    pipeline, you can view real-time statistics about the pipeline, examine a sample of the data
+    being processed, and create rules and alerts. </shortdesc>
   <conbody>
     <p><indexterm>pipelines<indexterm>monitoring</indexterm></indexterm><indexterm>monitoring
           pipelines<indexterm>overview</indexterm></indexterm>When you access the <ph

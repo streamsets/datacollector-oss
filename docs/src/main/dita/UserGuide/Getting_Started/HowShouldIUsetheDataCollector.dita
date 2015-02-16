@@ -10,9 +10,9 @@
   crucial connection between hops in the stream. </shortdesc>
  <conbody>
   <p>You can use a single <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or an array of
-    <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s to solve
-   your ingest dilemmas.</p>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or an
+      array of <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+      />s to solve your ingest requirements.</p>
   <p>For example, you might install a single <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to stream
       log file data from a web server to HDFS. Or, you might install an array of <ph

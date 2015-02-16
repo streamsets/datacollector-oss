@@ -29,7 +29,9 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Condition</entry>
+                                    <entry>Condition <xref
+                                            href="StreamSelector_Conditions.dita#task_mj5_vjf_xq"
+                                        > <image href="../Graphics/icon_moreInfo.png" scale="11"/></xref></entry>
                                     <entry>Condition to stream data to this output. Click the
                                             <uicontrol>Add</uicontrol> icon to create additional
                                         conditions and corresponding output locations. <p>To define
@@ -51,7 +53,10 @@
                                         </p></entry>
                                 </row>
                                 <row>
-                                    <entry>Unmatched Record Handling</entry>
+                                    <entry>Unmatched Record Handling <xref
+                                        href="StreamSelector_fallback.dita#concept_sn5_5kx_wq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                                id="image_eld_51f_cr"/></xref></entry>
                                     <entry>Determines how to handle records that do not match any
                                         condition: <ul id="ul_uxy_r3f_xq">
                                             <li>Drop Record - Drops the record from the pipeline. </li>

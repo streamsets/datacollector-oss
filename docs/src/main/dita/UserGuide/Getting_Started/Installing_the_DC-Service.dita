@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_pnf_344_1r">
-    <title>Service Installation and Launch</title>
+    <title>Installation and Launch (Service)</title>
     <shortdesc>Install the <ph id="pName-long">Data Collector</ph> on the machine that you want to
         run a pipeline. After installation, you can launch the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -15,7 +15,8 @@
             libexec/sdcd-env.sh script.</context>
         <steps id="steps_wnx_444_1r">
             <step>
-                <cmd> Download StreamSets SDC tarball and extract it to desired location.</cmd>
+                <cmd> Download StreamSets SDC tarball and extract it to desired location, typically
+                    /opt/local/.</cmd>
             </step>
             <step>
                 <cmd>Copy initd/_sdcinitd_prototype to the /etc/init.d/ directory as sdc.</cmd>
@@ -49,9 +50,9 @@
                     sdc:sdc.</cmd>
             </step>
             <step>
-                <cmd>To launch the <ph
+                <cmd>To start the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />, use the following command: </cmd>
+                    /> as a service, use the following command: </cmd>
                 <info>
                     <codeblock>/etc/init.d/sdc start</codeblock>
                 </info>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_oy4_tbf_cr">
+ <title>Sample Conditions for Streams</title>
+ <shortdesc>A Stream Selector condition defines the data that passes to the associated stream. All
+  incoming data that meets the condition passes to the stream. Use the expression language to define
+  conditions. </shortdesc>
+ <conbody>
+  <p>When you define a condition, you typically base it on values in one or more fields in the
+   record. </p>
+  <section>
+   <title>Sample Conditions</title>
+   <p>The following conditions are common scenarios that you might adapt:<dl>
+     <dlentry>
+      <dt><codeph>${str:contains(record:value("/line"), "ERROR")}</codeph></dt>
+      <dd>Checks the data in the Line field for the text, "ERROR". </dd>
+      <dd>If the field contains "ERROR", the record passes to the stream. </dd>
+     </dlentry>
+     <dlentry>
+      <dt><codeph>${str:contains(str:toLower(record:value("/message")), "fatal")</codeph></dt>
+      <dd>Lowercases the string values in the Message field, and then checks the data in the field
+       for "fatal". </dd>
+      <dd>If the field contains "fatal", the record passes to the stream. </dd>
+     </dlentry>
+     <dlentry>
+      <dt><codeph>${record:value("/priority") &gt; 1}</codeph></dt>
+      <dd>If the value in the Priority field is greater than one, the record passes to the stream.
+      </dd>
+     </dlentry>
+     <dlentry>
+      <dt><codeph>${record:value("/AccountID")==null}</codeph></dt>
+      <dd>If the AccountID field is null, the record passes to the stream.</dd>
+     </dlentry>
+    </dl></p>
+  </section>
+ </conbody>
+ <related-links>
+  <link href="ConfiguringExpressionsConditions.dita#concept_ofb_1cm_xq"/>
+  <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
+ </related-links>
+</concept>
