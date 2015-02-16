@@ -347,6 +347,10 @@ public class SpoolDirSource extends BaseSource {
         break;
     }
 
+    if (getContext().isPreview()) {
+      poolingTimeoutSecs = 1;
+    }
+
     DirectorySpooler.Builder builder = DirectorySpooler.builder().setDir(spoolDir).setFilePattern(filePattern).
         setMaxSpoolFiles(maxSpoolFiles).setPostProcessing(postProcessing);
     if (postProcessing == DirectorySpooler.FilePostProcessing.ARCHIVE) {
