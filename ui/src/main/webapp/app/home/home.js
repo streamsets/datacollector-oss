@@ -737,7 +737,8 @@ angular
         //Stage Instance Configuration
         $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
         $scope.detailPaneConfigDefn = _.find($scope.stageLibraries, function (stageLibrary) {
-          return stageLibrary.name === selectedObject.stageName &&
+          return stageLibrary.library === selectedObject.library &&
+            stageLibrary.name === selectedObject.stageName &&
             stageLibrary.version === selectedObject.stageVersion;
         });
       } else if(type === pipelineConstant.PIPELINE){
