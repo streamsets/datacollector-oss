@@ -63,13 +63,13 @@
       </row>
       <row>
        <entry>Empty</entry>
-       <entry>The empty operator is a prefix operation that can be used to determine whether a value
-        is null or empty.</entry>
+       <entry><p><codeph>empty</codeph></p>The <ph>empty</ph> operator is a prefix operation that
+        can be used to determine whether a value is null or empty.</entry>
       </row>
       <row>
        <entry>Conditional</entry>
-       <entry> ?<p>For example, <codeph>A ? B : C</codeph> evaluates B or C depending on the result
-         of the evaluation of A. </p></entry>
+       <entry> ?<p>For example, <codeph>A ? B : C</codeph> states that if A is true, then B. If A is
+         not true, then C. </p></entry>
       </row>
      </tbody>
     </tgroup>

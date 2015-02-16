@@ -2,24 +2,21 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hjk_b4l_vq">
  <title>Referencing Field Names</title>
- <shortdesc>To understand references to fields, think of the record as a directory, and the field
-    reference as the path to the field. <draft-comment author="Loretta">come back to this - natty's
-      comments</draft-comment></shortdesc>
+ <shortdesc>To understand references to fields, think of the record as a root directory, and a
+    reference to a field as the path to the field. </shortdesc>
  <conbody>
   <p><indexterm>processors<indexterm>referencing field names</indexterm></indexterm><indexterm>field
           names<indexterm>referencing</indexterm></indexterm></p>
-    <p>When a record is a line of text, the record acts like root directory with one level of
-      subdirectories. A reference to a field in a text record is simply: <codeph>/&lt;field
-        name></codeph>.  So a field named CITY displays as /CITY. </p>
-    <p>When a record is complex, like a JSON object, the root directory might have a more complex
-      structure. In this case, a reference to a field is the path to the field as follows:
-        <codeph>/&lt;path to field>/&lt;field name></codeph>. So a field in a JSON tweet might
-      display as /users/followers_count. </p>
-    <p><draft-comment author="Loretta">stuff below is old</draft-comment>Stages display a field name
-      with a preceding slash as follows: </p>
+    <p>When a record is a line of text, the fields are one level of subdirectories. A reference to a
+      field in a text record is simply: <codeph>/&lt;field name></codeph>. So a field named CITY
+      displays as /CITY. </p>
+    <p>When a record is complex, like a JSON object, the root object might incude many additional
+      objects. A reference to a field, in this case, is the path to the field: <codeph>/&lt;path to
+        field>/&lt;field name></codeph>. For example, a field in a JSON tweet might display as
+      /users/followers_count. </p>
     <p>After you preview data or select fields using preview data, you can generally select fields
-      from a list. When a list is not available or when you want to define a new field name, type in
-      the field name with a preceding slash.</p>
+      from a list. When a list is not available or when defining a new field name, use the
+      appropriate format to define reference the field. </p>
   <p>For example, when you define an output field for an Expression Evaluator, you can select from a
       list of fields passed from the previous stage. But to create a new field for the results of
       the expression, you enter a field name, such as /Code. </p>

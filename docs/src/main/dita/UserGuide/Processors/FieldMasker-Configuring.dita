@@ -6,17 +6,14 @@
     <taskbody>
         <context/>
         <steps id="steps_ekd_cp4_wq">
-            <step>
-                <cmd><indexterm>Field Masker
-                    processor<indexterm>configuring</indexterm></indexterm></cmd>
-            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
                 <cmd/>
             </step>
             <step id="SelectHashField">
-                <cmd>On the <uicontrol>Mask</uicontrol> tab, configure the following
-                    properties:</cmd>
+                <cmd><indexterm>Field Masker
+                    processor<indexterm>configuring</indexterm></indexterm>On the
+                        <uicontrol>Mask</uicontrol> tab, configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ozv_nnk_wq">
                         <tgroup cols="2">

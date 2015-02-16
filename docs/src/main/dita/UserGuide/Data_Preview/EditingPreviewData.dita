@@ -3,7 +3,8 @@
 <concept id="concept_d24_1rj_br">
  <title>Editing Preview Data</title>
  <shortdesc>You can edit preview data to view how a stage or group of stages processes the changed
-  data. Use this functionality to fine-tune pipeline configuration. </shortdesc>
+  data. Edit preview data to test for data conditions that might not appear in data
+  preview.</shortdesc>
  <conbody>
   <p><indexterm>data preview<indexterm>editing data</indexterm></indexterm>For example, when the
    stage filters integer data based on an expression, you might change the input data to test

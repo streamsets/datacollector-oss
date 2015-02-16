@@ -15,7 +15,7 @@
     </dlentry>
     <dlentry>
      <dt>Field Values</dt>
-     <dd>You can call a field in an expression: ${record:value("/&lt;/fieldname>")}.</dd>
+     <dd>You can call a field in an expression: ${record:value("/&lt;fieldname>")}.</dd>
     </dlentry>
     <dlentry>
      <dt>Datetime Variables</dt>

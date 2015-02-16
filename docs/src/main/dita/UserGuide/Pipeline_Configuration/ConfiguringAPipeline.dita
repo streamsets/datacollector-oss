@@ -40,19 +40,17 @@
                         <strow>
                             <stentry>Delivery Guarantee <xref
                                     href="DeliveryGuarantee.dita#concept_ffz_hhw_kq">
-                                    <image href="../Graphics/icon_moreInfo.png" scale="12"
-                                        alt="more info"/></xref></stentry>
+                                    <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                       /></xref></stentry>
                             <stentry>Determines how the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                 /> handles data after an unexpected event causes the pipeline to
-                                stop running. Select one of the following options:<ul
-                                    id="ul_b4v_51m_sq">
-                                    <li><uicontrol>At least once</uicontrol>. Ensures all data is
-                                        processed and written to the destination. Might result in
-                                        duplicate rows.</li>
-                                    <li><uicontrol>At most once</uicontrol>. Ensures that data is
-                                        not reprocessed to prevent writing duplicate data to the
-                                        destination. Might result in missing rows.</li>
+                                stop running:<ul id="ul_b4v_51m_sq">
+                                    <li>At Least Once - Ensures all data is processed and written to
+                                        the destination. Might result in duplicate rows.</li>
+                                    <li>At Most Once - Ensures that data is not reprocessed to
+                                        prevent writing duplicate data to the destination. Might
+                                        result in missing rows.</li>
                                 </ul><p>Default is <uicontrol>At least
                                 once</uicontrol>.</p></stentry>
                         </strow>
@@ -75,14 +73,14 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Error Record Handling</entry>
+                                    <entry>Error Record Handling <xref
+                                        href="ErrorHandling.dita#concept_pm4_txm_vq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"/></xref></entry>
                                     <entry>Determines how to handle records that cannot be processed
                                         as expected. Use one of the following options:<ul
                                             id="ul_ayr_y22_br">
-                                            <li><uicontrol>Trash</uicontrol> - Saves error records
-                                                to a file.</li>
-                                            <li><uicontrol>Records to File</uicontrol> - Discards
-                                                error records.</li>
+                                            <li>Trash - Saves error records to a file.</li>
+                                            <li>Records to File - Discards error records.</li>
                                         </ul></entry>
                                 </row>
                             </tbody>
@@ -136,14 +134,14 @@
                         href="../Origins/Origins_overview.dita#concept_hpr_twm_jq"/>.</info>
             </step>
             <step>
-                <cmd>Use the <uicontrol>Stage Library</uicontrol> button to add the next stage that
+                <cmd>Use the <uicontrol>Stage Library</uicontrol> icon to add the next stage that
                     you want to use, connect the origin to the new stage, and configure the new
                     stage.</cmd>
                 <info>For configuration details about processors, see <xref
                         href="../Processors/Processors_overview.dita#concept_hpr_twm_jq"/>.<p>For
                         configuration details about destinations, see <xref
                             href="../Destinations/Destinations_overview.dita#concept_hpr_twm_jq"
-                        />..</p></info>
+                        />.</p></info>
             </step>
             <step>
                 <cmd>Set additional stages as necessary.</cmd>

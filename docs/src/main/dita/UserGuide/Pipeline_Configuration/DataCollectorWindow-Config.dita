@@ -30,40 +30,48 @@
           </row>
           <row>
             <entry>2</entry>
+            <entry>Stage and Pipeline list</entry>
+            <entry>Lists the stages in the pipeline. Use to select a stage to edit. You can also
+              select the stage in the canvas.</entry>
+          </row>
+          <row>
+            <entry>3</entry>
             <entry>Properties panel</entry>
             <entry>Displays the properties of the pipeline or selected stage when you configure a
               pipeline. </entry>
           </row>
           <row>
-            <entry>3</entry>
-            <entry>Stage list</entry>
-            <entry>Displays the name of the selected stage. To configure properties for a different
-              stage, select the stage from the list. Or, click the stage in the pipeline.</entry>
-          </row>
-          <row>
             <entry>4</entry>
-            <entry>Stage and Pipeline list</entry>
-            <entry>Lists the stages in the pipeline. Use to select stage to edit. You can also
-              select the pipeline.</entry>
+            <entry>Stage library</entry>
+            <entry>List of available stages. Use to add stages to the pipeline. You can drag a stage
+              to a location on canvas or click a stage to add it to the end of the pipeline.<p>You
+                can view all stages, stages by type, or stages by library.</p></entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon_AddStage.png" id="image_kgj_44z_sq" scale="60"
+            <entry><image href="../Graphics/icon-StageLibrary.png" id="image_ftx_sjb_cr" scale="75"
               /></entry>
-            <entry>Add Stage button</entry>
-            <entry>Lists of available stages. Use to add stages to the pipeline.</entry>
+            <entry>Stage Library icon</entry>
+            <entry>Toggles the display of the stage library.</entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" scale="60"
+            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" scale="75"
               /></entry>
-            <entry>Issues button</entry>
+            <entry>Issues icon</entry>
             <entry>Displays the number of validation issues in the pipeline. Click to view a
               detailed list of issues.</entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon_error.png" id="image_dkw_q4z_sq" scale="60"
+            <entry><image href="../Graphics/icon_DataPreview.png" id="image_tyf_xkb_cr" scale="75"
               /></entry>
-            <entry>Error icon</entry>
-            <entry>Indicates one or more errors in stage configuration.</entry>
+            <entry>Preview icon</entry>
+            <entry>Starts a data preview.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon_More.png" id="image_hnh_wkb_cr" scale="75"
+              /></entry>
+            <entry>More icon</entry>
+            <entry>Provides additional actions for the pipeline. Use to reset the origin for the
+              pipeline.</entry>
           </row>
         </tbody>
       </tgroup>

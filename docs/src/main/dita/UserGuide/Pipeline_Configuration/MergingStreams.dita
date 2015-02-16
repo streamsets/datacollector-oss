@@ -14,7 +14,7 @@
   <p>The data from stream 2 of  Routes Data and all data from Replaces Null Values pass to
    Field-Level Expressions for further processing, but in no particular order and with no record
    merging.</p>
-  <p><image href="../Graphics/MergingStreams.png" id="image_kxc_jty_5q" scale="80"/></p>
+  <p><image href="../Graphics/MergingStreams.png" id="image_kxc_jty_5q" scale="60"/></p>
   <note>The pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
    destinations, configure pipeline logic to remove duplicate data or to prevent the generation of
    duplicate data.</note>

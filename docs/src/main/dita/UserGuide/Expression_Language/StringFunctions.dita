@@ -111,14 +111,14 @@
      <dd>For example, ${str:startsWith("Data Collector", "Data")} returns: true.</dd>
     </dlentry>
     <dlentry>
-     <dt>${str:endWith("&lt;string>", "&lt;subset>")} </dt>
+     <dt>${str:endsWith("&lt;string>", "&lt;subset>")} </dt>
      <dd>Returns true or false based on whether the string ends with the configured subset of
       characters.</dd>
      <dd>Uses the following arguments:<ul id="ul_tf5_y4k_br">
        <li>string - The string to evaluate.</li>
        <li>subset - The subset of characters to look for.</li>
       </ul></dd>
-     <dd>For example, ${str:endWith("32403-1001", "1001")} returns: true.</dd>
+     <dd>For example, ${str:endsWith("32403-1001", "1001")} returns: true.</dd>
     </dlentry>
    </dl>
   </p>

@@ -6,17 +6,14 @@
     <taskbody>
         <context/>
         <steps id="steps_upj_std_br">
-            <step>
-                <cmd><indexterm>Kafka Producer
-                        destination<indexterm>configuring</indexterm></indexterm></cmd>
-            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step1"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step2">
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <wintitle>Kafka</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd><indexterm>Kafka Producer
+                        destination<indexterm>configuring</indexterm></indexterm>On the
+                        <wintitle>Kafka</wintitle> tab, configure the following properties:</cmd>
                 <info>
                     <p>
                         <table frame="all" rowsep="1" colsep="1" id="table_wp4_xtd_br">

@@ -7,9 +7,13 @@
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../Pipeline_Configuration/DataCollectorWindow-Config.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+  <topicref href="../Pipeline_Configuration/ReplicatingStreams.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   <topicref href="../Pipeline_Configuration/MergingStreams.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-  <topicref href="../Pipeline_Configuration/ReplicatingStreams.dita"/>
   <topicref href="../Pipeline_Configuration/ErrorHandling.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Pipeline_Configuration/SendToError.dita"/>
@@ -17,8 +21,10 @@
   </topicref>
   <topicref href="../Pipeline_Configuration/DeliveryGuarantee.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-  <topicref href="../Pipeline_Configuration/RequiredFields.dita"/>
-  <topicref href="../Pipeline_Configuration/SDCRecordFormat.dita"/>
+  <topicref href="../Pipeline_Configuration/RequiredFields.dita">
+   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+  <topicref href="../Pipeline_Configuration/SDCRecordFormat.dita">
+   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../Pipeline_Configuration/ConfiguringAPipeline.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
  </topicref>

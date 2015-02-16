@@ -50,26 +50,23 @@
  <h2 class="title topictitle2">Referencing Field Names</h2>
 
  
- <div class="body conbody"><p class="shortdesc">To understand references to fields, think of the record as a directory, and the field
-    reference as the path to the field. </p>
+ <div class="body conbody"><p class="shortdesc">To understand references to fields, think of the record as a root directory, and a
+    reference to a field as the path to the field. </p>
 
   <p class="p"></p>
 
-    <p class="p">When a record is a line of text, the record acts like root directory with one level of
-      subdirectories. A reference to a field in a text record is simply: <samp class="ph codeph">/&lt;field
-        name&gt;</samp>.  So a field named CITY displays as /CITY. </p>
+    <p class="p">When a record is a line of text, the fields are one level of subdirectories. A reference to a
+      field in a text record is simply: <samp class="ph codeph">/&lt;field name&gt;</samp>. So a field named CITY
+      displays as /CITY. </p>
 
-    <p class="p">When a record is complex, like a JSON object, the root directory might have a more complex
-      structure. In this case, a reference to a field is the path to the field as follows:
-        <samp class="ph codeph">/&lt;path to field&gt;/&lt;field name&gt;</samp>. So a field in a JSON tweet might
-      display as /users/followers_count. </p>
-
-    <p class="p">Stages display a field name
-      with a preceding slash as follows: </p>
+    <p class="p">When a record is complex, like a JSON object, the root object might incude many additional
+      objects. A reference to a field, in this case, is the path to the field: <samp class="ph codeph">/&lt;path to
+        field&gt;/&lt;field name&gt;</samp>. For example, a field in a JSON tweet might display as
+      /users/followers_count. </p>
 
     <p class="p">After you preview data or select fields using preview data, you can generally select fields
-      from a list. When a list is not available or when you want to define a new field name, type in
-      the field name with a preceding slash.</p>
+      from a list. When a list is not available or when defining a new field name, use the
+      appropriate format to define reference the field. </p>
 
   <p class="p">For example, when you define an output field for an Expression Evaluator, you can select from a
       list of fields passed from the previous stage. But to create a new field for the results of
