@@ -27,10 +27,8 @@
     "shelljs": "^0.2.6"
   },
   "scripts": {
-    "prestart": "npm install",
-    "start": "node ./src/main/webapp/server.js",
     "pretest": "npm install",
-    "test": "karma start ./src/main/webapp/build/karma-conf.js",
+    "test": "karma start ./target/dist/karma-conf.js",
     "test-single-run": "karma start karma-conf.tpl.js  --single-run",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
