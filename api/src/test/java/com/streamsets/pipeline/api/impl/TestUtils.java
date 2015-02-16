@@ -42,4 +42,12 @@ public class TestUtils {
     Assert.assertNotNull(Utils.parse("20141022T13:30Z"));
   }
 
+  @Test
+  public void testIntPadding() {
+    Assert.assertEquals("1", Utils.intToPaddedString(1, 1));
+    Assert.assertEquals("001", Utils.intToPaddedString(1, 3));
+    Assert.assertEquals("001", Utils.intToPaddedString(1, 3));
+    Assert.assertEquals("100", Utils.intToPaddedString(100, 2));
+  }
+
 }

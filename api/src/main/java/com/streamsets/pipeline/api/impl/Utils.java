@@ -5,8 +5,6 @@
  */
 package com.streamsets.pipeline.api.impl;
 
-import org.slf4j.helpers.MessageFormatter;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,22 +20,22 @@ public final class Utils {
   Utils() {
   }
 
-  public static <T> T checkNotNull(T value, String varName) {
+  public static <T> T checkNotNull(T value, Object varName) {
     if (value == null) {
       throw new NullPointerException(format("{} cannot be null", varName));
     }
     return value;
   }
 
-  public static void checkArgument(boolean expression, String msg) {
+  public static void checkArgument(boolean expression, Object msg) {
     if (!expression) {
-      throw new IllegalArgumentException(msg);
+      throw new IllegalArgumentException((msg != null) ? msg.toString() : "");
     }
   }
 
-  public static void checkState(boolean expression, String msg) {
+  public static void checkState(boolean expression, Object msg) {
     if (!expression) {
-      throw new IllegalStateException(msg);
+      throw new IllegalStateException((msg != null) ? msg.toString() : "");
     }
   }
 
@@ -70,9 +68,33 @@ public final class Utils {
     StringBuilder sb = new StringBuilder(template.length() * 2);
     for (int i = 0; i < templateArr.length; i++) {
       sb.append(templateArr[i]);
-      if (i < templateArr.length - 1) {
-        sb.append((i < args.length) ? args[i] : TOKEN);
+      if (args != null) {
+        if (i < templateArr.length - 1) {
+          sb.append((i < args.length) ? args[i] : TOKEN);
+        }
       }
+    }
+    return sb.toString();
+  }
+
+  //format with lazy-eval
+  public static Object formatL(final String template, final Object... args) {
+    return new Object() {
+      @Override
+      public String toString() {
+        return format(template, args);
+      }
+    };
+  }
+
+  private static final String PADDING = "000000000000000000000000000000000000";
+
+  public static String intToPaddedString(int value, int padding) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(value);
+    padding = padding - sb.length();
+    if (padding > 0) {
+      sb.insert(0, PADDING.subSequence(0, padding));
     }
     return sb.toString();
   }

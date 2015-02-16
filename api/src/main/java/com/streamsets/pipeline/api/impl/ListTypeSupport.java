@@ -43,8 +43,9 @@ public class ListTypeSupport extends TypeSupport<List> {
 
   private List<Field> deepCopy(List<Field> list) {
     List<Field> copy = new ArrayList<>(list.size());
-    for (Field field : list) {
-      Utils.checkNotNull(field, "List cannot have null elements");
+    for (int i = 0; i < list.size(); i++) {
+      Field field = list.get(i);
+      Utils.checkNotNull(field, Utils.formatL("List has null element at '{}' pos", i));
       copy.add(field.clone());
     }
     return copy;

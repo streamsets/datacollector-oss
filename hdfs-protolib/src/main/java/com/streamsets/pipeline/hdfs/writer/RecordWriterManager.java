@@ -90,14 +90,14 @@ public class RecordWriterManager {
     Calendar calendar = Calendar.getInstance(timeZone);
     calendar.setTime(date);
     Map<String, Object> map = new HashMap<>();
-    String year = String.format("%04d", calendar.get(Calendar.YEAR));
+    String year = Utils.intToPaddedString(calendar.get(Calendar.YEAR), 4);
     map.put(CONST_YYYY, year);
     map.put(CONST_YY, year.substring(year.length() - 2));
-    map.put(CONST_MM, String.format("%02d", calendar.get(Calendar.MONTH) + 1));
-    map.put(CONST_DD, String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH)));
-    map.put(CONST_hh, String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY)));
-    map.put(CONST_mm, String.format("%02d", calendar.get(Calendar.MINUTE)));
-    map.put(CONST_ss, String.format("%02d", calendar.get(Calendar.SECOND)));
+    map.put(CONST_MM, Utils.intToPaddedString(calendar.get(Calendar.MONTH) + 1, 2));
+    map.put(CONST_DD, Utils.intToPaddedString(calendar.get(Calendar.DAY_OF_MONTH), 2));
+    map.put(CONST_hh, Utils.intToPaddedString(calendar.get(Calendar.HOUR_OF_DAY), 2));
+    map.put(CONST_mm, Utils.intToPaddedString(calendar.get(Calendar.MINUTE), 2));
+    map.put(CONST_ss, Utils.intToPaddedString(calendar.get(Calendar.SECOND), 2));
     return map;
   }
 
