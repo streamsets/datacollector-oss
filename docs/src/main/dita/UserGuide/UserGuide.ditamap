@@ -40,7 +40,6 @@
     <chapter href="Chapter_Maps/Troubleshooting.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Glossary.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/ExpressionLanguage.ditamap" format="ditamap" outputclass=""/>
-    <chapter href="Chapter_Maps/DataCollectorExtensions.ditamap" format="ditamap"/>
     <chapter href="Reusable_Content/ReusableSteps.dita" collection-type="unordered" processing-role="resource-only"></chapter>
     <chapter href="Reusable_Content/ReusablePhrases.dita" collection-type="unordered"
         processing-role="resource-only"/>

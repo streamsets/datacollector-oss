@@ -7,14 +7,14 @@
         including Kafka and ZooKeeper details. For delimited and JSON data, configure additional
         related properties. You can optionally add custom Kafka properties. </shortdesc>
     <taskbody>
-        <context><indexterm>Kafka Consumer
-            origin<indexterm>configuring</indexterm></indexterm></context>
+        <context/>
         <steps id="steps_f3x_nhw_yq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc">
                 <cmd/>
             </step><step>
-                <cmd>On the <uicontrol>Kafka</uicontrol> tab, configure the following
-                    properties:</cmd>
+                <cmd><indexterm>Kafka Consumer
+                    origin<indexterm>configuring</indexterm></indexterm>On the
+                        <uicontrol>Kafka</uicontrol> tab, configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_v4j_qhw_yq">
                         <tgroup cols="2">

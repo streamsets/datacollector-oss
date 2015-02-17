@@ -17,6 +17,10 @@
    <topicref href="../Getting_Started/Requirements.dita"/>
    <topicref href="../Getting_Started/Installing_the_DC.dita"/>
    <topicref href="../Getting_Started/Installing_the_DC-Service.dita"/>
+   <topicref href="../Getting_Started/InstallingAdditionalStages.dita">
+    <topicref href="../Getting_Started/InstallStage-DownloadUntar.dita"/>
+    <topicref href="../Getting_Started/InstallStage-UntarCopy.dita"/>
+   </topicref>
    <topicref href="../Getting_Started/CreatingAdditionalUsers.dita"/>
    <topicref href="../Getting_Started/CustomizingDataCollector.dita"/>
   </topicref>

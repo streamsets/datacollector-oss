@@ -9,10 +9,8 @@
         <context/>
         <steps id="steps_dmf_l3k_br">
             <step>
-                <cmd><indexterm>JVM metrics<indexterm>viewing</indexterm></indexterm></cmd>
-            </step>
-            <step>
-                <cmd>To view JVM metrics, click <menucascade>
+                <cmd><indexterm>JVM metrics<indexterm>viewing</indexterm></indexterm>To view JVM
+                    metrics, click <menucascade>
                         <uicontrol>Administration</uicontrol>
                         <uicontrol>JVM Metrics</uicontrol>
                     </menucascade>.</cmd>

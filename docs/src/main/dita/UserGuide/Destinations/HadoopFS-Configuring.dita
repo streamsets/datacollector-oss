@@ -4,16 +4,16 @@
     <title>Configuring a Hadoop FS Destination</title>
     <shortdesc>Configure a Hadoop FS destination to write data to a Hadoop file system.</shortdesc>
     <taskbody>
-        <context><indexterm>Hadoop FS
-            destination<indexterm>configuring</indexterm></indexterm></context>
+        <context/>
         <steps id="steps_ljw_44d_br">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step1"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step2">
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <wintitle>Hadoop FS</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd><indexterm>Hadoop FS
+                    destination<indexterm>configuring</indexterm></indexterm>On the <wintitle>Hadoop
+                        FS</wintitle> tab, configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_rst_t4d_br">
                         <tgroup cols="2">
