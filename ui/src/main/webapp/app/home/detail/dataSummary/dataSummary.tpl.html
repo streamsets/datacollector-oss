@@ -75,7 +75,7 @@
 
           <!-- Meter -->
           <div class="col-md-6 col-lg-6"
-               ng-if="dataRuleDefn.meterEnabled && count"
+               ng-if="dataRuleDefn.meterEnabled"
                ng-controller="DataSummaryMeterController">
 
             <ul class="properties">
@@ -95,10 +95,10 @@
               showValues="true"
               showLegend="true"
               yaxislabel="{{'home.detailPane.recordsPerSecond' | translate}}"
-              yaxislabeldistance="45"
+              yaxislabeldistance="30"
               tooltips="true"
               tooltipcontent="getTooltipContent()"
-              margin="{left:60,top:10,bottom:40,right:20}">
+              margin="{left:65,top:10,bottom:40,right:20}">
             </nvd3-discrete-bar-chart>
 
           </div>
