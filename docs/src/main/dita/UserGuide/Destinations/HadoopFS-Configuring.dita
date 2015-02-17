@@ -88,16 +88,26 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Files Prefix</entry>
-                                    <entry>Prefix to use for output files. Use when writing to a
-                                        directory that receives files from other sources.</entry>
-                                </row>
-                                <row>
                                     <entry>File Type</entry>
                                     <entry>Output file type:<ul id="ul_lgf_j3g_br">
                                             <li>Text files</li>
                                             <li>Sequence files</li>
                                         </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Determines how to handle error records:<ul
+                                            id="ul_o2f_4q3_cr">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Files Prefix</entry>
+                                    <entry>Prefix to use for output files. Use when writing to a
+                                        directory that receives files from other sources.</entry>
                                 </row>
                                 <row>
                                     <entry>Directory Template <xref
@@ -165,16 +175,6 @@
                                         compression codec:<ul id="ul_etm_1lg_br">
                                             <li>Block Compression</li>
                                             <li>Record Compression</li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>On Record Error</entry>
-                                    <entry>Determines how to handle error records:<ul
-                                            id="ul_o2f_4q3_cr">
-                                            <li>Discard - Discards the record.</li>
-                                            <li>Send to Error - Sends the record to the pipeline for
-                                                error handling.</li>
-                                            <li>Stop Pipeline - Stops the pipeline.</li>
                                         </ul></entry>
                                 </row>
                             </tbody>

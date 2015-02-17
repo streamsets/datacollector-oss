@@ -22,7 +22,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.08*"/>
                             <thead>
                                 <row>
-                                    <entry>JSON Parsing Property</entry>
+                                    <entry>JSON Parser Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>

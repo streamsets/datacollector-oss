@@ -48,20 +48,20 @@
                 can view all stages, stages by type, or stages by library.</p></entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon-StageLibrary.png" id="image_ftx_sjb_cr" scale="75"
+            <entry><image href="../Graphics/icon-StageLibrary.png" id="image_ftx_sjb_cr" scale="70"
               /></entry>
             <entry>Stage Library icon</entry>
             <entry>Toggles the display of the stage library.</entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" scale="75"
+            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" scale="70"
               /></entry>
             <entry>Issues icon</entry>
             <entry>Displays the number of validation issues in the pipeline. Click to view a
               detailed list of issues.</entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon_DataPreview.png" id="image_tyf_xkb_cr" scale="70"
+            <entry><image href="../Graphics/icon_DataPreview.png" id="image_tyf_xkb_cr" scale="65"
               /></entry>
             <entry>Preview icon</entry>
             <entry>Starts a data preview.</entry>
@@ -74,7 +74,7 @@
               pipeline.</entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon_link.png" id="image_fvp_4r3_cr" scale="70"
+            <entry><image href="../Graphics/icon_link.png" id="image_fvp_4r3_cr" scale="65"
               /></entry>
             <entry>Stream link icon</entry>
             <entry>Indicates the flow of data through the pipeline. Select to configure data rules

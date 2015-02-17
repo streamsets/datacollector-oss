@@ -36,9 +36,6 @@
             <step>
                 <cmd>On the <wintitle>Get Started</wintitle> page, click <uicontrol>Create
                         Pipeline</uicontrol>.</cmd>
-                <stepresult>The <wintitle>New Pipeline </wintitle>window appears.<p><image
-                            href="../Graphics/NewPipelineDialog.png" id="image_uzw_syf_tq"
-                            scale="50"/></p></stepresult>
             </step>
             <step>
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a name for the pipeline,

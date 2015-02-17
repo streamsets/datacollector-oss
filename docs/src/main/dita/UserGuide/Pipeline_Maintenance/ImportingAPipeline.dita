@@ -21,9 +21,8 @@
                     optional description, and click <uicontrol>Save</uicontrol>.</cmd>
             </step>
             <step>
-                <cmd>In the Pipeline library, click the <uicontrol>Actions</uicontrol> icon (<image
-                        href="../Graphics/icon_PipelineOptions.png" id="image_jgq_bz3_cr" scale="30"
-                    />) for the new pipeline, and then click <uicontrol>Import</uicontrol>.</cmd>
+                <cmd>In the Pipeline library, click the <uicontrol>Actions</uicontrol> icon for the
+                    new pipeline, and then click <uicontrol>Import</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>In the <wintitle>Import Pipeline</wintitle> window, browse to locate the

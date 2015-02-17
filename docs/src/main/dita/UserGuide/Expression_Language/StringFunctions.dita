@@ -31,8 +31,8 @@
      <dd>Uses the following argument:<ul id="ul_cpm_fnk_br">
        <li>string - The string to return without additional white space characters.</li>
       </ul></dd>
-     <dd>For example, ${str:trim("record:value("/Address")} trims leading and trailing white space
-      characters from the /Address field.</dd>
+     <dd>For example, ${str:trim(record:value("/Address"))} trims leading and trailing white space
+            characters from the /Address field.</dd>
     </dlentry>
     <dlentry>
      <dt>${str:toUpper("string>")} </dt>

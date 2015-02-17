@@ -21,7 +21,7 @@
                             <colspec colname="c2" colnum="2" colwidth="1.93*"/>
                             <thead>
                                 <row>
-                                    <entry>Local File System Property</entry>
+                                    <entry>SDC Record Files Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -38,8 +38,8 @@
                                 <row>
                                     <entry>Max File Size (MB)</entry>
                                     <entry>Maximum size for output files. Upon reaching the limit,
-                                        SDC Record Files creates a new output file. Use 0 to opt out
-                                        of this property. </entry>
+                                        SDC Record Files creates a new output file. <p>Use 0 to opt
+                                            out of this property. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

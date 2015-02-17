@@ -21,6 +21,6 @@
   <p>For example, when you define an output field for an Expression Evaluator, you can select from a
       list of fields passed from the previous stage. But to create a new field for the results of
       the expression, you enter a field name, such as /Code. </p>
-  <p><image href="../Graphics/FieldName-referencing.png" id="image_gxw_d2m_xq" scale="60"/></p>
+  <p><image href="../Graphics/FieldName-referencing.png" id="image_gxw_d2m_xq" scale="50"/></p>
  </conbody>
 </concept>

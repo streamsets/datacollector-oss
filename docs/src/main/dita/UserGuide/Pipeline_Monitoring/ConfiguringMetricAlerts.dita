@@ -36,10 +36,11 @@
                                             example, "Over 1000 pipeline error records."</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Metric Type  <xref
-                                            href="MetricTypes.dita#concept_y4d_tcw_1r"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="11"
-                                                id="image_ul3_5bj_cr"/></xref></entry>
+                                    <entry>Metric Type <xref
+                                            href="MetricTypes.dita#concept_y4d_tcw_1r"> <image
+                                                href="../Graphics/icon_moreInfo.png"
+                                                scale="11"></image></xref>
+                                    </entry>
                                     <entry>Type of metric information the alert is based on:<ul
                                             id="ul_fwn_zbk_br">
                                             <li>Counter</li>

@@ -10,7 +10,7 @@
   <p>The following image shows the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
       Monitor mode:</p>
-    <p><image href="../Graphics/DCConsole_Monitor.png" id="image_d3x_tf4_tq" scale="65"/></p>
+    <p><image href="../Graphics/DCConsole_Monitor.png" id="image_d3x_tf4_tq" scale="50"/></p>
   <simpletable frame="all" relcolwidth="1.0* 1.46* 3.66*" id="simpletable_jb5_1k4_tq">
    <sthead>
     <stentry>Area / Icon</stentry>
@@ -39,14 +39,14 @@
           view.</stentry>
    </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_MonDataAlert.png" id="image_twl_st5_br" scale="70"
+        <stentry><image href="../Graphics/icon_MonDataAlert.png" id="image_twl_st5_br" scale="60"
           /></stentry>
         <stentry>Monitoring Stream</stentry>
         <stentry>Select to create a data rule or alert.</stentry>
       </strow>
    <strow>
-    <stentry><image href="../Graphics/icon_MonInspect.png" id="image_gz1_rk4_tq" scale="80"
-     /></stentry>
+    <stentry><image href="../Graphics/icon_MonInspect.png" id="image_gz1_rk4_tq" scale="70"
+          /></stentry>
     <stentry>Inspect Data icon</stentry>
     <stentry>Indicates when alerts are configured on the stream:<ul id="ul_is1_tq5_br">
             <li>Gray indicates no data alerts are activated.</li>

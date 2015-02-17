@@ -11,12 +11,12 @@
       image shows the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
       during data preview mode:</p>
-  <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="65"/><table
+  <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="50"/><table
         frame="all" rowsep="1" colsep="1" id="table_nrm_fvt_sq">
         <tgroup cols="3">
-          <colspec colname="c1" colnum="1" colwidth="1.1*"/>
-          <colspec colname="c2" colnum="2" colwidth="1*"/>
-          <colspec colname="c3" colnum="3" colwidth="3.72*"/>
+          <colspec colname="c1" colnum="1" colwidth="1*"/>
+          <colspec colname="c2" colnum="2" colwidth="1.83*"/>
+          <colspec colname="c3" colnum="3" colwidth="4.08*"/>
           <thead>
             <row>
               <entry>Area / Icon</entry>
@@ -49,25 +49,28 @@
               <entry>Moves the preview to the next stage.</entry>
             </row>
             <row>
-              <entry><image href="../Graphics/icon_PrevRefresh.png" id="image_cfn_5mr_br"/></entry>
+              <entry><image href="../Graphics/icon_PrevRefresh.png" id="image_cfn_5mr_br" scale="95"
+                /></entry>
               <entry>Refresh Preview icon</entry>
               <entry>Refreshes the preview with a fresh set of data from the origin.</entry>
             </row>
             <row>
-              <entry><image href="../Graphics/icon_PreviewRerun.png" id="image_nzs_2nr_br"/></entry>
+              <entry><image href="../Graphics/icon_PreviewRerun.png" id="image_nzs_2nr_br"
+                  scale="95"/></entry>
               <entry>Run Preview with Changes icon</entry>
               <entry>Runs the data preview using changed data. Use to see how edited data is
                 processed by the pipeline. </entry>
             </row>
             <row>
               <entry><image href="../Graphics/icon_PrevRevertChanges.png" id="image_xnr_f4r_br"
-                /></entry>
+                  scale="95"/></entry>
               <entry>Revert Changes icon</entry>
               <entry>Reverts all changes to preview data and returns the preview to the origin.
               </entry>
             </row>
             <row>
-              <entry><image href="../Graphics/icon_PrevClose.png" id="image_cjl_jmr_br"/></entry>
+              <entry><image href="../Graphics/icon_PrevClose.png" id="image_cjl_jmr_br" scale="85"
+                /></entry>
               <entry>Close Preview icon</entry>
               <entry>Closes the data preview.</entry>
             </row>

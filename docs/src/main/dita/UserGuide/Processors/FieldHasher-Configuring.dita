@@ -21,7 +21,7 @@
                             <colspec colname="c2" colnum="2" colwidth="1.99*"/>
                             <thead>
                                 <row>
-                                    <entry>Field Hasher Configuration Property</entry>
+                                    <entry>Field Hasher Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>

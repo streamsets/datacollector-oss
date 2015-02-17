@@ -20,7 +20,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_tm4_vck_5q">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.51*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.9*"/>
                             <thead>
                                 <row>
                                     <entry>File Property</entry>
@@ -29,10 +29,10 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format 
-                              <xref href="Directory-DataFormat.dita#concept_gz5_dqw_yq">
-                                  <image href="../Graphics/icon_moreInfo.png" scale="11"/>
-                                      </xref></entry>
+                                    <entry>Data Format <xref
+                                            href="Directory-DataFormat.dita#concept_gz5_dqw_yq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"/>
+                                        </xref></entry>
                                     <entry>Data format for source files. Use one of the following
                                             formats:<ul id="ul_y1t_wql_5q">
                                             <li>Text</li>

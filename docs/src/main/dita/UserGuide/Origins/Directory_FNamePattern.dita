@@ -8,7 +8,7 @@
  <conbody>
   <p><indexterm>File Name Pattern<indexterm>Directory
             property</indexterm></indexterm><indexterm>Directory origin<indexterm>File Name
-               Pattern</indexterm></indexterm></p>
-    <p>For example, if you use *.json, Directory reads all files with the .json extension. </p>
+               Pattern</indexterm></indexterm>For example, if you use *.json, Directory reads all
+         files with the .json extension. </p>
  </conbody>
 </concept>

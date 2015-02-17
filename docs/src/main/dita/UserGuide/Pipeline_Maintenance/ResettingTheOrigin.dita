@@ -25,8 +25,7 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>To reset the origin, click the <uicontrol>More</uicontrol> icon (<image
-                        href="../Graphics/icon_More.png" id="image_elh_yxg_cr" scale="65"/>).</cmd>
+                <cmd>To reset the origin, click the <uicontrol>More</uicontrol> icon.</cmd>
             </step>
             <step>
                 <cmd>Click <uicontrol>Reset Origin</uicontrol>.</cmd>
