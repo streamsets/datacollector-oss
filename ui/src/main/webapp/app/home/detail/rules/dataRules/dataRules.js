@@ -66,10 +66,20 @@ angular
        * Remove Callback function
        *
        * @param ruleList
-       * @param $index
+       * @param rule
        */
-      removeRule: function(ruleList, $index) {
-        ruleList.splice($index, 1);
+      removeRule: function(ruleList, rule) {
+        var index;
+
+        angular.forEach(ruleList, function(r, ind) {
+          if(r.id === rule.id) {
+            index = ind;
+          }
+        });
+
+        if(index !== undefined) {
+          ruleList.splice(index, 1);
+        }
       }
     });
 
