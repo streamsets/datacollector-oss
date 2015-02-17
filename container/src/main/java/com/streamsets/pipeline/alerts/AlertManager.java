@@ -39,7 +39,7 @@ public class AlertManager {
   private static final String PIPELINE_NAME_KEY = "PIPELINE_NAME_KEY";
   private static final String CONDITION_KEY = "CONDITION_KEY";
   private static final String URL_KEY = "URL_KEY";
-  private static final String DATE_MASK = "";
+  private static final String DATE_MASK = "yyyy-MM-dd HH:mm:ss";
 
   private final String pipelineName;
   private final String revision;
@@ -67,12 +67,12 @@ public class AlertManager {
       if(ruleDefinition.isSendEmail()) {
 
         String emailBody = new String(EMAIL_TEMPLATE);
-        emailBody.replace(ALERT_VALUE_KEY, String.valueOf(value));
         java.text.DateFormat dateTimeFormat = new SimpleDateFormat(DATE_MASK, Locale.ENGLISH);
-        emailBody.replace(TIME_KEY, dateTimeFormat.format(new Date((long)alertResponse.get(TIMESTAMP))));
-        emailBody.replace(PIPELINE_NAME_KEY, pipelineName);
-        emailBody.replace(CONDITION_KEY, ruleDefinition.getCondition());
-        emailBody.replace(URL_KEY, runtimeInfo.getBaseHttpUrl());
+        emailBody = emailBody.replace(ALERT_VALUE_KEY, String.valueOf(value))
+          .replace(TIME_KEY, dateTimeFormat.format(new Date((Long) alertResponse.get(TIMESTAMP))))
+          .replace(PIPELINE_NAME_KEY, pipelineName)
+          .replace(CONDITION_KEY, ruleDefinition.getCondition())
+          .replace(URL_KEY, runtimeInfo.getBaseHttpUrl());
 
         if(emailSender == null) {
           LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
