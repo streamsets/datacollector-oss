@@ -78,9 +78,8 @@ angular
         });
     };
 
-    $scope.$on('onSelectionChange', function(event, options) {
-      var selectedObject = options.selectedObject,
-        type = options.type,
+    var updateErrorsTabData = function(options) {
+      var type = options.type,
         pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig;
       if($scope.isPipelineRunning && pipelineMetrics && pipelineMetrics.meters) {
@@ -112,6 +111,16 @@ angular
           $scope.errorMessages = [];
         }
       }
+    };
+
+    if($scope.selectedType) {
+      updateErrorsTabData({
+        type: $scope.selectedType
+      });
+    }
+
+    $scope.$on('onSelectionChange', function(event, options) {
+      updateErrorsTabData(options);
     });
 
 
