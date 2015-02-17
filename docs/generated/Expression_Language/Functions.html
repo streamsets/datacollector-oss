@@ -40,7 +40,7 @@
 
   <dl class="dl">
    
-    <dt class="dt dlterm">${record:type("&lt;field-path&gt;')}</dt>
+    <dt class="dt dlterm">${record:type('&lt;field-path&gt;')}</dt>
 
     <dd class="dd">Returns the data type of a field. </dd>
 
@@ -267,7 +267,7 @@
       </ul>
 </dd>
 
-     <dd class="dd">For example, ${str:toLower("&lt;FALSE&gt;")} returns: false.</dd>
+     <dd class="dd">For example, ${str:toLower("FALSE")} returns: false.</dd>
 
     
     
@@ -285,7 +285,7 @@
       </ul>
 </dd>
 
-     <dd class="dd">For example, ${str:replaceChar("lecucereche", e, a)} returns: lacucaracha.</dd>
+     <dd class="dd">For example, ${str:replaceChar("lecucereche", "e", "a")} returns: lacucaracha.</dd>
 
     
     
@@ -294,15 +294,15 @@
      <dd class="dd">Replaces a set of characters in a string with a new set of characters.</dd>
 
      <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_eqg_tnk_br">
-       <li class="li">string - The string for the replacement of a group of characters.</li>
+              <li class="li">string - The string for the replacement of a group of characters.</li>
 
-       <li class="li">oldString - The set of characters to replace.</li>
+              <li class="li">oldString - The set of characters to replace.</li>
 
-       <li class="li">newString - The set of characters to use for replacement.</li>
+              <li class="li">newString - The set of characters to use for replacement.</li>
 
-      </ul>
-<p class="p">For example, ${str:replaceString("my shoes", "&lt;my&gt;", "&lt;your&gt;")} returns: your
-       shoes.</p>
+            </ul>
+<p class="p">For example, ${str:replaceString("my shoes","my", "your")} returns: your
+              shoes.</p>
 </dd>
 
     

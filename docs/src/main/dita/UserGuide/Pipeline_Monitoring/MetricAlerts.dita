@@ -6,14 +6,12 @@
     error records or a batch of records taking too long to process. </shortdesc>
  <conbody>
   <p><indexterm>metric
-     alerts<indexterm>overview</indexterm></indexterm><indexterm>monitoring<indexterm>metric
-     alerts</indexterm></indexterm>You can configure metric alerts based on the metric type, the
-   metric, an element associated with the metric, and a condition.</p>
-  <p>Metric alerts display in the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
-   Monitor mode. You can also configure a metric alert to send email to all email addresses
-   associated with the pipeline. </p>
-  <p>You can configure metric alerts when you configure the pipeline or after you start the
-   pipeline. The metric alert takes effect after you enable the alert.</p>
+          alerts<indexterm>overview</indexterm></indexterm><indexterm>monitoring<indexterm>metric
+          alerts</indexterm></indexterm>Metric alerts display in the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
+      Monitor mode. You can also configure a metric alert to send email to all email addresses
+      associated with the pipeline. </p>
+    <p>You can configure metric alerts when you configure the pipeline or after you start the
+      pipeline. The metric alert takes effect after you enable the alert.</p>
  </conbody>
 </concept>

@@ -2,10 +2,10 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_utt_p2k_br">
     <title>Configuring a Data Rule</title>
-    <shortdesc>Create a data rule to view summary statistics and generate alerts based on the rule. </shortdesc>
     <taskbody>
         <context><indexterm>data rules and
-            alerts<indexterm>configuring</indexterm></indexterm></context>
+            alerts<indexterm>configuring</indexterm></indexterm>Create a data rule to view summary
+            statistics and generate alerts based on the rule.</context>
         <steps id="steps_mvl_w2k_br">
             <step>
                 <cmd>In the Properties panel or Monitor panel, click the <uicontrol>Data
@@ -29,7 +29,7 @@
                             <tbody>
                                 <row>
                                     <entry>Label</entry>
-                                    <entry>Define the label to display for the data rule. </entry>
+                                    <entry>The label to display for the data rule. </entry>
                                 </row>
                                 <row>
                                     <entry>Condition</entry>
@@ -39,7 +39,7 @@
                                     <entry>Sampling Percentage</entry>
                                     <entry>Percentage of records to sample to generate information
                                         for the data rule. A higher percentage can provide greater
-                                        accuracy, but use more resources on the <ph
+                                        accuracy but use more resources on the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> machine.</entry>
                                 </row>
@@ -66,8 +66,8 @@
                                     <entry>Threshold Type</entry>
                                     <entry>Type of threshold that defines when the alert becomes
                                             active:<ul id="ul_mj5_2gk_br">
-                                            <li>Count - A specified number of records</li>
-                                            <li>Percentage - A specified percentage of records</li>
+                                            <li>Count - A specified number of records.</li>
+                                            <li>Percentage - A specified percentage of records.</li>
                                         </ul></entry>
                                 </row>
                                 <row>

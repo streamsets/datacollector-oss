@@ -5,7 +5,7 @@
     <shortdesc>You can define the email addresses to receive metric and data alerts. When an alert
         triggers an email, the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> sends
-        an email to every email address in the list. </shortdesc>
+        an email to every address in the list. </shortdesc>
     <taskbody>
         <prereq><indexterm>email addresses<indexterm>configuring for
             alerts</indexterm></indexterm>To send email alerts, create an email account to send the
@@ -13,7 +13,7 @@
         <context/>
         <steps id="steps_rl5_tsw_1r">
             <step>
-                <cmd>To view pipeline configuration options, click an empty section of the pipeline
+                <cmd>To view pipeline configuration options, click an unused section of the pipeline
                     canvas.</cmd>
             </step>
             <step>

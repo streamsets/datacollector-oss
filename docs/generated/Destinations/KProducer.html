@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using the SDC records ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kafka Producer"></meta><meta name="abstract" content="The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using the SDC records format."></meta><meta name="description" content="The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using the SDC records format."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_oq2_5jl_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Producer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using the SDC Record ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kafka Producer"></meta><meta name="abstract" content="The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using the SDC Record format."></meta><meta name="description" content="The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using the SDC Record format."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_oq2_5jl_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Producer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,8 +15,8 @@
 
  
  <div class="body conbody"><p class="shortdesc">The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to
-  Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using
-  the SDC records format.</p>
+        Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data
+        using the SDC Record format.</p>
 
   <p class="p">When you configure a Kafka Producer, you configure the
       brokers, topic, partition strategy, and data format to use. You can add additional Kafka
@@ -44,12 +44,10 @@
 <div class="topic concept nested1" id="concept_a2p_t4l_zq">
  <h2 class="title topictitle2">Broker List</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">The Kafka Producer connects to Kafka based on the topic and associated brokers that you
-  specify. To ensure a connection in case a specified broker goes down, list as many brokers as
-  possible.</p>
-
-  <p class="p"></p>
+ <div class="body conbody">
+  <p class="p">The Kafka Producer connects to Kafka based on the topic and
+   associated brokers that you specify. To ensure a connection in case a specified broker goes down,
+   list as many brokers as possible.</p>
 
  </div>
 
@@ -65,7 +63,7 @@
       values.</p>
 
   <div class="note note"><span class="notetitle">Note:</span> The Kafka Producer uses the broker.host Kafka configuration property. The Kafka Consumer
-   ignores user-defined values for the broker.list property.</div>
+      ignores user-defined values for this property.</div>
 
  </div>
 
@@ -73,10 +71,12 @@
 <div class="topic task nested1" id="task_q4d_4yl_zq">
     <h2 class="title topictitle2">Configuring a Kafka Producer</h2>
 
-    
-    <div class="body taskbody"><p class="shortdesc">Configure a Kafka Producer to write text, delimited, or JSON text to a Kafka cluster. </p>
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a Kafka Producer
+                to write data to Kafka. </p>
 
-        <div class="section context"></div>
+        </div>
 
         <ol class="ol steps" id="task_q4d_4yl_zq__steps_upj_std_br"><li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, optionally enter a name and description for the stage.
@@ -84,12 +84,12 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
+                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
                         <img class="image" id="task_q4d_4yl_zq__d301e198" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">On the
-                        <span class="keyword wintitle">Kafka</span> tab, configure the following properties:</span>
+                <span class="ph cmd">On the <span class="keyword wintitle">Kafka</span> tab, configure the following
+                    properties:</span>
                 <div class="itemgroup info">
                     <div class="p">
                         
@@ -98,9 +98,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="23.980815347721823%" id="d3254e182">Kafka Properties</th>
+                                        <th class="entry" valign="top" width="23.980815347721823%" id="d3298e181">Kafka Properties</th>
 
-                                        <th class="entry" valign="top" width="76.01918465227818%" id="d3254e185">Description</th>
+                                        <th class="entry" valign="top" width="76.01918465227818%" id="d3298e184">Description</th>
 
                                     </tr>
 
@@ -108,27 +108,28 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3254e182 ">Broker URIs</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3298e181 ">Broker URIs</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3254e185 ">A comma-separated list of URIs for Kafka brokers that
-                                            write to the topic. Use the format
-                                                &lt;host&gt;:&lt;port&gt;.<p class="p">To ensure a connection, enter
-                                                as many broker URIs as possible.</p>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3298e184 ">A comma-separated list of URIs for Kafka brokers that
+                                            write to the topic. Use the following format:
+                                                <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.<p class="p">To ensure a
+                                                connection, enter as many broker URIs as
+                                                possible.</p>
 </td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3254e182 ">Topic</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3298e181 ">Topic</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3254e185 ">Kafka topic to use.</td>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3298e184 ">Kafka topic to use.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3254e182 ">Partition Strategy</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3298e181 ">Partition Strategy</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3254e185 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__ul_tq2_yr3_br">
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3298e184 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__ul_tq2_yr3_br">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -143,17 +144,17 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3254e182 ">Expression</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3298e181 ">Expression</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3254e185 ">Expression to use to write to partitions with an
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3298e184 ">Expression to use to write to partitions with an
                                             expression.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3254e182 ">Data Format</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3298e181 ">Data Format</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3254e185 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__ul_wlj_353_br">
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3298e184 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__ul_wlj_353_br">
                                                 <li class="li">Text</li>
 
                                                 <li class="li">JSON</li>
@@ -169,9 +170,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3254e182 ">Kafka Configuration</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3298e181 ">Kafka Configuration</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3254e185 ">Additional Kafka properties to use. Click the
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3298e184 ">Additional Kafka properties to use. Click the
                                                 <span class="ph uicontrol">Add</span> icon and define the Kafka
                                             property name and value. <p class="p">Use the property names and
                                                 values as expected by Kafka. Do not use the
@@ -200,9 +201,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="26.525198938992045%" id="d3254e322">Delimited Property</th>
+                                        <th class="entry" valign="top" width="26.525198938992045%" id="d3298e324">Delimited Property</th>
 
-                                        <th class="entry" valign="top" width="73.47480106100795%" id="d3254e325">Description</th>
+                                        <th class="entry" valign="top" width="73.47480106100795%" id="d3298e327">Description</th>
 
                                     </tr>
 
@@ -210,9 +211,9 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="26.525198938992045%" headers="d3254e322 ">Delimiter Format</td>
+                                        <td class="entry" valign="top" width="26.525198938992045%" headers="d3298e324 ">Delimiter Format</td>
 
-                                        <td class="entry" valign="top" width="73.47480106100795%" headers="d3254e325 ">Format to use for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_gfs_553_br">
+                                        <td class="entry" valign="top" width="73.47480106100795%" headers="d3298e327 ">Format to use for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_gfs_553_br">
                                                 <li class="li">Basic CSV - File that includes comma-separated
                                                   values. </li>
 
@@ -233,9 +234,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="26.525198938992045%" headers="d3254e322 ">Fields</td>
+                                        <td class="entry" valign="top" width="26.525198938992045%" headers="d3298e324 ">Fields</td>
 
-                                        <td class="entry" valign="top" width="73.47480106100795%" headers="d3254e325 ">Fields to include in the record.</td>
+                                        <td class="entry" valign="top" width="73.47480106100795%" headers="d3298e327 ">Fields to include in the record.</td>
 
                                     </tr>
 
@@ -259,9 +260,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="23.980815347721823%" id="d3254e397">Text Property</th>
+                                        <th class="entry" valign="top" width="23.980815347721823%" id="d3298e399">Text Property</th>
 
-                                        <th class="entry" valign="top" width="76.01918465227818%" id="d3254e400">Description</th>
+                                        <th class="entry" valign="top" width="76.01918465227818%" id="d3298e402">Description</th>
 
                                     </tr>
 
@@ -269,9 +270,9 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3254e397 ">Field</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d3298e399 ">Field</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3254e400 ">Single field to write data to Kafka. </td>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d3298e402 ">Single field to write data to Kafka. </td>
 
                                     </tr>
 

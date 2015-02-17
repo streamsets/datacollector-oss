@@ -3,7 +3,7 @@
 <concept id="concept_p54_4kl_vq">
  <title>Expression Language</title>
  <shortdesc>The StreamSets expression language enables you to create expressions that evaluate or
-    modify data. The expression language is based on the JSP 2.0 Expression Language. </shortdesc>
+    modify data. The StreamSets expression language is based on the JSP 2.0 Expression Language. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector<indexterm>expression
         language</indexterm></indexterm><indexterm>expression

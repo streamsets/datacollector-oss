@@ -33,7 +33,7 @@
       </ul>
 </div>
 
-  <p class="p">For details about literals, operators, functions, and reserved words, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The StreamSets expression language enables you to create expressions that evaluate or modify data. The expression language is based on the JSP 2.0 Expression Language.">Expression Language</a>.</p>
+  <p class="p">For details about literals, operators, functions, and reserved words, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The StreamSets expression language enables you to create expressions that evaluate or modify data. The StreamSets expression language is based on the JSP 2.0 Expression Language.">Expression Language</a>.</p>
 
  </div>
 
@@ -70,8 +70,10 @@
 
   </div>
 
-  <div class="p">To reference a nested field, as with a field in a JSON object, use the path to the field as
-   follows:<pre class="pre codeblock">record:value("/&lt;path to field&gt;/&lt;field name&gt;")</pre>
+  <div class="p">To reference a nested field, such as a field in a JSON object, use the path to the field as
+    follows:<pre class="pre codeblock">record:value("/&lt;path to field&gt;/&lt;field name&gt;")</pre>
+<div class="note note"><span class="notetitle">Note:</span> You can
+    use single or double quotation marks to surround a field name.</div>
 </div>
 
  </div>
@@ -94,10 +96,7 @@
 </div>
 
             <p class="p">However, the bonus percentage changes regularly. So instead of using .01 directly in
-                the expression, you can create a Bonus constant and set it to .01 as
-                    shown:</p>
-
-            <p class="p"><img class="image" id="task_ogd_zj3_wq__image_qsg_pyp_yq" src="../Graphics/ExpressionStageConfig.png" height="204" width="531"></img></p>
+                the expression, you can create a Bonus constant and set it to .01 as shown:<img class="image" id="task_ogd_zj3_wq__image_cdh_cw3_cr" src="../Graphics/DefiningConstants.png" height="94" width="374"></img></p>
 
             <p class="p">Then you can use the Bonus constant in an expression as follows:</p>
 

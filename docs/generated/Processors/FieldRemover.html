@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Field Remover removes fields from the pipeline. Use the Field Remover to discard data that you do not need in the pipeline. When you configure the Field Remover, you can list the fields that you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Remover"></meta><meta name="abstract" content="The Field Remover removes fields from the pipeline. Use the Field Remover to discard data that you do not need in the pipeline."></meta><meta name="description" content="The Field Remover removes fields from the pipeline. Use the Field Remover to discard data that you do not need in the pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jdd_blr_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Remover</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Field Remover removes fields from the pipeline. Use the Field Remover to discard data that you do not need in the pipeline. Use a Field Remover to remove unwanted fields from the pipeline. When ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Remover"></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jdd_blr_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Remover</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -13,15 +13,9 @@
 <div class="nested0" id="concept_jdd_blr_wq">
  <h1 class="title topictitle1">Field Remover</h1>
 
- 
- <div class="body conbody"><p class="shortdesc">The Field Remover removes fields from the pipeline. Use the Field Remover to discard
-  data that you do not need in the pipeline. </p>
-
-  <p class="p"></p>
-
-  <p class="p">When you configure the Field Remover, you can list the fields that you want to keep so the
-   Field Remover removes the remaining fields. Or, you can list the fields that you want to remove.
-  </p>
+ <div class="body conbody">
+  <p class="p">The Field Remover removes fields from the pipeline. Use the
+   Field Remover to discard data that you do not need in the pipeline. </p>
 
  </div>
 
@@ -32,7 +26,9 @@
     
     <div class="body taskbody"><p class="shortdesc">Use a Field Remover to remove unwanted fields from the pipeline. </p>
 
-        <div class="section context"></div>
+        <div class="section context">When you configure the Field
+            Remover, you can list the fields that you want to keep so the Field Remover removes the
+            remaining fields. Or, you can list the fields that you want to remove. </div>
 
         <ol class="ol steps" id="task_c1j_btr_wq__steps_fdt_ttq_wq"><li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, optionally enter a name and description for the stage.
@@ -40,7 +36,7 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
+                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
                         <img class="image" id="task_c1j_btr_wq__d1648e167" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
@@ -54,9 +50,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="23.980815347721823%" id="d17744e108">Field Remover Property</th>
+                                    <th class="entry" valign="top" width="23.980815347721823%" id="d17896e103">Field Remover Property</th>
 
-                                    <th class="entry" valign="top" width="76.01918465227818%" id="d17744e111">Description</th>
+                                    <th class="entry" valign="top" width="76.01918465227818%" id="d17896e106">Description</th>
 
                                 </tr>
 
@@ -64,17 +60,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d17744e108 ">Action</td>
+                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d17896e103 ">Action</td>
 
-                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d17744e111 ">Indicates whether to keep or drop the listed fields.
+                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d17896e106 ">Indicates whether to keep or drop the listed fields.
                                     </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d17744e108 ">Fields</td>
+                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d17896e103 ">Fields</td>
 
-                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d17744e111 ">List of fields to keep or remove.</td>
+                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d17896e106 ">List of fields to keep or remove.</td>
 
                                 </tr>
 

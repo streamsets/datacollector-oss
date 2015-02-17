@@ -25,8 +25,7 @@
             </step>
             <step>
                 <cmd>To preview multiple stages, click <uicontrol>Multiple</uicontrol>.</cmd>
-                <info>The Preview panel displays two lists of stages.<draft-comment author="Loretta"
-                        >add screenshot with new labels</draft-comment></info>
+                <info>The Preview panel displays two lists of stages.</info>
             </step>
             <step>
                 <cmd>From the list on the left, select the first stage to use.</cmd>

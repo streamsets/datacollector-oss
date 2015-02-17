@@ -35,8 +35,8 @@ ${record:value("/ID")==null}</pre>
  <h2 class="title topictitle2">Sample Conditions for Streams</h2>
 
  
- <div class="body conbody"><p class="shortdesc">A condition defines the data that passes to the associated stream. All incoming data
-  that meets the condition passes to the stream. Use the expression language to define conditions. </p>
+ <div class="body conbody"><p class="shortdesc">A condition defines the data that passes to the associated stream. All records that meet
+  the condition passes to the stream. Use the expression language to define conditions. </p>
 
   <p class="p">When you define a condition, you typically base it on values in one or more fields in the
    record. </p>
@@ -83,7 +83,7 @@ ${record:value("/ID")==null}</pre>
 
  <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
 <div class="related_link"><a class="navheader_parent_path" href="ConfiguringExpressionsConditions.html#concept_ofb_1cm_xq" title="Use the expression language to configure expressions and conditions. You can configure expressions in the Expression Evaluator. You can configure conditions in the Stream Selector.">Configuring Expressions and Conditions</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The StreamSets expression language enables you to create expressions that evaluate or modify data. The expression language is based on the JSP 2.0 Expression Language.">Expression Language</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The StreamSets expression language enables you to create expressions that evaluate or modify data. The StreamSets expression language is based on the JSP 2.0 Expression Language.">Expression Language</a></div>
 </div>
 </div>
 </div>
@@ -98,7 +98,7 @@ ${record:value("/ID")==null}</pre>
   <div class="p">
    <dl class="dl">
     
-     <dt class="dt dlterm">Error handling for unmatched records</dt>
+     <dt class="dt dlterm">Error handling</dt>
 
      <dd class="dd">The Unmatched Record Handling property determines how the
       Stream Selector handles records that do not match any conditions. The Stream Selector can
@@ -114,7 +114,7 @@ ${record:value("/ID")==null}</pre>
 
     
     
-     <dt class="dt dlterm">Create a default stream</dt>
+     <dt class="dt dlterm">Default stream</dt>
 
      <dd class="dd">You can create a default stream to capture records that do not match other conditions. When
       you create a default stream, you connect the output to a branch in the pipeline. </dd>
@@ -145,11 +145,12 @@ ${record:value("/ID")==null}</pre>
 <div class="topic task nested1" id="task_iss_2zx_wq">
     <h2 class="title topictitle2">Configuring the Stream Selector</h2>
 
-    
-    <div class="body taskbody"><p class="shortdesc">Use a Stream Selector to route data to different streams based on
-        conditions</p>
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Use
+                a Stream Selector to route data to different streams based on conditions.</p>
 
-        <div class="section context"></div>
+        </div>
 
         <ol class="ol steps" id="task_iss_2zx_wq__steps_tsx_3gf_xq"><li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, optionally enter a name and description for the stage.
@@ -157,13 +158,12 @@ ${record:value("/ID")==null}</pre>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
+                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
                         <img class="image" id="task_iss_2zx_wq__d1648e167" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">On the
-                        <span class="ph uicontrol">Conditions</span> tab, configure the following
+                <span class="ph cmd">On the <span class="ph uicontrol">Conditions</span> tab, configure the following
                     properties:</span>
                 <div class="itemgroup info">
                     
@@ -172,9 +172,9 @@ ${record:value("/ID")==null}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.011204481792717%" id="d19291e282">Stream Selector Property</th>
+                                    <th class="entry" valign="top" width="31.446540880503143%" id="d19429e283">Stream Selector Property</th>
 
-                                    <th class="entry" valign="top" width="71.98879551820728%" id="d19291e285">Description</th>
+                                    <th class="entry" valign="top" width="68.55345911949686%" id="d19429e286">Description</th>
 
                                 </tr>
 
@@ -182,9 +182,10 @@ ${record:value("/ID")==null}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d19291e282 ">Condition <a class="xref" href="StreamSelector_Conditions.html#task_mj5_vjf_xq" title="Configure a condition for each stream of data that you want to route. The Stream Selector passes all data that matches the condition to the stream."> <img class="image" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19429e283 ">Condition <a class="xref" href="StreamSelector_Conditions.html#task_mj5_vjf_xq" title="Configure a condition for each stream of data that you want to route. The Stream Selector passes all data that matches the condition to the stream.">
+                                            <img class="image" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
 
-                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d19291e285 ">Condition to stream data to this output. Click the
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19429e286 ">Condition to stream data to this output. Click the
                                             <span class="ph uicontrol">Add</span> icon to create additional
                                         conditions and corresponding output locations. <p class="p">To define
                                             a default stream to capture unmatched records, add a
@@ -195,10 +196,10 @@ ${record:value("/ID")==null}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d19291e282 ">Constants <a class="xref" href="ConfiguringExpressionsConditions.html#task_ogd_zj3_wq" title="You can define constants that you can reuse within a processor. Define a constant when you have a value that you want use more than once in the processor or that you want to be able to update easily. You can define constants in the Expression Evaluator and Stream Selector processors.">
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19429e283 ">Constants <a class="xref" href="ConfiguringExpressionsConditions.html#task_ogd_zj3_wq" title="You can define constants that you can reuse within a processor. Define a constant when you have a value that you want use more than once in the processor or that you want to be able to update easily. You can define constants in the Expression Evaluator and Stream Selector processors.">
                                             <img class="image" id="task_iss_2zx_wq__image_c4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
 
-                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d19291e285 ">Represents a constant in conditions. Define a constant to
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19429e286 ">Represents a constant in conditions. Define a constant to
                                         easily reuse it in the stage or to easily update the
                                         constant value. <p class="p">To define a constant, click the
                                                 <span class="ph uicontrol">Add</span> icon, and then enter a
@@ -210,10 +211,10 @@ ${record:value("/ID")==null}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d19291e282 ">Unmatched Record Handling <a class="xref" href="StreamSelector.html#concept_sn5_5kx_wq" title="When a record does not match any condition, the Stream Selector can use the error handling for unmatched records or you can configure a default stream that accepts the unmatched records:">
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19429e283 ">Unmatched Record Handling <a class="xref" href="StreamSelector.html#concept_sn5_5kx_wq" title="When a record does not match any condition, the Stream Selector can use the error handling for unmatched records or you can configure a default stream that accepts the unmatched records:">
                                             <img class="image" id="task_iss_2zx_wq__image_eld_51f_cr" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
 
-                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d19291e285 ">Determines how to handle records that do not match any
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19429e286 ">Determines how to handle records that do not match any
                                         condition: <ul class="ul" id="task_iss_2zx_wq__ul_uxy_r3f_xq">
                                             <li class="li">Drop Record - Drops the record from the pipeline. </li>
 
@@ -240,7 +241,7 @@ ${record:value("/ID")==null}</pre>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
 <div class="related_link"><a class="navheader_parent_path" href="ConfiguringExpressionsConditions.html#concept_ofb_1cm_xq" title="Use the expression language to configure expressions and conditions. You can configure expressions in the Expression Evaluator. You can configure conditions in the Stream Selector.">Configuring Expressions and Conditions</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The StreamSets expression language enables you to create expressions that evaluate or modify data. The expression language is based on the JSP 2.0 Expression Language.">Expression Language</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The StreamSets expression language enables you to create expressions that evaluate or modify data. The StreamSets expression language is based on the JSP 2.0 Expression Language.">Expression Language</a></div>
 </div>
 </div>
 </div>

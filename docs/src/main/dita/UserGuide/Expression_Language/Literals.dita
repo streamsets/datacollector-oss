@@ -11,9 +11,7 @@
    <li>Integers - as in Java</li>
    <li>Floating point - as in Java</li>
    <li>Strings with single or double quotation marks</li>
-   <li>Escape characters for strings: \ to escape quotation marks, and \\ to escape \<draft-comment
-          author="Loretta">is this escape info right, translated from (what I thought was)
-          gibberish</draft-comment></li>
+   <li>Escape characters for strings: \ to escape quotation marks, and \\ to escape \</li>
    <li>Null - null</li>
   </ul>
  </conbody>

@@ -12,7 +12,7 @@
             </step>
             <step>
                 <cmd><indexterm>Record Deduplicator
-                        processors<indexterm>configuring</indexterm></indexterm>On the
+                        processor<indexterm>configuring</indexterm></indexterm>On the
                         <uicontrol>Deduplication</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>

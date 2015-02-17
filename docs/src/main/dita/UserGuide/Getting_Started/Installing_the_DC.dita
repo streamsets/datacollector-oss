@@ -10,9 +10,10 @@
         <context/>
         <steps id="steps_g53_l3p_kq">
             <step>
-                <cmd><indexterm>installation<indexterm>tarball</indexterm></indexterm><indexterm>launch<indexterm>tarball</indexterm></indexterm>
-                    Download the StreamSets SDC tarball and extract it to the desired
-                    location.</cmd>
+                <cmd><indexterm>installation<indexterm>manual
+                        start</indexterm></indexterm><indexterm>launch the Data
+                            Collector<indexterm>manual start</indexterm></indexterm> Download the
+                    StreamSets SDC tarball and extract it to the desired location.</cmd>
             </step>
             <step>
                 <cmd>Optionally, in the <codeph>libexec/sdc-env.sh</codeph> file, set the following

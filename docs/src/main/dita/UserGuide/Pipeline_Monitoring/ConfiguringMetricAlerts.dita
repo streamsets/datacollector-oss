@@ -3,10 +3,12 @@
 <task id="task_hcf_11k_br">
     <title>Configuring a Metric Alert</title>
     <shortdesc>Create a metric alert to receive monitoring or email alerts based on metric rules.
-        You can configure metric alerts when you configure or monitor a pipeline.</shortdesc>
+        You can configure metric alerts when you configure or monitor a pipeline. You can edit or
+        delete alerts when they are not active. </shortdesc>
     <taskbody>
-        <context><indexterm>metric alerts<indexterm>configuring</indexterm></indexterm><p>You can
-                edit or delete alerts when they are not active. </p></context>
+        <context><indexterm>metric alerts<indexterm>configuring</indexterm></indexterm> You
+            configure metric alerts based on the metric type, the metric, an element associated with
+            the metric, and a condition. </context>
         <steps id="steps_jzm_f1k_br">
             <step>
                 <cmd>In the Properties panel or Monitor panel, click the <uicontrol>Metric
@@ -34,8 +36,10 @@
                                             example, "Over 1000 pipeline error records."</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Metric Type <xref
-                                        href="MetricTypes.dita#concept_y4d_tcw_1r"><image href="../Graphics/icon_moreInfo.png" scale="11"></image></xref></entry>
+                                    <entry>Metric Type  <xref
+                                            href="MetricTypes.dita#concept_y4d_tcw_1r"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="11"
+                                                id="image_ul3_5bj_cr"/></xref></entry>
                                     <entry>Type of metric information the alert is based on:<ul
                                             id="ul_fwn_zbk_br">
                                             <li>Counter</li>
@@ -82,4 +86,7 @@
             </step>
         </steps>
     </taskbody>
+    <related-links>
+        <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
+    </related-links>
 </task>

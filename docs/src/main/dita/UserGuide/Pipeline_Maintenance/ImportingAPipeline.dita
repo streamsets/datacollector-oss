@@ -3,13 +3,14 @@
 <task id="task_fdf_hrr_5q">
     <title>Importing a Pipeline</title>
     <shortdesc>Import a pipeline to use a pipeline developed on a different <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. When
-        you import a pipeline, you create a pipeline and then import the pipeline. </shortdesc>
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or to
+        restore a backup file. </shortdesc>
     <taskbody>
         <context><indexterm>pipelines<indexterm>importing</indexterm></indexterm>Import a pipeline
             from a pipeline file. Pipeline files are JSON files exported from another <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            />.</context>
+                />.<p>When you import a pipeline, you create a pipeline and then import the
+                pipeline. </p></context>
         <steps id="steps_slv_nrr_5q">
             <step>
                 <cmd>In the <wintitle>Pipeline</wintitle> library, click <uicontrol>Create New
@@ -17,13 +18,12 @@
             </step>
             <step>
                 <cmd>In the <wintitle>New Pipeline</wintitle> dialog box, enter a pipeline name and
-                    optional description. Click <uicontrol>Save</uicontrol>.</cmd>
+                    optional description, and click <uicontrol>Save</uicontrol>.</cmd>
             </step>
             <step>
-                <cmd>In the Pipeline library, click the <uicontrol>Actions</uicontrol> icon of the
-                    new pipeline, and then click <uicontrol>Import</uicontrol>.</cmd>
-                <info><image href="../Graphics/Pipeline_import.png" id="image_avf_jsr_5q" scale="60"
-                    /></info>
+                <cmd>In the Pipeline library, click the <uicontrol>Actions</uicontrol> icon (<image
+                        href="../Graphics/icon_PipelineOptions.png" id="image_jgq_bz3_cr" scale="30"
+                    />) for the new pipeline, and then click <uicontrol>Import</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>In the <wintitle>Import Pipeline</wintitle> window, browse to locate the

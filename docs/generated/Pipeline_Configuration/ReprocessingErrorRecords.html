@@ -21,7 +21,7 @@
         <div class="section context">
             <p class="p">In the error
                 pipeline, include the Directory origin and configure it to use the SDC Records data
-                format. The SDC Records data format provides information so you can reprocess the
+                format. The SDC Records data format provides information for reprocessing the
                 original records with the necessary error handling. </p>
 
             <div class="p">The SDC Records format provides the follwoing information: <ul class="ul" id="task_skc_j54_1r__ul_fxk_mbd_br">
@@ -44,7 +44,8 @@
 
             <p class="p">When you create the error pipeline, you can use error and record functions provided
                 by the expression language to route different types of error records through
-                pipelines that resolve the error and write the corrected record to destinations. </p>
+                different transformation logic to resolve the error and write the corrected record
+                to destinations. </p>
 
             <p class="p">For example, your error files contain records with invalid product IDs discarded as a
                 required field from the first processor in the pipeline, a Field Filter. They also
@@ -52,7 +53,7 @@
                 conversion. </p>
 
             <p class="p">In the error pipeline, you can use a Stream Selector to route the records discarded
-                from the Field Filter to a branch that corrects product IDs. It routes the records
+                from the Field Filter to a branch that corrects product IDs, and the records
                 discarded by the Field Converter to a branch that performs a valid data type
                 conversion. </p>
 

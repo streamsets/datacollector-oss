@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="A processor stage represents a type of data processing that you want to perform within the pipeline. You can use as many processors in a pipeline as you need. The Data Collector provides the following ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Processors"></meta><meta name="abstract" content="A processor stage represents a type of data processing that you want to perform within the pipeline. You can use as many processors in a pipeline as you need."></meta><meta name="description" content="A processor stage represents a type of data processing that you want to perform within the pipeline. You can use as many processors in a pipeline as you need."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hpr_twm_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Processors</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="A processor stage represents a type of data processing that you want to perform. You can use as many processors in a pipeline as you need. The Data Collector provides the following processors: ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Processors"></meta><meta name="abstract" content="A processor stage represents a type of data processing that you want to perform. You can use as many processors in a pipeline as you need."></meta><meta name="description" content="A processor stage represents a type of data processing that you want to perform. You can use as many processors in a pipeline as you need."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hpr_twm_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Processors</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,8 +14,8 @@
   <h1 class="title topictitle1">Processors</h1>
 
   
-  <div class="body conbody"><p class="shortdesc">A processor stage represents a type of data processing that you want to perform within
-    the pipeline. You can use as many processors in a pipeline as you need.</p>
+  <div class="body conbody"><p class="shortdesc">A processor stage represents a type of data processing that you want to perform. You
+    can use as many processors in a pipeline as you need.</p>
 
     <div class="p">The <span class="ph">Data
                   Collector</span> provides
@@ -53,21 +53,23 @@
  <div class="body conbody"><p class="shortdesc">To understand references to fields, think of the record as a root directory, and a
     reference to a field as the path to the field. </p>
 
-    <p class="p">When a record is a line of text, the
-      fields are one level of subdirectories. A reference to a field in a text record is simply:
-        <samp class="ph codeph">/&lt;field name&gt;</samp>. </p>
+    <div class="p">When a record is a line of
+            text, the fields are one level of subdirectories. A reference to a field in a text
+            record is simply: <pre class="pre codeblock">/&lt;field name&gt;</pre>
+</div>
 
     <p class="p">So a field named CITY displays as /CITY. </p>
 
-    <p class="p">When a record is complex, like a JSON object, the root object might incude many additional
-      objects.  In this case, a reference to a field is the path to the field: <samp class="ph codeph">/&lt;path to
-        field&gt;/&lt;field name&gt;</samp>. </p>
+    <div class="p">When a record is complex, like a JSON object, the root object might incude many additional
+            objects. In this case, a reference to a field is the path to the field:
+            <pre class="pre codeblock">/&lt;path to field&gt;/&lt;field name&gt;</pre>
+</div>
 
     <p class="p">For example, a field in a JSON tweet might display as /users/followers_count. </p>
 
     <p class="p">After you preview data or select fields using preview data, you can generally select fields
-      from a list. When a list is not available or when defining a new field name, use the
-      appropriate format to define reference the field. </p>
+            from a list. When a list is not available or when defining a new field name, use the
+            appropriate format to reference the field. </p>
 
   <p class="p">For example, when you define an output field for an Expression Evaluator, you can select from a
       list of fields passed from the previous stage. But to create a new field for the results of

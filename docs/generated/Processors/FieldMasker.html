@@ -42,7 +42,7 @@
      <dt class="dt dlterm">Fixed-length</dt>
 
      <dd class="dd">Replaces values with a fixed-length mask. Use when you want to
-      mask any variability in length in the data. </dd>
+      mask variations in the length of the data. </dd>
 
      <dd class="dd">The following example uses a fixed-length masks to hide passwords:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_zyf_5cj_yq" border="0" class="simpletable"><tr class="strow">
         <td valign="top" class="stentry" width="50%">
@@ -74,7 +74,7 @@ L92m1sN3q</pre>
 
      <dd class="dd">The following example uses a variable length mask to hide the same passwords:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_jfq_bdj_yq" border="0" class="simpletable"><tr class="strow">
         <td valign="top" class="stentry" width="50%">
-         <pre class="pre codeblock"><span class="ph uicontrol">Original Password</span> (original)
+         <pre class="pre codeblock"><span class="ph uicontrol">Original Password</span>
 1234
 donKey
 022367snowfall</pre>
@@ -100,10 +100,30 @@ L92m1sN3q0jaOmE67Ws</pre>
      <dd class="dd">Replaces values with a mask based on a user-defined pattern. </dd>
 
      <dd class="dd">When you define the pattern for the mask, you can use a hash mark (#) to reveal the
-      character in that location of the hash mark. All other characters are used as constants in the
-      mask. For example, the following mask pattern reveals the area code of a phone number and
-      replaces all other digits in the phone number with an x: <samp class="ph codeph">###-xxx-xxxx</samp>.<div class="note tip"><span class="tiptitle">Tip:</span> To avoid confusing masking characters for real data, use one masking character
-       instead of a mix of masking characters.</div>
+      character in that location. All other characters are used as constants in the mask. </dd>
+
+     <dd class="dd">The following example uses <samp class="ph codeph">###-xxx-xxxx</samp> as the mask pattern to reveal the
+      area code of a phone number while masking the rest of the number:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_xwn_ms3_cr" border="0" class="simpletable"><tr class="strow">
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Original Phone Number</span>
+415-333-3434
+301-999-0987
+617-567-8888</pre>
+
+        </td>
+
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Custom Mask (###-xxx-xxxx)</span>
+415-xxx-xxxx
+301-xxx-xxxx
+617-xxx-xxxx</pre>
+
+        </td>
+
+       </tr>
+</table>
+<div class="note tip"><span class="tiptitle">Tip:</span> To avoid confusing masking characters for real data, use one
+       masking character instead of a mix of masking characters.</div>
 </dd>
 
     
@@ -128,7 +148,7 @@ L92m1sN3q0jaOmE67Ws</pre>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the field to the pipeline for error handling.">
+                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
                         <img class="image" id="task_vgg_z44_wq__d1648e167" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></span>
                 <div class="itemgroup info">You might include any field that the processor uses.</div>
             </li>
@@ -142,9 +162,9 @@ L92m1sN3q0jaOmE67Ws</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="50%" id="d17292e223">Field Masker Configuration Property</th>
+                                    <th class="entry" valign="top" width="33.44481605351171%" id="d17402e247">Field Masker Property</th>
 
-                                    <th class="entry" valign="top" width="50%" id="d17292e226">Description</th>
+                                    <th class="entry" valign="top" width="66.5551839464883%" id="d17402e250">Description</th>
 
                                 </tr>
 
@@ -152,19 +172,18 @@ L92m1sN3q0jaOmE67Ws</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d17292e223 ">Fields to Mask</td>
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d17402e247 ">Fields to Mask</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d17292e226 ">One or more String fields to mask with the same mask
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d17402e250 ">One or more String fields to mask with the same mask
                                         type.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d17292e223 ">Mask Type <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d17402e247 ">Mask Type <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                            <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
 
-                                        <img class="image" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d17292e226 ">Mask type to hide field values. Select one of the
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d17402e250 ">Mask type to hide field values. Select one of the
                                         following options:<ul class="ul" id="task_vgg_z44_wq__ul_kmd_rnk_wq">
                                             <li class="li">Fixed-length - Replaces values with a fixed-length
                                                 mask.</li>
@@ -181,10 +200,10 @@ L92m1sN3q0jaOmE67Ws</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d17292e223 ">Custom Mask <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                    <td class="entry" valign="top" width="33.44481605351171%" headers="d17402e247 ">Custom Mask <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
                                             <img class="image" id="task_vgg_z44_wq__image_rx1_l1q_wq" src="../Graphics/icon_moreInfo.png" height="15" width="15"></img></a></td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d17292e226 ">Mask pattern for a custom mask. Enter the pattern that
+                                    <td class="entry" valign="top" width="66.5551839464883%" headers="d17402e250 ">Mask pattern for a custom mask. Enter the pattern that
                                         you want to use.<p class="p">Use the hash mark (#) to display
                                             characters in the specified location. Use any other
                                             character as a masking character.</p>

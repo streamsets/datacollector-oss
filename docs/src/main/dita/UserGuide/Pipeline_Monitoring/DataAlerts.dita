@@ -2,9 +2,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tpm_rsk_zq">
  <title>Data Rules and Alerts</title>
- <shortdesc>Data rules define the information that you want to see about the data moving between
-  stages. You can create data rules based on any link in the pipeline. You can also create alerts
-  based on the data rules.</shortdesc>
+ <shortdesc>Data rules define the information that you want to see about the data that passes
+  between stages. You can create data rules based on any link in the pipeline. You can also create
+  alerts based on the data rules.</shortdesc>
  <conbody>
   <p><indexterm>data rules and
      alerts<indexterm>overview</indexterm></indexterm><indexterm>monitoring<indexterm>data rules and

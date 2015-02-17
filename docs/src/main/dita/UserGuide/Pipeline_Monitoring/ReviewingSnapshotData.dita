@@ -6,13 +6,13 @@
         a snapshot, the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> takes
         a snapshot of the data being processed. You can then review the snapshot stage by stage or
-        through a set of stages, like data preview.</shortdesc>
+        through a group of stages, like data preview.</shortdesc>
     <taskbody>
         <context>
             <p><indexterm>snapshot<indexterm>overview</indexterm></indexterm>Review a snapshot of
                 data to verify how the pipeline processes data. In the Monitor panel, you can drill
-                down to review the values of each record to determine if the stage or stages
-                transforms data as expected.</p>
+                down to review the values of each record to determine if the stage or group of
+                stages transform data as expected.</p>
         </context>
         <steps id="steps_esy_44p_tq">
             <step>
@@ -28,7 +28,7 @@
             <step>
                 <cmd>To view the snapshot for multiple stages, click
                     <uicontrol>Multiple</uicontrol>.</cmd>
-                <info>The Preview panel displays two lists of stages.<ol id="ol_nww_4rp_tq">
+                <info>The Preview panel displays two lists of stages:<ol id="ol_nww_4rp_tq">
                         <li>From the list on the left, select the first stage to include.</li>
                         <li>In the list on the right, select the last stage to include.</li>
                     </ol></info>

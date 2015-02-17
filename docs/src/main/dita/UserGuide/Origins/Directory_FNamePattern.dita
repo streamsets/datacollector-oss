@@ -7,8 +7,8 @@
     asterisk or question mark. </shortdesc>
  <conbody>
   <p><indexterm>File Name Pattern<indexterm>Directory
-        property</indexterm></indexterm><indexterm>Directory processor<indexterm>File Name
-          Pattern</indexterm></indexterm></p>
+            property</indexterm></indexterm><indexterm>Directory origin<indexterm>File Name
+               Pattern</indexterm></indexterm></p>
     <p>For example, if you use *.json, Directory reads all files with the .json extension. </p>
  </conbody>
 </concept>

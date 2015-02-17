@@ -11,7 +11,7 @@
       image shows the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
       during data preview mode:</p>
-  <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="45"/><table
+  <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="50"/><table
         frame="all" rowsep="1" colsep="1" id="table_nrm_fvt_sq">
         <tgroup cols="3">
           <colspec colname="c1" colnum="1" colwidth="1.1*"/>

@@ -20,9 +20,9 @@
   unexpected error, it stops the pipeline. </p>
 
   <p class="p">You can configure a pipeline to discard error records or to
-   save error records. When you save error records, you define the directory to use and when to
-   create additional files. Error files are written to the directory with the following naming
-   convention: records-&lt;file number&gt;.json.</p>
+   save error records. When you save error records, you define the directory to use and the
+   parameter for creating additional files. Error files are written to the directory with the
+   following naming convention: <samp class="ph codeph">records-&lt;file number&gt;.json.</samp></p>
 
   <p class="p">Each stage in the pipeline includes built-in resilience. Some stages also include configurable
    error handling. When a stage without explicit error handling options encounters an error record,
@@ -34,8 +34,8 @@
    4096 characters and the stage encounters an object with 5000 characters, the stage discards or
    saves the object based on the pipeline error handling configuration. </p>
 
-  <p class="p">When a stage includes an error handling option, the stage configuration can override the
-   pipeline configuration. </p>
+  <p class="p">When a stage includes an error handling option, the stage configuration overrides the pipeline
+   configuration. </p>
 
   <p class="p">For example, a Field Splitter splits field values into three parts and is configured to discard
    records that cannot be split. Even if the pipeline is configured to save error records, the Field

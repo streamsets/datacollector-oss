@@ -2,15 +2,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vxd_tsm_tq">
  <title>Troubleshooting</title>
- <shortdesc>We hope the following tips might help you with using the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. If you have
-  suggestions for additional troubleshooting items, please send them to
-  docs@streamsets.com.</shortdesc>
+ <shortdesc>Use the following tips to help you with the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. If you have
+    suggestions for additional items, feel free to send them to docs@streamsets.com.</shortdesc>
  <conbody>
   <p>
    <dl>
     <dlentry>
-     <dt>When I go to the<ph
+     <dt>When I go to the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             console, I get a "Webpage not available" error message.</dt>
      <dd><indexterm>Data
@@ -21,8 +20,9 @@
             />.</dd>
     </dlentry>
     <dlentry>
-     <dt>Why isn't the Data Preview icon enabled.</dt>
-     <dd>You can preview data after you configure the required fields for the origin. </dd>
+     <dt>Why isn't the Data Preview icon enabled?</dt>
+     <dd>You can preview data after you connect all stages in the pipeline and configure required
+            properties. You can use any valid value as a placeholder. </dd>
     </dlentry>
     <dlentry>
      <dt>Why doesn't the data preview show any data?</dt>
@@ -30,7 +30,8 @@
        id="ul_uhn_pz2_xq">
        <li>The origin might not be configured correctly. In the Preview panel, check the Issues tab
         of the origin stage for related issues.</li>
-       <li>The origin might not have any data at the moment.</li>
+       <li>The origin might not have any data at the moment. For example, a File Tail origin can
+                only provide data preview when data is being written to the file. </li>
       </ul></dd>
     </dlentry>
     <dlentry>

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="We hope the following tips might help you with using the Data Collector . If you have suggestions for additional troubleshooting items, please send them to docs@streamsets.com. When I go to the Data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Troubleshooting"></meta><meta name="abstract" content="We hope the following tips might help you with using the Data Collector. If you have suggestions for additional troubleshooting items, please send them to docs@streamsets.com."></meta><meta name="description" content="We hope the following tips might help you with using the Data Collector. If you have suggestions for additional troubleshooting items, please send them to docs@streamsets.com."></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vxd_tsm_tq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Troubleshooting</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use the following tips to help you with the Data Collector . If you have suggestions for additional items, feel free to send them to docs@streamsets.com. When I go to the Data Collector console, I get ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Troubleshooting"></meta><meta name="abstract" content="Use the following tips to help you with the Data Collector. If you have suggestions for additional items, feel free to send them to docs@streamsets.com."></meta><meta name="description" content="Use the following tips to help you with the Data Collector. If you have suggestions for additional items, feel free to send them to docs@streamsets.com."></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vxd_tsm_tq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Troubleshooting</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,15 +14,14 @@
  <h1 class="title topictitle1">Troubleshooting</h1>
 
  
- <div class="body conbody"><p class="shortdesc">We hope the following tips might help you with using the <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc">Use the following tips to help you with the <span class="ph">Data
                   Collector</span>. If you have
-  suggestions for additional troubleshooting items, please send them to
-  docs@streamsets.com.</p>
+    suggestions for additional items, feel free to send them to docs@streamsets.com.</p>
 
   <div class="p">
    <dl class="dl">
     
-     <dt class="dt dlterm">When I go to the<span class="ph">Data
+     <dt class="dt dlterm">When I go to the <span class="ph">Data
                   Collector</span>
             console, I get a "Webpage not available" error message.</dt>
 
@@ -34,9 +33,10 @@
 
     
     
-     <dt class="dt dlterm">Why isn't the Data Preview icon enabled.</dt>
+     <dt class="dt dlterm">Why isn't the Data Preview icon enabled?</dt>
 
-     <dd class="dd">You can preview data after you configure the required fields for the origin. </dd>
+     <dd class="dd">You can preview data after you connect all stages in the pipeline and configure required
+            properties. You can use any valid value as a placeholder. </dd>
 
     
     
@@ -46,7 +46,8 @@
        <li class="li">The origin might not be configured correctly. In the Preview panel, check the Issues tab
         of the origin stage for related issues.</li>
 
-       <li class="li">The origin might not have any data at the moment.</li>
+       <li class="li">The origin might not have any data at the moment. For example, a File Tail origin can
+                only provide data preview when data is being written to the file. </li>
 
       </ul>
 </dd>

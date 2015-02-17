@@ -10,7 +10,7 @@
    provides the following record functions:</p>
   <dl>
    <dlentry>
-    <dt>${record:type("&lt;field-path>')}</dt>
+    <dt>${record:type('&lt;field-path>')}</dt>
     <dd>Returns the data type of a field. </dd>
     <dd>Possible return values are: <ul id="ul_lmr_2hv_1r">
       <li>Boolean</li>

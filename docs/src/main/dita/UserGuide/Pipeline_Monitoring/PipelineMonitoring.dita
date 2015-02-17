@@ -8,18 +8,17 @@
     being processed, and create rules and alerts. </shortdesc>
   <conbody>
     <p><indexterm>pipelines<indexterm>monitoring</indexterm></indexterm><indexterm>monitoring
-          pipelines<indexterm>overview</indexterm></indexterm>When you access the <ph
+          <indexterm>overview</indexterm></indexterm>When you access the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console as
       the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs
       a pipeline, the console displays the pipeline in Monitor mode. In Monitor mode, you can
       perform the following tasks:<ul id="ul_c4s_w13_tq">
-        <li>View how a snapshot of data moves through the pipeline</li>
-        <li>View statistics for the pipeline and stages in the pipeline</li>
+        <li>View a snapshot of data</li>
+        <li>View stage and pipeline statistics</li>
         <li>Create metric alerts based on pipeline and stage statistics</li>
-        <li>Create data rules that can generate graphs and alerts based on a sampling of data
-          passing between stages</li>
+        <li>Create data rules that can generate graphs and alerts</li>
         <li>Define the email addresses to receive email alerts</li>
-        <li>View the pipeline history.</li>
+        <li>View the pipeline history</li>
       </ul></p>
   </conbody>
 </concept>
