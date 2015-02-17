@@ -2,9 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_npp_skg_cr">
  <title>Tailing JSON Data</title>
- <shortdesc>To capture JSON data with the File Tail origin, each JSON object must be written to file
-  as a single line.</shortdesc>
  <conbody>
-  <p><indexterm>File Tail origin<indexterm>tailing JSON data</indexterm></indexterm></p>
+  <p><indexterm>File Tail origin<indexterm>tailing JSON data</indexterm></indexterm>To capture JSON
+   data with the File Tail origin, each JSON object must be written to file as a single line.</p>
  </conbody>
 </concept>

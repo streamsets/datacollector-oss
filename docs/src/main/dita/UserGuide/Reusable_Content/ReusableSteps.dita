@@ -16,8 +16,8 @@
             </step>
             <step id="StartPreview">
                 <cmd>From the pipeline canvas, click <uicontrol>Preview</uicontrol>.</cmd>
-                <info>If the Preview button is disabled, check the Issues list for unconnected
-                    stages and required properties that are not defined.</info>
+                <info>If the Preview icon is disabled, check the Issues list for unconnected stages
+                    and required properties that are not defined.</info>
                 <stepresult>The Preview panel highlights the origin stage and displays preview
                     records in the Output Data column. Since this is the origin of the pipeline, no
                     input data displays. <p>You can drill down to view the details of a record.

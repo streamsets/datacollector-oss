@@ -69,9 +69,9 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="11"
                                                 id="image_c4p_p5v_yq"/></xref>
                                     </entry>
-                                    <entry>Regular expression that describes the file names. You can
-                                        use UNIX-style wildcards, such as * or ?. For example,
-                                        *.log.</entry>
+                                    <entry>Regular expression that describes the file names. <p>You
+                                            can use UNIX-style wildcards, such as * or ?. For
+                                            example, *.log.</p></entry>
                                 </row>
                                 <row>
                                     <entry>First File to Process <xref
@@ -165,9 +165,9 @@
                                 <row>
                                     <entry>Use Truncated Flag</entry>
                                     <entry>Adds a boolean field to the record to indicate if a
-                                        record was truncated. The field name is Truncated. Possible
-                                        values are True for a truncated record and False for
-                                        untruncated values.</entry>
+                                        record was truncated. The field name is Truncated.
+                                            <p>Possible values are True for a truncated record, and
+                                            False for untruncated values.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

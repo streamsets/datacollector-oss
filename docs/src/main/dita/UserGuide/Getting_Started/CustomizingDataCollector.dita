@@ -25,7 +25,7 @@
             <p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> properties file, sdc.properties, is located in the following
-                directory:<codeblock>&lt;installdir>/etc/sdc.properties</codeblock></p>
+                directory:<codeblock>&lt;SDCinstalldir>/etc/sdc.properties</codeblock></p>
             <p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> properties file includes the following general properties:<table frame="all"

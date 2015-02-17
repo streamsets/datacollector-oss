@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_bt1_zcp_kq">
-    <title>Installation and Launch (Manual)</title>
+    <title>Installation and Launch (Manual Start)</title>
     <shortdesc>Install the <ph id="pName-long">Data Collector</ph> on the machine that you want to
         run a pipeline. After installation, you can launch the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
@@ -11,11 +11,12 @@
         <steps id="steps_g53_l3p_kq">
             <step>
                 <cmd><indexterm>installation<indexterm>tarball</indexterm></indexterm><indexterm>launch<indexterm>tarball</indexterm></indexterm>
-                    Download StreamSets SDC tarball and extract it to desired location.</cmd>
+                    Download the StreamSets SDC tarball and extract it to the desired
+                    location.</cmd>
             </step>
             <step>
-                <cmd>Optionally, in the <codeph>libexec/sdc-env.sh</codeph> file, set environment
-                    variables to point to appropriate directories:</cmd>
+                <cmd>Optionally, in the <codeph>libexec/sdc-env.sh</codeph> file, set the following
+                    environment variables:</cmd>
                 <info>
                     <ul id="ul_vbv_b44_1r">
                         <li>SDC_CONF - SDC configuration directory.</li>
@@ -29,7 +30,7 @@
                 <cmd>Use the following command to launch the <ph>Data Collector</ph> and run it in
                     the background:</cmd>
                 <info>
-                    <codeblock>&lt;DCinstalldir>/bin/sdc &amp;</codeblock>
+                    <codeblock>&lt;SDCinstalldir>/bin/sdc &amp;</codeblock>
                 </info>
             </step>
         </steps>

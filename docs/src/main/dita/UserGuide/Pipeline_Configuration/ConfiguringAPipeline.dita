@@ -79,8 +79,9 @@
                                     <entry>Determines how to handle records that cannot be processed
                                         as expected. Use one of the following options:<ul
                                             id="ul_ayr_y22_br">
-                                            <li>Trash - Saves error records to a file.</li>
-                                            <li>Records to File - Discards error records.</li>
+                                            <li>Trash - Discards error records.</li>
+                                            <li>Records to File - Saves error records to a
+                                                file.</li>
                                         </ul></entry>
                                 </row>
                             </tbody>
@@ -128,14 +129,14 @@
                 </info>
             </step>
             <step>
-                <cmd>Use the <uicontrol>Stage Library</uicontrol> icon to add an origin stage. In
-                    the Properties panel, configure the stage properties.</cmd>
+                <cmd>Use the <uicontrol>Stage Library</uicontrol> to add an origin stage. In the
+                    Properties panel, configure the stage properties.</cmd>
                 <info>For configuration details about origin stages, see <xref
                         href="../Origins/Origins_overview.dita#concept_hpr_twm_jq"/>.</info>
             </step>
             <step>
-                <cmd>Use the <uicontrol>Stage Library</uicontrol> icon to add the next stage that
-                    you want to use, connect the origin to the new stage, and configure the new
+                <cmd>Use the <uicontrol>Stage Library</uicontrol> to add the next stage that you
+                    want to use, connect the origin to the new stage, and configure the new
                     stage.</cmd>
                 <info>For configuration details about processors, see <xref
                         href="../Processors/Processors_overview.dita#concept_hpr_twm_jq"/>.<p>For
@@ -144,7 +145,7 @@
                         />.</p></info>
             </step>
             <step>
-                <cmd>Set additional stages as necessary.</cmd>
+                <cmd>Add additional stages as necessary.</cmd>
             </step>
             <step>
                 <cmd>When the pipeline is valid, you can use the <uicontrol>Preview</uicontrol> icon
@@ -157,9 +158,8 @@
                     the pipeline. </cmd>
             </step>
         </steps>
-        <result>The <ph
+        <result>When the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            starts the pipeline. The Monitor panel displays real-time statistics for the pipeline.
-        </result>
+            starts the pipeline, the Monitor panel displays real-time statistics for the pipeline. </result>
     </taskbody>
 </task>

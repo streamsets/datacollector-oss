@@ -4,7 +4,7 @@
     <title>Creating Additional Users</title>
     <shortdesc>The <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        includes a default login, admin/admin. You can create additional Data Collector users for
+        includes a default login: admin/admin. You can create additional Data Collector users for
         increased security.</shortdesc>
     <taskbody>
         <context>
@@ -43,9 +43,9 @@
                     <codeblock>echo -n "&lt;username>:&lt;realm>:&lt;password>" | md5</codeblock></info>
             </step>
             <step>
-                <cmd>Restart the <ph
+                <cmd>To make the new users available, restart the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> to make the new users available.</cmd>
+                    />.</cmd>
             </step>
         </steps>
     </taskbody>

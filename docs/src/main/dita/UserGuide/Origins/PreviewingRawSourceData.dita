@@ -73,8 +73,6 @@
                 <cmd>Click <uicontrol>Preview</uicontrol>.</cmd>
             </step>
         </steps>
-        <result>The Raw Source Preview area displays the preview.<p><image
-                    href="../Graphics/RawSourcePreview.png" id="image_ozk_lp1_tq" scale="70"
-            /></p></result>
+        <result>The Raw Source Preview area displays the preview.</result>
     </taskbody>
 </task>

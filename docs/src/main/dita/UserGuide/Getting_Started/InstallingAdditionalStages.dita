@@ -15,7 +15,7 @@
           <colspec colname="c2" colnum="2" colwidth="1.85*"/>
           <thead>
             <row>
-              <entry/>
+              <entry>Additional Functionality</entry>
               <entry>Description</entry>
             </row>
           </thead>
@@ -26,8 +26,8 @@
                 <p>Cloudera CDH version 5.3.0</p>
                 <p>Cloudera CDH version 5.2.1</p>
               </entry>
-              <entry>Use to access the Cloudera distribution of Apache Hadoop. <p>Provides a
-                  Cloudera CDH origin and destination for the installed version.</p></entry>
+              <entry>Use to write to the Cloudera distribution of Apache Hadoop. <p>Provides a
+                  Cloudera CDH destination for the installed version.</p></entry>
             </row>
             <row>
               <entry>Kafka version 0.8.2.0<p>Kafka version 0.8.1.1</p></entry>

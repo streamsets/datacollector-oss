@@ -23,14 +23,14 @@
        <entry>Type of content in JSON files. Use one of the following options: <p>
          <ul id="ul_atw_krl_5q">
           <li>Array of Objects </li>
-          <li>Multiple Objects.</li>
+          <li>Multiple Objects</li>
          </ul>
         </p></entry>
       </row>
       <row>
        <entry>Maximum Object Length (chars)</entry>
-       <entry>Maximum number of characters in a JSON object. Longer objects are passed to the
-        pipeline for error handling. </entry>
+       <entry>Maximum number of characters in a JSON object. <p>Longer objects are passed to the
+         pipeline for error handling. </p></entry>
       </row>
      </tbody>
     </tgroup>

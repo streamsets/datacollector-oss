@@ -2,7 +2,8 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ihv_p5f_cr">
     <title>Installing New Stages (Untar-Copy)</title>
-    <shortdesc>You can install a new stage by untarring the stage library and copying the </shortdesc>
+    <shortdesc>You can install a new stage by untarring the stage library and copying
+        files.</shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_dtv_x5f_cr">

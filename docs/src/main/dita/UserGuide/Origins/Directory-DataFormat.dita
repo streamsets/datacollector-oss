@@ -22,8 +22,7 @@
     <dd>When you configure the JSON data properties, you define the maximum length of the JSON
           object. When an object exceeds the maximum length, Directory skips the object and
           continues processing with the next object. </dd>
-        <dd>The skipped object is either discarded or written to error based on the default error
-          handling for the pipeline. </dd>
+        <dd>The skipped object is sent to the pipeline for error handling.</dd>
    </dlentry>
    <dlentry>
     <dt>Delimited</dt>
@@ -43,14 +42,14 @@
     <dd>Generates records based on the location of the record separator XML element.</dd>
     <dd>When you configure the XML data properties, you define the maximum length of the XML record. </dd>
         <dd>When a record exceeds the maximum length, Directory skips the record and continues
-          processing with the next record. The skipped record is either discarded or written to
-          error based on the default error handling for the pipeline. </dd>
+          processing with the next record. The skipped record is sent to the pipeline for error
+          handling.</dd>
    </dlentry>
       <dlentry>
         <dt>SDC Records</dt>
-        <dd>Use to process SDC records produced by another pipeline, such as output or error records
-          from another pipeline. </dd>
         <dd>Generates a record for every record.</dd>
+        <dd>Use to process SDC records produced by another pipeline, such as output records or error
+          records from another pipeline. </dd>
         <dd>For error records, provides the original record as read from the origin in the original
           pipeline. Also provides error information that you can use for correcting the record in an
           error pipeline. When processing error records, Directory expects the error file names and

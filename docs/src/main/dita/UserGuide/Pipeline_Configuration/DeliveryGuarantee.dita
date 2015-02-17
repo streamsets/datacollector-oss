@@ -17,7 +17,7 @@
           <dd>If a failure causes the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             stop while processing a batch of data, when restarts, it reprocesses the batch.</dd>
-          <dd>This option ensures that no data is lost. But if the failure occurs while the <ph
+          <dd>This option ensures that no data is lost. But if the failure occurs as the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             writes data to destinations, up to one batch data might be duplicated in the
             target.</dd>
@@ -32,7 +32,7 @@
             stop while processing a batch of data, when it starts up, it begins processing with the
             next batch of data.</dd>
           <dd>This option ensures duplicate data is not written to the target due to reprocessing.
-            But if the failure occurs while the <ph
+            But if the failure occurs as the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             writes data to destinations, up to one batch of data might not be processed.</dd>
         </dlentry>

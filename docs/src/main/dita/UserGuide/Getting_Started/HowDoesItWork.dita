@@ -22,14 +22,14 @@
    missing data. So you add a Value Replacer to replace null values in those fields. </p>
   <p>Now that the data flow is done, you configure the pipeline to save records that cannot be
    processed correctly and configure an email alert to let you know when the pipeline generates more
-   than 100 bad records. Then, you start the pipeline and the <ph
+   than 100 error records. Then, you start the pipeline and the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> goes to work. </p>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
    console goes into Monitor mode and displays summary and error statistics immediately. To get a
    close look at what's going on, you take a snapshot of the pipeline so you can examine how a set
    of data passed through the pipeline. You can also inspect data - configure rules to provide
    details about data as it moves from stage to stage - and configure rule-based alerts. </p>
-  <p>And what about those bad records being saved? They're saved with error details. The <ph
+  <p>And what about those error records being saved? They're saved with error details. The <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can move them
    to an external directory so you can create an error pipeline to reprocess that data. Voila!</p>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is a

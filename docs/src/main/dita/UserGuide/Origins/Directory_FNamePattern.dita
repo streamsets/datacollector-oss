@@ -3,12 +3,12 @@
 <concept id="concept_bxt_ndl_5q">
  <title>File Name Pattern</title>
  <shortdesc>Use a regular expression to define the file name pattern. Directory reads files in the
-  file directory that match the file name pattern.</shortdesc>
+    file directory that match the file name pattern. You can use UNIX-style wildcards, such as
+    asterisk or question mark. </shortdesc>
  <conbody>
   <p><indexterm>File Name Pattern<indexterm>Directory
         property</indexterm></indexterm><indexterm>Directory processor<indexterm>File Name
-          Pattern</indexterm></indexterm>You can use UNIX-style wildcards, such as asterisk (*) and
-      question mark (?). </p>
+          Pattern</indexterm></indexterm></p>
     <p>For example, if you use *.json, Directory reads all files with the .json extension. </p>
  </conbody>
 </concept>

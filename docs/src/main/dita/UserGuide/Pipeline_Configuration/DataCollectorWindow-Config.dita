@@ -26,11 +26,11 @@
           <row>
             <entry>1</entry>
             <entry>Pipeline canvas</entry>
-            <entry>Displays the pipeline. Use to configure the stages for the pipeline.</entry>
+            <entry>Displays the pipeline. Use to configure the pipeline data flow.</entry>
           </row>
           <row>
             <entry>2</entry>
-            <entry>Stage and Pipeline list</entry>
+            <entry>Stage list</entry>
             <entry>Lists the stages in the pipeline. Use to select a stage to edit. You can also
               select the stage in the canvas.</entry>
           </row>
