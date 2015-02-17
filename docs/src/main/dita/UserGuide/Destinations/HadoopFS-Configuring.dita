@@ -191,14 +191,13 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_wv3_xzd_br">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.77*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.49*"/>
                             <thead>
                                 <row>
-                                    <entry>Late Records Property 
-                                        <xref                                           href="HadoopFS-LateRecordHandling.dita#concept_xgm_g4d_br">
-                                            <image href="../Graphics/icon_moreInfo.png"
-                                                scale="11"/>
-                                    </xref>
+                                    <entry>Late Records Property <xref
+                                            href="HadoopFS-LateRecordHandling.dita#concept_xgm_g4d_br">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"/>
+                                        </xref>
                                     </entry>
                                     <entry>Description</entry>
                                 </row>
@@ -224,10 +223,10 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Late Record Directory Template 
-                                        <xref href="HadoopFS-DirectoryTemplates.dita#concept_cvc_skd_br">
-                                        <image href="../Graphics/icon_moreInfo.png"
-                                            scale="11"/></xref></entry>
+                                    <entry>Late Record Directory Template <xref
+                                            href="HadoopFS-DirectoryTemplates.dita#concept_cvc_skd_br">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                            /></xref></entry>
                                     <entry>Template for creating late record directories. You can
                                         use constants, field values, and datetime variables.
                                             <p>Output directories are created based on the smallest
@@ -275,11 +274,12 @@
                                 </row>
                                 <row>
                                     <entry>Remove New Line Characters</entry>
-                                    <entry>Removes new line characters. Use True or False.
-                                            <p>Recommended for ensuring writing text to a Hadoop
-                                            file system as a single line of text.<draft-comment
-                                                author="Loretta">add conceptual info post-beta if
-                                                necessary.</draft-comment></p></entry>
+                                    <entry>Removes new line characters from within a record. Use
+                                        True or False. <p>Recommended to ensure writing text to a
+                                            Hadoop file system as a single line of
+                                                text.<draft-comment author="Loretta">add conceptual
+                                                info post-beta if
+                                        necessary.</draft-comment></p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
