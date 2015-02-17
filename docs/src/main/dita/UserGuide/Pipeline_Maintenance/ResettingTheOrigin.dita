@@ -4,12 +4,12 @@
     <title>Resetting the Origin</title>
     <shortdesc>You can reset the origin when you want the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        process all available data. You can reset the origin for the Directory and Kafka Consumer
-        origins.</shortdesc>
+        process all available data. You can reset the origin for Directory origins. Reset the origin
+        when the pipeline is not running.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>resetting the origin</indexterm></indexterm>For
-                Directory and Kafka Consumer, the <ph
+            <p><indexterm>pipelines<indexterm>resetting the origin</indexterm></indexterm>For the
+                Directory origin, the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> notes where it stopped processing data when you stop a pipeline. When you restart
                 the pipeline, it continues from where it left off by default. </p>
@@ -17,14 +17,16 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to process all available data instead of continuing from where it stopped, reset
                 the origin.</p>
+            <p>To change the starting point for a Kafka Consumer, you can change the offset in the
+                Kafka ZooKeeper.</p>
         </context>
         <steps id="steps_hvb_y1s_5q">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/PickPipeline">
                 <cmd/>
             </step>
             <step>
-                <cmd>To reset the origin, from the pipeline canvas, click the
-                        <uicontrol>More</uicontrol> icon.</cmd>
+                <cmd>To reset the origin, click the <uicontrol>More</uicontrol> icon (<image
+                        href="../Graphics/icon_More.png" id="image_elh_yxg_cr" scale="70"/>).</cmd>
             </step>
             <step>
                 <cmd>Click <uicontrol>Reset Origin</uicontrol>.</cmd>

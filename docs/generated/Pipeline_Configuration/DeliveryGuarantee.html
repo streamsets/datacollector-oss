@@ -30,8 +30,10 @@
                   Collector</span> to
             stop while processing a batch of data, when restarts, it reprocesses the batch.</dd>
 
-          <dd class="dd">This option ensures that no data is lost, but can write duplicate data to targets. Up
-            to one batch data might be duplicated in the target.</dd>
+          <dd class="dd">This option ensures that no data is lost. But if the failure occurs while the <span class="ph">Data
+                  Collector</span>
+            writes data to destinations, up to one batch data might be duplicated in the
+            target.</dd>
 
         
         
@@ -43,11 +45,13 @@
 
           <dd class="dd">If a failure causes the <span class="ph">Data
                   Collector</span> to
-            stop while processing a batch of data, when it starts up, it begins processing the next
-            batch of data.</dd>
+            stop while processing a batch of data, when it starts up, it begins processing with the
+            next batch of data.</dd>
 
-          <dd class="dd">This option ensures duplicate data is not written to the target due to reprocessing,
-            but can result in the loss of data. Up to one batch of data might not be processed.</dd>
+          <dd class="dd">This option ensures duplicate data is not written to the target due to reprocessing.
+            But if the failure occurs while the <span class="ph">Data
+                  Collector</span>
+            writes data to destinations, up to one batch of data might not be processed.</dd>
 
         
       </dl>

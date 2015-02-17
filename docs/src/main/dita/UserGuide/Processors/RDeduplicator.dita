@@ -13,7 +13,8 @@
       example, to discard purchases that are accidentally resent, you might compare information
       about the purchaser, selected items, and shipping address, but ignore the timestamp of the
       event. </p>
-  <p>To enhance pipeline performance, the Record Deduplicator hashes the comparison fields and uses
-            the hashed values when evaluating for duplicates. </p>
+        <p>To enhance pipeline performance, the Record Deduplicator hashes comparison fields and
+            uses the hashed values to evaluate for duplicates. On occasion, hash functions can
+            generate collisions that can cause records to be incorrectly treated as duplicates.</p>
  </conbody>
 </concept>

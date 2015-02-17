@@ -7,11 +7,10 @@
   during development as a placeholder for a different destination. </shortdesc>
  <conbody>
   <p><indexterm>Trash
-     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Trash</indexterm></indexterm>For
-   example, the following pipeline uses the Stream Selector to route data to the Kafka Producer and
-   Hadoop FS targets based on different conditions. The Stream Selector routes all records that are
-   not included in either of the other conditions to the Trash destination. <draft-comment
-    author="Loretta">Retake screenshot with Hadoop FS</draft-comment></p>
+          destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Trash</indexterm></indexterm>For
+      example, the following pipeline uses the Stream Selector to route data to the Kafka Producer
+      and Hadoop FS targets based on different conditions. The Stream Selector routes all records
+      that are not included in either of the other conditions to the Trash destination. </p>
   <p>
    <image href="../Graphics/TrashPipeline.png" id="image_djp_2fj_wq" scale="50"/></p>
   <p>When you use a Trash destination, you can use data preview to view the data routed to the

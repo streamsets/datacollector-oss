@@ -7,15 +7,15 @@
         Then, you define post-processing options and the properties specific to the data
         format.</shortdesc>
     <taskbody>
-        <context><indexterm>Directory origin<indexterm>configuring</indexterm></indexterm></context>
+        <context/>
         <steps id="steps_tvn_b5v_yq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc">
                 <cmd/>
             </step>
            
             <step>
-                <cmd>On the <uicontrol>Files</uicontrol> tab, configure the following
-                    properties:</cmd>
+                <cmd><indexterm>Directory origin<indexterm>configuring</indexterm></indexterm>On the
+                        <uicontrol>Files</uicontrol> tab, configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_tm4_vck_5q">
                         <tgroup cols="2">
@@ -52,10 +52,7 @@
                                         /> where source files are stored.</entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Size (recs)   <xref
-                                            href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
-                                                id="image_kgv_zq3_br"/></xref></entry>
+                                    <entry>Batch Size (recs)</entry>
                                     <entry>Number of records to pass through the pipeline at one
                                         time. </entry>
                                 </row>
@@ -72,8 +69,9 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="11"
                                                 id="image_c4p_p5v_yq"/></xref>
                                     </entry>
-                                    <entry>Regular expression that describes the file names. For
-                                        example, *.log.</entry>
+                                    <entry>Regular expression that describes the file names. You can
+                                        use UNIX-style wildcards, such as * or ?. For example,
+                                        *.log.</entry>
                                 </row>
                                 <row>
                                     <entry>First File to Process <xref

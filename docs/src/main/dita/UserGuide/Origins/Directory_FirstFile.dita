@@ -3,7 +3,7 @@
 <concept id="concept_ltv_r3l_5q">
  <title>First File for Processing</title>
  <shortdesc>Configure a first file for processing when you want Directory to ignore certain files in
-    the file directory.</shortdesc>
+      the directory.</shortdesc>
  <conbody>
   <p><indexterm>First File for Processing<indexterm>Directory
             property</indexterm></indexterm><indexterm>Directory origin<indexterm>First File for

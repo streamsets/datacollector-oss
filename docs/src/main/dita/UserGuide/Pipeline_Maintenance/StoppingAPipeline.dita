@@ -18,8 +18,7 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>To stop the pipeline, from the pipeline canvas, click the
-                        <uicontrol>Stop</uicontrol> icon.</cmd>
+                <cmd>To stop the pipeline, click the <uicontrol>Stop</uicontrol> icon.</cmd>
                 <info>The <wintitle>Stop Pipeline Confirmation</wintitle> dialog box appears.</info>
             </step>
             <step>

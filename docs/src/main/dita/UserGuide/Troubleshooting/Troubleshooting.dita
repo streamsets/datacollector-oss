@@ -35,11 +35,12 @@
     </dlentry>
     <dlentry>
      <dt>Why can't I edit preview data?</dt>
-     <dd>When you can edit preview data in the following locations: <ul
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_EditPreview"
-       id="ul_ojz_yhn_tq">
-       <li/>
-      </ul></dd>
+     <dd>When you can edit preview data in the following locations in a pipeline. <ul
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_EditPreview"
+              id="ul_ojz_yhn_tq">
+              <li/>
+            </ul></dd>
+          <dd>Edit preview data to test or debug pipeline processing.</dd>
     </dlentry>
     <dlentry>
      <dt>Why isn't the Start icon enabled? </dt>

@@ -2,7 +2,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hpr_twm_jq">
  <title>Destinations</title>
- <shortdesc>A destination stage represents the target system for a pipeline. You can use one or more
+ <shortdesc>A destination stage represents the target for a pipeline. You can use one or more
     destinations in a pipeline.</shortdesc>
  <conbody>
   <p><indexterm>destinations<indexterm>overview</indexterm></indexterm>You can use the following

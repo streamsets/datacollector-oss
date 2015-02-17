@@ -71,9 +71,9 @@
                 </cmd>
             </step>
             <step id="PickPipeline">
-                <cmd>Verify that the pipeline that you want to stop appears in the pipeline canvas. </cmd>
-                <info>If it does not, select the pipeline that you want to stop from the
-                        <wintitle>Pipeline</wintitle> library.</info>
+                <cmd>Verify that the pipeline that you want to use appears in the pipeline canvas. </cmd>
+                <info>If it does not, select the pipeline from the <wintitle>Pipeline</wintitle>
+                    library.</info>
             </step>
             <step>
                 <cmd>

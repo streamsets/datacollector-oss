@@ -9,19 +9,22 @@
         />.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>starting</indexterm></indexterm>For the Directory and
-                Kafka Consumer origins, when you restart a pipeline, the <ph
+            <p><indexterm>pipelines<indexterm>starting</indexterm></indexterm>For a Directory
+                origin, when you restart a pipeline, the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> starts the pipeline from where it last stopped by default. You can configure a
-                pipeline to forget the last stopping point and read all available data.</p>
+                pipeline to reset the origin to read all available data.</p>
+            <p>A Kafka Consumer origin starts processing data based on the offset passed from the
+                Kafka ZooKeeper. </p>
+            <p>A File Tail origin processes data that is written to the file after you start the
+                pipeline.</p>
         </context>
         <steps id="steps_f5j_mzr_5q">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/PickPipeline">
                 <cmd/>
             </step>
             <step>
-                <cmd>To start the pipeline, in the pipeline canvas, click the
-                        <uicontrol>Start</uicontrol> icon.</cmd>
+                <cmd>To start the pipeline, click the <uicontrol>Start</uicontrol> icon.</cmd>
                 <info>If the Start icon is not enabled, the pipeline is not valid or the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> is running a different pipeline.</info>

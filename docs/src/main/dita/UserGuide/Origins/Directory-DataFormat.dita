@@ -18,7 +18,7 @@
    <dlentry>
     <dt>JSON</dt>
     <dd>Generates a record for each JSON object. </dd>
-    <dd>You can use JSON files that include multiple JSON objects or a JSON array.</dd>
+    <dd>You can use JSON files that include multiple JSON objects or a single JSON array.</dd>
     <dd>When you configure the JSON data properties, you define the maximum length of the JSON
           object. When an object exceeds the maximum length, Directory skips the object and
           continues processing with the next object. </dd>

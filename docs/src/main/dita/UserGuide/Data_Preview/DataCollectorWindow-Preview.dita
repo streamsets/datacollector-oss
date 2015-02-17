@@ -51,7 +51,7 @@
             <row>
               <entry><image href="../Graphics/icon_PrevRefresh.png" id="image_cfn_5mr_br"/></entry>
               <entry>Refresh Preview icon</entry>
-              <entry>Refreshes the preview with a new set of data from the origin.</entry>
+              <entry>Refreshes the preview with a fresh set of data from the origin.</entry>
             </row>
             <row>
               <entry><image href="../Graphics/icon_PreviewRerun.png" id="image_nzs_2nr_br"/></entry>

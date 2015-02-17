@@ -33,7 +33,7 @@
       </ul>
 </div>
 
-  <p class="p">For details about literals, operators, functions, and reserved words, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The expression language enables you to create expressions that evaluate or modify data. Use the expression language to create expressions in the Expression processor and conditions in the Stream Selector processor.">Expression Language</a>.</p>
+  <p class="p">For details about literals, operators, functions, and reserved words, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The StreamSets expression language enables you to create expressions that evaluate or modify data. The expression language is based on the JSP 2.0 Expression Language.">Expression Language</a>.</p>
 
  </div>
 
@@ -66,7 +66,7 @@
    from the TIME field:</p>
 
   <div class="p">
-   <pre class="pre codeblock">${record:value("/DATE")} {record:value("/TIME")}</pre>
+   <pre class="pre codeblock">${record:value("/DATE")} ${record:value("/TIME")}</pre>
 
   </div>
 

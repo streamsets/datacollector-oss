@@ -2,15 +2,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_p54_4kl_vq">
  <title>Expression Language</title>
- <shortdesc>The expression language enables you to create expressions that evaluate or modify data.
-  Use the expression language to create expressions in the Expression processor and conditions in
-  the Stream Selector processor.</shortdesc>
+ <shortdesc>The StreamSets expression language enables you to create expressions that evaluate or
+    modify data. The expression language is based on the JSP 2.0 Expression Language. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector<indexterm>expression
         language</indexterm></indexterm><indexterm>expression
-          language<indexterm>overview</indexterm></indexterm>You can also use the expression
-      language when you configure data rules, the Hadoop FS output file options, and Kafka Producer
-      partitions.</p>
+          language<indexterm>overview</indexterm></indexterm>Use the expression language to create
+      expressions in the Expression Evaluator and conditions in the Stream Selector processor. You
+      can also use the expression language when you configure data rules, the Hadoop FS output file
+      options, and Kafka Producer partition strategy.</p>
   <p>You can use the following elements in an expression or condition:<ul id="ul_wrf_fjm_xq">
     <li>Field names</li>
     <li>Constants</li>

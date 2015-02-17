@@ -8,22 +8,26 @@
  <conbody>
   <p><indexterm>Hadoop FS destination<indexterm>directory
     templates</indexterm></indexterm><indexterm>directory templates<indexterm>Hadoop
-    FS</indexterm></indexterm>You can use the following elements in a directory template:<dl>
+    FS</indexterm></indexterm>You can use a mix of constants, field values, and datetime variables
+   in a directory template.</p>
+  <p>For example, to create output directories for event data based on the state and timestamp of a
+   record, you might define the following output directory
+   template:<codeblock> /outputfiles/${record:value("/State")}/${YY}-${MM}-${hh}</codeblock></p>
+  <p>You can use the following elements in a directory template:<dl>
     <dlentry>
      <dt>Constants</dt>
      <dd>You can use any constant, such as "output" or "lateRecords."</dd>
     </dlentry>
     <dlentry>
      <dt>Field Values</dt>
-     <dd>You can call a field in an expression: ${record:value("/&lt;fieldname>")}.</dd>
+     <dd>You can call a field in an expression: ${record:value("/&lt;field name>")}.</dd>
     </dlentry>
     <dlentry>
      <dt>Datetime Variables</dt>
      <dd>Hadoop FS creates directories as needed, based on the smallest datetime variable that you
       use. For example, if the smallest variable is hours, then the directories are created for
       every hour of the day that receives output records.</dd>
-     <dd>You can use any combination of the following datetime variables in a directory template:<ul
-       id="ul_s2x_5qq_1r">
+     <dd>You can use the following datetime variables in a directory template:<ul id="ul_s2x_5qq_1r">
        <li>${YYYY} - four digit year</li>
        <li>${YY} - two digit year</li>
        <li>${MM} - two digit month</li>
@@ -32,12 +36,15 @@
        <li>${mm} - two digit minute</li>
        <li>${ss} - two digit second</li>
       </ul></dd>
+     <dd>When you define a directory template, use all of the datetime variables between one of the
+      year variables and the smallest variable that you want to use. For example, to create
+      directories based on the date, you might use one of the following datetime variable
+      progressions:</dd>
+     <dd>
+      <codeblock>${YYYY}-${MM}-${DD}
+${YY}_${MM}_${DD}</codeblock>
+     </dd>
     </dlentry>
    </dl></p>
-  <p>For example, to create output directories for event data based on the state and timestamp of a
-   record, you might define the following output directory template:
-   /outputfiles/${record:value("/State")}/${YY}-${MM}-${hh}.</p>
-  <p>Since the smallest unit of measurement is the hour, Hadoop FS can create a new output directory
-   every hour for every state included in the output records. </p>
  </conbody>
 </concept>
