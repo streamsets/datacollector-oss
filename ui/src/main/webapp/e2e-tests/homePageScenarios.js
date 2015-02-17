@@ -103,9 +103,11 @@ describe('StreamSets Data Collector App', function() {
 
         pipelines[0].element(by.css('[ng-click="duplicatePipelineConfig(pipeline, $event)"]')).click();
 
-        element(by.css('button[type="submit"]')).click();
-
         browser.sleep(500);
+
+        element(by.css('.duplicate-modal-form')).element(by.css('button[type="submit"]')).click();
+
+        browser.sleep(2000);
 
         //Test pipeline creation by checking list of pipelines
         element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
@@ -151,7 +153,7 @@ describe('StreamSets Data Collector App', function() {
       });
     });
 
-    it('should be able to toggle stage library', function() {
+    it('should be able to toggle stage library and click on stage to add', function() {
       //Select Sample Pipeline
 
       //Toggle Library Pane
@@ -166,8 +168,34 @@ describe('StreamSets Data Collector App', function() {
       element(by.css('[ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel"]')).click();
       expect(element(by.model('$storage.stageFilterGroup')).getAttribute('value')).toEqual('SOURCE');
 
-    });
 
+      //Add Source
+      element.all(by.repeater('stageLibrary in stageLibraries')).then(function(stageLibraries) {
+        //Select 1 Stage
+        stageLibraries[0].click();
+
+        browser.sleep(2000);
+      });
+
+
+      //Add Processor
+      element(by.model('$storage.stageFilterGroup')).element(by.cssContainingText('option', 'Processor')).click();
+      element.all(by.repeater('stageLibrary in stageLibraries')).then(function(stageLibraries) {
+        //Select 1 Stage
+        stageLibraries[0].click();
+        browser.sleep(2000);
+      });
+
+
+      //Add Target
+      element(by.model('$storage.stageFilterGroup')).element(by.cssContainingText('option', 'Destinations')).click();
+      element.all(by.repeater('stageLibrary in stageLibraries')).then(function(stageLibraries) {
+        //Select 1 Stage
+        stageLibraries[0].click();
+        browser.sleep(2000);
+      });
+
+    });
 
   });
 });
