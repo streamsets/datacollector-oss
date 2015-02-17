@@ -14,7 +14,7 @@
   </topicref>
   <topicref href="../Pipeline_Configuration/MergingStreams.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-  <topicref href="../Pipeline_Configuration/ErrorHandling.dita">
+  <topicref href="../Pipeline_Configuration/ErrorHandling.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Pipeline_Configuration/SendToError.dita"/>
    <topicref href="../Pipeline_Configuration/ReprocessingErrorRecords.dita"/>

@@ -11,9 +11,9 @@
                 pipeline, include the Directory origin and configure it to use the SDC Records data
                 format. The SDC Records data format provides information for reprocessing the
                 original records with the necessary error handling. </p>
-            <p>The SDC Records format provides the follwoing information: <ul id="ul_fxk_mbd_br">
+            <p>The SDC Records format provides the following information: <ul id="ul_fxk_mbd_br">
                     <li>The original source record, as read by the pipeline that generated the
-                        error. Changes to the record that might have occured within the original
+                        error. Changes to the record that might have occurred within the original
                         pipeline are not preserved.</li>
                     <li>Additional metadata that includes: <ul id="ul_xqh_2bg_cr">
                             <li>The path the record took through the pipeline, including the stage

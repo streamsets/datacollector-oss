@@ -23,14 +23,14 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/MetricAlerts.dita">
+  <topicref href="../Pipeline_Monitoring/MetricAlerts.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Pipeline_Monitoring/MetricTypes.dita"/>
    <topicref href="../Pipeline_Monitoring/ConfiguringMetricAlerts.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/DataAlerts.dita">
+  <topicref href="../Pipeline_Monitoring/DataAlerts.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

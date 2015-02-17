@@ -45,15 +45,12 @@
                                     <entry>Not Enough Splits</entry>
                                     <entry>Determines how to handle records that cannot be split as
                                             requested:<ul id="ul_n5d_xn3_yq">
-                                            <li><uicontrol>Continue</uicontrol> - Passes the record
-                                                split as much as possible with null values in unused
-                                                split fields. </li>
-                                            <li><uicontrol>Discard</uicontrol> - Discards the
-                                                record.</li>
-                                            <li><uicontrol>Send to Error</uicontrol> - Sends the
-                                                record to the pipeline for error handling. </li>
-                                            <li><uicontrol>Stop Pipeline</uicontrol> - Stops the
-                                                pipeline.</li>
+                                            <li>Continue - Passes the record split as much as
+                                                possible with null values in unused split fields. </li>
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling. </li>
+                                            <li>Stop Pipeline - Stops the pipeline.</li>
                                         </ul></entry>
                                 </row>
                                 <row>

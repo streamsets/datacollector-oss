@@ -20,7 +20,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_zfp_zy4_yq">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.45*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.63*"/>
                             <thead>
                                 <row>
                                     <entry>Expression Evaluator Property</entry>
@@ -46,9 +46,9 @@
                                 </row>
                                 <row>
                                     <entry>Constants <xref
-                                        href="DefiningConstants.dita#task_ogd_zj3_wq"> 
-                                        <image href="../Graphics/icon_moreInfo.png" scale="11"
-                                            id="image_c4p_p5v_yq"/></xref></entry>
+                                            href="DefiningConstants.dita#task_ogd_zj3_wq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                                id="image_c4p_p5v_yq"/></xref></entry>
                                     <entry>Represents a constant in expressions. Define a constant
                                         to easily reuse it in the stage or to easily update the
                                         constant value. <p>To define a constant, click the

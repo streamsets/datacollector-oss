@@ -11,7 +11,7 @@
             text, the fields are one level of subdirectories. A reference to a field in a text
             record is simply: <codeblock>/&lt;field name></codeblock></p>
     <p>So a field named CITY displays as /CITY. </p>
-    <p>When a record is complex, like a JSON object, the root object might incude many additional
+    <p>When a record is complex, like a JSON object, the root object might include many additional
             objects. In this case, a reference to a field is the path to the field:
             <codeblock>/&lt;path to field>/&lt;field name></codeblock></p>
     <p>For example, a field in a JSON tweet might display as /users/followers_count. </p>

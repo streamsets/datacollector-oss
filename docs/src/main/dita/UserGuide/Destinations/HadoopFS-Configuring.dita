@@ -273,6 +273,14 @@
                                                 column in the output file. </li>
                                         </ul></entry>
                                 </row>
+                                <row>
+                                    <entry>Remove New Line Characters</entry>
+                                    <entry>Removes new line characters. Use True or False.
+                                            <p>Recommended for ensuring writing text to a Hadoop
+                                            file system as a single line of text.<draft-comment
+                                                author="Loretta">add conceptual info post-beta if
+                                                necessary.</draft-comment></p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
