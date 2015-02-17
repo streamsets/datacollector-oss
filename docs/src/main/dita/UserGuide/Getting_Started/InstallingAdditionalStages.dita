@@ -4,13 +4,12 @@
  <title>Installing Additional Stages</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
     /> includes a wide range of stages for pipeline development, but you might find a need for
-    additional functionality. We have created additional stages that you can install and are working
-    on more. </shortdesc>
+    additional functionality. </shortdesc>
  <conbody>
   <p><indexterm>stages<indexterm>installing
           additional</indexterm></indexterm><indexterm>installation<indexterm>additional
-          stages</indexterm></indexterm>At this time, the following additional stages are available:
-        <table frame="all" rowsep="1" colsep="1" id="table_izz_npf_cr">
+          stages</indexterm></indexterm>At this time, you can install the following additional
+      stages: <table frame="all" rowsep="1" colsep="1" id="table_izz_npf_cr">
         <tgroup cols="2">
           <colspec colname="c1" colnum="1" colwidth="1*"/>
           <colspec colname="c2" colnum="2" colwidth="1.85*"/>
