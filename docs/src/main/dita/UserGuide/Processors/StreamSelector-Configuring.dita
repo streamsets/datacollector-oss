@@ -2,25 +2,24 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_iss_2zx_wq">
     <title>Configuring the Stream Selector</title>
-    <shortdesc>Use a Stream Selector to route data to different streams based on
-        conditions</shortdesc>
     <taskbody>
-        <context/>
+        <context>
+            <p><indexterm>Stream Selector processor<indexterm>configuring</indexterm></indexterm>Use
+                a Stream Selector to route data to different streams based on conditions.</p>
+        </context>
         <steps id="steps_tsx_3gf_xq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
                 <cmd/>
             </step>
             <step>
-                <cmd><indexterm>Stream Selector
-                        processor<indexterm>configuring</indexterm></indexterm>On the
-                        <uicontrol>Conditions</uicontrol> tab, configure the following
+                <cmd>On the <uicontrol>Conditions</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ecr_dwf_br">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.57*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.18*"/>
                             <thead>
                                 <row>
                                     <entry>Stream Selector Property</entry>
@@ -30,8 +29,9 @@
                             <tbody>
                                 <row>
                                     <entry>Condition <xref
-                                            href="StreamSelector_Conditions.dita#task_mj5_vjf_xq"
-                                        > <image href="../Graphics/icon_moreInfo.png" scale="11"/></xref></entry>
+                                            href="StreamSelector_Conditions.dita#task_mj5_vjf_xq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                            /></xref></entry>
                                     <entry>Condition to stream data to this output. Click the
                                             <uicontrol>Add</uicontrol> icon to create additional
                                         conditions and corresponding output locations. <p>To define
@@ -54,7 +54,7 @@
                                 </row>
                                 <row>
                                     <entry>Unmatched Record Handling <xref
-                                        href="StreamSelector_fallback.dita#concept_sn5_5kx_wq">
+                                            href="StreamSelector_fallback.dita#concept_sn5_5kx_wq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="11"
                                                 id="image_eld_51f_cr"/></xref></entry>
                                     <entry>Determines how to handle records that do not match any

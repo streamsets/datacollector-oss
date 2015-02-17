@@ -14,4 +14,8 @@
    when you have a constant value that you use in more than one expression or that you want to
    change easily. </p>
  </conbody>
+  <related-links>
+    <link href="ConfiguringExpressionsConditions.dita#concept_ofb_1cm_xq"/>
+    <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
+  </related-links>
 </concept>

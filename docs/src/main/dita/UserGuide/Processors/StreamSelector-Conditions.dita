@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_oy4_tbf_cr">
  <title>Sample Conditions for Streams</title>
- <shortdesc>A condition defines the data that passes to the associated stream. All incoming data
-  that meets the condition passes to the stream. Use the expression language to define conditions. </shortdesc>
+ <shortdesc>A condition defines the data that passes to the associated stream. All records that meet
+  the condition passes to the stream. Use the expression language to define conditions. </shortdesc>
  <conbody>
   <p>When you define a condition, you typically base it on values in one or more fields in the
    record. </p>

@@ -2,18 +2,20 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_m2m_skm_zq">
     <title>Configuring a Hadoop FS Destination</title>
-    <shortdesc>Configure a Hadoop FS destination to write data to a Hadoop file system.</shortdesc>
     <taskbody>
-        <context/>
+        <context>
+            <p><indexterm>Hadoop FS
+                destination<indexterm>configuring</indexterm></indexterm>Configure a Hadoop FS
+                destination to write data to a Hadoop file system.</p>
+        </context>
         <steps id="steps_ljw_44d_br">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step1"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step2">
                 <cmd/>
             </step>
             <step>
-                <cmd><indexterm>Hadoop FS
-                    destination<indexterm>configuring</indexterm></indexterm>On the <wintitle>Hadoop
-                        FS</wintitle> tab, configure the following properties:</cmd>
+                <cmd>On the <wintitle>Hadoop FS</wintitle> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_rst_t4d_br">
                         <tgroup cols="2">
@@ -21,7 +23,7 @@
                             <colspec colname="c2" colnum="2" colwidth="2.85*"/>
                             <thead>
                                 <row>
-                                    <entry>Hadoop FS Properties</entry>
+                                    <entry>Hadoop FS Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -131,7 +133,7 @@
                                     <entry>Max Records in a File</entry>
                                     <entry>Maximum number of records to be written to an output
                                         file. Additional records are written to a new file. <p>Use 0
-                                            to opt out of using this property.</p></entry>
+                                            to opt out of this property.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Max File Size (MB)</entry>
@@ -163,6 +165,16 @@
                                         compression codec:<ul id="ul_etm_1lg_br">
                                             <li>Block Compression</li>
                                             <li>Record Compression</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Determines how to handle error records:<ul
+                                            id="ul_o2f_4q3_cr">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline.</li>
                                         </ul></entry>
                                 </row>
                             </tbody>
@@ -253,10 +265,10 @@
                                 <row>
                                     <entry>Field Mapping</entry>
                                     <entry>Map output fields to column names for the output file.
-                                        Click the Add icon to add additional field mappings. <ul
-                                            id="ul_zgf_plg_br">
+                                        Click the <uicontrol>Add</uicontrol> icon to add additional
+                                        field mappings. <ul id="ul_zgf_plg_br">
                                             <li>Field Path - Field name of the record. Use a leading
-                                                slash as follows: /&lt;FirstField>.</li>
+                                                slash as follows: /Field.</li>
                                             <li>Delimited Column Name - Name for the corresponding
                                                 column in the output file. </li>
                                         </ul></entry>

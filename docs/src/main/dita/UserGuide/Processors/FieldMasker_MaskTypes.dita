@@ -11,7 +11,7 @@
      <dd><indexterm>Field Masker processor<indexterm>mask
        types</indexterm></indexterm><indexterm>mask types<indexterm>Field
        Masker</indexterm></indexterm>Replaces values with a fixed-length mask. Use when you want to
-      mask any variability in length in the data. </dd>
+      mask variations in the length of the data. </dd>
      <dd>The following example uses a fixed-length masks to hide passwords:<simpletable frame="none"
        relcolwidth="1.0* 1.0*" id="simpletable_zyf_5cj_yq">
        <strow>
@@ -38,7 +38,7 @@ L92m1sN3q</codeblock>
        frame="none" relcolwidth="1.0* 1.0*" id="simpletable_jfq_bdj_yq">
        <strow>
         <stentry>
-         <codeblock><uicontrol>Original Password</uicontrol> (original)
+         <codeblock><uicontrol>Original Password</uicontrol>
 1234
 donKey
 022367snowfall</codeblock>
@@ -56,11 +56,26 @@ L92m1sN3q0jaOmE67Ws</codeblock>
      <dt>Custom</dt>
      <dd>Replaces values with a mask based on a user-defined pattern. </dd>
      <dd>When you define the pattern for the mask, you can use a hash mark (#) to reveal the
-      character in that location of the hash mark. All other characters are used as constants in the
-      mask. For example, the following mask pattern reveals the area code of a phone number and
-      replaces all other digits in the phone number with an x: <codeph>###-xxx-xxxx</codeph>.<note
-       type="tip">To avoid confusing masking characters for real data, use one masking character
-       instead of a mix of masking characters.</note></dd>
+      character in that location. All other characters are used as constants in the mask. </dd>
+     <dd>The following example uses <codeph>###-xxx-xxxx</codeph> as the mask pattern to reveal the
+      area code of a phone number while masking the rest of the number:<simpletable frame="none"
+       relcolwidth="1.0* 1.0*" id="simpletable_xwn_ms3_cr">
+       <strow>
+        <stentry>
+         <codeblock><uicontrol>Original Phone Number</uicontrol>
+415-333-3434
+301-999-0987
+617-567-8888</codeblock>
+        </stentry>
+        <stentry>
+         <codeblock><uicontrol>Custom Mask (###-xxx-xxxx)</uicontrol>
+415-xxx-xxxx
+301-xxx-xxxx
+617-xxx-xxxx</codeblock>
+        </stentry>
+       </strow>
+      </simpletable><note type="tip">To avoid confusing masking characters for real data, use one
+       masking character instead of a mix of masking characters.</note></dd>
     </dlentry>
    </dl>
   </p>

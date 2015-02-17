@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hpr_twm_jq">
   <title>Processors</title>
-  <shortdesc>A processor stage represents a type of data processing that you want to perform within
-    the pipeline. You can use as many processors in a pipeline as you need.</shortdesc>
+  <shortdesc>A processor stage represents a type of data processing that you want to perform. You
+    can use as many processors in a pipeline as you need.</shortdesc>
   <conbody>
     <p><indexterm>processors<indexterm>overview</indexterm></indexterm>The <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides

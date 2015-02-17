@@ -61,7 +61,7 @@
               detailed list of issues.</entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon_DataPreview.png" id="image_tyf_xkb_cr" scale="75"
+            <entry><image href="../Graphics/icon_DataPreview.png" id="image_tyf_xkb_cr" scale="70"
               /></entry>
             <entry>Preview icon</entry>
             <entry>Starts a data preview.</entry>
@@ -72,6 +72,13 @@
             <entry>More icon</entry>
             <entry>Provides additional actions for the pipeline. Use to reset the origin for the
               pipeline.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon_link.png" id="image_fvp_4r3_cr" scale="70"
+              /></entry>
+            <entry>Stream link icon</entry>
+            <entry>Indicates the flow of data through the pipeline. Select to configure data rules
+              and alerts.</entry>
           </row>
         </tbody>
       </tgroup>

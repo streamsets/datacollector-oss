@@ -3,7 +3,7 @@
 <concept id="concept_o5k_dmf_zq">
  <title>Value Replacer</title>
  <shortdesc>The Value Replacer replaces null values in a field with a constant. The Value Replacer
-  can also replace existing values in a field with null values. </shortdesc>
+  can also replace existing values in a field with Nulls. </shortdesc>
  <conbody>
   <note type="tip"><indexterm>Value Replacer
           processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Value

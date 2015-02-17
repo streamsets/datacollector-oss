@@ -17,11 +17,11 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ozv_nnk_wq">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.99*"/>
                             <thead>
                                 <row>
-                                    <entry>Field Masker Configuration Property</entry>
+                                    <entry>Field Masker Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -34,8 +34,8 @@
                                 <row>
                                     <entry>Mask Type <xref
                                             href="FieldMasker_MaskTypes.dita#concept_vwp_gh4_wq">
-
-                                        <image href="../Graphics/icon_moreInfo.png" scale="12"/></xref></entry>
+                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                            /></xref></entry>
                                     <entry>Mask type to hide field values. Select one of the
                                         following options:<ul id="ul_kmd_rnk_wq">
                                             <li>Fixed-length - Replaces values with a fixed-length

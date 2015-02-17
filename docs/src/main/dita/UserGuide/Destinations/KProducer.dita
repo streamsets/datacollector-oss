@@ -3,8 +3,8 @@
 <concept id="concept_oq2_5jl_zq">
  <title>Kafka Producer</title>
  <shortdesc>The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to
-  Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data using
-  the SDC records format.</shortdesc>
+        Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data
+        using the SDC Record format.</shortdesc>
  <conbody>
   <p><indexterm>Kafka Producer
           destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kafka

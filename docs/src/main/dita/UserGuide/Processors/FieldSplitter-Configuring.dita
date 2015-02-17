@@ -2,12 +2,11 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_av1_5g3_yq">
     <title>Configuring a Field Splitter</title>
-    <shortdesc>Configure a Field Splitter to split data from a single field into multiple fields.
-        You can split data from a single field. To split additional fields, add another Field
-        Splitter to the pipeline.</shortdesc>
     <taskbody>
         <context><indexterm>Field Splitter
-            processor<indexterm>configuring</indexterm></indexterm></context>
+            processor<indexterm>configuring</indexterm></indexterm>Configure a Field Splitter to
+            split data from a single field into multiple fields. You can split data from a single
+            field. To split additional fields, add another Field Splitter to the pipeline.</context>
         <steps id="steps_r4z_dh3_yq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">

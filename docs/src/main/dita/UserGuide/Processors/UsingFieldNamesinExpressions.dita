@@ -12,7 +12,8 @@
   <p>
    <codeblock>${record:value("/DATE")} ${record:value("/TIME")}</codeblock>
   </p>
-  <p>To reference a nested field, as with a field in a JSON object, use the path to the field as
-   follows:<codeblock>record:value("/&lt;path to field>/&lt;field name>")</codeblock></p>
+  <p>To reference a nested field, such as a field in a JSON object, use the path to the field as
+    follows:<codeblock>record:value("/&lt;path to field>/&lt;field name>")</codeblock><note>You can
+    use single or double quotation marks to surround a field name.</note></p>
  </conbody>
 </concept>

@@ -4,8 +4,9 @@
     <title>Configuring a Field Hasher</title>
     <shortdesc>Configure a Field Hasher to encode sensitive data.</shortdesc>
     <taskbody>
-        <context><indexterm>Field Hasher
-            processor<indexterm>configuring</indexterm></indexterm></context>
+        <context><indexterm>Field Hasher processor<indexterm>configuring</indexterm></indexterm>When
+            you configure the Field Hasher, you select the field that you want to encode and the
+            algorithm that you want to use. </context>
         <steps id="steps_fsf_flk_wq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
@@ -32,8 +33,8 @@
                                 </row>
                                 <row>
                                     <entry>Hash Type</entry>
-                                    <entry>Algorithm to use to hash field values. Use one of the
-                                        following options:<ul id="ul_kmd_rnk_wq">
+                                    <entry>Algorithm to use to hash field values:<ul
+                                            id="ul_kmd_rnk_wq">
                                             <li>MD5 - Produces a 128-bit (16-byte) hash value,
                                                 typically expressed in text format as a 32 digit
                                                 hexadecimal number.</li>

@@ -2,10 +2,10 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_npx_xgf_vq">
     <title>Configuring a Kafka Consumer</title>
-    <shortdesc>Configure a Kafka Consumer to read text, delimited, JSON, or XML data from a Kafka
-        cluster. When you configure the Kafka Consumer, you configure the general properties,
-        including Kafka and ZooKeeper details. For delimited and JSON data, configure additional
-        related properties. You can optionally add custom Kafka properties. </shortdesc>
+    <shortdesc>Configure a Kafka Consumer to read data from a Kafka cluster. When you configure the
+        Kafka Consumer, you configure the general properties, including Kafka and ZooKeeper details.
+        For delimited and JSON data, configure additional related properties. You can optionally add
+        custom Kafka properties. </shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_f3x_nhw_yq">
@@ -22,7 +22,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3*"/>
                             <thead>
                                 <row>
-                                    <entry>General Properties</entry>
+                                    <entry>Kafka Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -107,8 +107,8 @@
                                 </row>
                                 <row>
                                     <entry>Produce Single Record</entry>
-                                    <entry>Generates a single record for multiple JSON objects. Not
-                                        available for JSON arrays.</entry>
+                                    <entry>Generates a single record for multiple JSON objects.
+                                            <p>Not available for JSON arrays.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Max Object Length (chars) </entry>

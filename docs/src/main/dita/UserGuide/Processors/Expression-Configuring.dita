@@ -37,9 +37,9 @@
                                         <ul id="ul_hhv_kzf_br">
                                             <li>Output Field - The field to pass the results of the
                                                 expression to the next stage. Enter the name of a
-                                                new or existing field as follows: /&lt;field
-                                                  name>.<p>The Expression Evaluator replaces values
-                                                  in existing field. </p></li>
+                                                new or existing field as follows: /FieldName.<p>The
+                                                  Expression Evaluator replaces values in existing
+                                                  field. </p></li>
                                             <li>Expression - Expression to evaluate.</li>
                                         </ul>
                                     </entry>

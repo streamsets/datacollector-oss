@@ -35,8 +35,9 @@
                                 </row>
                                 <row>
                                     <entry>Time to Compare</entry>
-                                    <entry>Amount of seconds to compare records. This property takes
-                                        precedence over the Max Records to Compare. </entry>
+                                    <entry>Number of seconds to compare records. This property takes
+                                        precedence over the Max Records to Compare. <p>Use 0 to opt
+                                            out of this property.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Compare</entry>

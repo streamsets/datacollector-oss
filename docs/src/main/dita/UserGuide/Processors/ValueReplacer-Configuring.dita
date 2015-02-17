@@ -2,19 +2,19 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ihq_ymf_zq">
     <title>Configuring a Value Replacer</title>
-    <shortdesc>Use a Value Replacer to replace null values in a field or to replace values in a
-        field with Nulls. </shortdesc>
     <taskbody>
-        <context/>
+        <context>
+            <p><indexterm>Value Replacer processor<indexterm>configuring</indexterm></indexterm>Use
+                a Value Replacer to replace null values in a field or to replace values in a field
+                with Nulls. </p>
+        </context>
         <steps id="steps_as1_cnf_zq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
                 <cmd/>
             </step>
             <step>
-                <cmd><indexterm>Value Replacer
-                        processor<indexterm>configuring</indexterm></indexterm>On the
-                        <uicontrol>Replace</uicontrol> tab, to configure the following
+                <cmd>On the <uicontrol>Replace</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_bxr_2nf_zq">

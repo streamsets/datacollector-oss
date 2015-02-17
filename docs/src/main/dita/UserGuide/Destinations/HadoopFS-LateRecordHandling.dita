@@ -2,15 +2,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xgm_g4d_br">
  <title>Late Records and Late Record Handling </title>
- <shortdesc>You can define a time limit for records to be written to the associated output
-  directory. Any record that arrives past this limit is considered late. This limit is appropriate
-  when you use the time of the record as the time basis. </shortdesc>
+ <shortdesc>You can define a time limit for records to be written to its associated output
+    directory. Any record that arrives past this limit is considered late. This limit is appropriate
+    when you use the time of the record as the time basis. </shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS destination<indexterm>late record
         handling</indexterm></indexterm><indexterm>late record handling<indexterm>Hadoop
           FS</indexterm></indexterm>For example, a Hadoop FS destination writes event data to hourly
       output directories based on the timestamp of the event, and it has a time limit of one day.
-      Any records that arrive more than a day later that the hourly output directory window are
+      Any records that arrive more than a day after the hourly output directory window are
       considered late. </p>
   <p>You can send late records to a late records file, to the pipeline for error handling, or
    discard the records. When you send records to a late records file, you define a late records

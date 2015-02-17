@@ -2,18 +2,20 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_q4d_4yl_zq">
     <title>Configuring a Kafka Producer</title>
-    <shortdesc>Configure a Kafka Producer to write text, delimited, or JSON text to a Kafka cluster. </shortdesc>
     <taskbody>
-        <context/>
+        <context>
+            <p><indexterm>Kafka Producer
+                destination<indexterm>configuring</indexterm></indexterm>Configure a Kafka Producer
+                to write data to Kafka. </p>
+        </context>
         <steps id="steps_upj_std_br">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step1"
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step2">
                 <cmd/>
             </step>
             <step>
-                <cmd><indexterm>Kafka Producer
-                        destination<indexterm>configuring</indexterm></indexterm>On the
-                        <wintitle>Kafka</wintitle> tab, configure the following properties:</cmd>
+                <cmd>On the <wintitle>Kafka</wintitle> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <p>
                         <table frame="all" rowsep="1" colsep="1" id="table_wp4_xtd_br">
@@ -30,9 +32,10 @@
                                     <row>
                                         <entry>Broker URIs</entry>
                                         <entry>A comma-separated list of URIs for Kafka brokers that
-                                            write to the topic. Use the format
-                                                &lt;host>:&lt;port>.<p>To ensure a connection, enter
-                                                as many broker URIs as possible.</p></entry>
+                                            write to the topic. Use the following format:
+                                                <codeph>&lt;host>:&lt;port></codeph>.<p>To ensure a
+                                                connection, enter as many broker URIs as
+                                                possible.</p></entry>
                                     </row>
                                     <row>
                                         <entry>Topic</entry>

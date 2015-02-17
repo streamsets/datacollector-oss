@@ -2,9 +2,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vlj_vph_yq">
  <title>Field Splitter</title>
- <shortdesc>The Field Splitter splits string data in a field based on a separator character and
-  passes the separated data to new fields. Use the Field Splitter to split complex string values
-  into logical components. </shortdesc>
+ <shortdesc>The Field Splitter splits string data based on a separator character and passes the
+  separated data to new fields. Use the Field Splitter to split complex string values into logical
+  components. </shortdesc>
  <conbody>
   <p><indexterm>Field Splitter
      processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field

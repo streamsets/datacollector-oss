@@ -9,7 +9,7 @@
   <p>
    <dl>
     <dlentry>
-     <dt>Error handling for unmatched records</dt>
+     <dt>Error handling</dt>
      <dd><indexterm>Stream Selector processor<indexterm>unmatched record
        handling</indexterm></indexterm><indexterm>unmatched record handling<indexterm>Stream
         Selector</indexterm></indexterm>The Unmatched Record Handling property determines how the
@@ -21,7 +21,7 @@
       </ul></dd>
     </dlentry>
     <dlentry>
-     <dt>Create a default stream</dt>
+     <dt>Default stream</dt>
      <dd>You can create a default stream to capture records that do not match other conditions. When
       you create a default stream, you connect the output to a branch in the pipeline. </dd>
      <dd>You can configure the branch to perform additional processing or write it directly to a

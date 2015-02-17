@@ -17,7 +17,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_ld1_5fr_5q">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.45*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.83*"/>
                             <thead>
                                 <row>
                                     <entry>File Property</entry>
@@ -46,9 +46,10 @@
                                 </row>
                                 <row>
                                     <entry>Batch Wait Time (secs) <xref
-                                        href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
-                                        <image href="../Graphics/icon_moreInfo.png" scale="11"/>
-                                           </xref> </entry>
+                                            href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="11"/>
+                                        </xref>
+                                    </entry>
                                     <entry>Number of seconds to wait before sending a batch.</entry>
                                 </row>
                             </tbody>
