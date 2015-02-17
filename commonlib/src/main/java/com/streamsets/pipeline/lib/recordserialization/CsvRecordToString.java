@@ -21,12 +21,14 @@ import java.util.Map;
 public class CsvRecordToString implements RecordToString {
 
   private final CSVFormat csvFormat;
+  private final boolean replaceNewLines;
 
   //Kafka target configuration asks for column name to fieldPath map
   private Map<String, String> fieldPathToNameMap;
 
-  public CsvRecordToString(CSVFormat csvFormat) {
+  public CsvRecordToString(CSVFormat csvFormat, boolean replaceNewLines) {
     this.csvFormat = csvFormat;
+    this.replaceNewLines = replaceNewLines;
   }
 
   @Override
@@ -41,7 +43,11 @@ public class CsvRecordToString implements RecordToString {
     }
     try {
       StringWriter stringWriter = new StringWriter();
-      CSVPrinter csvPrinter = new CSVPrinter(stringWriter, csvFormat);
+      CSVFormat format =csvFormat;
+      if (replaceNewLines) {
+        format = format.withRecordSeparator(null); //to avoid having ENTERs at the end
+      }
+      CSVPrinter csvPrinter = new CSVPrinter(stringWriter, format);
       csvPrinter.printRecord(recordToCsv(record));
       csvPrinter.flush();
       csvPrinter.close();
@@ -56,7 +62,16 @@ public class CsvRecordToString implements RecordToString {
     for(Map.Entry<String, String> entry : fieldPathToNameMap.entrySet()) {
       Field field = record.get(entry.getKey());
       if(field != null) {
-        values.add(getValueAsString(record, field));
+        String value = getValueAsString(record, field);
+        if (replaceNewLines) {
+          if (value.contains("\n")) {
+            value = value.replace('\n', ' ');
+          }
+          if (value.contains("\r")) {
+            value = value.replace('\r', ' ');
+          }
+        }
+        values.add(value);
       } else {
         values.add("");
       }

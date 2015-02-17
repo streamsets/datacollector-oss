@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.commons.csv.CSVFormat;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,7 @@ public class TestCsvRecordToString {
 
   @Test
   public void testCsvRecordToString() throws IOException, StageException {
-    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT);
+    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT, false);
     Map<String, String> fieldPathToName = new LinkedHashMap<>();
     fieldPathToName.put("/values[0]", "year");
     fieldPathToName.put("/values[10]", "name");
@@ -38,8 +40,22 @@ public class TestCsvRecordToString {
   }
 
   @Test
+  public void testCsvRecordToStringReplaceNewLines() throws IOException, StageException {
+    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT, true);
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("a", Field.create("A B\r\nC\r\n"));
+    record.set(Field.create(map));
+    Map<String, String> fieldPathToName = new LinkedHashMap<>();
+    fieldPathToName.put("/a", "value");
+    recordToString.setFieldPathToNameMapping(fieldPathToName);
+    String result = recordToString.toString(record);
+    Assert.assertEquals("\"A B  C  \"", result);
+  }
+
+  @Test
   public void testCsvRecordToStringByteArrayField() throws IOException, StageException {
-    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT);
+    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT, false);
     Map<String, String> fieldPathToName = new LinkedHashMap<>();
     fieldPathToName.put("/id", "ID");
     recordToString.setFieldPathToNameMapping(fieldPathToName);
@@ -50,7 +66,7 @@ public class TestCsvRecordToString {
 
   @Test
   public void testCsvRecordToStringByteArrayFieldNull() throws IOException, StageException {
-    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT);
+    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT, false);
     Map<String, String> fieldPathToName = new LinkedHashMap<>();
     fieldPathToName.put("/id", "ID");
     recordToString.setFieldPathToNameMapping(fieldPathToName);

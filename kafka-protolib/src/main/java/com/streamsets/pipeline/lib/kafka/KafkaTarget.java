@@ -221,7 +221,7 @@ public class KafkaTarget extends BaseTarget {
         recordToString = new DataCollectorRecordToString(getContext());
         break;
       case CSV:
-        recordToString = new CsvRecordToString(csvFileFormat.getFormat());
+        recordToString = new CsvRecordToString(csvFileFormat.getFormat(), false);
         break;
       case TEXT:
         recordToString = new LogRecordToString(fieldPath);

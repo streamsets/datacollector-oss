@@ -361,7 +361,8 @@ public class TestKafkaTargetSinglePartition {
     }
     Assert.assertEquals(28, messages.size());
 
-    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT);
+    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT, false
+    );
     Map<String, String> fieldPathToName = new LinkedHashMap<>();
     fieldPathToName.put("/values[0]", null);
     fieldPathToName.put("/values[2]", null);

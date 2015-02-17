@@ -57,6 +57,8 @@ public class TestHdfsTarget {
         .addConfiguration("dataFormat", HdfsDataFormat.RECORD)
         .addConfiguration("csvFileFormat", null)
         .addConfiguration("cvsFieldPathToNameMappingConfigList", new ArrayList<>())
+        .addConfiguration("onRecordError", OnRecordError.STOP_PIPELINE)
+        .addConfiguration("replaceNewLines", false)
         .build();
     runner.runInit();
     List<Record> records = new ArrayList<>();

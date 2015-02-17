@@ -211,11 +211,23 @@ public abstract class BaseHdfsTarget extends BaseTarget {
       defaultValue = "TEXT",
       label = "File Type",
       description = "",
-      displayPosition = 105,
+      displayPosition = 100,
       group = "OUTPUT_FILES"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileTypeChooserValues.class)
   public HdfsFileType fileType;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "SEND_TO_ERROR",
+      label = "On Record Error",
+      description = "",
+      displayPosition = 105,
+      group = "OUTPUT_FILES"
+  )
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnRecordErrorChooserValues.class)
+  public OnRecordError onRecordError;
 
   @ConfigDef(
       required = true,
@@ -315,6 +327,19 @@ public abstract class BaseHdfsTarget extends BaseTarget {
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Remove New Line Characters",
+      description = "Replaces new lines characters with white spaces",
+      displayPosition = 315,
+      group = "CSV",
+      dependsOn = "dataFormat",
+      triggeredByValue = "CSV"
+  )
+  public boolean replaceNewLines;
 
   @ConfigDef(
       required = true,
@@ -519,7 +544,7 @@ public abstract class BaseHdfsTarget extends BaseTarget {
         recordToString = new JsonRecordToString();
         break;
       case CSV:
-        recordToString = new CsvRecordToString(csvFileFormat.getFormat());
+        recordToString = new CsvRecordToString(csvFileFormat.getFormat(), replaceNewLines);
         recordToString.setFieldPathToNameMapping(getFieldPathToNameMapping(cvsFieldPathToNameMappingConfigList));
         break;
       default:

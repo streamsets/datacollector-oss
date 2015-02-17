@@ -25,6 +25,8 @@ public enum HdfsLibError implements ErrorCode {
 
   HDFS_0015("The record '{}' is late"),
   HDFS_0016("Error while writing to HDFS: {}"),
+  HDFS_0017("Stopping pipeline, record '{}' in error: {}"),
+  HDFS_0018("Record in error: {}"),
   ;
   private final String msg;
 
