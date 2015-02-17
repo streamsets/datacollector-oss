@@ -26,7 +26,12 @@
 
         <div class="action-menu pull-right" dropdown
              ng-if="pipeline.name === activeConfigInfo.name">
-          <span class="dropdown-toggle" dropdown-toggle aria-expanded="true" ng-click="$event.stopPropagation();">
+          <span class="dropdown-toggle" dropdown-toggle aria-expanded="true"
+                tooltip-placement="bottom"
+                tooltip="{{'global.form.actions' | translate}}"
+                tooltip-popup-delay="500"
+                tooltip-append-to-body="true"
+                ng-click="$event.stopPropagation();">
             <i class="fa fa-ellipsis-v"></i>
           </span>
           <ul class="dropdown-menu" role="menu">
