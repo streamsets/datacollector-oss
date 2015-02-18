@@ -11,7 +11,6 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -20,7 +19,6 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.el.ELUtils;
-import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,19 +36,9 @@ import java.util.Set;
     description="Performs calculations on a field-by-field basis",
     icon="expression.png"
 )
-@ConfigGroups(ExpressionProcessor.Groups.class)
+@ConfigGroups(com.streamsets.pipeline.lib.stage.processor.expression.ConfigGroups.class)
 public class ExpressionProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(ExpressionProcessor.class);
-
-  public enum Groups implements Label {
-    EXPRESSIONS;
-
-    @Override
-    public String getLabel() {
-      return "Expressions";
-    }
-
-  }
 
   public static class ExpressionProcessorConfig {
 
@@ -247,8 +235,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       try {
         elEvaluator.eval(variables, expressionProcessorConfig.expression);
       } catch (ELException ex) {
-        LOG.error(StageLibError.LIB_0600.getMessage(), expressionProcessorConfig.expression, ex.getMessage(), ex);
-        throw new StageException(StageLibError.LIB_0600, expressionProcessorConfig.expression, ex.getMessage(), ex);
+        throw new StageException(Errors.EXPR_00, expressionProcessorConfig.expression, ex.getMessage(), ex);
       }
     }
   }
@@ -265,8 +252,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       try {
         result = elEvaluator.eval(variables, expressionProcessorConfig.expression);
       } catch (ELException e) {
-        LOG.error(StageLibError.LIB_0600.getMessage(), expressionProcessorConfig.expression, e.getMessage(), e);
-        throw new StageException(StageLibError.LIB_0600, expressionProcessorConfig.expression, e.getMessage(), e);
+        throw new StageException(Errors.EXPR_00, expressionProcessorConfig.expression, e.getMessage(), e);
       }
       Field newField = Field.create(getTypeFromObject(result), result);
       if(record.has(expressionProcessorConfig.fieldToSet)) {

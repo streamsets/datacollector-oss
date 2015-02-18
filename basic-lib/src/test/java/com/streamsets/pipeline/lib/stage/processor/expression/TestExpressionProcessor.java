@@ -9,7 +9,6 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.util.StageLibError;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -38,7 +37,7 @@ public class TestExpressionProcessor {
       runner.runInit();
       Assert.fail("Stage exception expected as the expression string is not valid");
     } catch (StageException e) {
-      Assert.assertEquals(StageLibError.LIB_0600, e.getErrorCode());
+      Assert.assertEquals(Errors.EXPR_00, e.getErrorCode());
     }
   }
 
@@ -67,7 +66,7 @@ public class TestExpressionProcessor {
       runner.runProcess(ImmutableList.of(record));
       Assert.fail("Stage exception expected as the expression string is not valid");
     } catch (StageException e) {
-      Assert.assertEquals(StageLibError.LIB_0600, e.getErrorCode());
+      Assert.assertEquals(Errors.EXPR_00, e.getErrorCode());
     }
   }
 
