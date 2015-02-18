@@ -352,13 +352,13 @@ angular
       getIssuesMessage: function (stageInstanceName, issue) {
         var msg = issue.message;
 
-        if (issue.level === 'STAGE_CONFIG') {
+        if (issue.configName) {
           var stageInstance = _.find($scope.pipelineConfig.stages, function (stage) {
             return stage.instanceName === stageInstanceName;
           });
 
           if (stageInstance) {
-            msg += ' : ' + getConfigurationLabel(stageInstance, issue.configName);
+            msg += ' : ' + pipelineService.getConfigurationLabel(stageInstance, issue.configName);
           }
         }
 
@@ -443,6 +443,8 @@ angular
         //Definitions
         $scope.pipelineConfigDefinition = definitions.pipeline[0];
         $scope.stageLibraries = definitions.stages;
+
+        pipelineService.setStageDefintions(definitions.stages);
 
         $scope.sources = _.filter($scope.stageLibraries, function (stageLibrary) {
           return stageLibrary.type === pipelineConstant.SOURCE_STAGE_TYPE;
@@ -848,26 +850,6 @@ angular
           //console.log( "Timer rejected!" );
         }
       );
-    };
-
-    /**
-     * Returns label of Configuration for given Stage Instance object and Configuration Name.
-     *
-     * @param stageInstance
-     * @param configName
-     * @returns {*}
-     */
-    var getConfigurationLabel = function (stageInstance, configName) {
-      var stageDefinition = _.find($scope.stageLibraries, function (stage) {
-          return stageInstance.library === stage.library &&
-            stageInstance.stageName === stage.name &&
-            stageInstance.stageVersion === stage.version;
-        }),
-        configDefinition = stageDefinition ? _.find(stageDefinition.configDefinitions, function (configDefinition) {
-          return configDefinition.name === configName;
-        }) : undefined;
-
-      return configDefinition ? configDefinition.label : configName;
     };
 
     var getStageErrorCounts = function() {

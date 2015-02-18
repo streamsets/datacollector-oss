@@ -218,6 +218,7 @@
       "pipelineConfigJSONData": "Pipeline Configuration",
       "pipelinePreviewJSONData": "Pipeline Preview",
       "pipelineRulesJSONData": "Pipeline Rules",
+      "pipelineStatusJSONData": "Pipeline Status",
       "rawPreview": "Raw Preview",
       "recordsPerSecond": "(records / sec)",
       "restURL": "REST Interface",

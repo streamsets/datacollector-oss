@@ -30,6 +30,10 @@ angular.module('dataCollectorApp.common')
       return maxYPos ? maxYPos + 150 : 50;
     };
 
+    this.setStageDefintions = function(stageDefns) {
+      self.stageDefintions = stageDefns;
+    };
+
     /**
      * Construct new instance for give Stage Definition
      * @param options
@@ -213,6 +217,45 @@ angular.module('dataCollectorApp.common')
             return 'assets/stage/defaultTarget.svg';
         }
       }
+    };
+
+
+
+    /**
+     * Returns message string of the issue.
+     *
+     * @param stageInstance
+     * @param issue
+     * @returns {*}
+     */
+    this.getIssuesMessage = function (stageInstance, issue) {
+      var msg = issue.message;
+
+      if (issue.configName && stageInstance) {
+        msg += ' : ' + self.getConfigurationLabel(stageInstance, issue.configName);
+      }
+
+      return msg;
+    };
+
+    /**
+     * Returns label of Configuration for given Stage Instance object and Configuration Name.
+     *
+     * @param stageInstance
+     * @param configName
+     * @returns {*}
+     */
+    this.getConfigurationLabel = function (stageInstance, configName) {
+      var stageDefinition = _.find(self.stageDefintions, function (stage) {
+          return stageInstance.library === stage.library &&
+            stageInstance.stageName === stage.name &&
+            stageInstance.stageVersion === stage.version;
+        }),
+        configDefinition = stageDefinition ? _.find(stageDefinition.configDefinitions, function (configDefinition) {
+          return configDefinition.name === configName;
+        }) : undefined;
+
+      return configDefinition ? configDefinition.label : configName;
     };
 
     $translate([

@@ -10,7 +10,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       controller: 'PipelineGraphController'
     };
   })
-  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter, pipelineConstant, $translate){
+  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter,
+                                                  pipelineConstant, $translate, pipelineService){
 
     var showTransition = false,
       graphErrorBadgeLabel = '';
@@ -751,7 +752,19 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr('x', consts.rectWidth - 20)
         .attr('y', consts.rectHeight - 12)
         .append('xhtml:span')
-        .attr('class', 'node-warning fa fa-exclamation-triangle');
+        .attr('class', 'node-warning fa fa-exclamation-triangle graph-bootstrap-tooltip')
+        .attr('title', function(d) {
+          var issues = thisGraph.issues.stageIssues[d.instanceName],
+            title = '';
+
+          angular.forEach(issues, function(issue) {
+            title += pipelineService.getIssuesMessage(d, issue) + '<br>';
+          });
+
+          return title;
+        })
+        .attr('data-html', true)
+        .attr('data-placement', 'bottom');
 
 
 
@@ -888,6 +901,24 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
       // remove old links
       paths.exit().remove();
+
+      //Pipeline Warning
+      if(graph.issues && graph.issues.pipelineIssues && graph.issues.pipelineIssues.length) {
+        var pipelineIssuesStr = '';
+
+        angular.forEach(graph.issues.pipelineIssues, function(issue) {
+          pipelineIssuesStr += issue.message + '<br>';
+        });
+
+        graphWarning
+          .attr({
+            'title': pipelineIssuesStr,
+            'data-original-title': pipelineIssuesStr
+          })
+          .style('visibility', 'visible');
+      } else {
+        graphWarning.style('visibility', 'hidden');
+      }
 
 
       $('.graph-bootstrap-tooltip').each(function() {
@@ -1044,7 +1075,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
     /** MAIN SVG **/
-    var graphContainer, svg, graph, toolbar;
+    var graphContainer, svg, graph, toolbar, graphWarning;
 
     $scope.$on('updateGraph', function(event, options) {
       var nodes = options.nodes,
@@ -1088,6 +1119,16 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             graph.zoomOut();
             d3.event.preventDefault();
           });
+
+
+        graphWarning = graphContainer
+          .append('span')
+          .attr({
+            'class': 'warning-toolbar node-warning fa fa-exclamation-triangle graph-bootstrap-tooltip',
+            'data-html': true,
+            'data-placement': 'right'
+          })
+          .style('visibility', 'hidden');
 
       }
 
