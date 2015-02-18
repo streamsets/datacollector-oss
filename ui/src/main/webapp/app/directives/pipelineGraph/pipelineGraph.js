@@ -225,6 +225,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       thisGraph.edges = [];
       thisGraph.state.selectedNode = null;
       thisGraph.state.selectedEdge = null;
+      thisGraph.updateGraph();
 
       $('.graph-bootstrap-tooltip').each(function() {
         var $this = $(this),
@@ -233,8 +234,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           $this.tooltip('destroy');
         }
       });
-
-      thisGraph.updateGraph();
     };
 
     /* select all text in element: taken from http://stackoverflow.com/questions/6139107/programatically-select-text-in-a-contenteditable-html-element */
@@ -925,6 +924,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         var $this = $(this),
           title = $this.attr('title');
         if(title) {
+          $this.attr('title', '');
           $this.tooltip({
             title: title,
             container:'body'
