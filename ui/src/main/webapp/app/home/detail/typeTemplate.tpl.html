@@ -203,8 +203,12 @@
 
 <script type="text/ng-template" id="fieldSelectorMultiValuedConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
-    <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+    <ui-select multiple
+               tagging="tagTransform"
+               tagging-label="false"
+               reset-search-input="true"
                ng-disabled="isPipelineRunning"
+               tagging-tokens=",|ENTER"
                ng-model="detailPaneConfig.configuration[configIndex].value">
       <ui-select-match>
         {{$item}}
