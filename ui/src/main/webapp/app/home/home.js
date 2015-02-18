@@ -15,9 +15,12 @@ angular
   .controller('HomeController', function ($scope, $rootScope, $timeout, api, configuration, _, $q, $modal,
                                           $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster,
                                           $translate, contextHelpService) {
-    var timeout,
-      dirty = false,
+    var configTimeout,
+      configDirty = false,
+      configSaveInProgress = false,
+      rulesTimeout,
       rulesDirty = false,
+      rulesSaveInProgress = false,
       ignoreUpdate = false,
       pipelineStatusTimer,
       pipelineMetricsTimer,
@@ -543,7 +546,7 @@ angular
      * @param config
      */
     var saveUpdates = function (config) {
-      if ($rootScope.common.saveOperationInProgress) {
+      if (configSaveInProgress) {
         return;
       }
 
@@ -551,12 +554,15 @@ angular
         config = _.clone($scope.pipelineConfig);
       }
 
-      dirty = false;
-      $rootScope.common.saveOperationInProgress = true;
+      configDirty = false;
+      configSaveInProgress = true;
+      $rootScope.common.saveOperationInProgress++;
+
       api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.name, config).
         success(function (res) {
-          $rootScope.common.saveOperationInProgress = false;
-          if (dirty) {
+          configSaveInProgress = false;
+          $rootScope.common.saveOperationInProgress--;
+          if (configDirty) {
             config = _.clone($scope.pipelineConfig);
             config.uuid = res.uuid;
 
@@ -572,6 +578,8 @@ angular
           updateGraph(res, $scope.pipelineRules);
         }).
         error(function(data, status, headers, config) {
+          configSaveInProgress = false;
+          $rootScope.common.saveOperationInProgress--;
           $rootScope.common.errors = [data];
         });
     };
@@ -942,9 +950,9 @@ angular
      * @param rules
      */
     var saveRulesUpdate = function (rules) {
-      //if ($rootScope.common.saveOperationInProgress) {
-        //return;
-      //}
+      if (rulesSaveInProgress) {
+        return;
+      }
 
       rulesDirty = false;
 
@@ -952,10 +960,13 @@ angular
         rules = _.clone($scope.pipelineRules);
       }
 
-      $rootScope.common.saveOperationInProgress = true;
+      rulesSaveInProgress = true;
+      $rootScope.common.saveOperationInProgress++;
+
       api.pipelineAgent.savePipelineRules($scope.activeConfigInfo.name, rules).
         success(function (res) {
-          $rootScope.common.saveOperationInProgress = false;
+          rulesSaveInProgress = false;
+          $rootScope.common.saveOperationInProgress--;
           ignoreUpdate = true;
           rules = $scope.pipelineRules;
           rules.ruleIssues = res.ruleIssues;
@@ -986,6 +997,7 @@ angular
           }
         }).
         error(function(data, status, headers, config) {
+          $rootScope.common.saveOperationInProgress--;
           $rootScope.common.errors = [data];
         });
     };
@@ -1004,8 +1016,7 @@ angular
         return;
       }
       if (!angular.equals(newValue, oldValue)) {
-        dirty = true;
-
+        configDirty = true;
 
         //badRecordsHandling check
         var badRecordHandlingConfig = _.find(newValue.configuration, function(c) {
@@ -1033,10 +1044,10 @@ angular
           });
         }
 
-        if (timeout) {
-          $timeout.cancel(timeout);
+        if (configTimeout) {
+          $timeout.cancel(configTimeout);
         }
-        timeout = $timeout(saveUpdates, 1000);
+        configTimeout = $timeout(saveUpdates, 1000);
       }
     }, true);
 
@@ -1049,10 +1060,10 @@ angular
       }
       if (!angular.equals(newValue, oldValue)) {
         rulesDirty = true;
-        if (timeout) {
-          $timeout.cancel(timeout);
+        if (rulesTimeout) {
+          $timeout.cancel(rulesTimeout);
         }
-        timeout = $timeout(saveRulesUpdate, 500);
+        rulesTimeout = $timeout(saveRulesUpdate, 1000);
       }
     }, true);
 
@@ -1143,6 +1154,9 @@ angular
     });
 
     $scope.$on('$destroy', function() {
+
+      alert('test');
+
       $timeout.cancel(pipelineStatusTimer);
       $timeout.cancel(pipelineMetricsTimer);
       destroyed = true;

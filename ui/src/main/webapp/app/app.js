@@ -37,7 +37,7 @@ angular.module('dataCollectorApp')
     });
 
   })
-  .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService) {
+  .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService, $translate) {
     var defaultTitle = 'StreamSets Data Collector';
 
     $rootScope.pipelineConstant = pipelineConstant;
@@ -52,7 +52,7 @@ angular.module('dataCollectorApp')
         home: 'active'
       },
       namePattern: '^[a-zA-Z0-9 _]+$',
-      saveOperationInProgress: false,
+      saveOperationInProgress: 0,
       pipelineStatus: {},
       errors: [],
       activeDetailTab: undefined,
@@ -163,4 +163,26 @@ angular.module('dataCollectorApp')
     $rootScope.go = function ( path ) {
       $location.path( path );
     };
+
+    var unloadMessage = 'If you leave this page you are going to lose all unsaved changes, are you sure you want to leave?';
+
+    $translate('global.messages.info.unloadMessage').then(function(translation) {
+      unloadMessage = translation;
+    });
+
+    window.onbeforeunload = function (event) {
+      //Check if there was any change, if no changes, then simply let the user leave
+      if($rootScope.common.saveOperationInProgress <= 0){
+        return;
+      }
+
+      if (typeof event == 'undefined') {
+        event = window.event;
+      }
+      if (event) {
+        event.returnValue = unloadMessage;
+      }
+      return unloadMessage;
+    };
+
   });

@@ -40,13 +40,13 @@
 
     <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.state !== 'STOPPING'">
 
-      <div class="pull-left" ng-cloak ng-hide="isPipelineRunning || previewMode || activeConfigStatus.state === 'STOPPING'">
-        <div class="pipelineAgent-status pull-right" ng-hide="common.saveOperationInProgress">
+      <div class="pull-left" ng-cloak ng-hide="previewMode || activeConfigStatus.state === 'STOPPING'">
+        <div class="pipelineAgent-status pull-right" ng-hide="common.saveOperationInProgress > 0">
           <span class="glyphicon glyphicon-ok-circle"></span>
           <span translate="global.messages.info.saveOperationInProgress"></span>
         </div>
 
-        <div class="pipelineAgent-status pull-right" ng-show="common.saveOperationInProgress"
+        <div class="pipelineAgent-status pull-right" ng-show="common.saveOperationInProgress > 0"
              translate="global.messages.info.savingConfiguration">
         </div>
       </div>

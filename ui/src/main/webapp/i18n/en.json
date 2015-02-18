@@ -103,7 +103,8 @@
         "saveOperationInProgress" : "All Changes Saved",
         "savingConfiguration" : "Saving...",
         "originExists": "Origin already exists.",
-        "graphErrorBadgeLabel": "Total Bad records + Stage errors."
+        "graphErrorBadgeLabel": "Total Bad records + Stage errors.",
+        "unloadMessage": "If you leave this page you are going to lose all unsaved changes, are you sure you want to leave?"
       },
       "error": {
         "operationFailed": "Operation Failed"
