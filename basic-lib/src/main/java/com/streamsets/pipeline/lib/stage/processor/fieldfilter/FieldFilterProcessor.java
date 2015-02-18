@@ -11,7 +11,6 @@ import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -31,35 +30,9 @@ import java.util.Set;
     description="Removes fields from a record",
     icon="filter.png"
 )
-@ConfigGroups(FieldFilterProcessor.Groups.class)
+@ConfigGroups(com.streamsets.pipeline.lib.stage.processor.fieldfilter.ConfigGroups.class)
 public class FieldFilterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldFilterProcessor.class);
-
-  public enum Groups implements Label {
-    FILTER;
-
-    @Override
-    public String getLabel() {
-      return "Remove";
-    }
-
-  }
-
-  public enum FilterOperation implements Label {
-    KEEP("Keep Listed Fields"),
-    REMOVE("Remove Listed Fields");
-
-    private String label;
-
-    private FilterOperation(String label) {
-      this.label = label;
-    }
-
-    @Override
-    public String getLabel() {
-      return label;
-    }
-  }
 
   @ConfigDef(
       required = true,
@@ -70,7 +43,7 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
       displayPosition = 10,
       group = "FILTER"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FilterOperationValues.class)
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FilterOperationChooserValues.class)
   public FilterOperation filterOperation;
 
   @ConfigDef(
