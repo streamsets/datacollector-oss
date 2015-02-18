@@ -7,14 +7,14 @@ package com.streamsets.pipeline.lib.stage.processor.dedup;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum CompareFields implements Label {
+public enum SelectFields implements Label {
   ALL_FIELDS("All Fields"),
   SPECIFIED_FIELDS("Specified Fields"),
   ;
 
   private final String label;
 
-  CompareFields(String label) {
+  SelectFields(String label) {
     this.label = label;
   }
 

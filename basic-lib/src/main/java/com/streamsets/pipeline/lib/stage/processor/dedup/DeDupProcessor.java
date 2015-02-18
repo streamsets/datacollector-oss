@@ -20,14 +20,12 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.lib.queue.XEvictingQueue;
-import com.streamsets.pipeline.lib.util.StageLibError;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -41,39 +39,12 @@ import java.util.concurrent.TimeUnit;
     label = "Record Deduplicator",
     description = "Separates unique and duplicate records based on field comparison",
     icon="dedup.svg",
-    outputStreams = DeDupProcessor.OutputStreams.class
+    outputStreams = OutputStreams.class
 )
-@ConfigGroups(DeDupProcessor.Groups.class)
+@ConfigGroups(com.streamsets.pipeline.lib.stage.processor.dedup.ConfigGroups.class)
 public class DeDupProcessor extends RecordProcessor {
 
   private static final int MEMORY_USAGE_PER_HASH = 85;
-
-  public enum Groups implements Label {
-    DE_DUP;
-
-    @Override
-    public String getLabel() {
-      return "Deduplication";
-    }
-
-  }
-
-  public enum OutputStreams implements Label {
-    UNIQUE("Unique Records"),
-    DUPLICATE("Duplicate Records"),
-    ;
-
-    private final String label;
-
-    OutputStreams(String label) {
-      this.label = label;
-    }
-
-    @Override
-    public String getLabel() {
-      return label;
-    }
-  }
 
   @ConfigDef(
       required = true,
@@ -104,8 +75,8 @@ public class DeDupProcessor extends RecordProcessor {
       displayPosition = 30,
       group = "DE_DUP"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CompareFieldsChooserValues.class)
-  public CompareFields compareFields;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = SelectFieldsChooserValues.class)
+  public SelectFields compareFields;
 
   @ConfigDef(
       required = true,
@@ -212,18 +183,18 @@ public class DeDupProcessor extends RecordProcessor {
   protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
     if (recordCountWindow <= 0) {
-      issues.add(getContext().createConfigIssue(StageLibError.LIB_0900, recordCountWindow));
+      issues.add(getContext().createConfigIssue(Errors.DEDUP_00, recordCountWindow));
     }
     if (timeWindowSecs < 0) {
-      issues.add(getContext().createConfigIssue(StageLibError.LIB_0901, timeWindowSecs));
+      issues.add(getContext().createConfigIssue(Errors.DEDUP_01, timeWindowSecs));
     }
-    if (compareFields == CompareFields.SPECIFIED_FIELDS && fieldsToCompare.isEmpty()) {
-      issues.add(getContext().createConfigIssue(StageLibError.LIB_0902));
+    if (compareFields == SelectFields.SPECIFIED_FIELDS && fieldsToCompare.isEmpty()) {
+      issues.add(getContext().createConfigIssue(Errors.DEDUP_02));
     }
 
     long estimatedMemory = MEMORY_USAGE_PER_HASH * recordCountWindow;
     if (estimatedMemory > Runtime.getRuntime().maxMemory() / 3) {
-      issues.add(getContext().createConfigIssue(StageLibError.LIB_0903, recordCountWindow, estimatedMemory / 1024,
+      issues.add(getContext().createConfigIssue(Errors.DEDUP_03, recordCountWindow, estimatedMemory / 1024,
                                                 Runtime.getRuntime().maxMemory() / 1024));
     }
     return issues;
@@ -234,7 +205,7 @@ public class DeDupProcessor extends RecordProcessor {
   protected void init() throws StageException {
     super.init();
     hasher = Hashing.murmur3_128();
-    funnel = (compareFields == CompareFields.ALL_FIELDS) ? new RecordFunnel() : new RecordFunnel(fieldsToCompare);
+    funnel = (compareFields == SelectFields.ALL_FIELDS) ? new RecordFunnel() : new RecordFunnel(fieldsToCompare);
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
     if (timeWindowSecs > 0) {
       cacheBuilder.expireAfterWrite(timeWindowSecs, TimeUnit.SECONDS);

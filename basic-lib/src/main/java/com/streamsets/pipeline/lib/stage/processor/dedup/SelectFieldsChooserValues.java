@@ -7,10 +7,10 @@ package com.streamsets.pipeline.lib.stage.processor.dedup;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class CompareFieldsChooserValues extends BaseEnumChooserValues {
+public class SelectFieldsChooserValues extends BaseEnumChooserValues {
 
-  public CompareFieldsChooserValues() {
-    super(CompareFields.class);
+  public SelectFieldsChooserValues() {
+    super(SelectFields.class);
   }
 
 }
