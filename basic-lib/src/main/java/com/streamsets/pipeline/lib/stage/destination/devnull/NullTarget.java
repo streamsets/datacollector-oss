@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.stage.destination;
+package com.streamsets.pipeline.lib.stage.destination.devnull;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ErrorStage;
