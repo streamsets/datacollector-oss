@@ -26,7 +26,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testNonExistingFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig nameReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig nameReplacement = new FieldValueReplacerConfig();
     nameReplacement.fields = ImmutableList.of("/nonExisting");
     nameReplacement.newValue = "StreamSets";
 
@@ -145,7 +145,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullStringFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/stringField");
     stringFieldReplacement.newValue = "StreamSets";
 
@@ -177,7 +177,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullIntegerFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/intField");
     stringFieldReplacement.newValue = "123";
 
@@ -209,7 +209,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullDoubleFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/doubleField");
     stringFieldReplacement.newValue = "12345.6789";
 
@@ -241,7 +241,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullLongFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/longField");
     stringFieldReplacement.newValue = "523456789345";
 
@@ -273,7 +273,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullShortFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/shortField");
     stringFieldReplacement.newValue = "32762";
 
@@ -305,7 +305,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullFloatFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/floatField");
     stringFieldReplacement.newValue = "10.345f";
 
@@ -337,7 +337,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullDecimalFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/decimalField");
     stringFieldReplacement.newValue = "12345678";
 
@@ -369,7 +369,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullByteFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/byteField");
     stringFieldReplacement.newValue = "123";
 
@@ -401,7 +401,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullByteArrayFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/byteArrayField");
     stringFieldReplacement.newValue = "streamsets";
 
@@ -433,7 +433,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullCharFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/charField");
     stringFieldReplacement.newValue = "c";
 
@@ -465,7 +465,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testReplaceNullBooleanFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/booleanField");
     stringFieldReplacement.newValue = "true";
 
@@ -529,11 +529,11 @@ public class TestFieldValueReplacer {
   @Test
   public void testFieldsToNullAndReplaceNulls() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig nameReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig nameReplacement = new FieldValueReplacerConfig();
     nameReplacement.fields = ImmutableList.of("/name");
     nameReplacement.newValue = "StreamSets";
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig addressReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig addressReplacement = new FieldValueReplacerConfig();
     addressReplacement.fields = ImmutableList.of("/streetAddress");
     addressReplacement.newValue = "Sansome Street";
 
@@ -571,7 +571,7 @@ public class TestFieldValueReplacer {
   @Test
   public void testNonNullFields() throws StageException {
 
-    FieldValueReplacerProcessor.FieldValueReplacerConfig nameReplacement = new FieldValueReplacerProcessor.FieldValueReplacerConfig();
+    FieldValueReplacerConfig nameReplacement = new FieldValueReplacerConfig();
     nameReplacement.fields = ImmutableList.of("/name");
     nameReplacement.newValue = "NewValue";
 

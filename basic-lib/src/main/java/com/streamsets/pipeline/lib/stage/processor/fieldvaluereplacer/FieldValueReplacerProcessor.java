@@ -12,7 +12,6 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -35,19 +34,9 @@ import java.util.Locale;
     description = "Replaces null values with a constant and replaces values with NULL",
     icon="replacer.svg"
 )
-@ConfigGroups(FieldValueReplacerProcessor.Groups.class)
+@ConfigGroups(com.streamsets.pipeline.lib.stage.processor.fieldvaluereplacer.ConfigGroups.class)
 public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldValueReplacerProcessor.class);
-
-  public enum Groups implements Label {
-    REPLACE;
-
-    @Override
-    public String getLabel() {
-      return "Replace";
-    }
-
-  }
 
   @ConfigDef(
       required = false,
@@ -60,31 +49,6 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
   )
   @FieldSelector
   public List<String> fieldsToNull;
-
-  public static class FieldValueReplacerConfig {
-
-    @ConfigDef(
-        required = true,
-        type = Type.MODEL,
-        defaultValue="",
-        label = "Fields to Replace",
-        description = "You can enter multiple fields to replace with the same value",
-        displayPosition = 10
-    )
-    @FieldSelector
-    public List<String> fields;
-
-    @ConfigDef(
-        required = true,
-        type = Type.STRING,
-        defaultValue="",
-        label = "Replacement Value",
-        description="Value to replace nulls",
-        displayPosition = 20
-    )
-    public String newValue;
-
-  }
 
   @ConfigDef(
       required = false,
