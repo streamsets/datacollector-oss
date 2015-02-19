@@ -23,9 +23,9 @@ public class TestFieldMaskProcessor {
   @Test
   public void testFieldMaskProcessorVariableLength() throws StageException {
 
-    FieldMaskProcessor.FieldMaskConfig nameMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
+    FieldMaskConfig nameMaskConfig = new FieldMaskConfig();
     nameMaskConfig.fields = ImmutableList.of("/name", "/age", "/ssn", "/phone");
-    nameMaskConfig.maskType = FieldMaskProcessor.Type.VARIABLE_LENGTH;
+    nameMaskConfig.maskType = MaskType.VARIABLE_LENGTH;
     nameMaskConfig.mask = null;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
@@ -64,9 +64,9 @@ public class TestFieldMaskProcessor {
   @Test
   public void testFieldMaskProcessorFixedLength() throws StageException {
 
-    FieldMaskProcessor.FieldMaskConfig ageMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
+    FieldMaskConfig ageMaskConfig = new FieldMaskConfig();
     ageMaskConfig.fields = ImmutableList.of("/name", "/age", "/ssn", "/phone");
-    ageMaskConfig.maskType = FieldMaskProcessor.Type.FIXED_LENGTH;
+    ageMaskConfig.maskType = MaskType.FIXED_LENGTH;
     ageMaskConfig.mask = null;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
@@ -105,9 +105,9 @@ public class TestFieldMaskProcessor {
   @Test
   public void testFieldMaskProcessorFormatPreserving() throws StageException {
 
-    FieldMaskProcessor.FieldMaskConfig formatPreserveMask = new FieldMaskProcessor.FieldMaskConfig();
+    FieldMaskConfig formatPreserveMask = new FieldMaskConfig();
     formatPreserveMask.fields = ImmutableList.of("/name", "/age", "/ssn", "/phone");
-    formatPreserveMask.maskType = FieldMaskProcessor.Type.CUSTOM;
+    formatPreserveMask.maskType = MaskType.CUSTOM;
     formatPreserveMask.mask = "xxx-xx-####";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
@@ -146,9 +146,9 @@ public class TestFieldMaskProcessor {
   @Test
   public void testFieldMaskProcessorNonString() throws StageException {
 
-    FieldMaskProcessor.FieldMaskConfig formatPreserveMask = new FieldMaskProcessor.FieldMaskConfig();
+    FieldMaskConfig formatPreserveMask = new FieldMaskConfig();
     formatPreserveMask.fields = ImmutableList.of("/name", "/age");
-    formatPreserveMask.maskType = FieldMaskProcessor.Type.CUSTOM;
+    formatPreserveMask.maskType = MaskType.CUSTOM;
     formatPreserveMask.mask = "xxx-xx-####";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
@@ -181,24 +181,24 @@ public class TestFieldMaskProcessor {
   @Test
   public void testFieldMaskProcessorMultipleFormats() throws StageException {
 
-    FieldMaskProcessor.FieldMaskConfig nameMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
+    FieldMaskConfig nameMaskConfig = new FieldMaskConfig();
     nameMaskConfig.fields = ImmutableList.of("/name");
-    nameMaskConfig.maskType = FieldMaskProcessor.Type.VARIABLE_LENGTH;
+    nameMaskConfig.maskType = MaskType.VARIABLE_LENGTH;
     nameMaskConfig.mask = null;
 
-    FieldMaskProcessor.FieldMaskConfig ageMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
+    FieldMaskConfig ageMaskConfig = new FieldMaskConfig();
     ageMaskConfig.fields = ImmutableList.of("/age");
-    ageMaskConfig.maskType = FieldMaskProcessor.Type.FIXED_LENGTH;
+    ageMaskConfig.maskType = MaskType.FIXED_LENGTH;
     ageMaskConfig.mask = null;
 
-    FieldMaskProcessor.FieldMaskConfig ssnMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
+    FieldMaskConfig ssnMaskConfig = new FieldMaskConfig();
     ssnMaskConfig.fields = ImmutableList.of("/ssn");
-    ssnMaskConfig.maskType = FieldMaskProcessor.Type.CUSTOM;
+    ssnMaskConfig.maskType = MaskType.CUSTOM;
     ssnMaskConfig.mask = "xxx-xx-####";
 
-    FieldMaskProcessor.FieldMaskConfig phoneMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
+    FieldMaskConfig phoneMaskConfig = new FieldMaskConfig();
     phoneMaskConfig.fields = ImmutableList.of("/phone");
-    phoneMaskConfig.maskType = FieldMaskProcessor.Type.CUSTOM;
+    phoneMaskConfig.maskType = MaskType.CUSTOM;
     phoneMaskConfig.mask = "###-###-####";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
@@ -237,9 +237,9 @@ public class TestFieldMaskProcessor {
   @Test
   public void testFieldMaskProcessorFiledDoesNotExist() throws StageException {
 
-    FieldMaskProcessor.FieldMaskConfig nameMaskConfig = new FieldMaskProcessor.FieldMaskConfig();
+    FieldMaskConfig nameMaskConfig = new FieldMaskConfig();
     nameMaskConfig.fields = ImmutableList.of("/name");
-    nameMaskConfig.maskType = FieldMaskProcessor.Type.VARIABLE_LENGTH;
+    nameMaskConfig.maskType = MaskType.VARIABLE_LENGTH;
     nameMaskConfig.mask = null;
 
 ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)

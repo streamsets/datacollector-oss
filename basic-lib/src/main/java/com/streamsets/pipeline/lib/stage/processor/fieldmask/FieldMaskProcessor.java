@@ -6,18 +6,14 @@
 package com.streamsets.pipeline.lib.stage.processor.fieldmask;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,80 +27,13 @@ import java.util.List;
     description = "Masks field values",
     icon="mask.png"
 )
-@ConfigGroups(FieldMaskProcessor.Groups.class)
+@ConfigGroups(com.streamsets.pipeline.lib.stage.processor.fieldmask.ConfigGroups.class)
 public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldMaskProcessor.class);
-
-  public enum Groups implements Label {
-    MASKING;
-
-    @Override
-    public String getLabel() {
-      return "Mask";
-    }
-
-  }
 
   private static final String FIXED_LENGTH_MASK = "xxxxxxxxxx";
   private static final char NON_MASK_CHAR = '#';
   private static final char MASK_CHAR = 'x';
-
-  public enum Type implements Label {
-    FIXED_LENGTH("Fixed length"),
-    VARIABLE_LENGTH("Variable length"),
-    CUSTOM("Custom"),
-
-    ;
-
-    private final String label;
-
-    Type(String label) {
-      this.label = label;
-    }
-
-    @Override
-    public String getLabel() {
-      return label;
-    }
-
-
-  }
-
-  public static class FieldMaskConfig {
-    @ConfigDef(
-        required = true,
-        type = ConfigDef.Type.MODEL,
-        defaultValue="",
-        label = "Fields to Mask",
-        description="Mask string fields. You can enter multiple fields for the same mask type.",
-        displayPosition = 10
-    )
-    @FieldSelector
-    public List<String> fields;
-
-    @ConfigDef(
-        required = true,
-        type = ConfigDef.Type.MODEL,
-        defaultValue="VARIABLE_LENGTH",
-        label = "Mask Type",
-        description="",
-        displayPosition = 20
-    )
-    @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = MaskTypeChooseValues.class)
-    public Type maskType;
-
-    @ConfigDef(
-        required = true,
-        type = ConfigDef.Type.STRING,
-        label = "Custom Mask",
-        description = "Use # to reveal field values. Other characters replace field values.",
-        displayPosition = 30,
-        dependsOn = "maskType",
-        triggeredByValue = "CUSTOM"
-    )
-    public String mask;
-
-  }
 
   @ConfigDef(
       required = false,
@@ -145,11 +74,11 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   }
 
   private String maskField(Field field, FieldMaskConfig fieldMaskConfig) {
-    if(fieldMaskConfig.maskType == Type.FIXED_LENGTH) {
+    if(fieldMaskConfig.maskType == MaskType.FIXED_LENGTH) {
       return fixedLengthMask();
-    } else if (fieldMaskConfig.maskType == Type.VARIABLE_LENGTH) {
+    } else if (fieldMaskConfig.maskType == MaskType.VARIABLE_LENGTH) {
       return variableLengthMask(field.getValueAsString());
-    } else if (fieldMaskConfig.maskType == Type.CUSTOM) {
+    } else if (fieldMaskConfig.maskType == MaskType.CUSTOM) {
       return mask(field.getValueAsString(), fieldMaskConfig.mask);
     }
     //Should not happen

@@ -5,12 +5,14 @@
  */
 package com.streamsets.pipeline.lib.stage.processor.fieldmask;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
-public class MaskTypeChooseValues extends BaseEnumChooserValues {
+public enum ConfigGroups implements Label {
+  MASKING;
 
-  public MaskTypeChooseValues() {
-    super(MaskType.class);
+  @Override
+  public String getLabel() {
+    return "Mask";
   }
 
 }
