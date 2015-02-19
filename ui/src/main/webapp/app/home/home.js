@@ -1154,9 +1154,6 @@ angular
     });
 
     $scope.$on('$destroy', function() {
-
-      alert('test');
-
       $timeout.cancel(pipelineStatusTimer);
       $timeout.cancel(pipelineMetricsTimer);
       destroyed = true;
