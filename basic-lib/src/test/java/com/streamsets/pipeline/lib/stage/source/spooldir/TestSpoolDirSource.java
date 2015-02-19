@@ -7,7 +7,6 @@ package com.streamsets.pipeline.lib.stage.source.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
@@ -48,7 +47,7 @@ public class TestSpoolDirSource {
         .addConfiguration("fileDataType", FileDataType.LOG_DATA)
         .addConfiguration("maxLogLineLength", 1024)
         .addConfiguration("setTruncated", false)
-        .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
+        .addConfiguration("postProcessing", PostProcessingOptions.ARCHIVE)
         .addConfiguration("filePattern", "file-[0-9].log")
         .addConfiguration("batchSize", 10)
         .addConfiguration("maxSpoolFiles", 10)

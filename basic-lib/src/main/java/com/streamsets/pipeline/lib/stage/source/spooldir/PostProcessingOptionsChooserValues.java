@@ -9,30 +9,15 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.ChooserValues;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 
 import java.util.List;
 
-public class PostProcessingOptionsChooserValues implements ChooserValues {
-  private static final List<String> VALUES;
+public class PostProcessingOptionsChooserValues extends BaseEnumChooserValues {
 
-  static {
-    VALUES = ImmutableList.copyOf(Lists.transform(ImmutableList.copyOf(DirectorySpooler.FilePostProcessing.values()),
-                                                  new Function<DirectorySpooler.FilePostProcessing, String>() {
-                                                    @Override
-                                                    public String apply(DirectorySpooler.FilePostProcessing input) {
-                                                      return input.toString();
-                                                    }
-                                                  }));
+  public PostProcessingOptionsChooserValues() {
+    super(PostProcessingOptions.class);
   }
 
-  @Override
-  public List<String> getValues() {
-    return VALUES;
-  }
-
-  @Override
-  public List<String> getLabels() {
-    return VALUES;
-  }
 }

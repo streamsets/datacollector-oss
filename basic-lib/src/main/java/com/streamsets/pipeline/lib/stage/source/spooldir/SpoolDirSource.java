@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -18,7 +17,6 @@ import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
-import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,32 +32,10 @@ import java.util.concurrent.TimeUnit;
     icon="spoolDirSource.png"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
-@ConfigGroups(SpoolDirSource.Groups.class)
+@ConfigGroups(com.streamsets.pipeline.lib.stage.source.spooldir.ConfigGroups.class)
 public class SpoolDirSource extends BaseSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);
   private static final String OFFSET_SEPARATOR = "::";
-
-  public static enum Groups implements Label {
-    FILES("Files"),
-    POST_PROCESSING("Post Processing"),
-    LOG_DATA("Text"),
-    JSON_DATA("JSON"),
-    DELIMITED_DATA("Delimited"),
-    XML_DATA("XML"),
-    ;
-
-    private final String label;
-
-    Groups(String label) {
-      this.label = label;
-    }
-
-    @Override
-    public String getLabel() {
-      return label;
-    }
-
-  }
 
   @ConfigDef(
       required = true,
@@ -164,7 +140,7 @@ public class SpoolDirSource extends BaseSource {
       group = "POST_PROCESSING"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PostProcessingOptionsChooserValues.class)
-  public DirectorySpooler.FilePostProcessing postProcessing;
+  public PostProcessingOptions postProcessing;
 
   @ConfigDef(
       required = false,
@@ -238,7 +214,7 @@ public class SpoolDirSource extends BaseSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "ARRAY_OBJECTS",
+      defaultValue = "MULTIPLE_OBJECTS",
       label = "JSON Content",
       description = "",
       displayPosition = 400,
@@ -352,8 +328,8 @@ public class SpoolDirSource extends BaseSource {
     }
 
     DirectorySpooler.Builder builder = DirectorySpooler.builder().setDir(spoolDir).setFilePattern(filePattern).
-        setMaxSpoolFiles(maxSpoolFiles).setPostProcessing(postProcessing);
-    if (postProcessing == DirectorySpooler.FilePostProcessing.ARCHIVE) {
+        setMaxSpoolFiles(maxSpoolFiles).setPostProcessing(postProcessing.getSpoolerAction());
+    if (postProcessing == PostProcessingOptions.ARCHIVE) {
       builder.setArchiveDir(archiveDir);
       builder.setArchiveRetention(retentionTimeMins);
     }
@@ -486,13 +462,13 @@ public class SpoolDirSource extends BaseSource {
         // we ask for a batch from the currentFile starting at offset
         offset = produce(currentFile, offset, batchSize, batchMaker);
       } catch (BadSpoolFileException ex) {
-        LOG.error(StageLibError.LIB_0101.getMessage(), ex.getFile(), ex.getPos(), ex.getMessage(), ex);
-        getContext().reportError(StageLibError.LIB_0101, ex.getFile(), ex.getPos(), ex.getMessage());
+        LOG.error(Errors.SPOOLDIR_01.getMessage(), ex.getFile(), ex.getPos(), ex.getMessage(), ex);
+        getContext().reportError(Errors.SPOOLDIR_01, ex.getFile(), ex.getPos(), ex.getMessage());
         try {
           // then we ask the spooler to error handle the failed file
           spooler.handleCurrentFileAsError();
         } catch (IOException ex1) {
-          throw new StageException(StageLibError.LIB_0100, currentFile, ex1.getMessage(), ex1);
+          throw new StageException(Errors.SPOOLDIR_00, currentFile, ex1.getMessage(), ex1);
         }
         // we set the offset to -1 to indicate we are done with the file and we should fetch a new one from the spooler
         offset = -1;

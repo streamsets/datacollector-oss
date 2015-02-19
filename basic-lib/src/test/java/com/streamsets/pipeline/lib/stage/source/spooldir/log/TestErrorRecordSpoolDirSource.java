@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.stage.source.spooldir.FileDataType;
+import com.streamsets.pipeline.lib.stage.source.spooldir.PostProcessingOptions;
 import com.streamsets.pipeline.lib.stage.source.spooldir.SpoolDirSource;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -50,7 +50,7 @@ public class TestErrorRecordSpoolDirSource {
   public void testProduceFullFile() throws Exception {
     File errorRecordsFile = createErrorRecordsFile();
     SourceRunner runner = new SourceRunner.Builder(SpoolDirSource.class)
-        .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
+        .addConfiguration("postProcessing", PostProcessingOptions.ARCHIVE)
         .addConfiguration("batchSize", 10)
         .addConfiguration("spoolDir", errorRecordsFile.getParent())
         .addConfiguration("archiveDir", createTestDir())

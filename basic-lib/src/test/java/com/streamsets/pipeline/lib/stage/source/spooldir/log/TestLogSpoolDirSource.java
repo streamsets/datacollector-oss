@@ -7,8 +7,8 @@ package com.streamsets.pipeline.lib.stage.source.spooldir.log;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.stage.source.spooldir.FileDataType;
+import com.streamsets.pipeline.lib.stage.source.spooldir.PostProcessingOptions;
 import com.streamsets.pipeline.lib.stage.source.spooldir.SpoolDirSource;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -45,7 +45,7 @@ public class TestLogSpoolDirSource {
   @Test
   public void testProduceFullFile() throws Exception {
     SourceRunner runner = new SourceRunner.Builder(SpoolDirSource.class)
-        .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
+        .addConfiguration("postProcessing", PostProcessingOptions.ARCHIVE)
         .addConfiguration("filePattern", "file-[0-9].log")
         .addConfiguration("batchSize", 10)
         .addConfiguration("maxSpoolFiles", 10)
@@ -81,7 +81,7 @@ public class TestLogSpoolDirSource {
   @Test
   public void testProduceLessThanFile() throws Exception {
     SourceRunner runner = new SourceRunner.Builder(SpoolDirSource.class)
-        .addConfiguration("postProcessing", DirectorySpooler.FilePostProcessing.ARCHIVE)
+        .addConfiguration("postProcessing", PostProcessingOptions.ARCHIVE)
         .addConfiguration("filePattern", "file-[0-9].log")
         .addConfiguration("batchSize", 10)
         .addConfiguration("maxSpoolFiles", 10)
