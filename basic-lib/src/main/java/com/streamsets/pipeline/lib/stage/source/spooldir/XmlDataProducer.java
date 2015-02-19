@@ -12,7 +12,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.io.OverrunException;
-import com.streamsets.pipeline.lib.util.StageLibError;
 import com.streamsets.pipeline.lib.xml.OverrunStreamingXmlParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,8 +97,8 @@ public class XmlDataProducer implements DataProducer {
         }
       } catch (OverrunStreamingXmlParser.XmlObjectLengthException ex) {
         xmlObjectsOverMaxLen.inc();
-        context.reportError(StageLibError.LIB_0200, maxXmlObjectLen, sourceFile, ex.getXmlOffset());
-        LOG.warn(StageLibError.LIB_0200.getMessage(), maxXmlObjectLen, sourceFile, ex.getXmlOffset());
+        context.reportError(Errors.SPOOLDIR_04, maxXmlObjectLen, sourceFile, ex.getXmlOffset());
+        LOG.warn(Errors.SPOOLDIR_04.getMessage(), maxXmlObjectLen, sourceFile, ex.getXmlOffset());
       }
     }
     return offset;

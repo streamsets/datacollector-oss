@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.hdfs.HdfsFileType;
-import com.streamsets.pipeline.hdfs.HdfsLibError;
+import com.streamsets.pipeline.hdfs.Errors;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -107,7 +107,7 @@ public class RecordWriterManager {
       ELRecordSupport.setRecordInContext(vars, record);
       return (String) pathElEval.eval(vars, dirPathTemplate);
     } catch (ELException ex) {
-      throw new StageException(HdfsLibError.HDFS_0003, dirPathTemplate, ex.getMessage(), ex);
+      throw new StageException(Errors.HADOOPFS_02, dirPathTemplate, ex.getMessage(), ex);
     }
   }
 

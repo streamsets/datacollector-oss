@@ -43,10 +43,10 @@ public enum CompressionMode implements Label {
         if (CompressionCodec.class.isAssignableFrom(klass)) {
           return (Class<? extends CompressionCodec> ) klass;
         } else {
-          throw new StageException(HdfsLibError.HDFS_0006, codecName);
+          throw new StageException(Errors.HADOOPFS_04, codecName);
         }
       } catch (Exception ex1) {
-        throw new StageException(HdfsLibError.HDFS_0007, codecName, ex1.getMessage(), ex1);
+        throw new StageException(Errors.HADOOPFS_05, codecName, ex1.getMessage(), ex1);
       }
     }
   }

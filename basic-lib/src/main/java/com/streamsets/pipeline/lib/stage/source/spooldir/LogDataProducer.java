@@ -13,7 +13,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunLineReader;
 import com.streamsets.pipeline.lib.util.LineToRecord;
-import com.streamsets.pipeline.lib.util.StageLibError;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +54,7 @@ public class LogDataProducer implements DataProducer {
     } catch (IOException ex) {
       long lastOffset = offset;
       offset = -1;
-      throw new StageException(StageLibError.LIB_0003, file, lastOffset, ex.getMessage(), ex);
+      throw new StageException(Errors.SPOOLDIR_03, file, lastOffset, ex.getMessage(), ex);
     } finally {
       if (offset == -1) {
         if (lineReader != null) {

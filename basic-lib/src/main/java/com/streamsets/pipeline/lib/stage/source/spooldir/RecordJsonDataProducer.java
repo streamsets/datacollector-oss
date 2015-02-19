@@ -14,7 +14,6 @@ import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordReader;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
-import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,8 +87,8 @@ public class RecordJsonDataProducer implements DataProducer {
         }
       } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
         jsonObjectsOverMaxLen.inc();
-        context.reportError(StageLibError.LIB_0200, ex.getJsonSnippet(), maxJsonObjectLen, sourceFile, offset);
-        LOG.warn(StageLibError.LIB_0200.getMessage(), ex.getJsonSnippet(), maxJsonObjectLen, sourceFile, offset);
+        context.reportError(Errors.SPOOLDIR_02, ex.getJsonSnippet(), maxJsonObjectLen, sourceFile, offset);
+        LOG.warn(Errors.SPOOLDIR_02.getMessage(), ex.getJsonSnippet(), maxJsonObjectLen, sourceFile, offset);
       }
     }
     return offset;
