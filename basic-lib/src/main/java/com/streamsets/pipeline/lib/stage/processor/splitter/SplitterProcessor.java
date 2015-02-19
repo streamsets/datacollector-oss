@@ -11,14 +11,12 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,19 +29,9 @@ import java.util.List;
     description = "Splits a string field based on a separator character",
     icon="splitter.png"
 )
-@ConfigGroups(SplitterProcessor.Groups.class)
+@ConfigGroups(com.streamsets.pipeline.lib.stage.processor.splitter.ConfigGroups.class)
 public class SplitterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SplitterProcessor.class);
-
-  public enum Groups implements Label {
-    FIELD_SPLITTER;
-
-    @Override
-    public String getLabel() {
-      return "Split";
-    }
-
-  }
 
   @ConfigDef(
       required = true,
@@ -111,7 +99,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
     super.init();
 
     if (fieldPathsForSplits.size() < 2) {
-      throw new StageException(StageLibError.LIB_0700);
+      throw new StageException(Errors.SPLITTER_00);
     }
 
     separatorStr = (separator == '^') ? " " : "" + separator;
@@ -132,12 +120,12 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
     String[] splits = null;
     ErrorCode error = null;
     if (field == null || field.getValue() == null) {
-      error = StageLibError.LIB_0701;
+      error = Errors.SPLITTER_01;
     } else {
       String str = field.getValueAsString();
       splits = str.split(separatorStr, fieldPaths.length);
       if (splits.length < fieldPaths.length) {
-        error = StageLibError.LIB_0702;
+        error = Errors.SPLITTER_02;
       }
     }
     if (error == null || onNotEnoughSplits == OnNotEnoughSplits.CONTINUE) {
