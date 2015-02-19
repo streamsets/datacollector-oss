@@ -7,7 +7,6 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.admin.AdminUtils;
 import kafka.consumer.ConsumerIterator;
@@ -233,7 +232,7 @@ public class TestKafkaTargetMultiPartition {
       targetRunner.runInit();
       Assert.fail("Expected StageException as the partition expression is not valid");
     } catch (StageException e) {
-      Assert.assertEquals(KafkaStageLibError.KFK_0357, e.getErrorCode());
+      Assert.assertEquals(Errors.KAFKA_23, e.getErrorCode());
     }
   }
 

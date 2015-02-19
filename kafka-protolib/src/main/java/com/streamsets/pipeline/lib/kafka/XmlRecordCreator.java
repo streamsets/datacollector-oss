@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.io.CountingReader;
-import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import com.streamsets.pipeline.lib.xml.StreamingXmlParser;
 
 import java.io.BufferedReader;
@@ -38,7 +37,7 @@ public class XmlRecordCreator implements RecordCreator {
       record.set(xmlParser.read());
       return ImmutableList.of(record);
     } catch (Exception e) {
-      throw new StageException(KafkaStageLibError.KFK_0101, e.getMessage(), e);
+      throw new StageException(Errors.KAFKA_01, e.getMessage(), e);
     }
   }
 }

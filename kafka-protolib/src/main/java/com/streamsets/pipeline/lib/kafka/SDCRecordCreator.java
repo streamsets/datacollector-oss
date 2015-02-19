@@ -5,17 +5,12 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordReader;
-import com.streamsets.pipeline.lib.io.CountingReader;
-import com.streamsets.pipeline.lib.util.KafkaStageLibError;
-import com.streamsets.pipeline.lib.xml.StreamingXmlParser;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,10 +38,10 @@ public class SDCRecordCreator implements RecordCreator {
         }
         return list;
       } catch (IOException ex) {
-        throw new StageException(KafkaStageLibError.KFK_0101, ex.getMessage(), ex);
+        throw new StageException(Errors.KAFKA_01, ex.getMessage(), ex);
       }
     } catch (IOException ex) {
-      throw new StageException(KafkaStageLibError.KFK_0101, ex.getMessage(), ex);
+      throw new StageException(Errors.KAFKA_01, ex.getMessage(), ex);
 
     }
   }

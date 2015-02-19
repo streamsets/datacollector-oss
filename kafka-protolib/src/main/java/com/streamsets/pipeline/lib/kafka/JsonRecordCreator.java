@@ -13,7 +13,6 @@ import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.lib.util.JsonUtil;
-import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -90,7 +89,7 @@ public class JsonRecordCreator implements RecordCreator {
         }
       }
     } catch (Exception e) {
-      throw new StageException(KafkaStageLibError.KFK_0101, e.getMessage(), e);
+      throw new StageException(Errors.KAFKA_01, e.getMessage(), e);
     }
   }
 }

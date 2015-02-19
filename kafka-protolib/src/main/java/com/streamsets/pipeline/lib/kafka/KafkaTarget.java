@@ -26,7 +26,6 @@ import com.streamsets.pipeline.lib.recordserialization.DataCollectorRecordToStri
 import com.streamsets.pipeline.lib.recordserialization.JsonRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.LogRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
-import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -280,8 +279,8 @@ public class KafkaTarget extends BaseTarget {
     try {
       elEvaluator.eval(variables, partition);
     } catch (ELException ex) {
-      LOG.error(KafkaStageLibError.KFK_0357.getMessage(), partition, ex.getMessage(), ex);
-      throw new StageException(KafkaStageLibError.KFK_0357, partition, ex.getMessage(), ex);
+      LOG.error(Errors.KAFKA_23.getMessage(), partition, ex.getMessage(), ex);
+      throw new StageException(Errors.KAFKA_23, partition, ex.getMessage(), ex);
     }
   }
 
@@ -324,14 +323,14 @@ public class KafkaTarget extends BaseTarget {
     try {
       partition = Integer.parseInt(partitionKey);
     } catch (NumberFormatException e) {
-      LOG.warn(KafkaStageLibError.KFK_0355.getMessage(), partitionKey, topic, e.getMessage());
-      getContext().toError(r, KafkaStageLibError.KFK_0355, partitionKey, topic, e.getMessage(), e);
+      LOG.warn(Errors.KAFKA_21.getMessage(), partitionKey, topic, e.getMessage());
+      getContext().toError(r, Errors.KAFKA_21, partitionKey, topic, e.getMessage(), e);
       return false;
     }
     //partition number is an integer starting from 0 ... n-1, where n is the number of partitions for topic t
     if(partition < 0 || partition >= kafkaProducer.getNumberOfPartitions()) {
-      LOG.warn(KafkaStageLibError.KFK_0356.getMessage(), partition, topic, kafkaProducer.getNumberOfPartitions());
-      getContext().toError(r, KafkaStageLibError.KFK_0356, partition, topic, kafkaProducer.getNumberOfPartitions());
+      LOG.warn(Errors.KAFKA_22.getMessage(), partition, topic, kafkaProducer.getNumberOfPartitions());
+      getContext().toError(r, Errors.KAFKA_22, partition, topic, kafkaProducer.getNumberOfPartitions());
       return false;
     }
     return true;
@@ -344,8 +343,8 @@ public class KafkaTarget extends BaseTarget {
       try {
         result = elEvaluator.eval(variables, partition);
       } catch (ELException e) {
-        LOG.warn(KafkaStageLibError.KFK_0354.getMessage(), partition, record.getHeader().getSourceId(), e.getMessage());
-        getContext().toError(record, KafkaStageLibError.KFK_0354, partition, record.getHeader().getSourceId(),
+        LOG.warn(Errors.KAFKA_20.getMessage(), partition, record.getHeader().getSourceId(), e.getMessage());
+        getContext().toError(record, Errors.KAFKA_20, partition, record.getHeader().getSourceId(),
           e.getMessage(), e);
         return null;
       }

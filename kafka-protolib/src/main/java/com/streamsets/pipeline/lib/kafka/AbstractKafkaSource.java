@@ -14,7 +14,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,8 +138,8 @@ public abstract class AbstractKafkaSource extends BaseSource {
       offsetToRead = Long.parseLong(lastSourceOffset);
       long latestOffsetInKafka = kafkaConsumer.getOffsetToRead(false);
       if(offsetToRead > latestOffsetInKafka) {
-        LOG.error(KafkaStageLibError.KFK_0300.getMessage(), lastSourceOffset, latestOffsetInKafka, topic, partition);
-        throw new StageException(KafkaStageLibError.KFK_0300, lastSourceOffset, latestOffsetInKafka, topic, partition);
+        LOG.error(Errors.KAFKA_03.getMessage(), lastSourceOffset, latestOffsetInKafka, topic, partition);
+        throw new StageException(Errors.KAFKA_03, lastSourceOffset, latestOffsetInKafka, topic, partition);
       }
     }
     //This is where we want to start reading from kafka topic partition.

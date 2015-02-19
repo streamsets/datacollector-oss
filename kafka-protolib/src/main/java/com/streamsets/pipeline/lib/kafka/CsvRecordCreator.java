@@ -12,7 +12,6 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.io.CountingReader;
-import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -53,7 +52,7 @@ public class CsvRecordCreator implements RecordCreator {
       record.set(Field.create(map));
       return ImmutableList.of(record);
     }catch (Exception e) {
-      throw new StageException(KafkaStageLibError.KFK_0100, e.getMessage(), e);
+      throw new StageException(Errors.KAFKA_00, e.getMessage(), e);
     }
   }
 }

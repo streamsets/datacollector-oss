@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import kafka.api.FetchRequest;
 import kafka.api.FetchRequestBuilder;
 import kafka.api.PartitionOffsetRequestInfo;
@@ -75,12 +74,12 @@ public class KafkaConsumer {
     brokers.add(broker);
     PartitionMetadata metadata = getPartitionMetadata(brokers, topic, partition);
     if (metadata == null) {
-      LOG.error(KafkaStageLibError.KFK_0303.getMessage(), topic, partition);
-      throw new StageException(KafkaStageLibError.KFK_0303, topic, partition);
+      LOG.error(Errors.KAFKA_06.getMessage(), topic, partition);
+      throw new StageException(Errors.KAFKA_06, topic, partition);
     }
     if (metadata.leader() == null) {
-      LOG.error(KafkaStageLibError.KFK_0304.getMessage(), topic, partition);
-      throw new StageException(KafkaStageLibError.KFK_0304, topic, partition);
+      LOG.error(Errors.KAFKA_07.getMessage(), topic, partition);
+      throw new StageException(Errors.KAFKA_07, topic, partition);
     }
     leader = new KafkaBroker(metadata.leader().host(), metadata.leader().port());
     //recreate consumer instance with the leader information for that topic
@@ -106,10 +105,10 @@ public class KafkaConsumer {
         //If the value of consumer.timeout.ms is set to a positive integer, a timeout exception is thrown to the
         //consumer if no message is available for consumption after the specified timeout value.
         //If this happens exit gracefully
-        LOG.warn(KafkaStageLibError.KFK_0308.getMessage());
+        LOG.warn(Errors.KAFKA_11.getMessage());
         return Collections.emptyList();
       } else {
-        throw new StageException(KafkaStageLibError.KFK_0309, e.getMessage(), e);
+        throw new StageException(Errors.KAFKA_12, e.getMessage(), e);
       }
     }
 
@@ -131,7 +130,7 @@ public class KafkaConsumer {
 
       if(fetchResponse.hasError()) {
         //could not fetch the second time, give kafka some time
-        LOG.error(KafkaStageLibError.KFK_0306.getMessage(), topic, partition, offset);
+        LOG.error(Errors.KAFKA_09.getMessage(), topic, partition, offset);
       }
     }
 
@@ -140,7 +139,7 @@ public class KafkaConsumer {
     for (kafka.message.MessageAndOffset messageAndOffset : fetchResponse.messageSet(topic, partition)) {
       long currentOffset = messageAndOffset.offset();
       if (currentOffset < offset) {
-        LOG.warn(KafkaStageLibError.KFK_0307.getMessage(), currentOffset, offset);
+        LOG.warn(Errors.KAFKA_10.getMessage(), currentOffset, offset);
         continue;
       }
       ByteBuffer payload = messageAndOffset.message().payload();
@@ -173,15 +172,15 @@ public class KafkaConsumer {
       OffsetResponse response = consumer.getOffsetsBefore(request);
 
       if (response.hasError()) {
-        LOG.error(KafkaStageLibError.KFK_0302.getMessage(), consumer.host() + ":" + consumer.port(),
+        LOG.error(Errors.KAFKA_05.getMessage(), consumer.host() + ":" + consumer.port(),
           response.errorCode(topic, partition));
         return 0;
       }
       long[] offsets = response.offsets(topic, partition);
       return offsets[0];
     } catch (Exception e) {
-      LOG.error(KafkaStageLibError.KFK_0310.getMessage(), e);
-      throw new StageException(KafkaStageLibError.KFK_0310, e.getMessage(), e);
+      LOG.error(Errors.KAFKA_13.getMessage(), e);
+      throw new StageException(Errors.KAFKA_13, e.getMessage(), e);
     }
   }
 
@@ -205,8 +204,8 @@ public class KafkaConsumer {
         }
       }
     }
-    LOG.error(KafkaStageLibError.KFK_0301.getMessage());
-    throw new StageException(KafkaStageLibError.KFK_0301);
+    LOG.error(Errors.KAFKA_04.getMessage());
+    throw new StageException(Errors.KAFKA_04);
   }
 
   private PartitionMetadata getPartitionMetadata(List<KafkaBroker> brokers, String topic, int partition) {
@@ -234,7 +233,7 @@ public class KafkaConsumer {
           }
         }
       } catch (Exception e) {
-        LOG.error(KafkaStageLibError.KFK_0305.getMessage(), broker.getHost() + ":" + broker.getPort(), topic, partition,
+        LOG.error(Errors.KAFKA_08.getMessage(), broker.getHost() + ":" + broker.getPort(), topic, partition,
           e.getMessage(), e);
       } finally {
         if (simpleConsumer != null) {

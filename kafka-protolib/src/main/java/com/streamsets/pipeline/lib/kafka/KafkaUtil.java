@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import kafka.common.ErrorMapping;
 import kafka.javaapi.TopicMetadata;
 import kafka.javaapi.TopicMetadataRequest;
@@ -58,13 +57,13 @@ public class KafkaUtil {
     }
     if(topicMetadata == null) {
       //Could not get topic metadata from any of the supplied brokers
-      LOG.error(KafkaStageLibError.KFK_0353.getMessage(), topic, metadataBrokerList);
-      throw new StageException(KafkaStageLibError.KFK_0353, topic, metadataBrokerList);
+      LOG.error(Errors.KAFKA_19.getMessage(), topic, metadataBrokerList);
+      throw new StageException(Errors.KAFKA_19, topic, metadataBrokerList);
     }
     if(topicMetadata.errorCode()== ErrorMapping.UnknownTopicOrPartitionCode()) {
       //Topic does not exist
-      LOG.error(KafkaStageLibError.KFK_0358.getMessage(), topic);
-      throw new StageException(KafkaStageLibError.KFK_0358, topic);
+      LOG.error(Errors.KAFKA_24.getMessage(), topic);
+      throw new StageException(Errors.KAFKA_24, topic);
     }
     return topicMetadata.partitionsMetadata().size();
   }

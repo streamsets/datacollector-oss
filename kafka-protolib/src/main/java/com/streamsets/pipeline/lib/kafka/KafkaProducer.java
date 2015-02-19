@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.util.KafkaStageLibError;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
@@ -101,8 +100,8 @@ public class KafkaProducer {
     } catch (Exception e) {
       //Producer internally refreshes metadata and retries if there is any recoverable exception.
       //If retry fails, a FailedToSendMessageException is thrown.
-      LOG.error(KafkaStageLibError.KFK_0350.getMessage(), e.getMessage(), e);
-      throw new StageException(KafkaStageLibError.KFK_0350, e.getMessage(), e);
+      LOG.error(Errors.KAFKA_16.getMessage(), e.getMessage(), e);
+      throw new StageException(Errors.KAFKA_16, e.getMessage(), e);
     }
   }
 
