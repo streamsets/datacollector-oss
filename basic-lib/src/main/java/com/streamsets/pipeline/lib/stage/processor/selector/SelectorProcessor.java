@@ -11,7 +11,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.LanePredicateMapping;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
@@ -21,7 +20,6 @@ import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
-import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,19 +36,9 @@ import java.util.Set;
     icon="laneSelector.png",
     outputStreams = StageDef.VariableOutputStreams.class,
     outputStreamsDrivenByConfig = "lanePredicates")
-@ConfigGroups(SelectorProcessor.Groups.class)
+@ConfigGroups(com.streamsets.pipeline.lib.stage.processor.selector.ConfigGroups.class)
 public class SelectorProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SelectorProcessor.class);
-
-  public enum Groups implements Label {
-    CONDITIONS;
-
-    @Override
-    public String getLabel() {
-      return "Conditions";
-    }
-
-  }
 
   @ConfigDef(
       required = true,
@@ -96,7 +84,7 @@ public class SelectorProcessor extends RecordProcessor {
       String outputLane = predicateLaneMap.get("outputLane");
       Object predicate = predicateLaneMap.get("predicate");
       if (!getContext().getOutputLanes().contains(outputLane)) {
-        throw new StageException(StageLibError.LIB_0012, outputLane, predicate);
+        throw new StageException(Errors.SELECTOR_02, outputLane, predicate);
       }
       predicateLanes[count] = new String[2];
       predicateLanes[count][0] = (String) predicate;
@@ -123,10 +111,10 @@ public class SelectorProcessor extends RecordProcessor {
   protected void init() throws StageException {
     super.init();
     if (lanePredicates == null || lanePredicates.size() == 0) {
-      throw new StageException(StageLibError.LIB_0010);
+      throw new StageException(Errors.SELECTOR_00);
     }
     if (getContext().getOutputLanes().size() != lanePredicates.size()) {
-      throw new StageException(StageLibError.LIB_0011, getContext().getOutputLanes(), lanePredicates.size());
+      throw new StageException(Errors.SELECTOR_01, getContext().getOutputLanes(), lanePredicates.size());
     }
     predicateLanes = parsePredicateLanes(lanePredicates);
     variables = parseConstants(constants);
@@ -188,7 +176,7 @@ public class SelectorProcessor extends RecordProcessor {
       try {
         elEvaluator.eval(variables, predicateLane[0], Boolean.class);
       } catch (ELException ex) {
-        throw new StageException(StageLibError.LIB_0013, predicateLane[0], ex.getMessage(), ex);
+        throw new StageException(Errors.SELECTOR_03, predicateLane[0], ex.getMessage(), ex);
       }
     }
   }
@@ -210,7 +198,7 @@ public class SelectorProcessor extends RecordProcessor {
                     pl[0], pl[1]);
         }
       } catch (ELException ex) {
-        getContext().toError(record, StageLibError.LIB_0014, pl[0], ex.getMessage(), ex);
+        getContext().toError(record, Errors.SELECTOR_04, pl[0], ex.getMessage(), ex);
       }
     }
     if (!matchedAtLeastOnePredicate) {
@@ -221,11 +209,11 @@ public class SelectorProcessor extends RecordProcessor {
         case RECORD_TO_ERROR:
           LOG.trace("Record '{}' does not satisfy any condition, sending it to error",
                     record.getHeader().getSourceId());
-          getContext().toError(record, StageLibError.LIB_0015);
+          getContext().toError(record, Errors.SELECTOR_05);
           break;
         case FAIL_PIPELINE:
-          LOG.error(StageLibError.LIB_0016.getMessage(), record.getHeader().getSourceId());
-          throw new StageException(StageLibError.LIB_0016, record.getHeader().getSourceId());
+          LOG.error(Errors.SELECTOR_06.getMessage(), record.getHeader().getSourceId());
+          throw new StageException(Errors.SELECTOR_06, record.getHeader().getSourceId());
       }
     }
   }

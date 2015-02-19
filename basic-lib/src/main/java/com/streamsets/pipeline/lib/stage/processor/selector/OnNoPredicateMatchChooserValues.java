@@ -9,31 +9,14 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.ChooserValues;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
 import java.util.List;
 
-public class OnNoPredicateMatchChooserValues implements ChooserValues {
+public class OnNoPredicateMatchChooserValues extends BaseEnumChooserValues {
 
-  private static final List<String> VALUES;
-
-  static {
-    VALUES =
-        ImmutableList.copyOf(Lists.transform(ImmutableList.copyOf(
-            OnNoPredicateMatch.values()), new Function<OnNoPredicateMatch, String>() {
-          @Override
-          public String apply(OnNoPredicateMatch input) {
-            return input.toString();
-          }
-        }));
+  public OnNoPredicateMatchChooserValues() {
+    super(OnNoPredicateMatch.class);
   }
 
-  @Override
-  public List<String> getValues() {
-    return VALUES;
-  }
-
-  @Override
-  public List<String> getLabels() {
-    return VALUES;
-  }
 }
