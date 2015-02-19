@@ -5,21 +5,16 @@
  */
 package com.streamsets.pipeline.lib.stage.processor.fieldtypeconverter;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.pipeline.lib.util.StageLibError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,115 +32,9 @@ import java.util.Locale;
     description = "Converts the data type of a field",
     icon="converter.svg"
 )
-@ConfigGroups(FieldTypeConverterProcessor.Groups.class)
+@ConfigGroups(com.streamsets.pipeline.lib.stage.processor.fieldtypeconverter.ConfigGroups.class)
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
-
-  public enum Groups implements Label {
-    TYPE_CONVERSION;
-
-    @Override
-    public String getLabel() {
-      return "Conversions";
-    }
-
-  }
-
-  public enum DataLocale {
-
-    ENGLISH(Locale.ENGLISH),
-    FRENCH(Locale.FRENCH),
-    GERMAN(Locale.GERMAN),
-    ITALIAN(Locale.ITALIAN),
-    JAPANESE(Locale.JAPANESE),
-    KOREAN(Locale.KOREAN),
-    CHINESE(Locale.CHINESE),
-    SIMPLIFIED_CHINESE(Locale.SIMPLIFIED_CHINESE),
-    TRADITIONAL_CHINESE(Locale.TRADITIONAL_CHINESE);
-
-    private Locale locale;
-
-    private DataLocale(Locale locale) {
-      this.locale = locale;
-    }
-
-    public Locale getLocale() {
-      return this.locale;
-    }
-  }
-
-  public enum StandardDateFormats {
-
-    YYYY_MM_DD("yyyy-MM-dd"),
-    DD_MM_YYYY("dd-MMM-YYYY"),
-    YYYY_MM_DD_HH_MM_SS("yyyy-MM-dd HH:mm:ss"),
-    YYYY_MM_DD_HH_MM_SS_SSS("yyyy-MM-dd HH:mm:ss.SSS"),
-    YYYY_MM_DD_HH_MM_SS_SSS_Z("yyyy-MM-dd HH:mm:ss.SSS Z"),
-    YYYY_MM_DD_T_HH_MM_Z("yyyy-MM-dd'T'HH:mm'Z'");
-
-    private String format;
-
-    private StandardDateFormats(String format) {
-      this.format = format;
-    }
-
-    public String getFormat() {
-      return format;
-    }
-  }
-
-  public static class FieldTypeConverterConfig {
-
-    @ConfigDef(
-        required = true,
-        type = Type.MODEL,
-        defaultValue="",
-        label = "Fields to Convert",
-        description = "You can convert multiple fields to the same type",
-        displayPosition = 10
-    )
-    @FieldSelector
-    public List<String> fields;
-
-    @ConfigDef(
-        required = true,
-        type = Type.MODEL,
-        defaultValue="INTEGER",
-        label = "Convert to Type",
-        description = "Select a compatible data type",
-        displayPosition = 10
-    )
-    @ValueChooser(chooserValues = ConverterValuesProvider.class, type = ChooserMode.PROVIDED)
-    public Field.Type targetType;
-
-    @ConfigDef(
-        required = true,
-        type = Type.MODEL,
-        defaultValue = "ENGLISH",
-        label = "Data Locale",
-        description = "Affects the interpretation of locale sensitive data, such as using the comma as a decimal " +
-                      "separator",
-        displayPosition = 20,
-        dependsOn = "targetType",
-        triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT"}
-    )
-    @ValueChooser(chooserValues = LocaleValuesProvider.class, type = ChooserMode.PROVIDED)
-    public DataLocale dataLocale;
-
-    @ConfigDef(
-        required = true,
-        type = Type.MODEL,
-        defaultValue="yyyy-MM-dd",
-        label = "Date Format",
-        description="Select or enter any valid date or datetime format",
-        displayPosition = 30,
-        dependsOn = "targetType",
-        triggeredByValue = {"DATE", "DATETIME"}
-    )
-    @ValueChooser(chooserValues = DateFormatValuesProvider.class, type = ChooserMode.SUGGESTED)
-    public String dateFormat;
-
-  }
 
   @ConfigDef(
       required = false,
@@ -178,9 +67,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
                 record.set(fieldToConvert, convertStringToTargetType(field, fieldTypeConverterConfig.targetType,
                   fieldTypeConverterConfig.dataLocale.getLocale(), fieldTypeConverterConfig.dateFormat));
               } catch (ParseException | NumberFormatException e) {
-                LOG.warn(StageLibError.LIB_0400.getMessage(), fieldToConvert, field.getValueAsString(),
-                  fieldTypeConverterConfig.targetType.name(), e.getMessage());
-                getContext().toError(record, StageLibError.LIB_0400, fieldToConvert, field.getValueAsString(),
+                getContext().toError(record, Errors.CONVERTER_00, fieldToConvert, field.getValueAsString(),
                   fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
                 return;
               }
@@ -190,9 +77,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
               //use the built in type conversion provided by TypeSupport
               record.set(fieldToConvert, Field.create(fieldTypeConverterConfig.targetType, field.getValue()));
             } catch (IllegalArgumentException e) {
-              LOG.warn(StageLibError.LIB_0400.getMessage(), fieldToConvert, field.getValueAsString(),
-                fieldTypeConverterConfig.targetType.name(), e.getMessage());
-              getContext().toError(record, StageLibError.LIB_0400, fieldToConvert, field.getValueAsString(),
+              getContext().toError(record, Errors.CONVERTER_00, fieldToConvert, field.getValueAsString(),
                 fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
               return;
             }
