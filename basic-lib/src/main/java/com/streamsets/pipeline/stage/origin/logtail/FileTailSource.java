@@ -18,6 +18,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.util.JsonLineToRecord;
 import com.streamsets.pipeline.lib.util.LineToRecord;
 import com.streamsets.pipeline.lib.util.ToRecord;

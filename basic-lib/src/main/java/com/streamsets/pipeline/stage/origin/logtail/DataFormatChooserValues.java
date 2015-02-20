@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
 
 public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 

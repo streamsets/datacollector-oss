@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
