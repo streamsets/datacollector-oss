@@ -9,9 +9,7 @@ import com.streamsets.pipeline.api.Label;
 
 public enum OnNotEnoughSplits implements Label {
   CONTINUE("Continue"),
-  DISCARD("Discard"),
   TO_ERROR("Send to Error"),
-  STOP_PIPELINE("Stop Pipeline"),
 
   ;
 

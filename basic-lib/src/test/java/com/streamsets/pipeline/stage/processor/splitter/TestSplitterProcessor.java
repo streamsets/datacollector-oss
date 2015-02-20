@@ -69,40 +69,6 @@ public class TestSplitterProcessor {
   }
 
   @Test
-  public void testSplittingDiscarding() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterProcessor.class)
-        .addConfiguration("fieldPath", "/line")
-        .addConfiguration("separator", '^')
-        .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
-        .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.DISCARD)
-        .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
-        .addOutputLane("out")
-        .build();
-    runner.runInit();
-    try {
-
-      Record r0 = createRecordWithLine("a b");
-      Record r1 = createRecordWithLine("a b c");
-      Record r2 = createRecordWithLine("a");
-      Record r3 = createRecordWithLine("");
-      Record r4 = createRecordWithLine(" ");
-      Record r5 = createRecordWithLine(null);
-      List<Record> input = ImmutableList.of(r0, r1, r2, r3, r4, r5);
-      StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(3, output.getRecords().get("out").size());
-      Assert.assertEquals("a", output.getRecords().get("out").get(0).get("/a").getValue());
-      Assert.assertEquals("b", output.getRecords().get("out").get(0).get("/b").getValue());
-      Assert.assertEquals("a", output.getRecords().get("out").get(1).get("/a").getValue());
-      Assert.assertEquals("b c", output.getRecords().get("out").get(1).get("/b").getValue());
-      Assert.assertEquals("", output.getRecords().get("out").get(2).get("/a").getValue());
-      Assert.assertEquals("", output.getRecords().get("out").get(2).get("/b").getValue());
-      Assert.assertTrue(runner.getErrorRecords().isEmpty());
-    } finally {
-      runner.runDestroy();
-    }
-  }
-
-  @Test
   public void testSplittingToError() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterProcessor.class)
         .addConfiguration("fieldPath", "/line")
@@ -137,40 +103,13 @@ public class TestSplitterProcessor {
 
   }
 
-  @Test(expected = StageException.class)
-  public void testSplittingStopPipeline() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterProcessor.class)
-        .addConfiguration("fieldPath", "/line")
-        .addConfiguration("separator", '^')
-        .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
-        .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.STOP_PIPELINE)
-        .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
-        .addOutputLane("out")
-        .build();
-    runner.runInit();
-    try {
-
-      Record r0 = createRecordWithLine("a b");
-      Record r1 = createRecordWithLine("a b c");
-      Record r2 = createRecordWithLine("a");
-      Record r3 = createRecordWithLine("");
-      Record r4 = createRecordWithLine(" ");
-      Record r5 = createRecordWithLine(null);
-      List<Record> input = ImmutableList.of(r0, r1, r2, r3, r4, r5);
-      runner.runProcess(input);
-    } finally {
-      runner.runDestroy();
-    }
-
-  }
-
   @Test
   public void testKeepUnplitValue() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterProcessor.class)
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
-        .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.STOP_PIPELINE)
+        .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.TO_ERROR)
         .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
         .addOutputLane("out")
         .build();
@@ -195,7 +134,7 @@ public class TestSplitterProcessor {
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
-        .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.STOP_PIPELINE)
+        .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.TO_ERROR)
         .addConfiguration("originalFieldAction", OriginalFieldAction.REMOVE)
         .addOutputLane("out")
         .build();

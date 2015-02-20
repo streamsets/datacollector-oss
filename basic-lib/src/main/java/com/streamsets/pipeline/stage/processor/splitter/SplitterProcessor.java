@@ -17,8 +17,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -31,7 +29,6 @@ import java.util.List;
 )
 @ConfigGroups(com.streamsets.pipeline.stage.processor.splitter.ConfigGroups.class)
 public class SplitterProcessor extends SingleLaneRecordProcessor {
-  private static final Logger LOG = LoggerFactory.getLogger(SplitterProcessor.class);
 
   @ConfigDef(
       required = true,
@@ -140,20 +137,11 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
         record.delete(fieldPath);
       }
       batchMaker.addRecord(record);
+    } else if (onNotEnoughSplits == OnNotEnoughSplits.TO_ERROR) {
+      getContext().toError(record, error, record, fieldPath);
     } else {
-      switch (onNotEnoughSplits) {
-        case DISCARD:
-          LOG.debug(error.getMessage(), record, fieldPath);
-          break;
-        case TO_ERROR:
-          getContext().toError(record, error, record, fieldPath);
-          break;
-        case STOP_PIPELINE:
-          throw new StageException(error, record, fieldPath);
-        default:
-          throw new IllegalStateException(Utils.format("It should not happen, error={}, onNotEnoughSplits={}", error,
-                                                       onNotEnoughSplits));
-      }
+      throw new IllegalStateException(Utils.format("It should not happen, error={}, onNotEnoughSplits={}", error,
+                                                   onNotEnoughSplits));
     }
   }
 
