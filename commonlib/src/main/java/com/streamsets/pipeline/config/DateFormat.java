@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
+package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.Label;
 

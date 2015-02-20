@@ -1,4 +1,4 @@
-package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
+package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
