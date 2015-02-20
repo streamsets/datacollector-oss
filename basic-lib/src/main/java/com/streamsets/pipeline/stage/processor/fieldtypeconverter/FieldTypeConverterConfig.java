@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.PrimitiveFieldTypeChooserValues;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class FieldTypeConverterConfig {
       description = "Select a compatible data type",
       displayPosition = 10
   )
-  @ValueChooser(chooserValues = FieldTypeChooserValues.class, type = ChooserMode.PROVIDED)
+  @ValueChooser(chooserValues = PrimitiveFieldTypeChooserValues.class, type = ChooserMode.PROVIDED)
   public Field.Type targetType;
 
   @ConfigDef(
