@@ -30,7 +30,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/nonExistent", "/beginner", "/expert", "/skilled");
     fieldTypeConverterConfig.targetType = Field.Type.BOOLEAN;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -78,7 +78,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert"
       , "/null");
     fieldTypeConverterConfig.targetType = Field.Type.BOOLEAN;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -125,7 +125,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.BYTE;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -163,7 +163,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.CHAR;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -201,7 +201,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.BYTE_ARRAY;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -240,7 +240,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
       "/skilled", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -288,7 +288,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
       "/skilled", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
-    fieldTypeConverterConfig.dataLocale = DataLocale.GERMAN;
+    fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -337,7 +337,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
       "/skilled", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.DOUBLE;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -385,7 +385,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
       "/skilled", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
-    fieldTypeConverterConfig.dataLocale = DataLocale.GERMAN;
+    fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -434,7 +434,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.INTEGER;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -482,7 +482,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.INTEGER;
-    fieldTypeConverterConfig.dataLocale = DataLocale.GERMAN;
+    fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -530,7 +530,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.LONG;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -578,7 +578,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.LONG;
-    fieldTypeConverterConfig.dataLocale = DataLocale.GERMAN;
+    fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -626,7 +626,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.SHORT;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -674,7 +674,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.SHORT;
-    fieldTypeConverterConfig.dataLocale = DataLocale.GERMAN;
+    fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -722,7 +722,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.FLOAT;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -770,7 +770,7 @@ public class TestFieldTypeConverterProcessor {
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
       "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.FLOAT;
-    fieldTypeConverterConfig.dataLocale = DataLocale.GERMAN;
+    fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -817,35 +817,35 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterConfig();
     beginnerConfig.fields = ImmutableList.of("/beginner");
     beginnerConfig.targetType = Field.Type.DATE;
-    beginnerConfig.dataLocale = DataLocale.ENGLISH;
+    beginnerConfig.dataLocale = "en";
     beginnerConfig.dateFormat = "yyyy-MM-dd";
 
     FieldTypeConverterConfig intermediateConfig =
       new FieldTypeConverterConfig();
     intermediateConfig.fields = ImmutableList.of("/intermediate");
     intermediateConfig.targetType = Field.Type.DATE;
-    intermediateConfig.dataLocale = DataLocale.ENGLISH;
+    intermediateConfig.dataLocale = "en";
     intermediateConfig.dateFormat = "dd-MM-YYYY";
 
     FieldTypeConverterConfig skilledConfig =
       new FieldTypeConverterConfig();
     skilledConfig.fields = ImmutableList.of("/skilled");
     skilledConfig.targetType = Field.Type.DATE;
-    skilledConfig.dataLocale = DataLocale.ENGLISH;
+    skilledConfig.dataLocale = "en";
     skilledConfig.dateFormat = "yyyy-MM-dd HH:mm:ss";
 
     FieldTypeConverterConfig advancedConfig =
       new FieldTypeConverterConfig();
     advancedConfig.fields = ImmutableList.of("/advanced");
     advancedConfig.targetType = Field.Type.DATE;
-    advancedConfig.dataLocale = DataLocale.ENGLISH;
+    advancedConfig.dataLocale = "en";
     advancedConfig.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS";
 
     FieldTypeConverterConfig expertConfig =
       new FieldTypeConverterConfig();
     expertConfig.fields = ImmutableList.of("/expert");
     expertConfig.targetType = Field.Type.DATE;
-    expertConfig.dataLocale = DataLocale.ENGLISH;
+    expertConfig.dataLocale = "en";
     expertConfig.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS Z";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -913,35 +913,35 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterConfig();
     beginnerConfig.fields = ImmutableList.of("/beginner");
     beginnerConfig.targetType = Field.Type.DATETIME;
-    beginnerConfig.dataLocale = DataLocale.ENGLISH;
+    beginnerConfig.dataLocale = "en";
     beginnerConfig.dateFormat = "yyyy-MM-dd";
 
     FieldTypeConverterConfig intermediateConfig =
       new FieldTypeConverterConfig();
     intermediateConfig.fields = ImmutableList.of("/intermediate");
     intermediateConfig.targetType = Field.Type.DATETIME;
-    intermediateConfig.dataLocale = DataLocale.ENGLISH;
+    intermediateConfig.dataLocale = "en";
     intermediateConfig.dateFormat = "dd-MM-YYYY";
 
     FieldTypeConverterConfig skilledConfig =
       new FieldTypeConverterConfig();
     skilledConfig.fields = ImmutableList.of("/skilled");
     skilledConfig.targetType = Field.Type.DATETIME;
-    skilledConfig.dataLocale = DataLocale.ENGLISH;
+    skilledConfig.dataLocale = "en";
     skilledConfig.dateFormat = "yyyy-MM-dd HH:mm:ss";
 
     FieldTypeConverterConfig advancedConfig =
       new FieldTypeConverterConfig();
     advancedConfig.fields = ImmutableList.of("/advanced");
     advancedConfig.targetType = Field.Type.DATETIME;
-    advancedConfig.dataLocale = DataLocale.ENGLISH;
+    advancedConfig.dataLocale = "en";
     advancedConfig.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS";
 
     FieldTypeConverterConfig expertConfig =
       new FieldTypeConverterConfig();
     expertConfig.fields = ImmutableList.of("/expert");
     expertConfig.targetType = Field.Type.DATETIME;
-    expertConfig.dataLocale = DataLocale.ENGLISH;
+    expertConfig.dataLocale = "en";
     expertConfig.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS Z";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -1008,7 +1008,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/invalidConversion");
     fieldTypeConverterConfig.targetType = Field.Type.FLOAT;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
@@ -1035,7 +1035,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/invalidConversion");
     fieldTypeConverterConfig.targetType = Field.Type.DATE;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
     fieldTypeConverterConfig.dateFormat = DateFormat.DD_MM_YYYY.getFormat();
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)
@@ -1064,7 +1064,7 @@ public class TestFieldTypeConverterProcessor {
       new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/invalidConversion");
     fieldTypeConverterConfig.targetType = Field.Type.DATE;
-    fieldTypeConverterConfig.dataLocale = DataLocale.ENGLISH;
+    fieldTypeConverterConfig.dataLocale = "en";
     fieldTypeConverterConfig.dateFormat = DateFormat.DD_MM_YYYY.getFormat();
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterProcessor.class)

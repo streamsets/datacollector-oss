@@ -65,7 +65,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
             } else {
               try {
                 record.set(fieldToConvert, convertStringToTargetType(field, fieldTypeConverterConfig.targetType,
-                  fieldTypeConverterConfig.dataLocale.getLocale(), fieldTypeConverterConfig.dateFormat));
+                  fieldTypeConverterConfig.getLocale(), fieldTypeConverterConfig.dateFormat));
               } catch (ParseException | NumberFormatException e) {
                 getContext().toError(record, Errors.CONVERTER_00, fieldToConvert, field.getValueAsString(),
                   fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);

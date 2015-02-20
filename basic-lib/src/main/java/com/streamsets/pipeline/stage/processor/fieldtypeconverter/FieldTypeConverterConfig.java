@@ -10,10 +10,12 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.LocaleChooserValues;
 import com.streamsets.pipeline.config.DateFormatChooserValues;
 import com.streamsets.pipeline.config.PrimitiveFieldTypeChooserValues;
 
 import java.util.List;
+import java.util.Locale;
 
 public class FieldTypeConverterConfig {
 
@@ -42,7 +44,7 @@ public class FieldTypeConverterConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "ENGLISH",
+      defaultValue = "en,US",
       label = "Data Locale",
       description = "Affects the interpretation of locale sensitive data, such as using the comma as a decimal " +
                     "separator",
@@ -50,8 +52,17 @@ public class FieldTypeConverterConfig {
       dependsOn = "targetType",
       triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT"}
   )
-  @ValueChooser(chooserValues = DataLocaleChooserValues.class, type = ChooserMode.PROVIDED)
-  public DataLocale dataLocale;
+  @ValueChooser(chooserValues = LocaleChooserValues.class, type = ChooserMode.PROVIDED)
+  public String dataLocale;
+
+  private Locale locale;
+
+  public Locale getLocale() {
+    if (locale == null) {
+      locale = LocaleChooserValues.getLocale(dataLocale);
+    }
+    return locale;
+  }
 
   @ConfigDef(
       required = true,
