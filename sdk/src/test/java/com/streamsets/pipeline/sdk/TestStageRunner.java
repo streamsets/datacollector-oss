@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.StageType;
@@ -25,11 +26,11 @@ public class TestStageRunner {
 
     DummyStageRunner(Class<DummyStage> stageClass, Map<String, Object> configuration, List<String> outputLanes,
         boolean isPreview) {
-      super(stageClass, StageType.SOURCE, configuration, outputLanes, isPreview);
+      super(stageClass, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR);
     }
 
     DummyStageRunner(DummyStage stage, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview) {
-      super(stage, StageType.SOURCE, configuration, outputLanes, isPreview);
+      super(stage, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR);
     }
 
     public static class Builder extends StageRunner.Builder<DummyStage, DummyStageRunner, Builder> {

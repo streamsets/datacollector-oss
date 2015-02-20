@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.lib.recordSerialization;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
@@ -25,7 +26,7 @@ public class TestDataCollectorRecordToString {
 
   @Test
   public void testRecordToString() throws IOException, StageException {
-    Target.Context context = ContextInfoCreator.createTargetContext("t", false);
+    Target.Context context = ContextInfoCreator.createTargetContext("t", false, OnRecordError.TO_ERROR);
     RecordToString recordToString = new DataCollectorRecordToString(context);
     Record record = RecordCreator.create();
     record.set(Field.create("hello"));

@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.kafka;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
@@ -123,7 +124,7 @@ public class KafkaTestUtil {
   }
 
   public static List<KeyedMessage<String, String>> produceJsonMessages(String topic, String partition) throws IOException {
-    ContextExtensions ctx = (ContextExtensions) ContextInfoCreator.createTargetContext("", false);
+    ContextExtensions ctx = (ContextExtensions) ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
     List<KeyedMessage<String, String>> messages = new ArrayList<>();
     for (Record record : produce20Records()) {
       StringWriter writer = new StringWriter();

@@ -9,6 +9,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -41,13 +42,15 @@ public class StageRuntime {
   private final Stage stage;
   private final Stage.Info info;
   private final List<String> requiredFields;
+  private final OnRecordError onRecordError;
   private StageContext context;
 
   private StageRuntime(final StageDefinition def, final StageConfiguration conf, List<String> requiredFields,
-      Stage stage) {
+      OnRecordError onRecordError, Stage stage) {
     this.def = def;
     this.conf = conf;
     this.requiredFields = requiredFields;
+    this.onRecordError = onRecordError;
     this.stage = stage;
     info = new Stage.Info() {
       @Override
@@ -82,6 +85,10 @@ public class StageRuntime {
 
   public List<String> getRequiredFields() {
     return requiredFields;
+  }
+
+  public OnRecordError getOnRecordError() {
+    return onRecordError;
   }
 
   public Stage getStage() {
@@ -178,11 +185,13 @@ public class StageRuntime {
     private final String name;
     private final PipelineConfiguration pipelineConf;
     private List<String> requiredFields;
+    private OnRecordError onRecordError;
 
     public Builder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf) {
       this.stageLib = stageLib;
       this.name = name;
       this.pipelineConf = pipelineConf;
+      onRecordError = OnRecordError.STOP_PIPELINE;
     }
 
     public StageRuntime[] build() throws PipelineRuntimeException {
@@ -213,7 +222,7 @@ public class StageRuntime {
         Class klass = def.getStageClassLoader().loadClass(def.getClassName());
         Stage stage = (Stage) klass.newInstance();
         configureStage(def, conf, klass, stage);
-        return new StageRuntime(def, conf, requiredFields, stage);
+        return new StageRuntime(def, conf, requiredFields, onRecordError, stage);
       } catch (Exception ex) {
         throw new PipelineRuntimeException(ContainerError.CONTAINER_0151, ex.getMessage(), ex);
       }
@@ -230,26 +239,29 @@ public class StageRuntime {
         }
         Object value = confConf.getValue();
         String instanceVar = confDef.getFieldName();
-        if (ConfigDefinition.SYSTEM_CONFIGS.contains(confDef.getName())) {
-          if (ConfigDefinition.REQUIRED_FIELDS.equals(confDef.getName())) {
+        switch (confDef.getName()) {
+          case ConfigDefinition.REQUIRED_FIELDS:
             requiredFields = (List<String>) value;
-          }
-        } else {
-          try {
-            Field var = klass.getField(instanceVar);
-            //check if the field is an enum and convert the value to enum if so
-            if(confDef.getModel() != null && confDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
-              setComplexField(var, stageDef, stageConf, stage, confDef, value);
-            } else {
-              setField(var, stageDef, stageConf, stage, confDef, value);
+            break;
+          case ConfigDefinition.ON_RECORD_ERROR:
+            onRecordError = OnRecordError.valueOf(value.toString());
+            break;
+          default:
+            try {
+              Field var = klass.getField(instanceVar);
+              //check if the field is an enum and convert the value to enum if so
+              if (confDef.getModel() != null && confDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
+                setComplexField(var, stageDef, stageConf, stage, confDef, value);
+              } else {
+                setField(var, stageDef, stageConf, stage, confDef, value);
+              }
+            } catch (PipelineRuntimeException ex) {
+              throw ex;
+            } catch (Exception ex) {
+              throw new PipelineRuntimeException(ContainerError.CONTAINER_0152,
+                                                 stageDef.getClassName(), stageConf.getInstanceName(), instanceVar,
+                                                 value, ex.getMessage(), ex);
             }
-          } catch (PipelineRuntimeException ex) {
-            throw ex;
-          } catch (Exception ex) {
-            throw new PipelineRuntimeException(ContainerError.CONTAINER_0152,
-                                               stageDef.getClassName(), stageConf.getInstanceName(), instanceVar, value,
-                                               ex.getMessage(), ex);
-          }
         }
       }
     }

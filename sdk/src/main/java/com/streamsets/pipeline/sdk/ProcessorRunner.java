@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
@@ -20,13 +21,13 @@ import java.util.Map;
 public class ProcessorRunner extends StageRunner<Processor> {
 
   public ProcessorRunner(Processor processor, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview) {
-    super(processor, StageType.PROCESSOR, configuration, outputLanes, isPreview);
+      boolean isPreview, OnRecordError onRecordError) {
+    super(processor, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError);
   }
 
   public ProcessorRunner(Class<Processor> processorClass, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview) {
-    super(processorClass, StageType.PROCESSOR, configuration, outputLanes, isPreview);
+      boolean isPreview, OnRecordError onRecordError) {
+    super(processorClass, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError);
   }
 
   public Output runProcess(List<Record> inputRecords) throws StageException {
@@ -51,8 +52,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
     @Override
     public ProcessorRunner build() {
       Utils.checkState(!outputLanes.isEmpty(), "A Processor must have at least one output stream");
-      return  (stage != null) ? new ProcessorRunner(stage, configs, outputLanes, isPreview)
-                              : new ProcessorRunner(stageClass, configs, outputLanes, isPreview);
+      return  (stage != null) ? new ProcessorRunner(stage, configs, outputLanes, isPreview, onRecordError)
+                              : new ProcessorRunner(stageClass, configs, outputLanes, isPreview, onRecordError);
     }
 
   }

@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -16,13 +17,14 @@ import java.util.Map;
 
 public class SourceRunner extends StageRunner<Source> {
 
-  public SourceRunner(Source source, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview) {
-    super(source, StageType.SOURCE, configuration, outputLanes, isPreview);
+  public SourceRunner(Source source, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview,
+      OnRecordError onRecordError) {
+    super(source, StageType.SOURCE, configuration, outputLanes, isPreview, onRecordError);
   }
 
   public SourceRunner(Class<Source> sourceClass, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview) {
-    super(sourceClass, StageType.SOURCE, configuration, outputLanes, isPreview);
+      boolean isPreview, OnRecordError onRecordError) {
+    super(sourceClass, StageType.SOURCE, configuration, outputLanes, isPreview, onRecordError);
   }
 
   public Output runProduce(String lastOffset, int maxBatchSize) throws StageException {
@@ -46,8 +48,8 @@ public class SourceRunner extends StageRunner<Source> {
     @Override
     public SourceRunner build() {
       Utils.checkState(!outputLanes.isEmpty(), "A Source must have at least one output stream");
-      return  (stage != null) ? new SourceRunner(stage, configs, outputLanes, isPreview)
-                              : new SourceRunner(stageClass, configs, outputLanes, isPreview);
+      return  (stage != null) ? new SourceRunner(stage, configs, outputLanes, isPreview, onRecordError)
+                              : new SourceRunner(stageClass, configs, outputLanes, isPreview, onRecordError);
     }
 
   }

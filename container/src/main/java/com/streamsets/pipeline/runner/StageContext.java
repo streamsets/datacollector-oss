@@ -50,16 +50,19 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final MetricRegistry metrics;
   private final String instanceName;
   private final List<String> outputLanes;
+  private final OnRecordError onRecordError;
   private ErrorSink errorSink;
 
   //for SDK
-  public StageContext(String instanceName, StageType stageType, boolean isPreview, List<String> outputLanes) {
+  public StageContext(String instanceName, StageType stageType, boolean isPreview, OnRecordError onRecordError,
+      List<String> outputLanes) {
     pipelineInfo = ImmutableList.of();
     this.stageType = stageType;
     this.isPreview = isPreview;
     metrics = new MetricRegistry();
     this.instanceName = instanceName;
     this.outputLanes = ImmutableList.copyOf(outputLanes);
+    this.onRecordError = onRecordError;
     errorSink = new ErrorSink();
   }
 
@@ -71,7 +74,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.metrics = metrics;
     this.instanceName = stageRuntime.getConfiguration().getInstanceName();
     this.outputLanes = ImmutableList.copyOf(stageRuntime.getConfiguration().getOutputLanes());
-
+    onRecordError = stageRuntime.getOnRecordError();
   }
 
   private static class ConfigIssueImpl extends StageIssue implements Stage.ConfigIssue {
@@ -217,7 +220,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public OnRecordError getOnErrorRecord() {
-    return OnRecordError.TO_ERROR; //TODO
+    return onRecordError;
   }
 
   @Override

@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
@@ -159,12 +160,13 @@ public abstract class StageRunner<S extends Stage> {
 
   @SuppressWarnings("unchecked")
   StageRunner(Class<S> stageClass, StageType stageType, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview) {
-    this((S) getStage(Utils.checkNotNull(stageClass, "stageClass")), stageType, configuration, outputLanes, isPreview);
+      boolean isPreview, OnRecordError onRecordError) {
+    this((S) getStage(Utils.checkNotNull(stageClass, "stageClass")), stageType, configuration, outputLanes, isPreview,
+         onRecordError);
   }
 
   StageRunner(S stage, StageType stageType, Map < String, Object > configuration, List< String > outputLanes,
-      boolean isPreview) {
+      boolean isPreview, OnRecordError onRecordError) {
     Utils.checkNotNull(stage, "stage");
     Utils.checkNotNull(configuration, "configuration");
     Utils.checkNotNull(outputLanes, "outputLanes");
@@ -178,7 +180,7 @@ public abstract class StageRunner<S extends Stage> {
     String version = getVersion(stage.getClass());
     String instanceName = name + "_1";
     info = ContextInfoCreator.createInfo(name, version, instanceName);
-    context = new StageContext(instanceName, stageType ,isPreview, outputLanes);
+    context = new StageContext(instanceName, stageType ,isPreview, onRecordError, outputLanes);
     status = Status.CREATED;
   }
 
@@ -263,20 +265,29 @@ public abstract class StageRunner<S extends Stage> {
     final List<String> outputLanes;
     final Map<String, Object> configs;
     boolean isPreview;
+    OnRecordError onRecordError;
 
     private Builder(Class<S> stageClass, S stage) {
       this.stageClass =stageClass;
       this.stage = stage;
       outputLanes = new ArrayList<>();
       configs = new HashMap<>();
+      onRecordError = OnRecordError.STOP_PIPELINE;
     }
 
     protected Builder(S stage) {
       this(null, Utils.checkNotNull(stage, "stage"));
     }
 
+    @SuppressWarnings("unchecked")
     public B setPreview(boolean isPreview) {
       this.isPreview = isPreview;
+      return (B) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public B setOnRecordError(OnRecordError onRecordError) {
+      this.onRecordError = onRecordError;
       return (B) this;
     }
 

@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
@@ -313,7 +314,7 @@ public class TestKafkaTargetSinglePartition {
 
     Assert.assertEquals(20, messages.size());
 
-    ContextExtensions ctx = (ContextExtensions) ContextInfoCreator.createTargetContext("", false);
+    ContextExtensions ctx = (ContextExtensions) ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
     for(int i = 0; i < logRecords.size(); i++) {
       JsonRecordReader rr = ctx.createJsonRecordReader(new StringReader(messages.get(i)), 0, Integer.MAX_VALUE);
       Assert.assertEquals(logRecords.get(i), rr.readRecord());

@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.sdk;
 
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -36,21 +37,24 @@ public class ContextInfoCreator {
     };
   }
 
-  private static StageContext createContext(String instanceName, boolean isPreview, List<String> outputLanes) {
-    return new StageContext(instanceName, StageType.SOURCE, isPreview, outputLanes);
+  private static StageContext createContext(String instanceName, boolean isPreview, OnRecordError onRecordError,
+      List<String> outputLanes) {
+    return new StageContext(instanceName, StageType.SOURCE, isPreview, onRecordError, outputLanes);
   }
 
-  public static Source.Context createSourceContext(String instanceName, boolean isPreview, List<String> outputLanes) {
-    return createContext(instanceName, isPreview, outputLanes);
+  public static Source.Context createSourceContext(String instanceName, boolean isPreview, OnRecordError onRecordError,
+      List<String> outputLanes) {
+    return createContext(instanceName, isPreview, onRecordError, outputLanes);
   }
 
-  public static Processor.Context createProcessorContext(String instanceName, boolean isPreview, List<String> outputLanes) {
-    return createContext(instanceName, isPreview, outputLanes);
+  public static Processor.Context createProcessorContext(String instanceName, boolean isPreview,
+      OnRecordError onRecordError, List<String> outputLanes) {
+    return createContext(instanceName, isPreview, onRecordError, outputLanes);
   }
 
   @SuppressWarnings("unchecked")
-  public static Target.Context createTargetContext(String instanceName, boolean isPreview) {
-    return createContext(instanceName, isPreview, Collections.EMPTY_LIST);
+  public static Target.Context createTargetContext(String instanceName, boolean isPreview, OnRecordError onRecordError) {
+    return createContext(instanceName, isPreview, onRecordError, Collections.EMPTY_LIST);
   }
 
 }

@@ -11,19 +11,14 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Captures attributes related to individual configuration options
  */
 public class ConfigDefinition {
 
   public static final String REQUIRED_FIELDS = "stageRequiredFields";
+  public static final String ON_RECORD_ERROR = "stageOnRecordError";
 
-  // we are not using Guava ImmutableSet.of() because this breaks the annotation processor
-  public static final Set<String> SYSTEM_CONFIGS = new HashSet<>(Arrays.asList(REQUIRED_FIELDS));
   private final String name;
   private final ConfigDef.Type type;
   private final String label;

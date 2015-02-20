@@ -7,6 +7,7 @@ package com.streamsets.pipeline.runner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
@@ -32,7 +33,8 @@ public class TestStageContextExt {
 
   @Test
   public void testRecordJsonReader() throws Exception {
-    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, Collections.EMPTY_LIST);
+    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
+                                             Collections.EMPTY_LIST);
     RecordImpl record = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mime");
     record.getHeader().setStagesPath("stagePath");
     record.getHeader().setTrackingId("trackingId");
@@ -52,7 +54,8 @@ public class TestStageContextExt {
 
   @Test
   public void testRecordsJsonReader() throws Exception {
-    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, Collections.EMPTY_LIST);
+    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
+                                             Collections.EMPTY_LIST);
     RecordImpl record1 = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mime");
     record1.getHeader().setStagesPath("stagePath");
     record1.getHeader().setTrackingId("trackingId");
@@ -87,7 +90,8 @@ public class TestStageContextExt {
 
   @Test
   public void testRecordJsonWriter() throws Exception {
-    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, Collections.EMPTY_LIST);
+    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
+                                             Collections.EMPTY_LIST);
     RecordImpl record = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mime");
     record.getHeader().setStagesPath("stagePath");
     record.getHeader().setTrackingId("trackingId");
@@ -104,7 +108,8 @@ public class TestStageContextExt {
 
   @Test
   public void testRecordsJsonWriter() throws Exception {
-    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, Collections.EMPTY_LIST);
+    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
+                                             Collections.EMPTY_LIST);
     RecordImpl record1 = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mime");
     record1.getHeader().setStagesPath("stagePath");
     record1.getHeader().setTrackingId("trackingId");
@@ -135,7 +140,8 @@ public class TestStageContextExt {
 
   @Test
   public void testRecordsJsonWriterReader() throws Exception {
-    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, Collections.EMPTY_LIST);
+    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
+                                             Collections.EMPTY_LIST);
     RecordImpl record1 = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mime");
     record1.getHeader().setStagesPath("stagePath");
     record1.getHeader().setTrackingId("trackingId");
@@ -169,7 +175,8 @@ public class TestStageContextExt {
 
   @Test
   public void testJsonWriterReaderRecordsWithByteArray() throws Exception {
-    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, Collections.EMPTY_LIST);
+    Stage.Context context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
+                                             Collections.EMPTY_LIST);
     RecordImpl record1 = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mime");
     record1.getHeader().setStagesPath("stagePath");
     record1.getHeader().setTrackingId("trackingId");

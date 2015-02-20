@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.sdk;
 
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -19,13 +20,14 @@ import java.util.Map;
 public class TargetRunner extends StageRunner<Target> {
 
   @SuppressWarnings("unchecked")
-  public TargetRunner(Target source, Map<String, Object> configuration, boolean isPreview) {
-    super(source, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview);
+  public TargetRunner(Target source, Map<String, Object> configuration, boolean isPreview, OnRecordError onRecordError) {
+    super(source, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview, onRecordError);
   }
 
   @SuppressWarnings("unchecked")
-  public TargetRunner(Class<Target> sourceClass, Map<String, Object> configuration, boolean isPreview) {
-    super(sourceClass, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview);
+  public TargetRunner(Class<Target> sourceClass, Map<String, Object> configuration, boolean isPreview,
+      OnRecordError onRecordError) {
+    super(sourceClass, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview, onRecordError);
   }
 
   public void runWrite(List<Record> inputRecords) throws StageException {
@@ -48,8 +50,8 @@ public class TargetRunner extends StageRunner<Target> {
     @Override
     public TargetRunner build() {
       Utils.checkState(outputLanes.isEmpty(), "A Target cannot have output streams");
-      return (stage != null) ? new TargetRunner(stage, configs, isPreview)
-                             : new TargetRunner(stageClass, configs, isPreview);
+      return (stage != null) ? new TargetRunner(stage, configs, isPreview, onRecordError)
+                             : new TargetRunner(stageClass, configs, isPreview, onRecordError);
     }
 
   }

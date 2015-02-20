@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
@@ -23,7 +24,8 @@ public class TestSDCRecordCreator {
 
   @Test
   public void testCreator() throws Exception {
-    Source.Context context = ContextInfoCreator.createSourceContext("i", false , ImmutableList.of("a"));
+    Source.Context context = ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR,
+                                                                    ImmutableList.of("a"));
 
     Record record = com.streamsets.pipeline.sdk.RecordCreator.create("s", "id");
     record.set(Field.create("hello"));
