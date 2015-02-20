@@ -3,14 +3,14 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spooldir;
+package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class JsonFileModeChooserValues extends BaseEnumChooserValues {
+public class JsonModeChooserValues extends BaseEnumChooserValues {
 
-  public JsonFileModeChooserValues() {
-    super(JsonFileMode.class);
+  public JsonModeChooserValues() {
+    super(JsonMode.class);
   }
 
 }

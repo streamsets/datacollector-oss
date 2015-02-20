@@ -12,6 +12,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
@@ -38,7 +39,7 @@ public class JsonDataProducer implements DataProducer {
   private final Counter jsonObjectsOverMaxLen;
   private OverrunStreamingJsonParser parser;
 
-  public JsonDataProducer(Source.Context context, JsonFileMode jsonMode, int maxJsonObjectLen) {
+  public JsonDataProducer(Source.Context context, JsonMode jsonMode, int maxJsonObjectLen) {
     this.context = context;
     this.jsonContent = jsonMode.getFormat();
     this.maxJsonObjectLen = maxJsonObjectLen;

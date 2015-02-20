@@ -17,6 +17,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
+import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
       dependsOn = "consumerPayloadType",
       triggeredByValue = "JSON"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonEventModeChooserValues.class)
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonModeChooserValues.class)
   public StreamingJsonParser.Mode jsonContent;
 
   @ConfigDef(

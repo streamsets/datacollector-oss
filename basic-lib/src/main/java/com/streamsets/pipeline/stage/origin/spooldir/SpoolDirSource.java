@@ -19,6 +19,8 @@ import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -225,8 +227,8 @@ public class SpoolDirSource extends BaseSource {
       dependsOn = "dataFormat",
       triggeredByValue = "JSON"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
-  public JsonFileMode jsonContent;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonModeChooserValues.class)
+  public JsonMode jsonContent;
 
   @ConfigDef(
       required = true,
