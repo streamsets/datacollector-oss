@@ -7,7 +7,6 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -57,7 +56,7 @@ public class KafkaSource extends AbstractKafkaSource {
     description = "The specific CSV format of the files",
     group = "CSV_PROPERTIES",
     dependsOn = "consumerPayloadType",
-    triggeredByValue = {"CSV"},
+    triggeredByValue = {"DELIMITED"},
     defaultValue = "CSV")
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
@@ -71,10 +70,10 @@ public class KafkaSource extends AbstractKafkaSource {
       case JSON:
         recordCreator = new JsonRecordCreator(getContext(), jsonContent, maxJsonObjectLen, produceSingleRecord, topic);
         break;
-      case LOG:
+      case TEXT:
         recordCreator = new LogRecordCreator(getContext(), topic);
         break;
-      case CSV:
+      case DELIMITED:
         recordCreator = new CsvRecordCreator(getContext(), csvFileFormat, topic);
         break;
       case XML:

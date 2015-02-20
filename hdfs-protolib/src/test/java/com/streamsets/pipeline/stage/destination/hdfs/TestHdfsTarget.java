@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.junit.Assert;
@@ -54,7 +55,7 @@ public class TestHdfsTarget {
         .addConfiguration("lateRecordsLimit", "${30 * MINUTES}")
         .addConfiguration("lateRecordsAction", HdfsLateRecordsAction.DISCARD)
         .addConfiguration("lateRecordsDirPathTemplate", "")
-        .addConfiguration("dataFormat", HdfsDataFormat.RECORD)
+        .addConfiguration("dataFormat", DataFormat.SDC_JSON)
         .addConfiguration("csvFileFormat", null)
         .addConfiguration("cvsFieldPathToNameMappingConfigList", new ArrayList<>())
         .addConfiguration("onRecordError", OnRecordError.STOP_PIPELINE)

@@ -10,10 +10,10 @@ import com.streamsets.pipeline.api.Label;
 public enum ConfigGroups implements Label {
   FILES("Files"),
   POST_PROCESSING("Post Processing"),
-  LOG_DATA("Text"),
-  JSON_DATA("JSON"),
-  DELIMITED_DATA("Delimited"),
-  XML_DATA("XML"),
+  TEXT("Text"),
+  JSON("JSON"),
+  DELIMITED("Delimited"),
+  XML("XML"),
   ;
 
   private final String label;

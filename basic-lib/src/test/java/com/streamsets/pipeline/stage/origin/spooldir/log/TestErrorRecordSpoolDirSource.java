@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.stage.origin.spooldir.FileDataType;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.origin.spooldir.PostProcessingOptions;
 import com.streamsets.pipeline.stage.origin.spooldir.SpoolDirSource;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -57,7 +57,7 @@ public class TestErrorRecordSpoolDirSource {
         .addConfiguration("retentionTimeMins", 10)
         .addConfiguration("poolingTimeoutSecs", 0)
         .addConfiguration("errorArchiveDir", null)
-        .addConfiguration("fileDataType", FileDataType.SDC_RECORDS)
+        .addConfiguration("dataFormat", DataFormat.SDC_JSON)
         .addOutputLane("lane")
         .build();
     runner.runInit();

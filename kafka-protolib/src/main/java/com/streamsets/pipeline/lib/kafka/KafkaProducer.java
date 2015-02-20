@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.DataFormat;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
@@ -43,13 +44,13 @@ public class KafkaProducer {
   /*Host on which the seed broker is running*/
   private final String metadataBrokerList;
   private final Map<String, String> kafkaProducerConfigs;
-  private final ProducerPayloadType producerPayloadType;
+  private final DataFormat producerPayloadType;
   private final PartitionStrategy partitionStrategy;
   private List<KeyedMessage<String, byte[]>> messageList;
   private Producer<String, byte[]> producer;
   private int numberOfPartitions;
 
-  public KafkaProducer(String topic, String metadataBrokerList, ProducerPayloadType producerPayloadType,
+  public KafkaProducer(String topic, String metadataBrokerList, DataFormat producerPayloadType,
                        PartitionStrategy partitionStrategy, Map<String, String> kafkaProducerConfigs) {
     this.topic = topic;
     this.metadataBrokerList = metadataBrokerList;
@@ -109,8 +110,8 @@ public class KafkaProducer {
     return numberOfPartitions;
   }
 
-  private void configureSerializer(Properties props, ProducerPayloadType producerPayloadType) {
-    if(producerPayloadType == ProducerPayloadType.TEXT) {
+  private void configureSerializer(Properties props, DataFormat producerPayloadType) {
+    if(producerPayloadType == DataFormat.TEXT) {
       props.put(SERIALIZER_CLASS_KEY, DEFAULT_ENCODER_CLASS);
     }
   }

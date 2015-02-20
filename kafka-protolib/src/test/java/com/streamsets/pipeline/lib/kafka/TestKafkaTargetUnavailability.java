@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.admin.AdminUtils;
 import kafka.consumer.KafkaStream;
@@ -78,7 +79,7 @@ public class TestKafkaTargetUnavailability {
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")
@@ -110,7 +111,7 @@ public class TestKafkaTargetUnavailability {
       .addConfiguration("brokerHost", HOST)
       .addConfiguration("brokerPort", port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("constants", null)
       .addConfiguration("csvFileFormat", "DEFAULT")

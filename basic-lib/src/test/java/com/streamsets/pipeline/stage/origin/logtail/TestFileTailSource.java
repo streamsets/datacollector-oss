@@ -28,7 +28,7 @@ public class TestFileTailSource {
     String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
 
     SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
-        .addConfiguration("fileDataType", FileDataType.LOG_DATA)
+        .addConfiguration("dataFormat", DataFormat.TEXT)
         .addConfiguration("fileName", logFile)
         .addConfiguration("batchSize", 25)
         .addConfiguration("maxWaitTimeSecs", 1)
@@ -49,7 +49,7 @@ public class TestFileTailSource {
       Assert.assertTrue(file.setReadable(false));
 
       SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
-          .addConfiguration("fileDataType", FileDataType.LOG_DATA)
+          .addConfiguration("dataFormat", DataFormat.TEXT)
           .addConfiguration("fileName", logFile)
           .addConfiguration("batchSize", 25)
           .addConfiguration("maxWaitTimeSecs", 1)
@@ -72,7 +72,7 @@ public class TestFileTailSource {
     is.close();
 
     SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
-        .addConfiguration("fileDataType", FileDataType.LOG_DATA)
+        .addConfiguration("dataFormat", DataFormat.TEXT)
         .addConfiguration("fileName", logFile)
         .addConfiguration("batchSize", 25)
         .addConfiguration("maxWaitTimeSecs", 1)
@@ -109,7 +109,7 @@ public class TestFileTailSource {
     is.close();
 
     SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
-        .addConfiguration("fileDataType", FileDataType.JSON_DATA)
+        .addConfiguration("dataFormat", DataFormat.JSON)
         .addConfiguration("fileName", logFile)
         .addConfiguration("batchSize", 25)
         .addConfiguration("maxWaitTimeSecs", 1)

@@ -48,8 +48,8 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
       displayPosition = 10,
       group = "FILE"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileDataTypeChooserValues.class)
-  public FileDataType fileDataType;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
+  public DataFormat dataFormat;
 
   @ConfigDef(
       required = true,
@@ -113,12 +113,12 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     if (logFile.exists() && !logFile.isFile()) {
       issues.add(getContext().createConfigIssue(Errors.TAIL_03, logFile));
     }
-    switch (fileDataType) {
-      case LOG_DATA:
-      case JSON_DATA:
+    switch (dataFormat) {
+      case TEXT:
+      case JSON:
         break;
       default:
-        issues.add(getContext().createConfigIssue(Errors.TAIL_02, "fileDataType", fileDataType));
+        issues.add(getContext().createConfigIssue(Errors.TAIL_02, "dataFormat", dataFormat));
     }
     return issues;
   }
@@ -131,15 +131,15 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     logLinesQueue = new ArrayBlockingQueue<>(2 * batchSize);
     logTail = new LogTail(logFile, true, getInfo(), logLinesQueue);
     logTail.start();
-    switch (fileDataType) {
-      case LOG_DATA:
+    switch (dataFormat) {
+      case TEXT:
         lineToRecord = new LineToRecord(false);
         break;
-      case JSON_DATA:
+      case JSON:
         lineToRecord = new JsonLineToRecord();
         break;
       default:
-        throw new StageException(Errors.TAIL_02, "fileDataType", fileDataType);
+        throw new StageException(Errors.TAIL_02, "dataFormat", dataFormat);
     }
     fileOffset = String.format("%s::%d", fileName, System.currentTimeMillis());
     recordCount = 0;

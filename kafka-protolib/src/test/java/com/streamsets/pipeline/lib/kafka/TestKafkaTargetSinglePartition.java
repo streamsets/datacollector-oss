@@ -6,13 +6,12 @@
 package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordReader;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
-import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.admin.AdminUtils;
@@ -90,7 +89,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/")
@@ -127,7 +126,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/")
@@ -167,7 +166,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/name")
@@ -208,7 +207,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/lastStatusChange") //this is number field, should be converted to string
@@ -250,7 +249,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/") //this is map field, should not be converted to string
@@ -290,7 +289,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.SDC_RECORDS)
+      .addConfiguration("payloadType", DataFormat.SDC_JSON)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
@@ -324,7 +323,7 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteCsvRecords() throws InterruptedException, StageException, IOException {
 
-    //Test CSV is - "2010,NLDS1,PHI,NL,CIN,NL,3,0,0"
+    //Test DELIMITED is - "2010,NLDS1,PHI,NL,CIN,NL,3,0,0"
     List<String> fieldPaths = new ArrayList<>();
     fieldPaths.add("/values[0]");
     fieldPaths.add("/values[2]");
@@ -338,7 +337,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.CSV)
+      .addConfiguration("payloadType", DataFormat.DELIMITED)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", CsvFileMode.CSV)
       .addConfiguration("fieldPaths", fieldPaths)

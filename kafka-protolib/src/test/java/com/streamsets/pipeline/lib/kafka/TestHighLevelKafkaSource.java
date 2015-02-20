@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -92,7 +93,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("consumerPayloadType", DataFormat.TEXT)
       .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecord", false)
       .build();
@@ -134,7 +135,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("consumerPayloadType", DataFormat.TEXT)
       .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecord", false)
       .build();
@@ -176,7 +177,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.JSON)
+      .addConfiguration("consumerPayloadType", DataFormat.JSON)
       .addConfiguration("jsonContent", StreamingJsonParser.Mode.MULTIPLE_OBJECTS)
       .addConfiguration("produceSingleRecord", true)
       .addConfiguration("maxJsonObjectLen", 4096)
@@ -234,7 +235,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.JSON)
+      .addConfiguration("consumerPayloadType", DataFormat.JSON)
       .addConfiguration("jsonContent", StreamingJsonParser.Mode.MULTIPLE_OBJECTS)
       .addConfiguration("produceSingleRecord", false)
       .addConfiguration("maxJsonObjectLen", 4096)
@@ -287,7 +288,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.JSON)
+      .addConfiguration("consumerPayloadType", DataFormat.JSON)
       .addConfiguration("jsonContent", StreamingJsonParser.Mode.ARRAY_OBJECTS)
       .addConfiguration("maxJsonObjectLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
@@ -345,7 +346,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.XML)
+      .addConfiguration("consumerPayloadType", DataFormat.XML)
       .addConfiguration("jsonContent", null)
       .addConfiguration("maxJsonObjectLen", null)
       .addConfiguration("kafkaConsumerConfigs", null)
@@ -393,7 +394,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.CSV)
+      .addConfiguration("consumerPayloadType", DataFormat.DELIMITED)
       .addConfiguration("csvFileFormat", CsvFileMode.CSV)
       .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecord", true)

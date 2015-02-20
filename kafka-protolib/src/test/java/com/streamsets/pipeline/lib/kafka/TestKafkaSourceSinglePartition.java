@@ -6,12 +6,10 @@
 package com.streamsets.pipeline.lib.kafka;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.util.CsvUtil;
-import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import kafka.javaapi.producer.Producer;
@@ -98,7 +96,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("consumerPayloadType", DataFormat.TEXT)
       .addConfiguration("produceSingleRecord", true)
       .build();
 
@@ -146,7 +144,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("consumerPayloadType", DataFormat.TEXT)
       .addConfiguration("produceSingleRecord", true)
       .build();
 
@@ -249,7 +247,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
       .addConfiguration("csvFileFormat", CsvFileMode.CSV)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.CSV)
+      .addConfiguration("consumerPayloadType", DataFormat.DELIMITED)
       .addConfiguration("produceSingleRecord", true)
       .build();
 

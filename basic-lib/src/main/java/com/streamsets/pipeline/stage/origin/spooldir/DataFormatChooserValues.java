@@ -3,15 +3,15 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.destination.hdfs;
+package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 
-public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
+public class DataFormatChooserValues extends BaseEnumChooserValues {
 
   public DataFormatChooserValues() {
-    super(DataFormat.SDC_JSON, DataFormat.JSON, DataFormat.DELIMITED);
+    super(DataFormat.TEXT, DataFormat.JSON, DataFormat.DELIMITED, DataFormat.XML, DataFormat.SDC_JSON);
   }
 
 }

@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
@@ -85,7 +86,7 @@ public class TestHighLevelKafkaSourceUnavailability {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 300000)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("consumerPayloadType", DataFormat.TEXT)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();
 
@@ -113,7 +114,7 @@ public class TestHighLevelKafkaSourceUnavailability {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 1000)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("consumerPayloadType", DataFormat.TEXT)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();
 

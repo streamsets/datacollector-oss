@@ -15,6 +15,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.config.DataFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,8 +77,8 @@ public abstract class HighLevelAbstractKafkaSource extends BaseSource implements
       displayPosition = 40,
       group = "KAFKA"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ConsumerPayloadTypeChooserValues.class)
-  public ConsumerPayloadType consumerPayloadType;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ConsumerDataFormatChooserValues.class)
+  public DataFormat consumerPayloadType;
 
   @ConfigDef(
       required = true,

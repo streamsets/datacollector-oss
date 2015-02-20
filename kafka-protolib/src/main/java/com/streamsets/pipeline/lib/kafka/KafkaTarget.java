@@ -18,6 +18,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
@@ -48,7 +49,7 @@ public class KafkaTarget extends BaseTarget {
 
   public enum Groups implements Label {
     KAFKA("Kafka"),
-    CSV("Delimited"),
+    DELIMITED("Delimited"),
     TEXT("Text")
 
     ;
@@ -115,14 +116,14 @@ public class KafkaTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "SDC_RECORDS",
+      defaultValue = "SDC_JSON",
       label = "Data Format",
       description = "",
       displayPosition = 50,
       group = "KAFKA"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ProducerPayloadTypeChooserValues.class)
-  public ProducerPayloadType payloadType;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ProducerDataFormatChooserValues.class)
+  public DataFormat payloadType;
 
   @ConfigDef(
       required = false,
@@ -135,7 +136,7 @@ public class KafkaTarget extends BaseTarget {
   )
   public Map<String, String> kafkaProducerConfigs;
 
-  /********  For CSV Content  ***********/
+  /********  For DELIMITED Content  ***********/
 
   @ConfigDef(
       required = false,
@@ -144,9 +145,9 @@ public class KafkaTarget extends BaseTarget {
       label = "Delimiter Format",
       description = "",
       displayPosition = 100,
-      group = "CSV",
+      group = "DELIMITED",
       dependsOn = "payloadType",
-      triggeredByValue = "CSV"
+      triggeredByValue = "DELIMITED"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
@@ -158,9 +159,9 @@ public class KafkaTarget extends BaseTarget {
       label = "Fields",
       description = "Fields to write to Kafka",
       displayPosition = 110,
-      group = "CSV",
+      group = "DELIMITED",
       dependsOn = "payloadType",
-      triggeredByValue = "CSV"
+      triggeredByValue = "DELIMITED"
   )
   @FieldSelector
   public List<String> fieldPaths;
@@ -216,10 +217,10 @@ public class KafkaTarget extends BaseTarget {
 
   private void createRecordToStringInstance(Map<String, String> fieldNameToPathMap) {
     switch(payloadType) {
-      case SDC_RECORDS:
+      case SDC_JSON:
         recordToString = new DataCollectorRecordToString(getContext());
         break;
-      case CSV:
+      case DELIMITED:
         recordToString = new CsvRecordToString(csvFileFormat.getFormat(), false);
         break;
       case TEXT:

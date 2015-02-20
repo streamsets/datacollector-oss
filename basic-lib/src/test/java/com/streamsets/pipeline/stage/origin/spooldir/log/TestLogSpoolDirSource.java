@@ -7,7 +7,7 @@ package com.streamsets.pipeline.stage.origin.spooldir.log;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.stage.origin.spooldir.FileDataType;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.origin.spooldir.PostProcessingOptions;
 import com.streamsets.pipeline.stage.origin.spooldir.SpoolDirSource;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -55,7 +55,7 @@ public class TestLogSpoolDirSource {
         .addConfiguration("initialFileToProcess", null)
         .addConfiguration("poolingTimeoutSecs", 0)
         .addConfiguration("errorArchiveDir", null)
-        .addConfiguration("fileDataType", FileDataType.LOG_DATA)
+        .addConfiguration("dataFormat", DataFormat.TEXT)
         .addConfiguration("setTruncated", false)
         .addConfiguration("maxLogLineLength", 10)
         .addOutputLane("lane")
@@ -91,7 +91,7 @@ public class TestLogSpoolDirSource {
         .addConfiguration("initialFileToProcess", null)
         .addConfiguration("poolingTimeoutSecs", 0)
         .addConfiguration("errorArchiveDir", null)
-        .addConfiguration("fileDataType", FileDataType.LOG_DATA)
+        .addConfiguration("dataFormat", DataFormat.TEXT)
         .addConfiguration("setTruncated", true)
         .addConfiguration("maxLogLineLength", 10)
         .addOutputLane("lane")

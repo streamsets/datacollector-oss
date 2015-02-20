@@ -3,26 +3,24 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.kafka;
+package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum ProducerPayloadType implements Label {
-  SDC_RECORDS("SDC Record"),
-  JSON("JSON"),
-  CSV("Delimited"),
+public enum DataFormat implements Label {
   TEXT("Text"),
-
+  JSON("JSON"),
   ;
+
   private final String label;
 
-  ProducerPayloadType(String label) {
+  DataFormat(String label) {
     this.label = label;
   }
-
 
   @Override
   public String getLabel() {
     return label;
   }
+
 }

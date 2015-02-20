@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.config.DataFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,8 +114,8 @@ public abstract class AbstractKafkaSource extends BaseSource {
     label = "Payload Type",
     group = "KAFKA_PROPERTIES",
     defaultValue = "TEXT")
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ConsumerPayloadTypeChooserValues.class)
-  public ConsumerPayloadType consumerPayloadType;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ConsumerDataFormatChooserValues.class)
+  public DataFormat consumerPayloadType;
 
 
 

@@ -16,6 +16,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +46,8 @@ public class SpoolDirSource extends BaseSource {
       displayPosition = 0,
       group = "FILES"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileDataTypeChooserValues.class)
-  public FileDataType fileDataType;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
+  public DataFormat dataFormat;
 
   @ConfigDef(
       required = true,
@@ -88,8 +89,8 @@ public class SpoolDirSource extends BaseSource {
                     "Files are processed in naturally ascending order.",
       displayPosition = 40,
       group = "FILES",
-      dependsOn = "fileDataType",
-      triggeredByValue = { "LOG_DATA", "JSON_DATA", "XML_DATA", "DELIMITED_DATA"}
+      dependsOn = "dataFormat",
+      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED"}
   )
   public String filePattern;
 
@@ -102,8 +103,8 @@ public class SpoolDirSource extends BaseSource {
                     "pipeline to fail.",
       displayPosition = 60,
       group = "FILES",
-      dependsOn = "fileDataType",
-      triggeredByValue = { "LOG_DATA", "JSON_DATA", "XML_DATA", "DELIMITED_DATA"}
+      dependsOn = "dataFormat",
+      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED"}
   )
   public int maxSpoolFiles;
 
@@ -115,8 +116,8 @@ public class SpoolDirSource extends BaseSource {
       description = "When configured, the Data Collector does not process earlier (naturally ascending order) file names",
       displayPosition = 50,
       group = "FILES",
-      dependsOn = "fileDataType",
-      triggeredByValue = { "LOG_DATA", "JSON_DATA", "XML_DATA", "DELIMITED_DATA"}
+      dependsOn = "dataFormat",
+      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED"}
   )
   public String initialFileToProcess;
 
@@ -176,9 +177,9 @@ public class SpoolDirSource extends BaseSource {
       label = "File Type",
       description = "",
       displayPosition = 300,
-      group = "DELIMITED_DATA",
-      dependsOn = "fileDataType",
-      triggeredByValue = "DELIMITED_DATA"
+      group = "DELIMITED",
+      dependsOn = "dataFormat",
+      triggeredByValue = "DELIMITED"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
@@ -190,9 +191,9 @@ public class SpoolDirSource extends BaseSource {
       label = "Header Line",
       description = "",
       displayPosition = 310,
-      group = "DELIMITED_DATA",
-      dependsOn = "fileDataType",
-      triggeredByValue = "DELIMITED_DATA"
+      group = "DELIMITED",
+      dependsOn = "dataFormat",
+      triggeredByValue = "DELIMITED"
   )
   public boolean hasHeaderLine;
 
@@ -203,9 +204,9 @@ public class SpoolDirSource extends BaseSource {
       label = "Convert to Map",
       description = "Converts delimited values to a map based on the header or placeholder header values",
       displayPosition = 320,
-      group = "DELIMITED_DATA",
-      dependsOn = "fileDataType",
-      triggeredByValue = "DELIMITED_DATA"
+      group = "DELIMITED",
+      dependsOn = "dataFormat",
+      triggeredByValue = "DELIMITED"
   )
   public boolean convertToMap;
 
@@ -218,9 +219,9 @@ public class SpoolDirSource extends BaseSource {
       label = "JSON Content",
       description = "",
       displayPosition = 400,
-      group = "JSON_DATA",
-      dependsOn = "fileDataType",
-      triggeredByValue = "JSON_DATA"
+      group = "JSON",
+      dependsOn = "dataFormat",
+      triggeredByValue = "JSON"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonFileModeChooserValues.class)
   public JsonFileMode jsonContent;
@@ -232,9 +233,9 @@ public class SpoolDirSource extends BaseSource {
       label = "Max Object Length (chars)",
       description = "Larger objects are not processed",
       displayPosition = 410,
-      group = "JSON_DATA",
-      dependsOn = "fileDataType",
-      triggeredByValue = "JSON_DATA"
+      group = "JSON",
+      dependsOn = "dataFormat",
+      triggeredByValue = "JSON"
   )
   public int maxJsonObjectLen;
 
@@ -247,9 +248,9 @@ public class SpoolDirSource extends BaseSource {
       label = "Max Line Length",
       description = "Longer lines are truncated",
       displayPosition = 500,
-      group = "LOG_DATA",
-      dependsOn = "fileDataType",
-      triggeredByValue = "LOG_DATA"
+      group = "TEXT",
+      dependsOn = "dataFormat",
+      triggeredByValue = "TEXT"
   )
   public int maxLogLineLength;
 
@@ -260,9 +261,9 @@ public class SpoolDirSource extends BaseSource {
       label = "Add Truncated Flag",
       description = "Adds a boolean /truncated field to the record to indicate if the record has been truncated",
       displayPosition = 510,
-      group = "LOG_DATA",
-      dependsOn = "fileDataType",
-      triggeredByValue = "LOG_DATA"
+      group = "TEXT",
+      dependsOn = "dataFormat",
+      triggeredByValue = "TEXT"
   )
 
   public boolean setTruncated;
@@ -275,9 +276,9 @@ public class SpoolDirSource extends BaseSource {
       label = "Delimiter Element",
       description = "XML element that acts as a record delimiter",
       displayPosition = 600,
-      group = "XML_DATA",
-      dependsOn = "fileDataType",
-      triggeredByValue = "XML_DATA"
+      group = "XML",
+      dependsOn = "dataFormat",
+      triggeredByValue = "XML"
   )
   public String xmlRecordElement;
 
@@ -288,9 +289,9 @@ public class SpoolDirSource extends BaseSource {
       label = "Max Record Length (chars)",
       description = "Larger records are not processed",
       displayPosition = 610,
-      group = "XML_DATA",
-      dependsOn = "fileDataType",
-      triggeredByValue = "XML_DATA"
+      group = "XML",
+      dependsOn = "dataFormat",
+      triggeredByValue = "XML"
   )
   public int maxXmlObjectLen;
 
@@ -302,20 +303,20 @@ public class SpoolDirSource extends BaseSource {
   protected void init() throws StageException {
     super.init();
 
-    switch (fileDataType) {
-      case LOG_DATA:
+    switch (dataFormat) {
+      case TEXT:
         dataProducer = new LogDataProducer(getContext(), maxLogLineLength, setTruncated);
         break;
-      case JSON_DATA:
+      case JSON:
         dataProducer = new JsonDataProducer(getContext(), jsonContent, maxJsonObjectLen);
         break;
-      case DELIMITED_DATA:
+      case DELIMITED:
         dataProducer = new CsvDataProducer(getContext(), csvFileFormat, hasHeaderLine, convertToMap);
         break;
-      case XML_DATA:
+      case XML:
         dataProducer = new XmlDataProducer(getContext(), xmlRecordElement, maxXmlObjectLen);
         break;
-      case SDC_RECORDS:
+      case SDC_JSON:
         filePattern = "records-??????.json";
         initialFileToProcess = "";
         maxSpoolFiles = 10000;

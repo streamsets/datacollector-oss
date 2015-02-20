@@ -32,7 +32,7 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
 
   public enum Groups implements Label {
     JSON("JSON"),
-    CSV("Delimited")
+    DELIMITED("Delimited")
 
     ;
 
@@ -50,7 +50,7 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "ARRAY_OBJECTS",
+      defaultValue = "MULTIPLE_OBJECTS",
       label = "JSON Content",
       description = "",
       displayPosition = 100,
@@ -90,13 +90,13 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "CSV",
+      defaultValue = "DELIMITED",
       label = "Delimiter Format Type",
       description = "",
       displayPosition = 200,
-      group = "CSV",
+      group = "DELIMITED",
       dependsOn = "consumerPayloadType",
-      triggeredByValue = "CSV"
+      triggeredByValue = "DELIMITED"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
@@ -110,16 +110,16 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
       case JSON:
         recordCreator = new JsonRecordCreator(getContext(), jsonContent, maxJsonObjectLen, produceSingleRecord, topic);
         break;
-      case LOG:
+      case TEXT:
         recordCreator = new LogRecordCreator(getContext(), topic);
         break;
-      case CSV:
+      case DELIMITED:
         recordCreator = new CsvRecordCreator(getContext(), csvFileFormat, topic);
         break;
       case XML:
         recordCreator = new XmlRecordCreator(getContext(), topic);
         break;
-      case SDC_RECORDS:
+      case SDC_JSON:
         recordCreator = new SDCRecordCreator(getContext());
         break;
       default :

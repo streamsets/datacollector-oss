@@ -6,11 +6,12 @@
 package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
 
-public class ConsumerPayloadTypeChooserValues extends BaseEnumChooserValues {
+public class ConsumerDataFormatChooserValues extends BaseEnumChooserValues {
 
-  public ConsumerPayloadTypeChooserValues() {
-    super(ConsumerPayloadType.class);
+  public ConsumerDataFormatChooserValues() {
+    super(DataFormat.TEXT, DataFormat.JSON, DataFormat.DELIMITED, DataFormat.XML, DataFormat.SDC_JSON);
   }
 
 }

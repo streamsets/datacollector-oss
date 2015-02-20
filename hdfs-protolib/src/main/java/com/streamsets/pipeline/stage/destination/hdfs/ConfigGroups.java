@@ -11,7 +11,7 @@ public enum ConfigGroups implements Label {
   HADOOP_FS("Hadoop FS"),
   OUTPUT_FILES("Output Files"),
   LATE_RECORDS("Late Records"),
-  CSV("Delimited"),
+  DELIMITED("Delimited"),
   ;
 
   private final String label;

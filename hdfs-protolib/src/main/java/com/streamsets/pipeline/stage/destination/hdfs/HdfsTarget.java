@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
@@ -294,7 +295,7 @@ public class HdfsTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "RECORD",
+      defaultValue = "SDC_JSON",
       label = "Data Format",
       description = "Data Format",
       displayPosition = 100,
@@ -303,21 +304,21 @@ public class HdfsTarget extends BaseTarget {
       triggeredByValue = { "TEXT", "SEQUENCE_FILE"}
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
-  public HdfsDataFormat dataFormat;
+  public DataFormat dataFormat;
 
 
-  /********  For CSV Content  ***********/
+  /********  For DELIMITED Content  ***********/
 
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "CSV",
+      defaultValue = "SV",
       label = "CSV Format",
       description = "",
       displayPosition = 310,
-      group = "CSV",
+      group = "DELIMITED",
       dependsOn = "dataFormat",
-      triggeredByValue = "CSV"
+      triggeredByValue = "DELIMITED"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
   public CsvFileMode csvFileFormat;
@@ -329,9 +330,9 @@ public class HdfsTarget extends BaseTarget {
       label = "Remove New Line Characters",
       description = "Replaces new lines characters with white spaces",
       displayPosition = 315,
-      group = "CSV",
+      group = "DELIMITED",
       dependsOn = "dataFormat",
-      triggeredByValue = "CSV"
+      triggeredByValue = "DELIMITED"
   )
   public boolean replaceNewLines;
 
@@ -341,9 +342,9 @@ public class HdfsTarget extends BaseTarget {
       label = "Field Mapping",
       description = "",
       displayPosition = 320,
-      group = "CSV",
+      group = "DELIMITED",
       dependsOn = "dataFormat",
-      triggeredByValue = "CSV"
+      triggeredByValue = "DELIMITED"
   )
   @ComplexField
   public List<FieldPathToNameMappingConfig> cvsFieldPathToNameMappingConfigList;
@@ -536,13 +537,13 @@ public class HdfsTarget extends BaseTarget {
   private RecordToString createRecordToStringInstance() {
     RecordToString recordToString;
     switch(dataFormat) {
-      case RECORD:
+      case SDC_JSON:
         recordToString = new DataCollectorRecordToString(getContext());
         break;
       case JSON:
         recordToString = new JsonRecordToString();
         break;
-      case CSV:
+      case DELIMITED:
         recordToString = new CsvRecordToString(csvFileFormat.getFormat(), replaceNewLines);
         recordToString.setFieldPathToNameMapping(getFieldPathToNameMapping(cvsFieldPathToNameMappingConfigList));
         break;

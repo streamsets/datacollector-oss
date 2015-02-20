@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.admin.AdminUtils;
 import kafka.consumer.ConsumerIterator;
@@ -85,7 +86,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partition", "-1")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.ROUND_ROBIN)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/")
@@ -128,7 +129,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partition", "-1")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.RANDOM)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/")
@@ -177,7 +178,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partition", "${record:value('/') % 3}")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/")
@@ -222,7 +223,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partition", "${value('/') % 3}")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/")
@@ -247,7 +248,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partition", "${record:value('/') % 3}")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/")
@@ -273,7 +274,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partition", "13")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/")
@@ -299,7 +300,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partition", "${record:value('/')}")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", ProducerPayloadType.TEXT)
+      .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("fieldPath", "/")

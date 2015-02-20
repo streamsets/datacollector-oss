@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
@@ -87,7 +88,7 @@ public class TestKafkaSourceUnavailability {
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("consumerPayloadType", DataFormat.TEXT)
       .addConfiguration("produceSingleRecord", true)
       .build();
 
@@ -117,7 +118,7 @@ public class TestKafkaSourceUnavailability {
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
-      .addConfiguration("consumerPayloadType", ConsumerPayloadType.LOG)
+      .addConfiguration("consumerPayloadType", DataFormat.TEXT)
       .addConfiguration("produceSingleRecord", true)
       .build();
 

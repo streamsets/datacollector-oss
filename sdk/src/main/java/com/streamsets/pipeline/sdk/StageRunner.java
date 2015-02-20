@@ -147,7 +147,7 @@ public abstract class StageRunner<S extends Stage> {
       if (dependsOnValue != null) {
         String valueStr = dependsOnValue.toString();
         for (String trigger : configDef.triggeredByValue()) {
-          if (valueStr.endsWith(trigger)) {
+          if (valueStr.equals(trigger)) {
             return true;
           }
         }
