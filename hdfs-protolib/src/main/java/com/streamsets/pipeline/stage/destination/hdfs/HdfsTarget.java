@@ -275,13 +275,13 @@ public class HdfsTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "TO_ERROR",
-      label = "Late Records Handling",
+      label = "Late Record Handling",
       description = "Action for records considered late.",
       displayPosition = 210,
       group = "LATE_RECORDS"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = LateRecordsActionChooserValues.class)
-  public HdfsLateRecordsAction lateRecordsAction;
+  public LateRecordsAction lateRecordsAction;
 
   @ConfigDef(
       required = false,
@@ -647,8 +647,6 @@ public class HdfsTarget extends BaseTarget {
         lateRecordsCounter.inc();
         lateRecordsMeter.mark();
         switch (lateRecordsAction) {
-          case DISCARD:
-            break;
           case SEND_TO_ERROR:
             getContext().toError(record, Errors.HADOOPFS_12, record.getHeader().getSourceId());
             break;

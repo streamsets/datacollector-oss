@@ -54,7 +54,7 @@ public class TestHdfsTarget {
         .addConfiguration("maxFileSize", 0)
         .addConfiguration("timeDriver", "${record:value('/time')}")
         .addConfiguration("lateRecordsLimit", "${30 * MINUTES}")
-        .addConfiguration("lateRecordsAction", HdfsLateRecordsAction.DISCARD)
+        .addConfiguration("lateRecordsAction", LateRecordsAction.SEND_TO_ERROR)
         .addConfiguration("lateRecordsDirPathTemplate", "")
         .addConfiguration("dataFormat", DataFormat.SDC_JSON)
         .addConfiguration("csvFileFormat", null)
