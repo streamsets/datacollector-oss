@@ -2,7 +2,7 @@
  * Service for providing access to the Pipeline utility functions.
  */
 angular.module('dataCollectorApp.common')
-  .service('pipelineService', function(pipelineConstant, $translate) {
+  .service('pipelineService', function(pipelineConstant, $translate, _) {
 
     var self = this,
       translations = {};
@@ -256,6 +256,112 @@ angular.module('dataCollectorApp.common')
         }) : undefined;
 
       return configDefinition ? configDefinition.label : configName;
+    };
+
+
+    var getStageConfigurationNameConfigMap = function(stageInstance) {
+      var nameConfigMap = {},
+        stageDefinition = _.find(self.stageDefintions, function (stage) {
+          return stageInstance.library === stage.library &&
+            stageInstance.stageName === stage.name &&
+            stageInstance.stageVersion === stage.version;
+        });
+
+      angular.forEach(stageDefinition.configDefinitions, function (configDefinition) {
+        nameConfigMap[configDefinition.name] = configDefinition;
+      });
+
+      return nameConfigMap;
+    };
+
+    var getConfigValueString = function(configDefinition, configValue) {
+      var valStr = [];
+      if(configDefinition.type === 'MODEL') {
+         switch(configDefinition.model.modelType) {
+            case 'VALUE_CHOOSER':
+              if(configDefinition.model.chooserMode === 'PROVIDED') {
+                var ind = _.indexOf(configDefinition.model.values, configValue);
+                return configDefinition.model.labels[ind];
+              }
+              break;
+            case 'LANE_PREDICATE_MAPPING':
+              valStr = [];
+              angular.forEach(configValue, function(lanePredicate, index) {
+                valStr.push({
+                  Stream: index + 1,
+                  Condition: lanePredicate.predicate
+                });
+              });
+              configValue = valStr;
+              break;
+            case 'COMPLEX_FIELD':
+              valStr = [];
+              angular.forEach(configValue, function(groupValueObject) {
+                var groupValStr = {};
+                angular.forEach(configDefinition.model.configDefinitions, function(groupConfigDefinition) {
+
+                  if((groupConfigDefinition.dependsOn && groupConfigDefinition.triggeredByValues) &&
+                    (groupValueObject[groupConfigDefinition.dependsOn] === undefined ||
+                      !_.contains(groupConfigDefinition.triggeredByValues, groupValueObject[groupConfigDefinition.dependsOn] + ''))) {
+                    return;
+                  }
+
+                  groupValStr[groupConfigDefinition.label] = groupValueObject[groupConfigDefinition.name];
+                });
+                valStr.push(groupValStr);
+              });
+              configValue = valStr;
+              break;
+          }
+      }
+
+      if(_.isObject(configValue)) {
+        return JSON.stringify(configValue);
+      }
+
+      return configValue;
+    };
+
+    /**
+     * Return HTML list of Stage Configuration.
+     *
+     * @returns {string}
+     */
+    this.getStageConfigurationHTML = function(stageInstance) {
+      var configurationHtml = '<ul class="config-properties">',
+        nameConfigMap = getStageConfigurationNameConfigMap(stageInstance);
+
+      angular.forEach(stageInstance.configuration, function(c) {
+        var configDefinition = nameConfigMap[c.name];
+
+        if(c.value !== undefined && c.value !== null) {
+
+          if(configDefinition.dependsOn && configDefinition.triggeredByValues) {
+            var dependsOnConfiguration = _.find(stageInstance.configuration, function(config) {
+              return config.name === configDefinition.dependsOn;
+            });
+
+            if(dependsOnConfiguration.value === undefined ||
+              !_.contains(configDefinition.triggeredByValues, dependsOnConfiguration.value + '')) {
+              return;
+            }
+          }
+
+          configurationHtml += '<li>';
+          configurationHtml += '<span class="config-label">';
+          configurationHtml += (configDefinition.label || configDefinition.name) + ':  ';
+          configurationHtml += '</span>';
+          configurationHtml += '<span class="config-value">';
+          configurationHtml += getConfigValueString(configDefinition, c.value);
+          configurationHtml += '</span>';
+          configurationHtml += '</li>';
+
+        }
+      });
+
+      configurationHtml += '</ul>';
+
+      return configurationHtml;
     };
 
     $translate([

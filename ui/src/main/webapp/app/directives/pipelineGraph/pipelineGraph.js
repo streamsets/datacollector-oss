@@ -765,13 +765,34 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr('data-html', true)
         .attr('data-placement', 'bottom');
 
+      //Add Configuration Icon
+      newGs.append('svg:foreignObject')
+        .filter(function(d) {
+          var configurationExists = false;
+
+          angular.forEach(d.configuration, function(c) {
+            if(c.value !== undefined && c.value !== null) {
+              configurationExists = true;
+            }
+          });
+
+          return configurationExists;
+        })
+        .attr('width', 20)
+        .attr('height', 20)
+        .attr('x', consts.rectWidth - 25)
+        .attr('y', 10)
+        .append('xhtml:span')
+        .attr('class', 'node-config fa fa-gear graph-bootstrap-tooltip')
+        .attr('title', function(d) {
+          return pipelineService.getStageConfigurationHTML(d);
+        })
+        .attr('data-html', true)
+        .attr('data-placement', 'bottom');
 
 
       //Add bad records count
       newGs.append('svg:foreignObject')
-        .filter(function(d) {
-          return true;
-        })
         .attr('width', 100)
         .attr('height', 30)
         .attr('x', 10)

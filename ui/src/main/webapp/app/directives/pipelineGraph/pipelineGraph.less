@@ -51,6 +51,10 @@ pipeline-graph {
     color: @brand-danger;
   }
 
+  .node-config {
+    color: @streamsets-icon-btn-color;
+  }
+
   marker{
     fill: @default-pipeline-graph-fill-color;
   }
@@ -94,6 +98,7 @@ pipeline-graph {
         }
 
         text {
+          cursor: default;
           fill: #ffffff;
 
           &.lane-number {
@@ -105,8 +110,8 @@ pipeline-graph {
           fill: #ffffff;
         }
 
-        .node-warning {
-          //color: #ffffff;
+        .node-config {
+          color: #000000;
         }
       }
     }
@@ -134,8 +139,8 @@ pipeline-graph {
         fill: #ffffff;
       }
 
-      .node-warning {
-        //color: #ffffff;
+      .node-config {
+        color: #000000;
       }
 
       &:hover {
@@ -287,4 +292,17 @@ pipeline-graph {
     vector-effect: non-scaling-stroke;
   }
 
+}
+
+
+.config-properties{
+  text-align: left;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  .config-value {
+    padding-right: @smallPadding;
+    color: @streamsets-color;
+  }
 }

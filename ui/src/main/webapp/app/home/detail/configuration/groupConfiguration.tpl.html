@@ -180,7 +180,10 @@
                   <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUED"
                        ng-click="onFieldSelectorFocus(detailPaneConfig)"
                        class="clearfix">
-                    <ui-select multiple tagging tagging-label="false" reset-search-input="true"
+                    <ui-select multiple
+                               tagging="tagTransform"
+                               tagging-label="false" reset-search-input="true"
+                               tagging-tokens=",|ENTER"
                                ng-disabled="isPipelineRunning"
                                ng-model="customFieldValue[customFieldConfigDefinition.name]">
                       <ui-select-match
