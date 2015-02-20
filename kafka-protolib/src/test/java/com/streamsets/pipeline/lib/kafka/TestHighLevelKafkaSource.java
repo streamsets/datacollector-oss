@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -395,7 +396,7 @@ public class TestHighLevelKafkaSource {
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("consumerPayloadType", DataFormat.DELIMITED)
-      .addConfiguration("csvFileFormat", CsvFileMode.CSV)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecord", true)
       .build();
@@ -411,7 +412,7 @@ public class TestHighLevelKafkaSource {
     List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
-    CsvRecordCreator csvFieldCreator = new CsvRecordCreator((Source.Context)sourceRunner.getContext(), CsvFileMode.CSV,
+    CsvRecordCreator csvFieldCreator = new CsvRecordCreator((Source.Context)sourceRunner.getContext(), CsvMode.CSV,
       "testProduceCsvRecords");
     for (int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get().getValueAsMap());

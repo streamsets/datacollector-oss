@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.kafka;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.util.CsvUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -246,7 +247,7 @@ public class TestKafkaSourceSinglePartition {
       .addConfiguration("maxBatchSize", 64000)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("minBatchSize", 100)
-      .addConfiguration("csvFileFormat", CsvFileMode.CSV)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("consumerPayloadType", DataFormat.DELIMITED)
       .addConfiguration("produceSingleRecord", true)
       .build();

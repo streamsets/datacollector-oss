@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.io.CountingReader;
 
@@ -25,11 +26,11 @@ public class CsvRecordCreator implements RecordCreator {
 
   private static final String DOT = ".";
 
-  private final CsvFileMode csvFileMode;
+  private final CsvMode csvFileMode;
   private final Source.Context context;
   private final String topic;
 
-  public CsvRecordCreator(Source.Context context, CsvFileMode csvFileMode, String topic) {
+  public CsvRecordCreator(Source.Context context, CsvMode csvFileMode, String topic) {
     this.csvFileMode = csvFileMode;
     this.context = context;
     this.topic = topic;

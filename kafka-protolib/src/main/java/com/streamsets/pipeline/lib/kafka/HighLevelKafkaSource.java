@@ -15,6 +15,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 
 import java.util.List;
@@ -98,8 +100,8 @@ public class HighLevelKafkaSource extends HighLevelAbstractKafkaSource {
       dependsOn = "consumerPayloadType",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
-  public CsvFileMode csvFileFormat;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvModeChooserValues.class)
+  public CsvMode csvFileFormat;
 
   private RecordCreator recordCreator;
 

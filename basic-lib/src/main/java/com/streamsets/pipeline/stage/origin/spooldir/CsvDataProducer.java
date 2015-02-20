@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import org.apache.commons.csv.CSVFormat;
 
@@ -31,7 +32,7 @@ public class CsvDataProducer implements DataProducer {
   private List<Field> headerFields;
   private OverrunCsvParser parser;
 
-  public CsvDataProducer(Source.Context context, CsvFileMode csvMode, boolean hasHeaderLine, boolean convertToMap) {
+  public CsvDataProducer(Source.Context context, CsvMode csvMode, boolean hasHeaderLine, boolean convertToMap) {
     this.context = context;
     this.csvFormat = (hasHeaderLine) ? csvMode.getFormat().withHeader() : csvMode.getFormat();
     this.hasHeaderLine = hasHeaderLine;

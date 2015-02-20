@@ -16,6 +16,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
+import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import org.slf4j.Logger;
@@ -181,8 +183,8 @@ public class SpoolDirSource extends BaseSource {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CvsFileModeChooserValues.class)
-  public CsvFileMode csvFileFormat;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvModeChooserValues.class)
+  public CsvMode csvFileFormat;
 
   @ConfigDef(
       required = true,

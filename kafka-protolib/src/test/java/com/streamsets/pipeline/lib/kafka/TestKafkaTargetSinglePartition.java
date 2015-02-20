@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordReader;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
@@ -339,7 +340,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", DataFormat.DELIMITED)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("csvFileFormat", CsvFileMode.CSV)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("fieldPaths", fieldPaths)
       .build();
 

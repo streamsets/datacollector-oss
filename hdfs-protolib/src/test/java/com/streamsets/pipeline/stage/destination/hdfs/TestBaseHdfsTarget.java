@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -79,7 +80,7 @@ public class TestBaseHdfsTarget {
     target.compression = CompressionMode.NONE.name();
     target.timeDriver = "${time:now()}";
     target.lateRecordsLimit = "${1 * HOURS}";
-    target.csvFileFormat = CsvFileMode.CSV;
+    target.csvFileFormat = CsvMode.CSV;
     target.dataFormat = DataFormat.DELIMITED;
     target.cvsFieldPathToNameMappingConfigList = new ArrayList<>();
   }
