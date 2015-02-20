@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.OnRecordError;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.junit.Assert;

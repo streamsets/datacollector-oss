@@ -15,6 +15,8 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.config.OnRecordError;
+import com.streamsets.pipeline.config.OnRecordErrorChooserValues;
 import com.streamsets.pipeline.lib.util.JsonLineToRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +63,8 @@ public class JsonParserProcessor extends SingleLaneRecordProcessor {
       displayPosition = 30,
       group = "JSON"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnRecordProcessingErrorChooserValues.class)
-  public OnRecordProcessingError onRecordProcessingError;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnRecordErrorChooserValues.class)
+  public OnRecordError onRecordProcessingError;
 
   private JsonLineToRecord parser;
 

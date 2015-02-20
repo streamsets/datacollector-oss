@@ -3,11 +3,11 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.processor.jsonparser;
+package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum OnRecordProcessingError implements Label {
+public enum OnRecordError implements Label {
   DISCARD("Discard"),
   TO_ERROR("Send to Error"),
   STOP_PIPELINE("Stop Pipeline"),
@@ -16,7 +16,7 @@ public enum OnRecordProcessingError implements Label {
 
   private final String label;
 
-  OnRecordProcessingError(String label) {
+  OnRecordError(String label) {
     this.label = label;
   }
 

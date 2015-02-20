@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.OnRecordError;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -34,7 +35,7 @@ public class TestJsonParserProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserProcessor.class)
         .addConfiguration("fieldPathToParse", "/json")
         .addConfiguration("parsedFieldPath", "/parsed")
-        .addConfiguration("onRecordProcessingError", OnRecordProcessingError.DISCARD)
+        .addConfiguration("onRecordProcessingError", OnRecordError.DISCARD)
         .addOutputLane("out")
         .build();
     runner.runInit();
@@ -61,7 +62,7 @@ public class TestJsonParserProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserProcessor.class)
         .addConfiguration("fieldPathToParse", "/json")
         .addConfiguration("parsedFieldPath", "/parsed")
-        .addConfiguration("onRecordProcessingError", OnRecordProcessingError.TO_ERROR)
+        .addConfiguration("onRecordProcessingError", OnRecordError.TO_ERROR)
         .addOutputLane("out")
         .build();
     runner.runInit();
@@ -88,7 +89,7 @@ public class TestJsonParserProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserProcessor.class)
         .addConfiguration("fieldPathToParse", "/json")
         .addConfiguration("parsedFieldPath", "/parsed")
-        .addConfiguration("onRecordProcessingError", OnRecordProcessingError.STOP_PIPELINE)
+        .addConfiguration("onRecordProcessingError", OnRecordError.STOP_PIPELINE)
         .addOutputLane("out")
         .build();
     runner.runInit();

@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.OnRecordError;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -43,7 +44,7 @@ public class TestSelectorProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .addConfiguration("lanePredicates", null)
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
+        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .build();
     runner.runInit();
   }
@@ -53,7 +54,7 @@ public class TestSelectorProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .addConfiguration("lanePredicates", createLanePredicates())
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
+        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .build();
     runner.runInit();
   }
@@ -63,7 +64,7 @@ public class TestSelectorProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .addConfiguration("lanePredicates", createLanePredicates("a", "true"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
+        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .build();
     runner.runInit();
   }
@@ -73,7 +74,7 @@ public class TestSelectorProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .addConfiguration("lanePredicates", createLanePredicates("a", "true"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
+        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .addOutputLane("b")
         .build();
@@ -85,7 +86,7 @@ public class TestSelectorProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .addConfiguration("lanePredicates", createLanePredicates("a", "${x}"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
+        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .build();
     runner.runInit();
@@ -96,7 +97,7 @@ public class TestSelectorProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .addConfiguration("lanePredicates", createLanePredicates("a", "x"))
         .addConfiguration("constants", ImmutableMap.of("x", "false"))
-        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
+        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .build();
     runner.runInit();
@@ -108,7 +109,7 @@ public class TestSelectorProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .addConfiguration("lanePredicates", createLanePredicates("a", "x"))
         .addConfiguration("constants", constant)
-        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
+        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .build();
     runner.runInit();
@@ -121,7 +122,7 @@ public class TestSelectorProcessor {
                                                                  "b", "${record:value('') == 2}",
                                                                  "c", "${default}"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
+        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .addOutputLane("b")
         .addOutputLane("c")
@@ -159,7 +160,7 @@ public class TestSelectorProcessor {
         .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
                                                                  "b", "${record:value('') == 2}"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.DROP_RECORD)
+        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .addOutputLane("b")
         .build();
@@ -194,7 +195,7 @@ public class TestSelectorProcessor {
         .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
                                                                  "b", "${record:value('') == 2}"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.RECORD_TO_ERROR)
+        .addConfiguration("onNoPredicateMatch", OnRecordError.TO_ERROR)
         .addOutputLane("a")
         .addOutputLane("b")
         .build();
@@ -231,7 +232,7 @@ public class TestSelectorProcessor {
         .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
                                                                  "b", "${record:value('') == 2}"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnNoPredicateMatch.FAIL_PIPELINE)
+        .addConfiguration("onNoPredicateMatch", OnRecordError.STOP_PIPELINE)
         .addOutputLane("a")
         .addOutputLane("b")
         .build();

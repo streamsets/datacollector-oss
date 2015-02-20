@@ -23,6 +23,8 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.OnRecordError;
+import com.streamsets.pipeline.config.OnRecordErrorChooserValues;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
@@ -218,7 +220,7 @@ public class HdfsTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "SEND_TO_ERROR",
+      defaultValue = "TO_ERROR",
       label = "On Record Error",
       description = "",
       displayPosition = 105,
@@ -272,7 +274,7 @@ public class HdfsTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "SEND_TO_ERROR",
+      defaultValue = "TO_ERROR",
       label = "Late Records Handling",
       description = "Action for records considered late.",
       displayPosition = 210,
@@ -663,7 +665,7 @@ public class HdfsTarget extends BaseTarget {
       switch (onRecordError) {
         case DISCARD:
           break;
-        case SEND_TO_ERROR:
+        case TO_ERROR:
           getContext().toError(record, Errors.HADOOPFS_15, ex.getMessage());
           break;
         case STOP_PIPELINE:

@@ -17,6 +17,8 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.RecordProcessor;
+import com.streamsets.pipeline.config.OnRecordError;
+import com.streamsets.pipeline.config.OnRecordErrorChooserValues;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
@@ -64,14 +66,14 @@ public class SelectorProcessor extends RecordProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "DROP_RECORD",
+      defaultValue = "DISCARD",
       label = "Unmatched Record Handling",
       description = "Action for records without matching conditions",
       displayPosition = 30,
       group = "CONDITIONS"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnNoPredicateMatchChooserValues.class)
-  public OnNoPredicateMatch onNoPredicateMatch;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnRecordErrorChooserValues.class)
+  public OnRecordError onNoPredicateMatch;
 
   private String[][] predicateLanes;
   private ELEvaluator elEvaluator;
@@ -203,15 +205,15 @@ public class SelectorProcessor extends RecordProcessor {
     }
     if (!matchedAtLeastOnePredicate) {
       switch (onNoPredicateMatch) {
-        case DROP_RECORD:
+        case DISCARD:
           LOG.trace("Record '{}' does not satisfy any condition, dropping it", record.getHeader().getSourceId());
           break;
-        case RECORD_TO_ERROR:
+        case TO_ERROR:
           LOG.trace("Record '{}' does not satisfy any condition, sending it to error",
                     record.getHeader().getSourceId());
           getContext().toError(record, Errors.SELECTOR_05);
           break;
-        case FAIL_PIPELINE:
+        case STOP_PIPELINE:
           LOG.error(Errors.SELECTOR_06.getMessage(), record.getHeader().getSourceId());
           throw new StageException(Errors.SELECTOR_06, record.getHeader().getSourceId());
       }
