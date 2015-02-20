@@ -6,22 +6,21 @@
 package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Iterator;
 
-public abstract class RecordProcessor extends BaseProcessor {
+public abstract class RecordTarget extends BaseTarget {
 
   @Override
-  public final void process(Batch batch, BatchMaker batchMaker) throws StageException {
+  public final void write(Batch batch) throws StageException {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       Record record = it.next();
       try {
-        process(record, batchMaker);
+        write(record);
       } catch (OnRecordErrorException ex) {
         switch (getContext().getOnErrorRecord()) {
           case DISCARD:
@@ -39,6 +38,6 @@ public abstract class RecordProcessor extends BaseProcessor {
     }
   }
 
-  protected abstract void process(Record record, BatchMaker batchMaker) throws StageException, OnRecordErrorException;
+  protected abstract void write(Record record) throws StageException, OnRecordErrorException;
 
 }

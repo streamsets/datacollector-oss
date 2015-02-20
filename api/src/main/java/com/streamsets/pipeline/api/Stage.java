@@ -46,6 +46,8 @@ public interface Stage<C extends Stage.Context> {
 
     public void reportError(ErrorCode errorCode, Object... args);
 
+    public OnRecordError getOnErrorRecord();
+
     public void toError(Record record, Exception exception);
 
     public void toError(Record record, String errorMessage);

@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
@@ -213,6 +214,12 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     errorSink.addError(instanceName, new ErrorMessage(errorCode, args));
   }
 
+
+  @Override
+  public OnRecordError getOnErrorRecord() {
+    return OnRecordError.TO_ERROR; //TODO
+  }
+
   @Override
   @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
   public void toError(Record record, Exception ex) {
@@ -243,6 +250,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     recordImpl.getHeader().setError(instanceName, errorMessage);
     errorSink.addRecord(instanceName, recordImpl);
   }
+
   @Override
   public List<String> getOutputLanes() {
     return outputLanes;
