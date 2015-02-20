@@ -24,7 +24,7 @@ public class TestExpressionProcessor {
   @Test
   public void testInvalidExpression() throws StageException {
 
-    ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
+    ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
     expressionProcessorConfig.expression = "${(record:value('baseSalary') +record:value('bonus') * 2}"; //invalid expression string, missing ")"
     expressionProcessorConfig.fieldToSet = "/grossSalary";
 
@@ -44,7 +44,7 @@ public class TestExpressionProcessor {
   @Test
   public void tesExpressionEvaluationFailure() throws StageException {
 
-    ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
+    ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
     expressionProcessorConfig.expression = "${(record:value('/baseSalary') + record:value('/bonus') * 2}"; //invalid expression string, missing ")"
     expressionProcessorConfig.fieldToSet = "/grossSalary";
 
@@ -73,7 +73,7 @@ public class TestExpressionProcessor {
   @Test
   public void testReplaceExistingFieldInExpression() throws StageException {
 
-    ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
+    ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
     expressionProcessorConfig.expression = "${record:value('/baseSalary') + record:value('/bonus') - record:value('/tax')}";
     expressionProcessorConfig.fieldToSet = "/baseSalary";
 
@@ -107,7 +107,7 @@ public class TestExpressionProcessor {
   @Test
   public void testSimpleExpression() throws StageException {
 
-    ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
+    ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
     expressionProcessorConfig.expression = "${record:value('/baseSalary') + record:value('/bonus') - record:value('/tax')}";
     expressionProcessorConfig.fieldToSet = "/netSalary";
 
@@ -141,7 +141,7 @@ public class TestExpressionProcessor {
   @Test
   public void testComplexExpression() throws StageException {
 
-    ExpressionProcessor.ExpressionProcessorConfig complexExpressionConfig = new ExpressionProcessor.ExpressionProcessorConfig();
+    ExpressionProcessorConfig complexExpressionConfig = new ExpressionProcessorConfig();
     complexExpressionConfig.expression = "${((record:value('/baseSalary') * 2) + record:value('/bonus') - (record:value('/perks') / record:value('/bonus')))/2}";
     complexExpressionConfig.fieldToSet = "/complexResult";
 
@@ -175,15 +175,15 @@ public class TestExpressionProcessor {
   @Test
   public void testSubstringExpression() throws StageException {
 
-    ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessor.ExpressionProcessorConfig();
+    ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
     expressionProcessorConfig.expression = "${str:substring(record:value('/fullName') , 6, 20)}";
     expressionProcessorConfig.fieldToSet = "/lastName";
 
-    ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig1 = new ExpressionProcessor.ExpressionProcessorConfig();
+    ExpressionProcessorConfig expressionProcessorConfig1 = new ExpressionProcessorConfig();
     expressionProcessorConfig1.expression = "${str:substring(record:value('/fullName') , 10, 20)}";
     expressionProcessorConfig1.fieldToSet = "/empty";
 
-    ExpressionProcessor.ExpressionProcessorConfig expressionProcessorConfig2 = new ExpressionProcessor.ExpressionProcessorConfig();
+    ExpressionProcessorConfig expressionProcessorConfig2 = new ExpressionProcessorConfig();
     expressionProcessorConfig2.expression = "${str:substring(record:value('/fullName') , 0, 6)}";
     expressionProcessorConfig2.fieldToSet = "/first";
 
@@ -219,7 +219,7 @@ public class TestExpressionProcessor {
   @Test
   public void testRecordId() throws StageException {
 
-    ExpressionProcessor.ExpressionProcessorConfig complexExpressionConfig = new ExpressionProcessor.ExpressionProcessorConfig();
+    ExpressionProcessorConfig complexExpressionConfig = new ExpressionProcessorConfig();
     complexExpressionConfig.expression = "${record:id()}";
     complexExpressionConfig.fieldToSet = "/id";
 
