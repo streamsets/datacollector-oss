@@ -754,11 +754,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr('class', 'node-warning fa fa-exclamation-triangle graph-bootstrap-tooltip')
         .attr('title', function(d) {
           var issues = thisGraph.issues.stageIssues[d.instanceName],
-            title = '';
+            title = '<span class="stage-errors-tooltip">';
 
           angular.forEach(issues, function(issue) {
             title += pipelineService.getIssuesMessage(d, issue) + '<br>';
           });
+
+          title += '</span>';
 
           return title;
         })
@@ -1149,7 +1151,18 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             'data-html': true,
             'data-placement': 'right'
           })
-          .style('visibility', 'hidden');
+          .style('visibility', 'hidden')
+          .on('mouseup', function() {
+            if(graph.state.selectedNode) {
+              graph.removeSelectFromNode();
+            } else if(graph.state.selectedEdge) {
+              graph.removeSelectFromEdge();
+            }
+
+            $scope.$apply(function(){
+              $scope.$emit('onRemoveNodeSelection');
+            });
+          });
 
       }
 
