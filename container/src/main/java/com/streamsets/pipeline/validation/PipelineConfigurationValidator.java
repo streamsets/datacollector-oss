@@ -455,7 +455,7 @@ public class PipelineConfigurationValidator {
                                                     ValidationError.VALIDATION_0009, "List<Map>"));
           preview = false;
         } else {
-          int count = 0;
+          int count = 1;
           for (Object element : (List) conf.getValue()) {
             if (element instanceof Map) {
               Map map = (Map)element;
@@ -482,21 +482,21 @@ public class PipelineConfigurationValidator {
               }
               if (!map.containsKey("predicate")) {
                 issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                        ValidationError.VALIDATION_0020, count, "predicate"));
+                                                        ValidationError.VALIDATION_0020, count, "condition"));
                 preview = false;
               } else {
                 if (map.get("predicate") == null) {
                   issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                          ValidationError.VALIDATION_0021, count, "predicate"));
+                                                          ValidationError.VALIDATION_0021, count, "condition"));
                   preview = false;
                 } else {
                   if (!(map.get("predicate") instanceof String)) {
                     issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                            ValidationError.VALIDATION_0022, count, "predicate"));
+                                                            ValidationError.VALIDATION_0022, count, "condition"));
                     preview = false;
                   } else if (((String)map.get("predicate")).isEmpty()) {
                     issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                            ValidationError.VALIDATION_0023, count, "predicate"));
+                                                            ValidationError.VALIDATION_0023, count, "condition"));
                     preview = false;
                   }
                 }
