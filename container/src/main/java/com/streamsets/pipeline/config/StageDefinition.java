@@ -45,6 +45,7 @@ public class StageDefinition {
   private final StageType type;
   private final boolean errorStage;
   private final boolean requiredFields;
+  private final boolean onRecordError;
   private final RawSourceDefinition rawSourceDefinition;
   private List<ConfigDefinition> configDefinitions;
   private Map<String, ConfigDefinition> configDefinitionsMap;
@@ -66,6 +67,7 @@ public class StageDefinition {
       @JsonProperty("type") StageType type,
       @JsonProperty("errorStage") boolean errorStage,
       @JsonProperty("requiredFields") boolean requiredFields,
+      @JsonProperty("onRecordError") boolean onRecordError,
       @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions,
       @JsonProperty("rawSourceDefinition") RawSourceDefinition rawSourceDefinition,
       @JsonProperty("icon") String icon,
@@ -81,6 +83,7 @@ public class StageDefinition {
     this.type = type;
     this.errorStage = errorStage;
     this.requiredFields = requiredFields;
+    this.onRecordError = onRecordError;
     this.configDefinitions = configDefinitions;
     this.rawSourceDefinition = rawSourceDefinition;
     configDefinitionsMap = new HashMap<>();
@@ -167,8 +170,14 @@ public class StageDefinition {
     return errorStage;
   }
 
-  public boolean isRequiredFields() {
+  @JsonProperty("requiredFields")
+  public boolean hasRequiredFields() {
     return requiredFields;
+  }
+
+  @JsonProperty("onRecordError")
+  public boolean hasOnRecordError() {
+    return onRecordError;
   }
 
   public void addConfiguration(ConfigDefinition confDef) {
@@ -268,8 +277,8 @@ public class StageDefinition {
 
     StageDefinition def = new StageDefinition(
       getClassName(), getName(), getVersion(), label, description,
-      getType(), isErrorStage(), isRequiredFields(), configDefs, rsd, getIcon(), localizedConfGroupDef,
-      isVariableOutputStreams(), getOutputStreams(), getOutputStreamLabelProviderClass());
+      getType(), isErrorStage(), hasRequiredFields(), hasOnRecordError(), configDefs, rsd, getIcon(),
+      localizedConfGroupDef, isVariableOutputStreams(), getOutputStreams(), getOutputStreamLabelProviderClass());
     def.setLibrary(getLibrary(), libraryLabel, classLoader);
 
     for(ConfigDefinition configDef : def.getConfigDefinitions()) {

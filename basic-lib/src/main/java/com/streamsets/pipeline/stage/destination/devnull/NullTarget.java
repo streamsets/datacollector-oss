@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.destination.devnull;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -17,9 +18,9 @@ import com.streamsets.pipeline.api.base.BaseTarget;
     version = "1.0.0",
     label = "Trash",
     description = "Discards records",
-    icon="trash.png",
-    requiredFields = false
+    icon="trash.png"
 )
+@HideConfig(requiredFields = true, onErrorRecord = true)
 @ErrorStage
 public class NullTarget extends BaseTarget {
 

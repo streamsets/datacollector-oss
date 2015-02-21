@@ -233,30 +233,30 @@ public class MockStages {
       stages = new ArrayList<>();
       StageDefinition sDef = new StageDefinition(
         MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
-        "sourceDesc", StageType.SOURCE, false, true, Collections.EMPTY_LIST, null/*raw source definition*/,"", null, false, 1, null
+        "sourceDesc", StageType.SOURCE, false, true, true, Collections.EMPTY_LIST, null/*raw source definition*/,"", null, false, 1, null
       );
       sDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
       StageDefinition socDef = new StageDefinition(
           MSourceOffsetCommitter.class.getName(), "sourceOffsetCommitterName", "1.0.0", "sourceOffsetCommitterLabel",
-          "sourceDesc", StageType.SOURCE, false, true, Collections.EMPTY_LIST, null/*raw source definition*/,"", null, false, 1, null
+          "sourceDesc", StageType.SOURCE, false, true, true, Collections.EMPTY_LIST, null/*raw source definition*/,"", null, false, 1, null
       );
       socDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
       StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel",
-          "sourceDescription", StageType.PROCESSOR, false, true, Collections.EMPTY_LIST, null/*raw source definition*/, "", null,
+          "sourceDescription", StageType.PROCESSOR, false, true, true, Collections.EMPTY_LIST, null/*raw source definition*/, "", null,
           false, 1, null);
       pDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
       StageDefinition tDef = new StageDefinition(
         MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
-        "targetDesc", StageType.TARGET, false, true, Collections.EMPTY_LIST, null/*raw source definition*/, "", null, false, 0, null
+        "targetDesc", StageType.TARGET, false, true, true, Collections.EMPTY_LIST, null/*raw source definition*/, "", null, false, 0, null
       );
       tDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
       StageDefinition eDef = new StageDefinition(
           ETarget.class.getName(), "errorTarget", "1.0.0", "errorTarget",
-          "Error Target", StageType.TARGET, true, false, Collections.EMPTY_LIST, null/*raw source definition*/, "", null, false, 0, null
+          "Error Target", StageType.TARGET, true, false, true, Collections.EMPTY_LIST, null/*raw source definition*/, "", null, false, 0, null
       );
       eDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
@@ -268,7 +268,7 @@ public class MockStages {
           "groupName", "triggeredConfFieldName", null, "dependencyConfName", new String[] { "1" }, 0);
       StageDefinition swcDef = new StageDefinition(
           MSource.class.getName(), "sourceWithConfigsName", "1.0.0", "sourceWithConfigsLabel",
-          "sourceWithConfigsDesc", StageType.SOURCE, false, true, Lists.newArrayList(depConfDef, triggeredConfDef),
+          "sourceWithConfigsDesc", StageType.SOURCE, false, true, true, Lists.newArrayList(depConfDef, triggeredConfDef),
           null/*raw source definition*/,"", null, false, 1, null);
       swcDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 

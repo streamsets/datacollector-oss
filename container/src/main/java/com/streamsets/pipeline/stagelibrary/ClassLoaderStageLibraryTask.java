@@ -22,7 +22,6 @@ import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.StageDefinition;
-import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.task.AbstractTask;
@@ -147,10 +146,12 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       new String[] {}, 20);
 
   private void addSystemConfigurations(StageDefinition stage) {
-    if (stage.isRequiredFields()) {
+    if (stage.hasRequiredFields()) {
       stage.addConfiguration(REQUIRED_FIELDS_CONFIG);
     }
-    stage.addConfiguration(ON_RECORD_ERROR_CONFIG);
+    if (stage.hasOnRecordError()) {
+      stage.addConfiguration(ON_RECORD_ERROR_CONFIG);
+    }
   }
 
   private String createKey(String library, String name, String version) {

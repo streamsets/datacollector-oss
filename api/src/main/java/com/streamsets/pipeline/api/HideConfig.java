@@ -11,6 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target(ElementType.TYPE)
 public @interface HideConfig {
-
-  String[] value();
+  boolean requiredFields() default false;
+  boolean onErrorRecord() default false;
+  String[] value() default {};
 }

@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -39,9 +40,9 @@ import java.util.List;
     version = "1.0.0",
     label = "SDC Record Files",
     description = "Writes records to the local File System using 'SDC Record (JSON)' format",
-    icon="localfilesystem.png",
-    requiredFields = false
+    icon="localfilesystem.png"
 )
+@HideConfig(requiredFields = true, onErrorRecord = true)
 @ErrorStage
 @ConfigGroups(com.streamsets.pipeline.stage.destination.recordstolocalfilesystem.ConfigGroups.class)
 public class RecordsToLocalFileSystemTarget extends BaseTarget {

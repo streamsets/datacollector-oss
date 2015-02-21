@@ -16,6 +16,7 @@ import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.LanePredicateMapping;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -265,7 +266,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       String outputStreamsLabelProviderClass = getOutputStreamLabelsProviderClass(stageDefAnnotation);
 
       StageType stageType = StageType.valueOf(getStageTypeFromElement(typeElement));
-      boolean requiredFields = stageType != StageType.SOURCE && stageDefAnnotation.requiredFields();
+      HideConfig hideConfigAnnotation = typeElement.getAnnotation(HideConfig.class);
+
+      boolean requiredFields = stageType != StageType.SOURCE &&
+                               (hideConfigAnnotation == null || !hideConfigAnnotation.requiredFields());
+      boolean onRecordError = hideConfigAnnotation == null || !hideConfigAnnotation.onErrorRecord();
       String stageName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
       stageDefinition = new StageDefinition(
           typeElement.getQualifiedName().toString(),
@@ -276,6 +281,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           stageType,
           errorStage,
           requiredFields,
+          onRecordError,
           configDefinitions,
           rawSourceDefinition,
           stageDefAnnotation.icon(),
