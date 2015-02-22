@@ -4,7 +4,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api, pipelineService) {
+  .controller('CreateModalInstanceController', function ($scope, $rootScope, $modalInstance, $translate, api) {
     angular.extend($scope, {
       common: {
         errors: []

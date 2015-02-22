@@ -90,8 +90,8 @@ angular
       updateStageGroups();
     });
 
-    $scope.$on('onPipelineConfigSelect', function(configInfo, newPipeline) {
-      if(newPipeline) {
+    $scope.$on('updateGraph', function(event, options) {
+      if(options && options.nodes && options.nodes.length === 0) {
         $scope.$storage.stageFilterGroup = _.find($scope.stageGroups, function(group) {
           return group.name === pipelineConstant.SOURCE_STAGE_TYPE;
         });
