@@ -1,0 +1,62 @@
+<ng-include src="'app/home/error/errorModal.tpl.html'"></ng-include>
+<ng-include src="'app/home/error/errorAlert.tpl.html'"></ng-include>
+
+<ng-include src="'app/home/header/header.tpl.html'"></ng-include>
+
+<div class="home-bg-splitter" ng-cloak
+     ng-class="{'comfortable-density': $storage.displayDensity === pipelineConstant.DENSITY_COMFORTABLE,
+                   'cozy-density': $storage.displayDensity === pipelineConstant.DENSITY_COZY,
+                   'compact-density': $storage.displayDensity === pipelineConstant.DENSITY_COMPACT}">
+  <bg-splitter orientation="horizontal" class="library-splitter" ng-class="{'hide-library-panel': hideLibraryPanel}">
+
+    <bg-pane min-size="0">
+      <ng-include src="'app/home/library/library.tpl.html'"></ng-include>
+    </bg-pane>
+
+    <bg-pane min-size="0">
+
+      <bg-splitter orientation="horizontal" class="stage-library-splitter"
+                   ng-class="{'hide-stage-library-panel': !$storage.hideStageLibraryPanel || $storage.maximizeDetailPane || isPipelineRunning || previewMode || snapshotMode}"
+                   ng-cloak>
+
+        <bg-pane min-size="0">
+          <bg-splitter orientation="vertical"
+                       ng-class="{'minimize-pane2': $storage.minimizeDetailPane, 'maximize-pane2': $storage.maximizeDetailPane}">
+
+            <bg-pane min-size="0">
+              <ng-include src="'app/home/graph/graph.tpl.html'"></ng-include>
+            </bg-pane>
+
+            <bg-pane min-size="0">
+              <ng-include ng-if="pipelineConfig" src="'app/home/detail/detail.tpl.html'"></ng-include>
+              <ng-include ng-if="pipelineConfig" src="'app/home/preview/preview.tpl.html'"></ng-include>
+              <ng-include ng-if="pipelineConfig" src="'app/home/snapshot/snapshot.tpl.html'"></ng-include>
+            </bg-pane>
+          </bg-splitter>
+        </bg-pane>
+
+        <bg-pane min-size="0">
+          <ng-include src="'app/home/stageLibrary/stageLibrary.tpl.html'"></ng-include>
+        </bg-pane>
+
+      </bg-splitter>
+
+      <div class="pipeline-empty-container" ng-class="{'show': (!pipelines || pipelines.length === 0) && !pipelineConfig && loaded}"  ng-cloak>
+        <div class="create-pipeline-btn-group">
+          <h2 translate="home.getStarted">Get Started</h2>
+          <button class="btn btn-primary pull-left create-pipeline-btn" ng-click="addPipelineConfig()">
+            <span class="fa fa-plus"></span>
+            <span translate="home.createPipeline">Create Pipeline</span>
+          </button>
+
+          <button class="btn btn-primary pull-lef import-pipeline-btn" ng-click="importPipelineConfig()">
+            <span class="fa fa-arrow-circle-down"></span>
+            <span translate="home.importPipeline">Import Pipeline</span>
+          </button>
+        </div>
+      </div>
+
+    </bg-pane>
+
+  </bg-splitter>
+</div>

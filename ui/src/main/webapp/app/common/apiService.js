@@ -4,7 +4,7 @@
 
 angular.module('dataCollectorApp.common')
   .factory('api', function($rootScope, $http, $q) {
-    var apiBase = 'rest/v1',
+    var apiBase = '/rest/v1',
       api = {events: {}};
 
     api.admin = {
@@ -25,7 +25,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getJMX : function() {
-        var url = 'jmx';
+        var url = '/jmx';
         return $http({
           method: 'GET',
           url: url

@@ -1,3 +1,4 @@
+/*
 describe('Controller: modules/home/HomeCtrl', function () {
   var $rootScope, $scope, $controller, $httpBackend, mockedApi;
 
@@ -11,10 +12,22 @@ describe('Controller: modules/home/HomeCtrl', function () {
     $httpBackend = _$httpBackend_;
     mockedApi = api;
 
-    $httpBackend.expectGET('i18n/en.json').respond({});
-    $httpBackend.expectGET('rest/v1/helpref').respond({});
-    $httpBackend.expectGET('rest/v1/configuration/all').respond({});
-    $httpBackend.expectGET('rest/v1/definitions').respond({
+    $httpBackend.expectGET('/i18n/en.json').respond({});
+    $httpBackend.expectGET('/rest/v1/helpref').respond({});
+    $httpBackend.expectGET('/rest/v1/configuration/all').respond({});
+    $httpBackend.expectGET('/rest/v1/pipeline/status').respond({
+      name: "xyz",
+      rev: "1.0",
+      state: "NOT_RUNNING",
+      message: null,
+      lastStatusChange: 1416546973284
+    });
+
+    $httpBackend.expectGET('/rest/v1/pipeline/metrics').respond({
+      'ui.help.base.url': "/help",
+      'ui.refresh.interval.ms': "2000"
+    });
+    $httpBackend.expectGET('/rest/v1/definitions').respond({
       pipeline: [
         {
           configDefinitions: [
@@ -276,7 +289,7 @@ describe('Controller: modules/home/HomeCtrl', function () {
       ]
     });
 
-    $httpBackend.expectGET('rest/v1/pipeline-library').respond(
+    $httpBackend.expectGET('/rest/v1/pipeline-library').respond(
       [ {
         "name" : "xyz",
         "description" : "asdsad",
@@ -289,24 +302,11 @@ describe('Controller: modules/home/HomeCtrl', function () {
         "valid" : true
       } ]);
 
-    $httpBackend.expectGET('rest/v1/pipeline/status').respond({
-      name: "xyz",
-      rev: "1.0",
-      state: "NOT_RUNNING",
-      message: null,
-      lastStatusChange: 1416546973284
-    });
+    $httpBackend.expectGET('/rest/v1/pipeline-library/xyz').respond({info: {name: 'xyz'}});
 
-    $httpBackend.expectGET('rest/v1/pipeline/metrics').respond({
-      'ui.help.base.url': "/help",
-      'ui.refresh.interval.ms': "2000"
-    });
+    $httpBackend.expectGET('/rest/v1/pipeline-library/xyz/rules').respond({});
 
-    $httpBackend.expectGET('rest/v1/pipeline-library/xyz').respond({info: {name: 'xyz'}});
-
-    $httpBackend.expectGET('rest/v1/pipeline-library/xyz/rules').respond({});
-
-    $httpBackend.expectPOST('rest/v1/pipeline-library/xyz/rules').respond({});
+    $httpBackend.expectPOST('/rest/v1/pipeline-library/xyz/rules').respond({});
 
     $controller('HomeController', {
       '$rootScope': $rootScope,
@@ -391,3 +391,5 @@ describe('Controller: modules/home/HomeCtrl', function () {
 
 
 });
+
+  */

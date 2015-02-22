@@ -2,10 +2,121 @@
  * Service for providing access to the Pipeline utility functions.
  */
 angular.module('dataCollectorApp.common')
-  .service('pipelineService', function(pipelineConstant, $translate, _) {
+  .service('pipelineService', function(pipelineConstant, api, $q, $translate, $modal, $location, $route, _) {
 
     var self = this,
       translations = {};
+
+    this.initializeDefer = undefined;
+
+    this.init = function() {
+      if(!self.initializeDefer) {
+        self.initializeDefer = $q.defer();
+
+        $q.all([
+            api.pipelineAgent.getDefinitions(),
+            api.pipelineAgent.getPipelines()
+          ])
+          .then(function (results) {
+            var definitions = results[0].data,
+              pipelines = results[1].data;
+
+            //Definitions
+            self.pipelineConfigDefinition = definitions.pipeline[0];
+            self.stageDefintions = definitions.stages;
+
+            //Pipelines
+            self.pipelines = pipelines;
+
+            self.initializeDefer.resolve();
+          }, function(data) {
+            self.initializeDefer.reject(data);
+          });
+      }
+
+      return self.initializeDefer.promise;
+    };
+
+    this.getPipelineConfigDefinition = function() {
+      return self.pipelineConfigDefinition;
+    };
+
+    this.getStageDefinitions = function() {
+      return self.stageDefintions;
+    };
+
+    this.getPipelines = function() {
+      return self.pipelines;
+    };
+
+    this.addPipeline = function(configObject) {
+      var index = _.sortedIndex(self.pipelines, configObject.info, function(obj) {
+        return obj.name.toLowerCase();
+      });
+
+      self.pipelines.splice(index, 0, configObject.info);
+    };
+
+    this.removePipeline = function(configInfo) {
+      var index = _.indexOf(self.pipelines, _.find(self.pipelines, function(pipeline){
+        return pipeline.name === configInfo.name;
+      }));
+
+      self.pipelines.splice(index, 1);
+    };
+
+
+    /**
+     * Add Pipeline Config Command Handler.
+     *
+     */
+    this.addPipelineConfigCommand = function() {
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/create/create.tpl.html',
+        controller: 'CreateModalInstanceController',
+        size: '',
+        backdrop: 'static'
+      });
+
+      modalInstance.result.then(function (configObject) {
+        self.addPipeline(configObject);
+        $location.path('/collector/pipeline/' + configObject.info.name);
+      }, function () {
+
+      });
+    };
+
+    /**
+     * Import link command handler
+     */
+    this.importPipelineConfigCommand = function(pipelineInfo, $event) {
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/import/importModal.tpl.html',
+        controller: 'ImportModalInstanceController',
+        size: '',
+        backdrop: 'static',
+        resolve: {
+          pipelineInfo: function () {
+            return pipelineInfo;
+          }
+        }
+      });
+
+      if($event) {
+        $event.stopPropagation();
+      }
+
+      modalInstance.result.then(function (configObject) {
+        if(configObject) {
+          self.addPipeline(configObject);
+          $location.path('/collector/pipeline/' + configObject.info.name);
+        } else {
+          $route.reload();
+        }
+      }, function () {
+
+      });
+    };
 
     var getXPos = function(pipelineConfig, firstOpenLane) {
       var prevStage = (firstOpenLane && firstOpenLane.stageInstance) ? firstOpenLane.stageInstance :
@@ -205,16 +316,16 @@ angular.module('dataCollectorApp.common')
      */
     this.getStageIconURL = function(stage) {
       if(stage.icon) {
-        return 'rest/v1/definitions/stages/icon?name=' + stage.name +
+        return '/rest/v1/definitions/stages/icon?name=' + stage.name +
         '&library=' + stage.library + '&version=' + stage.version;
       } else {
         switch(stage.type) {
           case pipelineConstant.SOURCE_STAGE_TYPE:
-            return 'assets/stage/defaultSource.svg';
+            return '/assets/stage/defaultSource.svg';
           case pipelineConstant.PROCESSOR_STAGE_TYPE:
-            return 'assets/stage/defaultProcessor.svg';
+            return '/assets/stage/defaultProcessor.svg';
           case pipelineConstant.TARGET_STAGE_TYPE:
-            return 'assets/stage/defaultTarget.svg';
+            return '/assets/stage/defaultTarget.svg';
         }
       }
     };

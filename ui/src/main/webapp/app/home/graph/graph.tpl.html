@@ -56,7 +56,7 @@
 
 
         <select class="form-control" name="newPipelineProcessor"
-                ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in processors.concat(selectorProcessors)"
+                ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in processors"
                 ng-model="connectStage.selected"
                 ng-change="onConnectStageChange()">
           <option value="">

@@ -1,7 +1,7 @@
 angular.module('dataCollectorApp')
   .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider,
                    uiSelectConfig, $httpProvider){
-    $locationProvider.html5Mode(true);
+    $locationProvider.html5Mode({enabled: true, requireBase: false});
     $routeProvider.otherwise({
       templateUrl: 'app/home/home.tpl.html',
       controller: 'HomeController'
@@ -9,7 +9,7 @@ angular.module('dataCollectorApp')
 
     // Initialize angular-translate
     $translateProvider.useStaticFilesLoader({
-      prefix: 'i18n/',
+      prefix: '/i18n/',
       suffix: '.json'
     });
 
