@@ -100,10 +100,11 @@
     },
     "messages": {
       "info": {
+        "graphErrorBadgeLabel": "Total Bad records + Stage errors.",
+        "noPipelineExists": "No Pipeline found with name '{{name}}'",
+        "originExists": "Origin already exists.",
         "saveOperationInProgress" : "All Changes Saved",
         "savingConfiguration" : "Saving...",
-        "originExists": "Origin already exists.",
-        "graphErrorBadgeLabel": "Total Bad records + Stage errors.",
         "unloadMessage": "If you leave this page you are going to lose all unsaved changes, are you sure you want to leave?"
       },
       "error": {

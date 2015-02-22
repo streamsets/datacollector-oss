@@ -427,6 +427,8 @@ angular
       }
     });
 
+    $rootScope.common.errors = [];
+
     /**
      * Fetch definitions for Pipeline and Stages, fetch all pipeline configuration info, status and metric.
      */
@@ -490,6 +492,10 @@ angular
         if($scope.activeConfigInfo) {
           return $q.all([api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name),
             api.pipelineAgent.getPipelineRules($scope.activeConfigInfo.name)]);
+        } else {
+          $translate('global.messages.info.noPipelineExists', {name: routeParamPipelineName}).then(function(translation) {
+            $rootScope.common.errors = [translation];
+          });
         }
 
       },function(data, status, headers, config) {

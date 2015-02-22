@@ -40,6 +40,7 @@ public class AlertManager {
   private static final String CONDITION_KEY = "CONDITION_KEY";
   private static final String URL_KEY = "URL_KEY";
   private static final String DATE_MASK = "yyyy-MM-dd HH:mm:ss";
+  private static final String PIPELINE_URL = "/collector/pipeline/";
 
   private final String pipelineName;
   private final String revision;
@@ -72,7 +73,7 @@ public class AlertManager {
           .replace(TIME_KEY, dateTimeFormat.format(new Date((Long) alertResponse.get(TIMESTAMP))))
           .replace(PIPELINE_NAME_KEY, pipelineName)
           .replace(CONDITION_KEY, ruleDefinition.getCondition())
-          .replace(URL_KEY, runtimeInfo.getBaseHttpUrl());
+          .replace(URL_KEY, runtimeInfo.getBaseHttpUrl() + PIPELINE_URL + pipelineName.replaceAll(" ", "%20"));
 
         if(emailSender == null) {
           LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
