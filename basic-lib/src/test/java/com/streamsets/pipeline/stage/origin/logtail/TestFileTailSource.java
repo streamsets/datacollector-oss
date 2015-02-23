@@ -28,11 +28,8 @@ public class TestFileTailSource {
     Assert.assertTrue(testDataDir.mkdirs());
     String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
 
-    SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
-        .addConfiguration("dataFormat", DataFormat.TEXT)
-        .addConfiguration("fileName", logFile)
-        .addConfiguration("batchSize", 25)
-        .addConfiguration("maxWaitTimeSecs", 1)
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, logFile, 25, 1);
+    SourceRunner runner = new SourceRunner.Builder(source)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -49,11 +46,8 @@ public class TestFileTailSource {
     try {
       Assert.assertTrue(file.setReadable(false));
 
-      SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
-          .addConfiguration("dataFormat", DataFormat.TEXT)
-          .addConfiguration("fileName", logFile)
-          .addConfiguration("batchSize", 25)
-          .addConfiguration("maxWaitTimeSecs", 1)
+      FileTailSource source = new FileTailSource(DataFormat.TEXT, logFile, 25, 1);
+      SourceRunner runner = new SourceRunner.Builder(source)
           .addOutputLane("lane")
           .build();
       runner.runInit();
@@ -72,11 +66,8 @@ public class TestFileTailSource {
     IOUtils.copy(is, os);
     is.close();
 
-    SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
-        .addConfiguration("dataFormat", DataFormat.TEXT)
-        .addConfiguration("fileName", logFile)
-        .addConfiguration("batchSize", 25)
-        .addConfiguration("maxWaitTimeSecs", 1)
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, logFile, 25, 1);
+    SourceRunner runner = new SourceRunner.Builder(source)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -89,7 +80,7 @@ public class TestFileTailSource {
       long end = System.currentTimeMillis();
       Assert.assertTrue(end - start >= 1000);
       Assert.assertNotNull(output.getNewOffset());
-      Assert.assertEquals(((FileTailSource) runner.getStage()).getFileOffset() + "::1", output.getNewOffset());
+      Assert.assertEquals(source.getFileOffset() + "::1", output.getNewOffset());
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Record record = output.getRecords().get("lane").get(0);
       Assert.assertEquals("HELLO", record.get("/line").getValueAsString());
@@ -109,11 +100,8 @@ public class TestFileTailSource {
     IOUtils.copy(is, os);
     is.close();
 
-    SourceRunner runner = new SourceRunner.Builder(FileTailSource.class)
-        .addConfiguration("dataFormat", DataFormat.JSON)
-        .addConfiguration("fileName", logFile)
-        .addConfiguration("batchSize", 25)
-        .addConfiguration("maxWaitTimeSecs", 1)
+    FileTailSource source = new FileTailSource(DataFormat.JSON, logFile, 25, 1);
+    SourceRunner runner = new SourceRunner.Builder(source)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -127,14 +115,14 @@ public class TestFileTailSource {
       long end = System.currentTimeMillis();
       Assert.assertTrue(end - start >= 1000);
       Assert.assertNotNull(output.getNewOffset());
-      Assert.assertEquals(((FileTailSource) runner.getStage()).getFileOffset() + "::2", output.getNewOffset());
+      Assert.assertEquals(source.getFileOffset() + "::2", output.getNewOffset());
       Assert.assertEquals(2, output.getRecords().get("lane").size());
       Record record = output.getRecords().get("lane").get(0);
       Assert.assertEquals(1, record.get("/a").getValue());
-      Assert.assertEquals(((FileTailSource)runner.getStage()).getFileOffset() + "::0", record.getHeader().getSourceId());
+      Assert.assertEquals(source.getFileOffset() + "::0", record.getHeader().getSourceId());
       record = output.getRecords().get("lane").get(1);
       Assert.assertEquals(2, record.get("[0]/b").getValue());
-      Assert.assertEquals(((FileTailSource)runner.getStage()).getFileOffset() + "::1", record.getHeader().getSourceId());
+      Assert.assertEquals(source.getFileOffset() + "::1", record.getHeader().getSourceId());
     } finally {
       runner.runDestroy();
     }
