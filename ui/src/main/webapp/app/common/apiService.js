@@ -33,18 +33,6 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
-       * Fetches JVM Metrics
-       * @returns {*}
-       */
-      getJVMMetrics: function() {
-        var url = apiBase + '/admin/jvm-metrics';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
-
-      /**
        * Fetched Build Information
        */
       getBuildInfo: function() {

@@ -5,9 +5,17 @@ var env = {
 exports.config = {
   allScriptsTimeout: 11000,
 
-  specs: [
-    '*.js'
-  ],
+  suites: {
+    restAPI: [
+      'restAPI/adminResource.js',
+      'restAPI/configurationResource.js',
+      'restAPI/helpResource.js',
+      'restAPI/jmx.js',
+      'restAPI/stageLibraryResource.js',
+      'restAPI/pipelineStoreResource.js'
+    ],
+    ui: ['ui/homePage.js']
+  },
 
   capabilities: {
     //'browserName': 'firefox'
