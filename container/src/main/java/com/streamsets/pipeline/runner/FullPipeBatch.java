@@ -76,7 +76,7 @@ public class FullPipeBatch implements PipeBatch {
   @Override
   public BatchMakerImpl startStage(StagePipe pipe) {
     String stageName = pipe.getStage().getInfo().getInstanceName();
-    Preconditions.checkState(!processedStages.contains(stageName), Utils.format(
+    Preconditions.checkState(!processedStages.contains(stageName), Utils.formatL(
       "The stage '{}' has been processed already", stageName));
     processedStages.add(stageName);
     for (String output : pipe.getOutputLanes()) {
@@ -170,16 +170,16 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   public void moveLane(String inputLane, String outputLane) {
-    fullPayload.put(outputLane, Preconditions.checkNotNull(fullPayload.remove(inputLane), Utils.format(
+    fullPayload.put(outputLane, Preconditions.checkNotNull(fullPayload.remove(inputLane), Utils.formatL(
         "Stream '{}' does not exist", inputLane)));
   }
 
   @Override
   public void moveLaneCopying(String inputLane, List<String> outputLanes) {
-    List<Record> records = Preconditions.checkNotNull(fullPayload.remove(inputLane), Utils.format(
+    List<Record> records = Preconditions.checkNotNull(fullPayload.remove(inputLane), Utils.formatL(
         "Stream '{}' does not exist", inputLane));
     for (String lane : outputLanes) {
-      Preconditions.checkNotNull(fullPayload.containsKey(lane), Utils.format("Lane '{}' does not exist", lane));
+      Preconditions.checkNotNull(fullPayload.containsKey(lane), Utils.formatL("Lane '{}' does not exist", lane));
       fullPayload.put(lane, createCopy(records));
     }
   }
@@ -201,10 +201,10 @@ public class FullPipeBatch implements PipeBatch {
   @Override
   public void combineLanes(List<String> lanes, String to) {
     List<String> undefLanes = remove(lanes, fullPayload.keySet());
-    Preconditions.checkState(undefLanes.isEmpty(), Utils.format("Lanes '{}' does not exist", undefLanes));
+    Preconditions.checkState(undefLanes.isEmpty(), Utils.formatL("Lanes '{}' does not exist", undefLanes));
     fullPayload.put(to, new ArrayList<Record>());
     for (String lane : lanes) {
-      List<Record> records = Preconditions.checkNotNull(fullPayload.remove(lane), Utils.format(
+      List<Record> records = Preconditions.checkNotNull(fullPayload.remove(lane), Utils.formatL(
           "Stream '{}' does not exist", lane));
       fullPayload.get(to).addAll(records);
     }

@@ -99,6 +99,27 @@ public class ObserverRunner {
     for(String alertId : rulesConfigurationChangeRequest.getMetricAlertsToRemove()) {
       MetricsConfigurator.removeGauge(metrics, alertId);
     }
+
+    //resize evicting queue which retains sampled records
+    for(Map.Entry<String, Integer> e :
+      rulesConfigurationChangeRequest.getRulesWithSampledRecordSizeChanges().entrySet()) {
+      if(ruleToSampledRecordsMap.get(e.getKey()) != null) {
+        EvictingQueue<Record> records = ruleToSampledRecordsMap.get(e.getKey());
+        int newSize = e.getValue();
+
+        int maxSize = configuration.get(
+          com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_MAX_CACHE_SIZE_KEY,
+          com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_MAX_CACHE_SIZE_DEFAULT);
+        if(newSize > maxSize) {
+          newSize = maxSize;
+        }
+
+        EvictingQueue<Record> newQueue = EvictingQueue.create(newSize);
+        //this will retain only the last 'newSize' number of elements
+        newQueue.addAll(records);
+        ruleToSampledRecordsMap.put(e.getKey(), newQueue);
+      }
+    }
   }
 
   public List<Record> getSampledRecords(String ruleId, int size) {

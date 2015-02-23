@@ -5,9 +5,6 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class DataRuleDefinition extends RuleDefinition {
 
   private final String label;
@@ -24,21 +21,10 @@ public class DataRuleDefinition extends RuleDefinition {
   /*create a meter to indicate rate of records matching the condition over time.*/
   private final boolean meterEnabled;
 
-  @JsonCreator
-  public DataRuleDefinition(@JsonProperty("id") String id,
-                            @JsonProperty("label") String label,
-                            @JsonProperty("lane") String lane,
-                            @JsonProperty("samplingPercentage") double samplingPercentage,
-                            @JsonProperty("samplingRecordsToRetain") int samplingRecordsToRetain,
-                            @JsonProperty("condition") String condition,
-                            @JsonProperty("alertEnabled") boolean alertEnabled,
-                            @JsonProperty("alertText") String alertText,
-                            @JsonProperty("thresholdType") ThresholdType thresholdType,
-                            @JsonProperty("thresholdValue") String thresholdValue,
-                            @JsonProperty("minVolume") long minVolume,
-                            @JsonProperty("meterEnabled") boolean meterEnabled,
-                            @JsonProperty("sendEmail") boolean sendEmail,
-                            @JsonProperty("enabled") boolean enabled) {
+  public DataRuleDefinition(String id, String label, String lane, double samplingPercentage,
+                            int samplingRecordsToRetain, String condition, boolean alertEnabled, String alertText,
+                            ThresholdType thresholdType, String thresholdValue, long minVolume, boolean meterEnabled,
+                            boolean sendEmail, boolean enabled) {
     super(id, condition, alertText, sendEmail, enabled);
     this.label = label;
     this.lane = lane;

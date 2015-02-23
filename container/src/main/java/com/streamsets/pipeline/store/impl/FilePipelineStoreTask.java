@@ -18,6 +18,10 @@ import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.pipeline.restapi.bean.PipelineInfoJson;
+import com.streamsets.pipeline.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
@@ -156,8 +160,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       null, null);
     pipeline.setDescription(description);
     try {
-      json.writeValue(getInfoFile(name), info);
-      json.writeValue(getPipelineFile(name), pipeline);
+      json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
+      json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
     } catch (Exception ex) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0202, name, ex.getMessage(),
                                        ex);
@@ -200,7 +204,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     }
     try {
-      return json.readValue(getInfoFile(name), PipelineInfo.class);
+      PipelineInfoJson pipelineInfoJsonBean =
+        json.readValue(getInfoFile(name), PipelineInfoJson.class);
+      return pipelineInfoJsonBean.getPipelineInfo();
     } catch (Exception ex) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0206, name);
     }
@@ -245,8 +251,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
                                          pipeline.isValid());
     try {
       pipeline.setUuid(uuid);
-      json.writeValue(getInfoFile(name), info);
-      json.writeValue(getPipelineFile(name), pipeline);
+      json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
+      json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
     } catch (Exception ex) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0204, name, ex.getMessage(), ex);
     }
@@ -267,7 +273,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     }
     try {
       PipelineInfo info = getInfo(name);
-      PipelineConfiguration pipeline = json.readValue(getPipelineFile(name), PipelineConfiguration.class);
+      PipelineConfigurationJson pipelineConfigBean = json.readValue(getPipelineFile(name),
+        PipelineConfigurationJson.class);
+      PipelineConfiguration pipeline = pipelineConfigBean.getPipelineConfiguration();
       pipeline.setPipelineInfo(info);
       return pipeline;
     } catch (Exception ex) {
@@ -288,8 +296,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         File rulesFile = getRulesFile(name);
         if(rulesFile.exists()) {
           try {
-            ruleDefinitions = ObjectMapperFactory.get().readValue(
-              new DataStore(rulesFile).getInputStream(), RuleDefinitions.class);
+            RuleDefinitionsJson ruleDefinitionsJsonBean =
+              ObjectMapperFactory.get().readValue(
+              new DataStore(rulesFile).getInputStream(), RuleDefinitionsJson.class);
+            ruleDefinitions = ruleDefinitionsJsonBean.getRuleDefinitions();
           } catch (IOException ex) {
             //File does not exist
             LOG.debug(ContainerError.CONTAINER_0403.getMessage(), name, ex.getMessage(),
@@ -327,7 +337,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       ruleDefinitions.setUuid(uuid);
       try {
         ObjectMapperFactory.get().writeValue(new DataStore(getRulesFile(pipelineName)).getOutputStream(),
-          ruleDefinitions);
+          BeanHelper.wrapRuleDefinitions(ruleDefinitions));
         pipelineToRuleDefinitionMap.put(getPipelineKey(pipelineName, tag), ruleDefinitions);
       } catch (IOException ex) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0404, pipelineName, ex.getMessage(),

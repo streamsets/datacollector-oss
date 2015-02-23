@@ -10,6 +10,7 @@ import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.ContainerError;
@@ -43,7 +44,8 @@ public class PipelineManagerResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getStatus() throws PipelineManagerException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getPipelineState()).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
+      BeanHelper.wrapPipelineState(pipelineManager.getPipelineState())).build();
   }
 
   @Path("/start")
@@ -55,11 +57,11 @@ public class PipelineManagerResource {
       throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineManagerException {
     try {
       PipelineState ps = pipelineManager.startPipeline(name, rev);
-      return Response.ok().type(MediaType.APPLICATION_JSON).entity(ps).build();
+      return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(ps)).build();
     } catch (PipelineRuntimeException ex) {
       if (ex.getErrorCode() == ContainerError.CONTAINER_0158) {
         return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(
-          ex.getIssues()).build();
+          BeanHelper.wrapIssues(ex.getIssues())).build();
       } else {
         throw ex;
       }
@@ -70,9 +72,8 @@ public class PipelineManagerResource {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response stopPipeline() throws PipelineManagerException {
-
     PipelineState ps = pipelineManager.stopPipeline(false);
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ps).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(ps)).build();
   }
 
   @Path("/resetOffset/{name}")
@@ -97,7 +98,8 @@ public class PipelineManagerResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getSnapshotStatus() {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshotStatus()).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
+      BeanHelper.wrapSnapshotStatus(pipelineManager.getSnapshotStatus())).build();
   }
 
   @Path("/snapshot/{name}")
@@ -139,7 +141,8 @@ public class PipelineManagerResource {
       @PathParam("name") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("fromBeginning") @DefaultValue("false") boolean fromBeginning) throws PipelineManagerException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getHistory(name, rev, fromBeginning)).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
+      BeanHelper.wrapPipelineStates(pipelineManager.getHistory(name, rev, fromBeginning))).build();
   }
 
   @Path("/history/{pipelineName}")
@@ -160,7 +163,7 @@ public class PipelineManagerResource {
       @QueryParam ("size") @DefaultValue("10") int size) throws PipelineManagerException {
     size = size > 100 ? 100 : size;
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-        pipelineManager.getErrorRecords(stageInstanceName, size)).build();
+      BeanHelper.wrapRecords(pipelineManager.getErrorRecords(stageInstanceName, size))).build();
   }
 
   @Path("/errorMessages")
@@ -172,7 +175,7 @@ public class PipelineManagerResource {
   ) throws PipelineManagerException {
     size = size > 100 ? 100 : size;
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-        pipelineManager.getErrorMessages(stageInstanceName, size)).build();
+        BeanHelper.wrapErrorMessages(pipelineManager.getErrorMessages(stageInstanceName, size))).build();
   }
 
   @Path("/sampledRecords")
@@ -183,7 +186,7 @@ public class PipelineManagerResource {
     @QueryParam ("sampleSize") @DefaultValue("10") int sampleSize) throws PipelineManagerException {
     sampleSize = sampleSize > 100 ? 100 : sampleSize;
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.getSampledRecords(sampleId, sampleSize)).build();
+      BeanHelper.wrapRecords(pipelineManager.getSampledRecords(sampleId, sampleSize))).build();
   }
 
   @Path("/alerts/{pipelineName}")
@@ -196,4 +199,5 @@ public class PipelineManagerResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
       pipelineManager.deleteAlert(alertId)).build();
   }
+
 }

@@ -5,11 +5,8 @@
  */
 package com.streamsets.pipeline.validation;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.util.NullDeserializer;
 
-@JsonDeserialize(using = NullDeserializer.Object.class)
 public class RuleIssue extends Issue {
 
   private final String ruleId;

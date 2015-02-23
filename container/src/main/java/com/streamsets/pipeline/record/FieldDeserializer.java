@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.restapi.bean.FieldJson;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
@@ -17,12 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FieldDeserializer extends JsonDeserializer<Field> {
+public class FieldDeserializer extends JsonDeserializer<FieldJson> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public Field deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-    return parse(jp.readValueAs(Map.class));
+  public FieldJson deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+    Field field = parse(jp.readValueAs(Map.class));
+    return new FieldJson(field);
   }
 
   @SuppressWarnings("unchecked")

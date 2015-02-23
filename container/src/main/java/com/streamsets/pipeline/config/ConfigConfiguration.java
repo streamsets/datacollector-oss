@@ -5,16 +5,13 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
 
 public class ConfigConfiguration {
   private final String name;
   private final Object value;
 
-  public ConfigConfiguration(
-      @JsonProperty("name") String name,
-      @JsonProperty("value") Object value) {
+  public ConfigConfiguration(String name, Object value) {
     this.name = name;
     this.value = value;
   }

@@ -59,7 +59,7 @@ public class DirectorySpooler {
 
     public Builder setDir(String dir) {
       this.spoolDir = Preconditions.checkNotNull(dir, "dir cannot be null");
-      Preconditions.checkArgument(new File(dir).isAbsolute(), Utils.format("dir '{}' must be an absolute path", dir));
+      Preconditions.checkArgument(new File(dir).isAbsolute(), Utils.formatL("dir '{}' must be an absolute path", dir));
       return this;
     }
 
@@ -81,7 +81,7 @@ public class DirectorySpooler {
 
     public Builder setArchiveDir(String dir) {
       this.archiveDir = Preconditions.checkNotNull(dir, "dir cannot be null");
-      Preconditions.checkArgument(new File(dir).isAbsolute(), Utils.format("dir '{}' must be an absolute path", dir));
+      Preconditions.checkArgument(new File(dir).isAbsolute(), Utils.formatL("dir '{}' must be an absolute path", dir));
       return this;
     }
 
@@ -99,7 +99,7 @@ public class DirectorySpooler {
 
     public Builder setErrorArchiveDir(String dir) {
       this.errorArchiveDir = Preconditions.checkNotNull(dir, "edir cannot be null");
-      Preconditions.checkArgument(new File(dir).isAbsolute(), Utils.format("dir '{}' must be an absolute path", dir));
+      Preconditions.checkArgument(new File(dir).isAbsolute(), Utils.formatL("dir '{}' must be an absolute path", dir));
       return this;
     }
 
@@ -155,9 +155,9 @@ public class DirectorySpooler {
   volatile FileFinder finder;
 
   private void checkBaseDir(Path path) {
-    Preconditions.checkState(path.isAbsolute(), Utils.format("Path '{}' is not an absolute path", path));
-    Preconditions.checkState(Files.exists(path), Utils.format("Path '{}' does not exist", path));
-    Preconditions.checkState(Files.isDirectory(path), Utils.format("Path '{}' is not a directory", path));
+    Preconditions.checkState(path.isAbsolute(), Utils.formatL("Path '{}' is not an absolute path", path));
+    Preconditions.checkState(Files.exists(path), Utils.formatL("Path '{}' does not exist", path));
+    Preconditions.checkState(Files.isDirectory(path), Utils.formatL("Path '{}' is not a directory", path));
   }
 
   public void init(String currentFile) {

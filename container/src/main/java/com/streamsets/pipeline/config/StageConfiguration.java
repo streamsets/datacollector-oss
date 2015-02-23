@@ -5,9 +5,7 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -33,16 +31,9 @@ public class StageConfiguration {
 
   private boolean systemGenerated;
 
-  @JsonCreator
-  public StageConfiguration(
-      @JsonProperty("instanceName") String instanceName,
-      @JsonProperty("library") String library,
-      @JsonProperty("stageName") String stageName,
-      @JsonProperty("stageVersion") String stageVersion,
-      @JsonProperty("configuration") List<ConfigConfiguration> configuration,
-      @JsonProperty("uiInfo") Map<String, Object> uiInfo,
-      @JsonProperty("inputLanes") List<String> inputLanes,
-      @JsonProperty("outputLanes") List<String> outputLanes) {
+  public StageConfiguration(String instanceName, String library, String stageName, String stageVersion,
+      List<ConfigConfiguration> configuration, Map<String, Object> uiInfo, List<String> inputLanes,
+      List<String> outputLanes) {
     this.instanceName = instanceName;
     this.library = library;
     this.stageName = stageName;
@@ -105,7 +96,6 @@ public class StageConfiguration {
     systemGenerated = true;
   }
 
-  @JsonIgnore
   public boolean isSystemGenerated() {
     return systemGenerated;
   }

@@ -6,10 +6,10 @@
 package com.streamsets.pipeline.restapi;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
-import com.streamsets.pipeline.prodmanager.State;
-import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
+import com.streamsets.pipeline.restapi.bean.PipelineStateJson;
+import com.streamsets.pipeline.restapi.bean.SnapshotStatusJson;
+import com.streamsets.pipeline.restapi.bean.StateJson;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -35,9 +35,9 @@ public class TestPipelineManagerResource extends JerseyTest {
 
   @Test
   public void testGetStatusAPI() {
-    PipelineState state = target("/v1/pipeline/status").request().get(PipelineState.class);
+    PipelineStateJson state = target("/v1/pipeline/status").request().get(PipelineStateJson.class);
     Assert.assertNotNull(state);
-    Assert.assertEquals(State.STOPPED, state.getState());
+    Assert.assertEquals(StateJson.STOPPED, state.getState());
     Assert.assertEquals("Pipeline is not running", state.getMessage());
   }
 
@@ -46,9 +46,9 @@ public class TestPipelineManagerResource extends JerseyTest {
     Response r = target("/v1/pipeline/start").queryParam("name", PIPELINE_NAME).queryParam("rev", PIPELINE_REV)
         .request().post(null);
     Assert.assertNotNull(r);
-    PipelineState state = r.readEntity(PipelineState.class);
+    PipelineStateJson state = r.readEntity(PipelineStateJson.class);
     Assert.assertNotNull(state);
-    Assert.assertEquals(State.RUNNING, state.getState());
+    Assert.assertEquals(StateJson.RUNNING, state.getState());
     Assert.assertEquals("The pipeline is now running", state.getMessage());
   }
 
@@ -57,9 +57,9 @@ public class TestPipelineManagerResource extends JerseyTest {
     Response r = target("/v1/pipeline/stop").queryParam("rev", PIPELINE_REV)
         .request().post(null);
     Assert.assertNotNull(r);
-    PipelineState state = r.readEntity(PipelineState.class);
+    PipelineStateJson state = r.readEntity(PipelineStateJson.class);
     Assert.assertNotNull(state);
-    Assert.assertEquals(State.STOPPED, state.getState());
+    Assert.assertEquals(StateJson.STOPPED, state.getState());
     Assert.assertEquals("The pipeline is not running", state.getMessage());
   }
 
@@ -93,7 +93,7 @@ public class TestPipelineManagerResource extends JerseyTest {
     Response r = target("/v1/pipeline/snapshot").queryParam("get","status").request().get();
     Assert.assertNotNull(r);
 
-    SnapshotStatus s = r.readEntity(SnapshotStatus.class);
+    SnapshotStatusJson s = r.readEntity(SnapshotStatusJson.class);
 
     Assert.assertEquals(false, s.isExists());
     Assert.assertEquals(true, s.isSnapshotInProgress());
@@ -113,8 +113,8 @@ public class TestPipelineManagerResource extends JerseyTest {
   public void testGetHistoryAPI() {
     Response r = target("/v1/pipeline/history/myPipeline").request().get();
     Assert.assertNotNull(r);
-    List<PipelineState> pipelineStates = r.readEntity(new GenericType<List<PipelineState>>() {});
-    Assert.assertEquals(3, pipelineStates.size());
+    List<PipelineStateJson> pipelineStateJsons = r.readEntity(new GenericType<List<PipelineStateJson>>() {});
+    Assert.assertEquals(3, pipelineStateJsons.size());
   }
 
   @Test

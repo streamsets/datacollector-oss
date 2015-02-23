@@ -28,6 +28,8 @@ import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.RecordJson;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
@@ -108,7 +110,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
     @Override
     protected Class getExpectedClass() {
-      return RecordImpl.class;
+      return RecordJson.class;
     }
 
     @Override
@@ -118,7 +120,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
     @Override
     public Record readRecord() throws IOException {
-      return (Record) read();
+      RecordJson recordJson = (RecordJson) read();
+      return BeanHelper.unwrapRecord(recordJson);
     }
   }
 
@@ -133,7 +136,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
     @Override
     public void write(Record record) throws IOException {
-      generator.writeObject(record);
+      generator.writeObject(BeanHelper.wrapRecord(record));
     }
 
     @Override

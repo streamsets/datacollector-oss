@@ -5,12 +5,16 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
+import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -18,8 +22,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.Writer;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,15 +36,17 @@ public class TestSDCRecordSpoolDirSource {
   }
 
   private File createErrorRecordsFile() throws Exception {
-    ObjectWriter jsonWriter = new ObjectMapper().writer();
     File f = new File(createTestDir(), "errorrecords-0000.json");
-    Writer writer = new FileWriter(f);
+    Source.Context sourceContext = ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
+      ImmutableList.of("lane"));
+    JsonRecordWriter jsonRecordWriter = ((ContextExtensions) sourceContext).createJsonRecordWriter(new OutputStreamWriter(new FileOutputStream(f)));
+
     Record r = RecordCreator.create("s", "c::1");
     r.set(Field.create("Hello"));
-    writer.write(jsonWriter.writeValueAsString(r));
+    jsonRecordWriter.write(r);
     r.set(Field.create("Bye"));
-    writer.write(jsonWriter.writeValueAsString(r));
-    writer.close();
+    jsonRecordWriter.write(r);
+    jsonRecordWriter.close();
     return f;
   }
 

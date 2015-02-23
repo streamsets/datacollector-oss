@@ -8,7 +8,8 @@ package com.streamsets.pipeline.restapi;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.prodmanager.RawSourcePreviewHelper;
-import com.streamsets.pipeline.runner.StageOutput;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.StageOutputJson;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -84,7 +85,8 @@ public class PreviewResource {
       @QueryParam("sourceOffset") String sourceOffset,
       @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize,
       @QueryParam("batches") @DefaultValue("1") int batches,
-      @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets, List<StageOutput> stageOutputsToOverride)
+      @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets,
+      List<StageOutputJson> stageOutputsToOverrideJson)
       throws PipelineStoreException, PipelineRuntimeException, StageException {
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
@@ -95,11 +97,13 @@ public class PreviewResource {
     PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize, batches, skipTargets);
     try {
       PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
-      PreviewPipelineOutput previewOutput = pipeline.run(stageOutputsToOverride);
-      return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewOutput).build();
+      PreviewPipelineOutput previewOutput = pipeline.run(BeanHelper.unwrapStageOutput(stageOutputsToOverrideJson));
+      return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPreviewPipelineOutput(previewOutput))
+        .build();
     } catch (PipelineRuntimeException ex) {
       if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
-        return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(ex.getIssues()).build();
+        return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(
+          BeanHelper.wrapIssues(ex.getIssues())).build();
       } else {
         throw ex;
       }

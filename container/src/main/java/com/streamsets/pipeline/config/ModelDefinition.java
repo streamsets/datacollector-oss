@@ -5,10 +5,8 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.ChooserMode;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.List;
 
@@ -20,14 +18,8 @@ public class ModelDefinition {
   private List<String> values;
   private List<String> labels;
 
-  @JsonCreator
-  public ModelDefinition(
-    @JsonProperty("modelType") ModelType modelType,
-    @JsonProperty("chooserMode") ChooserMode chooserMode,
-    @JsonProperty("valuesProviderClass")String valuesProviderClass,
-    @JsonProperty("values") List<String> values,
-    @JsonProperty("labels") List<String> labels,
-    @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions) {
+  public ModelDefinition(ModelType modelType, ChooserMode chooserMode, String valuesProviderClass, List<String> values,
+    List<String> labels, List<ConfigDefinition> configDefinitions) {
     this.modelType = modelType;
     this.chooserMode = chooserMode;
     this.valuesProviderClass = valuesProviderClass;

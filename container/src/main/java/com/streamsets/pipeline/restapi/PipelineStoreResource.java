@@ -6,8 +6,9 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.RuleDefinitions;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.pipeline.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -50,7 +51,8 @@ public class PipelineStoreResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getPipelines() throws PipelineStoreException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(store.getPipelines()).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineInfo(store.getPipelines()))
+      .build();
   }
 
   @Path("/{name}")
@@ -64,15 +66,15 @@ public class PipelineStoreResource {
       throws PipelineStoreException, URISyntaxException {
     Object data;
     if (get.equals("pipeline")) {
-      PipelineConfiguration pipeline = store.load(name, rev);
+      com.streamsets.pipeline.config.PipelineConfiguration pipeline = store.load(name, rev);
       PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
       validator.validate();
       pipeline.setValidation(validator);
-      data = pipeline;
+      data = BeanHelper.wrapPipelineConfiguration(pipeline);
     } else if (get.equals("info")) {
-      data = store.getInfo(name);
+      data = BeanHelper.wrapPipelineInfo(store.getInfo(name));
     } else if (get.equals("history")) {
-      data = store.getHistory(name);
+      data = BeanHelper.wrapPipelineRevInfo(store.getHistory(name));
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid value for parameter 'get': {}", get));
     }
@@ -93,11 +95,12 @@ public class PipelineStoreResource {
       @PathParam("name") String name,
       @QueryParam("description") @DefaultValue("") String description)
       throws PipelineStoreException, URISyntaxException {
-    PipelineConfiguration pipeline = store.create(name, description, user);
+    com.streamsets.pipeline.config.PipelineConfiguration pipeline = store.create(name, description, user);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
     validator.validate();
     pipeline.setValidation(validator);
-    return Response.created(UriBuilder.fromUri(uri).path(name).build()).entity(pipeline).build();
+    return Response.created(UriBuilder.fromUri(uri).path(name).build()).entity(
+      BeanHelper.wrapPipelineConfiguration(pipeline)).build();
   }
 
   @Path("/{name}")
@@ -119,13 +122,15 @@ public class PipelineStoreResource {
       @PathParam("name") String name,
       @QueryParam("tag") String tag,
       @QueryParam("tagDescription") String tagDescription,
-      PipelineConfiguration pipeline)
+      PipelineConfigurationJson pipeline)
       throws PipelineStoreException, URISyntaxException {
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
+    com.streamsets.pipeline.config.PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(
+      pipeline);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
     validator.validate();
-    pipeline.setValidation(validator);
-    pipeline = store.save(name, user, tag, tagDescription, pipeline);
-    return Response.ok().entity(pipeline).build();
+    pipelineConfig.setValidation(validator);
+    pipelineConfig = store.save(name, user, tag, tagDescription, pipelineConfig);
+    return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
   }
 
   @Path("/{name}/rules")
@@ -134,12 +139,13 @@ public class PipelineStoreResource {
   public Response getRules(
     @PathParam("name") String name,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
-    RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
+    com.streamsets.pipeline.config.RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
     if(ruleDefinitions != null) {
       RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
       ruleDefinitionValidator.validateRuleDefinition(ruleDefinitions);
     }
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ruleDefinitions).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
+      BeanHelper.wrapRuleDefinitions(ruleDefinitions)).build();
   }
 
   @Path("/{name}/rules")
@@ -148,11 +154,12 @@ public class PipelineStoreResource {
   public Response saveRules(
     @PathParam("name") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    RuleDefinitions ruleDefinitions) throws PipelineStoreException {
+    RuleDefinitionsJson ruleDefinitionsJson) throws PipelineStoreException {
+    com.streamsets.pipeline.config.RuleDefinitions ruleDefs = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
-    ruleDefinitionValidator.validateRuleDefinition(ruleDefinitions);
-    ruleDefinitions = store.storeRules(name, rev, ruleDefinitions);
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ruleDefinitions).build();
+    ruleDefinitionValidator.validateRuleDefinition(ruleDefs);
+    ruleDefs = store.storeRules(name, rev, ruleDefs);
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapRuleDefinitions(ruleDefs)).build();
   }
 
 }

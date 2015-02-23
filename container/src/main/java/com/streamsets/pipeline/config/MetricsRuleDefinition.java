@@ -5,24 +5,14 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class MetricsRuleDefinition extends RuleDefinition {
 
   private final String metricId;
   private final MetricType metricType;
   private final MetricElement metricElement;
 
-  @JsonCreator
-  public MetricsRuleDefinition(@JsonProperty("id") String id,
-                               @JsonProperty("alertText") String alertText,
-                               @JsonProperty("metricId") String metricId,
-                               @JsonProperty("metricType") MetricType metricType,
-                               @JsonProperty("metricElement") MetricElement metricElement,
-                               @JsonProperty("condition") String condition,
-                               @JsonProperty("sendMail") boolean sendEmail,
-                               @JsonProperty("enabled") boolean enabled) {
+  public MetricsRuleDefinition(String id, String alertText,  String metricId, MetricType metricType,
+                               MetricElement metricElement, String condition,boolean sendEmail, boolean enabled) {
     super(id, condition, alertText, sendEmail, enabled);
     this.metricId = metricId;
     this.metricType = metricType;

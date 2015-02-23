@@ -45,7 +45,7 @@ public abstract class AbstractTask implements Task {
   @Override
   public synchronized void init() {
     Preconditions.checkState(VALID_TRANSITIONS.get(getStatus()).contains(Status.INITIALIZED),
-                             Utils.format(STATE_ERROR_MSG, getStatus()));
+                             Utils.formatL(STATE_ERROR_MSG, getStatus()));
     try {
       LOG.debug("Task '{}' initializing", getName());
       setStatus(Status.INITIALIZED);
@@ -62,7 +62,7 @@ public abstract class AbstractTask implements Task {
   @Override
   public synchronized void run() {
     Preconditions.checkState(VALID_TRANSITIONS.get(getStatus()).contains(Status.RUNNING),
-                             Utils.format(STATE_ERROR_MSG, getStatus()));
+                             Utils.formatL(STATE_ERROR_MSG, getStatus()));
     setStatus(Status.RUNNING);
     try {
       LOG.debug("Task '{}' starting", getName());
@@ -79,7 +79,7 @@ public abstract class AbstractTask implements Task {
   @Override
   public synchronized void stop() {
     Preconditions.checkState(VALID_TRANSITIONS.get(getStatus()).contains(Status.STOPPED),
-                             Utils.format(STATE_ERROR_MSG, getStatus()));
+                             Utils.formatL(STATE_ERROR_MSG, getStatus()));
     if (getStatus() != Status.STOPPED) {
       LOG.debug("Task '{}' stopping", getName());
       safeStop(Status.STOPPED);
@@ -113,7 +113,7 @@ public abstract class AbstractTask implements Task {
   @Override
   public void waitWhileRunning() throws InterruptedException {
     Preconditions.checkState(getStatus() == Status.RUNNING || getStatus() == Status.STOPPED,
-                             Utils.format(STATE_ERROR_MSG, getStatus()));
+                             Utils.formatL(STATE_ERROR_MSG, getStatus()));
     if (getStatus() == Status.RUNNING) {
       latch.await();
     }

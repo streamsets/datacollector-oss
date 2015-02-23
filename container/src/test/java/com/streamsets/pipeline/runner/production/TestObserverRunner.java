@@ -102,10 +102,11 @@ public class TestObserverRunner {
     RuleDefinitions ruleDefinitions = new RuleDefinitions(null, dataRuleDefinitions, Collections.<String>emptyList(),
       UUID.randomUUID());
     Map<String, List<DataRuleDefinition>> laneToRuleDefinition = new HashMap<>();
+    Map<String, Integer> ruleIdToSampledRecordsSize = new HashMap<>();
     laneToRuleDefinition.put(LANE + "::s", dataRuleDefinitions);
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =
       new RulesConfigurationChangeRequest(ruleDefinitions, Collections.<String>emptySet(),
-        Collections.<String>emptySet(), laneToRuleDefinition);
+        Collections.<String>emptySet(), laneToRuleDefinition, ruleIdToSampledRecordsSize);
     return rulesConfigurationChangeRequest;
   }
 

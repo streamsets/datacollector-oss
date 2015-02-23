@@ -38,6 +38,5 @@ public class TestMultipleStages extends TestPipelineAnnotationProcessorBase {
     //PipelineStages.json is expected to be generated and must match
     //the contents of MultipleStages.json
     TestUtil.compareExpectedAndActualStages("MultipleStages.json");
-
   }
 }

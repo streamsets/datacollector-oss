@@ -6,18 +6,19 @@
 package com.streamsets.pipeline.restapi;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.config.DataRuleDefinition;
-import com.streamsets.pipeline.config.MetricElement;
-import com.streamsets.pipeline.config.MetricType;
-import com.streamsets.pipeline.config.MetricsRuleDefinition;
-import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.RuleDefinitions;
-import com.streamsets.pipeline.config.StageConfiguration;
-import com.streamsets.pipeline.config.ThresholdType;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.DataRuleDefinitionJson;
+import com.streamsets.pipeline.restapi.bean.MetricElementJson;
+import com.streamsets.pipeline.restapi.bean.MetricTypeJson;
+import com.streamsets.pipeline.restapi.bean.MetricsRuleDefinitionJson;
+import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.pipeline.restapi.bean.PipelineInfoJson;
+import com.streamsets.pipeline.restapi.bean.PipelineRevInfoJson;
+import com.streamsets.pipeline.restapi.bean.RuleDefinitionsJson;
+import com.streamsets.pipeline.restapi.bean.StageConfigurationJson;
+import com.streamsets.pipeline.restapi.bean.ThresholdTypeJson;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.store.PipelineInfo;
-import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.ContainerError;
@@ -55,16 +56,16 @@ public class TestPipelineStoreResource extends JerseyTest {
   @Test
   public void testGetPipelines() {
     Response response = target("/v1/pipeline-library").request().get();
-    List<PipelineInfo> pipelineInfos = response.readEntity(new GenericType<List<PipelineInfo>>() {});
-    Assert.assertNotNull(pipelineInfos);
-    Assert.assertEquals(1, pipelineInfos.size());
+    List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
+    Assert.assertNotNull(pipelineInfoJsons);
+    Assert.assertEquals(1, pipelineInfoJsons.size());
   }
 
   @Test
   public void testGetInfoPipeline() {
     Response response = target("/v1/pipeline-library/xyz").queryParam("rev", "1.0.0").queryParam("get", "pipeline").
         request().get();
-    PipelineConfiguration pipelineConfig = response.readEntity(PipelineConfiguration.class);
+    PipelineConfigurationJson pipelineConfig = response.readEntity(PipelineConfigurationJson.class);
     Assert.assertNotNull(pipelineConfig);
   }
 
@@ -72,29 +73,29 @@ public class TestPipelineStoreResource extends JerseyTest {
   public void testGetInfoInfo() {
     Response response = target("/v1/pipeline-library/xyz").queryParam("rev", "1.0.0").queryParam("get", "info").
         request().get();
-    PipelineInfo pipelineInfo = response.readEntity(PipelineInfo.class);
-    Assert.assertNotNull(pipelineInfo);
+    PipelineInfoJson pipelineInfoJson = response.readEntity(PipelineInfoJson.class);
+    Assert.assertNotNull(pipelineInfoJson);
   }
 
   @Test
   public void testGetInfoHistory() {
     Response response = target("/v1/pipeline-library/xyz").queryParam("rev", "1.0.0").queryParam("get", "history").
         request().get();
-    List<PipelineRevInfo> pipelineRevInfo = response.readEntity(new GenericType<List<PipelineRevInfo>>() {});
-    Assert.assertNotNull(pipelineRevInfo);
+    List<PipelineRevInfoJson> pipelineRevInfoJson = response.readEntity(new GenericType<List<PipelineRevInfoJson>>() {});
+    Assert.assertNotNull(pipelineRevInfoJson);
   }
 
   @Test
   public void testCreate() {
     Response response = target("/v1/pipeline-library/myPipeline").queryParam("description", "my description").request()
         .put(Entity.json("abc"));
-    PipelineConfiguration pipelineConfig = response.readEntity(PipelineConfiguration.class);
+    PipelineConfigurationJson pipelineConfig = response.readEntity(PipelineConfigurationJson.class);
     Assert.assertEquals(201, response.getStatusInfo().getStatusCode());
     Assert.assertNotNull(pipelineConfig);
     Assert.assertNotNull(pipelineConfig.getUuid());
     Assert.assertEquals(3, pipelineConfig.getStages().size());
 
-    StageConfiguration stageConf = pipelineConfig.getStages().get(0);
+    StageConfigurationJson stageConf = pipelineConfig.getStages().get(0);
     Assert.assertEquals("s", stageConf.getInstanceName());
     Assert.assertEquals("sourceName", stageConf.getStageName());
     Assert.assertEquals("1.0.0", stageConf.getStageVersion());
@@ -110,13 +111,13 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testSave() {
-    PipelineConfiguration toSave = MockStages.createPipelineConfigurationSourceProcessorTarget();
+    com.streamsets.pipeline.config.PipelineConfiguration toSave = MockStages.createPipelineConfigurationSourceProcessorTarget();
     Response response = target("/v1/pipeline-library/myPipeline")
         .queryParam("tag", "tag")
         .queryParam("tagDescription", "tagDescription").request()
-        .post(Entity.json(toSave));
+        .post(Entity.json(BeanHelper.wrapPipelineConfiguration(toSave)));
 
-    PipelineConfiguration returned = response.readEntity(PipelineConfiguration.class);
+    PipelineConfigurationJson returned = response.readEntity(PipelineConfigurationJson.class);
     Assert.assertNotNull(returned);
     Assert.assertEquals(200, response.getStatus());
     Assert.assertEquals(toSave.getDescription(), returned.getDescription());
@@ -126,27 +127,27 @@ public class TestPipelineStoreResource extends JerseyTest {
   @Test
   public void testSaveRules() {
 
-    List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
-    metricsRuleDefinitions.add(new MetricsRuleDefinition("m1", "m1", "a", MetricType.COUNTER,
-      MetricElement.COUNTER_COUNT, "p", false, true));
-    metricsRuleDefinitions.add(new MetricsRuleDefinition("m2", "m2", "a", MetricType.TIMER,
-      MetricElement.TIMER_M15_RATE, "p", false, true));
-    metricsRuleDefinitions.add(new MetricsRuleDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
-      MetricElement.HISTOGRAM_MEAN, "p", false, true));
+    List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons = new ArrayList<>();
+    metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m1", "m1", "a", MetricTypeJson.COUNTER,
+      MetricElementJson.COUNTER_COUNT, "p", false, true));
+    metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m2", "m2", "a", MetricTypeJson.TIMER,
+      MetricElementJson.TIMER_M15_RATE, "p", false, true));
+    metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m3", "m3", "a", MetricTypeJson.HISTOGRAM,
+      MetricElementJson.HISTOGRAM_MEAN, "p", false, true));
 
-    List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
-    dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "a", ThresholdType.COUNT, "200",
+    List<DataRuleDefinitionJson> dataRuleDefinitionJsons = new ArrayList<>();
+    dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("a", "a", "a", 20, 300, "x", true, "a", ThresholdTypeJson.COUNT, "200",
       1000, true, false, true));
-    dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "a", ThresholdType.COUNT, "200",
+    dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("b", "b", "b", 20, 300, "x", true, "a", ThresholdTypeJson.COUNT, "200",
       1000, true, false, true));
-    dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "a", ThresholdType.COUNT, "200",
+    dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("c", "c", "c", 20, 300, "x", true, "a", ThresholdTypeJson.COUNT, "200",
       1000, true, false, true));
 
-    RuleDefinitions ruleDefinitions = new RuleDefinitions(metricsRuleDefinitions, dataRuleDefinitions,
+    RuleDefinitionsJson ruleDefinitionsJson = new RuleDefinitionsJson(metricsRuleDefinitionJsons, dataRuleDefinitionJsons,
       Collections.<String>emptyList(), UUID.randomUUID());
     Response r = target("/v1/pipeline-library/myPipeline/rules").queryParam("rev", "tag").request()
-      .post(Entity.json(ruleDefinitions));
-    RuleDefinitions result = r.readEntity(RuleDefinitions.class);
+      .post(Entity.json(ruleDefinitionsJson));
+    RuleDefinitionsJson result = r.readEntity(RuleDefinitionsJson.class);
 
     Assert.assertEquals(3, result.getMetricsRuleDefinitions().size());
     Assert.assertEquals(3, result.getDataRuleDefinitions().size());
@@ -157,7 +158,7 @@ public class TestPipelineStoreResource extends JerseyTest {
     Response r = target("/v1/pipeline-library/myPipeline/rules").queryParam("rev", "tag")
       .request().get();
     Assert.assertNotNull(r);
-    RuleDefinitions result = r.readEntity(RuleDefinitions.class);
+    RuleDefinitionsJson result = r.readEntity(RuleDefinitionsJson.class);
     Assert.assertEquals(3, result.getMetricsRuleDefinitions().size());
     Assert.assertEquals(3, result.getDataRuleDefinitions().size());
   }
@@ -196,13 +197,14 @@ public class TestPipelineStoreResource extends JerseyTest {
       PipelineStoreTask pipelineStore = Mockito.mock(PipelineStoreTask.class);
       try {
         Mockito.when(pipelineStore.getPipelines()).thenReturn(ImmutableList.of(
-            new PipelineInfo("name", "description", new java.util.Date(0), new java.util.Date(0), "creator",
+            new com.streamsets.pipeline.store.PipelineInfo("name", "description", new java.util.Date(0), new java.util.Date(0), "creator",
                 "lastModifier", "1", UUID.randomUUID(), true)));
         Mockito.when(pipelineStore.getInfo("xyz")).thenReturn(
-            new PipelineInfo("xyz", "xyz description",new java.util.Date(0), new java.util.Date(0), "xyz creator",
+            new com.streamsets.pipeline.store.PipelineInfo("xyz", "xyz description",new java.util.Date(0), new java.util.Date(0), "xyz creator",
                 "xyz lastModifier", "1", UUID.randomUUID(), true));
-        Mockito.when(pipelineStore.getHistory("xyz")).thenReturn(ImmutableList.of(new PipelineRevInfo(
-            new PipelineInfo("xyz", "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
+        Mockito.when(pipelineStore.getHistory("xyz")).thenReturn(ImmutableList.of(
+          new com.streamsets.pipeline.store.PipelineRevInfo(new com.streamsets.pipeline.store.PipelineInfo("xyz",
+            "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
                 "xyz lastModifier", "1", UUID.randomUUID(), true))));
         Mockito.when(pipelineStore.load("xyz", "1.0.0")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
@@ -213,42 +215,42 @@ public class TestPipelineStoreResource extends JerseyTest {
             .when(pipelineStore).delete("xyz");
         Mockito.when(pipelineStore.save(
             Matchers.anyString(), Matchers.anyString(), Matchers.anyString(), Matchers.anyString(),
-            (PipelineConfiguration)Matchers.any())).thenReturn(
+            (com.streamsets.pipeline.config.PipelineConfiguration)Matchers.any())).thenReturn(
           MockStages.createPipelineConfigurationSourceProcessorTarget());
 
-        List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
-        metricsRuleDefinitions.add(new MetricsRuleDefinition("m1", "m1", "a", MetricType.COUNTER,
-          MetricElement.COUNTER_COUNT, "p", false, true));
-        metricsRuleDefinitions.add(new MetricsRuleDefinition("m2", "m2", "a", MetricType.TIMER,
-          MetricElement.TIMER_M15_RATE, "p", false, true));
-        metricsRuleDefinitions.add(new MetricsRuleDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
-          MetricElement.HISTOGRAM_MEAN, "p", false, true));
+        List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons = new ArrayList<>();
+        metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m1", "m1", "a", MetricTypeJson.COUNTER,
+          MetricElementJson.COUNTER_COUNT, "p", false, true));
+        metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m2", "m2", "a", MetricTypeJson.TIMER,
+          MetricElementJson.TIMER_M15_RATE, "p", false, true));
+        metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m3", "m3", "a", MetricTypeJson.HISTOGRAM,
+          MetricElementJson.HISTOGRAM_MEAN, "p", false, true));
 
-        List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
-        dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+        List<DataRuleDefinitionJson> dataRuleDefinitionJsons = new ArrayList<>();
+        dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("a", "a", "a", 20, 300, "x", true, "c", ThresholdTypeJson.COUNT, "200",
           1000, true, false,true));
-        dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+        dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("b", "b", "b", 20, 300, "x", true, "c", ThresholdTypeJson.COUNT, "200",
           1000, true, false, true));
-        dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
+        dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("c", "c", "c", 20, 300, "x", true, "c", ThresholdTypeJson.COUNT, "200",
           1000, true, false, true));
 
-        RuleDefinitions rules = new RuleDefinitions(metricsRuleDefinitions, dataRuleDefinitions,
+        RuleDefinitionsJson rules = new RuleDefinitionsJson(metricsRuleDefinitionJsons, dataRuleDefinitionJsons,
           Collections.<String>emptyList(), UUID.randomUUID());
         List<RuleIssue> ruleIssues = new ArrayList<>();
         ruleIssues.add(RuleIssue.createRuleIssue("a", ValidationError.VALIDATION_0000));
         ruleIssues.add(RuleIssue.createRuleIssue("b", ValidationError.VALIDATION_0000));
         ruleIssues.add(RuleIssue.createRuleIssue("c", ValidationError.VALIDATION_0000));
-        rules.setRuleIssues(ruleIssues);
+        rules.getRuleDefinitions().setRuleIssues(ruleIssues);
 
         try {
-          Mockito.when(pipelineStore.retrieveRules("myPipeline", "tag")).thenReturn(rules);
+          Mockito.when(pipelineStore.retrieveRules("myPipeline", "tag")).thenReturn(rules.getRuleDefinitions());
         } catch (PipelineStoreException e) {
           e.printStackTrace();
         }
         try {
           Mockito.when(pipelineStore.storeRules(
-            Matchers.anyString(), Matchers.anyString(), (RuleDefinitions) Matchers.any()))
-            .thenReturn(rules);
+            Matchers.anyString(), Matchers.anyString(), (com.streamsets.pipeline.config.RuleDefinitions) Matchers.any()))
+            .thenReturn(rules.getRuleDefinitions());
         } catch (PipelineStoreException e) {
           e.printStackTrace();
         }

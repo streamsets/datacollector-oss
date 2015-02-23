@@ -5,8 +5,6 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
 
 public class PipelineState {
@@ -16,13 +14,7 @@ public class PipelineState {
   private final String message;
   private final long lastStatusChange;
 
-  @JsonCreator
-  public PipelineState(
-      @JsonProperty("name") String name,
-      @JsonProperty("rev") String rev,
-      @JsonProperty("state") State state,
-      @JsonProperty("message") String message,
-      @JsonProperty("lastStatusChange") long lastStatusChange) {
+  public PipelineState(String name, String rev, State state, String message, long lastStatusChange) {
     this.name = name;
     this.rev = rev;
     this.state = state;

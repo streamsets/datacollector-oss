@@ -5,8 +5,6 @@
  */
 package com.streamsets.pipeline.snapshotstore;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.runner.StageOutput;
 
 import java.util.List;
@@ -15,9 +13,7 @@ public class Snapshot {
 
   private final List<StageOutput> snapshot;
 
-  @JsonCreator
-  public Snapshot(
-      @JsonProperty("snapshot") List<StageOutput> snapshot) {
+  public Snapshot(List<StageOutput> snapshot) {
     this.snapshot = snapshot;
   }
 

@@ -6,8 +6,6 @@
 package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.store.PipelineInfo;
@@ -19,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class PipelineConfiguration {
   private int schemaVersion;
   private UUID uuid = null;
@@ -33,13 +30,8 @@ public class PipelineConfiguration {
   private boolean previewable;
 
   @SuppressWarnings("unchecked")
-  public PipelineConfiguration(
-      @JsonProperty("schemaVersion") int schemaVersion,
-      @JsonProperty("uuid") UUID uuid,
-      @JsonProperty("configuration") List<ConfigConfiguration> configuration,
-      @JsonProperty("uiInfo") Map<String, Object> uiInfo,
-      @JsonProperty("stages") List<StageConfiguration> stages,
-      @JsonProperty("errorStage") StageConfiguration errorStage) {
+  public PipelineConfiguration(int schemaVersion, UUID uuid, List<ConfigConfiguration> configuration,
+      Map<String, Object> uiInfo, List<StageConfiguration> stages, StageConfiguration errorStage) {
     this.schemaVersion = schemaVersion;
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.configuration = configuration;

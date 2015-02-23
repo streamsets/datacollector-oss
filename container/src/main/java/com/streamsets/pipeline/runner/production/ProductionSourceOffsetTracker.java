@@ -8,6 +8,8 @@ package com.streamsets.pipeline.runner.production;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.SourceOffsetJson;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import org.slf4j.Logger;
@@ -70,8 +72,10 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     if(pipelineOffsetFile.exists()) {
       //offset file exists, read from it
       try {
-        sourceOffset = ObjectMapperFactory.get().readValue(new DataStore(pipelineOffsetFile).getInputStream(),
-          SourceOffset.class);
+        SourceOffsetJson sourceOffsetJson =
+          ObjectMapperFactory.get().readValue(new DataStore(pipelineOffsetFile).getInputStream(),
+            SourceOffsetJson.class);
+        sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -90,7 +94,7 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     LOG.debug("Saving offset {} for pipeline {}", s.getOffset(), pipelineName);
     try {
       ObjectMapperFactory.get().writeValue((new DataStore(getPipelineOffsetFile(pipelineName, rev)).getOutputStream()),
-        s);
+        BeanHelper.wrapSourceOffset(s));
     } catch (IOException e) {
       LOG.error("Failed to save offset value {}. Reason {}", s.getOffset(), e.getMessage(), e);
       throw new RuntimeException(e);

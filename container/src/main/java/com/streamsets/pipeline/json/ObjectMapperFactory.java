@@ -10,10 +10,10 @@ import com.codahale.metrics.json.MetricsModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
 import com.streamsets.pipeline.record.FieldDeserializer;
+import com.streamsets.pipeline.restapi.bean.FieldJson;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +26,7 @@ public class ObjectMapperFactory {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new MetricsModule(TimeUnit.SECONDS, TimeUnit.SECONDS, false, MetricFilter.ALL));
     SimpleModule module = new SimpleModule();
-    module.addDeserializer(Field.class, new FieldDeserializer());
+    module.addDeserializer(FieldJson.class, new FieldDeserializer());
     module.addSerializer(ExtendedMeter.class, new ExtendedMeterSerializer(TimeUnit.SECONDS));
     module.addDeserializer(ErrorMessage.class, new ErrorMessageDeserializer());
     objectMapper.registerModule(module);

@@ -24,6 +24,8 @@ import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.StageDefinitionJson;
 import com.streamsets.pipeline.task.AbstractTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,8 +103,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
             URL url = resources.nextElement();
             InputStream is = url.openStream();
-            StageDefinition[] stages = json.readValue(is, StageDefinition[].class);
-            for (StageDefinition stage : stages) {
+            StageDefinitionJson[] stages =
+              json.readValue(is, StageDefinitionJson[].class);
+            for (StageDefinitionJson stageDef : stages) {
+              StageDefinition stage = BeanHelper.unwrapStageDefinition(stageDef);
               stage.setLibrary(libraryName, libraryLabel, cl);
               String key = createKey(libraryName, stage.getName(), stage.getVersion());
               LOG.debug("Loaded stage '{}' (library:name:version)", key);

@@ -1,157 +1,175 @@
 [ {
-    "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterSource",
-    "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_TwitterSource",
-    "version" : "1.0",
-    "label" : "twitter_source",
-    "description" : "Produces twitter feeds",
-    "type" : "SOURCE",
-    "configDefinitions" : [ {
-                              "name" : "username",
-                              "type" : "MODEL",
-                              "label" : "username",
-                              "description" : "The user name of the twitter user",
-                              "required" : true,
-                              "group" : "USER_INFO",
-                              "fieldName" : "username",
-                              "model" : {
-                                "modelType" : "FIELD_SELECTOR_MULTI_VALUED",
-                                "chooserMode" : null,
-                                "valuesProviderClass" : null,
-                                "values" : null,
-                                "labels" : null
-                              },
-                              "defaultValue" : "admin"
-                            }, {
-                              "name" : "password",
-                              "type" : "STRING",
-                              "label" : "password",
-                              "description" : "The password the twitter user",
-                              "required" : true,
-                              "group" : "USER_INFO",
-                              "fieldName" : "password",
-                              "model" : null,
-                              "defaultValue" : "admin"
-                            } ],
-    "rawSourceDefinition" : {
-      "rawSourcePreviewerClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterRawSourcePreviewer",
-      "mimeType" : "*/*",
-      "configDefinitions" : [ {
-                                "name" : "username",
-                                "type" : "MODEL",
-                                "label" : "username",
-                                "description" : "The user name of the twitter user",
-                                "required" : true,
-                                "group" : "",
-                                "fieldName" : "username",
-                                "model" : {
-                                  "modelType" : "FIELD_SELECTOR_MULTI_VALUED",
-                                  "chooserMode" : null,
-                                  "valuesProviderClass" : null,
-                                  "values" : null,
-                                  "labels" : null
-                                },
-                                "defaultValue" : "admin"
-                              }, {
-                                "name" : "password",
-                                "type" : "STRING",
-                                "label" : "password",
-                                "description" : "The password the twitter user",
-                                "required" : true,
-                                "group" : "",
-                                "fieldName" : "password",
-                                "model" : null,
-                                "defaultValue" : "admin"
-                              } ]
+  "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterSource",
+  "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_TwitterSource",
+  "version" : "1.0",
+  "label" : "twitter_source",
+  "description" : "Produces twitter feeds",
+  "type" : "SOURCE",
+  "errorStage" : false,
+  "requiredFields" : false,
+  "onRecordError" : true,
+  "configDefinitions" : [ {
+    "name" : "username",
+    "type" : "MODEL",
+    "label" : "username",
+    "description" : "The user name of the twitter user",
+    "defaultValue" : "admin",
+    "required" : true,
+    "group" : "USER_INFO",
+    "fieldName" : "username",
+    "model" : {
+      "modelType" : "FIELD_SELECTOR_MULTI_VALUED",
+      "chooserMode" : null,
+      "valuesProviderClass" : null,
+      "values" : null,
+      "labels" : null,
+      "configDefinitions" : null
     },
-    "icon" : "",
-    "library" : null
+    "dependsOn" : "",
+    "triggeredByValues" : [ ],
+    "displayPosition" : 0
   }, {
+    "name" : "password",
+    "type" : "STRING",
+    "label" : "password",
+    "description" : "The password the twitter user",
+    "defaultValue" : "admin",
+    "required" : true,
+    "group" : "USER_INFO",
+    "fieldName" : "password",
+    "model" : null,
+    "dependsOn" : "",
+    "triggeredByValues" : [ ],
+    "displayPosition" : 0
+  } ],
+  "rawSourceDefinition" : {
+    "rawSourcePreviewerClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterRawSourcePreviewer",
+    "mimeType" : "*/*",
+    "configDefinitions" : [ {
+      "name" : "username",
+      "type" : "MODEL",
+      "label" : "username",
+      "description" : "The user name of the twitter user",
+      "defaultValue" : "admin",
+      "required" : true,
+      "group" : "",
+      "fieldName" : "username",
+      "model" : {
+        "modelType" : "FIELD_SELECTOR_MULTI_VALUED",
+        "chooserMode" : null,
+        "valuesProviderClass" : null,
+        "values" : null,
+        "labels" : null,
+        "configDefinitions" : null
+      },
+      "dependsOn" : "",
+      "triggeredByValues" : [ ],
+      "displayPosition" : 0
+    }, {
+      "name" : "password",
+      "type" : "STRING",
+      "label" : "password",
+      "description" : "The password the twitter user",
+      "defaultValue" : "admin",
+      "required" : true,
+      "group" : "",
+      "fieldName" : "password",
+      "model" : null,
+      "dependsOn" : "",
+      "triggeredByValues" : [ ],
+      "displayPosition" : 0
+    } ]
+  },
+  "icon" : "",
+  "configGroupDefinition" : {
+    "classNameToGroupsMap" : {
+      "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterSource$TwitterConfigGroups" : [ "USER_INFO", "OTHER" ]
+    },
+    "groupNameToLabelMapList" : [ {
+      "name" : "USER_INFO",
+      "label" : null
+    }, {
+      "name" : "OTHER",
+      "label" : null
+    } ]
+  },
+  "variableOutputStreams" : false,
+  "outputStreams" : 1,
+  "outputStreamLabelProviderClass" : "com.streamsets.pipeline.api.StageDef$DefaultOutputStreams",
+  "library" : null,
+  "libraryLabel" : null,
+  "outputStreamLabels" : null
+}, {
   "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterProcessor",
   "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_TwitterProcessor",
   "version" : "1.0",
   "label" : "twitter_processor",
   "description" : "processes twitter feeds",
   "type" : "PROCESSOR",
+  "errorStage" : false,
+  "requiredFields" : true,
+  "onRecordError" : true,
   "configDefinitions" : [ {
-                            "name" : "regEx",
-                            "type" : "MODEL",
-                            "label" : "regEx",
-                            "description" : "The regular expression used to parse the tweet",
-                            "required" : true,
-                            "group" : "",
-                            "fieldName" : "regEx",
-                            "model" : {
-                              "modelType" : "FIELD_VALUE_CHOOSER",
-                              "chooserMode" : "PROVIDED",
-                              "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TypesProvider",
-                              "values" : null,
-                              "labels" : null
-                            },
-                            "defaultValue" : "[a-z][A-Z][0-9]"
-                          }, {
-                            "name" : "tweetType1",
-                            "type" : "MODEL",
-                            "label" : "tweetType1",
-                            "description" : "The regular expression used to parse the tweet",
-                            "required" : true,
-                            "group" : "",
-                            "fieldName" : "tweetType1",
-                            "model" : {
-                              "modelType" : "VALUE_CHOOSER",
-                              "chooserMode" : "PROVIDED",
-                              "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TweetTypeProvider",
-                              "values" : null,
-                              "labels" : null
-                            },
-                            "defaultValue" : "[a-z][A-Z][0-9]"
-                          }, {
-                            "name" : "tweetType2",
-                            "type" : "MODEL",
-                            "label" : "tweetType2",
-                            "description" : "The regular expression used to parse the tweet",
-                            "required" : true,
-                            "group" : "",
-                            "fieldName" : "tweetType2",
-                            "model" : {
-                              "modelType" : "FIELD_VALUE_CHOOSER",
-                              "chooserMode" : "PROVIDED",
-                              "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TweetTypeProvider",
-                              "values" : null,
-                              "labels" : null
-                            },
-                            "defaultValue" : "[a-z][A-Z][0-9]"
-                          } ],
-  "rawSourceDefinition" : null,
-  "icon" : "",
-  "library" : null
-}, {
-  "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.ExtendedTwitterProcessor",
-  "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_ExtendedTwitterProcessor",
-  "version" : "1.0",
-  "label" : "extended_twitter_processor",
-  "description" : "processes twitter feeds",
-  "type" : "PROCESSOR",
-  "configDefinitions" : [ {
-                          "name" : "regEx",
-                          "type" : "MODEL",
-                          "label" : "regEx",
-                          "description" : "The regular expression used to parse the tweet",
-                          "required" : true,
-                          "group" : "",
-                          "fieldName" : "regEx",
-                          "model" : {
-                            "modelType" : "FIELD_VALUE_CHOOSER",
-                            "chooserMode" : "PROVIDED",
-                            "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TypesProvider",
-                            "values" : null,
-                            "labels" : null,
-                            "configDefinitions" : null
-                          },
-                          "dependsOn" : "",
-                          "triggeredByValues" : [ ],
-                          "displayPosition" : 0,
-                          "defaultValue" : "[a-z][A-Z][0-9]"
-                        } ],
+    "name" : "regEx",
+    "type" : "MODEL",
+    "label" : "regEx",
+    "description" : "The regular expression used to parse the tweet",
+    "defaultValue" : "[a-z][A-Z][0-9]",
+    "required" : true,
+    "group" : "",
+    "fieldName" : "regEx",
+    "model" : {
+      "modelType" : "FIELD_VALUE_CHOOSER",
+      "chooserMode" : "PROVIDED",
+      "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TypesProvider",
+      "values" : null,
+      "labels" : null,
+      "configDefinitions" : null
+    },
+    "dependsOn" : "",
+    "triggeredByValues" : [ ],
+    "displayPosition" : 0
+  }, {
+    "name" : "tweetType1",
+    "type" : "MODEL",
+    "label" : "tweetType1",
+    "description" : "The regular expression used to parse the tweet",
+    "defaultValue" : "[a-z][A-Z][0-9]",
+    "required" : true,
+    "group" : "",
+    "fieldName" : "tweetType1",
+    "model" : {
+      "modelType" : "VALUE_CHOOSER",
+      "chooserMode" : "PROVIDED",
+      "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TweetTypeProvider",
+      "values" : null,
+      "labels" : null,
+      "configDefinitions" : null
+    },
+    "dependsOn" : "",
+    "triggeredByValues" : [ ],
+    "displayPosition" : 0
+  }, {
+    "name" : "tweetType2",
+    "type" : "MODEL",
+    "label" : "tweetType2",
+    "description" : "The regular expression used to parse the tweet",
+    "defaultValue" : "[a-z][A-Z][0-9]",
+    "required" : true,
+    "group" : "",
+    "fieldName" : "tweetType2",
+    "model" : {
+      "modelType" : "FIELD_VALUE_CHOOSER",
+      "chooserMode" : "PROVIDED",
+      "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TweetTypeProvider",
+      "values" : null,
+      "labels" : null,
+      "configDefinitions" : null
+    },
+    "dependsOn" : "tweetType1",
+    "triggeredByValues" : [ "a", "b", "c" ],
+    "displayPosition" : 0
+  } ],
   "rawSourceDefinition" : null,
   "icon" : "",
   "configGroupDefinition" : {
@@ -165,34 +183,95 @@
   "libraryLabel" : null,
   "outputStreamLabels" : null
 }, {
-    "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterTarget",
-    "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_TwitterTarget",
-    "version" : "1.3",
-    "label" : "twitter_target",
-    "description" : "Consumes twitter feeds",
-    "type" : "TARGET",
-    "configDefinitions" : [ {
-                              "name" : "username",
-                              "type" : "STRING",
-                              "label" : "username",
-                              "description" : "The user name of the twitter user",
-                              "required" : true,
-                              "group" : "",
-                              "fieldName" : "username",
-                              "model" : null,
-                              "defaultValue" : "admin"
-                            }, {
-                              "name" : "password",
-                              "type" : "STRING",
-                              "label" : "password",
-                              "description" : "The password the twitter user",
-                              "required" : true,
-                              "group" : "",
-                              "fieldName" : "password",
-                              "model" : null,
-                              "defaultValue" : "admin"
-                            } ],
-    "rawSourceDefinition" : null,
-    "icon" : "",
-    "library" : null
-  } ]
+  "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.ExtendedTwitterProcessor",
+  "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_ExtendedTwitterProcessor",
+  "version" : "1.0",
+  "label" : "extended_twitter_processor",
+  "description" : "processes twitter feeds",
+  "type" : "PROCESSOR",
+  "errorStage" : false,
+  "requiredFields" : true,
+  "onRecordError" : true,
+  "configDefinitions" : [ {
+    "name" : "regEx",
+    "type" : "MODEL",
+    "label" : "regEx",
+    "description" : "The regular expression used to parse the tweet",
+    "defaultValue" : "[a-z][A-Z][0-9]",
+    "required" : true,
+    "group" : "",
+    "fieldName" : "regEx",
+    "model" : {
+      "modelType" : "FIELD_VALUE_CHOOSER",
+      "chooserMode" : "PROVIDED",
+      "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TypesProvider",
+      "values" : null,
+      "labels" : null,
+      "configDefinitions" : null
+    },
+    "dependsOn" : "",
+    "triggeredByValues" : [ ],
+    "displayPosition" : 0
+  } ],
+  "rawSourceDefinition" : null,
+  "icon" : "",
+  "configGroupDefinition" : {
+    "classNameToGroupsMap" : { },
+    "groupNameToLabelMapList" : [ ]
+  },
+  "variableOutputStreams" : false,
+  "outputStreams" : 1,
+  "outputStreamLabelProviderClass" : "com.streamsets.pipeline.api.StageDef$DefaultOutputStreams",
+  "library" : null,
+  "libraryLabel" : null,
+  "outputStreamLabels" : null
+}, {
+  "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterTarget",
+  "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_TwitterTarget",
+  "version" : "1.3",
+  "label" : "twitter_target",
+  "description" : "Consumes twitter feeds",
+  "type" : "TARGET",
+  "errorStage" : false,
+  "requiredFields" : true,
+  "onRecordError" : true,
+  "configDefinitions" : [ {
+    "name" : "username",
+    "type" : "STRING",
+    "label" : "username",
+    "description" : "The user name of the twitter user",
+    "defaultValue" : "admin",
+    "required" : true,
+    "group" : "",
+    "fieldName" : "username",
+    "model" : null,
+    "dependsOn" : "",
+    "triggeredByValues" : [ ],
+    "displayPosition" : 0
+  }, {
+    "name" : "password",
+    "type" : "STRING",
+    "label" : "password",
+    "description" : "The password the twitter user",
+    "defaultValue" : "admin",
+    "required" : true,
+    "group" : "",
+    "fieldName" : "password",
+    "model" : null,
+    "dependsOn" : "",
+    "triggeredByValues" : [ ],
+    "displayPosition" : 0
+  } ],
+  "rawSourceDefinition" : null,
+  "icon" : "",
+  "configGroupDefinition" : {
+    "classNameToGroupsMap" : { },
+    "groupNameToLabelMapList" : [ ]
+  },
+  "variableOutputStreams" : false,
+  "outputStreams" : 0,
+  "outputStreamLabelProviderClass" : "com.streamsets.pipeline.api.StageDef$DefaultOutputStreams",
+  "library" : null,
+  "libraryLabel" : null,
+  "outputStreamLabels" : null
+} ]

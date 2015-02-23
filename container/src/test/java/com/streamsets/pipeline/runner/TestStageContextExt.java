@@ -16,6 +16,8 @@ import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.RecordJson;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,7 +44,7 @@ public class TestStageContextExt {
     StringWriter writer = new StringWriter();
 
     ObjectMapper om = ObjectMapperFactory.get();
-    om.writeValue(writer, record);
+    om.writeValue(writer, BeanHelper.wrapRecord(record));
     writer.close();
     StringReader reader = new StringReader(writer.toString());
     JsonRecordReader rr = ((ContextExtensions)context).createJsonRecordReader(reader, 0, 100000);
@@ -69,8 +71,8 @@ public class TestStageContextExt {
 
     StringWriter writer = new StringWriter();
     ObjectMapper om = ObjectMapperFactory.get();
-    om.writeValue(writer, record1);
-    om.writeValue(writer, record2);
+    om.writeValue(writer, BeanHelper.wrapRecord(record1));
+    om.writeValue(writer, BeanHelper.wrapRecord(record2));
     writer.close();
 
     StringReader reader = new StringReader(writer.toString());
@@ -102,8 +104,9 @@ public class TestStageContextExt {
     rw.write(record);
     rw.close();
 
-    Record newRecord = ObjectMapperFactory.get().readValue(writer.toString(), RecordImpl.class);
-    Assert.assertEquals(record, newRecord);
+    RecordJson newRecordJson = ObjectMapperFactory.get().readValue(writer.toString(),
+      RecordJson.class);
+    Assert.assertEquals(record, BeanHelper.unwrapRecord(newRecordJson));
   }
 
   @Test
@@ -129,11 +132,12 @@ public class TestStageContextExt {
     rw.write(record2);
     rw.close();
 
-    Iterator<RecordImpl> it = ObjectMapperFactory.get().getFactory().createParser(writer.toString()).readValuesAs(RecordImpl.class);
+    Iterator<RecordJson> it = ObjectMapperFactory.get().getFactory().
+      createParser(writer.toString()).readValuesAs(RecordJson.class);
     Assert.assertTrue(it.hasNext());
-    Assert.assertEquals(record1, it.next());
+    Assert.assertEquals(record1, BeanHelper.unwrapRecord(it.next()));
     Assert.assertTrue(it.hasNext());
-    Assert.assertEquals(record2, it.next());
+    Assert.assertEquals(record2, BeanHelper.unwrapRecord(it.next()));
     Assert.assertFalse(it.hasNext());
 
   }

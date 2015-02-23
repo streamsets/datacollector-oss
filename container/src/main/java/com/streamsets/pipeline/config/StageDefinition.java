@@ -5,9 +5,6 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.Label;
@@ -56,25 +53,11 @@ public class StageDefinition {
   private final String outputStreamLabelProviderClass;
   private List<String> outputStreamLabels;
 
-
-  @JsonCreator
-  public StageDefinition(
-      @JsonProperty("className") String className,
-      @JsonProperty("name") String name,
-      @JsonProperty("version") String version,
-      @JsonProperty("label") String label,
-      @JsonProperty("description") String description,
-      @JsonProperty("type") StageType type,
-      @JsonProperty("errorStage") boolean errorStage,
-      @JsonProperty("requiredFields") boolean requiredFields,
-      @JsonProperty("onRecordError") boolean onRecordError,
-      @JsonProperty("configDefinitions") List<ConfigDefinition> configDefinitions,
-      @JsonProperty("rawSourceDefinition") RawSourceDefinition rawSourceDefinition,
-      @JsonProperty("icon") String icon,
-      @JsonProperty("configGroupDefinition") ConfigGroupDefinition configGroupDefinition,
-      @JsonProperty("variableOutputStreams") boolean variableOutputStreams,
-      @JsonProperty("outputStreams") int outputStreams,
-      @JsonProperty("outputStreamLabelProviderClass") String outputStreamLabelProviderClass) {
+  public StageDefinition(String className, String name, String version, String label, String description,
+      StageType type, boolean errorStage, boolean requiredFields, boolean onRecordError,
+      List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
+      ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
+      String outputStreamLabelProviderClass) {
     this.className = className;
     this.name = name;
     this.version = version;
@@ -123,7 +106,6 @@ public class StageDefinition {
     return libraryLabel;
   }
 
-  @JsonIgnore
   public ClassLoader getStageClassLoader() {
     return classLoader;
   }
@@ -132,12 +114,10 @@ public class StageDefinition {
     return className;
   }
 
-  @JsonIgnore
   public String getBundle() {
     return className;
   }
 
-  @JsonIgnore
   public Class getStageClass() {
     return klass;
   }
@@ -170,12 +150,10 @@ public class StageDefinition {
     return errorStage;
   }
 
-  @JsonProperty("requiredFields")
   public boolean hasRequiredFields() {
     return requiredFields;
   }
 
-  @JsonProperty("onRecordError")
   public boolean hasOnRecordError() {
     return onRecordError;
   }

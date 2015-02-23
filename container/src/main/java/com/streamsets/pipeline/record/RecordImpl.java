@@ -5,10 +5,6 @@
  */
 package com.streamsets.pipeline.record;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -20,17 +16,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class RecordImpl implements Record {
   private final HeaderImpl header;
   private Field value;
 
-  // Json deserialization
-
-  @JsonCreator
-  public RecordImpl(@JsonProperty("header") HeaderImpl header, @JsonProperty("value") Field value) {
+  public RecordImpl(HeaderImpl header, Field value) {
     this.header = header;
     this.value = value;
   }
@@ -403,7 +394,6 @@ public class RecordImpl implements Record {
   }
 
   @Override
-  @JsonIgnore
   public Set<String> getFieldPaths() {
     Set<String> paths = new LinkedHashSet<>();
     if (value != null) {

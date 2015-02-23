@@ -8,6 +8,9 @@ package com.streamsets.pipeline.snapshotstore.impl;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.SnapshotJson;
+import com.streamsets.pipeline.restapi.bean.StageOutputJson;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.Snapshot;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
@@ -40,7 +43,7 @@ public class FileSnapshotStore implements SnapshotStore {
   public void storeSnapshot(String pipelineName, String rev, List<StageOutput> snapshot) {
     try {
       ObjectMapperFactory.get().writeValue(new DataStore(getPipelineSnapshotFile(pipelineName, rev)).getOutputStream(),
-        new Snapshot(snapshot));
+        new SnapshotJson(new Snapshot(snapshot)));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -53,8 +56,9 @@ public class FileSnapshotStore implements SnapshotStore {
       return Collections.emptyList();
     }
     try {
-      return ObjectMapperFactory.get().readValue(
-        new DataStore(getPipelineSnapshotFile(pipelineName, rev)).getInputStream(), Snapshot.class).getSnapshot();
+      List<StageOutputJson> snapshotJson = ObjectMapperFactory.get().readValue(
+        new DataStore(getPipelineSnapshotFile(pipelineName, rev)).getInputStream(), SnapshotJson.class).getSnapshot();
+      return BeanHelper.unwrapStageOutput(snapshotJson);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

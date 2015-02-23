@@ -10,6 +10,8 @@ import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.StageDefinitionJson;
 import com.streamsets.pipeline.sdk.annotationsprocessor.Constants;
 import org.junit.Assert;
 
@@ -30,9 +32,9 @@ public class TestUtil {
     ObjectMapper json = ObjectMapperFactory.get();
     List<StageDefinition> stageDefinitions = new ArrayList<StageDefinition>();
     try {
-      StageDefinition[] stageDefArray = json.readValue(inputStream, StageDefinition[].class);
-      for(StageDefinition s : stageDefArray) {
-        stageDefinitions.add(s);
+      StageDefinitionJson[] stageDefArray = json.readValue(inputStream, StageDefinitionJson[].class);
+      for(StageDefinitionJson s : stageDefArray) {
+        stageDefinitions.add(BeanHelper.unwrapStageDefinition(s));
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -48,7 +50,7 @@ public class TestUtil {
 
     List<StageDefinition> expectedStages = TestUtil.getStageCollection(in);
 
-    Assert.assertTrue(actualStages.size() == expectedStages.size());
+    Assert.assertEquals(expectedStages.size(), actualStages.size());
     //check the deserialized StageCollections.
     deepCompareStageDefinitions(expectedStages, actualStages);
   }

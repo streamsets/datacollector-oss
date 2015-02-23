@@ -18,14 +18,17 @@ public class RulesConfigurationChangeRequest {
   private final Map<String, List<DataRuleDefinition>> laneToDataRuleMap;
   private final Set<String> metricAlertsToRemove;
   private final Set<String> rulesToRemove;
+  private final Map<String, Integer> rulesWithSampledRecordSizeChanges;
 
   public RulesConfigurationChangeRequest(RuleDefinitions ruleDefinitions, Set<String> rulesToRemove,
                                          Set<String> metricAlertsToRemove,
-                                         Map<String, List<DataRuleDefinition>> laneToDataRuleMap) {
+                                         Map<String, List<DataRuleDefinition>> laneToDataRuleMap,
+                                         Map<String, Integer> rulesWithSampledRecordSizeChanges) {
     this.ruleDefinitions = ruleDefinitions;
     this.rulesToRemove = rulesToRemove;
     this.metricAlertsToRemove = metricAlertsToRemove;
     this.laneToDataRuleMap = laneToDataRuleMap;
+    this.rulesWithSampledRecordSizeChanges = rulesWithSampledRecordSizeChanges;
   }
 
   public RuleDefinitions getRuleDefinitions() {
@@ -42,5 +45,9 @@ public class RulesConfigurationChangeRequest {
 
   public Map<String, List<DataRuleDefinition>> getLaneToDataRuleMap() {
     return laneToDataRuleMap;
+  }
+
+  public Map<String, Integer> getRulesWithSampledRecordSizeChanges() {
+    return rulesWithSampledRecordSizeChanges;
   }
 }

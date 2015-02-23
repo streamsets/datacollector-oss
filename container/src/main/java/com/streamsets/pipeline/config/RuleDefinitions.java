@@ -5,8 +5,6 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.validation.RuleIssue;
 
 import java.util.List;
@@ -20,12 +18,8 @@ public class RuleDefinitions {
   private List<RuleIssue> ruleIssues;
   private UUID uuid = null;
 
-  @JsonCreator
-  public RuleDefinitions(
-    @JsonProperty("metricsRuleDefinitions") List<MetricsRuleDefinition> metricsRuleDefinitions,
-    @JsonProperty("dataRuleDefinitions") List<DataRuleDefinition> dataRuleDefinitions,
-    @JsonProperty("emailIds") List<String> emailIds,
-    @JsonProperty("uuid") UUID uuid) {
+  public RuleDefinitions(List<MetricsRuleDefinition> metricsRuleDefinitions,
+    List<DataRuleDefinition> dataRuleDefinitions, List<String> emailIds,UUID uuid) {
     this.metricsRuleDefinitions = metricsRuleDefinitions;
     this.dataRuleDefinitions = dataRuleDefinitions;
     this.emailIds = emailIds;

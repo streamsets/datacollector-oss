@@ -57,9 +57,14 @@ public class DataRuleEvaluator {
       List<Record> sampleSet = sampleRecords.subList(0, numberOfRecords);
       EvictingQueue<Record> sampledRecords = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
       if (sampledRecords == null) {
-        sampledRecords = EvictingQueue.create(configuration.get(
-          com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_CACHE_SIZE_KEY,
-          com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_CACHE_SIZE_DEFAULT));
+        int maxSize = configuration.get(
+          com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_MAX_CACHE_SIZE_KEY,
+          com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_MAX_CACHE_SIZE_DEFAULT);
+        int size = dataRuleDefinition.getSamplingRecordsToRetain();
+        if(size > maxSize) {
+          size = maxSize;
+        }
+        sampledRecords = EvictingQueue.create(size);
         ruleToSampledRecordsMap.put(dataRuleDefinition.getId(), sampledRecords);
       }
       //Meter

@@ -29,6 +29,8 @@ import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -210,7 +212,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     try {
       FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
         PIPELINE_STAGES_JSON);
-      json.writeValue(resource.openOutputStream(), stageDefinitions);
+      json.writeValue(resource.openOutputStream(), BeanHelper.wrapStageDefinitions(stageDefinitions));
     } catch (IOException e) {
       processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
     }

@@ -5,8 +5,6 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -32,20 +30,9 @@ public class ConfigDefinition {
   private final ModelDefinition model;
   private final int displayPosition;
 
-  @JsonCreator
-  public ConfigDefinition(
-      @JsonProperty("name") String name,
-      @JsonProperty("type") ConfigDef.Type type,
-      @JsonProperty("label") String label,
-      @JsonProperty("description") String description,
-      @JsonProperty("default") Object defaultValue,
-      @JsonProperty("required") boolean required,
-      @JsonProperty("group") String group,
-      @JsonProperty("fieldName") String fieldName,
-      @JsonProperty("model") ModelDefinition model,
-      @JsonProperty("dependsOn") String dependsOn,
-      @JsonProperty("triggeredByValues") String[] triggeredByValues,
-      @JsonProperty("displayPosition") int displayPosition) {
+  public ConfigDefinition(String name, ConfigDef.Type type, String label, String description, Object defaultValue,
+      boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
+      String[] triggeredByValues, int displayPosition) {
     this.name = name;
     this.type = type;
     this.label = label;

@@ -53,11 +53,14 @@ public class RulesConfigLoader {
     //TODO: compute, detect changes etc and upload
     Set<String> rulesToRemove = new HashSet<>();
     Set<String> pipelineAlertsToRemove = new HashSet<>();
+    Map<String, Integer> rulesWithSampledRecordSizeChanges = new HashMap<>();
     if (previousRuleDefinitions != null) {
-      rulesToRemove.addAll(detectRulesToRemove(previousRuleDefinitions.getDataRuleDefinitions(),
-        newRuleDefinitions.getDataRuleDefinitions()));
-      pipelineAlertsToRemove.addAll(detectAlertsToRemove(previousRuleDefinitions.getMetricsRuleDefinitions(),
-        newRuleDefinitions.getMetricsRuleDefinitions()));
+      //detect rules to remove and also the rules whose 'retain sampled record size' has changed
+      detectDataRuleChanges(previousRuleDefinitions.getDataRuleDefinitions(),
+        newRuleDefinitions.getDataRuleDefinitions(), rulesToRemove, rulesWithSampledRecordSizeChanges);
+      //detect metric rules to be removed
+      detectMetricRuleChanges(previousRuleDefinitions.getMetricsRuleDefinitions(),
+        newRuleDefinitions.getMetricsRuleDefinitions(), pipelineAlertsToRemove);
     }
     Map<String, List<DataRuleDefinition>> laneToDataRule = new HashMap<>();
     for (DataRuleDefinition dataRuleDefinition : newRuleDefinitions.getDataRuleDefinitions()) {
@@ -72,14 +75,14 @@ public class RulesConfigLoader {
 
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =
       new RulesConfigurationChangeRequest(newRuleDefinitions, rulesToRemove, pipelineAlertsToRemove,
-        laneToDataRule);
+        laneToDataRule, rulesWithSampledRecordSizeChanges);
 
     return rulesConfigurationChangeRequest;
   }
 
-  private Set<String> detectAlertsToRemove(List<MetricsRuleDefinition> oldMetricsRuleDefinitions,
-                                   List<MetricsRuleDefinition> newMetricsRuleDefinitions) {
-    Set<String> alertsToRemove = new HashSet<>();
+  private void detectMetricRuleChanges(List<MetricsRuleDefinition> oldMetricsRuleDefinitions,
+                                              List<MetricsRuleDefinition> newMetricsRuleDefinitions,
+                                              Set<String> alertsToRemove) {
     if(newMetricsRuleDefinitions != null && oldMetricsRuleDefinitions != null) {
       for(MetricsRuleDefinition oldMetricAlertDefinition : oldMetricsRuleDefinitions) {
         boolean found = false;
@@ -99,34 +102,46 @@ public class RulesConfigLoader {
         }
       }
     }
-    return alertsToRemove;
   }
 
-  private Set<String> detectRulesToRemove(List<DataRuleDefinition> oldMetricDefinitions,
-                                  List<DataRuleDefinition> newMetricDefinitions) {
-    Set<String> rulesToRemove = new HashSet<>();
-    if(newMetricDefinitions != null && oldMetricDefinitions != null) {
-      for(DataRuleDefinition oldMetricDefinition : oldMetricDefinitions) {
+  private void detectDataRuleChanges(List<DataRuleDefinition> oldRuleDefinitions,
+                                     List<DataRuleDefinition> newRuleDefinitions,
+                                     Set<String> rulesToRemove, Map<String, Integer> rulesToResizeSamplingRecords) {
+    if(newRuleDefinitions != null && oldRuleDefinitions != null) {
+      for(DataRuleDefinition oldRuleDefinition : oldRuleDefinitions) {
         boolean found = false;
-        for(DataRuleDefinition newMetricDefinition : newMetricDefinitions) {
-          if(oldMetricDefinition.getId().equals(newMetricDefinition.getId())) {
+        for(DataRuleDefinition newRuleDefinition : newRuleDefinitions) {
+          if(oldRuleDefinition.getId().equals(newRuleDefinition.getId())) {
             found = true;
-            if(oldMetricDefinition.isEnabled() && !newMetricDefinition.isEnabled()) {
-              rulesToRemove.add(oldMetricDefinition.getId());
+            if(oldRuleDefinition.isEnabled() && !newRuleDefinition.isEnabled()) {
+              rulesToRemove.add(oldRuleDefinition.getId());
             }
-            if(hasRuleChanged(oldMetricDefinition, newMetricDefinition)) {
-              if(oldMetricDefinition.isAlertEnabled() || oldMetricDefinition.isMeterEnabled()) {
-                rulesToRemove.add(oldMetricDefinition.getId());
+            if(hasRuleChanged(oldRuleDefinition, newRuleDefinition)) {
+              if(oldRuleDefinition.isAlertEnabled() || oldRuleDefinition.isMeterEnabled()) {
+                rulesToRemove.add(oldRuleDefinition.getId());
               }
+            }
+            if(hasSamplingSizeChanged(oldRuleDefinition, newRuleDefinition)) {
+              rulesToResizeSamplingRecords.put(newRuleDefinition.getId(),
+                newRuleDefinition.getSamplingRecordsToRetain());
             }
           }
         }
         if(!found) {
-          rulesToRemove.add(oldMetricDefinition.getId());
+          rulesToRemove.add(oldRuleDefinition.getId());
         }
       }
     }
-    return rulesToRemove;
+  }
+
+  private boolean hasSamplingSizeChanged(DataRuleDefinition oldRuleDefinition, DataRuleDefinition newRuleDefinition) {
+    boolean noChange = true;
+    if(newRuleDefinition.isEnabled()) {
+      if(oldRuleDefinition.getSamplingRecordsToRetain() != newRuleDefinition.getSamplingRecordsToRetain()) {
+        noChange = false;
+      }
+    }
+    return !noChange;
   }
 
   private boolean hasRuleChanged(DataRuleDefinition oldDataRuleDefinition,

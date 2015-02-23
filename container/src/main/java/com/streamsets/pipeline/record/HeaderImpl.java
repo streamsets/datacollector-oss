@@ -5,9 +5,6 @@
  */
 package com.streamsets.pipeline.record;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
@@ -131,7 +128,6 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
   }
 
   @Override
-  @JsonIgnore
   public Set<String> getAttributeNames() {
     return ImmutableSet.copyOf(Sets.filter(map.keySet(), this));
   }
@@ -168,23 +164,10 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
     return (Map) Maps.filterKeys(map, this);
   }
 
-  // For Json deserialization
-
-  @JsonCreator
-  public HeaderImpl(  @JsonProperty("stageCreator") String stageCreator,
-      @JsonProperty("sourceId") String sourceId,
-      @JsonProperty("stagesPath") String stagesPath,
-      @JsonProperty("trackingId") String trackingId,
-      @JsonProperty("previousTrackingId") String previousTrackingId,
-      @JsonProperty("raw") byte[] raw,
-      @JsonProperty("rawMimeType") String rawMimeType,
-      @JsonProperty("errorDataCollectorId") String errorDataCollectorId,
-      @JsonProperty("errorPipelineName") String errorPipelineName,
-      @JsonProperty("errorStage") String errorStageInstance,
-      @JsonProperty("errorCode") String errorCode,
-      @JsonProperty("errorMessage") String errorMessage,
-      @JsonProperty("errorTimestamp") long errorTimestamp,
-      @JsonProperty("values") Map<String, Object> map) {
+  public HeaderImpl(String stageCreator, String sourceId, String stagesPath, String trackingId,
+                    String previousTrackingId, byte[] raw, String rawMimeType, String errorDataCollectorId,
+                    String errorPipelineName, String errorStageInstance, String errorCode, String errorMessage,
+                    long errorTimestamp, Map<String, Object> map) {
     this.map = map;
     setStageCreator(stageCreator);
     setSourceId(sourceId);
@@ -265,12 +248,10 @@ public class HeaderImpl implements Record.Header, Predicate<String> {
     map.put(ERROR_TIMESTAMP_ATTR, errorTimestamp);
   }
 
-  @JsonIgnore
   public void setSourceRecord(Record record) {
     map.put(SOURCE_RECORD_ATTR, record);
   }
 
-  @JsonIgnore
   public Record getSourceRecord() {
     return (Record) map.get(SOURCE_RECORD_ATTR);
   }

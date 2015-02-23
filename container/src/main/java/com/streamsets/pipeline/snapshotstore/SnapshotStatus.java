@@ -5,17 +5,12 @@
  */
 package com.streamsets.pipeline.snapshotstore;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class SnapshotStatus {
 
   private final boolean exists;
   private final boolean snapshotInProgress;
 
-  @JsonCreator
-  public SnapshotStatus(@JsonProperty("exists") boolean exists,
-                        @JsonProperty("snapshotInProgress") boolean snapshotInProgress) {
+  public SnapshotStatus(boolean exists, boolean snapshotInProgress) {
     this.exists = exists;
     this.snapshotInProgress = snapshotInProgress;
   }
