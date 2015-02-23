@@ -3,16 +3,16 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
+package com.streamsets.pipeline.stage.processor.fieldvaluereplacer;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum ConfigGroups implements Label {
-  TYPE_CONVERSION;
+public enum Groups implements Label {
+  REPLACE;
 
   @Override
   public String getLabel() {
-    return "Conversions";
+    return "Replace";
   }
 
 }

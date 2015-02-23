@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
     icon="spoolDirSource.png"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
-@ConfigGroups(com.streamsets.pipeline.stage.origin.spooldir.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 @HideConfig(onErrorRecord = true)
 public class SpoolDirSource extends BaseSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);

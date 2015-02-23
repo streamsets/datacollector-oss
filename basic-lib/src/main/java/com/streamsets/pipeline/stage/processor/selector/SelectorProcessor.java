@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.stage.processor.selector;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
@@ -15,11 +14,8 @@ import com.streamsets.pipeline.api.LanePredicateMapping;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
-import com.streamsets.pipeline.api.OnRecordError;
-import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
@@ -39,7 +35,7 @@ import java.util.Set;
     icon="laneSelector.png",
     outputStreams = StageDef.VariableOutputStreams.class,
     outputStreamsDrivenByConfig = "lanePredicates")
-@ConfigGroups(com.streamsets.pipeline.stage.processor.selector.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 public class SelectorProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SelectorProcessor.class);
 

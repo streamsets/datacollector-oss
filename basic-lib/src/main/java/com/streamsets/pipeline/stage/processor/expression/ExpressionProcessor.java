@@ -36,7 +36,7 @@ import java.util.Set;
     description="Performs calculations on a field-by-field basis",
     icon="expression.png"
 )
-@ConfigGroups(com.streamsets.pipeline.stage.processor.expression.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 public class ExpressionProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(ExpressionProcessor.class);
 

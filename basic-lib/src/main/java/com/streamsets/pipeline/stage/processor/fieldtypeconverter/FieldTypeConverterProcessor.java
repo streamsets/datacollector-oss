@@ -33,7 +33,7 @@ import java.util.Locale;
     description = "Converts the data type of a field",
     icon="converter.svg"
 )
-@ConfigGroups(com.streamsets.pipeline.stage.processor.fieldtypeconverter.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 @HideConfig(onErrorRecord = true)
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);

@@ -3,15 +3,16 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.destination.recordstolocalfilesystem;
+package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum ConfigGroups implements Label {
-  FILES;
+public enum Groups implements Label {
+  FILE;
 
   @Override
   public String getLabel() {
-    return "Files";
+    return "File";
   }
+
 }

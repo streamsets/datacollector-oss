@@ -31,7 +31,7 @@ import java.util.Set;
     description="Removes fields from a record",
     icon="filter.png"
 )
-@ConfigGroups(com.streamsets.pipeline.stage.processor.fieldfilter.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 @HideConfig(onErrorRecord = true)
 public class FieldFilterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldFilterProcessor.class);

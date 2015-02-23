@@ -44,7 +44,7 @@ import java.util.List;
 )
 @HideConfig(requiredFields = true, onErrorRecord = true)
 @ErrorStage
-@ConfigGroups(com.streamsets.pipeline.stage.destination.recordstolocalfilesystem.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private final static Logger LOG = LoggerFactory.getLogger(RecordsToLocalFileSystemTarget.class);
 

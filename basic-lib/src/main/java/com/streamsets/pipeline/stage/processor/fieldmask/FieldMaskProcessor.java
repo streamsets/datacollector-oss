@@ -28,7 +28,7 @@ import java.util.List;
     description = "Masks field values",
     icon="mask.png"
 )
-@ConfigGroups(com.streamsets.pipeline.stage.processor.fieldmask.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 @HideConfig(onErrorRecord = true)
 public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldMaskProcessor.class);

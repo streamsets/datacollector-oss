@@ -34,7 +34,7 @@ import java.util.Locale;
     description = "Replaces null values with a constant and replaces values with NULL",
     icon="replacer.svg"
 )
-@ConfigGroups(com.streamsets.pipeline.stage.processor.fieldvaluereplacer.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldValueReplacerProcessor.class);
 

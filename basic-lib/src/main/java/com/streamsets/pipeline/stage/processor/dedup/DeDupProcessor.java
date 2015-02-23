@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
     icon="dedup.svg",
     outputStreams = OutputStreams.class
 )
-@ConfigGroups(com.streamsets.pipeline.stage.processor.dedup.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 @HideConfig(onErrorRecord = true)
 public class DeDupProcessor extends RecordProcessor {
 

@@ -3,22 +3,19 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spooldir;
+package com.streamsets.pipeline.stage.destination.hdfs;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum ConfigGroups implements Label {
-  FILES("Files"),
-  POST_PROCESSING("Post Processing"),
-  TEXT("Text"),
-  JSON("JSON"),
+public enum Groups implements Label {
+  HADOOP_FS("Hadoop FS"),
+  OUTPUT_FILES("Output Files"),
+  LATE_RECORDS("Late Records"),
   DELIMITED("Delimited"),
-  XML("XML"),
   ;
 
   private final String label;
-
-  ConfigGroups(String label) {
+  Groups(String label) {
     this.label = label;
   }
 
@@ -26,5 +23,4 @@ public enum ConfigGroups implements Label {
   public String getLabel() {
     return label;
   }
-
 }

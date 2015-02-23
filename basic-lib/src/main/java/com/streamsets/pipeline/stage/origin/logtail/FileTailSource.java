@@ -38,7 +38,7 @@ import java.util.concurrent.BlockingQueue;
     icon="fileTail.png"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
-@ConfigGroups(com.streamsets.pipeline.stage.origin.logtail.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 @HideConfig(onErrorRecord = true)
 public class FileTailSource extends BaseSource implements OffsetCommitter {
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;

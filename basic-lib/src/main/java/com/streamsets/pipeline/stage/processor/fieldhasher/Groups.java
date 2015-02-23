@@ -3,16 +3,16 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.processor.jsonparser;
+package com.streamsets.pipeline.stage.processor.fieldhasher;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum ConfigGroups implements Label {
-  JSON;
+public enum Groups implements Label {
+  HASHING;
 
   @Override
   public String getLabel() {
-    return "Parse";
+    return "Hash";
   }
 
 }

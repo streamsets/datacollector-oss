@@ -15,7 +15,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.lib.util.JsonLineToRecord;
-import com.streamsets.pipeline.lib.util.ToRecord;
 import com.streamsets.pipeline.lib.util.ToRecordException;
 
 @GenerateResourceBundle
@@ -25,7 +24,7 @@ import com.streamsets.pipeline.lib.util.ToRecordException;
     description = "Parses a string field with JSON data",
     icon="jsonparser.svg"
 )
-@ConfigGroups(com.streamsets.pipeline.stage.processor.jsonparser.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 public class JsonParserProcessor extends SingleLaneRecordProcessor {
 
   @ConfigDef(

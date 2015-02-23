@@ -3,16 +3,15 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.processor.dedup;
+package com.streamsets.pipeline.stage.destination.recordstolocalfilesystem;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum ConfigGroups implements Label {
-  DE_DUP;
+public enum Groups implements Label {
+  FILES;
 
   @Override
   public String getLabel() {
-    return "Deduplication";
+    return "Files";
   }
-
 }

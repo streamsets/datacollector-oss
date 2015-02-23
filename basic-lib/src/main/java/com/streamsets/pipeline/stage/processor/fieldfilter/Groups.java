@@ -3,16 +3,16 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.processor.expression;
+package com.streamsets.pipeline.stage.processor.fieldfilter;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum ConfigGroups implements Label {
-  EXPRESSIONS;
+public enum Groups implements Label {
+  FILTER;
 
   @Override
   public String getLabel() {
-    return "Expressions";
+    return "Remove";
   }
 
 }

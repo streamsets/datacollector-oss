@@ -3,16 +3,16 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.processor.fieldfilter;
+package com.streamsets.pipeline.stage.processor.fieldmask;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum ConfigGroups implements Label {
-  FILTER;
+public enum Groups implements Label {
+  MASKING;
 
   @Override
   public String getLabel() {
-    return "Remove";
+    return "Mask";
   }
 
 }

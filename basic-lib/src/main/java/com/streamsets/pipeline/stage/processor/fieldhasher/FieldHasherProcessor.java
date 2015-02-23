@@ -29,7 +29,7 @@ import java.util.List;
     label="Field Hasher",
     description = "Uses an algorithm to hash field values",
     icon="hash.png")
-@ConfigGroups(com.streamsets.pipeline.stage.processor.fieldhasher.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 @HideConfig(onErrorRecord = true)
 public class FieldHasherProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldHasherProcessor.class);

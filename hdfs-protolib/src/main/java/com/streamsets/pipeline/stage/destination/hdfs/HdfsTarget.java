@@ -62,7 +62,7 @@ import java.util.TimeZone;
     description = "Writes to a Hadoop file system",
     icon = "hdfs.svg"
 )
-@ConfigGroups(com.streamsets.pipeline.stage.destination.hdfs.ConfigGroups.class)
+@ConfigGroups(Groups.class)
 public class HdfsTarget extends BaseTarget {
   private final static Logger LOG = LoggerFactory.getLogger(HdfsTarget.class);
 
