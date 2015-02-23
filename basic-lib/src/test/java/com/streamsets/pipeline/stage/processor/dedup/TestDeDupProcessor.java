@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.processor.dedup;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -33,11 +34,8 @@ public class TestDeDupProcessor {
 
   @Test(expected = StageException.class)
   public void testValidateConfigs1() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.SPECIFIED_FIELDS)
-        .addConfiguration("fieldsToCompare", Collections.emptyList())
-        .addConfiguration("timeWindowSecs", 1)
-        .addConfiguration("recordCountWindow", 4)
+    Processor processor = new DeDupProcessor(4, 1, SelectFields.SPECIFIED_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -46,11 +44,8 @@ public class TestDeDupProcessor {
 
   @Test
   public void testValidateConfigs2() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.SPECIFIED_FIELDS)
-        .addConfiguration("fieldsToCompare", Arrays.asList("/a"))
-        .addConfiguration("timeWindowSecs", 1)
-        .addConfiguration("recordCountWindow", 4)
+    Processor processor = new DeDupProcessor(4, 1, SelectFields.SPECIFIED_FIELDS, Arrays.asList("/a"));
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -60,10 +55,8 @@ public class TestDeDupProcessor {
 
   @Test(expected = StageException.class)
   public void testValidateConfigs3() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.ALL_FIELDS)
-        .addConfiguration("timeWindowSecs", 0)
-        .addConfiguration("recordCountWindow", 0)
+    Processor processor = new DeDupProcessor(0, 0, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -72,10 +65,8 @@ public class TestDeDupProcessor {
 
   @Test
   public void testValidateConfigs4() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.ALL_FIELDS)
-        .addConfiguration("timeWindowSecs", 0)
-        .addConfiguration("recordCountWindow", 4)
+    Processor processor = new DeDupProcessor(4, 0, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -84,10 +75,9 @@ public class TestDeDupProcessor {
 
   @Test(expected = StageException.class)
   public void testValidateConfigs5() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.ALL_FIELDS)
-        .addConfiguration("timeWindowSecs", 0)
-        .addConfiguration("recordCountWindow", (int) (Runtime.getRuntime().maxMemory() / 3 / 85 + 1))
+    Processor processor = new DeDupProcessor((int) (Runtime.getRuntime().maxMemory() / 3 / 85 + 1), 0,
+                                             SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -96,10 +86,9 @@ public class TestDeDupProcessor {
 
   @Test
   public void testValidateConfigs6() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.ALL_FIELDS)
-        .addConfiguration("timeWindowSecs", 0)
-        .addConfiguration("recordCountWindow", (int) (Runtime.getRuntime().maxMemory() / 3 / 85 - 1))
+    Processor processor = new DeDupProcessor((int) (Runtime.getRuntime().maxMemory() / 3 / 85 - 1), 0,
+                                             SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -108,10 +97,8 @@ public class TestDeDupProcessor {
 
   @Test
   public void testUniqueSingleBatch() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.ALL_FIELDS)
-        .addConfiguration("timeWindowSecs", 1)
-        .addConfiguration("recordCountWindow", 4)
+    Processor processor = new DeDupProcessor(4, 1, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -133,10 +120,8 @@ public class TestDeDupProcessor {
 
   @Test
   public void testDupWithinTimeWindowSingleBatch() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.ALL_FIELDS)
-        .addConfiguration("timeWindowSecs", 1)
-        .addConfiguration("recordCountWindow", 4)
+    Processor processor = new DeDupProcessor(4, 1, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -158,10 +143,8 @@ public class TestDeDupProcessor {
 
   @Test
   public void testUniqueMultipleBatches() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.ALL_FIELDS)
-        .addConfiguration("timeWindowSecs", 1)
-        .addConfiguration("recordCountWindow", 4)
+    Processor processor = new DeDupProcessor(4, 1, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -199,10 +182,8 @@ public class TestDeDupProcessor {
 
   @Test
   public void testDupWithinTimeWindowMultipleBatches() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.ALL_FIELDS)
-        .addConfiguration("timeWindowSecs", 1)
-        .addConfiguration("recordCountWindow", 4)
+    Processor processor = new DeDupProcessor(4, 1, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -240,10 +221,8 @@ public class TestDeDupProcessor {
 
   @Test
   public void testDupOutsideTimeWindowMultipleBatches() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.ALL_FIELDS)
-        .addConfiguration("timeWindowSecs", 1)
-        .addConfiguration("recordCountWindow", 4)
+    Processor processor = new DeDupProcessor(4, 1, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -283,10 +262,8 @@ public class TestDeDupProcessor {
 
   @Test
   public void testDupWithinRecordTailSingleBatch() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.ALL_FIELDS)
-        .addConfiguration("timeWindowSecs", 0)
-        .addConfiguration("recordCountWindow", 3)
+    Processor processor = new DeDupProcessor(3, 0, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -309,10 +286,8 @@ public class TestDeDupProcessor {
 
   @Test
   public void testDupWithinRecordTailMultipleBatches() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupProcessor.class)
-        .addConfiguration("compareFields", SelectFields.ALL_FIELDS)
-        .addConfiguration("timeWindowSecs", 0)
-        .addConfiguration("recordCountWindow", 3)
+    Processor processor = new DeDupProcessor(3, 0, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();

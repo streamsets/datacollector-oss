@@ -14,17 +14,9 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.PrimitiveSink;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ChooserMode;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.lib.queue.XEvictingQueue;
 
@@ -34,63 +26,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@GenerateResourceBundle
-@StageDef(
-    version = "1.0.0",
-    label = "Record Deduplicator",
-    description = "Separates unique and duplicate records based on field comparison",
-    icon="dedup.svg",
-    outputStreams = OutputStreams.class
-)
-@ConfigGroups(Groups.class)
-@HideConfig(onErrorRecord = true)
 public class DeDupProcessor extends RecordProcessor {
+  private static final long MEMORY_USAGE_PER_HASH = 85;
 
-  private static final int MEMORY_USAGE_PER_HASH = 85;
+  private final  int recordCountWindow;
+  private final  int timeWindowSecs;
+  private final  SelectFields compareFields;
+  private final  List<String> fieldsToCompare;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.INTEGER,
-      defaultValue = "1000000",
-      label = "Max Records to Compare",
-      displayPosition = 10,
-      group = "DE_DUP"
-  )
-  public int recordCountWindow;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.INTEGER,
-      defaultValue = "0",
-      label = "Time to Compare (secs)",
-      description = "Creates a window of time for comparison. Takes precedence over Max Records. Use 0 for no time window.",
-      displayPosition = 20,
-      group = "DE_DUP"
-  )
-  public int timeWindowSecs;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "ALL_FIELDS",
-      label = "Compare",
-      displayPosition = 30,
-      group = "DE_DUP"
-  )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = SelectFieldsChooserValues.class)
-  public SelectFields compareFields;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Fields to Compare",
-      displayPosition = 40,
-      group = "DE_DUP",
-      dependsOn = "compareFields",
-      triggeredByValue = "SPECIFIED_FIELDS"
-  )
-  @FieldSelector
-  public List<String> fieldsToCompare;
+  public DeDupProcessor(int recordCountWindow, int timeWindowSecs,
+      SelectFields compareFields, List<String> fieldsToCompare) {
+    this.recordCountWindow = recordCountWindow;
+    this.timeWindowSecs = timeWindowSecs;
+    this.compareFields = compareFields;
+    this.fieldsToCompare = fieldsToCompare;
+  }
 
   public static class RecordFunnel implements Funnel<Record> {
     private List<String> fieldsToHash;
@@ -196,8 +146,8 @@ public class DeDupProcessor extends RecordProcessor {
 
     long estimatedMemory = MEMORY_USAGE_PER_HASH * recordCountWindow;
     if (estimatedMemory > Runtime.getRuntime().maxMemory() / 3) {
-      issues.add(getContext().createConfigIssue(Errors.DEDUP_03, recordCountWindow, estimatedMemory / 1024,
-                                                Runtime.getRuntime().maxMemory() / 1024));
+      issues.add(getContext().createConfigIssue(Errors.DEDUP_03, recordCountWindow, estimatedMemory / (1024 * 1024),
+                                                Runtime.getRuntime().maxMemory() / (1024 * 1024)));
     }
     return issues;
   }
