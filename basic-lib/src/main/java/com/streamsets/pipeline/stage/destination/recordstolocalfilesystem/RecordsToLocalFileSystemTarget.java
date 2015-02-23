@@ -7,13 +7,7 @@ package com.streamsets.pipeline.stage.destination.recordstolocalfilesystem;
 
 import com.google.common.io.CountingOutputStream;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.ErrorStage;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
@@ -35,53 +29,18 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 
-@GenerateResourceBundle
-@StageDef(
-    version = "1.0.0",
-    label = "SDC Record Files",
-    description = "Writes records to the local File System using 'SDC Record (JSON)' format",
-    icon="localfilesystem.png"
-)
-@HideConfig(requiredFields = true, onErrorRecord = true)
-@ErrorStage
-@ConfigGroups(Groups.class)
 public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private final static Logger LOG = LoggerFactory.getLogger(RecordsToLocalFileSystemTarget.class);
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Directory",
-      description = "Directory to write records",
-      displayPosition = 10,
-      group = "FILES"
-  )
-  public String directory;
+  private final String directory;
+  private final String rotationIntervalSecs;
+  private final int maxFileSizeMbs;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.EL_NUMBER,
-      defaultValue = "${1 * HOURS}",
-      label = "File Wait Time (secs)",
-      description = "Max time to wait for error records before creating a new error file. \n" +
-                    "Enter the time in seconds or use the default expression to enter the time limit in minutes. " +
-                    "You can also use HOURS in the expression to enter the limit in hours.",
-      displayPosition = 20,
-      group = "FILES"
-  )
-  public String rotationIntervalSecs;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.INTEGER,
-      defaultValue = "512",
-      label = "Max File Size (MB)",
-      description = "Max file size to trigger the creation of a new file. Use 0 to opt out.",
-      displayPosition = 30,
-      group = "FILES"
-  )
-  public int maxFileSizeMbs;
+  public RecordsToLocalFileSystemTarget(String directory, String rotationIntervalSecs, int maxFileSizeMbs) {
+    this.directory = directory;
+    this.rotationIntervalSecs = rotationIntervalSecs;
+    this.maxFileSizeMbs = maxFileSizeMbs;
+  }
 
   private File dir;
   private long rotationMillis;
