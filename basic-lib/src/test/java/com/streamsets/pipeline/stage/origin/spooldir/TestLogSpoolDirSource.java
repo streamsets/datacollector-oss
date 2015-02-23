@@ -3,13 +3,11 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spooldir.log;
+package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.stage.origin.spooldir.PostProcessingOptions;
-import com.streamsets.pipeline.stage.origin.spooldir.SpoolDirSource;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
@@ -42,27 +40,18 @@ public class TestLogSpoolDirSource {
     return f;
   }
 
+  private SpoolDirSource createSource(boolean truncated) {
+    return new SpoolDirSource(DataFormat.TEXT, createTestDir(), 10, 0, "file-[0-9].log", 10, null, null,
+                              PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, false, false, null, 0, 10,
+                              truncated, null, 0);
+  }
+
   @Test
   public void testProduceFullFile() throws Exception {
-    SourceRunner runner = new SourceRunner.Builder(SpoolDirSource.class)
-        .addConfiguration("postProcessing", PostProcessingOptions.ARCHIVE)
-        .addConfiguration("filePattern", "file-[0-9].log")
-        .addConfiguration("batchSize", 10)
-        .addConfiguration("maxSpoolFiles", 10)
-        .addConfiguration("spoolDir", createTestDir())
-        .addConfiguration("archiveDir", createTestDir())
-        .addConfiguration("retentionTimeMins", 10)
-        .addConfiguration("initialFileToProcess", null)
-        .addConfiguration("poolingTimeoutSecs", 0)
-        .addConfiguration("errorArchiveDir", null)
-        .addConfiguration("dataFormat", DataFormat.TEXT)
-        .addConfiguration("setTruncated", false)
-        .addConfiguration("maxLogLineLength", 10)
-        .addOutputLane("lane")
-        .build();
+    SpoolDirSource source = createSource(false);
+    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {
-      SpoolDirSource source = (SpoolDirSource) runner.getStage();
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
       Assert.assertEquals(-1, source.produce(createLogFile(), 0, 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
@@ -80,25 +69,10 @@ public class TestLogSpoolDirSource {
 
   @Test
   public void testProduceLessThanFile() throws Exception {
-    SourceRunner runner = new SourceRunner.Builder(SpoolDirSource.class)
-        .addConfiguration("postProcessing", PostProcessingOptions.ARCHIVE)
-        .addConfiguration("filePattern", "file-[0-9].log")
-        .addConfiguration("batchSize", 10)
-        .addConfiguration("maxSpoolFiles", 10)
-        .addConfiguration("spoolDir", createTestDir())
-        .addConfiguration("archiveDir", createTestDir())
-        .addConfiguration("retentionTimeMins", 10)
-        .addConfiguration("initialFileToProcess", null)
-        .addConfiguration("poolingTimeoutSecs", 0)
-        .addConfiguration("errorArchiveDir", null)
-        .addConfiguration("dataFormat", DataFormat.TEXT)
-        .addConfiguration("setTruncated", true)
-        .addConfiguration("maxLogLineLength", 10)
-        .addOutputLane("lane")
-        .build();
+    SpoolDirSource source = createSource(true);
+    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {
-      SpoolDirSource source = (SpoolDirSource) runner.getStage();
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
       long offset = source.produce(createLogFile(), 0, 1, batchMaker);
       Assert.assertEquals(11, offset);

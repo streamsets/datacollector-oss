@@ -7,7 +7,9 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
@@ -31,6 +33,19 @@ public class TestSpoolDirSource {
     int maxBatchSize;
     long offsetIncrement;
     boolean produceCalled;
+    String spoolDir;
+
+    public TSpoolDirSource(DataFormat dataFormat, String spoolDir, int batchSize, long poolingTimeoutSecs,
+        String filePattern,
+        int maxSpoolFiles, String initialFileToProcess, String errorArchiveDir, PostProcessingOptions postProcessing,
+        String archiveDir, long retentionTimeMins, CsvMode csvFileFormat, boolean hasHeaderLine, boolean convertToMap,
+        JsonMode jsonContent, int maxJsonObjectLen, int maxLogLineLength, boolean setTruncated, String xmlRecordElement,
+        int maxXmlObjectLen) {
+      super(dataFormat, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess,
+            errorArchiveDir, postProcessing, archiveDir, retentionTimeMins, csvFileFormat, hasHeaderLine, convertToMap,
+            jsonContent, maxJsonObjectLen, maxLogLineLength, setTruncated, xmlRecordElement, maxXmlObjectLen);
+      this.spoolDir = spoolDir;
+    }
 
     @Override
     public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
@@ -43,28 +58,16 @@ public class TestSpoolDirSource {
     }
   }
 
-  private SourceRunner createSourceRunner(SpoolDirSource source, String initialFile) {
-    return new SourceRunner.Builder(source)
-        .addConfiguration("dataFormat", DataFormat.TEXT)
-        .addConfiguration("maxLogLineLength", 1024)
-        .addConfiguration("setTruncated", false)
-        .addConfiguration("postProcessing", PostProcessingOptions.ARCHIVE)
-        .addConfiguration("filePattern", "file-[0-9].log")
-        .addConfiguration("batchSize", 10)
-        .addConfiguration("maxSpoolFiles", 10)
-        .addConfiguration("spoolDir", createTestDir())
-        .addConfiguration("archiveDir", createTestDir())
-        .addConfiguration("retentionTimeMins", 10)
-        .addConfiguration("initialFileToProcess", initialFile)
-        .addConfiguration("poolingTimeoutSecs", 0)
-        .addConfiguration("errorArchiveDir", null)
-        .addOutputLane("lane")
-        .build();
+  private TSpoolDirSource createSource(String initialFile) {
+    return new TSpoolDirSource(DataFormat.TEXT, createTestDir(), 10, 0, "file-[0-9].log", 10, initialFile, null,
+                               PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, false, false, null,
+                               0, 1024, false, null, 0);
   }
+
   @Test
   public void testInitDestroy() throws Exception {
-    TSpoolDirSource source = new TSpoolDirSource();
-    SourceRunner runner = createSourceRunner(source, "file-0.log");
+    TSpoolDirSource source = createSource("file-0.log");
+    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {
       Assert.assertTrue(source.getSpooler().isRunning());
@@ -76,8 +79,7 @@ public class TestSpoolDirSource {
 
   @Test
   public void getOffsetMethods() throws Exception {
-    TSpoolDirSource source = new TSpoolDirSource();
-    createSourceRunner(source, "file-0.log");
+    TSpoolDirSource source = createSource("file-0.log");
     Assert.assertNull(source.getFileFromSourceOffset(null));
     Assert.assertEquals("x", source.getFileFromSourceOffset("x"));
     Assert.assertEquals(0, source.getOffsetFromSourceOffset(null));
@@ -88,8 +90,8 @@ public class TestSpoolDirSource {
 
   @Test
   public void testProduceNoInitialFileNoFileInSpoolDirNullOffset() throws Exception {
-    TSpoolDirSource source = new TSpoolDirSource();
-    SourceRunner runner = createSourceRunner(source, null);
+    TSpoolDirSource source = createSource(null);
+    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {
       StageRunner.Output output = runner.runProduce(null, 10);
@@ -104,8 +106,8 @@ public class TestSpoolDirSource {
 
   @Test
   public void testProduceNoInitialFileWithFileInSpoolDirNullOffset() throws Exception {
-    TSpoolDirSource source = new TSpoolDirSource();
-    SourceRunner runner = createSourceRunner(source, "file-0.log");
+    TSpoolDirSource source = createSource("file-0.log");
+    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     File file = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file.toPath());
     runner.runInit();
@@ -124,8 +126,8 @@ public class TestSpoolDirSource {
 
   @Test
   public void testProduceNoInitialFileNoFileInSpoolDirNotNullOffset() throws Exception {
-    TSpoolDirSource source = new TSpoolDirSource();
-    SourceRunner runner = createSourceRunner(source, null);
+    TSpoolDirSource source = createSource(null);
+    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {
       StageRunner.Output output = runner.runProduce("file-0.log", 10);
@@ -139,8 +141,8 @@ public class TestSpoolDirSource {
 
   @Test
   public void testProduceNoInitialFileWithFileInSpoolDirNotNullOffset() throws Exception {
-    TSpoolDirSource source = new TSpoolDirSource();
-    SourceRunner runner = createSourceRunner(source, "file-0.log");
+    TSpoolDirSource source = createSource("file-0.log");
+    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     File file = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file.toPath());
     runner.runInit();
@@ -158,8 +160,8 @@ public class TestSpoolDirSource {
 
   @Test
   public void testProduceNoInitialFileWithFileInSpoolDirNonZeroOffset() throws Exception {
-    TSpoolDirSource source = new TSpoolDirSource();
-    SourceRunner runner = createSourceRunner(source, null);
+    TSpoolDirSource source = createSource(null);
+    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     File file = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file.toPath());
     runner.runInit();
@@ -177,8 +179,8 @@ public class TestSpoolDirSource {
 
   @Test
   public void testAdvanceToNextSpoolFile() throws Exception {
-    TSpoolDirSource source = new TSpoolDirSource();
-    SourceRunner runner = createSourceRunner(source, null);
+    TSpoolDirSource source = createSource(null);
+    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     File file1 = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file1.toPath());
     File file2 = new File(source.spoolDir, "file-1.log").getAbsoluteFile();
