@@ -281,7 +281,7 @@ angular.module('dataCollectorApp.common')
         } else if(configDefinition.model.modelType === 'LANE_PREDICATE_MAPPING') {
           config.value = [{
             outputLane: stageInstance.outputLanes[0],
-            predicate: '${default}'
+            predicate: 'default'
           }];
         } else if(configDefinition.model.modelType === 'COMPLEX_FIELD') {
           var complexFieldObj = {};

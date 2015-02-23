@@ -145,8 +145,8 @@ angular
        */
       addLane: function(stageInstance, configValue) {
         var outputLaneName = stageInstance.instanceName + 'OutputLane' + (new Date()).getTime();
-        stageInstance.outputLanes.push(outputLaneName);
-        configValue.push({
+        stageInstance.outputLanes.unshift(outputLaneName);
+        configValue.unshift({
           outputLane: outputLaneName,
           predicate: ''
         });

@@ -261,7 +261,7 @@
                placeholder="{{'home.detailPane.configurationTab.enterPredicate' | translate}}"
                ng-required="true"
                name="{{configDefinition.name + $index}}"
-               ng-readonly="isPipelineRunning"
+               ng-readonly="isPipelineRunning || lanePredicateMapping.predicate === 'default'"
                ng-model="lanePredicateMapping.predicate"/>
       </div>
 
