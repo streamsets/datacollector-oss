@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -29,6 +30,7 @@ import java.util.List;
     description = "Uses an algorithm to hash field values",
     icon="hash.png")
 @ConfigGroups(com.streamsets.pipeline.stage.processor.fieldhasher.ConfigGroups.class)
+@HideConfig(onErrorRecord = true)
 public class FieldHasherProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldHasherProcessor.class);
 

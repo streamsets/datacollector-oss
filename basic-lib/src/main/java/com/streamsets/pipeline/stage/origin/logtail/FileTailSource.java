@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Record;
@@ -38,6 +39,7 @@ import java.util.concurrent.BlockingQueue;
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(com.streamsets.pipeline.stage.origin.logtail.ConfigGroups.class)
+@HideConfig(onErrorRecord = true)
 public class FileTailSource extends BaseSource implements OffsetCommitter {
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
 

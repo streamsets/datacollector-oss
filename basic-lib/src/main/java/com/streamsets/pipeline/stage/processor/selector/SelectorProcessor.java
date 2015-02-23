@@ -16,6 +16,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
@@ -62,18 +63,6 @@ public class SelectorProcessor extends RecordProcessor {
       group = "CONDITIONS"
   )
   public Map<String, ?> constants;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "DISCARD",
-      label = "Unmatched Record Handling",
-      description = "Action for records without matching conditions",
-      displayPosition = 30,
-      group = "CONDITIONS"
-  )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnRecordErrorChooserValues.class)
-  public OnRecordError onNoPredicateMatch;
 
   private String[][] predicateLanes;
   private ELEvaluator elEvaluator;
@@ -200,23 +189,12 @@ public class SelectorProcessor extends RecordProcessor {
                     pl[0], pl[1]);
         }
       } catch (ELException ex) {
-        getContext().toError(record, Errors.SELECTOR_04, pl[0], ex.getMessage(), ex);
+        throw new OnRecordErrorException(Errors.SELECTOR_04, record.getHeader().getSourceId());
       }
     }
     if (!matchedAtLeastOnePredicate) {
-      switch (onNoPredicateMatch) {
-        case DISCARD:
-          LOG.trace("Record '{}' does not satisfy any condition, dropping it", record.getHeader().getSourceId());
-          break;
-        case TO_ERROR:
-          LOG.trace("Record '{}' does not satisfy any condition, sending it to error",
-                    record.getHeader().getSourceId());
-          getContext().toError(record, Errors.SELECTOR_05);
-          break;
-        case STOP_PIPELINE:
-          LOG.error(Errors.SELECTOR_06.getMessage(), record.getHeader().getSourceId());
-          throw new StageException(Errors.SELECTOR_06, record.getHeader().getSourceId());
-      }
+      //TODO: SDC-247, get rid of this and hide
+      throw new OnRecordErrorException(Errors.SELECTOR_06, record.getHeader().getSourceId());
     }
   }
 

@@ -52,9 +52,9 @@ public class TestSelectorProcessor {
   @Test(expected = IllegalStateException.class)
   public void testInitZeroLanePredicates() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
+        .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("lanePredicates", createLanePredicates())
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .build();
     runner.runInit();
   }
@@ -62,9 +62,9 @@ public class TestSelectorProcessor {
   @Test(expected = IllegalStateException.class)
   public void testInitLanePredicatesNotMatchingLanes() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
+        .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("lanePredicates", createLanePredicates("a", "true"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .build();
     runner.runInit();
   }
@@ -72,9 +72,9 @@ public class TestSelectorProcessor {
   @Test(expected = StageException.class)
   public void testInitLanePredicatesMoreOutputLanes() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
+        .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("lanePredicates", createLanePredicates("a", "true"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .addOutputLane("b")
         .build();
@@ -84,9 +84,9 @@ public class TestSelectorProcessor {
   @Test(expected = StageException.class)
   public void testInitLanePredicatesInvalidPredicate() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
+        .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("lanePredicates", createLanePredicates("a", "${x}"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .build();
     runner.runInit();
@@ -95,9 +95,9 @@ public class TestSelectorProcessor {
   @Test
   public void testInitLanePredicates() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
+        .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("lanePredicates", createLanePredicates("a", "x"))
         .addConfiguration("constants", ImmutableMap.of("x", "false"))
-        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .build();
     runner.runInit();
@@ -107,9 +107,9 @@ public class TestSelectorProcessor {
   public void testInitLanePredicatesWithListMapConstants() throws Exception {
     List<Map> constant = ImmutableList.of((Map)ImmutableMap.of("key", "x", "value", "false"));
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
+        .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("lanePredicates", createLanePredicates("a", "x"))
         .addConfiguration("constants", constant)
-        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .build();
     runner.runInit();
@@ -118,11 +118,11 @@ public class TestSelectorProcessor {
   @Test
   public void testSelectWithDefault() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
+        .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
                                                                  "b", "${record:value('') == 2}",
                                                                  "c", "${default}"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .addOutputLane("b")
         .addOutputLane("c")
@@ -157,10 +157,10 @@ public class TestSelectorProcessor {
   @Test
   public void testSelectWithoutDefaultDropping() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
+        .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
                                                                  "b", "${record:value('') == 2}"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnRecordError.DISCARD)
         .addOutputLane("a")
         .addOutputLane("b")
         .build();
@@ -192,10 +192,10 @@ public class TestSelectorProcessor {
   @Test
   public void testSelectWithoutDefaultToError() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
+        .setOnRecordError(OnRecordError.TO_ERROR)
         .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
                                                                  "b", "${record:value('') == 2}"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnRecordError.TO_ERROR)
         .addOutputLane("a")
         .addOutputLane("b")
         .build();
@@ -229,10 +229,10 @@ public class TestSelectorProcessor {
   @Test(expected = StageException.class)
   public void testSelectWithoutDefaultFailPipeline() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
                                                                  "b", "${record:value('') == 2}"))
         .addConfiguration("constants", null)
-        .addConfiguration("onNoPredicateMatch", OnRecordError.STOP_PIPELINE)
         .addOutputLane("a")
         .addOutputLane("b")
         .build();

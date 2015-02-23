@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -33,6 +34,7 @@ import java.util.Locale;
     icon="converter.svg"
 )
 @ConfigGroups(com.streamsets.pipeline.stage.processor.fieldtypeconverter.ConfigGroups.class)
+@HideConfig(onErrorRecord = true)
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
 

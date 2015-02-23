@@ -23,8 +23,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.api.OnRecordError;
-import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
@@ -216,18 +214,6 @@ public class HdfsTarget extends BaseTarget {
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileTypeChooserValues.class)
   public HdfsFileType fileType;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "TO_ERROR",
-      label = "On Record Error",
-      description = "",
-      displayPosition = 105,
-      group = "OUTPUT_FILES"
-  )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnRecordErrorChooserValues.class)
-  public OnRecordError onRecordError;
 
   @ConfigDef(
       required = true,
@@ -660,11 +646,11 @@ public class HdfsTarget extends BaseTarget {
         }
       }
     } catch (Exception ex) {
-      switch (onRecordError) {
+      switch (getContext().getOnErrorRecord()) {
         case DISCARD:
           break;
         case TO_ERROR:
-          getContext().toError(record, Errors.HADOOPFS_15, ex.getMessage());
+          getContext().toError(record, ex);
           break;
         case STOP_PIPELINE:
           throw new StageException(Errors.HADOOPFS_14, record, ex.getMessage(), ex);

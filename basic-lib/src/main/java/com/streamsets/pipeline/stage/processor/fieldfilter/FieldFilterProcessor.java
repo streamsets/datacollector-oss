@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -31,6 +32,7 @@ import java.util.Set;
     icon="filter.png"
 )
 @ConfigGroups(com.streamsets.pipeline.stage.processor.fieldfilter.ConfigGroups.class)
+@HideConfig(onErrorRecord = true)
 public class FieldFilterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldFilterProcessor.class);
 

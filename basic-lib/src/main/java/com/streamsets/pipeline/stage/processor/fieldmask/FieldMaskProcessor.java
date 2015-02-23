@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -28,6 +29,7 @@ import java.util.List;
     icon="mask.png"
 )
 @ConfigGroups(com.streamsets.pipeline.stage.processor.fieldmask.ConfigGroups.class)
+@HideConfig(onErrorRecord = true)
 public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldMaskProcessor.class);
 

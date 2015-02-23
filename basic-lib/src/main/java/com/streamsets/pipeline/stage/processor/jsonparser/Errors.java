@@ -11,6 +11,7 @@ public enum Errors implements ErrorCode {
   JSONP_00("Record '{}' does not have the field-path '{}', cannot parse"),
   JSONP_01("Record '{}' has the field-path '{}' set to NULL, cannot parse"),
   JSONP_02("Record '{}' cannot set the parsed JSON  at field-path='{}', field-path does not exist"),
+  JSONP_03("Record '{}' could not JSON parse field '{}': {}"),
   ;
 
   private final String msg;

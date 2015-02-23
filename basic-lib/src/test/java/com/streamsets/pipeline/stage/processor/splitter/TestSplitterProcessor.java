@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.processor.splitter;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -71,6 +72,7 @@ public class TestSplitterProcessor {
   @Test
   public void testSplittingToError() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterProcessor.class)
+        .setOnRecordError(OnRecordError.TO_ERROR)
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))

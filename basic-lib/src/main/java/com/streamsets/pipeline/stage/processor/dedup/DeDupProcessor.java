@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -42,6 +43,7 @@ import java.util.concurrent.TimeUnit;
     outputStreams = OutputStreams.class
 )
 @ConfigGroups(com.streamsets.pipeline.stage.processor.dedup.ConfigGroups.class)
+@HideConfig(onErrorRecord = true)
 public class DeDupProcessor extends RecordProcessor {
 
   private static final int MEMORY_USAGE_PER_HASH = 85;

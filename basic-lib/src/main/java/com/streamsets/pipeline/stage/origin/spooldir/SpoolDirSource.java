@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -38,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(com.streamsets.pipeline.stage.origin.spooldir.ConfigGroups.class)
+@HideConfig(onErrorRecord = true)
 public class SpoolDirSource extends BaseSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);
   private static final String OFFSET_SEPARATOR = "::";

@@ -11,10 +11,12 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -137,11 +139,8 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
         record.delete(fieldPath);
       }
       batchMaker.addRecord(record);
-    } else if (onNotEnoughSplits == OnNotEnoughSplits.TO_ERROR) {
-      getContext().toError(record, error, record, fieldPath);
     } else {
-      throw new IllegalStateException(Utils.format("It should not happen, error={}, onNotEnoughSplits={}", error,
-                                                   onNotEnoughSplits));
+      throw new OnRecordErrorException(error);
     }
   }
 

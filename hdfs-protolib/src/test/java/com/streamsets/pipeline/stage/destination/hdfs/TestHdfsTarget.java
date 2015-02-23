@@ -40,6 +40,7 @@ public class TestHdfsTarget {
   @Test
   public void testTarget() throws Exception {
     TargetRunner runner = new TargetRunner.Builder(HdfsTarget.class)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .addConfiguration("hdfsUri", "file:///")
         .addConfiguration("hdfsKerberos", false)
         .addConfiguration("hdfsConfigs", new HashMap<>())
@@ -59,7 +60,6 @@ public class TestHdfsTarget {
         .addConfiguration("dataFormat", DataFormat.SDC_JSON)
         .addConfiguration("csvFileFormat", null)
         .addConfiguration("cvsFieldPathToNameMappingConfigList", new ArrayList<>())
-        .addConfiguration("onRecordError", OnRecordError.STOP_PIPELINE)
         .addConfiguration("replaceNewLines", false)
         .build();
     runner.runInit();

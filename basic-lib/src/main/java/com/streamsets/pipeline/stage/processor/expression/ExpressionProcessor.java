@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
@@ -225,7 +226,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       try {
         result = elEvaluator.eval(variables, expressionProcessorConfig.expression);
       } catch (ELException e) {
-        throw new StageException(Errors.EXPR_00, expressionProcessorConfig.expression, e.getMessage(), e);
+        throw new OnRecordErrorException(Errors.EXPR_00, expressionProcessorConfig.expression, e.getMessage(), e);
       }
       Field newField = Field.create(getTypeFromObject(result), result);
       if(record.has(expressionProcessorConfig.fieldToSet)) {

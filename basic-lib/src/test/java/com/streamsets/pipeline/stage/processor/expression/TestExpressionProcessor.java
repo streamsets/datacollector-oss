@@ -7,8 +7,10 @@ package com.streamsets.pipeline.stage.processor.expression;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -45,7 +47,7 @@ public class TestExpressionProcessor {
   public void tesExpressionEvaluationFailure() throws StageException {
 
     ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
-    expressionProcessorConfig.expression = "${(record:value('/baseSalary') + record:value('/bonus') * 2}"; //invalid expression string, missing ")"
+    expressionProcessorConfig.expression = "${record:value('/baseSalary') + record:value('/bonusx')}"; //invalid expression string, missing ")"
     expressionProcessorConfig.fieldToSet = "/grossSalary";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
@@ -58,14 +60,14 @@ public class TestExpressionProcessor {
 
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("baseSalary", Field.create(Field.Type.STRING, "100000.25"));
-      map.put("bonus", Field.create(Field.Type.STRING, "2000"));
+      map.put("bonusx", Field.create(Field.Type.STRING, "xxx"));
       map.put("tax", Field.create(Field.Type.STRING, "30000.25"));
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       runner.runProcess(ImmutableList.of(record));
       Assert.fail("Stage exception expected as the expression string is not valid");
-    } catch (StageException e) {
+    } catch (OnRecordErrorException e) {
       Assert.assertEquals(Errors.EXPR_00, e.getErrorCode());
     }
   }
