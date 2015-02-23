@@ -12,8 +12,8 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0000("Runtime exception: {}"),
 
   // StageContext
-  CONTAINER_0001("Exception: {}"),
-  CONTAINER_0002("Error message: {}"),
+  CONTAINER_0001("{}"),
+  CONTAINER_0002("{}"),
 
   CONTAINER_0010("Stage configuration validation error: {}"),
 

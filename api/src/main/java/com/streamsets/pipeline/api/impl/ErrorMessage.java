@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.api.impl;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.StageException;
 
 public class ErrorMessage implements LocalizableString {
   private static final Object[] NULL_ONE_ARG = {null};
@@ -13,6 +14,24 @@ public class ErrorMessage implements LocalizableString {
   private final String errorCode;
   private final LocalizableString localizableMessage;
   private final long timestamp;
+  private final boolean preppendErrorCode;
+
+  public ErrorMessage(final StageException ex) {
+    errorCode = ex.getErrorCode().getCode();
+    timestamp = System.currentTimeMillis();
+    localizableMessage = new LocalizableString() {
+      @Override
+      public String getNonLocalized() {
+        return ex.getMessage();
+      }
+
+      @Override
+      public String getLocalized() {
+        return ex.getLocalizedMessage();
+      }
+    };
+    preppendErrorCode = false;
+  }
 
   public ErrorMessage(String errorCode, final String nonLocalizedMsg, long timestamp) {
     this.errorCode = errorCode;
@@ -28,6 +47,7 @@ public class ErrorMessage implements LocalizableString {
       }
     };
     this.timestamp = timestamp;
+    preppendErrorCode = true;
   }
 
   public ErrorMessage(ErrorCode errorCode, Object... params) {
@@ -40,6 +60,7 @@ public class ErrorMessage implements LocalizableString {
     localizableMessage = new LocalizableMessage(errorCode.getClass().getClassLoader(), resourceBundle,
                                                 errorCode.getCode(), errorCode.getMessage(), params);
     timestamp = System.currentTimeMillis();
+    preppendErrorCode = true;
   }
 
   public String getErrorCode() {
@@ -52,12 +73,14 @@ public class ErrorMessage implements LocalizableString {
 
   @Override
   public String getNonLocalized() {
-    return Utils.format("{} - {}", getErrorCode(), localizableMessage.getNonLocalized());
+    return (preppendErrorCode) ? Utils.format("{} - {}", getErrorCode(), localizableMessage.getNonLocalized())
+                               : localizableMessage.getNonLocalized();
   }
 
   @Override
   public String getLocalized() {
-    return Utils.format("{} - {}", getErrorCode(), localizableMessage.getLocalized());
+    return (preppendErrorCode) ? Utils.format("{} - {}", getErrorCode(), localizableMessage.getLocalized())
+                               : localizableMessage.getLocalized();
   }
 
 }

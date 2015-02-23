@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordReader;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
@@ -228,7 +229,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, Exception ex) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(ex, "exception cannot be null");
-    toError(record, new ErrorMessage(ContainerError.CONTAINER_0001, instanceName, ex.getMessage()));
+    if (ex instanceof StageException) {
+      toError(record, new ErrorMessage((StageException) ex));
+    } else {
+      toError(record, new ErrorMessage(ContainerError.CONTAINER_0001, ex.getMessage()));
+    }
   }
 
   @Override
