@@ -452,7 +452,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         }
 
         $scope.$apply(function(){
-          $scope.$emit('onRemoveNodeSelection');
+          $scope.$emit('onRemoveNodeSelection', {
+            selectedObject: undefined,
+            type: pipelineConstant.PIPELINE
+          });
         });
       }
       state.graphMouseDown = false;
@@ -500,7 +503,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
                 thisGraph.spliceLinksForNode(selectedNode);
                 state.selectedNode = null;
-                $scope.$emit('onRemoveNodeSelection');
+                $scope.$emit('onRemoveNodeSelection', {
+                  selectedObject: undefined,
+                  type: pipelineConstant.PIPELINE
+                });
                 thisGraph.updateGraph();
               }
             });
@@ -515,7 +521,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
                 thisGraph.edges.splice(edgeIndex, 1);
                 state.selectedEdge = null;
-                $scope.$emit('onRemoveNodeSelection');
+                $scope.$emit('onRemoveNodeSelection', {
+                  selectedObject: undefined,
+                  type: pipelineConstant.PIPELINE
+                });
                 thisGraph.updateGraph();
               }
             });
@@ -616,7 +625,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       var thisGraph = this,
         consts = thisGraph.consts,
         state = thisGraph.state,
-        stageErrorCounts = thisGraph.stageErrorCounts;
+        stageErrorCounts = thisGraph.stageErrorCounts,
+        firstConfigIssue;
 
       thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d){
         return String(d.source.instanceName) + '+' + String(d.target.instanceName);
@@ -646,8 +656,20 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         })
         .on('mousedown', function(d){
           thisGraph.stageMouseDown.call(thisGraph, d3.select(this), d);
+
+          var options = {
+            selectedObject: d,
+            type: pipelineConstant.STAGE_INSTANCE
+          };
+
+          if(firstConfigIssue) {
+            options.detailTabName = 'configuration';
+            options.configGroup = firstConfigIssue.configGroup;
+            options.configName =  firstConfigIssue.configName;
+          }
+
           $scope.$apply(function(){
-            $scope.$emit('onNodeSelection', d);
+            $scope.$emit('onNodeSelection', options);
           });
         })
         .on('mouseup', function(d){
@@ -765,7 +787,19 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           return title;
         })
         .attr('data-html', true)
-        .attr('data-placement', 'bottom');
+        .attr('data-placement', 'bottom')
+        .on('mousedown', function(d) {
+          var issues = thisGraph.issues.stageIssues[d.instanceName];
+
+          angular.forEach(issues, function(issue) {
+            if(issue.configName && !firstConfigIssue) {
+              firstConfigIssue = issue;
+            }
+          });
+        })
+        .on('mouseup', function(d){
+          firstConfigIssue = undefined;
+        });
 
       //Add Configuration Icon
       newGs.append('svg:foreignObject')
@@ -1159,8 +1193,27 @@ angular.module('pipelineGraphDirectives', ['underscore'])
               graph.removeSelectFromEdge();
             }
 
-            $scope.$apply(function(){
-              $scope.$emit('onRemoveNodeSelection');
+            var options = {
+              selectedObject: undefined,
+              type: pipelineConstant.PIPELINE
+            }, firstConfigIssue;
+
+            if(graph.issues && graph.issues.pipelineIssues && graph.issues.pipelineIssues.length) {
+              angular.forEach(graph.issues.pipelineIssues, function(issue) {
+                if(issue.configName && !firstConfigIssue) {
+                  firstConfigIssue = issue;
+                }
+              });
+
+              if(firstConfigIssue) {
+                options.detailTabName = 'configuration';
+                options.configGroup = firstConfigIssue.configGroup;
+                options.configName =  firstConfigIssue.configName;
+              }
+            }
+
+            $scope.$apply(function() {
+              $scope.$emit('onRemoveNodeSelection', options);
             });
           });
 

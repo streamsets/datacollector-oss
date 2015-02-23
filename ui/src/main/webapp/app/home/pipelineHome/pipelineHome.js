@@ -1066,11 +1066,8 @@ angular
       }
     }, true);
 
-    $scope.$on('onNodeSelection', function (event, stageInstance) {
-      updateDetailPane({
-        selectedObject: stageInstance,
-        type: pipelineConstant.STAGE_INSTANCE
-      });
+    $scope.$on('onNodeSelection', function (event, options) {
+      updateDetailPane(options);
     });
 
 
@@ -1093,11 +1090,8 @@ angular
       });
     });
 
-    $scope.$on('onRemoveNodeSelection', function () {
-      updateDetailPane({
-        selectedObject: undefined,
-        type: pipelineConstant.PIPELINE
-      });
+    $scope.$on('onRemoveNodeSelection', function (event, options) {
+      updateDetailPane(options);
     });
 
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
