@@ -59,21 +59,21 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
         //NOP
       }
       if (!logFile.exists()) {
-        issues.add(getContext().createConfigIssue(Errors.TAIL_00, Groups.FILE.name(), fileName, logFile));
+        issues.add(getContext().createConfigIssue(Groups.FILE.name(), fileName, Errors.TAIL_00, logFile));
       }
     }
     if (logFile.exists() && !logFile.canRead()) {
-      issues.add(getContext().createConfigIssue(Errors.TAIL_01, Groups.FILE.name(), fileName, logFile));
+      issues.add(getContext().createConfigIssue(Groups.FILE.name(), fileName, Errors.TAIL_01, logFile));
     }
     if (logFile.exists() && !logFile.isFile()) {
-      issues.add(getContext().createConfigIssue(Errors.TAIL_03, Groups.FILE.name(), fileName, logFile));
+      issues.add(getContext().createConfigIssue(Groups.FILE.name(), fileName, Errors.TAIL_03, logFile));
     }
     switch (dataFormat) {
       case TEXT:
       case JSON:
         break;
       default:
-        issues.add(getContext().createConfigIssue(Errors.TAIL_02, Groups.FILE.name(), "dataFormat", dataFormat,
+        issues.add(getContext().createConfigIssue(Groups.FILE.name(), "dataFormat", Errors.TAIL_02, dataFormat,
                                                   Arrays.asList(DataFormat.TEXT, DataFormat.JSON)));
     }
     return issues;

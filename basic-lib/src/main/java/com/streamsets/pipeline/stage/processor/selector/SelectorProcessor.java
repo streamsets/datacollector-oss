@@ -40,16 +40,16 @@ public class SelectorProcessor extends RecordProcessor {
   protected List<ConfigIssue> validateConfigs()  throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
     if (lanePredicates == null || lanePredicates.size() == 0) {
-      issues.add(getContext().createConfigIssue(Errors.SELECTOR_00, Groups.CONDITIONS.name(), "lanePredicates"));
+      issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_00));
     } else {
       if (getContext().getOutputLanes().size() != lanePredicates.size()) {
-        issues.add(getContext().createConfigIssue(Errors.SELECTOR_01, Groups.CONDITIONS.name(), "lanePredicates",
+        issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_01,
                                                   lanePredicates.size(),
                                                   getContext().getOutputLanes().size()));
       } else {
         predicateLanes = parsePredicateLanes(lanePredicates, issues);
         if (!predicateLanes[predicateLanes.length - 1][0].equals("default")) {
-          issues.add(getContext().createConfigIssue(Errors.SELECTOR_07, Groups.CONDITIONS.name(), "lanePredicates"));
+          issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_07));
         } else {
           variables = parseConstants(constants, issues);
           elEvaluator = new ELEvaluator();
@@ -59,14 +59,14 @@ public class SelectorProcessor extends RecordProcessor {
           for (int i = 0; i < predicateLanes.length - 1; i++) {
             String[] predicateLane = predicateLanes[i];
             if (!predicateLane[0].startsWith("${") || !predicateLane[0].endsWith("}")) {
-              issues.add(getContext().createConfigIssue(Errors.SELECTOR_08, Groups.CONDITIONS.name(), "lanePredicates",
+              issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_08,
                                                         predicateLane[0]));
             } else {
               try {
                 elEvaluator.eval(variables, predicateLane[0], Boolean.class);
               } catch (Exception ex) {
-                issues.add(getContext().createConfigIssue(Errors.SELECTOR_03, Groups.CONDITIONS.name(),
-                                                          "lanePredicates", predicateLane[0], ex.getMessage(), ex));
+                issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_03,
+                                                          predicateLane[0], ex.getMessage(), ex));
               }
             }
           }
@@ -85,7 +85,7 @@ public class SelectorProcessor extends RecordProcessor {
       String outputLane = predicateLaneMap.get("outputLane");
       Object predicate = predicateLaneMap.get("predicate");
       if (!getContext().getOutputLanes().contains(outputLane)) {
-        issues.add(getContext().createConfigIssue(Errors.SELECTOR_02, Groups.CONDITIONS.name(), "lanePredicates",
+        issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_02,
                                                   outputLane, predicate));
       }
       predicateLanes[count] = new String[2];
@@ -105,8 +105,8 @@ public class SelectorProcessor extends RecordProcessor {
         try {
           variables.addVariable(entry.getKey(), entry.getValue());
         } catch (Exception ex) {
-            issues.add(getContext().createConfigIssue(Errors.SELECTOR_04, Groups.CONDITIONS.name(),
-                                                      "constants", constants, ex.getMessage(), ex));
+            issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "constants", Errors.SELECTOR_04,
+                                                      constants, ex.getMessage(), ex));
         }
         LOG.debug("Constant: {}='{}'", entry.getKey(), entry.getValue());
       }

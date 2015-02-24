@@ -92,7 +92,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private static final Object[] NULL_ONE_ARG = {null};
 
   @Override
-  public Stage.ConfigIssue createConfigIssue(ErrorCode errorCode, String configGroup, String configName, Object... args) {
+  public Stage.ConfigIssue createConfigIssue(String configGroup, String configName, ErrorCode errorCode,
+      Object... args) {
     Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
     args = (args != null) ? args.clone() : NULL_ONE_ARG;
     return new ConfigIssueImpl(instanceName, configGroup, configName, errorCode, args);

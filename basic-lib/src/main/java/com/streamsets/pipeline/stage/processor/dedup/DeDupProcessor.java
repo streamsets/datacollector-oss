@@ -135,20 +135,20 @@ public class DeDupProcessor extends RecordProcessor {
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
     if (recordCountWindow <= 0) {
-      issues.add(getContext().createConfigIssue(Errors.DEDUP_00, Groups.DE_DUP.name(), "recordCountWindow",
+      issues.add(getContext().createConfigIssue(Groups.DE_DUP.name(), "recordCountWindow", Errors.DEDUP_00,
                                                 recordCountWindow));
     }
     if (timeWindowSecs < 0) {
-      issues.add(getContext().createConfigIssue(Errors.DEDUP_01,  Groups.DE_DUP.name(), "timeWindowSecs",
+      issues.add(getContext().createConfigIssue(Groups.DE_DUP.name(), "timeWindowSecs", Errors.DEDUP_01,
                                                 timeWindowSecs));
     }
     if (compareFields == SelectFields.SPECIFIED_FIELDS && fieldsToCompare.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Errors.DEDUP_02,  Groups.DE_DUP.name(), "compareFields"));
+      issues.add(getContext().createConfigIssue(Groups.DE_DUP.name(), "compareFields", Errors.DEDUP_02));
     }
 
     long estimatedMemory = MEMORY_USAGE_PER_HASH * recordCountWindow;
     if (estimatedMemory > Runtime.getRuntime().maxMemory() / 3) {
-      issues.add(getContext().createConfigIssue(Errors.DEDUP_03,  Groups.DE_DUP.name(), "recordCountWindow",
+      issues.add(getContext().createConfigIssue(Groups.DE_DUP.name(), "recordCountWindow", Errors.DEDUP_03,
                                                 recordCountWindow, estimatedMemory / (1024 * 1024),
                                                 Runtime.getRuntime().maxMemory() / (1024 * 1024)));
     }
