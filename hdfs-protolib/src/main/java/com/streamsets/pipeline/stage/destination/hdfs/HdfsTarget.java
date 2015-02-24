@@ -247,7 +247,7 @@ public class HdfsTarget extends BaseTarget {
       required = true,
       type = ConfigDef.Type.EL_NUMBER,
       defaultValue = "${1 * HOURS}",
-      label = "Late Records Time Limit (secs)",
+      label = "Late Record Time Limit (secs)",
       description = "Time limit (in seconds) for a record to be written to the corresponding HDFS directory, if the " +
                     "limit is exceeded the record will be written to the current late records file. 0 means no limit. " +
                     "If a number is used it is considered seconds, it can be multiplied by 'MINUTES' or 'HOURS', ie: " +
@@ -260,7 +260,7 @@ public class HdfsTarget extends BaseTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "TO_ERROR",
+      defaultValue = "SEND_TO_ERROR",
       label = "Late Record Handling",
       description = "Action for records considered late.",
       displayPosition = 210,
