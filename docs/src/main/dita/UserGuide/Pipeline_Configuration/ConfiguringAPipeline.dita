@@ -8,10 +8,7 @@
         <context>
             <p><indexterm>pipelines<indexterm>configuring</indexterm></indexterm>A pipeline can
                 include the following components:<ul id="ul_eyy_b2w_kq">
-                    <li>A single origin stage<ul id="ul_i5k_bpf_2r">
-                            <li>Testing bullet in list.</li>
-                            <li>Another test.</li>
-                        </ul></li>
+                    <li>A single origin stage</li>
                     <li>Multiple processor stages</li>
                     <li>Multiple destination stages</li>
                 </ul></p>
