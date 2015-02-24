@@ -60,11 +60,30 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>STREAMSETS-${dist.version}-sdc${project.version}</finalName>
               <descriptors>
                 <descriptor>src/main/assemblies/cloudera-integration.xml</descriptor>
               </descriptors>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <configuration>
+              <tasks>
+                <copy file="${project.build.directory}/${project.build.finalName}.tar.gz"
+                  tofile="${project.build.directory}/STREAMSETS-${project.version}-cdh5-el6.parcel" />
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
