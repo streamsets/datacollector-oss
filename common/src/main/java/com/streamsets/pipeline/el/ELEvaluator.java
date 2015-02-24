@@ -42,7 +42,7 @@ public class ELEvaluator {
 
     private static final void checkVariableName(String name) {
       Utils.checkNotNull(name, "name");
-      Utils.checkArgument(TextUtils.isValidName(name), Utils.formatL("Invalid variable name '{}', must be '{}'",
+      Utils.checkArgument(TextUtils.isValidName(name), Utils.formatL("Invalid name '{}', must be '{}'",
                                                                             name, TextUtils.VALID_NAME));
     }
 

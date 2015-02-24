@@ -17,6 +17,7 @@ import com.streamsets.pipeline.lib.util.ToRecord;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -58,21 +59,22 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
         //NOP
       }
       if (!logFile.exists()) {
-        issues.add(getContext().createConfigIssue(Errors.TAIL_00, logFile));
+        issues.add(getContext().createConfigIssue(Errors.TAIL_00, Groups.FILE.name(), fileName, logFile));
       }
     }
     if (logFile.exists() && !logFile.canRead()) {
-      issues.add(getContext().createConfigIssue(Errors.TAIL_01, logFile));
+      issues.add(getContext().createConfigIssue(Errors.TAIL_01, Groups.FILE.name(), fileName, logFile));
     }
     if (logFile.exists() && !logFile.isFile()) {
-      issues.add(getContext().createConfigIssue(Errors.TAIL_03, logFile));
+      issues.add(getContext().createConfigIssue(Errors.TAIL_03, Groups.FILE.name(), fileName, logFile));
     }
     switch (dataFormat) {
       case TEXT:
       case JSON:
         break;
       default:
-        issues.add(getContext().createConfigIssue(Errors.TAIL_02, "dataFormat", dataFormat));
+        issues.add(getContext().createConfigIssue(Errors.TAIL_02, Groups.FILE.name(), "dataFormat", dataFormat,
+                                                  Arrays.asList(DataFormat.TEXT, DataFormat.JSON)));
     }
     return issues;
   }

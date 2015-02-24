@@ -96,9 +96,10 @@ public class TestSelectorProcessor {
   public void testInitLanePredicates() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .setOnRecordError(OnRecordError.DISCARD)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "${x}"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "${x}", "b", "default"))
         .addConfiguration("constants", ImmutableMap.of("x", "false"))
         .addOutputLane("a")
+        .addOutputLane("b")
         .build();
     runner.runInit();
   }

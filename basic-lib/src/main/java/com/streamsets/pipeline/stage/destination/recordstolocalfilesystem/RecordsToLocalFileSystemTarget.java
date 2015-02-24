@@ -57,21 +57,21 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
 
     dir = new File(directory);
     if (!dir.exists()) {
-      issues.add(getContext().createConfigIssue(Errors.RECORDFS_01, directory));
+      issues.add(getContext().createConfigIssue(Errors.RECORDFS_01, Groups.FILES.name(), "directory", directory));
     }
     if (!dir.isDirectory()) {
-      issues.add(getContext().createConfigIssue(Errors.RECORDFS_02, directory));
+      issues.add(getContext().createConfigIssue(Errors.RECORDFS_02, Groups.FILES.name(), "directory", directory));
     }
     try {
       rotationMillis = ELEvaluator.evaluateHoursMinutesToSecondsExpr(rotationIntervalSecs) * 1000;
       if (rotationMillis <= 0) {
-        issues.add(getContext().createConfigIssue(Errors.RECORDFS_03, rotationIntervalSecs, rotationMillis / 1000));
+        issues.add(getContext().createConfigIssue(Errors.RECORDFS_03, Groups.FILES.name(), "rotationIntervalSecs", rotationIntervalSecs, rotationMillis / 1000));
       }
     } catch (ELException ex) {
-      issues.add(getContext().createConfigIssue(Errors.RECORDFS_04, rotationIntervalSecs));
+      issues.add(getContext().createConfigIssue(Errors.RECORDFS_04, Groups.FILES.name(), "rotationIntervalSecs", rotationIntervalSecs));
     }
     if (maxFileSizeMbs < 0) {
-      issues.add(getContext().createConfigIssue(Errors.RECORDFS_00, maxFileSizeMbs));
+      issues.add(getContext().createConfigIssue(Errors.RECORDFS_00, Groups.FILES.name(), "maxFileSizeMbs", maxFileSizeMbs));
     }
     maxFileSizeBytes = maxFileSizeMbs * 1024 * 1024;
     return issues;

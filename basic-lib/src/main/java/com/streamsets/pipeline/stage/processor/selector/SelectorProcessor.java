@@ -63,21 +63,23 @@ public class SelectorProcessor extends RecordProcessor {
   private ELEvaluator.Variables variables;
   private String defaultLane;
 
+  //TODO add config/group to config issues
   @Override
   protected List<ConfigIssue> validateConfigs()  throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
     if (lanePredicates == null || lanePredicates.size() == 0) {
-      issues.add(getContext().createConfigIssue(Errors.SELECTOR_00));
+      issues.add(getContext().createConfigIssue(Errors.SELECTOR_00, Groups.CONDITIONS.name(), "lanePredicates"));
     } else {
       if (getContext().getOutputLanes().size() != lanePredicates.size()) {
-        issues.add(getContext().createConfigIssue(Errors.SELECTOR_01, lanePredicates.size(),
+        issues.add(getContext().createConfigIssue(Errors.SELECTOR_01, Groups.CONDITIONS.name(), "lanePredicates",
+                                                  lanePredicates.size(),
                                                   getContext().getOutputLanes().size()));
       } else {
         predicateLanes = parsePredicateLanes(lanePredicates, issues);
         if (!predicateLanes[predicateLanes.length - 1][0].equals("default")) {
-          issues.add(getContext().createConfigIssue(Errors.SELECTOR_07));
+          issues.add(getContext().createConfigIssue(Errors.SELECTOR_07, Groups.CONDITIONS.name(), "lanePredicates"));
         } else {
-          variables = parseConstants(constants);
+          variables = parseConstants(constants, issues);
           elEvaluator = new ELEvaluator();
           ELRecordSupport.registerRecordFunctions(elEvaluator);
           ELStringSupport.registerStringFunctions(elEvaluator);
@@ -85,12 +87,14 @@ public class SelectorProcessor extends RecordProcessor {
           for (int i = 0; i < predicateLanes.length - 1; i++) {
             String[] predicateLane = predicateLanes[i];
             if (!predicateLane[0].startsWith("${") || !predicateLane[0].endsWith("}")) {
-              issues.add(getContext().createConfigIssue(Errors.SELECTOR_08, predicateLane[0]));
+              issues.add(getContext().createConfigIssue(Errors.SELECTOR_08, Groups.CONDITIONS.name(), "lanePredicates",
+                                                        predicateLane[0]));
             } else {
               try {
                 elEvaluator.eval(variables, predicateLane[0], Boolean.class);
-              } catch (ELException ex) {
-                issues.add(getContext().createConfigIssue(Errors.SELECTOR_03, predicateLane[0], ex.getMessage(), ex));
+              } catch (Exception ex) {
+                issues.add(getContext().createConfigIssue(Errors.SELECTOR_03, Groups.CONDITIONS.name(),
+                                                          "lanePredicates", predicateLane[0], ex.getMessage(), ex));
               }
             }
           }
@@ -109,24 +113,30 @@ public class SelectorProcessor extends RecordProcessor {
       String outputLane = predicateLaneMap.get("outputLane");
       Object predicate = predicateLaneMap.get("predicate");
       if (!getContext().getOutputLanes().contains(outputLane)) {
-        issues.add(getContext().createConfigIssue(Errors.SELECTOR_02, outputLane, predicate));
+        issues.add(getContext().createConfigIssue(Errors.SELECTOR_02, Groups.CONDITIONS.name(), "lanePredicates",
+                                                  outputLane, predicate));
       }
       predicateLanes[count] = new String[2];
       predicateLanes[count][0] = (String) predicate;
       predicateLanes[count][1] = outputLane;
-      LOG.debug("Condition:'{}' Stream:'{}'", predicate, outputLane);
+      LOG.debug("Condition:'{}' to stream:'{}'", predicate, outputLane);
       count++;
     }
     return predicateLanes;
   }
 
   @SuppressWarnings("unchecked")
-  private ELEvaluator.Variables parseConstants(Map<String,?> constants) throws StageException {
+  private ELEvaluator.Variables parseConstants(Map<String,?> constants, List<ConfigIssue> issues) throws StageException {
     ELEvaluator.Variables variables = new ELEvaluator.Variables();
     if (constants != null) {
       for (Map.Entry<String, ?> entry : constants.entrySet()) {
-        variables.addVariable(entry.getKey(), entry.getValue());
-        LOG.debug("Variable: {}='{}'", entry.getKey(), entry.getValue());
+        try {
+          variables.addVariable(entry.getKey(), entry.getValue());
+        } catch (Exception ex) {
+            issues.add(getContext().createConfigIssue(Errors.SELECTOR_04, Groups.CONDITIONS.name(),
+                                                      "constants", constants, ex.getMessage(), ex));
+        }
+        LOG.debug("Constant: {}='{}'", entry.getKey(), entry.getValue());
       }
     }
     return variables;
@@ -152,7 +162,8 @@ public class SelectorProcessor extends RecordProcessor {
           matchedAtLeastOnePredicate = true;
         }
       } catch (ELException ex) {
-        throw new OnRecordErrorException(Errors.SELECTOR_04, record.getHeader().getSourceId());
+        throw new OnRecordErrorException(Errors.SELECTOR_09, record.getHeader().getSourceId(), pl[0], ex.getMessage(),
+                                         ex);
       }
     }
     if (!matchedAtLeastOnePredicate) {

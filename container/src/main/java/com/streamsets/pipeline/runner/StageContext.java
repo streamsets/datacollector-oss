@@ -80,8 +80,9 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   private static class ConfigIssueImpl extends StageIssue implements Stage.ConfigIssue {
 
-    public ConfigIssueImpl(String instanceName, ErrorCode errorCode, Object... args) {
-      super(false, instanceName, errorCode, args); //TODO we should use errorStage bit here
+    public ConfigIssueImpl(String instanceName, String configGroup, String configName, ErrorCode errorCode,
+        Object... args) {
+      super(false, instanceName, configGroup, configName, errorCode, args); //TODO we should use errorStage bit here
     }
 
   }
@@ -89,10 +90,10 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private static final Object[] NULL_ONE_ARG = {null};
 
   @Override
-  public Stage.ConfigIssue createConfigIssue(ErrorCode errorCode, Object... args) {
+  public Stage.ConfigIssue createConfigIssue(ErrorCode errorCode, String configGroup, String configName, Object... args) {
     Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
     args = (args != null) ? args.clone() : NULL_ONE_ARG;
-    return new ConfigIssueImpl(instanceName, errorCode, args);
+    return new ConfigIssueImpl(instanceName, configGroup, configName, errorCode, args);
   }
 
   private static class RecordJsonReaderImpl extends OverrunStreamingJsonParser implements JsonRecordReader {

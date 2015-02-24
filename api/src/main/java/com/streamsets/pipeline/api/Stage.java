@@ -28,7 +28,7 @@ public interface Stage<C extends Stage.Context> {
 
     public boolean isPreview();
 
-    public ConfigIssue createConfigIssue(ErrorCode errorCode, Object... args);
+    public ConfigIssue createConfigIssue(ErrorCode errorCode, String configGroup, String configName, Object... args);
 
     public List<Info> getPipelineInfo();
 

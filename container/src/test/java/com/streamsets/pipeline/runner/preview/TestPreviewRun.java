@@ -137,7 +137,7 @@ public class TestPreviewRun {
     MockStages.setSourceCapture(new BaseSource() {
       @Override
       public List<ConfigIssue> validateConfigs(Info info, Source.Context context) {
-        return Arrays.asList(context.createConfigIssue(ContainerError.CONTAINER_0000));
+        return Arrays.asList(context.createConfigIssue(ContainerError.CONTAINER_0000, null, null));
       }
 
       @Override
