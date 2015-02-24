@@ -89,7 +89,7 @@
                 <cmd>For <uicontrol>Required Fields</uicontrol>, enter any fields that you want to
                     require data. <xref
                         href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
-                        <image href="../Graphics/icon_moreInfo.png" scale="11" id="image_h4p_p5v_yq"
+                        <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_h4p_p5v_yq"
                         /></xref></cmd>
                 <info>You might include any field that the processor uses.</info>
             </step>
@@ -107,7 +107,7 @@
                 <cmd>For <uicontrol>Required Fields</uicontrol>, enter any fields that you want to
                     require data. <xref
                         href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
-                        <image href="../Graphics/icon_moreInfo.png" scale="11" id="image_wct_vhg_br"
+                        <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wct_vhg_br"
                         /></xref></cmd>
             </step>
         </steps>

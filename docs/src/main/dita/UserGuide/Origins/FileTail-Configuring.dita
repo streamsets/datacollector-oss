@@ -42,10 +42,10 @@
                                     <entry>Maximum number of records to include in a batch. </entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Wait Time (secs)  <xref
+                                    <entry>Batch Wait Time (secs) <xref
                                             href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
                                             <image href="../Graphics/icon_moreInfo.png"
-                                                id="image_ulc_2fm_cr" scale="11"/></xref></entry>
+                                                id="image_ulc_2fm_cr" scale="10"/></xref></entry>
                                     <entry>Number of seconds to wait before sending a batch.</entry>
                                 </row>
                             </tbody>

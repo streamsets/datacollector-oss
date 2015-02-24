@@ -12,7 +12,7 @@
             <step>
                 <cmd><indexterm>installation<indexterm>manual
                         start</indexterm></indexterm><indexterm>launch the Data
-                            Collector<indexterm>manual start</indexterm></indexterm> Download the
+                            Collector<indexterm>manual start</indexterm></indexterm>Download the
                     StreamSets SDC tarball and extract it to the desired location.</cmd>
             </step>
             <step>

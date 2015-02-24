@@ -34,7 +34,7 @@
                                 <row>
                                     <entry>Mask Type <xref
                                             href="FieldMasker_MaskTypes.dita#concept_vwp_gh4_wq">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             /></xref></entry>
                                     <entry>Mask type to hide field values. Select one of the
                                         following options:<ul id="ul_kmd_rnk_wq">
@@ -49,7 +49,7 @@
                                 <row>
                                     <entry>Custom Mask <xref
                                             href="FieldMasker_MaskTypes.dita#concept_vwp_gh4_wq">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="12"
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_rx1_l1q_wq"/></xref></entry>
                                     <entry>Mask pattern for a custom mask. Enter the pattern that
                                         you want to use.<p>Use the hash mark (#) to display

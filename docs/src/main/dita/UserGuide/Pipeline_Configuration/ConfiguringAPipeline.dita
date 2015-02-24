@@ -8,7 +8,10 @@
         <context>
             <p><indexterm>pipelines<indexterm>configuring</indexterm></indexterm>A pipeline can
                 include the following components:<ul id="ul_eyy_b2w_kq">
-                    <li>A single origin stage</li>
+                    <li>A single origin stage<ul id="ul_i5k_bpf_2r">
+                            <li>Testing bullet in list.</li>
+                            <li>Another test.</li>
+                        </ul></li>
                     <li>Multiple processor stages</li>
                     <li>Multiple destination stages</li>
                 </ul></p>
@@ -40,7 +43,7 @@
                         <strow>
                             <stentry>Delivery Guarantee <xref
                                     href="DeliveryGuarantee.dita#concept_ffz_hhw_kq">
-                                    <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
                                        /></xref></stentry>
                             <stentry>Determines how the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -74,8 +77,9 @@
                             <tbody>
                                 <row>
                                     <entry>Error Record Handling <xref
-                                        href="ErrorHandling.dita#concept_pm4_txm_vq">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="11"/></xref></entry>
+                                            href="ErrorHandling.dita#concept_pm4_txm_vq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            /></xref></entry>
                                     <entry>Determines how to handle records that cannot be processed
                                         as expected. Use one of the following options:<ul
                                             id="ul_ayr_y22_br">

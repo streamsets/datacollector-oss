@@ -35,18 +35,21 @@
                                 <row>
                                     <entry>Convert to Type <xref
                                             href="FieldConverter_Datatypes.dita#concept_ixz_s5q_wq"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="11"/></xref></entry>
-                                    <entry>Data type for conversion. Select a valid type.</entry>
+                                                >
+                                        <image href="../Graphics/icon_moreInfo.png"
+                                            id="image_sd4_jx2_2r" scale="10" />
+                                    </xref>
+                                    </entry>
+                                    <entry>Data type for conversion. Select a valid type. </entry>
                                 </row>
                                 <row>
-                                    <entry>Data Locale</entry>
+                                    <entry>Data Locale </entry>
                                     <entry>Locale of the data in the field. <p>Can determine how the
                                             Field Converter formats converted data, such as a comma
                                             or period as a decimal separator. </p></entry>
                                 </row>
                                 <row>
-                                    <entry>Date Format</entry>
+                                    <entry>Date Format </entry>
                                     <entry>Format for a Date or Datetime field. Select or enter any
                                         valid format. <p>For more information about creating a
                                             custom date format, see <xref

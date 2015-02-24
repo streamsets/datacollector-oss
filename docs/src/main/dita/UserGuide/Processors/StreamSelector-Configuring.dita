@@ -30,7 +30,7 @@
                                 <row>
                                     <entry>Condition <xref
                                             href="StreamSelector_Conditions.dita#task_mj5_vjf_xq">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             /></xref></entry>
                                     <entry>Condition to stream data to this output. Click the
                                             <uicontrol>Add</uicontrol> icon to create additional
@@ -42,7 +42,7 @@
                                 <row>
                                     <entry>Constants <xref
                                             href="DefiningConstants.dita#task_ogd_zj3_wq">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_c4p_p5v_yq"/></xref></entry>
                                     <entry>Represents a constant in conditions. Define a constant to
                                         easily reuse it in the stage or to easily update the
@@ -55,7 +55,7 @@
                                 <row>
                                     <entry>Unmatched Record Handling <xref
                                             href="StreamSelector_fallback.dita#concept_sn5_5kx_wq">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_eld_51f_cr"/></xref></entry>
                                     <entry>Determines how to handle records that do not match any
                                         condition: <ul id="ul_uxy_r3f_xq">
