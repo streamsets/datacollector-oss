@@ -265,10 +265,10 @@
                ng-model="lanePredicateMapping.predicate"/>
       </div>
 
-      <div class="col-xs-2 btn-group" role="group" aria-label="Default button group"
+      <div class="col-xs-2" role="group" aria-label="Default button group"
            ng-hide="isPipelineRunning">
         <button type="button" class="btn btn-default btn-sm"
-                ng-hide="$first && $last"
+                ng-hide="$last"
                 ng-click="removeLane(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, lanePredicateMapping, $index)">
           <i class="fa fa-minus pointer"></i>
         </button>
