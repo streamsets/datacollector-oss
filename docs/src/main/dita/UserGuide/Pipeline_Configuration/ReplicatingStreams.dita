@@ -10,5 +10,8 @@
      streams</indexterm></indexterm><indexterm>replicating<indexterm>streams in a
      pipeline</indexterm></indexterm>Use a Stream Selector to use conditions to route different sets
    of data to different streams. </p>
+    <p>
+      <draft-comment author="Loretta">add a screenshot here with a For Example...</draft-comment>
+    </p>
  </conbody>
 </concept>

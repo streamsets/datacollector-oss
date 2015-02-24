@@ -7,8 +7,8 @@
     <p><indexterm>Stream Selector
           processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Stream
           Selector</indexterm></indexterm>When you configure a condition, the Stream Selector
-      creates an output for the stage that you connect to a downstream stage. The Stream Selector
-      passes a record to all streams where the record matches the condition. </p>
+      creates an output point that you connect to a downstream stage. The Stream Selector passes a
+      record to all streams where the record matches the condition. </p>
     <p>For example, you create the following conditions:
       <codeblock>${record:value("/State")==CA}
 ${record:value("/ID")==null}</codeblock></p>
