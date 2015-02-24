@@ -44,7 +44,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.CHARACTER,
-      defaultValue = " ",
+      defaultValue = "^",
       label = "Separator",
       description = "A single character. Use ^ for space.",
       displayPosition = 20,
@@ -65,7 +65,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "DISCARD",
+      defaultValue = "TO_ERROR",
       label = "Not Enough Splits ",
       description="Action for data that cannot be split as configured",
       displayPosition = 40,
