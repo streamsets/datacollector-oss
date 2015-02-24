@@ -6,12 +6,7 @@
 package com.streamsets.pipeline.stage.processor.selector;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.LanePredicateMapping;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
@@ -25,45 +20,22 @@ import javax.servlet.jsp.el.ELException;
 import java.util.List;
 import java.util.Map;
 
-@GenerateResourceBundle
-@StageDef(
-    version = "1.0.0",
-    label = "Stream Selector",
-    description = "Passes records to streams based on conditions",
-    icon="laneSelector.png",
-    outputStreams = StageDef.VariableOutputStreams.class,
-    outputStreamsDrivenByConfig = "lanePredicates")
-@ConfigGroups(Groups.class)
 public class SelectorProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SelectorProcessor.class);
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Condition",
-      description = "Records that match the condition pass to the stream",
-      displayPosition = 10,
-      group = "CONDITIONS"
-  )
-  @LanePredicateMapping
-  public List<Map<String, String>> lanePredicates;
+  private final List<Map<String, String>> lanePredicates;
+  private final Map<String, ?> constants;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MAP,
-      label = "Constants",
-      description = "Can be used in any expression in the processor",
-      displayPosition = 20,
-      group = "CONDITIONS"
-  )
-  public Map<String, ?> constants;
+  public SelectorProcessor(List<Map<String, String>> lanePredicates, Map<String, ?> constants) {
+    this.lanePredicates = lanePredicates;
+    this.constants = constants;
+  }
 
   private String[][] predicateLanes;
   private ELEvaluator elEvaluator;
   private ELEvaluator.Variables variables;
   private String defaultLane;
 
-  //TODO add config/group to config issues
   @Override
   protected List<ConfigIssue> validateConfigs()  throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
