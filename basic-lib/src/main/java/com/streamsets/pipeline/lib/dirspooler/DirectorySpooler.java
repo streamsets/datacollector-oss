@@ -160,6 +160,10 @@ public class DirectorySpooler {
     Preconditions.checkState(Files.isDirectory(path), Utils.formatL("Path '{}' is not a directory", path));
   }
 
+  public static PathMatcher createPathMatcher(String pattern) {
+    return FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+  }
+
   public void init(String currentFile) {
     this.currentFile = currentFile;
     try {
@@ -183,7 +187,7 @@ public class DirectorySpooler {
       }
       LOG.debug("Post processing mode '{}'{}", postProcessing, extraInfo);
 
-      fileMatcher = fs.getPathMatcher("glob:" + pattern);
+      fileMatcher = createPathMatcher(pattern);
 
       filesQueue = new PriorityBlockingQueue<>();
 

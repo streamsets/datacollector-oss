@@ -59,7 +59,7 @@ public class TestSpoolDirSource {
   }
 
   private TSpoolDirSource createSource(String initialFile) {
-    return new TSpoolDirSource(DataFormat.TEXT, createTestDir(), 10, 0, "file-[0-9].log", 10, initialFile, null,
+    return new TSpoolDirSource(DataFormat.TEXT, createTestDir(), 10, 1, "file-[0-9].log", 10, initialFile, null,
                                PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, false, false, null,
                                0, 1024, false, null, 0);
   }

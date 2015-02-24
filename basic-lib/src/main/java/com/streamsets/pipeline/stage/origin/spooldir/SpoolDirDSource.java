@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
-import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -14,9 +13,7 @@ import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
-import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
@@ -24,13 +21,6 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
-import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 @GenerateResourceBundle
 @StageDef(

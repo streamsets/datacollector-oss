@@ -51,7 +51,7 @@ public class TestSDCRecordSpoolDirSource {
   }
 
   private SpoolDirSource createSource(String dir) {
-    return new SpoolDirSource(DataFormat.SDC_JSON, createTestDir(), 10, 0, null, 10, null, null,
+    return new SpoolDirSource(DataFormat.SDC_JSON, createTestDir(), 10, 1, null, 10, null, null,
                               PostProcessingOptions.ARCHIVE, dir, 10, null, false, false, null, 0, 10,
                               false, null, 0);
   }

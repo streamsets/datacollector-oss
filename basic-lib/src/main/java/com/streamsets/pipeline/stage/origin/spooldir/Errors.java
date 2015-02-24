@@ -14,6 +14,21 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_02("Discarding Json Object, it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
   SPOOLDIR_03("LogDatProducer file='{}' offset='{}', {}"),
   SPOOLDIR_04("Discarding Xml Object, it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
+
+  SPOOLDIR_10("Unsupported data format '{}'"),
+  SPOOLDIR_11("Directory path cannot be empty"),
+  SPOOLDIR_12("Directory '{}' does not exits"),
+  SPOOLDIR_13("Path '{}' is not a directory"),
+  SPOOLDIR_14("Batch size cannot be less than 1"),
+  SPOOLDIR_15("Batch wait time '{}' cannot be less than 1"),
+  SPOOLDIR_16("Invalid GLOB file pattern '{}', {}"),
+  SPOOLDIR_17("Max files in directory '{}' cannot be less than 1"),
+  SPOOLDIR_18("First file to process '{}' does not match file pattern '{}"),
+  SPOOLDIR_19("Archive retention time cannot be less than 1"),
+  SPOOLDIR_20("Max object length cannot be less than 1"),
+  SPOOLDIR_21("Max line length cannot be less than 1"),
+  SPOOLDIR_22("Max record length cannot be less than 1"),
+  SPOOLDIR_23("Invalid XML element name '{}'"),
   ;
 
   private final String msg;

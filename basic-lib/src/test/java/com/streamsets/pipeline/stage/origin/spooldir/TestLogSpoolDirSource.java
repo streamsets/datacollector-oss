@@ -41,7 +41,7 @@ public class TestLogSpoolDirSource {
   }
 
   private SpoolDirSource createSource(boolean truncated) {
-    return new SpoolDirSource(DataFormat.TEXT, createTestDir(), 10, 0, "file-[0-9].log", 10, null, null,
+    return new SpoolDirSource(DataFormat.TEXT, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
                               PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, false, false, null, 0, 10,
                               truncated, null, 0);
   }

@@ -12,11 +12,14 @@ import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
+import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.PathMatcher;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class SpoolDirSource extends BaseSource {
@@ -75,6 +78,112 @@ public class SpoolDirSource extends BaseSource {
   private DirectorySpooler spooler;
   private File currentFile;
   private DataProducer dataProducer;
+
+  @Override
+  protected List<ConfigIssue> validateConfigs() throws StageException {
+    List<ConfigIssue> issues = super.validateConfigs();
+
+    validateDataFormat(issues);
+
+    validateDir(spoolDir, Groups.FILES.name(), "spoolDir", issues);
+
+    if (batchSize < 1) {
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "batchSize", Errors.SPOOLDIR_14));
+    }
+
+    if (poolingTimeoutSecs < 1) {
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "poolingTimeoutSecs", Errors.SPOOLDIR_15));
+    }
+
+    validateFilePattern(issues);
+
+    if (maxSpoolFiles < 1) {
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "maxSpoolFiles", Errors.SPOOLDIR_17));
+    }
+
+    validateInitialFileToProcess(issues);
+
+    if (errorArchiveDir != null && !errorArchiveDir.isEmpty()) {
+      validateDir(errorArchiveDir, Groups.POST_PROCESSING.name(), "errorArchiveDir", issues);
+    }
+
+    if (postProcessing == PostProcessingOptions.ARCHIVE) {
+      validateDir(archiveDir, Groups.POST_PROCESSING.name(), "archiveDir", issues);
+    }
+
+    if (retentionTimeMins < 1) {
+      issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "retentionTimeMins", Errors.SPOOLDIR_19));
+    }
+
+    switch (dataFormat) {
+      case JSON:
+        if (maxJsonObjectLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "maxJsonObjectLen", Errors.SPOOLDIR_20));
+        }
+        break;
+      case TEXT:
+        if (maxLogLineLength < 1) {
+          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "maxLogLineLength", Errors.SPOOLDIR_21));
+        }
+        break;
+      case XML:
+        if (maxXmlObjectLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.XML.name(), "maxXmlObjectLen", Errors.SPOOLDIR_22));
+        }
+        if (!XMLChar.isValidName(xmlRecordElement)) {
+          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.SPOOLDIR_23, xmlRecordElement));
+        }
+        break;
+    }
+
+    return issues;
+  }
+
+  private void validateDataFormat(List<ConfigIssue> issues) {
+    switch (dataFormat) {
+      case TEXT:
+      case JSON:
+      case DELIMITED:
+      case XML:
+      case SDC_JSON:
+        break;
+      default:
+        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "dataFormat", Errors.SPOOLDIR_10, dataFormat));
+    }
+  }
+
+  private void validateDir(String dir, String group, String config, List<ConfigIssue> issues) {
+    if (dir.isEmpty()) {
+      issues.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_11));
+    }
+    File fDir = new File(dir);
+    if (!fDir.exists()) {
+      issues.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_12, dir));
+    }
+    if (!fDir.isDirectory()) {
+      issues.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_13, dir));
+    }
+  }
+
+  private void validateFilePattern(List<ConfigIssue> issues) {
+    try {
+      DirectorySpooler.createPathMatcher(filePattern);
+    } catch (Exception ex) {
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "filePattern", Errors.SPOOLDIR_16, filePattern,
+                                                ex.getMessage(), ex));
+    }
+  }
+
+  private void validateInitialFileToProcess(List<ConfigIssue> issues) {
+    try {
+      PathMatcher pathMatcher = DirectorySpooler.createPathMatcher(filePattern);
+      if (!pathMatcher.matches(new File(initialFileToProcess).toPath())) {
+        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "initialFileToProcess", Errors.SPOOLDIR_18,
+                                                  initialFileToProcess, filePattern));
+      }
+    } catch (Exception ex) {
+    }
+  }
 
   @Override
   protected void init() throws StageException {
