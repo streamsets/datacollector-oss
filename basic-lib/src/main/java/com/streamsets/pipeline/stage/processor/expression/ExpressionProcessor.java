@@ -5,13 +5,8 @@
  */
 package com.streamsets.pipeline.stage.processor.expression;
 
-import com.streamsets.pipeline.api.ComplexField;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
@@ -27,191 +22,36 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-@GenerateResourceBundle
-@StageDef(
-    version="1.0.0",
-    label="Expression Evaluator",
-    description="Performs calculations on a field-by-field basis",
-    icon="expression.png"
-)
-@ConfigGroups(Groups.class)
 public class ExpressionProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(ExpressionProcessor.class);
 
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MODEL,
-      defaultValue="",
-      label = "Expressions",
-      description = "",
-      displayPosition = 10,
-      group = "EXPRESSIONS"
-  )
-  @ComplexField
-  public List<ExpressionProcessorConfig> expressionProcessorConfigs;
+  private final List<ExpressionProcessorConfig> expressionProcessorConfigs;
+  private final Map<String, ?> constants;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MAP,
-      label = "Constants",
-      description = "Can be used in any expression in the processor.",
-      displayPosition = 20,
-      group = "EXPRESSIONS"
-  )
-  public Map<String, ?> constants;
+  public ExpressionProcessor(
+      List<ExpressionProcessorConfig> expressionProcessorConfigs, Map<String, ?> constants) {
+    this.expressionProcessorConfigs = expressionProcessorConfigs;
+    this.constants = constants;
+  }
 
   private ELEvaluator elEvaluator;
   private ELEvaluator.Variables variables;
 
   @Override
-  protected void init() throws StageException {
-    super.init();
-    variables = ELUtils.parseConstants(constants);
+  protected List<ConfigIssue> validateConfigs() throws StageException {
+    List<ConfigIssue> issues =  super.validateConfigs();
+    variables = ELUtils.parseConstants(constants, getContext(), Groups.EXPRESSIONS.name(), "constants",
+                                       Errors.EXPR_01, issues);
     elEvaluator = new ELEvaluator();
     ELRecordSupport.registerRecordFunctions(elEvaluator);
     ELStringSupport.registerStringFunctions(elEvaluator);
-    validateExpressions();
-    LOG.debug("Expressions passed validation");
-  }
-
-  private void validateExpressions() throws StageException {
-    Record record = new Record(){
-      @Override
-      public Header getHeader() {
-        return new Header() {
-          @Override
-          public String getStageCreator() {
-            return null;
-          }
-
-          @Override
-          public String getSourceId() {
-            return null;
-          }
-
-          @Override
-          public String getTrackingId() {
-            return null;
-          }
-
-          @Override
-          public String getPreviousTrackingId() {
-            return null;
-          }
-
-          @Override
-          public String getStagesPath() {
-            return null;
-          }
-
-          @Override
-          public byte[] getRaw() {
-            return new byte[0];
-          }
-
-          @Override
-          public String getRawMimeType() {
-            return null;
-          }
-
-          @Override
-          public Set<String> getAttributeNames() {
-            return null;
-          }
-
-          @Override
-          public String getAttribute(String name) {
-            return null;
-          }
-
-          @Override
-          public void setAttribute(String name, String value) {
-
-          }
-
-          @Override
-          public void deleteAttribute(String name) {
-
-          }
-
-          @Override
-          public String getErrorDataCollectorId() {
-            return null;
-          }
-
-          @Override
-          public String getErrorPipelineName() {
-            return null;
-          }
-
-          @Override
-          public String getErrorCode() {
-            return null;
-          }
-
-          @Override
-          public String getErrorMessage() {
-            return null;
-          }
-
-          @Override
-          public String getErrorStage() {
-            return null;
-          }
-
-          @Override
-          public long getErrorTimestamp() {
-            return 0;
-          }
-        };
-      }
-
-      @Override
-      public Field get() {
-        return null;
-      }
-
-      @Override
-      public Field set(Field field) {
-        return null;
-      }
-
-      @Override
-      public Field get(String fieldPath) {
-        return null;
-      }
-
-      @Override
-      public Field delete(String fieldPath) {
-        return null;
-      }
-
-      @Override
-      public boolean has(String fieldPath) {
-        return false;
-      }
-
-      @Override
-      public Set<String> getFieldPaths() {
-        return null;
-      }
-
-      @Override
-      public Field set(String fieldPath, Field newField) {
-        return null;
-      }
-    };
-
-    ELRecordSupport.setRecordInContext(variables, record);
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
-      try {
-        elEvaluator.eval(variables, expressionProcessorConfig.expression);
-      } catch (ELException ex) {
-        throw new StageException(Errors.EXPR_00, expressionProcessorConfig.expression, ex.getMessage(), ex);
-      }
+      ELUtils.validateExpression(elEvaluator, variables, expressionProcessorConfig.expression, getContext(),
+                                 Groups.EXPRESSIONS.name(), "expressionProcessorConfigs", Errors.EXPR_00,
+                                 Object.class, issues);
     }
+    return issues;
   }
 
   @Override

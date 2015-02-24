@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
+import com.streamsets.pipeline.el.ELUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +52,8 @@ public class SelectorProcessor extends RecordProcessor {
         if (!predicateLanes[predicateLanes.length - 1][0].equals("default")) {
           issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_07));
         } else {
-          variables = parseConstants(constants, issues);
+          variables = ELUtils.parseConstants(constants, getContext(), Groups.CONDITIONS.name(), "constants",
+                                             Errors.SELECTOR_04, issues);
           elEvaluator = new ELEvaluator();
           ELRecordSupport.registerRecordFunctions(elEvaluator);
           ELStringSupport.registerStringFunctions(elEvaluator);
@@ -62,12 +64,9 @@ public class SelectorProcessor extends RecordProcessor {
               issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_08,
                                                         predicateLane[0]));
             } else {
-              try {
-                elEvaluator.eval(variables, predicateLane[0], Boolean.class);
-              } catch (Exception ex) {
-                issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_03,
-                                                          predicateLane[0], ex.getMessage(), ex));
-              }
+              ELUtils.validateExpression(elEvaluator, variables, predicateLane[0], getContext(),
+                                         Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_03,
+                                         Boolean.class, issues);
             }
           }
         }
@@ -95,23 +94,6 @@ public class SelectorProcessor extends RecordProcessor {
       count++;
     }
     return predicateLanes;
-  }
-
-  @SuppressWarnings("unchecked")
-  private ELEvaluator.Variables parseConstants(Map<String,?> constants, List<ConfigIssue> issues) throws StageException {
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
-    if (constants != null) {
-      for (Map.Entry<String, ?> entry : constants.entrySet()) {
-        try {
-          variables.addVariable(entry.getKey(), entry.getValue());
-        } catch (Exception ex) {
-            issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "constants", Errors.SELECTOR_04,
-                                                      constants, ex.getMessage(), ex));
-        }
-        LOG.debug("Constant: {}='{}'", entry.getKey(), entry.getValue());
-      }
-    }
-    return variables;
   }
 
   @Override

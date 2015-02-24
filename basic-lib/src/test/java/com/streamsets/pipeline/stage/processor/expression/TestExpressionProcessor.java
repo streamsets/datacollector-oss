@@ -6,9 +6,10 @@
 package com.streamsets.pipeline.stage.processor.expression;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -19,6 +20,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TestExpressionProcessor {
@@ -30,17 +32,15 @@ public class TestExpressionProcessor {
     expressionProcessorConfig.expression = "${(record:value('baseSalary') +record:value('bonus') * 2}"; //invalid expression string, missing ")"
     expressionProcessorConfig.fieldToSet = "/grossSalary";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
-      .addConfiguration("constants", null)
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+      .addConfiguration("constants", ImmutableMap.of("x-1", "x"))
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
       .addOutputLane("a").build();
 
-    try {
-      runner.runInit();
-      Assert.fail("Stage exception expected as the expression string is not valid");
-    } catch (StageException e) {
-      Assert.assertEquals(Errors.EXPR_00, e.getErrorCode());
-    }
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    Assert.assertEquals(2, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains("EXPR_01"));
+    Assert.assertTrue(issues.get(1).toString().contains("EXPR_00"));
   }
 
   @Test
@@ -50,7 +50,7 @@ public class TestExpressionProcessor {
     expressionProcessorConfig.expression = "${record:value('/baseSalary') + record:value('/bonusx')}"; //invalid expression string, missing ")"
     expressionProcessorConfig.fieldToSet = "/grossSalary";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
       .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
       .addOutputLane("a").build();
@@ -79,7 +79,7 @@ public class TestExpressionProcessor {
     expressionProcessorConfig.expression = "${record:value('/baseSalary') + record:value('/bonus') - record:value('/tax')}";
     expressionProcessorConfig.fieldToSet = "/baseSalary";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
       .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
       .addOutputLane("a").build();
@@ -113,7 +113,7 @@ public class TestExpressionProcessor {
     expressionProcessorConfig.expression = "${record:value('/baseSalary') + record:value('/bonus') - record:value('/tax')}";
     expressionProcessorConfig.fieldToSet = "/netSalary";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
       .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
       .addOutputLane("a").build();
@@ -147,7 +147,7 @@ public class TestExpressionProcessor {
     complexExpressionConfig.expression = "${((record:value('/baseSalary') * 2) + record:value('/bonus') - (record:value('/perks') / record:value('/bonus')))/2}";
     complexExpressionConfig.fieldToSet = "/complexResult";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
       .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(complexExpressionConfig))
       .addOutputLane("a").build();
@@ -189,7 +189,7 @@ public class TestExpressionProcessor {
     expressionProcessorConfig2.expression = "${str:substring(record:value('/fullName') , 0, 6)}";
     expressionProcessorConfig2.fieldToSet = "/first";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
       .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig, expressionProcessorConfig1, expressionProcessorConfig2))
       .addOutputLane("a").build();
@@ -225,7 +225,7 @@ public class TestExpressionProcessor {
     complexExpressionConfig.expression = "${record:id()}";
     complexExpressionConfig.fieldToSet = "/id";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
         .addConfiguration("constants", null)
         .addConfiguration("expressionProcessorConfigs", ImmutableList.of(complexExpressionConfig))
         .addOutputLane("a").build();

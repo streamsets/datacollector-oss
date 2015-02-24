@@ -8,7 +8,8 @@ package com.streamsets.pipeline.stage.processor.expression;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  EXPR_00("Failed to evaluate expression '{}', {}"),
+  EXPR_00("Invalid expression '{}', {}"),
+  EXPR_01("Invalid constant '{}', {}"),
   ;
 
   private final String msg;

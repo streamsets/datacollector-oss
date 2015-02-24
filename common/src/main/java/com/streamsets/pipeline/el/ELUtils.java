@@ -5,13 +5,17 @@
  */
 package com.streamsets.pipeline.el;
 
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,62 +23,30 @@ public class ELUtils {
 
   private static final Logger LOG = LoggerFactory.getLogger(ELUtils.class);
 
-  public static ELEvaluator.Variables parseConstants(Map<String,?> constants) throws StageException {
+  public static ELEvaluator.Variables parseConstants(Map<String,?> constants, Stage.Context context, String group,
+      String config, ErrorCode err, List<Stage.ConfigIssue> issues) {
     ELEvaluator.Variables variables = new ELEvaluator.Variables();
     if (constants != null) {
       for (Map.Entry<String, ?> entry : constants.entrySet()) {
-        variables.addVariable(entry.getKey(), entry.getValue());
-        LOG.debug("Variable: {}='{}'", entry.getKey(), entry.getValue());
+        try {
+          variables.addVariable(entry.getKey(), entry.getValue());
+        } catch (Exception ex) {
+          issues.add(context.createConfigIssue(group, config, err, constants, ex.getMessage(), ex));
+        }
+        LOG.debug("Constant: {}='{}'", entry.getKey(), entry.getValue());
       }
     }
     return variables;
   }
 
-  public static void validateExpression(ELEvaluator elEvaluator, ELEvaluator.Variables variables, String expression)
-    throws ELException {
-    Record record = new Record(){
-      @Override
-      public Header getHeader() {
-        return null;
-      }
-
-      @Override
-      public Field get() {
-        return null;
-      }
-
-      @Override
-      public Field set(Field field) {
-        return null;
-      }
-
-      @Override
-      public Field get(String fieldPath) {
-        return null;
-      }
-
-      @Override
-      public Field delete(String fieldPath) {
-        return null;
-      }
-
-      @Override
-      public boolean has(String fieldPath) {
-        return false;
-      }
-
-      @Override
-      public Set<String> getFieldPaths() {
-        return null;
-      }
-
-      @Override
-      public Field set(String fieldPath, Field newField) {
-        return null;
-      }
-    };
-
-    ELRecordSupport.setRecordInContext(variables, record);
-    elEvaluator.eval(variables, expression);
+  public static void validateExpression(ELEvaluator elEvaluator, ELEvaluator.Variables variables, String expression,
+      Processor.Context context, String group, String config, ErrorCode err, Class type, List<Stage.ConfigIssue> issues)
+      {
+    ELRecordSupport.setRecordInContext(variables, context.createRecord("forValidation"));
+    try {
+      elEvaluator.eval(variables, expression, type);
+    } catch (Exception ex) {
+      issues.add(context.createConfigIssue(group, config, err, expression, ex.getMessage(), ex));
+    }
   }
 }
