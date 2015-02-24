@@ -46,7 +46,7 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
   private long recordCount;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
+  protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
     File logFile = new File(fileName);
     if (!logFile.exists()) {

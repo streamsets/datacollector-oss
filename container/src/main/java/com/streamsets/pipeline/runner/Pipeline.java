@@ -47,7 +47,7 @@ public class Pipeline {
     return runner;
   }
 
-  public List<StageIssue> validateConfigs() {
+  public List<StageIssue> validateConfigs() throws StageException {
     List<StageIssue> configIssues = new ArrayList<>();
     configIssues.addAll(badRecordsHandler.validate());
     for (Pipe pipe : pipes) {

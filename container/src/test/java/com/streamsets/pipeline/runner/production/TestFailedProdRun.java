@@ -37,7 +37,7 @@ public class TestFailedProdRun {
   private static final String REVISION = "0";
 
   @Test(expected = PipelineRuntimeException.class)
-  public void testPipelineOpenLanes() throws PipelineRuntimeException {
+  public void testPipelineOpenLanes() throws PipelineRuntimeException, StageException {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
     MockStages.setSourceCapture(new BaseSource() {

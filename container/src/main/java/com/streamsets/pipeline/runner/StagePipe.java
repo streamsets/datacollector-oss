@@ -43,7 +43,7 @@ public class StagePipe extends Pipe {
   }
 
   @Override
-  public List<StageIssue> validateConfigs() {
+  public List<StageIssue> validateConfigs() throws StageException {
     return getStage().validateConfigs();
   }
 

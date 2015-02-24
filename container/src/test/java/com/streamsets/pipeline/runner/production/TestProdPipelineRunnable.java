@@ -74,7 +74,7 @@ public class TestProdPipelineRunnable {
   }
 
   @Test
-  public void testRun() throws PipelineRuntimeException, PipelineManagerException {
+  public void testRun() throws Exception {
 
     TestUtil.captureMockStages();
 
@@ -90,7 +90,7 @@ public class TestProdPipelineRunnable {
   }
 
   @Test
-  public void testStop() throws PipelineRuntimeException, PipelineManagerException {
+  public void testStop() throws Exception {
 
     TestUtil.captureMockStages();
 
@@ -143,7 +143,7 @@ public class TestProdPipelineRunnable {
   }
 
   @Test
-  public void testErrorState() throws PipelineRuntimeException, PipelineManagerException {
+  public void testErrorState() throws Exception {
     System.setProperty(RuntimeInfo.DATA_DIR, "./target/var");
 
     MockStages.setSourceCapture(new BaseSource() {
@@ -168,7 +168,7 @@ public class TestProdPipelineRunnable {
   }
 
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean capturenextBatch)
-    throws PipelineRuntimeException, PipelineManagerException {
+    throws PipelineRuntimeException, PipelineManagerException, StageException {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
 

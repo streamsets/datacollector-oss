@@ -167,7 +167,7 @@ public class TestProductionPipeline {
 
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee,
                                                       boolean captureNextBatch, boolean sourceOffsetCommitter)
-      throws PipelineRuntimeException {
+      throws PipelineRuntimeException, StageException {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");

@@ -109,7 +109,7 @@ public class StageRuntime {
   }
 
   @SuppressWarnings("unchecked")
-  public List<StageIssue> validateConfigs() {
+  public List<StageIssue> validateConfigs() throws StageException {
     Preconditions.checkState(context != null, "context has not been set");
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {

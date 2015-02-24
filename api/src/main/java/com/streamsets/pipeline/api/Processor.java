@@ -13,6 +13,8 @@ public interface Processor extends Stage<Processor.Context> {
 
     public List<String> getOutputLanes();
 
+    public Record createRecord(String recordId);
+
     public Record createRecord(Record originatorRecord);
 
     public Record createRecord(Record originatorRecord, byte[] raw, String rawMime);

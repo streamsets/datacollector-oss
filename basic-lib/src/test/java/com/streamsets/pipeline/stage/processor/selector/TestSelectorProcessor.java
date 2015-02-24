@@ -63,7 +63,7 @@ public class TestSelectorProcessor {
   public void testInitLanePredicatesNotMatchingLanes() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .setOnRecordError(OnRecordError.DISCARD)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "true"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "${true}"))
         .addConfiguration("constants", null)
         .build();
     runner.runInit();
@@ -73,7 +73,7 @@ public class TestSelectorProcessor {
   public void testInitLanePredicatesMoreOutputLanes() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .setOnRecordError(OnRecordError.DISCARD)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "true"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "${true}"))
         .addConfiguration("constants", null)
         .addOutputLane("a")
         .addOutputLane("b")
@@ -96,7 +96,7 @@ public class TestSelectorProcessor {
   public void testInitLanePredicates() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .setOnRecordError(OnRecordError.DISCARD)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "x"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "${x}"))
         .addConfiguration("constants", ImmutableMap.of("x", "false"))
         .addOutputLane("a")
         .build();
@@ -108,9 +108,10 @@ public class TestSelectorProcessor {
     List<Map> constant = ImmutableList.of((Map)ImmutableMap.of("key", "x", "value", "false"));
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
         .setOnRecordError(OnRecordError.DISCARD)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "x"))
+        .addConfiguration("lanePredicates", createLanePredicates("a", "${x}", "b", "default"))
         .addConfiguration("constants", constant)
         .addOutputLane("a")
+        .addOutputLane("b")
         .build();
     runner.runInit();
   }
@@ -121,7 +122,7 @@ public class TestSelectorProcessor {
         .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
                                                                  "b", "${record:value('') == 2}",
-                                                                 "c", "${default}"))
+                                                                 "c", "default"))
         .addConfiguration("constants", null)
         .addOutputLane("a")
         .addOutputLane("b")
@@ -149,106 +150,6 @@ public class TestSelectorProcessor {
       Assert.assertEquals(0, output.getRecords().get("c").get(0).get().getValueAsInteger());
       Assert.assertEquals(3, output.getRecords().get("c").get(1).get().getValueAsInteger());
 
-    } finally {
-      runner.runDestroy();
-    }
-  }
-
-  @Test
-  public void testSelectWithoutDefaultDropping() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .setOnRecordError(OnRecordError.DISCARD)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
-                                                                 "b", "${record:value('') == 2}"))
-        .addConfiguration("constants", null)
-        .addOutputLane("a")
-        .addOutputLane("b")
-        .build();
-
-    runner.runInit();
-    try {
-      Record r0 = RecordCreator.create();
-      r0.set(Field.create(0));
-      Record r1 = RecordCreator.create();
-      r1.set(Field.create(1));
-      Record r2 = RecordCreator.create();
-      r2.set(Field.create(2));
-      Record r3 = RecordCreator.create();
-      r3.set(Field.create(3));
-      List<Record> input = ImmutableList.of(r0, r1, r2, r3);
-      StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(ImmutableSet.of("a", "b"), output.getRecords().keySet());
-      Assert.assertEquals(1, output.getRecords().get("a").size());
-      Assert.assertEquals(1, output.getRecords().get("a").get(0).get().getValueAsInteger());
-      Assert.assertEquals(1, output.getRecords().get("b").size());
-      Assert.assertEquals(2, output.getRecords().get("b").get(0).get().getValueAsInteger());
-      Assert.assertTrue(runner.getErrors().isEmpty());
-      Assert.assertTrue(runner.getErrorRecords().isEmpty());
-    } finally {
-      runner.runDestroy();
-    }
-  }
-
-  @Test
-  public void testSelectWithoutDefaultToError() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .setOnRecordError(OnRecordError.TO_ERROR)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
-                                                                 "b", "${record:value('') == 2}"))
-        .addConfiguration("constants", null)
-        .addOutputLane("a")
-        .addOutputLane("b")
-        .build();
-
-    runner.runInit();
-    try {
-      Record r0 = RecordCreator.create();
-      r0.set(Field.create(0));
-      Record r1 = RecordCreator.create();
-      r1.set(Field.create(1));
-      Record r2 = RecordCreator.create();
-      r2.set(Field.create(2));
-      Record r3 = RecordCreator.create();
-      r3.set(Field.create(3));
-      List<Record> input = ImmutableList.of(r0, r1, r2, r3);
-      StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(ImmutableSet.of("a", "b"), output.getRecords().keySet());
-      Assert.assertEquals(1, output.getRecords().get("a").size());
-      Assert.assertEquals(1, output.getRecords().get("a").get(0).get().getValueAsInteger());
-      Assert.assertEquals(1, output.getRecords().get("b").size());
-      Assert.assertEquals(2, output.getRecords().get("b").get(0).get().getValueAsInteger());
-      Assert.assertTrue(runner.getErrors().isEmpty());
-      Assert.assertEquals(2, runner.getErrorRecords().size());
-      Assert.assertEquals(0, runner.getErrorRecords().get(0).get().getValueAsInteger());
-      Assert.assertEquals(3, runner.getErrorRecords().get(1).get().getValueAsInteger());
-    } finally {
-      runner.runDestroy();
-    }
-  }
-
-  @Test(expected = StageException.class)
-  public void testSelectWithoutDefaultFailPipeline() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(SelectorProcessor.class)
-        .setOnRecordError(OnRecordError.STOP_PIPELINE)
-        .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
-                                                                 "b", "${record:value('') == 2}"))
-        .addConfiguration("constants", null)
-        .addOutputLane("a")
-        .addOutputLane("b")
-        .build();
-
-    runner.runInit();
-    try {
-      Record r0 = RecordCreator.create();
-      r0.set(Field.create(0));
-      Record r1 = RecordCreator.create();
-      r1.set(Field.create(1));
-      Record r2 = RecordCreator.create();
-      r2.set(Field.create(2));
-      Record r3 = RecordCreator.create();
-      r3.set(Field.create(3));
-      List<Record> input = ImmutableList.of(r0, r1, r2, r3);
-      runner.runProcess(input);
     } finally {
       runner.runDestroy();
     }

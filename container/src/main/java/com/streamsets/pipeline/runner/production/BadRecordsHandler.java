@@ -21,7 +21,7 @@ public class BadRecordsHandler {
     this.errorStage = errorStage;
   }
 
-  public List<StageIssue> validate() {
+  public List<StageIssue> validate() throws StageException {
     return errorStage.validateConfigs();
   }
 

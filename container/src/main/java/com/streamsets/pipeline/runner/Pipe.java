@@ -35,7 +35,7 @@ public abstract class Pipe {
     return outputLanes;
   }
 
-  public abstract List<StageIssue> validateConfigs();
+  public abstract List<StageIssue> validateConfigs() throws StageException;
 
   public abstract void init() throws StageException;
 

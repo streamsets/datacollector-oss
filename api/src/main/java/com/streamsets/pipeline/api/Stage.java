@@ -59,7 +59,7 @@ public interface Stage<C extends Stage.Context> {
   public interface ConfigIssue {
   }
 
-  public List<ConfigIssue> validateConfigs(Info info, C context);
+  public List<ConfigIssue> validateConfigs(Info info, C context)  throws StageException;
 
   public void init(Info info, C context) throws StageException;
 

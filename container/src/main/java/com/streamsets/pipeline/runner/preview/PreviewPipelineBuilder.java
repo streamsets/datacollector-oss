@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.runner.preview;
 
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -42,7 +43,7 @@ public class PreviewPipelineBuilder {
     this.pipelineConf = pipelineConf;
   }
 
-  public PreviewPipeline build(PipelineRunner runner) throws PipelineRuntimeException {
+  public PreviewPipeline build(PipelineRunner runner) throws PipelineRuntimeException, StageException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     if (validator.validate() || validator.canPreview()) {
       List<String> openLanes = validator.getOpenLanes();

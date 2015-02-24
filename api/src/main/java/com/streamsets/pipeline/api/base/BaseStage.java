@@ -19,13 +19,13 @@ public abstract class BaseStage<C extends Context> implements Stage<C> {
   private boolean superInitCalled;
 
   @Override
-  public List<ConfigIssue> validateConfigs(Info info, C context) {
+  public List<ConfigIssue> validateConfigs(Info info, C context)  throws StageException {
     this.info = info;
     this.context = context;
     return validateConfigs();
   }
 
-  protected List<ConfigIssue> validateConfigs() {
+  protected List<ConfigIssue> validateConfigs()  throws StageException {
     return new ArrayList<>();
   }
 

@@ -52,7 +52,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private JsonRecordWriter writer;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
+  protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues =  super.validateConfigs();
 
     dir = new File(directory);

@@ -86,7 +86,7 @@ public class MockStages {
     public static class MSource implements Source {
 
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Context context) {
+      public List<ConfigIssue> validateConfigs(Info info, Context context) throws StageException {
         if (sourceCapture != null) {
           return sourceCapture.validateConfigs(info, context);
         } else {
@@ -130,7 +130,7 @@ public class MockStages {
     public static class MProcessor implements Processor {
 
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Processor.Context context) {
+      public List<ConfigIssue> validateConfigs(Info info, Processor.Context context) throws StageException {
         if (processorCapture != null) {
           return processorCapture.validateConfigs(info, context);
         } else {
@@ -163,7 +163,7 @@ public class MockStages {
     public static class MTarget implements Target {
 
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Target.Context context) {
+      public List<ConfigIssue> validateConfigs(Info info, Target.Context context) throws  StageException {
         if (targetCapture != null) {
           return targetCapture.validateConfigs(info, context);
         } else {
@@ -196,7 +196,7 @@ public class MockStages {
     public static class ETarget implements Target {
 
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Target.Context context) {
+      public List<ConfigIssue> validateConfigs(Info info, Target.Context context) throws StageException {
         if (errorCapture != null) {
           return errorCapture.validateConfigs(info, context);
         } else {

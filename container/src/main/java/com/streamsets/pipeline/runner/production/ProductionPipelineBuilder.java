@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.api.OffsetCommitter;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipeline;
@@ -35,7 +36,7 @@ public class ProductionPipelineBuilder {
   }
 
   public ProductionPipeline build(ProductionPipelineRunner runner, SourceOffsetTracker offsetTracker, Observer observer)
-      throws PipelineRuntimeException {
+      throws PipelineRuntimeException, StageException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     if (!validator.validate()) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, getFirstIssueAsString(
