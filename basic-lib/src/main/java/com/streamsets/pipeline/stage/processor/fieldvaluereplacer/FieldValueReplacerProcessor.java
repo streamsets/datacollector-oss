@@ -15,6 +15,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,6 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -81,8 +81,13 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
           if(record.has(fieldToReplace)) {
             Field field = record.get(fieldToReplace);
             if (field.getValue() == null) {
-              record.set(fieldToReplace, Field.create(field, convertToType(
-                fieldValueReplacerConfig.newValue, field.getType())));
+              try {
+                record.set(fieldToReplace, Field.create(field, convertToType(
+                  fieldValueReplacerConfig.newValue, field.getType())));
+              } catch (Exception e) {
+                throw new OnRecordErrorException(Errors.VALUE_REPLACER_00, fieldValueReplacerConfig.newValue,
+                  field.getType(), e.getMessage(), e);
+              }
             } else {
               LOG.debug("Field {} in Record {} is not null. Ignoring field replacement.", fieldToReplace,
                 record.getHeader().getSourceId());
@@ -98,7 +103,7 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
     batchMaker.addRecord(record);
   }
 
-  private Object convertToType(String stringValue, Field.Type fieldType) {
+  private Object convertToType(String stringValue, Field.Type fieldType) throws ParseException {
     switch (fieldType) {
       case BOOLEAN:
         return Boolean.valueOf(stringValue);
@@ -110,22 +115,10 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
         return stringValue.charAt(0);
       case DATE:
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        Date date;
-        try {
-          date = dateFormat.parse(stringValue);
-        } catch (ParseException e) {
-          throw new RuntimeException(e);
-        }
-        return date;
+        return dateFormat.parse(stringValue);
       case DATETIME:
         DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ", Locale.ENGLISH);
-        Date dateTime;
-        try {
-          dateTime = dateTimeFormat.parse(stringValue);
-        } catch (ParseException e) {
-          throw new RuntimeException(e);
-        }
-        return dateTime;
+        return dateTimeFormat.parse(stringValue);
       case DECIMAL:
         return new BigDecimal(stringValue);
       case DOUBLE:
