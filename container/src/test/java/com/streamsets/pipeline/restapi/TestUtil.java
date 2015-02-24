@@ -239,7 +239,7 @@ public class TestUtil {
 
       ErrorMessage em = new ErrorMessage("a", "b", 2L);
       try {
-        Mockito.when(pipelineManager.getErrorMessages("myProcessorStage")).thenReturn(
+        Mockito.when(pipelineManager.getErrorMessages("myProcessorStage", 100)).thenReturn(
           ImmutableList.of(em));
       } catch (PipelineManagerException e) {
         e.printStackTrace();

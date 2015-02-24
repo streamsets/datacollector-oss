@@ -342,7 +342,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     }
   }
 
-  public List<ErrorMessage> getErrorMessages(String instanceName) {
+  public List<ErrorMessage> getErrorMessages(String instanceName, int size) {
     synchronized (errorRecordsMutex) {
       if (stageToErrorMessagesMap == null || stageToErrorMessagesMap.isEmpty()
         || stageToErrorMessagesMap.get(instanceName) == null
@@ -350,6 +350,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
         return Collections.emptyList();
       }
     }
-    return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName));
+
+    if(stageToErrorMessagesMap.get(instanceName).size() > size) {
+      return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName)).subList(0, size);
+    } else {
+      return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName));
+    }
+
   }
 }

@@ -282,7 +282,7 @@ public class TestProductionRun {
     manager.startPipeline(MY_PIPELINE, PIPELINE_REV);
     waitForErrorMessages(MY_PROCESSOR);
 
-    List<ErrorMessage> errorMessages = manager.getErrorMessages(MY_PROCESSOR);
+    List<ErrorMessage> errorMessages = manager.getErrorMessages(MY_PROCESSOR, 100);
     Assert.assertNotNull(errorMessages);
     Assert.assertEquals(false, errorMessages.isEmpty());
 
@@ -322,7 +322,7 @@ public class TestProductionRun {
   }
 
   private void waitForErrorMessages(String instanceName) throws InterruptedException, PipelineManagerException {
-    while(manager.getErrorMessages(instanceName).isEmpty()) {
+    while(manager.getErrorMessages(instanceName, 100).isEmpty()) {
       Thread.sleep(5);
     }
   }

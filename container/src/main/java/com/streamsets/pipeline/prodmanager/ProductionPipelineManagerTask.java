@@ -238,10 +238,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return observerRunnable.getSampledRecords(sampleDefinitionId, size);
   }
 
-  public List<ErrorMessage> getErrorMessages(String instanceName) throws PipelineManagerException {
+  public List<ErrorMessage> getErrorMessages(String instanceName, int size) throws PipelineManagerException {
     checkState(getPipelineState() != null && getPipelineState().getState().equals(State.RUNNING),
       ContainerError.CONTAINER_0106);
-    return prodPipeline.getErrorMessages(instanceName);
+    return prodPipeline.getErrorMessages(instanceName, size);
   }
 
   public List<PipelineState> getHistory(String pipelineName, String rev, boolean fromBeginning)
