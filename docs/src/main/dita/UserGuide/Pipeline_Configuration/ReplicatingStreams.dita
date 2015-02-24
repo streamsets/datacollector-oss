@@ -7,11 +7,12 @@
     enter the stage, but by default all records are passed.</shortdesc>
  <conbody>
   <p><indexterm>pipelines<indexterm>replicating
-     streams</indexterm></indexterm><indexterm>replicating<indexterm>streams in a
-     pipeline</indexterm></indexterm>Use a Stream Selector to use conditions to route different sets
-   of data to different streams. </p>
-    <p>
-      <draft-comment author="Loretta">add a screenshot here with a For Example...</draft-comment>
-    </p>
+          streams</indexterm></indexterm><indexterm>replicating<indexterm>streams in a
+          pipeline</indexterm></indexterm>For example, in the following pipeline, all of the data
+      from the Directory origin passes to both branches of the pipeline for different types of
+      processing. But you might optionally configure required fields for the Field Splitter or Value
+      Replacer to discard any records that are not needed.</p>
+    <p><image href="../Graphics/ReplicatingStreams.png" id="image_m3h_hnm_2r" scale="50"/></p>
+    <p>To route data based on more complex conditions, use a Stream Selector.</p>
  </conbody>
 </concept>

@@ -203,7 +203,7 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Late Records Time Limit (secs)</entry>
+                                    <entry>Late Record Time Limit (secs)</entry>
                                     <entry>Time limit for output directories to accept data. <p>You
                                             can enter a time in seconds, or use the expression to
                                             enter a time in hours. You can also use MINUTES in the
@@ -211,14 +211,13 @@
                                         </p></entry>
                                 </row>
                                 <row>
-                                    <entry>Late Records Handling</entry>
+                                    <entry>Late Record Handling</entry>
                                     <entry>Determines how to handle late records:<ul
                                             id="ul_gx4_c12_br">
                                             <li>Send to error - Sends the record to the pipeline for
                                                 error handling. </li>
                                             <li>Send to late records file - Sends the record to a
                                                 late records file.</li>
-                                            <li>Discard - Discards the record.</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -275,10 +274,7 @@
                                     <entry>Remove New Line Characters</entry>
                                     <entry>Removes new line characters from within a record. Use
                                         True or False. <p>Recommended to ensure writing text to a
-                                            Hadoop file system as a single line of
-                                                text.<draft-comment author="Loretta">add conceptual
-                                                info post-beta if
-                                        necessary.</draft-comment></p></entry>
+                                            Hadoop file system as a single line of text.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

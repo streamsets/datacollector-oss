@@ -18,8 +18,14 @@
     stages. You can configure required fields for connected stages to discard records before they
     enter the stage, but by default all records are passed.</p>
 
-  <p class="p">Use a Stream Selector to use conditions to route different sets
-   of data to different streams. </p>
+  <p class="p">For example, in the following pipeline, all of the data
+      from the Directory origin passes to both branches of the pipeline for different types of
+      processing. But you might optionally configure required fields for the Field Splitter or Value
+      Replacer to discard any records that are not needed.</p>
+
+    <p class="p"><img class="image" id="concept_ub2_zdl_br__image_m3h_hnm_2r" src="../Graphics/ReplicatingStreams.png" height="126" width="485"></img></p>
+
+    <p class="p">To route data based on more complex conditions, use a Stream Selector.</p>
 
  </div>
 
