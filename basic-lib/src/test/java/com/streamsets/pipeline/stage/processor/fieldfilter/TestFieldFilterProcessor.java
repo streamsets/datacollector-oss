@@ -22,7 +22,7 @@ public class TestFieldFilterProcessor {
 
   @Test
   public void testKeep() throws StageException {
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
       .addConfiguration("fields", ImmutableList.of("/name", "/age"))
       .addConfiguration("filterOperation", FilterOperation.KEEP)
       .addOutputLane("a").build();
@@ -51,7 +51,7 @@ public class TestFieldFilterProcessor {
 
   @Test
   public void testKeepNonExistingFiled() throws StageException {
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
       .addConfiguration("fields", ImmutableList.of("/city"))
       .addConfiguration("filterOperation", FilterOperation.KEEP)
       .addOutputLane("a").build();
@@ -78,7 +78,7 @@ public class TestFieldFilterProcessor {
 
   @Test
   public void testRemove() throws StageException {
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
       .addConfiguration("fields", ImmutableList.of("/name", "/age"))
       .addConfiguration("filterOperation", FilterOperation.REMOVE)
       .addOutputLane("a").build();
@@ -106,7 +106,7 @@ public class TestFieldFilterProcessor {
 
   @Test
   public void testRemoveNonExistingFiled() throws StageException {
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
       .addConfiguration("fields", ImmutableList.of("/city"))
       .addConfiguration("filterOperation", FilterOperation.REMOVE)
       .addOutputLane("a").build();
