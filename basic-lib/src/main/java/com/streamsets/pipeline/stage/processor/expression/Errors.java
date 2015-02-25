@@ -10,6 +10,8 @@ import com.streamsets.pipeline.api.ErrorCode;
 public enum Errors implements ErrorCode {
   EXPR_00("Invalid expression '{}', {}"),
   EXPR_01("Invalid constant '{}', {}"),
+  EXPR_02("Record '{}', cannot set value in field '{}'"),
+  EXPR_03("Could not evaluate expression '{}' for record '{}', {}"),
   ;
 
   private final String msg;

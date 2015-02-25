@@ -14,8 +14,6 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.el.ELUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
 import java.math.BigDecimal;
@@ -24,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ExpressionProcessor extends SingleLaneRecordProcessor {
-  private static final Logger LOG = LoggerFactory.getLogger(ExpressionProcessor.class);
 
   private final List<ExpressionProcessorConfig> expressionProcessorConfigs;
   private final Map<String, ?> constants;
@@ -66,17 +63,20 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       try {
         result = elEvaluator.eval(variables, expressionProcessorConfig.expression);
       } catch (ELException e) {
-        throw new OnRecordErrorException(Errors.EXPR_00, expressionProcessorConfig.expression, e.getMessage(), e);
+        throw new OnRecordErrorException(Errors.EXPR_03, expressionProcessorConfig.expression,
+                                         record.getHeader().getSourceId(), e.getMessage(), e);
       }
       Field newField = Field.create(getTypeFromObject(result), result);
       if(record.has(expressionProcessorConfig.fieldToSet)) {
-        LOG.debug("Replacing existing field '{}' with value '{}'", expressionProcessorConfig.fieldToSet, result);
         record.set(expressionProcessorConfig.fieldToSet, newField);
       } else {
-        LOG.debug("Creating new field '{}' with value '{}'", expressionProcessorConfig.fieldToSet, result);
         //A new field will be created only if the parent field exists and supports creation of a new child field.
         //For a new field can be created in the parent field which is a map or if the parent field is an array.
         record.set(expressionProcessorConfig.fieldToSet, newField);
+        if(!record.has(expressionProcessorConfig.fieldToSet)) {
+          throw new OnRecordErrorException(Errors.EXPR_02, record.getHeader().getSourceId(),
+                                           expressionProcessorConfig.fieldToSet);
+        }
       }
     }
     batchMaker.addRecord(record);
@@ -98,7 +98,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     } else if(result instanceof Byte) {
       return Field.Type.BYTE;
     } else if(result instanceof byte[]) {
-      return Field.Type.BYTE;
+      return Field.Type.BYTE_ARRAY;
     } else if(result instanceof Character) {
       return Field.Type.CHAR;
     } else if(result instanceof Float) {

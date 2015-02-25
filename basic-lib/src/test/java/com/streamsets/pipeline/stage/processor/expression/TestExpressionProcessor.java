@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.processor.expression;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -47,7 +48,7 @@ public class TestExpressionProcessor {
   public void tesExpressionEvaluationFailure() throws StageException {
 
     ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
-    expressionProcessorConfig.expression = "${record:value('/baseSalary') + record:value('/bonusx')}"; //invalid expression string, missing ")"
+    expressionProcessorConfig.expression = "${record:value('/baseSalary') + record:value('/bonusx')}";
     expressionProcessorConfig.fieldToSet = "/grossSalary";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
@@ -68,7 +69,7 @@ public class TestExpressionProcessor {
       runner.runProcess(ImmutableList.of(record));
       Assert.fail("Stage exception expected as the expression string is not valid");
     } catch (OnRecordErrorException e) {
-      Assert.assertEquals(Errors.EXPR_00, e.getErrorCode());
+      Assert.assertEquals(Errors.EXPR_03, e.getErrorCode());
     }
   }
 
@@ -244,6 +245,34 @@ public class TestExpressionProcessor {
       Assert.assertEquals(1, result.size());
       Assert.assertTrue(result.containsKey("id"));
       Assert.assertEquals("s:1", result.get("id").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testFailingFieldSet() throws StageException {
+
+    ExpressionProcessorConfig complexExpressionConfig = new ExpressionProcessorConfig();
+    complexExpressionConfig.expression = "${record:id()}";
+    complexExpressionConfig.fieldToSet = "/id/xx";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addConfiguration("constants", null)
+        .addConfiguration("expressionProcessorConfigs", ImmutableList.of(complexExpressionConfig))
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(0, output.getRecords().get("a").size());
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+      Assert.assertEquals("s:1", runner.getErrorRecords().get(0).getHeader().getSourceId());
     } finally {
       runner.runDestroy();
     }
