@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
   VALUE_REPLACER_00("Failed to convert value '{}' to type '{}', {}."),
+  VALUE_REPLACER_01("Record '{}' does not contain fields '{}'."),
   ;
 
   private final String msg;

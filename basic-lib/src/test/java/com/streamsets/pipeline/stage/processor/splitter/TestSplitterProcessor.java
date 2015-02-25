@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -36,7 +36,7 @@ public class TestSplitterProcessor {
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
-        .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.CONTINUE)
+        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
         .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
         .addOutputLane("out")
         .build();
@@ -76,7 +76,7 @@ public class TestSplitterProcessor {
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
-        .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.TO_ERROR)
+        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
         .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
         .addOutputLane("out")
         .build();
@@ -111,7 +111,7 @@ public class TestSplitterProcessor {
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
-        .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.TO_ERROR)
+        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
         .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
         .addOutputLane("out")
         .build();
@@ -136,7 +136,7 @@ public class TestSplitterProcessor {
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
-        .addConfiguration("onNotEnoughSplits", OnNotEnoughSplits.TO_ERROR)
+        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
         .addConfiguration("originalFieldAction", OriginalFieldAction.REMOVE)
         .addOutputLane("out")
         .build();

@@ -7,8 +7,10 @@ package com.streamsets.pipeline.stage.processor.fieldhasher;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -34,6 +36,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -64,6 +67,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -95,6 +99,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -125,6 +130,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -155,6 +161,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -185,6 +192,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -215,6 +223,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -245,6 +254,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -275,6 +285,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -306,6 +317,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -337,6 +349,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -368,6 +381,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -399,6 +413,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -430,6 +445,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -462,6 +478,49 @@ public class TestFieldHasherProcessor {
   }
 
   @Test
+  public void testFieldsWithNullValuesError() throws StageException {
+    FieldHasherConfig fieldHasherConfig = new FieldHasherConfig();
+    fieldHasherConfig.fieldsToHash = ImmutableList.of("/age", "/name", "/sex", "/streetAddress");
+    fieldHasherConfig.hashType = HashType.SHA2;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("name", Field.create("a"));
+      map.put("age", Field.create(21));
+      map.put("sex", Field.create(Field.Type.STRING, null));
+      map.put("streetAddress", Field.create("c"));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(0, output.getRecords().get("a").size());
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+
+      Field field = runner.getErrorRecords().get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 4);
+      Assert.assertTrue(result.containsKey("name"));
+      Assert.assertEquals(computeHash("a", HashType.SHA2), result.get("name").getValue());
+      Assert.assertTrue(result.containsKey("age"));
+      Assert.assertEquals(computeHash("21", HashType.SHA2), result.get("age").getValue());
+      Assert.assertTrue(result.containsKey("sex"));
+      Assert.assertEquals(null, result.get("sex").getValue());
+      Assert.assertTrue(result.containsKey("streetAddress"));
+      Assert.assertEquals(computeHash("c", HashType.SHA2), result.get("streetAddress").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testMultipleFieldsDifferentHashTypes() throws StageException {
     FieldHasherConfig sha1HasherConfig = new FieldHasherConfig();
     sha1HasherConfig.fieldsToHash = ImmutableList.of("/age", "/name");
@@ -477,6 +536,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(sha1HasherConfig, sha2HasherConfig, md5HasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -517,6 +577,7 @@ public class TestFieldHasherProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -540,13 +601,47 @@ public class TestFieldHasherProcessor {
   }
 
   @Test
-  public void testUnsupportedFieldTypes() throws StageException {
+  public void testNonExistingFieldError() throws StageException {
+    FieldHasherConfig fieldHasherConfig = new FieldHasherConfig();
+    fieldHasherConfig.fieldsToHash = ImmutableList.of("/nonExisting");
+    fieldHasherConfig.hashType = HashType.SHA2;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("name", Field.create("streamsets"));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(0, output.getRecords().get("a").size());
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+      Field field = runner.getErrorRecords().get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 1);
+      Assert.assertTrue(result.containsKey("name"));
+      Assert.assertEquals("streamsets", result.get("name").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testUnsupportedFieldTypesContinue() throws StageException {
     FieldHasherConfig fieldHasherConfig = new FieldHasherConfig();
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/name", "/mapField", "/listField");
     fieldHasherConfig.hashType = HashType.SHA2;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -583,6 +678,44 @@ public class TestFieldHasherProcessor {
       Assert.assertEquals("e1", l.get(0).getValueAsString());
       Assert.assertEquals("e2", l.get(1).getValueAsString());
 
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testUnsupportedFieldTypesError() throws StageException {
+    FieldHasherConfig fieldHasherConfig = new FieldHasherConfig();
+    fieldHasherConfig.fieldsToHash = ImmutableList.of("/name", "/mapField", "/listField");
+    fieldHasherConfig.hashType = HashType.SHA2;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("name", Field.create("streamsets"));
+
+      Map<String, Field> mapField = new HashMap<>();
+      mapField.put("e1", Field.create("e1"));
+      mapField.put("e2", Field.create("e2"));
+
+      map.put("mapField", Field.create(mapField));
+      map.put("listField", Field.create(Field.Type.LIST, ImmutableList.of(Field.create("e1"), Field.create("e2"))));
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(0, output.getRecords().get("a").size());
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+
+      System.out.println(runner.getErrorRecords().get(0).getHeader().getErrorMessage());
     } finally {
       runner.runDestroy();
     }

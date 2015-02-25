@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldvaluereplacer;
 
+import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
@@ -15,8 +16,12 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.config.OnStagePreConditionFailure;
+import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
+import com.streamsets.pipeline.stage.util.StageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +29,10 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 @GenerateResourceBundle
 @StageDef(
@@ -61,16 +68,28 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
   @ComplexField
   public List<FieldValueReplacerConfig> fieldsToReplaceIfNull;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "TO_ERROR",
+    label = "Field Does Not Exist",
+    description="Action for data that does not contain the specified fields",
+    displayPosition = 30,
+    group = "REPLACE"
+  )
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnStagePreConditionFailureChooserValues.class)
+  public OnStagePreConditionFailure onStagePreConditionFailure;
+
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+    Set<String> fieldsThatDoNotExist = new HashSet<>();
     if(fieldsToNull != null && !fieldsToNull.isEmpty()) {
       for (String fieldToNull : fieldsToNull) {
         if(record.has(fieldToNull)) {
           Field field = record.get(fieldToNull);
           record.set(fieldToNull, Field.create(field, null));
         } else {
-          LOG.warn("Record {} does not have field {}. Ignoring field replacement.", record.getHeader().getSourceId(),
-            fieldToNull);
+          fieldsThatDoNotExist.add(fieldToNull);
         }
       }
     }
@@ -88,18 +107,18 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
                 throw new OnRecordErrorException(Errors.VALUE_REPLACER_00, fieldValueReplacerConfig.newValue,
                   field.getType(), e.getMessage(), e);
               }
-            } else {
-              LOG.debug("Field {} in Record {} is not null. Ignoring field replacement.", fieldToReplace,
-                record.getHeader().getSourceId());
             }
           } else {
-            LOG.warn("Record {} does not have field {}. Ignoring field replacement.", record.getHeader().getSourceId(),
-              fieldToReplace);
+            fieldsThatDoNotExist.add(fieldToReplace);
           }
         }
       }
     }
 
+    if(onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR && !fieldsThatDoNotExist.isEmpty()) {
+     throw new OnRecordErrorException(Errors.VALUE_REPLACER_01, record.getHeader().getSourceId(),
+       StageUtil.getCommaSeparatedNames(fieldsThatDoNotExist));
+    }
     batchMaker.addRecord(record);
   }
 
@@ -137,5 +156,4 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
         return stringValue;
     }
   }
-
 }

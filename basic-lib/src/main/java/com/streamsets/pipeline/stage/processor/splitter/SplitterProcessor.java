@@ -17,6 +17,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.config.OnStagePreConditionFailure;
+import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
 
 import java.util.List;
 
@@ -71,8 +73,8 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
       displayPosition = 40,
       group = "FIELD_SPLITTER"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnNotEnoughSplitsChooserValues.class)
-  public OnNotEnoughSplits onNotEnoughSplits;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnStagePreConditionFailureChooserValues.class)
+  public OnStagePreConditionFailure onStagePreConditionFailure;
 
   @ConfigDef(
       required = true,
@@ -125,7 +127,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
         error = Errors.SPLITTER_02;
       }
     }
-    if (error == null || onNotEnoughSplits == OnNotEnoughSplits.CONTINUE) {
+    if (error == null || onStagePreConditionFailure == OnStagePreConditionFailure.CONTINUE) {
       for (int i = 0; i < fieldPaths.length; i++) {
         if (splits != null && splits.length > i) {
           record.set(fieldPaths[i], Field.create(splits[i]));

@@ -3,11 +3,11 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.processor.splitter;
+package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum OnNotEnoughSplits implements Label {
+public enum OnStagePreConditionFailure implements Label {
   CONTINUE("Continue"),
   TO_ERROR("Send to Error"),
 
@@ -15,7 +15,7 @@ public enum OnNotEnoughSplits implements Label {
 
   private final String label;
 
-  OnNotEnoughSplits(String label) {
+  OnStagePreConditionFailure(String label) {
     this.label = label;
   }
 

@@ -9,6 +9,8 @@ import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
   HASH_00("Error creating message digest for {}, {}."),
+  HASH_01("The record '{}' has the following issues - Fields '{}' do not exist, Fields '{}' have null value, " +
+    "Fields '{}' are of type 'MAP' or 'LIST'.")
   ;
 
   private final String msg;

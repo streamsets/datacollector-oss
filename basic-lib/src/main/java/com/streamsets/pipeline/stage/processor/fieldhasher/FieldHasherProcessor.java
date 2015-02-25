@@ -5,23 +5,30 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldhasher;
 
+import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.config.OnStagePreConditionFailure;
+import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
+import com.streamsets.pipeline.stage.util.StageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @GenerateResourceBundle
 @StageDef(
@@ -30,7 +37,6 @@ import java.util.List;
     description = "Uses an algorithm to hash field values",
     icon="hash.png")
 @ConfigGroups(Groups.class)
-@HideConfig(onErrorRecord = true)
 public class FieldHasherProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldHasherProcessor.class);
 
@@ -46,26 +52,47 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
   @ComplexField
   public List<FieldHasherConfig> fieldHasherConfigs;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "TO_ERROR",
+    label = "On Field Issue",
+    description="Action for data that does not contain the specified fields, the field value is null or if the " +
+      "field type is Map or List",
+    displayPosition = 20,
+    group = "HASHING"
+  )
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnStagePreConditionFailureChooserValues.class)
+  public OnStagePreConditionFailure onStagePreConditionFailure;
+
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+    Set<String> fieldsDontExist = new HashSet<>();
+    Set<String> fieldsWithListOrMapType = new HashSet<>();
+    Set<String> fieldsWithNull = new HashSet<>();
+
     for(FieldHasherConfig fieldHasherConfig : fieldHasherConfigs) {
       for(String fieldToHash : fieldHasherConfig.fieldsToHash) {
         if(record.has(fieldToHash)) {
           Field field = record.get(fieldToHash);
           if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST) {
-            LOG.warn("The field {} in record {} is of type {}. Ignoring field.", fieldToHash,
-              record.getHeader().getSourceId(), field.getType().name());
+            fieldsWithListOrMapType.add(fieldToHash);
           } else if(field.getValue() == null) {
-            LOG.info("The field {} in record {} has null value. Ignoring field.", fieldToHash,
-              record.getHeader().getSourceId());
+            fieldsWithNull.add(fieldToHash);
           } else {
             Field newField = Field.create(generateHashForField(field, fieldHasherConfig.hashType));
             record.set(fieldToHash, newField);
           }
         } else {
-          LOG.info("Could not find field {} in record {}.", fieldToHash, record.getHeader().getSourceId());
+          fieldsDontExist.add(fieldToHash);
         }
       }
+    }
+
+    if(onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR) {
+      throw new OnRecordErrorException(Errors.HASH_01, record.getHeader().getSourceId(),
+        StageUtil.getCommaSeparatedNames(fieldsDontExist),  StageUtil.getCommaSeparatedNames(fieldsWithNull),
+        StageUtil.getCommaSeparatedNames(fieldsWithListOrMapType));
     }
     batchMaker.addRecord(record);
   }
