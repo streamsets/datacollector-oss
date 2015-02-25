@@ -34,7 +34,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/name");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -65,7 +65,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -97,7 +97,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -128,7 +128,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -159,7 +159,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -190,7 +190,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -221,7 +221,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -252,7 +252,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -283,7 +283,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -315,7 +315,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -347,7 +347,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -379,7 +379,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -411,7 +411,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/byteArray");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -443,7 +443,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age", "/name", "/sex", "/streetAddress");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -483,7 +483,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/age", "/name", "/sex", "/streetAddress");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
@@ -534,7 +534,7 @@ public class TestFieldHasherProcessor {
     md5HasherConfig.fieldsToHash = ImmutableList.of("/streetAddress");
     md5HasherConfig.hashType = HashType.MD5;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(sha1HasherConfig, sha2HasherConfig, md5HasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -575,7 +575,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/nonExisting");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -606,7 +606,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/nonExisting");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
@@ -639,7 +639,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/name", "/mapField", "/listField");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
@@ -689,7 +689,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/name", "/mapField", "/listField");
     fieldHasherConfig.hashType = HashType.SHA2;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)

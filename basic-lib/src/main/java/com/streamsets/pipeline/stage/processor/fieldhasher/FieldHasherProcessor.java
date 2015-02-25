@@ -5,24 +5,13 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldhasher;
 
-import com.streamsets.pipeline.api.ChooserMode;
-import com.streamsets.pipeline.api.ComplexField;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDef.Type;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
-import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
 import com.streamsets.pipeline.stage.util.StageUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,40 +19,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@GenerateResourceBundle
-@StageDef(
-    version="1.0.0",
-    label="Field Hasher",
-    description = "Uses an algorithm to hash field values",
-    icon="hash.png")
-@ConfigGroups(Groups.class)
 public class FieldHasherProcessor extends SingleLaneRecordProcessor {
-  private static final Logger LOG = LoggerFactory.getLogger(FieldHasherProcessor.class);
+  private final List<FieldHasherConfig> fieldHasherConfigs;
+  private final OnStagePreConditionFailure onStagePreConditionFailure;
 
-  @ConfigDef(
-      required = true,
-      type = Type.MODEL,
-      defaultValue="",
-      label = "",
-      description="",
-      displayPosition = 10,
-      group = "HASHING"
-  )
-  @ComplexField
-  public List<FieldHasherConfig> fieldHasherConfigs;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "TO_ERROR",
-    label = "On Field Issue",
-    description="Action for data that does not contain the specified fields, the field value is null or if the " +
-      "field type is Map or List",
-    displayPosition = 20,
-    group = "HASHING"
-  )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnStagePreConditionFailureChooserValues.class)
-  public OnStagePreConditionFailure onStagePreConditionFailure;
+  public FieldHasherProcessor(
+      List<FieldHasherConfig> fieldHasherConfigs,
+      OnStagePreConditionFailure onStagePreConditionFailure) {
+    this.fieldHasherConfigs = fieldHasherConfigs;
+    this.onStagePreConditionFailure = onStagePreConditionFailure;
+  }
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
