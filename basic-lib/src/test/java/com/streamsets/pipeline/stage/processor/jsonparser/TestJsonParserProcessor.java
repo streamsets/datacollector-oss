@@ -8,7 +8,6 @@ package com.streamsets.pipeline.stage.processor.jsonparser;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -33,7 +32,7 @@ public class TestJsonParserProcessor {
 
   @Test
   public void testParsingDiscarding() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserDProcessor.class)
         .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("fieldPathToParse", "/json")
         .addConfiguration("parsedFieldPath", "/parsed")
@@ -60,7 +59,7 @@ public class TestJsonParserProcessor {
 
   @Test
   public void testParsingToError() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserDProcessor.class)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .addConfiguration("fieldPathToParse", "/json")
         .addConfiguration("parsedFieldPath", "/parsed")
@@ -87,7 +86,7 @@ public class TestJsonParserProcessor {
 
   @Test(expected = OnRecordErrorException.class)
   public void testParsingStopPipeline() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserDProcessor.class)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .addConfiguration("fieldPathToParse", "/json")
         .addConfiguration("parsedFieldPath", "/parsed")

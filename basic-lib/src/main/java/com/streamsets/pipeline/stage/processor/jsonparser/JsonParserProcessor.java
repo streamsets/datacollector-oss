@@ -5,49 +5,23 @@
  */
 package com.streamsets.pipeline.stage.processor.jsonparser;
 
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.lib.util.JsonLineToRecord;
 import com.streamsets.pipeline.lib.util.ToRecordException;
 
-@GenerateResourceBundle
-@StageDef(
-    version="1.0.0",
-    label="JSON Parser",
-    description = "Parses a string field with JSON data",
-    icon="jsonparser.svg"
-)
-@ConfigGroups(Groups.class)
 public class JsonParserProcessor extends SingleLaneRecordProcessor {
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Field to Parse",
-      description = "String field that contains a JSON object",
-      displayPosition = 10,
-      group = "JSON"
-  )
-  public String fieldPathToParse;
+  private final String fieldPathToParse;
+  private final String parsedFieldPath;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "New Parsed Field",
-      description="Name of the new field to set the parsed JSON data",
-      displayPosition = 20,
-      group = "JSON"
-  )
-  public String parsedFieldPath;
+  public JsonParserProcessor(String fieldPathToParse, String parsedFieldPath) {
+    this.fieldPathToParse = fieldPathToParse;
+    this.parsedFieldPath = parsedFieldPath;
+  }
 
   private JsonLineToRecord parser;
 
