@@ -8,8 +8,8 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  HADOOPFS_00("HDFS Security enabled, could not retrieve kerberos credentials (KDC may not be available)"),
-  HADOOPFS_01("Failed to connect to HDFS FileSystem URI='{}', {}"),
+  HADOOPFS_00("Could not retrieve kerberos credentials (KDC may not be available)"),
+  HADOOPFS_01("Failed to configure/connect to the '{}' Hadoop File System, {}"),
   HADOOPFS_02("Invalid dir path template '{}', {}"),
 
   HADOOPFS_03("The specified Key expression is invalid '{}', {}"),
@@ -17,16 +17,22 @@ public enum Errors implements ErrorCode {
   HADOOPFS_05("The specified custom compression codec '{}' could not be loaded, {}"),
   HADOOPFS_06("The specified late records time limit expression is invalid '{}', {}"),
   HADOOPFS_07("The specified time driver expression is invalid '{}', {}"),
-  HADOOPFS_08("The maximum file size value must be zero greater than zero, '{}'"),
-  HADOOPFS_09("The maximum records per file must be zero greater than zero, '{}'"),
-  HADOOPFS_10("The late record time limit expression '{}' must be greater than zero"),
+  HADOOPFS_08("The maximum file size value must be zero or greater than zero"),
+  HADOOPFS_09("The maximum records per file must be zero or greater than zero"),
+  HADOOPFS_10("The late record time limit expression must be greater than zero"),
 
   HADOOPFS_11("Could not initialize the writer manager: {}"),
 
   HADOOPFS_12("The record '{}' is late"),
   HADOOPFS_13("Error while writing to HDFS: {}"),
-  HADOOPFS_14("Stopping pipeline, record '{}' in error: {}"),
+  HADOOPFS_14("Could not write record '{}', {}"),
   HADOOPFS_15("Record in error: {}"),
+  HADOOPFS_16("Unsupported data format '{}'"),
+  HADOOPFS_17("Could not initialize the late records writer manager: {}"),
+  HADOOPFS_18("URI '{}' must start with '<scheme>://'"),
+  HADOOPFS_19("Invalid time basis expression '{}', {}"),
+  HADOOPFS_20("Invalid directory path template, {}"),
+  HADOOPFS_21("Invalid late directory path template, {}"),
   ;
   private final String msg;
 

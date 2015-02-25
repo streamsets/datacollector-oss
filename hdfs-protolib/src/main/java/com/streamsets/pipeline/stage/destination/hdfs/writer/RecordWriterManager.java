@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
@@ -40,6 +41,18 @@ import java.util.TimeZone;
 
 public class RecordWriterManager {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriterManager.class);
+
+  public static void validateDirPathTemplate1(Target.Context context, String pathTemplate) throws ELException {
+    getCeilingDateBasedOnTemplate(pathTemplate, TimeZone.getDefault(), new Date());
+  }
+
+  public static void validateDirPathTemplate2(Target.Context context, String pathTemplate) throws ELException {
+    ELEvaluator elEval = new ELEvaluator();
+    ELRecordSupport.registerRecordFunctions(elEval);
+    ELEvaluator.Variables vars = new ELEvaluator.Variables(getELVarsForTime(TimeZone.getDefault(), new Date()), null);
+    ELRecordSupport.setRecordInContext(vars, context.createRecord("validateDirPathTemplate"));
+    elEval.eval(vars, pathTemplate, String.class);
+  }
 
   private URI hdfsUri;;
   private Configuration hdfsConf;
@@ -75,7 +88,7 @@ public class RecordWriterManager {
     this.recordToString = recordToString;
     pathElEval = new ELEvaluator();
     ELRecordSupport.registerRecordFunctions(pathElEval);
-    getCeilingDateBasedOnTemplate(new Date());
+    getCeilingDateBasedOnTemplate(dirPathTemplate, timeZone, new Date());
   }
 
   private static final String CONST_YYYY = "YYYY";
@@ -86,7 +99,7 @@ public class RecordWriterManager {
   private static final String CONST_mm = "mm";
   private static final String CONST_ss = "ss";
 
-  Map<String, Object> getELVarsForTime(Date date) {
+  static Map<String, Object> getELVarsForTime(TimeZone timeZone, Date date) {
     Calendar calendar = Calendar.getInstance(timeZone);
     calendar.setTime(date);
     Map<String, Object> map = new HashMap<>();
@@ -103,7 +116,7 @@ public class RecordWriterManager {
 
   String getDirPath(Date date, Record record) throws StageException {
     try {
-      ELEvaluator.Variables vars = new ELEvaluator.Variables(getELVarsForTime(date), null);
+      ELEvaluator.Variables vars = new ELEvaluator.Variables(getELVarsForTime(timeZone, date), null);
       ELRecordSupport.setRecordInContext(vars, record);
       return (String) pathElEval.eval(vars, dirPathTemplate);
     } catch (ELException ex) {
@@ -151,7 +164,7 @@ public class RecordWriterManager {
     TIME_CONSTANTS.add(CONST_ss);
   }
 
-  Date getCeilingDateBasedOnTemplate(Date date) {
+  static Date getCeilingDateBasedOnTemplate(String dirPathTemplate, TimeZone timeZone, Date date) {
     Calendar calendar = Calendar.getInstance(timeZone);
     calendar.setTime(date);
     if (!dirPathTemplate.contains(CONST_YY) && !dirPathTemplate.contains(CONST_YYYY)) {
@@ -222,7 +235,7 @@ public class RecordWriterManager {
 
   long getTimeToLiveMillis(Date now, Date recordDate) {
     // we up the record date to the greatest one based on the template
-    recordDate = getCeilingDateBasedOnTemplate(recordDate);
+    recordDate = getCeilingDateBasedOnTemplate(dirPathTemplate, timeZone, recordDate);
     return recordDate.getTime() + cutOffMillis - now.getTime();
   }
 

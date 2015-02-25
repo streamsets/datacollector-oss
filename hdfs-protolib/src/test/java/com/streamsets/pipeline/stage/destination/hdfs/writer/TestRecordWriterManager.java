@@ -94,7 +94,7 @@ public class TestRecordWriterManager {
 
     Date date = getFixedDate();
 
-    Map<String, Object> map = mgr.getELVarsForTime(date);
+    Map<String, Object> map = mgr.getELVarsForTime(TimeZone.getTimeZone("UTC"), date);
     Assert.assertEquals("2015", map.get("YYYY"));
     Assert.assertEquals("15", map.get("YY"));
     Assert.assertEquals("01", map.get("MM"));
@@ -473,10 +473,10 @@ public class TestRecordWriterManager {
 
     Date actual = parseDate("2015-01-20T14:01:15Z");
     Date expected = new Date(parseDate("2015-01-20T14:01:16Z").getTime() - 1);
-    Date computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    Date computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getDefault(), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
     actual = new Date(actual.getTime() + 10);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getDefault(), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // up to minutes
@@ -487,10 +487,10 @@ public class TestRecordWriterManager {
 
     actual = parseDate("2015-01-20T14:01:15Z");
     expected = new Date(parseDate("2015-01-20T14:02:00Z").getTime() - 1);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getDefault(), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
     actual = new Date(actual.getTime() + 10);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getDefault(), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // up to hours
@@ -501,10 +501,10 @@ public class TestRecordWriterManager {
 
     actual = parseDate("2015-01-20T14:01:15Z");
     expected = new Date(parseDate("2015-01-20T15:00:00Z").getTime() - 1);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getDefault(), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
     actual = new Date(actual.getTime() + 10);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getDefault(), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // up to days
@@ -515,10 +515,10 @@ public class TestRecordWriterManager {
 
     actual = parseDate("2015-01-20T14:01:15Z");
     expected = new Date(parseDate("2015-01-20T24:00:00Z").getTime() - 1);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getTimeZone("UTC"), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
     actual = new Date(actual.getTime() + 10);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getTimeZone("UTC"), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // up to months
@@ -529,10 +529,10 @@ public class TestRecordWriterManager {
 
     actual = parseDate("2015-01-20T14:01:15Z");
     expected = new Date(parseDate("2015-01-31T24:00:00Z").getTime() - 1);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getTimeZone("UTC"), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
     actual = new Date(actual.getTime() + 10);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getTimeZone("UTC"), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // up to years
@@ -543,10 +543,10 @@ public class TestRecordWriterManager {
 
     actual = parseDate("2015-01-20T14:01:15Z");
     expected = new Date(parseDate("2015-12-31T24:00:00Z").getTime() - 1);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getTimeZone("UTC"), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
     actual = new Date(actual.getTime() + 10);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getTimeZone("UTC"), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // leap year
@@ -557,10 +557,10 @@ public class TestRecordWriterManager {
 
     actual = parseDate("2016-02-20T1:01:15Z");
     expected = new Date(parseDate("2016-03-01T00:00:00Z").getTime() - 1);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getTimeZone("UTC"), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
     actual = new Date(actual.getTime() + 10);
-    computed = mgr.getCeilingDateBasedOnTemplate(actual);
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getTimeZone("UTC"), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
   }
 
@@ -582,7 +582,7 @@ public class TestRecordWriterManager {
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
                                                       cutOffRecords, fileType, compressionCodec , compressionType,
                                                       keyEL, toString);
-    mgr.getCeilingDateBasedOnTemplate(new Date());
+    mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getDefault(), new Date());
   }
 
   @Test(expected = IllegalArgumentException.class)

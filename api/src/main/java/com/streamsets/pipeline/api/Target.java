@@ -9,6 +9,8 @@ public interface Target extends Stage<Target.Context> {
 
   public interface Context extends Stage.Context {
 
+    public Record createRecord(String recordSourceId);
+
   }
 
   public void write(Batch batch) throws StageException;

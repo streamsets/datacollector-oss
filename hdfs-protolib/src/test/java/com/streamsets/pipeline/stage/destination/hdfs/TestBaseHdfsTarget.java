@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.CsvMode;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class TestBaseHdfsTarget {
   private static MiniDFSCluster miniDFS;
@@ -115,7 +117,7 @@ public class TestBaseHdfsTarget {
           cvsFieldPathToNameMappingConfigList
       ) {
         @Override
-        public void processBatch(Batch batch) throws StageException {
+        public void write(Batch batch) throws StageException {
         }
       };
     }
@@ -127,7 +129,7 @@ public class TestBaseHdfsTarget {
     configure(dTarget);
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+      target.validateConfigs(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
       Assert.assertNotNull(target.getHdfsConfiguration());
     } finally {
       target.destroy();
@@ -140,14 +142,14 @@ public class TestBaseHdfsTarget {
     configure(dTarget);
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+      target.validateConfigs(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
       Assert.assertEquals("X", target.getHdfsConfiguration().get("x"));
     } finally {
       target.destroy();
     }
   }
 
-  @Test(expected = StageException.class)
+  @Test
   public void testKerberosConfig() throws Exception {
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     dTarget.hdfsKerberos = true;
@@ -155,11 +157,10 @@ public class TestBaseHdfsTarget {
     dTarget.kerberosPrincipal = "sdc/localhost";
     configure(dTarget);
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
-    try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
-    } finally {
-      target.destroy();
-    }
+    List<Stage.ConfigIssue> issues =
+        target.validateConfigs(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains("HADOOPFS_00"));
   }
 
   @Test
@@ -237,7 +238,7 @@ public class TestBaseHdfsTarget {
     configure(dTarget);
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+      target.validateConfigs(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
       target.getBatchTime();
       Assert.assertEquals(3600, target.getLateRecordLimitSecs());
     } finally {
@@ -249,7 +250,7 @@ public class TestBaseHdfsTarget {
     dTarget.lateRecordsLimit = "${1 * MINUTES}";
     target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+      target.validateConfigs(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
       Assert.assertEquals(60, target.getLateRecordLimitSecs());
     } finally {
       target.destroy();
@@ -262,12 +263,12 @@ public class TestBaseHdfsTarget {
     configure(dTarget);
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+      target.validateConfigs(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
       target.getBatchTime();
       Record record = RecordCreator.create();
       ELEvaluator.Variables vars = new ELEvaluator.Variables(null, null);
-      target.write(null); //forcing a setBatchTime()
-      Date now = target.getBatchTime();
+      target.write((Batch)null); //forcing a setBatchTime()
+      Date now = target.setBatchTime();
       Assert.assertEquals(now, target.getRecordTime(record));
     } finally {
       target.destroy();
@@ -281,13 +282,13 @@ public class TestBaseHdfsTarget {
     dTarget.timeDriver = "${record:value('/')}";
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+      target.validateConfigs(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
       Date date = new Date();
       Record record = RecordCreator.create();
       record.set(Field.createDatetime(date));
       ELEvaluator.Variables vars = new ELEvaluator.Variables(null, null);
       Thread.sleep(1); // so batch time is later than date for sure
-      target.processBatch(null); //forcing a setBatchTime()
+      target.write((Batch) null); //forcing a setBatchTime()
       Assert.assertEquals(date, target.getRecordTime(record));
     } finally {
       target.destroy();

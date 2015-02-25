@@ -304,7 +304,7 @@ public class HdfsDTarget extends DTarget {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "SV",
+      defaultValue = "CSV",
       label = "CSV Format",
       description = "",
       displayPosition = 310,

@@ -10,7 +10,8 @@ import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.base.RecordTarget;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -39,13 +40,12 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.security.PrivilegedExceptionAction;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class HdfsTarget extends BaseTarget {
+public class HdfsTarget extends RecordTarget {
   private final static Logger LOG = LoggerFactory.getLogger(HdfsTarget.class);
 
   private final String hdfsUri;
@@ -106,6 +106,7 @@ public class HdfsTarget extends BaseTarget {
 
   private Configuration hdfsConfiguration;
   private UserGroupInformation ugi;
+  private long lateRecordsLimitSecs;
   private ELEvaluator timeDriverElEval;
   private ActiveRecordWriters currentWriters;
   private ActiveRecordWriters lateWriters;
@@ -114,12 +115,106 @@ public class HdfsTarget extends BaseTarget {
   private Date batchTime;
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected List<ConfigIssue> validateConfigs() throws StageException {
+    List<ConfigIssue> issues = super.validateConfigs();
+    validateHadoopFS(issues);
     try {
+      lateRecordsLimitSecs = ELEvaluator.evaluateHoursMinutesToSecondsExpr(lateRecordsLimit);
+      if (lateRecordsLimitSecs <= 0) {
+        issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), "lateRecordsLimit", Errors.HADOOPFS_10));
+      }
+    } catch (Exception ex) {
+      issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), "lateRecordsLimit", Errors.HADOOPFS_06,
+                                                lateRecordsLimit, ex.getMessage(), ex));
+    }
+    if (maxFileSize < 0) {
+      issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), "maxFileSize", Errors.HADOOPFS_08));
+    }
+
+    if (maxRecordsPerFile < 0) {
+      issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), "maxRecordsPerFile", Errors.HADOOPFS_09));
+    }
+
+    if (uniquePrefix == null) {
+      uniquePrefix = "";
+    }
+
+    recordToString = createRecordToStringInstance(issues);
+
+    SequenceFile.CompressionType compressionType = (seqFileCompressionType != null)
+                                                   ? seqFileCompressionType.getType() : null;
+
+    try {
+      RecordWriterManager.validateDirPathTemplate1(getContext(), dirPathTemplate);
+      RecordWriterManager.validateDirPathTemplate2(getContext(), dirPathTemplate);
+      try {
+        CompressionCodec compressionCodec = (CompressionMode.getCodec(compression) != null)
+                                            ? CompressionMode.getCodec(compression).newInstance() : null;
+        RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
+                                                          dirPathTemplate, TimeZone.getTimeZone(timeZoneID),
+                                                          lateRecordsLimitSecs, maxFileSize, maxRecordsPerFile,
+                                                          fileType, compressionCodec, compressionType, keyEl,
+                                                          recordToString);
+        currentWriters = new ActiveRecordWriters(mgr);
+      } catch (Exception ex) {
+        issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), null, Errors.HADOOPFS_11, ex.getMessage(),
+                                                  ex));
+      }
+    } catch (Exception ex) {
+      issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "dirPathTemplate", Errors.HADOOPFS_20,
+                                                ex.getMessage(), ex));
+    }
+
+    try {
+      if (lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
+        RecordWriterManager.validateDirPathTemplate1(getContext(), lateRecordsDirPathTemplate);
+        RecordWriterManager.validateDirPathTemplate2(getContext(), lateRecordsDirPathTemplate);
+        try {
+          CompressionCodec compressionCodec = (getCompressionCodec() != null)
+                                              ? getCompressionCodec().newInstance() : null;
+          RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
+                                                            lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID),
+                                                            lateRecordsLimitSecs, maxFileSize,
+                                                            maxRecordsPerFile, fileType, compressionCodec,
+                                                            compressionType, keyEl, recordToString);
+          lateWriters = new ActiveRecordWriters(mgr);
+        } catch (Exception ex) {
+          issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), null, Errors.HADOOPFS_17, ex.getMessage(), ex));
+        }
+      }
+    } catch (Exception ex) {
+      issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "lateRecordsDirPathTemplate",
+                                                Errors.HADOOPFS_21, ex.getMessage(), ex));
+    }
+
+
+    timeDriverElEval = new ELEvaluator();
+    ELRecordSupport.registerRecordFunctions(timeDriverElEval);
+    timeDriverElEval.registerFunction("time", "now", TIME_NOW_FUNC);
+
+    try {
+      ELEvaluator.Variables variables = new ELEvaluator.Variables();
+      ELRecordSupport.setRecordInContext(variables, getContext().createRecord("validationConfigs"));
+      setTimeNowInContext(variables, new Date());
+      timeDriverElEval.eval(variables, timeDriver, Date.class);
+    } catch (ELException ex) {
+      issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "timeDriver", Errors.HADOOPFS_19,
+                                                ex.getMessage(), ex));
+    }
+
+    return issues;
+  }
+
+  private void validateHadoopFS(List<ConfigIssue> issues) {
+    try {
+      boolean skipFS = false;
       hdfsConfiguration = new HdfsConfiguration();
       for (Map.Entry<String, String> config : hdfsConfigs.entrySet()) {
         hdfsConfiguration.set(config.getKey(), config.getValue());
+      }
+      if (!hdfsUri.contains("://")) {
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_18, hdfsUri));
+        skipFS = true;
       }
       hdfsConfiguration.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
       if (hdfsKerberos) {
@@ -127,74 +222,33 @@ public class HdfsTarget extends BaseTarget {
                               UserGroupInformation.AuthenticationMethod.KERBEROS.name());
         ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(kerberosPrincipal, kerberosKeytab);
         if (ugi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
-          throw new StageException(Errors.HADOOPFS_00);
+          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsKerberos", Errors.HADOOPFS_00));
         }
       } else {
         hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
                               UserGroupInformation.AuthenticationMethod.SIMPLE.name());
         ugi = UserGroupInformation.getLoginUser();
       }
-      ugi.doAs(new PrivilegedExceptionAction<Void>() {
-        @Override
-        public Void run() throws Exception {
-          getFileSystemForInitDestroy();
-          return null;
-        }
-      });
-    } catch (Exception ex) {
-      throw new StageException(Errors.HADOOPFS_01, hdfsUri, ex.getMessage(), ex);
-    }
-
-    if (uniquePrefix == null) {
-      uniquePrefix = "";
-    }
-
-    long lateRecordLimitSecs = getLateRecordLimitSecs();
-    if (lateRecordLimitSecs <= 0) {
-      throw new StageException(Errors.HADOOPFS_10, lateRecordsLimit);
-    }
-
-    if (maxFileSize < 0) {
-      throw new StageException(Errors.HADOOPFS_08, maxFileSize);
-    }
-
-    if (maxRecordsPerFile < 0) {
-      throw new StageException(Errors.HADOOPFS_09, maxRecordsPerFile);
-    }
-
-    recordToString = createRecordToStringInstance();
-
-    SequenceFile.CompressionType compressionType = (seqFileCompressionType != null)
-                                                   ? seqFileCompressionType.getType() : null;
-    try {
-      CompressionCodec compressionCodec = (CompressionMode.getCodec(compression) != null)
-                                          ? CompressionMode.getCodec(compression).newInstance() : null;
-      RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-                                                        dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordLimitSecs, maxFileSize, maxRecordsPerFile,
-                                                        fileType, compressionCodec, compressionType, keyEl, recordToString);
-
-      currentWriters = new ActiveRecordWriters(mgr);
-    } catch (Exception ex) {
-      throw new StageException(Errors.HADOOPFS_11, ex.getMessage(), ex);
-    }
-
-    try {
-      if (lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
-        CompressionCodec compressionCodec = (getCompressionCodec() != null)
-                                            ? getCompressionCodec().newInstance() : null;
-        RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-                                                          lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordLimitSecs, maxFileSize,
-                                                          maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl, recordToString);
-
-        lateWriters = new ActiveRecordWriters(mgr);
+      if (!skipFS) {
+        ugi.doAs(new PrivilegedExceptionAction<Void>() {
+          @Override
+          public Void run() throws Exception {
+            try (FileSystem fs = getFileSystemForInitDestroy()) { //to trigger the close
+            }
+            return null;
+          }
+        });
       }
     } catch (Exception ex) {
-      throw new StageException(Errors.HADOOPFS_11, ex.getMessage(), ex);
+      issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_01, hdfsUri,
+                                                ex.getMessage(), ex));
     }
+  }
 
-    timeDriverElEval = new ELEvaluator();
-    ELRecordSupport.registerRecordFunctions(timeDriverElEval);
-    timeDriverElEval.registerFunction("time", "now", TIME_NOW_FUNC);
+
+  @Override
+  protected void init() throws StageException {
+    super.init();
 
     toHdfsRecordsCounter = getContext().createCounter("toHdfsRecords");
     toHdfsRecordsMeter = getContext().createMeter("toHdfsRecords");
@@ -225,12 +279,9 @@ public class HdfsTarget extends BaseTarget {
     return CompressionMode.getCodec(compression);
   }
 
-  long getLateRecordLimitSecs() throws StageException {
-    try {
-      return ELEvaluator.evaluateHoursMinutesToSecondsExpr(lateRecordsLimit);
-    } catch (Exception ex) {
-      throw new StageException(Errors.HADOOPFS_06, lateRecordsLimit, ex.getMessage(), ex);
-    }
+  // for testing only
+  long getLateRecordLimitSecs() {
+    return lateRecordsLimitSecs;
   }
 
   static final String TIME_NOW_CONTEXT_VAR = "time_now";
@@ -245,6 +296,7 @@ public class HdfsTarget extends BaseTarget {
     }
   }
 
+  //required for EL
   public static Date getTimeNowFunc() {
     Date now = (Date) ELEvaluator.getVariablesInScope().getContextVariable(TIME_NOW_CONTEXT_VAR);
     Utils.checkArgument(now != null, "time:now() function has not been properly initialized");
@@ -268,8 +320,8 @@ public class HdfsTarget extends BaseTarget {
     return fieldPathToNameMapping;
   }
 
-  private RecordToString createRecordToStringInstance() {
-    RecordToString recordToString;
+  private RecordToString createRecordToStringInstance(List<ConfigIssue> issues) {
+    RecordToString recordToString = null;
     switch(dataFormat) {
       case SDC_JSON:
         recordToString = new DataCollectorRecordToString(getContext());
@@ -282,7 +334,8 @@ public class HdfsTarget extends BaseTarget {
         recordToString.setFieldPathToNameMapping(getFieldPathToNameMapping(cvsFieldPathToNameMappingConfigList));
         break;
       default:
-        throw new IllegalStateException(Utils.format("Invalid data format '{}'", dataFormat));
+        issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "dataFormat",
+                                                  Errors.HADOOPFS_16, dataFormat));
     }
     return recordToString;
   }
@@ -296,7 +349,9 @@ public class HdfsTarget extends BaseTarget {
       if (lateWriters != null) {
         lateWriters.closeAll();
       }
-      getFileSystemForInitDestroy().close();
+      if (ugi != null) {
+        getFileSystemForInitDestroy().close();
+      }
     } catch (IOException ex) {
       LOG.warn("Error while closing HDFS FileSystem URI='{}': {}", hdfsUri, ex.getMessage(), ex);
     }
@@ -310,7 +365,11 @@ public class HdfsTarget extends BaseTarget {
       ugi.doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
-          processBatch(batch);
+          getCurrentWriters().purge();
+          if (getLateWriters() != null) {
+            getLateWriters().purge();
+          }
+          HdfsTarget.super.write(batch);
           return null;
         }
       });
@@ -319,8 +378,10 @@ public class HdfsTarget extends BaseTarget {
     }
   }
 
-  private void setBatchTime() {
+  //visible for testing.
+  Date setBatchTime() {
     batchTime = new Date();
+    return batchTime;
   }
 
   protected Date getBatchTime() {
@@ -347,23 +408,8 @@ public class HdfsTarget extends BaseTarget {
   private Counter lateRecordsCounter;
   private Meter lateRecordsMeter;
 
-
-  public void processBatch(Batch batch) throws StageException {
-    try {
-      getCurrentWriters().purge();
-      if (getLateWriters() != null) {
-        getLateWriters().purge();
-      }
-      Iterator<Record> it = batch.getRecords();
-      while (it.hasNext()) {
-        processRecord(it.next());
-      }
-    } catch (IOException ex) {
-      throw new StageException(Errors.HADOOPFS_13, ex.getMessage(), ex);
-    }
-  }
-
-  protected void processRecord(Record record) throws StageException {
+  @Override
+  protected void write(Record record) throws StageException {
     try {
       Date recordTime = getRecordTime(record);
       RecordWriter writer = getCurrentWriters().get(getBatchTime(), recordTime, record);
@@ -389,17 +435,7 @@ public class HdfsTarget extends BaseTarget {
         }
       }
     } catch (Exception ex) {
-      switch (getContext().getOnErrorRecord()) {
-        case DISCARD:
-          break;
-        case TO_ERROR:
-          getContext().toError(record, ex);
-          break;
-        case STOP_PIPELINE:
-          throw new StageException(Errors.HADOOPFS_14, record, ex.getMessage(), ex);
-        default:
-          throw new RuntimeException("It should never happen");
-      }
+      throw new OnRecordErrorException(Errors.HADOOPFS_14, record, ex.getMessage(), ex);
     }
   }
 
