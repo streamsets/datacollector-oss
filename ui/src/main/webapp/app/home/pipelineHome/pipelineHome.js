@@ -13,7 +13,7 @@ angular
   }])
   .controller('PipelineHomeController', function ($scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q, $modal,
                                           $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster,
-                                          $translate, contextHelpService) {
+                                          $translate, contextHelpService, $location) {
     var routeParamPipelineName = $routeParams.pipelineName,
       configTimeout,
       configDirty = false,
@@ -495,6 +495,9 @@ angular
           $translate('global.messages.info.noPipelineExists', {name: routeParamPipelineName}).then(function(translation) {
             $rootScope.common.errors = [translation];
           });
+
+          $location.path('/');
+          $location.replace();
         }
 
       },function(data, status, headers, config) {
