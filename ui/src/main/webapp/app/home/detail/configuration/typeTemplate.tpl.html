@@ -39,31 +39,32 @@
 <script type="text/ng-template" id="characterConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8" ng-init="characterModel = getCharacterValue(detailPaneConfig.configuration[configIndex].value)">
 
-    <div class="btn-group">
+    <div class="clearfix">
+      <div class="btn-group pull-left">
 
-      <label class="btn btn-default"
-             ng-model="characterModel"
-             ng-change="detailPaneConfig.configuration[configIndex].value='\t'"
-             btn-radio="'\t'">Tab</label>
-      <label class="btn btn-default"
-             ng-model="characterModel"
-             ng-change="detailPaneConfig.configuration[configIndex].value=';'"
-             btn-radio="';'">Semicolon</label>
-      <label class="btn btn-default"
-             ng-model="characterModel"
-             ng-change="detailPaneConfig.configuration[configIndex].value=','"
-             btn-radio="','">Comma</label>
-      <label class="btn btn-default"
-             ng-model="characterModel"
-             ng-change="detailPaneConfig.configuration[configIndex].value=' '"
-             btn-radio="' '">Space</label>
-      <label class="btn btn-default"
-             ng-model="characterModel"
-             ng-change="detailPaneConfig.configuration[configIndex].value=null"
-             btn-radio="'Other'">Other</label>
+        <label class="btn btn-default"
+               ng-model="characterModel"
+               ng-change="detailPaneConfig.configuration[configIndex].value='\t'"
+               btn-radio="'\t'">Tab</label>
+        <label class="btn btn-default"
+               ng-model="characterModel"
+               ng-change="detailPaneConfig.configuration[configIndex].value=';'"
+               btn-radio="';'">Semicolon</label>
+        <label class="btn btn-default"
+               ng-model="characterModel"
+               ng-change="detailPaneConfig.configuration[configIndex].value=','"
+               btn-radio="','">Comma</label>
+        <label class="btn btn-default"
+               ng-model="characterModel"
+               ng-change="detailPaneConfig.configuration[configIndex].value=' '"
+               btn-radio="' '">Space</label>
+        <label class="btn btn-default"
+               ng-model="characterModel"
+               ng-change="detailPaneConfig.configuration[configIndex].value=null"
+               btn-radio="'Other'">Other</label>
+      </div>
 
-
-      <input type="text" class="form-control character-type" name="{{configDefinition.name}}"
+      <input type="text" class="form-control character-type pull-left" name="{{configDefinition.name}}"
              focus-me="{{autoFocusConfigName === configDefinition.name}}"
              ng-if="characterModel === 'Other'"
              ng-maxlength="1"
