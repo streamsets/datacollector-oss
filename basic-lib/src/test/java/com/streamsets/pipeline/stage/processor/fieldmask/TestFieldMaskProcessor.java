@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.processor.fieldmask;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -28,7 +29,7 @@ public class TestFieldMaskProcessor {
     nameMaskConfig.maskType = MaskType.VARIABLE_LENGTH;
     nameMaskConfig.mask = null;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(nameMaskConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -69,7 +70,7 @@ public class TestFieldMaskProcessor {
     ageMaskConfig.maskType = MaskType.FIXED_LENGTH;
     ageMaskConfig.mask = null;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(ageMaskConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -110,7 +111,7 @@ public class TestFieldMaskProcessor {
     formatPreserveMask.maskType = MaskType.CUSTOM;
     formatPreserveMask.mask = "xxx-xx-####";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(formatPreserveMask))
       .addOutputLane("a").build();
     runner.runInit();
@@ -151,9 +152,10 @@ public class TestFieldMaskProcessor {
     formatPreserveMask.maskType = MaskType.CUSTOM;
     formatPreserveMask.mask = "xxx-xx-####";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
-      .addConfiguration("fieldMaskConfigs", ImmutableList.of(formatPreserveMask))
-      .addOutputLane("a").build();
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addConfiguration("fieldMaskConfigs", ImmutableList.of(formatPreserveMask))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -164,15 +166,9 @@ public class TestFieldMaskProcessor {
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-      Assert.assertEquals(1, output.getRecords().get("a").size());
-      Field field = output.getRecords().get("a").get(0).get();
-      Assert.assertTrue(field.getValue() instanceof Map);
-      Map<String, Field> result = field.getValueAsMap();
-      Assert.assertTrue(result.size() == 2);
-      Assert.assertTrue(result.containsKey("name"));
-      Assert.assertEquals(12345, result.get("name").getValue());
-      Assert.assertTrue(result.containsKey("age"));
-      Assert.assertEquals(123.56, result.get("age").getValue());
+      Assert.assertEquals(0, output.getRecords().get("a").size());
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+      Assert.assertEquals(Errors.MASK_00.name(), runner.getErrorRecords().get(0).getHeader().getErrorCode());
     } finally {
       runner.runDestroy();
     }
@@ -201,7 +197,7 @@ public class TestFieldMaskProcessor {
     phoneMaskConfig.maskType = MaskType.CUSTOM;
     phoneMaskConfig.mask = "###-###-####";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(nameMaskConfig, ageMaskConfig, ssnMaskConfig, phoneMaskConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -242,7 +238,7 @@ public class TestFieldMaskProcessor {
     nameMaskConfig.maskType = MaskType.VARIABLE_LENGTH;
     nameMaskConfig.mask = null;
 
-ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskProcessor.class)
+ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(nameMaskConfig))
       .addOutputLane("a").build();
     runner.runInit();

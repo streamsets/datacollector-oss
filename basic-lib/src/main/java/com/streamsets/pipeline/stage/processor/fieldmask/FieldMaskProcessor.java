@@ -6,30 +6,17 @@
 package com.streamsets.pipeline.stage.processor.fieldmask;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.api.ComplexField;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@GenerateResourceBundle
-@StageDef(
-    version="1.0.0",
-    label="Field Masker",
-    description = "Masks field values",
-    icon="mask.png"
-)
-@ConfigGroups(Groups.class)
-@HideConfig(onErrorRecord = true)
 public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldMaskProcessor.class);
 
@@ -37,42 +24,35 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   private static final char NON_MASK_CHAR = '#';
   private static final char MASK_CHAR = 'x';
 
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MODEL,
-      defaultValue="",
-      label = "",
-      description = "",
-      displayPosition = 10,
-      group = "MASKING"
-  )
-  @ComplexField
-  public List<FieldMaskConfig> fieldMaskConfigs;
+  private final List<FieldMaskConfig> fieldMaskConfigs;
+
+  public FieldMaskProcessor(List<FieldMaskConfig> fieldMaskConfigs) {
+    this.fieldMaskConfigs = fieldMaskConfigs;
+  }
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+    List<String> nonStringFields = new ArrayList<>();
     for(FieldMaskConfig fieldMaskConfig : fieldMaskConfigs) {
       for (String toMask : fieldMaskConfig.fields) {
         if(record.has(toMask)) {
           Field field = record.get(toMask);
           if (field.getType() != Field.Type.STRING) {
-            LOG.info("The field {} in record {} is of type {}. Ignoring field.", toMask,
-              record.getHeader().getSourceId(), field.getType().name());
-          } else if (field.getValue() == null) {
-            LOG.info("The field {} in record {} has null value. Ignoring field.", toMask,
-              record.getHeader().getSourceId());
+            nonStringFields.add(toMask);
           } else {
-            LOG.debug("Applying mask '{}' to field {} in record {}.", fieldMaskConfig.maskType, toMask,
-              record.getHeader().getSourceId());
-            Field newField = Field.create(maskField(field, fieldMaskConfig));
-            record.set(toMask, newField);
+            if (field.getValue() != null) {
+              Field newField = Field.create(maskField(field, fieldMaskConfig));
+              record.set(toMask, newField);
+            }
           }
-        } else {
-          LOG.info("Could not find field {} in record {}.", toMask, record.getHeader().getSourceId());
         }
       }
     }
-    batchMaker.addRecord(record);
+    if (nonStringFields.isEmpty()) {
+      batchMaker.addRecord(record);
+    } else {
+      throw new OnRecordErrorException(Errors.MASK_00, record.getHeader().getSourceId(), nonStringFields);
+    }
   }
 
   private String maskField(Field field, FieldMaskConfig fieldMaskConfig) {
