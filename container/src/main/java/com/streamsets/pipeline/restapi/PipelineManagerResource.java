@@ -59,7 +59,7 @@ public class PipelineManagerResource {
       PipelineState ps = pipelineManager.startPipeline(name, rev);
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(ps)).build();
     } catch (PipelineRuntimeException ex) {
-      if (ex.getErrorCode() == ContainerError.CONTAINER_0158) {
+      if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
         return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(
           BeanHelper.wrapIssues(ex.getIssues())).build();
       } else {

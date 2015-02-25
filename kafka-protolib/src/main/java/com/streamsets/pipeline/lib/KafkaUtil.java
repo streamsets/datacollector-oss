@@ -5,7 +5,9 @@
  */
 package com.streamsets.pipeline.lib;
 
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.stage.destination.kafka.Groups;
 import kafka.common.ErrorMapping;
 import kafka.javaapi.TopicMetadata;
 import kafka.javaapi.TopicMetadataRequest;
@@ -20,19 +22,36 @@ import java.util.List;
 public class KafkaUtil {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaUtil.class);
+  private static final String METADATA_READER_CLIENT = "metadataReaderClient";
+  private static final int METADATA_READER_TIME_OUT = 10000;
+  private static final int BUFFER_SIZE = 64 * 1024;
 
-  public static int findNUmberOfPartitions(String metadataBrokerList, String topic, int timeout, int bufferSize,
-                                           String clientName) throws StageException {
+  public static int findNUmberOfPartitions(String metadataBrokerList, String topic) throws StageException {
     List<KafkaBroker> kafkaBrokers = getKafkaBrokers(metadataBrokerList);
+    TopicMetadata topicMetadata = getTopicMetadata(kafkaBrokers, topic);
+
+    //The following should not happen since its already validated.
+    //Unless something changes while the pipeline is running
+    if(topicMetadata == null) {
+      //Could not get topic metadata from any of the supplied brokers
+      LOG.error(Errors.KAFKA_05.getMessage(), topic, metadataBrokerList);
+      throw new StageException(Errors.KAFKA_05, topic, metadataBrokerList);
+    }
+    if(topicMetadata.errorCode()== ErrorMapping.UnknownTopicOrPartitionCode()) {
+      //Topic does not exist
+      LOG.error(Errors.KAFKA_06.getMessage(), topic);
+      throw new StageException(Errors.KAFKA_06, topic);
+    }
+    return topicMetadata.partitionsMetadata().size();
+  }
+
+  public static TopicMetadata getTopicMetadata(List<KafkaBroker> kafkaBrokers, String topic) {
     SimpleConsumer simpleConsumer = null;
     TopicMetadata topicMetadata = null;
     for(KafkaBroker broker : kafkaBrokers) {
       try {
-        LOG.info("Creating SimpleConsumer using the following configuration: host {}, port {}, max wait time {}, max " +
-            "fetch size {}, client columnName {}", broker.getHost(), broker.getPort(), timeout, bufferSize,
-          clientName);
-        simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), timeout, bufferSize,
-          clientName);
+        simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
+          METADATA_READER_CLIENT);
 
         List<String> topics = Collections.singletonList(topic);
         TopicMetadataRequest req = new TopicMetadataRequest(topics);
@@ -55,20 +74,61 @@ public class KafkaUtil {
         }
       }
     }
+    return topicMetadata;
+  }
+
+  public static void validateTopic(List<Stage.ConfigIssue> issues, List<KafkaBroker> kafkaBrokers, Stage.Context context,
+                             String topic, String brokerList) {
+    if(topic == null || topic.isEmpty()) {
+      issues.add(context.createConfigIssue(Groups.KAFKA.name(), "topic",
+        Errors.KAFKA_04, "topic"));
+    }
+
+    TopicMetadata topicMetadata = KafkaUtil.getTopicMetadata(kafkaBrokers, topic);
+
     if(topicMetadata == null) {
       //Could not get topic metadata from any of the supplied brokers
-      LOG.error(Errors.KAFKA_19.getMessage(), topic, metadataBrokerList);
-      throw new StageException(Errors.KAFKA_19, topic, metadataBrokerList);
+      issues.add(context.createConfigIssue(Groups.KAFKA.name(), "topic",
+        Errors.KAFKA_05, topic, brokerList));
+      return;
     }
     if(topicMetadata.errorCode()== ErrorMapping.UnknownTopicOrPartitionCode()) {
       //Topic does not exist
-      LOG.error(Errors.KAFKA_24.getMessage(), topic);
-      throw new StageException(Errors.KAFKA_24, topic);
+      issues.add(context.createConfigIssue(Groups.KAFKA.name(), "topic",
+        Errors.KAFKA_06, topic));
+      return;
     }
-    return topicMetadata.partitionsMetadata().size();
+  }
+
+  public static List<KafkaBroker> validateBrokerList(List<Stage.ConfigIssue> issues, String brokerList,
+                                                     String brokerPropertyName, Stage.Context context) {
+    if(brokerList == null || brokerList.isEmpty()) {
+      issues.add(context.createConfigIssue(Groups.KAFKA.name(), brokerPropertyName,
+        Errors.KAFKA_04, brokerPropertyName));
+      return null;
+    }
+    List<KafkaBroker> kafkaBrokers = new ArrayList<>();
+    String[] brokers = brokerList.split(",");
+    for(String broker : brokers) {
+      String[] brokerHostAndPort = broker.split(":");
+      if(brokerHostAndPort.length != 2) {
+        issues.add(context.createConfigIssue(Groups.KAFKA.name(), brokerPropertyName,
+          Errors.KAFKA_03, brokerList, brokerPropertyName));
+      } else {
+        try {
+          int port = Integer.parseInt(brokerHostAndPort[1]);
+          kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0], port));
+        } catch (NumberFormatException e) {
+          issues.add(context.createConfigIssue(Groups.KAFKA.name(), brokerPropertyName,
+            Errors.KAFKA_03, brokerList, brokerPropertyName));
+        }
+      }
+    }
+    return kafkaBrokers;
   }
 
   private static List<KafkaBroker> getKafkaBrokers(String metadataBrokerList) {
+    //configurations are already validated so do not expect any exception
     List<KafkaBroker> kafkaBrokers = new ArrayList<>();
     String[] brokers = metadataBrokerList.split(",");
     for(String broker : brokers) {
@@ -77,4 +137,5 @@ public class KafkaUtil {
     }
     return kafkaBrokers;
   }
+
 }

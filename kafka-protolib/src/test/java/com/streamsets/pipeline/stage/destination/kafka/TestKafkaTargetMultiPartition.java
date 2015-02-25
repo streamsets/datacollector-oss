@@ -6,9 +6,9 @@
 package com.streamsets.pipeline.stage.destination.kafka;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.admin.AdminUtils;
@@ -227,12 +227,9 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("fieldPath", "/")
       .build();
 
-    try {
-      targetRunner.runInit();
-      Assert.fail("Expected StageException as the partition expression is not valid");
-    } catch (StageException e) {
-      Assert.assertEquals(Errors.KAFKA_23, e.getErrorCode());
-    }
+    List<Stage.ConfigIssue> configIssues = targetRunner.runValidateConfigs();
+    Assert.assertEquals(1, configIssues.size());
+
   }
 
   @Test

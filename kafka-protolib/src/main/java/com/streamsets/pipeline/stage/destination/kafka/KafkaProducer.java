@@ -37,9 +37,6 @@ public class KafkaProducer {
   private static final String RANDOM_PARTITIONER_CLASS = "com.streamsets.pipeline.stage.destination.kafka.RandomPartitioner";
   private static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.stage.destination.kafka.RoundRobinPartitioner";
   private static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.stage.destination.kafka.ExpressionPartitioner";
-  private static final String METADATA_READER_CLIENT = "metadataReaderClient";
-  private static final int METADATA_READER_TIME_OUT = 10000;
-  private static final int BUFFER_SIZE = 64 * 1024;
 
   /*Topic to readData from*/
   private final String topic;
@@ -82,8 +79,7 @@ public class KafkaProducer {
     ProducerConfig config = new ProducerConfig(props);
     producer = new Producer<>(config);
 
-    numberOfPartitions = KafkaUtil.findNUmberOfPartitions(metadataBrokerList, topic, METADATA_READER_TIME_OUT,
-      BUFFER_SIZE, METADATA_READER_CLIENT);
+    numberOfPartitions = KafkaUtil.findNUmberOfPartitions(metadataBrokerList, topic);
   }
 
   public void destroy() {
@@ -103,8 +99,8 @@ public class KafkaProducer {
     } catch (Exception e) {
       //Producer internally refreshes metadata and retries if there is any recoverable exception.
       //If retry fails, a FailedToSendMessageException is thrown.
-      LOG.error(Errors.KAFKA_16.getMessage(), e.getMessage(), e);
-      throw new StageException(Errors.KAFKA_16, e.getMessage(), e);
+      LOG.error(Errors.KAFKA_50.getMessage(), e.getMessage(), e);
+      throw new StageException(Errors.KAFKA_50, e.getMessage(), e);
     }
   }
 

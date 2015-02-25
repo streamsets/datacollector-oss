@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.MessageAndOffset;
@@ -69,12 +70,22 @@ public class KafkaConsumer {
     this.context = context;
   }
 
-  public void init() throws StageException {
+  public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) throws StageException {
     Properties props = new Properties();
     configureKafkaProperties(props);
     LOG.debug("Creating Kafka Consumer with properties {}" , props.toString());
     consumerConfig = new ConsumerConfig(props);
-    createConsumer();
+    createConsumer(issues, context);
+  }
+
+  public void init() throws StageException {
+    if(consumer == null) {
+      Properties props = new Properties();
+      configureKafkaProperties(props);
+      LOG.debug("Creating Kafka Consumer with properties {}", props.toString());
+      consumerConfig = new ConsumerConfig(props);
+      createConsumer();
+    }
   }
 
   public void destroy() {
@@ -118,12 +129,22 @@ public class KafkaConsumer {
   }
 
   private void createConsumer() throws StageException {
+    createConsumer(null, null);
+  }
+
+  private void createConsumer(List<Stage.ConfigIssue> issues, Stage.Context context) throws StageException {
     LOG.debug("Creating consumer with configuration {}", consumerConfig.props().props().toString());
     try {
       consumer = Consumer.createJavaConsumerConnector(consumerConfig);
     } catch (Exception e) {
-      LOG.error(Errors.KAFKA_14.getMessage(), e.getMessage(), e);
-      throw new StageException(Errors.KAFKA_14, e.getMessage(), e);
+      if(issues != null) {
+        issues.add(context.createConfigIssue(Groups.KAFKA.name(), "zookeeperConnect",
+          Errors.KAFKA_31, zookeeperConnect, e.getMessage()));
+        return;
+      } else {
+        LOG.error(Errors.KAFKA_31.getMessage(), zookeeperConnect, e.getMessage(), e);
+        throw new StageException(Errors.KAFKA_31, zookeeperConnect, e.getMessage(), e);
+      }
     }
 
     Map<String, Integer> topicCountMap = new HashMap<>();
@@ -142,8 +163,8 @@ public class KafkaConsumer {
     try {
       consumerIterator = stream.iterator();
     } catch (Exception e) {
-      LOG.error(Errors.KAFKA_15.getMessage(), e.getMessage(), e);
-      throw new StageException(Errors.KAFKA_15, e.getMessage(), e);
+      LOG.error(Errors.KAFKA_32.getMessage(), e.getMessage(), e);
+      throw new StageException(Errors.KAFKA_32, e.getMessage(), e);
     }
   }
 

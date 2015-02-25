@@ -48,7 +48,7 @@ public class ProductionPipelineBuilder {
     List<StageIssue> configIssues = pipeline.validateConfigs();
     if (!configIssues.isEmpty()) {
       Issues issues = new Issues(configIssues);
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, issues);
+      throw new PipelineRuntimeException(issues);
     }
 
     if (pipeline.getSource() instanceof OffsetCommitter) {
