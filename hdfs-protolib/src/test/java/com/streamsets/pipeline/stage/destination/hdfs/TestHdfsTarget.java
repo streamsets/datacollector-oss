@@ -39,7 +39,7 @@ public class TestHdfsTarget {
 
   @Test
   public void testTarget() throws Exception {
-    TargetRunner runner = new TargetRunner.Builder(HdfsTarget.class)
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .addConfiguration("hdfsUri", "file:///")
         .addConfiguration("hdfsKerberos", false)
