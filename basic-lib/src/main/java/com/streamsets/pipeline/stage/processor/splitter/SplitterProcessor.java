@@ -5,88 +5,33 @@
  */
 package com.streamsets.pipeline.stage.processor.splitter;
 
-import com.streamsets.pipeline.api.ChooserMode;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
-import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
 
 import java.util.List;
 
-@GenerateResourceBundle
-@StageDef(
-    version="1.0.0",
-    label="Field Splitter",
-    description = "Splits a string field based on a separator character",
-    icon="splitter.png"
-)
-@ConfigGroups(Groups.class)
 public class SplitterProcessor extends SingleLaneRecordProcessor {
+  private final String fieldPath;
+  private final char separator;
+  private final List<String> fieldPathsForSplits;
+  private final OnStagePreConditionFailure onStagePreConditionFailure;
+  private final OriginalFieldAction originalFieldAction;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Field to Split",
-      description = "Split string fields. You can enter multiple fields to split with the same separator.",
-      displayPosition = 10,
-      group = "FIELD_SPLITTER"
-  )
-  public String fieldPath;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CHARACTER,
-      defaultValue = "^",
-      label = "Separator",
-      description = "A single character.",
-      displayPosition = 20,
-      group = "FIELD_SPLITTER"
-  )
-  public char separator;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.LIST,
-      label = "New Split Fields",
-      description="New fields to pass split data. The last field includes any remaining unsplit data.",
-      displayPosition = 30,
-      group = "FIELD_SPLITTER"
-  )
-  public List<String> fieldPathsForSplits;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "TO_ERROR",
-      label = "Not Enough Splits ",
-      description="Action for data that cannot be split as configured",
-      displayPosition = 40,
-      group = "FIELD_SPLITTER"
-  )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnStagePreConditionFailureChooserValues.class)
-  public OnStagePreConditionFailure onStagePreConditionFailure;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "REMOVE",
-      label = "Original Field",
-      description="Action for the original field being split",
-      displayPosition = 50,
-      group = "FIELD_SPLITTER"
-  )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OriginalFieldActionChooserValues.class)
-  public OriginalFieldAction originalFieldAction;
+  public SplitterProcessor(String fieldPath, char separator, List<String> fieldPathsForSplits,
+      OnStagePreConditionFailure onStagePreConditionFailure,
+      OriginalFieldAction originalFieldAction) {
+    this.fieldPath = fieldPath;
+    this.separator = separator;
+    this.fieldPathsForSplits = fieldPathsForSplits;
+    this.onStagePreConditionFailure = onStagePreConditionFailure;
+    this.originalFieldAction = originalFieldAction;
+  }
 
   private boolean removeUnsplitValue;
 
@@ -94,12 +39,19 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
   private String[] fieldPaths;
 
   @Override
+  protected List<ConfigIssue> validateConfigs() throws StageException {
+    List<ConfigIssue> issues = super.validateConfigs();
+    if (fieldPathsForSplits.size() < 2) {
+      issues.add(getContext().createConfigIssue(Groups.FIELD_SPLITTER.name(), "fieldPathsForSplits",
+                                                Errors.SPLITTER_00));
+    }
+
+    return issues;
+  }
+
+  @Override
   protected void init() throws StageException {
     super.init();
-
-    if (fieldPathsForSplits.size() < 2) {
-      throw new StageException(Errors.SPLITTER_00);
-    }
 
     separatorStr = (separator == '^') ? " " : "" + separator;
 

@@ -31,8 +31,22 @@ public class TestSplitterProcessor {
   }
 
   @Test
+  public void testValidateConfigs() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
+        .addConfiguration("fieldPath", "/line")
+        .addConfiguration("separator", '^')
+        .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a"))
+        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
+        .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
+        .addOutputLane("out")
+        .build();
+    Assert.assertEquals(1, runner.runValidateConfigs().size());
+    Assert.assertTrue(runner.runValidateConfigs().get(0).toString().contains("SPLITTER_00"));
+  }
+
+    @Test
   public void testSplitting() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
@@ -71,7 +85,7 @@ public class TestSplitterProcessor {
 
   @Test
   public void testSplittingToError() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
@@ -107,7 +121,7 @@ public class TestSplitterProcessor {
 
   @Test
   public void testKeepUnplitValue() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
@@ -132,7 +146,7 @@ public class TestSplitterProcessor {
 
   @Test
   public void testRemoveUnplitValue() throws Exception {
-    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
