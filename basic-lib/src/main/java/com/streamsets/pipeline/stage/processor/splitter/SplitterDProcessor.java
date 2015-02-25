@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.processor.splitter;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
@@ -30,21 +31,22 @@ public class SplitterDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.MODEL,
       defaultValue = "",
       label = "Field to Split",
-      description = "Split string fields. You can enter multiple fields to split with the same separator.",
+      description = "",
       displayPosition = 10,
       group = "FIELD_SPLITTER"
   )
+  @FieldSelector(singleValued = true)
   public String fieldPath;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.CHARACTER,
-      defaultValue = "^",
+      defaultValue = " ",
       label = "Separator",
-      description = "A single character. Use ^ for space.",
+      description = "A single character",
       displayPosition = 20,
       group = "FIELD_SPLITTER"
   )
