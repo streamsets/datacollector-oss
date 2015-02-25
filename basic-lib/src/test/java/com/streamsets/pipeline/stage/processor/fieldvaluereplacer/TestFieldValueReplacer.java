@@ -32,7 +32,7 @@ public class TestFieldValueReplacer {
     nameReplacement.fields = ImmutableList.of("/nonExisting");
     nameReplacement.newValue = "StreamSets";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", ImmutableList.of("/nonExisting"))
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(nameReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -65,7 +65,7 @@ public class TestFieldValueReplacer {
     nameReplacement.fields = ImmutableList.of("/nonExisting");
     nameReplacement.newValue = "StreamSets";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("fieldsToNull", ImmutableList.of("/nonExisting"))
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(nameReplacement))
@@ -91,7 +91,7 @@ public class TestFieldValueReplacer {
 
   @Test
   public void testNullConfiguration() throws StageException {
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", null)
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -119,7 +119,7 @@ public class TestFieldValueReplacer {
 
   @Test
   public void testEmptyConfiguration() throws StageException {
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", new ArrayList<>())
       .addConfiguration("fieldsToReplaceIfNull", new ArrayList<>())
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -147,7 +147,7 @@ public class TestFieldValueReplacer {
 
   @Test
   public void testFieldsToNull() throws StageException {
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", ImmutableList.of("/age"))
       .addConfiguration("fieldsToReplaceIfNull", null)
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -186,7 +186,7 @@ public class TestFieldValueReplacer {
     stringFieldReplacement.fields = ImmutableList.of("/stringField");
     stringFieldReplacement.newValue = "StreamSets";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -219,7 +219,7 @@ public class TestFieldValueReplacer {
     stringFieldReplacement.fields = ImmutableList.of("/intField");
     stringFieldReplacement.newValue = "123";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -252,7 +252,7 @@ public class TestFieldValueReplacer {
     stringFieldReplacement.fields = ImmutableList.of("/doubleField");
     stringFieldReplacement.newValue = "12345.6789";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -285,7 +285,7 @@ public class TestFieldValueReplacer {
     stringFieldReplacement.fields = ImmutableList.of("/longField");
     stringFieldReplacement.newValue = "523456789345";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -318,7 +318,7 @@ public class TestFieldValueReplacer {
     stringFieldReplacement.fields = ImmutableList.of("/shortField");
     stringFieldReplacement.newValue = "32762";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -351,7 +351,7 @@ public class TestFieldValueReplacer {
     stringFieldReplacement.fields = ImmutableList.of("/floatField");
     stringFieldReplacement.newValue = "10.345f";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -384,7 +384,7 @@ public class TestFieldValueReplacer {
     stringFieldReplacement.fields = ImmutableList.of("/decimalField");
     stringFieldReplacement.newValue = "12345678";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -417,7 +417,7 @@ public class TestFieldValueReplacer {
     stringFieldReplacement.fields = ImmutableList.of("/byteField");
     stringFieldReplacement.newValue = "123";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -450,7 +450,7 @@ public class TestFieldValueReplacer {
     stringFieldReplacement.fields = ImmutableList.of("/byteArrayField");
     stringFieldReplacement.newValue = "streamsets";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -483,7 +483,7 @@ public class TestFieldValueReplacer {
     stringFieldReplacement.fields = ImmutableList.of("/charField");
     stringFieldReplacement.newValue = "c";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -516,7 +516,7 @@ public class TestFieldValueReplacer {
     stringFieldReplacement.fields = ImmutableList.of("/booleanField");
     stringFieldReplacement.newValue = "true";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -585,7 +585,7 @@ public class TestFieldValueReplacer {
     addressReplacement.fields = ImmutableList.of("/streetAddress");
     addressReplacement.newValue = "Sansome Street";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", ImmutableList.of("/age"))
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(nameReplacement, addressReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
@@ -624,7 +624,7 @@ public class TestFieldValueReplacer {
     nameReplacement.fields = ImmutableList.of("/name");
     nameReplacement.newValue = "NewValue";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(nameReplacement))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
