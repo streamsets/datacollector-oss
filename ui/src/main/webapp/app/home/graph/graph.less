@@ -35,6 +35,8 @@
       margin-bottom: 0;
       border-radius: 0;
       z-index: 5;
+      padding-top: @defaultPadding;
+      padding-bottom: @defaultPadding;
 
       &.alert-select-stage {
         padding-top: @smallPadding;
@@ -50,11 +52,12 @@
         }
 
         button {
-          padding-top: @smallPadding * 1.5;
+          padding-top: @smallPadding;
         }
 
         .dont-show-again {
           margin-bottom: 0;
+          margin-top: @smallPadding;
         }
 
       }

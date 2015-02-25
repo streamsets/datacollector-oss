@@ -559,6 +559,10 @@ angular
 
       api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.name, config).
         success(function (res) {
+
+          //Clear Previous errors
+          $rootScope.common.errors = [];
+
           configSaveInProgress = false;
           $rootScope.common.saveOperationInProgress--;
           if (configDirty) {

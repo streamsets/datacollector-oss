@@ -26,11 +26,11 @@
         <form class="form-horizontal" role="form"
               ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
               name="{{detailPaneConfig.instanceName || 'pipeline'}}">
-          <div class="form-group"
+          <div class="form-group "
+               ng-class="{'has-error': getConfigurationIssueMessage(detailPaneConfig, configDefinition)}"
                ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: groupNameToLabelMap.name} | orderBy: 'displayPosition'"
                ng-if="(!configDefinition.dependsOn || verifyDependsOn(detailPaneConfig, configDefinition)) && configDefinition.group === groupNameToLabelMap.name"
-               ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)"
-               show-errors>
+               ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)">
 
             <ng-include ng-if="selectedType !== pipelineConstant.LINK"
                     src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>

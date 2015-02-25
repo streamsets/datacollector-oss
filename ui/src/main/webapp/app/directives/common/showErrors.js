@@ -21,7 +21,7 @@ angular.module('dataCollectorApp.commonDirectives')
       };
     };
   })
-  .directive('showErrors', function($timeout, showErrorsConfig) {
+  .directive('showErrors', function($timeout, showErrorsConfig, $interpolate) {
     var getShowSuccess, getTrigger, linkFn;
     getTrigger = function(options) {
       var trigger;
@@ -48,7 +48,7 @@ angular.module('dataCollectorApp.commonDirectives')
         trigger = getTrigger(options);
         inputEl = el[0].querySelector('.form-control[name]');
         inputNgEl = angular.element(inputEl);
-        inputName = inputNgEl.attr('name');
+        inputName = $interpolate(inputNgEl.attr('name') || '')(scope);
         if (!inputName) {
           //throw "show-errors element has no child input elements with a 'name' attribute and a 'form-control' class";
           return;

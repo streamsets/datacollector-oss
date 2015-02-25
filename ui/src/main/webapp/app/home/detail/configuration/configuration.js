@@ -9,6 +9,20 @@ angular
                                                    api, previewService, pipelineConstant, pipelineService) {
     var fieldsPathList;
 
+    var getIssueMessage = function(issues, instanceName, configDefinition) {
+      if(instanceName && issues.stageIssues && issues.stageIssues[instanceName]) {
+        issues = issues.stageIssues[instanceName];
+      } else if(issues.pipelineIssues){
+        issues = issues.pipelineIssues;
+      }
+
+      var filteredIssues = _.filter(issues, function(issue) {
+        return (issue.configName === configDefinition.name);
+      });
+
+      return filteredIssues && filteredIssues.length ? _.pluck(filteredIssues, 'message').join(' , ') : '';
+    };
+
     angular.extend($scope, {
       fieldPaths: [],
 
@@ -20,23 +34,18 @@ angular
        */
       getConfigurationIssueMessage: function(configObject, configDefinition) {
         var config = $scope.pipelineConfig,
-          issues,
+          commonErrors = $rootScope.common.errors,
           issue;
 
         if(config && config.issues) {
-          if(configObject.instanceName && config.issues.stageIssues &&
-            config.issues.stageIssues && config.issues.stageIssues[configObject.instanceName]) {
-            issues = config.issues.stageIssues[configObject.instanceName];
-          } else if(config.issues.pipelineIssues){
-            issues = config.issues.pipelineIssues;
-          }
+          issue = getIssueMessage(config.issues, configObject.instanceName, configDefinition);
         }
 
-        issue = _.find(issues, function(issue) {
-          return (issue.level === 'STAGE_CONFIG' && issue.configName === configDefinition.name);
-        });
+        if(!issue && commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
+          issue = getIssueMessage(commonErrors[0], configObject.instanceName, configDefinition);
+        }
 
-        return issue ? issue.message : '';
+        return issue;
       },
 
       /**
