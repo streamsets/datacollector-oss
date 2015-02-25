@@ -377,8 +377,7 @@ angular
       onIssueClick: function(issue, instanceName) {
         var pipelineConfig = $scope.pipelineConfig,
           stageInstance;
-        $scope.$storage.maximizeDetailPane = false;
-        $scope.$storage.minimizeDetailPane = false;
+
         if(instanceName) {
           //Select stage instance
           stageInstance = _.find(pipelineConfig.stages, function(stage) {
@@ -744,6 +743,11 @@ angular
       $scope.errorStageConfig = undefined;
       $scope.errorStageConfigDefn = undefined;
 
+
+      if(options.configName) {
+        $scope.$storage.maximizeDetailPane = false;
+        $scope.$storage.minimizeDetailPane = false;
+      }
 
       if(type === pipelineConstant.STAGE_INSTANCE) {
         $scope.stageSelected = true;

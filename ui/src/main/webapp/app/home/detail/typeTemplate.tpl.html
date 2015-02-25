@@ -37,13 +37,41 @@
 
 
 <script type="text/ng-template" id="characterConfigurationTemplate">
-  <div class="controls col-lg-7 col-md-8">
-    <input type="text" class="form-control character-type" name="{{configDefinition.name}}"
-           focus-me="{{autoFocusConfigName === configDefinition.name}}"
-           ng-maxlength="1"
-           ng-readonly="isPipelineRunning"
-           ng-model="detailPaneConfig.configuration[configIndex].value"
-           ng-required="configDefinition.required">
+  <div class="controls col-lg-7 col-md-8" ng-init="characterModel = getCharacterValue(detailPaneConfig.configuration[configIndex].value)">
+
+    <div class="btn-group">
+
+      <label class="btn btn-default"
+             ng-model="characterModel"
+             ng-change="detailPaneConfig.configuration[configIndex].value='\t'"
+             btn-radio="'\t'">Tab</label>
+      <label class="btn btn-default"
+             ng-model="characterModel"
+             ng-change="detailPaneConfig.configuration[configIndex].value=';'"
+             btn-radio="';'">Semicolon</label>
+      <label class="btn btn-default"
+             ng-model="characterModel"
+             ng-change="detailPaneConfig.configuration[configIndex].value=','"
+             btn-radio="','">Comma</label>
+      <label class="btn btn-default"
+             ng-model="characterModel"
+             ng-change="detailPaneConfig.configuration[configIndex].value=' '"
+             btn-radio="' '">Space</label>
+      <label class="btn btn-default"
+             ng-model="characterModel"
+             ng-change="detailPaneConfig.configuration[configIndex].value=null"
+             btn-radio="'Other'">Other</label>
+
+
+      <input type="text" class="form-control character-type" name="{{configDefinition.name}}"
+             focus-me="{{autoFocusConfigName === configDefinition.name}}"
+             ng-if="characterModel === 'Other'"
+             ng-maxlength="1"
+             ng-readonly="isPipelineRunning"
+             ng-model="detailPaneConfig.configuration[configIndex].value"
+             ng-required="configDefinition.required">
+
+    </div>
 
     <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
   </div>

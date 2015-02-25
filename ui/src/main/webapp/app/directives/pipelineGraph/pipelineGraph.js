@@ -348,8 +348,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       var prevEdge = state.selectedEdge;
       if (!prevEdge || prevEdge !== d){
         thisGraph.replaceSelectEdge(d3path, d);
-      } else{
-        thisGraph.removeSelectFromEdge();
       }
     };
 

@@ -385,6 +385,14 @@ angular
             return issue.configGroup === groupName;
           });
         }
+      },
+
+      getCharacterValue: function(val) {
+        if(val !== '\t' && val !== ';' && val !== ',' && val !== ' ') {
+          return 'Other';
+        }
+
+        return val;
       }
     });
 

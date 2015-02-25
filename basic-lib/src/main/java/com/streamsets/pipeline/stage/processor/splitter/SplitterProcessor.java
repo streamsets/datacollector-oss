@@ -48,7 +48,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "^",
       label = "Separator",
-      description = "A single character. Use ^ for space.",
+      description = "A single character.",
       displayPosition = 20,
       group = "FIELD_SPLITTER"
   )
