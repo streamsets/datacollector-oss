@@ -32,7 +32,7 @@ public abstract class SingleLaneProcessor extends BaseProcessor {
   }
 
   @Override
-  public final void process(final Batch batch, final BatchMaker batchMaker) throws StageException {
+  public void process(final Batch batch, final BatchMaker batchMaker) throws StageException {
     SingleLaneBatchMaker slBatchMaker = new SingleLaneBatchMaker() {
       @Override
       public void addRecord(Record record) {

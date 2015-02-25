@@ -16,7 +16,7 @@ import java.util.Iterator;
 public abstract class RecordProcessor extends BaseProcessor {
 
   @Override
-  public final void process(Batch batch, BatchMaker batchMaker) throws StageException {
+  public void process(Batch batch, BatchMaker batchMaker) throws StageException {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       Record record = it.next();

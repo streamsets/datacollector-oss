@@ -15,7 +15,7 @@ import java.util.Iterator;
 public abstract class RecordTarget extends BaseTarget {
 
   @Override
-  public final void write(Batch batch) throws StageException {
+  public void write(Batch batch) throws StageException {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       Record record = it.next();

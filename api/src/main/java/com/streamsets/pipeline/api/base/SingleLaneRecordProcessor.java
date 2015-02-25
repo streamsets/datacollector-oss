@@ -15,7 +15,7 @@ import java.util.Iterator;
 public abstract class SingleLaneRecordProcessor extends SingleLaneProcessor {
 
   @Override
-  public final void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
+  public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       Record record = it.next();
