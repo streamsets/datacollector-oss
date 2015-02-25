@@ -4,20 +4,14 @@
     <title>Viewing <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         Logs</title>
-    <shortdesc>You can view log data for the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-        />.</shortdesc>
     <taskbody>
-        <context/>
-        <steps id="steps_udd_v3k_br">
-            <step>
-                <cmd><indexterm>Data Collector<indexterm>viewing
-                            logs</indexterm></indexterm><indexterm>logs<indexterm>Data
-                            Collector</indexterm></indexterm>Click <menucascade>
-                        <uicontrol>Administration</uicontrol>
-                        <uicontrol>Logs</uicontrol>
-                    </menucascade>.</cmd>
-            </step>
-        </steps>
+        <context><indexterm>Data Collector<indexterm>viewing
+                    logs</indexterm></indexterm><indexterm>logs<indexterm>Data
+                Collector</indexterm></indexterm>To view log data for the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+            click <menucascade>
+                <uicontrol>Administration</uicontrol>
+                <uicontrol>Logs</uicontrol>
+            </menucascade>.</context>
     </taskbody>
 </task>
