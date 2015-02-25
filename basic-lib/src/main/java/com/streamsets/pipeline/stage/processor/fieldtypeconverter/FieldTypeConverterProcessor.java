@@ -5,15 +5,8 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
-import com.streamsets.pipeline.api.ComplexField;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDef.Type;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import org.slf4j.Logger;
@@ -26,29 +19,15 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-@GenerateResourceBundle
-@StageDef(
-    version="1.0.0",
-    label="Field Converter",
-    description = "Converts the data type of a field",
-    icon="converter.svg"
-)
-@ConfigGroups(Groups.class)
-@HideConfig(onErrorRecord = true)
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
 
-  @ConfigDef(
-      required = false,
-      type = Type.MODEL,
-      defaultValue="",
-      label = "",
-      description = "",
-      displayPosition = 10,
-      group = "TYPE_CONVERSION"
-  )
-  @ComplexField
-  public List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
+  private final List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
+
+  public FieldTypeConverterProcessor(
+      List<FieldTypeConverterConfig> fieldTypeConverterConfigs) {
+    this.fieldTypeConverterConfigs = fieldTypeConverterConfigs;
+  }
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
