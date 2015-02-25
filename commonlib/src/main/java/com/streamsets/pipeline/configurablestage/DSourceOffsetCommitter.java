@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.configurablestage;
 
-import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
