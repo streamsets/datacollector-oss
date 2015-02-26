@@ -8,10 +8,12 @@ package com.streamsets.pipeline.runner.production;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
-import com.streamsets.pipeline.prodmanager.ShutdownObject;
 import com.streamsets.pipeline.prodmanager.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.concurrent.Future;
 
 public class ProductionPipelineRunnable implements Runnable {
 
@@ -24,19 +26,21 @@ public class ProductionPipelineRunnable implements Runnable {
   private volatile Thread runningThread;
   private volatile boolean nodeProcessShutdown;
   private boolean exception;
-  private final ShutdownObject shutdownObject;
+  private final List<Future<?>> relatedTasks;
+
 
   public ProductionPipelineRunnable(ProductionPipelineManagerTask pipelineManager, ProductionPipeline pipeline,
-                                    String name, String rev, ShutdownObject shutdownObject) {
+                                    String name, String rev, List<Future<?>> relatedTasks) {
     this.pipelineManager = pipelineManager;
     this.pipeline = pipeline;
     this.rev = rev;
     this.name = name;
-    this.shutdownObject = shutdownObject;
+    this.relatedTasks = relatedTasks;
   }
 
   @Override
   public void run() {
+    Thread.currentThread().setName("ProductionPipelineRunnable");
     try {
       runningThread = Thread.currentThread();
       pipeline.run();
@@ -59,9 +63,12 @@ public class ProductionPipelineRunnable implements Runnable {
     } finally {
       runningThread = null;
       //signal observer thread [which shares this object] to stop
-      shutdownObject.setStop(true);
+      for(Future<?> task : relatedTasks) {
+        task.cancel(true);
+      }
     }
 
+    //Update pipeline state accordingly
     if(pipeline.wasStopped()) {
       //pipeline was stopped while it was running, could be pipeline stop or node process shutdown [Ctrl-C]
       try {

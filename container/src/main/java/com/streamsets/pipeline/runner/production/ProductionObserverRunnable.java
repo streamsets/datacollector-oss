@@ -9,7 +9,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
-import com.streamsets.pipeline.prodmanager.ShutdownObject;
 import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,27 +23,24 @@ public class ProductionObserverRunnable implements Runnable {
 
   private final ProductionPipelineManagerTask pipelineManager;
   private final BlockingQueue<Object> requestQueue;
-  private final ShutdownObject shutdownObject;
   private volatile Thread runningThread;
   private final MetricRegistry metrics;
   private final ObserverRunner observerRunner;
 
   public ProductionObserverRunnable(ProductionPipelineManagerTask pipelineManager,
-                                    BlockingQueue<Object> requestQueue, ShutdownObject shutdownObject,
-                                    AlertManager alertManager, Configuration configuration) {
+                                    BlockingQueue<Object> requestQueue, AlertManager alertManager,
+                                    Configuration configuration) {
     this.pipelineManager = pipelineManager;
     this.requestQueue = requestQueue;
     this.metrics = this.pipelineManager.getMetrics();
-    this.shutdownObject = shutdownObject;
-
     this.observerRunner = new ObserverRunner(metrics, alertManager, configuration);
-
   }
 
   @Override
   public void run() {
+    Thread.currentThread().setName("ProductionObserverRunnable");
     runningThread = Thread.currentThread();
-    while(!shutdownObject.isStop()) {
+    while(true) {
       try {
         Object request = requestQueue.poll(1000, TimeUnit.MILLISECONDS);
         if(request != null) {
@@ -63,14 +59,6 @@ public class ProductionObserverRunnable implements Runnable {
         runningThread = null;
         return;
       }
-    }
-  }
-
-  public void stop() {
-    Thread thread = runningThread;
-    if (thread != null) {
-      thread.interrupt();
-      LOG.debug("Pipeline stopped, interrupting the Observer Thread.");
     }
   }
 

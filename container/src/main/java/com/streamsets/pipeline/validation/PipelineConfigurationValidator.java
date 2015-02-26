@@ -10,6 +10,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageConfiguration;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -265,138 +267,154 @@ public class PipelineConfigurationValidator {
       }
       for (ConfigConfiguration conf : stageConf.getConfiguration()) {
         ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
-        if (confDef == null) {
-          // stage configuration defines an invalid configuration
-          issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), conf.getName(),
-                                                  ValidationError.VALIDATION_0008));
-        } else if (conf.getValue() == null && confDef.isRequired()) {
-          // stage configuration has a NULL value for a configuration that requires a value
-          String dependsOn = confDef.getDependsOn();
-          String[] triggeredBy = confDef.getTriggeredByValues();
-          // If the config doesn't depend on anything or the config should be triggered, config is invalid
-          if (dependsOn == null || dependsOn.isEmpty() ||
-              (Arrays.asList(triggeredBy).contains(String.valueOf(stageConf.getConfig(dependsOn).getValue())))) {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
-                                                    ValidationError.VALIDATION_0007));
+        preview &= validateConfigDefinition(confDef, conf, stageConf, null, issueCreator);
+      }
+    }
+    return preview;
+  }
+
+  private boolean validateConfigDefinition(ConfigDefinition confDef, ConfigConfiguration conf,
+                                           StageConfiguration stageConf, Map<String, Object> parentConf,
+                                           StageIssueCreator issueCreator) {
+    //parentConf is applicable when validating complex fields.
+    boolean preview = true;
+    if (confDef == null) {
+      // stage configuration defines an invalid configuration
+      issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), conf.getName(),
+        ValidationError.VALIDATION_0008));
+    } else if (conf.getValue() == null && confDef.isRequired()) {
+      // stage configuration has a NULL value for a configuration that requires a value
+      String dependsOn = confDef.getDependsOn();
+      String[] triggeredBy = confDef.getTriggeredByValues();
+      // If the config doesn't depend on anything or the config should be triggered, config is invalid
+      if (dependsOn == null || dependsOn.isEmpty() ||
+        (Arrays.asList(triggeredBy).contains(String.valueOf(stageConf.getConfig(dependsOn).getValue())))) {
+        issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
+          ValidationError.VALIDATION_0007));
+        preview = false;
+      }
+    }
+    boolean validateConfig = true;
+    if (confDef.getDependsOn() != null &&
+      (confDef.getTriggeredByValues() != null && confDef.getTriggeredByValues().length > 0)) {
+      String dependsOn = confDef.getDependsOn();
+      String[] triggeredBy = confDef.getTriggeredByValues();
+      ConfigConfiguration dependsOnConfig = getConfig(stageConf.getConfiguration(), dependsOn);
+      if(dependsOnConfig == null) {
+        //complex field case?
+        //look at the configurations in model definition
+        if(parentConf.containsKey(dependsOn)) {
+          dependsOnConfig = new ConfigConfiguration(dependsOn, parentConf.get(dependsOn));
+        }
+      }
+      if (dependsOnConfig != null && dependsOnConfig.getValue() != null) {
+        validateConfig = false;
+        String valueStr = dependsOnConfig.getValue().toString();
+        for (String trigger : triggeredBy) {
+          validateConfig |= valueStr.equals(trigger);
+        }
+      }
+    }
+    if (validateConfig && conf.getValue() != null) {
+      switch (confDef.getType()) {
+        case BOOLEAN:
+          if (!(conf.getValue() instanceof Boolean)) {
+            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+              confDef.getName(), ValidationError.VALIDATION_0009,
+              confDef.getType()));
             preview = false;
           }
-        }
-        boolean validateConfig = true;
-        if (confDef.getDependsOn() != null &&
-            (confDef.getTriggeredByValues() != null && confDef.getTriggeredByValues().length > 0)) {
-          String dependsOn = confDef.getDependsOn();
-          String[] triggeredBy = confDef.getTriggeredByValues();
-          ConfigConfiguration dependsOnConfig = getConfig(stageConf.getConfiguration(), dependsOn);
-          if (dependsOnConfig.getValue() != null) {
-            validateConfig = false;
-            String valueStr = dependsOnConfig.getValue().toString();
-            for (String trigger : triggeredBy) {
-              validateConfig |= valueStr.equals(trigger);
-            }
+          break;
+        case INTEGER:
+          if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
+            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+              confDef.getName(), ValidationError.VALIDATION_0009,
+              confDef.getType()));
+            preview = false;
           }
-        }
-        if (validateConfig && conf.getValue() != null) {
-          switch (confDef.getType()) {
-            case BOOLEAN:
-              if (!(conf.getValue() instanceof Boolean)) {
+          break;
+        case STRING:
+          if (!(conf.getValue() instanceof String)) {
+            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+              confDef.getName(), ValidationError.VALIDATION_0009,
+              confDef.getType()));
+            preview = false;
+          }
+          break;
+        case CHARACTER:
+          if (!(conf.getValue() instanceof String)) {
+            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+              confDef.getName(), ValidationError.VALIDATION_0009,
+              confDef.getType()));
+            preview = false;
+          } else if (((String)conf.getValue()).length() > 1) {
+            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+              confDef.getName(), ValidationError.VALIDATION_0031,
+              conf.getValue()));
+          }
+          break;
+        case MAP:
+          if (conf.getValue() instanceof List) {
+            int count = 0;
+            for (Object element : (List) conf.getValue()) {
+              if (element == null) {
                 issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                        confDef.getName(), ValidationError.VALIDATION_0009,
-                                                        confDef.getType()));
+                  confDef.getName(), ValidationError.VALIDATION_0024,
+                  count));
                 preview = false;
-              }
-              break;
-            case INTEGER:
-              if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
-                issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                        confDef.getName(), ValidationError.VALIDATION_0009,
-                                                        confDef.getType()));
-                preview = false;
-              }
-              break;
-            case STRING:
-              if (!(conf.getValue() instanceof String)) {
-                issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                        confDef.getName(), ValidationError.VALIDATION_0009,
-                                                        confDef.getType()));
-                preview = false;
-              }
-              break;
-            case CHARACTER:
-              if (!(conf.getValue() instanceof String)) {
-                issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                        confDef.getName(), ValidationError.VALIDATION_0009,
-                                                        confDef.getType()));
-                preview = false;
-              } else if (((String)conf.getValue()).length() > 1) {
-                issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                        confDef.getName(), ValidationError.VALIDATION_0031,
-                                                        conf.getValue()));
-              }
-              break;
-            case MAP:
-              if (conf.getValue() instanceof List) {
-                int count = 0;
-                for (Object element : (List) conf.getValue()) {
-                  if (element == null) {
-                    issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                            confDef.getName(), ValidationError.VALIDATION_0024,
-                                                            count));
-                    preview = false;
-                  } else if (element instanceof Map) {
-                    Map map = (Map) element;
-                    if (!map.containsKey("key") || !map.containsKey("value")) {
-                      issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                              confDef.getName(), ValidationError.VALIDATION_0025,
-                                                              count));
-                      preview = false;
-                    }
-                  } else {
-                    issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                            confDef.getName(), ValidationError.VALIDATION_0026, count,
-                                                            element.getClass().getSimpleName()));
-                    preview = false;
-                  }
-                  count++;
+              } else if (element instanceof Map) {
+                Map map = (Map) element;
+                if (!map.containsKey("key") || !map.containsKey("value")) {
+                  issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+                    confDef.getName(), ValidationError.VALIDATION_0025,
+                    count));
+                  preview = false;
                 }
-              } else if (!(conf.getValue() instanceof Map)) {
+              } else {
                 issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                        confDef.getName(), ValidationError.VALIDATION_0009,
-                                                        confDef.getType()));
+                  confDef.getName(), ValidationError.VALIDATION_0026, count,
+                  element.getClass().getSimpleName()));
                 preview = false;
               }
-              break;
-            case LIST:
-              if (!(conf.getValue() instanceof List)) {
-                issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                        confDef.getName(), ValidationError.VALIDATION_0009,
-                                                        confDef.getType()));
-                preview = false;
-              }
-              break;
-            case EL_BOOLEAN:
-            case EL_DATE:
-            case EL_NUMBER:
-              if (!(conf.getValue() instanceof String)) {
-                issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                        confDef.getName(), ValidationError.VALIDATION_0029,
-                                                        confDef.getType()));
-                preview = false;
-              }
-              String value = (String) conf.getValue();
-              if (!value.startsWith("${") || !value.endsWith("}")) {
-                issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                                                        confDef.getName(), ValidationError.VALIDATION_0030, value));
-                preview = false;
-              }
-              break;
-            case EL_STRING:
-            case EL_OBJECT:
-              break;
-            case MODEL:
-              preview &= validateModel(stageConf.getInstanceName(), confDef, conf, issueCreator);
-              break;
+              count++;
+            }
+          } else if (!(conf.getValue() instanceof Map)) {
+            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+              confDef.getName(), ValidationError.VALIDATION_0009,
+              confDef.getType()));
+            preview = false;
           }
-        }
+          break;
+        case LIST:
+          if (!(conf.getValue() instanceof List)) {
+            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+              confDef.getName(), ValidationError.VALIDATION_0009,
+              confDef.getType()));
+            preview = false;
+          }
+          break;
+        case EL_BOOLEAN:
+        case EL_DATE:
+        case EL_NUMBER:
+          if (!(conf.getValue() instanceof String)) {
+            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+              confDef.getName(), ValidationError.VALIDATION_0029,
+              confDef.getType()));
+            preview = false;
+          }
+          String value = (String) conf.getValue();
+          if (!value.startsWith("${") || !value.endsWith("}")) {
+            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+              confDef.getName(), ValidationError.VALIDATION_0030, value));
+            preview = false;
+          }
+          break;
+        case EL_STRING:
+        case EL_OBJECT:
+          break;
+        case MODEL:
+          preview &= validateModel(stageConf, confDef, conf, issueCreator);
+          break;
       }
     }
     return preview;
@@ -420,8 +438,9 @@ public class PipelineConfigurationValidator {
     return preview;
   }
 
-  private boolean validateModel(String instanceName, ConfigDefinition confDef, ConfigConfiguration conf,
+  private boolean validateModel(StageConfiguration stageConf, ConfigDefinition confDef, ConfigConfiguration conf,
       StageIssueCreator issueCreator) {
+    String instanceName = stageConf.getInstanceName();
     boolean preview = true;
     switch (confDef.getModel().getModelType()) {
       case VALUE_CHOOSER:
@@ -438,6 +457,25 @@ public class PipelineConfigurationValidator {
           issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
                                                   ValidationError.VALIDATION_0009, "List"));
           preview = false;
+        }
+        break;
+      case COMPLEX_FIELD:
+        if(conf.getValue() != null) {
+          //this can be a single HashMap or an array of hashMap
+          Map<String, ConfigDefinition> configDefinitionsMap = new HashMap<>();
+          for (ConfigDefinition c : confDef.getModel().getConfigDefinitions()) {
+            configDefinitionsMap.put(c.getName(), c);
+          }
+          if (conf.getValue() instanceof List) {
+            //list of hash maps
+            List<Map<String, Object>> maps = (List<Map<String, Object>>) conf.getValue();
+            for (Map<String, Object> map : maps) {
+              preview &= validateComplexConfig(configDefinitionsMap, map, stageConf, confDef.getModel(), issueCreator);
+            }
+          } else if (conf.getValue() instanceof Map) {
+            preview &= validateComplexConfig(configDefinitionsMap, (Map<String, Object>) conf.getValue(), stageConf,
+              confDef.getModel(), issueCreator);
+          }
         }
         break;
       case FIELD_VALUE_CHOOSER:
@@ -510,6 +548,20 @@ public class PipelineConfigurationValidator {
           }
          }
         break;
+    }
+    return preview;
+  }
+
+  private boolean validateComplexConfig(Map<String, ConfigDefinition> configDefinitionsMap,
+                                        Map<String, Object> confvalue , StageConfiguration stageConf,
+                                        ModelDefinition modelDef, StageIssueCreator issueCreator) {
+    boolean preview = true;
+    for(Map.Entry<String, Object> entry : confvalue.entrySet()) {
+      String configName = entry.getKey();
+      Object value = entry.getValue();
+      ConfigDefinition configDefinition = configDefinitionsMap.get(configName);
+      ConfigConfiguration configConfiguration = new ConfigConfiguration(configName, value);
+      preview &= validateConfigDefinition(configDefinition, configConfiguration, stageConf, confvalue, issueCreator);
     }
     return preview;
   }

@@ -5,57 +5,22 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs;
 
-import com.codahale.metrics.Counter;
-import com.codahale.metrics.Meter;
-import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooser;
-import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.configurablestage.DTarget;
-import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.ELRecordSupport;
-import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
-import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriter;
-import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
-import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
-import com.streamsets.pipeline.lib.recordserialization.DataCollectorRecordToString;
-import com.streamsets.pipeline.lib.recordserialization.JsonRecordToString;
-import com.streamsets.pipeline.lib.recordserialization.RecordToString;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.hdfs.HdfsConfiguration;
-import org.apache.hadoop.io.SequenceFile;
-import org.apache.hadoop.io.compress.CompressionCodec;
-import org.apache.hadoop.security.UserGroupInformation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.servlet.jsp.el.ELException;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.security.PrivilegedExceptionAction;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 @GenerateResourceBundle
 @StageDef(
