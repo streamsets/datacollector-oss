@@ -5,11 +5,14 @@
  */
 package com.streamsets.pipeline.runner.preview;
 
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.StageOutput;
+import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.Issues;
+import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +40,10 @@ public class PreviewPipeline {
       pipeline.destroy();
     }
     return new PreviewPipelineOutput(issues, pipeline.getRunner());
+  }
+
+  public List<StageIssue> validateConfigs() throws StageException {
+    return pipeline.validateConfigs();
   }
 
 }

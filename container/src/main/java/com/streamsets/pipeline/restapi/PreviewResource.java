@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.restapi;
 
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.prodmanager.RawSourcePreviewHelper;
@@ -122,6 +123,30 @@ public class PreviewResource {
     Map<String, String> preview = RawSourcePreviewHelper.preview(name, rev, previewParams, store, stageLibrary,
       configuration);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(preview).build();
+  }
+
+  @Path("/{name}/validateConfigs")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response preview(
+      @PathParam("name") String name,
+      @QueryParam("rev") String rev)
+      throws PipelineStoreException, PipelineRuntimeException, StageException {
+    PipelineConfiguration pipelineConf = store.load(name, rev);
+    SourceOffsetTracker tracker = new PreviewSourceOffsetTracker("");
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, 10, 1, true);
+    try {
+      PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
+      return Response.ok().type(MediaType.APPLICATION_JSON)
+                     .entity(BeanHelper.wrapStageIssues(pipeline.validateConfigs())).build();
+    } catch (PipelineRuntimeException ex) {
+      if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
+        return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(
+            BeanHelper.wrapIssues(ex.getIssues())).build();
+      } else {
+        throw ex;
+      }
+    }
   }
 
 }
