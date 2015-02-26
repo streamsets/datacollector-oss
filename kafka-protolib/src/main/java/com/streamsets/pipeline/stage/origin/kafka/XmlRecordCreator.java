@@ -3,12 +3,13 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib;
+package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.xml.StreamingXmlParser;
 

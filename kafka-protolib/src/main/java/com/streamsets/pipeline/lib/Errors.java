@@ -12,10 +12,11 @@ public enum Errors implements ErrorCode {
   KAFKA_00("Could not parse CVS, {}"),
   KAFKA_01("Could not parse JSON, {}"),
   KAFKA_02("Unsupported data format '{}'"),
-  KAFKA_03("Invalid value '{}' specified for configuration '{}'"),
-  KAFKA_04("No value specified for configuration '{}'"),
-  KAFKA_05("Could not find metadata for topic '{}' from the supplied metadata broker list '{}'"),
-  KAFKA_06("Topic '{}' does not exist."),
+  KAFKA_03("Could not find metadata for topic '{}' from the supplied metadata broker list '{}'"),
+  KAFKA_04("Topic '{}' does not exist."),
+  KAFKA_05("Topic cannot be empty."),
+  KAFKA_06("Broker URIs cannot be empty."),
+  KAFKA_07("Invalid Broker URI '{}'."),
 
   //Kafka source messages
   KAFKA_20("A message with offset '{}' which is greater than the latest offset '{}' is requested from Kafka topic '{}' partition '{}'"),
@@ -31,6 +32,10 @@ public enum Errors implements ErrorCode {
   KAFKA_30("Error fetching offset from kafka, {}"),
   KAFKA_31("Error connecting to zookeeper with connect string '{}', {}"),
   KAFKA_32("Error getting iterator from Kafka Stream , {}"),
+  KAFKA_33("Consumer Group cannot be empty"),
+  KAFKA_34("Max Batch Size (messages) cannot be less than 1"),
+  KAFKA_35("Batch Wait Time (millisecs) cannot be less than 1"),
+  KAFKA_36("Max Object Length (chars) cannot be less than 1"),
 
   //Kafka target messages
   KAFKA_50("Error writing data to kafka broker, {}"),
@@ -39,7 +44,9 @@ public enum Errors implements ErrorCode {
   KAFKA_54("Error evaluating partition expression '{}' for record '{}'. Reason {}"),
   KAFKA_55("Error converting the result of partition expression '{}' to a partition id for topic '{}'. Reason : {}"),
   KAFKA_56("Partition expression resulted in invalid partition id '{}'. Topic '{}' has {} partitions"),
-  KAFKA_57("Failed to evaluate partition expression '{}', {}"),
+  KAFKA_57("Invalid partition expression '{}', {}"),
+  KAFKA_58("Field cannot be empty"),
+  KAFKA_59("Fields cannot be empty"),
 
   ;
   private final String msg;

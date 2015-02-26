@@ -13,16 +13,9 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.CsvRecordCreator;
 import com.streamsets.pipeline.lib.Errors;
-import com.streamsets.pipeline.lib.JsonRecordCreator;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaUtil;
-import com.streamsets.pipeline.lib.LogRecordCreator;
-import com.streamsets.pipeline.lib.MessageAndOffset;
-import com.streamsets.pipeline.lib.RecordCreator;
-import com.streamsets.pipeline.lib.SDCRecordCreator;
-import com.streamsets.pipeline.lib.XmlRecordCreator;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 
 import org.slf4j.Logger;
@@ -68,13 +61,13 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
 
-    List<KafkaBroker> kafkaBrokers = KafkaUtil.validateBrokerList(issues, zookeeperConnect, "zookeeperConnect",
-      getContext());
+    List<KafkaBroker> kafkaBrokers = KafkaUtil.validateBrokerList(issues, zookeeperConnect, Groups.KAFKA.name(),
+      "zookeeperConnect", getContext());
 
     //topic should exist
     if(topic == null || topic.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
-        Errors.KAFKA_04, "topic"));
+        Errors.KAFKA_05));
     }
 
     //validate connecting to kafka
@@ -87,23 +80,23 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     //consumerGroup
     if(consumerGroup == null || consumerGroup.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "consumerGroup",
-        Errors.KAFKA_04, "consumerGroup"));
+        Errors.KAFKA_33));
     }
 
     //maxBatchSize
     if(maxBatchSize < 1) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "maxBatchSize",
-        Errors.KAFKA_03, "maxBatchSize"));
+        Errors.KAFKA_34));
     }
 
     //maxWaitTime
     if(maxWaitTime < 1) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "maxWaitTime",
-        Errors.KAFKA_03, "maxWaitTime"));
+        Errors.KAFKA_35));
     }
 
     //payload type and payload specific configuration
-    validateDataFormatAndSpecificConfig(issues, consumerPayloadType, getContext(), Groups.KAFKA.name(),
+    validateDataFormatAndSpecificConfig(issues, getContext(), Groups.KAFKA.name(),
       "consumerPayloadType");
 
     //kafka consumer configs
@@ -114,6 +107,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
 
   @Override
   public void init() throws StageException {
+    super.init();
     if(getContext().isPreview()) {
       //set fixed batch duration time of 1 second for preview.
       maxWaitTime = 1000;
@@ -137,7 +131,6 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
       case SDC_JSON:
         recordCreator = new SDCRecordCreator(getContext());
         break;
-      default :
     }
   }
 
@@ -178,15 +171,14 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   /******** Validation Specific to Kafka Source *******/
   /****************************************************/
 
-  private void validateDataFormatAndSpecificConfig(List<Stage.ConfigIssue> issues, DataFormat dataFormat,
-                                                   Stage.Context context, String groupName, String configName) {
-    switch (dataFormat) {
+  private void validateDataFormatAndSpecificConfig(List<Stage.ConfigIssue> issues, Stage.Context context,
+                                                   String groupName, String configName) {
+    switch (consumerPayloadType) {
       case TEXT:
         break;
       case JSON:
         if (maxJsonObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "maxJsonObjectLen", Errors.KAFKA_03,
-            maxJsonObjectLen, "maxJsonObjectLen"));
+          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "maxJsonObjectLen", Errors.KAFKA_36));
         }
         break;
       case DELIMITED:
@@ -195,7 +187,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
         //no-op
         break;
       default:
-        issues.add(context.createConfigIssue(groupName, configName, Errors.KAFKA_02, dataFormat));
+        issues.add(context.createConfigIssue(groupName, configName, Errors.KAFKA_02, consumerPayloadType));
     }
   }
 }

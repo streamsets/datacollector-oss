@@ -73,11 +73,12 @@ public class KafkaTarget extends BaseTarget {
     List<ConfigIssue> issues = super.validateConfigs();
 
     //metadata broker list should be one or more <host>:<port> separated by a comma
-    List<KafkaBroker> kafkaBrokers = KafkaUtil.validateBrokerList(issues, metadataBrokerList, "metadataBrokerList",
-      getContext());
+    List<KafkaBroker> kafkaBrokers = KafkaUtil.validateBrokerList(issues, metadataBrokerList,
+      Groups.KAFKA.name(), "metadataBrokerList", getContext());
 
     //topic should exist
-    KafkaUtil.validateTopic(issues, kafkaBrokers, getContext(), topic, metadataBrokerList);
+    KafkaUtil.validateTopic(issues, kafkaBrokers, getContext(), Groups.KAFKA.name(), "topic", topic,
+      metadataBrokerList);
 
     //validate partition expression
     validatePartitionExpression(issues);
@@ -286,7 +287,7 @@ public class KafkaTarget extends BaseTarget {
       case TEXT:
         //required the field configuration to be set and it is "/" by default
         if(fieldPath == null || fieldPath.isEmpty()) {
-          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "fieldPath", Errors.KAFKA_04, "fieldPath"));
+          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "fieldPath", Errors.KAFKA_58));
         }
         break;
       case JSON:
@@ -296,7 +297,7 @@ public class KafkaTarget extends BaseTarget {
         //delimiter format is dropdown and it has a default value
         //"fields" option must be specified
         if (fieldPaths == null || fieldPaths.isEmpty()) {
-          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "fieldPaths", Errors.KAFKA_04, "fieldPaths"));
+          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "fieldPaths", Errors.KAFKA_59, "fieldPaths"));
         }
         break;
       case SDC_JSON:

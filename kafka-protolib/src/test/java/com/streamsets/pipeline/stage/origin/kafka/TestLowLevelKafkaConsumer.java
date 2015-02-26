@@ -3,10 +3,12 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib;
+package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.KafkaBroker;
+import com.streamsets.pipeline.lib.KafkaTestUtil;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.server.KafkaConfig;

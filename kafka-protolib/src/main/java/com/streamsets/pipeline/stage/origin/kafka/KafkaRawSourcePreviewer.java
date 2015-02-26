@@ -8,8 +8,6 @@ package com.streamsets.pipeline.stage.origin.kafka;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.lib.KafkaBroker;
-import com.streamsets.pipeline.lib.LowLevelKafkaConsumer;
-import com.streamsets.pipeline.lib.MessageAndOffset;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

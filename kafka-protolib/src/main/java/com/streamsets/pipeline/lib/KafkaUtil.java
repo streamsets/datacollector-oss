@@ -7,7 +7,6 @@ package com.streamsets.pipeline.lib;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.stage.destination.kafka.Groups;
 import kafka.common.ErrorMapping;
 import kafka.javaapi.TopicMetadata;
 import kafka.javaapi.TopicMetadataRequest;
@@ -34,13 +33,13 @@ public class KafkaUtil {
     //Unless something changes while the pipeline is running
     if(topicMetadata == null) {
       //Could not get topic metadata from any of the supplied brokers
-      LOG.error(Errors.KAFKA_05.getMessage(), topic, metadataBrokerList);
-      throw new StageException(Errors.KAFKA_05, topic, metadataBrokerList);
+      LOG.error(Errors.KAFKA_03.getMessage(), topic, metadataBrokerList);
+      throw new StageException(Errors.KAFKA_03, topic, metadataBrokerList);
     }
     if(topicMetadata.errorCode()== ErrorMapping.UnknownTopicOrPartitionCode()) {
       //Topic does not exist
-      LOG.error(Errors.KAFKA_06.getMessage(), topic);
-      throw new StageException(Errors.KAFKA_06, topic);
+      LOG.error(Errors.KAFKA_04.getMessage(), topic);
+      throw new StageException(Errors.KAFKA_04, topic);
     }
     return topicMetadata.partitionsMetadata().size();
   }
@@ -77,34 +76,35 @@ public class KafkaUtil {
     return topicMetadata;
   }
 
-  public static void validateTopic(List<Stage.ConfigIssue> issues, List<KafkaBroker> kafkaBrokers, Stage.Context context,
-                             String topic, String brokerList) {
+  public static void validateTopic(List<Stage.ConfigIssue> issues, List<KafkaBroker> kafkaBrokers,
+                                   Stage.Context context, String confiGroupName, String configName,
+                                   String topic, String brokerList) {
     if(topic == null || topic.isEmpty()) {
-      issues.add(context.createConfigIssue(Groups.KAFKA.name(), "topic",
-        Errors.KAFKA_04, "topic"));
+      issues.add(context.createConfigIssue(confiGroupName, configName,
+        Errors.KAFKA_05));
     }
 
     TopicMetadata topicMetadata = KafkaUtil.getTopicMetadata(kafkaBrokers, topic);
 
     if(topicMetadata == null) {
       //Could not get topic metadata from any of the supplied brokers
-      issues.add(context.createConfigIssue(Groups.KAFKA.name(), "topic",
-        Errors.KAFKA_05, topic, brokerList));
+      issues.add(context.createConfigIssue(confiGroupName, configName,
+        Errors.KAFKA_03, topic, brokerList));
       return;
     }
     if(topicMetadata.errorCode()== ErrorMapping.UnknownTopicOrPartitionCode()) {
       //Topic does not exist
-      issues.add(context.createConfigIssue(Groups.KAFKA.name(), "topic",
-        Errors.KAFKA_06, topic));
+      issues.add(context.createConfigIssue(confiGroupName, configName,
+        Errors.KAFKA_04, topic));
       return;
     }
   }
 
   public static List<KafkaBroker> validateBrokerList(List<Stage.ConfigIssue> issues, String brokerList,
-                                                     String brokerPropertyName, Stage.Context context) {
+                                                     String confiGroupName, String configName, Stage.Context context) {
     if(brokerList == null || brokerList.isEmpty()) {
-      issues.add(context.createConfigIssue(Groups.KAFKA.name(), brokerPropertyName,
-        Errors.KAFKA_04, brokerPropertyName));
+      issues.add(context.createConfigIssue(confiGroupName, configName,
+        Errors.KAFKA_06, configName));
       return null;
     }
     List<KafkaBroker> kafkaBrokers = new ArrayList<>();
@@ -112,15 +112,13 @@ public class KafkaUtil {
     for(String broker : brokers) {
       String[] brokerHostAndPort = broker.split(":");
       if(brokerHostAndPort.length != 2) {
-        issues.add(context.createConfigIssue(Groups.KAFKA.name(), brokerPropertyName,
-          Errors.KAFKA_03, brokerList, brokerPropertyName));
+        issues.add(context.createConfigIssue(confiGroupName, configName, Errors.KAFKA_07, brokerList));
       } else {
         try {
           int port = Integer.parseInt(brokerHostAndPort[1]);
           kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0], port));
         } catch (NumberFormatException e) {
-          issues.add(context.createConfigIssue(Groups.KAFKA.name(), brokerPropertyName,
-            Errors.KAFKA_03, brokerList, brokerPropertyName));
+          issues.add(context.createConfigIssue(confiGroupName, configName, Errors.KAFKA_07, brokerList));
         }
       }
     }
