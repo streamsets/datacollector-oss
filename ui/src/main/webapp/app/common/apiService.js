@@ -324,6 +324,20 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Validate the Pipeline
+       *
+       * @param name
+       * @returns {*}
+       */
+      validatePipeline: function(name) {
+        var url = apiBase + '/pipeline-library/' + name + '/validateConfigs';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Start the Pipeline
        *
        * @param name

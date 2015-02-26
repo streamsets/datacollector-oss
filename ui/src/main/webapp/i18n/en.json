@@ -108,9 +108,9 @@
         "unloadMessage": "If you leave this page you are going to lose all unsaved changes, are you sure you want to leave?"
       },
       "error": {
-        "operationFailed": "Operation Failed"
       },
       "validate": {
+        "validationFailed": "Validation Failed",
         "validationErrors": "Validation Errors"
       }
     }
@@ -154,7 +154,8 @@
       "stoppingPipeline": "Stopping Pipeline...",
       "targets": "Destinations",
       "toggleLibraryPane": "Toggle Library Pane",
-      "uptime": "Uptime"
+      "uptime": "Uptime",
+      "validate": "Validate"
     },
     "graphPane": {
       "startErrorMessage": "Pipeline definition '{{name}}' is running. Pipeline Agent supports running only one Pipeline Definition.",
@@ -223,7 +224,7 @@
       "pipelineStatusJSONData": "Pipeline Status",
       "rawPreview": "Raw Preview",
       "recordsPerSecond": "(records / sec)",
-      "restURL": "REST Interface",
+      "restURL": "REST Response",
       "rules": "Rules",
       "rulesTab": {
         "action": "Action",

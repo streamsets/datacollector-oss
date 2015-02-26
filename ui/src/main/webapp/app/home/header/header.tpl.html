@@ -144,7 +144,6 @@
               ng-show="isPipelineRunning && !snapshotMode"
               ng-click="captureSnapshot()">
         <span class="glyphicon glyphicon-camera fa-12x"></span>
-        <span ng-hide="iconOnly" translate="home.header.snapshot">Snapshot</span>
       </a>
 
       <a type="button" class="btn btn-danger btn-sm"
@@ -154,7 +153,6 @@
               ng-show="snapshotMode"
               ng-click="closeSnapshot()">
         <span class="glyphicon glyphicon-camera fa-12x"></span>
-        <span ng-hide="iconOnly" translate="home.header.closeSnapshot">Close Snapshot</span>
       </a>
 
 
@@ -166,7 +164,6 @@
               ng-click="previewPipeline()"
               ng-disabled="!pipelineConfig.previewable">
         <span class="glyphicon glyphicon-eye-open fa-12x"></span>
-        <span ng-hide="iconOnly" translate="home.header.preview">Preview</span>
       </a>
 
       <a type="button" class="btn btn-danger btn-sm"
@@ -176,7 +173,17 @@
               ng-show="previewMode"
               ng-click="closePreview()">
         <span class="glyphicon glyphicon-eye-close fa-12x"></span>
-        <span ng-hide="iconOnly" translate="home.header.closePreview">Close Preview</span>
+      </a>
+
+      <a type="button" class="btn btn-primary btn-sm"
+         tooltip-placement="bottom"
+         tooltip="{{'home.header.validate' | translate}}"
+         tooltip-trigger="mouseenter"
+         tooltip-popup-delay="500"
+         ng-hide="isPipelineRunning || previewMode"
+         ng-disabled="!pipelineConfig.valid"
+         ng-click="validatePipeline()">
+        <span class="glyphicon glyphicon-ok-circle fa-12x"></span>
       </a>
 
       <a type="button" class="btn btn-primary btn-sm"
@@ -187,7 +194,6 @@
               ng-disabled="!pipelineConfig.valid"
               ng-click="startPipeline()">
         <span class="glyphicon glyphicon-play fa-12x"></span>
-        <span ng-hide="iconOnly" translate="home.header.start">Start</span>
       </a>
 
       <a type="button" class="btn btn-danger btn-sm"
@@ -197,7 +203,6 @@
               ng-click="stopPipeline()"
               ng-show="isPipelineRunning && !snapshotMode">
         <span class="glyphicon glyphicon-stop fa-12x"></span>
-        <span ng-hide="iconOnly" translate="home.header.stop">Stop</span>
       </a>
 
       <div class="btn-group">

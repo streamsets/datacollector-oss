@@ -134,17 +134,26 @@ angular
        */
       hasConfigurationIssues: function(stageInstance) {
         var config = $scope.pipelineConfig,
+          commonErrors = $rootScope.common.errors,
+          issuesMap,
           issues = [];
 
-        if(config && config.issues) {
-          if(stageInstance.instanceName && config.issues.stageIssues &&
-            config.issues.stageIssues[stageInstance.instanceName]) {
-            issues = config.issues.stageIssues[stageInstance.instanceName];
-          } else if(!stageInstance.instanceName && config.issues.pipelineIssues){
-            issues.push.apply(issues, config.issues.pipelineIssues);
 
-            if(config.errorStage && config.issues.stageIssues && config.issues.stageIssues[config.errorStage.instanceName]) {
-              issues.push.apply(issues, config.issues.stageIssues[config.errorStage.instanceName]);
+        if(commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
+          issuesMap = commonErrors[0];
+        } else if(config && config.issues){
+          issuesMap = config.issues;
+        }
+
+        if(issuesMap) {
+          if(stageInstance.instanceName && issuesMap.stageIssues &&
+            issuesMap.stageIssues[stageInstance.instanceName]) {
+            issues = issuesMap.stageIssues[stageInstance.instanceName];
+          } else if(!stageInstance.instanceName && issuesMap.pipelineIssues){
+            issues.push.apply(issues, issuesMap.pipelineIssues);
+
+            if(config.errorStage && issuesMap.stageIssues && issuesMap.stageIssues[config.errorStage.instanceName]) {
+              issues.push.apply(issues, issuesMap.stageIssues[config.errorStage.instanceName]);
             }
           }
         }

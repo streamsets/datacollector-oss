@@ -9,9 +9,11 @@ angular
                                                    api, previewService, pipelineConstant, pipelineService) {
     var fieldsPathList;
 
-    var getIssueMessage = function(issues, instanceName, configDefinition) {
+    var getIssueMessage = function(config, issues, instanceName, configDefinition) {
       if(instanceName && issues.stageIssues && issues.stageIssues[instanceName]) {
         issues = issues.stageIssues[instanceName];
+      } else if(config.errorStage && issues.stageIssues && issues.stageIssues[config.errorStage.instanceName]) {
+        issues = issues.stageIssues[config.errorStage.instanceName];
       } else if(issues.pipelineIssues){
         issues = issues.pipelineIssues;
       }
@@ -38,11 +40,11 @@ angular
           issue;
 
         if(config && config.issues) {
-          issue = getIssueMessage(config.issues, configObject.instanceName, configDefinition);
+          issue = getIssueMessage(config, config.issues, configObject.instanceName, configDefinition);
         }
 
         if(!issue && commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
-          issue = getIssueMessage(commonErrors[0], configObject.instanceName, configDefinition);
+          issue = getIssueMessage(config, commonErrors[0], configObject.instanceName, configDefinition);
         }
 
         return issue;
@@ -367,14 +369,22 @@ angular
 
       showConfigurationWarning: function(stageInstance, groupName, errorStage) {
         var config = $scope.pipelineConfig,
+          commonErrors = $rootScope.common.errors,
+          issuesMap,
           issues;
 
-        if(config && config.issues) {
-          if(stageInstance.instanceName && config.issues.stageIssues &&
-            config.issues.stageIssues && config.issues.stageIssues[stageInstance.instanceName]) {
-            issues = config.issues.stageIssues[stageInstance.instanceName];
-          } else if(config.issues.pipelineIssues){
-            issues = config.issues.pipelineIssues;
+
+        if(commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
+          issuesMap = commonErrors[0];
+        } else if(config && config.issues){
+          issuesMap = config.issues;
+        }
+
+        if(issuesMap) {
+          if(stageInstance.instanceName && issuesMap.stageIssues && issuesMap.stageIssues[stageInstance.instanceName]) {
+            issues = issuesMap.stageIssues[stageInstance.instanceName];
+          } else if(issuesMap.pipelineIssues) {
+            issues = issuesMap.pipelineIssues;
           }
         }
 

@@ -40,6 +40,21 @@ angular
       },
 
       /**
+       * Validate Pipeline
+       */
+      validatePipeline: function() {
+        api.pipelineAgent.validatePipeline($scope.activeConfigInfo.name).
+          then(
+          function (res) {
+            console.log(res);
+          },
+          function (res) {
+            $rootScope.common.errors = [res.data];
+          }
+        );
+      },
+
+      /**
        * On Start Pipeline button click.
        *
        */

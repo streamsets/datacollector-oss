@@ -50,10 +50,10 @@
               ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
               name="badRecordsForm">
           <div class="form-group"
+               ng-class="{'has-error': getConfigurationIssueMessage(detailPaneConfig, configDefinition)}"
                ng-repeat="configDefinition in errorStageConfigDefn.configDefinitions track by $index | orderBy: 'displayPosition'"
                ng-if="(!configDefinition.dependsOn || verifyDependsOn(errorStageConfig, configDefinition))"
-               ng-init="configIndex = getConfigIndex(errorStageConfig, configDefinition);"
-               show-errors>
+               ng-init="configIndex = getConfigIndex(errorStageConfig, configDefinition);">
 
             <ng-include ng-if="selectedType !== pipelineConstant.LINK"
                         src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
