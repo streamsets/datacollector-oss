@@ -8,7 +8,7 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  HADOOPFS_00("Could not retrieve kerberos credentials (KDC may not be available)"),
+  HADOOPFS_00("Hadoop UserGroupInformation reports SIMPLE authentication, it should be KERBEROS"),
   HADOOPFS_01("Failed to configure/connect to the '{}' Hadoop File System, {}"),
   HADOOPFS_02("Invalid dir path template '{}', {}"),
 

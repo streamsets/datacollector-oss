@@ -160,7 +160,7 @@ public class TestBaseHdfsTarget {
     List<Stage.ConfigIssue> issues =
         target.validateConfigs(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
     Assert.assertEquals(1, issues.size());
-    Assert.assertTrue(issues.get(0).toString().contains("HADOOPFS_00"));
+    Assert.assertTrue(issues.get(0).toString().contains("HADOOPFS_01"));
   }
 
   @Test
