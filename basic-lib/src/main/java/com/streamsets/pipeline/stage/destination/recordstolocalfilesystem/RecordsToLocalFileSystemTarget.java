@@ -58,9 +58,10 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     dir = new File(directory);
     if (!dir.exists()) {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "directory", Errors.RECORDFS_01, directory));
-    }
-    if (!dir.isDirectory()) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "directory", Errors.RECORDFS_02, directory));
+    } else{
+      if (!dir.isDirectory()) {
+        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "directory", Errors.RECORDFS_02, directory));
+      }
     }
     try {
       rotationMillis = ELEvaluator.evaluateHoursMinutesToSecondsExpr(rotationIntervalSecs) * 1000;
