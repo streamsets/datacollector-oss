@@ -32,6 +32,8 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Path("/v1/pipeline-library")
 public class PipelineStoreResource {
@@ -60,7 +62,7 @@ public class PipelineStoreResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getInfo(
       @PathParam("name") String name,
-      @QueryParam("rev") String rev,
+      @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("get") @DefaultValue("pipeline") String get,
       @QueryParam("attachment") @DefaultValue("false") Boolean attachment)
       throws PipelineStoreException, URISyntaxException {
@@ -79,11 +81,17 @@ public class PipelineStoreResource {
       throw new IllegalArgumentException(Utils.format("Invalid value for parameter 'get': {}", get));
     }
 
-    if(attachment)
+    if(attachment) {
+      Map<String, Object> envelope = new HashMap<String, Object>();
+      envelope.put("pipelineConfig", data);
+
+      com.streamsets.pipeline.config.RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
+      envelope.put("pipelineRules", BeanHelper.wrapRuleDefinitions(ruleDefinitions));
+
       return Response.ok().
         header("Content-Disposition", "attachment; filename=" + name + ".json").
-        type(MediaType.APPLICATION_JSON).entity(data).build();
-    else
+        type(MediaType.APPLICATION_JSON).entity(envelope).build();
+    } else
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(data).build();
 
   }

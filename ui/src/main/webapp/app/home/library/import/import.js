@@ -22,22 +22,49 @@ angular
 
         reader.onload = function (loadEvent) {
           try {
-            var jsonConfigObj = JSON.parse(loadEvent.target.result);
-            if(jsonConfigObj.uuid) {
+            var parsedObj = JSON.parse(loadEvent.target.result),
+              jsonConfigObj,
+              jsonRulesObj;
 
+            if(parsedObj.pipelineConfig) {
+              //It is an config and rules envelope
+              jsonConfigObj = parsedObj.pipelineConfig;
+              jsonRulesObj = parsedObj.pipelineRules;
+            } else {
+              jsonConfigObj = parsedObj;
+            }
+
+            if(jsonConfigObj.uuid) {
               if(pipelineInfo) { //If pipeline config already exists
                 jsonConfigObj.uuid = pipelineInfo.uuid;
                 api.pipelineAgent.savePipelineConfig(pipelineInfo.name, jsonConfigObj).
-                  success(function(res) {
-                    $modalInstance.close();
-                  }).error(function(data) {
+                  then(function(res) {
+                    if(jsonRulesObj && jsonRulesObj.uuid) {
+                      api.pipelineAgent.getPipelineRules(pipelineInfo.name).
+                        then(function(res) {
+                          var rulesObj = res.data;
+                          rulesObj.metricsRuleDefinitions = jsonRulesObj.metricsRuleDefinitions;
+                          rulesObj.dataRuleDefinitions = jsonRulesObj.dataRuleDefinitions;
+                          rulesObj.emailIds = jsonRulesObj.emailIds;
+
+                          api.pipelineAgent.savePipelineRules(pipelineInfo.name, rulesObj).
+                            then(function() {
+                              $modalInstance.close();
+                            });
+
+                        });
+
+                    } else {
+                      $modalInstance.close();
+                    }
+                  },function(data) {
                     $scope.common.errors = [data];
                   });
               } else { //If no pipeline exist
-
+                var newPipelineObject;
                 api.pipelineAgent.createNewPipelineConfig(jsonConfigObj.info.name, jsonConfigObj.info.description)
                   .then(function(res) {
-                    var newPipelineObject = res.data;
+                    newPipelineObject = res.data;
                     newPipelineObject.configuration = jsonConfigObj.configuration;
                     newPipelineObject.errorStage = jsonConfigObj.errorStage;
                     newPipelineObject.uiInfo = jsonConfigObj.uiInfo;
@@ -45,7 +72,24 @@ angular
                     return api.pipelineAgent.savePipelineConfig(jsonConfigObj.info.name, newPipelineObject);
                   })
                   .then(function(res) {
-                    $modalInstance.close(res.data);
+                    if(jsonRulesObj && jsonRulesObj.uuid) {
+                      api.pipelineAgent.getPipelineRules(jsonConfigObj.info.name).
+                        then(function(res) {
+                          var rulesObj = res.data;
+                          rulesObj.metricsRuleDefinitions = jsonRulesObj.metricsRuleDefinitions;
+                          rulesObj.dataRuleDefinitions = jsonRulesObj.dataRuleDefinitions;
+                          rulesObj.emailIds = jsonRulesObj.emailIds;
+
+                          api.pipelineAgent.savePipelineRules(jsonConfigObj.info.name, rulesObj).
+                            then(function() {
+                              $modalInstance.close(newPipelineObject);
+                            });
+
+                        });
+
+                    } else {
+                      $modalInstance.close(newPipelineObject);
+                    }
                   },function(res) {
                     $scope.common.errors = [res.data];
                   });

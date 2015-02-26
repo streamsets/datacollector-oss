@@ -204,14 +204,17 @@ angular.module('dataCollectorApp.common')
       duplicatePipelineConfig: function(name, description, pipelineInfo) {
         var deferred = $q.defer(),
           pipelineObject,
-          duplicatePipelineObject;
+          pipelineRulesObject,
+          duplicatePipelineObject,
+          duplicatePipelineRulesObject;
 
         // Fetch the pipelineInfo full object
         // then Create new config object
         // then copy the configuration from pipelineInfo to new Object.
-        api.pipelineAgent.getPipelineConfig(pipelineInfo.name)
-          .then(function(res) {
-            pipelineObject = res.data;
+        $q.all([api.pipelineAgent.getPipelineConfig(pipelineInfo.name), api.pipelineAgent.getPipelineRules(pipelineInfo.name)])
+          .then(function(results) {
+            pipelineObject = results[0].data;
+            pipelineRulesObject = results[1].data;
             return api.pipelineAgent.createNewPipelineConfig(name, description);
           })
           .then(function(res) {
@@ -223,7 +226,22 @@ angular.module('dataCollectorApp.common')
             return api.pipelineAgent.savePipelineConfig(name, duplicatePipelineObject);
           })
           .then(function(res) {
-            deferred.resolve(res.data);
+            duplicatePipelineObject = res.data;
+
+            //Fetch the Pipeline Rules
+            return api.pipelineAgent.getPipelineRules(name);
+          })
+          .then(function(res) {
+            duplicatePipelineRulesObject = res.data;
+            duplicatePipelineRulesObject.metricsRuleDefinitions = pipelineRulesObject.metricsRuleDefinitions;
+            duplicatePipelineRulesObject.dataRuleDefinitions = pipelineRulesObject.dataRuleDefinitions;
+            duplicatePipelineRulesObject.emailIds = pipelineRulesObject.emailIds;
+
+            //Save the pipeline Rules
+            return api.pipelineAgent.savePipelineRules(name, duplicatePipelineRulesObject);
+          })
+          .then(function(res) {
+            deferred.resolve(duplicatePipelineObject);
           });
 
         return deferred.promise;
