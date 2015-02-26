@@ -40,10 +40,8 @@
     <chapter href="Chapter_Maps/Troubleshooting.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Glossary.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/ExpressionLanguage.ditamap" format="ditamap" outputclass=""/>
-    <chapter href="Reusable_Content/ReusableSteps.dita" collection-type="unordered" processing-role="resource-only"></chapter>
-    <chapter href="Reusable_Content/ReusablePhrases.dita" collection-type="unordered"
+    <chapter href="Chapter_Maps/ReusableContent.ditamap" format="ditamap"
         processing-role="resource-only"/>
-    <chapter href="Reusable_Content/ReusableTables.dita" collection-type="unordered" processing-role="resource-only"></chapter>
     <backmatter>
         <booklists>
             <indexlist/>

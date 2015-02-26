@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_dlh_p15_2r">
+ <title>Viewing Raw JSON Data</title>
+ <shortdesc>You can view the JSON data that the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console uses to
+  generate displays. You can generate the raw JSON data when requested by a StreamSets client
+  services member to help troubleshoot a problem. </shortdesc>
+ <conbody>
+  <p>
+   <draft-comment author="Loretta">access point, different types. move the following into a
+    subheading? </draft-comment>
+  </p>
+  <p>You can view different types of JSON data based on where you are in the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console. The
+   following table lists the types of JSON data that you can generate:<table frame="all" rowsep="1"
+    colsep="1" id="table_jvn_fm5_2r">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+     <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+     <thead>
+      <row>
+       <entry/>
+       <entry/>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>Configuring a Pipeline</entry>
+       <entry>Pipeline Configuration<p>Pipeline Rules</p><p>Definitions</p></entry>
+      </row>
+      <row>
+       <entry>Previewing a Pipeline</entry>
+       <entry>Pipeline Preview</entry>
+      </row>
+      <row>
+       <entry>Monitoring a Pipeline</entry>
+       <entry>Pipeline Monitoring<p>Pipeline Status</p><p>Pipeline Configuration</p><p>Pipeline
+         Rules</p><p>Definitions </p></entry>
+      </row>
+      <row>
+       <entry>Viewing JVM Metrics</entry>
+       <entry>JVM Metrics</entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table></p>
+  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   provides the following JSON data:<ul id="ul_flz_mn5_2r">
+    <li>Pipeline Configuration - </li>
+    <li>Pipeline Rules - </li>
+    <li>Definitions - </li>
+    <li>Pipeline Preview - </li>
+    <li>Pipeline Monitoring - </li>
+    <li>Pipeline Status - </li>
+    <li>JVM Metrics - </li>
+   </ul></p>
+ </conbody>
+</concept>
