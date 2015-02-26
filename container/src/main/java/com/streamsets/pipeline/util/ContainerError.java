@@ -39,7 +39,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0151("Pipeline build error, {}"),
   CONTAINER_0152("Stage '{}', instance '{}', variable '{}', value '{}', configuration injection error: {}"),
   CONTAINER_0153("Stage '{}', instance '{}', missing configuration '{}'"),
-  CONTAINER_0154("Cannot preview, {}"),
+  CONTAINER_0154("Cannot preview, there are static configuration issues: {}"),
   CONTAINER_0155("Instance '{}', required fields configuration must be a List, it is a '{}'"),
   CONTAINER_0156("Invalid instance '{}'"),
   CONTAINER_0157("Cannot do a preview stage run on a source, instance '{}'"),

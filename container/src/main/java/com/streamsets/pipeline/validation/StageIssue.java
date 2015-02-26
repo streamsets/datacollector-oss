@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 public class StageIssue extends Issue {
   private final String instanceName;
-  private final boolean errorStage;
+  private boolean errorStage;
 
   protected StageIssue(boolean errorStage, String instanceName, ErrorCode error, Object... args) {
     this(errorStage, instanceName, null, null, error, args);
@@ -25,6 +25,10 @@ public class StageIssue extends Issue {
 
   public String getInstanceName() {
     return instanceName;
+  }
+
+  public void setErrorStage() {
+    errorStage = true;
   }
 
   public boolean isErrorStage() {

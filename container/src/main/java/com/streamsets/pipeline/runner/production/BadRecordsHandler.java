@@ -22,7 +22,11 @@ public class BadRecordsHandler {
   }
 
   public List<StageIssue> validate() throws StageException {
-    return errorStage.validateConfigs();
+    List<StageIssue> issues = errorStage.validateConfigs();
+    for (StageIssue issue: issues) {
+      issue.setErrorStage();
+    }
+    return issues;
   }
 
   public void init() throws StageException {
