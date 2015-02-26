@@ -8,6 +8,18 @@ angular
   .controller('HeaderController', function ($scope, $rootScope, $timeout, _, api, $translate,
                                            pipelineService, pipelineConstant, $modal) {
 
+
+    var pipelineValidationInProgress = 'Validating Pipeline...',
+      pipelineValidationSuccess = 'Validation Successful.';
+
+    $translate('global.messages.validate.pipelineValidationInProgress').then(function(translation) {
+      pipelineValidationInProgress = translation;
+    });
+
+    $translate('global.messages.validate.pipelineValidationSuccess').then(function(translation) {
+      pipelineValidationSuccess = translation;
+    });
+
     angular.extend($scope, {
       iconOnly: true,
       selectedSource: {},
@@ -43,12 +55,19 @@ angular
        * Validate Pipeline
        */
       validatePipeline: function() {
+        $rootScope.common.infoList.push({
+          message:pipelineValidationInProgress
+        });
         api.pipelineAgent.validatePipeline($scope.activeConfigInfo.name).
           then(
           function (res) {
-            console.log(res);
+            $rootScope.common.infoList = [];
+            $rootScope.common.successList.push({
+              message: pipelineValidationSuccess
+            });
           },
           function (res) {
+            $rootScope.common.infoList = [];
             $rootScope.common.errors = [res.data];
           }
         );

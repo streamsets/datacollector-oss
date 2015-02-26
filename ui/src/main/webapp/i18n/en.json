@@ -111,7 +111,9 @@
       },
       "validate": {
         "validationFailed": "Validation Failed",
-        "validationErrors": "Validation Errors"
+        "validationErrors": "Validation Errors",
+        "pipelineValidationInProgress": "Validating Pipeline...",
+        "pipelineValidationSuccess": "Validation Successful"
       }
     }
   },

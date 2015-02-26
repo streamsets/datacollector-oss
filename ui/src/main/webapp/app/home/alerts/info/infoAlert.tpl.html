@@ -1,0 +1,12 @@
+<div class="alert alert-info alert-dismissible" role="alert"
+     ng-controller="InfoAlertController"
+     ng-repeat="info in common.infoList">
+
+  <button type="button" class="close" ng-click="removeAlert(common.infoList, $index)">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+  </button>
+
+  <span ng-bind-html="info.message"></span>
+
+</div>

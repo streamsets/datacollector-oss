@@ -1,0 +1,14 @@
+<div class="alert alert-success alert-dismissible" role="alert"
+     ng-controller="SuccessAlertController"
+     ng-repeat="success in common.successList">
+
+  <button type="button" class="close" ng-click="removeAlert(common.successList, $index)">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+  </button>
+
+  <span>
+    {{getAlertMessage(success, common.successList, $index)}}
+  </span>
+
+</div>

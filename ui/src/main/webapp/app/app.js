@@ -55,6 +55,8 @@ angular.module('dataCollectorApp')
       saveOperationInProgress: 0,
       pipelineStatus: {},
       errors: [],
+      infoList: [],
+      successList: [],
       activeDetailTab: undefined,
       dontShowHelpAlert: false,
 

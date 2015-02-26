@@ -11,7 +11,8 @@ angular
       /**
        * Remove Error Message.
        *
-       * @param error
+       * @param errorList
+       * @param index
        */
       removeAlert: function(errorList, index) {
         errorList.splice(index, 1);

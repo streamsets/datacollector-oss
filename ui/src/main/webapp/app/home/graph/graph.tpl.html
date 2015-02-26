@@ -85,7 +85,9 @@
 
     </div>
 
-    <ng-include src="'errorAlertContent.html'"></ng-include>
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+    <ng-include src="'app/home/alerts/info/infoAlert.tpl.html'"></ng-include>
+    <ng-include src="'app/home/alerts/success/successAlert.tpl.html'"></ng-include>
 
     <pipeline-graph ng-show="pipelineConfig" graph-value="pipelineConfig" ></pipeline-graph>
 
