@@ -1,40 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dlh_p15_2r">
- <title>Viewing Raw JSON Data</title>
- <shortdesc>You can view the JSON data that the <ph
+ <title>REST Response</title>
+ <shortdesc>You can view the REST response that the <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console uses to
-  generate displays. You can generate the raw JSON data when requested by a StreamSets client
-  services member to help troubleshoot a problem. </shortdesc>
+  generate displays. The REST response is JSON data that you can send to a StreamSets client
+  services member to help troubleshoot issues. </shortdesc>
  <conbody>
   <p>
    <draft-comment author="Loretta">access point, different types. move the following into a
     subheading? </draft-comment>
   </p>
-  <p>You can view different types of JSON data based on where you are in the <ph
+  <p>You can view the following types of REST responses:<ul id="ul_flz_mn5_2r">
+    <li>Pipeline Configuration - Provides information about the pipeline and each stage in the
+     pipeline.</li>
+    <li>Pipeline Rules - Provides information about metric and data rules and alerts. </li>
+    <li>Definitions - Provides information about all available <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> stages.</li>
+    <li>Pipeline Preview - Provides information about the preview data moving through the pipeline.
+     Also includes monitoring information that is not used in preview.</li>
+    <li>Pipeline Monitoring - Provides monitoring information for the pipeline.</li>
+    <li>Pipeline Status - Provides the current status of the pipeline.</li>
+    <li>JVM Metrics - Provides JVM metrics for the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</li>
+   </ul></p>
+  <p>Different REST responses are available at different locations in the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console. The
    following table lists the types of JSON data that you can generate:<table frame="all" rowsep="1"
-    colsep="1" id="table_jvn_fm5_2r">
+    colsep="1" id="table_gqf_xb3_fr">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.0*"/>
      <colspec colname="c2" colnum="2" colwidth="1.0*"/>
      <thead>
       <row>
-       <entry/>
-       <entry/>
+       <entry>Data Collector Console location</entry>
+       <entry>REST Response</entry>
       </row>
      </thead>
      <tbody>
       <row>
-       <entry>Configuring a Pipeline</entry>
+       <entry>Pipeline Configuration</entry>
        <entry>Pipeline Configuration<p>Pipeline Rules</p><p>Definitions</p></entry>
       </row>
       <row>
-       <entry>Previewing a Pipeline</entry>
+       <entry>Data Preview</entry>
        <entry>Pipeline Preview</entry>
       </row>
       <row>
-       <entry>Monitoring a Pipeline</entry>
+       <entry>Pipeline Monitoring</entry>
        <entry>Pipeline Monitoring<p>Pipeline Status</p><p>Pipeline Configuration</p><p>Pipeline
          Rules</p><p>Definitions </p></entry>
       </row>
@@ -45,15 +58,5 @@
      </tbody>
     </tgroup>
    </table></p>
-  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-   provides the following JSON data:<ul id="ul_flz_mn5_2r">
-    <li>Pipeline Configuration - </li>
-    <li>Pipeline Rules - </li>
-    <li>Definitions - </li>
-    <li>Pipeline Preview - </li>
-    <li>Pipeline Monitoring - </li>
-    <li>Pipeline Status - </li>
-    <li>JVM Metrics - </li>
-   </ul></p>
  </conbody>
 </concept>

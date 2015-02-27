@@ -23,7 +23,9 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Administration/ViewingJSONResults.dita"/>
+  <topicref href="../Administration/RESTResponse.dita">
+   <topicref href="../Administration/ViewingRESTResponse.dita"/>
+  </topicref>
   <topicref href="../Administration/ShuttingDown.dita">
    <topicmeta>
     <shortdesc/>

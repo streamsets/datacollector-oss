@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_dlh_p15_2r">
+ <title>REST Response</title>
+ <shortdesc>You can view the REST response that the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console uses to
+  generate displays. The REST response is JSON data that you can send to StreamSets client services
+  to help troubleshoot issues. </shortdesc>
+ <conbody>
+  <p>
+   <draft-comment author="Loretta">access point - Admin?</draft-comment>
+  </p>
+  <p><indexterm>REST responses<indexterm>overview</indexterm></indexterm>You can view the following
+   types of REST responses:<ul id="ul_flz_mn5_2r">
+    <li>Pipeline Configuration - Provides information about the pipeline and each stage in the
+     pipeline.</li>
+    <li>Pipeline Rules - Provides information about metric and data rules and alerts. </li>
+    <li>Definitions - Provides information about all available <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> stages.</li>
+    <li>Pipeline Preview - Provides information about the preview data moving through the pipeline.
+     Also includes monitoring information that is not used in preview.</li>
+    <li>Pipeline Monitoring - Provides monitoring information for the pipeline.</li>
+    <li>Pipeline Status - Provides the current status of the pipeline.</li>
+    <li>JVM Metrics - Provides JVM metrics for the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</li>
+   </ul></p>
+ </conbody>
+</concept>

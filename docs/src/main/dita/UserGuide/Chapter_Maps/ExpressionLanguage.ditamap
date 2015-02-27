@@ -9,6 +9,7 @@
    </topicmeta>
    <topicref href="../Processors/BasicSyntax.dita"/>
    <topicref href="../Processors/UsingFieldNamesinExpressions.dita"/>
+   <topicref href="../Expression_Language/DataTypeCoercion.dita"/>
    <topicref href="../Expression_Language/StageInstanceName.dita"/>
    <topicref href="../Expression_Language/StagePaths.dita"/>
   </topicref>

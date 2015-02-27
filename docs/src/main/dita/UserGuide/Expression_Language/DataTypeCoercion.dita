@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_fmr_ggh_fr">
+ <title>Data Type Coercion</title>
+ <shortdesc>When possible, the expression language performs coersion - or implicit data type
+  conversion. </shortdesc>
+ <conbody>
+  <p>
+   <draft-comment author="Loretta">do I have to be careful not to confuse conversion and coercion?
+    Get a good example.</draft-comment>
+  </p>
+ </conbody>
+</concept>
