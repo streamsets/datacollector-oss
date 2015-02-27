@@ -64,7 +64,7 @@
         padding-top: 0;
         margin: 0;
         color: @streamsets-icon-btn-color;
-        width: 50px;
+        width: 40px;
 
         &:hover {
           color: @streamsets-icon-btn-hover-color;
@@ -112,6 +112,10 @@
 
     .icon-button {
       padding: 5px 8px;
+
+      &.btn[disabled] {
+        opacity: 0.35;
+      }
 
       &.btn-danger {
         color: @brand-danger;

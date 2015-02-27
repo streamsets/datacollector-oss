@@ -51,6 +51,39 @@
         </div>
       </div>
 
+      <div class="btn-group">
+        <a class="btn btn-link dropdown-toggle icon-button"
+           tooltip-placement="bottom" tooltip="{{'home.header.more' | translate}}"
+           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+           tooltip-popup-delay="500"
+           data-toggle="dropdown">
+          <span class="fa fa-ellipsis-h fa-14x"></span>
+        </a>
+        <ul class="dropdown-menu pull-right" role="menu">
+
+          <li role="presentation"
+              ng-if="!isPipelineRunning"
+              ng-class="{'disabled': !pipelineConfig.valid}">
+            <a href="#" ng-click="!pipelineConfig.valid || resetOffset()">
+              <i class="fa fa-power-off"></i> {{'home.resetOffset.title' | translate}}
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="isPipelineRunning && !monitoringPaused">
+            <a href="#" ng-click="pauseMonitoring()">
+              <i class="fa fa-pause"></i> {{'home.header.pauseMonitoring' | translate}}
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="isPipelineRunning && monitoringPaused">
+            <a href="#" ng-click="continueMonitoring()">
+              <i class="fa fa-play"></i> {{'home.header.continueMonitoring' | translate}}
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
       <div class="btn-group issues-dropdown"
            ng-show="pipelineConfig && pipelineConfig.issues.issueCount > 0">
         <a class="btn btn-link dropdown-toggle" data-toggle="dropdown"
@@ -89,15 +122,6 @@
         </ul>
       </div>
 
-      <a class="btn btn-link icon-button"
-              tooltip-placement="bottom" tooltip="{{'home.header.stageLibrary' | translate}}"
-              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-              tooltip-popup-delay="500"
-              ng-hide="isPipelineRunning || previewMode"
-              ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel">
-        <span class="fa fa-th fa-14x"></span>
-      </a>
-
       <div class="btn-group notifications-dropdown"
            ng-show="isPipelineRunning">
         <a class="btn btn-link dropdown-toggle"
@@ -134,7 +158,6 @@
 
         </ul>
       </div>
-
 
       <a class="btn btn-link icon-button"
               tooltip-placement="bottom" tooltip="{{'home.header.snapshot' | translate}}"
@@ -204,38 +227,15 @@
         <span class="glyphicon glyphicon-stop fa-14x"></span>
       </a>
 
-      <div class="btn-group">
-        <a class="btn btn-link dropdown-toggle icon-button"
-                tooltip-placement="bottom" tooltip="{{'home.header.more' | translate}}"
-                tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-                tooltip-popup-delay="500"
-                data-toggle="dropdown">
-          <span class="fa fa-ellipsis-h fa-14x"></span>
-        </a>
-        <ul class="dropdown-menu pull-right" role="menu">
+      <a class="btn btn-link icon-button"
+         tooltip-placement="bottom" tooltip="{{'home.header.stageLibrary' | translate}}"
+         tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+         tooltip-popup-delay="500"
+         ng-hide="isPipelineRunning || previewMode"
+         ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel">
+        <span class="fa fa-th fa-14x"></span>
+      </a>
 
-          <li role="presentation"
-              ng-if="!isPipelineRunning"
-              ng-class="{'disabled': !pipelineConfig.valid}">
-            <a href="#" ng-click="!pipelineConfig.valid || resetOffset()">
-              <i class="fa fa-power-off"></i> {{'home.resetOffset.title' | translate}}
-            </a>
-          </li>
-
-          <li role="presentation" ng-if="isPipelineRunning && !monitoringPaused">
-            <a href="#" ng-click="pauseMonitoring()">
-              <i class="fa fa-pause"></i> {{'home.header.pauseMonitoring' | translate}}
-            </a>
-          </li>
-
-          <li role="presentation" ng-if="isPipelineRunning && monitoringPaused">
-            <a href="#" ng-click="continueMonitoring()">
-              <i class="fa fa-play"></i> {{'home.header.continueMonitoring' | translate}}
-            </a>
-          </li>
-
-        </ul>
-      </div>
     </div>
 
   </div>
