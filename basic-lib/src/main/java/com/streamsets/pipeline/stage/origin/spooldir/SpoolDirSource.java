@@ -159,9 +159,10 @@ public class SpoolDirSource extends BaseSource {
     File fDir = new File(dir);
     if (!fDir.exists()) {
       issues.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_12, dir));
-    }
-    if (!fDir.isDirectory()) {
-      issues.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_13, dir));
+    } else {
+      if (!fDir.isDirectory()) {
+        issues.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_13, dir));
+      }
     }
   }
 
