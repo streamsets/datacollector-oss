@@ -68,8 +68,12 @@ public class JsonDataProducer implements DataProducer {
     } finally {
       if (offset == -1) {
         if (parser != null) {
-          parser.close();
-          parser = null;
+          try {
+            parser.close();
+            parser = null;
+          } catch (IOException ex) {
+            //NOP
+          }
         }
         if (reader != null) {
           try {

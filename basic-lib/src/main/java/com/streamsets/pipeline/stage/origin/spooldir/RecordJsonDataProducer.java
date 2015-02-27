@@ -58,7 +58,11 @@ public class RecordJsonDataProducer implements DataProducer {
     } finally {
       if (offset == -1) {
         if (parser != null) {
-          parser.close();
+          try {
+            parser.close();
+          } catch (IOException ex) {
+            //NOP
+          }
           parser = null;
         }
         if (reader != null) {

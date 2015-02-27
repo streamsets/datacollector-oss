@@ -16,6 +16,6 @@ public interface JsonRecordReader extends Closeable {
 
   public Record readRecord() throws IOException;
 
-  public void close();
+  public void close() throws IOException;
 
 }

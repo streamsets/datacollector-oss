@@ -31,6 +31,7 @@ public class StreamingJsonParser {
   private boolean starting;
   private JsonStreamContext rootContext;
   private long posCorrection;
+  private boolean closed;
 
   protected ObjectMapper getObjectMapper() {
     return new ObjectMapper();
@@ -145,6 +146,9 @@ public class StreamingJsonParser {
   }
 
   public Object read() throws IOException {
+    if (closed) {
+      throw new IOException("The parser is closed");
+    }
     try {
       Object value = null;
       switch (mode) {
@@ -161,12 +165,9 @@ public class StreamingJsonParser {
     }
   }
 
-  public void close() {
-    try {
-      jsonParser.close();
-    } catch (IOException ex) {
-      //NOP
-    }
+  public void close() throws IOException {
+    closed = true;
+    jsonParser.close();
   }
 
 }
