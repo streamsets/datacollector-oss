@@ -27,7 +27,7 @@ import java.util.UUID;
 
 @GenerateResourceBundle
 @StageDef(version="1.0.0", label="Dev Data Generator",
-  icon="random.svg")
+  icon="random.png")
 public class RandomDataGenerator extends BaseSource {
 
   private Random random = new Random();

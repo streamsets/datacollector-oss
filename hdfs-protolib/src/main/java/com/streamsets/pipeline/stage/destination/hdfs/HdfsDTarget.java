@@ -27,7 +27,7 @@ import java.util.Map;
     version = "1.0.0",
     label = "Hadoop FS",
     description = "Writes to a Hadoop file system",
-    icon = "hdfs.svg"
+    icon = "hdfs.png"
 )
 @ConfigGroups(Groups.class)
 public class HdfsDTarget extends DTarget {

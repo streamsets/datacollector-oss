@@ -17,7 +17,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
     version="1.0.0",
     label="JSON Parser",
     description = "Parses a string field with JSON data",
-    icon="jsonparser.svg"
+    icon="jsonparser.png"
 )
 @ConfigGroups(Groups.class)
 public class JsonParserDProcessor extends DProcessor {

@@ -19,7 +19,7 @@ import java.util.Random;
 @StageDef(version = "1.0.0", label = "Dev Random Error",
           description = "Randomly do something with the record, output, error, vanish, the threshold for what to do " +
                         "is randomly selected per batch",
-          icon="random.svg")
+          icon="random.png")
 public class RandomErrorProcessor extends SingleLaneProcessor {
   private Random random;
   private int batchCount;

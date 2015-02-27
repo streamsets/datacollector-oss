@@ -26,7 +26,7 @@ import java.util.List;
     version="1.0.0",
     label="Value Replacer",
     description = "Replaces null values with a constant and replaces values with NULL",
-    icon="replacer.svg"
+    icon="replacer.png"
 )
 @ConfigGroups(Groups.class)
 public class FieldValueReplacerDProcessor extends DProcessor {

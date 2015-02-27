@@ -21,7 +21,7 @@ import java.util.List;
     version="1.0.0",
     label="Field Converter",
     description = "Converts the data type of a field",
-    icon="converter.svg"
+    icon="converter.png"
 )
 @ConfigGroups(Groups.class)
 @HideConfig(onErrorRecord = true)

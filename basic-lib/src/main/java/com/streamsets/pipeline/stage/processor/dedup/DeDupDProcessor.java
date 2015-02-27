@@ -23,7 +23,7 @@ import java.util.List;
     version = "1.0.0",
     label = "Record Deduplicator",
     description = "Separates unique and duplicate records based on field comparison",
-    icon="dedup.svg",
+    icon="dedup.png",
     outputStreams = OutputStreams.class
 )
 @ConfigGroups(Groups.class)
