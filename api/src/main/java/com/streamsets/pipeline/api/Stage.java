@@ -55,6 +55,9 @@ public interface Stage<C extends Stage.Context> {
 
     public void toError(Record record, ErrorCode errorCode, Object... args);
 
+    Record createRecord(String recordSourceId);
+
+    Record createRecord(String recordSourceId, byte[] raw, String rawMime);
   }
 
   public interface ConfigIssue {
