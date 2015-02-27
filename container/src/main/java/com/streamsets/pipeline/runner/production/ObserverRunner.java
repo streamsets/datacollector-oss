@@ -31,6 +31,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ObserverRunner {
 
   private static final Logger LOG = LoggerFactory.getLogger(ObserverRunner.class);
+  private static final String USER_PREFIX = "user.";
 
   private RulesConfigurationChangeRequest rulesConfigurationChangeRequest;
   private final Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap;
@@ -56,19 +57,18 @@ public class ObserverRunner {
 
   public void handleDataRulesEvaluationRequest(DataRulesEvaluationRequest dataRulesEvaluationRequest) {
 
-    //This is the map of lane vs sampled records
-    Map<String, List<Record>> snapshot = dataRulesEvaluationRequest.getSnapshot();
-    for(Map.Entry<String, List<Record>> entry : snapshot.entrySet()) {
-      String lane = entry.getKey();
-      List<Record> sampleRecords = entry.getValue();
-
+    //This is the map of ruleId vs sampled records
+    Map<String, Map<String, List<Record>>> snapshot = dataRulesEvaluationRequest.getSnapshot();
+    for(Map.Entry<String, Map<String, List<Record>>> e : snapshot.entrySet()) {
+      String lane = e.getKey();
+      Map<String, List<Record>> ruleIdToSampledRecords = e.getValue();
       List<DataRuleDefinition> dataRuleDefinitions = rulesConfigurationChangeRequest.getLaneToDataRuleMap().get(lane);
-      if(dataRuleDefinitions != null) {
+      if (dataRuleDefinitions != null) {
         for (DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
           DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator, alertManager,
             rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(), dataRuleDefinition, configuration);
-          dataRuleEvaluator.evaluateRule(dataRulesEvaluationRequest.getLaneToRecordsSize().get(lane), sampleRecords,
-            lane, ruleToSampledRecordsMap);
+          dataRuleEvaluator.evaluateRule(ruleIdToSampledRecords.get(dataRuleDefinition.getId()), lane,
+            ruleToSampledRecordsMap);
         }
       }
     }
@@ -93,8 +93,8 @@ public class ObserverRunner {
 
     //remove metrics for changed / deleted rules
     for(String ruleId : rulesConfigurationChangeRequest.getRulesToRemove()) {
-      MetricsConfigurator.removeMeter(metrics, ruleId);
-      MetricsConfigurator.removeCounter(metrics, ruleId);
+      MetricsConfigurator.removeMeter(metrics, USER_PREFIX + ruleId);
+      MetricsConfigurator.removeCounter(metrics, USER_PREFIX + ruleId);
     }
     for(String alertId : rulesConfigurationChangeRequest.getMetricAlertsToRemove()) {
       MetricsConfigurator.removeGauge(metrics, alertId);

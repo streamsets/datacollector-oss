@@ -21,7 +21,7 @@ public class TestUtil {
   private static final String TEST_STRING = "TestAlertsChecker";
   private static final String MIME = "application/octet-stream";
 
-  public static Map<String, List<Record>> createSnapshot(String lane) {
+  public static Map<String, Map<String, List<Record>>> createSnapshot(String lane, String ruleId) {
     Map<String, List<Record>> snapshot = new HashMap<>();
     List<Record> records = new ArrayList<>();
 
@@ -67,9 +67,25 @@ public class TestUtil {
     r6.set(Field.create(map6));
     records.add(r6);
 
-    snapshot.put(lane + "::s", records);
+    snapshot.put(ruleId, records);
+    Map<String, Map<String, List<Record>>> result = new HashMap<>();
+    result.put(lane + "::s", snapshot);
+    return result;
+  }
 
-    return snapshot;
+  public static List<Record> createRecords(int n) {
+    List<Record> records = new ArrayList<>();
+
+    for(int i = 0; i < n; i++) {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("name", Field.create(Field.Type.STRING, "streamsets"));
+      map.put("zip", Field.create(Field.Type.INTEGER, 94102));
+      Record r1 = new RecordImpl("s", "s:"+i, TEST_STRING.getBytes(), MIME);
+      r1.set(Field.create(map));
+      records.add(r1);
+    }
+
+    return records;
   }
 
   public static Map<String, Integer> createLaneToRecordSizeMap(String lane) {
@@ -77,4 +93,5 @@ public class TestUtil {
     map.put(lane + "::s", 6);
     return map;
   }
+
 }

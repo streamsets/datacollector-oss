@@ -253,10 +253,9 @@ public class TestDataRuleEvaluator {
   }
 
   private void evaluateRule(DataRuleEvaluator dataRuleEvaluator, String lane) {
-    dataRuleEvaluator.evaluateRule(TestUtil.createLaneToRecordSizeMap(lane).get(
-        LaneResolver.getPostFixedLaneForObserver(lane)),
-      TestUtil.createSnapshot(lane).get(LaneResolver.getPostFixedLaneForObserver(lane)), lane, new HashMap<String,
-        EvictingQueue<Record>>());
+    dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane, dataRuleEvaluator.getDataRuleDefinition().getId())
+      .get(LaneResolver.getPostFixedLaneForObserver(lane)).get(dataRuleEvaluator.getDataRuleDefinition().getId()),
+      lane, new HashMap<String,EvictingQueue<Record>>());
   }
 
 }

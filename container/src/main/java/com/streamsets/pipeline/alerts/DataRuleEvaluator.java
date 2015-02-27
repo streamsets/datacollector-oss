@@ -8,6 +8,7 @@ package com.streamsets.pipeline.alerts;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.EvictingQueue;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
@@ -47,14 +48,11 @@ public class DataRuleEvaluator {
     this.alertManager = alertManager;
   }
 
-  public void evaluateRule(int allRecordsSize, List<Record> sampleRecords, String lane,
+  public void evaluateRule(List<Record> sampleRecords, String lane,
                            Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap) {
 
     if (dataRuleDefinition.isEnabled()) {
-      int numberOfRecords = (int) Math.floor(allRecordsSize * dataRuleDefinition.getSamplingPercentage() / 100);
-
       //cache all sampled records for this data rule definition in an evicting queue
-      List<Record> sampleSet = sampleRecords.subList(0, numberOfRecords);
       EvictingQueue<Record> sampledRecords = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
       if (sampledRecords == null) {
         int maxSize = configuration.get(
@@ -71,7 +69,7 @@ public class DataRuleEvaluator {
       //evaluate sample set of records for condition
       int matchingRecordCount = 0;
       int evaluatedRecordCount = 0;
-      for (Record r : sampleSet) {
+      for (Record r : sampleRecords) {
         evaluatedRecordCount++;
         //evaluate
         boolean success = evaluate(r, dataRuleDefinition.getCondition(), dataRuleDefinition.getId());
@@ -91,9 +89,9 @@ public class DataRuleEvaluator {
               lane));
         }
         //counter for the matching records - cummulative sum of records that match criteria
-        Counter matchingRecordCounter = MetricsConfigurator.getCounter(metrics, dataRuleDefinition.getId());
+        Counter matchingRecordCounter = MetricsConfigurator.getCounter(metrics, USER_PREFIX + dataRuleDefinition.getId());
         if (matchingRecordCounter == null) {
-          matchingRecordCounter = MetricsConfigurator.createCounter(metrics, dataRuleDefinition.getId());
+          matchingRecordCounter = MetricsConfigurator.createCounter(metrics, USER_PREFIX + dataRuleDefinition.getId());
         }
 
         evaluatedRecordCounter.inc(evaluatedRecordCount);
@@ -143,4 +141,8 @@ public class DataRuleEvaluator {
     }
   }
 
+  @VisibleForTesting
+  DataRuleDefinition getDataRuleDefinition() {
+    return dataRuleDefinition;
+  }
 }

@@ -33,6 +33,7 @@ import java.util.UUID;
 public class TestObserverRunner {
 
   private static final String LANE = "lane";
+  private static final String ID = "myId";
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String REVISION = "1.0";
   private ObserverRunner observerRunner;
@@ -90,14 +91,14 @@ public class TestObserverRunner {
   }
 
   private DataRulesEvaluationRequest createProductionObserverRequest() {
-    DataRulesEvaluationRequest request = new DataRulesEvaluationRequest(TestUtil.createSnapshot(LANE),
+    DataRulesEvaluationRequest request = new DataRulesEvaluationRequest(TestUtil.createSnapshot(LANE, ID),
       TestUtil.createLaneToRecordSizeMap(LANE));
     return request;
   }
 
   private RulesConfigurationChangeRequest createRulesConfigurationChangeRequest(boolean alert, boolean meter) {
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
-    dataRuleDefinitions.add(new DataRuleDefinition("myId", "myRule", LANE + "::s", 100, 5,
+    dataRuleDefinitions.add(new DataRuleDefinition(ID, "myRule", LANE + "::s", 100, 5,
       "${record:value(\"/name\")==null}", alert, "alertText", ThresholdType.COUNT, "2", 5, meter, false, true));
     RuleDefinitions ruleDefinitions = new RuleDefinitions(null, dataRuleDefinitions, Collections.<String>emptyList(),
       UUID.randomUUID());
