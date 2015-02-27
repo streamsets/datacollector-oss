@@ -114,6 +114,7 @@ angular
         $scope.$storage.stageFilterGroup = _.find($scope.stageGroups, function(group) {
           return group.name === pipelineConstant.SOURCE_STAGE_TYPE;
         });
+        $scope.onStageFilterGroupChange();
       }
     });
 
