@@ -3,6 +3,7 @@
 
     <div class="stage-filter">
       <select class="form-control" name="stageLibrary" ng-model="$storage.stageFilterGroup"
+              ng-change="onStageFilterGroupChange()"
               ng-options="stageGroup.label group by stageGroup.group for stageGroup in stageGroups track by stageGroup.name">
         <option value="">{{'global.form.allStages' | translate}}</option>
       </select>
@@ -10,21 +11,18 @@
 
     <div class="stage-list-container">
       <ul class="stages-list">
-
         <li id="item1" draggable drag-data="stageLibrary"
             tooltip-placement="bottom" tooltip="{{stageLibrary.description}}"
             tooltip-append-to-body="true"
             tooltip-popup-delay="500"
-            ng-repeat="stageLibrary in stageLibraries | filter : libraryFilter | orderBy: 'label'"
+            ng-repeat="stageLibrary in filteredStageLibraries | orderBy: 'label'"
             ng-init="icon=getStageIconURL(stageLibrary)">
           <a role="menuitem" tabindex="-1" href="#"
              ng-click="addStageInstance({stage: stageLibrary})"
              ng-style="{'background-image': 'url({{icon}})'}">
             <span>{{stageLibrary.label}}</span>
-            <!--span>{{stageLibrary.label + ' - ' + stageLibrary.libraryLabel}}</span-->
           </a>
         </li>
-
       </ul>
     </div>
 

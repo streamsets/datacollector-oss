@@ -41,8 +41,17 @@
     </div>
   </div>
 
-  <br>
-
+  <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE && stageLibraryList.length > 1">
+    <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.configurationTab.stageLibrary">Stage Library</label>
+    <div class="controls col-lg-7 col-md-8">
+      <select class="form-control"
+              name="stageLibrary"
+              ng-disabled="isPipelineRunning"
+              ng-model="detailPaneConfig.library"
+              ng-options="item.library as item.libraryLabel for item in stageLibraryList">
+      </select>
+    </div>
+  </div>
 
 </form>
 

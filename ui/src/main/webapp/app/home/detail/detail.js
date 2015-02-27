@@ -126,6 +126,14 @@ angular
         }
       },
 
+      getStageLibraryLabel: function(stageInstance) {
+        var nameLabelMap = _.find($scope.stageLibraryList, function(labelMap) {
+         return stageInstance.library === labelMap.library;
+        });
+
+        return nameLabelMap.libraryLabel;
+      },
+
       /**
        * Checks if configuration has any issue.
        *

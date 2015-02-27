@@ -6,6 +6,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('StageLibraryController', function ($scope, pipelineService, pipelineConstant) {
     angular.extend($scope, {
+      filteredStageLibraries: [],
 
       allStage: {
         group: 'All'
@@ -21,28 +22,20 @@ angular
         return pipelineService.getStageIconURL(stage);
       },
 
+
       /**
-       * Filter callback function
+       * Callback function when stageFilterGroup is updated.
        *
-       * @param stage
-       * @returns {boolean}
        */
-      libraryFilter: function(stage) {
-        var filterGroup = $scope.$storage.stageFilterGroup;
-
-        if(filterGroup === undefined) {
-          $scope.$storage.stageFilterGroup = '';
-        }
-
-        if(filterGroup) {
-          if(filterGroup.group === 'Type') {
-            return stage.type === filterGroup.name;
-          } else if(filterGroup.group === 'Library') {
-            return stage.library === filterGroup.name;
+      onStageFilterGroupChange: function() {
+        var stageNameList = [];
+        $scope.filteredStageLibraries = [];
+        angular.forEach($scope.stageLibraries, function(stageLibrary) {
+          if(libraryFilter(stageLibrary) && !_.contains(stageNameList, stageLibrary.name)) {
+            stageNameList.push(stageLibrary.name);
+            $scope.filteredStageLibraries.push(stageLibrary);
           }
-        }
-
-        return true;
+        });
       }
     });
 
@@ -59,6 +52,30 @@ angular
       name: pipelineConstant.TARGET_STAGE_TYPE,
       label: 'Destinations'
     }];
+
+    /**
+     * Filter callback function
+     *
+     * @param stage
+     * @returns {boolean}
+     */
+    var libraryFilter = function(stage) {
+      var filterGroup = $scope.$storage.stageFilterGroup;
+
+      if(filterGroup === undefined) {
+        $scope.$storage.stageFilterGroup = '';
+      }
+
+      if(filterGroup) {
+        if(filterGroup.group === 'Type') {
+          return stage.type === filterGroup.name;
+        } else if(filterGroup.group === 'Library') {
+          return stage.library === filterGroup.name;
+        }
+      }
+
+      return true;
+    };
 
     var updateStageGroups = function() {
       var stageGroups = [],
@@ -82,6 +99,8 @@ angular
       });
 
       $scope.stageGroups = stageGroups;
+
+      $scope.onStageFilterGroupChange();
     };
 
     updateStageGroups();

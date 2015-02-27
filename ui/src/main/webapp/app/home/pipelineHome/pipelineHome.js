@@ -740,7 +740,8 @@ angular
     var updateDetailPane = function(options) {
       var selectedObject = options.selectedObject,
         type = options.type,
-        errorStage = $scope.pipelineConfig.errorStage;
+        errorStage = $scope.pipelineConfig.errorStage,
+        stageLibraryList = [];
 
       $scope.selectedType = type;
       $scope.errorStageConfig = undefined;
@@ -756,17 +757,29 @@ angular
         $scope.stageSelected = true;
         //Stage Instance Configuration
         $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
-        $scope.detailPaneConfigDefn = _.find($scope.stageLibraries, function (stageLibrary) {
-          return stageLibrary.library === selectedObject.library &&
-            stageLibrary.name === selectedObject.stageName &&
-            stageLibrary.version === selectedObject.stageVersion;
+
+        _.each($scope.stageLibraries, function (stageLibrary) {
+          if(stageLibrary.name === selectedObject.stageName &&
+            stageLibrary.version === selectedObject.stageVersion) {
+
+            if(stageLibrary.library === selectedObject.library) {
+              $scope.detailPaneConfigDefn = stageLibrary;
+            }
+
+            stageLibraryList.push({
+              library: stageLibrary.library,
+              libraryLabel: stageLibrary.libraryLabel
+            });
+          }
         });
+
+        $scope.stageLibraryList = stageLibraryList;
+
       } else if(type === pipelineConstant.PIPELINE){
         //Pipeline Configuration
         $scope.stageSelected = false;
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
         $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
-
 
         if(errorStage && errorStage.configuration && errorStage.configuration.length) {
           $scope.errorStageConfig = errorStage;
