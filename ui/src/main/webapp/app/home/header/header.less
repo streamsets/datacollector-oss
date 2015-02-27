@@ -72,14 +72,14 @@
 
         .fa-bell, .fa-exclamation-triangle {
           position: absolute;
-          top: 8px;
-          right: 25px;
+          top: 5px;
+          right: 15px;
         }
 
         .badge {
           position: absolute;
-          top: 1px;
-          right: 12px;
+          top: -2px;
+          right: 2px;
           color: #fff;
           background-color: #d9534f;
           font-size: .7em;
@@ -108,6 +108,18 @@
       padding: @defaultPadding @defaultPadding*2;
       color: #ACACAC;
       font-size: 12px;
+    }
+
+    .icon-button {
+      padding: 5px 8px;
+
+      &.btn-danger {
+        color: @brand-danger;
+      }
+
+      &.btn-success {
+        color: @brand-success;
+      }
     }
 
   }

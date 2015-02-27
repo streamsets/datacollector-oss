@@ -89,14 +89,13 @@
         </ul>
       </div>
 
-      <a type="button" class="btn btn-primary btn-sm"
+      <a class="btn btn-link icon-button"
               tooltip-placement="bottom" tooltip="{{'home.header.stageLibrary' | translate}}"
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
               ng-hide="isPipelineRunning || previewMode"
               ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel">
-        <span class="fa fa-th fa-12x"></span>
-        <span ng-hide="iconOnly" translate="home.header.stageLibrary">Stage Library</span>
+        <span class="fa fa-th fa-14x"></span>
       </a>
 
       <div class="btn-group notifications-dropdown"
@@ -137,45 +136,45 @@
       </div>
 
 
-      <a type="button" class="btn btn-primary btn-sm"
+      <a class="btn btn-link icon-button"
               tooltip-placement="bottom" tooltip="{{'home.header.snapshot' | translate}}"
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
               ng-show="isPipelineRunning && !snapshotMode"
               ng-click="captureSnapshot()">
-        <span class="glyphicon glyphicon-camera fa-12x"></span>
+        <span class="glyphicon glyphicon-camera fa-14x"></span>
       </a>
 
-      <a type="button" class="btn btn-danger btn-sm"
+      <a class="btn btn-danger btn-link icon-button"
               tooltip-placement="bottom" tooltip="{{'home.header.closeSnapshot' | translate}}"
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
               ng-show="snapshotMode"
               ng-click="closeSnapshot()">
-        <span class="glyphicon glyphicon-camera fa-12x"></span>
+        <span class="glyphicon glyphicon-camera fa-14x"></span>
       </a>
 
 
-      <a type="button" class="btn btn-primary btn-sm"
+      <a class="btn btn-link icon-button"
               tooltip-placement="bottom" tooltip="{{'home.header.preview' | translate}}"
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
               ng-hide="isPipelineRunning || previewMode"
               ng-click="previewPipeline()"
               ng-disabled="!pipelineConfig.previewable">
-        <span class="glyphicon glyphicon-eye-open fa-12x"></span>
+        <span class="glyphicon glyphicon-eye-open fa-14x"></span>
       </a>
 
-      <a type="button" class="btn btn-danger btn-sm"
+      <a class="btn btn-danger btn-link icon-button"
               tooltip-placement="bottom" tooltip="{{'home.header.closePreview' | translate}}"
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
               ng-show="previewMode"
               ng-click="closePreview()">
-        <span class="glyphicon glyphicon-eye-close fa-12x"></span>
+        <span class="glyphicon glyphicon-eye-close fa-14x"></span>
       </a>
 
-      <a type="button" class="btn btn-primary btn-sm"
+      <a class="btn btn-link icon-button"
          tooltip-placement="bottom"
          tooltip="{{'home.header.validate' | translate}}"
          tooltip-trigger="mouseenter"
@@ -183,35 +182,35 @@
          ng-hide="isPipelineRunning || previewMode"
          ng-disabled="!pipelineConfig.valid"
          ng-click="validatePipeline()">
-        <span class="glyphicon glyphicon-ok-circle fa-12x"></span>
+        <span class="glyphicon glyphicon-ok-circle fa-14x"></span>
       </a>
 
-      <a type="button" class="btn btn-primary btn-sm"
+      <a class="btn btn-link icon-button"
               tooltip-placement="bottom" tooltip="{{'home.header.start' | translate}}"
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
               ng-hide="isPipelineRunning || previewMode"
               ng-disabled="!pipelineConfig.valid"
               ng-click="startPipeline()">
-        <span class="glyphicon glyphicon-play fa-12x"></span>
+        <span class="glyphicon glyphicon-play fa-14x"></span>
       </a>
 
-      <a type="button" class="btn btn-danger btn-sm"
+      <a class="btn btn-danger btn-link icon-button"
               tooltip-placement="bottom" tooltip="{{'home.header.stop' | translate}}"
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
               ng-click="stopPipeline()"
               ng-show="isPipelineRunning && !snapshotMode">
-        <span class="glyphicon glyphicon-stop fa-12x"></span>
+        <span class="glyphicon glyphicon-stop fa-14x"></span>
       </a>
 
       <div class="btn-group">
-        <a type="button" class="btn btn-primary btn-sm dropdown-toggle"
+        <a class="btn btn-link dropdown-toggle icon-button"
                 tooltip-placement="bottom" tooltip="{{'home.header.more' | translate}}"
                 tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
                 tooltip-popup-delay="500"
                 data-toggle="dropdown">
-          <span class="fa fa-ellipsis-h fa-12x"></span>
+          <span class="fa fa-ellipsis-h fa-14x"></span>
         </a>
         <ul class="dropdown-menu pull-right" role="menu">
 
