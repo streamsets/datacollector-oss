@@ -23,28 +23,21 @@ public class OverrunCsvParser extends CsvParser {
   }
 
   public OverrunCsvParser(Reader reader, CSVFormat format, long initialPosition) throws IOException {
-    super(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), format, initialPosition);
+    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), format, initialPosition);
+  }
+
+  public OverrunCsvParser(OverrunReader reader, CSVFormat format, long initialPosition) throws IOException {
+    super(reader, format, initialPosition);
     countingReader = (OverrunReader) getReader();
     countingReader.setEnabled(true);
   }
 
   @Override
-  protected String[] readHeader() throws IOException {
-    try {
-      return super.readHeader();
-    } catch (RuntimeException ex) {
-      OverrunException oex = ExceptionUtils.findSpecificCause(ex, OverrunException.class);
-      if (oex != null) {
-        overrun = true;
-        throw oex;
-      }
-      throw ex;
-    }
-  }
-
-  @Override
   protected CSVRecord nextRecord() throws IOException {
-    countingReader.resetCount();
+    if (overrun) {
+      throw new IOException("The parser is unusable, the underlying reader had an overrun");
+    }
+    ((OverrunReader)getReader()).resetCount();
     return super.nextRecord();
   }
 

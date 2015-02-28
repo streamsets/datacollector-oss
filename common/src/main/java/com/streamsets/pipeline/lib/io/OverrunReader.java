@@ -32,7 +32,7 @@ public class OverrunReader extends CountingReader {
   }
 
   public void setEnabled(boolean enabled) {
-    this.enabled = enabled;
+    this.enabled = enabled && readLimit > 0;
     if (enabled) {
       resetCount();
     }

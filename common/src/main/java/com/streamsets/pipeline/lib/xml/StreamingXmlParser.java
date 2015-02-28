@@ -46,8 +46,7 @@ public class StreamingXmlParser {
   private final Reader reader;
   private final XMLEventReader xmlEventReader;
   private String recordElement;
-  private long initialPosition;
-  private boolean starting;
+  private boolean closed;
 
   // reads a full XML document as a single Field
   public StreamingXmlParser(Reader xmlEventReader) throws IOException, XMLStreamException {
@@ -67,11 +66,24 @@ public class StreamingXmlParser {
       throws IOException, XMLStreamException {
     this.reader = reader;
     this.recordElement = recordElement;
-    this.initialPosition = initialPosition;
     XMLInputFactory factory = XMLInputFactory.newFactory();
     factory.setProperty("javax.xml.stream.isCoalescing", true);
     this.xmlEventReader = factory.createXMLEventReader(reader);
-    starting = true;
+    while (hasNext(xmlEventReader) && !peek(xmlEventReader).isEndDocument() && !peek(xmlEventReader).isStartElement()) {
+      read(xmlEventReader);
+    }
+    if (recordElement == null || recordElement.isEmpty()) {
+      StartElement startE = (StartElement) peek(xmlEventReader);
+      this.recordElement = startE.getName().getLocalPart();
+    } else {
+      //consuming root
+      read(xmlEventReader);
+    }
+    //fastforward to initial position
+    while (hasNext(xmlEventReader) && peek(xmlEventReader).getLocation().getCharacterOffset() < initialPosition) {
+      read(xmlEventReader);
+      fastForwardLeaseReader();
+    }
   }
 
   public Reader getReader() {
@@ -79,6 +91,7 @@ public class StreamingXmlParser {
   }
 
   public void close() {
+    closed = true;
     try {
       xmlEventReader.close();
     } catch (Exception ex) {
@@ -87,26 +100,11 @@ public class StreamingXmlParser {
   }
 
   public Field read() throws IOException, XMLStreamException {
+    if (closed) {
+      throw new IOException("The parser has been closed");
+    }
     Field field = null;
     if (hasNext(xmlEventReader)) {
-      if (starting) {
-        while (hasNext(xmlEventReader) && !peek(xmlEventReader).isEndDocument() && !peek(xmlEventReader).isStartElement()) {
-          read(xmlEventReader);
-        }
-        if (recordElement != null) {
-          //consuming root
-          read(xmlEventReader);
-        } else {
-          StartElement startE = (StartElement) peek(xmlEventReader);
-          recordElement = startE.getName().getLocalPart();
-        }
-        //fastforward to initial position
-        while (hasNext(xmlEventReader) && peek(xmlEventReader).getLocation().getCharacterOffset() < initialPosition) {
-          read(xmlEventReader);
-          fastForwardLeaseReader();
-        }
-        starting = false;
-      }
       int depth = 0;
 
       // we need to skip first level elements that are not the record delimiter and we have to ignore record delimiter
@@ -216,13 +214,13 @@ public class StreamingXmlParser {
     return map;
   }
 
-  protected boolean isInNopMode() throws XMLStreamException {
+  protected boolean isOverMaxObjectLength() throws XMLStreamException {
     return false;
   }
 
   @SuppressWarnings("unchecked")
   private void addContent(Map<String, Object> contents, String name, Field field) throws XMLStreamException {
-    if (!isInNopMode()) {
+    if (!isOverMaxObjectLength()) {
       List<Field> list = (List<Field>) contents.get(name);
       if (list == null) {
         list = new ArrayList<>();

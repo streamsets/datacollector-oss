@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.io.OverrunReader;
@@ -130,7 +130,12 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   public OverrunStreamingJsonParser(CountingReader reader, long initialPosition, Mode mode, int maxObjectLen)
       throws IOException {
-    super(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), initialPosition, mode);
+    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), initialPosition, mode, maxObjectLen);
+  }
+
+  public OverrunStreamingJsonParser(OverrunReader reader, long initialPosition, Mode mode, int maxObjectLen)
+      throws IOException {
+    super(reader, initialPosition, mode);
     countingReader = (OverrunReader) getReader();
     countingReader.setEnabled(true);
     this.maxObjectLen = maxObjectLen;
@@ -153,7 +158,7 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   @Override
   protected Object readObjectFromArray() throws IOException {
-    Preconditions.checkState(!overrun, "The underlying input stream had an overrun, the parser is not usable anymore");
+    Utils.checkState(!overrun, "The underlying input stream had an overrun, the parser is not usable anymore");
     countingReader.resetCount();
     limit = getJsonParser().getCurrentLocation().getCharOffset() + maxObjectLen;
     try {
@@ -186,7 +191,7 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   @Override
   protected Object readObjectFromStream() throws IOException {
-    Preconditions.checkState(!overrun, "The underlying input stream had an overrun, the parser is not usable anymore");
+    Utils.checkState(!overrun, "The underlying input stream had an overrun, the parser is not usable anymore");
     countingReader.resetCount();
     limit = getJsonParser().getCurrentLocation().getCharOffset() + maxObjectLen;
     try {
