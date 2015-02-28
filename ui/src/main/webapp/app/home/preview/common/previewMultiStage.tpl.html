@@ -24,23 +24,28 @@
     </thead>
 
     <tbody>
-    <tr ng-repeat="record in multiStagePreviewData.output">
+    <tr ng-repeat="inputRecord in multiStagePreviewData.output"
+        ng-init="outputRecords = getInputRecords(multiStagePreviewData.input, inputRecord)">
 
       <td>
         <record-tree
-          record="record"
-          record-value="record.value"
-          field-name="('global.form.record' | translate)+($index+1) + getRecordAdditionalInfo(fromStage, record, 'output')"
+          record="inputRecord"
+          record-value="inputRecord.value"
+          diff-type="'input'"
+          diff-record-value="outputRecords[0].value"
+          field-name="('global.form.record' | translate)+($index+1) + getRecordAdditionalInfo(fromStage, inputRecord, 'output')"
           is-root="true"
           editable="previewMode">
         </record-tree>
       </td>
 
       <td>
-        <div ng-repeat="record in outputRecords = getInputRecords(multiStagePreviewData.input, record)">
+        <div ng-repeat="record in outputRecords">
           <record-tree
             record="record"
             record-value="record.value"
+            diff-type="'output'"
+            diff-record-value="inputRecord.value"
             field-name="('global.form.record' | translate)+($parent.$index+1)"
             is-root="true"
             editable="false">

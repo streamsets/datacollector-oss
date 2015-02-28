@@ -9,6 +9,9 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
     var linkFunction = function (scope) {
 
       angular.extend(scope, {
+        updatedValue: false,
+        updatedField: false,
+
         onClick: function($event) {
           $event.preventDefault();
           if(scope.isRoot) {
@@ -40,6 +43,14 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         }
       });
 
+      if(scope.diffType && scope.recordValue && scope.recordValue.type !== 'MAP' && scope.recordValue.type !== 'LIST') {
+        if(!scope.diffRecordValue || scope.recordValue.path !== scope.diffRecordValue.path) {
+          scope.updatedField = true;
+        } else if(scope.recordValue.value !== scope.diffRecordValue.value){
+          scope.updatedValue = true;
+        }
+      }
+
     };
 
     return {
@@ -48,6 +59,8 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
       scope: {
         record: '=',
         recordValue: '=',
+        diffType: '=',
+        diffRecordValue: '=',
         fieldName: '=',
         isRoot: '=',
         editable: '=',

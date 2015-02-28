@@ -60,11 +60,14 @@
             </tr>
 
             <tr ng-switch-when="PROCESSOR"
-                ng-repeat="record in stagePreviewData.input">
+                ng-repeat="inputRecord in stagePreviewData.input"
+                ng-init="outputRecords = getOutputRecords(stagePreviewData.output, inputRecord)">
               <td>
                 <record-tree
-                  record="record"
-                  record-value="record.value"
+                  record="inputRecord"
+                  record-value="inputRecord.value"
+                  diff-type="'input'"
+                  diff-record-value="outputRecords[0].value"
                   field-name="('global.form.record' | translate)+($index+1)"
                   is-root="true"
                   editable="previewMode">
@@ -72,10 +75,12 @@
 
               </td>
               <td>
-                <div ng-repeat="record in outputRecords = getOutputRecords(stagePreviewData.output, record)">
+                <div ng-repeat="record in outputRecords">
                   <record-tree
                     record="record"
                     record-value="record.value"
+                    diff-type="'output'"
+                    diff-record-value="inputRecord.value"
                     field-name="('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.outputRecord' | translate) +  ($index + 1) + getRecordAdditionalInfo(detailPaneConfig, record, 'output')"
                     is-root="true"
                     editable="false">
@@ -84,7 +89,7 @@
 
                 </div>
 
-                <div ng-repeat="record in errorsRecords = getErrorRecords(stagePreviewData.errorRecords, record)">
+                <div ng-repeat="record in errorsRecords = getErrorRecords(stagePreviewData.errorRecords, inputRecord)">
                   <record-tree
                     record="record"
                     record-value="record.value"
