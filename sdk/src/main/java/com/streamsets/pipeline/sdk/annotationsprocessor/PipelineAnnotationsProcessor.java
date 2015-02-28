@@ -444,6 +444,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       } catch (NumberFormatException e) {
         return 0;
       }
+    } else if (typeKind.equals(TypeKind.CHAR)) {
+      if(defaultValue != null && !defaultValue.isEmpty()) {
+        return defaultValue.charAt(0);
+      }
+      return ' ';
     }
     //If String or Model, return the string as is
     return defaultValue;

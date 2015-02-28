@@ -93,7 +93,10 @@ public class KafkaDTarget extends DTarget {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.MAP,
-    defaultValue = "",
+    defaultValue = "[ {\n" +
+      "        \"key\" : \"queue.buffering.max.ms\",\n" +
+      "        \"value\" : \"5000\"\n" +
+      "      } ]",
     label = "Kafka Configuration",
     description = "Additional Kafka properties to pass to the underlying Kafka producer",
     displayPosition = 60,
@@ -120,7 +123,7 @@ public class KafkaDTarget extends DTarget {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
-    defaultValue = "TEXT",
+    defaultValue = "[\"/\"]",
     label = "Fields",
     description = "Fields to write to Kafka",
     displayPosition = 110,

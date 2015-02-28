@@ -21,7 +21,7 @@ public class ConfigDefinition {
   private final ConfigDef.Type type;
   private final String label;
   private final String description;
-  private final Object defaultValue;
+  private Object defaultValue;
   private final boolean required;
   private final String group;
   private final String fieldName;
@@ -91,6 +91,10 @@ public class ConfigDefinition {
 
   public int getDisplayPosition() {
     return displayPosition;
+  }
+
+  public void setDefaultValue(Object defaultValue) {
+    this.defaultValue = defaultValue;
   }
 
   private final static String CONFIG_LABEL = "{}.label";

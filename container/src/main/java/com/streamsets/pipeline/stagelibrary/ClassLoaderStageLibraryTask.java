@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.stagelibrary;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.CacheBuilder;
@@ -33,6 +35,9 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -119,9 +124,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               stagesInLibrary.put(key, stage.getClassName());
               stageList.add(stage);
               stageMap.put(key, stage);
+              convertDefaultValueToType(stage);
             }
           }
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException | NoSuchFieldException ex) {
           throw new RuntimeException(
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.getMessage()),
               ex);
@@ -178,4 +184,62 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     return stageMap.get(createKey(library, name, version));
   }
 
+  private void convertDefaultValueToType(StageDefinition stageDefinition) throws ClassNotFoundException,
+    NoSuchFieldException, IOException {
+    Class stageClass = stageDefinition.getStageClassLoader().loadClass(stageDefinition.getClassName());
+    for (ConfigDefinition confDef : stageDefinition.getConfigDefinitions()) {
+      if(confDef.getFieldName() == null) {
+        //confDef.getFieldName() is null for system config definitions like required fields etc.
+        continue;
+      }
+      Field field = stageClass.getField(confDef.getFieldName());
+      //Complex types must be handled
+      if (confDef.getModel() != null && confDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
+        setDefaultForComplexType(field, confDef);
+      }
+      setDefaultForConfigDef(confDef, field);
+    }
+  }
+
+  private void setDefaultForComplexType(Field field, ConfigDefinition confDef)
+    throws NoSuchFieldException, IOException {
+    Type genericType = field.getGenericType();
+    Class klass;
+    if (genericType instanceof ParameterizedType) {
+      Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
+      klass = (Class) typeArguments[0];
+    } else {
+      klass = (Class) genericType;
+    }
+    for (ConfigDefinition configDefinition : confDef.getModel().getConfigDefinitions()) {
+      Field f = klass.getField(configDefinition.getFieldName());
+      setDefaultForConfigDef(configDefinition, f);
+    }
+  }
+
+  private void setDefaultForConfigDef(ConfigDefinition configDef, Field field) throws IOException {
+    if(!(configDef.getDefaultValue() instanceof String)) {
+      return;
+    }
+    Object defaultValue = null;
+    String defaultValueString = (String) configDef.getDefaultValue();
+    if (defaultValueString != null && !defaultValueString.isEmpty()) {
+      //Boolean, Int, long are converted by annotation processor
+      //Enum can be left as String
+      //Map and classes are converted from json string to map and List.
+
+      if (field.getType().isAssignableFrom(List.class) || field.getType().isAssignableFrom(Map.class)) {
+        //the defaultValue string is treated as JSON
+        //Because of UI limitations both List and Map must be serialized and de-serialized as List.
+        //So Map with 2 entries will be converted 2 Maps.
+        // Each Map has 2 entries
+        // "key"      ->     <key in the original map>
+        //  "value"   ->     <value in the original map>
+        defaultValue = ObjectMapperFactory.get().readValue(defaultValueString, List.class);
+      }
+      if (defaultValue != null) {
+        configDef.setDefaultValue(defaultValue);
+      }
+    }
+  }
 }
