@@ -10,12 +10,15 @@ import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.util.JsonLineToRecord;
-import com.streamsets.pipeline.lib.util.LineToRecord;
-import com.streamsets.pipeline.lib.util.ToRecord;
+import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +44,7 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
   private BlockingQueue<String> logLinesQueue;
   private long maxWaitTimeMillis;
   private LogTail logTail;
-  private ToRecord lineToRecord;
+  private CharDataParserFactory parserFactory;
 
   private String fileOffset;
   private long recordCount;
@@ -87,17 +90,23 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     logLinesQueue = new ArrayBlockingQueue<>(2 * batchSize);
     logTail = new LogTail(logFile, true, getInfo(), logLinesQueue);
     logTail.start();
-    switch (dataFormat) {
-      case TEXT:
-        lineToRecord = new LineToRecord(false);
-        break;
-      case JSON:
-        lineToRecord = new JsonLineToRecord();
-        break;
-      default:
-        throw new StageException(Errors.TAIL_02, "dataFormat", dataFormat);
+    try {
+      switch (dataFormat) {
+        case TEXT:
+          parserFactory = new CharDataParserFactory.Builder(getContext(), CharDataParserFactory.Format.TEXT)
+              .setMaxDataLen(1024 * 1024).build();
+          break;
+        case JSON:
+          parserFactory = new CharDataParserFactory.Builder(getContext(), CharDataParserFactory.Format.JSON)
+              .setMode(JsonMode.MULTIPLE_OBJECTS).setMaxDataLen(1024 * 1024).build();
+          break;
+        default:
+          throw new StageException(Errors.TAIL_02, "dataFormat", dataFormat);
+      }
+    } catch (IOException ex) {
+
     }
-    fileOffset = String.format("%s::%d", fileName, System.currentTimeMillis());
+    fileOffset = logFile.getName() + "::" + System.currentTimeMillis();
     recordCount = 0;
   }
 
@@ -115,6 +124,10 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     return recordCount;
   }
 
+  private String getOffset() {
+    return getFileOffset() + "::" + getRecordCount();
+  }
+
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     long start = System.currentTimeMillis();
@@ -129,11 +142,34 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     }
     logLinesQueue.drainTo(lines, fetch);
     for (String line : lines) {
-      Record record = lineToRecord.createRecord(getContext(), getFileOffset(), getRecordCount(), line, false);
-      batchMaker.addRecord(record);
-      recordCount++;
+      String sourceId = getOffset();
+      try (DataParser parser = parserFactory.getParser(sourceId, line)) {
+        Record record = parser.parse();
+        if (record != null) {
+          batchMaker.addRecord(record);
+          recordCount++;
+        }
+      } catch (IOException|DataParserException ex) {
+        switch (getContext().getOnErrorRecord()) {
+          case DISCARD:
+            break;
+          case TO_ERROR:
+            getContext().reportError(Errors.TAIL_04, sourceId, ex.getMessage(), ex);
+            break;
+          case STOP_PIPELINE:
+            if (ex instanceof StageException) {
+              throw (StageException) ex;
+            } else {
+              throw new StageException(Errors.TAIL_04, sourceId, ex.getMessage(), ex);
+            }
+          default:
+            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                                                         getContext().getOnErrorRecord(), ex));
+        }
+
+      }
     }
-    return getFileOffset() + "::" + getRecordCount();
+    return getOffset();
   }
 
   @Override

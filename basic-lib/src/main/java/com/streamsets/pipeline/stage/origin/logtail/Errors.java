@@ -12,6 +12,7 @@ public enum Errors implements ErrorCode {
   TAIL_01("Insufficient permissions to read the log file '{}'"),
   TAIL_02("Invalid data format '{}', must be one of '{}'"),
   TAIL_03("Path '{}' is no a file"),
+  TAIL_04("Could not parse record '{}', {}"),
   ;
 
   private final String msg;

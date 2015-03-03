@@ -27,7 +27,6 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)
-@HideConfig(onErrorRecord = true)
 public class FileTailDSource extends DSourceOffsetCommitter {
 
   @ConfigDef(

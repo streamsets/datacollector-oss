@@ -83,8 +83,8 @@ public class TestFileTailSource {
       Assert.assertEquals(source.getFileOffset() + "::1", output.getNewOffset());
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Record record = output.getRecords().get("lane").get(0);
-      Assert.assertEquals("HELLO", record.get("/line").getValueAsString());
-      Assert.assertEquals(((FileTailSource)runner.getStage()).getFileOffset() + "::0", record.getHeader().getSourceId());
+      Assert.assertEquals("HELLO", record.get("/text").getValueAsString());
+      Assert.assertEquals(((FileTailSource)runner.getStage()).getFileOffset() + "::0::0", record.getHeader().getSourceId());
     } finally {
       runner.runDestroy();
     }
@@ -119,10 +119,10 @@ public class TestFileTailSource {
       Assert.assertEquals(2, output.getRecords().get("lane").size());
       Record record = output.getRecords().get("lane").get(0);
       Assert.assertEquals(1, record.get("/a").getValue());
-      Assert.assertEquals(source.getFileOffset() + "::0", record.getHeader().getSourceId());
+      Assert.assertEquals(source.getFileOffset() + "::0::0", record.getHeader().getSourceId());
       record = output.getRecords().get("lane").get(1);
       Assert.assertEquals(2, record.get("[0]/b").getValue());
-      Assert.assertEquals(source.getFileOffset() + "::1", record.getHeader().getSourceId());
+      Assert.assertEquals(source.getFileOffset() + "::1::0", record.getHeader().getSourceId());
     } finally {
       runner.runDestroy();
     }
