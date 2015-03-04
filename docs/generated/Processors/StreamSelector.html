@@ -120,24 +120,30 @@ ${record:value("/ID")==null}</pre>
       you create a default stream, you connect the output to a branch in the pipeline. </dd>
 
      <dd class="dd">You can configure the branch to perform additional processing or write it directly to a
-      destination. You might write the data to a real destination or use the Trash destination. </dd>
+      destination. You might write the data to a real destination or use the Trash destination.</dd>
 
-     <dd class="dd">When you use the Trash destination, the pipeline discards the records. But unlike
-      discarding the record as part of error handling, the <span class="ph">Data
-                  Collector</span> keeps
-      metrics for the Trash destination so you can view the number of records being discarded and
-      you can create alerts around this metric. </dd>
+     <dd class="dd">For example, the following pipeline processes tweeted data: </dd>
+
+     <dd class="dd"><img class="image" id="concept_sn5_5kx_wq__image_gyn_nps_gr" src="../Graphics/StreamSelector-Pipeline.png" height="191" width="480"></img></dd>
+
+     <dd class="dd">The Stream Selector passes deleted tweets to the Deleted Tweets destination. It routes new
+      tweets with possibly sensitive language to a Field Masker to mask the possibly inappropriate
+      text, and passes all remaining tweets directly to the New Tweets destination. </dd>
+
+     <dd class="dd">The following image shows the Stream Selector configuration:</dd>
+
+     <dd class="dd"><img class="image" id="concept_sn5_5kx_wq__image_rmw_4ps_gr" src="../Graphics/StreamSelector-config.png" height="107" width="397"></img>
+     </dd>
+
+     <dd class="dd">The first condition evaluates for records that have been deleted. The second condition
+      evaluates for records flagged as possibly sensitive - these records pass to the Field Masker
+      to mask the possibly offensive language. The third default condition captures all remaining
+      records.</dd>
 
     
    </dl>
 
   </div>
-
-  <p class="p">
-   
-  </p>
-
-  <p class="p"> </p>
 
  </div>
 
@@ -172,9 +178,9 @@ ${record:value("/ID")==null}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="31.446540880503143%" id="d19311e283">Stream Selector Property</th>
+                                    <th class="entry" valign="top" width="31.446540880503143%" id="d19311e288">Stream Selector Property</th>
 
-                                    <th class="entry" valign="top" width="68.55345911949686%" id="d19311e286">Description</th>
+                                    <th class="entry" valign="top" width="68.55345911949686%" id="d19311e291">Description</th>
 
                                 </tr>
 
@@ -182,10 +188,10 @@ ${record:value("/ID")==null}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19311e283 ">Condition <a class="xref" href="StreamSelector_Conditions.html#task_mj5_vjf_xq" title="Configure a condition for each stream of data that you want to route. The Stream Selector passes all data that matches the condition to the stream.">
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19311e288 ">Condition <a class="xref" href="StreamSelector_Conditions.html#task_mj5_vjf_xq" title="Configure a condition for each stream of data that you want to route. The Stream Selector passes all data that matches the condition to the stream.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19311e286 ">Condition to stream data to this output. Click the
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19311e291 ">Condition to stream data to this output. Click the
                                             <span class="ph uicontrol">Add</span> icon to create additional
                                         conditions and corresponding output locations. <p class="p">To define
                                             a default stream to capture unmatched records, add a
@@ -196,10 +202,10 @@ ${record:value("/ID")==null}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19311e283 ">Constants <a class="xref" href="ConfiguringExpressionsConditions.html#task_ogd_zj3_wq" title="You can define constants that you can reuse within a processor. Define a constant when you have a value that you want use more than once in the processor or that you want to be able to update easily. You can define constants in the Expression Evaluator and Stream Selector processors.">
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19311e288 ">Constants <a class="xref" href="ConfiguringExpressionsConditions.html#task_ogd_zj3_wq" title="You can define constants that you can reuse within a processor. Define a constant when you have a value that you want use more than once in the processor or that you want to be able to update easily. You can define constants in the Expression Evaluator and Stream Selector processors.">
                                             <img class="image" id="task_iss_2zx_wq__image_c4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19311e286 ">Represents a constant in conditions. Define a constant to
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19311e291 ">Represents a constant in conditions. Define a constant to
                                         easily reuse it in the stage or to easily update the
                                         constant value. <p class="p">To define a constant, click the
                                                 <span class="ph uicontrol">Add</span> icon, and then enter a
@@ -211,10 +217,10 @@ ${record:value("/ID")==null}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19311e283 ">Unmatched Record Handling <a class="xref" href="StreamSelector.html#concept_sn5_5kx_wq" title="When a record does not match any condition, the Stream Selector can use the error handling for unmatched records or you can configure a default stream that accepts the unmatched records:">
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19311e288 ">Unmatched Record Handling <a class="xref" href="StreamSelector.html#concept_sn5_5kx_wq" title="When a record does not match any condition, the Stream Selector can use the error handling for unmatched records or you can configure a default stream that accepts the unmatched records:">
                                             <img class="image" id="task_iss_2zx_wq__image_eld_51f_cr" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19311e286 ">Determines how to handle records that do not match any
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19311e291 ">Determines how to handle records that do not match any
                                         condition: <ul class="ul" id="task_iss_2zx_wq__ul_uxy_r3f_xq">
                                             <li class="li">Drop Record - Drops the record from the pipeline. </li>
 
