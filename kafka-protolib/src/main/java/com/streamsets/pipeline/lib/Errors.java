@@ -35,7 +35,8 @@ public enum Errors implements ErrorCode {
   KAFKA_33("Consumer Group cannot be empty"),
   KAFKA_34("Max Batch Size (messages) cannot be less than 1"),
   KAFKA_35("Batch Wait Time (millisecs) cannot be less than 1"),
-  KAFKA_36("Max Object Length (chars) cannot be less than 1"),
+  KAFKA_36("Invalid XML element name '{}'"),
+  KAFKA_37("Could not parse record from message '{}', {}"),
 
   //Kafka target messages
   KAFKA_50("Error writing data to kafka broker, {}"),

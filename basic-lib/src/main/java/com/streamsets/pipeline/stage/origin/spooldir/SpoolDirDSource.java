@@ -20,6 +20,7 @@ import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;

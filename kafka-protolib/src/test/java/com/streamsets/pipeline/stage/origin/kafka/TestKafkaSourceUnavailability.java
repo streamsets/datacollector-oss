@@ -87,7 +87,7 @@ public class TestKafkaSourceUnavailability {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 300000)
-      .addConfiguration("consumerPayloadType", DataFormat.TEXT)
+      .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();
 
@@ -115,7 +115,7 @@ public class TestKafkaSourceUnavailability {
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 1000)
-      .addConfiguration("consumerPayloadType", DataFormat.TEXT)
+      .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();
 

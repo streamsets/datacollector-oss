@@ -13,12 +13,15 @@ import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.DataFormatChooserValues;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 
 import java.util.Map;
 
@@ -74,8 +77,8 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     displayPosition = 40,
     group = "KAFKA"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ConsumerDataFormatChooserValues.class)
-  public DataFormat consumerPayloadType;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
+  public DataFormat dataFormat;
 
   @ConfigDef(
     required = true,
@@ -118,56 +121,68 @@ public class KafkaDSource extends DSourceOffsetCommitter {
       description = "",
       displayPosition = 100,
       group = "JSON",
-      dependsOn = "consumerPayloadType",
+      dependsOn = "dataFormat",
       triggeredByValue = "JSON"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonModeChooserValues.class)
-  public StreamingJsonParser.Mode jsonContent;
+  public JsonMode jsonContent;
 
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
     label = "Produce Single Record",
-    description = "Generates a single record for multiple JSON objects",
-    displayPosition = 103,
-    group = "JSON",
-    dependsOn = "jsonContent",
-    triggeredByValue = "MULTIPLE_OBJECTS"
+    description = "Generates a single record for multiple objects within a message",
+    displayPosition = 5,
+    group = "KAFKA"
   )
   public boolean produceSingleRecord;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
-      defaultValue = "4096",
-      label = "Max Object Length (chars)",
-      description = "Longer objects are skipped",
-      displayPosition = 110,
-      group = "JSON",
-      dependsOn = "consumerPayloadType",
-      triggeredByValue = "JSON"
-  )
-  public int maxJsonObjectLen;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "DELIMITED",
+      defaultValue = "CSV",
       label = "Delimiter Format Type",
       description = "",
       displayPosition = 200,
       group = "DELIMITED",
-      dependsOn = "consumerPayloadType",
+      dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NO_HEADER",
+      label = "Header Line",
+      description = "",
+      displayPosition = 210,
+      group = "DELIMITED",
+      dependsOn = "dataFormat",
+      triggeredByValue = "DELIMITED"
+  )
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvHeaderChooserValues.class)
+  public CsvHeader csvHeader;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Delimiter Element",
+      description = "XML element that acts as a record delimiter",
+      displayPosition = 300,
+      group = "XML",
+      dependsOn = "dataFormat",
+      triggeredByValue = "XML"
+  )
+  public String xmlRecordElement;
+
   @Override
   protected Source createSource() {
-    return new KafkaSource(zookeeperConnect, consumerGroup, topic, consumerPayloadType, maxBatchSize,
-      maxWaitTime, kafkaConsumerConfigs, jsonContent, produceSingleRecord, maxJsonObjectLen, csvFileFormat);
+    return new KafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, maxBatchSize,
+      maxWaitTime, kafkaConsumerConfigs, jsonContent, produceSingleRecord, csvFileFormat, csvHeader,
+      xmlRecordElement);
   }
 
 }

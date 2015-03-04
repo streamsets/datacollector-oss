@@ -5,21 +5,34 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaUtil;
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 
+import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
+import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,32 +42,34 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   private final String zookeeperConnect;
   private final String consumerGroup;
   private final String topic;
-  private final DataFormat consumerPayloadType;
+  private final DataFormat dataFormat;
   private final int maxBatchSize;
   private final Map<String, String> kafkaConsumerConfigs;
-  private final StreamingJsonParser.Mode jsonContent;
+  private final JsonMode jsonContent;
   private final boolean produceSingleRecord;
-  private final int maxJsonObjectLen;
   private final CsvMode csvFileFormat;
+  private final CsvHeader csvHeader;
+  private final String xmlRecordElement;
   private int maxWaitTime;
-  private RecordCreator recordCreator;
   private KafkaConsumer kafkaConsumer;
 
   public KafkaSource(String zookeeperConnect, String consumerGroup, String topic,
-                     DataFormat consumerPayloadType, int maxBatchSize, int maxWaitTime,
-                     Map<String, String> kafkaConsumerConfigs, StreamingJsonParser.Mode jsonContent,
-                     boolean produceSingleRecord, int maxJsonObjectLen, CsvMode csvFileFormat) {
+                     DataFormat dataFormat, int maxBatchSize, int maxWaitTime,
+                     Map<String, String> kafkaConsumerConfigs, JsonMode jsonContent,
+                     boolean produceSingleRecord, CsvMode csvFileFormat, CsvHeader csvHeader,
+      String xmlRecordElement) {
     this.zookeeperConnect = zookeeperConnect;
     this.consumerGroup = consumerGroup;
     this.topic = topic;
-    this.consumerPayloadType = consumerPayloadType;
+    this.dataFormat = dataFormat;
     this.maxBatchSize = maxBatchSize;
     this.maxWaitTime = maxWaitTime;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
     this.jsonContent = jsonContent;
     this.produceSingleRecord = produceSingleRecord;
-    this.maxJsonObjectLen = maxJsonObjectLen;
     this.csvFileFormat = csvFileFormat;
+    this.csvHeader = csvHeader;
+    this.xmlRecordElement = xmlRecordElement;
   }
 
   @Override
@@ -96,14 +111,15 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     }
 
     //payload type and payload specific configuration
-    validateDataFormatAndSpecificConfig(issues, getContext(), Groups.KAFKA.name(),
-      "consumerPayloadType");
+    validateDataFormatAndSpecificConfig(issues);
 
     //kafka consumer configs
     //We do not validate this, just pass it down to Kafka
 
     return issues;
   }
+
+  CharDataParserFactory parserFactory;
 
   @Override
   public void init() throws StageException {
@@ -115,55 +131,101 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     kafkaConsumer.init();
     LOG.info("Successfully initialized Kafka Consumer");
 
-    switch ((consumerPayloadType)) {
-      case JSON:
-        recordCreator = new JsonRecordCreator(getContext(), jsonContent, maxJsonObjectLen, produceSingleRecord, topic);
-        break;
+    CharDataParserFactory.Builder builder =
+        new CharDataParserFactory.Builder(getContext(), dataFormat.getFormat()).setMaxDataLen(-1);
+
+    switch ((dataFormat)) {
       case TEXT:
-        recordCreator = new LogRecordCreator(getContext(), topic);
+        break;
+      case JSON:
+        builder.setMode(jsonContent);
         break;
       case DELIMITED:
-        recordCreator = new CsvRecordCreator(getContext(), csvFileFormat, topic);
+        builder.setMode(csvFileFormat).setMode(csvHeader);
         break;
       case XML:
-        recordCreator = new XmlRecordCreator(getContext(), topic);
+        builder.setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
         break;
       case SDC_JSON:
-        recordCreator = new SDCRecordCreator(getContext());
         break;
     }
+    parserFactory = builder.build();
   }
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    LOG.debug("Reading messages from kafka.");
     int recordCounter = 0;
     int batchSize = this.maxBatchSize > maxBatchSize ? maxBatchSize : this.maxBatchSize;
     long startTime = System.currentTimeMillis();
     while(recordCounter < batchSize && (startTime + maxWaitTime) > System.currentTimeMillis()) {
       MessageAndOffset message = kafkaConsumer.read();
       if(message != null) {
-        List<Record> records = recordCreator.createRecords(message, recordCounter);
-        recordCounter += records.size();
+        List<Record> records = processKafkaMessage(message);
         for(Record record : records) {
           batchMaker.addRecord(record);
         }
+        recordCounter += records.size();
       }
     }
-    LOG.info("Produced {} records in this batch.", recordCounter);
     return lastSourceOffset;
+  }
+
+  private final static Charset UTF8 = Charset.forName("UTF-8");
+
+  @VisibleForTesting
+  List<Record> processKafkaMessage(MessageAndOffset message) throws StageException {
+    List<Record> records = new ArrayList<>();
+    String messageStr = new String(message.getPayload(), UTF8);
+    String messageId = getMessageID(message);
+    try (DataParser parser = parserFactory.getParser(messageId, messageStr)) {
+      Record record = parser.parse();
+      while (record != null) {
+        records.add(record);
+        record = parser.parse();
+      }
+    } catch (IOException|DataParserException ex) {
+      switch (getContext().getOnErrorRecord()) {
+        case DISCARD:
+          break;
+        case TO_ERROR:
+          getContext().reportError(Errors.KAFKA_37, messageId, ex.getMessage(), ex);
+          break;
+        case STOP_PIPELINE:
+          if (ex instanceof StageException) {
+            throw (StageException) ex;
+          } else {
+            throw new StageException(Errors.KAFKA_37, messageId, ex.getMessage(), ex);
+          }
+        default:
+          throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                                                       getContext().getOnErrorRecord(), ex));
+      }
+    }
+    if (produceSingleRecord && records.size() > 1) {
+      List<Field> list = new ArrayList<>();
+      for (Record record : records) {
+        list.add(record.get());
+      }
+      Record record = records.get(0);
+      record.set(Field.create(list));
+      records.clear();
+      records.add(record);
+    }
+    return records;
+  }
+
+  private String getMessageID(MessageAndOffset message) {
+    return topic + "::" + message.getPartition() + "::" + message.getOffset();
   }
 
   @Override
   public void destroy() {
-    LOG.info("Destroying Kafka Consumer");
     kafkaConsumer.destroy();
     super.destroy();
   }
 
   @Override
   public void commit(String offset) throws StageException {
-    LOG.info("Committing offset for topic.");
     kafkaConsumer.commit();
   }
 
@@ -171,23 +233,14 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   /******** Validation Specific to Kafka Source *******/
   /****************************************************/
 
-  private void validateDataFormatAndSpecificConfig(List<Stage.ConfigIssue> issues, Stage.Context context,
-                                                   String groupName, String configName) {
-    switch (consumerPayloadType) {
-      case TEXT:
-        break;
-      case JSON:
-        if (maxJsonObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "maxJsonObjectLen", Errors.KAFKA_36));
+  private void validateDataFormatAndSpecificConfig(List<Stage.ConfigIssue> issues) {
+    switch (dataFormat) {
+      case XML:
+        if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
+          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.KAFKA_36,
+                                                    xmlRecordElement));
         }
         break;
-      case DELIMITED:
-      case SDC_JSON:
-      case XML:
-        //no-op
-        break;
-      default:
-        issues.add(context.createConfigIssue(groupName, configName, Errors.KAFKA_02, consumerPayloadType));
     }
   }
 }
