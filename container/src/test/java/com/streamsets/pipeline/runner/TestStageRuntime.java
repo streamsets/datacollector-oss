@@ -77,18 +77,18 @@ public class TestStageRuntime {
   @SuppressWarnings("unchecked")
   public static StageLibraryTask createMockStageLibrary() {
     StageLibraryTask lib = Mockito.mock(StageLibraryTask.class);
-    List<ConfigDefinition> configDefs = new ArrayList<ConfigDefinition>();
+    List<ConfigDefinition> configDefs = new ArrayList<>();
     ConfigDefinition configDef = new ConfigDefinition("string", ConfigDef.Type.STRING, "l1", "d1", "--", true, "g",
-                                                      "stringVar", null, "", new String[] {}, 0);
+                                                      "stringVar", null, "", new ArrayList<>(), 0);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", null, "",
-      new String[] {}, 0);
+      new ArrayList<>(), 0);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("long", ConfigDef.Type.INTEGER, "l3", "d3", "-2", true, "g", "longVar", null, "",
-      new String[] {}, 0);
+      new ArrayList<>(), 0);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("boolean", ConfigDef.Type.BOOLEAN, "l4", "d4", "false", true, "g", "booleanVar",
-      null, "", new String[] {}, 0);
+      null, "", new ArrayList<>(), 0);
     configDefs.add(configDef);
     StageDefinition sourceDef = new StageDefinition(
       TSource.class.getName(), "source", "1.0.0", "label", "description",
@@ -96,7 +96,7 @@ public class TestStageRuntime {
     sourceDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
     StageDefinition targetDef = new StageDefinition(
       TTarget.class.getName(), "target", "1.0.0", "label", "description",
-      StageType.TARGET, false, true, true, Collections.EMPTY_LIST, null/*raw source definition*/,"", null, false, 0, null);
+      StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,"", null, false, 0, null);
     targetDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"))).thenReturn(targetDef);
@@ -106,7 +106,7 @@ public class TestStageRuntime {
 
   @SuppressWarnings("unchecked")
   public static PipelineConfiguration createMockPipelineConfiguration() {
-    List<ConfigConfiguration> configs = new ArrayList<ConfigConfiguration>();
+    List<ConfigConfiguration> configs = new ArrayList<>();
     ConfigConfiguration config = new ConfigConfiguration("string", "STRING");
     configs.add(config);
     config = new ConfigConfiguration("int", 1);
@@ -115,23 +115,23 @@ public class TestStageRuntime {
     configs.add(config);
     config = new ConfigConfiguration("boolean", true);
     configs.add(config);
-    List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
+    List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfiguration("isource", "library", "source", "1.0.0",
-      configs, null, Collections.EMPTY_LIST, ImmutableList.of("a"));
+      configs, null, Collections.<String>emptyList(), ImmutableList.of("a"));
     stages.add(source);
     StageConfiguration stage = new StageConfiguration(
       "itarget", "library", "target", "1.0.0",
-      Collections.EMPTY_LIST, null, ImmutableList.of("a"),
-      Collections.EMPTY_LIST);
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("a"),
+      Collections.<String>emptyList());
     stages.add(stage);
-    List<ConfigConfiguration> pipelineConfigs = new ArrayList<ConfigConfiguration>(2);
+    List<ConfigConfiguration> pipelineConfigs = new ArrayList<>(2);
     pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
     StageConfiguration errorStage = new StageConfiguration(
         "errorStrage", "library", "errorTarget", "1.0.0",
-        Collections.EMPTY_LIST, null, Collections.EMPTY_LIST,
-        Collections.EMPTY_LIST);
+        Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(),
+        Collections.<String>emptyList());
 
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), pipelineConfigs, null,
       stages, errorStage);

@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.List;
+
 /**
  * Captures attributes related to individual configuration options
  */
@@ -30,7 +32,7 @@ public class ConfigDefinitionJson {
     @JsonProperty("fieldName") String fieldName,
     @JsonProperty("model") ModelDefinitionJson model,
     @JsonProperty("dependsOn") String dependsOn,
-    @JsonProperty("triggeredByValues") String[] triggeredByValues,
+    @JsonProperty("triggeredByValues") List<Object> triggeredByValues,
     @JsonProperty("displayPosition") int displayPosition) {
     this.configDefinition = new com.streamsets.pipeline.config.ConfigDefinition(name, type, label, description,
       defaultValue, required, group, fieldName, BeanHelper.unwrapModelDefinition(model), dependsOn, triggeredByValues,
@@ -80,7 +82,7 @@ public class ConfigDefinitionJson {
     return configDefinition.getDependsOn();
   }
 
-  public String[] getTriggeredByValues() {
+  public List<Object> getTriggeredByValues() {
     return configDefinition.getTriggeredByValues();
   }
 

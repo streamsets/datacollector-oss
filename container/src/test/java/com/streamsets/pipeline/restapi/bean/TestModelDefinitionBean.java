@@ -32,9 +32,14 @@ public class TestModelDefinitionBean {
     labels.add("V ONE");
     labels.add("V TWO");
 
+    List<Object> triggeredBy = new ArrayList<>();
+    triggeredBy.add("X");
+    triggeredBy.add("Y");
+    triggeredBy.add("Z");
+
     List< ConfigDefinition > configDefinitions = new ArrayList<>();
     configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", null, "A",
-      new String[] {"X", "Y", "Z"}, 0));
+      triggeredBy, 0));
 
     com.streamsets.pipeline.config.ModelDefinition modelDefinition =
       new com.streamsets.pipeline.config.ModelDefinition(ModelType.COMPLEX_FIELD, ChooserMode.PROVIDED,
@@ -63,9 +68,14 @@ public class TestModelDefinitionBean {
     labels.add("V ONE");
     labels.add("V TWO");
 
+    List<Object> triggeredBy = new ArrayList<>();
+    triggeredBy.add("X");
+    triggeredBy.add("Y");
+    triggeredBy.add("Z");
+
     List< ConfigDefinition > configDefinitions = new ArrayList<>();
     configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", null, "A",
-      new String[] {"X", "Y", "Z"}, 0));
+      triggeredBy, 0));
 
     com.streamsets.pipeline.config.ModelDefinition modelDefinition =
       new com.streamsets.pipeline.config.ModelDefinition(ModelType.COMPLEX_FIELD, ChooserMode.PROVIDED,

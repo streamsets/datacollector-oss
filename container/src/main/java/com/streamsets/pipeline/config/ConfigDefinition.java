@@ -9,6 +9,8 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.List;
+
 /**
  * Captures attributes related to individual configuration options
  */
@@ -26,13 +28,13 @@ public class ConfigDefinition {
   private final String group;
   private final String fieldName;
   private final String dependsOn;
-  private final String[] triggeredByValues;
+  private List<Object> triggeredByValues;
   private final ModelDefinition model;
   private final int displayPosition;
 
   public ConfigDefinition(String name, ConfigDef.Type type, String label, String description, Object defaultValue,
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
-      String[] triggeredByValues, int displayPosition) {
+      List<Object> triggeredByValues, int displayPosition) {
     this.name = name;
     this.type = type;
     this.label = label;
@@ -85,8 +87,12 @@ public class ConfigDefinition {
     return dependsOn;
   }
 
-  public String[] getTriggeredByValues() {
+  public List<Object> getTriggeredByValues() {
     return triggeredByValues;
+  }
+
+  public void setTriggeredByValues(List<Object> triggeredByValues) {
+    this.triggeredByValues = triggeredByValues;
   }
 
   public int getDisplayPosition() {

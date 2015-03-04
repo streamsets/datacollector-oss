@@ -5,8 +5,6 @@
  */
 package com.streamsets.pipeline.stagelibrary;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.CacheBuilder;
@@ -125,6 +123,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               stageList.add(stage);
               stageMap.put(key, stage);
               convertDefaultValueToType(stage);
+              convertTriggeredByValuesToType(stage.getStageClassLoader().loadClass(stage.getClassName()),
+                stage.getConfigDefinitions());
+              //TODO: Set the EL metadata for all the config defs in this stage
             }
           }
         } catch (IOException | ClassNotFoundException | NoSuchFieldException ex) {
@@ -143,7 +144,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       ConfigDefinition.REQUIRED_FIELDS, ConfigDef.Type.MODEL, "Required Fields",
       "Records without any of these fields are sent to error",
       null, false, "", null, new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUED, null, null, null, null, null),
-      "", new String[] {}, 10);
+      "", new ArrayList<>(), 10);
 
   //Group name needs to be empty for UI to show the config in General Group.
   private static final ConfigDefinition ON_RECORD_ERROR_CONFIG = new ConfigDefinition(
@@ -153,7 +154,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
                                                  OnRecordErrorChooserValues.class.getName(),
                                                  new OnRecordErrorChooserValues().getValues(),
                                                  new OnRecordErrorChooserValues().getLabels(), null), "",
-      new String[] {}, 20);
+      new ArrayList<>(), 20);
 
   private void addSystemConfigurations(StageDefinition stage) {
     if (stage.hasRequiredFields()) {
@@ -182,6 +183,56 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @SuppressWarnings("unchecked")
   public StageDefinition getStage(String library, String name, String version) {
     return stageMap.get(createKey(library, name, version));
+  }
+
+  private void convertTriggeredByValuesToType(Class stageClass, List<ConfigDefinition> configDefinitions)
+    throws ClassNotFoundException,
+    NoSuchFieldException, IOException {
+    for (ConfigDefinition confDef : configDefinitions) {
+      if(confDef.getFieldName() == null) {
+        //confDef.getFieldName() is null for system config definitions like required fields etc.
+        continue;
+      }
+      if(confDef.getDependsOn() == null || confDef.getDependsOn().isEmpty()) {
+        continue;
+      }
+      Field field = stageClass.getField(confDef.getDependsOn());
+      //Complex types must be handled
+      if (confDef.getModel() != null && confDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
+        Type genericType = field.getGenericType();
+        Class klass;
+        if (genericType instanceof ParameterizedType) {
+          Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
+          klass = (Class) typeArguments[0];
+        } else {
+          klass = (Class) genericType;
+        }
+        convertTriggeredByValuesToType(klass, confDef.getModel().getConfigDefinitions());
+      } else {
+        List<Object> triggeredByValues = new ArrayList<>();
+        for(Object value : confDef.getTriggeredByValues()) {
+          //Boolean, Int, long are converted by annotation processor, so no-op here
+          //Enum can be left as String
+          //Only Map and List types are converted from json string to map and List.
+          if(value instanceof String &&
+            (field.getType().isAssignableFrom(List.class) || field.getType().isAssignableFrom(Map.class))) {
+            String valueString = (String) value;
+            if (valueString != null && !valueString.isEmpty()) {
+              //the defaultValue string is treated as JSON
+              //Because of UI limitations both List and Map must be serialized and de-serialized as List.
+              //So Map with 2 entries will be converted 2 Maps.
+              // Each Map has 2 entries
+              // "key"      ->     <key in the original map>
+              //  "value"   ->     <value in the original map>
+              triggeredByValues.add(ObjectMapperFactory.get().readValue(valueString, List.class));
+            }
+          } else {
+            triggeredByValues.add(value);
+          }
+        }
+        confDef.setTriggeredByValues(triggeredByValues);
+      }
+    }
   }
 
   private void convertDefaultValueToType(StageDefinition stageDefinition) throws ClassNotFoundException,

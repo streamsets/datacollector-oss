@@ -285,10 +285,10 @@ public class PipelineConfigurationValidator {
     } else if (conf.getValue() == null && confDef.isRequired()) {
       // stage configuration has a NULL value for a configuration that requires a value
       String dependsOn = confDef.getDependsOn();
-      String[] triggeredBy = confDef.getTriggeredByValues();
+      List<Object> triggeredBy = confDef.getTriggeredByValues();
       // If the config doesn't depend on anything or the config should be triggered, config is invalid
       if (dependsOn == null || dependsOn.isEmpty() ||
-        (Arrays.asList(triggeredBy).contains(String.valueOf(stageConf.getConfig(dependsOn).getValue())))) {
+        (triggeredBy.contains(stageConf.getConfig(dependsOn).getValue()))) {
         issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
           ValidationError.VALIDATION_0007));
         preview = false;
@@ -296,9 +296,9 @@ public class PipelineConfigurationValidator {
     }
     boolean validateConfig = true;
     if (confDef.getDependsOn() != null &&
-      (confDef.getTriggeredByValues() != null && confDef.getTriggeredByValues().length > 0)) {
+      (confDef.getTriggeredByValues() != null && confDef.getTriggeredByValues().size() > 0)) {
       String dependsOn = confDef.getDependsOn();
-      String[] triggeredBy = confDef.getTriggeredByValues();
+      List<Object> triggeredBy = confDef.getTriggeredByValues();
       ConfigConfiguration dependsOnConfig = getConfig(stageConf.getConfiguration(), dependsOn);
       if(dependsOnConfig == null) {
         //complex field case?
@@ -309,9 +309,9 @@ public class PipelineConfigurationValidator {
       }
       if (dependsOnConfig != null && dependsOnConfig.getValue() != null) {
         validateConfig = false;
-        String valueStr = dependsOnConfig.getValue().toString();
-        for (String trigger : triggeredBy) {
-          validateConfig |= valueStr.equals(trigger);
+        Object value = dependsOnConfig.getValue();
+        for (Object trigger : triggeredBy) {
+          validateConfig |= value.equals(trigger);
         }
       }
     }

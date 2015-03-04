@@ -39,21 +39,22 @@ public class MockStages {
   public static StageConfiguration createSource(String instanceName, List<String> outputs) {
 
     return new StageConfiguration(instanceName, "default", "sourceName", "1.0.0",
-                                  Collections.EMPTY_LIST, null, Collections.EMPTY_LIST, outputs);
+                                  Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(),
+      outputs);
   }
 
   @SuppressWarnings("unchecked")
   public static StageConfiguration createProcessor(String instanceName, List<String> inputs, List<String> outputs) {
     return new StageConfiguration(
       instanceName, "default", "processorName",  "1.0.0",
-      Collections.EMPTY_LIST, null, inputs, outputs);
+      Collections.<ConfigConfiguration>emptyList(), null, inputs, outputs);
   }
 
   @SuppressWarnings("unchecked")
   public static StageConfiguration createTarget(String instanceName, List<String> inputs) {
     return new StageConfiguration(
       instanceName, "default", "targetName",  "1.0.0",
-      Collections.EMPTY_LIST, null, inputs, Collections.EMPTY_LIST);
+      Collections.<ConfigConfiguration>emptyList(), null, inputs, Collections.<String>emptyList());
   }
 
   private static Source sourceCapture;
@@ -233,39 +234,46 @@ public class MockStages {
       stages = new ArrayList<>();
       StageDefinition sDef = new StageDefinition(
         MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
-        "sourceDesc", StageType.SOURCE, false, true, true, Collections.EMPTY_LIST, null/*raw source definition*/,"", null, false, 1, null
+        "sourceDesc", StageType.SOURCE, false, true, true, Collections.<ConfigDefinition>emptyList(),
+        null/*raw source definition*/,"", null, false, 1, null
       );
       sDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
       StageDefinition socDef = new StageDefinition(
           MSourceOffsetCommitter.class.getName(), "sourceOffsetCommitterName", "1.0.0", "sourceOffsetCommitterLabel",
-          "sourceDesc", StageType.SOURCE, false, true, true, Collections.EMPTY_LIST, null/*raw source definition*/,"", null, false, 1, null
+          "sourceDesc", StageType.SOURCE, false, true, true, Collections.<ConfigDefinition>emptyList(),
+        null/*raw source definition*/,"", null, false, 1, null
       );
       socDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
       StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel",
-          "sourceDescription", StageType.PROCESSOR, false, true, true, Collections.EMPTY_LIST, null/*raw source definition*/, "", null,
+          "sourceDescription", StageType.PROCESSOR, false, true, true, Collections.<ConfigDefinition>emptyList(),
+        null/*raw source definition*/, "", null,
           false, 1, null);
       pDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
       StageDefinition tDef = new StageDefinition(
         MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
-        "targetDesc", StageType.TARGET, false, true, true, Collections.EMPTY_LIST, null/*raw source definition*/, "", null, false, 0, null
+        "targetDesc", StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(),
+        null/*raw source definition*/, "", null, false, 0, null
       );
       tDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
       StageDefinition eDef = new StageDefinition(
           ETarget.class.getName(), "errorTarget", "1.0.0", "errorTarget",
-          "Error Target", StageType.TARGET, true, false, true, Collections.EMPTY_LIST, null/*raw source definition*/, "", null, false, 0, null
+          "Error Target", StageType.TARGET, true, false, true, Collections.<ConfigDefinition>emptyList(),
+        null/*raw source definition*/, "", null, false, 0, null
       );
       eDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
       ConfigDefinition depConfDef = new ConfigDefinition(
           "dependencyConfName", ConfigDef.Type.INTEGER, "dependencyConfLabel", "dependencyConfDesc", "", true,
           "groupName", "dependencyConfFieldName", null, "", null, 0);
+      List<Object> triggeredBy = new ArrayList<>();
+      triggeredBy.add(1);
       ConfigDefinition triggeredConfDef = new ConfigDefinition(
           "triggeredConfName", ConfigDef.Type.INTEGER, "triggeredConfLabel", "triggeredConfDesc", "", true,
-          "groupName", "triggeredConfFieldName", null, "dependencyConfName", new String[] { "1" }, 0);
+          "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0);
       StageDefinition swcDef = new StageDefinition(
           MSource.class.getName(), "sourceWithConfigsName", "1.0.0", "sourceWithConfigsLabel",
           "sourceWithConfigsDesc", StageType.SOURCE, false, true, true, Lists.newArrayList(depConfDef, triggeredConfDef),
@@ -335,23 +343,21 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static StageConfiguration getErrorStageConfig() {
     return new StageConfiguration("errorStage", "default", "errorTarget", "1.0.0",
-                                  Collections.EMPTY_LIST, null, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+      Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(),
+      Collections.<String>emptyList());
   }
 
   @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineConfigurationSourceProcessorTarget(int schemaVersion) {
-    List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
+    List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfiguration("s", "default", "sourceName", "1.0.0",
-                                                       Collections.EMPTY_LIST, null, Collections.EMPTY_LIST,
-                                                       ImmutableList.of("s"));
+      Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(), ImmutableList.of("s"));
     stages.add(source);
     StageConfiguration processor = new StageConfiguration("p", "default", "processorName", "1.0.0",
-                                                          Collections.EMPTY_LIST, null, ImmutableList.of("s"),
-                                                          ImmutableList.of("p"));
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("s"), ImmutableList.of("p"));
     stages.add(processor);
     StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
-                                                       Collections.EMPTY_LIST, null, ImmutableList.of("p"),
-                                                       Collections.EMPTY_LIST);
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("p"), Collections.<String>emptyList());
     stages.add(target);
 
     return new PipelineConfiguration(schemaVersion, UUID.randomUUID(), null, null, stages, getErrorStageConfig());
@@ -359,18 +365,15 @@ public class MockStages {
 
   @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineConfigurationSourceOffsetCommitterProcessorTarget() {
-    List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
+    List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfiguration("s", "default", "sourceOffsetCommitterName", "1.0.0",
-                                                       Collections.EMPTY_LIST, null, Collections.EMPTY_LIST,
-                                                       ImmutableList.of("s"));
+      Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(), ImmutableList.of("s"));
     stages.add(source);
     StageConfiguration processor = new StageConfiguration("p", "default", "processorName", "1.0.0",
-                                                          Collections.EMPTY_LIST, null, ImmutableList.of("s"),
-                                                          ImmutableList.of("p"));
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("s"), ImmutableList.of("p"));
     stages.add(processor);
     StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
-                                                       Collections.EMPTY_LIST, null, ImmutableList.of("p"),
-                                                       Collections.EMPTY_LIST);
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("p"), Collections.<String>emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages,
                                      getErrorStageConfig());
@@ -379,14 +382,13 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineWithRequiredDependentConfig() {
     List<String> lanes = ImmutableList.of("a");
-    List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
+    List<StageConfiguration> stages = new ArrayList<>();
 
     StageConfiguration source = new StageConfiguration("s", "default", "sourceWithConfigsName", "1.0.0",
-                                                       Lists.<ConfigConfiguration>newArrayList(), null,
-                                                       Collections.EMPTY_LIST, lanes);
+      Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(), lanes);
     stages.add(source);
     StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
-                                                       Collections.EMPTY_LIST, null, lanes, Collections.EMPTY_LIST);
+      Collections.<ConfigConfiguration>emptyList(), null, lanes, Collections.<String>emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages,
                                      getErrorStageConfig());
@@ -395,12 +397,13 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineConfigurationSourceTarget() {
     List<String> lanes = ImmutableList.of("a");
-    List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
+    List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfiguration("s", "default", "sourceName", "1.0.0",
-                                                       Collections.EMPTY_LIST, null, Collections.EMPTY_LIST, lanes);
+      Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(),
+      lanes);
     stages.add(source);
     StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
-                                                      Collections.EMPTY_LIST, null, lanes, Collections.EMPTY_LIST);
+      Collections.<ConfigConfiguration>emptyList(), null, lanes, Collections.<String>emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages,
                                      getErrorStageConfig());
@@ -408,15 +411,15 @@ public class MockStages {
 
   public static PipelineConfiguration createPipelineConfigurationSourceTwoTargets() {
     List<String> lanes = ImmutableList.of("a");
-    List<StageConfiguration> stages = new ArrayList<StageConfiguration>();
+    List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfiguration("s", "default", "sourceName", "1.0.0",
-                                                       Collections.EMPTY_LIST, null, Collections.EMPTY_LIST, lanes);
+      Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(), lanes);
     stages.add(source);
     StageConfiguration target = new StageConfiguration("t1", "default", "targetName", "1.0.0",
-                                                      Collections.EMPTY_LIST, null, lanes, Collections.EMPTY_LIST);
+      Collections.<ConfigConfiguration>emptyList(), null, lanes, Collections.<String>emptyList());
     stages.add(target);
     target = new StageConfiguration("t2", "default", "targetName", "1.0.0",
-                                                      Collections.EMPTY_LIST, null, lanes, Collections.EMPTY_LIST);
+      Collections.<ConfigConfiguration>emptyList(), null, lanes, Collections.<String>emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages,
                                      getErrorStageConfig());

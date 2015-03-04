@@ -7,8 +7,9 @@ package com.streamsets.pipeline.sdk.annotationsprocessor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.FieldSelector;
@@ -16,11 +17,10 @@ import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.LanePredicateMapping;
-import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
-import com.streamsets.pipeline.api.ChooserMode;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ConfigGroupDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
@@ -28,7 +28,6 @@ import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -54,6 +53,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -335,8 +335,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   private List<ConfigDefinition> getConfigDefsFromTypeElement(TypeElement typeElement) {
     List<ConfigDefinition> configDefinitions = new ArrayList<>();
-    List<VariableElement> variableElements = getAllFields(typeElement);
-
     Set<String> configPropsToSkip = new HashSet<>();
     HideConfig hideConfigAnnotation = typeElement.getAnnotation(HideConfig.class);
     if(hideConfigAnnotation != null) {
@@ -344,7 +342,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         configPropsToSkip.add(config);
       }
     }
-    for (VariableElement variableElement : variableElements) {
+    Map<String, VariableElement> allFields = getAllFields(typeElement);
+    for (VariableElement variableElement : allFields.values()) {
       if(configPropsToSkip.contains(variableElement.getSimpleName().toString())) {
         continue;
       }
@@ -404,7 +403,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             variableElement.getSimpleName().toString(),
             model,
             configDefAnnot.dependsOn(),
-            configDefAnnot.triggeredByValue(),
+            getTriggeredByValues(configDefAnnot.triggeredByValue(), allFields.get(configDefAnnot.dependsOn())),
             configDefAnnot.displayPosition());
         configDefinitions.add(configDefinition);
       }
@@ -454,6 +453,33 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return defaultValue;
   }
 
+  private List<Object> getTriggeredByValues(String[] defaultValue, VariableElement dependsOn) {
+    List<Object> result = new ArrayList<>();
+    for(String value : defaultValue) {
+      TypeKind typeKind = dependsOn.asType().getKind();
+      if (typeKind.equals(TypeKind.BOOLEAN)) {
+        result.add(Boolean.parseBoolean(value));
+      } else if (typeKind.equals(TypeKind.INT)) {
+        try {
+          result.add(Integer.parseInt(value));
+        } catch (NumberFormatException e) {
+          //Invalid type
+        }
+      } else if (typeKind.equals(TypeKind.LONG)) {
+        try {
+          result.add(Long.parseLong(value));
+        } catch (NumberFormatException e) {
+          //Invalid type
+        }
+      } else {
+        //char, enum, list and map are not handled here
+        result.add(value);
+      }
+    }
+    //If String or Model, return the string as is
+    return result;
+  }
+
   private RawSourceDefinition getRawSourceDefinition(RawSource rawSourceAnnot) {
     //process all fields annotated with ConfigDef annotation in raw source provider
     String rawSourcePreviewerClass = getRawSourcePreviewer(rawSourceAnnot);
@@ -467,7 +493,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * @param typeElement
    * @return
    */
-  private List<VariableElement> getAllFields(TypeElement typeElement) {
+  private Map<String, VariableElement> getAllFields(TypeElement typeElement) {
     List<Element> enclosedElements = new ArrayList<>();
     List<TypeMirror> allSuperTypes = getAllSuperTypes(typeElement);
     //We like the fields to be returned in the order of their declaration in the class.
@@ -482,7 +508,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
     enclosedElements.addAll(typeElement.getEnclosedElements());
     List<VariableElement> variableElements = ElementFilter.fieldsIn(enclosedElements);
-    return variableElements;
+    Map<String, VariableElement> result = new LinkedHashMap<>();
+    for(VariableElement v : variableElements) {
+      result.put(v.getSimpleName().toString(), v);
+    }
+    return result;
   }
 
   private ChooserMode getFieldSelectionType(com.streamsets.pipeline.api.ChooserMode type) {
@@ -763,7 +793,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     String dependsOnConfig = configDefAnnot.dependsOn();
     if(dependsOnConfig != null && !dependsOnConfig.isEmpty()) {
       boolean valid = false;
-      for(VariableElement v : getAllFields(typeElement)) {
+      for(VariableElement v : getAllFields(typeElement).values()) {
         if(v.getSimpleName().toString().equals(dependsOnConfig) && v.getAnnotation(ConfigDef.class) != null) {
           valid = true;
         }
@@ -960,8 +990,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
     }
 
-    List<VariableElement> variableElements = getAllFields(t);
-    for (VariableElement v : variableElements) {
+    for (VariableElement v : getAllFields(t).values()) {
       ComplexField complexField = v.getAnnotation(ComplexField.class);
       if(complexField != null) {
         printError("ComplexField.type.declares.complex.fields",
@@ -1207,8 +1236,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
 
     //check if the group names used in the config defs of type element are valid
-    List<VariableElement> allFields = getAllFields(typeElement);
-    for(VariableElement v : allFields) {
+    for(VariableElement v : getAllFields(typeElement).values()) {
       ConfigDef configDef = v.getAnnotation(ConfigDef.class);
       if(configDef != null && !configDef.group().isEmpty()) {
         if(!groups.contains(configDef.group())) {
@@ -1480,7 +1508,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         } else {
           boolean found = false;
           String drivenByConfig = stageDef.outputStreamsDrivenByConfig();
-          for(VariableElement v : getAllFields(typeElement)) {
+          for(VariableElement v : getAllFields(typeElement).values()) {
             if(v.getSimpleName().toString().equals(drivenByConfig) && v.getAnnotation(ConfigDef.class) != null) {
               found = true;
             }

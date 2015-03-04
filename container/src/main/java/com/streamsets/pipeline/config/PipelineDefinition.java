@@ -98,7 +98,7 @@ public class PipelineDefinition {
       "deliveryGuarantee",
       gdModelDefinition,
       "",
-      new String[] {},
+      new ArrayList<>(),
       0);
 
     return dgConfigDef;
@@ -141,7 +141,7 @@ public class PipelineDefinition {
         "",
         model,
         "",
-        new String[] {},
+        new ArrayList<>(),
         10);
     configs.add(config);
 
