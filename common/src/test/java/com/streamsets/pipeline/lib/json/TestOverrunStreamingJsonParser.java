@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.json;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.lib.io.CountingReader;
+import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import org.junit.After;
@@ -49,7 +50,7 @@ public class TestOverrunStreamingJsonParser {
     try {
       parser.read();
       Assert.fail();
-    } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
+    } catch (ObjectLengthException ex) {
       //NOP
     }
     List a2 = (List) parser.read();
@@ -71,7 +72,7 @@ public class TestOverrunStreamingJsonParser {
     try {
       parser.read();
       Assert.fail();
-    } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
+    } catch (ObjectLengthException ex) {
       //NOP
     }
     List a2 = (List) parser.read();
@@ -172,7 +173,7 @@ public class TestOverrunStreamingJsonParser {
     try {
       parser.read();
       Assert.fail();
-    } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
+    } catch (ObjectLengthException ex) {
       //NOP
     }
     List l2 = (List) parser.read();
@@ -191,7 +192,7 @@ public class TestOverrunStreamingJsonParser {
     try {
       parser.read();
       Assert.fail();
-    } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
+    } catch (ObjectLengthException ex) {
       //NOP
     }
     List l2a = (List) parser.read();
@@ -231,7 +232,7 @@ public class TestOverrunStreamingJsonParser {
     try {
       parser.read();
       Assert.fail();
-    } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
+    } catch (ObjectLengthException ex) {
       //NOP
     }
     List l2 = (List) parser.read();
@@ -245,7 +246,7 @@ public class TestOverrunStreamingJsonParser {
     try {
       parser.read();
       Assert.fail();
-    } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
+    } catch (ObjectLengthException ex) {
       //NOP
     }
     List l2a = (List) parser.read();

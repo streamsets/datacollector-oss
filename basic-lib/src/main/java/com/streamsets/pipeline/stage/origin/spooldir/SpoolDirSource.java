@@ -6,12 +6,19 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
+import com.streamsets.pipeline.lib.io.ObjectLengthException;
+import com.streamsets.pipeline.lib.io.OverrunException;
+import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
 import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +32,10 @@ import java.util.concurrent.TimeUnit;
 public class SpoolDirSource extends BaseSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);
   private static final String OFFSET_SEPARATOR = "::";
+  private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
 
   private final DataFormat dataFormat;
+  private final int overrunLimit;
   private final String spoolDir;
   private final int batchSize;
   private long poolingTimeoutSecs;
@@ -38,22 +47,20 @@ public class SpoolDirSource extends BaseSource {
   private final String archiveDir;
   private final long retentionTimeMins;
   private final CsvMode csvFileFormat;
-  private final boolean hasHeaderLine;
-  private final boolean convertToMap;
+  private final CsvHeader csvHeader;
   private final JsonMode jsonContent;
   private final int maxJsonObjectLen;
   private final int maxLogLineLength;
-  private final boolean setTruncated;
   private final String xmlRecordElement;
   private final int maxXmlObjectLen;
 
-  public SpoolDirSource(DataFormat dataFormat, String spoolDir, int batchSize, long poolingTimeoutSecs,
+  public SpoolDirSource(DataFormat dataFormat, int overrunLimit, String spoolDir, int batchSize, long poolingTimeoutSecs,
       String filePattern, int maxSpoolFiles, String initialFileToProcess, String errorArchiveDir,
       PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
-      CsvMode csvFileFormat, boolean hasHeaderLine, boolean convertToMap,
-      JsonMode jsonContent, int maxJsonObjectLen, int maxLogLineLength, boolean setTruncated,
+      CsvMode csvFileFormat, CsvHeader csvHeader, JsonMode jsonContent, int maxJsonObjectLen, int maxLogLineLength,
       String xmlRecordElement, int maxXmlObjectLen) {
     this.dataFormat = dataFormat;
+    this.overrunLimit = overrunLimit * 1024;
     this.spoolDir = spoolDir;
     this.batchSize = batchSize;
     this.poolingTimeoutSecs = poolingTimeoutSecs;
@@ -65,19 +72,19 @@ public class SpoolDirSource extends BaseSource {
     this.archiveDir = archiveDir;
     this.retentionTimeMins = retentionTimeMins;
     this.csvFileFormat = csvFileFormat;
-    this.hasHeaderLine = hasHeaderLine;
-    this.convertToMap = convertToMap;
+    this.csvHeader = csvHeader;
     this.jsonContent = jsonContent;
     this.maxJsonObjectLen = maxJsonObjectLen;
     this.maxLogLineLength = maxLogLineLength;
-    this.setTruncated = setTruncated;
     this.xmlRecordElement = xmlRecordElement;
     this.maxXmlObjectLen = maxXmlObjectLen;
   }
 
   private DirectorySpooler spooler;
   private File currentFile;
-  private DataProducer dataProducer;
+  private CharDataParserFactory parserFactory;
+  private DataParser parser;
+
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
@@ -86,6 +93,11 @@ public class SpoolDirSource extends BaseSource {
     validateDataFormat(issues);
 
     validateDir(spoolDir, Groups.FILES.name(), "spoolDir", issues);
+
+    if (overrunLimit < MIN_OVERRUN_LIMIT) {
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "overrunLimit", Errors.SPOOLDIR_14,
+                                                overrunLimit / 1024, MIN_OVERRUN_LIMIT));
+    }
 
     if (batchSize < 1) {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "batchSize", Errors.SPOOLDIR_14));
@@ -107,13 +119,20 @@ public class SpoolDirSource extends BaseSource {
       validateDir(errorArchiveDir, Groups.POST_PROCESSING.name(), "errorArchiveDir", issues);
     }
 
-    if (postProcessing == PostProcessingOptions.ARCHIVE) {
-      validateDir(archiveDir, Groups.POST_PROCESSING.name(), "archiveDir", issues);
+    if (errorArchiveDir != null && !errorArchiveDir.isEmpty()) {
+      validateDir(errorArchiveDir, Groups.POST_PROCESSING.name(), "errorArchiveDir", issues);
     }
 
-    if (retentionTimeMins < 1) {
-      issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "retentionTimeMins", Errors.SPOOLDIR_19));
+    if (postProcessing == PostProcessingOptions.ARCHIVE) {
+      if (archiveDir != null && !archiveDir.isEmpty()) {
+        validateDir(archiveDir, Groups.POST_PROCESSING.name(), "archiveDir", issues);
+      } else {
+        if (retentionTimeMins < 1) {
+          issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "retentionTimeMins", Errors.SPOOLDIR_19));
+        }
+      }
     }
+
 
     switch (dataFormat) {
       case JSON:
@@ -131,10 +150,13 @@ public class SpoolDirSource extends BaseSource {
           issues.add(getContext().createConfigIssue(Groups.XML.name(), "maxXmlObjectLen", Errors.SPOOLDIR_22));
         }
         if (!XMLChar.isValidName(xmlRecordElement)) {
-          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.SPOOLDIR_23, xmlRecordElement));
+          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.SPOOLDIR_23,
+                                                    xmlRecordElement));
         }
         break;
     }
+
+    validateDataParser(issues);
 
     return issues;
   }
@@ -186,30 +208,38 @@ public class SpoolDirSource extends BaseSource {
     }
   }
 
-  @Override
-  protected void init() throws StageException {
-    super.init();
-
+  private void validateDataParser(List<ConfigIssue> issues) {
+    CharDataParserFactory.Builder  builder = new CharDataParserFactory.Builder(getContext(), dataFormat.getFormat());
     switch (dataFormat) {
       case TEXT:
-        dataProducer = new LogDataProducer(getContext(), maxLogLineLength, setTruncated);
+        builder.setMaxDataLen(maxLogLineLength);
         break;
       case JSON:
-        dataProducer = new JsonDataProducer(getContext(), jsonContent, maxJsonObjectLen);
+        builder.setMaxDataLen(maxJsonObjectLen).setMode(jsonContent);
         break;
       case DELIMITED:
-        dataProducer = new CsvDataProducer(getContext(), csvFileFormat, hasHeaderLine, convertToMap);
+        builder.setMaxDataLen(-1).setMode(csvFileFormat).setMode(csvHeader);
         break;
       case XML:
-        dataProducer = new XmlDataProducer(getContext(), xmlRecordElement, maxXmlObjectLen);
+        builder.setMaxDataLen(maxXmlObjectLen).setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
         break;
       case SDC_JSON:
+        builder.setMaxDataLen(-1);
         filePattern = "records-??????.json";
         initialFileToProcess = "";
         maxSpoolFiles = 10000;
-        dataProducer = new RecordJsonDataProducer(getContext());
         break;
     }
+    try {
+      parserFactory = builder.build();
+    } catch (Exception ex) {
+      issues.add(getContext().createConfigIssue(null, null, Errors.SPOOLDIR_24, ex.getMessage(), ex));
+    }
+
+  }
+  @Override
+  protected void init() throws StageException {
+    super.init();
 
     if (getContext().isPreview()) {
       poolingTimeoutSecs = 1;
@@ -372,7 +402,47 @@ public class SpoolDirSource extends BaseSource {
    */
   public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException,
       BadSpoolFileException {
-    return dataProducer.produce(file, offset, maxBatchSize, batchMaker);
+    String sourceFile = file.getName();
+    try {
+      if (parser == null) {
+        parser = parserFactory.getParser(file, overrunLimit, offset);
+      }
+      for (int i = 0; i < maxBatchSize; i++) {
+        try {
+          Record record = parser.parse();
+          if (record != null) {
+            batchMaker.addRecord(record);
+            offset = parser.getOffset();
+          } else {
+            parser.close();
+            parser = null;
+            offset = -1;
+            break;
+          }
+        } catch (ObjectLengthException ex) {
+          getContext().reportError(Errors.SPOOLDIR_02, sourceFile, offset, maxJsonObjectLen);
+        }
+      }
+    } catch (OverrunException ex) {
+      offset = -1;
+      throw new BadSpoolFileException(file.getAbsolutePath(), ex.getStreamOffset(), ex);
+    } catch (IOException ex) {
+      offset = -1;
+      long exOffset = (parser != null) ? parser.getOffset() : -1;
+      throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
+    } finally {
+      if (offset == -1) {
+        if (parser != null) {
+          try {
+            parser.close();
+            parser = null;
+          } catch (IOException ex) {
+            //NOP
+          }
+        }
+      }
+    }
+    return offset;
   }
 
 }

@@ -90,21 +90,17 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     logLinesQueue = new ArrayBlockingQueue<>(2 * batchSize);
     logTail = new LogTail(logFile, true, getInfo(), logLinesQueue);
     logTail.start();
-    try {
-      switch (dataFormat) {
-        case TEXT:
-          parserFactory = new CharDataParserFactory.Builder(getContext(), CharDataParserFactory.Format.TEXT)
-              .setMaxDataLen(1024 * 1024).build();
-          break;
-        case JSON:
-          parserFactory = new CharDataParserFactory.Builder(getContext(), CharDataParserFactory.Format.JSON)
-              .setMode(JsonMode.MULTIPLE_OBJECTS).setMaxDataLen(1024 * 1024).build();
-          break;
-        default:
-          throw new StageException(Errors.TAIL_02, "dataFormat", dataFormat);
-      }
-    } catch (IOException ex) {
-
+    switch (dataFormat) {
+      case TEXT:
+        parserFactory = new CharDataParserFactory.Builder(getContext(), CharDataParserFactory.Format.TEXT)
+            .setMaxDataLen(-1).build();
+        break;
+      case JSON:
+        parserFactory = new CharDataParserFactory.Builder(getContext(), CharDataParserFactory.Format.JSON)
+            .setMode(JsonMode.MULTIPLE_OBJECTS).setMaxDataLen(-1).build();
+        break;
+      default:
+        throw new StageException(Errors.TAIL_02, "dataFormat", dataFormat);
     }
     fileOffset = logFile.getName() + "::" + System.currentTimeMillis();
     recordCount = 0;

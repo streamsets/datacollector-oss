@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.xml;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 
@@ -45,7 +46,7 @@ public class OverrunStreamingXmlParser  extends StreamingXmlParser {
 
   @Override
   protected boolean isOverMaxObjectLength() throws XMLStreamException {
-    return getReaderPosition() > limit;
+    return (maxObjectLen > -1) && getReaderPosition() > limit;
   }
 
   @Override
@@ -57,7 +58,7 @@ public class OverrunStreamingXmlParser  extends StreamingXmlParser {
     try {
       field = super.read();
       if (isOverMaxObjectLength()) {
-        throw new XmlObjectLengthException(Utils.format("XML Object at offset '{}' exceeds max length '{}'",
+        throw new ObjectLengthException(Utils.format("XML Object at offset '{}' exceeds max length '{}'",
                                                         initialPosition, maxObjectLen), initialPosition);
       }
       initialPosition = getReaderPosition();
@@ -69,20 +70,6 @@ public class OverrunStreamingXmlParser  extends StreamingXmlParser {
       throw ex;
     }
     return field;
-  }
-
-  public static class XmlObjectLengthException extends IOException {
-    private long readerOffset;
-
-    public XmlObjectLengthException(String message, long offset) {
-      super(message);
-      readerOffset = offset;
-    }
-
-    public long getXmlOffset() {
-      return readerOffset;
-    }
-
   }
 
 }

@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
@@ -38,12 +39,12 @@ public class TestSpoolDirSource {
     public TSpoolDirSource(DataFormat dataFormat, String spoolDir, int batchSize, long poolingTimeoutSecs,
         String filePattern,
         int maxSpoolFiles, String initialFileToProcess, String errorArchiveDir, PostProcessingOptions postProcessing,
-        String archiveDir, long retentionTimeMins, CsvMode csvFileFormat, boolean hasHeaderLine, boolean convertToMap,
-        JsonMode jsonContent, int maxJsonObjectLen, int maxLogLineLength, boolean setTruncated, String xmlRecordElement,
+        String archiveDir, long retentionTimeMins, CsvMode csvFileFormat, CsvHeader csvHeaders,
+        JsonMode jsonContent, int maxJsonObjectLen, int maxLogLineLength, String xmlRecordElement,
         int maxXmlObjectLen) {
-      super(dataFormat, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess,
-            errorArchiveDir, postProcessing, archiveDir, retentionTimeMins, csvFileFormat, hasHeaderLine, convertToMap,
-            jsonContent, maxJsonObjectLen, maxLogLineLength, setTruncated, xmlRecordElement, maxXmlObjectLen);
+      super(dataFormat, 100, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess,
+            errorArchiveDir, postProcessing, archiveDir, retentionTimeMins, csvFileFormat, csvHeaders,
+            jsonContent, maxJsonObjectLen, maxLogLineLength, xmlRecordElement, maxXmlObjectLen);
       this.spoolDir = spoolDir;
     }
 
@@ -60,8 +61,8 @@ public class TestSpoolDirSource {
 
   private TSpoolDirSource createSource(String initialFile) {
     return new TSpoolDirSource(DataFormat.TEXT, createTestDir(), 10, 1, "file-[0-9].log", 10, initialFile, null,
-                               PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, false, false, null,
-                               0, 1024, false, null, 0);
+                               PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, null,
+                               0, 1024, null, 0);
   }
 
   @Test

@@ -134,19 +134,20 @@ public abstract class CharDataParserFactory {
     }
 
     public Builder setMaxDataLen(int maxDataLen) {
-      Utils.checkArgument(maxDataLen > 0, Utils.formatL("maxDataLen '{}' cannot be less than 1", maxDataLen));
+      Utils.checkArgument(maxDataLen > 0 || maxDataLen == -1, Utils.formatL(
+          "maxDataLen '{}' cannot be zero, use -1 to disable it", maxDataLen));
       this.maxDataLen = maxDataLen;
       return this;
     }
 
-    public CharDataParserFactory build() throws IOException {
+    public CharDataParserFactory build() {
       Utils.checkState(modes.size() == format.getModes().length, "All required modes have not been set");
-      Utils.checkState(maxDataLen > 0, "maxDataLen has not been set");
+      Utils.checkState(maxDataLen != 0, "maxDataLen has not been set");
       return build(context, format, modes, maxDataLen, configs);
     }
 
     CharDataParserFactory build(Stage.Context context, Format format, Map<Class<? extends Enum>, Enum> modes,
-        int maxDataLen, Map<String, Object> configs) throws IOException {
+        int maxDataLen, Map<String, Object> configs) {
       CharDataParserFactory factory;
       switch (format) {
         case TEXT:

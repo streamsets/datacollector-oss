@@ -38,7 +38,11 @@ public class TextDataParser implements DataParser {
     reader.setEnabled(false);
     IOUtils.skipFully(reader, readerOffset);
     reader.setEnabled(true);
-    sb = new StringBuilder(maxObjectLen);
+    sb = new StringBuilder(maxObjectLen > 0 ? maxObjectLen : 1024);
+  }
+
+  private boolean isOverMaxObjectLen(int len) {
+    return maxObjectLen > -1 && len > maxObjectLen;
   }
 
   @Override
@@ -51,7 +55,7 @@ public class TextDataParser implements DataParser {
       record = context.createRecord(readerId + "::" + offset);
       Map<String, Field> map = new HashMap<>();
       map.put(fieldTextName, Field.create(sb.toString()));
-      if (read > maxObjectLen) {
+      if (isOverMaxObjectLen(read)) {
         map.put(fieldTruncatedName, Field.create(true));
       }
       record.set(Field.create(map));
@@ -75,12 +79,13 @@ public class TextDataParser implements DataParser {
   int readLine(StringBuilder sb) throws IOException {
     int c = reader.read();
     int count = (c == -1) ? -1 : 0;
-    while (c > -1 && count < maxObjectLen && !checkEolAndAdjust(c)) {
+    while (c > -1 && !isOverMaxObjectLen(count) && !checkEolAndAdjust(c)) {
       count++;
       sb.append((char) c);
       c = reader.read();
     }
-    if (count >= maxObjectLen) {
+    if (isOverMaxObjectLen(count)) {
+      sb.setLength(sb.length() - 1);
       while (c > -1 && c != '\n' && c != '\r') {
         count++;
         c = reader.read();

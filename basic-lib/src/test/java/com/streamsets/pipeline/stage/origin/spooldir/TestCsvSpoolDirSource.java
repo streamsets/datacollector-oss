@@ -7,6 +7,8 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -20,7 +22,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.UUID;
 
-public class TestLogSpoolDirSource {
+public class TestCsvSpoolDirSource {
 
   private String createTestDir() {
     File f = new File("target", UUID.randomUUID().toString());
@@ -28,27 +30,29 @@ public class TestLogSpoolDirSource {
     return f.getAbsolutePath();
   }
 
-  private final static String LINE1 = "1234567890";
-  private final static String LINE2 = "A1234567890";
+  private final static String LINE1 = "A,B";
+  private final static String LINE2 = "a,b";
+  private final static String LINE3 = "e,f";
 
   private File createLogFile() throws Exception {
     File f = new File(createTestDir(), "test.log");
     Writer writer = new FileWriter(f);
-    IOUtils.write(LINE1 + "\n", writer);
-    IOUtils.write(LINE2, writer);
+    writer.write(LINE1 + "\n");
+    writer.write(LINE2 + "\n");
+    writer.write(LINE3 + "\n");
     writer.close();
     return f;
   }
 
-  private SpoolDirSource createSource(boolean truncated) {
-    return new SpoolDirSource(DataFormat.TEXT, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
-                              PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, false, false, null, 0, 10,
-                              truncated, null, 0);
+  private SpoolDirSource createSource(CsvHeader header) {
+    return new SpoolDirSource(DataFormat.DELIMITED, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
+                              PostProcessingOptions.ARCHIVE, createTestDir(), 10, CsvMode.RFC4180, header, null, 0, 10,
+                              null, 0);
   }
 
   @Test
   public void testProduceFullFile() throws Exception {
-    SpoolDirSource source = createSource(false);
+    SpoolDirSource source = createSource(CsvHeader.NO_HEADER);
     SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {
@@ -57,41 +61,65 @@ public class TestLogSpoolDirSource {
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
-      Assert.assertEquals(2, records.size());
-      Assert.assertEquals(LINE1, records.get(0).get().getValueAsMap().get("line").getValueAsString());
-      Assert.assertNull(records.get(0).get().getValueAsMap().get("truncated"));
-      Assert.assertEquals(LINE2.substring(0, 10), records.get(1).get().getValueAsMap().get("line").getValueAsString());
-      Assert.assertNull(records.get(1).get().getValueAsMap().get("truncated"));
+      Assert.assertEquals(3, records.size());
+      Assert.assertEquals("A", records.get(0).get("[0]/value").getValueAsString());
+      Assert.assertEquals("B", records.get(0).get("[1]/value").getValueAsString());
+      Assert.assertFalse(records.get(0).has("[0]/header"));
+      Assert.assertFalse(records.get(0).has("[1]/header"));
+      Assert.assertFalse(records.get(0).has("[2]"));
     } finally {
       runner.runDestroy();
     }
   }
 
   @Test
-  public void testProduceLessThanFile() throws Exception {
-    SpoolDirSource source = createSource(true);
+  public void testProduceLessThanFileIgnoreHeader() throws Exception {
+    testProduceLessThanFile(true);
+  }
+
+  @Test
+  public void testProduceLessThanFileWithHeader() throws Exception {
+    testProduceLessThanFile(false);
+  }
+
+  private void testProduceLessThanFile(boolean ignoreHeader) throws Exception {
+    SpoolDirSource source = createSource((ignoreHeader) ? CsvHeader.IGNORE_HEADER : CsvHeader.WITH_HEADER);
     SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
       long offset = source.produce(createLogFile(), 0, 1, batchMaker);
-      Assert.assertEquals(11, offset);
+      Assert.assertEquals(8, offset);
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
       Assert.assertEquals(1, records.size());
-      Assert.assertEquals(LINE1, records.get(0).get().getValueAsMap().get("line").getValueAsString());
-      Assert.assertEquals(false, records.get(0).get().getValueAsMap().get("truncated").getValueAsBoolean());
+      Assert.assertEquals("a", records.get(0).get("[0]/value").getValueAsString());
+      Assert.assertEquals("b", records.get(0).get("[1]/value").getValueAsString());
+      if (ignoreHeader) {
+        Assert.assertFalse(records.get(0).has("[0]/header"));
+        Assert.assertFalse(records.get(0).has("[1]/header"));
+      } else {
+        Assert.assertEquals("A", records.get(0).get("[0]/header").getValueAsString());
+        Assert.assertEquals("B", records.get(0).get("[1]/header").getValueAsString());
+      }
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
       offset = source.produce(createLogFile(), offset, 1, batchMaker);
-      Assert.assertEquals(22, offset);
+      Assert.assertEquals(12, offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
       Assert.assertEquals(1, records.size());
-      Assert.assertEquals(LINE2.substring(0, 10), records.get(0).get().getValueAsMap().get("line").getValueAsString());
-      Assert.assertEquals(true, records.get(0).get().getValueAsMap().get("truncated").getValueAsBoolean());
+      Assert.assertEquals("e", records.get(0).get("[0]/value").getValueAsString());
+      Assert.assertEquals("f", records.get(0).get("[1]/value").getValueAsString());
+      if (ignoreHeader) {
+        Assert.assertFalse(records.get(0).has("[0]/header"));
+        Assert.assertFalse(records.get(0).has("[1]/header"));
+      } else {
+        Assert.assertEquals("A", records.get(0).get("[0]/header").getValueAsString());
+        Assert.assertEquals("B", records.get(0).get("[1]/header").getValueAsString());
+      }
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
       offset = source.produce(createLogFile(), offset, 1, batchMaker);

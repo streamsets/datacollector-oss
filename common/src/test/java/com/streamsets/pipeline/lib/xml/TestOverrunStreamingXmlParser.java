@@ -19,6 +19,7 @@ package com.streamsets.pipeline.lib.xml;
 
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import org.junit.After;
@@ -29,8 +30,6 @@ import org.junit.Test;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.List;
-import java.util.Map;
 
 public class TestOverrunStreamingXmlParser {
 
@@ -85,7 +84,7 @@ public class TestOverrunStreamingXmlParser {
     try {
       f = parser.read();
       Assert.fail();
-    } catch (OverrunStreamingXmlParser.XmlObjectLengthException ex) {
+    } catch (ObjectLengthException ex) {
     }
     f = parser.read();
     Assert.assertNotNull(f);

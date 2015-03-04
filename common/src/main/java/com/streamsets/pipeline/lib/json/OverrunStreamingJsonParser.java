@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
+import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
@@ -121,7 +122,8 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   private final OverrunReader countingReader;
   private final int maxObjectLen;
-  private long limit;
+  private long startOffset;
+  private long limitOffset;
   private boolean overrun;
 
   public OverrunStreamingJsonParser(CountingReader reader, Mode mode, int maxObjectLen) throws IOException {
@@ -160,12 +162,13 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
   protected Object readObjectFromArray() throws IOException {
     Utils.checkState(!overrun, "The underlying input stream had an overrun, the parser is not usable anymore");
     countingReader.resetCount();
-    limit = getJsonParser().getCurrentLocation().getCharOffset() + maxObjectLen;
+    startOffset = getJsonParser().getCurrentLocation().getCharOffset();
+    limitOffset = startOffset + maxObjectLen;
     try {
       TL.set(this);
       return super.readObjectFromArray();
     } catch (Exception ex) {
-      JsonObjectLengthException olex = ExceptionUtils.findSpecificCause(ex, JsonObjectLengthException.class);
+      ObjectLengthException olex = ExceptionUtils.findSpecificCause(ex, ObjectLengthException.class);
       if (olex != null) {
         JsonParser parser = getJsonParser();
         JsonToken token = parser.getCurrentToken();
@@ -193,12 +196,12 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
   protected Object readObjectFromStream() throws IOException {
     Utils.checkState(!overrun, "The underlying input stream had an overrun, the parser is not usable anymore");
     countingReader.resetCount();
-    limit = getJsonParser().getCurrentLocation().getCharOffset() + maxObjectLen;
+    limitOffset = getJsonParser().getCurrentLocation().getCharOffset() + maxObjectLen;
     try {
       TL.set(this);
       return super.readObjectFromStream();
     } catch (Exception ex) {
-      JsonObjectLengthException olex = ExceptionUtils.findSpecificCause(ex, JsonObjectLengthException.class);
+      ObjectLengthException olex = ExceptionUtils.findSpecificCause(ex, ObjectLengthException.class);
       if (olex != null) {
         fastForwardToNextRootObject();
         throw olex;
@@ -215,24 +218,14 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
     }
   }
 
-  public static class JsonObjectLengthException extends IOException {
-    private String objectSnippet;
-
-    public JsonObjectLengthException(String message, Object json) {
-      super(message);
-      objectSnippet = json.toString();
-    }
-
-    public String getJsonSnippet() {
-      return objectSnippet;
-    }
-
-  }
-
   private static void checkIfLengthExceededForObjectRead(Object json) {
     OverrunStreamingJsonParser enforcer = TL.get();
-    if (enforcer.getJsonParser().getCurrentLocation().getCharOffset() > enforcer.limit) {
-      ExceptionUtils.throwUndeclared(new JsonObjectLengthException("Json Object exceeds max length", json));
+    if (enforcer.maxObjectLen > -1) {
+      if (enforcer.getJsonParser().getCurrentLocation().getCharOffset() > enforcer.limitOffset) {
+        ExceptionUtils.throwUndeclared(new ObjectLengthException(Utils.format(
+            "JSON Object at offset '{}' exceeds max length '{}'", enforcer.startOffset, enforcer.maxObjectLen),
+                                                                 enforcer.startOffset));
+      }
     }
   }
 

@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.parser.json;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
@@ -48,7 +49,7 @@ public class JsonDataParser implements DataParser {
       } else {
         eof = true;
       }
-    } catch (OverrunStreamingJsonParser.JsonObjectLengthException ex) {
+    } catch (ObjectLengthException ex) {
       throw new DataParserException(Errors.JSON_PARSER_02, readerId, offset, maxObjectLen);
     }
     return record;

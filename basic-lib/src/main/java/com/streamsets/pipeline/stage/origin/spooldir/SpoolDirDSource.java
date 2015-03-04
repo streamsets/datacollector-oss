@@ -15,6 +15,8 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
@@ -45,6 +47,7 @@ public class SpoolDirDSource extends DSource {
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
@@ -54,6 +57,17 @@ public class SpoolDirDSource extends DSource {
       group = "FILES"
   )
   public String spoolDir;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      label = "Overrun Limit (KB)",
+      defaultValue = "128",
+      description = "Low level reader limit to avoid Out of Memory errors",
+      displayPosition = 15,
+      group = "FILES"
+  )
+  public int overrunLimit;
 
   @ConfigDef(
       required = true,
@@ -182,8 +196,8 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "TRUE",
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NO_HEADER",
       label = "Header Line",
       description = "",
       displayPosition = 310,
@@ -191,20 +205,8 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  public boolean hasHeaderLine;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "TRUE",
-      label = "Convert to Map",
-      description = "Converts delimited values to a map based on the header or placeholder header values",
-      displayPosition = 320,
-      group = "DELIMITED",
-      dependsOn = "dataFormat",
-      triggeredByValue = "DELIMITED"
-  )
-  public boolean convertToMap;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvHeaderChooserValues.class)
+  public CsvHeader csvHeader;
 
   // JSON Configuration
 
@@ -250,20 +252,6 @@ public class SpoolDirDSource extends DSource {
   )
   public int maxLogLineLength;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Add Truncated Flag",
-      description = "Adds a boolean /truncated field to the record to indicate if the record has been truncated",
-      displayPosition = 510,
-      group = "TEXT",
-      dependsOn = "dataFormat",
-      triggeredByValue = "TEXT"
-  )
-
-  public boolean setTruncated;
-
   // XML Configuration
 
   @ConfigDef(
@@ -293,10 +281,10 @@ public class SpoolDirDSource extends DSource {
 
   @Override
   protected Source createSource() {
-    return new SpoolDirSource(dataFormat, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles,
-                              initialFileToProcess, errorArchiveDir, postProcessing, archiveDir, retentionTimeMins,
-                              csvFileFormat, hasHeaderLine, convertToMap, jsonContent, maxJsonObjectLen,
-                              maxLogLineLength, setTruncated, xmlRecordElement, maxXmlObjectLen);
+    return new SpoolDirSource(dataFormat, overrunLimit, spoolDir, batchSize, poolingTimeoutSecs, filePattern,
+                              maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
+                              retentionTimeMins, csvFileFormat, csvHeader, jsonContent, maxJsonObjectLen,
+                              maxLogLineLength, xmlRecordElement, maxXmlObjectLen);
   }
 
 }

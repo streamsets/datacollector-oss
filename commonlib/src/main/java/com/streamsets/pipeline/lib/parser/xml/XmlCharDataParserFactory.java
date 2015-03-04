@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class XmlCharDataParserFactory extends CharDataParserFactory {
   static final String KEY_PREFIX = "xml.";
-  static final String RECORD_ELEMENT_KEY = KEY_PREFIX + "record.element";
+  public static final String RECORD_ELEMENT_KEY = KEY_PREFIX + "record.element";
   static final String RECORD_ELEMENT_DEFAULT = "";
 
   public static Map<String, Object> registerConfigs(Map<String, Object> configs) {

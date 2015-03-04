@@ -11,9 +11,8 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_00("Could not archive file '{}' in error, {}"),
   SPOOLDIR_01("Error while processing file '{}' at position '{}', {}"),
 
-  SPOOLDIR_02("Discarding Json Object, it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
+  SPOOLDIR_02("Object in file '{}' at offset '{}' exceeds maximum length '{}'"),
   SPOOLDIR_03("LogDatProducer file='{}' offset='{}', {}"),
-  SPOOLDIR_04("Discarding Xml Object, it exceeds maximum length '{}', file '{}', object starts at offset '{}'"),
 
   SPOOLDIR_10("Unsupported data format '{}'"),
   SPOOLDIR_11("Directory path cannot be empty"),
@@ -29,6 +28,8 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_21("Max line length cannot be less than 1"),
   SPOOLDIR_22("Max record length cannot be less than 1"),
   SPOOLDIR_23("Invalid XML element name '{}'"),
+  SPOOLDIR_24("Could not create the parser factory, '{}'"),
+  SPOOLDIR_25("Low level reader overrun limit '{}KB' must be at least '{}KB'"),
   ;
 
   private final String msg;
