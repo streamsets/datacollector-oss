@@ -303,7 +303,7 @@ angular
         });
 
         return dependsOnConfiguration && dependsOnConfiguration.value !== undefined &&
-          _.contains(triggeredByValues, dependsOnConfiguration.value + '');
+          _.contains(triggeredByValues, dependsOnConfiguration.value);
       },
 
 
@@ -320,7 +320,7 @@ angular
           triggeredByValues = customConfiguration.triggeredByValues,
           dependsOnConfiguration = customFieldConfigValue[dependsOnConfigName];
 
-        return dependsOnConfiguration && _.contains(triggeredByValues, dependsOnConfiguration + '');
+        return dependsOnConfiguration && _.contains(triggeredByValues, dependsOnConfiguration);
       },
 
       /**

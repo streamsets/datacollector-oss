@@ -84,13 +84,13 @@
 
 
     <div ng-switch-when="COMPLEX_FIELD" class="clearfix">
-      <ng-include src="'labelConfigurationTemplate'"></ng-include>
+      <ng-include ng-if="configDefinition.label" src="'labelConfigurationTemplate'"></ng-include>
 
-      <div class="controls col-md-7">
+      <div class="controls" ng-class="configDefinition.label ? 'col-md-7' : 'col-md-12'">
         <table class="table">
           <thead>
           <tr>
-            <th class="col-md-5 custom-field-property"
+            <th class="custom-field-property"
                 ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions">
               <span>{{customeFieldConfigDefintion.label}}</span>
               <i class="fa fa-info-circle help-icon"

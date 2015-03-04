@@ -267,16 +267,6 @@ angular
           tab.active = (tab.name === 'configuration');
         });
       }
-
     });
-
-    $scope.$on('showBadRecordsSelected', function() {
-      angular.forEach($scope.detailPaneTabs, function(tab) {
-        if(tab.name === 'errors') {
-          tab.active = true;
-        }
-      });
-    });
-
 
   });

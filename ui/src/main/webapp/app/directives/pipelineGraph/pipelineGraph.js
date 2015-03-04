@@ -41,7 +41,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         shiftNodeDrag: false,
         selectedText: null,
         currentScale: 1,
-        copiedStage: undefined
+        copiedStage: undefined,
+        showBadRecords: false
       };
 
       // define arrow markers for graph links
@@ -666,6 +667,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             options.configName =  firstConfigIssue.configName;
           }
 
+          if(thisGraph.state.showBadRecords) {
+            options.detailTabName = 'errors';
+          }
+
           $scope.$apply(function(){
             $scope.$emit('onNodeSelection', options);
           });
@@ -849,9 +854,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           return '';
         })
         .on('mousedown', function() {
-          $rootScope.$apply(function() {
-            $rootScope.$broadcast('showBadRecordsSelected');
-          });
+          thisGraph.state.showBadRecords = true;
+        })
+        .on('mouseup', function() {
+          thisGraph.state.showBadRecords = false;
         });
 
 
@@ -995,8 +1001,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
         y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes)),
         sourceX,sourceY,targetX,targetY, sourceTangentX, sourceTangentY, targetTangentX, targetTangentY;
-
-
 
       sourceX = (d.source.uiInfo.xPos + consts.rectWidth);
       sourceY = (d.source.uiInfo.yPos + y);
