@@ -276,7 +276,7 @@ angular.module('dataCollectorApp.common')
         };
 
       if(configDefinition.type === 'MODEL') {
-        if(configDefinition.model.modelType === 'FIELD_SELECTOR_MULTI_VALUED') {
+        if(configDefinition.model.modelType === 'FIELD_SELECTOR_MULTI_VALUED' && !config.value) {
           config.value = [];
         } else if(configDefinition.model.modelType === 'LANE_PREDICATE_MAPPING') {
           config.value = [{
@@ -299,9 +299,9 @@ angular.module('dataCollectorApp.common')
         }
       } else if(configDefinition.type === 'BOOLEAN' && config.value === undefined) {
         config.value = false;
-      } else if(configDefinition.type === 'LIST') {
+      } else if(configDefinition.type === 'LIST' && !config.value) {
         config.value = [];
-      } else if(configDefinition.type === 'MAP') {
+      } else if(configDefinition.type === 'MAP' && !config.value) {
         config.value = [];
       }
 
