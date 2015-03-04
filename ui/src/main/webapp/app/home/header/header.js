@@ -82,6 +82,7 @@ angular
           var startResponse;
           $scope.$storage.maximizeDetailPane = false;
           $scope.$storage.minimizeDetailPane = false;
+          $scope.$storage.readNotifications = [];
           api.pipelineAgent.startPipeline($scope.activeConfigInfo.name, 0).
             then(
             function (res) {

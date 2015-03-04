@@ -429,6 +429,32 @@ angular
        */
       launchHelp: function(helpId) {
         contextHelpService.launchHelp(helpId);
+      },
+
+      /**
+       * Delete Triggered Alert
+       */
+      deleteTriggeredAlert: function(triggeredAlert, event) {
+
+        if(event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        $scope.triggeredAlerts = _.filter($scope.triggeredAlerts, function(alert) {
+          return alert.rule.id !== triggeredAlert.rule.id;
+        });
+
+        api.pipelineAgent.deleteAlert($scope.pipelineConfig.info.name, triggeredAlert.rule.id)
+          .success(function() {
+            //Alert deleted successfully
+            $rootScope.$storage.readNotifications = _.filter($rootScope.$storage.readNotifications, function(alertId) {
+              return alertId !== triggeredAlert.rule.id;
+            });
+          })
+          .error(function(data, status, headers, config) {
+            $rootScope.common.errors = [data];
+          });
       }
     });
 
@@ -1171,6 +1197,21 @@ angular
         $scope.triggeredAlerts = pipelineService.getTriggeredAlerts($scope.pipelineRules,
           $rootScope.common.pipelineMetrics);
         $scope.$broadcast('updateEdgePreviewIconColor', $scope.pipelineRules, $scope.triggeredAlerts);
+
+        if ('Notification' in window) {
+          Notification.requestPermission(function(permission) {
+            angular.forEach($scope.triggeredAlerts, function(triggeredAlert) {
+              if(!_.contains($rootScope.$storage.readNotifications, triggeredAlert.rule.id)) {
+                $rootScope.$storage.readNotifications.push(triggeredAlert.rule.id);
+                var notification = new Notification(config.info.name,{
+                  body: triggeredAlert.rule.alertText,
+                  icon: '/assets/favicon.png'
+                });
+              }
+            });
+          });
+        }
+
       } else {
         $scope.triggeredAlerts = [];
       }
@@ -1193,5 +1234,4 @@ angular
         pageHidden = false;
       }
     });
-
   });

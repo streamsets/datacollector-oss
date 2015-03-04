@@ -225,8 +225,12 @@
           <li role="presentation"
               ng-repeat="alert in triggeredAlerts">
             <a role="menuitem" tabindex="-1" href="#"
-               ng-click="onNotificationClick(alert)"
-               ng-bind="alert.rule.alertText"></a>
+               ng-click="onNotificationClick(alert)">
+              <span ng-bind="alert.rule.alertText"></span>
+              <button type="button" class="close" aria-label="Close" ng-click="deleteTriggeredAlert(alert, $event)">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </a>
           </li>
 
           <li role="presentation" class="dropdown-header"

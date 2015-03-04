@@ -185,19 +185,6 @@ angular
       },
 
       /**
-       * Delete Triggered Alert
-       */
-      deleteTriggeredAlert: function(triggeredAlert) {
-        api.pipelineAgent.deleteAlert($scope.pipelineConfig.info.name, triggeredAlert.rule.id)
-          .success(function() {
-            //Alert deleted successfully
-          })
-          .error(function(data, status, headers, config) {
-            $rootScope.common.errors = [data];
-          });
-      },
-
-      /**
        * Select the Rules Tab
        * @param triggeredAlert
        */
