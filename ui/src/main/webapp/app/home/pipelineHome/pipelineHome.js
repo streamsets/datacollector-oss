@@ -68,8 +68,10 @@ angular
        *  relativeXPos [optional]
        *  relativeYPos [optional]
        *  configuration [optional]
+       *
+       *  @param event
        */
-      addStageInstance: function (options) {
+      addStageInstance: function (options, event) {
         var stage = options.stage,
           firstOpenLane = options.firstOpenLane,
           relativeXPos = options.relativeXPos,
@@ -77,6 +79,10 @@ angular
           configuration = options.configuration,
           stageInstance,
           edge;
+
+        if(event) {
+          event.preventDefault();
+        }
 
         if(stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
           var sourceExists = false;

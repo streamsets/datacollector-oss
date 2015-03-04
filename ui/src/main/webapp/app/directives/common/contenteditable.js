@@ -7,13 +7,41 @@ angular.module('dataCollectorApp.commonDirectives')
     return {
       restrict: 'A',
       require: 'ngModel',
+      scope: {
+        valueType: '=valueType'
+      },
       link: function(scope, element, attrs, ngModel) {
-
         function read() {
           var value = element.text();
 
           if(value === 'null') {
             ngModel.$setViewValue(null);
+          } else if(scope.valueType) {
+            switch(scope.valueType) {
+              case 'INTEGER':
+                if(!isNaN(value)) {
+                  value = parseInt(value);
+                  ngModel.$setViewValue(value);
+                } else {
+                  ngModel.$setViewValue(value);
+                }
+                break;
+
+              case 'LONG':
+              case 'FLOAT':
+              case 'DOUBLE':
+                if(!isNaN(value)) {
+                  value = parseFloat(value);
+                  ngModel.$setViewValue(value);
+                } else {
+                  ngModel.$setViewValue(value);
+                }
+                break;
+
+              default:
+                ngModel.$setViewValue(value);
+            }
+
           } else {
             ngModel.$setViewValue(value);
           }

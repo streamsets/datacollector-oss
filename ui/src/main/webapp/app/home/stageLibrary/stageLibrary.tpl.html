@@ -18,7 +18,7 @@
             ng-repeat="stageLibrary in filteredStageLibraries | orderBy: 'label'"
             ng-init="icon=getStageIconURL(stageLibrary)">
           <a role="menuitem" tabindex="-1" href="/"
-             ng-click="addStageInstance({stage: stageLibrary})"
+             ng-click="addStageInstance({stage: stageLibrary}, $event)"
              ng-style="{'background-image': 'url({{icon}})'}">
             <span>{{stageLibrary.label}}</span>
           </a>

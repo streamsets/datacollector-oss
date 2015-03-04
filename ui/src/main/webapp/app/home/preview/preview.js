@@ -98,7 +98,7 @@ angular
 
               if(intersection && intersection.length) {
                 angular.forEach(intersection, function(laneName) {
-                  stageOutput.output[laneName] = changedStageOutput.output[laneName];
+                  stageOutput.output[laneName] = angular.copy(changedStageOutput.output[laneName]);
                 });
               }
             });

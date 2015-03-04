@@ -231,6 +231,7 @@
          tooltip-placement="bottom" tooltip="{{'home.header.stageLibrary' | translate}}"
          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
          tooltip-popup-delay="500"
+         ng-class="{'btn-selected': $storage.hideStageLibraryPanel}"
          ng-hide="isPipelineRunning || previewMode"
          ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel">
         <span class="fa fa-th fa-14x"></span>

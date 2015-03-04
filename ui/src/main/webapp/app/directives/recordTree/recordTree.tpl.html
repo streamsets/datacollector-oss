@@ -105,6 +105,7 @@
                 ng-if="editable === true"
                 ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
                 contenteditable="true"
+                value-type="recordValue.type"
                 ng-change="recordValueUpdated(record, recordValue)"
                 ng-model="recordValue.value">
           </span>
