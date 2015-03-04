@@ -122,43 +122,6 @@
         </ul>
       </div>
 
-      <div class="btn-group notifications-dropdown"
-           ng-show="isPipelineRunning">
-        <a class="btn btn-link dropdown-toggle"
-                data-toggle="dropdown"
-                tooltip-placement="top"
-                tooltip="{{'home.header.notifications' | translate}}"
-                tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-                tooltip-popup-delay="500">
-          <span class="fa fa-bell fa-12x"></span>
-          <span ng-hide="iconOnly" translate="home.header.notifications">Notifications</span>
-          <span class="badge"
-                ng-if="triggeredAlerts.length > 0"
-                ng-bind="triggeredAlerts.length"></span>
-        </a>
-        <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
-
-          <li role="presentation" class="dropdown-header" ng-if="triggeredAlerts.length > 0"
-              translate="home.header.alerts">
-            Alerts
-          </li>
-
-          <li role="presentation"
-              ng-repeat="alert in triggeredAlerts">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="onNotificationClick(alert)"
-               ng-bind="alert.rule.alertText"></a>
-          </li>
-
-          <li role="presentation" class="dropdown-header"
-              translate="home.header.emptyAlerts"
-              ng-if="triggeredAlerts.length === 0">
-            It’s all good! You don’t have any new alerts.
-          </li>
-
-        </ul>
-      </div>
-
       <a class="btn btn-link icon-button"
               tooltip-placement="bottom" tooltip="{{'home.header.snapshot' | translate}}"
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
@@ -236,6 +199,44 @@
          ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel">
         <span class="fa fa-th fa-14x"></span>
       </a>
+
+
+      <div class="btn-group notifications-dropdown"
+           ng-show="isPipelineRunning">
+        <a class="btn btn-link dropdown-toggle"
+           data-toggle="dropdown"
+           tooltip-placement="top"
+           tooltip="{{'home.header.notifications' | translate}}"
+           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+           tooltip-popup-delay="500">
+          <span class="fa fa-bell fa-12x"></span>
+          <span ng-hide="iconOnly" translate="home.header.notifications">Notifications</span>
+          <span class="badge"
+                ng-if="triggeredAlerts.length > 0"
+                ng-bind="triggeredAlerts.length"></span>
+        </a>
+        <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+          <li role="presentation" class="dropdown-header" ng-if="triggeredAlerts.length > 0"
+              translate="home.header.alerts">
+            Alerts
+          </li>
+
+          <li role="presentation"
+              ng-repeat="alert in triggeredAlerts">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="onNotificationClick(alert)"
+               ng-bind="alert.rule.alertText"></a>
+          </li>
+
+          <li role="presentation" class="dropdown-header"
+              translate="home.header.emptyAlerts"
+              ng-if="triggeredAlerts.length === 0">
+            It’s all good! You don’t have any new alerts.
+          </li>
+
+        </ul>
+      </div>
 
     </div>
 

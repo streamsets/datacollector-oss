@@ -19,22 +19,26 @@ angular.module('dataCollectorApp.commonDirectives')
           } else if(scope.valueType) {
             switch(scope.valueType) {
               case 'INTEGER':
-                if(!isNaN(value)) {
+                if(value && !isNaN(value)) {
                   value = parseInt(value);
                   ngModel.$setViewValue(value);
-                } else {
+                } else if(value) {
                   ngModel.$setViewValue(value);
+                } else {
+                  ngModel.$setViewValue(null);
                 }
                 break;
 
               case 'LONG':
               case 'FLOAT':
               case 'DOUBLE':
-                if(!isNaN(value)) {
+                if(value && !isNaN(value)) {
                   value = parseFloat(value);
                   ngModel.$setViewValue(value);
-                } else {
+                } else if(value) {
                   ngModel.$setViewValue(value);
+                } else {
+                  ngModel.$setViewValue(null);
                 }
                 break;
 
