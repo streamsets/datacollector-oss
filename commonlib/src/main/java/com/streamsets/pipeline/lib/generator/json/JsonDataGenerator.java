@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public class JsonDataGenerator implements DataGenerator {
+  final static String EOL = System.getProperty("line.separator");
   private final JsonFactory JSON_FACTORY = new ObjectMapper().getFactory();
 
   private final boolean isArray;
@@ -48,6 +49,9 @@ public class JsonDataGenerator implements DataGenerator {
       throw new IOException("generator has been closed");
     }
     generator.writeObject(fieldToJsonObject(record, record.get()));
+    if (!isArray) {
+      generator.writeRaw(EOL);
+    }
   }
 
   @Override

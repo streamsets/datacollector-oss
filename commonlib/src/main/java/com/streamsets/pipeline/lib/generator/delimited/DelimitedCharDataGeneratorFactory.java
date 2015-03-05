@@ -22,10 +22,13 @@ public class DelimitedCharDataGeneratorFactory extends CharDataGeneratorFactory 
   static final String HEADER_DEFAULT = "header";
   public static final String VALUE_KEY = KEY_PREFIX + "value";
   static final String VALUE_DEFAULT = "value";
+  public static final String REPLACE_NEWLINES_KEY = KEY_PREFIX + "replaceNewLines";
+  static final boolean REPLACE_NEWLINES_DEFAULT = true;
 
   public static Map<String, Object> registerConfigs(Map<String, Object> configs) {
     configs.put(HEADER_KEY, HEADER_DEFAULT);
     configs.put(VALUE_KEY, VALUE_DEFAULT);
+    configs.put(REPLACE_NEWLINES_KEY, REPLACE_NEWLINES_DEFAULT);
     return configs;
   }
 
@@ -33,18 +36,20 @@ public class DelimitedCharDataGeneratorFactory extends CharDataGeneratorFactory 
   private final CsvHeader header;
   private final String headerKey;
   private final String valueKey;
+  private final boolean replaceNewLines;
 
   public DelimitedCharDataGeneratorFactory(Stage.Context context, CSVFormat format, CsvHeader header,
       Map<String, Object> configs) {
     this.format = format;
     this.header = header;
-    this.headerKey = (String) configs.get(HEADER_KEY);
-    this.valueKey = (String) configs.get(VALUE_KEY);
+    headerKey = (String) configs.get(HEADER_KEY);
+    valueKey = (String) configs.get(VALUE_KEY);
+    replaceNewLines = (boolean )configs.get(REPLACE_NEWLINES_KEY);
   }
 
   @Override
   public DataGenerator getGenerator(Writer writer) throws IOException, DataGeneratorException {
-    return new DelimitedDataGenerator(writer, format, header, headerKey, valueKey);
+    return new DelimitedDataGenerator(writer, format, header, headerKey, valueKey, replaceNewLines);
   }
 
 }

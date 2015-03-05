@@ -209,7 +209,7 @@ public class SpoolDirSource extends BaseSource {
   }
 
   private void validateDataParser(List<ConfigIssue> issues) {
-    CharDataParserFactory.Builder  builder = new CharDataParserFactory.Builder(getContext(), dataFormat.getFormat());
+    CharDataParserFactory.Builder  builder = new CharDataParserFactory.Builder(getContext(), dataFormat.getParserFormat());
     switch (dataFormat) {
       case TEXT:
         builder.setMaxDataLen(maxLogLineLength);

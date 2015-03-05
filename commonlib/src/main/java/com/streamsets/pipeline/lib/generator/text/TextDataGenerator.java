@@ -44,7 +44,7 @@ public class TextDataGenerator implements DataGenerator {
       throw new IOException("Generator has been closed");
     }
     Field field = record.get(fieldPath);
-    if (field != null) {
+    if (field != null && field.getValue() != null) {
       String value;
       try {
         value = field.getValueAsString();

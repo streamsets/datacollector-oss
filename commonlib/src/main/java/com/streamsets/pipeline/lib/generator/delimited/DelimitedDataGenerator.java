@@ -26,8 +26,10 @@ public class DelimitedDataGenerator implements DataGenerator {
   private final CSVPrinter printer;
   private boolean firstRecord;
   private boolean closed;
+  private boolean replaceNewLines;
 
-  public DelimitedDataGenerator(Writer writer, CSVFormat format, CsvHeader header, String headerKey, String valueKey)
+  public DelimitedDataGenerator(Writer writer, CSVFormat format, CsvHeader header, String headerKey, String valueKey,
+      boolean replaceNewLines)
       throws IOException {
     format = format.withHeader((String[])null);
     this.format = format;
@@ -36,6 +38,7 @@ public class DelimitedDataGenerator implements DataGenerator {
     printer = new CSVPrinter(writer, format);
     this.header = header;
     firstRecord = true;
+    this.replaceNewLines = replaceNewLines;
   }
 
   //VisibleForTesting
@@ -82,7 +85,16 @@ public class DelimitedDataGenerator implements DataGenerator {
     for (int i = 0; i< columns.size(); i++) {
       Field column = columns.get(i);
       try {
-        values.add(column.getValueAsMap().get(key).getValueAsString());
+        String value = column.getValueAsMap().get(key).getValueAsString();
+        if (replaceNewLines) {
+          if (value.contains("\n")) {
+            value = value.replace('\n', ' ');
+          }
+          if (value.contains("\r")) {
+            value = value.replace('\r', ' ');
+          }
+        }
+        values.add(value);
       } catch (Exception ex) {
         throw new DataGeneratorException(Errors.DELIMITED_GENERATOR_01, record.getHeader().getSourceId(), i,
                                          column.getType());

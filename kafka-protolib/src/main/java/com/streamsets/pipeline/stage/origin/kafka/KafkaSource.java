@@ -132,7 +132,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     LOG.info("Successfully initialized Kafka Consumer");
 
     CharDataParserFactory.Builder builder =
-        new CharDataParserFactory.Builder(getContext(), dataFormat.getFormat()).setMaxDataLen(-1);
+        new CharDataParserFactory.Builder(getContext(), dataFormat.getParserFormat()).setMaxDataLen(-1);
 
     switch ((dataFormat)) {
       case TEXT:
