@@ -10,9 +10,9 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.io.WildcardFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,8 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private DirectoryStream.Filter<Path> fileFilter;
   private File activeFile;
   private CountingOutputStream countingOutputStream;
-  private JsonRecordWriter writer;
+  private CharDataGeneratorFactory generatorFactory;
+  private DataGenerator generator;
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
@@ -88,6 +89,8 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     fileFilter = WildcardFilter.createRegex("records-[0-9][0-9][0-9][0-9][0-9][0-9].json");
     // if we had non graceful shutdown we may have a _tmp file around. new file is not created.
     rotate(false);
+    generatorFactory = new CharDataGeneratorFactory.Builder(getContext(),
+                                                            CharDataGeneratorFactory.Format.SDC_RECORD).build();
   }
 
   @Override
@@ -95,15 +98,15 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     Iterator<Record> it = batch.getRecords();
     try {
       while (it.hasNext()) {
-        if (writer == null || hasToRotate()) {
+        if (generator == null || hasToRotate()) {
           //rotating file because of rotation interval or size limit. creates new file as we need to write records
           //or we don't have a writer and need to create one
           rotate(true);
         }
-        writer.write(it.next());
+        generator.write(it.next());
       }
-      if (writer != null) {
-        writer.flush();
+      if (generator != null) {
+        generator.flush();
       }
       if (hasToRotate()) {
         // rotating file because of rotation interval in case of empty batches. new file is not created.
@@ -147,10 +150,11 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   }
 
   private void rotate(boolean createNewFile) throws StageException {
+    OutputStream outputStream = null;
     try {
-      if (writer != null) {
-        writer.close();
-        writer = null;
+      if (generator != null) {
+        generator.close();
+        generator = null;
       }
       if (activeFile.exists()) {
         File finalName = findFinalName();
@@ -159,17 +163,30 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       }
       if (createNewFile) {
         LOG.debug("Creating new '{}'", activeFile);
-        OutputStream outputStream = new FileOutputStream(activeFile);
+        outputStream = new FileOutputStream(activeFile);
         if (maxFileSizeBytes > 0) {
           countingOutputStream = new CountingOutputStream(outputStream);
           outputStream = countingOutputStream;
         }
-        writer = ((ContextExtensions)getContext()).createJsonRecordWriter(new OutputStreamWriter(outputStream));
+        generator = generatorFactory.getGenerator(new OutputStreamWriter(outputStream));
       }
       lastRotation = System.currentTimeMillis();
     } catch (IOException ex) {
-      if (writer != null) {
-        writer.close();
+      if (generator != null) {
+        try {
+          generator.close();
+        } catch (IOException ex1) {
+          //NOP
+        }
+        generator = null;
+      } else {
+        if (outputStream != null) {
+          try {
+            outputStream.close();
+          } catch (IOException ex1) {
+            //NOP
+          }
+        }
       }
       throw new StageException(Errors.RECORDFS_06, activeFile, ex.getMessage(), ex);
     }
