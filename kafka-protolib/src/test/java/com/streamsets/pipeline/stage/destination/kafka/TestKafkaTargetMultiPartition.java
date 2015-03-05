@@ -90,7 +90,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.ROUND_ROBIN)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/")
+      .addConfiguration("textFieldPath", "/")
       .build();
 
     targetRunner.runInit();
@@ -115,7 +115,7 @@ public class TestKafkaTargetMultiPartition {
       }
       Assert.assertEquals(3, messages.size());
       for(String message : messages) {
-        Assert.assertTrue(records.contains(message));
+        Assert.assertTrue(records.contains(message.trim()));
       }
       messages.clear();
     }
@@ -132,7 +132,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.RANDOM)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/")
+      .addConfiguration("textFieldPath", "/")
       .build();
 
     targetRunner.runInit();
@@ -157,6 +157,7 @@ public class TestKafkaTargetMultiPartition {
       }
 
       for(String message : messages) {
+        message = message.trim();
         Assert.assertTrue(records.contains(message));
         records.remove(message);
       }
@@ -180,7 +181,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/")
+      .addConfiguration("textFieldPath", "/")
       .build();
 
     targetRunner.runInit();
@@ -205,7 +206,7 @@ public class TestKafkaTargetMultiPartition {
       }
       Assert.assertEquals(3, messages.size());
       for(String message : messages) {
-        Assert.assertTrue(records.contains(message));
+        Assert.assertTrue(records.contains(message.trim()));
       }
       messages.clear();
     }
@@ -224,7 +225,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/")
+      .addConfiguration("textFieldPath", "/")
       .build();
 
     List<Stage.ConfigIssue> configIssues = targetRunner.runValidateConfigs();
@@ -245,7 +246,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/")
+      .addConfiguration("textFieldPath", "/")
       .build();
 
     targetRunner.runInit();
@@ -270,7 +271,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/")
+      .addConfiguration("textFieldPath", "/")
       .build();
 
     targetRunner.runInit();
@@ -295,7 +296,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/")
+      .addConfiguration("textFieldPath", "/")
       .build();
 
     targetRunner.runInit();

@@ -94,7 +94,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/")
+      .addConfiguration("textFieldPath", "/")
       .build();
 
     targetRunner.runInit();
@@ -130,7 +130,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/")
+      .addConfiguration("textFieldPath", "/")
       .build();
 
     targetRunner.runInit();
@@ -150,7 +150,7 @@ public class TestKafkaTargetSinglePartition {
     }
     Assert.assertEquals(9, messages.size());
     for(int i = 0; i < logRecords.size(); i++) {
-      Assert.assertEquals(logRecords.get(i).get().getValueAsString(), messages.get(i));
+      Assert.assertEquals(logRecords.get(i).get().getValueAsString(), messages.get(i).trim());
     }
   }
 
@@ -169,7 +169,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/name")
+      .addConfiguration("textFieldPath", "/name")
       .build();
 
     targetRunner.runInit();
@@ -190,7 +190,7 @@ public class TestKafkaTargetSinglePartition {
     }
     Assert.assertEquals(20, messages.size());
     for(int i = 0; i < logRecords.size(); i++) {
-      Assert.assertEquals(logRecords.get(i).get().getValueAsMap().get("name").getValueAsString(), messages.get(i));
+      Assert.assertEquals(logRecords.get(i).get().getValueAsMap().get("name").getValueAsString(), messages.get(i).trim());
     }
   }
 
@@ -209,7 +209,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/lastStatusChange") //this is number field, should be converted to string
+      .addConfiguration("textFieldPath", "/lastStatusChange") //this is number field, should be converted to string
       .build();
 
     targetRunner.runInit();
@@ -231,7 +231,7 @@ public class TestKafkaTargetSinglePartition {
     Assert.assertEquals(20, messages.size());
     for(int i = 0; i < logRecords.size(); i++) {
       Assert.assertEquals(logRecords.get(i).get().getValueAsMap().get("lastStatusChange").getValueAsString(),
-        messages.get(i));
+        messages.get(i).trim());
     }
   }
 
@@ -250,7 +250,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("fieldPath", "/") //this is map field, should not be converted to string
+      .addConfiguration("textFieldPath", "/") //this is map field, should not be converted to string
       .build();
 
     targetRunner.runInit();
@@ -321,12 +321,6 @@ public class TestKafkaTargetSinglePartition {
   public void testWriteCsvRecords() throws InterruptedException, StageException, IOException {
 
     //Test DELIMITED is - "2010,NLDS1,PHI,NL,CIN,NL,3,0,0"
-    List<String> fieldPaths = new ArrayList<>();
-    fieldPaths.add("/values[0]");
-    fieldPaths.add("/values[2]");
-    fieldPaths.add("/values[3]");
-    fieldPaths.add("/values[20]");
-    fieldPaths.add("/values[4]");
 
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topic", TOPIC)
@@ -336,7 +330,6 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("payloadType", DataFormat.DELIMITED)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("fieldPaths", fieldPaths)
       .build();
 
     targetRunner.runInit();
@@ -356,18 +349,5 @@ public class TestKafkaTargetSinglePartition {
     }
     Assert.assertEquals(28, messages.size());
 
-    RecordToString recordToString = new CsvRecordToString(CSVFormat.DEFAULT, false
-    );
-    Map<String, String> fieldPathToName = new LinkedHashMap<>();
-    fieldPathToName.put("/values[0]", null);
-    fieldPathToName.put("/values[2]", null);
-    fieldPathToName.put("/values[3]", null);
-    fieldPathToName.put("/values[20]", null);
-    fieldPathToName.put("/values[4]", null);
-    recordToString.setFieldPathToNameMapping(fieldPathToName);
-
-    for (int i = 0; i < logRecords.size(); i++) {
-      Assert.assertEquals(recordToString.toString(logRecords.get(i)), messages.get(i));
-    }
   }
 }

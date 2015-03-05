@@ -120,20 +120,6 @@ public class KafkaDTarget extends DTarget {
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "[\"/\"]",
-    label = "Fields",
-    description = "Fields to write to Kafka",
-    displayPosition = 110,
-    group = "DELIMITED",
-    dependsOn = "payloadType",
-    triggeredByValue = "DELIMITED"
-  )
-  @FieldSelector
-  public List<String> fieldPaths;
-
   /********  For TEXT Content  ***********/
 
   @ConfigDef(
@@ -148,11 +134,11 @@ public class KafkaDTarget extends DTarget {
     triggeredByValue = "TEXT"
   )
   @FieldSelector(singleValued = true)
-  public String fieldPath;
+  public String textFieldPath;
 
   @Override
   protected Target createTarget() {
     return new KafkaTarget(metadataBrokerList, topic, partitionStrategy, partition, payloadType, kafkaProducerConfigs,
-      csvFileFormat, fieldPaths, fieldPath);
+      csvFileFormat, textFieldPath);
   }
 }

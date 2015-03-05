@@ -6,33 +6,33 @@
 package com.streamsets.pipeline.stage.destination.kafka;
 
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
 import com.streamsets.pipeline.el.ELStringSupport;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaUtil;
-import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
-import com.streamsets.pipeline.lib.recordserialization.DataCollectorRecordToString;
-import com.streamsets.pipeline.lib.recordserialization.JsonRecordToString;
-import com.streamsets.pipeline.lib.recordserialization.LogRecordToString;
-import com.streamsets.pipeline.lib.recordserialization.RecordToString;
+import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.text.TextCharDataGeneratorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class KafkaTarget extends BaseTarget {
 
@@ -45,18 +45,17 @@ public class KafkaTarget extends BaseTarget {
   private final DataFormat payloadType;
   private final Map<String, String> kafkaProducerConfigs;
   private final CsvMode csvFileFormat;
-  private final List<String> fieldPaths;
-  private final String fieldPath;
+  private final String textFieldPath;
 
   private KafkaProducer kafkaProducer;
   private long recordCounter = 0;
   private ELEvaluator elEvaluator;
   private ELEvaluator.Variables variables;
-  private RecordToString recordToString;
+  private CharDataGeneratorFactory generatorFactory;
 
   public KafkaTarget(String metadataBrokerList, String topic, PartitionStrategy partitionStrategy, String partition,
                      DataFormat payloadType, Map<String, String> kafkaProducerConfigs, CsvMode csvFileFormat,
-                     List<String> fieldPaths, String fieldPath) {
+                      String textFieldPath) {
     this.metadataBrokerList = metadataBrokerList;
     this.topic = topic;
     this.partitionStrategy = partitionStrategy;
@@ -64,8 +63,7 @@ public class KafkaTarget extends BaseTarget {
     this.payloadType = payloadType;
     this.kafkaProducerConfigs = kafkaProducerConfigs;
     this.csvFileFormat = csvFileFormat;
-    this.fieldPaths = fieldPaths;
-    this.fieldPath = fieldPath;
+    this.textFieldPath = textFieldPath;
   }
 
   @Override
@@ -98,35 +96,29 @@ public class KafkaTarget extends BaseTarget {
       payloadType, partitionStrategy, kafkaProducerConfigs);
     kafkaProducer.init();
 
-    createRecordToStringInstance(getFieldPathToNameMapping());
+    generatorFactory = createDataGeneratorFactory();
   }
 
-  private Map<String, String> getFieldPathToNameMapping() {
-    Map<String, String> fieldPathToNameMapping = new LinkedHashMap<>();
-    if(fieldPaths != null && !fieldPaths.isEmpty()) {
-      for (String fieldPath : fieldPaths) {
-        fieldPathToNameMapping.put(fieldPath, null);
-      }
-    }
-    return fieldPathToNameMapping;
-  }
-
-  private void createRecordToStringInstance(Map<String, String> fieldNameToPathMap) {
+  private CharDataGeneratorFactory createDataGeneratorFactory() {
+    CharDataGeneratorFactory.Builder builder = new CharDataGeneratorFactory.Builder(getContext(),
+                                                                                    payloadType.getGeneratorFormat());
     switch(payloadType) {
       case SDC_JSON:
-        recordToString = new DataCollectorRecordToString(getContext());
         break;
       case DELIMITED:
-        recordToString = new CsvRecordToString(csvFileFormat.getFormat(), false);
+        builder.setMode(csvFileFormat);
+        builder.setMode(CsvHeader.NO_HEADER);
+        builder.setConfig(DelimitedCharDataGeneratorFactory.REPLACE_NEWLINES_KEY, false);
         break;
       case TEXT:
-        recordToString = new LogRecordToString(fieldPath);
+        builder.setConfig(TextCharDataGeneratorFactory.FIELD_PATH_KEY, textFieldPath);
+        builder.setConfig(TextCharDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, false);
         break;
       case JSON:
-        recordToString = new JsonRecordToString();
+        builder.setMode(JsonMode.MULTIPLE_OBJECTS);
         break;
     }
-    recordToString.setFieldPathToNameMapping(fieldNameToPathMap);
+    return builder.build();
   }
 
   @Override
@@ -148,9 +140,8 @@ public class KafkaTarget extends BaseTarget {
         byte[] message;
         try {
           message = serializeRecord(r);
-        } catch (StageException e) {
-          LOG.warn(e.getMessage());
-          getContext().toError(r, e.getMessage());
+        } catch (IOException| StageException e) {
+          getContext().toError(r, e);
           continue;
         }
         kafkaProducer.enqueueMessage(message, partitionKey);
@@ -159,7 +150,7 @@ public class KafkaTarget extends BaseTarget {
 
       kafkaProducer.write();
       recordCounter += batchRecordCounter;
-      LOG.info("Wrote {} records in this batch.", batchRecordCounter);
+      LOG.debug("Wrote {} records in this batch.", batchRecordCounter);
     }
   }
 
@@ -206,13 +197,12 @@ public class KafkaTarget extends BaseTarget {
     }
   }
 
-  private byte[] serializeRecord(Record r) throws StageException {
-    LOG.debug("Serializing record {}", r.getHeader().getSourceId());
-    String recordString = recordToString.toString(r);
-    if(recordString != null) {
-      return recordString.getBytes();
-    }
-    return null;
+  private byte[] serializeRecord(Record r) throws StageException, IOException {
+    StringWriter sw = new StringWriter(1024);
+    DataGenerator generator = generatorFactory.getGenerator(sw);
+    generator.write(r);
+    generator.close();
+    return sw.toString().getBytes();
   }
 
   /****************************************************/
@@ -230,47 +220,7 @@ public class KafkaTarget extends BaseTarget {
   }
 
   private void validateExpressions(List<Stage.ConfigIssue> issues) {
-    Record record = new Record(){
-      @Override
-      public Header getHeader() {
-        return null;
-      }
-
-      @Override
-      public Field get() {
-        return null;
-      }
-
-      @Override
-      public Field set(Field field) {
-        return null;
-      }
-
-      @Override
-      public Field get(String fieldPath) {
-        return null;
-      }
-
-      @Override
-      public Field delete(String fieldPath) {
-        return null;
-      }
-
-      @Override
-      public boolean has(String fieldPath) {
-        return false;
-      }
-
-      @Override
-      public Set<String> getFieldPaths() {
-        return null;
-      }
-
-      @Override
-      public Field set(String fieldPath, Field newField) {
-        return null;
-      }
-    };
+    Record record = getContext().createRecord("validateConfigs");
 
     ELRecordSupport.setRecordInContext(variables, record);
     try {
@@ -286,20 +236,12 @@ public class KafkaTarget extends BaseTarget {
     switch (dataFormat) {
       case TEXT:
         //required the field configuration to be set and it is "/" by default
-        if(fieldPath == null || fieldPath.isEmpty()) {
+        if(textFieldPath == null || textFieldPath.isEmpty()) {
           issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "fieldPath", Errors.KAFKA_58));
         }
         break;
       case JSON:
-        //no-op
-        break;
       case DELIMITED:
-        //delimiter format is dropdown and it has a default value
-        //"fields" option must be specified
-        if (fieldPaths == null || fieldPaths.isEmpty()) {
-          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "fieldPaths", Errors.KAFKA_59, "fieldPaths"));
-        }
-        break;
       case SDC_JSON:
         //no-op
         break;

@@ -178,14 +178,14 @@ public class KafkaTestUtil {
       .getResource("testKafkaTarget.csv").getFile()));
     while ((line = bufferedReader.readLine()) != null) {
       String columns[] = line.split(",");
-      Map<String, Field> map = new LinkedHashMap<>();
-      List<Field> values = new ArrayList<>(columns.length);
+      List<Field> list = new ArrayList<>();
       for (String column : columns) {
-        values.add(Field.create(column));
+        Map<String, Field> map = new LinkedHashMap<>();
+        map.put("value", Field.create(column));
+        list.add(Field.create(map));
       }
-      map.put("values", Field.create(values));
       Record record = RecordCreator.create("s", "s:1", null, null);
-      record.set(Field.create(map));
+      record.set(Field.create(list));
       records.add(record);
     }
     return records;
