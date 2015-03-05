@@ -19,7 +19,8 @@ angular
     'ui.select',
     'showLoadingDirectives',
     'recordTreeDirectives',
-    'ui.bootstrap.datetimepicker'
+    'ui.bootstrap.datetimepicker',
+    'ui.codemirror'
   ])
   .constant('amTimeAgoConfig', {
     withoutSuffix: true

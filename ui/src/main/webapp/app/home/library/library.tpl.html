@@ -36,35 +36,30 @@
           <ul class="dropdown-menu" role="menu">
             <li role="presentation"
                 ng-hide="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
-              <a role="menuitem" tabindex="-1" href="#"
-                 dropdown-toggle
-                 translate="global.form.delete"
-                 ng-click="deletePipelineConfig(pipeline, $event)">
-                Delete
+              <a href="#" dropdown-toggle ng-click="deletePipelineConfig(pipeline, $event)">
+                <i class="fa fa-trash-o"></i>
+                <span>{{'global.form.delete' | translate}}</span>
               </a>
             </li>
+
             <li role="presentation">
-              <a role="menuitem" tabindex="-1" href="#"
-                 dropdown-toggle
-                 translate="global.form.duplicate"
-                 ng-click="duplicatePipelineConfig(pipeline, $event)">
-                Duplicate
+              <a href="#" dropdown-toggle ng-click="duplicatePipelineConfig(pipeline, $event)">
+                <i class="fa fa-files-o"></i>
+                <span>{{'global.form.duplicate' | translate}}</span>
               </a>
             </li>
+
             <li role="presentation">
-              <a role="menuitem" tabindex="-1" href="#"
-                 dropdown-toggle
-                 translate="global.form.import"
-                 ng-click="importPipelineConfig(pipeline, $event)">
-                Duplicate
+              <a href="#" dropdown-toggle ng-click="importPipelineConfig(pipeline, $event)">
+                <i class="glyphicon glyphicon-import"></i>
+                <span>{{'global.form.import' | translate}}</span>
               </a>
             </li>
+
             <li role="presentation">
-              <a role="menuitem" tabindex="-1" href="#"
-                 dropdown-toggle
-                 translate="global.form.export"
-                 ng-click="exportPipelineConfig(pipeline, $event)">
-                Duplicate
+              <a href="#" dropdown-toggle ng-click="exportPipelineConfig(pipeline, $event)">
+                <i class="glyphicon glyphicon-export"></i>
+                <span>{{'global.form.export' | translate}}</span>
               </a>
             </li>
           </ul>

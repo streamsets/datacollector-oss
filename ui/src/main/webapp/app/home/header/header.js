@@ -192,6 +192,34 @@ angular
             type: pipelineConstant.LINK
           });
         }
+      },
+
+      /**
+       * Delete Pipeline Configuration
+       */
+      deletePipelineConfig: function(pipelineInfo, $event) {
+        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event);
+      },
+
+      /**
+       * Duplicate Pipeline Configuration
+       */
+      duplicatePipelineConfig: function(pipelineInfo, $event) {
+        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event);
+      },
+
+      /**
+       * Import link command handler
+       */
+      importPipelineConfig: function(pipelineInfo, $event) {
+        pipelineService.importPipelineConfigCommand(pipelineInfo, $event);
+      },
+
+      /**
+       * Export link command handler
+       */
+      exportPipelineConfig: function(pipelineInfo, $event) {
+        api.pipelineAgent.exportPipelineConfig(pipelineInfo.name);
       }
     });
 

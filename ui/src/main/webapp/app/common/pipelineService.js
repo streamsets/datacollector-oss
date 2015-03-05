@@ -118,6 +118,68 @@ angular.module('dataCollectorApp.common')
       });
     };
 
+
+    /**
+     * Delete Pipeline Configuration Command Handler
+     */
+    this.deletePipelineConfigCommand = function(pipelineInfo, $event) {
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/delete/delete.tpl.html',
+        controller: 'DeleteModalInstanceController',
+        size: '',
+        backdrop: 'static',
+        resolve: {
+          pipelineInfo: function () {
+            return pipelineInfo;
+          }
+        }
+      });
+
+      if($event) {
+        $event.stopPropagation();
+      }
+
+      modalInstance.result.then(function (configInfo) {
+        self.removePipeline(configInfo);
+        if(self.pipelines.length) {
+          $location.path('/collector/pipeline/' + self.pipelines[0].name);
+        } else {
+          $location.path('/');
+        }
+      }, function () {
+
+      });
+    };
+
+
+    /**
+     * Duplicate Pipeline Configuration Command Handler
+     */
+    this.duplicatePipelineConfigCommand = function(pipelineInfo, $event) {
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/duplicate/duplicate.tpl.html',
+        controller: 'DuplicateModalInstanceController',
+        size: '',
+        backdrop: 'static',
+        resolve: {
+          pipelineInfo: function () {
+            return pipelineInfo;
+          }
+        }
+      });
+
+      if($event) {
+        $event.stopPropagation();
+      }
+
+      modalInstance.result.then(function (configObject) {
+        self.addPipeline(configObject);
+        $location.path('/collector/pipeline/' + configObject.info.name);
+      }, function () {
+
+      });
+    };
+
     var getXPos = function(pipelineConfig, firstOpenLane) {
       var prevStage = (firstOpenLane && firstOpenLane.stageInstance) ? firstOpenLane.stageInstance :
         ((pipelineConfig.stages && pipelineConfig.stages.length) ? pipelineConfig.stages[pipelineConfig.stages.length - 1] : undefined);

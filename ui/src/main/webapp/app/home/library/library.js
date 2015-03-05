@@ -30,59 +30,14 @@ angular
        * Delete Pipeline Configuration
        */
       deletePipelineConfig: function(pipelineInfo, $event) {
-        var modalInstance = $modal.open({
-          templateUrl: 'app/home/library/delete/delete.tpl.html',
-          controller: 'DeleteModalInstanceController',
-          size: '',
-          backdrop: 'static',
-          resolve: {
-            pipelineInfo: function () {
-              return pipelineInfo;
-            }
-          }
-        });
-
-        $event.stopPropagation();
-        modalInstance.result.then(function (configInfo) {
-          pipelineService.removePipeline(configInfo);
-
-          if(pipelineInfo.name === $scope.activeConfigInfo.name) {
-            if($scope.pipelines.length) {
-              $location.path('/collector/pipeline/' + $scope.pipelines[0].name);
-            } else {
-              $location.path('/');
-            }
-          }
-
-        }, function () {
-
-        });
+        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event);
       },
 
       /**
        * Duplicate Pipeline Configuration
        */
       duplicatePipelineConfig: function(pipelineInfo, $event) {
-        $event.stopPropagation();
-
-        var modalInstance = $modal.open({
-          templateUrl: 'app/home/library/duplicate/duplicate.tpl.html',
-          controller: 'DuplicateModalInstanceController',
-          size: '',
-          backdrop: 'static',
-          resolve: {
-            pipelineInfo: function () {
-              return pipelineInfo;
-            }
-          }
-        });
-
-        modalInstance.result.then(function (configObject) {
-          pipelineService.addPipeline(configObject);
-          $location.path('/collector/pipeline/' + configObject.info.name);
-        }, function () {
-
-        });
+        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event);
       },
 
       /**
@@ -101,14 +56,4 @@ angular
       }
 
     });
-
-
-    $scope.$on('addPipelineConfig', function() {
-      $scope.addPipelineConfig();
-    });
-
-    $scope.$on('importPipelineConfig', function() {
-      $scope.importPipelineConfig();
-    });
-
   });

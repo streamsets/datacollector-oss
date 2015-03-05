@@ -90,7 +90,9 @@ module.exports = function(grunt) {
         'bower_components/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js',
         'bower_components/angular-ui-select/dist/select.js',
         'bower_components/ngstorage/ngStorage.js',
-        'bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js'
+        'bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
+        'bower_components/codemirror/lib/codemirror.js',
+        'bower_components/angular-ui-codemirror/ui-codemirror.js'
       ],
       css: [
         'bower_components/bootstrap/dist/css/bootstrap.min.css',
@@ -98,7 +100,8 @@ module.exports = function(grunt) {
         'bower_components/fontawesome/css/font-awesome.css',
         'bower_components/nvd3/nv.d3.css',
         'bower_components/angular-ui-select/dist/select.css',
-        'bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css'
+        'bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
+        'bower_components/codemirror/lib/codemirror.css'
       ],
       assets: [
       ],

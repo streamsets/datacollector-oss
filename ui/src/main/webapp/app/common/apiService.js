@@ -242,6 +242,8 @@ angular.module('dataCollectorApp.common')
           })
           .then(function(res) {
             deferred.resolve(duplicatePipelineObject);
+          },function(res) {
+            deferred.reject(res);
           });
 
         return deferred.promise;

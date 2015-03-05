@@ -18,8 +18,8 @@ angular
           pipelineInfo)).
           then(function(configObject) {
             $modalInstance.close(configObject);
-          },function(data) {
-            $scope.common.errors = [data];
+          },function(res) {
+            $scope.common.errors = [res.data];
           });
       },
       cancel : function () {
