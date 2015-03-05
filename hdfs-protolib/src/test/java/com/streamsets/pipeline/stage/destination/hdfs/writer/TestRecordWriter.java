@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
-import com.streamsets.pipeline.lib.recordserialization.RecordToString;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -28,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.Map;
 import java.util.UUID;
 
 public class TestRecordWriter {
