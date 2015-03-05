@@ -29,6 +29,12 @@ angular
       },
 
       onToStageChange: function() {
+        $scope.multiStagePreviewData = {
+          input: [],
+          output: [],
+          errorRecords: [],
+          stageErrors: []
+        };
         $timeout(function() {
           updatePreviewData($scope.fromStage, $scope.toStage);
         });
