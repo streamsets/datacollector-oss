@@ -33,6 +33,7 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlets.GzipFilter;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
@@ -56,6 +57,17 @@ public class WebServerModule {
         context.addServlet(servlet, "/*");
       }
 
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideGzipFilter() {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        FilterHolder filter = new FilterHolder(GzipFilter.class);
+        context.addFilter(filter, "/*", EnumSet.of(DispatcherType.REQUEST));
+      }
     };
   }
 
