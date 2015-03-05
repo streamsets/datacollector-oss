@@ -12,6 +12,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.el.ELEvaluator;
@@ -84,9 +85,9 @@ public class TestBaseHdfsTarget {
     target.compression = CompressionMode.NONE.name();
     target.timeDriver = "${time:now()}";
     target.lateRecordsLimit = "${1 * HOURS}";
-    target.csvFileFormat = CsvMode.CSV;
     target.dataFormat = DataFormat.DELIMITED;
-    target.cvsFieldPathToNameMappingConfigList = new ArrayList<>();
+    target.csvFileFormat = CsvMode.CSV;
+    target.csvHeader = CsvHeader.IGNORE_HEADER;
   }
 
   static class ForTestHdfsTarget extends HdfsDTarget {
@@ -113,8 +114,11 @@ public class TestBaseHdfsTarget {
           lateRecordsDirPathTemplate,
           dataFormat,
           csvFileFormat,
-          replaceNewLines,
-          cvsFieldPathToNameMappingConfigList
+          csvHeader,
+          cvsReplaceNewLines,
+          jsonMode,
+          textFieldPath,
+          textEmptyLineIfNull
       ) {
         @Override
         public void write(Batch batch) throws StageException {

@@ -7,6 +7,9 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.hadoop.fs.FileSystem;
@@ -24,21 +27,32 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Map;
 import java.util.UUID;
 
 public class TestRecordWriter {
   private static Path testDir;
 
-  public static class DummyRecordToString implements RecordToString {
+  public static class DummyDataGeneratorFactory extends CharDataGeneratorFactory {
     @Override
-    public void setFieldPathToNameMapping(Map<String, String> fieldPathToNameMap) {
+    public DataGenerator getGenerator(final Writer writer) throws IOException, DataGeneratorException {
+      return new DataGenerator() {
+        @Override
+        public void write(Record record) throws IOException, DataGeneratorException {
+          writer.write(record.get().getValueAsString() + "\n");
+        }
 
-    }
+        @Override
+        public void flush() throws IOException {
+          writer.flush();
+        }
 
-    @Override
-    public String toString(Record record) {
-      return record.get().getValueAsString();
+        @Override
+        public void close() throws IOException {
+          writer.close();
+        }
+      };
     }
   }
 
@@ -61,7 +75,7 @@ public class TestRecordWriter {
       OutputStream os = fs.create(file, false);
       long timeToLive = 10000;
       long expires = System.currentTimeMillis() + timeToLive;
-      RecordWriter writer = new RecordWriter(file, timeToLive, os, new DummyRecordToString());
+      RecordWriter writer = new RecordWriter(file, timeToLive, os, new DummyDataGeneratorFactory());
       Assert.assertTrue(writer.isTextFile());
       Assert.assertFalse(writer.isSeqFile());
       Assert.assertEquals(file, writer.getPath());
@@ -105,7 +119,7 @@ public class TestRecordWriter {
                                                               (CompressionCodec) null);
       long timeToLive = 10000;
       long expires = System.currentTimeMillis() + timeToLive;
-      RecordWriter writer = new RecordWriter(file, timeToLive, seqFile, keyEL, new DummyRecordToString());
+      RecordWriter writer = new RecordWriter(file, timeToLive, seqFile, keyEL, new DummyDataGeneratorFactory());
       Assert.assertFalse(writer.isTextFile());
       Assert.assertTrue(writer.isSeqFile());
       Assert.assertEquals(file, writer.getPath());
@@ -137,7 +151,7 @@ public class TestRecordWriter {
       } else {
         Assert.assertEquals("a", key.toString());
       }
-      Assert.assertEquals("a", value.toString());
+      Assert.assertEquals("a", value.toString().trim());
       Assert.assertTrue(reader.next(key, value));
       if (useUUIDAsKey) {
         Assert.assertNotNull(UUID.fromString(key.toString()));
@@ -145,7 +159,7 @@ public class TestRecordWriter {
       } else {
         Assert.assertEquals("z", key.toString());
       }
-      Assert.assertEquals("z", value.toString());
+      Assert.assertEquals("z", value.toString().trim());
       Assert.assertFalse(reader.next(key, value));
       reader.close();
     } finally {

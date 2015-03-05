@@ -7,8 +7,10 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
-import com.streamsets.pipeline.lib.recordserialization.RecordToString;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -20,24 +22,34 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
 import java.net.URI;
 import java.util.Date;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
 public class TestActiveRecordWriters {
   private static Path testDir;
 
-  public static class DummyRecordToString implements RecordToString {
+  public static class DummyDataGeneratorFactory extends CharDataGeneratorFactory {
     @Override
-    public void setFieldPathToNameMapping(Map<String, String> fieldPathToNameMap) {
+    public DataGenerator getGenerator(Writer writer) throws IOException, DataGeneratorException {
+      return new DataGenerator() {
+        @Override
+        public void write(Record record) throws IOException, DataGeneratorException {
+        }
 
-    }
+        @Override
+        public void flush() throws IOException {
 
-    @Override
-    public String toString(Record record) {
-      return record.get().getValueAsString();
+        }
+
+        @Override
+        public void close() throws IOException {
+
+        }
+      };
     }
   }
 
@@ -67,10 +79,10 @@ public class TestActiveRecordWriters {
     compressionCodec.setConf(conf);
     SequenceFile.CompressionType compressionType = SequenceFile.CompressionType.BLOCK;
     String keyEL = "uuid()";
-    RecordToString toString = new DummyRecordToString();
+    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
                                                       cutOffRecords, fileType, compressionCodec , compressionType,
-                                                      keyEL, toString);
+                                                      keyEL, generatorFactory);
     ActiveRecordWriters writers = new ActiveRecordWriters(mgr);
 
     Date now = new Date();

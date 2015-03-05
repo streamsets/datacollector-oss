@@ -13,14 +13,15 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.RecordTarget;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
-import com.streamsets.pipeline.lib.recordserialization.CsvRecordToString;
-import com.streamsets.pipeline.lib.recordserialization.DataCollectorRecordToString;
-import com.streamsets.pipeline.lib.recordserialization.JsonRecordToString;
-import com.streamsets.pipeline.lib.recordserialization.RecordToString;
+import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.text.TextCharDataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriter;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
@@ -68,8 +69,11 @@ public class HdfsTarget extends RecordTarget {
   private final String lateRecordsDirPathTemplate;
   private final DataFormat dataFormat;
   private final CsvMode csvFileFormat;
-  private final boolean replaceNewLines;
-  private final List<FieldPathToNameMappingConfig> cvsFieldPathToNameMappingConfigList;
+  private final CsvHeader csvHeader;
+  private final boolean csvReplaceNewLines;
+  private final JsonMode jsonMode;
+  private final String textFieldPath;
+  private final boolean textEmptyLineIfNull;
 
 
   public HdfsTarget(String hdfsUri, boolean hdfsKerberos, String kerberosPrincipal, String kerberosKeytab,
@@ -78,8 +82,8 @@ public class HdfsTarget extends RecordTarget {
       HdfsFileType fileType, String keyEl,
       HdfsSequenceFileCompressionType seqFileCompressionType, String lateRecordsLimit,
       LateRecordsAction lateRecordsAction, String lateRecordsDirPathTemplate,
-      DataFormat dataFormat, CsvMode csvFileFormat, boolean replaceNewLines,
-      List<FieldPathToNameMappingConfig> cvsFieldPathToNameMappingConfigList) {
+      DataFormat dataFormat, CsvMode csvFileFormat, CsvHeader csvHeader, boolean csvReplaceNewLines, JsonMode jsonMode,
+      String textFieldPath, boolean textEmptyLineIfNull) {
     this.hdfsUri = hdfsUri;
     this.hdfsKerberos = hdfsKerberos;
     this.kerberosPrincipal = kerberosPrincipal;
@@ -100,8 +104,11 @@ public class HdfsTarget extends RecordTarget {
     this.lateRecordsDirPathTemplate = lateRecordsDirPathTemplate;
     this.dataFormat = dataFormat;
     this.csvFileFormat = csvFileFormat;
-    this.replaceNewLines = replaceNewLines;
-    this.cvsFieldPathToNameMappingConfigList = cvsFieldPathToNameMappingConfigList;
+    this.csvHeader = csvHeader;
+    this.csvReplaceNewLines = csvReplaceNewLines;
+    this.jsonMode = jsonMode;
+    this.textFieldPath = textFieldPath;
+    this.textEmptyLineIfNull = textEmptyLineIfNull;
   }
 
   private Configuration hdfsConfiguration;
@@ -110,7 +117,7 @@ public class HdfsTarget extends RecordTarget {
   private ELEvaluator timeDriverElEval;
   private ActiveRecordWriters currentWriters;
   private ActiveRecordWriters lateWriters;
-  private RecordToString recordToString;
+  private CharDataGeneratorFactory generatorFactory;
 
   private Date batchTime;
 
@@ -139,7 +146,8 @@ public class HdfsTarget extends RecordTarget {
       uniquePrefix = "";
     }
 
-    recordToString = createRecordToStringInstance(issues);
+    validateDataFormat(issues);
+    generatorFactory = createDataGeneratorFactory();
 
     SequenceFile.CompressionType compressionType = (seqFileCompressionType != null)
                                                    ? seqFileCompressionType.getType() : null;
@@ -154,7 +162,7 @@ public class HdfsTarget extends RecordTarget {
                                                           dirPathTemplate, TimeZone.getTimeZone(timeZoneID),
                                                           lateRecordsLimitSecs, maxFileSize, maxRecordsPerFile,
                                                           fileType, compressionCodec, compressionType, keyEl,
-                                                          recordToString);
+                                                          generatorFactory);
         currentWriters = new ActiveRecordWriters(mgr);
       } catch (Exception ex) {
         issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), null, Errors.HADOOPFS_11, ex.getMessage(),
@@ -176,7 +184,7 @@ public class HdfsTarget extends RecordTarget {
                                                             lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID),
                                                             lateRecordsLimitSecs, maxFileSize,
                                                             maxRecordsPerFile, fileType, compressionCodec,
-                                                            compressionType, keyEl, recordToString);
+                                                            compressionType, keyEl, generatorFactory);
           lateWriters = new ActiveRecordWriters(mgr);
         } catch (Exception ex) {
           issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), null, Errors.HADOOPFS_17, ex.getMessage(), ex));
@@ -321,24 +329,43 @@ public class HdfsTarget extends RecordTarget {
     return fieldPathToNameMapping;
   }
 
-  private RecordToString createRecordToStringInstance(List<ConfigIssue> issues) {
-    RecordToString recordToString = null;
-    switch(dataFormat) {
-      case SDC_JSON:
-        recordToString = new DataCollectorRecordToString(getContext());
-        break;
+  private void validateDataFormat(List<ConfigIssue> issues) {
+    switch (dataFormat) {
+      case TEXT:
       case JSON:
-        recordToString = new JsonRecordToString();
+      case DELIMITED:
+      case SDC_JSON:
+        break;
+      case XML:
+      default:
+        issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "dataFormat", Errors.HADOOPFS_16,
+                                                  dataFormat));
+    }
+  }
+
+  private CharDataGeneratorFactory createDataGeneratorFactory() {
+    CharDataGeneratorFactory.Builder builder = new CharDataGeneratorFactory.Builder(getContext(),
+                                                                                    dataFormat.getGeneratorFormat());
+    switch(dataFormat) {
+      case JSON:
+        builder.setMode(jsonMode);
         break;
       case DELIMITED:
-        recordToString = new CsvRecordToString(csvFileFormat.getFormat(), replaceNewLines);
-        recordToString.setFieldPathToNameMapping(getFieldPathToNameMapping(cvsFieldPathToNameMappingConfigList));
+        builder.setMode(csvFileFormat);
+        builder.setMode(csvHeader);
+        builder.setConfig(DelimitedCharDataGeneratorFactory.REPLACE_NEWLINES_KEY, csvReplaceNewLines);
         break;
+      case TEXT:
+        builder.setConfig(TextCharDataGeneratorFactory.FIELD_PATH_KEY, textFieldPath);
+        builder.setConfig(TextCharDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, textEmptyLineIfNull);
+        break;
+      case SDC_JSON:
+        break;
+      case XML:
       default:
-        issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "dataFormat",
-                                                  Errors.HADOOPFS_16, dataFormat));
+        throw new IllegalStateException("It should not happen");
     }
-    return recordToString;
+    return builder.build();
   }
 
   @Override

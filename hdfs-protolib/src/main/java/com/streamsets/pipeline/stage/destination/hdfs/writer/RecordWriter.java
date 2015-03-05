@@ -10,7 +10,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
-import com.streamsets.pipeline.lib.recordserialization.RecordToString;
+import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGenerator;
 import org.apache.commons.io.output.CountingOutputStream;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
@@ -22,7 +23,7 @@ import javax.servlet.jsp.el.ELException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
@@ -45,11 +46,11 @@ public class RecordWriter {
 
   private final long expires;
   private final Path path;
-  private final RecordToString recordToString;
+  private final CharDataGeneratorFactory generatorFactory;
   private long recordCount;
 
   private CountingOutputStream textOutputStream;
-  private Writer writer;
+  private DataGenerator generator;
   private boolean textFile;
 
   private SequenceFile.Writer seqWriter;
@@ -60,23 +61,24 @@ public class RecordWriter {
   private Text value;
   private boolean seqFile;
 
-  private RecordWriter(Path path, long timeToLiveMillis, RecordToString recordToString) {
+  private RecordWriter(Path path, long timeToLiveMillis, CharDataGeneratorFactory generatorFactory) {
     this.expires = System.currentTimeMillis() + timeToLiveMillis;
     this.path = path;
-    this.recordToString = recordToString;
+    this.generatorFactory = generatorFactory;
     LOG.debug("Path[{}] - Creating", path);
   }
 
-  public RecordWriter(Path path, long timeToLiveMillis, OutputStream textOutputStream, RecordToString recordToString) {
-    this(path, timeToLiveMillis, recordToString);
+  public RecordWriter(Path path, long timeToLiveMillis, OutputStream textOutputStream,
+      CharDataGeneratorFactory generatorFactory) throws StageException, IOException {
+    this(path, timeToLiveMillis, generatorFactory);
     this.textOutputStream = new CountingOutputStream(textOutputStream);
-    writer = new OutputStreamWriter(this.textOutputStream);
+    generator = generatorFactory.getGenerator(new OutputStreamWriter(this.textOutputStream));
     textFile = true;
   }
 
   public RecordWriter(Path path, long timeToLiveMillis, SequenceFile.Writer seqWriter, String keyEL,
-      RecordToString recordToString) {
-    this(path, timeToLiveMillis, recordToString);
+      CharDataGeneratorFactory generatorFactory) {
+    this(path, timeToLiveMillis, generatorFactory);
     this.seqWriter = seqWriter;
     this.keyEL = keyEL;
     elEval = new ELEvaluator();
@@ -100,16 +102,16 @@ public class RecordWriter {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Path[{}] - Writing ['{}']", path, record.getHeader().getSourceId());
     }
-    if (writer != null) {
-      String str = recordToString.toString(record);
-      Utils.checkArgument(!str.contains("\n") && !str.contains("\r"),
-                          "String version of record cannot have EOL characters");
-      writer.write(str);
-      writer.write("\n");
+    if (generator != null) {
+      generator.write(record);
     } else if (seqWriter != null) {
       ELRecordSupport.setRecordInContext(elVars, record);
       key.set((String) elEval.eval(elVars, keyEL));
-      value.set(recordToString.toString(record));
+      StringWriter sw = new StringWriter(1024);
+      DataGenerator dg = generatorFactory.getGenerator(sw);
+      dg.write(record);
+      dg.close();
+      value.set(sw.toString());
       seqWriter.append(key, value);
     } else {
       throw new IOException(Utils.format("RecordWriter '{}' is closed", path));
@@ -119,8 +121,8 @@ public class RecordWriter {
 
   public void flush() throws IOException {
     LOG.debug("Path[{}] - Flushing", path);
-    if (writer != null) {
-      writer.flush();
+    if (generator != null) {
+      generator.flush();
     } else if (seqWriter != null) {
       seqWriter.hflush();
     }
@@ -130,7 +132,7 @@ public class RecordWriter {
   // buffer size.
   public long getLength() throws IOException {
     long length = -1;
-    if (writer != null) {
+    if (generator != null) {
       length = textOutputStream.getCount();
     } else if (seqWriter != null) {
       length = seqWriter.getLength();
@@ -145,13 +147,13 @@ public class RecordWriter {
   public void close() throws IOException {
     LOG.debug("Path[{}] - Closing", path);
     try {
-      if (writer != null) {
-        writer.close();
+      if (generator != null) {
+        generator.close();
       } else if (seqWriter != null) {
         seqWriter.close();
       }
     } finally {
-      writer = null;
+      generator = null;
       seqWriter = null;
     }
   }
@@ -165,7 +167,7 @@ public class RecordWriter {
   }
 
   public boolean isClosed() {
-    return writer == null && seqWriter == null;
+    return generator == null && seqWriter == null;
   }
 
   public String toString() {

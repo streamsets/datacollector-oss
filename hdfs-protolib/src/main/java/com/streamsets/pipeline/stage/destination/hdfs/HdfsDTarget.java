@@ -6,20 +6,22 @@
 package com.streamsets.pipeline.stage.destination.hdfs;
 
 import com.streamsets.pipeline.api.ChooserMode;
-import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
-import java.util.List;
 import java.util.Map;
 
 @GenerateResourceBundle
@@ -90,7 +92,7 @@ public class HdfsDTarget extends DTarget {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      defaultValue = "",
+      defaultValue = "sdc",
       label = "Files Prefix",
       description = "File name prefix",
       displayPosition = 105,
@@ -263,11 +265,10 @@ public class HdfsDTarget extends DTarget {
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
-
-  /********  For DELIMITED Content  ***********/
+  /********  For DELIMITED ***********/
 
   @ConfigDef(
-      required = false,
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "CSV",
       label = "CSV Format",
@@ -281,30 +282,76 @@ public class HdfsDTarget extends DTarget {
   public CsvMode csvFileFormat;
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Remove New Line Characters",
-      description = "Replaces new lines characters with white spaces",
-      displayPosition = 315,
-      group = "DELIMITED",
-      dependsOn = "dataFormat",
-      triggeredByValue = "DELIMITED"
-  )
-  public boolean replaceNewLines;
-
-  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Field Mapping",
+      defaultValue = "NO_HEADER",
+      label = "Header Line",
       description = "",
       displayPosition = 320,
       group = "DELIMITED",
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ComplexField
-  public List<FieldPathToNameMappingConfig> cvsFieldPathToNameMappingConfigList;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvHeaderChooserValues.class)
+  public CsvHeader csvHeader;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Remove New Line Characters",
+      description = "Replaces new lines characters with white spaces",
+      displayPosition = 330,
+      group = "DELIMITED",
+      dependsOn = "dataFormat",
+      triggeredByValue = "DELIMITED"
+  )
+  public boolean cvsReplaceNewLines;
+
+  /********  For JSON *******/
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "MULTIPLE_OBJECTS",
+      label = "JSON Content",
+      description = "",
+      displayPosition = 200,
+      group = "JSON",
+      dependsOn = "dataFormat",
+      triggeredByValue = "JSON"
+  )
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonModeChooserValues.class)
+  public JsonMode jsonMode;
+
+  /********  For TEXT *******/
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "/text",
+      label = "Text Field Path",
+      description = "",
+      displayPosition = 300,
+      group = "TEXT",
+      dependsOn = "dataFormat",
+      triggeredByValue = "TEXT"
+  )
+  public String textFieldPath;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Empty line if no text",
+      description = "",
+      displayPosition = 310,
+      group = "TEXT",
+      dependsOn = "dataFormat",
+      triggeredByValue = "TEXT"
+  )
+  public boolean textEmptyLineIfNull;
+
 
   @Override
   protected Target createTarget() {
@@ -329,8 +376,11 @@ public class HdfsDTarget extends DTarget {
       lateRecordsDirPathTemplate,
       dataFormat,
       csvFileFormat,
-      replaceNewLines,
-      cvsFieldPathToNameMappingConfigList
+      csvHeader,
+      cvsReplaceNewLines,
+      jsonMode,
+      textFieldPath,
+      textEmptyLineIfNull
     );
   }
 

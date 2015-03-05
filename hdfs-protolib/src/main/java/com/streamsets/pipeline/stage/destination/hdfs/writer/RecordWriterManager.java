@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELRecordSupport;
+import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import com.streamsets.pipeline.lib.recordserialization.RecordToString;
@@ -67,12 +68,12 @@ public class RecordWriterManager {
   private CompressionCodec compressionCodec;
   private SequenceFile.CompressionType compressionType;
   private String keyEL;
-  private RecordToString recordToString;
+  private CharDataGeneratorFactory generatorFactory;
 
   public RecordWriterManager(URI hdfsUri, Configuration hdfsConf, String uniquePrefix, String dirPathTemplate,
       TimeZone timeZone, long cutOffSecs, long cutOffSize, long cutOffRecords, HdfsFileType fileType,
       CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
-      RecordToString recordToString) {
+      CharDataGeneratorFactory generatorFactory) {
     this.hdfsUri = hdfsUri;
     this.hdfsConf = hdfsConf;
     this.uniquePrefix = uniquePrefix;
@@ -85,7 +86,7 @@ public class RecordWriterManager {
     this.compressionCodec = compressionCodec;
     this.compressionType = compressionType;
     this.keyEL = keyEL;
-    this.recordToString = recordToString;
+    this.generatorFactory = generatorFactory;
     pathElEval = new ELEvaluator();
     ELRecordSupport.registerRecordFunctions(pathElEval);
     getCeilingDateBasedOnTemplate(dirPathTemplate, timeZone, new Date());
@@ -239,14 +240,14 @@ public class RecordWriterManager {
     return recordDate.getTime() + cutOffMillis - now.getTime();
   }
 
-  RecordWriter createWriter(FileSystem fs, Path path, long timeToLiveMillis) throws IOException {
+  RecordWriter createWriter(FileSystem fs, Path path, long timeToLiveMillis) throws StageException, IOException {
     switch (fileType) {
       case TEXT:
         OutputStream os = fs.create(path, false);
         if (compressionCodec != null) {
           os = compressionCodec.createOutputStream(os);
         }
-        return new RecordWriter(path, timeToLiveMillis, os, recordToString);
+        return new RecordWriter(path, timeToLiveMillis, os, generatorFactory);
       case SEQUENCE_FILE:
         Utils.checkNotNull(compressionType, "compressionType");
         Utils.checkNotNull(keyEL, "keyEL");
@@ -254,7 +255,7 @@ public class RecordWriterManager {
                             "if using a compressionCodec, compressionType cannot be NULL");
         SequenceFile.Writer writer = SequenceFile.createWriter(fs, hdfsConf, path, Text.class, Text.class,
                                                                compressionType, compressionCodec);
-        return new RecordWriter(path, timeToLiveMillis, writer, keyEL, recordToString);
+        return new RecordWriter(path, timeToLiveMillis, writer, keyEL, generatorFactory);
       default:
         throw new UnsupportedOperationException(Utils.format("Unsupported file Type '{}'", fileType));
     }

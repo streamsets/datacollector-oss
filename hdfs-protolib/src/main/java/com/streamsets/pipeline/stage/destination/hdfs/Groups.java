@@ -11,6 +11,8 @@ public enum Groups implements Label {
   HADOOP_FS("Hadoop FS"),
   OUTPUT_FILES("Output Files"),
   LATE_RECORDS("Late Records"),
+  TEXT("Text"),
+  JSON("JSON"),
   DELIMITED("Delimited"),
   ;
 

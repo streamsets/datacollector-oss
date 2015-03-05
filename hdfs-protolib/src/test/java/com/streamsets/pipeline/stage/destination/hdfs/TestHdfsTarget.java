@@ -59,8 +59,7 @@ public class TestHdfsTarget {
         .addConfiguration("lateRecordsDirPathTemplate", "")
         .addConfiguration("dataFormat", DataFormat.SDC_JSON)
         .addConfiguration("csvFileFormat", null)
-        .addConfiguration("cvsFieldPathToNameMappingConfigList", new ArrayList<>())
-        .addConfiguration("replaceNewLines", false)
+        .addConfiguration("cvsReplaceNewLines", false)
         .build();
     runner.runInit();
     List<Record> records = new ArrayList<>();
