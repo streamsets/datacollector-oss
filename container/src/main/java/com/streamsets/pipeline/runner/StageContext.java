@@ -127,8 +127,9 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   }
 
   private static class JsonRecordWriterImpl implements JsonRecordWriter {
-    private Writer writer;
-    private JsonGenerator generator;
+    private final Writer writer;
+    private final JsonGenerator generator;
+    private boolean closed;
 
     public JsonRecordWriterImpl(Writer writer) throws IOException {
       this.writer = writer;
@@ -137,16 +138,23 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
     @Override
     public void write(Record record) throws IOException {
+      if (closed) {
+        throw new IOException("writer has been closed");
+      }
       generator.writeObject(BeanHelper.wrapRecord(record));
     }
 
     @Override
     public void flush() throws IOException {
+      if (closed) {
+        throw new IOException("writer has been closed");
+      }
       writer.flush();
     }
 
     @Override
     public void close() {
+      closed = true;
       try {
         writer.close();
       } catch (IOException ex) {
