@@ -169,7 +169,7 @@ public abstract class CharDataParserFactory {
           factory = new JsonSdcRecordCharDataParserFactory(context, maxDataLen, configs);
           break;
         case LOG:
-          throw new UnsupportedOperationException();
+          throw new IllegalArgumentException("LOG not yet implemented");
         default:
           throw new IllegalStateException(Utils.format("Unsupported format '{}'", format));
       }
