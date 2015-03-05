@@ -23,10 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -573,7 +573,7 @@ public class PipelineConfigurationValidator {
     List<StageConfiguration> stagesConf = pipelineConfiguration.getStages();
     for (int i = 0; i < stagesConf.size(); i++) {
       StageConfiguration stageConf = stagesConf.get(i);
-      Set<String> openOutputs = new HashSet<>(stageConf.getOutputLanes());
+      Set<String> openOutputs = new LinkedHashSet<>(stageConf.getOutputLanes());
       for (int j = i + 1; j < stagesConf.size(); j++) {
         StageConfiguration downStreamStageConf = stagesConf.get(j);
         Set<String> duplicateOutputs = Sets.intersection(new HashSet<>(stageConf.getOutputLanes()),

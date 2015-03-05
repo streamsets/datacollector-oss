@@ -42,7 +42,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         selectedText: null,
         currentScale: 1,
         copiedStage: undefined,
-        showBadRecords: false
+        showBadRecords: false,
+        showConfiguration: false
       };
 
       // define arrow markers for graph links
@@ -669,6 +670,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
           if(thisGraph.state.showBadRecords) {
             options.detailTabName = 'errors';
+          } else if(thisGraph.state.showConfiguration) {
+            options.detailTabName = 'configuration';
           }
 
           $scope.$apply(function(){
@@ -827,7 +830,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           return pipelineService.getStageConfigurationHTML(d);
         })
         .attr('data-html', true)
-        .attr('data-placement', 'bottom');
+        .attr('data-placement', 'bottom')
+        .on('mousedown', function() {
+          thisGraph.state.showConfiguration = true;
+        })
+        .on('mouseup', function() {
+          thisGraph.state.showConfiguration = false;
+        });
 
 
       //Add bad records count
