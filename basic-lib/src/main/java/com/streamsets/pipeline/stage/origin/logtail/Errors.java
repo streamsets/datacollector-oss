@@ -11,7 +11,7 @@ public enum Errors implements ErrorCode {
   TAIL_00("Log File '{}' does not exist"),
   TAIL_01("Insufficient permissions to read the log file '{}'"),
   TAIL_02("Invalid data format '{}', must be one of '{}'"),
-  TAIL_03("Path '{}' is no a file"),
+  TAIL_03("Path '{}' is not a file"),
   TAIL_04("Could not parse record '{}', {}"),
   ;
 
