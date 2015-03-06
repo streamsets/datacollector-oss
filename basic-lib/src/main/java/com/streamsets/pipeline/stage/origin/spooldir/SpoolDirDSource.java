@@ -259,7 +259,7 @@ public class SpoolDirDSource extends DSource {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Delimiter Element",
-      description = "XML element that acts as a record delimiter",
+      description = "XML element that acts as a record delimiter. No delimiter will treat the whole XML document as one record.",
       displayPosition = 600,
       group = "XML",
       dependsOn = "dataFormat",
