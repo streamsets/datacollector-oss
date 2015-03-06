@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -28,8 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
-import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +44,15 @@ public class KafkaTarget extends BaseTarget {
   private final String topic;
   private final PartitionStrategy partitionStrategy;
   private final String partition;
-  private final DataFormat payloadType;
+  private final DataFormat dataFormat;
+  private final boolean singleMessagePerBatch;
   private final Map<String, String> kafkaProducerConfigs;
   private final CsvMode csvFileFormat;
+  private final CsvHeader csvHeader;
+  private final boolean csvReplaceNewLines;
+  private final JsonMode jsonMode;
   private final String textFieldPath;
+  private final boolean textEmptyLineIfNull;
 
   private KafkaProducer kafkaProducer;
   private long recordCounter = 0;
@@ -54,16 +61,22 @@ public class KafkaTarget extends BaseTarget {
   private CharDataGeneratorFactory generatorFactory;
 
   public KafkaTarget(String metadataBrokerList, String topic, PartitionStrategy partitionStrategy, String partition,
-                     DataFormat payloadType, Map<String, String> kafkaProducerConfigs, CsvMode csvFileFormat,
-                      String textFieldPath) {
+      DataFormat dataFormat, boolean singleMessagePerBatch, Map<String, String> kafkaProducerConfigs,
+      CsvMode csvFileFormat, CsvHeader csvHeader, boolean csvReplaceNewLines, JsonMode jsonMode, String textFieldPath,
+      boolean textEmptyLineIfNull) {
     this.metadataBrokerList = metadataBrokerList;
     this.topic = topic;
     this.partitionStrategy = partitionStrategy;
     this.partition = partition;
-    this.payloadType = payloadType;
+    this.dataFormat = dataFormat;
+    this.singleMessagePerBatch = singleMessagePerBatch;
     this.kafkaProducerConfigs = kafkaProducerConfigs;
     this.csvFileFormat = csvFileFormat;
+    this.csvHeader = csvHeader;
+    this.csvReplaceNewLines = csvReplaceNewLines;
+    this.jsonMode = jsonMode;
     this.textFieldPath = textFieldPath;
+    this.textEmptyLineIfNull = textEmptyLineIfNull;
   }
 
   @Override
@@ -72,17 +85,18 @@ public class KafkaTarget extends BaseTarget {
 
     //metadata broker list should be one or more <host>:<port> separated by a comma
     List<KafkaBroker> kafkaBrokers = KafkaUtil.validateBrokerList(issues, metadataBrokerList,
-      Groups.KAFKA.name(), "metadataBrokerList", getContext());
+                                                                  Groups.KAFKA.name(), "metadataBrokerList",
+                                                                  getContext());
 
     //topic should exist
     KafkaUtil.validateTopic(issues, kafkaBrokers, getContext(), Groups.KAFKA.name(), "topic", topic,
-      metadataBrokerList);
+                            metadataBrokerList);
 
     //validate partition expression
     validatePartitionExpression(issues);
 
     //payload type and payload specific configuration
-    validateDataFormatAndSpecificConfig(issues, payloadType, getContext(), Groups.KAFKA.name(), "payloadType");
+    validateDataFormatAndSpecificConfig(issues, dataFormat, getContext(), Groups.KAFKA.name(), "dataFormat");
 
     //kafka producer configs
     //We do not validate this, just pass it down to Kafka
@@ -93,7 +107,7 @@ public class KafkaTarget extends BaseTarget {
   @Override
   public void init() throws StageException {
     kafkaProducer = new KafkaProducer(topic, metadataBrokerList,
-      payloadType, partitionStrategy, kafkaProducerConfigs);
+                                      dataFormat, partitionStrategy, kafkaProducerConfigs);
     kafkaProducer.init();
 
     generatorFactory = createDataGeneratorFactory();
@@ -101,21 +115,21 @@ public class KafkaTarget extends BaseTarget {
 
   private CharDataGeneratorFactory createDataGeneratorFactory() {
     CharDataGeneratorFactory.Builder builder = new CharDataGeneratorFactory.Builder(getContext(),
-                                                                                    payloadType.getGeneratorFormat());
-    switch(payloadType) {
+                                                                                    dataFormat.getGeneratorFormat());
+    switch (dataFormat) {
       case SDC_JSON:
         break;
       case DELIMITED:
         builder.setMode(csvFileFormat);
-        builder.setMode(CsvHeader.NO_HEADER);
-        builder.setConfig(DelimitedCharDataGeneratorFactory.REPLACE_NEWLINES_KEY, false);
+        builder.setMode(csvHeader);
+        builder.setConfig(DelimitedCharDataGeneratorFactory.REPLACE_NEWLINES_KEY, csvReplaceNewLines);
         break;
       case TEXT:
         builder.setConfig(TextCharDataGeneratorFactory.FIELD_PATH_KEY, textFieldPath);
-        builder.setConfig(TextCharDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, false);
+        builder.setConfig(TextCharDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, textEmptyLineIfNull);
         break;
       case JSON:
-        builder.setMode(JsonMode.MULTIPLE_OBJECTS);
+        builder.setMode(jsonMode);
         break;
     }
     return builder.build();
@@ -123,70 +137,143 @@ public class KafkaTarget extends BaseTarget {
 
   @Override
   public void write(Batch batch) throws StageException {
-    long batchRecordCounter = 0;
-    Iterator<Record> records = batch.getRecords();
-    if(records.hasNext()) {
-      while (records.hasNext()) {
-        Record r = records.next();
-
-        String partitionKey = getPartitionKey(r);
-        if(partitionKey == null) {
-          //record in error
-          continue;
-        }
-        if(!partitionKey.isEmpty() && !validatePartition(r, partitionKey)) {
-          continue;
-        }
-        byte[] message;
-        try {
-          message = serializeRecord(r);
-        } catch (IOException| StageException e) {
-          getContext().toError(r, e);
-          continue;
-        }
-        kafkaProducer.enqueueMessage(message, partitionKey);
-        batchRecordCounter++;
-      }
-
-      kafkaProducer.write();
-      recordCounter += batchRecordCounter;
-      LOG.debug("Wrote {} records in this batch.", batchRecordCounter);
+    if (singleMessagePerBatch) {
+      writeOneMessagePerBatch(batch);
+    } else {
+      writeOneMessagePerRecord(batch);
     }
   }
 
-  private boolean validatePartition(Record r, String partitionKey) {
-    int partition = -1;
-    try {
-      partition = Integer.parseInt(partitionKey);
-    } catch (NumberFormatException e) {
-      LOG.warn(Errors.KAFKA_55.getMessage(), partitionKey, topic, e.getMessage());
-      getContext().toError(r, Errors.KAFKA_55, partitionKey, topic, e.getMessage(), e);
-      return false;
+  private void writeOneMessagePerBatch(Batch batch) throws StageException {
+    int count = 0;
+    Map<String, List<Record>> perPartition = new HashMap<>();
+    Iterator<Record> records = batch.getRecords();
+    while (records.hasNext()) {
+      Record record = records.next();
+      try {
+        String partitionKey = getPartitionKey(record);
+        List<Record> list = perPartition.get(partitionKey);
+        if (list == null) {
+          list = new ArrayList<>();
+          perPartition.put(partitionKey, list);
+        }
+        list.add(record);
+      } catch (Exception ex) {
+        switch (getContext().getOnErrorRecord()) {
+          case DISCARD:
+            break;
+          case TO_ERROR:
+            getContext().toError(record, Errors.KAFKA_56, partition, topic, kafkaProducer.getNumberOfPartitions(),
+                                 record.getHeader().getSourceId());
+            break;
+          case STOP_PIPELINE:
+            throw new StageException(Errors.KAFKA_56, partition, topic, kafkaProducer.getNumberOfPartitions(),
+                                     record.getHeader().getSourceId());
+          default:
+            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                                                         getContext().getOnErrorRecord()));
+        }
+      }
     }
-    //partition number is an integer starting from 0 ... n-1, where n is the number of partitions for topic t
-    if(partition < 0 || partition >= kafkaProducer.getNumberOfPartitions()) {
-      LOG.warn(Errors.KAFKA_56.getMessage(), partition, topic, kafkaProducer.getNumberOfPartitions());
-      getContext().toError(r, Errors.KAFKA_56, partition, topic, kafkaProducer.getNumberOfPartitions());
-      return false;
+    if (!perPartition.isEmpty()) {
+      for (Map.Entry<String, List<Record>> entry : perPartition.entrySet()) {
+        String partition = entry.getKey();
+        List<Record> list = entry.getValue();
+        StringWriter sw = new StringWriter(1024 * list.size());
+        Record currentRecord = null;
+        try {
+          DataGenerator generator = generatorFactory.getGenerator(sw);
+          for (Record record : list) {
+            currentRecord = record;
+            generator.write(record);
+            count++;
+          }
+          currentRecord = null;
+          generator.close();
+          byte[] bytes = sw.toString().getBytes();
+          kafkaProducer.enqueueMessage(bytes, partition);
+          kafkaProducer.write();
+          recordCounter += count;
+          LOG.debug("Wrote {} records in this batch.", count);
+        } catch (Exception ex) {
+          String sourceId = (currentRecord == null) ? "<NONE>" : currentRecord.getHeader().getSourceId();
+          switch (getContext().getOnErrorRecord()) {
+            case DISCARD:
+              LOG.warn("Could not serialize record '{}', all records from batch '{}' for partition '{}' are " +
+                       "discarded, error: {}", sourceId, batch.getSourceOffset(), partition, ex.getMessage(), ex);
+              break;
+            case TO_ERROR:
+              for (Record record : list) {
+                getContext().toError(record, Errors.KAFKA_60, sourceId, batch.getSourceOffset(), partition,
+                                     ex.getMessage(), ex);
+              }
+              break;
+            case STOP_PIPELINE:
+              throw new StageException(Errors.KAFKA_60, sourceId, batch.getSourceOffset(), partition, ex.getMessage(),
+                                       ex);
+            default:
+              throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                                                           getContext().getOnErrorRecord()));
+          }
+        }
+      }
     }
-    return true;
+  }
+
+  private void writeOneMessagePerRecord(Batch batch) throws StageException {
+    long count = 0;
+    Iterator<Record> records = batch.getRecords();
+    while (records.hasNext()) {
+      Record record = records.next();
+      try {
+        String partitionKey = getPartitionKey(record);
+        StringWriter sw = new StringWriter(1024);
+        DataGenerator generator = generatorFactory.getGenerator(sw);
+        generator.write(record);
+        generator.close();
+        byte[] bytes = sw.toString().getBytes();
+        kafkaProducer.enqueueMessage(bytes, partitionKey);
+        count++;
+      } catch (Exception ex) {
+        switch (getContext().getOnErrorRecord()) {
+          case DISCARD:
+            break;
+          case TO_ERROR:
+            getContext().toError(record, ex);
+            break;
+          case STOP_PIPELINE:
+            if (ex instanceof StageException) {
+              throw (StageException) ex;
+            } else {
+              throw new StageException(Errors.KAFKA_51, record.getHeader().getSourceId(), ex.getMessage(), ex);
+            }
+          default:
+            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                                                         getContext().getOnErrorRecord()));
+        }
+      }
+    }
+    kafkaProducer.write();
+    recordCounter += count;
+    LOG.debug("Wrote {} records in this batch.", count);
   }
 
   private String getPartitionKey(Record record) throws StageException {
+    String partitionKey = "";
     if(partitionStrategy == PartitionStrategy.EXPRESSION) {
       ELRecordSupport.setRecordInContext(variables, record);
-      Object result;
       try {
-        result = elEvaluator.eval(variables, partition);
+        int p = elEvaluator.eval(variables, partition, Integer.class);
+        if (p < 0 || p >= kafkaProducer.getNumberOfPartitions()) {
+          throw new StageException(Errors.KAFKA_56, partition, topic, kafkaProducer.getNumberOfPartitions(),
+                                   record.getHeader().getSourceId());
+        }
+        partitionKey = Integer.toString(p);
       } catch (ELException e) {
-        LOG.warn(Errors.KAFKA_54.getMessage(), partition, record.getHeader().getSourceId(), e.getMessage());
-        getContext().toError(record, Errors.KAFKA_54, partition, record.getHeader().getSourceId(),
-          e.getMessage(), e);
-        return null;
+        throw new StageException(Errors.KAFKA_54, partition, record.getHeader().getSourceId(), e.getMessage());
       }
-      return result.toString();
     }
-    return "";
+    return partitionKey;
   }
 
   @Override
@@ -195,14 +282,6 @@ public class KafkaTarget extends BaseTarget {
     if(kafkaProducer != null) {
       kafkaProducer.destroy();
     }
-  }
-
-  private byte[] serializeRecord(Record r) throws StageException, IOException {
-    StringWriter sw = new StringWriter(1024);
-    DataGenerator generator = generatorFactory.getGenerator(sw);
-    generator.write(r);
-    generator.close();
-    return sw.toString().getBytes();
   }
 
   /****************************************************/

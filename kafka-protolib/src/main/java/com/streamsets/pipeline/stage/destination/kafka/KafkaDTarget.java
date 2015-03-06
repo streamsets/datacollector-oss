@@ -13,9 +13,13 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 import java.util.List;
@@ -88,7 +92,18 @@ public class KafkaDTarget extends DTarget {
     group = "KAFKA"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ProducerDataFormatChooserValues.class)
-  public DataFormat payloadType;
+  public DataFormat dataFormat;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "One Message per Batch",
+      description = "Generates a single Kafka message with all records in the batch",
+      displayPosition = 55,
+      group = "KAFKA"
+  )
+  public boolean singleMessagePerBatch;
 
   @ConfigDef(
     required = false,
@@ -114,11 +129,54 @@ public class KafkaDTarget extends DTarget {
     description = "",
     displayPosition = 100,
     group = "DELIMITED",
-    dependsOn = "payloadType",
+    dependsOn = "dataFormat",
     triggeredByValue = "DELIMITED"
   )
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NO_HEADER",
+      label = "Header Line",
+      description = "",
+      displayPosition = 110,
+      group = "DELIMITED",
+      dependsOn = "dataFormat",
+      triggeredByValue = "DELIMITED"
+  )
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvHeaderChooserValues.class)
+  public CsvHeader csvHeader;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Remove New Line Characters",
+      description = "Replaces new lines characters with white spaces",
+      displayPosition = 120,
+      group = "DELIMITED",
+      dependsOn = "dataFormat",
+      triggeredByValue = "DELIMITED"
+  )
+  public boolean csvReplaceNewLines;
+
+  /********  For JSON *******/
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "MULTIPLE_OBJECTS",
+      label = "JSON Content",
+      description = "",
+      displayPosition = 200,
+      group = "JSON",
+      dependsOn = "dataFormat",
+      triggeredByValue = "JSON"
+  )
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonModeChooserValues.class)
+  public JsonMode jsonMode;
 
   /********  For TEXT Content  ***********/
 
@@ -126,19 +184,33 @@ public class KafkaDTarget extends DTarget {
     required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue = "/",
-    label = "Field",
+    label = "Text Field Path",
     description = "Field to write data to Kafka",
     displayPosition = 120,
     group = "TEXT",
-    dependsOn = "payloadType",
+    dependsOn = "dataFormat",
     triggeredByValue = "TEXT"
   )
   @FieldSelector(singleValued = true)
   public String textFieldPath;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Empty Line if no Text",
+      description = "",
+      displayPosition = 310,
+      group = "TEXT",
+      dependsOn = "dataFormat",
+      triggeredByValue = "TEXT"
+  )
+  public boolean textEmptyLineIfNull;
+
   @Override
   protected Target createTarget() {
-    return new KafkaTarget(metadataBrokerList, topic, partitionStrategy, partition, payloadType, kafkaProducerConfigs,
-      csvFileFormat, textFieldPath);
+    return new KafkaTarget(metadataBrokerList, topic, partitionStrategy, partition, dataFormat, singleMessagePerBatch,
+                           kafkaProducerConfigs, csvFileFormat, csvHeader, csvReplaceNewLines, jsonMode, textFieldPath,
+                           textEmptyLineIfNull);
   }
 }

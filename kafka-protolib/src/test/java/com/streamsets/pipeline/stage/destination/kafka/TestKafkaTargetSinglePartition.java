@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordReader;
+import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
@@ -44,14 +45,26 @@ public class TestKafkaTargetSinglePartition {
   private static KafkaServer kafkaServer;
   private static ZkClient zkClient;
   private static EmbeddedZookeeper zkServer;
-  private static List<KafkaStream<byte[], byte[]>> kafkaStreams;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams1;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams2;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams3;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams4;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams5;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams6;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams7;
   private static int port;
 
   private static final String HOST = "localhost";
   private static final int BROKER_ID = 0;
   private static final int PARTITIONS = 1;
   private static final int REPLICATION_FACTOR = 1;
-  private static final String TOPIC = "test";
+  private static final String TOPIC1 = "test1";
+  private static final String TOPIC2 = "test2";
+  private static final String TOPIC3 = "test3";
+  private static final String TOPIC4 = "test4";
+  private static final String TOPIC5 = "test5";
+  private static final String TOPIC6 = "test6";
+  private static final String TOPIC7 = "test7";
   private static final int TIME_OUT = 1000;
 
   @BeforeClass
@@ -65,12 +78,30 @@ public class TestKafkaTargetSinglePartition {
     Properties props = TestUtils.createBrokerConfig(BROKER_ID, port);
     kafkaServer = TestUtils.createServer(new KafkaConfig(props), new MockTime());
     // create topic
-    AdminUtils.createTopic(zkClient, TOPIC, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC1, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC2, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC3, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC4, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC5, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC6, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC7, PARTITIONS, REPLICATION_FACTOR, new Properties());
     List<KafkaServer> servers = new ArrayList<>();
     servers.add(kafkaServer);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC1, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC2, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC3, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC4, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC5, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC6, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC7, 0, TIME_OUT);
 
-    kafkaStreams = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC, PARTITIONS);
+    kafkaStreams1 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC1, PARTITIONS);
+    kafkaStreams2 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC2, PARTITIONS);
+    kafkaStreams3 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC3, PARTITIONS);
+    kafkaStreams4 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC4, PARTITIONS);
+    kafkaStreams5 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC5, PARTITIONS);
+    kafkaStreams6 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC6, PARTITIONS);
+    kafkaStreams7 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC7, PARTITIONS);
   }
 
   @AfterClass
@@ -83,14 +114,15 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteNoRecords() throws InterruptedException, StageException {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-      .addConfiguration("topic", TOPIC)
+      .addConfiguration("topic", TOPIC1)
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", DataFormat.TEXT)
+      .addConfiguration("dataFormat", DataFormat.TEXT)
+      .addConfiguration("singleMessagePerBatch", false)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("textFieldPath", "/")
+      .addConfiguration("textEmptyLineIfNull", true)
       .build();
 
     targetRunner.runInit();
@@ -99,8 +131,8 @@ public class TestKafkaTargetSinglePartition {
     targetRunner.runDestroy();
 
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams.size() == 1);
-    ConsumerIterator<byte[], byte[]> it = kafkaStreams.get(0).iterator();
+    Assert.assertTrue(kafkaStreams1.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams1.get(0).iterator();
     try {
       while (it.hasNext()) {
         messages.add(new String(it.next().message()));
@@ -119,14 +151,15 @@ public class TestKafkaTargetSinglePartition {
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-      .addConfiguration("topic", TOPIC)
+      .addConfiguration("topic", TOPIC2)
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("payloadType", DataFormat.TEXT)
+      .addConfiguration("dataFormat", DataFormat.TEXT)
+      .addConfiguration("singleMessagePerBatch", false)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("textFieldPath", "/")
+      .addConfiguration("textEmptyLineIfNull", true)
       .build();
 
     targetRunner.runInit();
@@ -135,8 +168,8 @@ public class TestKafkaTargetSinglePartition {
     targetRunner.runDestroy();
 
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams.size() == 1);
-    ConsumerIterator<byte[], byte[]> it = kafkaStreams.get(0).iterator();
+    Assert.assertTrue(kafkaStreams2.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams2.get(0).iterator();
     try {
       while (it.hasNext()) {
         messages.add(new String(it.next().message()));
@@ -158,14 +191,15 @@ public class TestKafkaTargetSinglePartition {
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-      .addConfiguration("topic", TOPIC)
+      .addConfiguration("topic", TOPIC3)
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("payloadType", DataFormat.TEXT)
+      .addConfiguration("dataFormat", DataFormat.TEXT)
+      .addConfiguration("singleMessagePerBatch", false)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("textFieldPath", "/name")
+      .addConfiguration("textEmptyLineIfNull", true)
       .build();
 
     targetRunner.runInit();
@@ -174,8 +208,8 @@ public class TestKafkaTargetSinglePartition {
     targetRunner.runDestroy();
 
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams.size() == 1);
-    ConsumerIterator<byte[], byte[]> it = kafkaStreams.get(0).iterator();
+    Assert.assertTrue(kafkaStreams3.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams3.get(0).iterator();
     try {
       while (it.hasNext()) {
         String message = new String(it.next().message());
@@ -198,14 +232,15 @@ public class TestKafkaTargetSinglePartition {
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-      .addConfiguration("topic", TOPIC)
+      .addConfiguration("topic", TOPIC4)
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("payloadType", DataFormat.TEXT)
+      .addConfiguration("dataFormat", DataFormat.TEXT)
+      .addConfiguration("singleMessagePerBatch", false)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("textFieldPath", "/lastStatusChange") //this is number field, should be converted to string
+        .addConfiguration("textEmptyLineIfNull", true)
       .build();
 
     targetRunner.runInit();
@@ -214,8 +249,8 @@ public class TestKafkaTargetSinglePartition {
     targetRunner.runDestroy();
 
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams.size() == 1);
-    ConsumerIterator<byte[], byte[]> it = kafkaStreams.get(0).iterator();
+    Assert.assertTrue(kafkaStreams4.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams4.get(0).iterator();
     try {
       while (it.hasNext()) {
         String message = new String(it.next().message());
@@ -239,14 +274,16 @@ public class TestKafkaTargetSinglePartition {
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-      .addConfiguration("topic", TOPIC)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addConfiguration("topic", TOPIC5)
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("payloadType", DataFormat.TEXT)
+      .addConfiguration("dataFormat", DataFormat.TEXT)
+      .addConfiguration("singleMessagePerBatch", false)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("csvFileFormat", "DEFAULT")
       .addConfiguration("textFieldPath", "/") //this is map field, should not be converted to string
+      .addConfiguration("textEmptyLineIfNull", true)
       .build();
 
     targetRunner.runInit();
@@ -259,8 +296,8 @@ public class TestKafkaTargetSinglePartition {
 
     //Double check that there are no messages in kafka target topic
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams.size() == 1);
-    ConsumerIterator<byte[], byte[]> it = kafkaStreams.get(0).iterator();
+    Assert.assertTrue(kafkaStreams5.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams5.get(0).iterator();
     try {
       while (it.hasNext()) {
         String message = new String(it.next().message());
@@ -278,13 +315,13 @@ public class TestKafkaTargetSinglePartition {
   public void testWriteJsonRecords() throws InterruptedException, StageException, IOException {
 
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-      .addConfiguration("topic", TOPIC)
+      .addConfiguration("topic", TOPIC6)
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", DataFormat.SDC_JSON)
+      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+      .addConfiguration("singleMessagePerBatch", false)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("csvFileFormat", "DEFAULT")
       .build();
 
     targetRunner.runInit();
@@ -293,8 +330,8 @@ public class TestKafkaTargetSinglePartition {
     targetRunner.runDestroy();
 
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams.size() == 1);
-    ConsumerIterator<byte[], byte[]> it = kafkaStreams.get(0).iterator();
+    Assert.assertTrue(kafkaStreams6.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams6.get(0).iterator();
     try {
       while (it.hasNext()) {
         messages.add(new String(it.next().message()));
@@ -319,13 +356,16 @@ public class TestKafkaTargetSinglePartition {
     //Test DELIMITED is - "2010,NLDS1,PHI,NL,CIN,NL,3,0,0"
 
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-      .addConfiguration("topic", TOPIC)
+      .addConfiguration("topic", TOPIC7)
       .addConfiguration("partition", "0")
       .addConfiguration("metadataBrokerList", HOST + ":" + port)
       .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", DataFormat.DELIMITED)
+      .addConfiguration("dataFormat", DataFormat.DELIMITED)
+      .addConfiguration("singleMessagePerBatch", false)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
+      .addConfiguration("csvReplaceNewLines", false)
       .build();
 
     targetRunner.runInit();
@@ -334,8 +374,8 @@ public class TestKafkaTargetSinglePartition {
     targetRunner.runDestroy();
 
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams.size() == 1);
-    ConsumerIterator<byte[], byte[]> it = kafkaStreams.get(0).iterator();
+    Assert.assertTrue(kafkaStreams7.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams7.get(0).iterator();
     try {
       while (it.hasNext()) {
         messages.add(new String(it.next().message()));

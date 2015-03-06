@@ -40,14 +40,15 @@ public enum Errors implements ErrorCode {
 
   //Kafka target messages
   KAFKA_50("Error writing data to kafka broker, {}"),
-  KAFKA_51("Error serializing record, {}"),
+  KAFKA_51("Error serializing record '{}', {}"),
   KAFKA_52("Could not retrieve metadata for topic '{}' from Broker '{}'. Reason : {}"),
   KAFKA_54("Error evaluating partition expression '{}' for record '{}'. Reason {}"),
   KAFKA_55("Error converting the result of partition expression '{}' to a partition id for topic '{}'. Reason : {}"),
-  KAFKA_56("Partition expression resulted in invalid partition id '{}'. Topic '{}' has {} partitions"),
+  KAFKA_56("Partition expression resulted in invalid partition id '{}'. Topic '{}' has {} partitions. Record '{}'"),
   KAFKA_57("Invalid partition expression '{}', {}"),
   KAFKA_58("Field cannot be empty"),
   KAFKA_59("Fields cannot be empty"),
+  KAFKA_60("Could not serialize record '{}', all records from batch '{}' for partition '{}' are sent to error, error: {}"),
 
   ;
   private final String msg;
