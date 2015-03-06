@@ -306,7 +306,7 @@ public class HdfsDTarget extends DTarget {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  public boolean cvsReplaceNewLines;
+  public boolean csvReplaceNewLines;
 
   /********  For JSON *******/
 
@@ -377,7 +377,7 @@ public class HdfsDTarget extends DTarget {
       dataFormat,
       csvFileFormat,
       csvHeader,
-      cvsReplaceNewLines,
+      csvReplaceNewLines,
       jsonMode,
       textFieldPath,
       textEmptyLineIfNull
