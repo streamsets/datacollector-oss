@@ -55,6 +55,8 @@ angular
        * Validate Pipeline
        */
       validatePipeline: function() {
+        $scope.$storage.maximizeDetailPane = false;
+        $scope.$storage.minimizeDetailPane = false;
         $rootScope.common.infoList.push({
           message:pipelineValidationInProgress
         });
