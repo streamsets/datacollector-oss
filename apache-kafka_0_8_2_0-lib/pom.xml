@@ -147,6 +147,9 @@
       <id>dist</id>
       <activation>
         <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
       </activation>
       <build>
         <plugins>

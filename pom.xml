@@ -31,6 +31,18 @@
     </license>
   </licenses>
 
+  <properties>
+    <cdh_5_2_1-lib>none</cdh_5_2_1-lib>
+    <cdh_5_2_2-lib>none</cdh_5_2_2-lib>
+    <cdh_5_2_3-lib>none</cdh_5_2_3-lib>
+    <cdh_5_2_4-lib>cdh5_2_4-lib</cdh_5_2_4-lib>
+    <cdh_5_3_0-lib>none</cdh_5_3_0-lib>
+    <cdh_5_3_1-lib>none</cdh_5_3_1-lib>
+    <cdh_5_3_2-lib>cdh5_3_2-lib</cdh_5_3_2-lib>
+    <apache-kafka_0_8_1_1-lib>apache-kafka_0_8_1_1-lib</apache-kafka_0_8_1_1-lib>
+    <apache-kafka_0_8_2_0-lib>apache-kafka_0_8_2_0-lib</apache-kafka_0_8_2_0-lib>
+  </properties>
+
   <modules>
     <module>root-proto</module>
     <module>root</module>
@@ -44,9 +56,8 @@
     <module>sdk</module>
     <module>sdk-test</module>
     <module>hdfs-protolib</module>
-    <module>cdh5_3_0-lib</module>
-    <module>cdh5_3_1-lib</module>
-    <module>cdh5_2_1-lib</module>
+    <module>cdh5_2_4-lib</module>
+    <module>cdh5_3_2-lib</module>
     <module>kafka-protolib</module>
     <module>apache-kafka_0_8_1_1-lib</module>
     <module>apache-kafka_0_8_2_0-lib</module>
@@ -95,6 +106,9 @@
       <id>ui</id>
       <activation>
         <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
       </activation>
       <modules>
         <module>ui</module>
@@ -104,6 +118,9 @@
       <id>docs</id>
       <activation>
         <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
       </activation>
       <modules>
         <module>docs</module>
@@ -122,6 +139,9 @@
       <id>dist</id>
       <activation>
         <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
       </activation>
       <modules>
         <module>dist</module>
@@ -158,6 +178,29 @@
       </activation>
       <modules>
         <module>template-lib</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>all-libs</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <properties>
+        <cdh_5_2_1-lib>cdh5_2_1-lib</cdh_5_2_1-lib>
+        <cdh_5_2_2-lib>cdh5_2_2-lib</cdh_5_2_2-lib>
+        <cdh_5_2_3-lib>cdh5_2_3-lib</cdh_5_2_3-lib>
+        <cdh_5_3_0-lib>cdh5_3_0-lib</cdh_5_3_0-lib>
+        <cdh_5_3_1-lib>cdh5_3_1-lib</cdh_5_3_1-lib>
+      </properties>
+      <modules>
+        <module>cdh5_2_1-lib</module>
+        <module>cdh5_2_2-lib</module>
+        <module>cdh5_2_3-lib</module>
+        <module>cdh5_3_0-lib</module>
+        <module>cdh5_3_1-lib</module>
       </modules>
     </profile>
   </profiles>

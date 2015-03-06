@@ -52,12 +52,12 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-cdh5_3_0-lib</artifactId>
+      <artifactId>streamsets-datacollector-cdh5_3_2-lib</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-cdh5_2_1-lib</artifactId>
+      <artifactId>streamsets-datacollector-cdh5_2_4-lib</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -107,6 +107,42 @@
 
   <profiles>
     <profile>
+      <id>all-libs</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-cdh5_2_1-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-cdh5_2_2-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-cdh5_2_3-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-cdh5_3_0-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-cdh5_3_1-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>dev</id>
       <activation>
         <activeByDefault>false</activeByDefault>
@@ -130,6 +166,9 @@
       <id>ui</id>
       <activation>
         <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
       </activation>
       <properties>
         <!-- trick to avoid pulling UI files if the 'ui' profile is not active -->
@@ -150,6 +189,9 @@
       <id>docs</id>
       <activation>
         <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
       </activation>
       <properties>
         <docs.dist-dir>${basedir}/../docs/target/dita/out</docs.dist-dir>

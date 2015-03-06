@@ -22,11 +22,11 @@
   <packaging>jar</packaging>
 
   <dependencies>
-    <!--<dependency>-->
-      <!--<groupId>com.streamsets</groupId>-->
-      <!--<artifactId>streamsets-datacollector-dist</artifactId>-->
-      <!--<scope>compile</scope>-->
-    <!--</dependency>-->
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-dist</artifactId>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -73,6 +73,51 @@
             </configuration>
           </execution>
           <execution>
+            <id>cdh-5.2.2</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-cdh_5_2_2-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-cdh_5_2_2-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>cdh-5.2.3</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-cdh_5_2_3-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-cdh_5_2_3-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>cdh-5.2.4</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-cdh_5_2_4-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-cdh_5_2_4-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
             <id>cdh-5.3.0</id>
             <phase>package</phase>
             <goals>
@@ -99,6 +144,21 @@
               <finalName>streamsets-datacollector-cdh_5_3_1-lib-${project.version}</finalName>
               <descriptors>
                 <descriptor>src/main/assemblies/data-collector-cdh_5_3_1-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>cdh-5.3.2</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-cdh_5_3_2-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-cdh_5_3_2-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>

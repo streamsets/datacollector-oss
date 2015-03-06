@@ -15,15 +15,26 @@
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-apache-kafka_0_8_1_1-lib</artifactId>
+  <artifactId>streamsets-datacollector-cdh5_3_2-lib</artifactId>
   <version>1.0.0b2-SNAPSHOT</version>
-  <description>StreamSets Data Collector Apache Kafka 0.8.1.1 Lib</description>
-  <name>StreamSets Data Collector Apache Kafka 0.8.1.1 Lib</name>
+  <description>StreamSets Data Collector CDH5.3.2 Lib</description>
+  <name>StreamSets Data Collector CDH5.3.2 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <kafka.version>0.8.1.1</kafka.version>
+    <hadoop.version>2.5.0-cdh5.3.2</hadoop.version>
   </properties>
+
+  <repositories>
+    <repository>
+      <id>cdh.repo</id>
+      <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+      <name>Cloudera Repositories</name>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 
   <dependencies>
     <dependency>
@@ -70,39 +81,64 @@
 
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-kafka-protolib</artifactId>
+      <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
       <exclusions>
         <exclusion>
-          <groupId>org.apache.kafka</groupId>
-          <artifactId>kafka_2.8.0</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.scala-lang</groupId>
-          <artifactId>scala-library</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.101tec</groupId>
-          <artifactId>zkclient</artifactId>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-client</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka_2.8.0</artifactId>
-      <version>${kafka.version}</version>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+      <version>${hadoop.version}</version>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka_2.8.0</artifactId>
-      <version>${kafka.version}</version>
-      <classifier>test</classifier>
-      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>io.dropwizard.metrics</groupId>
+          <artifactId>metrics-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-yarn-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-mapreduce-client-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-mapreduce-client-app</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-minicluster</artifactId>
+      <version>${hadoop.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -119,7 +155,7 @@
             </goals>
             <configuration>
               <sources>
-                <source>${basedir}/../kakfa-protolib/src/test/java</source>
+                <source>${basedir}/../hdfs-protolib/src/test/java</source>
               </sources>
             </configuration>
           </execution>
@@ -132,7 +168,7 @@
             <configuration>
               <resources>
                 <resource>
-                  <directory>${basedir}/../kafka-protolib/src/test/resources</directory>
+                  <directory>${basedir}/../hdfs-protolib/src/test/resources</directory>
                 </resource>
               </resources>
             </configuration>

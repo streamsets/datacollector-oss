@@ -138,29 +138,45 @@
       <outputDirectory>/stage-libs/</outputDirectory>
     </fileSet>
 
-    <!-- cdh5_2_1-lib -->
-    <!--<fileSet>-->
-      <!--<directory>${basedir}/../cdh5_2_1-lib/target/stage-libs/</directory>-->
-      <!--<outputDirectory>/stage-libs/</outputDirectory>-->
-    <!--</fileSet>-->
-
-    <!-- cdh5_3_0-lib -->
+    <!-- CDH libs -->
     <fileSet>
-      <directory>${basedir}/../cdh5_3_0-lib/target/stage-libs/</directory>
+      <directory>${basedir}/../${cdh_5_2_1-lib}/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_2_2-lib}/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_2_3-lib}/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_2_4-lib}/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_3_0-lib}/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_3_1-lib}/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_3_2-lib}/target/stage-libs/</directory>
       <outputDirectory>/stage-libs/</outputDirectory>
     </fileSet>
 
-    <!-- apache_kafka_0_8_1_1-lib -->
+    <!-- Apache Kafka libs -->
     <fileSet>
-      <directory>${basedir}/../apache-kafka_0_8_1_1-lib/target/stage-libs/</directory>
+      <directory>${basedir}/../${apache-kafka_0_8_1_1-lib}/target/stage-libs/</directory>
       <outputDirectory>/stage-libs/</outputDirectory>
     </fileSet>
-
-    <!--&lt;!&ndash; apache_kafka_0_8_2_0-lib &ndash;&gt;-->
-    <!--<fileSet>-->
-      <!--<directory>${basedir}/../apache-kafka_0_8_2_0-lib/target/stage-libs/</directory>-->
-      <!--<outputDirectory>/stage-libs/</outputDirectory>-->
-    <!--</fileSet>-->
+    <fileSet>
+      <directory>${basedir}/../${apache-kafka_0_8_2_0-lib}/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
 
   </fileSets>
 
