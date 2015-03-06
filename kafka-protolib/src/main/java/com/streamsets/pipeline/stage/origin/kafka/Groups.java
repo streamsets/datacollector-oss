@@ -8,21 +8,22 @@ package com.streamsets.pipeline.stage.origin.kafka;
 import com.streamsets.pipeline.api.Label;
 
 public enum Groups implements Label {
-    KAFKA("KAFKA"),
-    JSON("JSON"),
-    DELIMITED("Delimited"),
-    XML("XML"),
+  KAFKA("KAFKA"),
+  TEXT("Text"),
+  JSON("JSON"),
+  DELIMITED("Delimited"),
+  XML("XML"),
 
-    ;
+  ;
 
-    private final String label;
+  private final String label;
 
-    private Groups(String label) {
-      this.label = label;
-    }
-
-    public String getLabel() {
-      return this.label;
-    }
+  private Groups(String label) {
+    this.label = label;
   }
+
+  public String getLabel() {
+    return this.label;
+  }
+}
 

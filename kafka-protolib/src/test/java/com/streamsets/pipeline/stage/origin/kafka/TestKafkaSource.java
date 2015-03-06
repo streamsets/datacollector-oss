@@ -99,8 +99,9 @@ public class TestKafkaSource {
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("dataFormat", DataFormat.TEXT)
+      .addConfiguration("textMaxLineLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecord", false)
+      .addConfiguration("produceSingleRecordPerBatch", false)
       .build();
 
     sourceRunner.runInit();
@@ -142,8 +143,9 @@ public class TestKafkaSource {
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("dataFormat", DataFormat.TEXT)
+      .addConfiguration("textMaxLineLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecord", false)
+      .addConfiguration("produceSingleRecordPerBatch", false)
       .build();
 
     sourceRunner.runInit();
@@ -177,15 +179,16 @@ public class TestKafkaSource {
       producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
-      .addOutputLane("lane")
-      .addConfiguration("topic", "testProduceJsonRecordsMultipleObjectsSingleRecord")
+        .addOutputLane("lane")
+        .addConfiguration("topic", "testProduceJsonRecordsMultipleObjectsSingleRecord")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("dataFormat", DataFormat.JSON)
       .addConfiguration("jsonContent", JsonMode.MULTIPLE_OBJECTS)
-      .addConfiguration("produceSingleRecord", true)
+      .addConfiguration("jsonMaxObjectLen", 4096)
+      .addConfiguration("produceSingleRecordPerBatch", true)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();
 
@@ -215,15 +218,16 @@ public class TestKafkaSource {
       producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
-      .addOutputLane("lane")
-      .addConfiguration("topic", "testProduceJsonRecordsMultipleObjectsMultipleRecord")
+        .addOutputLane("lane")
+        .addConfiguration("topic", "testProduceJsonRecordsMultipleObjectsMultipleRecord")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("dataFormat", DataFormat.JSON)
       .addConfiguration("jsonContent", JsonMode.MULTIPLE_OBJECTS)
-      .addConfiguration("produceSingleRecord", false)
+      .addConfiguration("jsonMaxObjectLen", 4096)
+      .addConfiguration("produceSingleRecordPerBatch", false)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();
 
@@ -253,16 +257,17 @@ public class TestKafkaSource {
       producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
-      .addOutputLane("lane")
-      .addConfiguration("topic", "testProduceJsonRecordsArrayObjects")
+        .addOutputLane("lane")
+        .addConfiguration("topic", "testProduceJsonRecordsArrayObjects")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
       .addConfiguration("dataFormat", DataFormat.JSON)
       .addConfiguration("jsonContent", JsonMode.ARRAY_OBJECTS)
+      .addConfiguration("jsonMaxObjectLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecord", true)
+      .addConfiguration("produceSingleRecordPerBatch", true)
       .build();
 
     sourceRunner.runInit();
@@ -300,8 +305,9 @@ public class TestKafkaSource {
       .addConfiguration("dataFormat", DataFormat.XML)
       .addConfiguration("jsonContent", null)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecord", true)
+      .addConfiguration("produceSingleRecordPerBatch", true)
       .addConfiguration("xmlRecordElement", "")
+      .addConfiguration("xmlMaxObjectLen", 4096)
       .build();
 
     sourceRunner.runInit();
@@ -339,7 +345,7 @@ public class TestKafkaSource {
       .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecord", true)
+      .addConfiguration("produceSingleRecordPerBatch", true)
       .build();
 
     sourceRunner.runInit();

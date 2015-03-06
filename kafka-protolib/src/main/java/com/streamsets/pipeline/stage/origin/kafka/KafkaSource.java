@@ -43,33 +43,38 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   private final String consumerGroup;
   private final String topic;
   private final DataFormat dataFormat;
+  public boolean produceSingleRecordPerBatch;
   private final int maxBatchSize;
   private final Map<String, String> kafkaConsumerConfigs;
+  public int textMaxLineLen;
   private final JsonMode jsonContent;
-  private final boolean produceSingleRecord;
+  public int jsonMaxObjectLen;
   private final CsvMode csvFileFormat;
   private final CsvHeader csvHeader;
   private final String xmlRecordElement;
+  public int xmlMaxObjectLen;
   private int maxWaitTime;
   private KafkaConsumer kafkaConsumer;
 
-  public KafkaSource(String zookeeperConnect, String consumerGroup, String topic,
-                     DataFormat dataFormat, int maxBatchSize, int maxWaitTime,
-                     Map<String, String> kafkaConsumerConfigs, JsonMode jsonContent,
-                     boolean produceSingleRecord, CsvMode csvFileFormat, CsvHeader csvHeader,
-      String xmlRecordElement) {
+  public KafkaSource(String zookeeperConnect, String consumerGroup, String topic, DataFormat dataFormat,
+      boolean produceSingleRecordPerBatch, int maxBatchSize, int maxWaitTime, Map<String, String> kafkaConsumerConfigs,
+      int textMaxLineLen, JsonMode jsonContent, int jsonMaxObjectLen, CsvMode csvFileFormat, CsvHeader csvHeader,
+      String xmlRecordElement, int xmlMaxObjectLen) {
     this.zookeeperConnect = zookeeperConnect;
     this.consumerGroup = consumerGroup;
     this.topic = topic;
     this.dataFormat = dataFormat;
+    this.produceSingleRecordPerBatch = produceSingleRecordPerBatch;
     this.maxBatchSize = maxBatchSize;
     this.maxWaitTime = maxWaitTime;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    this.textMaxLineLen = textMaxLineLen;
     this.jsonContent = jsonContent;
-    this.produceSingleRecord = produceSingleRecord;
+    this.jsonMaxObjectLen = jsonMaxObjectLen;
     this.csvFileFormat = csvFileFormat;
     this.csvHeader = csvHeader;
     this.xmlRecordElement = xmlRecordElement;
+    this.xmlMaxObjectLen = xmlMaxObjectLen;
   }
 
   @Override
@@ -132,18 +137,22 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     LOG.info("Successfully initialized Kafka Consumer");
 
     CharDataParserFactory.Builder builder =
-        new CharDataParserFactory.Builder(getContext(), dataFormat.getParserFormat()).setMaxDataLen(-1);
+        new CharDataParserFactory.Builder(getContext(), dataFormat.getParserFormat());
 
     switch ((dataFormat)) {
       case TEXT:
+        builder.setMaxDataLen(textMaxLineLen);
         break;
       case JSON:
         builder.setMode(jsonContent);
+        builder.setMaxDataLen(jsonMaxObjectLen);
         break;
       case DELIMITED:
+        builder.setMaxDataLen(-1);
         builder.setMode(csvFileFormat).setMode(csvHeader);
         break;
       case XML:
+        builder.setMaxDataLen(xmlMaxObjectLen);
         builder.setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
         break;
       case SDC_JSON:
@@ -201,7 +210,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
                                                        getContext().getOnErrorRecord(), ex));
       }
     }
-    if (produceSingleRecord && records.size() > 1) {
+    if (produceSingleRecordPerBatch && records.size() > 1) {
       List<Field> list = new ArrayList<>();
       for (Record record : records) {
         list.add(record.get());

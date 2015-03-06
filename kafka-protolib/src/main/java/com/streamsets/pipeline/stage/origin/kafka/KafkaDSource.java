@@ -81,6 +81,17 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   public DataFormat dataFormat;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Produce Single Record",
+      description = "Generates a single record for multiple objects within a message",
+      displayPosition = 45,
+      group = "KAFKA"
+  )
+  public boolean produceSingleRecordPerBatch;
+
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.INTEGER,
     defaultValue = "1000",
@@ -115,6 +126,19 @@ public class KafkaDSource extends DSourceOffsetCommitter {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "1024",
+      label = "Max Line Length",
+      description = "Longer lines are truncated",
+      displayPosition = 100,
+      group = "TEXT",
+      dependsOn = "dataFormat",
+      triggeredByValue = "TEXT"
+  )
+  public int textMaxLineLen;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "MULTIPLE_OBJECTS",
       label = "JSON Content",
@@ -128,15 +152,17 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   public JsonMode jsonContent;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    label = "Produce Single Record",
-    description = "Generates a single record for multiple objects within a message",
-    displayPosition = 5,
-    group = "KAFKA"
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "4096",
+      label = "Max Object Length (chars)",
+      description = "Larger objects are not processed",
+      displayPosition = 110,
+      group = "JSON",
+      dependsOn = "dataFormat",
+      triggeredByValue = "JSON"
   )
-  public boolean produceSingleRecord;
+  public int jsonMaxObjectLen;
 
   @ConfigDef(
       required = true,
@@ -178,11 +204,24 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   )
   public String xmlRecordElement;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "4096",
+      label = "Max Record Length (chars)",
+      description = "Larger records are not processed",
+      displayPosition = 310,
+      group = "XML",
+      dependsOn = "dataFormat",
+      triggeredByValue = "XML"
+  )
+  public int xmlMaxObjectLen;
+
   @Override
   protected Source createSource() {
-    return new KafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, maxBatchSize,
-      maxWaitTime, kafkaConsumerConfigs, jsonContent, produceSingleRecord, csvFileFormat, csvHeader,
-      xmlRecordElement);
+    return new KafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, produceSingleRecordPerBatch,
+                           maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent,
+                           jsonMaxObjectLen, csvFileFormat, csvHeader, xmlRecordElement, xmlMaxObjectLen);
   }
 
 }
