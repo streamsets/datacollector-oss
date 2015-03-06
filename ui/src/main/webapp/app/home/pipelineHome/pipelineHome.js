@@ -758,7 +758,8 @@ angular
           showEdgePreviewIcon: $scope.isPipelineRunning,
           isReadOnly: $scope.isPipelineRunning || $scope.previewMode,
           pipelineRules: $scope.pipelineRules,
-          triggeredAlerts: $scope.triggeredAlerts
+          triggeredAlerts: $scope.triggeredAlerts,
+          errorStage: $scope.pipelineConfig.errorStage
         });
       });
 

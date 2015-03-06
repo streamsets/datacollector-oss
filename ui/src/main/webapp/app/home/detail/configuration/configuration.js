@@ -467,11 +467,8 @@ angular
         $scope.configGroupTabs = [];
       }
 
-      if(options.errorStage) {
-        $scope.errorStageConfigActive = true;
-      } else {
-        $scope.errorStageConfigActive = false;
-      }
+      $scope.errorStageConfigActive = options.errorStage;
+
     };
 
     $scope.$on('onSelectionChange', function(event, options) {

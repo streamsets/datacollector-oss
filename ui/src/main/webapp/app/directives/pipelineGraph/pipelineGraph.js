@@ -972,19 +972,31 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       paths.exit().remove();
 
       //Pipeline Warning
-      if(graph.issues && graph.issues.pipelineIssues && graph.issues.pipelineIssues.length) {
+      if(graph.issues && graph.issues.pipelineIssues) {
         var pipelineIssuesStr = '';
 
         angular.forEach(graph.issues.pipelineIssues, function(issue) {
           pipelineIssuesStr += issue.message + '<br>';
         });
 
-        graphWarning
-          .attr({
-            'title': pipelineIssuesStr,
-            'data-original-title': pipelineIssuesStr
-          })
-          .style('visibility', 'visible');
+        if(graph.errorStage && graph.errorStage.instanceName &&
+          graph.issues.stageIssues[graph.errorStage.instanceName]) {
+          angular.forEach(graph.issues.stageIssues[graph.errorStage.instanceName], function(issue) {
+            pipelineIssuesStr += issue.message + '<br>';
+          });
+        }
+
+        if(pipelineIssuesStr) {
+          graphWarning
+            .attr({
+              'title': pipelineIssuesStr,
+              'data-original-title': pipelineIssuesStr
+            })
+            .style('visibility', 'visible');
+        } else {
+          graphWarning.style('visibility', 'hidden');
+        }
+
       } else {
         graphWarning.style('visibility', 'hidden');
       }
@@ -1172,7 +1184,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         toolbar = graphContainer.append('div')
           .attr('class', 'graph-toolbar');
 
-
         toolbar.append('div')
           .append('span')
           .attr('class', 'pointer fa fa-plus')
@@ -1210,12 +1221,23 @@ angular.module('pipelineGraphDirectives', ['underscore'])
               type: pipelineConstant.PIPELINE
             }, firstConfigIssue;
 
-            if(graph.issues && graph.issues.pipelineIssues && graph.issues.pipelineIssues.length) {
+            if(graph.issues && graph.issues.pipelineIssues) {
               angular.forEach(graph.issues.pipelineIssues, function(issue) {
                 if(issue.configName && !firstConfigIssue) {
                   firstConfigIssue = issue;
                 }
               });
+
+
+              if(!firstConfigIssue && graph.errorStage && graph.errorStage.instanceName &&
+                  graph.issues.stageIssues[graph.errorStage.instanceName]) {
+                angular.forEach(graph.issues.stageIssues[graph.errorStage.instanceName], function(issue) {
+                  if(issue.configName && !firstConfigIssue) {
+                    firstConfigIssue = issue;
+                    options.errorStage = true;
+                  }
+                });
+              }
 
               if(firstConfigIssue) {
                 options.detailTabName = 'configuration';
@@ -1239,6 +1261,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       graph.isReadOnly = options.isReadOnly;
       graph.pipelineRules = options.pipelineRules;
       graph.triggeredAlerts = options.triggeredAlerts;
+      graph.errorStage = options.errorStage;
       graph.updateGraph();
 
       if(selectNode) {
