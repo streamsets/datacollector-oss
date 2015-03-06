@@ -343,7 +343,7 @@ public class HdfsDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "Empty line if no text",
+      label = "Empty Line if no Text",
       description = "",
       displayPosition = 310,
       group = "TEXT",
