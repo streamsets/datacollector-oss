@@ -27,18 +27,17 @@
      <dd>You can configure the branch to perform additional processing or write it directly to a
       destination. You might write the data to a real destination or use the Trash destination.</dd>
      <dd>For example, the following pipeline processes tweeted data: </dd>
-     <dd><image href="../Graphics/StreamSelector-Pipeline.png" id="image_gyn_nps_gr" scale="70"
+     <dd><image href="../Graphics/StreamSelector-Pipeline.png" id="image_gyn_nps_gr" scale="60"
       /></dd>
      <dd>The Stream Selector passes deleted tweets to the Deleted Tweets destination. It routes new
-      tweets with possibly sensitive language to a Field Masker to mask the possibly inappropriate
-      text, and passes all remaining tweets directly to the New Tweets destination. </dd>
+      tweets with possibly sensitive language to a Field Masker to mask the potentially
+      inappropriate text, and passes all remaining tweets directly to the New Tweets destination. </dd>
      <dd>The following image shows the Stream Selector configuration:</dd>
      <dd><image href="../Graphics/StreamSelector-config.png" id="image_rmw_4ps_gr" scale="60"/>
      </dd>
      <dd>The first condition evaluates for records that have been deleted. The second condition
-      evaluates for records flagged as possibly sensitive - these records pass to the Field Masker
-      to mask the possibly offensive language. The third default condition captures all remaining
-      records.</dd>
+      evaluates for records flagged by Twitter as possibly sensitive. The third default condition
+      captures all remaining records.</dd>
     </dlentry>
    </dl>
   </p>
