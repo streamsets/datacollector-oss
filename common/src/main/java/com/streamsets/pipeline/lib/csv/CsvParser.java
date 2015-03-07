@@ -7,6 +7,8 @@ package com.streamsets.pipeline.lib.csv;
 
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
+import com.streamsets.pipeline.lib.io.ObjectLengthException;
+import com.streamsets.pipeline.lib.util.ExceptionUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -21,24 +23,26 @@ public class CsvParser implements Closeable, AutoCloseable {
   private long currentPos;
   private final CSVParser parser;
   private final CountingReader reader;
+  private final int maxObjectLen;
   private Iterator<CSVRecord> iterator;
   private CSVRecord nextRecord;
   private final String[] headers;
   private boolean closed;
 
-  public CsvParser(Reader reader, CSVFormat format) throws IOException {
-    this(new CountingReader(reader), format, 0);
+  public CsvParser(Reader reader, CSVFormat format, int maxObjectLen) throws IOException {
+    this(new CountingReader(reader), format, maxObjectLen, 0);
   }
 
   @SuppressWarnings("unchecked")
-  public CsvParser(CountingReader reader, CSVFormat format, long initialPosition) throws IOException {
+  public CsvParser(CountingReader reader, CSVFormat format, int maxObjectLen, long initialPosition) throws IOException {
     Utils.checkNotNull(reader, "reader");
     Utils.checkNotNull(reader.getPos() == 0,
-                       "reader must be in position zero, the CsvParser will fastforward to the initialPosition");
+                       "reader must be in position zero, the CsvParser will fast-forward to the initialPosition");
     Utils.checkNotNull(format, "format");
     Utils.checkArgument(initialPosition >= 0, "initialPosition must be greater or equal than zero");
     this.reader = reader;
     currentPos = initialPosition;
+    this.maxObjectLen = maxObjectLen;
     if (initialPosition == 0) {
       if (format.getSkipHeaderRecord()) {
         format = format.withSkipHeaderRecord(false);
@@ -95,7 +99,14 @@ public class CsvParser implements Closeable, AutoCloseable {
     if (nextRecord != null) {
       nextRecord = nextRecord();
     }
+    long prevPos = currentPos;
     currentPos = (nextRecord != null) ? nextRecord.getCharacterPosition() : reader.getPos();
+    if (maxObjectLen > -1) {
+      if (currentPos - prevPos > maxObjectLen) {
+        ExceptionUtils.throwUndeclared(new ObjectLengthException(Utils.format(
+            "CSV Object at offset '{}' exceeds max length '{}'", prevPos, maxObjectLen), prevPos));
+      }
+    }
     return toArray(record);
   }
 

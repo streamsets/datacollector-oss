@@ -15,20 +15,20 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class OverrunCsvParser extends CsvParser {
-  private final OverrunReader countingReader;
   private boolean overrun;
 
-  public OverrunCsvParser(Reader reader, CSVFormat format) throws IOException {
-    this(reader, format, 0);
+  public OverrunCsvParser(Reader reader, CSVFormat format, int maxObjectLen) throws IOException {
+    this(reader, format, 0, maxObjectLen);
   }
 
-  public OverrunCsvParser(Reader reader, CSVFormat format, long initialPosition) throws IOException {
-    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), format, initialPosition);
+  public OverrunCsvParser(Reader reader, CSVFormat format, long initialPosition, int maxObjectLen) throws IOException {
+    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), format, initialPosition, maxObjectLen);
   }
 
-  public OverrunCsvParser(OverrunReader reader, CSVFormat format, long initialPosition) throws IOException {
-    super(reader, format, initialPosition);
-    countingReader = (OverrunReader) getReader();
+  public OverrunCsvParser(OverrunReader reader, CSVFormat format, long initialPosition, int maxObjectLen)
+      throws IOException {
+    super(reader, format, -1, initialPosition);
+    OverrunReader countingReader = (OverrunReader) getReader();
     countingReader.setEnabled(true);
   }
 

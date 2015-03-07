@@ -209,6 +209,19 @@ public class SpoolDirDSource extends DSource {
   @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvHeaderChooserValues.class)
   public CsvHeader csvHeader;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "1024",
+      label = "Max Record Length (chars)",
+      description = "Larger objects are not processed",
+      displayPosition = 320,
+      group = "DELIMITED",
+      dependsOn = "dataFormat",
+      triggeredByValue = "DELIMITED"
+  )
+  public int csvMaxObjectLen;
+
   // JSON Configuration
 
   @ConfigDef(
@@ -284,8 +297,8 @@ public class SpoolDirDSource extends DSource {
   protected Source createSource() {
     return new SpoolDirSource(dataFormat, overrunLimit, spoolDir, batchSize, poolingTimeoutSecs, filePattern,
                               maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
-                              retentionTimeMins, csvFileFormat, csvHeader, jsonContent, maxJsonObjectLen,
-                              maxLogLineLength, xmlRecordElement, maxXmlObjectLen);
+                              retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
+                              maxJsonObjectLen, maxLogLineLength, xmlRecordElement, maxXmlObjectLen);
   }
 
 }

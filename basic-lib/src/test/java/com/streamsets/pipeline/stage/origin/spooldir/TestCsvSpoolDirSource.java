@@ -12,7 +12,6 @@ import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,8 +45,8 @@ public class TestCsvSpoolDirSource {
 
   private SpoolDirSource createSource(CsvHeader header) {
     return new SpoolDirSource(DataFormat.DELIMITED, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
-                              PostProcessingOptions.ARCHIVE, createTestDir(), 10, CsvMode.RFC4180, header, null, 0, 10,
-                              null, 0);
+                              PostProcessingOptions.ARCHIVE, createTestDir(), 10, CsvMode.RFC4180, header, 5, null, 0,
+                              10, null, 0);
   }
 
   @Test

@@ -43,7 +43,7 @@ public class TestSpoolDirSource {
         JsonMode jsonContent, int maxJsonObjectLen, int maxLogLineLength, String xmlRecordElement,
         int maxXmlObjectLen) {
       super(dataFormat, 100, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess,
-            errorArchiveDir, postProcessing, archiveDir, retentionTimeMins, csvFileFormat, csvHeaders,
+            errorArchiveDir, postProcessing, archiveDir, retentionTimeMins, csvFileFormat, csvHeaders, -1,
             jsonContent, maxJsonObjectLen, maxLogLineLength, xmlRecordElement, maxXmlObjectLen);
       this.spoolDir = spoolDir;
     }

@@ -31,7 +31,7 @@ public class TestOverrunCsvParser {
   private void testLimit(int limit, int lineLength) throws Exception {
     System.setProperty(OverrunReader.READ_LIMIT_SYS_PROP, "" + limit);
     String csv = "a," + Strings.repeat("b", lineLength) + ",c";
-    OverrunCsvParser parser = new OverrunCsvParser(new StringReader(csv), CSVFormat.DEFAULT);
+    OverrunCsvParser parser = new OverrunCsvParser(new StringReader(csv), CSVFormat.DEFAULT, -1);
     Assert.assertNotNull(parser.read());
   }
 

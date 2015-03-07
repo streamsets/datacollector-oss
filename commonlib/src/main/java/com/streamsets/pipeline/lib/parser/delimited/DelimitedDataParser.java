@@ -29,7 +29,7 @@ public class DelimitedDataParser implements DataParser {
   private boolean eof;
 
   public DelimitedDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-      CSVFormat format, CsvHeader header) throws IOException {
+      CSVFormat format, CsvHeader header, int maxObjectLen) throws IOException {
     this.context = context;
     this.readerId = readerId;
     switch (header) {
@@ -45,7 +45,7 @@ public class DelimitedDataParser implements DataParser {
       default:
         throw new RuntimeException("It should not happen");
     }
-    parser = new OverrunCsvParser(reader, format, readerOffset);
+    parser = new OverrunCsvParser(reader, format, readerOffset, maxObjectLen);
     String[] hs = parser.getHeaders();
     if (header != CsvHeader.IGNORE_HEADER && hs != null) {
       headers = new ArrayList<>();

@@ -324,7 +324,6 @@ public class KafkaTarget extends BaseTarget {
       case SDC_JSON:
         //no-op
         break;
-      case XML:
       default:
         issues.add(context.createConfigIssue(groupName, configName, Errors.KAFKA_02, dataFormat));
         //XML is not supported for KafkaTarget

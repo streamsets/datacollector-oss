@@ -21,10 +21,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class CharDataParserFactory {
@@ -163,7 +161,7 @@ public abstract class CharDataParserFactory {
         case DELIMITED:
           CsvMode csvMode = (CsvMode) modes.get(CsvMode.class);
           CsvHeader csvHeader = (CsvHeader) modes.get(CsvHeader.class);
-          factory = new DelimitedCharDataParserFactory(context, csvMode.getFormat(), csvHeader, configs);
+          factory = new DelimitedCharDataParserFactory(context, csvMode.getFormat(), csvHeader, maxDataLen, configs);
           break;
         case SDC_RECORD:
           factory = new JsonSdcRecordCharDataParserFactory(context, maxDataLen, configs);

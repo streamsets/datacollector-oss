@@ -48,6 +48,7 @@ public class SpoolDirSource extends BaseSource {
   private final long retentionTimeMins;
   private final CsvMode csvFileFormat;
   private final CsvHeader csvHeader;
+  private final int cvsMaxObjectLen;
   private final JsonMode jsonContent;
   private final int maxJsonObjectLen;
   private final int maxLogLineLength;
@@ -57,8 +58,8 @@ public class SpoolDirSource extends BaseSource {
   public SpoolDirSource(DataFormat dataFormat, int overrunLimit, String spoolDir, int batchSize, long poolingTimeoutSecs,
       String filePattern, int maxSpoolFiles, String initialFileToProcess, String errorArchiveDir,
       PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
-      CsvMode csvFileFormat, CsvHeader csvHeader, JsonMode jsonContent, int maxJsonObjectLen, int maxLogLineLength,
-      String xmlRecordElement, int maxXmlObjectLen) {
+      CsvMode csvFileFormat, CsvHeader csvHeader, int cvsMaxObjectLen, JsonMode jsonContent, int maxJsonObjectLen,
+      int maxLogLineLength, String xmlRecordElement, int maxXmlObjectLen) {
     this.dataFormat = dataFormat;
     this.overrunLimit = overrunLimit * 1024;
     this.spoolDir = spoolDir;
@@ -73,6 +74,7 @@ public class SpoolDirSource extends BaseSource {
     this.retentionTimeMins = retentionTimeMins;
     this.csvFileFormat = csvFileFormat;
     this.csvHeader = csvHeader;
+    this.cvsMaxObjectLen = cvsMaxObjectLen;
     this.jsonContent = jsonContent;
     this.maxJsonObjectLen = maxJsonObjectLen;
     this.maxLogLineLength = maxLogLineLength;
@@ -89,8 +91,6 @@ public class SpoolDirSource extends BaseSource {
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
-
-    validateDataFormat(issues);
 
     validateDir(spoolDir, Groups.FILES.name(), "spoolDir", issues);
 
@@ -142,36 +142,34 @@ public class SpoolDirSource extends BaseSource {
         break;
       case TEXT:
         if (maxLogLineLength < 1) {
-          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "maxLogLineLength", Errors.SPOOLDIR_21));
+          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "maxLogLineLength", Errors.SPOOLDIR_20));
+        }
+        break;
+      case DELIMITED:
+        if (cvsMaxObjectLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.DELIMITED.name(), "csvMaxObjectLen", Errors.SPOOLDIR_20));
         }
         break;
       case XML:
         if (maxXmlObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.XML.name(), "maxXmlObjectLen", Errors.SPOOLDIR_22));
+          issues.add(getContext().createConfigIssue(Groups.XML.name(), "maxXmlObjectLen", Errors.SPOOLDIR_20));
         }
         if (!XMLChar.isValidName(xmlRecordElement)) {
           issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.SPOOLDIR_23,
                                                     xmlRecordElement));
         }
         break;
+      case SDC_JSON:
+        break;
+      default:
+        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "dataFormat", Errors.SPOOLDIR_10,
+                                                  dataFormat));
+        break;
     }
 
     validateDataParser(issues);
 
     return issues;
-  }
-
-  private void validateDataFormat(List<ConfigIssue> issues) {
-    switch (dataFormat) {
-      case TEXT:
-      case JSON:
-      case DELIMITED:
-      case XML:
-      case SDC_JSON:
-        break;
-      default:
-        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "dataFormat", Errors.SPOOLDIR_10, dataFormat));
-    }
   }
 
   private void validateDir(String dir, String group, String config, List<ConfigIssue> issues) {
@@ -218,7 +216,7 @@ public class SpoolDirSource extends BaseSource {
         builder.setMaxDataLen(maxJsonObjectLen).setMode(jsonContent);
         break;
       case DELIMITED:
-        builder.setMaxDataLen(-1).setMode(csvFileFormat).setMode(csvHeader);
+        builder.setMaxDataLen(cvsMaxObjectLen).setMode(csvFileFormat).setMode(csvHeader);
         break;
       case XML:
         builder.setMaxDataLen(maxXmlObjectLen).setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);

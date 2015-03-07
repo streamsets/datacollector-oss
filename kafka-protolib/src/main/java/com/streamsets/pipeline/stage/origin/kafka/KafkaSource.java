@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -51,6 +50,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   public int jsonMaxObjectLen;
   private final CsvMode csvFileFormat;
   private final CsvHeader csvHeader;
+  public int csvMaxObjectLen;
   private final String xmlRecordElement;
   public int xmlMaxObjectLen;
   private int maxWaitTime;
@@ -59,7 +59,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   public KafkaSource(String zookeeperConnect, String consumerGroup, String topic, DataFormat dataFormat,
       boolean produceSingleRecordPerBatch, int maxBatchSize, int maxWaitTime, Map<String, String> kafkaConsumerConfigs,
       int textMaxLineLen, JsonMode jsonContent, int jsonMaxObjectLen, CsvMode csvFileFormat, CsvHeader csvHeader,
-      String xmlRecordElement, int xmlMaxObjectLen) {
+      int csvMaxObjectLen, String xmlRecordElement, int xmlMaxObjectLen) {
     this.zookeeperConnect = zookeeperConnect;
     this.consumerGroup = consumerGroup;
     this.topic = topic;
@@ -73,6 +73,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     this.jsonMaxObjectLen = jsonMaxObjectLen;
     this.csvFileFormat = csvFileFormat;
     this.csvHeader = csvHeader;
+    this.csvMaxObjectLen = csvMaxObjectLen;
     this.xmlRecordElement = xmlRecordElement;
     this.xmlMaxObjectLen = xmlMaxObjectLen;
   }
@@ -115,8 +116,34 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
         Errors.KAFKA_35));
     }
 
-    //payload type and payload specific configuration
-    validateDataFormatAndSpecificConfig(issues);
+    switch (dataFormat) {
+      case JSON:
+        if (jsonMaxObjectLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "maxJsonObjectLen", Errors.KAFKA_38));
+        }
+        break;
+      case TEXT:
+        if (textMaxLineLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "maxLogLineLength", Errors.KAFKA_38));
+        }
+        break;
+      case DELIMITED:
+        if (csvMaxObjectLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.DELIMITED.name(), "csvMaxObjectLen", Errors.KAFKA_38));
+        }
+        break;
+      case XML:
+        if (xmlMaxObjectLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.XML.name(), "maxXmlObjectLen", Errors.KAFKA_38));
+        }
+        if (!XMLChar.isValidName(xmlRecordElement)) {
+          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.KAFKA_36,
+                                                    xmlRecordElement));
+        }
+        break;
+      default:
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "dataFormat", Errors.KAFKA_39, dataFormat));
+    }
 
     //kafka consumer configs
     //We do not validate this, just pass it down to Kafka
@@ -148,7 +175,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
         builder.setMaxDataLen(jsonMaxObjectLen);
         break;
       case DELIMITED:
-        builder.setMaxDataLen(-1);
+        builder.setMaxDataLen(csvMaxObjectLen);
         builder.setMode(csvFileFormat).setMode(csvHeader);
         break;
       case XML:
@@ -238,18 +265,4 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     kafkaConsumer.commit();
   }
 
-  /****************************************************/
-  /******** Validation Specific to Kafka Source *******/
-  /****************************************************/
-
-  private void validateDataFormatAndSpecificConfig(List<Stage.ConfigIssue> issues) {
-    switch (dataFormat) {
-      case XML:
-        if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
-          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.KAFKA_36,
-                                                    xmlRecordElement));
-        }
-        break;
-    }
-  }
 }

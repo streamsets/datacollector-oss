@@ -193,6 +193,19 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   public CsvHeader csvHeader;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.INTEGER,
+      defaultValue = "1024",
+      label = "Max Record Length (chars)",
+      description = "Larger objects are not processed",
+      displayPosition = 220,
+      group = "DELIMITED",
+      dependsOn = "dataFormat",
+      triggeredByValue = "DELIMITED"
+  )
+  public int csvMaxObjectLen;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Delimiter Element",
@@ -221,7 +234,8 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   protected Source createSource() {
     return new KafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, produceSingleRecordPerBatch,
                            maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent,
-                           jsonMaxObjectLen, csvFileFormat, csvHeader, xmlRecordElement, xmlMaxObjectLen);
+                           jsonMaxObjectLen, csvFileFormat, csvHeader, csvMaxObjectLen, xmlRecordElement,
+                           xmlMaxObjectLen);
   }
 
 }

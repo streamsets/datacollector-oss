@@ -26,12 +26,14 @@ public class DelimitedCharDataParserFactory extends CharDataParserFactory {
   private final Stage.Context context;
   private final CSVFormat format;
   private final CsvHeader header;
+  private final int maxObjectLen;
 
-  public DelimitedCharDataParserFactory(Stage.Context context, CSVFormat format, CsvHeader header,
+  public DelimitedCharDataParserFactory(Stage.Context context, CSVFormat format, CsvHeader header, int maxObjectLen,
       Map<String, Object> configs) {
     this.context = context;
     this.format = format;
     this.header = header;
+    this.maxObjectLen = maxObjectLen;
   }
 
   @Override
@@ -39,7 +41,7 @@ public class DelimitedCharDataParserFactory extends CharDataParserFactory {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
                                                          reader.getPos()));
     try {
-      return new DelimitedDataParser(context, id, reader, readerOffset, format, header);
+      return new DelimitedDataParser(context, id, reader, readerOffset, format, header, maxObjectLen);
     } catch (IOException ex) {
       throw new DataParserException(Errors.DELIMITED_PARSER_00, id, readerOffset, ex.getMessage(), ex);
     }

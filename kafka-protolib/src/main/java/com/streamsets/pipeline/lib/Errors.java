@@ -37,6 +37,9 @@ public enum Errors implements ErrorCode {
   KAFKA_35("Batch Wait Time (millisecs) cannot be less than 1"),
   KAFKA_36("Invalid XML element name '{}'"),
   KAFKA_37("Could not parse record from message '{}', {}"),
+  KAFKA_38("Max data object length cannot be less than 1"),
+  KAFKA_39("Unsupported data format '{}'"),
+
 
   //Kafka target messages
   KAFKA_50("Error writing data to kafka broker, {}"),

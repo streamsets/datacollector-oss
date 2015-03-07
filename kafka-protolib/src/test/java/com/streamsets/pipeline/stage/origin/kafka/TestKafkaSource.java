@@ -344,6 +344,7 @@ public class TestKafkaSource {
       .addConfiguration("dataFormat", DataFormat.DELIMITED)
       .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
+      .addConfiguration("csvMaxObjectLen", -1)
       .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecordPerBatch", true)
       .build();

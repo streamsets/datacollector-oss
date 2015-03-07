@@ -336,7 +336,6 @@ public class HdfsTarget extends RecordTarget {
       case DELIMITED:
       case SDC_JSON:
         break;
-      case XML:
       default:
         issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "dataFormat", Errors.HADOOPFS_16,
                                                   dataFormat));
