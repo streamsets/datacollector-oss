@@ -6,11 +6,13 @@
 package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -69,7 +71,7 @@ public class TestActiveRecordWriters {
     URI uri = new URI("file:///");
     Configuration conf = new HdfsConfiguration();
     String prefix = "prefix";
-    String template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}/${hh}/${mm}/${ss}/${record:value('/')}";
+    String template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}/${record:value('/')}";
     TimeZone timeZone = TimeZone.getTimeZone("UTC");
     long cutOffSecs = 2;
     long cutOffSize = 10000;
@@ -81,8 +83,8 @@ public class TestActiveRecordWriters {
     String keyEL = "uuid()";
     CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                                      cutOffRecords, fileType, compressionCodec , compressionType,
-                                                      keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory,
+      ContextInfoCreator.createTargetContext("testWritersLifecycle", false, OnRecordError.TO_ERROR));
     ActiveRecordWriters writers = new ActiveRecordWriters(mgr);
 
     Date now = new Date();

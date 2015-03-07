@@ -15,8 +15,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.ELRecordSupport;
-import com.streamsets.pipeline.el.ELStringSupport;
+import com.streamsets.pipeline.el.RecordEl;
+import com.streamsets.pipeline.el.StringEL;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
@@ -48,10 +48,8 @@ public class ObserverRunner {
     this.alertResponse = new HashMap<>();
     this.ruleToSampledRecordsMap = new HashMap<>();
     this.configuration = configuration;
-    elEvaluator = new ELEvaluator();
+    elEvaluator = new ELEvaluator("ObserverRunner", RecordEl.class, StringEL.class);
     variables = new ELEvaluator.Variables();
-    ELRecordSupport.registerRecordFunctions(elEvaluator);
-    ELStringSupport.registerStringFunctions(elEvaluator);
     this.alertManager = alertManager;
   }
 

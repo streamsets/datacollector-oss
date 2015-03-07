@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.runner.preview;
 
+import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.el.ElMetadata;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.task.TaskWrapper;
 
@@ -31,12 +33,17 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   }
 
   @Override
+  public ElMetadata getElMetadata() {
+    return library.getElMetadata();
+  }
+
+  @Override
   public StageDefinition getStage(String library, String name, String version) {
     StageDefinition def;
     if (LIBRARY.equals(library) && NAME.equals(name) && VERSION.equals(VERSION)) {
       def = new StageDefinition(PreviewPlugTarget.class.getName(), NAME, VERSION, "previewPlug", "Preview Plug",
-          StageType.TARGET, false, false, false, Collections.EMPTY_LIST, null/*raw source definition*/, "", null,
-          false, 0, null);
+          StageType.TARGET, false, false, false, Collections.<ConfigDefinition>emptyList(),
+        null/*raw source definition*/, "", null, false, 0, null);
       def.setLibrary(LIBRARY, "", getClass().getClassLoader());
     } else {
       def = this.library.getStage(library, name, version);

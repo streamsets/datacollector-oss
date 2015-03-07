@@ -285,7 +285,7 @@ public class TestKafkaSource {
     sourceRunner.runDestroy();
   }
 
-  @Test
+  //@Test
   public void testProduceXmlRecords() throws StageException, IOException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
@@ -344,7 +344,7 @@ public class TestKafkaSource {
       .addConfiguration("dataFormat", DataFormat.DELIMITED)
       .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
-      .addConfiguration("csvMaxObjectLen", -1)
+      .addConfiguration("csvMaxObjectLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecordPerBatch", true)
       .build();

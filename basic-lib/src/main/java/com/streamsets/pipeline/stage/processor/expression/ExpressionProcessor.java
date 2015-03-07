@@ -5,17 +5,17 @@
  */
 package com.streamsets.pipeline.stage.processor.expression;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.ELRecordSupport;
-import com.streamsets.pipeline.el.ELStringSupport;
-import com.streamsets.pipeline.el.ELUtils;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.el.RecordEl;
+import com.streamsets.pipeline.el.StringEL;
 
-import javax.servlet.jsp.el.ELException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -32,28 +32,35 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     this.constants = constants;
   }
 
-  private ELEvaluator elEvaluator;
-  private ELEvaluator.Variables variables;
+  private ELEval expressionEval;
+  private ELEval.Variables variables;
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues =  super.validateConfigs();
-    variables = ELUtils.parseConstants(constants, getContext(), Groups.EXPRESSIONS.name(), "constants",
-                                       Errors.EXPR_01, issues);
-    elEvaluator = new ELEvaluator();
-    ELRecordSupport.registerRecordFunctions(elEvaluator);
-    ELStringSupport.registerStringFunctions(elEvaluator);
+    variables = getContext().parseConstants(constants, getContext(), Groups.EXPRESSIONS.name(), "constants",
+      Errors.EXPR_01, issues);
+    expressionEval = createExpressionEval(getContext());
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
-      ELUtils.validateExpression(elEvaluator, variables, expressionProcessorConfig.expression, getContext(),
-                                 Groups.EXPRESSIONS.name(), "expressionProcessorConfigs", Errors.EXPR_00,
-                                 Object.class, issues);
+      getContext().validateExpression(expressionEval, variables, expressionProcessorConfig.expression, getContext(),
+        Groups.EXPRESSIONS.name(), "expressionProcessorConfigs", Errors.EXPR_00,
+        Object.class, issues);
     }
     return issues;
   }
 
   @Override
+  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+    return ImmutableList.of(createExpressionEval(elEvalProvider));
+  }
+
+  private ELEval createExpressionEval(ElEvalProvider elEvalProvider) {
+    return elEvalProvider.createELEval("expression", RecordEl.class, StringEL.class);
+  }
+
+  @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    ELRecordSupport.setRecordInContext(variables, record);
+    RecordEl.setRecordInContext(variables, record);
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
       String fieldToSet = expressionProcessorConfig.fieldToSet;
       if(fieldToSet == null || fieldToSet.isEmpty()) {
@@ -61,8 +68,8 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       }
       Object result;
       try {
-        result = elEvaluator.eval(variables, expressionProcessorConfig.expression);
-      } catch (ELException e) {
+        result = expressionEval.eval(variables, expressionProcessorConfig.expression, Object.class);
+      } catch (ELEvalException e) {
         throw new OnRecordErrorException(Errors.EXPR_03, expressionProcessorConfig.expression,
                                          record.getHeader().getSourceId(), e.getMessage(), e);
       }

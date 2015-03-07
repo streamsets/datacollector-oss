@@ -40,7 +40,7 @@ public class StageLibraryResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getDefinitions() {
     //The definitions to be returned
-    Map<String, List<Object>> definitions = new HashMap<>();
+    Map<String, Object> definitions = new HashMap<>();
 
     //Populate the definitions with all the stage definitions
     List<StageDefinition> stageDefinitions = stageLibrary.getStages();
@@ -52,6 +52,9 @@ public class StageLibraryResource {
     List<Object> pipeline = new ArrayList<>(1);
     pipeline.add(BeanHelper.wrapPipelineDefinition(new PipelineDefinition(stageLibrary)));
     definitions.put("pipeline", pipeline);
+
+    definitions.put("elMetadata", stageLibrary.getElMetadata());
+
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();
   }
 

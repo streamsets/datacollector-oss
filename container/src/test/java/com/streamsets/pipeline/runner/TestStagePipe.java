@@ -13,11 +13,13 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.el.ELEval;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,11 +52,17 @@ public class TestStagePipe {
       }
 
       @Override
+      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+        return new ArrayList<>();
+      }
+
+      @Override
       public void init(Info info, Context context) throws StageException {
       }
 
       @Override
       public void destroy() {
+
       }
     });
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
@@ -98,6 +106,11 @@ public class TestStagePipe {
       @Override
       public List<ConfigIssue> validateConfigs(Info info, Processor.Context context) {
         return Collections.emptyList();
+      }
+
+      @Override
+      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+        return new ArrayList<>();
       }
 
       @Override
@@ -157,6 +170,12 @@ public class TestStagePipe {
       public List<ConfigIssue> validateConfigs(Info info, Target.Context context) {
         return Collections.emptyList();
       }
+
+      @Override
+      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+        return new ArrayList<>();
+      }
+
       @Override
       public void write(Batch batch) throws StageException {
         write = true;

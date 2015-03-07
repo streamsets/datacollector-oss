@@ -15,12 +15,14 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.el.ElMetadata;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 
@@ -96,6 +98,11 @@ public class MockStages {
       }
 
       @Override
+      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+        return new ArrayList<>();
+      }
+
+      @Override
       public void init(Info info, Context context) throws StageException {
         if (sourceCapture != null) {
           sourceCapture.init(info, context);
@@ -140,6 +147,11 @@ public class MockStages {
       }
 
       @Override
+      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+        return new ArrayList<>();
+      }
+
+      @Override
       public void init(Info info, Context context) throws StageException {
         if (processorCapture != null) {
           processorCapture.init(info, context);
@@ -162,6 +174,11 @@ public class MockStages {
     }
 
     public static class MTarget implements Target {
+
+      @Override
+      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+        return new ArrayList<>();
+      }
 
       @Override
       public List<ConfigIssue> validateConfigs(Info info, Target.Context context) throws  StageException {
@@ -195,6 +212,11 @@ public class MockStages {
     }
 
     public static class ETarget implements Target {
+
+      @Override
+      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+        return new ArrayList<>();
+      }
 
       @Override
       public List<ConfigIssue> validateConfigs(Info info, Target.Context context) throws StageException {
@@ -268,12 +290,13 @@ public class MockStages {
 
       ConfigDefinition depConfDef = new ConfigDefinition(
           "dependencyConfName", ConfigDef.Type.INTEGER, "dependencyConfLabel", "dependencyConfDesc", "", true,
-          "groupName", "dependencyConfFieldName", null, "", null, 0);
+          "groupName", "dependencyConfFieldName", null, "", null, 0, new ArrayList<String>(), new ArrayList<String>());
       List<Object> triggeredBy = new ArrayList<>();
       triggeredBy.add(1);
       ConfigDefinition triggeredConfDef = new ConfigDefinition(
           "triggeredConfName", ConfigDef.Type.INTEGER, "triggeredConfLabel", "triggeredConfDesc", "", true,
-          "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0);
+          "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0, new ArrayList<String>(),
+        new ArrayList<String>());
       StageDefinition swcDef = new StageDefinition(
           MSource.class.getName(), "sourceWithConfigsName", "1.0.0", "sourceWithConfigsLabel",
           "sourceWithConfigsDesc", StageType.SOURCE, false, true, true, Lists.newArrayList(depConfDef, triggeredConfDef),
@@ -316,6 +339,11 @@ public class MockStages {
     @Override
     public List<StageDefinition> getStages() {
       return stages;
+    }
+
+    @Override
+    public ElMetadata getElMetadata() {
+      return null;
     }
 
     @Override

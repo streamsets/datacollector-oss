@@ -5,19 +5,21 @@
  */
 package com.streamsets.pipeline.stage.destination.kafka;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.ELRecordSupport;
-import com.streamsets.pipeline.el.ELStringSupport;
+import com.streamsets.pipeline.el.RecordEl;
+import com.streamsets.pipeline.el.StringEL;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaUtil;
@@ -28,7 +30,6 @@ import com.streamsets.pipeline.lib.generator.text.TextCharDataGeneratorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.jsp.el.ELException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,9 +57,9 @@ public class KafkaTarget extends BaseTarget {
 
   private KafkaProducer kafkaProducer;
   private long recordCounter = 0;
-  private ELEvaluator elEvaluator;
-  private ELEvaluator.Variables variables;
   private CharDataGeneratorFactory generatorFactory;
+  private ELEval partitionStrategyEval;
+  private ELEval.Variables variables;
 
   public KafkaTarget(String metadataBrokerList, String topic, PartitionStrategy partitionStrategy, String partition,
       DataFormat dataFormat, boolean singleMessagePerBatch, Map<String, String> kafkaProducerConfigs,
@@ -171,7 +172,7 @@ public class KafkaTarget extends BaseTarget {
                                      record.getHeader().getSourceId());
           default:
             throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
-                                                         getContext().getOnErrorRecord()));
+              getContext().getOnErrorRecord()));
         }
       }
     }
@@ -261,15 +262,15 @@ public class KafkaTarget extends BaseTarget {
   private String getPartitionKey(Record record) throws StageException {
     String partitionKey = "";
     if(partitionStrategy == PartitionStrategy.EXPRESSION) {
-      ELRecordSupport.setRecordInContext(variables, record);
+      RecordEl.setRecordInContext(variables, record);
       try {
-        int p = elEvaluator.eval(variables, partition, Integer.class);
+        int p = partitionStrategyEval.eval(variables, partition, Integer.class);
         if (p < 0 || p >= kafkaProducer.getNumberOfPartitions()) {
           throw new StageException(Errors.KAFKA_56, partition, topic, kafkaProducer.getNumberOfPartitions(),
                                    record.getHeader().getSourceId());
         }
         partitionKey = Integer.toString(p);
-      } catch (ELException e) {
+      } catch (ELEvalException e) {
         throw new StageException(Errors.KAFKA_54, partition, record.getHeader().getSourceId(), e.getMessage());
       }
     }
@@ -284,16 +285,24 @@ public class KafkaTarget extends BaseTarget {
     }
   }
 
+  @Override
+  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+    return ImmutableList.of(createPartitionStrategyEval(elEvalProvider));
+  }
+
+  private ELEval createPartitionStrategyEval(ElEvalProvider elEvalProvider) {
+    return elEvalProvider.createELEval("partitionStrategy", RecordEl.class, StringEL.class);
+  }
+
   /****************************************************/
   /******** Validation Specific to Kafka Target *******/
   /****************************************************/
 
   private void validatePartitionExpression(List<ConfigIssue> issues) {
     if (partitionStrategy == PartitionStrategy.EXPRESSION) {
-      variables = new ELEvaluator.Variables();
-      elEvaluator = new ELEvaluator();
-      ELRecordSupport.registerRecordFunctions(elEvaluator);
-      ELStringSupport.registerStringFunctions(elEvaluator);
+      partitionStrategyEval = createPartitionStrategyEval(getContext());
+      //There is no scope to provide variables for kafka target as of today, create empty variables
+      variables = getContext().getDefaultVariables();
       validateExpressions(issues);
     }
   }
@@ -301,10 +310,10 @@ public class KafkaTarget extends BaseTarget {
   private void validateExpressions(List<Stage.ConfigIssue> issues) {
     Record record = getContext().createRecord("validateConfigs");
 
-    ELRecordSupport.setRecordInContext(variables, record);
+    RecordEl.setRecordInContext(variables, record);
     try {
-      elEvaluator.eval(variables, partition);
-    } catch (ELException ex) {
+      partitionStrategyEval.eval(variables, partition, Object.class);
+    } catch (ELEvalException ex) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "partition",
         Errors.KAFKA_57, partition, ex.getMessage()));
     }

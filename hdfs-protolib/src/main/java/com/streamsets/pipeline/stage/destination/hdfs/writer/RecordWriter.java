@@ -7,11 +7,14 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.ELRecordSupport;
+import com.streamsets.pipeline.el.RecordEl;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.stage.destination.hdfs.ElUtil;
 import org.apache.commons.io.output.CountingOutputStream;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
@@ -19,30 +22,13 @@ import org.apache.hadoop.io.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.jsp.el.ELException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.lang.reflect.Method;
-import java.util.UUID;
 
 public class RecordWriter {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriter.class);
-
-  private static final Method UUID_FUNC;
-
-  static {
-    try {
-      UUID_FUNC = RecordWriter.class.getMethod("UUIDFunc");
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  public static String UUIDFunc() {
-    return UUID.randomUUID().toString();
-  }
 
   private final long expires;
   private final Path path;
@@ -55,11 +41,12 @@ public class RecordWriter {
 
   private SequenceFile.Writer seqWriter;
   private String keyEL;
-  private ELEvaluator elEval;
-  private ELEvaluator.Variables elVars;
+  private ELEval keyElEval;
+  private ELEval.Variables elVars;
   private Text key;
   private Text value;
   private boolean seqFile;
+  private Target.Context context;
 
   private RecordWriter(Path path, long timeToLiveMillis, CharDataGeneratorFactory generatorFactory) {
     this.expires = System.currentTimeMillis() + timeToLiveMillis;
@@ -77,14 +64,13 @@ public class RecordWriter {
   }
 
   public RecordWriter(Path path, long timeToLiveMillis, SequenceFile.Writer seqWriter, String keyEL,
-      CharDataGeneratorFactory generatorFactory) {
+      CharDataGeneratorFactory generatorFactory, Target.Context context) {
     this(path, timeToLiveMillis, generatorFactory);
     this.seqWriter = seqWriter;
     this.keyEL = keyEL;
-    elEval = new ELEvaluator();
-    elEval.registerFunction("", "uuid", UUID_FUNC);
-    ELRecordSupport.registerRecordFunctions(elEval);
-    elVars = new ELEvaluator.Variables();
+    this.context = context;
+    keyElEval = ElUtil.createKeyElEval(context);
+    elVars = context.getDefaultVariables();
     key = new Text();
     value = new Text();
     seqFile = true;
@@ -98,15 +84,15 @@ public class RecordWriter {
     return expires;
   }
 
-  public void write(Record record) throws IOException, StageException, ELException {
+  public void write(Record record) throws IOException, StageException, ELEvalException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Path[{}] - Writing ['{}']", path, record.getHeader().getSourceId());
     }
     if (generator != null) {
       generator.write(record);
     } else if (seqWriter != null) {
-      ELRecordSupport.setRecordInContext(elVars, record);
-      key.set((String) elEval.eval(elVars, keyEL));
+      RecordEl.setRecordInContext(elVars, record);
+      key.set(keyElEval.eval(elVars, keyEL, String.class));
       StringWriter sw = new StringWriter(1024);
       DataGenerator dg = generatorFactory.getGenerator(sw);
       dg.write(record);

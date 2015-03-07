@@ -15,7 +15,6 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.hadoop.conf.Configuration;
@@ -79,7 +78,7 @@ public class TestBaseHdfsTarget {
     target.hdfsConfigs = new HashMap<String, String>();
     target.hdfsConfigs.put("x", "X");
     target.timeZoneID = "UTC";
-    target.dirPathTemplate = "${YYYY}";
+    target.dirPathTemplate = "${YYYY()}";
     target.lateRecordsDirPathTemplate = "";
     target.compression = CompressionMode.NONE.name();
     target.timeDriver = "${time:now()}";
@@ -269,7 +268,6 @@ public class TestBaseHdfsTarget {
       target.validateConfigs(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
       target.getBatchTime();
       Record record = RecordCreator.create();
-      ELEvaluator.Variables vars = new ELEvaluator.Variables(null, null);
       target.write((Batch)null); //forcing a setBatchTime()
       Date now = target.setBatchTime();
       Assert.assertEquals(now, target.getRecordTime(record));
@@ -289,7 +287,6 @@ public class TestBaseHdfsTarget {
       Date date = new Date();
       Record record = RecordCreator.create();
       record.set(Field.createDatetime(date));
-      ELEvaluator.Variables vars = new ELEvaluator.Variables(null, null);
       Thread.sleep(1); // so batch time is later than date for sure
       target.write((Batch) null); //forcing a setBatchTime()
       Assert.assertEquals(date, target.getRecordTime(record));

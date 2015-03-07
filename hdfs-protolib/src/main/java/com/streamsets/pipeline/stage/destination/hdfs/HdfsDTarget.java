@@ -103,10 +103,10 @@ public class HdfsDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.EL_STRING,
-      defaultValue = "/tmp/out/${YYYY}-${MM}-${DD}-${hh}-${mm}-${ss}",
+      defaultValue = "/tmp/out/${YYYY()}-${MM()}-${DD()}-${hh()}-${mm()}-${ss()}",
       label = "Directory Template",
-      description = "Template for the creation of output directories. Valid variables are ${YYYY}, ${MM}, ${DD}, " +
-                    "${hh}, ${mm}, ${ss} and {record:value(“/field”)} for values in a field. Directories are " +
+      description = "Template for the creation of output directories. Valid variables are ${YYYY()}, ${MM()}, ${DD()}, " +
+                    "${hh()}, ${mm()}, ${ss()} and {record:value(“/field”)} for values in a field. Directories are " +
                     "created based on the smallest time unit variable used.",
       displayPosition = 110,
       group = "OUTPUT_FILES"
@@ -240,10 +240,10 @@ public class HdfsDTarget extends DTarget {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.EL_STRING,
-      defaultValue = "/tmp/late/${YYYY}-${MM}-${DD}",
+      defaultValue = "/tmp/late/${YYYY()}-${MM()}-${DD()}",
       label = "Late Record Directory Template",
-      description = "Template for the creation of late record directories. Valid variables are ${YYYY}, ${MM}, " +
-                    "${DD}, ${hh}, ${mm}, ${ss}.",
+      description = "Template for the creation of late record directories. Valid variables are ${YYYY()}, ${MM()}, " +
+                    "${DD()}, ${hh()}, ${mm()}, ${ss()}.",
       displayPosition = 220,
       group = "LATE_RECORDS",
       dependsOn = "lateRecordsAction",

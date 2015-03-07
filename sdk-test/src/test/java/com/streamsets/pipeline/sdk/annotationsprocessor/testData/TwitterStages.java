@@ -7,6 +7,7 @@ package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.FieldSelector;
@@ -16,8 +17,9 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.ChooserMode;
+import com.streamsets.pipeline.api.el.ELEval;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -149,6 +151,11 @@ public class TwitterStages {
     @Override
     public List<ConfigIssue> validateConfigs(Info info, Context context) {
       return Collections.emptyList();
+    }
+
+    @Override
+    public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+      return new ArrayList<>();
     }
 
     @Override

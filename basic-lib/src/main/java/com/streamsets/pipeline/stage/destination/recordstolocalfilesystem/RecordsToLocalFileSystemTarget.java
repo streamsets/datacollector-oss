@@ -5,19 +5,21 @@
  */
 package com.streamsets.pipeline.stage.destination.recordstolocalfilesystem;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.CountingOutputStream;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.el.TimeEl;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.io.WildcardFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.jsp.el.ELException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,6 +53,16 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private CountingOutputStream countingOutputStream;
   private CharDataGeneratorFactory generatorFactory;
   private DataGenerator generator;
+  private ELEval rotationMillisEvaluator;
+
+  @Override
+  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+    return ImmutableList.of(createRotationMillisEval(elEvalProvider));
+  }
+
+  private ELEval createRotationMillisEval(ElEvalProvider elEvalProvider) {
+    return elEvalProvider.createELEval("rotationIntervalSecs", TimeEl.class);
+  }
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
@@ -65,12 +77,13 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       }
     }
     try {
-      rotationMillis = ELEvaluator.evaluateHoursMinutesToSecondsExpr(rotationIntervalSecs) * 1000;
+      rotationMillisEvaluator = createRotationMillisEval(getContext());
+      rotationMillis = rotationMillisEvaluator.eval(getContext().getDefaultVariables(), rotationIntervalSecs, Long.class);
       if (rotationMillis <= 0) {
         issues.add(getContext().createConfigIssue(Groups.FILES.name(), "rotationIntervalSecs", Errors.RECORDFS_03,
                                                   rotationIntervalSecs, rotationMillis / 1000));
       }
-    } catch (ELException ex) {
+    } catch (ELEvalException ex) {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "rotationIntervalSecs", Errors.RECORDFS_04,
                                                 rotationIntervalSecs));
     }

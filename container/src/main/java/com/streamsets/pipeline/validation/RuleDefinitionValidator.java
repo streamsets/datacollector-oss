@@ -8,17 +8,17 @@ package com.streamsets.pipeline.validation;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.ELRecordSupport;
-import com.streamsets.pipeline.el.ELStringSupport;
+import com.streamsets.pipeline.el.RecordEl;
+import com.streamsets.pipeline.el.StringEL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.jsp.el.ELException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -44,9 +44,7 @@ public class RuleDefinitionValidator {
 
   public RuleDefinitionValidator() {
     variables = new ELEvaluator.Variables();
-    elEvaluator = new ELEvaluator();
-    ELRecordSupport.registerRecordFunctions(elEvaluator);
-    ELStringSupport.registerStringFunctions(elEvaluator);
+    elEvaluator = new ELEvaluator("RuleDefinitionValidator", StringEL.class, RecordEl.class);
   }
 
   public boolean validateRuleDefinition(RuleDefinitions ruleDefinitions) {
@@ -161,9 +159,9 @@ public class RuleDefinitionValidator {
     }
     String predicateWithValue = condition.replace(VAL, DEFAULT_VALUE);
     try {
-      elEvaluator.eval(variables, predicateWithValue);
-    } catch (ELException ex) {
-      return RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0045, condition);
+      elEvaluator.eval(variables, predicateWithValue, Object.class);
+    } catch (ELEvalException e) {
+      return RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0047, condition);
     }
     return null;
   }
@@ -296,10 +294,10 @@ public class RuleDefinitionValidator {
       }
     };
 
-    ELRecordSupport.setRecordInContext(variables, record);
+    RecordEl.setRecordInContext(variables, record);
     try {
-      elEvaluator.eval(variables, condition);
-    } catch (ELException ex) {
+      elEvaluator.eval(variables, condition, Object.class);
+    } catch (ELEvalException ex) {
       return RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0045, condition);
     }
     return null;

@@ -14,6 +14,8 @@ public enum CommonError implements ErrorCode {
   CMN_0101("Error converting record '{}' to String, reason: {}"),
   CMN_0102("Field Path to Column Name Mapping must be supplied to convert records into CSV format."),
   CMN_0103("Error converting record '{}' to String, reason: {}"),
+  CMN_0104("Error evaluating expression {}, reason: {}"),
+  CMN_0105("Error parsing expression {}, reason: {}"),
 
   ;
   private final String msg;

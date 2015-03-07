@@ -99,7 +99,9 @@ public class PipelineDefinition {
       gdModelDefinition,
       "",
       new ArrayList<>(),
-      0);
+      0,
+      new ArrayList<String>(),
+      new ArrayList<String>());
 
     return dgConfigDef;
   }
@@ -142,7 +144,9 @@ public class PipelineDefinition {
         model,
         "",
         new ArrayList<>(),
-        10);
+        10,
+        new ArrayList<String>(),
+        new ArrayList<String>());
     configs.add(config);
 
     return configs;

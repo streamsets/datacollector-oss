@@ -5,9 +5,10 @@
  */
 package com.streamsets.pipeline.api.base;
 
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.Context;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.el.ELEval;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,10 @@ public abstract class BaseStage<C extends Context> implements Stage<C> {
     this.info = info;
     this.context = context;
     return validateConfigs();
+  }
+
+  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+    return new ArrayList<>();
   }
 
   protected List<ConfigIssue> validateConfigs()  throws StageException {

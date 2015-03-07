@@ -31,10 +31,13 @@ public class ConfigDefinition {
   private List<Object> triggeredByValues;
   private final ModelDefinition model;
   private final int displayPosition;
+  private final List<String> elFunctionDefinitionIds;
+  private final List<String> elVariableDefinitionIds;
 
   public ConfigDefinition(String name, ConfigDef.Type type, String label, String description, Object defaultValue,
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
-      List<Object> triggeredByValues, int displayPosition) {
+      List<Object> triggeredByValues, int displayPosition, List<String> elFunctionDefinitionIds,
+      List<String> elVariableDefinitionIds) {
     this.name = name;
     this.type = type;
     this.label = label;
@@ -47,6 +50,8 @@ public class ConfigDefinition {
     this.dependsOn = dependsOn;
     this.triggeredByValues = triggeredByValues;
     this.displayPosition = displayPosition;
+    this.elFunctionDefinitionIds = elFunctionDefinitionIds;
+    this.elVariableDefinitionIds = elVariableDefinitionIds;
   }
 
   public String getName() {
@@ -95,6 +100,14 @@ public class ConfigDefinition {
     this.triggeredByValues = triggeredByValues;
   }
 
+  public List<String> getElFunctionDefinitionIds() {
+    return elFunctionDefinitionIds;
+  }
+
+  public List<String> getElVariableDefinitionIds() {
+    return elVariableDefinitionIds;
+  }
+
   public int getDisplayPosition() {
     return displayPosition;
   }
@@ -117,7 +130,7 @@ public class ConfigDefinition {
 
     return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(),
       isRequired(), getGroup(), getFieldName(), getModel(), getDependsOn(), getTriggeredByValues(),
-      getDisplayPosition());
+      getDisplayPosition(), getElFunctionDefinitionIds(), getElVariableDefinitionIds());
   }
 
   @Override

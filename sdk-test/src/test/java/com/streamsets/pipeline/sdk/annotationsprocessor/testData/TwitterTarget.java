@@ -12,7 +12,9 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.el.ELEval;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,6 +65,11 @@ public class TwitterTarget implements Target {
   @Override
   public List<ConfigIssue> validateConfigs(Info info, Context context) {
     return Collections.emptyList();
+  }
+
+  @Override
+  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+    return new ArrayList<>();
   }
 
   @Override

@@ -13,19 +13,26 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ChooserMode;
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
-import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.impl.LocaleInContext;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.StageDefinition;
-import com.streamsets.pipeline.api.impl.LocaleInContext;
-import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.el.ElFunctionDefinition;
+import com.streamsets.pipeline.el.ElMetadata;
+import com.streamsets.pipeline.el.ElVariableDefinition;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.StageDefinitionJson;
+import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.task.AbstractTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +41,12 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +65,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private List<StageDefinition> stageList;
   private LoadingCache<Locale, List<StageDefinition>> localizedStageList;
   private ObjectMapper json;
+  private Map<String, ElFunctionDefinition> elFunctionDefinitionMap;
+  private Map<String, ElVariableDefinition> elVariableDefinitionMap;
+  private Map<String, String> elGroupsMap;
 
   @Inject
   public ClassLoaderStageLibraryTask(RuntimeInfo runtimeInfo) {
@@ -69,6 +81,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     json = ObjectMapperFactory.get();
     stageList = new ArrayList<>();
     stageMap = new HashMap<>();
+    elFunctionDefinitionMap = new HashMap<>();
+    elVariableDefinitionMap = new HashMap<>();
+    elGroupsMap = new HashMap<>();
     loadStages();
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
@@ -103,7 +118,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
           Enumeration<URL> resources = cl.getResources(PIPELINE_STAGES_JSON);
           while (resources.hasMoreElements()) {
             Map<String, String> stagesInLibrary = new HashMap<>();
-
             URL url = resources.nextElement();
             InputStream is = url.openStream();
             StageDefinitionJson[] stages =
@@ -125,10 +139,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               convertDefaultValueToType(stage);
               convertTriggeredByValuesToType(stage.getStageClassLoader().loadClass(stage.getClassName()),
                 stage.getConfigDefinitions());
-              //TODO: Set the EL metadata for all the config defs in this stage
+              setElMetadata(stage);
             }
           }
-        } catch (IOException | ClassNotFoundException | NoSuchFieldException ex) {
+        } catch (IOException | ClassNotFoundException | NoSuchFieldException | InvocationTargetException |
+          NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
           throw new RuntimeException(
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.getMessage()),
               ex);
@@ -139,12 +154,43 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     }
   }
 
+  private void setElMetadata(StageDefinition stageDefinition) throws ClassNotFoundException, IllegalAccessException,
+    InstantiationException, NoSuchMethodException, InvocationTargetException {
+    Class<?> stageClass = stageDefinition.getStageClassLoader().loadClass(stageDefinition.getClassName());
+    Stage<?> stage = (Stage<?>) stageClass.newInstance();
+    List<ELEval> elEvals = stage.getElEvals(new StageContext(stageDefinition.getName(), stageDefinition.getType(),
+      false,OnRecordError.TO_ERROR,Collections.<String>emptyList()));
+    for(ELEval elEval : elEvals) {
+      ConfigDefinition configDefinition = stageDefinition.getConfigDefinition(elEval.getConfigName());
+      List<String> elFunctionDefinitionIds = configDefinition.getElFunctionDefinitionIds();
+      for(ElFunctionDefinition elFunctionDefinition : ((ELEvaluator) elEval).getElFunctionDefinitions()) {
+        elFunctionDefinitionIds.add(elFunctionDefinition.getId());
+        if(!elFunctionDefinitionMap.containsKey(elFunctionDefinition.getId())) {
+          elFunctionDefinitionMap.put(elFunctionDefinition.getId(), elFunctionDefinition);
+          if(!elGroupsMap.containsKey(elFunctionDefinition.getGroup())) {
+            elGroupsMap.put(elFunctionDefinition.getGroup(), elFunctionDefinition.getGroup());
+          }
+        }
+      }
+      List<String> elVariableDefinitionIds = configDefinition.getElVariableDefinitionIds();
+      for(ElVariableDefinition elVariableDefinition : ((ELEvaluator) elEval).getElVariableDefinitions()) {
+        elVariableDefinitionIds.add(elVariableDefinition.getId());
+        if(!elVariableDefinitionMap.containsKey(elVariableDefinition.getId())) {
+          elVariableDefinitionMap.put(elVariableDefinition.getId(), elVariableDefinition);
+          if(!elGroupsMap.containsKey(elVariableDefinition.getGroup())) {
+            elGroupsMap.put(elVariableDefinition.getGroup(), elVariableDefinition.getGroup());
+          }
+        }
+      }
+    }
+  }
+
   //Group name needs to be empty for UI to show the config in General Group.
   private static final ConfigDefinition REQUIRED_FIELDS_CONFIG = new ConfigDefinition(
       ConfigDefinition.REQUIRED_FIELDS, ConfigDef.Type.MODEL, "Required Fields",
       "Records without any of these fields are sent to error",
       null, false, "", null, new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUED, null, null, null, null, null),
-      "", new ArrayList<>(), 10);
+      "", new ArrayList<>(), 10, new ArrayList<String>(), new ArrayList<String>());
 
   //Group name needs to be empty for UI to show the config in General Group.
   private static final ConfigDefinition ON_RECORD_ERROR_CONFIG = new ConfigDefinition(
@@ -154,7 +200,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
                                                  OnRecordErrorChooserValues.class.getName(),
                                                  new OnRecordErrorChooserValues().getValues(),
                                                  new OnRecordErrorChooserValues().getLabels(), null), "",
-      new ArrayList<>(), 20);
+      new ArrayList<>(), 20, new ArrayList<String>(), new ArrayList<String>());
 
   private void addSystemConfigurations(StageDefinition stage) {
     if (stage.hasRequiredFields()) {
@@ -180,12 +226,17 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   }
 
   @Override
+  public ElMetadata getElMetadata() {
+    return new ElMetadata(elFunctionDefinitionMap, elVariableDefinitionMap, elGroupsMap);
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   public StageDefinition getStage(String library, String name, String version) {
     return stageMap.get(createKey(library, name, version));
   }
 
-  private void convertTriggeredByValuesToType(Class stageClass, List<ConfigDefinition> configDefinitions)
+  private void convertTriggeredByValuesToType(Class<?> stageClass, List<ConfigDefinition> configDefinitions)
     throws ClassNotFoundException,
     NoSuchFieldException, IOException {
     for (ConfigDefinition confDef : configDefinitions) {
@@ -200,12 +251,12 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       //Complex types must be handled
       if (confDef.getModel() != null && confDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
         Type genericType = field.getGenericType();
-        Class klass;
+        Class<?> klass;
         if (genericType instanceof ParameterizedType) {
           Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
-          klass = (Class) typeArguments[0];
+          klass = (Class<?>) typeArguments[0];
         } else {
-          klass = (Class) genericType;
+          klass = (Class<?>) genericType;
         }
         convertTriggeredByValuesToType(klass, confDef.getModel().getConfigDefinitions());
       } else {
@@ -237,7 +288,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   private void convertDefaultValueToType(StageDefinition stageDefinition) throws ClassNotFoundException,
     NoSuchFieldException, IOException {
-    Class stageClass = stageDefinition.getStageClassLoader().loadClass(stageDefinition.getClassName());
+    Class<?> stageClass = stageDefinition.getStageClassLoader().loadClass(stageDefinition.getClassName());
     for (ConfigDefinition confDef : stageDefinition.getConfigDefinitions()) {
       if(confDef.getFieldName() == null) {
         //confDef.getFieldName() is null for system config definitions like required fields etc.
@@ -255,12 +306,12 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private void setDefaultForComplexType(Field field, ConfigDefinition confDef)
     throws NoSuchFieldException, IOException {
     Type genericType = field.getGenericType();
-    Class klass;
+    Class<?> klass;
     if (genericType instanceof ParameterizedType) {
       Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
-      klass = (Class) typeArguments[0];
+      klass = (Class<?>) typeArguments[0];
     } else {
-      klass = (Class) genericType;
+      klass = (Class<?>) genericType;
     }
     for (ConfigDefinition configDefinition : confDef.getModel().getConfigDefinitions()) {
       Field f = klass.getField(configDefinition.getFieldName());

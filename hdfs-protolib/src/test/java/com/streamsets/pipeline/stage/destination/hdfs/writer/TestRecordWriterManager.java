@@ -6,11 +6,14 @@
 package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
+import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -41,6 +44,8 @@ import java.util.UUID;
 
 public class TestRecordWriterManager {
   private static Path testDir;
+  private static Target.Context targetContext = ContextInfoCreator.createTargetContext("testWritersLifecycle", false,
+    OnRecordError.TO_ERROR);
 
 
   public static class DummyDataGeneratorFactory extends CharDataGeneratorFactory {
@@ -92,7 +97,7 @@ public class TestRecordWriterManager {
     Configuration conf = new HdfsConfiguration();
     String prefix = "prefix";
     String template = getTestDir().toString() +
-                      "/${YYYY}/${YY}/${MM}/${DD}/${hh}/${mm}/${ss}/" +
+                      "/${YYYY()}/${YY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}/" +
                       "${not empty record:value('/') ? record:value('/') : 'blah'}";
     TimeZone timeZone = TimeZone.getTimeZone("UTC");
     long cutOffSecs = 10;
@@ -104,20 +109,9 @@ public class TestRecordWriterManager {
     String keyEL = "uuid()";
     CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                                      cutOffRecords, fileType, compressionCodec, compressionType,
-                                                      keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext);
 
     Date date = getFixedDate();
-
-    Map<String, Object> map = mgr.getELVarsForTime(TimeZone.getTimeZone("UTC"), date);
-    Assert.assertEquals("2015", map.get("YYYY"));
-    Assert.assertEquals("15", map.get("YY"));
-    Assert.assertEquals("01", map.get("MM"));
-    Assert.assertEquals("20", map.get("DD"));
-    Assert.assertEquals("09", map.get("hh"));
-    Assert.assertEquals("56", map.get("mm"));
-    Assert.assertEquals("01", map.get("ss"));
-
 
     Record record = RecordCreator.create();
     record.set(Field.create("a"));
@@ -146,7 +140,7 @@ public class TestRecordWriterManager {
     URI uri = new URI("file:///");
     Configuration conf = new HdfsConfiguration();
     String prefix = "prefix";
-    String template = getTestDir().toString() + "/${YYYY}/${YY}/${MM}/${DD}/${hh}/${mm}/${ss}/${record:value('/')}";
+    String template = getTestDir().toString() + "/${YYYY()}/${YY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}/${record:value('/')}";
     TimeZone timeZone = TimeZone.getTimeZone("UTC");
     long cutOffSecs = 10;
     long cutOffSize = 20;
@@ -157,8 +151,7 @@ public class TestRecordWriterManager {
     String keyEL = "uuid()";
     CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                                      cutOffRecords, fileType, compressionCodec, compressionType,
-                                                      keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec, compressionType,keyEL, generatorFactory, targetContext);
 
     if (compressionCodec == null) {
       Assert.assertEquals("", mgr.getExtension());
@@ -177,7 +170,7 @@ public class TestRecordWriterManager {
     URI uri = new URI("file:///");
     Configuration conf = new HdfsConfiguration();
     String prefix = "prefix";
-    String template = getTestDir().toString() + "/${YYYY}";
+    String template = getTestDir().toString() + "/${YYYY()}";
     TimeZone timeZone = TimeZone.getTimeZone("UTC");
     long cutOffSecs = 10;
     long cutOffSize = 20;
@@ -187,9 +180,7 @@ public class TestRecordWriterManager {
     String keyEL = null;
     CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                                      cutOffRecords, fileType, compressionCodec, compressionType,
-                                                      keyEL, generatorFactory);
-
+      cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext);
     FileSystem fs = FileSystem.get(uri, conf);
     Path file = new Path(getTestDir(), UUID.randomUUID().toString());
     long expires = System.currentTimeMillis() + 50000;
@@ -228,7 +219,7 @@ public class TestRecordWriterManager {
     URI uri = new URI("file:///");
     Configuration conf = new HdfsConfiguration();
     String prefix = "prefix";
-    String template = getTestDir().toString() + "/${YYYY}";
+    String template = getTestDir().toString() + "/${YYYY()}";
     TimeZone timeZone = TimeZone.getTimeZone("UTC");
     long cutOffSecs = 10;
     long cutOffSize = 20;
@@ -237,9 +228,7 @@ public class TestRecordWriterManager {
     String keyEL = "${uuid()}";
     CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                                      cutOffRecords, fileType, compressionCodec, compressionType,
-                                                      keyEL, generatorFactory);
-
+      cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext);
     FileSystem fs = FileSystem.get(uri, conf);
     Path file = new Path(getTestDir(), UUID.randomUUID().toString());
     long expires = System.currentTimeMillis() + 50000;
@@ -280,7 +269,7 @@ public class TestRecordWriterManager {
     URI uri = new URI("file:///");
     Configuration conf = new HdfsConfiguration();
     String prefix = "prefix";
-    String template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}/${hh}/${mm}/${ss}/${record:value('/')}";
+    String template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}/${record:value('/')}";
     TimeZone timeZone = TimeZone.getTimeZone("UTC");
     long cutOffSecs = 10;
     long cutOffSize = 5;
@@ -292,9 +281,7 @@ public class TestRecordWriterManager {
     String keyEL = null;
     CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                                      cutOffRecords, fileType, compressionCodec , compressionType,
-                                                      keyEL, generatorFactory);
-
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
 
     FileSystem fs = FileSystem.get(uri, conf);
     Date now = getFixedDate();
@@ -364,7 +351,7 @@ public class TestRecordWriterManager {
     URI uri = new URI("file:///");
     Configuration conf = new HdfsConfiguration();
     String prefix = "prefix";
-    String template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}/${hh}/${mm}/${ss}/${record:value('/')}";
+    String template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}/${record:value('/')}";
     TimeZone timeZone = TimeZone.getTimeZone("UTC");
     long cutOffSecs = 10;
     long cutOffSize = 50000;
@@ -376,8 +363,8 @@ public class TestRecordWriterManager {
     String keyEL = null;
     CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                                      cutOffRecords, fileType, compressionCodec , compressionType,
-                                                      keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
+
     Date now = getFixedDate();
 
     Date recordDate = now;
@@ -399,7 +386,7 @@ public class TestRecordWriterManager {
     URI uri = new URI("file:///");
     Configuration conf = new HdfsConfiguration();
     String prefix = "prefix";
-    String template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}/${hh}/${mm}/${ss}/${record:value('/')}";
+    String template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}/${record:value('/')}";
     TimeZone timeZone = TimeZone.getTimeZone("UTC");
     long cutOffSecs = 10;
     long cutOffSize = 4;
@@ -411,8 +398,7 @@ public class TestRecordWriterManager {
     String keyEL = null;
     CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                                      cutOffRecords, fileType, compressionCodec , compressionType,
-                                                      keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
     Date now = getFixedDate();
 
     Date recordDate = now;
@@ -434,7 +420,7 @@ public class TestRecordWriterManager {
     URI uri = new URI("file:///");
     Configuration conf = new HdfsConfiguration();
     String prefix = "prefix";
-    String template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}/${hh}/${mm}/${ss}/${record:value('/')}";
+    String template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}/${record:value('/')}";
     TimeZone timeZone = TimeZone.getTimeZone("UTC");
     long cutOffSecs = 10;
     long cutOffSize = 0;
@@ -446,8 +432,7 @@ public class TestRecordWriterManager {
     String keyEL = null;
     CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                                      cutOffRecords, fileType, compressionCodec , compressionType,
-                                                      keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
     Date now = getFixedDate();
 
     Date recordDate = now;
@@ -481,10 +466,9 @@ public class TestRecordWriterManager {
     CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
 
     // up to seconds
-    String template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}/${hh}/${mm}/${ss}";
+    String template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}";
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                                      cutOffRecords, fileType, compressionCodec , compressionType,
-                                                      keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
 
     Date actual = parseDate("2015-01-20T14:01:15Z");
     Date expected = new Date(parseDate("2015-01-20T14:01:16Z").getTime() - 1);
@@ -495,10 +479,9 @@ public class TestRecordWriterManager {
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // up to minutes
-    template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}/${hh}/${mm}";
+    template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}/${hh()}/${mm()}";
     mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                  cutOffRecords, fileType, compressionCodec , compressionType,
-                                  keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
 
     actual = parseDate("2015-01-20T14:01:15Z");
     expected = new Date(parseDate("2015-01-20T14:02:00Z").getTime() - 1);
@@ -509,10 +492,9 @@ public class TestRecordWriterManager {
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // up to hours
-    template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}/${hh}";
+    template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}/${hh()}";
     mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                  cutOffRecords, fileType, compressionCodec , compressionType,
-                                  keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
 
     actual = parseDate("2015-01-20T14:01:15Z");
     expected = new Date(parseDate("2015-01-20T15:00:00Z").getTime() - 1);
@@ -523,10 +505,9 @@ public class TestRecordWriterManager {
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // up to days
-    template = getTestDir().toString() + "/${YYYY}/${MM}/${DD}";
+    template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}";
     mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                  cutOffRecords, fileType, compressionCodec , compressionType,
-                                  keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
 
     actual = parseDate("2015-01-20T14:01:15Z");
     expected = new Date(parseDate("2015-01-20T24:00:00Z").getTime() - 1);
@@ -537,11 +518,9 @@ public class TestRecordWriterManager {
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // up to months
-    template = getTestDir().toString() + "/${YYYY}/${MM}";
+    template = getTestDir().toString() + "/${YYYY()}/${MM()}";
     mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                  cutOffRecords, fileType, compressionCodec , compressionType,
-                                  keyEL, generatorFactory);
-
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
     actual = parseDate("2015-01-20T14:01:15Z");
     expected = new Date(parseDate("2015-01-31T24:00:00Z").getTime() - 1);
     computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getTimeZone("UTC"), actual);
@@ -551,10 +530,9 @@ public class TestRecordWriterManager {
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // up to years
-    template = getTestDir().toString() + "/${YYYY}";
+    template = getTestDir().toString() + "/${YYYY()}";
     mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                  cutOffRecords, fileType, compressionCodec , compressionType,
-                                  keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
 
     actual = parseDate("2015-01-20T14:01:15Z");
     expected = new Date(parseDate("2015-12-31T24:00:00Z").getTime() - 1);
@@ -565,10 +543,9 @@ public class TestRecordWriterManager {
     Assert.assertEquals(expected.getTime(), computed.getTime());
 
     // leap year
-    template = getTestDir().toString() + "/${YY}/${MM}";
+    template = getTestDir().toString() + "/${YY()}/${MM()}";
     mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                  cutOffRecords, fileType, compressionCodec , compressionType,
-                                  keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
 
     actual = parseDate("2016-02-20T1:01:15Z");
     expected = new Date(parseDate("2016-03-01T00:00:00Z").getTime() - 1);
@@ -595,8 +572,7 @@ public class TestRecordWriterManager {
     CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
 
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
-                                                      cutOffRecords, fileType, compressionCodec , compressionType,
-                                                      keyEL, generatorFactory);
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
     mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getDefault(), new Date());
   }
 
@@ -607,27 +583,27 @@ public class TestRecordWriterManager {
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDirTemplateGapInTokens1() throws Exception {
-    testInvalidDirTemplate("${MM}");
+    testInvalidDirTemplate("${MM()}");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDirTemplateGapInTokens2() throws Exception {
-    testInvalidDirTemplate("${YY}/${DD}");
+    testInvalidDirTemplate("${YY()}/${DD()}");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDirTemplateGapInTokens3() throws Exception {
-    testInvalidDirTemplate("${YY}/${MM}/${hh}");
+    testInvalidDirTemplate("${YY()}/${MM()}/${hh()}");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDirTemplateGapInTokens4() throws Exception {
-    testInvalidDirTemplate("${YY}/${MM}/${DD}/${mm}");
+    testInvalidDirTemplate("${YY()}/${MM()}/${DD()}/${mm()}");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDirTemplateGapInTokens5() throws Exception {
-    testInvalidDirTemplate("${YY}/${MM}/${DD}/${hh}/${ss}");
+    testInvalidDirTemplate("${YY()}/${MM()}/${DD()}/${hh()}/${ss()}");
   }
 
 }

@@ -15,9 +15,7 @@ public class TestELRecordSupport {
 
   @Test
   public void testRecordFunctions() throws Exception {
-    ELEvaluator eval = new ELEvaluator();
-    ELRecordSupport.registerRecordFunctions(eval);
-
+    ELEvaluator eval = new ELEvaluator("testRecordFunctions", RecordEl.class);
     ELEvaluator.Variables variables = new ELEvaluator.Variables();
 
     Record.Header header = Mockito.mock(Record.Header.class);
@@ -29,21 +27,19 @@ public class TestELRecordSupport {
     Mockito.when(record.get(Mockito.eq(""))).thenReturn(Field.create(1));
     Mockito.when(record.get(Mockito.eq("/x"))).thenReturn(null);
 
-    ELRecordSupport.setRecordInContext(variables, record);
+    RecordEl.setRecordInContext(variables, record);
 
     Assert.assertTrue(eval.eval(variables, "${record:type('') eq INTEGER}", Boolean.class));
     Assert.assertTrue(eval.eval(variables, "${record:value('') eq 1}", Boolean.class));
-    Assert.assertNull(eval.eval(variables, "${record:value('/x')}"));
-    Assert.assertEquals("id", eval.eval(variables, "${record:id()}"));
-    Assert.assertEquals("creator", eval.eval(variables, "${record:creator()}"));
-    Assert.assertEquals("path", eval.eval(variables, "${record:path()}"));
+    Assert.assertNull(eval.eval(variables, "${record:value('/x')}", Object.class));
+    Assert.assertEquals("id", eval.eval(variables, "${record:id()}", String.class));
+    Assert.assertEquals("creator", eval.eval(variables, "${record:creator()}", String.class));
+    Assert.assertEquals("path", eval.eval(variables, "${record:path()}", String.class));
   }
 
   @Test
   public void testErrorRecordFunctions() throws Exception {
-    ELEvaluator eval = new ELEvaluator();
-    ELRecordSupport.registerRecordFunctions(eval);
-
+    ELEvaluator eval = new ELEvaluator("testErrorRecordFunctions", RecordEl.class);
 
     ELEvaluator.Variables variables = new ELEvaluator.Variables();
 
@@ -57,15 +53,14 @@ public class TestELRecordSupport {
     Record record = Mockito.mock(Record.class);
     Mockito.when(record.getHeader()).thenReturn(header);
 
-    ELRecordSupport.setRecordInContext(variables, record);
+    RecordEl.setRecordInContext(variables, record);
 
-    Assert.assertEquals("stage", eval.eval(variables, "${error:stage()}"));
-    Assert.assertEquals("code", eval.eval(variables, "${error:code()}"));
-    Assert.assertEquals("message", eval.eval(variables, "${error:message()}"));
-    Assert.assertEquals("collector", eval.eval(variables, "${error:collectorId()}"));
-    Assert.assertEquals("pipeline", eval.eval(variables, "${error:pipeline()}"));
-    Assert.assertEquals(10l, eval.eval(variables, "${error:time()}"));
+    Assert.assertEquals("stage", eval.eval(variables, "${error:stage()}", String.class));
+    Assert.assertEquals("code", eval.eval(variables, "${error:code()}", String.class));
+    Assert.assertEquals("message", eval.eval(variables, "${error:message()}", String.class));
+    Assert.assertEquals("collector", eval.eval(variables, "${error:collectorId()}", String.class));
+    Assert.assertEquals("pipeline", eval.eval(variables, "${error:pipeline()}", String.class));
+    Assert.assertEquals(10l, (long)eval.eval(variables, "${error:time()}", Long.class));
   }
-
 
 }

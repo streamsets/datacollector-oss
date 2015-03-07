@@ -61,7 +61,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0044("Configuration 'threshold' must have a value between 0 and 100."),
   VALIDATION_0045("Condition '{}' set for Data Rule Definition is not valid."),
   VALIDATION_0046("Condition must be of the form '${value()<op><number>}'."),
-
+  VALIDATION_0047("Condition '{}' set for Metric Alert Definition is not valid."),
   VALIDATION_0050("Configuration '{}' must be set for Metric Alert Definition."),
 
 

@@ -5,25 +5,14 @@
  */
 package com.streamsets.pipeline.stage.processor.selector;
 
-import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.LanePredicateMapping;
 import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.configurablestage.DProcessor;
-import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.ELRecordSupport;
-import com.streamsets.pipeline.el.ELStringSupport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.servlet.jsp.el.ELException;
 import java.util.List;
 import java.util.Map;
 

@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.stagelibrary;
 
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.el.ElMetadata;
 import com.streamsets.pipeline.task.Task;
 
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.List;
 public interface StageLibraryTask extends Task {
 
   public List<StageDefinition> getStages();
+
+  public ElMetadata getElMetadata();
 
   public StageDefinition getStage(String library, String name, String version);
 

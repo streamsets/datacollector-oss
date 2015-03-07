@@ -33,10 +33,12 @@ public class ConfigDefinitionJson {
     @JsonProperty("model") ModelDefinitionJson model,
     @JsonProperty("dependsOn") String dependsOn,
     @JsonProperty("triggeredByValues") List<Object> triggeredByValues,
-    @JsonProperty("displayPosition") int displayPosition) {
+    @JsonProperty("displayPosition") int displayPosition,
+    @JsonProperty("elFunctionDefinitionIds") List<String> elFunctionDefinitionIds,
+    @JsonProperty("elVariableDefinitionIds") List<String> elVariableDefinitionIds) {
     this.configDefinition = new com.streamsets.pipeline.config.ConfigDefinition(name, type, label, description,
       defaultValue, required, group, fieldName, BeanHelper.unwrapModelDefinition(model), dependsOn, triggeredByValues,
-      displayPosition);
+      displayPosition, elFunctionDefinitionIds, elVariableDefinitionIds);
   }
 
   public ConfigDefinitionJson(com.streamsets.pipeline.config.ConfigDefinition configDefinition) {
@@ -89,6 +91,15 @@ public class ConfigDefinitionJson {
   public int getDisplayPosition() {
     return configDefinition.getDisplayPosition();
   }
+
+  public List<String> getElFunctionDefinitionIds() {
+    return configDefinition.getElFunctionDefinitionIds();
+  }
+
+  public List<String> getElVariableDefinitionIds() {
+    return configDefinition.getElVariableDefinitionIds();
+  }
+
 
   @JsonIgnore
   public com.streamsets.pipeline.config.ConfigDefinition getConfigDefinition() {

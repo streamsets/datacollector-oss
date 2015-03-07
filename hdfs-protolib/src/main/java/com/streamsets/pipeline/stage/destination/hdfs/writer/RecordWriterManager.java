@@ -8,12 +8,15 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.ELRecordSupport;
+import com.streamsets.pipeline.el.RecordEl;
+import com.streamsets.pipeline.el.TimeEl;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
-import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
+import com.streamsets.pipeline.stage.destination.hdfs.ElUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
+import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -24,7 +27,6 @@ import org.apache.hadoop.io.compress.CompressionCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.jsp.el.ELException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
@@ -32,33 +34,33 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
 public class RecordWriterManager {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriterManager.class);
 
-  public static void validateDirPathTemplate1(Target.Context context, String pathTemplate) throws ELException {
+  public static void validateDirPathTemplate1(Target.Context context, String pathTemplate) {
     getCeilingDateBasedOnTemplate(pathTemplate, TimeZone.getDefault(), new Date());
   }
 
-  public static void validateDirPathTemplate2(Target.Context context, String pathTemplate) throws ELException {
-    ELEvaluator elEval = new ELEvaluator();
-    ELRecordSupport.registerRecordFunctions(elEval);
-    ELEvaluator.Variables vars = new ELEvaluator.Variables(getELVarsForTime(TimeZone.getDefault(), new Date()), null);
-    ELRecordSupport.setRecordInContext(vars, context.createRecord("validateDirPathTemplate"));
-    elEval.eval(vars, pathTemplate, String.class);
+  public static void validateDirPathTemplate2(Target.Context context, String pathTemplate) throws ELEvalException {
+    ELEval dirPathTemplateEval = ElUtil.createDirPathTemplateEval(context);
+    ELEval.Variables vars = context.getDefaultVariables();
+    RecordEl.setRecordInContext(vars, context.createRecord("validateDirPathTemplate"));
+    Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+    calendar.setTime(new Date());
+    TimeEl.setCalendarInContext(vars, calendar);
+    dirPathTemplateEval.eval(vars, pathTemplate, String.class);
   }
 
   private URI hdfsUri;;
   private Configuration hdfsConf;
   private String uniquePrefix;
   private String dirPathTemplate;
-  private ELEvaluator pathElEval;
+  private ELEval dirPathTemplateElEval;
   private TimeZone timeZone;
   private long cutOffMillis;
   private long cutOffSize;
@@ -68,11 +70,12 @@ public class RecordWriterManager {
   private SequenceFile.CompressionType compressionType;
   private String keyEL;
   private CharDataGeneratorFactory generatorFactory;
+  private Target.Context context;
 
   public RecordWriterManager(URI hdfsUri, Configuration hdfsConf, String uniquePrefix, String dirPathTemplate,
       TimeZone timeZone, long cutOffSecs, long cutOffSize, long cutOffRecords, HdfsFileType fileType,
       CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
-      CharDataGeneratorFactory generatorFactory) {
+      CharDataGeneratorFactory generatorFactory, Target.Context context) {
     this.hdfsUri = hdfsUri;
     this.hdfsConf = hdfsConf;
     this.uniquePrefix = uniquePrefix;
@@ -86,8 +89,8 @@ public class RecordWriterManager {
     this.compressionType = compressionType;
     this.keyEL = keyEL;
     this.generatorFactory = generatorFactory;
-    pathElEval = new ELEvaluator();
-    ELRecordSupport.registerRecordFunctions(pathElEval);
+    this.context = context;
+    dirPathTemplateElEval = ElUtil.createDirPathTemplateEval(context);
     getCeilingDateBasedOnTemplate(dirPathTemplate, timeZone, new Date());
   }
 
@@ -99,27 +102,15 @@ public class RecordWriterManager {
   private static final String CONST_mm = "mm";
   private static final String CONST_ss = "ss";
 
-  static Map<String, Object> getELVarsForTime(TimeZone timeZone, Date date) {
-    Calendar calendar = Calendar.getInstance(timeZone);
-    calendar.setTime(date);
-    Map<String, Object> map = new HashMap<>();
-    String year = Utils.intToPaddedString(calendar.get(Calendar.YEAR), 4);
-    map.put(CONST_YYYY, year);
-    map.put(CONST_YY, year.substring(year.length() - 2));
-    map.put(CONST_MM, Utils.intToPaddedString(calendar.get(Calendar.MONTH) + 1, 2));
-    map.put(CONST_DD, Utils.intToPaddedString(calendar.get(Calendar.DAY_OF_MONTH), 2));
-    map.put(CONST_hh, Utils.intToPaddedString(calendar.get(Calendar.HOUR_OF_DAY), 2));
-    map.put(CONST_mm, Utils.intToPaddedString(calendar.get(Calendar.MINUTE), 2));
-    map.put(CONST_ss, Utils.intToPaddedString(calendar.get(Calendar.SECOND), 2));
-    return map;
-  }
-
   String getDirPath(Date date, Record record) throws StageException {
     try {
-      ELEvaluator.Variables vars = new ELEvaluator.Variables(getELVarsForTime(timeZone, date), null);
-      ELRecordSupport.setRecordInContext(vars, record);
-      return (String) pathElEval.eval(vars, dirPathTemplate);
-    } catch (ELException ex) {
+      ELEval.Variables vars = context.getDefaultVariables();
+      RecordEl.setRecordInContext(vars, record);
+      Calendar calendar = Calendar.getInstance(timeZone);
+      calendar.setTime(date);
+      TimeEl.setCalendarInContext(vars, calendar);
+      return dirPathTemplateElEval.eval(vars, dirPathTemplate, String.class);
+    } catch (ELEvalException ex) {
       throw new StageException(Errors.HADOOPFS_02, dirPathTemplate, ex.getMessage(), ex);
     }
   }
@@ -167,11 +158,11 @@ public class RecordWriterManager {
   static Date getCeilingDateBasedOnTemplate(String dirPathTemplate, TimeZone timeZone, Date date) {
     Calendar calendar = Calendar.getInstance(timeZone);
     calendar.setTime(date);
-    if (!dirPathTemplate.contains(CONST_YY) && !dirPathTemplate.contains(CONST_YYYY)) {
+    if (!dirPathTemplate.contains("${" + CONST_YY + "()}") && !dirPathTemplate.contains(CONST_YYYY)) {
       throw  new IllegalArgumentException("dir path template must have a '${YY}' or '${YYYY}' token");
     }
     boolean done = false;
-    if (!dirPathTemplate.contains(CONST_MM)) {
+    if (!dirPathTemplate.contains("${" + CONST_MM + "()}")) {
       calendar.set(Calendar.MONTH, calendar.getActualMaximum(Calendar.MONTH));
       calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
       calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
@@ -180,7 +171,7 @@ public class RecordWriterManager {
       calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
       done = true;
     }
-    if (!dirPathTemplate.contains(CONST_DD)) {
+    if (!dirPathTemplate.contains("${" + CONST_DD + "()}")) {
       if (!done) {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
@@ -194,7 +185,7 @@ public class RecordWriterManager {
         throw  new IllegalArgumentException("dir path template has the '${DD}' token but does not have the '${MM}' token");
       }
     }
-    if (!dirPathTemplate.contains(CONST_hh)) {
+    if (!dirPathTemplate.contains("${" + CONST_hh + "()}")) {
       if (!done) {
         calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
         calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
@@ -207,7 +198,7 @@ public class RecordWriterManager {
         throw  new IllegalArgumentException("dir path template has the '${hh}' token but does not have the '${DD}' token");
       }
     }
-    if (!dirPathTemplate.contains(CONST_mm)) {
+    if (!dirPathTemplate.contains("${" + CONST_mm + "()}")) {
       if (!done) {
         calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
         calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
@@ -219,7 +210,7 @@ public class RecordWriterManager {
         throw  new IllegalArgumentException("dir path template has the '${mm}' token but does not have the '${hh}' token");
       }
     }
-    if (!dirPathTemplate.contains(CONST_ss)) {
+    if (!dirPathTemplate.contains("${" + CONST_ss + "()}")) {
       if (!done) {
         calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
       }
@@ -254,7 +245,7 @@ public class RecordWriterManager {
                             "if using a compressionCodec, compressionType cannot be NULL");
         SequenceFile.Writer writer = SequenceFile.createWriter(fs, hdfsConf, path, Text.class, Text.class,
                                                                compressionType, compressionCodec);
-        return new RecordWriter(path, timeToLiveMillis, writer, keyEL, generatorFactory);
+        return new RecordWriter(path, timeToLiveMillis, writer, keyEL, generatorFactory, context);
       default:
         throw new UnsupportedOperationException(Utils.format("Unsupported file Type '{}'", fileType));
     }

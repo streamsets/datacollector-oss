@@ -72,6 +72,15 @@ public class StageDefinition {
     configDefinitionsMap = new HashMap<>();
     for (ConfigDefinition conf : configDefinitions) {
       configDefinitionsMap.put(conf.getName(), conf);
+      ModelDefinition modelDefinition = conf.getModel();
+      if(modelDefinition != null && modelDefinition.getConfigDefinitions() != null) {
+        //Multi level complex is not allowed. So we stop at this level
+        //Assumption is that the config property names are unique in the class hierarchy
+        //and across complex types
+        for (ConfigDefinition configDefinition : modelDefinition.getConfigDefinitions()) {
+          configDefinitionsMap.put(configDefinition.getName(), configDefinition);
+        }
+      }
     }
     this.icon = icon;
     this.configGroupDefinition = configGroupDefinition;

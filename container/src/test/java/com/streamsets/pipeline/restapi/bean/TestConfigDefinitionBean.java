@@ -34,7 +34,7 @@ public class TestConfigDefinitionBean {
     triggeredBy.add("Z");
     com.streamsets.pipeline.config.ConfigDefinition configDefinition =
       new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
-        triggeredBy, 0);
+        triggeredBy, 0, new ArrayList<String>(), new ArrayList<String>());
 
     ConfigDefinitionJson configDefinitionJsonBean =
       new ConfigDefinitionJson(configDefinition);
@@ -65,13 +65,13 @@ public class TestConfigDefinitionBean {
     triggeredBy.add("Z");
     com.streamsets.pipeline.config.ConfigDefinition configDefinition =
       new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
-        triggeredBy, 0);
+        triggeredBy, 0, new ArrayList<String>(), new ArrayList<String>());
 
     ModelDefinitionJson modelDefinitionJsonBean =
       new ModelDefinitionJson(modelDefinition);
     ConfigDefinitionJson configDefinitionJsonBean =
       new ConfigDefinitionJson("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true,
-        "g", "intVar", modelDefinitionJsonBean, "A", triggeredBy, 0);
+        "g", "intVar", modelDefinitionJsonBean, "A", triggeredBy, 0, new ArrayList<String>(), new ArrayList<String>());
 
     Assert.assertEquals(configDefinition.getName(), configDefinitionJsonBean.getName());
     Assert.assertEquals(configDefinition.getDefaultValue(), configDefinitionJsonBean.getDefaultValue());

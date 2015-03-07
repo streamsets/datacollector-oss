@@ -45,7 +45,7 @@ public class TestHdfsTarget {
         .addConfiguration("hdfsKerberos", false)
         .addConfiguration("hdfsConfigs", new HashMap<>())
         .addConfiguration("uniquePrefix", "foo")
-        .addConfiguration("dirPathTemplate", getTestDir() + "/hdfs/${YYYY}${MM}${DD}${hh}${mm}${record:value('/a')}")
+        .addConfiguration("dirPathTemplate", getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}")
         .addConfiguration("timeZoneID", "UTC")
         .addConfiguration("fileType", HdfsFileType.TEXT)
         .addConfiguration("keyEl", "${uuid()}")

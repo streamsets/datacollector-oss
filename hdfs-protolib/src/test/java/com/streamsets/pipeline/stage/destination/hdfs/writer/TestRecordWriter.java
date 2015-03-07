@@ -6,10 +6,12 @@
 package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -117,7 +119,8 @@ public class TestRecordWriter {
                                                               (CompressionCodec) null);
       long timeToLive = 10000;
       long expires = System.currentTimeMillis() + timeToLive;
-      RecordWriter writer = new RecordWriter(file, timeToLive, seqFile, keyEL, new DummyDataGeneratorFactory());
+      RecordWriter writer = new RecordWriter(file, timeToLive, seqFile, keyEL, new DummyDataGeneratorFactory(),
+        ContextInfoCreator.createTargetContext("testWritersLifecycle", false, OnRecordError.TO_ERROR));
       Assert.assertFalse(writer.isTextFile());
       Assert.assertTrue(writer.isSeqFile());
       Assert.assertEquals(file, writer.getPath());

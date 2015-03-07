@@ -20,28 +20,32 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordReader;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.el.RecordEl;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.RecordJson;
 import com.streamsets.pipeline.util.ContainerError;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.impl.ErrorMessage;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.validation.StageIssue;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
+import java.util.Map;
 
 public class StageContext implements Source.Context, Target.Context, Processor.Context, ContextExtensions {
 
@@ -110,7 +114,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     }
 
     @Override
-    protected Class getExpectedClass() {
+    protected Class<?> getExpectedClass() {
       return RecordJson.class;
     }
 
@@ -313,4 +317,47 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     return Utils.format("StageContext[instance='{}']", instanceName);
   }
 
+  //ElProvider interface implementation
+  @Override
+  public ELEval createELEval(String configName, Class<?>... elFuncConstDefClasses) {
+    return new ELEvaluator(configName, elFuncConstDefClasses);
+  }
+
+  @Override
+  public ELEval.Variables parseConstants(Map<String,?> constants, Stage.Context context, String group,
+                                                String config, ErrorCode err, List<Stage.ConfigIssue> issues) {
+    ELEval.Variables variables = new ELEvaluator.Variables();
+    if (constants != null) {
+      for (Map.Entry<String, ?> entry : constants.entrySet()) {
+        try {
+          variables.addVariable(entry.getKey(), entry.getValue());
+        } catch (Exception ex) {
+          issues.add(context.createConfigIssue(group, config, err, constants, ex.getMessage(), ex));
+        }
+      }
+    }
+    return variables;
+  }
+
+  @Override
+  public ELEval.Variables getDefaultVariables() {
+    return new ELEvaluator.Variables(null, null);
+  }
+
+  @Override
+  public ELEval.Variables createVariables(Map<String, Object> variables, Map<String, Object> contextVariables) {
+    return new ELEvaluator.Variables(variables, contextVariables);
+  }
+
+  @Override
+  public void validateExpression(ELEval elEvaluator, ELEval.Variables variables, String expression,
+                                        Processor.Context context, String group, String config, ErrorCode err, Class<?> type, List<Stage.ConfigIssue> issues)
+  {
+    RecordEl.setRecordInContext(variables, context.createRecord("forValidation"));
+    try {
+      elEvaluator.eval(variables, expression, type);
+    } catch (Exception ex) {
+      issues.add(context.createConfigIssue(group, config, err, expression, ex.getMessage(), ex));
+    }
+  }
 }

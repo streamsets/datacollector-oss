@@ -9,10 +9,12 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.config.StageType;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -53,12 +55,18 @@ public class TestStageRunner {
   }
 
   public static class DummyStage1 implements DummyStage {
+
     public boolean initialized;
     public boolean destroyed;
 
     @Override
     public List<ConfigIssue> validateConfigs(Info info, Stage.Context context) {
       return Collections.emptyList();
+    }
+
+    @Override
+    public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+      return new ArrayList<>();
     }
 
     @Override
@@ -70,6 +78,7 @@ public class TestStageRunner {
     public void destroy() {
       destroyed = true;
     }
+
   }
 
   @Test

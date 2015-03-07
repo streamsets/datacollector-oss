@@ -53,7 +53,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -404,7 +403,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             model,
             configDefAnnot.dependsOn(),
             getTriggeredByValues(configDefAnnot.triggeredByValue(), allFields.get(configDefAnnot.dependsOn())),
-            configDefAnnot.displayPosition());
+            configDefAnnot.displayPosition(),
+            new ArrayList<String>(),
+            new ArrayList<String>());
         configDefinitions.add(configDefinition);
       }
     }
@@ -901,7 +902,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     MODEL_ANNOTATIONS.add(ValueChooser.class);
     MODEL_ANNOTATIONS.add(LanePredicateMapping.class);
     MODEL_ANNOTATIONS.add(ComplexField.class);
-    for (Class klass : MODEL_ANNOTATIONS) {
+    for (Class<?> klass : MODEL_ANNOTATIONS) {
       MODEL_ANNOTATIONS_NAMES.add(klass.getSimpleName());
     }
   }
