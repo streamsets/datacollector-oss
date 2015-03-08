@@ -213,7 +213,7 @@ public class TestFieldTypeConverterProcessor {
       map.put("beginner", Field.create("abc"));
       map.put("intermediate", Field.create("yes"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -812,7 +812,7 @@ public class TestFieldTypeConverterProcessor {
   }
 
   @Test
-  public void testStringToDate() throws StageException {
+  public void testStringToDate() throws Exception {
     FieldTypeConverterConfig beginnerConfig =
       new FieldTypeConverterConfig();
     beginnerConfig.fields = ImmutableList.of("/beginner");
@@ -890,7 +890,8 @@ public class TestFieldTypeConverterProcessor {
       Assert.assertTrue(result.containsKey("expert"));
       Assert.assertEquals(Field.Type.DATE,result.get("expert").getType());
       SimpleDateFormat expertDateFormat = new SimpleDateFormat(expertConfig.dateFormat);
-      Assert.assertEquals("2015-01-03 21:32:32.333 -0800",
+      SimpleDateFormat expertDataSourceFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z");
+      Assert.assertEquals(expertDateFormat.format(expertDataSourceFormat.parse("2015-01-03 21:32:32.333 PST")),
         expertDateFormat.format(result.get("expert").getValueAsDate()));
 
       Assert.assertTrue(result.containsKey("skilled"));
@@ -908,7 +909,7 @@ public class TestFieldTypeConverterProcessor {
   }
 
   @Test
-  public void testStringToDateTime() throws StageException {
+  public void testStringToDateTime() throws Exception {
     FieldTypeConverterConfig beginnerConfig =
       new FieldTypeConverterConfig();
     beginnerConfig.fields = ImmutableList.of("/beginner");
@@ -985,7 +986,8 @@ public class TestFieldTypeConverterProcessor {
       Assert.assertTrue(result.containsKey("expert"));
       Assert.assertEquals(Field.Type.DATETIME,result.get("expert").getType());
       SimpleDateFormat expertDateFormat = new SimpleDateFormat(expertConfig.dateFormat);
-      Assert.assertEquals("2015-01-03 21:32:32.333 -0800",
+      SimpleDateFormat expertDataSourceFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z");
+      Assert.assertEquals(expertDateFormat.format(expertDataSourceFormat.parse("2015-01-03 21:32:32.333 PST")),
         expertDateFormat.format(result.get("expert").getValueAsDate()));
 
       Assert.assertTrue(result.containsKey("skilled"));
