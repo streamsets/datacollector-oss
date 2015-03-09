@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class TestRecordsToLocalFileSystemTarget {
   public void testTargetLifecycleTimeRotation() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
-    Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "${1}", 0);
+    Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "${900}", 0);
     TargetRunner runner = new TargetRunner.Builder(target).build();
     List<Record> input = new ArrayList<>();
     input.add(createRecord("a"));
@@ -49,7 +50,7 @@ public class TestRecordsToLocalFileSystemTarget {
     } finally {
       runner.runDestroy();
     }
-    Assert.assertEquals(2, dir.list().length);
+    Assert.assertEquals(Arrays.toString(dir.list()), 2, dir.list().length);
   }
 
   @Test
