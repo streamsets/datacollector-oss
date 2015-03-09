@@ -11,8 +11,8 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_00("Could not archive file '{}' in error, {}"),
   SPOOLDIR_01("Error while processing file '{}' at position '{}', {}"),
 
-  SPOOLDIR_02("Object in file '{}' at offset '{}' exceeds maximum length '{}'"),
-  SPOOLDIR_03("LogDatProducer file='{}' offset='{}', {}"),
+  SPOOLDIR_02("Object in file '{}' at offset '{}' exceeds maximum length"),
+  SPOOLDIR_04("File '{}' could not be fully processed, failed on '{}' offset: {}"),
 
   SPOOLDIR_10("Unsupported data format '{}'"),
   SPOOLDIR_11("Directory path cannot be empty"),

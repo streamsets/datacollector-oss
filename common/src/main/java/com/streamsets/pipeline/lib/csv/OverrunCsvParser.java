@@ -27,7 +27,7 @@ public class OverrunCsvParser extends CsvParser {
 
   public OverrunCsvParser(OverrunReader reader, CSVFormat format, long initialPosition, int maxObjectLen)
       throws IOException {
-    super(reader, format, -1, initialPosition);
+    super(reader, format, maxObjectLen, initialPosition);
     OverrunReader countingReader = (OverrunReader) getReader();
     countingReader.setEnabled(true);
   }

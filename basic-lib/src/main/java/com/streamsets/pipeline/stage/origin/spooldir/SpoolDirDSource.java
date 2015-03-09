@@ -34,7 +34,6 @@ import com.streamsets.pipeline.configurablestage.DSource;
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)
-@HideConfig(onErrorRecord = true)
 public class SpoolDirDSource extends DSource {
 
   @ConfigDef(

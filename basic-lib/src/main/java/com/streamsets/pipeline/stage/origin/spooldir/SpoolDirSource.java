@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -48,18 +49,18 @@ public class SpoolDirSource extends BaseSource {
   private final long retentionTimeMins;
   private final CsvMode csvFileFormat;
   private final CsvHeader csvHeader;
-  private final int cvsMaxObjectLen;
+  private final int csvMaxObjectLen;
   private final JsonMode jsonContent;
-  private final int maxJsonObjectLen;
-  private final int maxLogLineLength;
+  private final int jsonMaxObjectLen;
+  private final int textMaxLineLen;
   private final String xmlRecordElement;
-  private final int maxXmlObjectLen;
+  private final int xmlMaxObjectLen;
 
   public SpoolDirSource(DataFormat dataFormat, int overrunLimit, String spoolDir, int batchSize, long poolingTimeoutSecs,
       String filePattern, int maxSpoolFiles, String initialFileToProcess, String errorArchiveDir,
       PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
-      CsvMode csvFileFormat, CsvHeader csvHeader, int cvsMaxObjectLen, JsonMode jsonContent, int maxJsonObjectLen,
-      int maxLogLineLength, String xmlRecordElement, int maxXmlObjectLen) {
+      CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, JsonMode jsonContent, int jsonMaxObjectLen,
+      int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen) {
     this.dataFormat = dataFormat;
     this.overrunLimit = overrunLimit * 1024;
     this.spoolDir = spoolDir;
@@ -74,12 +75,12 @@ public class SpoolDirSource extends BaseSource {
     this.retentionTimeMins = retentionTimeMins;
     this.csvFileFormat = csvFileFormat;
     this.csvHeader = csvHeader;
-    this.cvsMaxObjectLen = cvsMaxObjectLen;
+    this.csvMaxObjectLen = csvMaxObjectLen;
     this.jsonContent = jsonContent;
-    this.maxJsonObjectLen = maxJsonObjectLen;
-    this.maxLogLineLength = maxLogLineLength;
+    this.jsonMaxObjectLen = jsonMaxObjectLen;
+    this.textMaxLineLen = textMaxLineLen;
     this.xmlRecordElement = xmlRecordElement;
-    this.maxXmlObjectLen = maxXmlObjectLen;
+    this.xmlMaxObjectLen = xmlMaxObjectLen;
   }
 
   private DirectorySpooler spooler;
@@ -136,23 +137,23 @@ public class SpoolDirSource extends BaseSource {
 
     switch (dataFormat) {
       case JSON:
-        if (maxJsonObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "maxJsonObjectLen", Errors.SPOOLDIR_20));
+        if (jsonMaxObjectLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "jsonMaxObjectLen", Errors.SPOOLDIR_20));
         }
         break;
       case TEXT:
-        if (maxLogLineLength < 1) {
-          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "maxLogLineLength", Errors.SPOOLDIR_20));
+        if (textMaxLineLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "textMaxLineLen", Errors.SPOOLDIR_20));
         }
         break;
       case DELIMITED:
-        if (cvsMaxObjectLen < 1) {
+        if (csvMaxObjectLen < 1) {
           issues.add(getContext().createConfigIssue(Groups.DELIMITED.name(), "csvMaxObjectLen", Errors.SPOOLDIR_20));
         }
         break;
       case XML:
-        if (maxXmlObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.XML.name(), "maxXmlObjectLen", Errors.SPOOLDIR_20));
+        if (xmlMaxObjectLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlMaxObjectLen", Errors.SPOOLDIR_20));
         }
         if (!XMLChar.isValidName(xmlRecordElement)) {
           issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.SPOOLDIR_23,
@@ -210,16 +211,16 @@ public class SpoolDirSource extends BaseSource {
     CharDataParserFactory.Builder  builder = new CharDataParserFactory.Builder(getContext(), dataFormat.getParserFormat());
     switch (dataFormat) {
       case TEXT:
-        builder.setMaxDataLen(maxLogLineLength);
+        builder.setMaxDataLen(textMaxLineLen);
         break;
       case JSON:
-        builder.setMaxDataLen(maxJsonObjectLen).setMode(jsonContent);
+        builder.setMaxDataLen(jsonMaxObjectLen).setMode(jsonContent);
         break;
       case DELIMITED:
-        builder.setMaxDataLen(cvsMaxObjectLen).setMode(csvFileFormat).setMode(csvHeader);
+        builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat).setMode(csvHeader);
         break;
       case XML:
-        builder.setMaxDataLen(maxXmlObjectLen).setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
+        builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);
@@ -418,16 +419,42 @@ public class SpoolDirSource extends BaseSource {
             break;
           }
         } catch (ObjectLengthException ex) {
-          getContext().reportError(Errors.SPOOLDIR_02, sourceFile, offset, maxJsonObjectLen);
+          long exOffset = offset;
+          offset = -1;
+          switch (getContext().getOnErrorRecord()) {
+            case DISCARD:
+              break;
+            case TO_ERROR:
+              getContext().reportError(Errors.SPOOLDIR_02, sourceFile, exOffset);
+              break;
+            case STOP_PIPELINE:
+              throw new StageException(Errors.SPOOLDIR_02, sourceFile, exOffset);
+            default:
+              throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                                                           getContext().getOnErrorRecord(), ex));
+          }
         }
       }
-    } catch (OverrunException ex) {
-      offset = -1;
-      throw new BadSpoolFileException(file.getAbsolutePath(), ex.getStreamOffset(), ex);
     } catch (IOException ex) {
       offset = -1;
-      long exOffset = (parser != null) ? parser.getOffset() : -1;
-      throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
+      long exOffset;
+      if (ex instanceof OverrunException) {
+        exOffset = ((OverrunException)ex).getStreamOffset();
+      } else {
+        exOffset = (parser != null) ? parser.getOffset() : -1;
+      }
+      switch (getContext().getOnErrorRecord()) {
+        case DISCARD:
+          break;
+        case TO_ERROR:
+          throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
+        case STOP_PIPELINE:
+          getContext().reportError(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.getMessage());
+          throw new StageException(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.getMessage());
+        default:
+          throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                                                       getContext().getOnErrorRecord(), ex));
+      }
     } finally {
       if (offset == -1) {
         if (parser != null) {
