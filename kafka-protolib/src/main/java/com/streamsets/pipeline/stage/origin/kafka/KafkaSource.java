@@ -140,7 +140,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
         if (xmlMaxObjectLen < 1) {
           issues.add(getContext().createConfigIssue(Groups.XML.name(), "maxXmlObjectLen", Errors.KAFKA_38));
         }
-        if (!xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
+        if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
           issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.KAFKA_36,
                                                     xmlRecordElement));
         }

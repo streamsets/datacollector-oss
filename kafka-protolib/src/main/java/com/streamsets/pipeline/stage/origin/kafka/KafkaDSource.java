@@ -209,6 +209,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Delimiter Element",
+      defaultValue = "",
       description = "XML element that acts as a record delimiter. No delimiter will treat the whole XML document as one record.",
       displayPosition = 300,
       group = "XML",
