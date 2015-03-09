@@ -33,7 +33,7 @@ public class TestErrorBundle extends TestPipelineAnnotationProcessorBase {
     //No compiler output is expected
     Assert.assertTrue(compilerOutput.isEmpty());
     //No diagnostics
-    Assert.assertTrue(diagnostics.isEmpty());
+    Assert.assertTrue(String.valueOf(diagnostics), diagnostics.isEmpty());
     //A bundle file "TwitterError.properties" is generated which contains 2 lines
     //INPUT_LANE_ERROR=null
     //OUTPUT_LANE_ERROR=null

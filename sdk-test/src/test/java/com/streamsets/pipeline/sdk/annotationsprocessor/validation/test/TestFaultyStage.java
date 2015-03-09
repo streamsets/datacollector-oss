@@ -74,11 +74,11 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());
     }
-    Assert.assertEquals(expectedSet.size(), diagnostics.size());
     for(Diagnostic d : diagnostics) {
-      Assert.assertTrue(expectedSet.contains(d.getMessage(Locale.ENGLISH)));
+      String msg = d.getMessage(Locale.ENGLISH);
+      Assert.assertTrue("Could not find '"  + msg + "'", expectedSet.contains(msg));
     }
-
+    Assert.assertEquals(expectedSet.size(), diagnostics.size());
     //test that no PipelineStages file is generated
     File f = new File(Constants.PIPELINE_STAGES_JSON);
     Assert.assertFalse(f.exists());

@@ -250,7 +250,7 @@ public class TestKafkaTargetMultiPartition {
   public void testInvalidPartitionExpression() throws InterruptedException, StageException {
 
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-        .setOnRecordError(OnRecordError.TO_ERROR)
+      .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topic", TOPIC4)
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
@@ -273,7 +273,7 @@ public class TestKafkaTargetMultiPartition {
   public void testPartitionExpressionEvaluationError() throws InterruptedException, StageException {
 
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-        .setOnRecordError(OnRecordError.TO_ERROR)
+      .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topic", TOPIC5)
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
@@ -301,7 +301,7 @@ public class TestKafkaTargetMultiPartition {
   public void testPartitionNumberOutOfRange() throws InterruptedException, StageException {
 
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-        .setOnRecordError(OnRecordError.TO_ERROR)
+      .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topic", TOPIC6)
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
@@ -328,7 +328,7 @@ public class TestKafkaTargetMultiPartition {
   public void testInvalidPartition() throws InterruptedException, StageException {
 
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-        .setOnRecordError(OnRecordError.TO_ERROR)
+      .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topic", TOPIC7)
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition

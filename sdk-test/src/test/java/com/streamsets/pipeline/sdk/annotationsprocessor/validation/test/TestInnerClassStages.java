@@ -29,17 +29,15 @@ public class TestInnerClassStages extends TestPipelineAnnotationProcessorBase {
     Assert.assertFalse(compilationResult);
     //No compiler output is expected
     Assert.assertTrue(compilerOutput.isEmpty());
-    //No diagnostics
-    Assert.assertTrue(diagnostics.size() == 3);
-
     List<String> expectedErrors = new ArrayList<String>(3);
+    Assert.assertEquals(String.valueOf(diagnostics), 3, diagnostics.size());
     expectedErrors.add("Stage TwitterTarget is an inner class. Inner class Stage implementations are not supported");
     expectedErrors.add("Stage TwitterProcessor is an inner class. Inner class Stage implementations are not supported");
     expectedErrors.add("Stage TwitterSource is an inner class. Inner class Stage implementations are not supported");
 
     for(Diagnostic d : diagnostics) {
-      System.out.println(d.getMessage(Locale.ENGLISH));
-      Assert.assertTrue(expectedErrors.contains(d.getMessage(Locale.ENGLISH)));
+      String msg = d.getMessage(Locale.ENGLISH);
+      Assert.assertTrue("Missing msg = '" + msg + "'", expectedErrors.contains(msg));
     }
   }
 }

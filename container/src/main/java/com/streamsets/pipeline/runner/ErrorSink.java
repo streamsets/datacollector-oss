@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,8 +27,8 @@ public class ErrorSink {
   private int totalErrorMessages;
 
   public ErrorSink() {
-    stageErrors = new HashMap<>();
-    errorRecords = new HashMap<>();
+    stageErrors = new LinkedHashMap<>();
+    errorRecords = new LinkedHashMap<>();
     size = 0;
     totalErrorMessages = 0;
     totalErrorRecords = 0;

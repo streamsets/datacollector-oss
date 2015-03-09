@@ -30,7 +30,7 @@ public class TestStageWithStageAndConfigDef extends TestPipelineAnnotationProces
     //No compiler output is expected
     Assert.assertTrue(compilerOutput.isEmpty());
     //No diagnostics
-    Assert.assertTrue(diagnostics.isEmpty());
+    Assert.assertTrue(String.valueOf(diagnostics), diagnostics.isEmpty());
     //PipelineStages.json is expected to be generated
     TestUtil.compareExpectedAndActualStages("SourceWithStageAndConfigDef.json");
 
