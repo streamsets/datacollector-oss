@@ -13,7 +13,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface ElConstant {
-  String prefix() default "";
   String name();
   String description();
 }

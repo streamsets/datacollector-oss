@@ -167,49 +167,49 @@ public class RecordEl {
   }
 
   //Declare field types as constants
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "INTEGER", description = "Field Type Integer")
+  @ElConstant(name = "INTEGER", description = "Field Type Integer")
   public static Field.Type INTEGER = Field.Type.INTEGER;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "BOOLEAN", description = "Field Type Boolean")
+  @ElConstant(name = "BOOLEAN", description = "Field Type Boolean")
   public static Field.Type BOOLEAN = Field.Type.BOOLEAN;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "BYTE", description = "Field Type Byte")
+  @ElConstant(name = "BYTE", description = "Field Type Byte")
   public static Field.Type BYTE = Field.Type.BYTE;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "BYTE_ARRAY", description = "Field Type Byte Array")
+  @ElConstant(name = "BYTE_ARRAY", description = "Field Type Byte Array")
   public static Field.Type BYTE_ARRAY = Field.Type.BYTE_ARRAY;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "CHAR", description = "Field Type Char")
+  @ElConstant(name = "CHAR", description = "Field Type Char")
   public static Field.Type CHAR = Field.Type.CHAR;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "DATE", description = "Field Type Date")
+  @ElConstant(name = "DATE", description = "Field Type Date")
   public static Field.Type DATE = Field.Type.DATE;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "DATETIME", description = "Field Type Date Time")
+  @ElConstant(name = "DATETIME", description = "Field Type Date Time")
   public static Field.Type DATETIME = Field.Type.DATETIME;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "DECIMAL", description = "Field Type Decimal")
+  @ElConstant(name = "DECIMAL", description = "Field Type Decimal")
   public static Field.Type DECIMAL = Field.Type.DECIMAL;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "DOUBLE", description = "Field Type Double")
+  @ElConstant(name = "DOUBLE", description = "Field Type Double")
   public static Field.Type DOUBLE = Field.Type.DOUBLE;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "FLOAT", description = "Field Type Float")
+  @ElConstant(name = "FLOAT", description = "Field Type Float")
   public static Field.Type FLOAT = Field.Type.FLOAT;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "LIST", description = "Field Type List")
+  @ElConstant(name = "LIST", description = "Field Type List")
   public static Field.Type LIST = Field.Type.LIST;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "MAP", description = "Field Type Map")
+  @ElConstant(name = "MAP", description = "Field Type Map")
   public static Field.Type MAP = Field.Type.MAP;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "LONG", description = "Field Type Long")
+  @ElConstant(name = "LONG", description = "Field Type Long")
   public static Field.Type LONG = Field.Type.LONG;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "SHORT", description = "Field Type Short")
+  @ElConstant(name = "SHORT", description = "Field Type Short")
   public static Field.Type SHORT = Field.Type.SHORT;
 
-  @ElConstant(prefix = RECORD_CONTEXT_VAR, name = "STRING", description = "Field Type String")
+  @ElConstant(name = "STRING", description = "Field Type String")
   public static Field.Type STRING = Field.Type.STRING;
 
 

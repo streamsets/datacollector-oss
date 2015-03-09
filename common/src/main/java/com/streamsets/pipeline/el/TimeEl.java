@@ -19,10 +19,10 @@ public class TimeEl {
   public static final String TIME_NOW_CONTEXT_VAR = "time_now";
   public static final String CALENDER_CONTEXT_VAR = "calender";
 
-  @ElConstant(prefix = "", name = "HOURS", description = "")
+  @ElConstant(name = "HOURS", description = "")
   public static final int HOURS = 60*60;
 
-  @ElConstant(prefix = "", name = "MINUTES", description = "")
+  @ElConstant(name = "MINUTES", description = "")
   public static final int MINUTES = 60;
 
   @ElFunction(prefix = TIME_CONTEXT_VAR, name = "now", description = "")

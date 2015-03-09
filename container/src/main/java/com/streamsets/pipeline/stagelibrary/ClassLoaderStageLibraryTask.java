@@ -177,9 +177,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         elVariableDefinitionIds.add(elVariableDefinition.getId());
         if(!elVariableDefinitionMap.containsKey(elVariableDefinition.getId())) {
           elVariableDefinitionMap.put(elVariableDefinition.getId(), elVariableDefinition);
-          if(!elGroupsMap.containsKey(elVariableDefinition.getGroup())) {
-            elGroupsMap.put(elVariableDefinition.getGroup(), elVariableDefinition.getGroup());
-          }
         }
       }
     }

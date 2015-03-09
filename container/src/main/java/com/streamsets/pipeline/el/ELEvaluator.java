@@ -88,7 +88,7 @@ public class ELEvaluator extends ELEval {
           try {
             constants.put(elConstant.name(), f.get(null));
             elVariableDefinitions.add(new ElVariableDefinition(elConstant.name(), elConstant.description(),
-              elConstant.prefix(), f.getType().getSimpleName()));
+              f.getType().getSimpleName()));
           } catch (IllegalAccessException e) {
             //FIXME: throw exception
           }
