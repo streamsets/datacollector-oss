@@ -7,14 +7,14 @@ package com.streamsets.pipeline.el;
 
 import java.util.UUID;
 
-public class ElVariableDefinition {
+public class ElConstantDefinition {
 
   private final String id;
   private final String name;
   private final String description;
   private final String returnType;
 
-  public ElVariableDefinition(String name, String description, String returnType) {
+  public ElConstantDefinition(String name, String description, String returnType) {
     this.id = UUID.randomUUID().toString();
     this.name = name;
     this.description = description;

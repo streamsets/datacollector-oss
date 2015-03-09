@@ -38,7 +38,7 @@ public interface Stage<C extends Stage.Context> {
     public ELEval.Variables createVariables(Map<String, Object> variables, Map<String, Object> contextVariables);
 
     public void validateExpression(ELEval elEvaluator, ELEval.Variables variables, String expression,
-                                          Processor.Context context, String group, String config, ErrorCode err,
+                                          Stage.Context context, String group, String config, ErrorCode err,
                                           Class<?> type, List<Stage.ConfigIssue> issues);
   }
 

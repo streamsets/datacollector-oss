@@ -351,10 +351,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public void validateExpression(ELEval elEvaluator, ELEval.Variables variables, String expression,
-                                        Processor.Context context, String group, String config, ErrorCode err, Class<?> type, List<Stage.ConfigIssue> issues)
+                                        Stage.Context context, String group, String config, ErrorCode err, Class<?> type, List<Stage.ConfigIssue> issues)
   {
     RecordEl.setRecordInContext(variables, context.createRecord("forValidation"));
     try {
+      elEvaluator.parseEL(expression);
       elEvaluator.eval(variables, expression, type);
     } catch (Exception ex) {
       issues.add(context.createConfigIssue(group, config, err, expression, ex.getMessage(), ex));

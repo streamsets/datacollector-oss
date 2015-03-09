@@ -78,6 +78,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     }
     try {
       rotationMillisEvaluator = createRotationMillisEval(getContext());
+      rotationMillisEvaluator.parseEL(rotationIntervalSecs);
       rotationMillis = rotationMillisEvaluator.eval(getContext().getDefaultVariables(), rotationIntervalSecs, Long.class);
       if (rotationMillis <= 0) {
         issues.add(getContext().createConfigIssue(Groups.FILES.name(), "rotationIntervalSecs", Errors.RECORDFS_03,

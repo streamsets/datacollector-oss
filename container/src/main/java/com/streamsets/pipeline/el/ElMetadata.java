@@ -9,13 +9,13 @@ import java.util.Map;
 
 public class ElMetadata {
   private final Map<String, ElFunctionDefinition> elFunctionDefinitions;
-  private final Map<String, ElVariableDefinition> elVariableDefinitions;
+  private final Map<String, ElConstantDefinition> elConstantDefinitions;
   private final Map<String, String> elGroupDefinitions;
 
   public ElMetadata(Map<String, ElFunctionDefinition> elFunctionDefinitions,
-                    Map<String, ElVariableDefinition> elVariableDefinitions, Map<String, String> elGroupDefinitions) {
+                    Map<String, ElConstantDefinition> elConstantDefinitions, Map<String, String> elGroupDefinitions) {
     this.elFunctionDefinitions = elFunctionDefinitions;
-    this.elVariableDefinitions = elVariableDefinitions;
+    this.elConstantDefinitions = elConstantDefinitions;
     this.elGroupDefinitions = elGroupDefinitions;
   }
 
@@ -27,7 +27,7 @@ public class ElMetadata {
     return elFunctionDefinitions;
   }
 
-  public Map<String, ElVariableDefinition> getElVariableDefinitions() {
-    return elVariableDefinitions;
+  public Map<String, ElConstantDefinition> getElConstantDefinitions() {
+    return elConstantDefinitions;
   }
 }

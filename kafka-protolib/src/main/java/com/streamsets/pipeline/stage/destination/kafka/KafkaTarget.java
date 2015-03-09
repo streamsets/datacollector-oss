@@ -303,19 +303,8 @@ public class KafkaTarget extends BaseTarget {
       partitionStrategyEval = createPartitionStrategyEval(getContext());
       //There is no scope to provide variables for kafka target as of today, create empty variables
       variables = getContext().getDefaultVariables();
-      validateExpressions(issues);
-    }
-  }
-
-  private void validateExpressions(List<Stage.ConfigIssue> issues) {
-    Record record = getContext().createRecord("validateConfigs");
-
-    RecordEl.setRecordInContext(variables, record);
-    try {
-      partitionStrategyEval.eval(variables, partition, Object.class);
-    } catch (ELEvalException ex) {
-      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "partition",
-        Errors.KAFKA_57, partition, ex.getMessage()));
+      getContext().validateExpression(partitionStrategyEval, variables, partition, getContext(), Groups.KAFKA.name(),
+        "partition", Errors.KAFKA_57, Object.class, issues);
     }
   }
 

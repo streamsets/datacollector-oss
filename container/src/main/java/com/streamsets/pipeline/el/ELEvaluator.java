@@ -33,7 +33,7 @@ public class ELEvaluator extends ELEval {
   private final Map<String, Method> functions;
   private final FunctionMapperImpl functionMapper;
   private final List<ElFunctionDefinition> elFunctionDefinitions;
-  private final List<ElVariableDefinition> elVariableDefinitions;
+  private final List<ElConstantDefinition> elConstantDefinitions;
 
   // ExpressionEvaluatorImpl can be used as a singleton
   private static final ExpressionEvaluatorImpl EVALUATOR = new ExpressionEvaluatorImpl();
@@ -43,7 +43,7 @@ public class ELEvaluator extends ELEval {
     constants = new HashMap<>();
     functions = new HashMap<>();
     elFunctionDefinitions = new ArrayList<>();
-    elVariableDefinitions = new ArrayList<>();
+    elConstantDefinitions = new ArrayList<>();
     populateConstantsAndFunctions(elFuncConstDefClasses);
     this.functionMapper = new FunctionMapperImpl();
   }
@@ -54,7 +54,7 @@ public class ELEvaluator extends ELEval {
     this.functions = new HashMap<>();
     this.functionMapper = new FunctionMapperImpl();
     elFunctionDefinitions = new ArrayList<>();
-    elVariableDefinitions = new ArrayList<>();
+    elConstantDefinitions = new ArrayList<>();
   }
 
   private void populateConstantsAndFunctions(Class<?>... elFuncConstDefClasses) {
@@ -87,7 +87,7 @@ public class ELEvaluator extends ELEval {
         if(elConstant != null) {
           try {
             constants.put(elConstant.name(), f.get(null));
-            elVariableDefinitions.add(new ElVariableDefinition(elConstant.name(), elConstant.description(),
+            elConstantDefinitions.add(new ElConstantDefinition(elConstant.name(), elConstant.description(),
               f.getType().getSimpleName()));
           } catch (IllegalAccessException e) {
             //FIXME: throw exception
@@ -224,7 +224,7 @@ public class ELEvaluator extends ELEval {
     return elFunctionDefinitions;
   }
 
-  public List<ElVariableDefinition> getElVariableDefinitions() {
-    return elVariableDefinitions;
+  public List<ElConstantDefinition> getElConstantDefinitions() {
+    return elConstantDefinitions;
   }
 }

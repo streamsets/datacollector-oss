@@ -53,7 +53,9 @@ public class StageLibraryResource {
     pipeline.add(BeanHelper.wrapPipelineDefinition(new PipelineDefinition(stageLibrary)));
     definitions.put("pipeline", pipeline);
 
-    definitions.put("elMetadata", stageLibrary.getElMetadata());
+    if(stageLibrary.getElMetadata() != null) {
+      definitions.put("elMetadata", BeanHelper.wrapElMetadata(stageLibrary.getElMetadata()));
+    }
 
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();
   }

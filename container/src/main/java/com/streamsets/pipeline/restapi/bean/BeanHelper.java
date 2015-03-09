@@ -5,6 +5,10 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
+import com.streamsets.pipeline.el.ElConstantDefinition;
+import com.streamsets.pipeline.el.ElFunctionArgumentDefinition;
+import com.streamsets.pipeline.el.ElFunctionDefinition;
+import com.streamsets.pipeline.el.ElMetadata;
 import com.streamsets.pipeline.record.HeaderImpl;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.production.SourceOffset;
@@ -603,6 +607,110 @@ public class BeanHelper {
     return new SourceOffsetJson(sourceOffset);
   }
 
+  public static List<ElFunctionArgumentDefinitionJson> wrapElFunctionArgumentDefinitions(
+    List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition) {
+    if(elFunctionArgumentDefinition == null) {
+      return null;
+    }
+    List<ElFunctionArgumentDefinitionJson> elFunctionArgumentDefinitionJsons =
+      new ArrayList<>(elFunctionArgumentDefinition.size());
+    for(ElFunctionArgumentDefinition e : elFunctionArgumentDefinition) {
+      elFunctionArgumentDefinitionJsons.add(new ElFunctionArgumentDefinitionJson(e));
+    }
+    return elFunctionArgumentDefinitionJsons;
+  }
+
+  public static List<ElFunctionArgumentDefinition> unwrapElFunctionArgumentDefinitions(
+    List<ElFunctionArgumentDefinitionJson> elFunctionArgumentDefinitionJson) {
+    if(elFunctionArgumentDefinitionJson == null) {
+      return null;
+    }
+    List<ElFunctionArgumentDefinition> elFunctionArgumentDefinitions =
+      new ArrayList<>(elFunctionArgumentDefinitionJson.size());
+    for(ElFunctionArgumentDefinitionJson e : elFunctionArgumentDefinitionJson) {
+      elFunctionArgumentDefinitions.add(e.getElFunctionArgumentDefinition());
+    }
+    return elFunctionArgumentDefinitions;
+  }
+
+  public static List<ElFunctionDefinition> unwrapElFunctionDefinitions(
+    List<ElFunctionDefinitionJson> elFunctionDefinitionJson) {
+    if(elFunctionDefinitionJson == null) {
+      return null;
+    }
+    List<ElFunctionDefinition> elFunctionDefinitions =
+      new ArrayList<>(elFunctionDefinitionJson.size());
+    for(ElFunctionDefinitionJson e : elFunctionDefinitionJson) {
+      elFunctionDefinitions.add(e.getElFunctionDefinition());
+    }
+    return elFunctionDefinitions;
+  }
+
+  public static Map<String, ElFunctionDefinitionJson> wrapElFunctionDefinitionsMap(
+    Map<String, ElFunctionDefinition> elFunctionDefinitionMap) {
+    if(elFunctionDefinitionMap == null) {
+      return null;
+    }
+    Map<String, ElFunctionDefinitionJson> elFunctionDefinitionJsonMap = new HashMap<>();
+    for(Map.Entry<String, ElFunctionDefinition> e : elFunctionDefinitionMap.entrySet()) {
+      elFunctionDefinitionJsonMap.put(e.getKey(), new ElFunctionDefinitionJson(e.getValue()));
+    }
+    return elFunctionDefinitionJsonMap;
+  }
+
+  public static Map<String, ElFunctionDefinition> unwrapElFunctionDefinitionsMap(
+    Map<String, ElFunctionDefinitionJson> elFunctionDefinitionJsonMap) {
+    if(elFunctionDefinitionJsonMap == null) {
+      return null;
+    }
+    Map<String, ElFunctionDefinition> elFunctionDefinitionMap = new HashMap<>();
+    for(Map.Entry<String, ElFunctionDefinitionJson> e : elFunctionDefinitionJsonMap.entrySet()) {
+      elFunctionDefinitionMap.put(e.getKey(), e.getValue().getElFunctionDefinition());
+    }
+    return elFunctionDefinitionMap;
+  }
+
+  public static List<ElConstantDefinition> unwrapElConstantDefinitions(
+    List<ElConstantDefinitionJson> elConstantDefinitionJson) {
+    if(elConstantDefinitionJson == null) {
+      return null;
+    }
+    List<ElConstantDefinition> elConstantDefinitions =
+      new ArrayList<>(elConstantDefinitionJson.size());
+    for(ElConstantDefinitionJson e : elConstantDefinitionJson) {
+      elConstantDefinitions.add(e.getElConstantDefinition());
+    }
+    return elConstantDefinitions;
+  }
+
+  public static Map<String, ElConstantDefinitionJson> wrapElConstantDefinitionsMap(
+    Map<String, ElConstantDefinition> elConstantDefinitionMap) {
+    if(elConstantDefinitionMap == null) {
+      return null;
+    }
+    Map<String, ElConstantDefinitionJson> elConstantDefinitionJsonMap = new HashMap<>();
+    for(Map.Entry<String, ElConstantDefinition> e : elConstantDefinitionMap.entrySet()) {
+      elConstantDefinitionJsonMap.put(e.getKey(), new ElConstantDefinitionJson(e.getValue()));
+    }
+    return elConstantDefinitionJsonMap;
+  }
+
+  public static Map<String, ElConstantDefinition> unwrapElConstantDefinitionsMap(
+    Map<String, ElConstantDefinitionJson> elConstantDefinitionJsonMap) {
+    if(elConstantDefinitionJsonMap == null) {
+      return null;
+    }
+    Map<String, ElConstantDefinition> elConstantDefinitionMap = new HashMap<>();
+    for(Map.Entry<String, ElConstantDefinitionJson> e : elConstantDefinitionJsonMap.entrySet()) {
+      elConstantDefinitionMap.put(e.getKey(), e.getValue().getElConstantDefinition());
+    }
+    return elConstantDefinitionMap;
+  }
+
+  public static ElMetadataJson wrapElMetadata(ElMetadata elMetadata) {
+    return new ElMetadataJson(elMetadata);
+  }
+
   /*****************************************************/
   /***************** Enum Helper ***********************/
   /*****************************************************/
@@ -1000,5 +1108,4 @@ public class BeanHelper {
         throw new IllegalArgumentException("Unrecognized model type");
     }
   }
-
 }

@@ -27,7 +27,7 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.el.ElMetadata;
-import com.streamsets.pipeline.el.ElVariableDefinition;
+import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
@@ -66,7 +66,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private LoadingCache<Locale, List<StageDefinition>> localizedStageList;
   private ObjectMapper json;
   private Map<String, ElFunctionDefinition> elFunctionDefinitionMap;
-  private Map<String, ElVariableDefinition> elVariableDefinitionMap;
+  private Map<String, ElConstantDefinition> elVariableDefinitionMap;
   private Map<String, String> elGroupsMap;
 
   @Inject
@@ -173,10 +173,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         }
       }
       List<String> elVariableDefinitionIds = configDefinition.getElVariableDefinitionIds();
-      for(ElVariableDefinition elVariableDefinition : ((ELEvaluator) elEval).getElVariableDefinitions()) {
-        elVariableDefinitionIds.add(elVariableDefinition.getId());
-        if(!elVariableDefinitionMap.containsKey(elVariableDefinition.getId())) {
-          elVariableDefinitionMap.put(elVariableDefinition.getId(), elVariableDefinition);
+      for(ElConstantDefinition elConstantDefinition : ((ELEvaluator) elEval).getElConstantDefinitions()) {
+        elVariableDefinitionIds.add(elConstantDefinition.getId());
+        if(!elVariableDefinitionMap.containsKey(elConstantDefinition.getId())) {
+          elVariableDefinitionMap.put(elConstantDefinition.getId(), elConstantDefinition);
         }
       }
     }

@@ -138,6 +138,7 @@ public class HdfsTarget extends RecordTarget {
     validateHadoopFS(issues);
     try {
       lateRecordsLimitEvaluator = ElUtil.createLateRecordsLimitEval(getContext());
+      lateRecordsLimitEvaluator.parseEL(lateRecordsLimit);
       lateRecordsLimitSecs = lateRecordsLimitEvaluator.eval(getContext().getDefaultVariables(),
         lateRecordsLimit, Long.class);
       if (lateRecordsLimitSecs <= 0) {
@@ -211,6 +212,7 @@ public class HdfsTarget extends RecordTarget {
       ELEval.Variables variables = getContext().getDefaultVariables();
       RecordEl.setRecordInContext(variables, getContext().createRecord("validationConfigs"));
       TimeEl.setTimeNowInContext(variables, new Date());
+      timeDriverElEval.parseEL(timeDriver);
       timeDriverElEval.eval(variables, timeDriver, Date.class);
     } catch (ELEvalException ex) {
       issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "timeDriver", Errors.HADOOPFS_19,
