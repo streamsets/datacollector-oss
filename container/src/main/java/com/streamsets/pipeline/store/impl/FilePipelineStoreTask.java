@@ -48,20 +48,6 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   private static final Logger LOG = LoggerFactory.getLogger(FilePipelineStoreTask.class);
 
-  public static final String CREATE_DEFAULT_PIPELINE_KEY = "create.default.pipeline";
-  public static final boolean CREATE_DEFAULT_PIPELINE_DEFAULT = true;
-  private static final String STAGE_PREFIX = "stage.";
-  private static final String DOT_REGEX = "\\.";
-
-  @VisibleForTesting
-  static final String DEFAULT_PIPELINE_NAME = "xyz";
-
-  @VisibleForTesting
-  static final String DEFAULT_PIPELINE_DESCRIPTION = "Default Pipeline";
-
-  @VisibleForTesting
-  static final String SYSTEM_USER = "system";
-
   @VisibleForTesting
   static final String REV = "0";
 
@@ -100,15 +86,6 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     if (!storeDir.exists()) {
       if (!storeDir.mkdirs()) {
         throw new RuntimeException(Utils.format("Could not create directory '{}'", storeDir.getAbsolutePath()));
-      }
-    }
-    if (conf.get(CREATE_DEFAULT_PIPELINE_KEY, CREATE_DEFAULT_PIPELINE_DEFAULT)) {
-      if (!hasPipeline(DEFAULT_PIPELINE_NAME)) {
-        try {
-          create(DEFAULT_PIPELINE_NAME, DEFAULT_PIPELINE_DESCRIPTION, SYSTEM_USER);
-        } catch (PipelineStoreException ex) {
-          throw new RuntimeException(ex);
-        }
       }
     }
   }

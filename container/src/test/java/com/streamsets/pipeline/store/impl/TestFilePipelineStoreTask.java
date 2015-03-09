@@ -37,18 +37,20 @@ import java.util.UUID;
 
 public class TestFilePipelineStoreTask {
 
+  private static final String DEFAULT_PIPELINE_NAME = "xyz";
+  private static final String DEFAULT_PIPELINE_DESCRIPTION = "Default Pipeline";
+  private static final String SYSTEM_USER = "system";
+
   @dagger.Module(injects = FilePipelineStoreTask.class)
   public static class Module {
-    private boolean createDefaultPipeline;
 
-    public Module(boolean createDefaultPipeline) {
-      this.createDefaultPipeline = createDefaultPipeline;
+    public Module() {
+
     }
 
     @Provides
     public Configuration provideConfiguration() {
       Configuration conf = new Configuration();
-      conf.set(FilePipelineStoreTask.CREATE_DEFAULT_PIPELINE_KEY, createDefaultPipeline);
       return conf;
     }
 
@@ -63,7 +65,7 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testStoreNoDefaultPipeline() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(false));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       //creating store dir
@@ -83,56 +85,8 @@ public class TestFilePipelineStoreTask {
   }
 
   @Test
-  public void testStoreDefaultPipeline() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(true));
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
-    try {
-      //creating store dir and default pipeline
-      store.init();
-      Assert.assertEquals(1, store.getPipelines().size());
-      Assert.assertEquals(1, store.getHistory(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME).size());
-    } finally {
-      store.stop();
-    }
-    store = dagger.get(FilePipelineStoreTask.class);
-    try {
-      //store dir exists and default pipeline already exists
-      store.init();
-      Assert.assertEquals(1, store.getPipelines().size());
-    } finally {
-      store.stop();
-    }
-  }
-
-  @Test
-  public void testStoreDefaultPipelineInfo() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(true));
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
-    try {
-      store.init();
-      List<PipelineInfo> infos = store.getPipelines();
-      Assert.assertEquals(1, infos.size());
-      PipelineInfo info = infos.get(0);
-      Assert.assertNotNull(info.getUuid());
-      Assert.assertEquals(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, info.getName());
-      Assert.assertEquals(FilePipelineStoreTask.DEFAULT_PIPELINE_DESCRIPTION, info.getDescription());
-      Assert.assertEquals(FilePipelineStoreTask.SYSTEM_USER, info.getCreator());
-      Assert.assertEquals(FilePipelineStoreTask.SYSTEM_USER, info.getLastModifier());
-      Assert.assertNotNull(info.getCreated());
-      Assert.assertEquals(info.getLastModified(), info.getCreated());
-      Assert.assertEquals(FilePipelineStoreTask.REV, info.getLastRev());
-      Assert.assertFalse(info.isValid());
-      PipelineConfiguration pc = store.load(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
-      Assert.assertEquals(info.getUuid(), pc.getUuid());
-      Assert.assertTrue(pc.getStages().isEmpty());
-    } finally {
-      store.stop();
-    }
-  }
-
-  @Test
   public void testCreateDelete() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(false));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
@@ -149,7 +103,7 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testCreateExistingPipeline() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(false));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
@@ -162,7 +116,7 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testDeleteNotExisting() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(false));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
@@ -174,11 +128,12 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testSaveNotExisting() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(true));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
+    createDefaultPipeline(store);
     try {
       store.init();
-      PipelineConfiguration pc = store.load(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
+      PipelineConfiguration pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       store.save("a", "foo", null, null, pc);
     } finally {
       store.stop();
@@ -187,13 +142,14 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testSaveWrongUuid() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(true));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
+    createDefaultPipeline(store);
     try {
       store.init();
-      PipelineConfiguration pc = store.load(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
+      PipelineConfiguration pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       pc.setUuid(UUID.randomUUID());
-      store.save(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, "foo", null, null, pc);
+      store.save(DEFAULT_PIPELINE_NAME, "foo", null, null, pc);
     } finally {
       store.stop();
     }
@@ -201,7 +157,7 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testLoadNotExisting() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(false));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
@@ -213,7 +169,7 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testHistoryNotExisting() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(false));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
@@ -235,21 +191,22 @@ public class TestFilePipelineStoreTask {
     pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
 
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, uuid, pipelineConfigs,
-                                     null, ImmutableList.of(stage), null);
+      null, ImmutableList.of(stage), null);
   }
 
   @Test
   public void testSave() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(true));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
-      PipelineInfo info1 = store.getInfo(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME);
-      PipelineConfiguration pc0 = store.load(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
+      createDefaultPipeline(store);
+      PipelineInfo info1 = store.getInfo(DEFAULT_PIPELINE_NAME);
+      PipelineConfiguration pc0 = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       pc0 = createPipeline(pc0.getUuid());
       Thread.sleep(5);
-      store.save(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, "foo", null, null, pc0);
-      PipelineInfo info2 = store.getInfo(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME);
+      store.save(DEFAULT_PIPELINE_NAME, "foo", null, null, pc0);
+      PipelineInfo info2 = store.getInfo(DEFAULT_PIPELINE_NAME);
       Assert.assertEquals(info1.getCreated(), info2.getCreated());
       Assert.assertEquals(info1.getCreator(), info2.getCreator());
       Assert.assertEquals(info1.getName(), info2.getName());
@@ -263,21 +220,22 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testSaveAndLoad() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module(true));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
-      PipelineConfiguration pc = store.load(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
+      createDefaultPipeline(store);
+      PipelineConfiguration pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       Assert.assertTrue(pc.getStages().isEmpty());
       UUID uuid = pc.getUuid();
       pc = createPipeline(pc.getUuid());
-      pc = store.save(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, "foo", null, null, pc);
+      pc = store.save(DEFAULT_PIPELINE_NAME, "foo", null, null, pc);
       UUID newUuid = pc.getUuid();
       Assert.assertNotEquals(uuid, newUuid);
-      PipelineConfiguration pc2 = store.load(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
+      PipelineConfiguration pc2 = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       Assert.assertFalse(pc2.getStages().isEmpty());
       Assert.assertEquals(pc.getUuid(), pc2.getUuid());
-      PipelineInfo info = store.getInfo(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME);
+      PipelineInfo info = store.getInfo(DEFAULT_PIPELINE_NAME);
       Assert.assertEquals(pc.getUuid(), info.getUuid());
     } finally {
       store.stop();
@@ -286,10 +244,11 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testStoreAndRetrieveRules() throws PipelineStoreException {
-    ObjectGraph dagger = ObjectGraph.create(new Module(true));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
-    RuleDefinitions ruleDefinitions = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    createDefaultPipeline(store);
+    RuleDefinitions ruleDefinitions = store.retrieveRules(DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
     Assert.assertNotNull(ruleDefinitions);
     Assert.assertTrue(ruleDefinitions.getDataRuleDefinitions().isEmpty());
@@ -311,9 +270,9 @@ public class TestFilePipelineStoreTask {
     dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true));
 
-    store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions);
+    store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions);
 
-    RuleDefinitions actualRuleDefinitions = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    RuleDefinitions actualRuleDefinitions = store.retrieveRules(DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
 
     Assert.assertTrue(ruleDefinitions == actualRuleDefinitions);
@@ -324,13 +283,14 @@ public class TestFilePipelineStoreTask {
     /*This test case mimicks a use case where 2 users connect to the same data collector instance
     * using different browsers and modify the same rule definition. The user who saves last runs into an exception.
     * The user is forced to reload, reapply changes and save*/
-    ObjectGraph dagger = ObjectGraph.create(new Module(true));
+    ObjectGraph dagger = ObjectGraph.create(new Module());
     PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
-    RuleDefinitions ruleDefinitions1 = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    createDefaultPipeline(store);
+    RuleDefinitions ruleDefinitions1 = store.retrieveRules(DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
 
-    RuleDefinitions tempRuleDef = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    RuleDefinitions tempRuleDef = store.retrieveRules(DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
     //Mimick two different clients [browsers] retrieving from the store
     RuleDefinitions ruleDefinitions2 = new RuleDefinitions(tempRuleDef.getMetricsRuleDefinitions(),
@@ -353,18 +313,18 @@ public class TestFilePipelineStoreTask {
       1000, true, false, true));
 
     //store ruleDefinition1
-    store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions1);
+    store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions1);
 
     //attempt storing rule definition 2, should fail
     try {
-      store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions2);
+      store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions2);
       Assert.fail("Expected PipelineStoreException as the rule definition being saved is not the latest copy.");
     } catch (PipelineStoreException e) {
       Assert.assertEquals(e.getErrorCode(), ContainerError.CONTAINER_0205);
     }
 
     //reload, modify and and then store
-    ruleDefinitions2 = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    ruleDefinitions2 = store.retrieveRules(DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
     dataRuleDefinitions = ruleDefinitions2.getDataRuleDefinitions();
     dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
@@ -374,12 +334,16 @@ public class TestFilePipelineStoreTask {
     dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true));
 
-    store.storeRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions2);
+    store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions2);
 
-    RuleDefinitions actualRuleDefinitions = store.retrieveRules(FilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
+    RuleDefinitions actualRuleDefinitions = store.retrieveRules(DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
 
     Assert.assertTrue(ruleDefinitions2 == actualRuleDefinitions);
+  }
+
+  private void createDefaultPipeline(PipelineStoreTask store) throws PipelineStoreException {
+    store.create(DEFAULT_PIPELINE_NAME,DEFAULT_PIPELINE_DESCRIPTION, SYSTEM_USER);
   }
 
 }

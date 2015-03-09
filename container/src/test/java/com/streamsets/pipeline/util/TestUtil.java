@@ -192,6 +192,10 @@ public class TestUtil {
       FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(info, conf);
       pipelineStoreTask.init();
       try {
+        //create an invalid pipeline
+        pipelineStoreTask.create("invalid", "invalid cox its empty", "tag");
+
+        //create a valid pipeline
         pipelineStoreTask.create(MY_PIPELINE, "description", "tag");
         PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_PIPELINE, PIPELINE_REV);
         PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();

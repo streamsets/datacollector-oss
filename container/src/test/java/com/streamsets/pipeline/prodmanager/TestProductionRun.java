@@ -74,7 +74,7 @@ public class TestProductionRun {
   public void testStartInvalidPipeline() throws PipelineStoreException, PipelineManagerException,
       PipelineRuntimeException, StageException {
     //cannot run pipeline "xyz", the default created by FilePipelineStore.init() as it is not valid
-    manager.startPipeline("xyz", PIPELINE_REV);
+    manager.startPipeline("invalid", PIPELINE_REV);
   }
 
   @Test(expected = PipelineManagerException.class)
