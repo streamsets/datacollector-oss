@@ -193,8 +193,9 @@ angular.module('dataCollectorApp.common')
 
         if(lanePredicatesConfiguration) {
           var lanePredicate = lanePredicatesConfiguration.value[index];
-          if(lanePredicate) {
-            info += ', <span class="predicate-label">' + translations['global.form.condition'] + ': </span><span class="predicate-value">"' + lanePredicate.predicate + '"</span>';
+          if(lanePredicate && lanePredicate.predicate) {
+            info += ', <span class="predicate-label">' + translations['global.form.condition'] +
+            ': </span><span class="predicate-value">' + escapeHtml(lanePredicate.predicate) + '</span>';
           }
         } else {
           var outputStreamLabels = stageInstance.uiInfo.outputStreamLabels,
@@ -210,5 +211,14 @@ angular.module('dataCollectorApp.common')
 
       return '';
     };
+
+    function escapeHtml(unsafe) {
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
 
   });
