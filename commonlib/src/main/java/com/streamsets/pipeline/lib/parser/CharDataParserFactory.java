@@ -122,11 +122,13 @@ public abstract class CharDataParserFactory {
 
     public Builder setConfig(String key, Object value) {
       Utils.checkNotNull(key, "key");
-      Utils.checkNotNull(value, "value");
       Utils.checkArgument(DEFAULT_CONFIGS.containsKey(key), Utils.formatL("Unsupported configuration '{}'", key));
-      Utils.checkArgument(DEFAULT_CONFIGS.get(key).getClass() == value.getClass(),
+      Utils.checkArgument(value == null || DEFAULT_CONFIGS.get(key).getClass() == value.getClass(),
                           Utils.formatL("Configuration '{}' must be of type '{}'", key,
                                         DEFAULT_CONFIGS.get(key).getClass().getSimpleName()));
+      if (value == null) {
+        value = DEFAULT_CONFIGS.get(key);
+      }
       configs.put(key, value);
       return this;
     }

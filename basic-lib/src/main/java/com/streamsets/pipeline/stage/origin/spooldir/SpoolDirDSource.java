@@ -9,7 +9,6 @@ import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
@@ -248,7 +247,7 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "JSON"
   )
-  public int maxJsonObjectLen;
+  public int jsonMaxObjectLen;
 
   // LOG Configuration
 
@@ -263,13 +262,14 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "TEXT"
   )
-  public int maxLogLineLength;
+  public int textMaxObjectLen;
 
   // XML Configuration
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
+      defaultValue = "",
       label = "Delimiter Element",
       description = "XML element that acts as a record delimiter. No delimiter will treat the whole XML document as one record.",
       displayPosition = 600,
@@ -290,14 +290,14 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "XML"
   )
-  public int maxXmlObjectLen;
+  public int xmlMaxObjectLen;
 
   @Override
   protected Source createSource() {
     return new SpoolDirSource(dataFormat, overrunLimit, spoolDir, batchSize, poolingTimeoutSecs, filePattern,
                               maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
                               retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
-                              maxJsonObjectLen, maxLogLineLength, xmlRecordElement, maxXmlObjectLen);
+                              jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen);
   }
 
 }

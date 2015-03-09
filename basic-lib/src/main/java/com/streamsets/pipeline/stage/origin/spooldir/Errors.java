@@ -28,6 +28,7 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_23("Invalid XML element name '{}'"),
   SPOOLDIR_24("Could not create the parser factory, '{}'"),
   SPOOLDIR_25("Low level reader overrun limit '{}KB' must be at least '{}KB'"),
+  SPOOLDIR_26("XML delimiter element cannot be empty"),
   ;
 
   private final String msg;
