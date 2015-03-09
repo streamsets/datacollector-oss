@@ -124,11 +124,11 @@ ${record:value("/ID")==null}</pre>
 
      <dd class="dd">For example, the following pipeline processes tweeted data: </dd>
 
-     <dd class="dd"><img class="image" id="concept_sn5_5kx_wq__image_gyn_nps_gr" src="../Graphics/StreamSelector-Pipeline.png" height="191" width="480"></img></dd>
+     <dd class="dd"><img class="image" id="concept_sn5_5kx_wq__image_gyn_nps_gr" src="../Graphics/StreamSelector-Pipeline.png" height="164" width="412"></img></dd>
 
      <dd class="dd">The Stream Selector passes deleted tweets to the Deleted Tweets destination. It routes new
-      tweets with possibly sensitive language to a Field Masker to mask the possibly inappropriate
-      text, and passes all remaining tweets directly to the New Tweets destination. </dd>
+      tweets with possibly sensitive language to a Field Masker to mask the potentially
+      inappropriate text, and passes all remaining tweets directly to the New Tweets destination. </dd>
 
      <dd class="dd">The following image shows the Stream Selector configuration:</dd>
 
@@ -136,9 +136,8 @@ ${record:value("/ID")==null}</pre>
      </dd>
 
      <dd class="dd">The first condition evaluates for records that have been deleted. The second condition
-      evaluates for records flagged as possibly sensitive - these records pass to the Field Masker
-      to mask the possibly offensive language. The third default condition captures all remaining
-      records.</dd>
+      evaluates for records flagged by Twitter as possibly sensitive. The third default condition
+      captures all remaining records.</dd>
 
     
    </dl>
@@ -159,14 +158,71 @@ ${record:value("/ID")==null}</pre>
         </div>
 
         <ol class="ol steps" id="task_iss_2zx_wq__steps_tsx_3gf_xq"><li class="li step stepexpand">
-                <span class="ph cmd">In the Properties panel, optionally enter a name and description for the stage.
-                </span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">For <span class="ph uicontrol">Required Fields</span>, enter any fields that you want to
-                    require data. <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
-                        <img class="image" id="task_iss_2zx_wq__d1684e167" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></span>
-                <div class="itemgroup info">You might include any field that the processor uses.</div>
+                <span class="ph cmd">In the Properties panel, on the General tab, configure the following
+                    properties. </span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_iss_2zx_wq__d1684e240" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d20721e261">General Property</th>
+
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d20721e264">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e261 ">Name</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e264 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e261 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e264 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e261 ">Required Fields <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                            <img class="image" id="task_iss_2zx_wq__d1684e286" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e264 ">Fields that must include data to be passed to the stage.
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
+                                            that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e261 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e264 ">Error record handling for the stage: <ul class="ul" id="task_iss_2zx_wq__d1684e301">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="ph uicontrol">Conditions</span> tab, configure the following
@@ -178,9 +234,9 @@ ${record:value("/ID")==null}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="31.446540880503143%" id="d19311e288">Stream Selector Property</th>
+                                    <th class="entry" valign="top" width="31.446540880503143%" id="d20721e354">Stream Selector Property</th>
 
-                                    <th class="entry" valign="top" width="68.55345911949686%" id="d19311e291">Description</th>
+                                    <th class="entry" valign="top" width="68.55345911949686%" id="d20721e357">Description</th>
 
                                 </tr>
 
@@ -188,10 +244,10 @@ ${record:value("/ID")==null}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19311e288 ">Condition <a class="xref" href="StreamSelector_Conditions.html#task_mj5_vjf_xq" title="Configure a condition for each stream of data that you want to route. The Stream Selector passes all data that matches the condition to the stream.">
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d20721e354 ">Condition <a class="xref" href="StreamSelector_Conditions.html#task_mj5_vjf_xq" title="Configure a condition for each stream of data that you want to route. The Stream Selector passes all data that matches the condition to the stream.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19311e291 ">Condition to stream data to this output. Click the
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d20721e357 ">Condition to stream data to this output. Click the
                                             <span class="ph uicontrol">Add</span> icon to create additional
                                         conditions and corresponding output locations. <p class="p">To define
                                             a default stream to capture unmatched records, add a
@@ -202,10 +258,10 @@ ${record:value("/ID")==null}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19311e288 ">Constants <a class="xref" href="ConfiguringExpressionsConditions.html#task_ogd_zj3_wq" title="You can define constants that you can reuse within a processor. Define a constant when you have a value that you want use more than once in the processor or that you want to be able to update easily. You can define constants in the Expression Evaluator and Stream Selector processors.">
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d20721e354 ">Constants <a class="xref" href="ConfiguringExpressionsConditions.html#task_ogd_zj3_wq" title="You can define constants that you can reuse within a processor. Define a constant when you have a value that you want use more than once in the processor or that you want to be able to update easily. You can define constants in the Expression Evaluator and Stream Selector processors.">
                                             <img class="image" id="task_iss_2zx_wq__image_c4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19311e291 ">Represents a constant in conditions. Define a constant to
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d20721e357 ">Represents a constant in conditions. Define a constant to
                                         easily reuse it in the stage or to easily update the
                                         constant value. <p class="p">To define a constant, click the
                                                 <span class="ph uicontrol">Add</span> icon, and then enter a
@@ -217,10 +273,10 @@ ${record:value("/ID")==null}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d19311e288 ">Unmatched Record Handling <a class="xref" href="StreamSelector.html#concept_sn5_5kx_wq" title="When a record does not match any condition, the Stream Selector can use the error handling for unmatched records or you can configure a default stream that accepts the unmatched records:">
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d20721e354 ">Unmatched Record Handling <a class="xref" href="StreamSelector.html#concept_sn5_5kx_wq" title="When a record does not match any condition, the Stream Selector can use the error handling for unmatched records or you can configure a default stream that accepts the unmatched records:">
                                             <img class="image" id="task_iss_2zx_wq__image_eld_51f_cr" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d19311e291 ">Determines how to handle records that do not match any
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d20721e357 ">Determines how to handle records that do not match any
                                         condition: <ul class="ul" id="task_iss_2zx_wq__ul_uxy_r3f_xq">
                                             <li class="li">Drop Record - Drops the record from the pipeline. </li>
 

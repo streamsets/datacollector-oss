@@ -6,10 +6,11 @@
     <taskbody>
         <context/>
         <steps id="steps_fdt_ttq_wq">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
-                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-noEHandling">
                 <cmd/>
             </step>
+            
             <step>
                 <cmd><indexterm>Field Converter
                         processor<indexterm>configuring</indexterm></indexterm>On the

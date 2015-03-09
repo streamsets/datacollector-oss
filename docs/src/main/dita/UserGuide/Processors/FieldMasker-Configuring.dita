@@ -6,10 +6,11 @@
     <taskbody>
         <context/>
         <steps id="steps_ekd_cp4_wq">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
-                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
                 <cmd/>
             </step>
+            
             <step id="SelectHashField">
                 <cmd><indexterm>Field Masker
                     processor<indexterm>configuring</indexterm></indexterm>On the

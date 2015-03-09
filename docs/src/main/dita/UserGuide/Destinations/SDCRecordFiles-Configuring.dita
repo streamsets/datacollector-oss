@@ -7,9 +7,11 @@
     <taskbody>
         <context/>
         <steps id="steps_fvm_m1v_1r">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Dest-Step1">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NameDescOnly">
                 <cmd/>
             </step>
+           
             <step>
                 <cmd><indexterm>SDC Record Files
                         destination<indexterm>configuring</indexterm></indexterm>Click the

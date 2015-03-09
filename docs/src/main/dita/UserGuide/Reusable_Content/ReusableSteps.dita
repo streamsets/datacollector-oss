@@ -77,38 +77,211 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">The first step should used for origins. Use the
-                        first &amp; 2nd steps for processors.</draft-comment>
+                    <draft-comment author="Loretta">Use this step for origins that have error
+                        handling</draft-comment>
                 </cmd>
             </step>
-            <step id="Step_NameDesc">
-                <cmd>In the Properties panel, optionally enter a name and description for the stage.
-                </cmd>
-            </step>
-            <step id="Step_ReqFields">
-                <cmd>For <uicontrol>Required Fields</uicontrol>, enter any fields that you want to
-                    require data. <xref
-                        href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
-                        <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_h4p_p5v_yq"
-                        /></xref></cmd>
-                <info>You might include any field that the processor uses.</info>
+            <step id="1stStepErrorHandling">
+                <cmd>In the Properties panel, on the General tab, configure the following
+                    properties. </cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_vlh_bgh_hr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_mmh_bgh_hr">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. </li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">Use these two steps for destination
-                        tasks.</draft-comment>
+                    <draft-comment author="Loretta">Use this step for processors that have error
+                        handling</draft-comment>
                 </cmd>
             </step>
-            <step id="Dest-Step1">
-                <cmd>In the Properties panel, optionally enter a name and description for the stage.
+            <step id="1stStep-ReqField-ErrorHandling">
+                <cmd>In the Properties panel, on the General tab, configure the following
+                    properties. </cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_blh_n2h_hr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>Required Fields <xref
+                                            href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_h4p_p5v_yq"/></xref></entry>
+                                    <entry>Fields that must include data to be passed to the stage.
+                                            <note outputclass="" type="tip">You might include fields
+                                            that the stage uses.</note></entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_swp_lfh_hr">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. </li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">Use the following step for processors without
+                        record handling.</draft-comment>
                 </cmd>
             </step>
-            <step id="Dest-Step2">
-                <cmd>For <uicontrol>Required Fields</uicontrol>, enter any fields that you want to
-                    require data. <xref
-                        href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
-                        <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wct_vhg_br"
-                        /></xref></cmd>
+            <step id="1stStep-ReqField-noEHandling">
+                <cmd>In the Properties panel, on the General tab, configure the following
+                    properties. </cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wjk_pfh_hr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>Required Fields <xref
+                                            href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_nkk_pfh_hr"/></xref></entry>
+                                    <entry>Fields that must include data to be passed to the stage.
+                                            <note outputclass="" type="tip">You might include fields
+                                            that the stage uses.</note></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta" id="1stStageLib-ReqField-ErrorH">Use this step
+                        for destinations with stage library, req fields, and error
+                        handling.</draft-comment>
+                </cmd>
+            </step>
+            <step id="1stStep-StageLib-ReqField-EHandling">
+                <cmd>In the Properties panel, on the General tab, configure the following
+                    properties. </cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_tvy_43h_hr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>Stage Library</entry>
+                                    <entry>Library version that you want to use. </entry>
+                                </row>
+                                <row>
+                                    <entry>Required Fields <xref
+                                            href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_hwy_43h_hr"/></xref></entry>
+                                    <entry>Fields that must include data to be passed to the stage.
+                                            <note outputclass="" type="tip">You might include fields
+                                            that the stage uses.</note></entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_kwy_43h_hr">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. </li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">Use the following for destinations with only
+                        name &amp; desc.</draft-comment>
+                </cmd>
+            </step>
+            <step id="1stStep-NameDescOnly">
+                <cmd>In the Properties panel, on the General tab, optionally enter a name and
+                    description for the destination.</cmd>
             </step>
         </steps>
     </taskbody>

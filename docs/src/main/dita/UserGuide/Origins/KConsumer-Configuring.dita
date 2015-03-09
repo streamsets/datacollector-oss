@@ -2,19 +2,19 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_npx_xgf_vq">
     <title>Configuring a Kafka Consumer</title>
-    <shortdesc>Configure a Kafka Consumer to read data from a Kafka cluster. When you configure the
-        Kafka Consumer, you configure the general properties, including Kafka and ZooKeeper details.
-        For delimited and JSON data, configure additional related properties. You can optionally add
-        custom Kafka properties. </shortdesc>
+    <shortdesc>Configure a Kafka Consumer to read data from a Kafka cluster. </shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>Kafka Consumer origin<indexterm>configuring</indexterm></indexterm>When
+            you configure the Kafka Consumer, you configure the general properties, including Kafka
+            and ZooKeeper details. For delimited and JSON data, configure additional related
+            properties. You can optionally add custom Kafka properties. </context>
         <steps id="steps_f3x_nhw_yq">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
                 <cmd/>
             </step><step>
-                <cmd><indexterm>Kafka Consumer
-                    origin<indexterm>configuring</indexterm></indexterm>On the
-                        <uicontrol>Kafka</uicontrol> tab, configure the following properties:</cmd>
+                <cmd>On the <uicontrol>Kafka</uicontrol> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_v4j_qhw_yq">
                         <tgroup cols="2">
@@ -27,6 +27,13 @@
                                 </row>
                             </thead>
                             <tbody>
+                                <row>
+                                    <entry>Produce Single Record</entry>
+                                    <entry>Generates a single record for records that include
+                                        multiple objects. <p>When not selected, Kafka Consumer
+                                            generates multiple records when a record includes
+                                            multiple objects.</p></entry>
+                                </row>
                                 <row>
                                     <entry>ZooKeeper Connection String</entry>
                                     <entry>Connection string for the ZooKeeper of the Kafka cluster.
@@ -57,13 +64,13 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Max Batch Size</entry>
+                                    <entry>Max Batch Size (messages)</entry>
                                     <entry>Maximum number of messages processed at one time.</entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Duration Time (secs)</entry>
-                                    <entry>Number of seconds the Kafka Consumer waits before sending
-                                        a partial or empty batch. </entry>
+                                    <entry>Batch Wait Time (millisecs)</entry>
+                                    <entry>Number of milliseconds that the Kafka Consumer waits
+                                        before sending a partial or empty batch. </entry>
                                 </row>
                                 <row>
                                     <entry>Kafka Configuration <xref
@@ -106,15 +113,12 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Produce Single Record</entry>
-                                    <entry>Generates a single record for multiple JSON objects.
-                                            <p>Not available for JSON arrays.</p></entry>
-                                </row>
-                                <row>
                                     <entry>Max Object Length (chars) </entry>
                                     <entry>The maximum number of characters in a JSON
                                             object.<p>Longer objects are passed to the pipeline for
-                                            error handling. </p></entry>
+                                            error handling. <draft-comment author="Loretta">delete -
+                                                Tucu to check if we're keeping
+                                            this.</draft-comment></p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -150,6 +154,34 @@
                                             <li>Tab-Separated Values - File that includes
                                                 tab-separated values.</li>
                                         </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Header Line</entry>
+                                    <entry>Indicates whether a file contains a header line, and
+                                        whether to use the header line.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For XML data, configure the following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_edn_jsg_hr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.03*"/>
+                            <thead>
+                                <row>
+                                    <entry>XML Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Delimiter Element</entry>
+                                    <entry>XML element that acts as a delimiter.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

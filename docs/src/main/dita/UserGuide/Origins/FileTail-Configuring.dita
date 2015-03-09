@@ -7,7 +7,8 @@
     <taskbody>
         <context/>
         <steps id="steps_cfd_j2w_yq">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
                 <cmd/>
             </step>
             <step>
