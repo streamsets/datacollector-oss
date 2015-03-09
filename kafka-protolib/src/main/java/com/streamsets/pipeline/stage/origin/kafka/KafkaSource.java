@@ -42,7 +42,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   private final String consumerGroup;
   private final String topic;
   private final DataFormat dataFormat;
-  public boolean produceSingleRecordPerBatch;
+  public boolean produceSingleRecordPerMessage;
   private final int maxBatchSize;
   private final Map<String, String> kafkaConsumerConfigs;
   public int textMaxLineLen;
@@ -57,14 +57,14 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   private KafkaConsumer kafkaConsumer;
 
   public KafkaSource(String zookeeperConnect, String consumerGroup, String topic, DataFormat dataFormat,
-      boolean produceSingleRecordPerBatch, int maxBatchSize, int maxWaitTime, Map<String, String> kafkaConsumerConfigs,
+      boolean produceSingleRecordPerMessage, int maxBatchSize, int maxWaitTime, Map<String, String> kafkaConsumerConfigs,
       int textMaxLineLen, JsonMode jsonContent, int jsonMaxObjectLen, CsvMode csvFileFormat, CsvHeader csvHeader,
       int csvMaxObjectLen, String xmlRecordElement, int xmlMaxObjectLen) {
     this.zookeeperConnect = zookeeperConnect;
     this.consumerGroup = consumerGroup;
     this.topic = topic;
     this.dataFormat = dataFormat;
-    this.produceSingleRecordPerBatch = produceSingleRecordPerBatch;
+    this.produceSingleRecordPerMessage = produceSingleRecordPerMessage;
     this.maxBatchSize = maxBatchSize;
     this.maxWaitTime = maxWaitTime;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
@@ -133,10 +133,14 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
         }
         break;
       case XML:
+        if (produceSingleRecordPerMessage) {
+          issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "produceSingleRecordPerMessage",
+                                                    Errors.KAFKA_40));
+        }
         if (xmlMaxObjectLen < 1) {
           issues.add(getContext().createConfigIssue(Groups.XML.name(), "maxXmlObjectLen", Errors.KAFKA_38));
         }
-        if (!XMLChar.isValidName(xmlRecordElement)) {
+        if (!xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
           issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.KAFKA_36,
                                                     xmlRecordElement));
         }
@@ -198,6 +202,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
       if(message != null) {
         List<Record> records = processKafkaMessage(message);
         for(Record record : records) {
+          System.out.println("YYY");
           batchMaker.addRecord(record);
         }
         recordCounter += records.size();
@@ -237,7 +242,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
                                                        getContext().getOnErrorRecord(), ex));
       }
     }
-    if (produceSingleRecordPerBatch && records.size() > 1) {
+    if (produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
       for (Record record : records) {
         list.add(record.get());

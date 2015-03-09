@@ -101,7 +101,7 @@ public class TestKafkaSource {
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("textMaxLineLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerBatch", false)
+      .addConfiguration("produceSingleRecordPerMessage", false)
       .build();
 
     sourceRunner.runInit();
@@ -145,7 +145,7 @@ public class TestKafkaSource {
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("textMaxLineLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerBatch", false)
+      .addConfiguration("produceSingleRecordPerMessage", false)
       .build();
 
     sourceRunner.runInit();
@@ -188,7 +188,7 @@ public class TestKafkaSource {
       .addConfiguration("dataFormat", DataFormat.JSON)
       .addConfiguration("jsonContent", JsonMode.MULTIPLE_OBJECTS)
       .addConfiguration("jsonMaxObjectLen", 4096)
-      .addConfiguration("produceSingleRecordPerBatch", true)
+      .addConfiguration("produceSingleRecordPerMessage", true)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();
 
@@ -227,7 +227,7 @@ public class TestKafkaSource {
       .addConfiguration("dataFormat", DataFormat.JSON)
       .addConfiguration("jsonContent", JsonMode.MULTIPLE_OBJECTS)
       .addConfiguration("jsonMaxObjectLen", 4096)
-      .addConfiguration("produceSingleRecordPerBatch", false)
+      .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("kafkaConsumerConfigs", null)
       .build();
 
@@ -267,7 +267,7 @@ public class TestKafkaSource {
       .addConfiguration("jsonContent", JsonMode.ARRAY_OBJECTS)
       .addConfiguration("jsonMaxObjectLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerBatch", true)
+      .addConfiguration("produceSingleRecordPerMessage", true)
       .build();
 
     sourceRunner.runInit();
@@ -285,19 +285,19 @@ public class TestKafkaSource {
     sourceRunner.runDestroy();
   }
 
-  //@Test
-  public void testProduceXmlRecords() throws StageException, IOException {
+  @Test
+  public void testProduceXmlRecordsNoRecordElement() throws StageException, IOException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
-    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceXmlRecords", SINGLE_PARTITION,
+    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceXmlRecords1", SINGLE_PARTITION,
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(new ProducerRunnable( "testProduceXmlRecords", SINGLE_PARTITION,
+    executorService.submit(new ProducerRunnable( "testProduceXmlRecords1", SINGLE_PARTITION,
       producer, startLatch, DataType.XML, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .addConfiguration("topic", "testProduceXmlRecords")
+      .addConfiguration("topic", "testProduceXmlRecords1")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -305,7 +305,7 @@ public class TestKafkaSource {
       .addConfiguration("dataFormat", DataFormat.XML)
       .addConfiguration("jsonContent", null)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerBatch", true)
+      .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("xmlRecordElement", "")
       .addConfiguration("xmlMaxObjectLen", 4096)
       .build();
@@ -323,6 +323,67 @@ public class TestKafkaSource {
     Assert.assertEquals(9, records.size());
 
     sourceRunner.runDestroy();
+  }
+
+  @Test
+  public void testProduceXmlRecordsRecordElement() throws StageException, IOException {
+
+    CountDownLatch startLatch = new CountDownLatch(1);
+    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceXmlRecords2", SINGLE_PARTITION,
+                              REPLICATION_FACTOR, TIME_OUT);
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    executorService.submit(new ProducerRunnable( "testProduceXmlRecords2", SINGLE_PARTITION,
+                                                 producer, startLatch, DataType.XML, null));
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+        .addOutputLane("lane")
+        .addConfiguration("topic", "testProduceXmlRecords2")
+        .addConfiguration("consumerGroup", CONSUMER_GROUP)
+        .addConfiguration("zookeeperConnect", zkConnect)
+        .addConfiguration("maxBatchSize", 9)
+        .addConfiguration("maxWaitTime", 5000)
+        .addConfiguration("dataFormat", DataFormat.XML)
+        .addConfiguration("jsonContent", null)
+        .addConfiguration("kafkaConsumerConfigs", null)
+        .addConfiguration("produceSingleRecordPerMessage", false)
+        .addConfiguration("xmlRecordElement", "author")
+        .addConfiguration("xmlMaxObjectLen", 4096)
+        .build();
+
+    sourceRunner.runInit();
+
+    startLatch.countDown();
+    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    executorService.shutdown();
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+
+    List<Record> records = output.getRecords().get("lane");
+    // we stop at 10 because each message has an XML with 2 authors (one record each)
+    Assert.assertEquals(10, records.size());
+
+    sourceRunner.runDestroy();
+  }
+
+  @Test(expected = StageException.class)
+  public void testProduceXmlRecordsRecordElementSingleRecordPerMessage() throws StageException, IOException {
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+        .addOutputLane("lane")
+        .addConfiguration("topic", "testProduceXmlRecords3")
+        .addConfiguration("consumerGroup", CONSUMER_GROUP)
+        .addConfiguration("zookeeperConnect", zkConnect)
+        .addConfiguration("maxBatchSize", 9)
+        .addConfiguration("maxWaitTime", 5000)
+        .addConfiguration("dataFormat", DataFormat.XML)
+        .addConfiguration("jsonContent", null)
+        .addConfiguration("kafkaConsumerConfigs", null)
+        .addConfiguration("produceSingleRecordPerMessage", true)
+        .addConfiguration("xmlRecordElement", "author")
+        .addConfiguration("xmlMaxObjectLen", 4096)
+        .build();
+
+    sourceRunner.runInit();
   }
 
   @Test
@@ -346,7 +407,7 @@ public class TestKafkaSource {
       .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
       .addConfiguration("csvMaxObjectLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerBatch", true)
+      .addConfiguration("produceSingleRecordPerMessage", true)
       .build();
 
     sourceRunner.runInit();

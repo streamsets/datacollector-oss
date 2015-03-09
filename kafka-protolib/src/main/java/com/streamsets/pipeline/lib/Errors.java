@@ -39,6 +39,7 @@ public enum Errors implements ErrorCode {
   KAFKA_37("Could not parse record from message '{}', {}"),
   KAFKA_38("Max data object length cannot be less than 1"),
   KAFKA_39("Unsupported data format '{}'"),
+  KAFKA_40("Messages with XML data cannot have multiple XML documents in a single message"),
 
 
   //Kafka target messages

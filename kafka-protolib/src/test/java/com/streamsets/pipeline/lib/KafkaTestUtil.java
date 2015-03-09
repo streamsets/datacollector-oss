@@ -212,6 +212,7 @@ public class KafkaTestUtil {
       case XML:
         return "<book id=\"bk104\">\n" +
           "<author>Corets, Eva</author>\n" +
+          "<author>CoretsXX, EvaXX</author>\n" +
           "<title>Oberon's Legacy</title>\n" +
           "<genre>Fantasy</genre>\n" +
           "<price>5.95</price>\n" +

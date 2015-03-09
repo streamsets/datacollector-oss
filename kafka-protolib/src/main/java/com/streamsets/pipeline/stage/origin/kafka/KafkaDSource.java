@@ -89,7 +89,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
       displayPosition = 45,
       group = "KAFKA"
   )
-  public boolean produceSingleRecordPerBatch;
+  public boolean produceSingleRecordPerMessage;
 
   @ConfigDef(
     required = true,
@@ -232,7 +232,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
 
   @Override
   protected Source createSource() {
-    return new KafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, produceSingleRecordPerBatch,
+    return new KafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, produceSingleRecordPerMessage,
                            maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent,
                            jsonMaxObjectLen, csvFileFormat, csvHeader, csvMaxObjectLen, xmlRecordElement,
                            xmlMaxObjectLen);
