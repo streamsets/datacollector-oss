@@ -5,9 +5,21 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('ConfigurationController', function ($scope, $rootScope, $q, $modal, _,
+  .controller('ConfigurationController', function ($scope, $rootScope, $q, $modal, _, $timeout,
                                                    api, previewService, pipelineConstant, pipelineService) {
-    var fieldsPathList;
+    var fieldsPathList,
+      defaultELEditorOptions = {
+        mode: {
+          name: 'javascript'
+        },
+        inputStyle: 'contenteditable',
+        showCursorWhenSelecting: true,
+        lineNumbers: false,
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        cursorHeight: 1,
+        //readOnly: 'nocursor'
+      };
 
     var getIssueMessage = function(config, issues, instanceName, configDefinition) {
       if(instanceName && issues.stageIssues && issues.stageIssues[instanceName]) {
@@ -27,6 +39,17 @@ angular
 
     angular.extend($scope, {
       fieldPaths: [],
+
+      onTabSelect: function() {
+        $scope.refreshCodemirror = true;
+        $timeout(function () {
+          $scope.refreshCodemirror = false;
+        }, 100);
+      },
+
+      getCodeMirrorOptions: function(options) {
+        return angular.extend({}, defaultELEditorOptions, options);
+      },
 
       /**
        * Returns message for the give Configuration Object and Definition.

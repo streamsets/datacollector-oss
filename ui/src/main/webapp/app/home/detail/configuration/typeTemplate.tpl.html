@@ -286,12 +286,20 @@
 
       <div class="col-xs-9 expression-language">
 
+        <!--
         <input type="text" class="form-control input-sm"
                placeholder="{{'home.detailPane.configurationTab.enterPredicate' | translate}}"
                ng-required="true"
                name="{{configDefinition.name + $index}}"
                ng-readonly="isPipelineRunning || lanePredicateMapping.predicate === 'default'"
                ng-model="lanePredicateMapping.predicate"/>
+               -->
+
+        <div ui-codemirror ng-model="lanePredicateMapping.predicate"
+             ui-refresh="refreshCodemirror"
+             ui-codemirror-opts="getCodeMirrorOptions({readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default'})">
+        </div>
+
       </div>
 
       <div class="col-xs-2" role="group" aria-label="Default button group"
