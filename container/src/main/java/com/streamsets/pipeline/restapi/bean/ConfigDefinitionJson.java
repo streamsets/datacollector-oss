@@ -34,11 +34,12 @@ public class ConfigDefinitionJson {
     @JsonProperty("dependsOn") String dependsOn,
     @JsonProperty("triggeredByValues") List<Object> triggeredByValues,
     @JsonProperty("displayPosition") int displayPosition,
-    @JsonProperty("elFunctionDefinitionIds") List<String> elFunctionDefinitionIds,
-    @JsonProperty("elVariableDefinitionIds") List<String> elVariableDefinitionIds) {
+    @JsonProperty("elFunctionDefinitions") List<ElFunctionDefinitionJson> elFunctionDefinitions,
+    @JsonProperty("elConstantDefinitions") List<ElConstantDefinitionJson> elConstantDefinitions) {
     this.configDefinition = new com.streamsets.pipeline.config.ConfigDefinition(name, type, label, description,
       defaultValue, required, group, fieldName, BeanHelper.unwrapModelDefinition(model), dependsOn, triggeredByValues,
-      displayPosition, elFunctionDefinitionIds, elVariableDefinitionIds);
+      displayPosition, BeanHelper.unwrapElFunctionDefinitions(elFunctionDefinitions),
+      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions));
   }
 
   public ConfigDefinitionJson(com.streamsets.pipeline.config.ConfigDefinition configDefinition) {
@@ -92,12 +93,12 @@ public class ConfigDefinitionJson {
     return configDefinition.getDisplayPosition();
   }
 
-  public List<String> getElFunctionDefinitionIds() {
-    return configDefinition.getElFunctionDefinitionIds();
+  public List<ElFunctionDefinitionJson> getElFunctionDefinitions() {
+    return BeanHelper.wrapElFunctionDefinitions(configDefinition.getElFunctionDefinitions());
   }
 
-  public List<String> getElVariableDefinitionIds() {
-    return configDefinition.getElVariableDefinitionIds();
+  public List<ElConstantDefinitionJson> getElConstantDefinitions() {
+    return BeanHelper.wrapElConstantDefinitions(configDefinition.getElConstantDefinitions());
   }
 
 

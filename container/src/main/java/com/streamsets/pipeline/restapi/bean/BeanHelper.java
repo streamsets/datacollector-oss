@@ -8,7 +8,6 @@ package com.streamsets.pipeline.restapi.bean;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionArgumentDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
-import com.streamsets.pipeline.el.ElMetadata;
 import com.streamsets.pipeline.record.HeaderImpl;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.production.SourceOffset;
@@ -620,6 +619,32 @@ public class BeanHelper {
     return elFunctionArgumentDefinitionJsons;
   }
 
+  public static List<ElFunctionDefinitionJson> wrapElFunctionDefinitions(
+    List<ElFunctionDefinition> elFunctionDefinition) {
+    if(elFunctionDefinition == null) {
+      return null;
+    }
+    List<ElFunctionDefinitionJson> elFunctionDefinitionJsons =
+      new ArrayList<>(elFunctionDefinition.size());
+    for(ElFunctionDefinition e : elFunctionDefinition) {
+      elFunctionDefinitionJsons.add(new ElFunctionDefinitionJson(e));
+    }
+    return elFunctionDefinitionJsons;
+  }
+
+  public static List<ElConstantDefinitionJson> wrapElConstantDefinitions(
+    List<ElConstantDefinition> elConstantDefinition) {
+    if(elConstantDefinition == null) {
+      return null;
+    }
+    List<ElConstantDefinitionJson> elConstantDefinitionJsons =
+      new ArrayList<>(elConstantDefinition.size());
+    for(ElConstantDefinition e : elConstantDefinition) {
+      elConstantDefinitionJsons.add(new ElConstantDefinitionJson(e));
+    }
+    return elConstantDefinitionJsons;
+  }
+
   public static List<ElFunctionArgumentDefinition> unwrapElFunctionArgumentDefinitions(
     List<ElFunctionArgumentDefinitionJson> elFunctionArgumentDefinitionJson) {
     if(elFunctionArgumentDefinitionJson == null) {
@@ -705,10 +730,6 @@ public class BeanHelper {
       elConstantDefinitionMap.put(e.getKey(), e.getValue().getElConstantDefinition());
     }
     return elConstantDefinitionMap;
-  }
-
-  public static ElMetadataJson wrapElMetadata(ElMetadata elMetadata) {
-    return new ElMetadataJson(elMetadata);
   }
 
   /*****************************************************/

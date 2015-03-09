@@ -8,7 +8,6 @@ package com.streamsets.pipeline.runner.preview;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.el.ElMetadata;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.task.TaskWrapper;
 
@@ -30,11 +29,6 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   @Override
   public List<StageDefinition> getStages() {
     return library.getStages();
-  }
-
-  @Override
-  public ElMetadata getElMetadata() {
-    return library.getElMetadata();
   }
 
   @Override

@@ -9,10 +9,13 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
+import com.streamsets.pipeline.el.ElConstantDefinition;
+import com.streamsets.pipeline.el.ElFunctionDefinition;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TestConfigDefinitionBean {
@@ -34,7 +37,7 @@ public class TestConfigDefinitionBean {
     triggeredBy.add("Z");
     com.streamsets.pipeline.config.ConfigDefinition configDefinition =
       new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
-        triggeredBy, 0, new ArrayList<String>(), new ArrayList<String>());
+        triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList());
 
     ConfigDefinitionJson configDefinitionJsonBean =
       new ConfigDefinitionJson(configDefinition);
@@ -65,13 +68,14 @@ public class TestConfigDefinitionBean {
     triggeredBy.add("Z");
     com.streamsets.pipeline.config.ConfigDefinition configDefinition =
       new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
-        triggeredBy, 0, new ArrayList<String>(), new ArrayList<String>());
+        triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList());
 
     ModelDefinitionJson modelDefinitionJsonBean =
       new ModelDefinitionJson(modelDefinition);
     ConfigDefinitionJson configDefinitionJsonBean =
       new ConfigDefinitionJson("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true,
-        "g", "intVar", modelDefinitionJsonBean, "A", triggeredBy, 0, new ArrayList<String>(), new ArrayList<String>());
+        "g", "intVar", modelDefinitionJsonBean, "A", triggeredBy, 0, Collections.<ElFunctionDefinitionJson>emptyList(),
+        Collections.<ElConstantDefinitionJson>emptyList());
 
     Assert.assertEquals(configDefinition.getName(), configDefinitionJsonBean.getName());
     Assert.assertEquals(configDefinition.getDefaultValue(), configDefinitionJsonBean.getDefaultValue());

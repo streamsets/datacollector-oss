@@ -9,10 +9,13 @@ import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelType;
+import com.streamsets.pipeline.el.ElConstantDefinition;
+import com.streamsets.pipeline.el.ElFunctionDefinition;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TestModelDefinitionBean {
@@ -39,7 +42,7 @@ public class TestModelDefinitionBean {
 
     List< ConfigDefinition > configDefinitions = new ArrayList<>();
     configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", null, "A",
-      triggeredBy, 0, new ArrayList<String>(), new ArrayList<String>()));
+      triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList()));
 
     com.streamsets.pipeline.config.ModelDefinition modelDefinition =
       new com.streamsets.pipeline.config.ModelDefinition(ModelType.COMPLEX_FIELD, ChooserMode.PROVIDED,
@@ -75,7 +78,8 @@ public class TestModelDefinitionBean {
 
     List< ConfigDefinition > configDefinitions = new ArrayList<>();
     configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar",
-      null, "A", triggeredBy, 0, new ArrayList<String>(), new ArrayList<String>()));
+      null, "A", triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(),
+      Collections.<ElConstantDefinition>emptyList()));
 
     com.streamsets.pipeline.config.ModelDefinition modelDefinition =
       new com.streamsets.pipeline.config.ModelDefinition(ModelType.COMPLEX_FIELD, ChooserMode.PROVIDED,

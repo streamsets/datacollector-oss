@@ -18,6 +18,8 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.el.ElConstantDefinition;
+import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
@@ -97,16 +99,20 @@ public class TestUtil {
     StageLibraryTask lib = Mockito.mock(StageLibraryTask.class);
     List<ConfigDefinition> configDefs = new ArrayList<>();
     ConfigDefinition configDef = new ConfigDefinition("string", ConfigDef.Type.STRING, "l1", "d1", "--", true, "g",
-        "stringVar", null, "", new ArrayList<>(), 0, new ArrayList<String>(), new ArrayList<String>());
+        "stringVar", null, "", new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
+      Collections.<ElConstantDefinition>emptyList());
     configDefs.add(configDef);
     configDef = new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", null, "",
-      new ArrayList<>(), 0, new ArrayList<String>(), new ArrayList<String>());
+      new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
+      Collections.<ElConstantDefinition>emptyList());
     configDefs.add(configDef);
     configDef = new ConfigDefinition("long", ConfigDef.Type.INTEGER, "l3", "d3", "-2", true, "g", "longVar", null, "",
-      new ArrayList<>(), 0, new ArrayList<String>(), new ArrayList<String>());
+      new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
+      Collections.<ElConstantDefinition>emptyList());
     configDefs.add(configDef);
     configDef = new ConfigDefinition("boolean", ConfigDef.Type.BOOLEAN, "l4", "d4", "false", true, "g", "booleanVar",
-      null, "", new ArrayList<>(), 0, new ArrayList<String>(), new ArrayList<String>());
+      null, "", new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
+      Collections.<ElConstantDefinition>emptyList());
     configDefs.add(configDef);
     StageDefinition sourceDef = new StageDefinition(
         TSource.class.getName(), "source", "1.0.0", "label", "description",

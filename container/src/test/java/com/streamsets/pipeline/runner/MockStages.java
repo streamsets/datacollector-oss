@@ -22,7 +22,8 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.el.ElMetadata;
+import com.streamsets.pipeline.el.ElConstantDefinition;
+import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 
@@ -290,13 +291,14 @@ public class MockStages {
 
       ConfigDefinition depConfDef = new ConfigDefinition(
           "dependencyConfName", ConfigDef.Type.INTEGER, "dependencyConfLabel", "dependencyConfDesc", "", true,
-          "groupName", "dependencyConfFieldName", null, "", null, 0, new ArrayList<String>(), new ArrayList<String>());
+          "groupName", "dependencyConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
+        Collections.<ElConstantDefinition>emptyList());
       List<Object> triggeredBy = new ArrayList<>();
       triggeredBy.add(1);
       ConfigDefinition triggeredConfDef = new ConfigDefinition(
           "triggeredConfName", ConfigDef.Type.INTEGER, "triggeredConfLabel", "triggeredConfDesc", "", true,
-          "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0, new ArrayList<String>(),
-        new ArrayList<String>());
+          "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0,
+        Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList());
       StageDefinition swcDef = new StageDefinition(
           MSource.class.getName(), "sourceWithConfigsName", "1.0.0", "sourceWithConfigsLabel",
           "sourceWithConfigsDesc", StageType.SOURCE, false, true, true, Lists.newArrayList(depConfDef, triggeredConfDef),
@@ -339,11 +341,6 @@ public class MockStages {
     @Override
     public List<StageDefinition> getStages() {
       return stages;
-    }
-
-    @Override
-    public ElMetadata getElMetadata() {
-      return null;
     }
 
     @Override

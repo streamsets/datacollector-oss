@@ -8,6 +8,8 @@ package com.streamsets.pipeline.config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.el.ElConstantDefinition;
+import com.streamsets.pipeline.el.ElFunctionDefinition;
 
 import java.util.List;
 
@@ -31,13 +33,13 @@ public class ConfigDefinition {
   private List<Object> triggeredByValues;
   private final ModelDefinition model;
   private final int displayPosition;
-  private final List<String> elFunctionDefinitionIds;
-  private final List<String> elVariableDefinitionIds;
+  private final List<ElFunctionDefinition> elFunctionDefinitions;
+  private final List<ElConstantDefinition> elConstantDefinitions;
 
   public ConfigDefinition(String name, ConfigDef.Type type, String label, String description, Object defaultValue,
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
-      List<Object> triggeredByValues, int displayPosition, List<String> elFunctionDefinitionIds,
-      List<String> elVariableDefinitionIds) {
+      List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
+      List<ElConstantDefinition> elConstantDefinitions) {
     this.name = name;
     this.type = type;
     this.label = label;
@@ -50,8 +52,8 @@ public class ConfigDefinition {
     this.dependsOn = dependsOn;
     this.triggeredByValues = triggeredByValues;
     this.displayPosition = displayPosition;
-    this.elFunctionDefinitionIds = elFunctionDefinitionIds;
-    this.elVariableDefinitionIds = elVariableDefinitionIds;
+    this.elFunctionDefinitions = elFunctionDefinitions;
+    this.elConstantDefinitions = elConstantDefinitions;
   }
 
   public String getName() {
@@ -100,12 +102,12 @@ public class ConfigDefinition {
     this.triggeredByValues = triggeredByValues;
   }
 
-  public List<String> getElFunctionDefinitionIds() {
-    return elFunctionDefinitionIds;
+  public List<ElFunctionDefinition> getElFunctionDefinitions() {
+    return elFunctionDefinitions;
   }
 
-  public List<String> getElVariableDefinitionIds() {
-    return elVariableDefinitionIds;
+  public List<ElConstantDefinition> getElConstantDefinitions() {
+    return elConstantDefinitions;
   }
 
   public int getDisplayPosition() {
@@ -130,7 +132,7 @@ public class ConfigDefinition {
 
     return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(),
       isRequired(), getGroup(), getFieldName(), getModel(), getDependsOn(), getTriggeredByValues(),
-      getDisplayPosition(), getElFunctionDefinitionIds(), getElVariableDefinitionIds());
+      getDisplayPosition(), getElFunctionDefinitions(), getElConstantDefinitions());
   }
 
   @Override

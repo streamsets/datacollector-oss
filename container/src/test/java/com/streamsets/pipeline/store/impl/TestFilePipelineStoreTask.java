@@ -130,9 +130,9 @@ public class TestFilePipelineStoreTask {
   public void testSaveNotExisting() throws Exception {
     ObjectGraph dagger = ObjectGraph.create(new Module());
     FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
-    createDefaultPipeline(store);
     try {
       store.init();
+      createDefaultPipeline(store);
       PipelineConfiguration pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       store.save("a", "foo", null, null, pc);
     } finally {
@@ -144,9 +144,9 @@ public class TestFilePipelineStoreTask {
   public void testSaveWrongUuid() throws Exception {
     ObjectGraph dagger = ObjectGraph.create(new Module());
     FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
-    createDefaultPipeline(store);
     try {
       store.init();
+      createDefaultPipeline(store);
       PipelineConfiguration pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       pc.setUuid(UUID.randomUUID());
       store.save(DEFAULT_PIPELINE_NAME, "foo", null, null, pc);

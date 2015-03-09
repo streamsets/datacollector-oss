@@ -26,10 +26,6 @@ public class ElConstantDefinitionJson {
     this.elConstantDefinition = new ElConstantDefinition(name, description, returnType);
   }
 
-  public String getId() {
-    return elConstantDefinition.getId();
-  }
-
   public String getName() {
     return elConstantDefinition.getName();
   }

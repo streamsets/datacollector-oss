@@ -10,9 +10,12 @@ import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.el.ElConstantDefinition;
+import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -100,8 +103,8 @@ public class PipelineDefinition {
       "",
       new ArrayList<>(),
       0,
-      new ArrayList<String>(),
-      new ArrayList<String>());
+      Collections.<ElFunctionDefinition> emptyList(),
+      Collections.<ElConstantDefinition> emptyList());
 
     return dgConfigDef;
   }
@@ -145,8 +148,8 @@ public class PipelineDefinition {
         "",
         new ArrayList<>(),
         10,
-        new ArrayList<String>(),
-        new ArrayList<String>());
+        Collections.<ElFunctionDefinition> emptyList(),
+        Collections.<ElConstantDefinition> emptyList());
     configs.add(config);
 
     return configs;

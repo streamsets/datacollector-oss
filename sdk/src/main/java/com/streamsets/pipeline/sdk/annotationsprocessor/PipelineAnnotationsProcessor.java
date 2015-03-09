@@ -28,6 +28,8 @@ import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.el.ElConstantDefinition;
+import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -404,8 +406,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             configDefAnnot.dependsOn(),
             getTriggeredByValues(configDefAnnot.triggeredByValue(), allFields.get(configDefAnnot.dependsOn())),
             configDefAnnot.displayPosition(),
-            new ArrayList<String>(),
-            new ArrayList<String>());
+            new ArrayList<ElFunctionDefinition>(),
+            new ArrayList<ElConstantDefinition>());
         configDefinitions.add(configDefinition);
       }
     }
