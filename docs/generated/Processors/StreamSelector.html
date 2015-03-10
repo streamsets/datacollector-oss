@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Stream Selector passes data to streams based on conditions. When you configure a condition, the Stream Selector creates an output point that you connect to a downstream stage. The Stream Selector ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Stream Selector"></meta><meta name="abstract" content="The Stream Selector passes data to streams based on conditions."></meta><meta name="description" content="The Stream Selector passes data to streams based on conditions."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_tqv_t5r_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Stream Selector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Stream Selector passes data to streams based on conditions. Define a condition for each stream of data that you want to create. The Stream Selector uses a default stream to pass records that do ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Stream Selector"></meta><meta name="abstract" content="The Stream Selector passes data to streams based on conditions. Define a condition for each stream of data that you want to create. The Stream Selector uses a default stream to pass records that do not match the user-defined conditions."></meta><meta name="description" content="The Stream Selector passes data to streams based on conditions. Define a condition for each stream of data that you want to create. The Stream Selector uses a default stream to pass records that do not match the user-defined conditions."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_tqv_t5r_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Stream Selector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,13 +14,15 @@
  <h1 class="title topictitle1">Stream Selector</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The Stream Selector passes data to streams based on conditions. </p>
+ <div class="body conbody"><p class="shortdesc">The Stream Selector passes data to streams based on conditions. Define a condition for
+    each stream of data that you want to create. The Stream Selector uses a default stream to pass
+    records that do not match the user-defined conditions. </p>
 
-    <p class="p">When you configure a condition, the Stream Selector
-      creates an output point that you connect to a downstream stage. The Stream Selector passes a
-      record to all streams where the record matches the condition. </p>
+    <p class="p">When you define a condition, the Stream Selector creates
+      an output that you connect to a downstream branch of the pipeline.</p>
 
-    <div class="p">For example, you create the following conditions:
+    <div class="p">The Stream Selector passes a record to all streams where the record matches the condition.
+      For example, you create the following conditions:
       <pre class="pre codeblock">${record:value("/State")==CA}
 ${record:value("/ID")==null}</pre>
 </div>
@@ -31,6 +33,41 @@ ${record:value("/ID")==null}</pre>
   </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_xr4_zt3_3r">
+ <h2 class="title topictitle2">Default Stream</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The default stream captures records that do not match user-defined conditions. Use the
+  default stream to manage unmatched records. </p>
+
+  <p class="p">When you configure the Stream Selector, you connect each stream
+   to a branch in the pipeline. The default stream is the last stream in the stage.</p>
+
+  <p class="p">You can configure the branch for the default stream to perform additional processing or to
+   write directly to a destination. If you do not need the records in the default stream, you can
+   connect the stream to a Trash destination.</p>
+
+  <p class="p">For example, the following image shows a Stream Selector that processes tweeted data:</p>
+
+  <p class="p"><img class="image" id="concept_xr4_zt3_3r__image_tgw_w2j_3r" src="../Graphics/StreamSelector-config.png" height="107" width="397"></img></p>
+
+  <p class="p">The first condition evaluates for records that have been deleted. The second condition
+   evaluates for records flagged as sensitive. The third default condition captures all remaining
+   records.</p>
+
+  <p class="p">The following image shows the Stream Selector in the pipeline: </p>
+
+  <p class="p">
+  <img class="image" id="concept_xr4_zt3_3r__image_gyn_nps_gr" src="../Graphics/StreamSelector-Pipeline.png" height="164" width="412"></img></p>
+
+  <p class="p">The first stream passes deleted tweets to the Deleted Tweets destination. The second stream
+   passes new tweets with sensitive language to a Field Masker to mask the inappropriate text. The
+   third stream,the default stream, passes all remaining tweets directly to the New Tweets
+   destination. </p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_oy4_tbf_cr">
  <h2 class="title topictitle2">Sample Conditions for Streams</h2>
 
@@ -167,9 +204,9 @@ ${record:value("/ID")==null}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d20721e261">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d20721e310">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d20721e264">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d20721e313">Description</th>
 
                                 </tr>
 
@@ -177,24 +214,24 @@ ${record:value("/ID")==null}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e261 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e310 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e264 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e261 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e264 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e313 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e261 ">Required Fields <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e310 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e313 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e310 ">Required Fields <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
                                             <img class="image" id="task_iss_2zx_wq__d1684e286" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e264 ">Fields that must include data to be passed to the stage.
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e313 ">Fields that must include data to be passed to the stage.
                                             <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
                                             that the stage uses.</div>
 </td>
@@ -202,9 +239,9 @@ ${record:value("/ID")==null}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e261 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20721e310 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e264 ">Error record handling for the stage: <ul class="ul" id="task_iss_2zx_wq__d1684e301">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20721e313 ">Error record handling for the stage: <ul class="ul" id="task_iss_2zx_wq__d1684e301">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -234,9 +271,9 @@ ${record:value("/ID")==null}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="31.446540880503143%" id="d20721e354">Stream Selector Property</th>
+                                    <th class="entry" valign="top" width="31.446540880503143%" id="d20721e403">Stream Selector Property</th>
 
-                                    <th class="entry" valign="top" width="68.55345911949686%" id="d20721e357">Description</th>
+                                    <th class="entry" valign="top" width="68.55345911949686%" id="d20721e406">Description</th>
 
                                 </tr>
 
@@ -244,10 +281,10 @@ ${record:value("/ID")==null}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d20721e354 ">Condition <a class="xref" href="StreamSelector_Conditions.html#task_mj5_vjf_xq" title="Configure a condition for each stream of data that you want to route. The Stream Selector passes all data that matches the condition to the stream.">
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d20721e403 ">Condition <a class="xref" href="StreamSelector_Conditions.html#task_mj5_vjf_xq" title="Configure a condition for each stream of data that you want to route. The Stream Selector passes all data that matches the condition to the stream.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d20721e357 ">Condition to stream data to this output. Click the
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d20721e406 ">Condition to stream data to this output. Click the
                                             <span class="ph uicontrol">Add</span> icon to create additional
                                         conditions and corresponding output locations. <p class="p">To define
                                             a default stream to capture unmatched records, add a
@@ -258,10 +295,10 @@ ${record:value("/ID")==null}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d20721e354 ">Constants <a class="xref" href="ConfiguringExpressionsConditions.html#task_ogd_zj3_wq" title="You can define constants that you can reuse within a processor. Define a constant when you have a value that you want use more than once in the processor or that you want to be able to update easily. You can define constants in the Expression Evaluator and Stream Selector processors.">
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d20721e403 ">Constants <a class="xref" href="ConfiguringExpressionsConditions.html#task_ogd_zj3_wq" title="You can define constants that you can reuse within a processor. Define a constant when you have a value that you want use more than once in the processor or that you want to be able to update easily. You can define constants in the Expression Evaluator and Stream Selector processors.">
                                             <img class="image" id="task_iss_2zx_wq__image_c4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d20721e357 ">Represents a constant in conditions. Define a constant to
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d20721e406 ">Represents a constant in conditions. Define a constant to
                                         easily reuse it in the stage or to easily update the
                                         constant value. <p class="p">To define a constant, click the
                                                 <span class="ph uicontrol">Add</span> icon, and then enter a
@@ -273,10 +310,10 @@ ${record:value("/ID")==null}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d20721e354 ">Unmatched Record Handling <a class="xref" href="StreamSelector.html#concept_sn5_5kx_wq" title="When a record does not match any condition, the Stream Selector can use the error handling for unmatched records or you can configure a default stream that accepts the unmatched records:">
+                                    <td class="entry" valign="top" width="31.446540880503143%" headers="d20721e403 ">Unmatched Record Handling <a class="xref" href="StreamSelector.html#concept_sn5_5kx_wq" title="When a record does not match any condition, the Stream Selector can use the error handling for unmatched records or you can configure a default stream that accepts the unmatched records:">
                                             <img class="image" id="task_iss_2zx_wq__image_eld_51f_cr" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d20721e357 ">Determines how to handle records that do not match any
+                                    <td class="entry" valign="top" width="68.55345911949686%" headers="d20721e406 ">Determines how to handle records that do not match any
                                         condition: <ul class="ul" id="task_iss_2zx_wq__ul_uxy_r3f_xq">
                                             <li class="li">Drop Record - Drops the record from the pipeline. </li>
 

@@ -50,6 +50,7 @@
   </topicref>
   <topicref href="../Processors/StreamSelector.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/StreamSelector-DefaultStream.dita"/>
    <topicref href="../Processors/StreamSelector-Conditions.dita"/>
    <topicref href="../Processors/StreamSelector_fallback.dita"/>
    <topicref href="../Processors/StreamSelector-Configuring.dita"/>
