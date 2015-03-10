@@ -147,11 +147,8 @@
                 <div ng-switch-when="MODEL"
                      ng-switch="customFieldConfigDefinition.model.modelType">
 
-                  <div ng-switch-when="VALUE_CHOOSER"
-                       ng-switch="customFieldConfigDefinition.model.chooserMode">
-
+                  <div ng-switch-when="VALUE_CHOOSER">
                     <select class="form-control"
-                            ng-switch-when="PROVIDED"
                             name="{{customFieldConfigDefinition.name + $index}}"
                             ng-disabled="isPipelineRunning"
                             ng-model="customFieldValue[customFieldConfigDefinition.name]">
@@ -161,21 +158,7 @@
                         {{customFieldConfigDefinition.model.labels[$index]}}
                       </option>
                     </select>
-
-                    <div ng-switch-when="SUGGESTED" class="input-group">
-                      <input type="text" class="form-control" ng-model="customFieldValue[customFieldConfigDefinition.name]">
-                      <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                        <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
-                          <li ng-repeat="listValue in customFieldConfigDefinition.model.values">
-                            <a href="#" ng-click="customFieldValue[customFieldConfigDefinition.name] = listValue">{{listValue}}</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-
                   </div>
-
 
                   <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUED"
                        ng-click="onFieldSelectorFocus(detailPaneConfig)"
