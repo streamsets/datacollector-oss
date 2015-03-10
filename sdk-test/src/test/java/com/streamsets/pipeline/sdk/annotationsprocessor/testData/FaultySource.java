@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -89,7 +88,7 @@ public class FaultySource {
   public int zip;
 
   //9. Field modifier should be modeled as Map<String, String>
-  @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues = MyChooserValues.class)
+  @FieldValueChooser(MyChooserValues.class)
   @ConfigDef(
     defaultValue = "180 Sansome",
     label = "street_address",
@@ -100,7 +99,7 @@ public class FaultySource {
 
   //10. Both FieldSelector and FieldValueChooser present
   @FieldSelector
-  @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues = TypesProvider.class)
+  @FieldValueChooser(TypesProvider.class)
   @ConfigDef(
     defaultValue = "400",
     label = "ste",
@@ -111,7 +110,7 @@ public class FaultySource {
 
   //11. Drop down should be modeled as 'java.lang.String'
   //12. The ConfigDef.Type for ValueChooser should be 'MODEL'
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = TypesProvider.class)
+  @ValueChooser(TypesProvider.class)
   @ConfigDef(
       defaultValue = "4",
       label = "floor",

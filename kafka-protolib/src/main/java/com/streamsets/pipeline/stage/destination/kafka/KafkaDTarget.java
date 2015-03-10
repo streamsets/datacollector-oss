@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.destination.kafka;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
@@ -66,7 +65,7 @@ public class KafkaDTarget extends DTarget {
     displayPosition = 30,
     group = "KAFKA"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PartitionStrategyChooserValues.class)
+  @ValueChooser(PartitionStrategyChooserValues.class)
   public PartitionStrategy partitionStrategy;
 
   @ConfigDef(
@@ -91,7 +90,7 @@ public class KafkaDTarget extends DTarget {
     displayPosition = 50,
     group = "KAFKA"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = ProducerDataFormatChooserValues.class)
+  @ValueChooser(ProducerDataFormatChooserValues.class)
   public DataFormat dataFormat;
 
   @ConfigDef(
@@ -132,7 +131,7 @@ public class KafkaDTarget extends DTarget {
     dependsOn = "dataFormat",
     triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvModeChooserValues.class)
+  @ValueChooser(CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
 
   @ConfigDef(
@@ -146,7 +145,7 @@ public class KafkaDTarget extends DTarget {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvHeaderChooserValues.class)
+  @ValueChooser(CsvHeaderChooserValues.class)
   public CsvHeader csvHeader;
 
   @ConfigDef(
@@ -175,7 +174,7 @@ public class KafkaDTarget extends DTarget {
       dependsOn = "dataFormat",
       triggeredByValue = "JSON"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonModeChooserValues.class)
+  @ValueChooser(JsonModeChooserValues.class)
   public JsonMode jsonMode;
 
   /********  For TEXT Content  ***********/

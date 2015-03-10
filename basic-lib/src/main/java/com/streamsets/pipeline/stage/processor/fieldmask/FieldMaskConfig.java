@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldmask;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -33,7 +32,7 @@ public class FieldMaskConfig {
       description="",
       displayPosition = 20
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = MaskTypeChooseValues.class)
+  @ValueChooser(MaskTypeChooseValues.class)
   public MaskType maskType;
 
   @ConfigDef(

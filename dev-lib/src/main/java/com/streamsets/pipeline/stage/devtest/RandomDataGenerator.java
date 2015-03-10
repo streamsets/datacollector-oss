@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.stage.devtest;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
@@ -122,7 +121,7 @@ public class RandomDataGenerator extends BaseSource {
     @ConfigDef(required = true, type = ConfigDef.Type.MODEL,
       label = "Field Type",
       defaultValue = "STRING")
-    @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = TypeChooserValueProvider.class)
+    @ValueChooser(TypeChooserValueProvider.class)
     public Type type;
   }
 

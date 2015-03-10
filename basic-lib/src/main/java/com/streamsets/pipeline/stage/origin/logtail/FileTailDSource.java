@@ -5,11 +5,9 @@
  */
 package com.streamsets.pipeline.stage.origin.logtail;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
@@ -37,7 +35,7 @@ public class FileTailDSource extends DSourceOffsetCommitter {
       displayPosition = 10,
       group = "FILE"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
+  @ValueChooser(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
   @ConfigDef(

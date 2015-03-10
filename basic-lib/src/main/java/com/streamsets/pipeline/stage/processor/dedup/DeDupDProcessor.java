@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.processor.dedup;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
@@ -59,7 +58,7 @@ public class DeDupDProcessor extends DProcessor {
       displayPosition = 30,
       group = "DE_DUP"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = SelectFieldsChooserValues.class)
+  @ValueChooser(SelectFieldsChooserValues.class)
   public SelectFields compareFields;
 
   @ConfigDef(

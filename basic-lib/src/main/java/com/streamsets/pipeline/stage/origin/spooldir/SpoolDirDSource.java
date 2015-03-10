@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -43,7 +42,7 @@ public class SpoolDirDSource extends DSource {
       displayPosition = 0,
       group = "FILES"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
+  @ValueChooser(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
 
@@ -149,7 +148,7 @@ public class SpoolDirDSource extends DSource {
       displayPosition = 110,
       group = "POST_PROCESSING"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = PostProcessingOptionsChooserValues.class)
+  @ValueChooser(PostProcessingOptionsChooserValues.class)
   public PostProcessingOptions postProcessing;
 
   @ConfigDef(
@@ -190,7 +189,7 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvModeChooserValues.class)
+  @ValueChooser(CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
 
   @ConfigDef(
@@ -204,7 +203,7 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvHeaderChooserValues.class)
+  @ValueChooser(CsvHeaderChooserValues.class)
   public CsvHeader csvHeader;
 
   @ConfigDef(
@@ -233,7 +232,7 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "JSON"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonModeChooserValues.class)
+  @ValueChooser(JsonModeChooserValues.class)
   public JsonMode jsonContent;
 
   @ConfigDef(

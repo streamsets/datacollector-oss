@@ -13,8 +13,6 @@ import java.lang.annotation.RetentionPolicy;
 @java.lang.annotation.Target(ElementType.FIELD)
 public @interface FieldValueChooser {
 
-  ChooserMode type();
-
-  Class<? extends ChooserValues> chooserValues();
+  Class<? extends ChooserValues> value();
 
 }

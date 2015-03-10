@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.config;
 
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -82,7 +81,7 @@ public class PipelineDefinition {
     gdValues.add(DeliveryGuarantee.AT_MOST_ONCE.name());
 
     ModelDefinition gdModelDefinition = new ModelDefinition(ModelType.VALUE_CHOOSER,
-      ChooserMode.PROVIDED, "",  gdValues, gdLabels, null);
+                                                            "",  gdValues, gdLabels, null);
 
     //Localize label and description for "delivery guarantee" config option
     String dgLabel = new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
@@ -133,7 +132,7 @@ public class PipelineDefinition {
 
   private List<ConfigDefinition> createBadRecordsHandlingConfigs() {
     List<ConfigDefinition> configs = new ArrayList<>();
-    ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, ChooserMode.PROVIDED, "",
+    ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, "",
                                                 getErrorHandlingValues(), getErrorHandlingLabels(), null);
     ConfigDefinition config = new ConfigDefinition(
         BAD_RECORDS_HANDLING_FIELD,

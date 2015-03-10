@@ -14,7 +14,6 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseProcessor;
-import com.streamsets.pipeline.api.ChooserMode;
 
 import java.util.Map;
 @GenerateResourceBundle
@@ -22,7 +21,7 @@ import java.util.Map;
 , version = "1.0")
 public class TwitterProcessor extends BaseProcessor{
 
-  @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues = TypesProvider.class)
+  @FieldValueChooser(TypesProvider.class)
   @ConfigDef(
     defaultValue = "[a-z][A-Z][0-9]",
     label = "regEx",
@@ -32,7 +31,7 @@ public class TwitterProcessor extends BaseProcessor{
   )
   public Map<String, String> regEx;
 
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = TweetTypeProvider.class)
+  @ValueChooser(TweetTypeProvider.class)
   @ConfigDef(
       defaultValue = "[a-z][A-Z][0-9]",
       label = "tweetType1",
@@ -42,7 +41,7 @@ public class TwitterProcessor extends BaseProcessor{
   )
   public TweetType tweetType1;
 
-  @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues = TweetTypeProvider.class)
+  @FieldValueChooser(TweetTypeProvider.class)
   @ConfigDef(
       defaultValue = "[a-z][A-Z][0-9]",
       label = "tweetType2",

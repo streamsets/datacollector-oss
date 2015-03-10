@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldhasher;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -32,6 +31,6 @@ public class FieldHasherConfig {
       description="",
       displayPosition = 20
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = HashTypeChooserValues.class)
+  @ValueChooser(HashTypeChooserValues.class)
   public HashType hashType;
 }

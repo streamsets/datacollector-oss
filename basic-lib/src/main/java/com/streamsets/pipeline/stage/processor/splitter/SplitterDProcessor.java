@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.processor.splitter;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
@@ -71,7 +70,7 @@ public class SplitterDProcessor extends DProcessor {
       displayPosition = 40,
       group = "FIELD_SPLITTER"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnStagePreConditionFailureChooserValues.class)
+  @ValueChooser(OnStagePreConditionFailureChooserValues.class)
   public OnStagePreConditionFailure onStagePreConditionFailure;
 
   @ConfigDef(
@@ -83,7 +82,7 @@ public class SplitterDProcessor extends DProcessor {
       displayPosition = 50,
       group = "FIELD_SPLITTER"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OriginalFieldActionChooserValues.class)
+  @ValueChooser(OriginalFieldActionChooserValues.class)
   public OriginalFieldAction originalFieldAction;
 
   @Override

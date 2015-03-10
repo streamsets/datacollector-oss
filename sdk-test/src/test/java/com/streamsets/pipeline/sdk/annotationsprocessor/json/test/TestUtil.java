@@ -123,7 +123,6 @@ public class TestUtil {
 
       if(e.getModel() != null) {
         Assert.assertNotNull(a.getModel());
-        Assert.assertEquals(e.getModel().getChooserMode(), a.getModel().getChooserMode());
         Assert.assertEquals(e.getModel().getLabels(), a.getModel().getLabels());
         Assert.assertEquals(e.getModel().getModelType(), a.getModel().getModelType());
         Assert.assertEquals(e.getModel().getValues(), a.getModel().getValues());

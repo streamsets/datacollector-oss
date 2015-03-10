@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -122,7 +121,7 @@ public class HdfsDTarget extends DTarget {
       displayPosition = 120,
       group = "OUTPUT_FILES"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = TimeZoneChooserValues.class)
+  @ValueChooser(TimeZoneChooserValues.class)
   public String timeZoneID;
 
   @ConfigDef(
@@ -168,7 +167,7 @@ public class HdfsDTarget extends DTarget {
       displayPosition = 160,
       group = "OUTPUT_FILES"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CompressionChooserValues.class)
+  @ValueChooser(CompressionChooserValues.class)
   public CompressionMode compression;
 
   @ConfigDef(
@@ -194,7 +193,7 @@ public class HdfsDTarget extends DTarget {
       displayPosition = 100,
       group = "OUTPUT_FILES"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FileTypeChooserValues.class)
+  @ValueChooser(FileTypeChooserValues.class)
   public HdfsFileType fileType;
 
   @ConfigDef(
@@ -222,7 +221,7 @@ public class HdfsDTarget extends DTarget {
       dependsOn = "fileType",
       triggeredByValue = "SEQUENCE_FILE"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = HdfsSequenceFileCompressionTypeChooserValues.class)
+  @ValueChooser(HdfsSequenceFileCompressionTypeChooserValues.class)
   public HdfsSequenceFileCompressionType seqFileCompressionType;
 
   @ConfigDef(
@@ -248,7 +247,7 @@ public class HdfsDTarget extends DTarget {
       displayPosition = 210,
       group = "LATE_RECORDS"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = LateRecordsActionChooserValues.class)
+  @ValueChooser(LateRecordsActionChooserValues.class)
   public LateRecordsAction lateRecordsAction;
 
   @ConfigDef(
@@ -276,7 +275,7 @@ public class HdfsDTarget extends DTarget {
       dependsOn = "fileType",
       triggeredByValue = { "TEXT", "SEQUENCE_FILE"}
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
+  @ValueChooser(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
   /********  For DELIMITED ***********/
@@ -292,7 +291,7 @@ public class HdfsDTarget extends DTarget {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvModeChooserValues.class)
+  @ValueChooser(CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
 
   @ConfigDef(
@@ -306,7 +305,7 @@ public class HdfsDTarget extends DTarget {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvHeaderChooserValues.class)
+  @ValueChooser(CsvHeaderChooserValues.class)
   public CsvHeader csvHeader;
 
   @ConfigDef(
@@ -335,7 +334,7 @@ public class HdfsDTarget extends DTarget {
       dependsOn = "dataFormat",
       triggeredByValue = "JSON"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonModeChooserValues.class)
+  @ValueChooser(JsonModeChooserValues.class)
   public JsonMode jsonMode;
 
   /********  For TEXT *******/

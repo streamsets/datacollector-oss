@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldfilter;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -39,7 +38,7 @@ public class FieldFilterDProcessor extends DProcessor {
       displayPosition = 10,
       group = "FILTER"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = FilterOperationChooserValues.class)
+  @ValueChooser(FilterOperationChooserValues.class)
   public FilterOperation filterOperation;
 
   @ConfigDef(

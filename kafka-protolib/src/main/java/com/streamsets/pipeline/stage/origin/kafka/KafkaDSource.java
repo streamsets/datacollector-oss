@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -77,7 +76,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     displayPosition = 40,
     group = "KAFKA"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = DataFormatChooserValues.class)
+  @ValueChooser(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
   @ConfigDef(
@@ -148,7 +147,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
       dependsOn = "dataFormat",
       triggeredByValue = "JSON"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = JsonModeChooserValues.class)
+  @ValueChooser(JsonModeChooserValues.class)
   public JsonMode jsonContent;
 
   @ConfigDef(
@@ -175,7 +174,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvModeChooserValues.class)
+  @ValueChooser(CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
 
   @ConfigDef(
@@ -189,7 +188,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CsvHeaderChooserValues.class)
+  @ValueChooser(CsvHeaderChooserValues.class)
   public CsvHeader csvHeader;
 
   @ConfigDef(

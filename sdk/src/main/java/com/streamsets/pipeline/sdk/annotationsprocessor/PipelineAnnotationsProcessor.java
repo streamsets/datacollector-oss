@@ -7,7 +7,6 @@ package com.streamsets.pipeline.sdk.annotationsprocessor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -364,31 +363,29 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             if(fieldSelector.singleValued()) {
               modelType = ModelType.FIELD_SELECTOR_SINGLE_VALUED;
             }
-            model = new ModelDefinition(modelType, null, null, null, null, null);
+            model = new ModelDefinition(modelType, null, null, null, null);
           }
           FieldValueChooser fieldValueChooser = variableElement.getAnnotation(FieldValueChooser.class);
           //processingEnv.
           if (fieldValueChooser != null) {
             model = new ModelDefinition(ModelType.FIELD_VALUE_CHOOSER,
-                getFieldSelectionType(fieldValueChooser.type()),
-                getValuesProvider(fieldValueChooser)
+                                        getValuesProvider(fieldValueChooser)
                 , null, null, null);
           }
           ValueChooser valueChooser = variableElement.getAnnotation(ValueChooser.class);
           if(valueChooser != null) {
             model = new ModelDefinition(ModelType.VALUE_CHOOSER,
-                getFieldSelectionType(valueChooser.type()),
-                getValuesProvider(valueChooser)
+                                        getValuesProvider(valueChooser)
                 , null, null, null);
           }
           LanePredicateMapping lanePredicateMapping = variableElement.getAnnotation(LanePredicateMapping.class);
           if (lanePredicateMapping != null) {
-            model = new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null, null);
+            model = new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null);
           }
           ComplexField complexField = variableElement.getAnnotation(ComplexField.class);
           if(complexField != null) {
             String typeName = getTypeNameFromComplexField(variableElement);
-            model = new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null, null,
+            model = new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null,
               getConfigDefsFromTypeElement(getTypeElementFromName(typeName)));
           }
         }
@@ -518,16 +515,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return result;
   }
 
-  private ChooserMode getFieldSelectionType(com.streamsets.pipeline.api.ChooserMode type) {
-    if(type.equals(com.streamsets.pipeline.api.ChooserMode.PROVIDED)) {
-      return ChooserMode.PROVIDED;
-    } else if (type.equals(com.streamsets.pipeline.api.ChooserMode.SUGGESTED)) {
-      return ChooserMode.SUGGESTED;
-    }
-    //default
-    return ChooserMode.SUGGESTED;
-  }
-
   /**
    * Infers the type of stage based on the interface implemented or the
    * abstract class extended.
@@ -627,7 +614,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //Find a better solution
     TypeMirror valueProviderTypeMirror = null;
     try {
-      fieldValueChooser.chooserValues();
+      fieldValueChooser.value();
     } catch (MirroredTypeException e) {
       valueProviderTypeMirror = e.getTypeMirror();
     }
@@ -670,7 +657,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //Find a better solution
     TypeMirror valueProviderTypeMirror = null;
     try {
-      valueChooser.chooserValues();
+      valueChooser.value();
     } catch (MirroredTypeException e) {
       valueProviderTypeMirror = e.getTypeMirror();
     }
@@ -1045,23 +1032,19 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private boolean validateDropDown(Element typeElement, VariableElement variableElement, ValueChooser valueChooser) {
     boolean valid = true;
 
-    if(valueChooser.type().equals(com.streamsets.pipeline.api.ChooserMode.PROVIDED)) {
-      //The type of could be string or an enum
-      valid &= checkIfTypeIsEnumOrString(typeElement, variableElement, variableElement.asType().toString());
-      //A chooserValues is expected.
-      //check if the chooserValues is specified and that implements the correct base class
-      //Not the best way of getting the TypeMirror of the ChooserValues implementation
-      //Find a better solution
-      TypeMirror valueProviderTypeMirror = null;
-      try {
-        valueChooser.chooserValues();
-      } catch (MirroredTypeException e) {
-        valueProviderTypeMirror = e.getTypeMirror();
-      }
-      valid &= validateValueProvider(typeElement, variableElement, valueProviderTypeMirror);
-    } else {
-      valid &= checkIfTypeIsString(typeElement, variableElement);
+    //The type of could be string or an enum
+    valid &= checkIfTypeIsEnumOrString(typeElement, variableElement, variableElement.asType().toString());
+    //A chooserValues is expected.
+    //check if the chooserValues is specified and that implements the correct base class
+    //Not the best way of getting the TypeMirror of the ChooserValues implementation
+    //Find a better solution
+    TypeMirror valueProviderTypeMirror = null;
+    try {
+      valueChooser.value();
+    } catch (MirroredTypeException e) {
+      valueProviderTypeMirror = e.getTypeMirror();
     }
+    valid &= validateValueProvider(typeElement, variableElement, valueProviderTypeMirror);
     return valid;
   }
 
@@ -1070,50 +1053,41 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     boolean valid = true;
     TypeMirror fieldType = variableElement.asType();
     String type = fieldType.toString();
-    if(fieldValueChooser.type().equals(com.streamsets.pipeline.api.ChooserMode.PROVIDED)) {
-      //FIXME<Hari>: Investigate and find a better way to do this
-      //check if type is Map<String, String> or Map<String, Enum>
-      if(type.contains(MAP_TYPE_WITH_KEY)) {
-        //get the second type in the map
-        String valueType = type.substring(MAP_TYPE_WITH_KEY.length(), type.length() -1);
-        //valueType must be string or enum
-        if (!valueType.equals("java.lang.String")) {
-          //check if it is an enum
-          Element e = getTypeElementFromName(valueType);
-          if(!e.getKind().equals(ElementKind.ENUM)) {
-            printError("field.validation.type.is.not.map",
-                "The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
-                typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
-            valid = false;
-          }
+    //FIXME<Hari>: Investigate and find a better way to do this
+    //check if type is Map<String, String> or Map<String, Enum>
+    if(type.contains(MAP_TYPE_WITH_KEY)) {
+      //get the second type in the map
+      String valueType = type.substring(MAP_TYPE_WITH_KEY.length(), type.length() -1);
+      //valueType must be string or enum
+      if (!valueType.equals("java.lang.String")) {
+        //check if it is an enum
+        Element e = getTypeElementFromName(valueType);
+        if(!e.getKind().equals(ElementKind.ENUM)) {
+          printError("field.validation.type.is.not.map",
+              "The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
+              typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+          valid = false;
         }
-      } else {
-        printError("field.validation.type.is.not.map",
-            "The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
-            typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
-        valid = false;
       }
-
-      //A chooserValues is expected.
-      //check if the chooserValues is specified and that implements the correct base class
-      //Not the best way of getting the TypeMirror of the ChooserValues implementation
-      //Find a better solution
-      TypeMirror valueProviderTypeMirror = null;
-      try {
-        fieldValueChooser.chooserValues();
-      } catch (MirroredTypeException e) {
-        valueProviderTypeMirror = e.getTypeMirror();
-      }
-
-      valid &= validateValueProvider(typeElement, variableElement, valueProviderTypeMirror);
     } else {
-      if (!type.equals("java.util.Map<java.lang.String,java.lang.String>")) {
-        printError("field.validation.type.is.not.map",
-            "The type of the field {} is expected to be Map<String, String>.",
-            typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
-        valid = false;
-      }
+      printError("field.validation.type.is.not.map",
+          "The type of the field {} is expected to be Map<String, String> or Map<String, Enum>.",
+          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+      valid = false;
     }
+
+    //A chooserValues is expected.
+    //check if the chooserValues is specified and that implements the correct base class
+    //Not the best way of getting the TypeMirror of the ChooserValues implementation
+    //Find a better solution
+    TypeMirror valueProviderTypeMirror = null;
+    try {
+      fieldValueChooser.value();
+    } catch (MirroredTypeException e) {
+      valueProviderTypeMirror = e.getTypeMirror();
+    }
+
+    valid &= validateValueProvider(typeElement, variableElement, valueProviderTypeMirror);
     return valid;
   }
 

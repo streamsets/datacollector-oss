@@ -1070,34 +1070,6 @@ public class BeanHelper {
     }
   }
 
-  public static ChooserModeJson wrapChooserMode(com.streamsets.pipeline.api.ChooserMode chooserMode) {
-    if(chooserMode == null) {
-      return null;
-    }
-    switch (chooserMode) {
-      case PROVIDED:
-        return ChooserModeJson.PROVIDED;
-      case SUGGESTED:
-        return ChooserModeJson.SUGGESTED;
-      default:
-        throw new IllegalArgumentException("Unrecognized model type");
-    }
-  }
-
-  public static com.streamsets.pipeline.api.ChooserMode unwrapChooserMode(ChooserModeJson chooserModeJson) {
-    if(chooserModeJson == null) {
-      return null;
-    }
-    switch (chooserModeJson) {
-      case PROVIDED:
-        return com.streamsets.pipeline.api.ChooserMode.PROVIDED;
-      case SUGGESTED:
-        return com.streamsets.pipeline.api.ChooserMode.SUGGESTED;
-      default:
-        throw new IllegalArgumentException("Unrecognized model type");
-    }
-  }
-
   public static StageTypeJson wrapStageType(com.streamsets.pipeline.config.StageType stageType) {
     if(stageType == null) {
       return null;

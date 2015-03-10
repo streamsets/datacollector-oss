@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
@@ -39,7 +38,7 @@ public class FieldTypeConverterConfig {
       description = "Select a compatible data type",
       displayPosition = 10
   )
-  @ValueChooser(chooserValues = PrimitiveFieldTypeChooserValues.class, type = ChooserMode.PROVIDED)
+  @ValueChooser(PrimitiveFieldTypeChooserValues.class)
   public Field.Type targetType;
 
   @ConfigDef(
@@ -53,7 +52,7 @@ public class FieldTypeConverterConfig {
       dependsOn = "targetType",
       triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT"}
   )
-  @ValueChooser(chooserValues = LocaleChooserValues.class, type = ChooserMode.PROVIDED)
+  @ValueChooser(LocaleChooserValues.class)
   public String dataLocale;
 
   private Locale locale;
@@ -75,7 +74,7 @@ public class FieldTypeConverterConfig {
       dependsOn = "targetType",
       triggeredByValue = {"DATE", "DATETIME"}
   )
-  @ValueChooser(chooserValues = DateFormatChooserValues.class, type = ChooserMode.PROVIDED)
+  @ValueChooser(DateFormatChooserValues.class)
   public DateFormat dateFormat;
 
   @ConfigDef(

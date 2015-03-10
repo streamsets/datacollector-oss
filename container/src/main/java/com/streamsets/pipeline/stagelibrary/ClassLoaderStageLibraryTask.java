@@ -12,7 +12,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
@@ -150,7 +149,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private static final ConfigDefinition REQUIRED_FIELDS_CONFIG = new ConfigDefinition(
       ConfigDefinition.REQUIRED_FIELDS, ConfigDef.Type.MODEL, "Required Fields",
       "Records without any of these fields are sent to error",
-      null, false, "", null, new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUED, null, null, null, null, null),
+      null, false, "", null, new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUED, null, null, null, null),
       "", new ArrayList<>(), 10, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList());
 
@@ -158,8 +157,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private static final ConfigDefinition ON_RECORD_ERROR_CONFIG = new ConfigDefinition(
       ConfigDefinition.ON_RECORD_ERROR, ConfigDef.Type.MODEL, "On Record Error",
       "Action to take with records sent to error",
-      OnRecordError.TO_ERROR.name(), true, "", null, new ModelDefinition(ModelType.VALUE_CHOOSER, ChooserMode.PROVIDED,
-                                                 OnRecordErrorChooserValues.class.getName(),
+      OnRecordError.TO_ERROR.name(), true, "", null, new ModelDefinition(ModelType.VALUE_CHOOSER,
+                                                                         OnRecordErrorChooserValues.class.getName(),
                                                  new OnRecordErrorChooserValues().getValues(),
                                                  new OnRecordErrorChooserValues().getLabels(), null), "",
       new ArrayList<>(), 20, Collections.<ElFunctionDefinition>emptyList(),

@@ -7,7 +7,6 @@ package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.FieldSelector;
@@ -73,7 +72,7 @@ public class TwitterStages {
     , version = "1.0")
   public class TwitterProcessor extends BaseProcessor {
 
-    @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues = TypesProvider.class)
+    @FieldValueChooser(TypesProvider.class)
     @ConfigDef(
       defaultValue = "[a-z][A-Z][0-9]",
       label = "regEx",

@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldvaluereplacer;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
@@ -63,7 +62,7 @@ public class FieldValueReplacerDProcessor extends DProcessor {
     displayPosition = 30,
     group = "REPLACE"
   )
-  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = OnStagePreConditionFailureChooserValues.class)
+  @ValueChooser(OnStagePreConditionFailureChooserValues.class)
   public OnStagePreConditionFailure onStagePreConditionFailure;
 
   @Override

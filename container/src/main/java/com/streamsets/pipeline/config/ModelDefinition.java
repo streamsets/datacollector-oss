@@ -5,23 +5,20 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.List;
 
 public class ModelDefinition {
   private final ModelType modelType;
-  private final ChooserMode chooserMode;
   private final String valuesProviderClass;
   private final List<ConfigDefinition> configDefinitions;
   private List<String> values;
   private List<String> labels;
 
-  public ModelDefinition(ModelType modelType, ChooserMode chooserMode, String valuesProviderClass, List<String> values,
-    List<String> labels, List<ConfigDefinition> configDefinitions) {
+  public ModelDefinition(ModelType modelType, String valuesProviderClass, List<String> values,
+      List<String> labels, List<ConfigDefinition> configDefinitions) {
     this.modelType = modelType;
-    this.chooserMode = chooserMode;
     this.valuesProviderClass = valuesProviderClass;
     this.configDefinitions = configDefinitions;
     this.values = values;
@@ -30,10 +27,6 @@ public class ModelDefinition {
 
   public ModelType getModelType() {
     return modelType;
-  }
-
-  public ChooserMode getChooserMode() {
-    return chooserMode;
   }
 
   public List<String> getValues() {

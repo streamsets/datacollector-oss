@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ChooserMode;
 import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ErrorCode;
@@ -24,7 +23,7 @@ import java.util.Map;
 @StageDef(description = "Produces twitter feeds", label = "twitter_source", version = "1.0")
 public class TwitterValuesProviderAndEnum extends BaseSource {
 
-  @FieldValueChooser(type = ChooserMode.PROVIDED, chooserValues = Misc.TwitterTypesProvider.class)
+  @FieldValueChooser(Misc.TwitterTypesProvider.class)
   @ConfigDef(
       defaultValue = "admin",
       label = "username",
