@@ -60,7 +60,8 @@ public class HdfsTarget extends RecordTarget {
   private final String timeDriver;
   private final long maxRecordsPerFile;
   private final long maxFileSize;
-  private final String compression;
+  private final CompressionMode compression;
+  private final String otherCompression;
   private final HdfsFileType fileType;
   private final String keyEl;
   private final HdfsSequenceFileCompressionType seqFileCompressionType;
@@ -78,7 +79,7 @@ public class HdfsTarget extends RecordTarget {
 
   public HdfsTarget(String hdfsUri, boolean hdfsKerberos, String kerberosPrincipal, String kerberosKeytab,
       Map<String, String> hdfsConfigs, String uniquePrefix, String dirPathTemplate, String timeZoneID,
-      String timeDriver, long maxRecordsPerFile, long maxFileSize, String compression,
+      String timeDriver, long maxRecordsPerFile, long maxFileSize, CompressionMode compression, String otherCompression,
       HdfsFileType fileType, String keyEl,
       HdfsSequenceFileCompressionType seqFileCompressionType, String lateRecordsLimit,
       LateRecordsAction lateRecordsAction, String lateRecordsDirPathTemplate,
@@ -96,6 +97,7 @@ public class HdfsTarget extends RecordTarget {
     this.maxRecordsPerFile = maxRecordsPerFile;
     this.maxFileSize = maxFileSize;
     this.compression = compression;
+    this.otherCompression = otherCompression;
     this.fileType = fileType;
     this.keyEl = keyEl;
     this.seqFileCompressionType = seqFileCompressionType;
@@ -120,6 +122,7 @@ public class HdfsTarget extends RecordTarget {
   private ELEval timeDriverElEval;
   private ELEval lateRecordsLimitEvaluator;
   private Date batchTime;
+  private CompressionCodec compressionCodec;
 
   @Override
   public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
@@ -170,8 +173,25 @@ public class HdfsTarget extends RecordTarget {
       RecordWriterManager.validateDirPathTemplate1(getContext(), dirPathTemplate);
       RecordWriterManager.validateDirPathTemplate2(getContext(), dirPathTemplate);
       try {
-        CompressionCodec compressionCodec = (CompressionMode.getCodec(compression) != null)
-                                            ? CompressionMode.getCodec(compression).newInstance() : null;
+        switch (compression) {
+          case OTHER:
+            try {
+              Class klass = Thread.currentThread().getContextClassLoader().loadClass(otherCompression);
+              if (CompressionCodec.class.isAssignableFrom(klass)) {
+                compressionCodec = ((Class<? extends CompressionCodec> ) klass).newInstance();
+              } else {
+                throw new StageException(Errors.HADOOPFS_04, otherCompression);
+              }
+            } catch (Exception ex1) {
+              throw new StageException(Errors.HADOOPFS_05, otherCompression, ex1.getMessage(), ex1);
+            }
+            break;
+          case NONE:
+            break;
+          default:
+            compressionCodec = compression.getCodec().newInstance();
+            break;
+        }
         RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
           dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSize, maxRecordsPerFile,
           fileType, compressionCodec, compressionType, keyEl, generatorFactory, getContext());
@@ -191,8 +211,6 @@ public class HdfsTarget extends RecordTarget {
         RecordWriterManager.validateDirPathTemplate1(getContext(), lateRecordsDirPathTemplate);
         RecordWriterManager.validateDirPathTemplate2(getContext(), lateRecordsDirPathTemplate);
         try {
-          CompressionCodec compressionCodec = (getCompressionCodec() != null)
-                                              ? getCompressionCodec().newInstance() : null;
           RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
             lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSize,
             maxRecordsPerFile, fileType, compressionCodec,compressionType, keyEl, generatorFactory, getContext());
@@ -293,8 +311,8 @@ public class HdfsTarget extends RecordTarget {
     return hdfsConfiguration;
   }
 
-  Class<? extends CompressionCodec> getCompressionCodec() throws StageException {
-    return CompressionMode.getCodec(compression);
+  CompressionCodec getCompressionCodec() throws StageException {
+    return compressionCodec;
   }
 
   // for testing only

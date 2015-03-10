@@ -17,6 +17,7 @@ public enum CompressionMode implements Label {
   GZIP("Gzip", GzipCodec.class),
   BZIP2("Bzip2", BZip2Codec.class),
   SNAPPY("Snappy", SnappyCodec.class),
+  OTHER("Other...", null),
 
   ;
 
@@ -31,26 +32,6 @@ public enum CompressionMode implements Label {
   public  Class<? extends CompressionCodec> getCodec() {
     return codec;
   }
-
-
-  @SuppressWarnings("unchecked")
-  public static Class<? extends CompressionCodec> getCodec(String codecName) throws StageException {
-    try {
-      return CompressionMode.valueOf(codecName).getCodec();
-    } catch (IllegalArgumentException ex) {
-      try {
-        Class klass = Thread.currentThread().getContextClassLoader().loadClass(codecName);
-        if (CompressionCodec.class.isAssignableFrom(klass)) {
-          return (Class<? extends CompressionCodec> ) klass;
-        } else {
-          throw new StageException(Errors.HADOOPFS_04, codecName);
-        }
-      } catch (Exception ex1) {
-        throw new StageException(Errors.HADOOPFS_05, codecName, ex1.getMessage(), ex1);
-      }
-    }
-  }
-
 
   @Override
   public String getLabel() {

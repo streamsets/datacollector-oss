@@ -49,7 +49,7 @@ public class TestHdfsTarget {
         .addConfiguration("timeZoneID", "UTC")
         .addConfiguration("fileType", HdfsFileType.TEXT)
         .addConfiguration("keyEl", "${uuid()}")
-        .addConfiguration("compression", "NONE")
+        .addConfiguration("compression", CompressionMode.NONE)
         .addConfiguration("seqFileCompressionType", HdfsSequenceFileCompressionType.BLOCK)
         .addConfiguration("maxRecordsPerFile", 5)
         .addConfiguration("maxFileSize", 0)

@@ -80,7 +80,8 @@ public class TestBaseHdfsTarget {
     target.timeZoneID = "UTC";
     target.dirPathTemplate = "${YYYY()}";
     target.lateRecordsDirPathTemplate = "";
-    target.compression = CompressionMode.NONE.name();
+    target.compression = CompressionMode.NONE;
+    target.otherCompression = null;
     target.timeDriver = "${time:now()}";
     target.lateRecordsLimit = "${1 * HOURS}";
     target.dataFormat = DataFormat.DELIMITED;
@@ -104,6 +105,7 @@ public class TestBaseHdfsTarget {
           maxRecordsPerFile,
           maxFileSize,
           compression,
+          otherCompression,
           fileType,
           keyEl,
           seqFileCompressionType,
@@ -157,6 +159,7 @@ public class TestBaseHdfsTarget {
     dTarget.hdfsKerberos = true;
     dTarget.kerberosKeytab = "/tmp/keytab";
     dTarget.kerberosPrincipal = "sdc/localhost";
+    dTarget.compression = CompressionMode.NONE;
     configure(dTarget);
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     List<Stage.ConfigIssue> issues =
@@ -171,7 +174,9 @@ public class TestBaseHdfsTarget {
     configure(dTarget);
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+      Target.Context context = ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR);
+      target.validateConfigs(null, context);
+      target.init(null, context);
       Assert.assertNull(target.getCompressionCodec());
     } finally {
       target.destroy();
@@ -182,11 +187,13 @@ public class TestBaseHdfsTarget {
   public void testDefinedCompressionCodec() throws Exception {
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.compression = CompressionMode.GZIP.name();
+    dTarget.compression = CompressionMode.GZIP;
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
-      Assert.assertEquals(CompressionMode.GZIP.getCodec(), target.getCompressionCodec());
+      Target.Context context = ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR);
+      target.validateConfigs(null, context);
+      target.init(null, context);
+      Assert.assertEquals(CompressionMode.GZIP.getCodec(), target.getCompressionCodec().getClass());
     } finally {
       target.destroy();
     }
@@ -196,42 +203,39 @@ public class TestBaseHdfsTarget {
   public void testCustomCompressionCodec() throws Exception {
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.compression = DeflateCodec.class.getName();
+    dTarget.compression = CompressionMode.OTHER;
+    dTarget.otherCompression = DeflateCodec.class.getName();
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
-      Assert.assertEquals(DeflateCodec.class, target.getCompressionCodec());
+      Target.Context context = ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR);
+      target.validateConfigs(null, context);
+      target.init(null, context);
+      Assert.assertEquals(DeflateCodec.class, target.getCompressionCodec().getClass());
     } finally {
       target.destroy();
     }
   }
 
-  @Test(expected = StageException.class)
+  @Test
   public void testInvalidCompressionCodec() throws Exception {
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.compression = String.class.getName();
+    dTarget.compression = CompressionMode.OTHER;
+    dTarget.otherCompression = String.class.getName();
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
-    try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
-      Assert.assertEquals(DeflateCodec.class, target.getCompressionCodec());
-    } finally {
-      target.destroy();
-    }
+    Target.Context context = ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR);
+    Assert.assertEquals(1, target.validateConfigs(null, context).size());
   }
 
-  @Test(expected = StageException.class)
+  @Test
   public void testUnknownCompressionCodec() throws Exception {
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.compression = "foo";
+    dTarget.compression = CompressionMode.OTHER;
+    dTarget.otherCompression = "foo";
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
-    try {
-      target.init(null, ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
-      Assert.assertEquals(DeflateCodec.class, target.getCompressionCodec());
-    } finally {
-      target.destroy();
-    }
+    Target.Context context = ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR);
+    Assert.assertEquals(1, target.validateConfigs(null, context).size());
   }
 
   @Test

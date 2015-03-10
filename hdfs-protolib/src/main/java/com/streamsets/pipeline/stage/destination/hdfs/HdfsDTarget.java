@@ -168,8 +168,22 @@ public class HdfsDTarget extends DTarget {
       displayPosition = 160,
       group = "OUTPUT_FILES"
   )
-  @ValueChooser(type = ChooserMode.SUGGESTED, chooserValues = CompressionChooserValues.class)
-  public String compression;
+  @ValueChooser(type = ChooserMode.PROVIDED, chooserValues = CompressionChooserValues.class)
+  public CompressionMode compression;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Other Compression Codec",
+      description = "",
+      displayPosition = 170,
+      group = "OUTPUT_FILES",
+      dependsOn = "compression",
+      triggeredByValue = "OTHER"
+  )
+
+  public String otherCompression;
 
   @ConfigDef(
       required = true,
@@ -368,6 +382,7 @@ public class HdfsDTarget extends DTarget {
       maxRecordsPerFile,
       maxFileSize,
       compression,
+      otherCompression,
       fileType,
       keyEl,
       seqFileCompressionType,
