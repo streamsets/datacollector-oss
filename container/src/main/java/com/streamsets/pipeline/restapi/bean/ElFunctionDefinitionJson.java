@@ -22,8 +22,10 @@ public class ElFunctionDefinitionJson {
     @JsonProperty("group") String group,
     @JsonProperty("returnType") String returnType,
     @JsonProperty("elFunctionArgumentDefinition") List<ElFunctionArgumentDefinitionJson> elFunctionArgumentDefinition) {
-    this.elFunctionDefinition = new ElFunctionDefinition(name, description, group, returnType,
-      BeanHelper.unwrapElFunctionArgumentDefinitions(elFunctionArgumentDefinition));
+    this.elFunctionDefinition = new ElFunctionDefinition(group, name, description,
+                                                         BeanHelper.unwrapElFunctionArgumentDefinitions(elFunctionArgumentDefinition),
+                                                         returnType
+    );
   }
 
   public ElFunctionDefinitionJson(ElFunctionDefinition elFunctionDefinition) {

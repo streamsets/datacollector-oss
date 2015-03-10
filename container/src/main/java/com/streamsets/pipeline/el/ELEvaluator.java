@@ -21,6 +21,7 @@ import javax.servlet.jsp.el.VariableResolver;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,11 +63,21 @@ public class ELEvaluator extends ELEval {
       for(Method m : klass.getMethods()) {
         ElFunction elFunctionAnnot = m.getAnnotation(ElFunction.class);
         if(elFunctionAnnot != null) {
-          String functionName = null;
-          if(elFunctionAnnot.prefix().isEmpty()) {
-            functionName = elFunctionAnnot.name();
-          } else {
-            functionName = elFunctionAnnot.prefix() + ":" + elFunctionAnnot.name();
+          if (!Modifier.isStatic(m.getModifiers())) {
+            throw new RuntimeException(Utils.format("EL function method must be static, class:'{}' method:'{}",
+                                                    klass.getName(), m));
+          }
+          if (!Modifier.isPublic(m.getModifiers())) {
+            throw new RuntimeException(Utils.format("EL function method must be public, class:'{}' method:'{}",
+                                                    klass.getName(), m));
+          }
+          String functionName = elFunctionAnnot.name();
+          if (functionName.isEmpty()) {
+            throw new RuntimeException(Utils.format("EL function name cannot be empty, class:'{}' method:'{}",
+                                                    klass.getName(), m));
+          }
+          if(!elFunctionAnnot.prefix().isEmpty()) {
+            functionName = elFunctionAnnot.prefix() + ":" + functionName;
           }
           functions.put(functionName, m);
           Annotation[][] parameterAnnotations = m.getParameterAnnotations();
@@ -78,16 +89,31 @@ public class ELEvaluator extends ELEval {
             elFunctionArgumentDefinitions.add(new ElFunctionArgumentDefinition(((ElParam)annotation).value(),
               parameterTypes[i].getSimpleName()));
           }
-          elFunctionDefinitions.add(new ElFunctionDefinition(elFunctionAnnot.name(), elFunctionAnnot.description(),
-            elFunctionAnnot.prefix(), m.getReturnType().getSimpleName(), elFunctionArgumentDefinitions));
+          elFunctionDefinitions.add(new ElFunctionDefinition(elFunctionAnnot.prefix(), functionName,
+                                                             elFunctionAnnot.description(),
+                                                             elFunctionArgumentDefinitions,
+                                                             m.getReturnType().getSimpleName()));
         }
       }
       for(Field f : klass.getFields()) {
         ElConstant elConstant = f.getAnnotation(ElConstant.class);
         if(elConstant != null) {
+          if (!Modifier.isStatic(f.getModifiers())) {
+            throw new RuntimeException(Utils.format("EL constant field must be static, class:'{}' field:'{}",
+                                                    klass.getName(), f));
+          }
+          if (!Modifier.isPublic(f.getModifiers())) {
+            throw new RuntimeException(Utils.format("EL constant field must be public, class:'{}' field:'{}",
+                                                    klass.getName(), f));
+          }
+          String constantName = elConstant.name();
+          if (constantName.isEmpty()) {
+            throw new RuntimeException(Utils.format("EL constant name cannot be empty, class:'{}' field:'{}",
+                                                    klass.getName(), f));
+          }
           try {
-            constants.put(elConstant.name(), f.get(null));
-            elConstantDefinitions.add(new ElConstantDefinition(elConstant.name(), elConstant.description(),
+            constants.put(constantName, f.get(null));
+            elConstantDefinitions.add(new ElConstantDefinition(constantName, elConstant.description(),
               f.getType().getSimpleName()));
           } catch (IllegalAccessException e) {
             //FIXME: throw exception

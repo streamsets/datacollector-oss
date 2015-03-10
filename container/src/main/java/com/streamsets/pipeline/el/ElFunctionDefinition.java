@@ -16,8 +16,8 @@ public class ElFunctionDefinition {
   private final String returnType;
   private final List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition;
 
-  public ElFunctionDefinition(String name, String description, String group, String returnType,
-                              List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition) {
+  public ElFunctionDefinition(String group, String name, String description,
+      List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition, String returnType) {
     this.id = group + ":" + name;
     this.name = name;
     this.description = description;
